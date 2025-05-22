@@ -507,7 +507,7 @@ msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:91
 #: src/view/com/profile/ProfileMenu.tsx:155
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:387
 msgctxt "toast"
 msgid "Account blocked"
 msgstr ""
@@ -518,7 +518,7 @@ msgid "Account followed"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:131
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:427
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:410
 msgctxt "toast"
 msgid "Account muted"
 msgstr ""
@@ -552,7 +552,7 @@ msgid "Account unfollowed"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:121
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:417
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:400
 msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
@@ -861,7 +861,6 @@ msgid "An error occurred while loading the video. Please try again."
 msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
-#: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the QR code!"
 msgstr ""
 
@@ -1095,8 +1094,8 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:570
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:573
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:553
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:556
 msgid "Assign topic - help train Discover!"
 msgstr ""
 
@@ -1173,7 +1172,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:300
 #: src/view/com/profile/ProfileMenu.tsx:464
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:882
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:865
 msgid "Block"
 msgstr ""
 
@@ -1183,13 +1182,13 @@ msgstr ""
 #: src/screens/Messages/components/RequestButtons.tsx:146
 #: src/view/com/profile/ProfileMenu.tsx:375
 #: src/view/com/profile/ProfileMenu.tsx:382
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:719
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:721
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:702
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:704
 msgid "Block account"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:447
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:877
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:860
 msgid "Block Account?"
 msgstr ""
 
@@ -1240,7 +1239,7 @@ msgid "Blocked Accounts"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:459
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:879
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:862
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr ""
 
@@ -1485,9 +1484,9 @@ msgid "Cancels opening the linked website"
 msgstr ""
 
 #: src/state/shell/composer/index.tsx:82
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:123
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:164
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:200
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:125
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:156
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:184
 msgid "Cannot interact with a blocked user"
 msgstr ""
 
@@ -2019,8 +2018,8 @@ msgstr ""
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:255
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:400
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:248
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:379
 msgid "Copied to clipboard"
 msgstr ""
 
@@ -2033,7 +2032,7 @@ msgstr ""
 msgid "Copies build version to clipboard"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:181
+#: src/components/StarterPack/QrCodeDialog.tsx:182
 msgid "Copy"
 msgstr ""
 
@@ -2046,8 +2045,8 @@ msgstr ""
 msgid "Copy at:// URI"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:781
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:783
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:764
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:766
 msgid "Copy author DID"
 msgstr ""
 
@@ -2066,11 +2065,11 @@ msgstr ""
 msgid "Copy host"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:123
+#: src/components/StarterPack/ShareDialog.tsx:104
 msgid "Copy link"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:130
+#: src/components/StarterPack/ShareDialog.tsx:111
 msgid "Copy Link"
 msgstr ""
 
@@ -2078,8 +2077,8 @@ msgstr ""
 msgid "Copy link to list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:517
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:526
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:500
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:509
 msgid "Copy link to post"
 msgstr ""
 
@@ -2088,17 +2087,17 @@ msgstr ""
 msgid "Copy message text"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:774
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:776
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:757
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:759
 msgid "Copy post at:// URI"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:495
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:497
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:478
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:480
 msgid "Copy post text"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:175
+#: src/components/StarterPack/QrCodeDialog.tsx:176
 msgid "Copy QR code"
 msgstr ""
 
@@ -2136,7 +2135,7 @@ msgstr ""
 msgid "Create"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:159
+#: src/components/StarterPack/QrCodeDialog.tsx:160
 msgid "Create a QR code for a starter pack"
 msgstr ""
 
@@ -2275,7 +2274,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:594
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:744
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:800
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:783
 #: src/view/screens/ProfileList.tsx:768
 msgid "Delete"
 msgstr ""
@@ -2338,8 +2337,8 @@ msgid "Delete my account"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:835
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:759
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:761
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:742
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:744
 msgid "Delete post"
 msgstr ""
 
@@ -2356,7 +2355,7 @@ msgstr ""
 msgid "Delete this list?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:795
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:778
 msgid "Delete this post?"
 msgstr ""
 
@@ -2394,12 +2393,12 @@ msgstr ""
 msgid "Descriptive alt text"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:663
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:673
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:646
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:656
 msgid "Detach quote"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:857
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:840
 msgid "Detach quote post?"
 msgstr ""
 
@@ -2607,7 +2606,7 @@ msgstr ""
 msgid "Double tap to close the dialog"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1057
+#: src/screens/VideoFeed/index.tsx:1071
 msgid "Double tap to like"
 msgstr ""
 
@@ -2700,8 +2699,8 @@ msgstr ""
 msgid "Edit image"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:740
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:753
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:723
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:736
 msgid "Edit interaction settings"
 msgstr ""
 
@@ -2830,8 +2829,8 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:104
 #: src/components/dialogs/Embed.tsx:108
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:534
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:536
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:517
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:519
 msgid "Embed post"
 msgstr ""
 
@@ -3061,7 +3060,7 @@ msgstr ""
 msgid "Expand or collapse the full post you are replying to"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:951
+#: src/screens/VideoFeed/index.tsx:962
 msgid "Expands or collapses post text"
 msgstr ""
 
@@ -3177,7 +3176,7 @@ msgstr ""
 msgid "Failed to delete message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:215
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:217
 msgid "Failed to delete post, please try again"
 msgstr ""
 
@@ -3230,7 +3229,7 @@ msgstr ""
 msgid "Failed to remove verification"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.tsx:46
+#: src/lib/media/save-image.ts:28
 msgid "Failed to save image: {0}"
 msgstr ""
 
@@ -3261,7 +3260,7 @@ msgstr ""
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:244
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:237
 msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
@@ -3320,8 +3319,8 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:299
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:314
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:291
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:307
 msgctxt "toast"
 msgid "Feedback sent!"
 msgstr ""
@@ -3423,7 +3422,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:494
 #: src/components/ProfileHoverCard/index.web.tsx:505
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:226
-#: src/screens/VideoFeed/index.tsx:839
+#: src/screens/VideoFeed/index.tsx:850
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:131
 msgid "Follow"
 msgstr ""
@@ -3438,7 +3437,7 @@ msgstr ""
 msgid "Follow {0}"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:816
+#: src/screens/VideoFeed/index.tsx:827
 msgid "Follow {handle}"
 msgstr ""
 
@@ -3501,7 +3500,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:493
 #: src/components/ProfileHoverCard/index.web.tsx:504
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:222
-#: src/screens/VideoFeed/index.tsx:837
+#: src/screens/VideoFeed/index.tsx:848
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:134
 #: src/view/screens/Feeds.tsx:602
 #: src/view/screens/SavedFeeds.tsx:422
@@ -3513,7 +3512,7 @@ msgstr ""
 msgid "Following {0}"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:815
+#: src/screens/VideoFeed/index.tsx:826
 msgid "Following {handle}"
 msgstr ""
 
@@ -3590,7 +3589,7 @@ msgstr ""
 msgid "From @{sanitizedAuthor}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:296
+#: src/view/com/posts/PostFeedItem.tsx:305
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
@@ -3637,8 +3636,8 @@ msgstr ""
 #: src/screens/Messages/Inbox.tsx:228
 #: src/screens/Profile/ProfileFeed/index.tsx:92
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1118
-#: src/screens/VideoFeed/index.tsx:1122
+#: src/screens/VideoFeed/index.tsx:1132
+#: src/screens/VideoFeed/index.tsx:1136
 #: src/view/com/auth/LoggedOut.tsx:72
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1038
@@ -3787,7 +3786,7 @@ msgstr ""
 msgid "Hidden"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:617
+#: src/screens/VideoFeed/index.tsx:625
 msgid "Hidden by your moderation settings."
 msgstr ""
 
@@ -3804,7 +3803,7 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:811
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:794
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr ""
@@ -3818,18 +3817,18 @@ msgstr ""
 msgid "Hide customization options"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:620
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:626
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:603
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:609
 msgid "Hide post for me"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:637
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:647
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:620
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:630
 msgid "Hide reply for everyone"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:619
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:625
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:602
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:608
 msgid "Hide reply for me"
 msgstr ""
 
@@ -3837,12 +3836,12 @@ msgstr ""
 msgid "Hide this card"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:806
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:789
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:806
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:867
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:789
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:850
 msgid "Hide this reply?"
 msgstr ""
 
@@ -3978,7 +3977,7 @@ msgstr ""
 msgid "If you need to update your email, <0>click here</0>."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:797
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:780
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
@@ -4016,9 +4015,12 @@ msgstr ""
 msgid "Image cache cleared, freed {0}"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:76
-#: src/view/com/lightbox/Lightbox.tsx:44
+#: src/lib/media/save-image.ts:26
 msgid "Image saved"
+msgstr ""
+
+#: src/lib/media/save-image.ts:45
+msgid "Images cannot be saved unless permission is granted to access your photo library."
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:49
@@ -4114,7 +4116,7 @@ msgstr ""
 msgid "Invite codes: 1 available"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:96
+#: src/components/StarterPack/ShareDialog.tsx:77
 msgid "Invite people to this starter pack!"
 msgstr ""
 
@@ -4323,7 +4325,7 @@ msgstr ""
 msgid "Like"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:317
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:295
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -4759,8 +4761,8 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:354
 #: src/view/com/profile/ProfileMenu.tsx:361
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:702
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:708
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:685
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:691
 msgid "Mute account"
 msgstr ""
 
@@ -4809,13 +4811,13 @@ msgstr ""
 msgid "Mute this word until you unmute it"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:590
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:573
 msgid "Mute thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:600
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:602
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:583
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:585
 msgid "Mute words & tags"
 msgstr ""
 
@@ -5171,8 +5173,8 @@ msgid "Not Found"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:471
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:824
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:363
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:807
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:341
 msgid "Note about sharing"
 msgstr ""
 
@@ -5373,7 +5375,7 @@ msgstr ""
 msgid "Open pack"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:73
+#: src/view/com/util/forms/PostDropdownBtn.tsx:75
 msgid "Open post options menu"
 msgstr ""
 
@@ -5599,12 +5601,8 @@ msgstr ""
 msgid "People following @{0}"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.tsx:27
-msgid "Permission to access camera roll is required."
-msgstr ""
-
-#: src/view/com/lightbox/Lightbox.tsx:35
-msgid "Permission to access camera roll was denied. Please enable it in your system settings."
+#: src/lib/media/save-image.ts:51
+msgid "Permission to access your photo library was denied. Please enable it in your system settings."
 msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
@@ -5641,12 +5639,12 @@ msgstr ""
 msgid "Pin to Home"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:463
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:446
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:453
 msgid "Pin to your profile"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:377
+#: src/view/com/posts/PostFeedItem.tsx:386
 msgid "Pinned"
 msgstr ""
 
@@ -5847,7 +5845,7 @@ msgstr ""
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:195
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:197
 msgctxt "toast"
 msgid "Post deleted"
 msgstr ""
@@ -5856,7 +5854,7 @@ msgstr ""
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:522
+#: src/screens/VideoFeed/index.tsx:529
 msgid "Post has been deleted"
 msgstr ""
 
@@ -5994,7 +5992,7 @@ msgstr ""
 msgid "Processing..."
 msgstr ""
 
-#: src/view/screens/DebugMod.tsx:926
+#: src/view/screens/DebugMod.tsx:927
 #: src/view/screens/Profile.tsx:364
 msgid "profile"
 msgstr ""
@@ -6063,11 +6061,11 @@ msgstr ""
 msgid "Quote post"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:343
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:333
 msgid "Quote post was re-attached"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:342
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:332
 msgid "Quote post was successfully detached"
 msgstr ""
 
@@ -6101,8 +6099,8 @@ msgstr ""
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:662
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:672
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:645
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:655
 msgid "Re-attach quote"
 msgstr ""
 
@@ -6119,11 +6117,11 @@ msgstr ""
 msgid "Read blog post"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:952
+#: src/screens/VideoFeed/index.tsx:963
 msgid "Read less"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:952
+#: src/screens/VideoFeed/index.tsx:963
 msgid "Read more"
 msgstr ""
 
@@ -6358,7 +6356,7 @@ msgctxt "action"
 msgid "Reply"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:269
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:247
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -6385,33 +6383,33 @@ msgid "Reply sorting"
 msgstr ""
 
 #: src/view/com/post/Post.tsx:205
-#: src/view/com/posts/PostFeedItem.tsx:571
+#: src/view/com/posts/PostFeedItem.tsx:581
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:562
+#: src/view/com/posts/PostFeedItem.tsx:572
 msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:564
+#: src/view/com/posts/PostFeedItem.tsx:574
 msgctxt "description"
 msgid "Reply to a post"
 msgstr ""
 
 #: src/view/com/post/Post.tsx:203
-#: src/view/com/posts/PostFeedItem.tsx:568
+#: src/view/com/posts/PostFeedItem.tsx:578
 msgctxt "description"
 msgid "Reply to you"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:375
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:365
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:374
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:364
 msgid "Reply was successfully hidden"
 msgstr ""
 
@@ -6453,8 +6451,8 @@ msgstr ""
 msgid "Report message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:728
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:730
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:711
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:713
 msgid "Report post"
 msgstr ""
 
@@ -6529,16 +6527,16 @@ msgstr ""
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:317
+#: src/view/com/posts/PostFeedItem.tsx:326
 msgid "Reposted by {0}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:336
+#: src/view/com/posts/PostFeedItem.tsx:345
 msgid "Reposted by <0><1/></0>"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:315
-#: src/view/com/posts/PostFeedItem.tsx:334
+#: src/view/com/posts/PostFeedItem.tsx:324
+#: src/view/com/posts/PostFeedItem.tsx:343
 msgid "Reposted by you"
 msgstr ""
 
@@ -6656,7 +6654,7 @@ msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:93
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:559
-#: src/screens/VideoFeed/index.tsx:1119
+#: src/screens/VideoFeed/index.tsx:1133
 #: src/view/screens/NotFound.tsx:60
 #: src/view/screens/ProfileList.tsx:1039
 msgid "Returns to previous page"
@@ -6671,7 +6669,7 @@ msgstr ""
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
-#: src/components/StarterPack/QrCodeDialog.tsx:191
+#: src/components/StarterPack/QrCodeDialog.tsx:192
 #: src/screens/Profile/Header/EditProfileDialog.tsx:243
 #: src/screens/Profile/Header/EditProfileDialog.tsx:257
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:262
@@ -6706,8 +6704,8 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:150
-#: src/components/StarterPack/ShareDialog.tsx:157
+#: src/components/StarterPack/ShareDialog.tsx:131
+#: src/components/StarterPack/ShareDialog.tsx:138
 msgid "Save image"
 msgstr ""
 
@@ -6719,7 +6717,7 @@ msgstr ""
 msgid "Save new handle"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:185
+#: src/components/StarterPack/QrCodeDialog.tsx:186
 msgid "Save QR code"
 msgstr ""
 
@@ -7055,8 +7053,8 @@ msgstr ""
 msgid "Send verification email"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:506
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:509
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:492
 msgid "Send via direct message"
 msgstr ""
 
@@ -7108,16 +7106,16 @@ msgstr ""
 msgid "Sexually Suggestive"
 msgstr ""
 
-#: src/components/StarterPack/QrCodeDialog.tsx:181
+#: src/components/StarterPack/QrCodeDialog.tsx:182
 #: src/screens/Hashtag.tsx:126
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
 #: src/screens/StarterPack/StarterPackScreen.tsx:603
 #: src/screens/Topic.tsx:102
 #: src/view/com/profile/ProfileMenu.tsx:239
 #: src/view/com/profile/ProfileMenu.tsx:248
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:517
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:526
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:352
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:500
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:509
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:330
 #: src/view/screens/ProfileList.tsx:513
 msgid "Share"
 msgstr ""
@@ -7136,13 +7134,13 @@ msgid "Share a fun fact!"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:476
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:829
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:368
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:812
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:346
 msgid "Share anyway"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:123
-#: src/components/StarterPack/ShareDialog.tsx:130
+#: src/components/StarterPack/ShareDialog.tsx:104
+#: src/components/StarterPack/ShareDialog.tsx:111
 #: src/screens/StarterPack/StarterPackScreen.tsx:607
 msgid "Share link"
 msgstr ""
@@ -7152,12 +7150,12 @@ msgstr ""
 msgid "Share Link"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:87
+#: src/components/StarterPack/ShareDialog.tsx:68
 msgid "Share link dialog"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:134
-#: src/components/StarterPack/ShareDialog.tsx:145
+#: src/components/StarterPack/ShareDialog.tsx:115
+#: src/components/StarterPack/ShareDialog.tsx:126
 msgid "Share QR code"
 msgstr ""
 
@@ -7169,7 +7167,7 @@ msgstr ""
 msgid "Share this starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:99
+#: src/components/StarterPack/ShareDialog.tsx:80
 msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr ""
 
@@ -7198,8 +7196,8 @@ msgstr ""
 #: src/components/moderation/ScreenHider.tsx:172
 #: src/components/moderation/ScreenHider.tsx:175
 #: src/screens/List/ListHiddenScreen.tsx:190
-#: src/screens/VideoFeed/index.tsx:620
-#: src/screens/VideoFeed/index.tsx:626
+#: src/screens/VideoFeed/index.tsx:628
+#: src/screens/VideoFeed/index.tsx:634
 msgid "Show anyway"
 msgstr ""
 
@@ -7220,8 +7218,8 @@ msgstr ""
 msgid "Show hidden replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:556
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:558
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:539
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:541
 msgid "Show less like this"
 msgstr ""
 
@@ -7231,12 +7229,12 @@ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:630
 #: src/view/com/post/Post.tsx:244
-#: src/view/com/posts/PostFeedItem.tsx:527
+#: src/view/com/posts/PostFeedItem.tsx:537
 msgid "Show More"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:548
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:550
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:531
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:533
 msgid "Show more like this"
 msgstr ""
 
@@ -7266,8 +7264,8 @@ msgstr ""
 msgid "Show replies by people you follow before all other replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:636
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:646
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:619
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:629
 msgid "Show reply for everyone"
 msgstr ""
 
@@ -7794,7 +7792,7 @@ msgstr ""
 msgid "That's all, folks!"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1091
+#: src/screens/VideoFeed/index.tsx:1105
 msgid "That's everything!"
 msgstr ""
 
@@ -7928,8 +7926,8 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:908
-#: src/view/com/posts/PostFeed.tsx:655
+#: src/screens/Search/Explore.tsx:909
+#: src/view/com/posts/PostFeed.tsx:670
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -7976,9 +7974,9 @@ msgstr ""
 #: src/view/com/profile/ProfileMenu.tsx:159
 #: src/view/com/profile/ProfileMenu.tsx:172
 #: src/view/com/profile/ProfileMenu.tsx:184
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:408
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:421
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:431
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:391
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:404
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:414
 msgid "There was an issue! {0}"
 msgstr ""
 
@@ -8158,12 +8156,12 @@ msgstr ""
 msgid "This post has been deleted."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:826
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:365
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:809
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:343
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:808
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:791
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
@@ -8175,7 +8173,7 @@ msgstr ""
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:869
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:852
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
@@ -8232,7 +8230,7 @@ msgstr ""
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:859
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:842
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr ""
 
@@ -8314,8 +8312,8 @@ msgstr ""
 #: src/components/dms/MessageContextMenu.tsx:141
 #: src/view/com/post-thread/PostThreadItem.tsx:823
 #: src/view/com/post-thread/PostThreadItem.tsx:826
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:487
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:489
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:470
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:472
 msgid "Translate"
 msgstr ""
 
@@ -8434,7 +8432,7 @@ msgstr ""
 msgid "Unfollow account"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:820
+#: src/screens/VideoFeed/index.tsx:831
 msgid "Unfollows the user"
 msgstr ""
 
@@ -8450,7 +8448,7 @@ msgstr ""
 msgid "Unlike"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:311
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:289
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -8471,8 +8469,8 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 #: src/view/com/profile/ProfileMenu.tsx:359
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:701
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:707
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:684
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:690
 msgid "Unmute account"
 msgstr ""
 
@@ -8484,8 +8482,8 @@ msgstr ""
 msgid "Unmute list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:586
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:590
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:569
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:573
 msgid "Unmute thread"
 msgstr ""
 
@@ -8511,8 +8509,8 @@ msgstr ""
 msgid "Unpin from home"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:462
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:469
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:445
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:452
 msgid "Unpin from profile"
 msgstr ""
 
@@ -8590,12 +8588,12 @@ msgstr ""
 msgid "Update your email"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:347
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:337
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:379
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:369
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
@@ -8856,11 +8854,11 @@ msgstr ""
 msgid "Video Games"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1049
+#: src/screens/VideoFeed/index.tsx:1063
 msgid "Video is paused"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1049
+#: src/screens/VideoFeed/index.tsx:1063
 msgid "Video is playing"
 msgstr ""
 
@@ -8896,7 +8894,7 @@ msgstr ""
 #: src/components/ProfileCard.tsx:116
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:446
 #: src/screens/Search/components/SearchProfileCard.tsx:36
-#: src/screens/VideoFeed/index.tsx:779
+#: src/screens/VideoFeed/index.tsx:790
 #: src/view/com/notifications/NotificationFeedItem.tsx:489
 msgid "View {0}'s profile"
 msgstr ""
@@ -8918,8 +8916,8 @@ msgid "View debug entry"
 msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:137
-#: src/screens/VideoFeed/index.tsx:648
-#: src/screens/VideoFeed/index.tsx:666
+#: src/screens/VideoFeed/index.tsx:656
+#: src/screens/VideoFeed/index.tsx:674
 msgid "View details"
 msgstr ""
 
@@ -9272,11 +9270,11 @@ msgstr ""
 msgid "Yes, delete this starter pack"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:862
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:845
 msgid "Yes, detach"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:872
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:855
 msgid "Yes, hide"
 msgstr ""
 
@@ -9518,10 +9516,6 @@ msgstr ""
 msgid "You must grant access to your photo library to save a QR code"
 msgstr ""
 
-#: src/components/StarterPack/ShareDialog.tsx:68
-msgid "You must grant access to your photo library to save the image."
-msgstr ""
-
 #: src/components/ReportDialog/SubmitView.tsx:211
 msgid "You must select at least one labeler for a report"
 msgstr ""
@@ -9551,11 +9545,11 @@ msgstr ""
 msgid "You will be signed out of all your accounts."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:237
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:230
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:233
+#: src/view/com/util/forms/PostDropdownBtnMenuItems.tsx:226
 msgid "You will now receive notifications for this thread"
 msgstr ""
 
@@ -9637,7 +9631,7 @@ msgstr ""
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1100
+#: src/screens/VideoFeed/index.tsx:1114
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
