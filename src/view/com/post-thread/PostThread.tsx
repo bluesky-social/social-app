@@ -90,7 +90,6 @@ type ThreadSkeletonParts = {
 }
 
 const keyExtractor = (item: RowItem) => {
-  console.log(item._reactKey)
   return item._reactKey
 }
 
@@ -258,7 +257,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
     fetchedAt,
     randomCache,
   ])
-  console.log({thread, skeleton})
 
   const error = React.useMemo(() => {
     if (AppBskyFeedDefs.isNotFoundPost(thread)) {
@@ -299,6 +297,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
       // maintainVisibleContentPosition and onContentSizeChange
       // to "hold onto" the correct row instead of the first one.
 
+      /*
+       * This is basically `!!parents.length`, see notes on `isParentLoading`
+       */
       if (!highlightedPost.ctx.isParentLoading && !deferParents) {
         // When progressively revealing parents, rendering a placeholder
         // here will cause scrolling jumps. Don't add it unless you test it.
@@ -325,6 +326,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
     return arr
   }, [skeleton, deferParents, maxParents, maxReplies])
 
+  console.log({anchorIndex: posts.findIndex(p => p.ctx?.isHighlightedPost)})
+
   // This is only used on the web to keep the post in view when its parents load.
   // On native, we rely on `maintainVisibleContentPosition` instead.
   const didAdjustScrollWeb = useRef<boolean>(false)
@@ -340,11 +343,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
       const headerNode = headerRef.current
       if (postNode && headerNode) {
         let pageY = (postNode as any as Element).getBoundingClientRect().top
-      console.log({pageY})
         pageY -= (headerNode as any as Element).getBoundingClientRect().height
-      console.log({pageY})
         pageY = Math.max(0, pageY)
-      console.log({pageY})
         ref.current?.scrollToOffset({
           animated: false,
           offset: pageY,
@@ -422,6 +422,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
       Boolean(skeleton?.parents && skeleton.parents.length > 0))
+
+  console.log({hasParents})
 
   const renderItem = ({item, index}: {item: RowItem; index: number}) => {
     if (item === REPLY_PROMPT && hasSession) {

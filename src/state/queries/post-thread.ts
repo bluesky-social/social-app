@@ -47,7 +47,8 @@ export interface ThreadCtx {
   isHighlightedPost?: boolean
   hasMore?: boolean
   /**
-   * Means the loading state has parents
+   * Means the loading state has parents, but once the data loads we don't even
+   * populate this value, so it's the same as `threadNode.parents.length`
    */
   isParentLoading?: boolean
   /**

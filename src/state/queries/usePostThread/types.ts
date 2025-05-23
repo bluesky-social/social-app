@@ -1,6 +1,7 @@
 import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type APP_BSKY_UNSPECCED,
+  type AtUri,
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyUnspeccedGetPostThreadV2,
@@ -89,7 +90,10 @@ export type Slice =
       kind: HiddenReplyKind
     }
   | {
-      type: 'threadPostNoOp'
+      type: 'readMore'
       key: string
-      comment: string
+      indent: number
+      replyCount: number
+      nextAnchor: Extract<Slice, {type: 'threadPost'}>
+      nextAnchorUri: AtUri
     }

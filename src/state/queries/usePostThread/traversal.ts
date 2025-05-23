@@ -1,4 +1,6 @@
 import {
+  APP_BSKY_UNSPECCED,
+  AtUri,
   AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
   type ModerationOpts,
@@ -20,6 +22,54 @@ export function flatten(
   },
 ) {
   const flattened: Slice[] = sorted.items
+
+  const unhydratedReplyIntervals = []
+
+  for (let i = 0; i < flattened.length; i++) {
+    const item = flattened[i]
+
+    if (item.type === 'threadPost') {
+      // TODO should not insert if not found post etc
+      if (item.ui.isAnchor && hasSession && !item.value.post.viewer?.replyDisabled) {
+        flattened.splice(i + 1, 0, {
+          type: 'replyComposer',
+          key: 'replyComposer',
+        })
+      }
+
+      const prev = unhydratedReplyIntervals[unhydratedReplyIntervals.length - 1]
+
+      if (item.annotations.has(APP_BSKY_UNSPECCED.GetPostThreadV2HasMoreReplies)) {
+        unhydratedReplyIntervals.push({
+          item,
+          replyCount: item.value.post.replyCount || 0,
+        })
+      }
+
+      /*
+       * If direct child of previous item with `hasMoreReplies`, subtract 
+       */
+      if (prev && item.depth === prev.item.depth + 1) {
+        prev.replyCount = Math.max(0, prev.replyCount - 1)
+      }
+
+      if (prev && item.depth <= prev.item.depth) {
+        flattened.splice(i, 0, {
+          type: 'readMore',
+          key: `readMore:${prev.item.uri}`,
+          indent: prev.item.depth + (item.depth < prev.item.depth ? -1 : 0),
+          replyCount: prev.replyCount,
+          nextAnchor: prev.item,
+          nextAnchorUri: new AtUri(prev.item.uri),
+        })
+        unhydratedReplyIntervals.pop()
+      }
+    }
+  }
+
+  /*
+   * Insert hidden items and buttons to show them
+   */
 
   if (sorted.hidden.length) {
     if (showHidden) {
@@ -52,30 +102,6 @@ export function flatten(
         key: 'showMutedReplies',
         kind: HiddenReplyKind.Muted,
       })
-    }
-  }
-
-  if (hasSession) {
-    for (let i = 0; i < flattened.length; i++) {
-      const item = flattened[i]
-
-      // TODO should not insert if not found post etc
-      if (item.type === 'threadPost') {
-        if (item.ui.isAnchor) {
-          flattened.splice(i + 1, 0, {
-            type: 'replyComposer',
-            key: 'replyComposer',
-          })
-        }
-
-        if (
-          item.value.post.replyCount &&
-          item.value.post.replyCount > 0 &&
-          !item.ui.showChildReplyLine
-        ) {
-          console.log('insert more link')
-        }
-      }
     }
   }
 
