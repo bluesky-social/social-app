@@ -41,11 +41,12 @@ export function usePostThread({
   const query = useQuery({
     enabled,
     queryKey,
+    gcTime: 0,
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
         anchor: uri!,
-        branchingFactor: params.view === 'linear' ? 1 : 100,
-        below: 10,
+        branchingFactor: params.view === 'linear' ? 1 : 3, // 100 TODO
+        below: 3,
         sorting: mapSortOptionsToSortID(params.sort),
       })
       return data
@@ -95,6 +96,7 @@ export function usePostThread({
   return {
     ...query,
     data: {
+      anchorIndex: items.findIndex(i => Boolean(i.ui?.isAnchor)),
       items,
       threadgate: query.data?.threadgate,
     },
