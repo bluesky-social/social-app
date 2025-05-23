@@ -9,6 +9,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
@@ -58,13 +59,15 @@ let ShareMenuItems = ({
   const showLoggedOutWarning =
     postAuthor.did !== currentAccount?.did && hideInPWI
 
-  const onSharePost = () => {
+  const onCopyLink = () => {
+    logger.metric('share:press:copyLink', {}, {statsig: true})
     const url = toShareUrl(href)
     shareUrl(url)
     onShareProp()
   }
 
   const onSelectChatToShareTo = (conversation: string) => {
+    logger.metric('share:press:dmSelected', {}, {statsig: true})
     navigation.navigate('MessagesConversation', {
       conversation,
       embed: postUri,
@@ -92,7 +95,7 @@ let ShareMenuItems = ({
               if (showLoggedOutWarning) {
                 loggedOutWarningPromptControl.open()
               } else {
-                onSharePost()
+                onCopyLink()
               }
             }}>
             <Menu.ItemText>
@@ -105,7 +108,10 @@ let ShareMenuItems = ({
             <Menu.Item
               testID="postDropdownSendViaDMBtn"
               label={_(msg`Send via direct message`)}
-              onPress={() => sendViaChatControl.open()}>
+              onPress={() => {
+                logger.metric('share:press:openDmSearch', {}, {statsig: true})
+                sendViaChatControl.open()
+              }}>
               <Menu.ItemText>
                 <Trans>Send via direct message</Trans>
               </Menu.ItemText>
@@ -117,7 +123,10 @@ let ShareMenuItems = ({
             <Menu.Item
               testID="postDropdownEmbedBtn"
               label={_(msg`Embed post`)}
-              onPress={() => embedPostControl.open()}>
+              onPress={() => {
+                logger.metric('share:press:embed', {}, {statsig: true})
+                embedPostControl.open()
+              }}>
               <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
               <Menu.ItemIcon icon={CodeBrackets} position="right" />
             </Menu.Item>
@@ -157,7 +166,7 @@ let ShareMenuItems = ({
         description={_(
           msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
         )}
-        onConfirm={onSharePost}
+        onConfirm={onCopyLink}
         confirmButtonCta={_(msg`Share anyway`)}
       />
 

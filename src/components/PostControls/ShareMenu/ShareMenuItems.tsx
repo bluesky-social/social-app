@@ -9,6 +9,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -21,6 +22,7 @@ import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/Pap
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {useDevMode} from '#/storage/hooks/dev-mode'
+import {RecentChats} from './RecentChats'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
 
 let ShareMenuItems = ({
@@ -53,12 +55,14 @@ let ShareMenuItems = ({
     postAuthor.did !== currentAccount?.did && hideInPWI
 
   const onSharePost = () => {
+    logger.metric('share:press:nativeShare', {}, {statsig: true})
     const url = toShareUrl(href)
     shareUrl(url)
     onShareProp()
   }
 
   const onCopyLink = () => {
+    logger.metric('share:press:copyLink', {}, {statsig: true})
     const url = toShareUrl(href)
     ExpoClipboard.setUrlAsync(url).then(() =>
       Toast.show(_(msg`Copied to clipboard`), 'clipboard-check'),
@@ -84,6 +88,26 @@ let ShareMenuItems = ({
   return (
     <>
       <Menu.Outer>
+        {hasSession && (
+          <Menu.Group>
+            <Menu.ContainerItem>
+              <RecentChats postUri={postUri} />
+            </Menu.ContainerItem>
+            <Menu.Item
+              testID="postDropdownSendViaDMBtn"
+              label={_(msg`Send via direct message`)}
+              onPress={() => {
+                logger.metric('share:press:openDmSearch', {}, {statsig: true})
+                sendViaChatControl.open()
+              }}>
+              <Menu.ItemText>
+                <Trans>Send via direct message</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Send} position="right" />
+            </Menu.Item>
+          </Menu.Group>
+        )}
+
         <Menu.Group>
           <Menu.Item
             testID="postDropdownShareBtn"
@@ -116,44 +140,29 @@ let ShareMenuItems = ({
             </Menu.ItemText>
             <Menu.ItemIcon icon={ChainLinkIcon} position="right" />
           </Menu.Item>
-
-          {hasSession && (
-            <Menu.Item
-              testID="postDropdownSendViaDMBtn"
-              label={_(msg`Send via direct message`)}
-              onPress={() => sendViaChatControl.open()}>
-              <Menu.ItemText>
-                <Trans>Send via direct message</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={Send} position="right" />
-            </Menu.Item>
-          )}
         </Menu.Group>
 
         {devModeEnabled && (
-          <>
-            <Menu.Divider />
-            <Menu.Group>
-              <Menu.Item
-                testID="postAtUriShareBtn"
-                label={_(msg`Copy post at:// URI`)}
-                onPress={onShareATURI}>
-                <Menu.ItemText>
-                  <Trans>Share post at:// URI</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-              </Menu.Item>
-              <Menu.Item
-                testID="postAuthorDIDShareBtn"
-                label={_(msg`Copy author DID`)}
-                onPress={onShareAuthorDID}>
-                <Menu.ItemText>
-                  <Trans>Share author DID</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-              </Menu.Item>
-            </Menu.Group>
-          </>
+          <Menu.Group>
+            <Menu.Item
+              testID="postAtUriShareBtn"
+              label={_(msg`Copy post at:// URI`)}
+              onPress={onShareATURI}>
+              <Menu.ItemText>
+                <Trans>Share post at:// URI</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+            </Menu.Item>
+            <Menu.Item
+              testID="postAuthorDIDShareBtn"
+              label={_(msg`Copy author DID`)}
+              onPress={onShareAuthorDID}>
+              <Menu.ItemText>
+                <Trans>Share author DID</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+            </Menu.Item>
+          </Menu.Group>
         )}
       </Menu.Outer>
 
