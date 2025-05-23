@@ -9,6 +9,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -54,12 +55,14 @@ let ShareMenuItems = ({
     postAuthor.did !== currentAccount?.did && hideInPWI
 
   const onSharePost = () => {
+    logger.metric('share:press:nativeShare', {}, {statsig: true})
     const url = toShareUrl(href)
     shareUrl(url)
     onShareProp()
   }
 
   const onCopyLink = () => {
+    logger.metric('share:press:copyLink', {}, {statsig: true})
     const url = toShareUrl(href)
     ExpoClipboard.setUrlAsync(url).then(() =>
       Toast.show(_(msg`Copied to clipboard`), 'clipboard-check'),
@@ -93,7 +96,10 @@ let ShareMenuItems = ({
             <Menu.Item
               testID="postDropdownSendViaDMBtn"
               label={_(msg`Send via direct message`)}
-              onPress={() => sendViaChatControl.open()}>
+              onPress={() => {
+                logger.metric('share:press:openDmSearch', {}, {statsig: true})
+                sendViaChatControl.open()
+              }}>
               <Menu.ItemText>
                 <Trans>Send via direct message</Trans>
               </Menu.ItemText>
