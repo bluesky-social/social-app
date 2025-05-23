@@ -94,8 +94,8 @@ export function threadPost({
     moderation: moderatePost(value.post, moderationOpts),
     ui: {
       isAnchor: depth === 0,
-      showParentReplyLine: !!oneUp && oneUp.depth < depth,
-      showChildReplyLine: !!oneDown && oneDown.depth > depth,
+      showParentReplyLine: !!oneUp && oneUp.depth !== 0 && oneUp.depth < depth,
+      showChildReplyLine: !!oneDown && depth !== 0 && oneDown.depth > depth,
     },
   }
 }
