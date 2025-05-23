@@ -395,4 +395,12 @@ export type MetricEvents = {
   'live:card:openProfile': {subject: string}
   'live:view:profile': {subject: string}
   'live:view:post': {subject: string; feed?: string}
+
+  'share:open': {context: 'feed' | 'thread'}
+  'share:press:copyLink': {}
+  'share:press:nativeShare': {}
+  'share:press:openDmSearch': {}
+  'share:press:dmSelected': {}
+  'share:press:recentDm': {}
+  'share:press:embed': {}
 }

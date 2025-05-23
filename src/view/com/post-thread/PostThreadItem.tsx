@@ -43,7 +43,6 @@ import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {Link, TextLink} from '#/view/com/util/Link'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -60,6 +59,7 @@ import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
+import {PostControls} from '#/components/PostControls'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -494,7 +494,7 @@ let PostThreadItemLoaded = ({
                   marginLeft: -5,
                 },
               ]}>
-              <PostCtrls
+              <PostControls
                 big
                 post={post}
                 record={record}
@@ -642,7 +642,7 @@ let PostThreadItemLoaded = ({
                   />
                 </View>
               )}
-              <PostCtrls
+              <PostControls
                 post={post}
                 record={record}
                 richText={richText}
