@@ -60,11 +60,21 @@ export function flatten(
       const item = flattened[i]
 
       // TODO should not insert if not found post etc
-      if (item.type === 'threadPost' && item.depth === 0) {
-        flattened.splice(i + 1, 0, {
-          type: 'replyComposer',
-          key: 'replyComposer',
-        })
+      if (item.type === 'threadPost') {
+        if (item.ui.isAnchor) {
+          flattened.splice(i + 1, 0, {
+            type: 'replyComposer',
+            key: 'replyComposer',
+          })
+        }
+
+        if (
+          item.value.post.replyCount &&
+          item.value.post.replyCount > 0 &&
+          !item.ui.showChildReplyLine
+        ) {
+          console.log('insert more link')
+        }
       }
     }
   }
@@ -178,11 +188,7 @@ export function sort(
         i = branch.end
         continue traversal
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
-        const lastSlice = items[items.length - 1]
-        const isFirstReply =
-          lastSlice.type === 'replyComposer' ||
-          (lastSlice.type === 'threadPost' && lastSlice.depth === 0)
-        const oneUp = isFirstReply ? undefined : thread.at(i - 1)
+        const oneUp = thread.at(i - 1)
         const oneDown = thread.at(i + 1)
         const post = views.threadPost({
           uri: item.uri,
