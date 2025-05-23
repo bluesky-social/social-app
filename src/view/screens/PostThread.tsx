@@ -13,9 +13,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
 import {useSetMinimalShellMode} from '#/state/shell'
-{
-  /* import {PostThread as PostThreadComponent} from '#/view/com/post-thread/PostThread' */
-}
+import {PostThread as PostThreadComponent} from '#/view/com/post-thread/PostThread'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -32,7 +30,10 @@ import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShow
 import {List, type ListMethods} from '#/view/com/util/List'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
+import {Link} from '#/components/Link'
+import {makeProfileLink} from '#/lib/routes/links'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
+import {CirclePlus_Stroke2_Corner0_Rounded as CirclePlus} from '#/components/icons/CirclePlus'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import * as Menu from '#/components/Menu'
@@ -41,7 +42,7 @@ import {Text} from '#/components/Typography'
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {
   // We don't insert any elements before the root row while loading.
   // So the row we want to use as the scroll anchor is the first row.
-  minIndexForVisible: 1,
+  minIndexForVisible: 0,
 }
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
@@ -232,13 +233,11 @@ export function Inner({uri}: {uri: string | undefined}) {
             // prevPost={prev}
             // nextPost={next}
             isHighlightedPost={item.ui.isAnchor}
-            // @ts-expect-error
-            hasMore={item.value.hasUnhydratedReplies}
+            hasMore={false} // TODO need to replace this entirely
             showChildReplyLine={item.ui.showChildReplyLine}
             showParentReplyLine={item.ui.showParentReplyLine}
             hasPrecedingItem={
-              // @ts-expect-error
-              item.ui.showParentReplyLine || !!item.value.hasUnhydratedParents
+              item.ui.showParentReplyLine
             } // !!hasUnrevealedParents // TODO
             overrideBlur={
               shownHiddenReplyKinds.has(HiddenReplyKind.Muted) && item.depth > 0
@@ -246,6 +245,68 @@ export function Inner({uri}: {uri: string | undefined}) {
             onPostSuccess={optimisticOnPostReply}
             hideTopBorder={index === 0} // && !item.isParentLoading} // TODO
           />
+        </View>
+      )
+    } else if (item.type === 'readMore') {
+      return (
+        <View style={[a.flex_row, a.px_sm]}>
+          {Array.from(Array(item.indent - 1)).map((_, n: number) => (
+            <View
+              key={`${item.key}-padding-${n}`}
+              style={[
+                a.ml_sm,
+                t.atoms.border_contrast_low,
+                {
+                  borderLeftWidth: 2,
+                  paddingLeft: a.pl_sm.paddingLeft - 2, // minus border
+                },
+              ]}
+            />
+          ))}
+          <View style={[a.ml_sm]}>
+            <View
+              style={[
+                t.atoms.border_contrast_low,
+                {
+                  borderLeftWidth: 2,
+                  borderBottomWidth: 2,
+                  borderBottomLeftRadius: a.rounded_sm.borderRadius,
+                  height: 12,
+                  width: a.pl_sm.paddingLeft * 2,
+                },
+              ]}
+            />
+          </View>
+          <Link
+            label={_(msg`Read more replies`)}
+            to={makeProfileLink(
+              {
+                did: item.nextAnchorUri.host,
+                handle: item.nextAnchor.value.post.author.handle,
+              },
+              'post',
+              item.nextAnchorUri.rkey,
+            )}
+            style={[a.pt_2xs, a.pb_sm, a.gap_xs]}>
+            {({hovered, pressed}) => {
+              return (
+                <>
+                  <CirclePlus
+                    fill={t.atoms.text_contrast_high.color}
+                    width={18}
+                  />
+                  <Text
+                    style={[
+                      a.text_sm,
+                      t.atoms.text_contrast_medium,
+                      (hovered || pressed) && a.underline,
+                    ]}>
+                    Read {item.replyCount} more replies
+                  </Text>
+                </>
+              )
+            }}
+          </Link>
         </View>
       )
     } else if (item.type === 'threadPostBlocked') {
@@ -297,6 +358,8 @@ export function Inner({uri}: {uri: string | undefined}) {
     return null
   }
 
+  console.log('PostThreadScreen', data?.anchorIndex)
+
   return (
     <>
       <Layout.Header.Outer headerRef={headerRef}>
@@ -337,7 +400,7 @@ export function Inner({uri}: {uri: string | undefined}) {
              */
             maintainVisibleContentPosition={
               isNative // && hasParents // TODO not sure we need this
-                ? MAINTAIN_VISIBLE_CONTENT_POSITION
+                ? { minIndexForVisible: 0 } // MAINTAIN_VISIBLE_CONTENT_POSITION
                 : undefined
             }
             desktopFixedHeight
