@@ -400,7 +400,7 @@ export const ComposePost = ({
       ).uris[0]
       try {
         await whenAppViewReady(agent, postUri, res => {
-          const postedThread = res.data.thread
+          const postedThread = res?.data?.thread
           return AppBskyFeedDefs.isThreadViewPost(postedThread)
         })
       } catch (waitErr: any) {

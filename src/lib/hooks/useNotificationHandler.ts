@@ -26,7 +26,13 @@ export type NotificationReason =
   | 'chat-message'
   | 'starterpack-joined'
 
+/**
+ * Manually overridden type, but retains the possibility of
+ * `notification.request.trigger.payload` being `undefined`, as specified in
+ * the source types.
+ */
 type NotificationPayload =
+  | undefined
   | {
       reason: Exclude<NotificationReason, 'chat-message'>
       uri: string
@@ -47,7 +53,7 @@ const DEFAULT_HANDLER_OPTIONS = {
 } satisfies Notifications.NotificationBehavior
 
 // These need to stay outside the hook to persist between account switches
-let storedPayload: NotificationPayload | undefined
+let storedPayload: NotificationPayload
 let prevDate = 0
 
 const logger = Logger.create(Logger.Context.Notifications)
@@ -191,6 +197,11 @@ export function useNotificationsHandler() {
         logger.debug('Notifications: received', {e})
 
         const payload = e.request.trigger.payload as NotificationPayload
+
+        if (!payload) {
+          return DEFAULT_HANDLER_OPTIONS
+        }
+
         if (
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did
@@ -230,6 +241,8 @@ export function useNotificationsHandler() {
         ) {
           const payload = e.notification.request.trigger
             .payload as NotificationPayload
+
+          if (!payload) return
 
           logger.debug(
             'User pressed a notification, opening notifications tab',
