@@ -17,7 +17,6 @@ import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {MESSAGE_SCREEN_POLL_INTERVAL} from '#/state/messages/convo/const'
 import {useMessagesEventBus} from '#/state/messages/events'
-import {useLeftConvos} from '#/state/queries/messages/leave-conversation'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
 import {List, type ListRef} from '#/view/com/util/List'
@@ -122,15 +121,12 @@ export function MessagesScreen({navigation, route}: Props) {
   useRefreshOnFocus(refetch)
   useRefreshOnFocus(refetchInbox)
 
-  const leftConvos = useLeftConvos()
-
   const inboxPreviewConvos = useMemo(() => {
     const inbox =
       inboxData?.pages
         .flatMap(page => page.convos)
         .filter(
           convo =>
-            !leftConvos.includes(convo.id) &&
             !convo.muted &&
             convo.unreadCount > 0 &&
             convo.members.every(member => member.handle !== 'missing.invalid'),
@@ -139,14 +135,11 @@ export function MessagesScreen({navigation, route}: Props) {
     return inbox
       .map(x => x.members.find(y => y.did !== currentAccount?.did))
       .filter(x => !!x)
-  }, [inboxData, leftConvos, currentAccount?.did])
+  }, [inboxData, currentAccount?.did])
 
   const conversations = useMemo(() => {
     if (data?.pages) {
-      const conversations = data.pages
-        .flatMap(page => page.convos)
-        // filter out convos that are actively being left
-        .filter(convo => !leftConvos.includes(convo.id))
+      const flattendConvos = data.pages.flatMap(page => page.convos)
 
       return [
         {
@@ -154,13 +147,13 @@ export function MessagesScreen({navigation, route}: Props) {
           count: inboxPreviewConvos.length,
           profiles: inboxPreviewConvos.slice(0, 3),
         },
-        ...conversations.map(
+        ...flattendConvos.map(
           convo => ({type: 'CONVERSATION', conversation: convo} as const),
         ),
       ] satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, inboxPreviewConvos])
+  }, [data, inboxPreviewConvos])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
