@@ -11,17 +11,13 @@ import {
   HiddenReplyKind,
   type UsePostThreadProps,
 } from '#/state/queries/usePostThread/types'
-import {
-  getThreadgateRecord,
-  mapSortOptionsToSortID,
-} from '#/state/queries/usePostThread/utils'
+import {getThreadgateRecord} from '#/state/queries/usePostThread/utils'
 import {useAgent, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 
 export * from '#/state/queries/usePostThread/types'
 
 export function usePostThread({
-  uri,
   enabled: isEnabled,
   params,
   state,
@@ -32,9 +28,8 @@ export function usePostThread({
   const moderationOpts = useModerationOpts()
   const mergeThreadgateHiddenReplies = useMergeThreadgateHiddenReplies()
 
-  const enabled = isEnabled !== false && !!uri && !!moderationOpts
+  const enabled = isEnabled !== false && !!params.anchor && !!moderationOpts
   const queryKey = createPostThreadQueryKey({
-    uri,
     params,
   })
 
@@ -44,16 +39,17 @@ export function usePostThread({
     gcTime: 0,
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
-        anchor: uri!,
+        anchor: params.anchor!,
         branchingFactor: params.view === 'linear' ? 1 : 3, // 100 TODO
         below: 3,
-        sorting: mapSortOptionsToSortID(params.sort),
+        sort: params.sort,
+        prioritizeFollowedUsers: params.prioritizeFollowedUsers,
       })
       return data
     },
     placeholderData() {
-      if (!uri) return
-      const placeholder = getThreadPlaceholder(qc, uri)
+      if (!params.anchor) return
+      const placeholder = getThreadPlaceholder(qc, params.anchor)
       if (placeholder) {
         return {thread: [placeholder]}
       }
@@ -96,7 +92,6 @@ export function usePostThread({
   return {
     ...query,
     data: {
-      anchorIndex: items.findIndex(i => Boolean(i.ui?.isAnchor)),
       items,
       threadgate: query.data?.threadgate,
     },
