@@ -33,7 +33,15 @@ export function HomeHeader(
   const items = React.useMemo(() => {
     const pinnedNames = feeds.map(f => f.displayName)
     if (!hasPinnedCustom) {
-      return pinnedNames.concat(_(msg`Feeds ✨`))
+      return pinnedNames.concat(
+        _(
+          msg({
+            message: 'Feeds ✨',
+            comment:
+              'Shown in tab bar on Home screen when the user has no pinned feeds',
+          }),
+        ),
+      )
     }
     return pinnedNames
   }, [hasPinnedCustom, feeds, _])
