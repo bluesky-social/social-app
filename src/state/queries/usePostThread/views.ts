@@ -90,7 +90,6 @@ export function threadPost({
         record: AppBskyFeedPost.Record
       },
     },
-    annotations: new Set(value.annotations),
     moderation: moderatePost(value.post, moderationOpts),
     ui: {
       isAnchor: depth === 0,
@@ -114,7 +113,11 @@ export function postViewToThreadPlaceholder(
     value: {
       $type: 'app.bsky.unspecced.getPostThreadV2#threadItemPost',
       post,
-      annotations: [],
+      hiddenByThreadgate: false,
+      opThread: false,
+      moreParents: false,
+      moreReplies: 0,
+      mutedByViewer: false,
     },
   }
 }

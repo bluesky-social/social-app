@@ -1,5 +1,4 @@
 import {
-  APP_BSKY_UNSPECCED,
   type AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedThreadgate,
@@ -7,21 +6,7 @@ import {
   AtUri,
 } from '@atproto/api'
 
-import {type PostThreadParams} from '#/state/queries/usePostThread/types'
 import * as bsky from '#/types/bsky'
-
-export function mapSortOptionsToSortID(sort: PostThreadParams['sort']) {
-  switch (sort) {
-    case 'top':
-      return APP_BSKY_UNSPECCED.GetPostThreadV2Top
-    case 'oldest':
-      return APP_BSKY_UNSPECCED.GetPostThreadV2Oldest
-    case 'newest':
-      return APP_BSKY_UNSPECCED.GetPostThreadV2Newest
-    default:
-      return APP_BSKY_UNSPECCED.GetPostThreadV2Top
-  }
-}
 
 export function getThreadgateRecord(
   view: AppBskyUnspeccedGetPostThreadV2.OutputSchema['threadgate'],

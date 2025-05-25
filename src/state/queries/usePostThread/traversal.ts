@@ -1,7 +1,6 @@
 import {
-  APP_BSKY_UNSPECCED,
-  AtUri,
   AppBskyUnspeccedGetPostThreadV2,
+  AtUri,
   type ModerationDecision,
   type ModerationOpts,
 } from '@atproto/api'
@@ -30,7 +29,11 @@ export function flatten(
 
     if (item.type === 'threadPost') {
       // TODO should not insert if not found post etc
-      if (item.ui.isAnchor && hasSession && !item.value.post.viewer?.replyDisabled) {
+      if (
+        item.ui.isAnchor &&
+        hasSession &&
+        !item.value.post.viewer?.replyDisabled
+      ) {
         flattened.splice(i + 1, 0, {
           type: 'replyComposer',
           key: 'replyComposer',
@@ -39,18 +42,19 @@ export function flatten(
 
       const prev = unhydratedReplyIntervals[unhydratedReplyIntervals.length - 1]
 
-      if (item.annotations.has(APP_BSKY_UNSPECCED.GetPostThreadV2HasMoreReplies)) {
+      if (item.value.moreReplies > 0) {
         unhydratedReplyIntervals.push({
           item,
-          replyCount: item.value.post.replyCount || 0,
+          replyCount: item.value.moreReplies,
         })
       }
 
       /*
-       * If direct child of previous item with `hasMoreReplies`, subtract 
+       * If direct child of previous item with `hasMoreReplies`, subtract
        */
       if (prev && item.depth === prev.item.depth + 1) {
-        prev.replyCount = Math.max(0, prev.replyCount - 1)
+        // TODO test if we need this
+        // prev.replyCount = Math.max(0, prev.replyCount - 1)
       }
 
       if (prev && item.depth <= prev.item.depth) {

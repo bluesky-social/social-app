@@ -1,28 +1,26 @@
 import {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  type APP_BSKY_UNSPECCED,
-  type AtUri,
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyUnspeccedGetPostThreadV2,
-  type BskyThreadViewPreference,
+  type AtUri,
   type ModerationDecision,
 } from '@atproto/api'
 
 export const postThreadQueryKeyRoot = 'getPostThreadV2' as const
 
 export const createPostThreadQueryKey = (
-  props: Pick<UsePostThreadProps, 'uri' | 'params'>,
+  props: Pick<UsePostThreadProps, 'params'>,
 ) => [postThreadQueryKeyRoot, props] as const
 
-export type PostThreadParams = {
+export type PostThreadParams = Pick<
+  AppBskyUnspeccedGetPostThreadV2.QueryParams,
+  'sort' | 'prioritizeFollowedUsers'
+> & {
+  anchor?: string
   view: 'tree' | 'linear'
-  sort: 'top' | 'oldest' | 'newest' | string
-  prioritizeFollows: BskyThreadViewPreference['prioritizeFollowedUsers']
 }
 
 export type UsePostThreadProps = {
-  uri?: string
   enabled?: boolean
   params: PostThreadParams
   state: {
@@ -47,12 +45,6 @@ export type Slice =
         }
       }
       moderation: ModerationDecision
-      /**
-       * Reference via {@link APP_BSKY_UNSPECCED}
-       */
-      annotations: Set<
-        AppBskyUnspeccedGetPostThreadV2.ThreadItemPost['annotations'][number]
-      >
       ui: {
         isAnchor: boolean
         showParentReplyLine: boolean
