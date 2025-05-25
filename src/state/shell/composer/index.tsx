@@ -27,13 +27,8 @@ export interface ComposerOptsPostRef {
 
 export type OnPostSuccessData =
   | {
-      type: 'post'
+      replyToUri?: string
       posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
-    }
-  | {
-      type: 'reply'
-      parent: AppBskyUnspeccedGetPostThreadV2.ThreadItem
-      replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
     }
   | undefined
 

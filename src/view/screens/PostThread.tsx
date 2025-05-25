@@ -151,10 +151,10 @@ export function Inner({uri}: {uri: string | undefined}) {
   })
 
   const optimisticOnPostReply = (data: OnPostSuccessData) => {
-    if (data && data.type === 'reply') {
-      const {parent, replies} = data
-      if (parent && replies.length) {
-        insertReplies(parent, replies)
+    if (data) {
+      const {replyToUri, posts} = data
+      if (replyToUri && posts.length) {
+        insertReplies(replyToUri, posts)
       }
     }
   }
