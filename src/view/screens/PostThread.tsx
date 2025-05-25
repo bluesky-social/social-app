@@ -212,10 +212,30 @@ export function Inner({uri}: {uri: string | undefined}) {
     }
   })
 
+  /*
+   * On native, any time we navigate to a new post/reply (even if the data is
+   * cached), we skip rendering parents so that the anchor post is the first
+   * item in the list. That way,
+   * `maintainVisibleContentPosition={{minIndexForVisible: 0}}` will pin the
+   * anchor post to the top of the screen, and on the next render, we'll
+   * include parents.
+   *
+   * On the web this is not necessary because we can synchronously adjust the
+   * scroll in onContentSizeChange instead.
+   */
+  const [deferParents, setDeferParents] = useState(isNative)
+  const items = useMemo(() => {
+    return (data?.items ?? []).filter(item => {
+      return !('depth' in item) || item.depth >= 0 || !deferParents
+    })
+  }, [data, deferParents])
+
   const renderItem = ({item, index}: {item: Slice; index: number}) => {
     if (item.type === 'threadPost') {
       return (
-        <View ref={item.ui.isAnchor ? anchorRef : undefined}>
+        <View
+          ref={item.ui.isAnchor ? anchorRef : undefined}
+          onLayout={deferParents ? () => setDeferParents(false) : undefined}>
           <PostThreadItem
             post={item.value.post}
             record={item.value.post.record}
@@ -377,7 +397,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         >
           <List
             ref={listRef}
-            data={data?.items ?? []}
+            data={items}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             onContentSizeChange={onContentSizeChangeWebOnly}
@@ -389,9 +409,7 @@ export function Inner({uri}: {uri: string | undefined}) {
              * @see https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition
              */
             maintainVisibleContentPosition={
-              isNative // && hasParents // TODO not sure we need this
-                ? {minIndexForVisible: 0} // MAINTAIN_VISIBLE_CONTENT_POSITION
-                : undefined
+              isNative ? {minIndexForVisible: 0} : undefined
             }
             desktopFixedHeight
             // removeClippedSubviews={isAndroid ? false : undefined}
