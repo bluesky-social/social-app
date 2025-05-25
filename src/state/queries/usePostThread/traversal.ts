@@ -1,6 +1,5 @@
 import {
   AppBskyUnspeccedGetPostThreadV2,
-  AtUri,
   type ModerationDecision,
   type ModerationOpts,
 } from '@atproto/api'
@@ -21,8 +20,7 @@ export function flatten(
   },
 ) {
   const flattened: Slice[] = sorted.items
-
-  const unhydratedReplyIntervals = []
+  const parentsWithUnhydratedReplies = []
 
   for (let i = 0; i < flattened.length; i++) {
     const item = flattened[i]
@@ -40,33 +38,50 @@ export function flatten(
         })
       }
 
-      const prev = unhydratedReplyIntervals[unhydratedReplyIntervals.length - 1]
+      const maybeParent =
+        parentsWithUnhydratedReplies[parentsWithUnhydratedReplies.length - 1]
 
-      if (item.value.moreReplies > 0) {
-        unhydratedReplyIntervals.push({
-          item,
-          replyCount: item.value.moreReplies,
-        })
+      if (maybeParent) {
+        // next item is a sibling or an aunt/uncle
+        if (item.depth <= maybeParent.depth) {
+          flattened.splice(
+            i,
+            0,
+            views.readMore({
+              item,
+              parent: maybeParent,
+            }),
+          )
+          parentsWithUnhydratedReplies.pop()
+          i++ // skip over the read more item
+        } else if (i === flattened.length - 1) {
+          // last iteration might have a parent
+          flattened.push(
+            views.readMore({
+              item,
+              parent: maybeParent,
+            }),
+          )
+          break
+        }
       }
 
       /*
-       * If direct child of previous item with `hasMoreReplies`, subtract
+       * Lastly, insert next read more if necessary
        */
-      if (prev && item.depth === prev.item.depth + 1) {
-        // TODO test if we need this
-        // prev.replyCount = Math.max(0, prev.replyCount - 1)
-      }
-
-      if (prev && item.depth <= prev.item.depth) {
-        flattened.splice(i, 0, {
-          type: 'readMore',
-          key: `readMore:${prev.item.uri}`,
-          indent: prev.item.depth + (item.depth < prev.item.depth ? -1 : 0),
-          replyCount: prev.replyCount,
-          nextAnchor: prev.item,
-          nextAnchorUri: new AtUri(prev.item.uri),
-        })
-        unhydratedReplyIntervals.pop()
+      if (item.value.moreReplies > 0) {
+        // last iteration might have its own read more
+        if (i === flattened.length - 1) {
+          flattened.push(
+            views.readMore({
+              item,
+              parent: item,
+            }),
+          )
+          break
+        } else {
+          parentsWithUnhydratedReplies.push(item)
+        }
       }
     }
   }

@@ -313,7 +313,7 @@ export function Inner({uri}: {uri: string | undefined}) {
                       t.atoms.text_contrast_medium,
                       (hovered || pressed) && a.underline,
                     ]}>
-                    Read {item.replyCount} more replies
+                    Read {item.replyCount} more replies ({item.key})
                   </Text>
                 </>
               )

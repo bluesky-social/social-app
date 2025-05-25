@@ -3,6 +3,7 @@ import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyUnspeccedGetPostThreadV2,
+  AtUri,
   moderatePost,
   type ModerationOpts,
 } from '@atproto/api'
@@ -96,6 +97,23 @@ export function threadPost({
       showParentReplyLine: !!oneUp && oneUp.depth !== 0 && oneUp.depth < depth,
       showChildReplyLine: !!oneDown && depth !== 0 && oneDown.depth > depth,
     },
+  }
+}
+
+export function readMore({
+  item,
+  parent,
+}: {
+  item: Extract<Slice, {type: 'threadPost'}>
+  parent: Extract<Slice, {type: 'threadPost'}>
+}) {
+  return {
+    type: 'readMore' as const,
+    key: `readMore:${parent.uri}`,
+    indent: parent.depth + (item.depth < parent.depth ? -1 : 0),
+    replyCount: parent.value.moreReplies,
+    nextAnchor: parent,
+    nextAnchorUri: new AtUri(parent.uri),
   }
 }
 
