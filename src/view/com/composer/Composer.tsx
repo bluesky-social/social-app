@@ -45,6 +45,7 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
+  AppBskyUnspeccedGetPostThreadV2,
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
@@ -393,6 +394,7 @@ export const ComposePost = ({
     let postUri: string | undefined
     let postSuccessData: OnPostSuccessData
     try {
+      logger.info(`composer: posting...`)
       postUri = (
         await apilib.post(agent, queryClient, {
           thread,
@@ -401,47 +403,48 @@ export const ComposePost = ({
           langs: toPostLanguages(langPrefs.postLanguage),
         })
       ).uris[0]
+
+      /*
+       * Wait for app view to have received the post(s). If this fails, it's
+       * ok, because the post _was_ actually published above.
+       */
       try {
         if (postUri) {
-          const [maybeParent, maybeReply, ...posts] = await retry(
+          logger.info(`composer: waiting for app view`)
+
+          const posts = await retry(
             5,
             _e => true,
             async () => {
               const res = await agent.app.bsky.unspecced.getPostThreadV2({
-                uri: postUri!,
-                above: 1,
+                anchor: postUri!,
+                above: false,
                 below: thread.posts.length - 1,
-                nestedBranchingFactor: 1,
+                branchingFactor: 1,
               })
-              const parent = res.data.thread.at(0)
-              if (!parent) {
-                throw new Error(`Not ready`)
+              if (res.data.thread.length !== thread.posts.length) {
+                throw new Error(`composer: app view is not ready`)
               }
-              if (res.data.thread.length !== thread.posts.length + 1) {
-                throw new Error(`Not ready`)
+              if (
+                !res.data.thread.every(p =>
+                  AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(p.value),
+                )
+              ) {
+                throw new Error(`composer: app view returned non-post items`)
               }
               return res.data.thread
             },
             1e3,
           )
-          if (maybeReply && maybeReply.uri === postUri) {
-            postSuccessData = {
-              type: 'reply',
-              parent: maybeParent,
-              replies: [maybeReply, ...posts],
-            }
-          } else {
-            postSuccessData = {
-              type: 'post',
-              posts: [maybeParent, maybeReply, ...posts].filter(Boolean),
-            }
+          postSuccessData = {
+            replyToUri: replyTo?.uri,
+            posts,
           }
         }
       } catch (waitErr: any) {
-        logger.error(waitErr, {
-          message: `Waiting for app view failed`,
+        logger.info(`composer: waiting for app view failed`, {
+          safeMessage: waitErr,
         })
-        // Keep going because the post *was* published.
       }
     } catch (e: any) {
       logger.error(e, {

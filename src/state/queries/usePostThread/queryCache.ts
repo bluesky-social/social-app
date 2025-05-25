@@ -33,7 +33,7 @@ export function createCacheMutator({
 }) {
   return {
     insertReplies(
-      parent: AppBskyUnspeccedGetPostThreadV2.ThreadItem,
+      parentUri: string,
       replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
     ) {
       queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
@@ -51,16 +51,14 @@ export function createCacheMutator({
               )
             )
               continue
-            if (!AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(parent.value))
-              continue
-            if (existingParent.uri !== parent.uri) continue
+            if (existingParent.uri !== parentUri) continue
 
             /*
              * Update parent data
              */
             existingParent.value.post = {
               ...existingParent.value.post,
-              replyCount: parent.value.post.replyCount,
+              replyCount: (existingParent.value.post.replyCount || 0) + 1,
             }
 
             const opDid = getRootPostAtUri(existingParent.value.post)?.host
