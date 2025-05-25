@@ -37,7 +37,7 @@ import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
-import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
+import {Link, TextLink, TextLinkOnWebOnly} from '#/view/com/util/Link'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
@@ -49,11 +49,12 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
+import {PostControls} from '#/components/PostControls'
+import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
-import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -439,7 +440,7 @@ let FeedItemInner = ({
             post={post}
             threadgateRecord={threadgateRecord}
           />
-          <PostCtrls
+          <PostControls
             post={post}
             record={record}
             richText={richText}
@@ -451,6 +452,8 @@ let FeedItemInner = ({
             onShowLess={onShowLess}
           />
         </View>
+
+        <DiscoverDebug feedContext={feedContext} />
       </View>
     </Link>
   )

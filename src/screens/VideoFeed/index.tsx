@@ -82,7 +82,6 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List} from '#/view/com/util/List'
-import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
@@ -97,6 +96,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
+import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
@@ -861,7 +861,7 @@ function Overlay({
               )}
               {record && (
                 <View style={[{left: -5}]}>
-                  <PostCtrls
+                  <PostControls
                     richText={richText}
                     post={post}
                     record={record}
