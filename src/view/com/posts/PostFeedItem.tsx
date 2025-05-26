@@ -274,6 +274,17 @@ let FeedItemInner = ({
 
   const {isActive: live} = useActorStatus(post.author)
 
+  const viaRepost = useMemo(() => {
+    if (AppBskyFeedDefs.isReasonRepost(reason)) {
+      return {
+        // @ts-expect-error
+        uri: reason.uri as string,
+        // @ts-expect-error
+        cid: reason.cid as string,
+      }
+    }
+  }, [reason])
+
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
@@ -461,6 +472,7 @@ let FeedItemInner = ({
             reqId={reqId}
             threadgateRecord={threadgateRecord}
             onShowLess={onShowLess}
+            viaRepost={viaRepost}
           />
         </View>
 
