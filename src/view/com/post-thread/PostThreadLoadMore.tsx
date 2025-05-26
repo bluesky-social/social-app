@@ -1,18 +1,18 @@
-import * as React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
-import {AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
+import {Link} from '#/view/com/util/Link'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
-import {Link} from '../util/Link'
-import {UserAvatar} from '../util/UserAvatar'
 
 export function PostThreadLoadMore({post}: {post: AppBskyFeedDefs.PostView}) {
   const t = useTheme()
 
-  const postHref = React.useMemo(() => {
+  const postHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
