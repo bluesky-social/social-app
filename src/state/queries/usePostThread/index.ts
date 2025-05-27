@@ -80,6 +80,7 @@ export function usePostThread({
       hasSession,
       showMuted: state.shownHiddenReplyKinds.has(HiddenReplyKind.Muted),
       showHidden: state.shownHiddenReplyKinds.has(HiddenReplyKind.Hidden),
+      view: params.view,
     },
   )
 
