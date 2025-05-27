@@ -1,9 +1,10 @@
 import {View} from 'react-native'
-import {msg, Trans, Plural} from '@lingui/macro'
+import {msg, Plural,Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
-import {type Slice, PostThreadParams} from '#/state/queries/usePostThread'
+import {type PostThreadParams,type Slice} from '#/state/queries/usePostThread'
+import {TREE_INDENT} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {CirclePlus_Stroke2_Corner0_Rounded as CirclePlus} from '#/components/icons/CirclePlus'
 import {Link} from '#/components/Link'
@@ -26,11 +27,10 @@ export function ReadMore({
       <View
         key={`${item.key}-padding-${n}`}
         style={[
-          a.ml_sm,
           t.atoms.border_contrast_low,
           {
-            borderLeftWidth: 2,
-            paddingLeft: a.pl_sm.paddingLeft - 2, // minus border
+            borderRightWidth: 2,
+            width: TREE_INDENT,
           },
         ]}
       />
@@ -45,22 +45,21 @@ export function ReadMore({
   ) : null
 
   return (
-    <View style={[a.flex_row, a.px_sm]}>
+    <View style={[a.flex_row]}>
       {treeIndents}
-      <View style={[a.ml_sm]}>
-        <View
-          style={[
-            t.atoms.border_contrast_low,
-            {
-              borderLeftWidth: 2,
-              borderBottomWidth: 2,
-              borderBottomLeftRadius: a.rounded_sm.borderRadius,
-              height: 12,
-              width: isTreeView ? a.pl_sm.paddingLeft * 2 : 42 / 2 + 10,
-            },
-          ]}
-        />
-      </View>
+      <View
+        style={[
+          t.atoms.border_contrast_low,
+          {
+            marginLeft: isTreeView ? TREE_INDENT - 2 : TREE_INDENT,
+            borderLeftWidth: 2,
+            borderBottomWidth: 2,
+            borderBottomLeftRadius: a.rounded_sm.borderRadius,
+            height: 12,
+            width: isTreeView ? TREE_INDENT : 42 / 2 + 10,
+          },
+        ]}
+      />
       <Link
         label={_(msg`Read more replies`)}
         to={makeProfileLink(
