@@ -4,7 +4,11 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 
-import {HiddenReplyKind, type Slice} from '#/state/queries/usePostThread/types'
+import {
+  HiddenReplyKind,
+  type PostThreadParams,
+  type Slice,
+} from '#/state/queries/usePostThread/types'
 import * as views from '#/state/queries/usePostThread/views'
 
 export function flatten(
@@ -13,14 +17,16 @@ export function flatten(
     hasSession,
     showMuted,
     showHidden,
+    view,
   }: {
     hasSession: boolean
     showMuted: boolean
     showHidden: boolean
+    view: PostThreadParams['view']
   },
 ) {
   const flattened: Slice[] = sorted.items
-  const parentsWithUnhydratedReplies = []
+  const parents = []
 
   for (let i = 0; i < flattened.length; i++) {
     const item = flattened[i]
@@ -38,25 +44,30 @@ export function flatten(
         })
       }
 
-      const deepestParent =
-        parentsWithUnhydratedReplies[parentsWithUnhydratedReplies.length - 1]
+      const deepestParent = parents[parents.length - 1]
 
       if (deepestParent) {
         // next item is a sibling or an aunt/uncle
         if (item.depth <= deepestParent.depth) {
-          for (let pi = parentsWithUnhydratedReplies.length - 1; pi >= 0; pi--) {
-            const parent = parentsWithUnhydratedReplies[pi]
+          for (let pi = parents.length - 1; pi >= 0; pi--) {
+            const parent = parents[pi]
             if (item.depth <= parent.depth) {
               flattened.splice(
-                i + 1 + (pi - parentsWithUnhydratedReplies.length),
+                i + 1 + (pi - parents.length),
                 0,
                 views.readMore({
                   item,
                   parent: parent,
                 }),
               )
-              parentsWithUnhydratedReplies.pop()
+              parents.pop()
+
+              // skip next iteration
               i++
+
+              if (view === 'linear') {
+                break
+              }
             } else {
               break
             }
@@ -65,33 +76,36 @@ export function flatten(
       }
 
       if (item.value.moreReplies > 0) {
-        parentsWithUnhydratedReplies.push(item)
+        parents.push(item)
       }
 
       const isLastIteration = i === flattened.length - 1
 
       if (isLastIteration) {
-        const deepestParent =
-          parentsWithUnhydratedReplies[parentsWithUnhydratedReplies.length - 1]
-
-        i++
+        const deepestParent = parents[parents.length - 1]
 
         if (deepestParent) {
           // next item is a sibling or an aunt/uncle
           if (deepestParent.depth <= item.depth) {
-            for (let pi = parentsWithUnhydratedReplies.length - 1; pi >= 0; pi--) {
-              const parent = parentsWithUnhydratedReplies[pi]
+            for (let pi = parents.length - 1; pi >= 0; pi--) {
+              const parent = parents[pi]
               if (parent.depth <= item.depth) {
                 flattened.splice(
-                  i + 1 + (pi - parentsWithUnhydratedReplies.length),
+                  i + 2 + (pi - parents.length),
                   0,
                   views.readMore({
                     item,
                     parent: parent,
                   }),
                 )
-                parentsWithUnhydratedReplies.pop()
+                parents.pop()
+
+                // skip next iteration
                 i++
+
+                if (view === 'linear') {
+                  break
+                }
               } else {
                 break
               }
