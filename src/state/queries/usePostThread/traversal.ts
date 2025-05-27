@@ -56,8 +56,7 @@ export function flatten(
                 i + 1 + (pi - parents.length),
                 0,
                 views.readMore({
-                  item,
-                  parent: parent,
+                  parent,
                 }),
               )
               parents.pop()
@@ -94,8 +93,7 @@ export function flatten(
                   i + 2 + (pi - parents.length),
                   0,
                   views.readMore({
-                    item,
-                    parent: parent,
+                    parent,
                   }),
                 )
                 parents.pop()
@@ -115,6 +113,8 @@ export function flatten(
       }
     }
   }
+
+  console.log(flattened)
 
   /*
    * Insert hidden items and buttons to show them
