@@ -101,16 +101,14 @@ export function threadPost({
 }
 
 export function readMore({
-  item,
   parent,
 }: {
-  item: Extract<Slice, {type: 'threadPost'}>
   parent: Extract<Slice, {type: 'threadPost'}>
 }) {
   return {
     type: 'readMore' as const,
     key: `readMore:${parent.uri}`,
-    indent: parent.depth + (item.depth < parent.depth ? -1 : 0),
+    indent: parent.depth,
     replyCount: parent.value.moreReplies,
     nextAnchor: parent,
     nextAnchorUri: new AtUri(parent.uri),
