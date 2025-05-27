@@ -95,7 +95,7 @@ export function threadPost({
     ui: {
       isAnchor: depth === 0,
       showParentReplyLine: !!oneUp && oneUp.depth !== 0 && oneUp.depth < depth,
-      showChildReplyLine: !!oneDown && depth !== 0 && oneDown.depth > depth,
+      showChildReplyLine: (value.post.replyCount || 0) > 0,
     },
   }
 }

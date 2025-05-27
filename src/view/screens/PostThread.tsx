@@ -1,6 +1,6 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Trans, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -22,6 +22,7 @@ import {
   HiddenReplyKind,
   type Slice,
   usePostThread,
+  PostThreadParams,
 } from '#/state/queries/usePostThread'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {type OnPostSuccessData} from '#/state/shell/composer'
@@ -261,65 +262,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       )
     } else if (item.type === 'readMore') {
       return (
-        <View style={[a.flex_row, a.px_sm]}>
-          {Array.from(Array(item.indent - 1)).map((_, n: number) => (
-            <View
-              key={`${item.key}-padding-${n}`}
-              style={[
-                a.ml_sm,
-                t.atoms.border_contrast_low,
-                {
-                  borderLeftWidth: 2,
-                  paddingLeft: a.pl_sm.paddingLeft - 2, // minus border
-                },
-              ]}
-            />
-          ))}
-          <View style={[a.ml_sm]}>
-            <View
-              style={[
-                t.atoms.border_contrast_low,
-                {
-                  borderLeftWidth: 2,
-                  borderBottomWidth: 2,
-                  borderBottomLeftRadius: a.rounded_sm.borderRadius,
-                  height: 12,
-                  width: a.pl_sm.paddingLeft * 2,
-                },
-              ]}
-            />
-          </View>
-          <Link
-            label={_(msg`Read more replies`)}
-            to={makeProfileLink(
-              {
-                did: item.nextAnchorUri.host,
-                handle: item.nextAnchor.value.post.author.handle,
-              },
-              'post',
-              item.nextAnchorUri.rkey,
-            )}
-            style={[a.pt_2xs, a.pb_sm, a.gap_xs]}>
-            {({hovered, pressed}) => {
-              return (
-                <>
-                  <CirclePlus
-                    fill={t.atoms.text_contrast_high.color}
-                    width={18}
-                  />
-                  <Text
-                    style={[
-                      a.text_sm,
-                      t.atoms.text_contrast_medium,
-                      (hovered || pressed) && a.underline,
-                    ]}>
-                    Read {item.replyCount} more replies ({item.key})
-                  </Text>
-                </>
-              )
-            }}
-          </Link>
-        </View>
+        <ReadMore item={item} view={treeViewEnabled ? 'tree' : 'linear'} />
       )
     } else if (item.type === 'threadPostBlocked') {
       return (
@@ -555,4 +498,97 @@ function ThreadMenu({
 
 const keyExtractor = (item: Slice) => {
   return item.key
+}
+
+function ReadMore({
+  item,
+  view,
+}: {
+  item: Extract<Slice, {type: 'readMore'}>
+  view: PostThreadParams['view']
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const isTreeView = view === 'tree'
+  const indentCount = item.indent - 1
+
+  const treeIndents = isTreeView ? (
+    Array.from(Array(indentCount)).map((_, n: number) => (
+      <View
+        key={`${item.key}-padding-${n}`}
+        style={[
+          a.ml_sm,
+          t.atoms.border_contrast_low,
+          {
+            borderLeftWidth: 2,
+            paddingLeft: a.pl_sm.paddingLeft - 2, // minus border
+          },
+        ]}
+      />
+    ))
+  ) : indentCount > 0 ? (
+    <View
+      style={[
+        // avi width minus border, divided by 2
+        {width: (42 - 2) / 2}
+      ]}
+    />
+  ) : null
+
+  return (
+    <View style={[a.flex_row, a.px_sm]}>
+      {treeIndents}
+      <View style={[a.ml_sm]}>
+        <View
+          style={[
+            t.atoms.border_contrast_low,
+            {
+              borderLeftWidth: 2,
+              borderBottomWidth: 2,
+              borderBottomLeftRadius: a.rounded_sm.borderRadius,
+              height: 12,
+              width: isTreeView ? a.pl_sm.paddingLeft * 2 : (42 / 2 + 10),
+            },
+          ]}
+        />
+      </View>
+      <Link
+        label={_(msg`Read more replies`)}
+        to={makeProfileLink(
+          {
+            did: item.nextAnchorUri.host,
+            handle: item.nextAnchor.value.post.author.handle,
+          },
+          'post',
+          item.nextAnchorUri.rkey,
+        )}
+        style={[a.pt_2xs, a.pb_sm, a.gap_xs]}>
+        {({hovered, pressed}) => {
+          return (
+            <>
+              <CirclePlus
+                fill={t.atoms.text_contrast_high.color}
+                width={18}
+              />
+              <Text
+                style={[
+                  a.text_sm,
+                  t.atoms.text_contrast_medium,
+                  (hovered || pressed) && a.underline,
+                ]}>
+                <Trans>
+                  Read {item.replyCount} more{' '}
+                  <Plural
+                    one="reply"
+                    other="replies"
+                    value={item.replyCount}
+                  />
+                </Trans>
+              </Text>
+            </>
+          )
+        }}
+      </Link>
+    </View>
+  )
 }

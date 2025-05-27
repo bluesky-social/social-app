@@ -38,49 +38,65 @@ export function flatten(
         })
       }
 
-      const maybeParent =
+      const deepestParent =
         parentsWithUnhydratedReplies[parentsWithUnhydratedReplies.length - 1]
 
-      if (maybeParent) {
+      if (deepestParent) {
         // next item is a sibling or an aunt/uncle
-        if (item.depth <= maybeParent.depth) {
-          flattened.splice(
-            i,
-            0,
-            views.readMore({
-              item,
-              parent: maybeParent,
-            }),
-          )
-          parentsWithUnhydratedReplies.pop()
-          i++ // skip over the read more item
-        } else if (i === flattened.length - 1) {
-          // last iteration might have a parent
-          flattened.push(
-            views.readMore({
-              item,
-              parent: maybeParent,
-            }),
-          )
-          break
+        if (item.depth <= deepestParent.depth) {
+          for (let pi = parentsWithUnhydratedReplies.length - 1; pi >= 0; pi--) {
+            const parent = parentsWithUnhydratedReplies[pi]
+            if (item.depth <= parent.depth) {
+              flattened.splice(
+                i + 1 + (pi - parentsWithUnhydratedReplies.length),
+                0,
+                views.readMore({
+                  item,
+                  parent: parent,
+                }),
+              )
+              parentsWithUnhydratedReplies.pop()
+              i++
+            } else {
+              break
+            }
+          }
         }
       }
 
-      /*
-       * Lastly, insert next read more if necessary
-       */
       if (item.value.moreReplies > 0) {
-        // last iteration might have its own read more
-        if (i === flattened.length - 1) {
-          flattened.push(
-            views.readMore({
-              item,
-              parent: item,
-            }),
-          )
-          break
-        } else {
-          parentsWithUnhydratedReplies.push(item)
+        parentsWithUnhydratedReplies.push(item)
+      }
+
+      const isLastIteration = i === flattened.length - 1
+
+      if (isLastIteration) {
+        const deepestParent =
+          parentsWithUnhydratedReplies[parentsWithUnhydratedReplies.length - 1]
+
+        i++
+
+        if (deepestParent) {
+          // next item is a sibling or an aunt/uncle
+          if (deepestParent.depth <= item.depth) {
+            for (let pi = parentsWithUnhydratedReplies.length - 1; pi >= 0; pi--) {
+              const parent = parentsWithUnhydratedReplies[pi]
+              if (parent.depth <= item.depth) {
+                flattened.splice(
+                  i + 1 + (pi - parentsWithUnhydratedReplies.length),
+                  0,
+                  views.readMore({
+                    item,
+                    parent: parent,
+                  }),
+                )
+                parentsWithUnhydratedReplies.pop()
+                i++
+              } else {
+                break
+              }
+            }
+          }
         }
       }
     }
