@@ -49,6 +49,8 @@ export type Slice =
         isAnchor: boolean
         showParentReplyLine: boolean
         showChildReplyLine: boolean
+        indent: number
+        parentHasBranchingReplies: boolean
       }
     }
   | {

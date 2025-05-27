@@ -65,17 +65,32 @@ export function threadPost({
   uri,
   depth,
   value,
+  parent: up,
   oneUp,
-  oneDown,
   moderationOpts,
 }: {
   uri: string
   depth: number
   value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
+  parent?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
   oneUp?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
   oneDown?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
   moderationOpts: ModerationOpts
 }): Extract<Slice, {type: 'threadPost'}> {
+  const parent = (up && 'post' in up?.value
+    ? up.value
+    : undefined) as unknown as AppBskyUnspeccedGetPostThreadV2.ThreadItemPost
+  const parentReplyCount = parent?.post?.replyCount || 0
+  const parentAdditionalReplies = parent?.moreReplies || 0
+  const parentHasBranchingReplies =
+    parentReplyCount > 1 && parentReplyCount - parentAdditionalReplies > 1
+  // if (!parentHasBranchingReplies) {
+  //   console.log(value.post.record.text, {
+  //     parentReplyCount,
+  //     parentAdditionalReplies,
+  //   })
+  // }
+
   return {
     type: 'threadPost',
     key: uri,
@@ -96,6 +111,8 @@ export function threadPost({
       isAnchor: depth === 0,
       showParentReplyLine: !!oneUp && oneUp.depth !== 0 && oneUp.depth < depth,
       showChildReplyLine: (value.post.replyCount || 0) > 0,
+      indent: parentHasBranchingReplies ? depth : up?.depth || depth,
+      parentHasBranchingReplies,
     },
   }
 }
@@ -108,7 +125,9 @@ export function readMore({
   return {
     type: 'readMore' as const,
     key: `readMore:${parent.uri}`,
-    indent: parent.depth,
+    indent: parent.ui.parentHasBranchingReplies
+      ? parent.depth
+      : parent.depth - 1,
     replyCount: parent.value.moreReplies,
     nextAnchor: parent,
     nextAnchorUri: new AtUri(parent.uri),

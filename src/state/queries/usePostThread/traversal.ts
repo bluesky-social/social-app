@@ -114,8 +114,6 @@ export function flatten(
     }
   }
 
-  console.log(flattened)
-
   /*
    * Insert hidden items and buttons to show them
    */
@@ -269,6 +267,9 @@ export function sort(
           uri: item.uri,
           depth: item.depth,
           value: item.value,
+          parent: thread.find(
+            p => p.uri === item.value.post.record.reply.parent.uri,
+          ),
           oneUp,
           oneDown,
           moderationOpts,
@@ -311,6 +312,9 @@ export function sort(
                   uri: child.uri,
                   depth: child.depth,
                   value: child.value,
+                  parent: thread.find(
+                    p => p.uri === child.value.post.record.reply.parent.uri,
+                  ),
                   oneUp: thread[ci - 1],
                   oneDown: thread[ci + 1],
                   moderationOpts,
