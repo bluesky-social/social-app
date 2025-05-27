@@ -1,10 +1,10 @@
 import {View} from 'react-native'
-import {msg, Plural,Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
-import {type PostThreadParams,type Slice} from '#/state/queries/usePostThread'
-import {TREE_INDENT} from '#/screens/PostThread/const'
+import {type PostThreadParams, type Slice} from '#/state/queries/usePostThread'
+import {TREE_AVI_WIDTH,TREE_INDENT} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {CirclePlus_Stroke2_Corner0_Rounded as CirclePlus} from '#/components/icons/CirclePlus'
 import {Link} from '#/components/Link'
@@ -30,7 +30,8 @@ export function ReadMore({
           t.atoms.border_contrast_low,
           {
             borderRightWidth: 2,
-            width: TREE_INDENT,
+            width: TREE_INDENT + TREE_AVI_WIDTH / 2,
+            left: 1,
           },
         ]}
       />
@@ -51,7 +52,9 @@ export function ReadMore({
         style={[
           t.atoms.border_contrast_low,
           {
-            marginLeft: isTreeView ? TREE_INDENT - 2 : TREE_INDENT,
+            marginLeft: isTreeView
+              ? TREE_INDENT + TREE_AVI_WIDTH / 2 - 1
+              : TREE_INDENT,
             borderLeftWidth: 2,
             borderBottomWidth: 2,
             borderBottomLeftRadius: a.rounded_sm.borderRadius,
