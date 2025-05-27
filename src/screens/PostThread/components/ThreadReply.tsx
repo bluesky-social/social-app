@@ -27,7 +27,7 @@ import {TextLink} from '#/view/com/util/Link'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
-import {TREE_INDENT} from '#/screens/PostThread/const'
+import {TREE_AVI_WIDTH,TREE_INDENT} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -38,6 +38,11 @@ import {type AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
+
+/**
+ * Mimic the space in PostMeta
+ */
+const TREE_AVI_PLUS_SPACE = TREE_AVI_WIDTH + a.gap_xs.gap
 
 export function ThreadReply({
   item,
@@ -174,23 +179,24 @@ let PostThreadItemLoaded = ({
     <View
       style={[
         a.flex_row,
-        item.depth === 1 && [a.border_t, t.atoms.border_contrast_low],
+        item.ui.indent === 1 && [a.border_t, t.atoms.border_contrast_low],
       ]}>
-      {Array.from(Array(item.depth - 1)).map((_, n: number) => (
+      {Array.from(Array(item.ui.indent - 1)).map((_, n: number) => (
         <View
           key={`${post.uri}-padding-${n}`}
           style={[
             t.atoms.border_contrast_low,
             {
               borderRightWidth: 2,
-              width: TREE_INDENT,
+              width: TREE_INDENT + TREE_AVI_WIDTH / 2,
+              left: 1,
             },
           ]}
         />
       ))}
       <View style={a.flex_1}>
         <SubtleHover>
-          <View style={[a.px_lg, a.py_sm, item.depth === 1 && [a.pt_lg]]}>
+          <View style={[a.px_lg, a.pt_sm, item.ui.indent === 1 && [a.pt_lg]]}>
             <PostHider
               testID={`postThreadItem-by-${post.author.handle}`}
               href={postHref}
@@ -207,53 +213,74 @@ let PostThreadItemLoaded = ({
                     moderation={moderation}
                     timestamp={post.indexedAt}
                     postHref={postHref}
-                    avatarSize={24}
+                    avatarSize={TREE_AVI_WIDTH}
                     style={[a.pb_xs]}
                     showAvatar
                   />
-                  <LabelsOnMyPost post={post} style={[a.pb_xs]} />
-                  <PostAlerts
-                    modui={moderation.ui('contentList')}
-                    style={[a.pb_2xs]}
-                    additionalCauses={additionalPostAlerts}
-                  />
-                  {richText?.text ? (
-                    <View style={[a.pb_2xs, a.pr_sm]}>
-                      <RichText
-                        enableTags
-                        value={richText}
-                        style={[a.flex_1, a.text_md]}
-                        numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                        authorHandle={post.author.handle}
-                        shouldProxyLinks={true}
+                  <View style={[a.flex_row]}>
+                    <View style={[a.relative, {width: TREE_AVI_PLUS_SPACE}]}>
+                      {item.ui.showChildReplyLine && (
+                        <View
+                          style={[
+                            a.h_full,
+                            t.atoms.border_contrast_low,
+                            {
+                              borderRightWidth: 2,
+                              width: '50%',
+                              left: -1,
+                            },
+                          ]}
+                        />
+                      )}
+                    </View>
+                    <View style={[a.flex_1]}>
+                      <LabelsOnMyPost post={post} style={[a.pb_xs]} />
+                      <PostAlerts
+                        modui={moderation.ui('contentList')}
+                        style={[a.pb_2xs]}
+                        additionalCauses={additionalPostAlerts}
+                      />
+                      {richText?.text ? (
+                        <View style={[a.pb_2xs, a.pr_sm]}>
+                          <RichText
+                            enableTags
+                            value={richText}
+                            style={[a.flex_1, a.text_md]}
+                            numberOfLines={
+                              limitLines ? MAX_POST_LINES : undefined
+                            }
+                            authorHandle={post.author.handle}
+                            shouldProxyLinks={true}
+                          />
+                        </View>
+                      ) : undefined}
+                      {limitLines ? (
+                        <TextLink
+                          text={_(msg`Show More`)}
+                          style={pal.link}
+                          onPress={onPressShowMore}
+                          href="#"
+                        />
+                      ) : undefined}
+                      {post.embed && (
+                        <View style={[a.pb_xs]}>
+                          <PostEmbeds
+                            embed={post.embed}
+                            moderation={moderation}
+                            viewContext={PostEmbedViewContext.Feed}
+                          />
+                        </View>
+                      )}
+                      <PostCtrls
+                        post={postShadow}
+                        record={record}
+                        richText={richText}
+                        onPressReply={onPressReply}
+                        logContext="PostThreadItem"
+                        threadgateRecord={threadgateRecord}
                       />
                     </View>
-                  ) : undefined}
-                  {limitLines ? (
-                    <TextLink
-                      text={_(msg`Show More`)}
-                      style={pal.link}
-                      onPress={onPressShowMore}
-                      href="#"
-                    />
-                  ) : undefined}
-                  {post.embed && (
-                    <View style={[a.pb_xs]}>
-                      <PostEmbeds
-                        embed={post.embed}
-                        moderation={moderation}
-                        viewContext={PostEmbedViewContext.Feed}
-                      />
-                    </View>
-                  )}
-                  <PostCtrls
-                    post={postShadow}
-                    record={record}
-                    richText={richText}
-                    onPressReply={onPressReply}
-                    logContext="PostThreadItem"
-                    threadgateRecord={threadgateRecord}
-                  />
+                  </View>
                 </View>
               </View>
             </PostHider>
