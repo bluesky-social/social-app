@@ -192,14 +192,7 @@ function usePostLikeMutation(
             ? toClout(post.likeCount + post.repostCount + post.replyCount)
             : undefined,
       })
-      return agent.app.bsky.feed.like.create(
-        {repo: agent.assertDid},
-        {
-          subject: {uri, cid},
-          via,
-          createdAt: new Date().toISOString(),
-        },
-      )
+      return agent.like(uri, cid, via)
     },
   })
 }
@@ -287,14 +280,7 @@ function usePostRepostMutation(
   >({
     mutationFn: ({uri, cid, via}) => {
       logEvent('post:repost', {logContext})
-      return agent.app.bsky.feed.repost.create(
-        {repo: agent.assertDid},
-        {
-          subject: {uri, cid},
-          via,
-          createdAt: new Date().toISOString(),
-        },
-      )
+      return agent.repost(uri, cid, via)
     },
   })
 }
