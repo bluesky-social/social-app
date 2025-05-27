@@ -1,4 +1,4 @@
-import React, {type ComponentProps} from 'react'
+import React, {type ComponentProps, type JSX} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'

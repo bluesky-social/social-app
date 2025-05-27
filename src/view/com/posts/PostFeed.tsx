@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useRef} from 'react'
+import React, {type JSX, memo, useCallback, useRef} from 'react'
 import {
   ActivityIndicator,
   AppState,

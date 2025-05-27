@@ -1,7 +1,7 @@
 import React, {memo} from 'react'
-import {RefreshControl, ViewToken} from 'react-native'
+import {RefreshControl, type ViewToken} from 'react-native'
 import {
-  FlatListPropsWithLayout,
+  type FlatListPropsWithLayout,
   runOnJS,
   useSharedValue,
 } from 'react-native-reanimated'
@@ -57,7 +57,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
       ...props
     },
     ref,
-  ): React.ReactElement => {
+  ): React.ReactElement<any> => {
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
     const dedupe = useDedupe(400)
