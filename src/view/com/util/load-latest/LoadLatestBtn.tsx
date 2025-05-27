@@ -13,7 +13,8 @@ import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
 import {colors} from '#/lib/styles'
 import {useSession} from '#/state/session'
-import {atoms as a, useLayoutBreakpoints} from '#/alf'
+import {atoms as a, useLayoutBreakpoints, web} from '#/alf'
+import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 
 export function LoadLatestBtn({
   onPress,
@@ -48,22 +49,24 @@ export function LoadLatestBtn({
     : {bottom: clamp(insets.bottom, 15, 60) + 15}
 
   return (
-    <Animated.View style={[showBottomBar && fabMinimalShellTransform]}>
+    <Animated.View
+      testID="loadLatestBtn"
+      style={[
+        a.fixed,
+        {left: 18},
+        isDesktop &&
+          (isTallViewport
+            ? styles.loadLatestOutOfLine
+            : styles.loadLatestInline),
+        isTablet &&
+          (centerColumnOffset
+            ? styles.loadLatestInlineOffset
+            : styles.loadLatestInline),
+        bottomPosition,
+        showBottomBar && fabMinimalShellTransform,
+      ]}>
       <PressableScale
-        style={[
-          styles.loadLatest,
-          isDesktop &&
-            (isTallViewport
-              ? styles.loadLatestOutOfLine
-              : styles.loadLatestInline),
-          isTablet &&
-            (centerColumnOffset
-              ? styles.loadLatestInlineOffset
-              : styles.loadLatestInline),
-          pal.borderDark,
-          pal.view,
-          bottomPosition,
-        ]}
+        style={[styles.loadLatest, pal.borderDark, pal.view]}
         onPress={onPress}
         hitSlop={HITSLOP_20}
         accessibilityLabel={label}
@@ -79,8 +82,6 @@ export function LoadLatestBtn({
 const styles = StyleSheet.create({
   loadLatest: {
     zIndex: 20,
-    ...a.fixed,
-    left: 18,
     borderWidth: StyleSheet.hairlineWidth,
     width: 52,
     height: 52,
@@ -90,16 +91,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadLatestInline: {
-    // @ts-expect-error web only
-    left: 'calc(50vw - 282px)',
+    left: web('calc(50vw - 282px)'),
   },
   loadLatestInlineOffset: {
-    // @ts-expect-error web only
-    left: 'calc(50vw - 432px)',
+    left: web(`calc(50vw - 282px + ${CENTER_COLUMN_OFFSET}px)`),
   },
   loadLatestOutOfLine: {
-    // @ts-expect-error web only
-    left: 'calc(50vw - 382px)',
+    left: web('calc(50vw - 382px)'),
   },
   indicator: {
     position: 'absolute',
