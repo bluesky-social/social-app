@@ -38,7 +38,7 @@ export function HomeHeader(
           msg({
             message: 'Feeds ✨',
             comment:
-              'Shown in tab bar on Home screen when the user has no pinned feeds',
+              'Shown in tab bar on Home screen when logged out and when the user has no pinned feeds',
           }),
         ),
       )
