@@ -275,12 +275,10 @@ let FeedItemInner = ({
   const {isActive: live} = useActorStatus(post.author)
 
   const viaRepost = useMemo(() => {
-    if (AppBskyFeedDefs.isReasonRepost(reason)) {
+    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
       return {
-        // @ts-expect-error
-        uri: reason.uri as string,
-        // @ts-expect-error
-        cid: reason.cid as string,
+        uri: reason.uri,
+        cid: reason.cid,
       }
     }
   }, [reason])
