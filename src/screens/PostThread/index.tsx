@@ -16,11 +16,14 @@ import {
 } from '#/state/queries/usePostThread'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
-import {PostThreadItem} from '#/view/com/post-thread/PostThreadItem'
+// import {PostThreadItem} from '#/view/com/post-thread/PostThreadItem'
 import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
 import {ReadMore} from '#/screens/PostThread/components/ReadMore'
+import {ThreadAnchor} from '#/screens/PostThread/components/ThreadAnchor'
+import {ThreadPost} from '#/screens/PostThread/components/ThreadPost'
+import {ThreadReply} from '#/screens/PostThread/components/ThreadReply'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -142,33 +145,58 @@ export function Inner({uri}: {uri: string | undefined}) {
 
   const renderItem = ({item, index}: {item: Slice; index: number}) => {
     if (item.type === 'threadPost') {
-      return (
-        <View
-          ref={item.ui.isAnchor ? anchorRef : undefined}
-          onLayout={deferParents ? () => setDeferParents(false) : undefined}>
-          <PostThreadItem
-            post={item.value.post}
-            record={item.value.post.record}
+      if (item.depth < 0) {
+        return (
+          <ThreadPost
+            item={item}
             threadgateRecord={data?.threadgate?.record ?? undefined}
-            moderation={item.moderation}
-            treeView={treeViewEnabled}
-            depth={item.depth}
-            // TODO
-            // prevPost={prev}
-            // nextPost={next}
-            isHighlightedPost={item.ui.isAnchor}
-            hasMore={false} // TODO need to replace this entirely
-            showChildReplyLine={item.ui.showChildReplyLine}
-            showParentReplyLine={item.ui.showParentReplyLine}
-            hasPrecedingItem={item.ui.showParentReplyLine} // !!hasUnrevealedParents // TODO
-            overrideBlur={
-              shownHiddenReplyKinds.has(HiddenReplyKind.Muted) && item.depth > 0
-            }
+            overrides={{
+              topBorder: index === 0, // && !item.isParentLoading, // TODO
+            }}
             onPostSuccess={optimisticOnPostReply}
-            hideTopBorder={index === 0} // && !item.isParentLoading} // TODO
           />
-        </View>
-      )
+        )
+      } else if (item.depth === 0) {
+        return (
+          <View
+            ref={item.ui.isAnchor ? anchorRef : undefined}
+            onLayout={deferParents ? () => setDeferParents(false) : undefined}>
+            <ThreadAnchor
+              item={item}
+              threadgateRecord={data?.threadgate?.record ?? undefined}
+              onPostSuccess={optimisticOnPostReply}
+            />
+          </View>
+        )
+      } else {
+        if (treeViewEnabled) {
+          return (
+            <ThreadReply
+              item={item}
+              threadgateRecord={data?.threadgate?.record ?? undefined}
+              overrides={{
+                moderation:
+                  shownHiddenReplyKinds.has(HiddenReplyKind.Muted) &&
+                  item.depth > 0,
+              }}
+              onPostSuccess={optimisticOnPostReply}
+            />
+          )
+        } else {
+          return (
+            <ThreadPost
+              item={item}
+              threadgateRecord={data?.threadgate?.record ?? undefined}
+              overrides={{
+                moderation:
+                  shownHiddenReplyKinds.has(HiddenReplyKind.Muted) &&
+                  item.depth > 0,
+              }}
+              onPostSuccess={optimisticOnPostReply}
+            />
+          )
+        }
+      }
     } else if (item.type === 'readMore') {
       return <ReadMore item={item} view={treeViewEnabled ? 'tree' : 'linear'} />
     } else if (item.type === 'threadPostBlocked') {
