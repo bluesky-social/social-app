@@ -1051,4 +1051,8 @@ export const atoms = {
       transform: [],
     },
   }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
+
+  pointer: web({
+    cursor: 'pointer',
+  }),
 } as const
