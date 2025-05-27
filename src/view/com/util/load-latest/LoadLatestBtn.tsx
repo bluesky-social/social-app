@@ -52,6 +52,7 @@ export function LoadLatestBtn({
       testID="loadLatestBtn"
       style={[
         a.fixed,
+        a.z_20,
         {left: 18},
         isDesktop &&
           (isTallViewport
