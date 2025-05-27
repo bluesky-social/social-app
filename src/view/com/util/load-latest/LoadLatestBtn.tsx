@@ -37,7 +37,6 @@ export function LoadLatestBtn({
   if (gate('remove_show_latest_button')) {
     return null
   }
-  // }
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
