@@ -297,16 +297,14 @@ let PostFeed = ({
   }, [onPostCreated])
 
   useEffect(() => {
-    if (enabled) {
+    if (enabled && !disablePoll) {
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
       if (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) {
         // check for new on enable (aka on focus)
-        console.log('check for new on enable')
         checkForNew()
-        // ^^^ IT'S THIS ONE
       }
     }
-  }, [enabled, feed, queryClient, scrollElRef, isEmpty, checkForNew])
+  }, [enabled, isEmpty, disablePoll, checkForNew])
 
   useEffect(() => {
     let cleanup1: () => void | undefined, cleanup2: () => void | undefined
