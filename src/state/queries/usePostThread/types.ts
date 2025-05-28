@@ -52,6 +52,7 @@ export type Slice =
         indent: number
         parentHasBranchingReplies: boolean
         isDeadEnd: boolean
+        skippedIndents: Set<number>
         /**
          * Populated during the final traversal of the thread. Denotes whether
          * there is a "Read more" link for the parent immediately following
@@ -64,8 +65,6 @@ export type Slice =
          * this item.
          */
         precedesChildReadMore?: boolean
-        skippedIndents: Set<number>
-        [key: string]: any
       }
     }
   | {
@@ -108,11 +107,6 @@ export type Slice =
     }
 
 export type TraversalMetadata = {
-  indent: number
-  hasBranchingReplies: boolean
-}
-
-export type NTraversalMetadata = {
   depth: number
   indent: number
   replies: number
@@ -120,7 +114,7 @@ export type NTraversalMetadata = {
   seenReplies: number
   hasBranchingReplies: boolean
   isLastSibling: boolean
-  parentMetadata?: NTraversalMetadata
+  parentMetadata?: TraversalMetadata
   prevItemDepth?: number
   nextItemDepth?: number
   skippedIndents: Set<number>

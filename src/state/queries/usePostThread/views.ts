@@ -8,10 +8,7 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 
-import {
-  type Slice,
-  type TraversalMetadata,
-} from '#/state/queries/usePostThread/types'
+import {type Slice} from '#/state/queries/usePostThread/types'
 
 export function threadPostNoUnauthenticated({
   uri,
@@ -68,28 +65,13 @@ export function threadPost({
   uri,
   depth,
   value,
-  oneUp,
-  oneDown,
   moderationOpts,
-  traversalMetadata,
 }: {
   uri: string
   depth: number
   value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
-  oneUp?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
-  oneDown?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
   moderationOpts: ModerationOpts
-  traversalMetadata?: TraversalMetadata
 }): Extract<Slice, {type: 'threadPost'}> {
-  const parentHasBranchingReplies = !!traversalMetadata?.hasBranchingReplies
-  /*
-   * Indent differs from depth in cases where the tree has no branches, and so
-   * we can maintain the more shallow depth of the parent.
-   */
-  const indent = parentHasBranchingReplies
-    ? depth
-    : traversalMetadata?.indent || depth
-
   return {
     type: 'threadPost',
     key: uri,
@@ -106,19 +88,8 @@ export function threadPost({
       },
     },
     moderation: moderatePost(value.post, moderationOpts),
-    ui: {
-      isAnchor: depth === 0,
-      showParentReplyLine: !!oneUp && oneUp.depth !== 0 && oneUp.depth < depth,
-      showChildReplyLine: (value.post.replyCount || 0) > 0,
-      indent,
-      parentHasBranchingReplies,
-      /*
-       * If there are no slices below this one, or the next slice is less
-       * indented than the computed indent for this post.
-       */
-      isDeadEnd: !oneDown || oneDown?.depth < indent,
-      skippedIndents: new Set(),
-    },
+    // @ts-ignore populated by the traversal
+    ui: {},
   }
 }
 
