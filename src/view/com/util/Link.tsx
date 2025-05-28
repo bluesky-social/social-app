@@ -11,11 +11,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
-import {
-  StackActions,
-  useLinkBuilder,
-  useLinkProps,
-} from '@react-navigation/native'
+import {StackActions} from '@react-navigation/native'
 
 import {
   type DebouncedNavigationProp,
@@ -51,7 +47,7 @@ interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   hoverStyle?: StyleProp<ViewStyle>
   noFeedback?: boolean
   asAnchor?: boolean
-  dataSet?: Object | undefined
+  dataSet?: any
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   onPointerEnter?: () => void
@@ -73,6 +69,7 @@ export const Link = memo(function Link({
   onBeforePress,
   accessibilityActions,
   onAccessibilityAction,
+  dataSet: dataSetProp,
   ...props
 }: Props) {
   const t = useTheme()
@@ -102,6 +99,14 @@ export const Link = memo(function Link({
     ...(accessibilityActions || []),
     {name: 'activate', label: title},
   ]
+
+  const dataSet = useMemo(() => {
+    const ds = {...dataSetProp}
+    if (anchorNoUnderline) {
+      ds.noUnderline = 1
+    }
+    return ds
+  }, [dataSetProp, anchorNoUnderline])
 
   if (noFeedback) {
     return (
@@ -133,17 +138,6 @@ export const Link = memo(function Link({
     )
   }
 
-  if (anchorNoUnderline) {
-    // @ts-ignore web only -prf
-    props.dataSet = props.dataSet || {}
-    // @ts-ignore web only -prf
-    props.dataSet.noUnderline = 1
-  }
-
-  if (title && !props.accessibilityLabel) {
-    props.accessibilityLabel = title
-  }
-
   const Com = props.hoverStyle ? PressableWithHover : Pressable
   return (
     <Com
@@ -152,8 +146,11 @@ export const Link = memo(function Link({
       onPress={onPress}
       accessible={accessible}
       accessibilityRole="link"
+      accessibilityLabel={props.accessibilityLabel ?? title}
+      accessibilityHint={props.accessibilityHint}
       // @ts-ignore web only -prf
       href={anchorHref}
+      dataSet={dataSet}
       {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </Com>
@@ -175,7 +172,7 @@ export const TextLink = memo(function TextLink({
   disableMismatchWarning,
   navigationAction,
   anchorNoUnderline,
-  ...orgProps
+  ...props
 }: {
   testID?: string
   type?: TypographyVariant
@@ -191,12 +188,6 @@ export const TextLink = memo(function TextLink({
   anchorNoUnderline?: boolean
   onBeforePress?: () => void
 } & TextProps) {
-  const {buildAction} = useLinkBuilder()
-  const sanitized = sanitizeUrl(href)
-  const {onPress: _, ...props} = useLinkProps({
-    href: sanitized,
-    action: buildAction(sanitized),
-  })
   const navigation = useNavigationDeduped()
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
@@ -286,8 +277,9 @@ export const TextLink = memo(function TextLink({
       // @ts-ignore web only -prf
       hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
       onPress={onPress}
-      {...props}
-      {...orgProps}>
+      accessibilityRole="link"
+      href={convertBskyAppUrlIfNeeded(sanitizeUrl(href))}
+      {...props}>
       {text}
     </Text>
   )
