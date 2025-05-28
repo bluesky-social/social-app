@@ -32,6 +32,7 @@ import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
+import {SubscribeProfileButton} from '#/components/post-subscriptions/SubscribeProfileButton'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
@@ -134,12 +135,16 @@ let ProfileHeaderStandard = ({
     }
   }, [_, queueUnblock])
 
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
 
   const {isActive: live} = useActorStatus(profile)
+
+  const subscriptionsDisallowed = useMemo(() => {
+    return !!profile.labels?.find(label => label.val === '!no-subscriptions')
+  }, [profile])
 
   return (
     <ProfileHeaderShell
@@ -198,6 +203,9 @@ let ProfileHeaderStandard = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
+              {hasSession && !subscriptionsDisallowed && (
+                <SubscribeProfileButton profile={profile} />
+              )}
               {hasSession && <MessageProfileButton profile={profile} />}
 
               <Button
