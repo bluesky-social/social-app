@@ -58,7 +58,7 @@ export function ReadMore({
             borderLeftWidth: 2,
             borderBottomWidth: 2,
             borderBottomLeftRadius: a.rounded_sm.borderRadius,
-            height: 12,
+            height: '50%',
             width: isTreeView ? TREE_INDENT : 42 / 2 + 10,
           },
         ]}
@@ -73,7 +73,7 @@ export function ReadMore({
           'post',
           item.nextAnchorUri.rkey,
         )}
-        style={[a.pt_2xs, a.pb_sm, a.gap_xs]}>
+        style={[a.pt_sm, a.pb_md, a.gap_xs]}>
         {({hovered, pressed}) => {
           return (
             <>

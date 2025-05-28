@@ -27,7 +27,7 @@ import {TextLink} from '#/view/com/util/Link'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
-import {TREE_AVI_WIDTH,TREE_INDENT} from '#/screens/PostThread/const'
+import {TREE_AVI_WIDTH, TREE_INDENT} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -214,7 +214,7 @@ let PostThreadItemLoaded = ({
                     timestamp={post.indexedAt}
                     postHref={postHref}
                     avatarSize={TREE_AVI_WIDTH}
-                    style={[a.pb_xs]}
+                    style={[a.pb_2xs]}
                     showAvatar
                   />
                   <View style={[a.flex_row]}>
@@ -234,25 +234,23 @@ let PostThreadItemLoaded = ({
                       )}
                     </View>
                     <View style={[a.flex_1]}>
-                      <LabelsOnMyPost post={post} style={[a.pb_xs]} />
+                      <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
                       <PostAlerts
                         modui={moderation.ui('contentList')}
                         style={[a.pb_2xs]}
                         additionalCauses={additionalPostAlerts}
                       />
                       {richText?.text ? (
-                        <View style={[a.pb_2xs, a.pr_sm]}>
-                          <RichText
-                            enableTags
-                            value={richText}
-                            style={[a.flex_1, a.text_md]}
-                            numberOfLines={
-                              limitLines ? MAX_POST_LINES : undefined
-                            }
-                            authorHandle={post.author.handle}
-                            shouldProxyLinks={true}
-                          />
-                        </View>
+                        <RichText
+                          enableTags
+                          value={richText}
+                          style={[a.flex_1, a.text_md]}
+                          numberOfLines={
+                            limitLines ? MAX_POST_LINES : undefined
+                          }
+                          authorHandle={post.author.handle}
+                          shouldProxyLinks={true}
+                        />
                       ) : undefined}
                       {limitLines ? (
                         <TextLink
