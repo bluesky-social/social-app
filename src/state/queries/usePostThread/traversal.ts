@@ -6,6 +6,7 @@ import {
 
 import {
   HiddenReplyKind,
+  type NTraversalMetadata,
   type PostThreadParams,
   type Slice,
   type TraversalMetadata,
@@ -13,6 +14,8 @@ import {
 import {
   getPostRecord,
   getPostTraversalMetadata,
+  getThreadPostUI,
+  getTraversalMetadata,
 } from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
 
@@ -147,7 +150,6 @@ export function flatten(
       }
     }
   }
-  console.log(flattened)
 
   /*
    * Insert hidden items and buttons to show them
@@ -204,6 +206,11 @@ export function sort(
   const hidden: Slice[] = []
   const muted: Slice[] = []
   const postDataMap = new Map<string, TraversalMetadata | undefined>()
+
+  const metadatas = new Map<string, NTraversalMetadata>()
+
+  // @ts-ignore
+  window.__data = metadatas // for debugging
 
   traversal: for (let i = 0; i < thread.length; i++) {
     const item = thread[i]
@@ -297,8 +304,25 @@ export function sort(
         i = branch.end
         continue traversal
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+        const parentMetadata = metadatas.get(
+          getPostRecord(item.value.post).reply?.parent?.uri || '',
+        )
         const oneUp = thread.at(i - 1)
         const oneDown = thread.at(i + 1)
+        const metadata = getTraversalMetadata({
+          item,
+          parentMetadata,
+          prevItem: oneUp,
+          nextItem: oneDown,
+        })
+        if (parentMetadata) {
+          parentMetadata.seenReplies += 1
+          metadata.isLastSibling =
+            parentMetadata.replies === parentMetadata.seenReplies
+        }
+        metadatas.set(item.uri, metadata)
+        metadatas.set(metadata.text, metadata) // TODO debugging
+
         const post = views.threadPost({
           uri: item.uri,
           depth: item.depth,
@@ -345,6 +369,26 @@ export function sort(
               if (
                 AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(child.value)
               ) {
+                const childParentMetadata = metadatas.get(
+                  getPostRecord(child.value.post).reply?.parent?.uri || '',
+                )
+                const prevItem = thread[ci - 1]
+                const nextItem = thread[ci + 1]
+                const childMetadata = getTraversalMetadata({
+                  item: child,
+                  prevItem,
+                  nextItem,
+                  parentMetadata: childParentMetadata,
+                })
+                if (childParentMetadata) {
+                  childParentMetadata.seenReplies += 1
+                  childMetadata.isLastSibling =
+                    childParentMetadata.replies ===
+                    childParentMetadata.seenReplies
+                }
+                metadatas.set(item.uri, childMetadata)
+                metadatas.set(childMetadata.text, childMetadata) // TODO debugging
+
                 const childPost = views.threadPost({
                   uri: child.uri,
                   depth: child.depth,
@@ -352,8 +396,8 @@ export function sort(
                   traversalMetadata: postDataMap.get(
                     getPostRecord(child.value.post)?.reply?.parent?.uri || '',
                   ),
-                  oneUp: thread[ci - 1],
-                  oneDown: thread[ci + 1],
+                  oneUp: prevItem,
+                  oneDown: nextItem,
                   moderationOpts,
                 })
                 postDataMap.set(child.uri, getPostTraversalMetadata(childPost))
@@ -393,6 +437,26 @@ export function sort(
       }
     }
   }
+
+  for (const item of items) {
+    if (item.type === 'threadPost') {
+      const metadata = metadatas.get(item.uri)
+      if (metadata) {
+        if (metadata.parentMetadata) {
+          metadata.skippedIndents = new Set([
+            ...metadata.parentMetadata.skippedIndents,
+          ])
+        }
+        if (metadata.isLastSibling) {
+          metadata.skippedIndents.add(item.depth - 2)
+        }
+
+        item.ui = getThreadPostUI(metadata)
+      }
+    }
+  }
+
+  // console.log(metadatas)
 
   return {
     items,

@@ -64,6 +64,8 @@ export type Slice =
          * this item.
          */
         precedesChildReadMore?: boolean
+        skippedIndents: Set<number>
+        [key: string]: any
       }
     }
   | {
@@ -108,4 +110,19 @@ export type Slice =
 export type TraversalMetadata = {
   indent: number
   hasBranchingReplies: boolean
+}
+
+export type NTraversalMetadata = {
+  depth: number
+  indent: number
+  replies: number
+  unhydratedReplies: number
+  seenReplies: number
+  hasBranchingReplies: boolean
+  isLastSibling: boolean
+  parentMetadata?: NTraversalMetadata
+  prevItemDepth?: number
+  nextItemDepth?: number
+  skippedIndents: Set<number>
+  [key: string]: any
 }
