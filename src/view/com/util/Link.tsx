@@ -1,20 +1,24 @@
-import React, {ComponentProps, memo, useMemo} from 'react'
+import {memo, useCallback, useMemo} from 'react'
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Platform,
   Pressable,
-  StyleProp,
-  TextProps,
-  TextStyle,
-  TouchableOpacity,
+  type StyleProp,
+  type TextProps,
+  type TextStyle,
+  type TouchableOpacity,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
-import {StackActions, useLinkProps} from '@react-navigation/native'
+import {
+  StackActions,
+  useLinkBuilder,
+  useLinkProps,
+} from '@react-navigation/native'
 
 import {
-  DebouncedNavigationProp,
+  type DebouncedNavigationProp,
   useNavigationDeduped,
 } from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
@@ -24,7 +28,7 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {TypographyVariant} from '#/lib/ThemeContext'
+import {type TypographyVariant} from '#/lib/ThemeContext'
 import {isAndroid, isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useModalControls} from '#/state/modals'
@@ -38,7 +42,7 @@ type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
   | GestureResponderEvent
 
-interface Props extends ComponentProps<typeof TouchableOpacity> {
+interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   testID?: string
   style?: StyleProp<ViewStyle>
   href?: string
@@ -77,7 +81,7 @@ export const Link = memo(function Link({
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
   const openLink = useOpenLink()
 
-  const onPress = React.useCallback(
+  const onPress = useCallback(
     (e?: Event) => {
       onBeforePress?.()
       if (typeof href === 'string') {
@@ -164,9 +168,9 @@ export const TextLink = memo(function TextLink({
   text,
   numberOfLines,
   lineHeight,
-  dataSet,
+  dataSet: dataSetProp,
   title,
-  onPress,
+  onPress: onPressProp,
   onBeforePress,
   disableMismatchWarning,
   navigationAction,
@@ -187,7 +191,12 @@ export const TextLink = memo(function TextLink({
   anchorNoUnderline?: boolean
   onBeforePress?: () => void
 } & TextProps) {
-  const {...props} = useLinkProps({to: sanitizeUrl(href)})
+  const {buildAction} = useLinkBuilder()
+  const sanitized = sanitizeUrl(href)
+  const {onPress: _, ...props} = useLinkProps({
+    href: sanitized,
+    action: buildAction(sanitized),
+  })
   const navigation = useNavigationDeduped()
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
@@ -196,12 +205,15 @@ export const TextLink = memo(function TextLink({
     console.error('Unable to detect mismatching label')
   }
 
-  if (anchorNoUnderline) {
-    dataSet = dataSet ?? {}
-    dataSet.noUnderline = 1
-  }
+  const dataSet = useMemo(() => {
+    const ds = {...dataSetProp}
+    if (anchorNoUnderline) {
+      ds.noUnderline = 1
+    }
+    return ds
+  }, [dataSetProp, anchorNoUnderline])
 
-  props.onPress = React.useCallback(
+  const onPress = useCallback(
     (e?: Event) => {
       const requiresWarning =
         !disableMismatchWarning &&
@@ -224,10 +236,10 @@ export const TextLink = memo(function TextLink({
         return
       }
       onBeforePress?.()
-      if (onPress) {
+      if (onPressProp) {
         e?.preventDefault?.()
-        // @ts-ignore function signature differs by platform -prf
-        return onPress()
+        // @ts-expect-error function signature differs by platform -prf
+        return onPressProp()
       }
       return onPressInner(
         closeModal,
@@ -240,7 +252,7 @@ export const TextLink = memo(function TextLink({
     },
     [
       onBeforePress,
-      onPress,
+      onPressProp,
       closeModal,
       openModal,
       navigation,
@@ -273,6 +285,7 @@ export const TextLink = memo(function TextLink({
       title={title}
       // @ts-ignore web only -prf
       hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
+      onPress={onPress}
       {...props}
       {...orgProps}>
       {text}
