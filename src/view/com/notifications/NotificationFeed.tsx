@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   ActivityIndicator,
-  ListRenderItemInfo,
+  type ListRenderItemInfo,
   StyleSheet,
   View,
 } from 'react-native'
@@ -16,7 +16,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {List, ListRef} from '#/view/com/util/List'
+import {List, type ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {NotificationFeedItem} from './NotificationFeedItem'

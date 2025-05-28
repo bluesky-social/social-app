@@ -6,7 +6,7 @@ import {
   View,
 } from 'react-native'
 import {
-  type AppBskyFeedDefs,
+  AppBskyFeedDefs,
   AppBskyFeedPost,
   type AppBskyFeedThreadgate,
   AtUri,
@@ -325,6 +325,16 @@ let PostThreadItemLoaded = ({
 
   const {isActive: live} = useActorStatus(post.author)
 
+  const reason = source?.post.reason
+  const viaRepost = useMemo(() => {
+    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+      return {
+        uri: reason.uri,
+        cid: reason.cid,
+      }
+    }
+  }, [reason])
+
   if (!record) {
     return <ErrorMessage message={_(msg`Invalid or unsupported post record`)} />
   }
@@ -542,6 +552,7 @@ let PostThreadItemLoaded = ({
                   threadgateRecord={threadgateRecord}
                   feedContext={source?.post?.feedContext}
                   reqId={source?.post?.reqId}
+                  viaRepost={viaRepost}
                 />
               </FeedFeedbackProvider>
             </View>
