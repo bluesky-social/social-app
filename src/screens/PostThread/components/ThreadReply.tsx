@@ -221,7 +221,7 @@ let PostThreadItemLoaded = ({
                 !item.ui.showChildReplyLine && a.pb_sm,
               ],
             ]}>
-            {item.ui.indent > 1 && (
+            {item.ui.indent > 1 && item.ui.parentHasBranchingReplies && (
               <View
                 style={[
                   a.absolute,
