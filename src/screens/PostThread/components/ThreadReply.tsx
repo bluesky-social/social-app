@@ -179,7 +179,11 @@ let PostThreadItemLoaded = ({
     <View
       style={[
         a.flex_row,
-        item.ui.indent === 1 && [a.border_t, t.atoms.border_contrast_low],
+        item.ui.indent === 1 &&
+          !item.ui.showParentReplyLine && [
+            a.border_t,
+            t.atoms.border_contrast_low,
+          ],
       ]}>
       {Array.from(Array(item.ui.indent - 1)).map((_, n: number) => (
         <View
@@ -196,7 +200,15 @@ let PostThreadItemLoaded = ({
       ))}
       <View style={a.flex_1}>
         <SubtleHover>
-          <View style={[a.px_lg, a.pt_sm, item.ui.indent === 1 && [a.pt_lg]]}>
+          <View
+            style={[
+              a.px_lg,
+              a.pt_sm,
+              item.ui.indent === 1 && [
+                !item.ui.showParentReplyLine && a.pt_lg,
+                !item.ui.showChildReplyLine && a.pb_sm,
+              ],
+            ]}>
             <PostHider
               testID={`postThreadItem-by-${post.author.handle}`}
               href={postHref}

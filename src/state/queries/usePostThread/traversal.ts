@@ -118,6 +118,7 @@ export function flatten(
       }
     }
   }
+  console.log(flattened)
 
   /*
    * Insert hidden items and buttons to show them
@@ -199,18 +200,16 @@ export function sort(
       ) {
         items.push(views.threadPostBlocked(item))
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
-        postDataMap.set(item.uri, getPostTraversalMetadata(item))
-
-        items.push(
-          views.threadPost({
-            uri: item.uri,
-            depth: item.depth,
-            value: item.value,
-            oneUp: thread[i - 1],
-            oneDown: thread[i + 1],
-            moderationOpts,
-          }),
-        )
+        const post = views.threadPost({
+          uri: item.uri,
+          depth: item.depth,
+          value: item.value,
+          oneUp: thread[i - 1],
+          oneDown: thread[i + 1],
+          moderationOpts,
+        })
+        postDataMap.set(item.uri, getPostTraversalMetadata(post))
+        items.push(post)
 
         parentTraversal: for (let pi = i - 1; pi >= 0; pi--) {
           const parentOneDown = thread[pi + 1]
@@ -269,8 +268,6 @@ export function sort(
         i = branch.end
         continue traversal
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
-        postDataMap.set(item.uri, getPostTraversalMetadata(item))
-
         const oneUp = thread.at(i - 1)
         const oneDown = thread.at(i + 1)
         const post = views.threadPost({
@@ -284,6 +281,7 @@ export function sort(
           oneDown,
           moderationOpts,
         })
+        postDataMap.set(item.uri, getPostTraversalMetadata(post))
         const postMod = getModerationState(post.moderation)
         const postIsHiddenByThreadgate = threadgateHiddenReplies.has(item.uri)
         const postIsModerated =
@@ -318,8 +316,6 @@ export function sort(
               if (
                 AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(child.value)
               ) {
-                postDataMap.set(child.uri, getPostTraversalMetadata(child))
-
                 const childPost = views.threadPost({
                   uri: child.uri,
                   depth: child.depth,
@@ -331,6 +327,7 @@ export function sort(
                   oneDown: thread[ci + 1],
                   moderationOpts,
                 })
+                postDataMap.set(child.uri, getPostTraversalMetadata(childPost))
                 const childPostMod = getModerationState(childPost.moderation)
                 const childPostIsHiddenByThreadgate =
                   threadgateHiddenReplies.has(child.uri)
