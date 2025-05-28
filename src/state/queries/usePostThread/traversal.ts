@@ -59,12 +59,15 @@ export function flatten(
 
             if (item.depth <= parent.depth) {
               /*
-               * Find the previous post item and set the `hasReadMore` flag
+               * Find the previous post item and set the read more flags
                */
               for (let ui = i - 1; ui >= 0; ui--) {
                 let prev = flattened[ui]
                 if (prev.type === 'threadPost') {
-                  prev.ui.hasReadMore = true
+                  prev.ui.precedesParentReadMore =
+                    prev.ui.indent - 1 === parent.ui.indent // true
+                  prev.ui.precedesChildReadMore =
+                    prev.ui.indent === item.ui.indent
                   break
                 }
               }
@@ -107,12 +110,15 @@ export function flatten(
               const parent = parents[pi]
               if (parent.depth <= item.depth) {
                 /*
-                 * Find the previous post item and set the `hasReadMore` flag
+                 * Find the previous post item and set the read more flags
                  */
                 for (let ui = i; ui >= 0; ui--) {
                   let prev = flattened[ui]
                   if (prev.type === 'threadPost') {
-                    prev.ui.hasReadMore = true
+                    prev.ui.precedesParentReadMore =
+                      prev.ui.indent - 1 === parent.ui.indent
+                    prev.ui.precedesChildReadMore =
+                      prev.ui.indent === item.ui.indent
                     break
                   }
                 }
@@ -141,7 +147,7 @@ export function flatten(
       }
     }
   }
-  // console.log(flattened)
+  console.log(flattened)
 
   /*
    * Insert hidden items and buttons to show them
