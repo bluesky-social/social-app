@@ -102,7 +102,7 @@ export function threadPost({
       showChildReplyLine: (value.post.replyCount || 0) > 0,
       indent: traversalMetadata?.hasBranchingReplies
         ? depth
-        : traversalMetadata?.depth || depth,
+        : traversalMetadata?.indent || depth,
       parentHasBranchingReplies: !!traversalMetadata?.hasBranchingReplies,
     },
   }
@@ -118,7 +118,7 @@ export function readMore({
     key: `readMore:${parent.uri}`,
     indent: parent.ui.parentHasBranchingReplies
       ? parent.depth
-      : Math.max(0, parent.depth - 1),
+      : parent.ui.indent,
     replyCount: parent.value.moreReplies,
     nextAnchor: parent,
     nextAnchorUri: new AtUri(parent.uri),
