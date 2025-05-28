@@ -69,6 +69,7 @@ export function threadPost({
   depth,
   value,
   oneUp,
+  oneDown,
   moderationOpts,
   traversalMetadata,
 }: {
@@ -104,6 +105,7 @@ export function threadPost({
         ? depth
         : traversalMetadata?.indent || depth,
       parentHasBranchingReplies: !!traversalMetadata?.hasBranchingReplies,
+      isDeadEnd: !oneDown || oneDown?.depth < depth,
     },
   }
 }

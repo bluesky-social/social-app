@@ -56,7 +56,19 @@ export function flatten(
         if (item.depth <= deepestParent.depth) {
           for (let pi = parents.length - 1; pi >= 0; pi--) {
             const parent = parents[pi]
+
             if (item.depth <= parent.depth) {
+              /*
+               * Find the previous post item and set the `hasReadMore` flag
+               */
+              for (let ui = i - 1; ui >= 0; ui--) {
+                let prev = flattened[ui]
+                if (prev.type === 'threadPost') {
+                  prev.ui.hasReadMore = true
+                  break
+                }
+              }
+
               flattened.splice(
                 i + 1 + (pi - parents.length),
                 0,
@@ -94,6 +106,17 @@ export function flatten(
             for (let pi = parents.length - 1; pi >= 0; pi--) {
               const parent = parents[pi]
               if (parent.depth <= item.depth) {
+                /*
+                 * Find the previous post item and set the `hasReadMore` flag
+                 */
+                for (let ui = i; ui >= 0; ui--) {
+                  let prev = flattened[ui]
+                  if (prev.type === 'threadPost') {
+                    prev.ui.hasReadMore = true
+                    break
+                  }
+                }
+
                 flattened.splice(
                   i + 2 + (pi - parents.length),
                   0,
@@ -118,7 +141,7 @@ export function flatten(
       }
     }
   }
-  console.log(flattened)
+  // console.log(flattened)
 
   /*
    * Insert hidden items and buttons to show them
