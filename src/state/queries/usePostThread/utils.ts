@@ -7,6 +7,7 @@ import {
 } from '@atproto/api'
 
 import {
+  type NTraversalMetadata,
   type Slice,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
@@ -55,5 +56,69 @@ export function getPostTraversalMetadata(
      * response, which can affect how we render tree view.
      */
     hasBranchingReplies: replyCount > 1 && replyCount - unhydratedReplies > 1,
+  }
+}
+
+export function getTraversalMetadata({
+  item,
+  prevItem,
+  nextItem,
+  parentMetadata,
+}: {
+  item: AppBskyUnspeccedGetPostThreadV2.ThreadItem
+  prevItem?: AppBskyUnspeccedGetPostThreadV2.ThreadItem
+  nextItem?: AppBskyUnspeccedGetPostThreadV2.ThreadItem
+  parentMetadata?: NTraversalMetadata
+}): NTraversalMetadata {
+  if (!AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+    throw new Error(`Expected thread item to be a post`)
+  }
+  const replies = item.value.post.replyCount || 0
+  const unhydratedReplies = item.value.moreReplies || 0
+  const hasBranchingReplies = replies > 1 && replies - unhydratedReplies > 1
+
+  return {
+    depth: item.depth,
+    // TODO maybe not used
+    indent: parentMetadata?.hasBranchingReplies
+      ? item.depth
+      : parentMetadata?.indent || item.depth,
+    replies,
+    unhydratedReplies,
+    seenReplies: 0,
+    hasBranchingReplies,
+    parentMetadata,
+    isLastSibling: false,
+    skippedIndents: new Set(),
+    prevItemDepth: prevItem?.depth,
+    nextItemDepth: nextItem?.depth,
+
+    // TODO non-spec
+    text: getPostRecord(item.value.post).text,
+  }
+}
+
+export function getThreadPostUI({
+  depth,
+  indent,
+  replies,
+  parentMetadata,
+  prevItemDepth,
+  nextItemDepth,
+  skippedIndents,
+}: NTraversalMetadata) {
+  return {
+    isAnchor: depth === 0,
+    showParentReplyLine:
+      !!prevItemDepth && prevItemDepth !== 0 && prevItemDepth < depth,
+    showChildReplyLine: replies > 0,
+    indent: depth,
+    parentHasBranchingReplies: !!parentMetadata?.hasBranchingReplies,
+    /*
+     * If there are no slices below this one, or the next slice is less
+     * indented than the computed indent for this post.
+     */
+    isDeadEnd: nextItemDepth === undefined || nextItemDepth < indent,
+    skippedIndents,
   }
 }
