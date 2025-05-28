@@ -27,7 +27,12 @@ import {TextLink} from '#/view/com/util/Link'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
-import {TREE_AVI_WIDTH, TREE_INDENT} from '#/screens/PostThread/const'
+import {
+  OUTER_SPACE,
+  REPLY_LINE_WIDTH,
+  TREE_AVI_WIDTH,
+  TREE_INDENT,
+} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -175,6 +180,8 @@ let PostThreadItemLoaded = ({
     setLimitLines(false)
   }, [setLimitLines])
 
+  const indents = Math.max(0, item.ui.indent - 1)
+
   return (
     <View
       style={[
@@ -185,13 +192,16 @@ let PostThreadItemLoaded = ({
             t.atoms.border_contrast_low,
           ],
       ]}>
-      {Array.from(Array(item.ui.indent - 1)).map((_, n: number) => (
+      {Array.from(Array(indents)).map((_, n: number) => (
         <View
           key={`${post.uri}-padding-${n}`}
           style={[
             t.atoms.border_contrast_low,
             {
-              borderRightWidth: 2,
+              borderRightWidth:
+                item.ui.isDeadEnd && n === indents - 1 && !item.ui.hasReadMore
+                  ? 0
+                  : REPLY_LINE_WIDTH,
               width: TREE_INDENT + TREE_AVI_WIDTH / 2,
               left: 1,
             },
@@ -202,13 +212,35 @@ let PostThreadItemLoaded = ({
         <SubtleHover>
           <View
             style={[
-              a.px_lg,
-              a.pt_sm,
+              {
+                paddingHorizontal: OUTER_SPACE,
+                paddingTop: OUTER_SPACE / 2,
+              },
               item.ui.indent === 1 && [
                 !item.ui.showParentReplyLine && a.pt_lg,
                 !item.ui.showChildReplyLine && a.pb_sm,
               ],
             ]}>
+            {item.ui.indent > 1 && (
+              <View
+                style={[
+                  a.absolute,
+                  t.atoms.border_contrast_low,
+                  {
+                    left: -1,
+                    top: 0,
+                    height:
+                      TREE_AVI_WIDTH / 2 +
+                      REPLY_LINE_WIDTH / 2 +
+                      OUTER_SPACE / 2,
+                    width: OUTER_SPACE,
+                    borderLeftWidth: REPLY_LINE_WIDTH,
+                    borderBottomWidth: REPLY_LINE_WIDTH,
+                    borderBottomLeftRadius: a.rounded_sm.borderRadius,
+                  },
+                ]}
+              />
+            )}
             <PostHider
               testID={`postThreadItem-by-${post.author.handle}`}
               href={postHref}

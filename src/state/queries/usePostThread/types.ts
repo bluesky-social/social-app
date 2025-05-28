@@ -51,6 +51,8 @@ export type Slice =
         showChildReplyLine: boolean
         indent: number
         parentHasBranchingReplies: boolean
+        isDeadEnd: boolean
+        hasReadMore?: boolean
       }
     }
   | {
