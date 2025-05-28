@@ -51,7 +51,7 @@ export function usePostThread({
       if (!params.anchor) return
       const placeholder = getThreadPlaceholder(qc, params.anchor)
       if (placeholder) {
-        return {thread: [placeholder]}
+        return {thread: [placeholder], hasHiddenReplies: false}
       }
       return
     },
