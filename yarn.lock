@@ -6289,12 +6289,12 @@
     invariant "^2.2.4"
     nullthrows "^1.1.1"
 
-"@react-navigation/bottom-tabs@7.0.0-rc.35":
-  version "7.0.0-rc.35"
-  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-7.0.0-rc.35.tgz#4dd364682b9dbefc7da28ced638a9c079eafce74"
-  integrity sha512-Kxnr2uZ8VK02Qy6zwvxNrJNt9a1NIQWTbIWU2RBdFfGis7YRoE2RHGkAdMhB+7GlQuXaoiBDok0YPKfHbTy/oQ==
+"@react-navigation/bottom-tabs@^7.3.13":
+  version "7.3.13"
+  resolved "https://registry.yarnpkg.com/@react-navigation/bottom-tabs/-/bottom-tabs-7.3.13.tgz#985d707ca92d45af2fa12fff7d1d43365d6218ec"
+  integrity sha512-J3MWXBJc3y6hefZNRqdj/JD4nzIDLzZL5GIYj89pR6oRf2Iibz9t1qV7yzxEc1KOaNDkXVZ/5U16PArEJFfykQ==
   dependencies:
-    "@react-navigation/elements" "^2.0.0-rc.26"
+    "@react-navigation/elements" "^2.4.2"
     color "^4.2.3"
 
 "@react-navigation/core@^7.0.0-rc.15":
@@ -6310,29 +6310,29 @@
     use-latest-callback "^0.2.1"
     use-sync-external-store "^1.2.2"
 
-"@react-navigation/drawer@7.0.0-rc.32":
-  version "7.0.0-rc.32"
-  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-7.0.0-rc.32.tgz#914065b38767289a7b0878bb3b007b816b7b0c3b"
-  integrity sha512-fKdSvPNkBCjpqpxouKNYzVuoqdGfUjYF2IrJNtA/yphnH7peGtRRvITpC+7FAkWWe0A5ZC275YzG/5CpvVeLyA==
+"@react-navigation/drawer@^7.3.12":
+  version "7.3.12"
+  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-7.3.12.tgz#aa19915d38f31372dd6eb596c976d6e123127b15"
+  integrity sha512-a1r1jZMEOcRUcTjT5CcHHuVLbY9unmmTnJjiRnXxWlSFi/5J2BZQWZj6nmrm16Ix1Wm1CWh0kuj7IrJ0E+Spaw==
   dependencies:
-    "@react-navigation/elements" "^2.0.0-rc.26"
+    "@react-navigation/elements" "^2.4.2"
     color "^4.2.3"
-    react-native-drawer-layout "^4.0.0-rc.11"
-    use-latest-callback "^0.2.1"
+    react-native-drawer-layout "^4.1.8"
+    use-latest-callback "^0.2.3"
 
-"@react-navigation/elements@^2.0.0-rc.26":
-  version "2.0.0-rc.26"
-  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-2.0.0-rc.26.tgz#a786367f3fc1d6d041d6e9ca097a66da8018ae70"
-  integrity sha512-omtEkb2E8j3dYLq08YGsDykQoVLtTLWAQXp0ql6cB8qjtMhP7rMhoBU50veh0Tes/96Sm3X0e3WZPQMVBKrSSg==
+"@react-navigation/elements@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/elements/-/elements-2.4.2.tgz#22680bcbec8d59f1aad35934beba83f9e251ed8f"
+  integrity sha512-cudKLsRtOB+i8iDzfBKypdqiHsDy1ruqCfYAtwKEclDmLsxu3/90YXoBtoPyFNyIpsn3GtsJzZsrYWQh78xSWg==
   dependencies:
     color "^4.2.3"
 
-"@react-navigation/native-stack@7.0.0-rc.29":
-  version "7.0.0-rc.29"
-  resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-7.0.0-rc.29.tgz#6301559139d906171bffbc22fa090aa4957e103e"
-  integrity sha512-KHjtwN+PFDiQi75MdJXQqvkBr5In6hwZKQJsFqWiwNa5bCWMV/KxtHK6LkC2sXAGO64A2xixIFYUgkx71Cd5xw==
+"@react-navigation/native-stack@^7.3.13":
+  version "7.3.13"
+  resolved "https://registry.yarnpkg.com/@react-navigation/native-stack/-/native-stack-7.3.13.tgz#b6962b71755f0ac8dd2f97a2c4229575a15a0cb1"
+  integrity sha512-udH+HumX0PmaT6QQTqjU3ciiCwifBGtnw1+6B1bVEDw83q80WHotlMitaf8Enbuf7oWrxwB+Eow4tV5MJXgQtQ==
   dependencies:
-    "@react-navigation/elements" "^2.0.0-rc.26"
+    "@react-navigation/elements" "^2.4.2"
     warn-once "^0.1.1"
 
 "@react-navigation/native@7.0.0-rc.21":
@@ -16773,17 +16773,17 @@ react-native-dotenv@^3.4.11:
   dependencies:
     dotenv "^16.4.5"
 
-react-native-drawer-layout@^4.0.0-rc.11:
-  version "4.0.0-rc.11"
-  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.0.0-rc.11.tgz#cae94060f24068d15b6699cbda12031daa209f34"
-  integrity sha512-LIKLAdS07GSNKV5f3K6RX+nLQskvSYp4Fe8VV2dvIMwrmEFEKagruM/S3NenwSsh8sewraV1oV4BjHHUq2PSsQ==
-  dependencies:
-    use-latest-callback "^0.2.1"
-
 react-native-drawer-layout@^4.1.6:
   version "4.1.7"
   resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.1.7.tgz#1c741c9bf9c739d6672201692e4ba4839ca0c8ff"
   integrity sha512-KeTGZsNEDbOmgo8ICwr1vBmvWjRrRsvbLc2IAfQnW5h5UtxVZVRxY4QaN84BSBQPXm6tQ6AXfII8TCXCv3c0Ew==
+  dependencies:
+    use-latest-callback "^0.2.3"
+
+react-native-drawer-layout@^4.1.8:
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/react-native-drawer-layout/-/react-native-drawer-layout-4.1.8.tgz#a832b81a00c413f6f9040487378ba54580c18797"
+  integrity sha512-NyAvx3VknkibuaLH2zl96hvMrjCrXnjpH2H/BwTZxFV1BzzegI51+wa8TgttKW343Kd8+9DOWOLX4xhXC1LEAA==
   dependencies:
     use-latest-callback "^0.2.3"
 
@@ -16822,7 +16822,7 @@ react-native-ios-context-menu@^1.15.3:
   dependencies:
     "@dominicstop/ts-event-emitter" "^1.1.0"
 
-react-native-is-edge-to-edge@1.1.7:
+react-native-is-edge-to-edge@1.1.7, react-native-is-edge-to-edge@^1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.7.tgz#28947688f9fafd584e73a4f935ea9603bd9b1939"
   integrity sha512-EH6i7E8epJGIcu7KpfXYXiV2JFIYITtq+rVS8uEb+92naMRBdxhTuS8Wn2Q7j9sqyO0B+Xbaaf9VdipIAmGW4w==
@@ -16891,12 +16891,13 @@ react-native-safe-area-context@5.4.0:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.4.0.tgz#04b51940408c114f75628a12a93569d30c525454"
   integrity sha512-JaEThVyJcLhA+vU0NU8bZ0a1ih6GiF4faZ+ArZLqpYbL6j7R3caRqj+mE3lEtKCuHgwjLg3bCxLL1GPUJZVqUA==
 
-react-native-screens@~4.10.0:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.10.0.tgz#40634aead590c6b7034ded6a9f92465d1d611906"
-  integrity sha512-Tw21NGuXm3PbiUGtZd0AnXirUixaAbPXDjNR0baBH7/WJDaDTTELLcQ7QRXuqAWbmr/EVCrKj1348ei1KFIr8A==
+react-native-screens@^4.11.0:
+  version "4.11.0"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-4.11.0.tgz#2d60fd377299dedaf954da5089907325a29d05ef"
+  integrity sha512-ddQupo2Gjw12sV0fxeFFkN/EiFUg3Ty+Qm7Kjf/VOJYH1z8/rHsiMMmxWzpRkFPcXZ6+10t62rot/IbxnbzCbA==
   dependencies:
     react-freeze "^1.0.0"
+    react-native-is-edge-to-edge "^1.1.7"
     warn-once "^0.1.0"
 
 react-native-svg@15.11.2:
