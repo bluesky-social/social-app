@@ -95,12 +95,12 @@ function RecentChatItem({
   onPress: () => void
   moderationOpts: ModerationOpts
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
 
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
+    profile.displayName || sanitizeHandle(i18n, profile.handle),
     moderation.ui('displayName'),
   )
   const verification = useSimpleVerificationState({profile})
