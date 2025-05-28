@@ -4,7 +4,12 @@ import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type PostThreadParams, type Slice} from '#/state/queries/usePostThread'
-import {TREE_AVI_WIDTH, TREE_INDENT} from '#/screens/PostThread/const'
+import {
+  LINEAR_AVI_WIDTH,
+  REPLY_LINE_WIDTH,
+  TREE_AVI_WIDTH,
+  TREE_INDENT,
+} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {CirclePlus_Stroke2_Corner0_Rounded as CirclePlus} from '#/components/icons/CirclePlus'
 import {Link} from '#/components/Link'
@@ -20,46 +25,39 @@ export function ReadMore({
   const t = useTheme()
   const {_} = useLingui()
   const isTreeView = view === 'tree'
-  const indentCount = Math.max(0, item.indent - 1)
+  const indent = Math.max(0, item.indent - 1)
 
-  const treeIndents = isTreeView ? (
-    Array.from(Array(indentCount)).map((_, n: number) => (
-      <View
-        key={`${item.key}-padding-${n}`}
-        style={[
-          t.atoms.border_contrast_low,
-          {
-            borderRightWidth: 2,
-            width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-            left: 1,
-          },
-        ]}
-      />
-    ))
-  ) : indentCount > 0 ? (
-    <View
-      style={[
-        // avi width minus border, divided by 2
-        {width: (42 - 2) / 2},
-      ]}
-    />
-  ) : null
+  const spacers = isTreeView
+    ? Array.from(Array(indent)).map((_, n: number) => (
+        <View
+          key={`${item.key}-padding-${n}`}
+          style={[
+            t.atoms.border_contrast_low,
+            {
+              borderRightWidth: REPLY_LINE_WIDTH,
+              width: TREE_INDENT + TREE_AVI_WIDTH / 2,
+              left: 1,
+            },
+          ]}
+        />
+      ))
+    : null
 
   return (
     <View style={[a.flex_row]}>
-      {treeIndents}
+      {spacers}
       <View
         style={[
           t.atoms.border_contrast_low,
           {
             marginLeft: isTreeView
               ? TREE_INDENT + TREE_AVI_WIDTH / 2 - 1
-              : TREE_INDENT,
+              : (LINEAR_AVI_WIDTH - REPLY_LINE_WIDTH) / 2 + 16,
             borderLeftWidth: 2,
             borderBottomWidth: 2,
             borderBottomLeftRadius: a.rounded_sm.borderRadius,
             height: '50%',
-            width: isTreeView ? TREE_INDENT : 42 / 2 + 10,
+            width: isTreeView ? TREE_INDENT : LINEAR_AVI_WIDTH / 2 + 10,
           },
         ]}
       />
