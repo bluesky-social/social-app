@@ -117,6 +117,7 @@ export function threadPost({
        * indented than the computed indent for this post.
        */
       isDeadEnd: !oneDown || oneDown?.depth < indent,
+      skippedIndents: new Set(),
     },
   }
 }
@@ -152,11 +153,9 @@ export function postViewToThreadPlaceholder(
     value: {
       $type: 'app.bsky.unspecced.getPostThreadV2#threadItemPost',
       post,
-      hiddenByThreadgate: false,
       opThread: false,
       moreParents: false,
       moreReplies: 0,
-      mutedByViewer: false,
     },
   }
 }

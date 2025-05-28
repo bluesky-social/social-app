@@ -193,19 +193,14 @@ let PostThreadItemLoaded = ({
           ],
       ]}>
       {Array.from(Array(indents)).map((_, n: number) => {
-        const isLastIteration = n === indents - 1
+        const isSkipped = item.ui.skippedIndents.has(n)
         return (
           <View
             key={`${post.uri}-padding-${n}`}
             style={[
               t.atoms.border_contrast_low,
               {
-                borderRightWidth:
-                  isLastIteration &&
-                  item.ui.isDeadEnd &&
-                  !item.ui.precedesParentReadMore
-                    ? 0
-                    : REPLY_LINE_WIDTH,
+                borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
                 width: TREE_INDENT + TREE_AVI_WIDTH / 2,
                 left: 1,
               },
@@ -229,7 +224,7 @@ let PostThreadItemLoaded = ({
                 !item.ui.precedesParentReadMore &&
                 !item.ui.precedesChildReadMore && [a.pb_sm],
             ]}>
-            {item.ui.indent > 1 && item.ui.parentHasBranchingReplies && (
+            {item.ui.indent > 1 && (
               <View
                 style={[
                   a.absolute,
