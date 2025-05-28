@@ -6298,17 +6298,17 @@
     color "^4.2.3"
 
 "@react-navigation/core@^7.0.0-rc.15":
-  version "7.0.0-rc.15"
-  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-7.0.0-rc.15.tgz#a6f1ae41c6afc690c54c2c3473011bab25e224dc"
-  integrity sha512-g02FyrUVVzUrzlYSp3ZHXWCFyZEDFEjiccEMBDwmgCWr/9NnnSYQ00utlyTU5GmGoFK1G1NAN1O+Q4YlT+GT1A==
+  version "7.9.2"
+  resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-7.9.2.tgz#e54bb3f36a33ef9eecaf814200e00b582470134f"
+  integrity sha512-lqCyKMWWaSwGK4VV3wRXXEKvl5IKrVH207Kp77TLCnITnd4KQIdgjzzJ/Pr62ugki3VTAErq1vg0yRlcXciCbg==
   dependencies:
-    "@react-navigation/routers" "^7.0.0-rc.8"
+    "@react-navigation/routers" "^7.3.7"
     escape-string-regexp "^4.0.0"
-    nanoid "3.3.7"
+    nanoid "^3.3.11"
     query-string "^7.1.3"
-    react-is "^18.2.0"
-    use-latest-callback "^0.2.1"
-    use-sync-external-store "^1.2.2"
+    react-is "^19.1.0"
+    use-latest-callback "^0.2.3"
+    use-sync-external-store "^1.5.0"
 
 "@react-navigation/drawer@^7.3.12":
   version "7.3.12"
@@ -6346,12 +6346,12 @@
     nanoid "3.3.7"
     use-latest-callback "^0.2.1"
 
-"@react-navigation/routers@^7.0.0-rc.8":
-  version "7.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-7.0.0-rc.8.tgz#fac5f6b3bfe2c29b77a0767493b262df19c4ee68"
-  integrity sha512-90E091XEiBd2pimv3ANNpjoAJK0V090SGuyPwU9CmgYfVe6BFdzfSNcOvIvJ9qLgjVKWrBzzoVBqZOwcYv+8zQ==
+"@react-navigation/routers@^7.3.7":
+  version "7.3.7"
+  resolved "https://registry.yarnpkg.com/@react-navigation/routers/-/routers-7.3.7.tgz#6ca658f2a4ff9cfaf33b678a3a04cc28a2e92481"
+  integrity sha512-5ffgrefOs2zWqcCVX+OKn+RDx0puopQtxqetegFrTfWQ6pGXdY/5v4kBpPwaOFrNEeE/LPbHt9IJaJuvyhB7RA==
   dependencies:
-    nanoid "3.3.7"
+    nanoid "^3.3.11"
 
 "@remirror/core-constants@3.0.0":
   version "3.0.0"
@@ -14976,6 +14976,11 @@ nanoid@^3.3.1, nanoid@^3.3.6:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.6.tgz#443380c856d6e9f9824267d960b4236ad583ea4c"
   integrity sha512-BGcqMMJuToF7i1rt+2PWSNVnWIkGCU78jBG3RxO/bZlnZPK2Cmi2QaffxGO/2RvWi9sL+FAiRiXMgsyxQ1DIDA==
 
+nanoid@^3.3.11:
+  version "3.3.11"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.11.tgz#4f4f112cefbe303202f2199838128936266d185b"
+  integrity sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==
+
 nanoid@^5.0.5:
   version "5.0.5"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-5.0.5.tgz#5112efb5c0caf4fc80680d66d303c65233a79fdd"
@@ -16731,7 +16736,7 @@ react-image-crop@^11.0.7:
   resolved "https://registry.yarnpkg.com/react-image-crop/-/react-image-crop-11.0.7.tgz#25f3d37ccbb65a05d19d23b4740a5912835c741e"
   integrity sha512-ZciKWHDYzmm366JDL18CbrVyjnjH0ojufGDmScfS4ZUqLHg4nm6ATY+K62C75W4ZRNt4Ii+tX0bSjNk9LQ2xzQ==
 
-react-is@19, react-is@^19.0.0:
+react-is@19, react-is@^19.0.0, react-is@^19.1.0:
   version "19.1.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.1.0.tgz#805bce321546b7e14c084989c77022351bbdd11b"
   integrity sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg==
@@ -16745,11 +16750,6 @@ react-is@^18.0.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
-
-react-is@^18.2.0:
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
-  integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
 react-keyed-flatten-children@^5.0.0:
   version "5.0.0"
@@ -19405,12 +19405,7 @@ use-isomorphic-layout-effect@^1.1.1:
   resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.2.tgz#497cefb13d863d687b08477d9e5a164ad8c1a6fb"
   integrity sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==
 
-use-latest-callback@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/use-latest-callback/-/use-latest-callback-0.2.1.tgz#4d4e6a9e4817b13142834850dcfa8d24ca4569cf"
-  integrity sha512-QWlq8Is8BGWBf883QOEQP5HWYX/kMI+JTbJ5rdtvJLmXTIh9XoHIO3PQcmQl8BU44VKxow1kbQUHa6mQSMALDQ==
-
-use-latest-callback@^0.2.3:
+use-latest-callback@^0.2.1, use-latest-callback@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/use-latest-callback/-/use-latest-callback-0.2.3.tgz#2d644d3063040b9bc2d4c55bb525a13ae3de9e16"
   integrity sha512-7vI3fBuyRcP91pazVboc4qu+6ZqM8izPWX9k7cRnT8hbD5svslcknsh3S9BUhaK11OmgTV4oWZZVSeQAiV53SQ==
@@ -19442,6 +19437,11 @@ use-sync-external-store@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.2.tgz#c3b6390f3a30eba13200d2302dcdf1e7b57b2ef9"
   integrity sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==
+
+use-sync-external-store@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.5.0.tgz#55122e2a3edd2a6c106174c27485e0fd59bcfca0"
+  integrity sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"
