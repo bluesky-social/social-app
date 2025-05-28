@@ -52,7 +52,18 @@ export type Slice =
         indent: number
         parentHasBranchingReplies: boolean
         isDeadEnd: boolean
-        hasReadMore?: boolean
+        /**
+         * Populated during the final traversal of the thread. Denotes whether
+         * there is a "Read more" link for the parent immediately following
+         * this item.
+         */
+        precedesParentReadMore?: boolean
+        /**
+         * Populated during the final traversal of the thread. Denotes whether
+         * there is a "Read more" link for this item immediately following
+         * this item.
+         */
+        precedesChildReadMore?: boolean
       }
     }
   | {
