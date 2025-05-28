@@ -7,7 +7,6 @@ import {
 } from '@atproto/api'
 
 import {
-  type NTraversalMetadata,
   type Slice,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
@@ -41,24 +40,6 @@ export function getPostRecord(post: AppBskyFeedDefs.PostView) {
   return post.record as AppBskyFeedPost.Record
 }
 
-export function getPostTraversalMetadata(
-  item: Extract<Slice, {type: 'threadPost'}>,
-): TraversalMetadata | undefined {
-  if (!AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) return
-  const replyCount = item.value.post.replyCount || 0
-  const unhydratedReplies = item.value.moreReplies || 0
-  return {
-    indent: item.ui.indent,
-    /**
-     * If the post has more than a single reply, and the total reply count
-     * minus the number of replies not present in the response is greater than
-     * 1, then we must have more than a single branch of replies present in the
-     * response, which can affect how we render tree view.
-     */
-    hasBranchingReplies: replyCount > 1 && replyCount - unhydratedReplies > 1,
-  }
-}
-
 export function getTraversalMetadata({
   item,
   prevItem,
@@ -68,13 +49,19 @@ export function getTraversalMetadata({
   item: AppBskyUnspeccedGetPostThreadV2.ThreadItem
   prevItem?: AppBskyUnspeccedGetPostThreadV2.ThreadItem
   nextItem?: AppBskyUnspeccedGetPostThreadV2.ThreadItem
-  parentMetadata?: NTraversalMetadata
-}): NTraversalMetadata {
+  parentMetadata?: TraversalMetadata
+}): TraversalMetadata {
   if (!AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
     throw new Error(`Expected thread item to be a post`)
   }
   const replies = item.value.post.replyCount || 0
   const unhydratedReplies = item.value.moreReplies || 0
+  /**
+   * If the post has more than a single reply, and the total reply count
+   * minus the number of replies not present in the response is greater than
+   * 1, then we must have more than a single branch of replies present in the
+   * response, which can affect how we render tree view.
+   */
   const hasBranchingReplies = replies > 1 && replies - unhydratedReplies > 1
 
   return {
@@ -106,7 +93,7 @@ export function getThreadPostUI({
   prevItemDepth,
   nextItemDepth,
   skippedIndents,
-}: NTraversalMetadata) {
+}: TraversalMetadata): Extract<Slice, {type: 'threadPost'}>['ui'] {
   return {
     isAnchor: depth === 0,
     showParentReplyLine:

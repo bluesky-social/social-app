@@ -6,14 +6,12 @@ import {
 
 import {
   HiddenReplyKind,
-  type NTraversalMetadata,
   type PostThreadParams,
   type Slice,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
 import {
   getPostRecord,
-  getPostTraversalMetadata,
   getThreadPostUI,
   getTraversalMetadata,
 } from '#/state/queries/usePostThread/utils'
@@ -205,15 +203,29 @@ export function sort(
   const items: Slice[] = []
   const hidden: Slice[] = []
   const muted: Slice[] = []
-  const postDataMap = new Map<string, TraversalMetadata | undefined>()
-
-  const metadatas = new Map<string, NTraversalMetadata>()
+  const metadatas = new Map<string, TraversalMetadata>()
 
   // @ts-ignore
   window.__data = metadatas // for debugging
 
   traversal: for (let i = 0; i < thread.length; i++) {
     const item = thread[i]
+    let parentMetadata: TraversalMetadata | undefined
+    let metadata: TraversalMetadata | undefined
+
+    if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+      parentMetadata = metadatas.get(
+        getPostRecord(item.value.post).reply?.parent?.uri || '',
+      )
+      metadata = getTraversalMetadata({
+        item,
+        parentMetadata,
+        prevItem: thread.at(i - 1),
+        nextItem: thread.at(i + 1),
+      })
+      metadatas.set(item.uri, metadata)
+      metadatas.set(metadata.text, metadata) // TODO debugging
+    }
 
     if (item.depth < 0) {
       /*
@@ -240,17 +252,12 @@ export function sort(
           uri: item.uri,
           depth: item.depth,
           value: item.value,
-          oneUp: thread[i - 1],
-          oneDown: thread[i + 1],
           moderationOpts,
         })
-        postDataMap.set(item.uri, getPostTraversalMetadata(post))
         items.push(post)
 
         parentTraversal: for (let pi = i - 1; pi >= 0; pi--) {
-          const parentOneDown = thread[pi + 1]
           const parent = thread[pi]
-          const parentOneUp = thread[pi - 1]
 
           if (
             AppBskyUnspeccedGetPostThreadV2.isThreadItemNoUnauthenticated(
@@ -277,8 +284,6 @@ export function sort(
                 uri: parent.uri,
                 depth: parent.depth,
                 value: parent.value,
-                oneUp: parentOneUp,
-                oneDown: parentOneDown,
                 moderationOpts,
               }),
             )
@@ -304,37 +309,20 @@ export function sort(
         i = branch.end
         continue traversal
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
-        const parentMetadata = metadatas.get(
-          getPostRecord(item.value.post).reply?.parent?.uri || '',
-        )
-        const oneUp = thread.at(i - 1)
-        const oneDown = thread.at(i + 1)
-        const metadata = getTraversalMetadata({
-          item,
-          parentMetadata,
-          prevItem: oneUp,
-          nextItem: oneDown,
-        })
         if (parentMetadata) {
           parentMetadata.seenReplies += 1
-          metadata.isLastSibling =
-            parentMetadata.replies === parentMetadata.seenReplies
+          if (metadata) {
+            metadata.isLastSibling =
+              parentMetadata.replies === parentMetadata.seenReplies
+          }
         }
-        metadatas.set(item.uri, metadata)
-        metadatas.set(metadata.text, metadata) // TODO debugging
 
         const post = views.threadPost({
           uri: item.uri,
           depth: item.depth,
           value: item.value,
-          traversalMetadata: postDataMap.get(
-            getPostRecord(item.value.post)?.reply?.parent?.uri || '',
-          ),
-          oneUp,
-          oneDown,
           moderationOpts,
         })
-        postDataMap.set(item.uri, getPostTraversalMetadata(post))
         const postMod = getModerationState(post.moderation)
         const postIsHiddenByThreadgate = threadgateHiddenReplies.has(item.uri)
         const postIsModerated =
@@ -372,12 +360,10 @@ export function sort(
                 const childParentMetadata = metadatas.get(
                   getPostRecord(child.value.post).reply?.parent?.uri || '',
                 )
-                const prevItem = thread[ci - 1]
-                const nextItem = thread[ci + 1]
                 const childMetadata = getTraversalMetadata({
                   item: child,
-                  prevItem,
-                  nextItem,
+                  prevItem: thread[ci - 1],
+                  nextItem: thread[ci + 1],
                   parentMetadata: childParentMetadata,
                 })
                 if (childParentMetadata) {
@@ -393,14 +379,8 @@ export function sort(
                   uri: child.uri,
                   depth: child.depth,
                   value: child.value,
-                  traversalMetadata: postDataMap.get(
-                    getPostRecord(child.value.post)?.reply?.parent?.uri || '',
-                  ),
-                  oneUp: prevItem,
-                  oneDown: nextItem,
                   moderationOpts,
                 })
-                postDataMap.set(child.uri, getPostTraversalMetadata(childPost))
                 const childPostMod = getModerationState(childPost.moderation)
                 const childPostIsHiddenByThreadgate =
                   threadgateHiddenReplies.has(child.uri)
