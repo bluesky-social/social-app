@@ -103,7 +103,7 @@ import {
 import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
-import {useTheme} from '#/alf'
+import {type Theme, useTheme} from '#/alf'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -515,19 +515,20 @@ function TabsNavigator() {
   )
 }
 
+function screenOptions(t: Theme) {
+  return {
+    fullScreenGestureEnabled: true,
+    fullScreenGestureShadowEnabled: true,
+    headerShown: false,
+    contentStyle: t.atoms.bg,
+  }
+}
+
 function HomeTabNavigator() {
   const t = useTheme()
 
   return (
-    <HomeTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        fullScreenGestureEnabled: true,
-        fullScreenGestureShadowEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}
-      initialRouteName="Home">
+    <HomeTab.Navigator screenOptions={screenOptions(t)} initialRouteName="Home">
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
       <HomeTab.Screen name="Start" getComponent={() => HomeScreen} />
       {commonScreens(HomeTab as typeof Flat)}
@@ -539,13 +540,7 @@ function SearchTabNavigator() {
   const t = useTheme()
   return (
     <SearchTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        fullScreenGestureEnabled: true,
-        fullScreenGestureShadowEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}
+      screenOptions={screenOptions(t)}
       initialRouteName="Search">
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
       {commonScreens(SearchTab as typeof Flat)}
@@ -557,13 +552,7 @@ function NotificationsTabNavigator() {
   const t = useTheme()
   return (
     <NotificationsTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        fullScreenGestureEnabled: true,
-        fullScreenGestureShadowEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}
+      screenOptions={screenOptions(t)}
       initialRouteName="Notifications">
       <NotificationsTab.Screen
         name="Notifications"
@@ -579,13 +568,7 @@ function MyProfileTabNavigator() {
   const t = useTheme()
   return (
     <MyProfileTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        fullScreenGestureEnabled: true,
-        fullScreenGestureShadowEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}
+      screenOptions={screenOptions(t)}
       initialRouteName="MyProfile">
       <MyProfileTab.Screen
         // MyProfile is not in AllNavigationParams - asserting as Profile at least
@@ -603,13 +586,7 @@ function MessagesTabNavigator() {
   const t = useTheme()
   return (
     <MessagesTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        fullScreenGestureEnabled: true,
-        fullScreenGestureShadowEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}
+      screenOptions={screenOptions(t)}
       initialRouteName="Messages">
       <MessagesTab.Screen
         name="Messages"
@@ -637,13 +614,7 @@ const FlatNavigator = () => {
   return (
     <Flat.Navigator
       screenListeners={screenListeners}
-      screenOptions={{
-        animationDuration: 285,
-        fullScreenGestureEnabled: true,
-        fullScreenGestureShadowEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}>
+      screenOptions={screenOptions(t)}>
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
