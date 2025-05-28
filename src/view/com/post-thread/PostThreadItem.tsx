@@ -16,7 +16,9 @@ import {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {MAX_POST_LINES} from '#/lib/constants'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -36,13 +38,11 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {Link, TextLink} from '#/view/com/util/Link'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -59,6 +59,7 @@ import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
+import {PostControls} from '#/components/PostControls'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
@@ -204,7 +205,7 @@ let PostThreadItemLoaded = ({
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const [limitLines, setLimitLines] = React.useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -287,6 +288,8 @@ let PostThreadItemLoaded = ({
     setLimitLines(false)
   }, [setLimitLines])
 
+  const {isActive: live} = useActorStatus(post.author)
+
   if (!record) {
     return <ErrorMessage message={_(msg`Invalid or unsupported post record`)} />
   }
@@ -330,6 +333,7 @@ let PostThreadItemLoaded = ({
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              live={live}
             />
             <View style={[a.flex_1]}>
               <View style={[a.flex_row, a.align_center]}>
@@ -490,7 +494,7 @@ let PostThreadItemLoaded = ({
                   marginLeft: -5,
                 },
               ]}>
-              <PostCtrls
+              <PostControls
                 big
                 post={post}
                 record={record}
@@ -575,6 +579,7 @@ let PostThreadItemLoaded = ({
                   profile={post.author}
                   moderation={moderation.ui('avatar')}
                   type={post.author.associated?.labeler ? 'labeler' : 'user'}
+                  live={live}
                 />
 
                 {showChildReplyLine && (
@@ -637,7 +642,7 @@ let PostThreadItemLoaded = ({
                   />
                 </View>
               )}
-              <PostCtrls
+              <PostControls
                 post={post}
                 record={record}
                 richText={richText}

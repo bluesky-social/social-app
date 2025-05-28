@@ -882,6 +882,7 @@ export function Explore({
               record={subItem.record}
               reason={indexInSlice === 0 ? slice.reason : undefined}
               feedContext={slice.feedContext}
+              reqId={slice.reqId}
               moderation={subItem.moderation}
               parentAuthor={subItem.parentAuthor}
               showReplyTo={item.showReplyTo}

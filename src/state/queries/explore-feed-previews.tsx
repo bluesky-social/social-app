@@ -215,6 +215,7 @@ export function useFeedPreviews(
                 isFallbackMarker: false,
                 isIncompleteThread: item.isIncompleteThread,
                 feedContext: item.feedContext,
+                reqId: item.reqId,
                 reason: item.reason,
                 feedPostUri: item.feedPostUri,
                 items: item.items

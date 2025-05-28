@@ -9,7 +9,9 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
@@ -25,7 +27,6 @@ import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -100,6 +101,8 @@ function ProfileCard() {
       profile: profiles?.find(p => p.did === account.did),
     }))
 
+  const {isActive: live} = useActorStatus(profile)
+
   return (
     <View style={[a.my_md, !leftNavMinimal && [a.w_full, a.align_start]]}>
       {!isLoading && profile ? (
@@ -142,6 +145,7 @@ function ProfileCard() {
                       avatar={profile.avatar}
                       size={size}
                       type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                      live={live}
                     />
                   </View>
                   {!leftNavMinimal && (
@@ -225,8 +229,7 @@ function SwitchMenuItems({
     | undefined
   signOutPromptControl: DialogControlProps
 }) {
-  const {_, i18n} = useLingui()
-  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
+  const {_} = useLingui()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
 
@@ -243,37 +246,11 @@ function SwitchMenuItems({
               <Trans>Switch account</Trans>
             </Menu.LabelText>
             {accounts.map(other => (
-              <Menu.Item
-                disabled={!!pendingDid}
-                style={[{minWidth: 150}]}
+              <SwitchMenuItem
                 key={other.account.did}
-                label={_(
-                  msg`Switch to ${sanitizeHandle(
-                    i18n,
-                    other.profile?.handle ?? other.account.handle,
-                    '@',
-                  )}`,
-                )}
-                onPress={() =>
-                  onPressSwitchAccount(other.account, 'SwitchAccount')
-                }>
-                <View style={[{marginLeft: tokens.space._2xs * -1}]}>
-                  <UserAvatar
-                    avatar={other.profile?.avatar}
-                    size={20}
-                    type={
-                      other.profile?.associated?.labeler ? 'labeler' : 'user'
-                    }
-                  />
-                </View>
-                <Menu.ItemText>
-                  {sanitizeHandle(
-                    i18n,
-                    other.profile?.handle ?? other.account.handle,
-                    '@',
-                  )}
-                </Menu.ItemText>
-              </Menu.Item>
+                account={other.account}
+                profile={other.profile}
+              />
             ))}
           </Menu.Group>
           <Menu.Divider />
@@ -294,6 +271,46 @@ function SwitchMenuItems({
         </Menu.ItemText>
       </Menu.Item>
     </Menu.Outer>
+  )
+}
+
+function SwitchMenuItem({
+  account,
+  profile,
+}: {
+  account: SessionAccount
+  profile: AppBskyActorDefs.ProfileViewDetailed | undefined
+}) {
+  const {_, i18n} = useLingui()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
+  const {isActive: live} = useActorStatus(profile)
+
+  return (
+    <Menu.Item
+      disabled={!!pendingDid}
+      style={[a.gap_sm, {minWidth: 150}]}
+      key={account.did}
+      label={_(
+        msg`Switch to ${sanitizeHandle(
+          i18n,
+          profile?.handle ?? account.handle,
+          '@',
+        )}`,
+      )}
+      onPress={() => onPressSwitchAccount(account, 'SwitchAccount')}>
+      <View>
+        <UserAvatar
+          avatar={profile?.avatar}
+          size={20}
+          type={profile?.associated?.labeler ? 'labeler' : 'user'}
+          live={live}
+          hideLiveBadge
+        />
+      </View>
+      <Menu.ItemText>
+        {sanitizeHandle(i18n, profile?.handle ?? account.handle, '@')}
+      </Menu.ItemText>
+    </Menu.Item>
   )
 }
 
@@ -449,7 +466,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
 function ComposeBtn() {
   const {currentAccount} = useSession()
   const {getState} = useNavigation()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {_} = useLingui()
   const {leftNavMinimal} = useLayoutBreakpoints()
   const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)

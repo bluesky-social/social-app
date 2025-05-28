@@ -8,7 +8,7 @@ import {useNavigationState} from '@react-navigation/native'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
@@ -265,7 +265,7 @@ const NavItem: React.FC<{
       {children({isActive})}
       {notificationCount ? (
         <View
-          style={styles.notificationCount}
+          style={[styles.notificationCount, styles.notificationCountWeb]}
           aria-label={_(
             msg`${plural(notificationCount, {
               one: '# unread item',
