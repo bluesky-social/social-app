@@ -8,7 +8,10 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 
-import {type Slice} from '#/state/queries/usePostThread/types'
+import {
+  type Slice,
+  type TraversalMetadata,
+} from '#/state/queries/usePostThread/types'
 
 export function threadPostNoUnauthenticated({
   uri,
@@ -65,32 +68,18 @@ export function threadPost({
   uri,
   depth,
   value,
-  parent: up,
   oneUp,
   moderationOpts,
+  traversalMetadata,
 }: {
   uri: string
   depth: number
   value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
-  parent?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
   oneUp?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
   oneDown?: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'][number]
   moderationOpts: ModerationOpts
+  traversalMetadata?: TraversalMetadata
 }): Extract<Slice, {type: 'threadPost'}> {
-  const parent = (up && 'post' in up?.value
-    ? up.value
-    : undefined) as unknown as AppBskyUnspeccedGetPostThreadV2.ThreadItemPost
-  const parentReplyCount = parent?.post?.replyCount || 0
-  const parentAdditionalReplies = parent?.moreReplies || 0
-  const parentHasBranchingReplies =
-    parentReplyCount > 1 && parentReplyCount - parentAdditionalReplies > 1
-  // if (!parentHasBranchingReplies) {
-  //   console.log(value.post.record.text, {
-  //     parentReplyCount,
-  //     parentAdditionalReplies,
-  //   })
-  // }
-
   return {
     type: 'threadPost',
     key: uri,
@@ -111,8 +100,10 @@ export function threadPost({
       isAnchor: depth === 0,
       showParentReplyLine: !!oneUp && oneUp.depth !== 0 && oneUp.depth < depth,
       showChildReplyLine: (value.post.replyCount || 0) > 0,
-      indent: parentHasBranchingReplies ? depth : up?.depth || depth,
-      parentHasBranchingReplies,
+      indent: traversalMetadata?.hasBranchingReplies
+        ? depth
+        : traversalMetadata?.depth || depth,
+      parentHasBranchingReplies: !!traversalMetadata?.hasBranchingReplies,
     },
   }
 }
@@ -127,7 +118,7 @@ export function readMore({
     key: `readMore:${parent.uri}`,
     indent: parent.ui.parentHasBranchingReplies
       ? parent.depth
-      : parent.depth - 1,
+      : Math.max(0, parent.depth - 1),
     replyCount: parent.value.moreReplies,
     nextAnchor: parent,
     nextAnchorUri: new AtUri(parent.uri),
