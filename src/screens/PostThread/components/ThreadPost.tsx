@@ -29,6 +29,11 @@ import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {
+  LINEAR_AVI_WIDTH,
+  OUTER_SPACE,
+  REPLY_LINE_WIDTH,
+} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -180,37 +185,37 @@ let PostThreadItemLoaded = ({
     <SubtleHover>
       <View
         style={[
-          a.px_sm,
           a.pointer,
           showTopBorder && [a.border_t, t.atoms.border_contrast_low],
+          {
+            paddingHorizontal: OUTER_SPACE,
+          },
+          // If there's no next child, add a little padding to bottom
+          !item.ui.showChildReplyLine && {
+            paddingBottom: OUTER_SPACE / 2,
+          },
         ]}>
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
           disabled={overrides?.moderation === true}
           modui={moderation.ui('contentList')}
-          iconSize={42}
+          iconSize={LINEAR_AVI_WIDTH}
           iconStyles={{marginLeft: 2, marginRight: 2}}
           profile={post.author}
           interpretFilterAsBlur>
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 10,
-              paddingLeft: 8,
-              height: 16,
-            }}>
-            <View style={{width: 42}}>
+          {/* Provides some space between posts as well as contains the reply line */}
+          <View style={[a.flex_row, {height: a.pt_md.paddingTop}]}>
+            <View style={{width: LINEAR_AVI_WIDTH}}>
               {item.ui.showParentReplyLine && (
                 <View
                   style={[
+                    a.mx_auto,
+                    a.flex_1,
+                    a.mb_xs,
                     {
-                      width: 2,
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                      flexGrow: 1,
-                      backgroundColor: pal.colors.replyLine,
-                      marginBottom: 4,
+                      width: REPLY_LINE_WIDTH,
+                      backgroundColor: t.atoms.border_contrast_low.borderColor,
                     },
                   ]}
                 />
@@ -218,19 +223,10 @@ let PostThreadItemLoaded = ({
             </View>
           </View>
 
-          <View
-            style={[
-              a.flex_row,
-              a.px_sm,
-              a.gap_md,
-              {
-                paddingBottom: item.ui.showChildReplyLine ? 0 : 8,
-              },
-            ]}>
-            {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
+          <View style={[a.flex_row, a.gap_md]}>
             <View>
               <PreviewableUserAvatar
-                size={42}
+                size={LINEAR_AVI_WIDTH}
                 profile={post.author}
                 moderation={moderation.ui('avatar')}
                 type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -240,13 +236,12 @@ let PostThreadItemLoaded = ({
               {item.ui.showChildReplyLine && (
                 <View
                   style={[
+                    a.mx_auto,
+                    a.mt_xs,
+                    a.flex_1,
                     {
-                      width: 2,
-                      marginLeft: 'auto',
-                      marginRight: 'auto',
-                      flexGrow: 1,
-                      backgroundColor: pal.colors.replyLine,
-                      marginTop: 4,
+                      width: REPLY_LINE_WIDTH,
+                      backgroundColor: t.atoms.border_contrast_low.borderColor,
                     },
                   ]}
                 />
@@ -259,7 +254,6 @@ let PostThreadItemLoaded = ({
                 moderation={moderation}
                 timestamp={post.indexedAt}
                 postHref={postHref}
-                avatarSize={24}
                 style={[a.pb_xs]}
               />
               <LabelsOnMyPost post={post} style={[a.pb_xs]} />
@@ -269,16 +263,14 @@ let PostThreadItemLoaded = ({
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
-                <View style={[a.pb_2xs, a.pr_sm]}>
-                  <RichText
-                    enableTags
-                    value={richText}
-                    style={[a.flex_1, a.text_md]}
-                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                    authorHandle={post.author.handle}
-                    shouldProxyLinks={true}
-                  />
-                </View>
+                <RichText
+                  enableTags
+                  value={richText}
+                  style={[a.flex_1, a.text_md]}
+                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                  authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
+                />
               ) : undefined}
               {limitLines ? (
                 <TextLink
