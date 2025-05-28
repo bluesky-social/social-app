@@ -518,10 +518,9 @@ function TabsNavigator() {
 function screenOptions(t: Theme) {
   return {
     fullScreenGestureEnabled: true,
-    fullScreenGestureShadowEnabled: true,
     headerShown: false,
     contentStyle: t.atoms.bg,
-  }
+  } as const
 }
 
 function HomeTabNavigator() {
