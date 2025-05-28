@@ -127,7 +127,7 @@ const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 /**
  * These "common screens" are reused across stacks.
  */
-function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
+function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
   const title = (page: MessageDescriptor) =>
     bskyTitle(i18n._(page), unreadCountLabel)
 
@@ -530,7 +530,7 @@ function HomeTabNavigator() {
       }}>
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
       <HomeTab.Screen name="Start" getComponent={() => HomeScreen} />
-      {commonScreens(HomeTab)}
+      {commonScreens(HomeTab as typeof Flat)}
     </HomeTab.Navigator>
   )
 }
@@ -548,7 +548,7 @@ function SearchTabNavigator() {
         contentStyle: t.atoms.bg,
       }}>
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
-      {commonScreens(SearchTab as typeof HomeTab)}
+      {commonScreens(SearchTab as typeof Flat)}
     </SearchTab.Navigator>
   )
 }
@@ -570,7 +570,7 @@ function NotificationsTabNavigator() {
         getComponent={() => NotificationsScreen}
         options={{requireAuth: true}}
       />
-      {commonScreens(NotificationsTab as typeof HomeTab)}
+      {commonScreens(NotificationsTab as typeof Flat)}
     </NotificationsTab.Navigator>
   )
 }
@@ -588,15 +588,13 @@ function MyProfileTabNavigator() {
         contentStyle: t.atoms.bg,
       }}>
       <MyProfileTab.Screen
-        // @ts-ignore // TODO: fix this broken type in ProfileScreen
-        name="MyProfile"
+        // MyProfile is not in AllNavigationParams - asserting as Profile at least
+        // gives us typechecking for initialParams -sfn
+        name={'MyProfile' as 'Profile'}
         getComponent={() => ProfileScreen}
-        initialParams={{
-          name: 'me',
-          hideBackButton: true,
-        }}
+        initialParams={{name: 'me', hideBackButton: true}}
       />
-      {commonScreens(MyProfileTab as typeof HomeTab)}
+      {commonScreens(MyProfileTab as unknown as typeof Flat)}
     </MyProfileTab.Navigator>
   )
 }
@@ -621,7 +619,7 @@ function MessagesTabNavigator() {
           animationTypeForReplace: route.params?.animation ?? 'push',
         })}
       />
-      {commonScreens(MessagesTab as typeof HomeTab)}
+      {commonScreens(MessagesTab as typeof Flat)}
     </MessagesTab.Navigator>
   )
 }
@@ -672,7 +670,7 @@ const FlatNavigator = () => {
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`)}}
       />
-      {commonScreens(Flat as typeof HomeTab, numUnread)}
+      {commonScreens(Flat, numUnread)}
     </Flat.Navigator>
   )
 }
