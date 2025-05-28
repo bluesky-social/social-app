@@ -858,7 +858,9 @@ function ExpandedPostDetails({
       <BackdatedPostIndicator post={post} />
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt)}
+          <time dateTime={post.index}>
+            {niceDate(i18n, post.indexedAt)}
+          </time>
         </Text>
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
