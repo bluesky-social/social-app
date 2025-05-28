@@ -91,3 +91,8 @@ export type Slice =
       nextAnchor: Extract<Slice, {type: 'threadPost'}>
       nextAnchorUri: AtUri
     }
+
+export type TraversalMetadata = {
+  depth: number
+  hasBranchingReplies: boolean
+}

@@ -8,7 +8,12 @@ import {
   HiddenReplyKind,
   type PostThreadParams,
   type Slice,
+  type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
+import {
+  getPostRecord,
+  getPostTraversalMetadata,
+} from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
 
 export function flatten(
@@ -168,6 +173,7 @@ export function sort(
   const items: Slice[] = []
   const hidden: Slice[] = []
   const muted: Slice[] = []
+  const postDataMap = new Map<string, TraversalMetadata | undefined>()
 
   traversal: for (let i = 0; i < thread.length; i++) {
     const item = thread[i]
@@ -193,6 +199,8 @@ export function sort(
       ) {
         items.push(views.threadPostBlocked(item))
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+        postDataMap.set(item.uri, getPostTraversalMetadata(item))
+
         items.push(
           views.threadPost({
             uri: item.uri,
@@ -261,14 +269,16 @@ export function sort(
         i = branch.end
         continue traversal
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+        postDataMap.set(item.uri, getPostTraversalMetadata(item))
+
         const oneUp = thread.at(i - 1)
         const oneDown = thread.at(i + 1)
         const post = views.threadPost({
           uri: item.uri,
           depth: item.depth,
           value: item.value,
-          parent: thread.find(
-            p => p.uri === item.value.post.record.reply.parent.uri,
+          traversalMetadata: postDataMap.get(
+            getPostRecord(item.value.post)?.reply?.parent?.uri || '',
           ),
           oneUp,
           oneDown,
@@ -308,12 +318,14 @@ export function sort(
               if (
                 AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(child.value)
               ) {
+                postDataMap.set(child.uri, getPostTraversalMetadata(child))
+
                 const childPost = views.threadPost({
                   uri: child.uri,
                   depth: child.depth,
                   value: child.value,
-                  parent: thread.find(
-                    p => p.uri === child.value.post.record.reply.parent.uri,
+                  traversalMetadata: postDataMap.get(
+                    getPostRecord(child.value.post)?.reply?.parent?.uri || '',
                   ),
                   oneUp: thread[ci - 1],
                   oneDown: thread[ci + 1],
