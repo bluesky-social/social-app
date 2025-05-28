@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type PostThreadParams, type Slice} from '#/state/queries/usePostThread'
-import {TREE_AVI_WIDTH,TREE_INDENT} from '#/screens/PostThread/const'
+import {TREE_AVI_WIDTH, TREE_INDENT} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {CirclePlus_Stroke2_Corner0_Rounded as CirclePlus} from '#/components/icons/CirclePlus'
 import {Link} from '#/components/Link'
@@ -20,7 +20,7 @@ export function ReadMore({
   const t = useTheme()
   const {_} = useLingui()
   const isTreeView = view === 'tree'
-  const indentCount = item.indent - 1
+  const indentCount = Math.max(0, item.indent - 1)
 
   const treeIndents = isTreeView ? (
     Array.from(Array(indentCount)).map((_, n: number) => (
