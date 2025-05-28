@@ -1,10 +1,10 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {useNavigation} from '@react-navigation/core'
-import {NavigationState} from '@react-navigation/native'
-import type {NavigationAction} from '@react-navigation/routers'
+import {type NavigationState} from '@react-navigation/native'
+import {type NavigationAction} from '@react-navigation/routers'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
-import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {type AllNavigatorParams, type NavigationProp} from '#/lib/routes/types'
 
 export type DebouncedNavigationProp = Pick<
   NavigationProp,
@@ -22,16 +22,19 @@ export function useNavigationDeduped() {
   const navigation = useNavigation<NavigationProp>()
   const dedupe = useDedupe()
 
-  return React.useMemo(
-    (): DebouncedNavigationProp => ({
-      // Types from @react-navigation/routers/lib/typescript/src/StackRouter.ts
+  return useMemo<DebouncedNavigationProp>(
+    () => ({
+      // Types from @react-navigation/routers/src/StackRouter.ts
       push: <RouteName extends keyof AllNavigatorParams>(
-        ...args: undefined extends AllNavigatorParams[RouteName]
-          ?
-              | [screen: RouteName]
-              | [screen: RouteName, params: AllNavigatorParams[RouteName]]
-          : [screen: RouteName, params: AllNavigatorParams[RouteName]]
+        ...args: {
+          [Screen in keyof AllNavigatorParams]: undefined extends AllNavigatorParams[Screen]
+            ?
+                | [screen: Screen]
+                | [screen: Screen, params: AllNavigatorParams[Screen]]
+            : [screen: Screen, params: AllNavigatorParams[Screen]]
+        }[RouteName]
       ) => {
+        // @ts-expect-error can't get the types to work -sfn
         dedupe(() => navigation.push(...args))
       },
       // Types from @react-navigation/core/src/types.tsx
@@ -46,14 +49,17 @@ export function useNavigationDeduped() {
       ) => {
         dedupe(() => navigation.navigate(...args))
       },
-      // Types from @react-navigation/routers/lib/typescript/src/StackRouter.ts
+      // Types from @react-navigation/routers/src/StackRouter.ts
       replace: <RouteName extends keyof AllNavigatorParams>(
-        ...args: undefined extends AllNavigatorParams[RouteName]
-          ?
-              | [screen: RouteName]
-              | [screen: RouteName, params: AllNavigatorParams[RouteName]]
-          : [screen: RouteName, params: AllNavigatorParams[RouteName]]
+        ...args: {
+          [Screen in keyof AllNavigatorParams]: undefined extends AllNavigatorParams[Screen]
+            ?
+                | [screen: Screen]
+                | [screen: Screen, params: AllNavigatorParams[Screen]]
+            : [screen: Screen, params: AllNavigatorParams[Screen]]
+        }[RouteName]
       ) => {
+        // @ts-expect-error can't get the types to work -sfn
         dedupe(() => navigation.replace(...args))
       },
       dispatch: (
