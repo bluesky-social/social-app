@@ -35,7 +35,6 @@ import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replie
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {Link} from '#/view/com/util/Link'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -48,6 +47,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
+import {PostControls} from '#/components/PostControls'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
@@ -376,7 +376,7 @@ let PostThreadItemLoaded = ({
                 marginLeft: -5,
               },
             ]}>
-            <PostCtrls
+            <PostControls
               big
               post={postShadow}
               record={record}
