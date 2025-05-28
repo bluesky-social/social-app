@@ -6,7 +6,10 @@ import {
   AtUri,
 } from '@atproto/api'
 
-import {type TraversalMetadata} from '#/state/queries/usePostThread/types'
+import {
+  type Slice,
+  type TraversalMetadata,
+} from '#/state/queries/usePostThread/types'
 import * as bsky from '#/types/bsky'
 
 export function getThreadgateRecord(
@@ -38,13 +41,13 @@ export function getPostRecord(post: AppBskyFeedDefs.PostView) {
 }
 
 export function getPostTraversalMetadata(
-  item: AppBskyUnspeccedGetPostThreadV2.ThreadItem,
+  item: Extract<Slice, {type: 'threadPost'}>,
 ): TraversalMetadata | undefined {
   if (!AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) return
   const replyCount = item.value.post.replyCount || 0
   const unhydratedReplies = item.value.moreReplies || 0
   return {
-    depth: item.depth,
+    indent: item.ui.indent,
     /**
      * If the post has more than a single reply, and the total reply count
      * minus the number of replies not present in the response is greater than

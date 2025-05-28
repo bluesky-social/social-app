@@ -93,6 +93,6 @@ export type Slice =
     }
 
 export type TraversalMetadata = {
-  depth: number
+  indent: number
   hasBranchingReplies: boolean
 }
