@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
@@ -13,31 +20,36 @@ import {
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAgent} from './session'
 
-type StateContext = {
+export type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
   sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
+  feedDescriptor: FeedDescriptor | undefined
 }
 
-const stateContext = React.createContext<StateContext>({
+const stateContext = createContext<StateContext>({
   enabled: false,
   onItemSeen: (_item: any) => {},
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
+  feedDescriptor: undefined,
 })
 
-export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
+export function useFeedFeedback(
+  feed: FeedDescriptor | undefined,
+  hasSession: boolean,
+) {
   const agent = useAgent()
   const enabled = isDiscoverFeed(feed) && hasSession
 
-  const queue = React.useRef<Set<string>>(new Set())
-  const history = React.useRef<
+  const queue = useRef<Set<string>>(new Set())
+  const history = useRef<
     // Use a WeakSet so that we don't need to clear it.
     // This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
     WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
   >(new WeakSet())
 
-  const aggregatedStats = React.useRef<AggregatedStats | null>(null)
-  const throttledFlushAggregatedStats = React.useMemo(
+  const aggregatedStats = useRef<AggregatedStats | null>(null)
+  const throttledFlushAggregatedStats = useMemo(
     () =>
       throttle(() => flushToStatsig(aggregatedStats.current), 45e3, {
         leading: true, // The outer call is already throttled somewhat.
@@ -46,12 +58,12 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     [],
   )
 
-  const sendToFeedNoDelay = React.useCallback(() => {
+  const sendToFeedNoDelay = useCallback(() => {
     const interactions = Array.from(queue.current).map(toInteraction)
     queue.current.clear()
 
     let proxyDid = 'did:web:discover.bsky.app'
-    if (STAGING_FEEDS.includes(feed)) {
+    if (STAGING_FEEDS.includes(feed ?? '')) {
       proxyDid = 'did:web:algo.pop2.bsky.app'
     }
 
@@ -79,7 +91,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     throttledFlushAggregatedStats()
   }, [agent, throttledFlushAggregatedStats, feed])
 
-  const sendToFeed = React.useMemo(
+  const sendToFeed = useMemo(
     () =>
       throttle(sendToFeedNoDelay, 10e3, {
         leading: false,
@@ -88,7 +100,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     [sendToFeedNoDelay],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!enabled) {
       return
     }
@@ -100,7 +112,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     return () => sub.remove()
   }, [enabled, sendToFeed])
 
-  const onItemSeen = React.useCallback(
+  const onItemSeen = useCallback(
     (feedItem: any) => {
       if (!enabled) {
         return
@@ -124,7 +136,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     [enabled, sendToFeed],
   )
 
-  const sendInteraction = React.useCallback(
+  const sendInteraction = useCallback(
     (interaction: AppBskyFeedDefs.Interaction) => {
       if (!enabled) {
         return
@@ -138,7 +150,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     [enabled, sendToFeed],
   )
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       enabled,
       // pass this method to the <List> onItemSeen
@@ -146,14 +158,15 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       // call on various events
       // queues the event to be sent with the throttled sendToFeed call
       sendInteraction,
+      feedDescriptor: feed,
     }
-  }, [enabled, onItemSeen, sendInteraction])
+  }, [enabled, onItemSeen, sendInteraction, feed])
 }
 
 export const FeedFeedbackProvider = stateContext.Provider
 
 export function useFeedFeedbackContext() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 // TODO
@@ -161,8 +174,8 @@ export function useFeedFeedbackContext() {
 // take advantage of the feed feedback API. Until that's in
 // place, we're hardcoding it to the discover feed.
 // -prf
-function isDiscoverFeed(feed: FeedDescriptor) {
-  return FEEDBACK_FEEDS.includes(feed)
+function isDiscoverFeed(feed?: FeedDescriptor) {
+  return !!feed && FEEDBACK_FEEDS.includes(feed)
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
