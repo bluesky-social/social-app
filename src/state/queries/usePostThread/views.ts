@@ -81,6 +81,15 @@ export function threadPost({
   moderationOpts: ModerationOpts
   traversalMetadata?: TraversalMetadata
 }): Extract<Slice, {type: 'threadPost'}> {
+  const parentHasBranchingReplies = !!traversalMetadata?.hasBranchingReplies
+  /*
+   * Indent differs from depth in cases where the tree has no branches, and so
+   * we can maintain the more shallow depth of the parent.
+   */
+  const indent = parentHasBranchingReplies
+    ? depth
+    : traversalMetadata?.indent || depth
+
   return {
     type: 'threadPost',
     key: uri,
@@ -101,11 +110,13 @@ export function threadPost({
       isAnchor: depth === 0,
       showParentReplyLine: !!oneUp && oneUp.depth !== 0 && oneUp.depth < depth,
       showChildReplyLine: (value.post.replyCount || 0) > 0,
-      indent: traversalMetadata?.hasBranchingReplies
-        ? depth
-        : traversalMetadata?.indent || depth,
-      parentHasBranchingReplies: !!traversalMetadata?.hasBranchingReplies,
-      isDeadEnd: !oneDown || oneDown?.depth < depth,
+      indent,
+      parentHasBranchingReplies,
+      /*
+       * If there are no slices below this one, or the next slice is less
+       * indented than the computed indent for this post.
+       */
+      isDeadEnd: !oneDown || oneDown?.depth < indent,
     },
   }
 }
