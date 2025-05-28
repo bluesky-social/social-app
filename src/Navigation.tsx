@@ -500,16 +500,16 @@ function TabsNavigator() {
       <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
       <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
       <Tab.Screen
+        name="MessagesTab"
+        getComponent={() => MessagesTabNavigator}
+      />
+      <Tab.Screen
         name="NotificationsTab"
         getComponent={() => NotificationsTabNavigator}
       />
       <Tab.Screen
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
-      />
-      <Tab.Screen
-        name="MessagesTab"
-        getComponent={() => MessagesTabNavigator}
       />
     </Tab.Navigator>
   )
@@ -522,12 +522,12 @@ function HomeTabNavigator() {
     <HomeTab.Navigator
       screenOptions={{
         animationDuration: 285,
-        gestureEnabled: true,
         fullScreenGestureEnabled: true,
         fullScreenGestureShadowEnabled: true,
         headerShown: false,
         contentStyle: t.atoms.bg,
-      }}>
+      }}
+      initialRouteName="Home">
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
       <HomeTab.Screen name="Start" getComponent={() => HomeScreen} />
       {commonScreens(HomeTab as typeof Flat)}
@@ -541,12 +541,12 @@ function SearchTabNavigator() {
     <SearchTab.Navigator
       screenOptions={{
         animationDuration: 285,
-        gestureEnabled: true,
         fullScreenGestureEnabled: true,
         fullScreenGestureShadowEnabled: true,
         headerShown: false,
         contentStyle: t.atoms.bg,
-      }}>
+      }}
+      initialRouteName="Search">
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
       {commonScreens(SearchTab as typeof Flat)}
     </SearchTab.Navigator>
@@ -559,12 +559,12 @@ function NotificationsTabNavigator() {
     <NotificationsTab.Navigator
       screenOptions={{
         animationDuration: 285,
-        gestureEnabled: true,
         fullScreenGestureEnabled: true,
         fullScreenGestureShadowEnabled: true,
         headerShown: false,
         contentStyle: t.atoms.bg,
-      }}>
+      }}
+      initialRouteName="Notifications">
       <NotificationsTab.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
@@ -581,12 +581,12 @@ function MyProfileTabNavigator() {
     <MyProfileTab.Navigator
       screenOptions={{
         animationDuration: 285,
-        gestureEnabled: true,
         fullScreenGestureEnabled: true,
         fullScreenGestureShadowEnabled: true,
         headerShown: false,
         contentStyle: t.atoms.bg,
-      }}>
+      }}
+      initialRouteName="MyProfile">
       <MyProfileTab.Screen
         // MyProfile is not in AllNavigationParams - asserting as Profile at least
         // gives us typechecking for initialParams -sfn
@@ -605,12 +605,12 @@ function MessagesTabNavigator() {
     <MessagesTab.Navigator
       screenOptions={{
         animationDuration: 285,
-        gestureEnabled: true,
         fullScreenGestureEnabled: true,
         fullScreenGestureShadowEnabled: true,
         headerShown: false,
         contentStyle: t.atoms.bg,
-      }}>
+      }}
+      initialRouteName="Messages">
       <MessagesTab.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
@@ -639,7 +639,6 @@ const FlatNavigator = () => {
       screenListeners={screenListeners}
       screenOptions={{
         animationDuration: 285,
-        gestureEnabled: true,
         fullScreenGestureEnabled: true,
         fullScreenGestureShadowEnabled: true,
         headerShown: false,
@@ -777,7 +776,14 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           logModuleInitTime()
           onReady()
           logger.metric('router:navigate', {}, {statsig: false})
-        }}>
+        }}
+        // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
+        // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
+        // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
+        // I'm scared of missing a spot (esp. with push notifications etc) so let's enable this legacy behaviour for now.
+        // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
+        // -sfn
+        navigationInChildEnabled>
         {children}
       </NavigationContainer>
     </>
