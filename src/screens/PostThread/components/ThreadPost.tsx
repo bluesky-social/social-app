@@ -191,9 +191,10 @@ let PostThreadItemLoaded = ({
             paddingHorizontal: OUTER_SPACE,
           },
           // If there's no next child, add a little padding to bottom
-          !item.ui.showChildReplyLine && {
-            paddingBottom: OUTER_SPACE / 2,
-          },
+          !item.ui.showChildReplyLine &&
+            !item.ui.precedesChildReadMore && {
+              paddingBottom: OUTER_SPACE / 2,
+            },
         ]}>
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
@@ -233,7 +234,8 @@ let PostThreadItemLoaded = ({
                 live={live}
               />
 
-              {item.ui.showChildReplyLine && (
+              {(item.ui.showChildReplyLine ||
+                item.ui.precedesChildReadMore) && (
                 <View
                   style={[
                     a.mx_auto,
