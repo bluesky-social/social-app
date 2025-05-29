@@ -109,6 +109,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {LegacyNotificationSettingsScreen} from './screens/Settings/LegacyNotificationSettings'
 import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -381,6 +382,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="NotificationSettings"
+        getComponent={() => NotificationSettingsScreen}
+        options={{title: title(msg`Notification settings`), requireAuth: true}}
+      />
+      <Stack.Screen
         name="ContentAndMediaSettings"
         getComponent={() => ContentAndMediaSettingsScreen}
         options={{
@@ -438,8 +444,8 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{title: title(msg`Chat request inbox`), requireAuth: true}}
       />
       <Stack.Screen
-        name="NotificationSettings"
-        getComponent={() => NotificationSettingsScreen}
+        name="LegacyNotificationSettings"
+        getComponent={() => LegacyNotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
       />
       <Stack.Screen
