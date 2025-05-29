@@ -52,7 +52,7 @@ export type CommonNavigatorParams = {
   AccountSettings: undefined
   PrivacyAndSecuritySettings: undefined
   ContentAndMediaSettings: undefined
-  PushNotificationSettings: undefined
+  NotificationSettings: undefined
   SettingsInterests: undefined
   AboutSettings: undefined
   AppIconSettings: undefined
@@ -62,7 +62,7 @@ export type CommonNavigatorParams = {
   MessagesConversation: {conversation: string; embed?: string; accept?: true}
   MessagesSettings: undefined
   MessagesInbox: undefined
-  NotificationSettings: undefined
+  LegacyNotificationSettings: undefined
   Feeds: undefined
   Start: {name: string; rkey: string}
   StarterPack: {name: string; rkey: string; new?: boolean}

@@ -5,7 +5,7 @@ export const router = new Router({
   Search: '/search',
   Feeds: '/feeds',
   Notifications: '/notifications',
-  NotificationSettings: '/notifications/settings',
+  LegacyNotificationSettings: '/notifications/settings',
   Settings: '/settings',
   Lists: '/lists',
   // moderation
@@ -46,10 +46,21 @@ export const router = new Router({
   AccountSettings: '/settings/account',
   PrivacyAndSecuritySettings: '/settings/privacy-and-security',
   ContentAndMediaSettings: '/settings/content-and-media',
-  PushNotificationSettings: '/settings/push-notifications',
   SettingsInterests: '/settings/interests',
   AboutSettings: '/settings/about',
   AppIconSettings: '/settings/app-icon',
+  NotificationSettings: '/settings/notifications',
+  ReplyNotificationSettings: '/settings/notifications/replies',
+  LikeNotificationSettings: '/settings/notifications/likes',
+  RepostNotificationSettings: '/settings/notifications/reposts',
+  NewFollowerNotificationSettings: '/settings/notifications/new-followers',
+  LikesOnRepostsNotificationSettings:
+    '/settings/notifications/likes-on-reposts',
+  RepostsOnRepostsNotificationSettings:
+    '/settings/notifications/reposts-on-reposts',
+  SubscriptionNotificationSettings:
+    '/settings/notifications/account-subscriptions',
+  MiscellaneousNotificationSettings: '/settings/notifications/miscellaneous',
   // support
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
