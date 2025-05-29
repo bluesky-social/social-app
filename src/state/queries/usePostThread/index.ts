@@ -41,8 +41,8 @@ export function usePostThread({
     async queryFn() {
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
         anchor: params.anchor!,
-        branchingFactor: params.view === 'linear' ? 1 : 3, // 100 TODO
-        below: 3,
+        branchingFactor: params.view === 'linear' ? 1 : undefined,
+        below: 10,
         sort: params.sort,
         prioritizeFollowedUsers: params.prioritizeFollowedUsers,
       })
