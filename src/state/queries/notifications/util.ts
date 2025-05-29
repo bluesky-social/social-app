@@ -22,7 +22,13 @@ import {
   type NotificationType,
 } from './types'
 
-const GROUPABLE_REASONS = ['like', 'repost', 'follow']
+const GROUPABLE_REASONS = [
+  'like',
+  'repost',
+  'follow',
+  'like-via-repost',
+  'repost-via-repost',
+]
 const MS_1HR = 1e3 * 60 * 60
 const MS_2DAY = MS_1HR * 48
 
