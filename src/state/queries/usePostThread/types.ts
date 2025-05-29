@@ -101,14 +101,13 @@ export type Slice =
       type: 'readMore'
       key: string
       indent: number
-      replyCount: number
-      nextAnchor: Extract<Slice, {type: 'threadPost'}>
-      nextAnchorUri: AtUri
+      href: string
+      moreReplies: number
+      skippedIndents: Set<number>
     }
 
 export type TraversalMetadata = {
   depth: number
-  indent: number
   replies: number
   unhydratedReplies: number
   seenReplies: number

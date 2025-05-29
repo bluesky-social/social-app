@@ -65,11 +65,9 @@ export function getTraversalMetadata({
   const hasBranchingReplies = replies > 1 && replies - unhydratedReplies > 1
 
   return {
+    uri: item.uri,
     depth: item.depth,
-    // TODO maybe not used
-    indent: parentMetadata?.hasBranchingReplies
-      ? item.depth
-      : parentMetadata?.indent || item.depth,
+    authorHandle: item.value.post.author.handle,
     replies,
     unhydratedReplies,
     seenReplies: 0,
@@ -79,6 +77,13 @@ export function getTraversalMetadata({
     skippedIndents: new Set(),
     prevItemDepth: prevItem?.depth,
     nextItemDepth: nextItem?.depth,
+    /*
+     * If there are no slices below this one, or the next slice is less
+     * indented than the computed indent for this post.
+     */
+    isDeadEnd: nextItem?.depth === undefined || nextItem?.depth < item.depth,
+
+    upcomingParentReadMore: parentMetadata?.upcomingParentReadMore || undefined,
 
     // TODO non-spec
     text: getPostRecord(item.value.post).text,
@@ -87,25 +92,27 @@ export function getTraversalMetadata({
 
 export function getThreadPostUI({
   depth,
-  indent,
   replies,
   parentMetadata,
   prevItemDepth,
-  nextItemDepth,
+  isDeadEnd,
   skippedIndents,
+  seenReplies,
+  unhydratedReplies,
 }: TraversalMetadata): Extract<Slice, {type: 'threadPost'}>['ui'] {
+  const isReplyAndHasReplies = depth > 0 && replies > 0 && ((replies - unhydratedReplies) === seenReplies || seenReplies > 0)
   return {
     isAnchor: depth === 0,
     showParentReplyLine:
       !!prevItemDepth && prevItemDepth !== 0 && prevItemDepth < depth,
-    showChildReplyLine: replies > 0,
+    showChildReplyLine: depth < 0 || isReplyAndHasReplies,
     indent: depth,
     parentHasBranchingReplies: !!parentMetadata?.hasBranchingReplies,
     /*
      * If there are no slices below this one, or the next slice is less
      * indented than the computed indent for this post.
      */
-    isDeadEnd: nextItemDepth === undefined || nextItemDepth < indent,
+    isDeadEnd, //nextItemDepth === undefined || nextItemDepth < depth,
     skippedIndents,
   }
 }
