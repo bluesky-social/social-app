@@ -100,7 +100,7 @@ export function useGetPosts() {
 export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
-  feedContext: string | undefined,
+  feedDescriptor: string | undefined,
   logContext: LogEvents['post:like']['logContext'] &
     LogEvents['post:unlike']['logContext'],
 ) {
@@ -108,8 +108,8 @@ export function usePostLikeMutationQueue(
   const postUri = post.uri
   const postCid = post.cid
   const initialLikeUri = post.viewer?.like
-  const likeMutation = usePostLikeMutation(feedContext, logContext, post)
-  const unlikeMutation = usePostUnlikeMutation(feedContext, logContext)
+  const likeMutation = usePostLikeMutation(feedDescriptor, logContext, post)
+  const unlikeMutation = usePostUnlikeMutation(feedDescriptor, logContext)
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialLikeUri,
@@ -161,7 +161,7 @@ export function usePostLikeMutationQueue(
 }
 
 function usePostLikeMutation(
-  feedContext: string | undefined,
+  feedDescriptor: string | undefined,
   logContext: LogEvents['post:like']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
@@ -194,7 +194,7 @@ function usePostLikeMutation(
           post.replyCount != null
             ? toClout(post.likeCount + post.repostCount + post.replyCount)
             : undefined,
-        feedContext: feedContext,
+        feedDescriptor: feedDescriptor,
       })
       return agent.like(uri, cid, via)
     },
@@ -202,13 +202,13 @@ function usePostLikeMutation(
 }
 
 function usePostUnlikeMutation(
-  feedContext: string | undefined,
+  feedDescriptor: string | undefined,
   logContext: LogEvents['post:unlike']['logContext'],
 ) {
   const agent = useAgent()
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
     mutationFn: ({likeUri}) => {
-      logger.metric('post:unlike', {logContext, feedContext: feedContext})
+      logger.metric('post:unlike', {logContext, feedDescriptor})
       return agent.deleteLike(likeUri)
     },
   })
@@ -217,7 +217,7 @@ function usePostUnlikeMutation(
 export function usePostRepostMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
-  feedContext: string | undefined,
+  feedDescriptor: string | undefined,
   logContext: LogEvents['post:repost']['logContext'] &
     LogEvents['post:unrepost']['logContext'],
 ) {
@@ -225,8 +225,8 @@ export function usePostRepostMutationQueue(
   const postUri = post.uri
   const postCid = post.cid
   const initialRepostUri = post.viewer?.repost
-  const repostMutation = usePostRepostMutation(feedContext, logContext)
-  const unrepostMutation = usePostUnrepostMutation(feedContext, logContext)
+  const repostMutation = usePostRepostMutation(feedDescriptor, logContext)
+  const unrepostMutation = usePostUnrepostMutation(feedDescriptor, logContext)
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialRepostUri,
@@ -276,7 +276,7 @@ export function usePostRepostMutationQueue(
 }
 
 function usePostRepostMutation(
-  feedContext: string | undefined,
+  feedDescriptor: string | undefined,
   logContext: LogEvents['post:repost']['logContext'],
 ) {
   const agent = useAgent()
@@ -286,20 +286,20 @@ function usePostRepostMutation(
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
     mutationFn: ({uri, cid, via}) => {
-      logger.metric('post:repost', {logContext, feedContext: feedContext})
+      logger.metric('post:repost', {logContext, feedDescriptor})
       return agent.repost(uri, cid, via)
     },
   })
 }
 
 function usePostUnrepostMutation(
-  feedContext: string | undefined,
+  feedDescriptor: string | undefined,
   logContext: LogEvents['post:unrepost']['logContext'],
 ) {
   const agent = useAgent()
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
     mutationFn: ({repostUri}) => {
-      logger.metric('post:unrepost', {logContext, feedContext: feedContext})
+      logger.metric('post:unrepost', {logContext, feedDescriptor})
       return agent.deleteRepost(repostUri)
     },
   })

@@ -196,19 +196,19 @@ export type MetricEvents = {
     likerClout: number | undefined
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
-    feedContext?: string
+    feedDescriptor?: string
   }
   'post:repost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
-    feedContext?: string
+    feedDescriptor?: string
   }
   'post:unlike': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
-    feedContext?: string
+    feedDescriptor?: string
   }
   'post:unrepost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
-    feedContext?: string
+    feedDescriptor?: string
   }
   'post:mute': {}
   'post:unmute': {}
