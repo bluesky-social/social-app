@@ -446,6 +446,55 @@ let NotificationFeedItem = ({
       </Trans>
     )
     icon = <VerifiedCheck size="xl" fill={t.palette.contrast_500} />
+  } else if (item.type === 'like-via-repost') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} liked your repost`,
+        )
+      : _(msg`${firstAuthorName} liked your repost`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        liked your repost
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} liked your repost</Trans>
+    )
+  } else if (item.type === 'repost-via-repost') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} reposted your repost`,
+        )
+      : _(msg`${firstAuthorName} reposted your repost`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        reposted your repost
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} reposted your repost</Trans>
+    )
+    icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else {
     return null
   }
@@ -553,7 +602,10 @@ let NotificationFeedItem = ({
                 </TimeElapsed>
               </Text>
             </ExpandListPressable>
-            {item.type === 'post-like' || item.type === 'repost' ? (
+            {item.type === 'post-like' ||
+            item.type === 'repost' ||
+            item.type === 'like-via-repost' ||
+            item.type === 'repost-via-repost' ? (
               <View style={[a.pt_2xs]}>
                 <AdditionalPostText post={item.subject} />
               </View>

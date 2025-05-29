@@ -134,7 +134,7 @@ export function LiveStatus({
             ? [a.px_xl, !embed.external.thumb ? a.pt_2xl : a.pt_lg]
             : a.p_lg,
         ]}>
-        <View style={[a.flex_1, a.justify_center, a.gap_2xs]}>
+        <View style={[a.w_full, a.justify_center, a.gap_2xs]}>
           <Text
             numberOfLines={3}
             style={[a.leading_snug, a.font_bold, a.text_xl]}>
