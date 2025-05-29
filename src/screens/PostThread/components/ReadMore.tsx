@@ -2,7 +2,6 @@ import {View} from 'react-native'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {makeProfileLink} from '#/lib/routes/links'
 import {type PostThreadParams, type Slice} from '#/state/queries/usePostThread'
 import {
   LINEAR_AVI_WIDTH,
@@ -28,19 +27,22 @@ export function ReadMore({
   const indent = Math.max(0, item.indent - 1)
 
   const spacers = isTreeView
-    ? Array.from(Array(indent)).map((_, n: number) => (
+    ? Array.from(Array(indent)).map((_, n: number) => {
+      const isSkipped = item.skippedIndents.has(n)
+      return (
         <View
           key={`${item.key}-padding-${n}`}
           style={[
             t.atoms.border_contrast_low,
             {
-              borderRightWidth: REPLY_LINE_WIDTH,
+              borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
               width: TREE_INDENT + TREE_AVI_WIDTH / 2,
               left: 1,
             },
           ]}
         />
-      ))
+      )
+    })
     : null
 
   return (
@@ -63,14 +65,7 @@ export function ReadMore({
       />
       <Link
         label={_(msg`Read more replies`)}
-        to={makeProfileLink(
-          {
-            did: item.nextAnchorUri.host,
-            handle: item.nextAnchor.value.post.author.handle,
-          },
-          'post',
-          item.nextAnchorUri.rkey,
-        )}
+        to={item.href}
         style={[a.pt_sm, a.pb_md, a.gap_xs]}>
         {({hovered, pressed}) => {
           return (
@@ -83,8 +78,8 @@ export function ReadMore({
                   (hovered || pressed) && a.underline,
                 ]}>
                 <Trans>
-                  Read {item.replyCount} more{' '}
-                  <Plural one="reply" other="replies" value={item.replyCount} />
+                  Read {item.moreReplies} more{' '}
+                  <Plural one="reply" other="replies" value={item.moreReplies} />
                 </Trans>
               </Text>
             </>

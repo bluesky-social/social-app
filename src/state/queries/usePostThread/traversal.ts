@@ -32,7 +32,6 @@ export function flatten(
   },
 ) {
   const flattened: Slice[] = sorted.items
-  const parents = []
 
   for (let i = 0; i < flattened.length; i++) {
     const item = flattened[i]
@@ -48,103 +47,6 @@ export function flatten(
           type: 'replyComposer',
           key: 'replyComposer',
         })
-      }
-
-      const deepestParent = parents[parents.length - 1]
-
-      if (deepestParent) {
-        // next item is a sibling or an aunt/uncle
-        if (item.depth <= deepestParent.depth) {
-          for (let pi = parents.length - 1; pi >= 0; pi--) {
-            const parent = parents[pi]
-
-            if (item.depth <= parent.depth) {
-              /*
-               * Find the previous post item and set the read more flags
-               */
-              for (let ui = i - 1; ui >= 0; ui--) {
-                let prev = flattened[ui]
-                if (prev.type === 'threadPost') {
-                  prev.ui.precedesParentReadMore =
-                    prev.ui.indent - 1 === parent.ui.indent // true
-                  prev.ui.precedesChildReadMore =
-                    prev.ui.indent === item.ui.indent
-                  break
-                }
-              }
-
-              flattened.splice(
-                i + 1 + (pi - parents.length),
-                0,
-                views.readMore({
-                  parent,
-                }),
-              )
-              parents.pop()
-
-              // skip next iteration
-              i++
-
-              if (view === 'linear') {
-                break
-              }
-            } else {
-              break
-            }
-          }
-        }
-      }
-
-      if (item.value.moreReplies > 0) {
-        parents.push(item)
-      }
-
-      const isLastIteration = i === flattened.length - 1
-
-      if (isLastIteration) {
-        const deepestParent = parents[parents.length - 1]
-
-        if (deepestParent) {
-          // next item is a sibling or an aunt/uncle
-          if (deepestParent.depth <= item.depth) {
-            for (let pi = parents.length - 1; pi >= 0; pi--) {
-              const parent = parents[pi]
-              if (parent.depth <= item.depth) {
-                /*
-                 * Find the previous post item and set the read more flags
-                 */
-                for (let ui = i; ui >= 0; ui--) {
-                  let prev = flattened[ui]
-                  if (prev.type === 'threadPost') {
-                    prev.ui.precedesParentReadMore =
-                      prev.ui.indent - 1 === parent.ui.indent
-                    prev.ui.precedesChildReadMore =
-                      prev.ui.indent === item.ui.indent
-                    break
-                  }
-                }
-
-                flattened.splice(
-                  i + 2 + (pi - parents.length),
-                  0,
-                  views.readMore({
-                    parent,
-                  }),
-                )
-                parents.pop()
-
-                // skip next iteration
-                i++
-
-                if (view === 'linear') {
-                  break
-                }
-              } else {
-                break
-              }
-            }
-          }
-        }
       }
     }
   }
@@ -310,10 +212,23 @@ export function sort(
         continue traversal
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
         if (parentMetadata) {
+          if (metadata) {
+            metadata.replyIndex = parentMetadata.seenReplies
+          }
+
           parentMetadata.seenReplies += 1
+
           if (metadata) {
             metadata.isLastSibling =
-              parentMetadata.replies === parentMetadata.seenReplies
+              parentMetadata.replies - parentMetadata.unhydratedReplies ===
+              parentMetadata.seenReplies
+
+            if (
+              parentMetadata.unhydratedReplies > 0 &&
+              metadata.isLastSibling
+            ) {
+              metadata.upcomingParentReadMore = parentMetadata
+            }
           }
         }
 
@@ -369,8 +284,16 @@ export function sort(
                 if (childParentMetadata) {
                   childParentMetadata.seenReplies += 1
                   childMetadata.isLastSibling =
-                    childParentMetadata.replies ===
+                    childParentMetadata.replies -
+                      childParentMetadata.unhydratedReplies ===
                     childParentMetadata.seenReplies
+
+                  if (
+                    childParentMetadata.unhydratedReplies > 0 &&
+                    childMetadata.isLastSibling
+                  ) {
+                    childMetadata.upcomingParentReadMore = childParentMetadata
+                  }
                 }
                 metadatas.set(item.uri, childMetadata)
                 metadatas.set(childMetadata.text, childMetadata) // TODO debugging
@@ -418,7 +341,9 @@ export function sort(
     }
   }
 
-  for (const item of items) {
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i]
+
     if (item.type === 'threadPost') {
       const metadata = metadatas.get(item.uri)
       if (metadata) {
@@ -426,17 +351,37 @@ export function sort(
           metadata.skippedIndents = new Set([
             ...metadata.parentMetadata.skippedIndents,
           ])
+
+          if (
+            metadata.isLastSibling &&
+            metadata.parentMetadata.unhydratedReplies <= 0
+          ) {
+            metadata.skippedIndents.add(item.depth - 2)
+          }
         }
-        if (metadata.isLastSibling) {
-          metadata.skippedIndents.add(item.depth - 2)
+
+        if (
+          metadata.unhydratedReplies > 0 &&
+          (metadata.nextItemDepth === undefined ||
+            metadata.nextItemDepth <= item.depth)
+        ) {
+          items.splice(i + 1, 0, views.readMore(metadata))
+          i++
+        }
+
+        if (metadata.upcomingParentReadMore && metadata.isDeadEnd) {
+          items.splice(
+            i + 1,
+            0,
+            views.readMore(metadata.upcomingParentReadMore),
+          )
+          i++
         }
 
         item.ui = getThreadPostUI(metadata)
       }
     }
   }
-
-  // console.log(metadatas)
 
   return {
     items,

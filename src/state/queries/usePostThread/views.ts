@@ -8,7 +8,8 @@ import {
   type ModerationOpts,
 } from '@atproto/api'
 
-import {type Slice} from '#/state/queries/usePostThread/types'
+import {makeProfileLink} from '#/lib/routes/links'
+import {type Slice, type TraversalMetadata} from '#/state/queries/usePostThread/types'
 
 export function threadPostNoUnauthenticated({
   uri,
@@ -94,19 +95,28 @@ export function threadPost({
 }
 
 export function readMore({
-  parent,
-}: {
-  parent: Extract<Slice, {type: 'threadPost'}>
-}) {
+  uri,
+  authorHandle,
+  unhydratedReplies: moreReplies,
+  depth: indent,
+  skippedIndents,
+}: TraversalMetadata): Extract<Slice, {type: 'readMore'}> {
+  const urip = new AtUri(uri)
+  const href = makeProfileLink(
+    {
+      did: urip.host,
+      handle: authorHandle,
+    },
+    'post',
+    urip.rkey,
+  )
   return {
     type: 'readMore' as const,
-    key: `readMore:${parent.uri}`,
-    indent: parent.ui.parentHasBranchingReplies
-      ? parent.depth
-      : parent.ui.indent,
-    replyCount: parent.value.moreReplies,
-    nextAnchor: parent,
-    nextAnchorUri: new AtUri(parent.uri),
+    key: `readMore:${uri}`,
+    href,
+    moreReplies,
+    indent,
+    skippedIndents,
   }
 }
 
