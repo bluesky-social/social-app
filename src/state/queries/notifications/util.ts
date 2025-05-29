@@ -244,7 +244,9 @@ function toKnownType(
     notif.reason === 'follow' ||
     notif.reason === 'starterpack-joined' ||
     notif.reason === 'verified' ||
-    notif.reason === 'unverified'
+    notif.reason === 'unverified' ||
+    notif.reason === 'like-via-repost' ||
+    notif.reason === 'repost-via-repost'
   ) {
     return notif.reason as NotificationType
   }
@@ -257,7 +259,12 @@ function getSubjectUri(
 ): string | undefined {
   if (type === 'reply' || type === 'quote' || type === 'mention') {
     return notif.uri
-  } else if (type === 'post-like' || type === 'repost') {
+  } else if (
+    type === 'post-like' ||
+    type === 'repost' ||
+    type === 'like-via-repost' ||
+    type === 'repost-via-repost'
+  ) {
     if (
       bsky.dangerousIsType<AppBskyFeedRepost.Record>(
         notif.record,

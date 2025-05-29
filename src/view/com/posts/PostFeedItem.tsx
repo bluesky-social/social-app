@@ -33,9 +33,10 @@ import {
   usePostShadow,
 } from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {precacheProfile} from '#/state/queries/profile'
+import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {useSetUnstablePostSource} from '#/state/unstable-post-source'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
 import {Link, TextLink, TextLinkOnWebOnly} from '#/view/com/util/Link'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
@@ -174,7 +175,8 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const {sendInteraction} = useFeedFeedbackContext()
+  const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
+  const unstableSetPostSource = useSetUnstablePostSource()
 
   const onPressReply = () => {
     sendInteraction({
@@ -229,7 +231,16 @@ let FeedItemInner = ({
       feedContext,
       reqId,
     })
-    precacheProfile(queryClient, post.author)
+    unstableCacheProfileView(queryClient, post.author)
+    unstableSetPostSource(post.uri, {
+      feed: feedDescriptor,
+      post: {
+        post,
+        reason: AppBskyFeedDefs.isReasonRepost(reason) ? reason : undefined,
+        feedContext,
+        reqId,
+      },
+    })
   }
 
   const outerStyles = [
@@ -262,6 +273,15 @@ let FeedItemInner = ({
     : undefined
 
   const {isActive: live} = useActorStatus(post.author)
+
+  const viaRepost = useMemo(() => {
+    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+      return {
+        uri: reason.uri,
+        cid: reason.cid,
+      }
+    }
+  }, [reason])
 
   return (
     <Link
@@ -450,6 +470,7 @@ let FeedItemInner = ({
             reqId={reqId}
             threadgateRecord={threadgateRecord}
             onShowLess={onShowLess}
+            viaRepost={viaRepost}
           />
         </View>
 
