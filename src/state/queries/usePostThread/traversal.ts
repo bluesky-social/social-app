@@ -6,7 +6,6 @@ import {
 
 import {
   HiddenReplyKind,
-  type PostThreadParams,
   type Slice,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
@@ -18,88 +17,20 @@ import {
 } from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
 
-export function flatten(
-  sorted: ReturnType<typeof sort>,
-  {
-    hasSession,
-    showMuted,
-    showHidden,
-  }: {
-    hasSession: boolean
-    showMuted: boolean
-    showHidden: boolean
-    view: PostThreadParams['view']
-  },
-) {
-  const flattened: Slice[] = sorted.items
-
-  for (let i = 0; i < flattened.length; i++) {
-    const item = flattened[i]
-
-    if (item.type === 'threadPost') {
-      // TODO should not insert if not found post etc
-      if (
-        item.ui.isAnchor &&
-        hasSession &&
-        !item.value.post.viewer?.replyDisabled
-      ) {
-        flattened.splice(i + 1, 0, {
-          type: 'replyComposer',
-          key: 'replyComposer',
-        })
-      }
-    }
-  }
-
-  /*
-   * Insert hidden items and buttons to show them
-   */
-
-  if (sorted.hidden.length) {
-    if (showHidden) {
-      flattened.push(...sorted.hidden)
-
-      if (sorted.muted.length) {
-        if (showMuted) {
-          flattened.push(...sorted.muted)
-        } else {
-          flattened.push({
-            type: 'showHiddenReplies',
-            key: 'showMutedReplies',
-            kind: HiddenReplyKind.Muted,
-          })
-        }
-      }
-    } else {
-      flattened.push({
-        type: 'showHiddenReplies',
-        key: 'showHiddenReplies',
-        kind: HiddenReplyKind.Hidden,
-      })
-    }
-  } else if (sorted.muted.length) {
-    if (showMuted) {
-      flattened.push(...sorted.muted)
-    } else {
-      flattened.push({
-        type: 'showHiddenReplies',
-        key: 'showMutedReplies',
-        kind: HiddenReplyKind.Muted,
-      })
-    }
-  }
-
-  return flattened
-}
-
-export function sort(
+export function traverse(
   thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
   {
     threadgateHiddenReplies,
     moderationOpts,
+    hasSession,
+    showMuted,
+    showHidden,
   }: {
     threadgateHiddenReplies: Set<string>
     moderationOpts: ModerationOpts
+    hasSession: boolean
+    showMuted: boolean
+    showHidden: boolean
   },
 ) {
   const items: Slice[] = []
@@ -321,6 +252,18 @@ export function sort(
     const item = items[i]
 
     if (item.type === 'threadPost') {
+      if (
+        item.depth === 0 &&
+        !item.value.post.viewer?.replyDisabled &&
+        hasSession
+      ) {
+        items.splice(i + 1, 0, {
+          type: 'replyComposer',
+          key: 'replyComposer',
+        })
+        i++ // skip next iteration
+      }
+
       const metadata = metadatas.get(item.uri)
 
       if (metadata) {
@@ -429,11 +372,41 @@ export function sort(
     }
   }
 
-  return {
-    items,
-    hidden,
-    muted,
+  if (hidden.length) {
+    if (showHidden) {
+      items.push(...hidden)
+
+      if (muted.length) {
+        if (showMuted) {
+          items.push(...muted)
+        } else {
+          items.push({
+            type: 'showHiddenReplies',
+            key: 'showMutedReplies',
+            kind: HiddenReplyKind.Muted,
+          })
+        }
+      }
+    } else {
+      items.push({
+        type: 'showHiddenReplies',
+        key: 'showHiddenReplies',
+        kind: HiddenReplyKind.Hidden,
+      })
+    }
+  } else if (muted.length) {
+    if (showMuted) {
+      items.push(...muted)
+    } else {
+      items.push({
+        type: 'showHiddenReplies',
+        key: 'showMutedReplies',
+        kind: HiddenReplyKind.Muted,
+      })
+    }
   }
+
+  return items
 }
 
 /**
