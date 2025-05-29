@@ -9,7 +9,10 @@ import {
 } from '@atproto/api'
 
 import {makeProfileLink} from '#/lib/routes/links'
-import {type Slice, type TraversalMetadata} from '#/state/queries/usePostThread/types'
+import {
+  type Slice,
+  type TraversalMetadata,
+} from '#/state/queries/usePostThread/types'
 
 export function threadPostNoUnauthenticated({
   uri,
@@ -82,7 +85,7 @@ export function threadPost({
       ...value,
       /*
        * Do not spread anything here, load bearing for post shadow strict
-       * equality checks.
+       * equality reference checks.
        */
       post: value.post as Omit<AppBskyFeedDefs.PostView, 'record'> & {
         record: AppBskyFeedPost.Record
@@ -95,28 +98,27 @@ export function threadPost({
 }
 
 export function readMore({
-  uri,
-  authorHandle,
-  unhydratedReplies: moreReplies,
-  depth: indent,
-  skippedIndents,
+  depth,
+  repliesUnhydrated,
+  skippedIndentIndices,
+  postData,
 }: TraversalMetadata): Extract<Slice, {type: 'readMore'}> {
-  const urip = new AtUri(uri)
+  const urip = new AtUri(postData.uri)
   const href = makeProfileLink(
     {
       did: urip.host,
-      handle: authorHandle,
+      handle: postData.authorHandle,
     },
     'post',
     urip.rkey,
   )
   return {
     type: 'readMore' as const,
-    key: `readMore:${uri}`,
+    key: `readMore:${postData.uri}`,
     href,
-    moreReplies,
-    indent,
-    skippedIndents,
+    moreReplies: repliesUnhydrated,
+    depth,
+    skippedIndentIndices,
   }
 }
 

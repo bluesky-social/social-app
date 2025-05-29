@@ -193,7 +193,7 @@ let PostThreadItemLoaded = ({
           ],
       ]}>
       {Array.from(Array(indents)).map((_, n: number) => {
-        const isSkipped = item.ui.skippedIndents.has(n)
+        const isSkipped = item.ui.skippedIndentIndices.has(n)
         return (
           <View
             key={`${post.uri}-padding-${n}`}
