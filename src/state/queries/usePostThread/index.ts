@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -5,7 +6,7 @@ import {
   createCacheMutator,
   getThreadPlaceholder,
 } from '#/state/queries/usePostThread/queryCache'
-import {flatten, sort} from '#/state/queries/usePostThread/traversal'
+import {traverse} from '#/state/queries/usePostThread/traversal'
 import {
   createPostThreadQueryKey,
   HiddenReplyKind,
@@ -69,20 +70,23 @@ export function usePostThread({
 
   // TODO map over pages, just like feeds
 
-  const items = flatten(
-    sort(query.data?.thread || [], {
+  const items = useMemo(() => {
+    return traverse(query.data?.thread || [], {
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(
         query.data?.threadgate?.record,
       ),
       moderationOpts: moderationOpts!,
-    }),
-    {
       hasSession,
       showMuted: state.shownHiddenReplyKinds.has(HiddenReplyKind.Muted),
       showHidden: state.shownHiddenReplyKinds.has(HiddenReplyKind.Hidden),
-      view: params.view,
-    },
-  )
+    })
+  }, [
+    query.data,
+    mergeThreadgateHiddenReplies,
+    moderationOpts,
+    hasSession,
+    state.shownHiddenReplyKinds,
+  ])
 
   const mutator = createCacheMutator({
     params,

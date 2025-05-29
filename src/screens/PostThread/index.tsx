@@ -116,12 +116,19 @@ export function Inner({uri}: {uri: string | undefined}) {
       // distance from top of the list (screen)
       const anchorOffsetTop = anchorElement.getBoundingClientRect().top
       const headerHeight = headerElement.getBoundingClientRect().height
-      // don't scroll past 0
-      const scrollPosition = Math.max(0, anchorOffsetTop - headerHeight)
-      listRef.current?.scrollToOffset({
-        animated: false,
-        offset: scrollPosition,
-      })
+      const scrollPosition = anchorOffsetTop - headerHeight
+      /*
+       * If scroll position is negative, it means the anchor post is above the
+       * top of the screen, meaning the user scrolled the list. In that case,
+       * we want to restore the previous scroll position by not scrolling here
+       * at all.
+       */
+      if (scrollPosition >= 0) {
+        listRef.current?.scrollToOffset({
+          animated: false,
+          offset: scrollPosition,
+        })
+      }
     }
   })
 
@@ -137,15 +144,10 @@ export function Inner({uri}: {uri: string | undefined}) {
    * scroll in onContentSizeChange instead.
    */
   const [deferParents, setDeferParents] = useState(isNative)
-  const items = useMemo(() => {
-    return (data?.items ?? []).filter(item => {
-      return !('depth' in item) || item.depth >= 0 || !deferParents
-    })
-  }, [data, deferParents])
-
   const renderItem = ({item, index}: {item: Slice; index: number}) => {
     if (item.type === 'threadPost') {
       if (item.depth < 0) {
+        if (deferParents) return null
         return (
           <ThreadPost
             item={item}
@@ -275,7 +277,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         >
           <List
             ref={listRef}
-            data={items}
+            data={data?.items || []}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             onContentSizeChange={onContentSizeChangeWebOnly}
