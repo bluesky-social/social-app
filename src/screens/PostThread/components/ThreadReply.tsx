@@ -220,7 +220,7 @@ let PostThreadItemLoaded = ({
                 !item.ui.showParentReplyLine && a.pt_lg,
                 !item.ui.showChildReplyLine && a.pb_sm,
               ],
-              item.ui.isDeadEnd &&
+              item.ui.isLastChild &&
                 !item.ui.precedesParentReadMore &&
                 !item.ui.precedesChildReadMore && [a.pb_sm],
             ]}>
