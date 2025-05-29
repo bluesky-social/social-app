@@ -1,11 +1,11 @@
 import {useCallback} from 'react'
-import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
+import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updatePostShadow} from '#/state/cache/post-shadow'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
@@ -98,6 +98,7 @@ export function useGetPosts() {
 
 export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
+  viaRepost: {uri: string; cid: string} | undefined,
   logContext: LogEvents['post:like']['logContext'] &
     LogEvents['post:unlike']['logContext'],
 ) {
@@ -115,6 +116,7 @@ export function usePostLikeMutationQueue(
         const {uri: likeUri} = await likeMutation.mutateAsync({
           uri: postUri,
           cid: postCid,
+          via: viaRepost,
         })
         userActionHistory.like([postUri])
         return likeUri
@@ -167,9 +169,9 @@ function usePostLikeMutation(
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
-    {uri: string; cid: string} // the post's uri and cid
+    {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
-    mutationFn: ({uri, cid}) => {
+    mutationFn: ({uri, cid, via}) => {
       let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
@@ -190,7 +192,7 @@ function usePostLikeMutation(
             ? toClout(post.likeCount + post.repostCount + post.replyCount)
             : undefined,
       })
-      return agent.like(uri, cid)
+      return agent.like(uri, cid, via)
     },
   })
 }
@@ -209,6 +211,7 @@ function usePostUnlikeMutation(
 
 export function usePostRepostMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
+  viaRepost: {uri: string; cid: string} | undefined,
   logContext: LogEvents['post:repost']['logContext'] &
     LogEvents['post:unrepost']['logContext'],
 ) {
@@ -226,6 +229,7 @@ export function usePostRepostMutationQueue(
         const {uri: repostUri} = await repostMutation.mutateAsync({
           uri: postUri,
           cid: postCid,
+          via: viaRepost,
         })
         return repostUri
       } else {
@@ -272,11 +276,11 @@ function usePostRepostMutation(
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
-    {uri: string; cid: string} // the post's uri and cid
+    {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
-    mutationFn: post => {
+    mutationFn: ({uri, cid, via}) => {
       logEvent('post:repost', {logContext})
-      return agent.repost(post.uri, post.cid)
+      return agent.repost(uri, cid, via)
     },
   })
 }

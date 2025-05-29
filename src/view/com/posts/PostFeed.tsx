@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useRef} from 'react'
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -22,6 +22,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {isStatusStillActive, validateStatus} from '#/lib/actor-status'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -208,15 +209,14 @@ let PostFeed = ({
   const {currentAccount, hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
-  const [isPTRing, setIsPTRing] = React.useState(false)
-  const checkForNewRef = React.useRef<(() => void) | null>(null)
-  const lastFetchRef = React.useRef<number>(Date.now())
+  const [isPTRing, setIsPTRing] = useState(false)
+  const lastFetchRef = useRef<number>(Date.now())
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
   const {gtMobile} = useBreakpoints()
   const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = isNative
 
-  const [hasPressedShowLessUris, setHasPressedShowLessUris] = React.useState(
+  const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
   )
   const onPressShowLess = useCallback(
@@ -231,7 +231,7 @@ let PostFeed = ({
   )
 
   const feedCacheKey = feedParams?.feedCacheKey
-  const opts = React.useMemo(
+  const opts = useMemo(
     () => ({enabled, ignoreFilterFor}),
     [enabled, ignoreFilterFor],
   )
@@ -250,20 +250,21 @@ let PostFeed = ({
   if (lastFetchedAt) {
     lastFetchRef.current = lastFetchedAt
   }
-  const isEmpty = React.useMemo(
+  const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],
   )
 
-  const checkForNew = React.useCallback(async () => {
-    // Discover always has fresh content
-    if (feedUriOrActorDid === DISCOVER_FEED_URI) {
-      return onHasNew?.(true)
-    }
-
+  const checkForNew = useNonReactiveCallback(async () => {
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
       return
     }
+
+    // Discover always has fresh content
+    if (feedUriOrActorDid === DISCOVER_FEED_URI) {
+      return onHasNew(true)
+    }
+
     try {
       if (await pollLatest(data.pages[0])) {
         if (isEmpty) {
@@ -275,20 +276,10 @@ let PostFeed = ({
     } catch (e) {
       logger.error('Poll latest failed', {feed, message: String(e)})
     }
-  }, [
-    feed,
-    data,
-    isFetching,
-    isEmpty,
-    onHasNew,
-    enabled,
-    disablePoll,
-    refetch,
-    feedUriOrActorDid,
-  ])
+  })
 
   const myDid = currentAccount?.did || ''
-  const onPostCreated = React.useCallback(() => {
+  const onPostCreated = useCallback(() => {
     // NOTE
     // only invalidate if there's 1 page
     // more than 1 page can trigger some UI freakouts on iOS and android
@@ -301,46 +292,41 @@ let PostFeed = ({
       queryClient.invalidateQueries({queryKey: RQKEY(feed)})
     }
   }, [queryClient, feed, data, myDid])
-  React.useEffect(() => {
+  useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
 
-  React.useEffect(() => {
-    // we store the interval handler in a ref to avoid needless
-    // reassignments in other effects
-    checkForNewRef.current = checkForNew
-  }, [checkForNew])
-  React.useEffect(() => {
+  useEffect(() => {
     if (enabled && !disablePoll) {
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
-      if (
-        (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) &&
-        checkForNewRef.current
-      ) {
+      if (isEmpty || timeSinceFirstLoad > CHECK_LATEST_AFTER) {
         // check for new on enable (aka on focus)
-        checkForNewRef.current()
+        checkForNew()
       }
     }
-  }, [enabled, disablePoll, feed, queryClient, scrollElRef, isEmpty])
-  React.useEffect(() => {
+  }, [enabled, isEmpty, disablePoll, checkForNew])
+
+  useEffect(() => {
     let cleanup1: () => void | undefined, cleanup2: () => void | undefined
     const subscription = AppState.addEventListener('change', nextAppState => {
       // check for new on app foreground
       if (nextAppState === 'active') {
-        checkForNewRef.current?.()
+        checkForNew()
       }
     })
     cleanup1 = () => subscription.remove()
     if (pollInterval) {
       // check for new on interval
-      const i = setInterval(() => checkForNewRef.current?.(), pollInterval)
+      const i = setInterval(() => {
+        checkForNew()
+      }, pollInterval)
       cleanup2 = () => clearInterval(i)
     }
     return () => {
       cleanup1?.()
       cleanup2?.()
     }
-  }, [pollInterval])
+  }, [pollInterval, checkForNew])
 
   const followProgressGuide = useProgressGuide('follow-10')
   const followAndLikeProgressGuide = useProgressGuide('like-10-and-follow-7')
@@ -350,7 +336,7 @@ let PostFeed = ({
 
   const {trendingDisabled, trendingVideoDisabled} = useTrendingSettings()
 
-  const feedItems: FeedRow[] = React.useMemo(() => {
+  const feedItems: FeedRow[] = useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
     // if the user has pressed show less on it
     const sliceItem = (row: Extract<FeedRow, {type: 'sliceItem'}>) => {
@@ -407,6 +393,7 @@ let PostFeed = ({
           for (const page of data.pages) {
             for (const slice of page.slices) {
               const item = slice.items.find(
+                // eslint-disable-next-line @typescript-eslint/no-shadow
                 item => item.uri === slice.feedPostUri,
               )
               if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
@@ -599,7 +586,7 @@ let PostFeed = ({
   // events
   // =
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     logEvent('feed:refresh', {
       feedType: feedType,
       feedUrl: feed,
@@ -615,7 +602,7 @@ let PostFeed = ({
     setIsPTRing(false)
   }, [refetch, setIsPTRing, onHasNew, feed, feedType])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
     logEvent('feed:endReached', {
@@ -638,19 +625,19 @@ let PostFeed = ({
     feedItems.length,
   ])
 
-  const onPressTryAgain = React.useCallback(() => {
+  const onPressTryAgain = useCallback(() => {
     refetch()
     onHasNew?.(false)
   }, [refetch, onHasNew])
 
-  const onPressRetryLoadMore = React.useCallback(() => {
+  const onPressRetryLoadMore = useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
 
   // rendering
   // =
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item: row, index: rowIndex}: ListRenderItemInfo<FeedRow>) => {
       if (row.type === 'empty') {
         return renderEmptyState()
@@ -773,7 +760,7 @@ let PostFeed = ({
 
   const shouldRenderEndOfFeed =
     !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
-  const FeedFooter = React.useCallback(() => {
+  const FeedFooter = useCallback(() => {
     /**
      * A bit of padding at the bottom of the feed as you scroll and when you
      * reach the end, so that content isn't cut off by the bottom of the

@@ -50,6 +50,7 @@ let PostControls = ({
   logContext,
   threadgateRecord,
   onShowLess,
+  viaRepost,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -63,13 +64,19 @@ let PostControls = ({
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  viaRepost?: {uri: string; cid: string}
 }): React.ReactNode => {
   const {_, i18n} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {openComposer} = useOpenComposer()
-  const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
+  const [queueLike, queueUnlike] = usePostLikeMutationQueue(
+    post,
+    viaRepost,
+    logContext,
+  )
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
+    viaRepost,
     logContext,
   )
   const requireAuth = useRequireAuth()
