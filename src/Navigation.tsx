@@ -91,7 +91,6 @@ import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaS
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
-import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
 import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from '#/screens/Settings/Settings'
 import {SettingsInterests} from '#/screens/Settings/SettingsInterests'
@@ -110,7 +109,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
-import {PushNotificationSettingsScreen} from './screens/Settings/PushNotificationSettings'
+import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -386,14 +385,6 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => ContentAndMediaSettingsScreen}
         options={{
           title: title(msg`Content and Media`),
-          requireAuth: true,
-        }}
-      />
-      <Stack.Screen
-        name="PushNotificationSettings"
-        getComponent={() => PushNotificationSettingsScreen}
-        options={{
-          title: title(msg`Push notifications`),
           requireAuth: true,
         }}
       />
