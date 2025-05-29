@@ -14,6 +14,7 @@ import {
   getPostRecord,
   getThreadPostUI,
   getTraversalMetadata,
+  storeTraversalMetadata,
 } from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
 
@@ -23,7 +24,6 @@ export function flatten(
     hasSession,
     showMuted,
     showHidden,
-    view,
   }: {
     hasSession: boolean
     showMuted: boolean
@@ -107,9 +107,6 @@ export function sort(
   const muted: Slice[] = []
   const metadatas = new Map<string, TraversalMetadata>()
 
-  // @ts-ignore
-  window.__data = metadatas // for debugging
-
   traversal: for (let i = 0; i < thread.length; i++) {
     const item = thread[i]
     let parentMetadata: TraversalMetadata | undefined
@@ -125,8 +122,7 @@ export function sort(
         prevItem: thread.at(i - 1),
         nextItem: thread.at(i + 1),
       })
-      metadatas.set(item.uri, metadata)
-      metadatas.set(metadata.text, metadata) // TODO debugging
+      storeTraversalMetadata(metadatas, metadata)
     }
 
     if (item.depth < 0) {
@@ -213,10 +209,10 @@ export function sort(
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
         if (parentMetadata) {
           /*
-           * Set this value before incrementing the parent's seenReplies
+           * Set this value before incrementing the parent's repliesSeenCount
            */
-          metadata!.replyIndex = parentMetadata.seenReplies
-          parentMetadata.seenReplies += 1
+          metadata!.repliesIndex = parentMetadata.repliesSeenCount
+          parentMetadata.repliesSeenCount += 1
         }
 
         const post = views.threadPost({
@@ -268,15 +264,15 @@ export function sort(
                   nextItem: thread[ci + 1],
                   parentMetadata: childParentMetadata,
                 })
+                storeTraversalMetadata(metadatas, childMetadata)
                 if (childParentMetadata) {
                   /*
-                   * Set this value before incrementing the parent's seenReplies
+                   * Set this value before incrementing the parent's repliesSeenCount
                    */
-                  childMetadata!.replyIndex = childParentMetadata.seenReplies
-                  childParentMetadata.seenReplies += 1
+                  childMetadata!.repliesIndex =
+                    childParentMetadata.repliesSeenCount
+                  childParentMetadata.repliesSeenCount += 1
                 }
-                metadatas.set(item.uri, childMetadata)
-                metadatas.set(childMetadata.text, childMetadata) // TODO debugging
 
                 const childPost = views.threadPost({
                   uri: child.uri,
@@ -332,8 +328,8 @@ export function sort(
           /*
            * Copy in the parent's skipped indents
            */
-          metadata.skippedIndents = new Set([
-            ...metadata.parentMetadata.skippedIndents,
+          metadata.skippedIndentIndices = new Set([
+            ...metadata.parentMetadata.skippedIndentIndices,
           ])
 
           /*
@@ -341,20 +337,22 @@ export function sort(
            * we've seen.
            */
           metadata.isLastSibling =
-            metadata.replyIndex === metadata.parentMetadata.seenReplies - 1
+            metadata.repliesIndex ===
+            metadata.parentMetadata.repliesSeenCount - 1
 
           /*
            * If this is the last sibling, it's implicitly part of the last
            * branch of this sub-tree.
            */
           if (metadata.isLastSibling) {
-            metadata.isPartOfLastBranchAtDepth = metadata.depth
+            metadata.isPartOfLastBranchFromDepth = metadata.depth
 
             /**
              * If the parent is part of the last branch of the sub-tree, so is the child.
              */
-            if (metadata.parentMetadata.isPartOfLastBranchAtDepth) {
-              metadata.isPartOfLastBranchAtDepth = metadata.parentMetadata.isPartOfLastBranchAtDepth
+            if (metadata.parentMetadata.isPartOfLastBranchFromDepth) {
+              metadata.isPartOfLastBranchFromDepth =
+                metadata.parentMetadata.isPartOfLastBranchFromDepth
             }
           }
 
@@ -363,7 +361,7 @@ export function sort(
            * at some point down the line we will need to show a "read more".
            */
           if (
-            metadata.parentMetadata.unhydratedReplies > 0 &&
+            metadata.parentMetadata.repliesUnhydrated > 0 &&
             metadata.isLastSibling
           ) {
             metadata.upcomingParentReadMore = metadata.parentMetadata
@@ -383,7 +381,7 @@ export function sort(
            * replies, then we know we can skip an indent line.
            */
           if (
-            metadata.parentMetadata.unhydratedReplies <= 0 &&
+            metadata.parentMetadata.repliesUnhydrated <= 0 &&
             metadata.isLastSibling
           ) {
             /**
@@ -391,7 +389,7 @@ export function sort(
              * bc of how we render these. So instead of handling that in the
              * component, we just adjust that back to 0-index here.
              */
-            metadata.skippedIndents.add(item.depth - 2)
+            metadata.skippedIndentIndices.add(item.depth - 2)
           }
         }
 
@@ -399,7 +397,7 @@ export function sort(
          * If this post has unhydrated replies, and it is the last child, then
          * it itself needs a "read more"
          */
-        if (metadata.unhydratedReplies > 0 && metadata.isLastChild) {
+        if (metadata.repliesUnhydrated > 0 && metadata.isLastChild) {
           items.splice(i + 1, 0, views.readMore(metadata))
           i++ // skip next iteration
         }
@@ -411,7 +409,8 @@ export function sort(
          */
         if (
           metadata.upcomingParentReadMore &&
-          metadata.isPartOfLastBranchAtDepth === metadata.upcomingParentReadMore.depth &&
+          metadata.isPartOfLastBranchFromDepth ===
+            metadata.upcomingParentReadMore.depth &&
           metadata.isLastChild
         ) {
           items.splice(
