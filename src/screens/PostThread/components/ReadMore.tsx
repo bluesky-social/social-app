@@ -24,25 +24,25 @@ export function ReadMore({
   const t = useTheme()
   const {_} = useLingui()
   const isTreeView = view === 'tree'
-  const indent = Math.max(0, item.indent - 1)
+  const indent = Math.max(0, item.depth - 1)
 
   const spacers = isTreeView
     ? Array.from(Array(indent)).map((_, n: number) => {
-      const isSkipped = item.skippedIndents.has(n)
-      return (
-        <View
-          key={`${item.key}-padding-${n}`}
-          style={[
-            t.atoms.border_contrast_low,
-            {
-              borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
-              width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-              left: 1,
-            },
-          ]}
-        />
-      )
-    })
+        const isSkipped = item.skippedIndentIndices.has(n)
+        return (
+          <View
+            key={`${item.key}-padding-${n}`}
+            style={[
+              t.atoms.border_contrast_low,
+              {
+                borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
+                width: TREE_INDENT + TREE_AVI_WIDTH / 2,
+                left: 1,
+              },
+            ]}
+          />
+        )
+      })
     : null
 
   return (
@@ -79,7 +79,11 @@ export function ReadMore({
                 ]}>
                 <Trans>
                   Read {item.moreReplies} more{' '}
-                  <Plural one="reply" other="replies" value={item.moreReplies} />
+                  <Plural
+                    one="reply"
+                    other="replies"
+                    value={item.moreReplies}
+                  />
                 </Trans>
               </Text>
             </>
