@@ -71,19 +71,30 @@ export function getTraversalMetadata({
     replies,
     unhydratedReplies,
     seenReplies: 0,
+    replyIndex: 0,
     hasBranchingReplies,
     parentMetadata,
-    isLastSibling: false,
+    isTopLevelReply: item.depth === 1,
     skippedIndents: new Set(),
     prevItemDepth: prevItem?.depth,
     nextItemDepth: nextItem?.depth,
     /*
-     * If there are no slices below this one, or the next slice is less
-     * indented than the computed indent for this post.
+     * If it's a top level reply, bc we render each top-level branch as a
+     * separate tree, it's implicitly part of the last branch. For subsequent
+     * replies, we'll override this after traversal.
      */
-    isDeadEnd: nextItem?.depth === undefined || nextItem?.depth < item.depth,
-
-    upcomingParentReadMore: parentMetadata?.upcomingParentReadMore || undefined,
+    isPartOfLastBranchAtDepth: item.depth === 1 ? 1 : undefined,
+    /*
+     * If there are no slices below this one, or the next slice has a depth <=
+     * than the depth of this post, it's the last child of the reply tree. It
+     * is not necessarily the last leaf in the parent branch, since it could
+     * have another sibling.
+     */
+    isLastChild: nextItem?.depth === undefined || nextItem?.depth <= item.depth,
+    /*
+     * Unknown until after traversal
+     */
+    isLastSibling: false,
 
     // TODO non-spec
     text: getPostRecord(item.value.post).text,
@@ -95,7 +106,7 @@ export function getThreadPostUI({
   replies,
   parentMetadata,
   prevItemDepth,
-  isDeadEnd,
+  isLastChild,
   skippedIndents,
   seenReplies,
   unhydratedReplies,
@@ -112,7 +123,7 @@ export function getThreadPostUI({
      * If there are no slices below this one, or the next slice is less
      * indented than the computed indent for this post.
      */
-    isDeadEnd, //nextItemDepth === undefined || nextItemDepth < depth,
+    isLastChild, //nextItemDepth === undefined || nextItemDepth < depth,
     skippedIndents,
   }
 }

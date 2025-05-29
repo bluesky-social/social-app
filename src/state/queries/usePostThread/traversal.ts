@@ -212,24 +212,11 @@ export function sort(
         continue traversal
       } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
         if (parentMetadata) {
-          if (metadata) {
-            metadata.replyIndex = parentMetadata.seenReplies
-          }
-
+          /*
+           * Set this value before incrementing the parent's seenReplies
+           */
+          metadata!.replyIndex = parentMetadata.seenReplies
           parentMetadata.seenReplies += 1
-
-          if (metadata) {
-            metadata.isLastSibling =
-              parentMetadata.replies - parentMetadata.unhydratedReplies ===
-              parentMetadata.seenReplies
-
-            if (
-              parentMetadata.unhydratedReplies > 0 &&
-              metadata.isLastSibling
-            ) {
-              metadata.upcomingParentReadMore = parentMetadata
-            }
-          }
         }
 
         const post = views.threadPost({
@@ -282,18 +269,11 @@ export function sort(
                   parentMetadata: childParentMetadata,
                 })
                 if (childParentMetadata) {
+                  /*
+                   * Set this value before incrementing the parent's seenReplies
+                   */
+                  childMetadata!.replyIndex = childParentMetadata.seenReplies
                   childParentMetadata.seenReplies += 1
-                  childMetadata.isLastSibling =
-                    childParentMetadata.replies -
-                      childParentMetadata.unhydratedReplies ===
-                    childParentMetadata.seenReplies
-
-                  if (
-                    childParentMetadata.unhydratedReplies > 0 &&
-                    childMetadata.isLastSibling
-                  ) {
-                    childMetadata.upcomingParentReadMore = childParentMetadata
-                  }
                 }
                 metadatas.set(item.uri, childMetadata)
                 metadatas.set(childMetadata.text, childMetadata) // TODO debugging
@@ -346,30 +326,94 @@ export function sort(
 
     if (item.type === 'threadPost') {
       const metadata = metadatas.get(item.uri)
+
       if (metadata) {
         if (metadata.parentMetadata) {
+          /*
+           * Copy in the parent's skipped indents
+           */
           metadata.skippedIndents = new Set([
             ...metadata.parentMetadata.skippedIndents,
           ])
 
+          /*
+           * We can now officially calculate `isLastSibling` based on the actual data that
+           * we've seen.
+           */
+          metadata.isLastSibling =
+            metadata.replyIndex === metadata.parentMetadata.seenReplies - 1
+
+          /*
+           * If this is the last sibling, it's implicitly part of the last
+           * branch of this sub-tree.
+           */
+          if (metadata.isLastSibling) {
+            metadata.isPartOfLastBranchAtDepth = metadata.depth
+
+            /**
+             * If the parent is part of the last branch of the sub-tree, so is the child.
+             */
+            if (metadata.parentMetadata.isPartOfLastBranchAtDepth) {
+              metadata.isPartOfLastBranchAtDepth = metadata.parentMetadata.isPartOfLastBranchAtDepth
+            }
+          }
+
+          /*
+           * If this is the last sibling, and the parent has unhydrated replies,
+           * at some point down the line we will need to show a "read more".
+           */
           if (
-            metadata.isLastSibling &&
-            metadata.parentMetadata.unhydratedReplies <= 0
+            metadata.parentMetadata.unhydratedReplies > 0 &&
+            metadata.isLastSibling
           ) {
+            metadata.upcomingParentReadMore = metadata.parentMetadata
+          }
+
+          /*
+           * Copy in the parent's upcoming read more, if it exists. Once we
+           * reach the bottom, we'll insert a "read more"
+           */
+          if (metadata.parentMetadata.upcomingParentReadMore) {
+            metadata.upcomingParentReadMore =
+              metadata.parentMetadata.upcomingParentReadMore
+          }
+
+          /**
+           * If this is the last sibling, and the parent has no unhydrated
+           * replies, then we know we can skip an indent line.
+           */
+          if (
+            metadata.parentMetadata.unhydratedReplies <= 0 &&
+            metadata.isLastSibling
+          ) {
+            /**
+             * Depth is 2 more than the 0-index of the indent calculation
+             * bc of how we render these. So instead of handling that in the
+             * component, we just adjust that back to 0-index here.
+             */
             metadata.skippedIndents.add(item.depth - 2)
           }
         }
 
-        if (
-          metadata.unhydratedReplies > 0 &&
-          (metadata.nextItemDepth === undefined ||
-            metadata.nextItemDepth <= item.depth)
-        ) {
+        /*
+         * If this post has unhydrated replies, and it is the last child, then
+         * it itself needs a "read more"
+         */
+        if (metadata.unhydratedReplies > 0 && metadata.isLastChild) {
           items.splice(i + 1, 0, views.readMore(metadata))
-          i++
+          i++ // skip next iteration
         }
 
-        if (metadata.upcomingParentReadMore && metadata.isDeadEnd) {
+        /*
+         * If there's an upcoming parent read more, this branch is part of the
+         * last branch of the sub-tree, and the item itself is the last child,
+         * insert the parent "read more".
+         */
+        if (
+          metadata.upcomingParentReadMore &&
+          metadata.isPartOfLastBranchAtDepth === metadata.upcomingParentReadMore.depth &&
+          metadata.isLastChild
+        ) {
           items.splice(
             i + 1,
             0,
@@ -378,6 +422,9 @@ export function sort(
           i++
         }
 
+        /*
+         * Calculate the final UI state for the thread item.
+         */
         item.ui = getThreadPostUI(metadata)
       }
     }
