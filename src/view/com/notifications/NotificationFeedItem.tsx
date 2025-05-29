@@ -97,7 +97,12 @@ let NotificationFeedItem = ({
   const {_, i18n} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
-    if (item.type === 'post-like' || item.type === 'repost') {
+    if (
+      item.type === 'post-like' ||
+      item.type === 'repost' ||
+      item.type === 'like-via-repost' ||
+      item.type === 'repost-via-repost'
+    ) {
       if (item.subjectUri) {
         const urip = new AtUri(item.subjectUri)
         return `/profile/${urip.host}/post/${urip.rkey}`
