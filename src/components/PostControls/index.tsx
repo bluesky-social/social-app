@@ -72,11 +72,13 @@ let PostControls = ({
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(
     post,
     viaRepost,
+    feedContext,
     logContext,
   )
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
     viaRepost,
+    feedContext,
     logContext,
   )
   const requireAuth = useRequireAuth()
