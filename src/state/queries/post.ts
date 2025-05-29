@@ -3,7 +3,7 @@ import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
+import {type LogEvents, toClout} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
@@ -286,7 +286,7 @@ function usePostRepostMutation(
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
     mutationFn: ({uri, cid, via}) => {
-      logEvent('post:repost', {logContext, feedContext: feedContext})
+      logger.metric('post:repost', {logContext, feedContext: feedContext})
       return agent.repost(uri, cid, via)
     },
   })
@@ -299,7 +299,7 @@ function usePostUnrepostMutation(
   const agent = useAgent()
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
     mutationFn: ({repostUri}) => {
-      logEvent('post:unrepost', {logContext, feedContext: feedContext})
+      logger.metric('post:unrepost', {logContext, feedContext: feedContext})
       return agent.deleteRepost(repostUri)
     },
   })
@@ -371,7 +371,7 @@ function useThreadMuteMutation() {
     {uri: string} // the root post's uri
   >({
     mutationFn: ({uri}) => {
-      logEvent('post:mute', {})
+      logger.metric('post:mute', {})
       return agent.api.app.bsky.graph.muteThread({root: uri})
     },
   })
@@ -381,7 +381,7 @@ function useThreadUnmuteMutation() {
   const agent = useAgent()
   return useMutation<{}, Error, {uri: string}>({
     mutationFn: ({uri}) => {
-      logEvent('post:unmute', {})
+      logger.metric('post:unmute', {})
       return agent.api.app.bsky.graph.unmuteThread({root: uri})
     },
   })
