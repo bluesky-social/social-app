@@ -6,6 +6,7 @@ import {
 
 import {
   HiddenReplyKind,
+  type PostThreadParams,
   type Slice,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
@@ -25,12 +26,14 @@ export function traverse(
     hasSession,
     showMuted,
     showHidden,
+    view,
   }: {
     threadgateHiddenReplies: Set<string>
     moderationOpts: ModerationOpts
     hasSession: boolean
     showMuted: boolean
     showHidden: boolean
+    view: PostThreadParams['view']
   },
 ) {
   const items: Slice[] = []
@@ -347,11 +350,14 @@ export function traverse(
         }
 
         /*
+         * Tree-view only.
+         *
          * If there's an upcoming parent read more, this branch is part of the
          * last branch of the sub-tree, and the item itself is the last child,
          * insert the parent "read more".
          */
         if (
+          view === 'tree' &&
           metadata.upcomingParentReadMore &&
           metadata.isPartOfLastBranchFromDepth ===
             metadata.upcomingParentReadMore.depth &&
