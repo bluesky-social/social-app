@@ -130,6 +130,12 @@ export type MetricEvents = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
+  'feed:suggestion:seen': {
+    feedUrl: string
+  }
+  'feed:suggestion:press': {
+    feedUrl: string
+  }
   'discover:showMore': {
     feedContext: string
   }

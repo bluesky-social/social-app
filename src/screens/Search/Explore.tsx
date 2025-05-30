@@ -281,9 +281,10 @@ export function Explore({
     hasPressedLoadMoreFeeds,
   ])
 
-  const {data: suggestedFeeds} = useGetSuggestedFeedsQuery({
-    enabled: useFullExperience,
-  })
+  const {data: suggestedFeeds, error: suggestedFeedsError} =
+    useGetSuggestedFeedsQuery({
+      enabled: useFullExperience,
+    })
   const {
     data: feedPreviewSlices,
     query: {
@@ -439,13 +440,11 @@ export function Explore({
       },
     })
 
-    if (feeds && preferences) {
-      // Currently the responses contain duplicate items.
-      // Needs to be fixed on backend, but let's dedupe to be safe.
-      let seen = new Set()
-      const feedItems: ExploreScreenItems[] = []
-      for (const page of feeds.pages) {
-        for (const feed of page.feeds) {
+    if (useFullExperience) {
+      if (suggestedFeeds && preferences) {
+        let seen = new Set()
+        const feedItems: ExploreScreenItems[] = []
+        for (const feed of suggestedFeeds.feeds) {
           if (!seen.has(feed.uri)) {
             seen.add(feed.uri)
             feedItems.push({
@@ -455,78 +454,170 @@ export function Explore({
             })
           }
         }
-      }
 
-      // feeds errors can occur during pagination, so feeds is truthy
-      if (feedsError) {
-        i.push({
-          type: 'error',
-          key: 'feedsError',
-          message: _(msg`Failed to load suggested feeds`),
-          error: cleanError(feedsError),
-        })
-      } else if (preferencesError) {
-        i.push({
-          type: 'error',
-          key: 'preferencesError',
-          message: _(msg`Failed to load feeds preferences`),
-          error: cleanError(preferencesError),
-        })
-      } else {
-        if (feedItems.length === 0) {
-          if (!hasNextFeedsPage) {
-            i.pop()
-          }
+        // feeds errors can occur during pagination, so feeds is truthy
+        if (suggestedFeedsError) {
+          i.push({
+            type: 'error',
+            key: 'feedsError',
+            message: _(msg`Failed to load suggested feeds`),
+            error: cleanError(feedsError),
+          })
+        } else if (preferencesError) {
+          i.push({
+            type: 'error',
+            key: 'preferencesError',
+            message: _(msg`Failed to load feeds preferences`),
+            error: cleanError(preferencesError),
+          })
         } else {
-          // This query doesn't follow the limit very well, so the first press of the
-          // load more button just unslices the array back to ~10 items
-          if (!hasPressedLoadMoreFeeds) {
-            i.push(...feedItems.slice(0, 6))
+          if (feedItems.length === 0) {
+            if (!hasNextFeedsPage) {
+              i.pop()
+            }
           } else {
-            i.push(...feedItems)
+            // This query doesn't follow the limit very well, so the first press of the
+            // load more button just unslices the array back to ~10 items
+            if (!hasPressedLoadMoreFeeds) {
+              i.push(...feedItems.slice(0, 6))
+            } else {
+              i.push(...feedItems)
+            }
+
+            for (const [index, item] of feedItems.entries()) {
+              if (item.type !== 'feed') {
+                continue
+              }
+              // don't log the ones we've already sent
+              if (hasPressedLoadMoreFeeds && index < 6) {
+                continue
+              }
+              logger.metric('feed:suggestion:seen', {feedUrl: item.feed.uri})
+            }
+          }
+          if (!hasPressedLoadMoreFeeds) {
+            i.push({
+              type: 'loadMore',
+              key: 'loadMoreFeeds',
+              message: _(msg`Load more suggested feeds`),
+              isLoadingMore: isLoadingMoreFeeds,
+              onLoadMore: onLoadMoreFeeds,
+            })
           }
         }
-        if (hasNextFeedsPage) {
+      } else {
+        if (feedsError) {
           i.push({
-            type: 'loadMore',
-            key: 'loadMoreFeeds',
-            message: _(msg`Load more suggested feeds`),
-            isLoadingMore: isLoadingMoreFeeds,
-            onLoadMore: onLoadMoreFeeds,
+            type: 'error',
+            key: 'feedsError',
+            message: _(msg`Failed to load suggested feeds`),
+            error: cleanError(feedsError),
           })
+        } else if (preferencesError) {
+          i.push({
+            type: 'error',
+            key: 'preferencesError',
+            message: _(msg`Failed to load feeds preferences`),
+            error: cleanError(preferencesError),
+          })
+        } else {
+          i.push({type: 'feedPlaceholder', key: 'feedPlaceholder'})
         }
       }
     } else {
-      if (feedsError) {
-        i.push({
-          type: 'error',
-          key: 'feedsError',
-          message: _(msg`Failed to load suggested feeds`),
-          error: cleanError(feedsError),
-        })
-      } else if (preferencesError) {
-        i.push({
-          type: 'error',
-          key: 'preferencesError',
-          message: _(msg`Failed to load feeds preferences`),
-          error: cleanError(preferencesError),
-        })
+      if (feeds && preferences) {
+        // Currently the responses contain duplicate items.
+        // Needs to be fixed on backend, but let's dedupe to be safe.
+        let seen = new Set()
+        const feedItems: ExploreScreenItems[] = []
+        for (const page of feeds.pages) {
+          for (const feed of page.feeds) {
+            if (!seen.has(feed.uri)) {
+              seen.add(feed.uri)
+              feedItems.push({
+                type: 'feed',
+                key: feed.uri,
+                feed,
+              })
+            }
+          }
+        }
+
+        // feeds errors can occur during pagination, so feeds is truthy
+        if (feedsError) {
+          i.push({
+            type: 'error',
+            key: 'feedsError',
+            message: _(msg`Failed to load suggested feeds`),
+            error: cleanError(feedsError),
+          })
+        } else if (preferencesError) {
+          i.push({
+            type: 'error',
+            key: 'preferencesError',
+            message: _(msg`Failed to load feeds preferences`),
+            error: cleanError(preferencesError),
+          })
+        } else {
+          if (feedItems.length === 0) {
+            if (!hasNextFeedsPage) {
+              i.pop()
+            }
+          } else {
+            // This query doesn't follow the limit very well, so the first press of the
+            // load more button just unslices the array back to ~10 items
+            if (!hasPressedLoadMoreFeeds) {
+              i.push(...feedItems.slice(0, 3))
+            } else {
+              i.push(...feedItems)
+            }
+          }
+          if (hasNextFeedsPage) {
+            i.push({
+              type: 'loadMore',
+              key: 'loadMoreFeeds',
+              message: _(msg`Load more suggested feeds`),
+              isLoadingMore: isLoadingMoreFeeds,
+              onLoadMore: onLoadMoreFeeds,
+            })
+          }
+        }
       } else {
-        i.push({type: 'feedPlaceholder', key: 'feedPlaceholder'})
+        if (feedsError) {
+          i.push({
+            type: 'error',
+            key: 'feedsError',
+            message: _(msg`Failed to load suggested feeds`),
+            error: cleanError(feedsError),
+          })
+        } else if (preferencesError) {
+          i.push({
+            type: 'error',
+            key: 'preferencesError',
+            message: _(msg`Failed to load feeds preferences`),
+            error: cleanError(preferencesError),
+          })
+        } else {
+          i.push({type: 'feedPlaceholder', key: 'feedPlaceholder'})
+        }
       }
     }
     return i
   }, [
-    feeds,
     _,
+    useFullExperience,
+    suggestedFeeds,
+    preferences,
+    suggestedFeedsError,
+    preferencesError,
     feedsError,
     hasNextFeedsPage,
     hasPressedLoadMoreFeeds,
     isLoadingMoreFeeds,
     onLoadMoreFeeds,
-    preferences,
-    preferencesError,
+    feeds,
   ])
+
   const suggestedStarterPacksModule = useMemo(() => {
     const i: ExploreScreenItems[] = []
     i.push({
@@ -709,7 +800,17 @@ export function Explore({
                 a.px_lg,
                 a.py_lg,
               ]}>
-              <FeedCard.Default view={item.feed} />
+              <FeedCard.Default
+                view={item.feed}
+                onPress={() => {
+                  if (!useFullExperience) {
+                    return
+                  }
+                  logger.metric('feed:suggestion:press', {
+                    feedUrl: item.feed.uri,
+                  })
+                }}
+              />
             </View>
           )
         }
@@ -896,11 +997,16 @@ export function Explore({
       }
     },
     [
-      t,
+      t.atoms.border_contrast_low,
+      t.atoms.bg_contrast_25,
+      t.atoms.text_contrast_medium,
+      t.atoms.bg,
+      t.palette.negative_400,
       focusSearchInput,
-      moderationOpts,
       selectedInterest,
+      moderationOpts,
       interestsDisplayNames,
+      useFullExperience,
       _,
       fetchNextPageFeedPreviews,
     ],
