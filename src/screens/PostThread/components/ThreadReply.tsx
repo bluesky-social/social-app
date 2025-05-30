@@ -269,7 +269,7 @@ let PostThreadItemLoaded = ({
                       {item.ui.showChildReplyLine && (
                         <View
                           style={[
-                            a.h_full,
+                            a.flex_1,
                             t.atoms.border_contrast_low,
                             {
                               borderRightWidth: 2,
@@ -288,16 +288,18 @@ let PostThreadItemLoaded = ({
                         additionalCauses={additionalPostAlerts}
                       />
                       {richText?.text ? (
-                        <RichText
-                          enableTags
-                          value={richText}
-                          style={[a.flex_1, a.text_md]}
-                          numberOfLines={
-                            limitLines ? MAX_POST_LINES : undefined
-                          }
-                          authorHandle={post.author.handle}
-                          shouldProxyLinks={true}
-                        />
+                        <View>
+                          <RichText
+                            enableTags
+                            value={richText}
+                            style={[a.flex_1, a.text_md]}
+                            numberOfLines={
+                              limitLines ? MAX_POST_LINES : undefined
+                            }
+                            authorHandle={post.author.handle}
+                            shouldProxyLinks={true}
+                          />
+                        </View>
                       ) : undefined}
                       {limitLines ? (
                         <TextLink

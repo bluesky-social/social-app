@@ -42,7 +42,7 @@ export function usePostThread({
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
         anchor: params.anchor!,
         branchingFactor: params.view === 'linear' ? 1 : undefined,
-        below: 10,
+        below: 4,
         sort: params.sort,
         prioritizeFollowedUsers: params.prioritizeFollowedUsers,
       })
