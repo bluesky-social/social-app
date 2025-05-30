@@ -2,6 +2,7 @@ import {
   type $Typed,
   type AppBskyFeedDefs,
   AppBskyUnspeccedGetPostThreadV2,
+  AppBskyUnspeccedDefs,
   AtUri,
 } from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
@@ -34,7 +35,7 @@ export function createCacheMutator({
   return {
     insertReplies(
       parentUri: string,
-      replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
+      replies: AppBskyUnspeccedDefs.ThreadItem[],
     ) {
       queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
         queryKey,
@@ -46,7 +47,7 @@ export function createCacheMutator({
           for (let i = 0; i < thread.length; i++) {
             const existingParent = thread[i]
             if (
-              !AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(
+              !AppBskyUnspeccedDefs.isThreadItemPost(
                 existingParent.value,
               )
             )
@@ -68,7 +69,7 @@ export function createCacheMutator({
               !nextItem || nextItem.depth <= existingParent.depth
             const firstReply = replies.at(0)
             const opIsReplier =
-              AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(
+              AppBskyUnspeccedDefs.isThreadItemPost(
                 firstReply?.value,
               )
                 ? opDid === firstReply.value.post.author.did
@@ -118,7 +119,7 @@ export function createCacheMutator({
      * Unused atm, post shadow does the trick, but it would be nice to clean up
      * the whole sub-tree on deletes.
      */
-    deletePost(post: AppBskyUnspeccedGetPostThreadV2.ThreadItem) {
+    deletePost(post: AppBskyUnspeccedDefs.ThreadItem) {
       queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
         queryKey,
         queryData => {
@@ -128,7 +129,7 @@ export function createCacheMutator({
 
           for (let i = 0; i < thread.length; i++) {
             const existingPost = thread[i]
-            if (!AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(post.value))
+            if (!AppBskyUnspeccedDefs.isThreadItemPost(post.value))
               continue
 
             if (existingPost.uri === post.uri) {
@@ -151,7 +152,7 @@ export function createCacheMutator({
 export function getThreadPlaceholder(
   queryClient: QueryClient,
   uri: string,
-): $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItem> | void {
+): $Typed<AppBskyUnspeccedDefs.ThreadItem> | void {
   let partial
   for (let item of getThreadPlaceholderCandidates(queryClient, uri)) {
     /*
@@ -178,8 +179,8 @@ export function* getThreadPlaceholderCandidates(
   uri: string,
 ): Generator<
   $Typed<
-    Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-      value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
+    Omit<AppBskyUnspeccedDefs.ThreadItem, 'value'> & {
+      value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
     }
   >,
   void
@@ -233,7 +234,7 @@ export function* findAllPostsInQueryData(
     const {thread} = queryData
 
     for (const item of thread) {
-      if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+      if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
         if (didOrHandleUriMatches(atUri, item.value.post)) {
           yield item.value.post
         }

@@ -2,14 +2,21 @@ import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyUnspeccedGetPostThreadV2,
+  type AppBskyUnspeccedDefs,
+  type AppBskyUnspeccedGetPostThreadHiddenV2,
   type ModerationDecision,
 } from '@atproto/api'
 
 export const postThreadQueryKeyRoot = 'getPostThreadV2' as const
+export const postThreadHiddenQueryKeyRoot = 'getPostThreadHiddenV2' as const
 
 export const createPostThreadQueryKey = (
   props: Pick<UsePostThreadProps, 'params'>,
 ) => [postThreadQueryKeyRoot, props] as const
+
+export const createPostThreadHiddenQueryKey = (
+  props: AppBskyUnspeccedGetPostThreadHiddenV2.QueryParams,
+) => [postThreadHiddenQueryKeyRoot, props] as const
 
 export type PostThreadParams = Pick<
   AppBskyUnspeccedGetPostThreadV2.QueryParams,
@@ -30,7 +37,7 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost, 'post'> & {
+      value: Omit<AppBskyUnspeccedDefs.ThreadItemPost, 'post'> & {
         post: Omit<AppBskyFeedDefs.PostView, 'record'> & {
           record: AppBskyFeedPost.Record
         }
@@ -51,21 +58,21 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedGetPostThreadV2.ThreadItemNoUnauthenticated
+      value: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated
     }
   | {
       type: 'threadPostNotFound'
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedGetPostThreadV2.ThreadItemNotFound
+      value: AppBskyUnspeccedDefs.ThreadItemNotFound
     }
   | {
       type: 'threadPostBlocked'
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedGetPostThreadV2.ThreadItemBlocked
+      value: AppBskyUnspeccedDefs.ThreadItemBlocked
     }
   | {
       type: 'replyComposer'

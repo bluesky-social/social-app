@@ -2,7 +2,7 @@ import {
   type $Typed,
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
-  type AppBskyUnspeccedGetPostThreadV2,
+  type AppBskyUnspeccedDefs,
   AtUri,
   moderatePost,
   type ModerationOpts,
@@ -18,7 +18,7 @@ export function threadPostNoUnauthenticated({
   uri,
   depth,
   value,
-}: AppBskyUnspeccedGetPostThreadV2.ThreadItem): Extract<
+}: AppBskyUnspeccedDefs.ThreadItem): Extract<
   ThreadItem,
   {type: 'threadPostNoUnauthenticated'}
 > {
@@ -27,7 +27,7 @@ export function threadPostNoUnauthenticated({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedGetPostThreadV2.ThreadItemNoUnauthenticated,
+    value: value as AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated,
   }
 }
 
@@ -35,7 +35,7 @@ export function threadPostNotFound({
   uri,
   depth,
   value,
-}: AppBskyUnspeccedGetPostThreadV2.ThreadItem): Extract<
+}: AppBskyUnspeccedDefs.ThreadItem): Extract<
   ThreadItem,
   {type: 'threadPostNotFound'}
 > {
@@ -44,7 +44,7 @@ export function threadPostNotFound({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedGetPostThreadV2.ThreadItemNotFound,
+    value: value as AppBskyUnspeccedDefs.ThreadItemNotFound,
   }
 }
 
@@ -52,7 +52,7 @@ export function threadPostBlocked({
   uri,
   depth,
   value,
-}: AppBskyUnspeccedGetPostThreadV2.ThreadItem): Extract<
+}: AppBskyUnspeccedDefs.ThreadItem): Extract<
   ThreadItem,
   {type: 'threadPostBlocked'}
 > {
@@ -61,7 +61,7 @@ export function threadPostBlocked({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedGetPostThreadV2.ThreadItemBlocked,
+    value: value as AppBskyUnspeccedDefs.ThreadItemBlocked,
   }
 }
 
@@ -73,7 +73,7 @@ export function threadPost({
 }: {
   uri: string
   depth: number
-  value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
+  value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
   moderationOpts: ModerationOpts
 }): Extract<ThreadItem, {type: 'threadPost'}> {
   return {
@@ -125,20 +125,22 @@ export function readMore({
 export function postViewToThreadPlaceholder(
   post: AppBskyFeedDefs.PostView,
 ): $Typed<
-  Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-    value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
+  Omit<AppBskyUnspeccedDefs.ThreadItem, 'value'> & {
+    value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
   }
 > {
   return {
-    $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
+    $type: 'app.bsky.unspecced.defs#threadItem',
     uri: post.uri,
     depth: 0, // reset to 0 for highlighted post
     value: {
-      $type: 'app.bsky.unspecced.getPostThreadV2#threadItemPost',
+      $type: 'app.bsky.unspecced.defs#threadItemPost',
       post,
       opThread: false,
       moreParents: false,
       moreReplies: 0,
+      hiddenByThreadgate: false,
+      mutedByViewer: false,
     },
   }
 }

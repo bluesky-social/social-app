@@ -3,6 +3,7 @@ import {
   AppBskyFeedPost,
   AppBskyFeedThreadgate,
   AppBskyUnspeccedGetPostThreadV2,
+  AppBskyUnspeccedDefs,
   AtUri,
 } from '@atproto/api'
 
@@ -46,12 +47,12 @@ export function getTraversalMetadata({
   nextItem,
   parentMetadata,
 }: {
-  item: AppBskyUnspeccedGetPostThreadV2.ThreadItem
-  prevItem?: AppBskyUnspeccedGetPostThreadV2.ThreadItem
-  nextItem?: AppBskyUnspeccedGetPostThreadV2.ThreadItem
+  item: AppBskyUnspeccedDefs.ThreadItem
+  prevItem?: AppBskyUnspeccedDefs.ThreadItem
+  nextItem?: AppBskyUnspeccedDefs.ThreadItem
   parentMetadata?: TraversalMetadata
 }): TraversalMetadata {
-  if (!AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+  if (!AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
     throw new Error(`Expected thread item to be a post`)
   }
   const repliesCount = item.value.post.replyCount || 0

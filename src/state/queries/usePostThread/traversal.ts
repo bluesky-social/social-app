@@ -1,5 +1,5 @@
 import {
-  AppBskyUnspeccedGetPostThreadV2,
+  AppBskyUnspeccedDefs,
   type ModerationDecision,
   type ModerationOpts,
 } from '@atproto/api'
@@ -18,7 +18,7 @@ import {
 import * as views from '#/state/queries/usePostThread/views'
 
 export function traverse(
-  thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
+  thread: AppBskyUnspeccedDefs.ThreadItem[],
   {
     threadgateHiddenReplies,
     moderationOpts,
@@ -26,6 +26,7 @@ export function traverse(
     view,
     hasHiddenReplies,
     showHiddenReplies,
+    skipHiddenReplyHandling,
     loadHiddenReplies,
   }: {
     threadgateHiddenReplies: Set<string>
@@ -34,6 +35,7 @@ export function traverse(
     view: PostThreadParams['view']
     hasHiddenReplies: boolean
     showHiddenReplies: boolean
+    skipHiddenReplyHandling?: boolean
     loadHiddenReplies: () => Promise<void>
   },
 ) {
@@ -46,7 +48,7 @@ export function traverse(
     let parentMetadata: TraversalMetadata | undefined
     let metadata: TraversalMetadata | undefined
 
-    if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+    if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
       parentMetadata = metadatas.get(
         getPostRecord(item.value.post).reply?.parent?.uri || '',
       )
@@ -66,20 +68,20 @@ export function traverse(
        */
     } else if (item.depth === 0) {
       if (
-        AppBskyUnspeccedGetPostThreadV2.isThreadItemNoUnauthenticated(
+        AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(
           item.value,
         )
       ) {
         items.push(views.threadPostNoUnauthenticated(item))
       } else if (
-        AppBskyUnspeccedGetPostThreadV2.isThreadItemNotFound(item.value)
+        AppBskyUnspeccedDefs.isThreadItemNotFound(item.value)
       ) {
         items.push(views.threadPostNotFound(item))
       } else if (
-        AppBskyUnspeccedGetPostThreadV2.isThreadItemBlocked(item.value)
+        AppBskyUnspeccedDefs.isThreadItemBlocked(item.value)
       ) {
         items.push(views.threadPostBlocked(item))
-      } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+      } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
         const post = views.threadPost({
           uri: item.uri,
           depth: item.depth,
@@ -92,24 +94,24 @@ export function traverse(
           const parent = thread[pi]
 
           if (
-            AppBskyUnspeccedGetPostThreadV2.isThreadItemNoUnauthenticated(
+            AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(
               parent.value,
             )
           ) {
             items.unshift(views.threadPostNoUnauthenticated(parent))
             break parentTraversal
           } else if (
-            AppBskyUnspeccedGetPostThreadV2.isThreadItemNotFound(parent.value)
+            AppBskyUnspeccedDefs.isThreadItemNotFound(parent.value)
           ) {
             items.unshift(views.threadPostNotFound(parent))
             break parentTraversal
           } else if (
-            AppBskyUnspeccedGetPostThreadV2.isThreadItemBlocked(parent.value)
+            AppBskyUnspeccedDefs.isThreadItemBlocked(parent.value)
           ) {
             items.unshift(views.threadPostBlocked(parent))
             break parentTraversal
           } else if (
-            AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(parent.value)
+            AppBskyUnspeccedDefs.isThreadItemPost(parent.value)
           ) {
             items.unshift(
               views.threadPost({
@@ -129,18 +131,18 @@ export function traverse(
        * we could.
        */
       const shouldBreak =
-        AppBskyUnspeccedGetPostThreadV2.isThreadItemNoUnauthenticated(
+        AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(
           item.value,
         ) ||
-        AppBskyUnspeccedGetPostThreadV2.isThreadItemNotFound(item.value) ||
-        AppBskyUnspeccedGetPostThreadV2.isThreadItemBlocked(item.value)
+        AppBskyUnspeccedDefs.isThreadItemNotFound(item.value) ||
+        AppBskyUnspeccedDefs.isThreadItemBlocked(item.value)
 
       if (shouldBreak) {
         const branch = getBranch(thread, i, item.depth)
         // could insert tombstone
         i = branch.end
         continue traversal
-      } else if (AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(item.value)) {
+      } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
         if (parentMetadata) {
           /*
            * Set this value before incrementing the parent's repliesSeenCount
@@ -161,7 +163,7 @@ export function traverse(
         const postIsModerated =
           postIsHiddenByThreadgate || postMod.blurred || postMod.muted
 
-        if (!postIsModerated) {
+        if (!postIsModerated || skipHiddenReplyHandling) {
           /*
            * Not moderated, probably need to insert it
            */
@@ -192,7 +194,7 @@ export function traverse(
               const child = thread[ci]
 
               if (
-                AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(child.value)
+                AppBskyUnspeccedDefs.isThreadItemPost(child.value)
               ) {
                 const childParentMetadata = metadatas.get(
                   getPostRecord(child.value.post).reply?.parent?.uri || '',
@@ -256,15 +258,17 @@ export function traverse(
     }
   }
 
-  if (hidden.length || hasHiddenReplies) {
-    if (showHiddenReplies) {
-      items.push(...hidden)
-    } else {
-      items.push({
-        type: 'showHiddenReplies',
-        key: 'showHiddenReplies',
-        onLoad: loadHiddenReplies,
-      })
+  if (!skipHiddenReplyHandling) {
+    if (hidden.length || hasHiddenReplies) {
+      if (showHiddenReplies) {
+        items.push(...hidden)
+      } else {
+        items.push({
+          type: 'showHiddenReplies',
+          key: 'showHiddenReplies',
+          onLoad: loadHiddenReplies,
+        })
+      }
     }
   }
 
@@ -428,7 +432,7 @@ export function traverse(
  *    const { start: 1, end: 3 } = getBranch(items, 1, 1)
  */
 export function getBranch(
-  thread: AppBskyUnspeccedGetPostThreadV2.OutputSchema['thread'],
+  thread: AppBskyUnspeccedDefs.ThreadItem[],
   branchStartIndex: number,
   branchStartDepth: number,
 ) {
