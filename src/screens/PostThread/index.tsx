@@ -237,7 +237,7 @@ export function Inner({uri}: {uri: string | undefined}) {
               threadgateRecord={data?.threadgate?.record ?? undefined}
               overrides={{
                 moderation:
-                  shownHiddenReplyKinds.has(HiddenReplyKind.Muted) &&
+                  shownHiddenReplyKinds.has(HiddenReplyKind.Hidden) &&
                   item.depth > 0,
               }}
               onPostSuccess={optimisticOnPostReply}

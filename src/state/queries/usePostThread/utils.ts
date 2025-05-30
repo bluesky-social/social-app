@@ -59,12 +59,9 @@ export function getTraversalMetadata({
   const metadata = {
     depth: item.depth,
     /*
-     * If there are no slices below this one, or the next slice has a depth <=
-     * than the depth of this post, it's the last child of the reply tree. It
-     * is not necessarily the last leaf in the parent branch, since it could
-     * have another sibling.
+     * Unknown until after traversal
      */
-    isLastChild: nextItem?.depth === undefined || nextItem?.depth <= item.depth,
+    isLastChild: false,
     /*
      * Unknown until after traversal
      */
@@ -89,6 +86,7 @@ export function getTraversalMetadata({
     repliesCount,
     repliesUnhydrated,
     repliesSeenCount: 0,
+    repliesIndexCount: 0,
     repliesIndex: 0,
     skippedIndentIndices: new Set<number>(),
   }
@@ -138,10 +136,12 @@ export function getThreadPostUI({
     showChildReplyLine: depth < 0 || isReplyAndHasReplies,
     indent: depth,
     /*
-     * If there are no slices below this one, or the next slice is less
-     * indented than the computed indent for this post.
+     * If there are no slices below this one, or the next slice has a depth <=
+     * than the depth of this post, it's the last child of the reply tree. It
+     * is not necessarily the last leaf in the parent branch, since it could
+     * have another sibling.
      */
-    isLastChild, //nextItemDepth === undefined || nextItemDepth < depth,
+    isLastChild,
     skippedIndentIndices,
     precedesChildReadMore: precedesChildReadMore ?? false,
   }
