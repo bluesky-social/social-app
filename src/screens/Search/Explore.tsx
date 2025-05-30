@@ -959,7 +959,7 @@ export function Explore({
     }
     if (!alreadyReportedRef.current.has(module)) {
       alreadyReportedRef.current.set(module, module)
-      logger.metric('explore:module:seen', {module})
+      logger.metric('explore:module:seen', {module}, {statsig: false})
     }
   }, [])
 

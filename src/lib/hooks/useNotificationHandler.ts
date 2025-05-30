@@ -248,7 +248,11 @@ export function useNotificationsHandler() {
             'User pressed a notification, opening notifications tab',
             {},
           )
-          logger.metric('notifications:openApp', {reason: payload.reason})
+          logger.metric(
+            'notifications:openApp',
+            {reason: payload.reason},
+            {statsig: false},
+          )
 
           invalidateCachedUnreadPage()
           truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
