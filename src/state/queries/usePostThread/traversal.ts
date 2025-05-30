@@ -341,6 +341,7 @@ export function traverse(
          * it itself needs a "read more"
          */
         if (metadata.repliesUnhydrated > 0 && metadata.isLastChild) {
+          metadata.precedesChildReadMore = true
           items.splice(i + 1, 0, views.readMore(metadata))
           i++ // skip next iteration
         }
