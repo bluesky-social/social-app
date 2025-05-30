@@ -759,16 +759,20 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         linking={LINKING}
         theme={theme}
         onStateChange={() => {
-          logger.metric('router:navigate', {
-            from: prevLoggedRouteName.current,
-          })
+          logger.metric(
+            'router:navigate',
+            {
+              from: prevLoggedRouteName.current,
+            },
+            {statsig: false},
+          )
           prevLoggedRouteName.current = getCurrentRouteName()
         }}
         onReady={() => {
           attachRouteToLogEvents(getCurrentRouteName)
           logModuleInitTime()
           onReady()
-          logger.metric('router:navigate', {})
+          logger.metric('router:navigate', {}, {statsig: false})
         }}>
         {children}
       </NavigationContainer>

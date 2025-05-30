@@ -63,11 +63,15 @@ export let MessageContextMenu = ({
     )
     openLink(translatorUrl, true)
 
-    logger.metric('translate', {
-      sourceLanguages: [],
-      targetLanguage: langPrefs.primaryLanguage,
-      textLength: message.text.length,
-    })
+    logger.metric(
+      'translate',
+      {
+        sourceLanguages: [],
+        targetLanguage: langPrefs.primaryLanguage,
+        textLength: message.text.length,
+      },
+      {statsig: false},
+    )
   }, [langPrefs.primaryLanguage, message.text, openLink])
 
   const onDelete = useCallback(() => {

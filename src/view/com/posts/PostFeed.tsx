@@ -796,10 +796,14 @@ let PostFeed = ({
         ) {
           if (!seenActorWithStatusRef.current.has(actor.did)) {
             seenActorWithStatusRef.current.add(actor.did)
-            logger.metric('live:view:post', {
-              subject: actor.did,
-              feed,
-            })
+            logger.metric(
+              'live:view:post',
+              {
+                subject: actor.did,
+                feed,
+              },
+              {statsig: false},
+            )
           }
         }
       }

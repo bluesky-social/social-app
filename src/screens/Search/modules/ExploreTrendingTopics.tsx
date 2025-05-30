@@ -44,7 +44,11 @@ function Inner() {
           trend={trend}
           rank={index + 1}
           onPress={() => {
-            logger.metric('trendingTopic:click', {context: 'explore'})
+            logger.metric(
+              'trendingTopic:click',
+              {context: 'explore'},
+              {statsig: true},
+            )
           }}
         />
       ))}
