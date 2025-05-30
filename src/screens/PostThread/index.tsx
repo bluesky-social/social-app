@@ -9,11 +9,7 @@ import {ScrollProvider} from '#/lib/ScrollContext'
 import {cleanError} from '#/lib/strings/errors'
 import {isNative} from '#/platform/detection'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
-import {
-  HiddenReplyKind,
-  type ThreadItem,
-  usePostThread,
-} from '#/state/queries/usePostThread'
+import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
@@ -53,22 +49,16 @@ export function Inner({uri}: {uri: string | undefined}) {
     setTreeViewEnabled,
   } = useThreadPreferences()
 
-  const [shownHiddenReplyKinds, setShownHiddenReplyKinds] = useState<
-    Set<HiddenReplyKind>
-  >(new Set())
-
-  const {isFetching, error, data, refetch, insertReplies} = usePostThread({
-    enabled: isThreadPreferencesLoaded,
-    params: {
-      anchor: uri,
-      sort: sortReplies,
-      view: treeViewEnabled ? 'tree' : 'linear',
-      prioritizeFollowedUsers,
-    },
-    state: {
-      shownHiddenReplyKinds,
-    },
-  })
+  const {isFetching, error, data, refetch, insertReplies, showHiddenReplies} =
+    usePostThread({
+      enabled: isThreadPreferencesLoaded,
+      params: {
+        anchor: uri,
+        sort: sortReplies,
+        view: treeViewEnabled ? 'tree' : 'linear',
+        prioritizeFollowedUsers,
+      },
+    })
 
   const optimisticOnPostReply = (data: OnPostSuccessData) => {
     if (data) {
@@ -242,9 +232,7 @@ export function Inner({uri}: {uri: string | undefined}) {
               item={item}
               threadgateRecord={data?.threadgate?.record ?? undefined}
               overrides={{
-                moderation:
-                  shownHiddenReplyKinds.has(HiddenReplyKind.Hidden) &&
-                  item.depth > 0,
+                moderation: showHiddenReplies && item.depth > 0,
               }}
               onPostSuccess={optimisticOnPostReply}
             />
@@ -255,9 +243,7 @@ export function Inner({uri}: {uri: string | undefined}) {
               item={item}
               threadgateRecord={data?.threadgate?.record ?? undefined}
               overrides={{
-                moderation:
-                  shownHiddenReplyKinds.has(HiddenReplyKind.Muted) &&
-                  item.depth > 0,
+                moderation: showHiddenReplies && item.depth > 0,
               }}
               onPostSuccess={optimisticOnPostReply}
             />
@@ -305,10 +291,8 @@ export function Inner({uri}: {uri: string | undefined}) {
     } else if (item.type === 'showHiddenReplies') {
       return (
         <PostThreadShowHiddenReplies
-          type={item.kind === 'muted' ? 'muted' : 'hidden'}
-          onPress={() =>
-            setShownHiddenReplyKinds(kinds => new Set([...kinds, item.kind]))
-          }
+          type="hidden"
+          onPress={() => item.onLoad()}
         />
       )
     } else if (item.type === 'skeleton') {
