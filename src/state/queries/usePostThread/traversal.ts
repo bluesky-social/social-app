@@ -145,7 +145,7 @@ export function traverse(
           /*
            * Set this value before incrementing the parent's repliesSeenCount
            */
-          metadata!.repliesIndex = parentMetadata.repliesIndexCount
+          metadata!.replyIndex = parentMetadata.repliesIndexCount
           // Increment the parent's repliesIndexCount
           parentMetadata.repliesIndexCount += 1
         }
@@ -211,7 +211,7 @@ export function traverse(
                   /*
                    * Set this value before incrementing the parent's repliesIndexCount
                    */
-                  childMetadata!.repliesIndex =
+                  childMetadata!.replyIndex =
                     childParentMetadata.repliesIndexCount
                   childParentMetadata.repliesIndexCount += 1
                 }
@@ -328,8 +328,7 @@ export function traverse(
            * based on the actual data that we've seen.
            */
           metadata.isLastSibling =
-            metadata.repliesIndex ===
-            metadata.parentMetadata.repliesSeenCount - 1
+            metadata.replyIndex === metadata.parentMetadata.repliesSeenCount - 1
           metadata.isLastChild =
             metadata.nextItemDepth === undefined ||
             metadata.nextItemDepth <= metadata.depth

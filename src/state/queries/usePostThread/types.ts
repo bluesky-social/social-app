@@ -161,14 +161,14 @@ export type TraversalMetadata = {
   repliesSeenCount: number
   /**
    * The total number of replies to this post hydrated in this response. Used
-   * for populating the `repliesIndex` of the post by referencing this value on
+   * for populating the `replyIndex` of the post by referencing this value on
    * the parent.
    */
   repliesIndexCount: number
   /**
    * The index-0-based index of this reply in the parent post's replies.
    */
-  repliesIndex: number
+  replyIndex: number
   /**
    * Each slice is responsible for rendering reply lines based on its depth.
    * This value corresponds to any line indices that can be skipped e.g.
