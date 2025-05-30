@@ -5,7 +5,6 @@ import {
 } from '@atproto/api'
 
 import {
-  HiddenReplyKind,
   type PostThreadParams,
   type ThreadItem,
   type TraversalMetadata,
@@ -24,21 +23,22 @@ export function traverse(
     threadgateHiddenReplies,
     moderationOpts,
     hasSession,
-    showMuted,
-    showHidden,
     view,
+    hasHiddenReplies,
+    showHiddenReplies,
+    loadHiddenReplies,
   }: {
     threadgateHiddenReplies: Set<string>
     moderationOpts: ModerationOpts
     hasSession: boolean
-    showMuted: boolean
-    showHidden: boolean
     view: PostThreadParams['view']
+    hasHiddenReplies: boolean
+    showHiddenReplies: boolean
+    loadHiddenReplies: () => Promise<void>
   },
 ) {
   const items: ThreadItem[] = []
   const hidden: ThreadItem[] = []
-  const muted: ThreadItem[] = []
   const metadatas = new Map<string, TraversalMetadata>()
 
   traversal: for (let i = 0; i < thread.length; i++) {
@@ -178,16 +178,13 @@ export function traverse(
            * Moderated in some way, we're going to walk children
            */
           const parent = post
-          const parentMod = postMod
           const parentIsTopLevelReply = parent.depth === 1
-          const sortArray = parentMod.muted ? muted : hidden
-
           // get sub tree
           const branch = getBranch(thread, i, item.depth)
 
           if (parentIsTopLevelReply) {
             // push branch anchor into sorted array
-            sortArray.push(parent)
+            hidden.push(parent)
             // skip branch anchor in branch traversal
             const startIndex = branch.start + 1
 
@@ -238,7 +235,7 @@ export function traverse(
                 ) {
                   ci = getBranch(thread, ci, child.depth).end
                 } else {
-                  sortArray.push(childPost)
+                  hidden.push(childPost)
                 }
               } else {
                 /*
@@ -259,36 +256,14 @@ export function traverse(
     }
   }
 
-  if (hidden.length) {
-    if (showHidden) {
+  if (hidden.length || hasHiddenReplies) {
+    if (showHiddenReplies) {
       items.push(...hidden)
-
-      if (muted.length) {
-        if (showMuted) {
-          items.push(...muted)
-        } else {
-          items.push({
-            type: 'showHiddenReplies',
-            key: 'showMutedReplies',
-            kind: HiddenReplyKind.Muted,
-          })
-        }
-      }
     } else {
       items.push({
         type: 'showHiddenReplies',
         key: 'showHiddenReplies',
-        kind: HiddenReplyKind.Hidden,
-      })
-    }
-  } else if (muted.length) {
-    if (showMuted) {
-      items.push(...muted)
-    } else {
-      items.push({
-        type: 'showHiddenReplies',
-        key: 'showMutedReplies',
-        kind: HiddenReplyKind.Muted,
+        onLoad: loadHiddenReplies,
       })
     }
   }

@@ -22,14 +22,6 @@ export type PostThreadParams = Pick<
 export type UsePostThreadProps = {
   enabled?: boolean
   params: PostThreadParams
-  state: {
-    shownHiddenReplyKinds: Set<HiddenReplyKind>
-  }
-}
-
-export enum HiddenReplyKind {
-  Hidden = 'hidden',
-  Muted = 'muted',
 }
 
 export type ThreadItem =
@@ -82,7 +74,7 @@ export type ThreadItem =
   | {
       type: 'showHiddenReplies'
       key: string
-      kind: HiddenReplyKind
+      onLoad: () => Promise<void>
     }
   | {
       type: 'readMore'
