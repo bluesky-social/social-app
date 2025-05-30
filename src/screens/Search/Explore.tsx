@@ -10,7 +10,6 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
@@ -35,7 +34,6 @@ import {
   createSuggestedStarterPacksQueryKey,
   useSuggestedStarterPacksQuery,
 } from '#/state/queries/useSuggestedStarterPacksQuery'
-import {useProgressGuide} from '#/state/shell/progress-guide'
 import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
@@ -61,11 +59,12 @@ import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {type Props as IcoProps} from '#/components/icons/common'
-import {type Props as SVGIconProps} from '#/components/icons/common'
+import {
+  type Props as IcoProps,
+  type Props as SVGIconProps,
+} from '#/components/icons/common'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -216,8 +215,6 @@ export function Explore({
   const t = useTheme()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
-  const gate = useGate()
-  const guide = useProgressGuide('follow-10')
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
 
   /*
@@ -484,7 +481,7 @@ export function Explore({
           // This query doesn't follow the limit very well, so the first press of the
           // load more button just unslices the array back to ~10 items
           if (!hasPressedLoadMoreFeeds) {
-            i.push(...feedItems.slice(0, 3))
+            i.push(...feedItems.slice(0, 6))
           } else {
             i.push(...feedItems)
           }
@@ -589,7 +586,6 @@ export function Explore({
     ]
   }, [showInterestsNux])
 
-  const isNewUser = guide?.guide === 'follow-10' && !guide.isComplete
   const items = useMemo<ExploreScreenItems[]>(() => {
     const i: ExploreScreenItems[] = []
 
@@ -599,25 +595,10 @@ export function Explore({
     i.push(...interestsNuxModule)
 
     if (useFullExperience) {
-      if (isNewUser) {
-        i.push(...suggestedFollowsModule)
-        i.push(...suggestedStarterPacksModule)
-        i.push({
-          type: 'header',
-          key: 'trending-topics-header',
-          title: _(msg`Trending topics`),
-          icon: Graph,
-          bottomBorder: true,
-        })
-        i.push(trendingTopicsModule)
-      } else {
-        i.push(trendingTopicsModule)
-        i.push(...suggestedFollowsModule)
-        i.push(...suggestedStarterPacksModule)
-      }
-      if (gate('explore_show_suggested_feeds')) {
-        i.push(...suggestedFeedsModule)
-      }
+      i.push(trendingTopicsModule)
+      i.push(...suggestedFeedsModule)
+      i.push(...suggestedFollowsModule)
+      i.push(...suggestedStarterPacksModule)
       i.push(...feedPreviewsModule)
     } else {
       i.push(...suggestedFollowsModule)
@@ -625,16 +606,13 @@ export function Explore({
 
     return i
   }, [
-    _,
     topBorder,
-    isNewUser,
     suggestedFollowsModule,
     suggestedStarterPacksModule,
     suggestedFeedsModule,
     trendingTopicsModule,
     feedPreviewsModule,
     interestsNuxModule,
-    gate,
     useFullExperience,
   ])
 
