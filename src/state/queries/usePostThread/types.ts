@@ -92,6 +92,11 @@ export type ThreadItem =
       moreReplies: number
       skippedIndentIndices: Set<number>
     }
+  | {
+      type: 'skeleton'
+      key: string
+      item: 'anchor' | 'reply' | 'replyComposer'
+    }
 
 export type TraversalMetadata = {
   /**

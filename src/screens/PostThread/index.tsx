@@ -20,8 +20,14 @@ import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShow
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
 import {ReadMore} from '#/screens/PostThread/components/ReadMore'
-import {ThreadAnchor} from '#/screens/PostThread/components/ThreadAnchor'
-import {ThreadPost} from '#/screens/PostThread/components/ThreadPost'
+import {
+  ThreadAnchor,
+  ThreadAnchorSkeleton,
+} from '#/screens/PostThread/components/ThreadAnchor'
+import {
+  ThreadPost,
+  ThreadPostSkeleton,
+} from '#/screens/PostThread/components/ThreadPost'
 import {ThreadReply} from '#/screens/PostThread/components/ThreadReply'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
@@ -305,6 +311,12 @@ export function Inner({uri}: {uri: string | undefined}) {
           }
         />
       )
+    } else if (item.type === 'skeleton') {
+      if (item.item === 'anchor') {
+        return <ThreadAnchorSkeleton />
+      } else if (item.item === 'reply') {
+        return <ThreadPostSkeleton />
+      }
     }
     return null
   }
@@ -358,7 +370,7 @@ export function Inner({uri}: {uri: string | undefined}) {
                  * Using `isFetching` over `isFetchingNextPage` is done on
                  * purpose here so we get the loader on initial render
                  */
-                isFetchingNextPage={isFetching}
+                // isFetchingNextPage={isFetching}
                 error={cleanError(error)}
                 onRetry={refetch}
                 /*
