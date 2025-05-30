@@ -66,7 +66,7 @@ export function ThreadPost({
   }
 
   return (
-    <PostThreadItemLoaded
+    <ThreadPostInner
       // Safeguard from clobbering per-post state below:
       key={postShadow.uri}
       item={item}
@@ -99,7 +99,7 @@ function PostThreadItemDeleted({hideTopBorder}: {hideTopBorder?: boolean}) {
   )
 }
 
-let PostThreadItemLoaded = ({
+const ThreadPostInner = memo(function ThreadPostInner({
   item,
   postShadow,
   overrides,
@@ -114,7 +114,7 @@ let PostThreadItemLoaded = ({
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
-}): React.ReactNode => {
+}): React.ReactNode {
   const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -305,8 +305,7 @@ let PostThreadItemLoaded = ({
       </View>
     </SubtleHover>
   )
-}
-PostThreadItemLoaded = memo(PostThreadItemLoaded)
+})
 
 function SubtleHover({children}: {children: React.ReactNode}) {
   const {

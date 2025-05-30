@@ -2,6 +2,7 @@ import {useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {runOnJS} from 'react-native-reanimated'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -28,6 +29,9 @@ import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+
+const PARENT_CHUNK_SIZE = 5
+const CHILD_CHUNK_SIZE = 50
 
 export function Inner({uri}: {uri: string | undefined}) {
   const t = useTheme()
@@ -144,6 +148,68 @@ export function Inner({uri}: {uri: string | undefined}) {
    * scroll in onContentSizeChange instead.
    */
   const [deferParents, setDeferParents] = useState(isNative)
+  const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE)
+  const [maxChildCount, setMaxChildCount] = useState(CHILD_CHUNK_SIZE)
+
+  const needsBumpMaxParents = useRef(false)
+  const onStartReached = () => {
+    setMaxParentCount(n => n + PARENT_CHUNK_SIZE)
+    // needsBumpMaxParents.current = true
+  }
+  // const bumpMaxParentsIfNeeded = () => {
+  //   if (!isNative) {
+  //     return
+  //   }
+  //   if (needsBumpMaxParents.current) {
+  //     needsBumpMaxParents.current = false
+  //     setMaxParentCount(n => n + PARENT_CHUNK_SIZE)
+  //   }
+  // }
+  // const onScrollToTop = bumpMaxParentsIfNeeded
+  // const onMomentumEnd = () => {
+  //   'worklet'
+  //   runOnJS(bumpMaxParentsIfNeeded)()
+  // }
+
+  const onEndReached = () => {
+    if (isFetching) return
+    setMaxChildCount(prev => prev + CHILD_CHUNK_SIZE)
+  }
+
+  const items = useMemo(() => {
+    const results: Slice[] = []
+
+    if (!data?.items) return results
+
+    let ci = 0
+
+    for (let i = 0; i < data.items.length; i++) {
+      const item = data.items[i]
+
+      if ('depth' in item) {
+        if (item.depth === 0) {
+          results.push(item)
+
+          if (!deferParents) {
+            const start = i - 1
+            const limit = Math.max(0, start - maxParentCount)
+            for (let pi = start; pi >= limit; pi--) {
+              results.unshift(data.items[pi])
+            }
+          }
+        } else if (item.depth > 0) {
+          if (ci <= maxChildCount) {
+            results.push(item)
+            ci++
+          }
+        }
+      } else {
+        results.push(item)
+      }
+    }
+
+    return results
+  }, [data, deferParents, maxParentCount, maxChildCount])
   const renderItem = ({item, index}: {item: Slice; index: number}) => {
     if (item.type === 'threadPost') {
       if (item.depth < 0) {
@@ -273,18 +339,19 @@ export function Inner({uri}: {uri: string | undefined}) {
         <PostThreadError error={error} />
       ) : (
         <ScrollProvider
-        // onMomentumEnd={onMomentumEnd}
+          //onMomentumEnd={onMomentumEnd}
         >
           <List
             ref={listRef}
-            data={data?.items || []}
+            data={items}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             onContentSizeChange={onContentSizeChangeWebOnly}
-            // onStartReached={onStartReached}
-            // onEndReached={onEndReached}
+            onStartReached={onStartReached}
+            onEndReached={onEndReached}
             onEndReachedThreshold={2}
-            // onScrollToTop={onScrollToTop}
+            onStartReachedThreshold={1}
+            //onScrollToTop={onScrollToTop}
             /**
              * @see https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition
              */
