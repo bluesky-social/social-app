@@ -2,7 +2,6 @@ import {useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {runOnJS} from 'react-native-reanimated'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -17,7 +16,6 @@ import {
 } from '#/state/queries/usePostThread'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
-// import {PostThreadItem} from '#/view/com/post-thread/PostThreadItem'
 import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
@@ -31,11 +29,10 @@ import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 
 const PARENT_CHUNK_SIZE = 5
-const CHILD_CHUNK_SIZE = 50
+const REPLIES_CHUNK_SIZE = 50
 
 export function Inner({uri}: {uri: string | undefined}) {
   const t = useTheme()
-  const {_} = useLingui()
   const {gtPhone} = useBreakpoints()
   // const {hasSession, currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
@@ -149,31 +146,19 @@ export function Inner({uri}: {uri: string | undefined}) {
    */
   const [deferParents, setDeferParents] = useState(isNative)
   const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE)
-  const [maxChildCount, setMaxChildCount] = useState(CHILD_CHUNK_SIZE)
+  const [maxRepliesCount, setMaxRepliesCount] = useState(REPLIES_CHUNK_SIZE)
+  const hasExhaustedReplies = useRef(false)
 
-  const needsBumpMaxParents = useRef(false)
   const onStartReached = () => {
-    setMaxParentCount(n => n + PARENT_CHUNK_SIZE)
-    // needsBumpMaxParents.current = true
+    // limit to 100
+    setMaxParentCount(n => Math.min(100, n + PARENT_CHUNK_SIZE))
   }
-  // const bumpMaxParentsIfNeeded = () => {
-  //   if (!isNative) {
-  //     return
-  //   }
-  //   if (needsBumpMaxParents.current) {
-  //     needsBumpMaxParents.current = false
-  //     setMaxParentCount(n => n + PARENT_CHUNK_SIZE)
-  //   }
-  // }
-  // const onScrollToTop = bumpMaxParentsIfNeeded
-  // const onMomentumEnd = () => {
-  //   'worklet'
-  //   runOnJS(bumpMaxParentsIfNeeded)()
-  // }
 
   const onEndReached = () => {
     if (isFetching) return
-    setMaxChildCount(prev => prev + CHILD_CHUNK_SIZE)
+    // prevent any state mutations if we know we're done
+    if (hasExhaustedReplies.current) return
+    setMaxRepliesCount(prev => prev + REPLIES_CHUNK_SIZE)
   }
 
   const items = useMemo(() => {
@@ -181,7 +166,8 @@ export function Inner({uri}: {uri: string | undefined}) {
 
     if (!data?.items) return results
 
-    let ci = 0
+    let repliesCount = 0
+    let totalRepliesCount = 0
 
     for (let i = 0; i < data.items.length; i++) {
       const item = data.items[i]
@@ -198,9 +184,11 @@ export function Inner({uri}: {uri: string | undefined}) {
             }
           }
         } else if (item.depth > 0) {
-          if (ci <= maxChildCount) {
+          totalRepliesCount++
+
+          if (repliesCount <= maxRepliesCount) {
             results.push(item)
-            ci++
+            repliesCount++
           }
         }
       } else {
@@ -208,8 +196,13 @@ export function Inner({uri}: {uri: string | undefined}) {
       }
     }
 
+    if (totalRepliesCount < maxRepliesCount) {
+      hasExhaustedReplies.current = true
+    }
+
     return results
-  }, [data, deferParents, maxParentCount, maxChildCount])
+  }, [data, deferParents, maxParentCount, maxRepliesCount])
+
   const renderItem = ({item, index}: {item: Slice; index: number}) => {
     if (item.type === 'threadPost') {
       if (item.depth < 0) {
@@ -339,7 +332,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         <PostThreadError error={error} />
       ) : (
         <ScrollProvider
-          //onMomentumEnd={onMomentumEnd}
+        //onMomentumEnd={onMomentumEnd}
         >
           <List
             ref={listRef}
@@ -351,7 +344,6 @@ export function Inner({uri}: {uri: string | undefined}) {
             onEndReached={onEndReached}
             onEndReachedThreshold={2}
             onStartReachedThreshold={1}
-            //onScrollToTop={onScrollToTop}
             /**
              * @see https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition
              */
