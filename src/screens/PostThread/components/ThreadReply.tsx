@@ -221,7 +221,6 @@ const ThreadReplyInner = memo(function ThreadReplyInner({
                 !item.ui.showChildReplyLine && a.pb_sm,
               ],
               item.ui.isLastChild &&
-                !item.ui.precedesParentReadMore &&
                 !item.ui.precedesChildReadMore && [a.pb_sm],
             ]}>
             {item.ui.indent > 1 && (
