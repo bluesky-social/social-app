@@ -32,7 +32,7 @@ export enum HiddenReplyKind {
   Muted = 'muted',
 }
 
-export type Slice =
+export type ThreadItem =
   | {
       type: 'threadPost'
       key: string

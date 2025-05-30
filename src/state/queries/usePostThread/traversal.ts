@@ -7,7 +7,7 @@ import {
 import {
   HiddenReplyKind,
   type PostThreadParams,
-  type Slice,
+  type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
 import {
@@ -36,9 +36,9 @@ export function traverse(
     view: PostThreadParams['view']
   },
 ) {
-  const items: Slice[] = []
-  const hidden: Slice[] = []
-  const muted: Slice[] = []
+  const items: ThreadItem[] = []
+  const hidden: ThreadItem[] = []
+  const muted: ThreadItem[] = []
   const metadatas = new Map<string, TraversalMetadata>()
 
   traversal: for (let i = 0; i < thread.length; i++) {

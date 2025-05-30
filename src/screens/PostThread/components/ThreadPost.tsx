@@ -20,7 +20,7 @@ import {
   type Shadow,
   usePostShadow,
 } from '#/state/cache/post-shadow'
-import {type Slice} from '#/state/queries/usePostThread/types'
+import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
@@ -51,7 +51,7 @@ export function ThreadPost({
   onPostSuccess,
   threadgateRecord,
 }: {
-  item: Extract<Slice, {type: 'threadPost'}>
+  item: Extract<ThreadItem, {type: 'threadPost'}>
   overrides?: {
     moderation?: boolean
     topBorder?: boolean
@@ -106,7 +106,7 @@ const ThreadPostInner = memo(function ThreadPostInner({
   onPostSuccess,
   threadgateRecord,
 }: {
-  item: Extract<Slice, {type: 'threadPost'}>
+  item: Extract<ThreadItem, {type: 'threadPost'}>
   postShadow: Shadow<AppBskyFeedDefs.PostView>
   overrides?: {
     moderation?: boolean

@@ -2,7 +2,10 @@ import {View} from 'react-native'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {type PostThreadParams, type Slice} from '#/state/queries/usePostThread'
+import {
+  type PostThreadParams,
+  type ThreadItem,
+} from '#/state/queries/usePostThread'
 import {
   LINEAR_AVI_WIDTH,
   REPLY_LINE_WIDTH,
@@ -18,7 +21,7 @@ export function ReadMore({
   item,
   view,
 }: {
-  item: Extract<Slice, {type: 'readMore'}>
+  item: Extract<ThreadItem, {type: 'readMore'}>
   view: PostThreadParams['view']
 }) {
   const t = useTheme()

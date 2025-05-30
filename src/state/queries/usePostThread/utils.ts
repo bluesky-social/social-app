@@ -7,7 +7,7 @@ import {
 } from '@atproto/api'
 
 import {
-  type Slice,
+  type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
 import * as bsky from '#/types/bsky'
@@ -122,7 +122,7 @@ export function getThreadPostUI({
   repliesSeenCount,
   repliesUnhydrated,
   precedesChildReadMore,
-}: TraversalMetadata): Extract<Slice, {type: 'threadPost'}>['ui'] {
+}: TraversalMetadata): Extract<ThreadItem, {type: 'threadPost'}>['ui'] {
   // TODO might be able to simplify this
   const isReplyAndHasReplies =
     depth > 0 &&
