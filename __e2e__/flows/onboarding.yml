@@ -12,6 +12,7 @@ appId: xyz.blueskyweb.app
     id: "e2eStartOnboarding"
 - tapOn: "Select an avatar"
 - waitForAnimationToEnd
+- assertVisible: "Search your library…"
 - tapOn:
     point: "50%,22%"
 - waitForAnimationToEnd
