@@ -492,7 +492,11 @@ export function Explore({
               if (hasPressedLoadMoreFeeds && index < 6) {
                 continue
               }
-              logger.metric('feed:suggestion:seen', {feedUrl: item.feed.uri})
+              logger.metric(
+                'feed:suggestion:seen',
+                {feedUrl: item.feed.uri},
+                {statsig: false},
+              )
             }
           }
           if (!hasPressedLoadMoreFeeds) {
