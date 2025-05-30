@@ -1,0 +1,19 @@
+diff --git a/node_modules/expo-media-library/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt b/node_modules/expo-media-library/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
+index f1255e8..a9b49e5 100644
+--- a/node_modules/expo-media-library/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
++++ b/node_modules/expo-media-library/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
+@@ -112,11 +112,9 @@ class MediaLibraryModule : Module() {
+     }
+ 
+     AsyncFunction("createAssetAsync") { localUri: String, albumId: String?, promise: Promise ->
+-      throwUnlessPermissionsGranted {
+-        withModuleScope(promise) {
+-          CreateAssetWithAlbumId(context, localUri, promise, true, albumId)
+-            .execute()
+-        }
++      withModuleScope(promise) {
++        CreateAssetWithAlbumId(context, localUri, promise, true, albumId)
++          .execute()
+       }
+     }
+ 

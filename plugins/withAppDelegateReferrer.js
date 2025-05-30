@@ -1,41 +1,41 @@
 const {withAppDelegate} = require('@expo/config-plugins')
 const {mergeContents} = require('@expo/config-plugins/build/utils/generateCode')
-const path = require('path')
-const fs = require('fs')
 
-module.exports = config => {
-  // eslint-disable-next-line no-shadow
-  return withAppDelegate(config, async config => {
-    const delegatePath = path.join(
-      config.modRequest.platformProjectRoot,
-      'AppDelegate.mm',
-    )
+module.exports = config =>
+  withAppDelegate(config, config => {
+    let contents = config.modResults.contents
 
-    let newContents = config.modResults.contents
-    newContents = mergeContents({
-      src: newContents,
+    contents = mergeContents({
+      src: contents,
       anchor: '// Linking API',
       newSrc: `
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setObject:options[UIApplicationOpenURLOptionsSourceApplicationKey] forKey:@"referrerApp"];\n`,
-      offset: 2,
+    // @generated begin referrer info – deep links
+    let defaults = UserDefaults.standard
+    defaults.set(
+      options[.sourceApplication] as? String,
+      forKey: "referrerApp"
+    )
+    // @generated end referrer info – deep links
+`,
+      offset: 6,
       tag: 'referrer info - deep links',
       comment: '//',
     }).contents
 
-    newContents = mergeContents({
-      src: newContents,
+    contents = mergeContents({
+      src: contents,
       anchor: '// Universal Links',
       newSrc: `
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setURL:userActivity.referrerURL forKey:@"referrer"];\n`,
-      offset: 2,
+    // @generated begin referrer info – universal links
+    let defaults = UserDefaults.standard
+    defaults.set(userActivity.referrerURL, forKey: "referrer")
+    // @generated end referrer info – universal links
+`,
+      offset: 6,
       tag: 'referrer info - universal links',
       comment: '//',
     }).contents
 
-    config.modResults.contents = newContents
-
+    config.modResults.contents = contents
     return config
   })
-}

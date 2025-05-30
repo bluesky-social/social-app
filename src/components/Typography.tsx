@@ -6,9 +6,11 @@ import {
   childHasEmoji,
   normalizeTextStyles,
   renderChildrenWithEmoji,
-  TextProps,
+  type TextProps,
 } from '#/alf/typography'
+
 export type {TextProps}
+export {Text as Span} from 'react-native'
 
 /**
  * Our main text component. Use this most of the time.

@@ -34,6 +34,41 @@ const RQKEY_ROOT = 'feed-previews'
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
 
 const LIMIT = 8 // sliced to 6, overfetch to account for moderation
+const PINNED_POST_URIS: Record<string, boolean> = {
+  // 📰 News
+  'at://did:plc:kkf4naxqmweop7dv4l2iqqf5/app.bsky.feed.post/3lgh27w2ngc2b':
+    true,
+  // Gardening
+  'at://did:plc:5rw2on4i56btlcajojaxwcat/app.bsky.feed.post/3kjorckgcwc27':
+    true,
+  // Web Development Trending
+  'at://did:plc:m2sjv3wncvsasdapla35hzwj/app.bsky.feed.post/3lfaw445axs22':
+    true,
+  // Anime & Manga EN
+  'at://did:plc:tazrmeme4dzahimsykusrwrk/app.bsky.feed.post/3knxx2gmkns2y':
+    true,
+  // 📽️ Film
+  'at://did:plc:2hwwem55ce6djnk6bn62cstr/app.bsky.feed.post/3llhpzhbq7c2g':
+    true,
+  // PopSky
+  'at://did:plc:lfdf4srj43iwdng7jn35tjsp/app.bsky.feed.post/3lbblgly65c2g':
+    true,
+  // Science
+  'at://did:plc:hu2obebw3nhfj667522dahfg/app.bsky.feed.post/3kl33otd6ob2s':
+    true,
+  // Birds! 🦉
+  'at://did:plc:ffkgesg3jsv2j7aagkzrtcvt/app.bsky.feed.post/3lbg4r57yk22d':
+    true,
+  // Astronomy
+  'at://did:plc:xy2zorw2ys47poflotxthlzg/app.bsky.feed.post/3kyzye4lujs2w':
+    true,
+  // What's Cooking 🍽️
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3lfqhgvxbqc2q':
+    true,
+  // BookSky 💙📚 #booksky
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3kgrm2rw5ww2e':
+    true,
+}
 
 export type FeedPreviewItem =
   | {
@@ -73,6 +108,7 @@ export type FeedPreviewItem =
       key: string
       slice: FeedPostSlice
       indexInSlice: number
+      feed: AppBskyFeedDefs.GeneratorView
       showReplyTo: boolean
       hideTopBorder: boolean
     }
@@ -84,6 +120,7 @@ export type FeedPreviewItem =
 
 export function useFeedPreviews(
   feedsMaybeWithDuplicates: AppBskyFeedDefs.GeneratorView[],
+  isEnabled: boolean = true,
 ) {
   const feeds = useMemo(
     () =>
@@ -99,7 +136,7 @@ export function useFeedPreviews(
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
   const moderationOpts = useModerationOpts()
-  const enabled = feeds.length > 0
+  const enabled = feeds.length > 0 && isEnabled
 
   const query = useInfiniteQuery({
     enabled,
@@ -178,21 +215,27 @@ export function useFeedPreviews(
                 isFallbackMarker: false,
                 isIncompleteThread: item.isIncompleteThread,
                 feedContext: item.feedContext,
+                reqId: item.reqId,
                 reason: item.reason,
                 feedPostUri: item.feedPostUri,
-                items: item.items.slice(0, 6).map((subItem, i) => {
-                  const feedPostSliceItem: FeedPostSliceItem = {
-                    _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
-                    uri: subItem.post.uri,
-                    post: subItem.post,
-                    record: subItem.record,
-                    moderation: moderations[i],
-                    parentAuthor: subItem.parentAuthor,
-                    isParentBlocked: subItem.isParentBlocked,
-                    isParentNotFound: subItem.isParentNotFound,
-                  }
-                  return feedPostSliceItem
-                }),
+                items: item.items
+                  .slice(0, 6)
+                  .filter(subItem => {
+                    return !PINNED_POST_URIS[subItem.post.uri]
+                  })
+                  .map((subItem, i) => {
+                    const feedPostSliceItem: FeedPostSliceItem = {
+                      _reactKey: `${item._reactKey}-${i}-${subItem.post.uri}`,
+                      uri: subItem.post.uri,
+                      post: subItem.post,
+                      record: subItem.record,
+                      moderation: moderations[i],
+                      parentAuthor: subItem.parentAuthor,
+                      isParentBlocked: subItem.isParentBlocked,
+                      isParentNotFound: subItem.isParentNotFound,
+                    }
+                    return feedPostSliceItem
+                  }),
               }
               if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
@@ -202,6 +245,7 @@ export function useFeedPreviews(
                   key: slice.items[0]._reactKey,
                   slice: slice,
                   indexInSlice: 0,
+                  feed: page.feed,
                   showReplyTo: false,
                   hideTopBorder: rowIndex === 0,
                 })
@@ -215,6 +259,7 @@ export function useFeedPreviews(
                   key: slice.items[beforeLast]._reactKey,
                   slice: slice,
                   indexInSlice: beforeLast,
+                  feed: page.feed,
                   showReplyTo:
                     slice.items[beforeLast].parentAuthor?.did !==
                     slice.items[beforeLast].post.author.did,
@@ -225,6 +270,7 @@ export function useFeedPreviews(
                   key: slice.items[last]._reactKey,
                   slice: slice,
                   indexInSlice: last,
+                  feed: page.feed,
                   showReplyTo: false,
                   hideTopBorder: false,
                 })
@@ -235,6 +281,7 @@ export function useFeedPreviews(
                     key: slice.items[i]._reactKey,
                     slice: slice,
                     indexInSlice: i,
+                    feed: page.feed,
                     showReplyTo: i === 0,
                     hideTopBorder: i === 0 && rowIndex === 0,
                   })

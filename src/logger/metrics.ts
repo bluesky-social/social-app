@@ -1,3 +1,4 @@
+import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 
 export type MetricEvents = {
@@ -23,7 +24,9 @@ export type MetricEvents = {
       | 'Takendown'
     scope: 'current' | 'every'
   }
-  'notifications:openApp': {}
+  'notifications:openApp': {
+    reason: NotificationReason
+  }
   'notifications:request': {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
     status: 'granted' | 'denied' | 'undetermined'
@@ -330,7 +333,6 @@ export type MetricEvents = {
       | 'suggestedFeeds'
       | 'suggestedStarterPacks'
       | `feed:${FeedDescriptor}`
-    index: number
   }
   'explore:module:searchButtonPress': {
     module: 'suggestedAccounts' | 'suggestedFeeds'
@@ -365,4 +367,40 @@ export type MetricEvents = {
     details: boolean
   }
   'reportDialog:failure': {}
+
+  translate: {
+    sourceLanguages: string[]
+    targetLanguage: string
+    textLength: number
+  }
+
+  'verification:create': {}
+  'verification:revoke': {}
+  'verification:badge:click': {}
+  'verification:learn-more': {
+    location:
+      | 'initialAnnouncementeNux'
+      | 'verificationsDialog'
+      | 'verifierDialog'
+      | 'verificationSettings'
+  }
+  'verification:settings:hideBadges': {}
+  'verification:settings:unHideBadges': {}
+
+  'live:create': {duration: number}
+  'live:edit': {}
+  'live:remove': {}
+  'live:card:open': {subject: string; from: 'post' | 'profile'}
+  'live:card:watch': {subject: string}
+  'live:card:openProfile': {subject: string}
+  'live:view:profile': {subject: string}
+  'live:view:post': {subject: string; feed?: string}
+
+  'share:open': {context: 'feed' | 'thread'}
+  'share:press:copyLink': {}
+  'share:press:nativeShare': {}
+  'share:press:openDmSearch': {}
+  'share:press:dmSelected': {}
+  'share:press:recentDm': {}
+  'share:press:embed': {}
 }

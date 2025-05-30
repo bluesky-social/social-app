@@ -15,6 +15,7 @@ module.exports = {
     'eu',
     'fi',
     'fr',
+    'fy',
     'ga',
     'gd',
     'gl',

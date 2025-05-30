@@ -1,11 +1,11 @@
 import React, {useMemo, useState} from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
   moderatePost,
-  ModerationDecision,
+  type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -14,31 +14,34 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
 import {colors, s} from '#/lib/styles'
-import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
-import {AviFollowButton} from '#/view/com/posts/AviFollowButton'
+import {Link, TextLink} from '#/view/com/util/Link'
+import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
+import {PostMeta} from '#/view/com/util/PostMeta'
+import {Text} from '#/view/com/util/text/Text'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {UserInfoText} from '#/view/com/util/UserInfoText'
 import {atoms as a} from '#/alf'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {PostControls} from '#/components/PostControls'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
-import {ContentHider} from '../../../components/moderation/ContentHider'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {Link, TextLink} from '../util/Link'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds, PostEmbedViewContext} from '../util/post-embeds'
-import {PostMeta} from '../util/PostMeta'
-import {Text} from '../util/text/Text'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserInfoText} from '../util/UserInfoText'
 
 export function Post({
   post,
@@ -113,7 +116,7 @@ function PostInner({
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -170,14 +173,12 @@ function PostInner({
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <AviFollowButton author={post.author} moderation={moderation}>
-            <PreviewableUserAvatar
-              size={42}
-              profile={post.author}
-              moderation={moderation.ui('avatar')}
-              type={post.author.associated?.labeler ? 'labeler' : 'user'}
-            />
-          </AviFollowButton>
+          <PreviewableUserAvatar
+            size={42}
+            profile={post.author}
+            moderation={moderation.ui('avatar')}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
+          />
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
@@ -254,7 +255,7 @@ function PostInner({
               />
             ) : null}
           </ContentHider>
-          <PostCtrls
+          <PostControls
             post={post}
             record={record}
             richText={richText}

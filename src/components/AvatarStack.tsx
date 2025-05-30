@@ -19,7 +19,7 @@ export function AvatarStack({
   numPending?: number
   backgroundColor?: string
 }) {
-  const halfSize = size / 2
+  const translation = size / 3 // overlap by 1/3
   const t = useTheme()
   const moderationOpts = useModerationOpts()
 
@@ -43,7 +43,7 @@ export function AvatarStack({
         a.flex_row,
         a.align_center,
         a.relative,
-        {width: size + (items.length - 1) * halfSize},
+        {width: size + (items.length - 1) * (size - translation)},
       ]}>
       {items.map((item, i) => (
         <View
@@ -54,7 +54,7 @@ export function AvatarStack({
             {
               width: size,
               height: size,
-              left: i * -halfSize,
+              left: i * -translation,
               borderWidth: 1,
               borderColor: backgroundColor ?? t.atoms.bg.backgroundColor,
               borderRadius: 999,

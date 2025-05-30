@@ -10,10 +10,14 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {createGetSuggestedFeedsQueryKey} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
+import {createGetSuggestedUsersQueryKey} from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import {createSuggestedStarterPacksQueryKey} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 import {atoms as a, useGutters, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
@@ -47,8 +51,7 @@ export function SettingsInterests() {
               t.atoms.text_contrast_medium,
             ]}>
             <Trans>
-              Selecting interests from the list below helps us deliver you
-              higher quality content.
+              Your selected interests help us serve you content you care about.
             </Trans>
           </Text>
 
@@ -98,15 +101,37 @@ function Inner({
 
       try {
         await agent.setInterestsPref({tags: interests})
-        await qc.invalidateQueries({queryKey: preferencesQueryKey})
+        qc.setQueriesData(
+          {queryKey: preferencesQueryKey},
+          (old?: UsePreferencesQueryResponse) => {
+            if (!old) return old
+            old.interests.tags = interests
+            return old
+          },
+        )
+        await Promise.all([
+          await qc.resetQueries({
+            queryKey: createSuggestedStarterPacksQueryKey(),
+          }),
+          await qc.resetQueries({queryKey: createGetSuggestedFeedsQueryKey()}),
+          await qc.resetQueries({
+            queryKey: createGetSuggestedUsersQueryKey({}),
+          }),
+        ])
+
         Toast.show(
-          _(msg({message: 'Content preferences updated!', context: 'toast'})),
+          _(
+            msg({
+              message: 'Your interests have been updated!',
+              context: 'toast',
+            }),
+          ),
         )
       } catch (error) {
         Toast.show(
           _(
             msg({
-              message: 'Failed to save content prefefences.',
+              message: 'Failed to save your interests.',
               context: 'toast',
             }),
           ),
@@ -124,25 +149,33 @@ function Inner({
   }
 
   return (
-    <Toggle.Group
-      values={interests}
-      onChange={onChangeInterests}
-      label={_(msg`Select your interests from the options below`)}>
-      <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-        {INTERESTS.map(interest => {
-          const name = interestsDisplayNames[interest]
-          if (!name) return null
-          return (
-            <Toggle.Item
-              key={interest}
-              name={interest}
-              label={interestsDisplayNames[interest]}>
-              <InterestButton interest={interest} />
-            </Toggle.Item>
-          )
-        })}
-      </View>
-    </Toggle.Group>
+    <>
+      {interests.length === 0 && (
+        <Admonition type="tip">
+          <Trans>We recommend selecting at least two interests.</Trans>
+        </Admonition>
+      )}
+
+      <Toggle.Group
+        values={interests}
+        onChange={onChangeInterests}
+        label={_(msg`Select your interests from the options below`)}>
+        <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+          {INTERESTS.map(interest => {
+            const name = interestsDisplayNames[interest]
+            if (!name) return null
+            return (
+              <Toggle.Item
+                key={interest}
+                name={interest}
+                label={interestsDisplayNames[interest]}>
+                <InterestButton interest={interest} />
+              </Toggle.Item>
+            )
+          })}
+        </View>
+      </Toggle.Group>
+    </>
   )
 }
 

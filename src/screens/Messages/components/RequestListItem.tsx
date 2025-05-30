@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatBskyConvoDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

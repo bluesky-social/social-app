@@ -1,4 +1,4 @@
-import {AppBskyActorDefs, ChatBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs, type ChatBskyActorDefs} from '@atproto/api'
 
 /**
  * Matches any profile view exported by our SDK

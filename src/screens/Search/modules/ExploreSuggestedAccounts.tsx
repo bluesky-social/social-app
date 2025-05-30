@@ -17,6 +17,7 @@ import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import * as ProfileCard from '#/components/ProfileCard'
 import {boostInterests, Tabs} from '#/components/ProgressGuide/FollowDialog'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 
@@ -57,9 +58,11 @@ export function useLoadEnoughProfiles({
 export function SuggestedAccountsTabBar({
   selectedInterest,
   onSelectInterest,
+  hideDefaultTab,
 }: {
   selectedInterest: string | null
   onSelectInterest: (interest: string | null) => void
+  hideDefaultTab?: boolean
 }) {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
@@ -71,8 +74,10 @@ export function SuggestedAccountsTabBar({
   return (
     <BlockDrawerGesture>
       <Tabs
-        interests={['all', ...interests]}
-        selectedInterest={selectedInterest || 'all'}
+        interests={hideDefaultTab ? interests : ['all', ...interests]}
+        selectedInterest={
+          selectedInterest || (hideDefaultTab ? interests[0] : 'all')
+        }
         onSelectTab={tab => {
           logger.metric(
             'explore:suggestedAccounts:tabPressed',
@@ -82,11 +87,21 @@ export function SuggestedAccountsTabBar({
           onSelectInterest(tab === 'all' ? null : tab)
         }}
         hasSearchText={false}
-        interestsDisplayNames={{
-          all: _(msg`All`),
-          ...interestsDisplayNames,
-        }}
+        interestsDisplayNames={
+          hideDefaultTab
+            ? interestsDisplayNames
+            : {
+                all: _(msg`For You`),
+                ...interestsDisplayNames,
+              }
+        }
         TabComponent={Tab}
+        contentContainerStyle={[
+          {
+            // visual alignment
+            paddingLeft: a.px_md.paddingLeft,
+          },
+        ]}
       />
     </BlockDrawerGesture>
   )
@@ -127,10 +142,7 @@ let Tab = ({
               a.py_sm,
               a.border,
               active || hovered || pressed || focused
-                ? [
-                    t.atoms.bg_contrast_25,
-                    {borderColor: t.atoms.bg_contrast_25.backgroundColor},
-                  ]
+                ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_medium]
                 : [t.atoms.bg, t.atoms.border_contrast_low],
             ]}>
             <Text
@@ -180,47 +192,52 @@ let SuggestedProfileCard = ({
           {statsig: true},
         )
       }}>
-      <View
-        style={[
-          a.w_full,
-          a.py_lg,
-          a.px_lg,
-          a.border_t,
-          t.atoms.border_contrast_low,
-          a.flex_1,
-        ]}>
-        <ProfileCard.Outer>
-          <ProfileCard.Header>
-            <ProfileCard.Avatar
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-            <ProfileCard.NameAndHandle
-              profile={profile}
-              moderationOpts={moderationOpts}
-            />
-            <ProfileCard.FollowButton
-              profile={profile}
-              moderationOpts={moderationOpts}
-              withIcon={false}
-              logContext="ExploreSuggestedAccounts"
-              onFollow={() => {
-                logger.metric(
-                  'suggestedUser:follow',
-                  {
-                    logContext: 'Explore',
-                    location: 'Card',
-                    recId,
-                    position,
-                  },
-                  {statsig: true},
-                )
-              }}
-            />
-          </ProfileCard.Header>
-          <ProfileCard.Description profile={profile} numberOfLines={2} />
-        </ProfileCard.Outer>
-      </View>
+      {s => (
+        <>
+          <SubtleHover hover={s.hovered || s.pressed} />
+          <View
+            style={[
+              a.flex_1,
+              a.w_full,
+              a.py_lg,
+              a.px_lg,
+              a.border_t,
+              t.atoms.border_contrast_low,
+            ]}>
+            <ProfileCard.Outer>
+              <ProfileCard.Header>
+                <ProfileCard.Avatar
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                <ProfileCard.NameAndHandle
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+                <ProfileCard.FollowButton
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  withIcon={false}
+                  logContext="ExploreSuggestedAccounts"
+                  onFollow={() => {
+                    logger.metric(
+                      'suggestedUser:follow',
+                      {
+                        logContext: 'Explore',
+                        location: 'Card',
+                        recId,
+                        position,
+                      },
+                      {statsig: true},
+                    )
+                  }}
+                />
+              </ProfileCard.Header>
+              <ProfileCard.Description profile={profile} numberOfLines={2} />
+            </ProfileCard.Outer>
+          </View>
+        </>
+      )}
     </ProfileCard.Link>
   )
 }

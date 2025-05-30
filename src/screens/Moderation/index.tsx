@@ -6,19 +6,22 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {atoms as a, useBreakpoints, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
@@ -27,7 +30,8 @@ import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
@@ -268,6 +272,21 @@ export function ModerationScreenInner({
             <SubItem
               title={_(msg`Blocked accounts`)}
               icon={CircleBanSign}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
+        <Divider />
+        <Link
+          label={_(msg`Manage verification settings`)}
+          testID="verificationSettingsBtn"
+          to="/moderation/verification-settings">
+          {state => (
+            <SubItem
+              title={_(msg`Verification settings`)}
+              icon={CircleCheck}
               style={[
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
               ]}

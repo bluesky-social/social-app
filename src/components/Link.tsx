@@ -1,12 +1,12 @@
 import React from 'react'
-import {GestureResponderEvent} from 'react-native'
+import {type GestureResponderEvent} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {AllNavigatorParams} from '#/lib/routes/types'
+import {type AllNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
@@ -16,10 +16,10 @@ import {
 } from '#/lib/strings/url-helpers'
 import {isNative, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
-import {Button, ButtonProps} from '#/components/Button'
+import {atoms as a, flatten, type TextStyleProp, useTheme, web} from '#/alf'
+import {Button, type ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Text, TextProps} from '#/components/Typography'
+import {Text, type TextProps} from '#/components/Typography'
 import {router} from '#/routes'
 
 /**
@@ -210,7 +210,9 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
-  Omit<ButtonProps, 'onPress' | 'disabled'>
+  Omit<ButtonProps, 'onPress' | 'disabled'> & {
+    overridePresentation?: boolean
+  }
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -228,6 +230,7 @@ export function Link({
   onLongPress: outerOnLongPress,
   download,
   shouldProxy,
+  overridePresentation,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress} = useLink({
@@ -237,6 +240,7 @@ export function Link({
     onPress: outerOnPress,
     onLongPress: outerOnLongPress,
     shouldProxy: shouldProxy,
+    overridePresentation,
   })
 
   return (
@@ -267,7 +271,7 @@ export function Link({
 export type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps &
     TextStyleProp &
-    Pick<TextProps, 'selectable' | 'numberOfLines'> &
+    Pick<TextProps, 'selectable' | 'numberOfLines' | 'emoji'> &
     Pick<ButtonProps, 'label' | 'accessibilityHint'> & {
       disableUnderline?: boolean
       title?: TextProps['title']

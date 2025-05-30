@@ -8,7 +8,7 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
-import {useTrendingConfig} from '#/state/trending-config'
+import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useGutters, useTheme, type ViewStyleProp, web} from '#/alf'
@@ -17,6 +17,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Flame_Stroke2_Corner1_Rounded as FlameIcon} from '#/components/icons/Flame'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {Link} from '#/components/Link'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 
 const TOPIC_COUNT = 5
@@ -28,10 +29,10 @@ export function ExploreTrendingTopics() {
 }
 
 function Inner() {
-  const {data: trending, error, isLoading} = useGetTrendsQuery()
+  const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
   const noTopics = !isLoading && !error && !trending?.trends?.length
 
-  return isLoading ? (
+  return isLoading || isRefetching ? (
     Array.from({length: TOPIC_COUNT}).map((__, i) => (
       <TrendingTopicRowSkeleton key={i} withPosts={i === 0} />
     ))
@@ -92,25 +93,23 @@ export function TrendRow({
       PressableComponent={Pressable}>
       {({hovered, pressed}) => (
         <>
-          <View
-            style={[
-              gutters,
-              a.w_full,
-              a.py_lg,
-              a.flex_row,
-              a.gap_2xs,
-              (hovered || pressed) && t.atoms.bg_contrast_25,
-            ]}>
+          <SubtleHover hover={hovered || pressed} />
+          <View style={[gutters, a.w_full, a.py_lg, a.flex_row, a.gap_2xs]}>
             <View style={[a.flex_1, a.gap_xs]}>
               <View style={[a.flex_row]}>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug, {width: 20}]}>
+                  style={[
+                    a.text_md,
+                    a.font_bold,
+                    a.leading_tight,
+                    {width: 20},
+                  ]}>
                   <Trans comment='The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"'>
                     {rank}.
                   </Trans>
                 </Text>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  style={[a.text_md, a.font_bold, a.leading_tight]}
                   numberOfLines={1}>
                   {trend.displayName}
                 </Text>
@@ -266,12 +265,12 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
               style={[a.rounded_full]}
             />
           </View>
-          <LoadingPlaceholder width={90} height={18} />
+          <LoadingPlaceholder width={90} height={17} />
         </View>
         <View style={[a.flex_row, a.gap_sm, a.align_center, {paddingLeft: 20}]}>
-          <LoadingPlaceholder width={70} height={18} />
-          <LoadingPlaceholder width={40} height={18} />
-          <LoadingPlaceholder width={60} height={18} />
+          <LoadingPlaceholder width={70} height={16} />
+          <LoadingPlaceholder width={40} height={16} />
+          <LoadingPlaceholder width={60} height={16} />
         </View>
       </View>
       <View style={[a.flex_shrink_0]}>
