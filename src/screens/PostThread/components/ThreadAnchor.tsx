@@ -50,6 +50,7 @@ import {type AppModerationCause} from '#/components/Pills'
 import {PostControls} from '#/components/PostControls'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
+import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
@@ -573,4 +574,34 @@ function getThreadAuthor(
   } catch {
     return ''
   }
+}
+
+export function ThreadAnchorSkeleton() {
+  return (
+    <View style={[a.p_lg, a.gap_md]}>
+      <Skele.Row style={[a.align_center, a.gap_md]}>
+        <Skele.Circle size={42} />
+
+        <Skele.Col>
+          <Skele.Text style={[a.text_lg, {width: '20%'}]} />
+          <Skele.Text blend style={[a.text_md, {width: '40%'}]} />
+        </Skele.Col>
+      </Skele.Row>
+
+      <View>
+        <Skele.Text style={[a.text_xl, {width: '100%'}]} />
+        <Skele.Text style={[a.text_xl, {width: '60%'}]} />
+      </View>
+
+      <Skele.Text style={[a.text_sm, {width: '50%'}]} />
+
+      <Skele.Row style={[a.justify_between]}>
+        <Skele.Pill blend size={24} />
+        <Skele.Pill blend size={24} />
+        <Skele.Pill blend size={24} />
+        <Skele.Circle blend size={24} />
+        <Skele.Circle blend size={24} />
+      </Skele.Row>
+    </View>
+  )
 }

@@ -54,7 +54,7 @@ export function usePostThread({
       if (placeholder) {
         return {thread: [placeholder], hasHiddenReplies: false}
       }
-      return
+      return {thread: [], hasHiddenReplies: false}
     },
     select(data) {
       const threadgate = getThreadgateRecord(data.threadgate)
@@ -95,6 +95,38 @@ export function usePostThread({
     queryKey,
     queryClient: qc,
   })
+
+  if (query.isPlaceholderData) {
+    const anchor = items.at(0)
+    const skeletonReplies =
+      anchor && anchor.type === 'threadPost'
+        ? anchor?.value.post.replyCount ?? 4
+        : 4
+
+    if (!items.length) {
+      items.push({
+        type: 'skeleton',
+        key: params.anchor!,
+        item: 'anchor',
+      })
+
+      if (hasSession) {
+        items.push({
+          type: 'skeleton',
+          key: 'replyComposer',
+          item: 'replyComposer',
+        })
+      }
+    }
+
+    for (let i = 0; i < skeletonReplies; i++) {
+      items.push({
+        type: 'skeleton',
+        key: `${params.anchor!}-reply-${i}`,
+        item: 'reply',
+      })
+    }
+  }
 
   return {
     ...query,

@@ -42,6 +42,7 @@ import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
+import * as Skele from '#/components/Skeleton'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
 
@@ -317,6 +318,43 @@ function SubtleHover({children}: {children: React.ReactNode}) {
     <View onPointerEnter={onHoverIn} onPointerLeave={onHoverOut}>
       <SubtleWebHover hover={hover} />
       {children}
+    </View>
+  )
+}
+
+export function ThreadPostSkeleton() {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        {paddingHorizontal: OUTER_SPACE, paddingVertical: OUTER_SPACE / 1.5},
+        a.gap_md,
+        a.border_t,
+        t.atoms.border_contrast_low,
+      ]}>
+      <Skele.Row style={[a.align_start, a.gap_md]}>
+        <Skele.Circle size={42} />
+
+        <Skele.Col style={[a.gap_xs]}>
+          <Skele.Row style={[a.gap_sm]}>
+            <Skele.Text style={[a.text_md, {width: '20%'}]} />
+            <Skele.Text blend style={[a.text_md, {width: '30%'}]} />
+          </Skele.Row>
+
+          <Skele.Col>
+            <Skele.Text blend style={[a.text_md, {width: '100%'}]} />
+            <Skele.Text blend style={[a.text_md, {width: '60%'}]} />
+          </Skele.Col>
+
+          <Skele.Row style={[a.justify_between, a.pt_xs]}>
+            <Skele.Pill blend size={16} />
+            <Skele.Pill blend size={16} />
+            <Skele.Pill blend size={16} />
+            <Skele.Circle blend size={16} />
+            <View />
+          </Skele.Row>
+        </Skele.Col>
+      </Skele.Row>
     </View>
   )
 }
