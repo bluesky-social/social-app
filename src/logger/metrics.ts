@@ -151,6 +151,12 @@ export type MetricEvents = {
   'feed:share': {
     feedUrl: string
   }
+  'feed:suggestion:seen': {
+    feedUrl: string
+  }
+  'feed:suggestion:press': {
+    feedUrl: string
+  }
   'discover:showMore': {
     feedContext: string
   }
