@@ -51,18 +51,7 @@ export type Slice =
         indent: number
         isLastChild: boolean
         skippedIndentIndices: Set<number>
-        /**
-         * Populated during the final traversal of the thread. Denotes whether
-         * there is a "Read more" link for the parent immediately following
-         * this item.
-         */
-        precedesParentReadMore?: boolean
-        /**
-         * Populated during the final traversal of the thread. Denotes whether
-         * there is a "Read more" link for this item immediately following
-         * this item.
-         */
-        precedesChildReadMore?: boolean
+        precedesChildReadMore: boolean
       }
     }
   | {
@@ -128,14 +117,20 @@ export type TraversalMetadata = {
    */
   nextItemDepth?: number
   /**
-   * The depth of the slice immediately preceding this one, if it exists.
-   */
-  prevItemDepth?: number
-  /**
    * This is a live reference to the parent metadata object. Mutations to this
    * are available for later use in children.
    */
   parentMetadata?: TraversalMetadata
+  /**
+   * Populated during the final traversal of the thread. Denotes whether
+   * there is a "Read more" link for this item immediately following
+   * this item.
+   */
+  precedesChildReadMore: boolean
+  /**
+   * The depth of the slice immediately preceding this one, if it exists.
+   */
+  prevItemDepth?: number
   /**
    * Any data needed to be passed along to the "read more" items. Keep this
    * trim for better memory usage.

@@ -76,8 +76,12 @@ export function getTraversalMetadata({
      */
     isPartOfLastBranchFromDepth: item.depth === 1 ? 1 : undefined,
     nextItemDepth: nextItem?.depth,
-    prevItemDepth: prevItem?.depth,
     parentMetadata,
+    prevItemDepth: prevItem?.depth,
+    /*
+     * Unknown until after traversal
+     */
+    precedesChildReadMore: false,
     postData: {
       uri: item.uri,
       authorHandle: item.value.post.author.handle,
@@ -119,6 +123,7 @@ export function getThreadPostUI({
   skippedIndentIndices,
   repliesSeenCount,
   repliesUnhydrated,
+  precedesChildReadMore,
 }: TraversalMetadata): Extract<Slice, {type: 'threadPost'}>['ui'] {
   // TODO might be able to simplify this
   const isReplyAndHasReplies =
@@ -138,5 +143,6 @@ export function getThreadPostUI({
      */
     isLastChild, //nextItemDepth === undefined || nextItemDepth < depth,
     skippedIndentIndices,
+    precedesChildReadMore: precedesChildReadMore ?? false,
   }
 }
