@@ -134,7 +134,7 @@ export function ExploreTrendingVideos() {
             label={_(msg`Pin`)}
             size="small"
             variant="outline"
-            color="secondary
+            color="secondary"
             onPress={pinFeed}>
             <ButtonText>{_(msg`Pin`)}</ButtonText>
             <ButtonIcon icon={Pin} position="right" />
