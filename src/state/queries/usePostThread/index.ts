@@ -79,6 +79,7 @@ export function usePostThread({
       hasSession,
       showMuted: state.shownHiddenReplyKinds.has(HiddenReplyKind.Muted),
       showHidden: state.shownHiddenReplyKinds.has(HiddenReplyKind.Hidden),
+      view: params.view,
     })
   }, [
     query.data,
@@ -86,6 +87,7 @@ export function usePostThread({
     moderationOpts,
     hasSession,
     state.shownHiddenReplyKinds,
+    params.view,
   ])
 
   const mutator = createCacheMutator({
