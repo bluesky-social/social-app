@@ -145,8 +145,9 @@ export function traverse(
           /*
            * Set this value before incrementing the parent's repliesSeenCount
            */
-          metadata!.repliesIndex = parentMetadata.repliesSeenCount
-          parentMetadata.repliesSeenCount += 1
+          metadata!.repliesIndex = parentMetadata.repliesIndexCount
+          // Increment the parent's repliesIndexCount
+          parentMetadata.repliesIndexCount += 1
         }
 
         const post = views.threadPost({
@@ -165,6 +166,13 @@ export function traverse(
            * Not moderated, probably need to insert it
            */
           items.push(post)
+
+          /*
+           * Update seen reply count of parent
+           */
+          if (parentMetadata) {
+            parentMetadata.repliesSeenCount += 1
+          }
         } else {
           /*
            * Moderated in some way, we're going to walk children
@@ -201,11 +209,11 @@ export function traverse(
                 storeTraversalMetadata(metadatas, childMetadata)
                 if (childParentMetadata) {
                   /*
-                   * Set this value before incrementing the parent's repliesSeenCount
+                   * Set this value before incrementing the parent's repliesIndexCount
                    */
                   childMetadata!.repliesIndex =
-                    childParentMetadata.repliesSeenCount
-                  childParentMetadata.repliesSeenCount += 1
+                    childParentMetadata.repliesIndexCount
+                  childParentMetadata.repliesIndexCount += 1
                 }
 
                 const childPost = views.threadPost({
@@ -251,8 +259,44 @@ export function traverse(
     }
   }
 
+  if (hidden.length) {
+    if (showHidden) {
+      items.push(...hidden)
+
+      if (muted.length) {
+        if (showMuted) {
+          items.push(...muted)
+        } else {
+          items.push({
+            type: 'showHiddenReplies',
+            key: 'showMutedReplies',
+            kind: HiddenReplyKind.Muted,
+          })
+        }
+      }
+    } else {
+      items.push({
+        type: 'showHiddenReplies',
+        key: 'showHiddenReplies',
+        kind: HiddenReplyKind.Hidden,
+      })
+    }
+  } else if (muted.length) {
+    if (showMuted) {
+      items.push(...muted)
+    } else {
+      items.push({
+        type: 'showHiddenReplies',
+        key: 'showMutedReplies',
+        kind: HiddenReplyKind.Muted,
+      })
+    }
+  }
+
   for (let i = 0; i < items.length; i++) {
     const item = items[i]
+    const prevItem = items.at(i - 1)
+    const nextItem = items.at(i + 1)
 
     if (item.type === 'threadPost') {
       if (
@@ -272,19 +316,23 @@ export function traverse(
       if (metadata) {
         if (metadata.parentMetadata) {
           /*
-           * Copy in the parent's skipped indents
+           * Track what's before/after now that we've applied moderation
            */
-          metadata.skippedIndentIndices = new Set([
-            ...metadata.parentMetadata.skippedIndentIndices,
-          ])
+          if (prevItem?.type === 'threadPost')
+            metadata.prevItemDepth = prevItem?.depth
+          if (nextItem?.type === 'threadPost')
+            metadata.nextItemDepth = nextItem?.depth
 
           /*
-           * We can now officially calculate `isLastSibling` based on the actual data that
-           * we've seen.
+           * We can now officially calculate `isLastSibling` and `isLastChild`
+           * based on the actual data that we've seen.
            */
           metadata.isLastSibling =
             metadata.repliesIndex ===
             metadata.parentMetadata.repliesSeenCount - 1
+          metadata.isLastChild =
+            metadata.nextItemDepth === undefined ||
+            metadata.nextItemDepth <= metadata.depth
 
           /*
            * If this is the last sibling, it's implicitly part of the last
@@ -321,6 +369,13 @@ export function traverse(
             metadata.upcomingParentReadMore =
               metadata.parentMetadata.upcomingParentReadMore
           }
+
+          /*
+           * Copy in the parent's skipped indents
+           */
+          metadata.skippedIndentIndices = new Set([
+            ...metadata.parentMetadata.skippedIndentIndices,
+          ])
 
           /**
            * If this is the last sibling, and the parent has no unhydrated
@@ -379,40 +434,6 @@ export function traverse(
     }
   }
 
-  if (hidden.length) {
-    if (showHidden) {
-      items.push(...hidden)
-
-      if (muted.length) {
-        if (showMuted) {
-          items.push(...muted)
-        } else {
-          items.push({
-            type: 'showHiddenReplies',
-            key: 'showMutedReplies',
-            kind: HiddenReplyKind.Muted,
-          })
-        }
-      }
-    } else {
-      items.push({
-        type: 'showHiddenReplies',
-        key: 'showHiddenReplies',
-        kind: HiddenReplyKind.Hidden,
-      })
-    }
-  } else if (muted.length) {
-    if (showMuted) {
-      items.push(...muted)
-    } else {
-      items.push({
-        type: 'showHiddenReplies',
-        key: 'showMutedReplies',
-        kind: HiddenReplyKind.Muted,
-      })
-    }
-  }
-
   return items
 }
 
@@ -463,5 +484,6 @@ export function getModerationState(moderation: ModerationDecision) {
   return {
     blurred,
     muted,
+    modui,
   }
 }
