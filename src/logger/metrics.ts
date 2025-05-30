@@ -130,6 +130,27 @@ export type MetricEvents = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
+  'feed:save': {
+    feedUrl: string
+  }
+  'feed:unsave': {
+    feedUrl: string
+  }
+  'feed:pin': {
+    feedUrl: string
+  }
+  'feed:unpin': {
+    feedUrl: string
+  }
+  'feed:like': {
+    feedUrl: string
+  }
+  'feed:unlike': {
+    feedUrl: string
+  }
+  'feed:share': {
+    feedUrl: string
+  }
   'feed:suggestion:seen': {
     feedUrl: string
   }
@@ -181,15 +202,19 @@ export type MetricEvents = {
     likerClout: number | undefined
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:repost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:unlike': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:unrepost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:mute': {}
   'post:unmute': {}
