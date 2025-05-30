@@ -472,9 +472,7 @@ export function Explore({
           })
         } else {
           if (feedItems.length === 0) {
-            if (!hasNextFeedsPage) {
-              i.pop()
-            }
+            i.pop()
           } else {
             // This query doesn't follow the limit very well, so the first press of the
             // load more button just unslices the array back to ~10 items
