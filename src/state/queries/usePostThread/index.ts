@@ -9,6 +9,8 @@ import {
 import {traverse} from '#/state/queries/usePostThread/traversal'
 import {
   createPostThreadQueryKey,
+  createPostThreadHiddenQueryKey,
+  type ThreadItem,
   type UsePostThreadProps,
 } from '#/state/queries/usePostThread/types'
 import {getThreadgateRecord} from '#/state/queries/usePostThread/utils'
@@ -31,9 +33,6 @@ export function usePostThread({
   const queryKey = createPostThreadQueryKey({
     params,
   })
-
-  const hasHiddenReplies = useRef(false)
-  const [showHiddenReplies, setShowHiddenReplies] = useState(false)
 
   const query = useQuery({
     enabled,
@@ -76,16 +75,48 @@ export function usePostThread({
     },
   })
 
+  const hasHiddenReplies = useRef(false)
   if (query?.data?.hasHiddenReplies) {
     hasHiddenReplies.current = true
   }
 
+  const [showHiddenReplies, setShowHiddenReplies] = useState(false)
+  const [hiddenReplies, setHiddenReplies] = useState<ThreadItem[]>([])
   const loadHiddenReplies = useCallback(async () => {
     setShowHiddenReplies(true)
-  }, [setShowHiddenReplies])
+    setHiddenReplies(Array.from({length: 2}).map((_, i) => ({
+      type: 'skeleton',
+      key: `${params.anchor!}-reply-${i}`,
+      item: 'reply',
+    })))
+    const queryParams = {
+      anchor: params.anchor!,
+      prioritizeFollowedUsers: params.prioritizeFollowedUsers,
+    }
+    const data = await qc.fetchQuery({
+      queryKey: createPostThreadHiddenQueryKey(queryParams),
+      async queryFn() {
+        const {data} = await agent.app.bsky.unspecced.getPostThreadHiddenV2(queryParams)
+        return data.thread || []
+      },
+    })
+    const items = traverse(data || [], {
+      threadgateHiddenReplies: mergeThreadgateHiddenReplies(
+        query.data?.threadgate?.record,
+      ),
+      moderationOpts: moderationOpts!,
+      hasSession,
+      view: params.view,
+      hasHiddenReplies: hasHiddenReplies.current,
+      showHiddenReplies,
+      skipHiddenReplyHandling: true,
+      loadHiddenReplies,
+    })
+    setHiddenReplies(items)
+  }, [params, setShowHiddenReplies])
 
   const items = useMemo(() => {
-    return traverse(query.data?.thread || [], {
+    const results = traverse(query.data?.thread || [], {
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(
         query.data?.threadgate?.record,
       ),
@@ -96,6 +127,8 @@ export function usePostThread({
       showHiddenReplies,
       loadHiddenReplies,
     })
+
+    return results.concat(hiddenReplies)
   }, [
     query.data,
     mergeThreadgateHiddenReplies,
@@ -104,6 +137,7 @@ export function usePostThread({
     params.view,
     showHiddenReplies,
     loadHiddenReplies,
+    hiddenReplies,
   ])
 
   if (query.isPlaceholderData) {
