@@ -11,7 +11,7 @@ import {isNative} from '#/platform/detection'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {
   HiddenReplyKind,
-  type Slice,
+  type ThreadItem,
   usePostThread,
 } from '#/state/queries/usePostThread'
 import {type OnPostSuccessData} from '#/state/shell/composer'
@@ -162,7 +162,7 @@ export function Inner({uri}: {uri: string | undefined}) {
   }
 
   const items = useMemo(() => {
-    const results: Slice[] = []
+    const results: ThreadItem[] = []
 
     if (!data?.items) return results
 
@@ -203,7 +203,7 @@ export function Inner({uri}: {uri: string | undefined}) {
     return results
   }, [data, deferParents, maxParentCount, maxRepliesCount])
 
-  const renderItem = ({item, index}: {item: Slice; index: number}) => {
+  const renderItem = ({item, index}: {item: ThreadItem; index: number}) => {
     if (item.type === 'threadPost') {
       if (item.depth < 0) {
         if (deferParents) return null
@@ -397,6 +397,6 @@ function PostThreadError({error}: {error: Error}) {
   return <View />
 }
 
-const keyExtractor = (item: Slice) => {
+const keyExtractor = (item: ThreadItem) => {
   return item.key
 }

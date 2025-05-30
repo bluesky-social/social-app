@@ -10,7 +10,7 @@ import {
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {
-  type Slice,
+  type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
 
@@ -19,7 +19,7 @@ export function threadPostNoUnauthenticated({
   depth,
   value,
 }: AppBskyUnspeccedGetPostThreadV2.ThreadItem): Extract<
-  Slice,
+  ThreadItem,
   {type: 'threadPostNoUnauthenticated'}
 > {
   return {
@@ -36,7 +36,7 @@ export function threadPostNotFound({
   depth,
   value,
 }: AppBskyUnspeccedGetPostThreadV2.ThreadItem): Extract<
-  Slice,
+  ThreadItem,
   {type: 'threadPostNotFound'}
 > {
   return {
@@ -53,7 +53,7 @@ export function threadPostBlocked({
   depth,
   value,
 }: AppBskyUnspeccedGetPostThreadV2.ThreadItem): Extract<
-  Slice,
+  ThreadItem,
   {type: 'threadPostBlocked'}
 > {
   return {
@@ -75,7 +75,7 @@ export function threadPost({
   depth: number
   value: $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItemPost>
   moderationOpts: ModerationOpts
-}): Extract<Slice, {type: 'threadPost'}> {
+}): Extract<ThreadItem, {type: 'threadPost'}> {
   return {
     type: 'threadPost',
     key: uri,
@@ -102,7 +102,7 @@ export function readMore({
   repliesUnhydrated,
   skippedIndentIndices,
   postData,
-}: TraversalMetadata): Extract<Slice, {type: 'readMore'}> {
+}: TraversalMetadata): Extract<ThreadItem, {type: 'readMore'}> {
   const urip = new AtUri(postData.uri)
   const href = makeProfileLink(
     {

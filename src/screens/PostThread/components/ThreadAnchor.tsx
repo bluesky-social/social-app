@@ -28,7 +28,7 @@ import {
 } from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
-import {type Slice} from '#/state/queries/usePostThread/types'
+import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
@@ -60,7 +60,7 @@ export function ThreadAnchor({
   onPostSuccess,
   threadgateRecord,
 }: {
-  item: Extract<Slice, {type: 'threadPost'}>
+  item: Extract<ThreadItem, {type: 'threadPost'}>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }) {
@@ -109,7 +109,7 @@ let PostThreadItemLoaded = ({
   onPostSuccess,
   threadgateRecord,
 }: {
-  item: Extract<Slice, {type: 'threadPost'}>
+  item: Extract<ThreadItem, {type: 'threadPost'}>
   postShadow: Shadow<AppBskyFeedDefs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
@@ -396,7 +396,7 @@ function ExpandedPostDetails({
   post,
   isThreadAuthor,
 }: {
-  post: Extract<Slice, {type: 'threadPost'}>['value']['post']
+  post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
   isThreadAuthor: boolean
 }) {
   const t = useTheme()
