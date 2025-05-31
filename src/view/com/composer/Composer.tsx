@@ -45,7 +45,7 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
-  AppBskyUnspeccedGetPostThreadV2,
+  AppBskyUnspeccedDefs,
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
@@ -427,7 +427,7 @@ export const ComposePost = ({
               }
               if (
                 !res.data.thread.every(p =>
-                  AppBskyUnspeccedGetPostThreadV2.isThreadItemPost(p.value),
+                  AppBskyUnspeccedDefs.isThreadItemPost(p.value),
                 )
               ) {
                 throw new Error(`composer: app view returned non-post items`)

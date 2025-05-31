@@ -3,6 +3,7 @@ import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
   type AppBskyUnspeccedDefs,
+  type AppBskyUnspeccedGetPostThreadV2,
   AtUri,
   moderatePost,
   type ModerationOpts,
@@ -10,6 +11,7 @@ import {
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {
+  type ApiThreadItem,
   type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
@@ -18,10 +20,7 @@ export function threadPostNoUnauthenticated({
   uri,
   depth,
   value,
-}: AppBskyUnspeccedDefs.ThreadItem): Extract<
-  ThreadItem,
-  {type: 'threadPostNoUnauthenticated'}
-> {
+}: ApiThreadItem): Extract<ThreadItem, {type: 'threadPostNoUnauthenticated'}> {
   return {
     type: 'threadPostNoUnauthenticated',
     key: uri,
@@ -35,10 +34,7 @@ export function threadPostNotFound({
   uri,
   depth,
   value,
-}: AppBskyUnspeccedDefs.ThreadItem): Extract<
-  ThreadItem,
-  {type: 'threadPostNotFound'}
-> {
+}: ApiThreadItem): Extract<ThreadItem, {type: 'threadPostNotFound'}> {
   return {
     type: 'threadPostNotFound',
     key: uri,
@@ -52,10 +48,7 @@ export function threadPostBlocked({
   uri,
   depth,
   value,
-}: AppBskyUnspeccedDefs.ThreadItem): Extract<
-  ThreadItem,
-  {type: 'threadPostBlocked'}
-> {
+}: ApiThreadItem): Extract<ThreadItem, {type: 'threadPostBlocked'}> {
   return {
     type: 'threadPostBlocked',
     key: uri,
@@ -125,12 +118,12 @@ export function readMore({
 export function postViewToThreadPlaceholder(
   post: AppBskyFeedDefs.PostView,
 ): $Typed<
-  Omit<AppBskyUnspeccedDefs.ThreadItem, 'value'> & {
+  Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
     value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
   }
 > {
   return {
-    $type: 'app.bsky.unspecced.defs#threadItem',
+    $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
     uri: post.uri,
     depth: 0, // reset to 0 for highlighted post
     value: {

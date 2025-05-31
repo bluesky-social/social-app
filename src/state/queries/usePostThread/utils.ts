@@ -2,12 +2,13 @@ import {
   type AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedThreadgate,
-  AppBskyUnspeccedGetPostThreadV2,
   AppBskyUnspeccedDefs,
+  type AppBskyUnspeccedGetPostThreadV2,
   AtUri,
 } from '@atproto/api'
 
 import {
+  type ApiThreadItem,
   type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
@@ -47,9 +48,9 @@ export function getTraversalMetadata({
   nextItem,
   parentMetadata,
 }: {
-  item: AppBskyUnspeccedDefs.ThreadItem
-  prevItem?: AppBskyUnspeccedDefs.ThreadItem
-  nextItem?: AppBskyUnspeccedDefs.ThreadItem
+  item: ApiThreadItem
+  prevItem?: ApiThreadItem
+  nextItem?: ApiThreadItem
   parentMetadata?: TraversalMetadata
 }): TraversalMetadata {
   if (!AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {

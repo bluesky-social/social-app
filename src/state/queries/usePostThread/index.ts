@@ -1,6 +1,7 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {wait} from '#/lib/async/wait'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   createCacheMutator,
@@ -8,8 +9,8 @@ import {
 } from '#/state/queries/usePostThread/queryCache'
 import {traverse} from '#/state/queries/usePostThread/traversal'
 import {
-  createPostThreadQueryKey,
   createPostThreadHiddenQueryKey,
+  createPostThreadQueryKey,
   type ThreadItem,
   type UsePostThreadProps,
 } from '#/state/queries/usePostThread/types'
@@ -39,13 +40,16 @@ export function usePostThread({
     queryKey,
     gcTime: 0,
     async queryFn() {
-      const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
-        anchor: params.anchor!,
-        branchingFactor: params.view === 'linear' ? 1 : undefined,
-        below: 4,
-        sort: params.sort,
-        prioritizeFollowedUsers: params.prioritizeFollowedUsers,
-      })
+      const {data} = await wait(
+        400,
+        agent.app.bsky.unspecced.getPostThreadV2({
+          anchor: params.anchor!,
+          branchingFactor: params.view === 'linear' ? 1 : undefined,
+          below: 4,
+          sort: params.sort,
+          prioritizeFollowedUsers: params.prioritizeFollowedUsers,
+        }),
+      )
       return data
     },
     placeholderData() {
@@ -84,22 +88,29 @@ export function usePostThread({
   const [hiddenReplies, setHiddenReplies] = useState<ThreadItem[]>([])
   const loadHiddenReplies = useCallback(async () => {
     setShowHiddenReplies(true)
-    setHiddenReplies(Array.from({length: 2}).map((_, i) => ({
-      type: 'skeleton',
-      key: `${params.anchor!}-reply-${i}`,
-      item: 'reply',
-    })))
+    setHiddenReplies(
+      Array.from({length: 2}).map((_, i) => ({
+        type: 'skeleton',
+        key: `${params.anchor!}-reply-${i}`,
+        item: 'reply',
+      })),
+    )
     const queryParams = {
       anchor: params.anchor!,
       prioritizeFollowedUsers: params.prioritizeFollowedUsers,
     }
-    const data = await qc.fetchQuery({
-      queryKey: createPostThreadHiddenQueryKey(queryParams),
-      async queryFn() {
-        const {data} = await agent.app.bsky.unspecced.getPostThreadHiddenV2(queryParams)
-        return data.thread || []
-      },
-    })
+    const data = await wait(
+      400,
+      qc.fetchQuery({
+        queryKey: createPostThreadHiddenQueryKey(queryParams),
+        async queryFn() {
+          const {data} = await agent.app.bsky.unspecced.getPostThreadHiddenV2(
+            queryParams,
+          )
+          return data.thread || []
+        },
+      }),
+    )
     const items = traverse(data || [], {
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(
         query.data?.threadgate?.record,
@@ -113,7 +124,17 @@ export function usePostThread({
       loadHiddenReplies,
     })
     setHiddenReplies(items)
-  }, [params, setShowHiddenReplies])
+  }, [
+    agent,
+    params,
+    hasSession,
+    mergeThreadgateHiddenReplies,
+    moderationOpts,
+    qc,
+    query.data?.threadgate?.record,
+    showHiddenReplies,
+    setShowHiddenReplies,
+  ])
 
   const items = useMemo(() => {
     const results = traverse(query.data?.thread || [], {

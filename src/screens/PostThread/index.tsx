@@ -114,6 +114,11 @@ export function Inner({uri}: {uri: string | undefined}) {
       const anchorOffsetTop = anchorElement.getBoundingClientRect().top
       const headerHeight = headerElement.getBoundingClientRect().height
       const scrollPosition = anchorOffsetTop - headerHeight
+      console.log({
+        anchorOffsetTop,
+        headerHeight,
+        scrollPosition,
+      })
       /*
        * If scroll position is negative, it means the anchor post is above the
        * top of the screen, meaning the user scrolled the list. In that case,
@@ -292,7 +297,16 @@ export function Inner({uri}: {uri: string | undefined}) {
       return (
         <PostThreadShowHiddenReplies
           type="hidden"
-          onPress={() => item.onLoad()}
+          onPress={() => {
+            item.onLoad()
+            /*
+             * Bit of a hack. This resets the ref value for the anchor so that
+             * the next time `onContentSizeChangeWebOnly` fires, it won't
+             * adjust scroll. However, on the next render cycle, it will, which
+             * will give us time to insert the skeleton state and handle scroll.
+             */
+            anchorRef.current = null
+          }}
         />
       )
     } else if (item.type === 'skeleton') {

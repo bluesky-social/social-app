@@ -5,6 +5,7 @@ import {
 } from '@atproto/api'
 
 import {
+  type ApiThreadItem,
   type PostThreadParams,
   type ThreadItem,
   type TraversalMetadata,
@@ -18,7 +19,7 @@ import {
 import * as views from '#/state/queries/usePostThread/views'
 
 export function traverse(
-  thread: AppBskyUnspeccedDefs.ThreadItem[],
+  thread: ApiThreadItem[],
   {
     threadgateHiddenReplies,
     moderationOpts,
@@ -67,19 +68,11 @@ export function traverse(
        * _up_ from there.
        */
     } else if (item.depth === 0) {
-      if (
-        AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(
-          item.value,
-        )
-      ) {
+      if (AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item.value)) {
         items.push(views.threadPostNoUnauthenticated(item))
-      } else if (
-        AppBskyUnspeccedDefs.isThreadItemNotFound(item.value)
-      ) {
+      } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(item.value)) {
         items.push(views.threadPostNotFound(item))
-      } else if (
-        AppBskyUnspeccedDefs.isThreadItemBlocked(item.value)
-      ) {
+      } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(item.value)) {
         items.push(views.threadPostBlocked(item))
       } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
         const post = views.threadPost({
@@ -94,25 +87,17 @@ export function traverse(
           const parent = thread[pi]
 
           if (
-            AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(
-              parent.value,
-            )
+            AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(parent.value)
           ) {
             items.unshift(views.threadPostNoUnauthenticated(parent))
             break parentTraversal
-          } else if (
-            AppBskyUnspeccedDefs.isThreadItemNotFound(parent.value)
-          ) {
+          } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(parent.value)) {
             items.unshift(views.threadPostNotFound(parent))
             break parentTraversal
-          } else if (
-            AppBskyUnspeccedDefs.isThreadItemBlocked(parent.value)
-          ) {
+          } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(parent.value)) {
             items.unshift(views.threadPostBlocked(parent))
             break parentTraversal
-          } else if (
-            AppBskyUnspeccedDefs.isThreadItemPost(parent.value)
-          ) {
+          } else if (AppBskyUnspeccedDefs.isThreadItemPost(parent.value)) {
             items.unshift(
               views.threadPost({
                 uri: parent.uri,
@@ -131,9 +116,7 @@ export function traverse(
        * we could.
        */
       const shouldBreak =
-        AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(
-          item.value,
-        ) ||
+        AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item.value) ||
         AppBskyUnspeccedDefs.isThreadItemNotFound(item.value) ||
         AppBskyUnspeccedDefs.isThreadItemBlocked(item.value)
 
@@ -193,9 +176,7 @@ export function traverse(
             for (let ci = startIndex; ci <= branch.end; ci++) {
               const child = thread[ci]
 
-              if (
-                AppBskyUnspeccedDefs.isThreadItemPost(child.value)
-              ) {
+              if (AppBskyUnspeccedDefs.isThreadItemPost(child.value)) {
                 const childParentMetadata = metadatas.get(
                   getPostRecord(child.value.post).reply?.parent?.uri || '',
                 )
@@ -432,7 +413,7 @@ export function traverse(
  *    const { start: 1, end: 3 } = getBranch(items, 1, 1)
  */
 export function getBranch(
-  thread: AppBskyUnspeccedDefs.ThreadItem[],
+  thread: ApiThreadItem[],
   branchStartIndex: number,
   branchStartDepth: number,
 ) {
