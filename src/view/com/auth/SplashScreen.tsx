@@ -1,17 +1,21 @@
+import {useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import * as SecureStore from 'expo-secure-store'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isNative} from '#/platform/detection'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import * as SettingsList from '#/screens/Settings/components/SettingsList'
+import {type RotationKey} from '#/screens/Settings/components/types'
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {CenteredView} from '../util/Views'
-
 export const SplashScreen = ({
   onPressSignin,
   onPressCreateAccount,
@@ -23,6 +27,24 @@ export const SplashScreen = ({
   const {_} = useLingui()
 
   const insets = useSafeAreaInsets()
+
+  const [showKeyBackups, setShowKeyBackups] = useState(false)
+
+  const fetchKeyBackups = async () => {
+    if (!isNative || !(await SecureStore.isAvailableAsync())) {
+      return
+    }
+    let rotationKeysString =
+      (await SecureStore.getItemAsync('rotationKeys')) ?? ''
+    let rotationKeys: RotationKey[] = rotationKeysString
+      ? JSON.parse(rotationKeysString)
+      : []
+    setShowKeyBackups(rotationKeys.length > 0)
+  }
+
+  useEffect(() => {
+    fetchKeyBackups()
+  }, [])
 
   return (
     <CenteredView style={[a.h_full, a.flex_1]}>
@@ -38,6 +60,18 @@ export const SplashScreen = ({
             <Trans>What's up?</Trans>
           </Text>
         </View>
+
+        {showKeyBackups && (
+          <View style={[a.mt_md, a.mb_md]}>
+            <SettingsList.LinkItem
+              to="/settings/key-backups"
+              label={_(msg`Key backups`)}>
+              <SettingsList.ItemText>
+                <Trans>Key backups</Trans>
+              </SettingsList.ItemText>
+            </SettingsList.LinkItem>
+          </View>
+        )}
         <View
           testID="signinOrCreateAccount"
           style={[a.px_xl, a.gap_md, a.pb_2xl]}>

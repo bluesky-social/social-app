@@ -151,6 +151,7 @@
     "expo-media-library": "~17.1.6",
     "expo-notifications": "~0.31.1",
     "expo-screen-orientation": "~8.1.5",
+    "expo-secure-store": "~14.0.1",
     "expo-sharing": "~13.1.5",
     "expo-splash-screen": "~0.30.8",
     "expo-system-ui": "~5.0.7",
