@@ -56,7 +56,7 @@ interface AppLanguageConfig {
 export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.en, name: 'English'},
   {code2: AppLanguage.an, name: 'Aragonés – Aragonese'},
-  {code2: AppLanguage.ar, name: 'اَلْعَرَبِيَّةُ – Arabic'},
+  {code2: AppLanguage.ar, name: 'العربية – Arabic'},
   {code2: AppLanguage.ast, name: 'Asturianu – Asturian'},
   {code2: AppLanguage.ca, name: 'Català – Catalan'},
   {code2: AppLanguage.cy, name: 'Cymraeg – Welsh'},
