@@ -95,6 +95,7 @@ module.exports = function (_config) {
             'nl',
             'pl',
             'pt-BR',
+            'pt-PT',
             'ro',
             'ru',
             'sv',

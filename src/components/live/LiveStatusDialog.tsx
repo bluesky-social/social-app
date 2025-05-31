@@ -158,7 +158,11 @@ export function LiveStatus({
           color="primary"
           variant="solid"
           onPress={() => {
-            logger.metric('live:card:watch', {subject: profile.did})
+            logger.metric(
+              'live:card:watch',
+              {subject: profile.did},
+              {statsig: true},
+            )
             openLink(embed.external.uri, false)
           }}>
           <ButtonText>
@@ -187,7 +191,11 @@ export function LiveStatus({
               color="secondary"
               variant="solid"
               onPress={() => {
-                logger.metric('live:card:openProfile', {subject: profile.did})
+                logger.metric(
+                  'live:card:openProfile',
+                  {subject: profile.did},
+                  {statsig: true},
+                )
                 unstableCacheProfileView(queryClient, profile)
                 onPressOpenProfile()
               }}>

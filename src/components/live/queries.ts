@@ -140,9 +140,17 @@ export function useUpsertLiveStatusMutation(
     },
     onSuccess: ({record, image}) => {
       if (createdAt) {
-        logger.metric('live:edit', {duration: record.durationMinutes})
+        logger.metric(
+          'live:edit',
+          {duration: record.durationMinutes},
+          {statsig: true},
+        )
       } else {
-        logger.metric('live:create', {duration: record.durationMinutes})
+        logger.metric(
+          'live:create',
+          {duration: record.durationMinutes},
+          {statsig: true},
+        )
       }
 
       Toast.show(_(msg`You are now live!`))
@@ -199,7 +207,7 @@ export function useRemoveLiveStatusMutation() {
       })
     },
     onSuccess: () => {
-      logger.metric('live:remove', {})
+      logger.metric('live:remove', {}, {statsig: true})
       Toast.show(_(msg`You are no longer live`))
       control.close(() => {
         if (!currentAccount) return

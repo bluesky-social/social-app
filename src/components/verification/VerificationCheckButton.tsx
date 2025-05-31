@@ -100,7 +100,7 @@ export function Badge({
         }
         hitSlop={20}
         onPress={() => {
-          logger.metric('verification:badge:click', {})
+          logger.metric('verification:badge:click', {}, {statsig: true})
           if (state.profile.role === 'verifier') {
             verifierDialogControl.open()
           } else {
