@@ -52,7 +52,7 @@ function DialogInner({
   embed: AppBskyEmbedExternal.View
   navigation: NavigationProp
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const control = Dialog.useDialogContext()
 
   const onPressOpenProfile = useCallback(() => {
@@ -65,7 +65,7 @@ function DialogInner({
 
   return (
     <Dialog.ScrollableInner
-      label={_(msg`${sanitizeHandle(profile.handle)} is live`)}
+      label={_(msg`${sanitizeHandle(i18n, profile.handle)} is live`)}
       contentContainerStyle={[a.pt_0, a.px_0]}
       style={[web({maxWidth: 420}), a.overflow_hidden]}>
       <LiveStatus

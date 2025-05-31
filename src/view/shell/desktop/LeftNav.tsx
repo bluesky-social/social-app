@@ -88,7 +88,7 @@ function ProfileCard() {
   const profiles = data?.profiles
   const signOutPromptControl = Prompt.usePromptControl()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
 
   const size = 48
@@ -174,7 +174,7 @@ function ProfileCard() {
                             t.atoms.text_contrast_medium,
                           ]}
                           numberOfLines={1}>
-                          {sanitizeHandle(profile.handle, '@')}
+                          {sanitizeHandle(i18n, profile.handle, '@')}
                         </Text>
                       </View>
                       <EllipsisIcon
@@ -281,7 +281,7 @@ function SwitchMenuItem({
   account: SessionAccount
   profile: AppBskyActorDefs.ProfileViewDetailed | undefined
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {isActive: live} = useActorStatus(profile)
 
@@ -292,6 +292,7 @@ function SwitchMenuItem({
       key={account.did}
       label={_(
         msg`Switch to ${sanitizeHandle(
+          i18n,
           profile?.handle ?? account.handle,
           '@',
         )}`,
@@ -307,7 +308,7 @@ function SwitchMenuItem({
         />
       </View>
       <Menu.ItemText>
-        {sanitizeHandle(profile?.handle ?? account.handle, '@')}
+        {sanitizeHandle(i18n, profile?.handle ?? account.handle, '@')}
       </Menu.ItemText>
     </Menu.Item>
   )

@@ -146,7 +146,7 @@ export function ModerationScreenInner({
 }: {
   preferences: UsePreferencesQueryResponse
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {gtMobile} = useBreakpoints()
@@ -456,6 +456,7 @@ export function ModerationScreenInner({
                       <LabelingService.Content>
                         <LabelingService.Title
                           value={getLabelingServiceTitle({
+                            i18n: i18n,
                             displayName: labeler.creator.displayName,
                             handle: labeler.creator.handle,
                           })}

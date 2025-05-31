@@ -66,7 +66,7 @@ export function useGenerateStarterPackMutation({
   onSuccess: ({uri, cid}: {uri: string; cid: string}) => void
   onError: (e: Error) => void
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const agent = useAgent()
 
   return useMutation<{uri: string; cid: string}, Error, void>({
@@ -104,7 +104,7 @@ export function useGenerateStarterPackMutation({
       const displayName = enforceLen(
         profile.displayName
           ? sanitizeDisplayName(profile.displayName)
-          : `@${sanitizeHandle(profile.handle)}`,
+          : `@${sanitizeHandle(i18n, profile.handle)}`,
         25,
         true,
       )

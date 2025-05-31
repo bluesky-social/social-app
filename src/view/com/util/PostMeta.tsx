@@ -133,7 +133,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 a.leading_tight,
                 {flexShrink: 10},
               ]}>
-              {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+              {NON_BREAKING_SPACE + sanitizeHandle(i18n, handle, '@')}
             </WebOnlyInlineLinkText>
           </View>
         </ProfileHoverCard>

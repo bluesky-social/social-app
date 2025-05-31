@@ -838,7 +838,7 @@ function ExpandedAuthorsList({
 
 function ExpandedAuthorCard({author}: {author: Author}) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const verification = useSimpleVerificationState({
     profile: author.profile,
   })
@@ -894,7 +894,7 @@ function ExpandedAuthorCard({author}: {author: Author}) {
               a.flex_shrink,
               t.atoms.text_contrast_medium,
             ]}>
-            {sanitizeHandle(author.profile.handle, '@')}
+            {sanitizeHandle(i18n, author.profile.handle, '@')}
           </Text>
         </View>
       </View>

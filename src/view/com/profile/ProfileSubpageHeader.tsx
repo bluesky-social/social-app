@@ -47,7 +47,7 @@ export function ProfileSubpageHeader({
   avatarType: UserAvatarType | 'starter-pack'
 }>) {
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
@@ -156,7 +156,7 @@ export function ProfileSubpageHeader({
                   <Trans>
                     List by{' '}
                     <TextLink
-                      text={sanitizeHandle(creator.handle || '', '@')}
+                      text={sanitizeHandle(i18n, creator.handle || '', '@')}
                       href={makeProfileLink(creator)}
                       style={pal.textLight}
                     />
@@ -169,7 +169,7 @@ export function ProfileSubpageHeader({
                   <Trans>
                     Moderation list by{' '}
                     <TextLink
-                      text={sanitizeHandle(creator.handle || '', '@')}
+                      text={sanitizeHandle(i18n, creator.handle || '', '@')}
                       href={makeProfileLink(creator)}
                       style={pal.textLight}
                     />
@@ -182,7 +182,7 @@ export function ProfileSubpageHeader({
                   <Trans>
                     Starter pack by{' '}
                     <TextLink
-                      text={sanitizeHandle(creator.handle || '', '@')}
+                      text={sanitizeHandle(i18n, creator.handle || '', '@')}
                       href={makeProfileLink(creator)}
                       style={pal.textLight}
                     />

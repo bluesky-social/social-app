@@ -36,7 +36,7 @@ export function SubmitView({
   onSubmitComplete: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const agent = useAgent()
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
@@ -148,6 +148,7 @@ export function SubmitView({
           <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
             {labelers.map(labeler => {
               const title = getLabelingServiceTitle({
+                i18n: i18n,
                 displayName: labeler.creator.displayName,
                 handle: labeler.creator.handle,
               })

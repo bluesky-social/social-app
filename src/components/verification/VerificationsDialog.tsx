@@ -55,10 +55,10 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {gtMobile} = useBreakpoints()
 
-  const userName = getUserDisplayName(profile)
+  const userName = getUserDisplayName(i18n, profile)
   const label = state.profile.isViewer
     ? state.profile.isVerified
       ? _(msg`You are verified`)

@@ -94,6 +94,7 @@ export function FeedHeader({
   sourceContext: Exclude<VideoFeedSourceContext, {type: 'author'}>
 }) {
   const {gtMobile} = useBreakpoints()
+  const {i18n} = useLingui()
 
   const {
     data: info,
@@ -131,7 +132,7 @@ export function FeedHeader({
           <Text
             style={[a.flex_shrink, a.text_sm, a.leading_snug]}
             numberOfLines={1}>
-            {sanitizeHandle(info.creatorHandle, '@')}
+            {sanitizeHandle(i18n, info.creatorHandle, '@')}
           </Text>
         </View>
       </View>

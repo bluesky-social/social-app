@@ -18,7 +18,7 @@ export function ProfileHeaderHandle({
   disableTaps?: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const invalidHandle = isInvalidHandle(profile.handle)
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
   return (
@@ -51,7 +51,7 @@ export function ProfileHeaderHandle({
         ]}>
         {invalidHandle
           ? _(msg`⚠Invalid Handle`)
-          : sanitizeHandle(profile.handle, '@')}
+          : sanitizeHandle(i18n, profile.handle, '@')}
       </Text>
     </View>
   )

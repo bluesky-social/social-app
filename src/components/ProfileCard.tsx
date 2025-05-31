@@ -109,12 +109,12 @@ export function Link({
 }: {
   profile: bsky.profile.AnyProfileView
 } & Omit<LinkProps, 'to' | 'label'>) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   return (
     <InternalLink
       label={_(
         msg`View ${
-          profile.displayName || sanitizeHandle(profile.handle)
+          profile.displayName || sanitizeHandle(i18n, profile.handle)
         }'s profile`,
       )}
       to={{
@@ -204,7 +204,7 @@ export function Name({
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
+    profile.displayName || sanitizeHandle(i18n, profile.handle),
     moderation.ui('displayName'),
   )
   const verification = useSimpleVerificationState({profile})
@@ -229,8 +229,9 @@ export function Name({
 }
 
 export function Handle({profile}: {profile: bsky.profile.AnyProfileView}) {
+  const {i18n} = useLingui()
   const t = useTheme()
-  const handle = sanitizeHandle(profile.handle, '@')
+  const handle = sanitizeHandle(i18n, profile.handle, '@')
 
   return (
     <Text

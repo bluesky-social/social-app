@@ -167,7 +167,7 @@ let FeedItemInner = ({
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
 
   const [hover, setHover] = useState(false)
 
@@ -379,7 +379,7 @@ let FeedItemInner = ({
                             lineHeight={1.2}>
                             {sanitizeDisplayName(
                               reason.by.displayName ||
-                                sanitizeHandle(reason.by.handle),
+                                sanitizeHandle(i18n, reason.by.handle),
                               moderation.ui('displayName'),
                             )}
                           </Text>
@@ -588,6 +588,7 @@ function ReplyToLabel({
   blocked?: boolean
   notFound?: boolean
 }) {
+  const {i18n} = useLingui()
   const pal = usePalette('default')
   const {currentAccount} = useSession()
 
@@ -615,7 +616,7 @@ function ReplyToLabel({
                 <Text emoji type="md" style={pal.textLight} lineHeight={1.2}>
                   {profile.displayName
                     ? sanitizeDisplayName(profile.displayName)
-                    : sanitizeHandle(profile.handle)}
+                    : sanitizeHandle(i18n, profile.handle)}
                 </Text>
               }
             />

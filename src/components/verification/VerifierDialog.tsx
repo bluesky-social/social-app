@@ -49,12 +49,12 @@ function Inner({
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
 
   const isSelf = profile.did === currentAccount?.did
-  const userName = getUserDisplayName(profile)
+  const userName = getUserDisplayName(i18n, profile)
   const label = isSelf
     ? _(msg`You are a trusted verifier`)
     : _(msg`${userName} is a trusted verifier`)

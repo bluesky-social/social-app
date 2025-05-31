@@ -9,6 +9,7 @@ import {
   ModerationOpts,
   ModerationUI,
 } from '@atproto/api'
+import {I18n} from '@lingui/core'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -56,15 +57,17 @@ export function labelIsHideableOffense(
 }
 
 export function getLabelingServiceTitle({
+  i18n,
   displayName,
   handle,
 }: {
+  i18n: I18n
   displayName?: string
   handle: string
 }) {
   return displayName
     ? sanitizeDisplayName(displayName)
-    : sanitizeHandle(handle, '@')
+    : sanitizeHandle(i18n, handle, '@')
 }
 
 export function lookupLabelValueDefinition(

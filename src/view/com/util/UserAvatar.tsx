@@ -517,7 +517,7 @@ let PreviewableUserAvatar = ({
   live,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const queryClient = useQueryClient()
   const status = useActorStatus(profile)
   const liveControl = useDialogControl()
@@ -557,7 +557,7 @@ let PreviewableUserAvatar = ({
           <Button
             label={_(
               msg`${sanitizeDisplayName(
-                profile.displayName || sanitizeHandle(profile.handle),
+                profile.displayName || sanitizeHandle(i18n, profile.handle),
               )}'s avatar`,
             )}
             accessibilityHint={_(msg`Opens live status dialog`)}
@@ -575,7 +575,7 @@ let PreviewableUserAvatar = ({
         <Link
           label={_(
             msg`${sanitizeDisplayName(
-              profile.displayName || sanitizeHandle(profile.handle),
+              profile.displayName || sanitizeHandle(i18n, profile.handle),
             )}'s avatar`,
           )}
           accessibilityHint={_(msg`Opens this profile`)}

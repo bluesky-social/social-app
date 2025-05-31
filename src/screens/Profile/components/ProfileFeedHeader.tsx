@@ -250,7 +250,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
                             t.atoms.text_contrast_medium,
                           ]}
                           numberOfLines={1}>
-                          {sanitizeHandle(info.creatorHandle, '@')}
+                          {sanitizeHandle(i18n, info.creatorHandle, '@')}
                         </Text>
                         <View style={[a.flex_row, a.align_center, {gap: 2}]}>
                           <HeartFilled
@@ -386,7 +386,7 @@ function DialogInner({
   isFeedStateChangePending: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
   const control = Dialog.useDialogContext()
@@ -464,7 +464,7 @@ function DialogInner({
                 ]}
                 numberOfLines={1}
                 onPress={() => control.close()}>
-                {sanitizeHandle(info.creatorHandle, '@')}
+                {sanitizeHandle(i18n, info.creatorHandle, '@')}
               </InlineLinkText>
             </Trans>
           </Text>

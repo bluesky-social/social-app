@@ -701,7 +701,7 @@ function Overlay({
   feedContext: string | undefined
   reqId: string | undefined
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
@@ -725,7 +725,7 @@ function Overlay({
     text: record?.text || '',
     facets: record?.facets,
   })
-  const handle = sanitizeHandle(post.author.handle, '@')
+  const handle = sanitizeHandle(i18n, post.author.handle, '@')
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: 1 - seekingAnimationSV.get(),
@@ -1020,7 +1020,7 @@ function PlayPauseTapArea({
   feedContext: string | undefined
   reqId: string | undefined
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const playHaptic = useHaptics()
   // TODO: implement viaRepost -sfn
@@ -1070,6 +1070,7 @@ function PlayPauseTapArea({
       }
       label={_(
         `Video from ${sanitizeHandle(
+          i18n,
           post.author.handle,
           '@',
         )}. Tap to play or pause the video`,

@@ -2,6 +2,7 @@ import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -76,10 +77,11 @@ function AutocompleteProfileCard({
   totalItems: number
   onPress: () => void
 }) {
+  const {i18n} = useLingui()
   const t = useTheme()
   const state = useSimpleVerificationState({profile})
   const displayName = sanitizeDisplayName(
-    profile.displayName || sanitizeHandle(profile.handle),
+    profile.displayName || sanitizeHandle(i18n, profile.handle),
   )
   return (
     <View
@@ -133,7 +135,7 @@ function AutocompleteProfileCard({
         <Text
           style={[t.atoms.text_contrast_medium, a.text_right, a.leading_snug]}
           numberOfLines={1}>
-          {sanitizeHandle(profile.handle, '@')}
+          {sanitizeHandle(i18n, profile.handle, '@')}
         </Text>
       </PressableScale>
     </View>

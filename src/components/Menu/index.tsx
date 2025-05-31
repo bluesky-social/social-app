@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
@@ -16,12 +16,12 @@ import {
   useMenuItemContext,
 } from '#/components/Menu/context'
 import {
-  ContextType,
-  GroupProps,
-  ItemIconProps,
-  ItemProps,
-  ItemTextProps,
-  TriggerProps,
+  type ContextType,
+  type GroupProps,
+  type ItemIconProps,
+  type ItemProps,
+  type ItemTextProps,
+  type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 

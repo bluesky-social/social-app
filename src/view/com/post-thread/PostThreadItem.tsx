@@ -397,7 +397,7 @@ let PostThreadItemLoaded = ({
                     numberOfLines={1}>
                     {sanitizeDisplayName(
                       post.author.displayName ||
-                        sanitizeHandle(post.author.handle),
+                        sanitizeHandle(i18n, post.author.handle),
                       moderation.ui('displayName'),
                     )}
                   </Text>
@@ -419,7 +419,7 @@ let PostThreadItemLoaded = ({
                     t.atoms.text_contrast_medium,
                   ]}
                   numberOfLines={1}>
-                  {sanitizeHandle(post.author.handle, '@')}
+                  {sanitizeHandle(i18n, post.author.handle, '@')}
                 </Text>
               </Link>
             </View>
