@@ -49,16 +49,23 @@ export function Inner({uri}: {uri: string | undefined}) {
     setTreeViewEnabled,
   } = useThreadPreferences()
 
-  const {isFetching, error, data, refetch, insertReplies, showHiddenReplies} =
-    usePostThread({
-      enabled: isThreadPreferencesLoaded,
-      params: {
-        anchor: uri,
-        sort: sortReplies,
-        view: treeViewEnabled ? 'tree' : 'linear',
-        prioritizeFollowedUsers,
-      },
-    })
+  const {
+    isFetching,
+    isPlaceholderData,
+    error,
+    data,
+    refetch,
+    insertReplies,
+    showHiddenReplies,
+  } = usePostThread({
+    enabled: isThreadPreferencesLoaded,
+    params: {
+      anchor: uri,
+      sort: sortReplies,
+      view: treeViewEnabled ? 'tree' : 'linear',
+      prioritizeFollowedUsers,
+    },
+  })
 
   const optimisticOnPostReply = (data: OnPostSuccessData) => {
     if (data) {
@@ -114,11 +121,11 @@ export function Inner({uri}: {uri: string | undefined}) {
       const anchorOffsetTop = anchorElement.getBoundingClientRect().top
       const headerHeight = headerElement.getBoundingClientRect().height
       const scrollPosition = anchorOffsetTop - headerHeight
-      console.log({
-        anchorOffsetTop,
-        headerHeight,
-        scrollPosition,
-      })
+      // console.log({
+      //   anchorOffsetTop,
+      //   headerHeight,
+      //   scrollPosition,
+      // })
       /*
        * If scroll position is negative, it means the anchor post is above the
        * top of the screen, meaning the user scrolled the list. In that case,
@@ -151,11 +158,14 @@ export function Inner({uri}: {uri: string | undefined}) {
   const hasExhaustedReplies = useRef(false)
 
   const onStartReached = () => {
+    // console.log('onStartReached')
+    if (isFetching) return
     // limit to 100
     setMaxParentCount(n => Math.min(100, n + PARENT_CHUNK_SIZE))
   }
 
   const onEndReached = () => {
+    // console.log('onEndReached')
     if (isFetching) return
     // prevent any state mutations if we know we're done
     if (hasExhaustedReplies.current) return
@@ -197,12 +207,13 @@ export function Inner({uri}: {uri: string | undefined}) {
       }
     }
 
-    if (totalRepliesCount < maxRepliesCount) {
+    // TODO should really just count these during traversal, can remove isPlaceholder data after that
+    if (maxRepliesCount > totalRepliesCount && !isPlaceholderData) {
       hasExhaustedReplies.current = true
     }
 
     return results
-  }, [data, deferParents, maxParentCount, maxRepliesCount])
+  }, [data, deferParents, maxParentCount, maxRepliesCount, isPlaceholderData])
 
   const renderItem = ({item, index}: {item: ThreadItem; index: number}) => {
     if (item.type === 'threadPost') {
