@@ -161,9 +161,13 @@ export function InitialVerificationAnnouncement() {
               color="primary"
               style={[a.justify_center, a.w_full]}
               onPress={() => {
-                logger.metric('verification:learn-more', {
-                  location: 'initialAnnouncementeNux',
-                })
+                logger.metric(
+                  'verification:learn-more',
+                  {
+                    location: 'initialAnnouncementeNux',
+                  },
+                  {statsig: false},
+                )
               }}>
               <ButtonText>
                 <Trans>Read blog post</Trans>

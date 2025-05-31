@@ -244,6 +244,38 @@ export function ItemRadio({selected}: {selected: boolean}) {
   )
 }
 
+/**
+ * NATIVE ONLY - for adding non-pressable items to the menu
+ *
+ * @platform ios, android
+ */
+export function ContainerItem({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.px_md,
+        a.rounded_md,
+        a.border,
+        t.atoms.bg_contrast_25,
+        t.atoms.border_contrast_low,
+        {paddingVertical: 10},
+        style,
+      ]}>
+      {children}
+    </View>
+  )
+}
+
 export function LabelText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
@@ -272,13 +304,14 @@ export function Group({children, style}: GroupProps) {
         style,
       ]}>
       {flattenReactChildren(children).map((child, i) => {
-        return React.isValidElement(child) && child.type === Item ? (
+        return React.isValidElement(child) &&
+          (child.type === Item || child.type === ContainerItem) ? (
           <React.Fragment key={i}>
             {i > 0 ? (
               <View style={[a.border_b, t.atoms.border_contrast_low]} />
             ) : null}
             {React.cloneElement(child, {
-              // @ts-ignore
+              // @ts-expect-error cloneElement is not aware of the types
               style: {
                 borderRadius: 0,
                 borderWidth: 0,

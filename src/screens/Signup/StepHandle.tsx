@@ -55,7 +55,7 @@ export function StepHandle() {
           value: _(msg`That handle is already taken.`),
           field: 'handle',
         })
-        logger.metric('signup:handleTaken', {})
+        logger.metric('signup:handleTaken', {}, {statsig: true})
         return
       }
     } catch (e) {

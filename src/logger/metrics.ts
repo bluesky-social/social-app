@@ -1,3 +1,4 @@
+import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 
 export type MetricEvents = {
@@ -23,7 +24,9 @@ export type MetricEvents = {
       | 'Takendown'
     scope: 'current' | 'every'
   }
-  'notifications:openApp': {}
+  'notifications:openApp': {
+    reason: NotificationReason
+  }
   'notifications:request': {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
     status: 'granted' | 'denied' | 'undetermined'
@@ -127,6 +130,33 @@ export type MetricEvents = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
+  'feed:save': {
+    feedUrl: string
+  }
+  'feed:unsave': {
+    feedUrl: string
+  }
+  'feed:pin': {
+    feedUrl: string
+  }
+  'feed:unpin': {
+    feedUrl: string
+  }
+  'feed:like': {
+    feedUrl: string
+  }
+  'feed:unlike': {
+    feedUrl: string
+  }
+  'feed:share': {
+    feedUrl: string
+  }
+  'feed:suggestion:seen': {
+    feedUrl: string
+  }
+  'feed:suggestion:press': {
+    feedUrl: string
+  }
   'discover:showMore': {
     feedContext: string
   }
@@ -172,15 +202,19 @@ export type MetricEvents = {
     likerClout: number | undefined
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:repost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:unlike': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:unrepost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:mute': {}
   'post:unmute': {}
@@ -392,4 +426,12 @@ export type MetricEvents = {
   'live:card:openProfile': {subject: string}
   'live:view:profile': {subject: string}
   'live:view:post': {subject: string; feed?: string}
+
+  'share:open': {context: 'feed' | 'thread'}
+  'share:press:copyLink': {}
+  'share:press:nativeShare': {}
+  'share:press:openDmSearch': {}
+  'share:press:dmSelected': {}
+  'share:press:recentDm': {}
+  'share:press:embed': {}
 }
