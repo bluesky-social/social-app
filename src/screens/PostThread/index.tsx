@@ -104,39 +104,40 @@ export function Inner({uri}: {uri: string | undefined}) {
   /**
    * WEB ONLY
    *
-   * Fires any time the content of the list changes. If user switches back to a
-   * sort that was rendered previously, this does NOT fire. Therefore, scroll
-   * is only reset to the anchor on initial render, or fresh data.
+   * Needed after clicking into a post. This handler ensures that once the
+   * parents load in, the anchor post is still at the top of the screen.
    *
    * When this fires, the `List` is scrolled all the way to the top, so
    * measurements taken from `top` correspond to the top of the screen. This
-   * handler scrolls the `List` to the top of the highlighted post, minus any
-   * fixed elements.
+   * handler scrolls the `List` to the top of the highlighted post after
+   * parents are prepended, offset by any fixed elements like the header.
    */
+  const hasScrolledToAnchor = useRef(false)
   const onContentSizeChangeWebOnly = web(() => {
     const anchorElement = anchorRef.current as any as Element
     const headerElement = headerRef.current as any as Element
-    if (anchorElement && headerElement) {
+    if (
+      anchorElement &&
+      headerElement &&
+      !deferParents &&
+      !hasScrolledToAnchor.current
+    ) {
       // distance from top of the list (screen)
       const anchorOffsetTop = anchorElement.getBoundingClientRect().top
       const headerHeight = headerElement.getBoundingClientRect().height
       const scrollPosition = anchorOffsetTop - headerHeight
-      // console.log({
-      //   anchorOffsetTop,
-      //   headerHeight,
-      //   scrollPosition,
-      // })
       /*
        * If scroll position is negative, it means the anchor post is above the
        * top of the screen, meaning the user scrolled the list. In that case,
        * we want to restore the previous scroll position by not scrolling here
        * at all.
        */
-      if (scrollPosition >= 0) {
+      if (scrollPosition >= headerHeight) {
         listRef.current?.scrollToOffset({
           animated: false,
           offset: scrollPosition,
         })
+        hasScrolledToAnchor.current = true
       }
     }
   })
@@ -158,14 +159,12 @@ export function Inner({uri}: {uri: string | undefined}) {
   const hasExhaustedReplies = useRef(false)
 
   const onStartReached = () => {
-    // console.log('onStartReached')
     if (isFetching) return
     // limit to 100
     setMaxParentCount(n => Math.min(100, n + PARENT_CHUNK_SIZE))
   }
 
   const onEndReached = () => {
-    // console.log('onEndReached')
     if (isFetching) return
     // prevent any state mutations if we know we're done
     if (hasExhaustedReplies.current) return
