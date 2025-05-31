@@ -97,29 +97,36 @@ let NotificationFeedItem = ({
   const {_, i18n} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
-    if (item.type === 'post-like' || item.type === 'repost') {
-      if (item.subjectUri) {
-        const urip = new AtUri(item.subjectUri)
-        return `/profile/${urip.host}/post/${urip.rkey}`
+    switch (item.type) {
+      case 'post-like':
+      case 'repost':
+      case 'like-via-repost':
+      case 'repost-via-repost': {
+        if (item.subjectUri) {
+          const urip = new AtUri(item.subjectUri)
+          return `/profile/${urip.host}/post/${urip.rkey}`
+        }
+        break
       }
-    } else if (
-      item.type === 'follow' ||
-      item.type === 'verified' ||
-      item.type === 'unverified'
-    ) {
-      return makeProfileLink(item.notification.author)
-    } else if (item.type === 'reply') {
-      const urip = new AtUri(item.notification.uri)
-      return `/profile/${urip.host}/post/${urip.rkey}`
-    } else if (
-      item.type === 'feedgen-like' ||
-      item.type === 'starterpack-joined'
-    ) {
-      if (item.subjectUri) {
-        const urip = new AtUri(item.subjectUri)
-        return `/profile/${urip.host}/feed/${urip.rkey}`
+      case 'follow':
+      case 'verified':
+      case 'unverified': {
+        return makeProfileLink(item.notification.author)
+      }
+      case 'reply': {
+        const uripReply = new AtUri(item.notification.uri)
+        return `/profile/${uripReply.host}/post/${uripReply.rkey}`
+      }
+      case 'feedgen-like':
+      case 'starterpack-joined': {
+        if (item.subjectUri) {
+          const urip = new AtUri(item.subjectUri)
+          return `/profile/${urip.host}/feed/${urip.rkey}`
+        }
+        break
       }
     }
+
     return ''
   }, [item])
 

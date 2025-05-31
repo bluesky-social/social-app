@@ -242,11 +242,15 @@ let PostMenuItems = ({
         AppBskyFeedPost.isRecord,
       )
     ) {
-      logger.metric('translate', {
-        sourceLanguages: post.record.langs ?? [],
-        targetLanguage: langPrefs.primaryLanguage,
-        textLength: post.record.text.length,
-      })
+      logger.metric(
+        'translate',
+        {
+          sourceLanguages: post.record.langs ?? [],
+          targetLanguage: langPrefs.primaryLanguage,
+          textLength: post.record.text.length,
+        },
+        {statsig: false},
+      )
     }
   }
 

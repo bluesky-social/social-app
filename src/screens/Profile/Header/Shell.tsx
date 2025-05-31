@@ -101,14 +101,22 @@ let ProfileHeaderShell = ({
 
   useEffect(() => {
     if (live.isActive) {
-      logger.metric('live:view:profile', {subject: profile.did})
+      logger.metric(
+        'live:view:profile',
+        {subject: profile.did},
+        {statsig: true},
+      )
     }
   }, [live.isActive, profile.did])
 
   const onPressAvi = React.useCallback(() => {
     if (live.isActive) {
       playHaptic('Light')
-      logger.metric('live:card:open', {subject: profile.did, from: 'profile'})
+      logger.metric(
+        'live:card:open',
+        {subject: profile.did, from: 'profile'},
+        {statsig: true},
+      )
       liveStatusControl.open()
     } else {
       const modui = moderation.ui('avatar')

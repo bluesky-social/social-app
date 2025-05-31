@@ -530,7 +530,11 @@ let PreviewableUserAvatar = ({
 
   const onOpenLiveStatus = useCallback(() => {
     playHaptic('Light')
-    logger.metric('live:card:open', {subject: profile.did, from: 'post'})
+    logger.metric(
+      'live:card:open',
+      {subject: profile.did, from: 'post'},
+      {statsig: true},
+    )
     liveControl.open()
   }, [liveControl, playHaptic, profile.did])
 

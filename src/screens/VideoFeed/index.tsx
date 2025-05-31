@@ -1027,6 +1027,7 @@ function PlayPauseTapArea({
   const [queueLike] = usePostLikeMutationQueue(
     post,
     undefined,
+    undefined,
     'ImmersiveVideo',
   )
   const {sendInteraction} = useFeedFeedbackContext()

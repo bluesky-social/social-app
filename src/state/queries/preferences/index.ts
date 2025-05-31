@@ -416,9 +416,9 @@ export function useSetVerificationPrefsMutation() {
     mutationFn: async prefs => {
       await agent.setVerificationPrefs(prefs)
       if (prefs.hideBadges) {
-        logger.metric('verification:settings:hideBadges', {})
+        logger.metric('verification:settings:hideBadges', {}, {statsig: true})
       } else {
-        logger.metric('verification:settings:unHideBadges', {})
+        logger.metric('verification:settings:unHideBadges', {}, {statsig: true})
       }
       // triggers a refetch
       await queryClient.invalidateQueries({
