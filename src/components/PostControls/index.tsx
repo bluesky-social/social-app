@@ -69,14 +69,17 @@ let PostControls = ({
   const {_, i18n} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {openComposer} = useOpenComposer()
+  const {feedDescriptor} = useFeedFeedbackContext()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(
     post,
     viaRepost,
+    feedDescriptor,
     logContext,
   )
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
     viaRepost,
+    feedDescriptor,
     logContext,
   )
   const requireAuth = useRequireAuth()
