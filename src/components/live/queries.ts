@@ -7,16 +7,42 @@ import {
 import {retry} from '@atproto/common-web'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
-import {type LinkMeta} from '#/lib/link-meta/link-meta'
+import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
+import {useLiveNowConfig} from '#/state/service-config'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {useDialogContext} from '#/components/Dialog'
+
+export function useLiveLinkMetaQuery(url: string | null) {
+  const liveNowConfig = useLiveNowConfig()
+  const {currentAccount} = useSession()
+  const {_} = useLingui()
+
+  const agent = useAgent()
+  return useQuery({
+    enabled: !!url,
+    queryKey: ['link-meta', url],
+    queryFn: async () => {
+      if (!url) return undefined
+      const config = liveNowConfig.find(cfg => cfg.did === currentAccount?.did)
+
+      if (!config) throw new Error(_(msg`You are not allowed to go live`))
+
+      const urlp = new URL(url)
+      if (!config.domains.includes(urlp.hostname)) {
+        throw new Error(_(msg`${urlp.hostname} is not a valid URL`))
+      }
+
+      return await getLinkMeta(agent, url)
+    },
+  })
+}
 
 export function useUpsertLiveStatusMutation(
   duration: number,
@@ -114,9 +140,17 @@ export function useUpsertLiveStatusMutation(
     },
     onSuccess: ({record, image}) => {
       if (createdAt) {
-        logger.metric('live:edit', {duration: record.durationMinutes})
+        logger.metric(
+          'live:edit',
+          {duration: record.durationMinutes},
+          {statsig: true},
+        )
       } else {
-        logger.metric('live:create', {duration: record.durationMinutes})
+        logger.metric(
+          'live:create',
+          {duration: record.durationMinutes},
+          {statsig: true},
+        )
       }
 
       Toast.show(_(msg`You are now live!`))
@@ -173,7 +207,7 @@ export function useRemoveLiveStatusMutation() {
       })
     },
     onSuccess: () => {
-      logger.metric('live:remove', {})
+      logger.metric('live:remove', {}, {statsig: true})
       Toast.show(_(msg`You are no longer live`))
       control.close(() => {
         if (!currentAccount) return

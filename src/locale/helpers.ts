@@ -215,6 +215,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.pl
       case 'pt-BR':
         return AppLanguage.pt_BR
+      case 'pt-PT':
+        return AppLanguage.pt_PT
       case 'ro':
         return AppLanguage.ro
       case 'ru':

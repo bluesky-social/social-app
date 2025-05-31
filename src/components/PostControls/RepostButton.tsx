@@ -1,18 +1,22 @@
-import React, {memo, useCallback} from 'react'
+import {memo, useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {Text} from '#/components/Typography'
-import {formatCount} from '../numeric/format'
+import {
+  PostControlButton,
+  PostControlButtonIcon,
+  PostControlButtonText,
+} from './PostControlButton'
 
 interface Props {
   isReposted: boolean
@@ -35,65 +39,46 @@ let RepostButton = ({
   const {_, i18n} = useLingui()
   const requireAuth = useRequireAuth()
   const dialogControl = Dialog.useDialogControl()
-  const playHaptic = useHaptics()
-  const color = React.useMemo(
-    () => ({
-      color: isReposted ? t.palette.positive_600 : t.palette.contrast_500,
-    }),
-    [t, isReposted],
-  )
+
   return (
     <>
-      <Button
+      <PostControlButton
         testID="repostBtn"
-        onPress={() => {
-          playHaptic('Light')
-          requireAuth(() => dialogControl.open())
-        }}
-        onLongPress={() => {
-          playHaptic('Heavy')
-          requireAuth(() => onQuote())
-        }}
-        style={[
-          a.flex_row,
-          a.align_center,
-          a.gap_xs,
-          a.bg_transparent,
-          {padding: 5},
-        ]}
-        hoverStyle={t.atoms.bg_contrast_25}
+        active={isReposted}
+        activeColor={t.palette.positive_600}
+        big={big}
+        onPress={() => requireAuth(() => dialogControl.open())}
+        onLongPress={() => requireAuth(() => onQuote())}
         label={
           isReposted
             ? _(
-                msg`Undo repost (${plural(repostCount || 0, {
-                  one: '# repost',
-                  other: '# reposts',
-                })})`,
+                msg({
+                  message: `Undo repost (${plural(repostCount || 0, {
+                    one: '# repost',
+                    other: '# reposts',
+                  })})`,
+                  comment:
+                    'Accessibility label for the repost button when the post has been reposted, verb followed by number of reposts and noun',
+                }),
               )
             : _(
-                msg`Repost (${plural(repostCount || 0, {
-                  one: '# repost',
-                  other: '# reposts',
-                })})`,
+                msg({
+                  message: `Repost (${plural(repostCount || 0, {
+                    one: '# repost',
+                    other: '# reposts',
+                  })})`,
+                  comment:
+                    'Accessibility label for the repost button when the post has not been reposted, verb form followed by number of reposts and noun form',
+                }),
               )
-        }
-        shape="round"
-        variant="ghost"
-        color="secondary"
-        hitSlop={POST_CTRL_HITSLOP}>
-        <Repost style={color} width={big ? 22 : 18} />
-        {typeof repostCount !== 'undefined' && repostCount > 0 ? (
-          <Text
-            testID="repostCount"
-            style={[
-              color,
-              big ? a.text_md : {fontSize: 15},
-              isReposted && a.font_bold,
-            ]}>
+        }>
+        <PostControlButtonIcon icon={Repost} />
+        {typeof repostCount !== 'undefined' && repostCount > 0 && (
+          <PostControlButtonText testID="repostCount">
             {formatCount(i18n, repostCount)}
-          </Text>
-        ) : undefined}
-      </Button>
+          </PostControlButtonText>
+        )}
+      </PostControlButton>
       <Dialog.Outer
         control={dialogControl}
         nativeOptions={{preventExpansion: true}}>
