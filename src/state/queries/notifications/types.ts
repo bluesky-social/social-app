@@ -46,6 +46,8 @@ type OtherNotificationType =
   | 'feedgen-like'
   | 'verified'
   | 'unverified'
+  | 'like-via-repost'
+  | 'repost-via-repost'
   | 'unknown'
 
 type FeedNotificationBase = {

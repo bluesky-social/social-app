@@ -22,7 +22,13 @@ import {
   type NotificationType,
 } from './types'
 
-const GROUPABLE_REASONS = ['like', 'repost', 'follow']
+const GROUPABLE_REASONS = [
+  'like',
+  'repost',
+  'follow',
+  'like-via-repost',
+  'repost-via-repost',
+]
 const MS_1HR = 1e3 * 60 * 60
 const MS_2DAY = MS_1HR * 48
 
@@ -244,7 +250,9 @@ function toKnownType(
     notif.reason === 'follow' ||
     notif.reason === 'starterpack-joined' ||
     notif.reason === 'verified' ||
-    notif.reason === 'unverified'
+    notif.reason === 'unverified' ||
+    notif.reason === 'like-via-repost' ||
+    notif.reason === 'repost-via-repost'
   ) {
     return notif.reason as NotificationType
   }
@@ -257,7 +265,12 @@ function getSubjectUri(
 ): string | undefined {
   if (type === 'reply' || type === 'quote' || type === 'mention') {
     return notif.uri
-  } else if (type === 'post-like' || type === 'repost') {
+  } else if (
+    type === 'post-like' ||
+    type === 'repost' ||
+    type === 'like-via-repost' ||
+    type === 'repost-via-repost'
+  ) {
     if (
       bsky.dangerousIsType<AppBskyFeedRepost.Record>(
         notif.record,

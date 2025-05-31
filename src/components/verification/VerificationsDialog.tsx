@@ -153,9 +153,13 @@ function Inner({
           color="secondary"
           style={[a.justify_center]}
           onPress={() => {
-            logger.metric('verification:learn-more', {
-              location: 'verificationsDialog',
-            })
+            logger.metric(
+              'verification:learn-more',
+              {
+                location: 'verificationsDialog',
+              },
+              {statsig: true},
+            )
           }}>
           <ButtonText>
             <Trans>Learn more</Trans>

@@ -5,25 +5,29 @@ import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   AtUri,
-  ModerationOpts,
+  type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {HITSLOP_20} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {makeProfileLink, makeStarterPackLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
@@ -46,7 +50,8 @@ import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
@@ -600,13 +605,24 @@ function OverflowMenu({
             <>
               <Menu.Group>
                 <Menu.Item
-                  label={_(msg`Share`)}
+                  label={
+                    isWeb
+                      ? _(msg`Copy link to starter pack`)
+                      : _(msg`Share via...`)
+                  }
                   testID="shareStarterPackLinkBtn"
                   onPress={onOpenShareDialog}>
                   <Menu.ItemText>
-                    <Trans>Share link</Trans>
+                    {isWeb ? (
+                      <Trans>Copy link</Trans>
+                    ) : (
+                      <Trans>Share via...</Trans>
+                    )}
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
+                  <Menu.ItemIcon
+                    icon={isWeb ? ChainLinkIcon : ArrowOutOfBoxIcon}
+                    position="right"
+                  />
                 </Menu.Item>
               </Menu.Group>
 

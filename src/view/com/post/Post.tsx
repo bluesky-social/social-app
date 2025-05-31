@@ -27,21 +27,21 @@ import {
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {Link, TextLink} from '#/view/com/util/Link'
+import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
+import {PostMeta} from '#/view/com/util/PostMeta'
+import {Text} from '#/view/com/util/text/Text'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {UserInfoText} from '#/view/com/util/UserInfoText'
 import {atoms as a} from '#/alf'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {PostControls} from '#/components/PostControls'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
-import {ContentHider} from '../../../components/moderation/ContentHider'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {Link, TextLink} from '../util/Link'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds, PostEmbedViewContext} from '../util/post-embeds'
-import {PostMeta} from '../util/PostMeta'
-import {Text} from '../util/text/Text'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserInfoText} from '../util/UserInfoText'
 
 export function Post({
   post,
@@ -255,7 +255,7 @@ function PostInner({
               />
             ) : null}
           </ContentHider>
-          <PostCtrls
+          <PostControls
             post={post}
             record={record}
             richText={richText}
