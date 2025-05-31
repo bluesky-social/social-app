@@ -38,7 +38,7 @@ export function usePostThread({
   const query = useQuery({
     enabled,
     queryKey,
-    gcTime: 0,
+    // gcTime: 0, // TODO faster if we let it cache
     async queryFn(ctx) {
       const {data} = await wait(
         400,
