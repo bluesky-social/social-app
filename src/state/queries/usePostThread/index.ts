@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
@@ -39,7 +39,7 @@ export function usePostThread({
     enabled,
     queryKey,
     gcTime: 0,
-    async queryFn() {
+    async queryFn(ctx) {
       const {data} = await wait(
         400,
         agent.app.bsky.unspecced.getPostThreadV2({
@@ -50,22 +50,37 @@ export function usePostThread({
           prioritizeFollowedUsers: params.prioritizeFollowedUsers,
         }),
       )
-      return data
-    },
-    placeholderData() {
-      if (!params.anchor) return
 
-      const placeholder = getThreadPlaceholder(qc, params.anchor)
-
-      if (placeholder) {
-        return {thread: [placeholder], hasHiddenReplies: false}
+      /*
+       * Initialize `ctx.meta` to track if there are hidden replies in any of
+       * the fetched pages of results.
+       */
+      ctx.meta = ctx.meta || {
+        hasHiddenReplies: false,
       }
 
       /*
-       * Return empty data here so that `isPlaceholderData` is always true,
-       * which we'll use to insert skeletons.
+       * If we ever see hidden replies, we'll set this to true.
        */
-      return {thread: [], hasHiddenReplies: false}
+      if (data.hasHiddenReplies) {
+        ctx.meta.hasHiddenReplies = true
+      }
+
+      return {
+        ...data,
+        hasHiddenReplies: !!ctx.meta.hasHiddenReplies,
+      }
+    },
+    placeholderData() {
+      if (!params.anchor) return
+      const placeholder = getThreadPlaceholder(qc, params.anchor)
+      /*
+       * Always return something here, even empty data, so that
+       * `isPlaceholderData` is always true, which we'll use to insert
+       * skeletons.
+       */
+      const thread = placeholder ? [placeholder] : []
+      return {thread, threadgate: undefined, hasHiddenReplies: false}
     },
     select(data) {
       const threadgate = getThreadgateRecord(data.threadgate)
@@ -79,15 +94,19 @@ export function usePostThread({
     },
   })
 
-  const hasHiddenReplies = useRef(false)
-  if (query?.data?.hasHiddenReplies) {
-    hasHiddenReplies.current = true
-  }
-
+  const hasHiddenReplies = !!query.data?.hasHiddenReplies
   const [showHiddenReplies, setShowHiddenReplies] = useState(false)
   const [hiddenReplies, setHiddenReplies] = useState<ThreadItem[]>([])
+
+  /**
+   * Loads hidden replies for this thread. Any replies that are moderated from
+   * the initial visible response(s) are shown immediately. Remote data is
+   * fetched and inserted when it's available.
+   */
   const loadHiddenReplies = useCallback(async () => {
+    // immediately show any moderated replies already in memory
     setShowHiddenReplies(true)
+    // add skeletons for the replies that will be loaded
     setHiddenReplies(
       Array.from({length: 2}).map((_, i) => ({
         type: 'skeleton',
@@ -95,10 +114,12 @@ export function usePostThread({
         item: 'reply',
       })),
     )
+
     const queryParams = {
       anchor: params.anchor!,
       prioritizeFollowedUsers: params.prioritizeFollowedUsers,
     }
+
     const data = await wait(
       400,
       qc.fetchQuery({
@@ -111,6 +132,7 @@ export function usePostThread({
         },
       }),
     )
+
     const items = traverse(data || [], {
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(
         query.data?.threadgate?.record,
@@ -118,11 +140,13 @@ export function usePostThread({
       moderationOpts: moderationOpts!,
       hasSession,
       view: params.view,
-      hasHiddenReplies: hasHiddenReplies.current,
+      hasHiddenReplies,
       showHiddenReplies,
       skipHiddenReplyHandling: true,
       loadHiddenReplies,
     })
+
+    // insert the hidden replies into the state
     setHiddenReplies(items)
   }, [
     agent,
@@ -132,6 +156,7 @@ export function usePostThread({
     moderationOpts,
     qc,
     query.data?.threadgate?.record,
+    hasHiddenReplies,
     showHiddenReplies,
     setShowHiddenReplies,
   ])
@@ -144,7 +169,7 @@ export function usePostThread({
       moderationOpts: moderationOpts!,
       hasSession,
       view: params.view,
-      hasHiddenReplies: hasHiddenReplies.current,
+      hasHiddenReplies,
       showHiddenReplies,
       loadHiddenReplies,
     })
@@ -156,6 +181,7 @@ export function usePostThread({
     moderationOpts,
     hasSession,
     params.view,
+    hasHiddenReplies,
     showHiddenReplies,
     loadHiddenReplies,
     hiddenReplies,
@@ -210,7 +236,6 @@ export function usePostThread({
         items,
         threadgate: query.data?.threadgate,
       },
-      hasHiddenReplies: hasHiddenReplies.current,
       showHiddenReplies,
       insertReplies: mutator.insertReplies,
     }),
