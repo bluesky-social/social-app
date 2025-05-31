@@ -1,18 +1,19 @@
 import React from 'react'
-import {ImageStyle, useWindowDimensions, View} from 'react-native'
+import {type ImageStyle, useWindowDimensions, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid, isWeb} from '#/platform/detection'
-import {ComposerImage} from '#/state/gallery'
+import {type ComposerImage} from '#/state/gallery'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text} from '#/components/Typography'
@@ -28,6 +29,7 @@ export const ImageAltTextDialog = ({
   image,
   onChange,
 }: Props): React.ReactNode => {
+  const {height: minHeight} = useWindowDimensions()
   const [altText, setAltText] = React.useState(image.alt)
 
   return (
@@ -38,7 +40,8 @@ export const ImageAltTextDialog = ({
           ...image,
           alt: enforceLen(altText, MAX_ALT_TEXT, true),
         })
-      }}>
+      }}
+      nativeOptions={{minHeight}}>
       <Dialog.Handle />
       <ImageAltTextInner
         control={control}
@@ -64,6 +67,8 @@ const ImageAltTextInner = ({
   const {_, i18n} = useLingui()
   const t = useTheme()
   const windim = useWindowDimensions()
+
+  const [isKeyboardVisible] = useIsKeyboardVisible()
 
   const imageStyle = React.useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
@@ -166,7 +171,7 @@ const ImageAltTextInner = ({
         </AltTextCounterWrapper>
       </View>
       {/* Maybe fix this later -h */}
-      {isAndroid ? <View style={{height: 300}} /> : null}
+      {isAndroid && isKeyboardVisible ? <View style={{height: 300}} /> : null}
     </Dialog.ScrollableInner>
   )
 }
