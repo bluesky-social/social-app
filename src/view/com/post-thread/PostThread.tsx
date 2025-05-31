@@ -326,8 +326,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
     return arr
   }, [skeleton, deferParents, maxParents, maxReplies])
 
-  console.log({anchorIndex: posts.findIndex(p => p.ctx?.isHighlightedPost)})
-
   // This is only used on the web to keep the post in view when its parents load.
   // On native, we rely on `maintainVisibleContentPosition` instead.
   const didAdjustScrollWeb = useRef<boolean>(false)
@@ -422,8 +420,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
       Boolean(skeleton?.parents && skeleton.parents.length > 0))
-
-  console.log({hasParents})
 
   const renderItem = ({item, index}: {item: RowItem; index: number}) => {
     if (item === REPLY_PROMPT && hasSession) {

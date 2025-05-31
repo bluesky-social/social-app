@@ -1,11 +1,15 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
-  type AppBskyUnspeccedGetPostThreadV2,
   type AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadHiddenV2,
+  type AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
 } from '@atproto/api'
+
+export type ApiThreadItem =
+  | AppBskyUnspeccedGetPostThreadV2.ThreadItem
+  | AppBskyUnspeccedGetPostThreadHiddenV2.ThreadHiddenItem
 
 export const postThreadQueryKeyRoot = 'getPostThreadV2' as const
 export const postThreadHiddenQueryKeyRoot = 'getPostThreadHiddenV2' as const
