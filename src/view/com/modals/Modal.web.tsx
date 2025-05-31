@@ -12,7 +12,6 @@ import * as DeleteAccountModal from './DeleteAccount'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
-import * as LinkWarningModal from './LinkWarning'
 import * as UserAddRemoveLists from './UserAddRemoveLists'
 
 export function ModalsContainer() {
@@ -65,8 +64,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <PostLanguagesSettingsModal.Component />
   } else if (modal.name === 'change-password') {
     element = <ChangePasswordModal.Component />
-  } else if (modal.name === 'link-warning') {
-    element = <LinkWarningModal.Component {...modal} />
   } else {
     return null
   }

@@ -1,20 +1,20 @@
-import React, {ComponentProps, memo, useMemo} from 'react'
+import React, {type ComponentProps, memo, useMemo} from 'react'
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Platform,
   Pressable,
-  StyleProp,
-  TextProps,
-  TextStyle,
-  TouchableOpacity,
+  type StyleProp,
+  type TextProps,
+  type TextStyle,
+  type TouchableOpacity,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {
-  DebouncedNavigationProp,
+  type DebouncedNavigationProp,
   useNavigationDeduped,
 } from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
@@ -24,12 +24,13 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {TypographyVariant} from '#/lib/ThemeContext'
+import {type TypographyVariant} from '#/lib/ThemeContext'
 import {isAndroid, isWeb} from '#/platform/detection'
 import {emitSoftReset} from '#/state/events'
 import {useModalControls} from '#/state/modals'
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
 import {useTheme} from '#/alf'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {router} from '../../../routes'
 import {PressableWithHover} from './PressableWithHover'
 import {Text} from './text/Text'
@@ -189,7 +190,8 @@ export const TextLink = memo(function TextLink({
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const navigation = useNavigationDeduped()
-  const {openModal, closeModal} = useModalControls()
+  const {closeModal} = useModalControls()
+  const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
 
   if (!disableMismatchWarning && typeof text !== 'string') {
@@ -208,9 +210,8 @@ export const TextLink = memo(function TextLink({
         linkRequiresWarning(href, typeof text === 'string' ? text : '')
       if (requiresWarning) {
         e?.preventDefault?.()
-        openModal({
-          name: 'link-warning',
-          text: typeof text === 'string' ? text : '',
+        linkWarningDialogControl.open({
+          displayText: typeof text === 'string' ? text : '',
           href,
         })
       }
@@ -242,13 +243,13 @@ export const TextLink = memo(function TextLink({
       onBeforePress,
       onPress,
       closeModal,
-      openModal,
       navigation,
       href,
       text,
       disableMismatchWarning,
       navigationAction,
       openLink,
+      linkWarningDialogControl,
     ],
   )
   const hrefAttrs = useMemo(() => {
