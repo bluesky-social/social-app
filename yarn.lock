@@ -3493,6 +3493,13 @@
     "@expo/config-plugins" "^9.0.14"
     fast-json-stringify "^6.0.0"
 
+"@bottom-tabs/react-navigation@0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@bottom-tabs/react-navigation/-/react-navigation-0.6.0.tgz#119517b6f2a8045b2e2c44291dcef157c95d0108"
+  integrity sha512-BiHjD9/TGy+mFB68imvxzM8G5UFRZA1kY9ELpxA0116i3TWR5TrzH+bgVHHCM7ovh9anvGc3Ht4YPItxmEDtgQ==
+  dependencies:
+    color "^4.2.3"
+
 "@braintree/sanitize-url@^6.0.2":
   version "6.0.4"
   resolved "https://registry.yarnpkg.com/@braintree/sanitize-url/-/sanitize-url-6.0.4.tgz#923ca57e173c6b232bbbb07347b1be982f03e783"
@@ -16806,6 +16813,15 @@ react-keyed-flatten-children@^5.0.0:
   resolved "https://registry.yarnpkg.com/react-keyed-flatten-children/-/react-keyed-flatten-children-5.0.0.tgz#3024fc8819f7b60fc5039b527f133d9ac3a02a82"
   integrity sha512-XA5ah02sZAeDrbz4Lusd4acqG5q5BtVwPHWierruVhrgX6CMCldbGcTZZM14cQZ+GWq+tzRzEpsCvnTtLODvjw==
 
+react-native-bottom-tabs@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/react-native-bottom-tabs/-/react-native-bottom-tabs-0.9.1.tgz#2937c07e7deb88bf2144aca789cb08bf05d0bb7d"
+  integrity sha512-qIqlQZ13O/iN5QEeD1Eup2YcS3kQLm/iLjSsms2yjxCcv9t0Vn6GumwghXXdigTO57IpVC5lr8ceUhz6OPKiOA==
+  dependencies:
+    react-freeze "^1.0.0"
+    sf-symbols-typescript "^2.0.0"
+    use-latest-callback "^0.2.1"
+
 react-native-compressor@^1.11.0:
   version "1.11.0"
   resolved "https://registry.yarnpkg.com/react-native-compressor/-/react-native-compressor-1.11.0.tgz#e297fa650b09cc754392153c38ae2ca510aee024"
@@ -17965,6 +17981,11 @@ sf-symbols-typescript@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/sf-symbols-typescript/-/sf-symbols-typescript-1.0.0.tgz#94e9210bf27e7583f9749a0d07bd4f4937ea488f"
   integrity sha512-DkS7q3nN68dEMb4E18HFPDAvyrjDZK9YAQQF2QxeFu9gp2xRDXFMF8qLJ1EmQ/qeEGQmop4lmMM1WtYJTIcCMw==
+
+sf-symbols-typescript@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/sf-symbols-typescript/-/sf-symbols-typescript-2.1.0.tgz#50a2d7b36edd6809606f0b0a36322fc1fdd7cfde"
+  integrity sha512-ezT7gu/SHTPIOEEoG6TF+O0m5eewl0ZDAO4AtdBi5HjsrUI6JdCG17+Q8+aKp0heM06wZKApRCn5olNbs0Wb/A==
 
 shallow-equal@^3.1.0:
   version "3.1.0"
@@ -19453,7 +19474,7 @@ use-isomorphic-layout-effect@^1.1.1:
   resolved "https://registry.yarnpkg.com/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.2.tgz#497cefb13d863d687b08477d9e5a164ad8c1a6fb"
   integrity sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==
 
-use-latest-callback@^0.2.3:
+use-latest-callback@^0.2.1, use-latest-callback@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/use-latest-callback/-/use-latest-callback-0.2.3.tgz#2d644d3063040b9bc2d4c55bb525a13ae3de9e16"
   integrity sha512-7vI3fBuyRcP91pazVboc4qu+6ZqM8izPWX9k7cRnT8hbD5svslcknsh3S9BUhaK11OmgTV4oWZZVSeQAiV53SQ==

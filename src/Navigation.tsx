@@ -3,10 +3,7 @@ import {Linking} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
-import {
-  type BottomTabBarProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs'
+import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -30,7 +27,6 @@ import {logger as notyLogger} from '#/lib/notifications/util'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
-  type BottomTabNavigatorParams,
   type FlatNavigatorParams,
   type HomeTabNavigatorParams,
   type MessagesTabNavigatorParams,
@@ -134,6 +130,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {Tab} from './BottomBarNavigator'
 import {useAccountSwitcher} from './lib/hooks/useAccountSwitcher'
 import {useNonReactiveCallback} from './lib/hooks/useNonReactiveCallback'
 import {useLoggedOutViewControls} from './state/shell/logged-out'
@@ -150,7 +147,6 @@ const MyProfileTab =
 const MessagesTab =
   createNativeStackNavigatorWithAuth<MessagesTabNavigatorParams>()
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
-const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
 /**
  * These "common screens" are reused across stacks.
