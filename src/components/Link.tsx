@@ -255,7 +255,7 @@ export function Link({
       {...web({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener noreferrer' : undefined,
+          rel: isExternal ? 'noopener' : undefined,
           download,
         },
         dataSet: {
@@ -345,7 +345,7 @@ export function InlineLinkText({
       {...web({
         hrefAttrs: {
           target: download ? undefined : isExternal ? 'blank' : undefined,
-          rel: isExternal ? 'noopener noreferrer' : undefined,
+          rel: isExternal ? 'noopener' : undefined,
           download,
         },
         dataSet: {
