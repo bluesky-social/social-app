@@ -25,7 +25,7 @@ export function traverse(
     moderationOpts,
     hasSession,
     view,
-    hasHiddenReplies,
+    hasServerHiddenReplies,
     hiddenRepliesVisible,
     skipHiddenReplyHandling,
     loadHiddenReplies,
@@ -34,7 +34,7 @@ export function traverse(
     moderationOpts: ModerationOpts
     hasSession: boolean
     view: PostThreadParams['view']
-    hasHiddenReplies: boolean
+    hasServerHiddenReplies: boolean
     hiddenRepliesVisible: boolean
     skipHiddenReplyHandling?: boolean
     loadHiddenReplies: () => Promise<void>
@@ -240,7 +240,7 @@ export function traverse(
   }
 
   if (!skipHiddenReplyHandling) {
-    if (hidden.length || hasHiddenReplies) {
+    if (hidden.length || hasServerHiddenReplies) {
       if (hiddenRepliesVisible) {
         items.push(...hidden)
       } else {

@@ -100,9 +100,11 @@ export function usePostThread({anchor}: {anchor?: string}) {
     },
   })
 
-  const hasHiddenReplies = !!query.data?.hasHiddenReplies
+  const hasServerHiddenReplies = !!query.data?.hasHiddenReplies
   const [hiddenRepliesVisible, setHiddenRepliesVisible] = useState(false)
-  const [hiddenItems, setHiddenItems] = useState<ThreadItem[]>([])
+  const [additionalHiddenItems, setAdditionalHiddenItems] = useState<
+    ThreadItem[]
+  >([])
 
   /**
    * Loads hidden replies for this thread. Any replies that are moderated from
@@ -110,10 +112,18 @@ export function usePostThread({anchor}: {anchor?: string}) {
    * fetched and inserted when it's available.
    */
   const loadHiddenReplies = useCallback(async () => {
-    // immediately show any moderated replies already in memory
+    /*
+     * Show any moderated replies already in memory that were handled here on
+     * the client. If there are server-hidden replies, we'll fetch those next.
+     */
     setHiddenRepliesVisible(true)
-    // add skeletons for the replies that will be loaded
-    setHiddenItems(
+
+    /*
+     * If there are no server hidden replies, just stop here.
+     */
+    if (!hasServerHiddenReplies) return
+
+    setAdditionalHiddenItems(
       Array.from({length: 2}).map((_, i) => ({
         type: 'skeleton',
         key: `${anchor!}-reply-${i}`,
@@ -121,18 +131,17 @@ export function usePostThread({anchor}: {anchor?: string}) {
       })),
     )
 
-    const queryParams = {
+    const params = {
       anchor: anchor!,
-      prioritizeFollowedUsers: prioritizeFollowedUsers,
+      prioritizeFollowedUsers,
     }
-
     const data = await wait(
       400,
       qc.fetchQuery({
-        queryKey: createPostThreadHiddenQueryKey(queryParams),
+        queryKey: createPostThreadHiddenQueryKey(params),
         async queryFn() {
           const {data} = await agent.app.bsky.unspecced.getPostThreadHiddenV2(
-            queryParams,
+            params,
           )
           return data.thread || []
         },
@@ -146,14 +155,14 @@ export function usePostThread({anchor}: {anchor?: string}) {
       moderationOpts: moderationOpts!,
       hasSession,
       view,
-      hasHiddenReplies,
+      hasServerHiddenReplies,
       hiddenRepliesVisible,
       skipHiddenReplyHandling: true,
       loadHiddenReplies,
     })
 
     // insert the hidden replies into the state
-    setHiddenItems(items)
+    setAdditionalHiddenItems(items)
   }, [
     agent,
     view,
@@ -164,7 +173,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     moderationOpts,
     qc,
     query.data?.threadgate?.record,
-    hasHiddenReplies,
+    hasServerHiddenReplies,
     hiddenRepliesVisible,
     setHiddenRepliesVisible,
   ])
@@ -177,22 +186,22 @@ export function usePostThread({anchor}: {anchor?: string}) {
       moderationOpts: moderationOpts!,
       hasSession,
       view: view,
-      hasHiddenReplies,
+      hasServerHiddenReplies,
       hiddenRepliesVisible,
       loadHiddenReplies,
     })
 
-    return results.concat(hiddenItems)
+    return results.concat(additionalHiddenItems)
   }, [
     query.data,
     mergeThreadgateHiddenReplies,
     moderationOpts,
     hasSession,
     view,
-    hasHiddenReplies,
+    hasServerHiddenReplies,
     hiddenRepliesVisible,
     loadHiddenReplies,
-    hiddenItems,
+    additionalHiddenItems,
   ])
 
   if (query.isPlaceholderData) {
