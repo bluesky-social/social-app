@@ -12,8 +12,7 @@ export type ApiThreadItem =
   | AppBskyUnspeccedGetPostThreadV2.ThreadItem
   | AppBskyUnspeccedGetPostThreadHiddenV2.ThreadHiddenItem
 
-export const postThreadQueryKeyRoot = 'getPostThreadV2' as const
-export const postThreadHiddenQueryKeyRoot = 'getPostThreadHiddenV2' as const
+export const postThreadQueryKeyRoot = 'post-thread-v2' as const
 
 export const createPostThreadQueryKey = (props: PostThreadParams) =>
   [postThreadQueryKeyRoot, props] as const
@@ -22,7 +21,7 @@ export const createPostThreadHiddenQueryKey = (
   props: Omit<AppBskyUnspeccedGetPostThreadHiddenV2.QueryParams, 'anchor'> & {
     anchor?: string
   },
-) => [postThreadHiddenQueryKeyRoot, props] as const
+) => [postThreadQueryKeyRoot, 'hidden', props] as const
 
 export type PostThreadParams = Pick<
   AppBskyUnspeccedGetPostThreadV2.QueryParams,
