@@ -115,6 +115,20 @@ export function readMore({
   }
 }
 
+export function skeleton({
+  key,
+  item,
+}: Omit<Extract<ThreadItem, {type: 'skeleton'}>, 'type'>): Extract<
+  ThreadItem,
+  {type: 'skeleton'}
+> {
+  return {
+    type: 'skeleton',
+    key,
+    item,
+  }
+}
+
 export function postViewToThreadPlaceholder(
   post: AppBskyFeedDefs.PostView,
 ): $Typed<
