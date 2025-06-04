@@ -1,6 +1,7 @@
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
+  type AppBskyFeedThreadgate,
   type AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadHiddenV2,
   type AppBskyUnspeccedGetPostThreadV2,
@@ -27,6 +28,14 @@ export type PostThreadParams = Pick<
 > & {
   anchor?: string
   view: 'tree' | 'linear'
+}
+
+export type UsePostThreadQueryResult = {
+  hasHiddenReplies: boolean
+  thread: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
+  threadgate?: Omit<AppBskyFeedDefs.ThreadgateView, 'record'> & {
+    record: AppBskyFeedThreadgate.Record
+  }
 }
 
 export type ThreadItem =

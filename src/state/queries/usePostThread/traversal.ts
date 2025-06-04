@@ -1,8 +1,4 @@
-import {
-  AppBskyUnspeccedDefs,
-  type ModerationDecision,
-  type ModerationOpts,
-} from '@atproto/api'
+import {AppBskyUnspeccedDefs, type ModerationOpts} from '@atproto/api'
 
 import {
   type ApiThreadItem,
@@ -376,14 +372,14 @@ export function combine(
   {items, hidden}: {items: ThreadItem[]; hidden: ThreadItem[]},
   {
     hasSession,
-    hiddenRepliesVisible,
-    hasServerHiddenReplies,
-    loadHiddenReplies,
+    hiddenItemsVisible,
+    hasServerHiddenItems,
+    loadServerHiddenItems,
   }: {
     hasSession: boolean
-    hiddenRepliesVisible: boolean
-    hasServerHiddenReplies: boolean
-    loadHiddenReplies: () => Promise<void>
+    hiddenItemsVisible: boolean
+    hasServerHiddenItems: boolean
+    loadServerHiddenItems: () => Promise<void>
   },
 ) {
   for (let i = 0; i < items.length; i++) {
@@ -402,14 +398,14 @@ export function combine(
     }
   }
 
-  if (hidden.length || hasServerHiddenReplies) {
-    if (hiddenRepliesVisible) {
+  if (hidden.length || hasServerHiddenItems) {
+    if (hiddenItemsVisible) {
       return items.concat(hidden)
     } else {
       return items.concat({
         type: 'showHiddenReplies',
         key: 'showHiddenReplies',
-        onLoad: loadHiddenReplies,
+        onLoad: loadServerHiddenItems,
       })
     }
   }
@@ -454,16 +450,5 @@ export function getBranch(
     start: branchStartIndex,
     end,
     length: end - branchStartIndex,
-  }
-}
-
-export function getModerationState(moderation: ModerationDecision) {
-  const modui = moderation.ui('contentList')
-  const blurred = modui.blur || modui.filter
-  const muted = (modui.blurs[0] || modui.filters[0])?.type === 'muted'
-  return {
-    blurred,
-    muted,
-    modui,
   }
 }
