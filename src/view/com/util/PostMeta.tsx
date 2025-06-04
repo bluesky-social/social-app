@@ -61,7 +61,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   return (
     <View
       style={[
-        a.flex_1,
+        isAndroid ? a.flex_1 : a.flex_shrink,
         a.flex_row,
         a.align_center,
         a.pb_xs,

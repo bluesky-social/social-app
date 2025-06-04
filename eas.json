@@ -86,6 +86,12 @@
       "env": {
         "EXPO_PUBLIC_ENV": "testflight"
       }
+    },
+    "sideload-android": {
+      "extends": "production",
+      "android": {
+        "buildType": "apk"
+      }
     }
   },
   "submit": {

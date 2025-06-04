@@ -1,11 +1,12 @@
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {Shadow} from '#/state/cache/types'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {type Shadow} from '#/state/cache/types'
+import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 
 export function ProfileHeaderDisplayName({
   profile,
@@ -18,7 +19,7 @@ export function ProfileHeaderDisplayName({
   const {gtMobile} = useBreakpoints()
 
   return (
-    <View pointerEvents="none">
+    <View>
       <Text
         emoji
         testID="profileHeaderDisplayName"
@@ -32,6 +33,15 @@ export function ProfileHeaderDisplayName({
           profile.displayName || sanitizeHandle(profile.handle),
           moderation.ui('displayName'),
         )}
+        <View
+          style={[
+            a.pl_xs,
+            {
+              marginTop: platform({ios: 2}),
+            },
+          ]}>
+          <VerificationCheckButton profile={profile} size="lg" />
+        </View>
       </Text>
     </View>
   )

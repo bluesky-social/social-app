@@ -388,8 +388,10 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
   let isCurrent =
     currentRouteInfo.name === 'Profile'
       ? isTab(currentRouteInfo.name, pathName) &&
-        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
-          currentAccount?.handle
+        ((currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+          currentAccount?.handle ||
+          (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+            currentAccount?.did)
       : isTab(currentRouteInfo.name, pathName)
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(

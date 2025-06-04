@@ -5,12 +5,16 @@ import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
 import {atoms as a, native} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
 import * as DateField from '#/components/forms/DateField'
 import {type DateFieldRef} from '#/components/forms/DateField/types'
 import {FormError} from '#/components/forms/FormError'
@@ -19,8 +23,9 @@ import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {usePreemptivelyCompleteActivePolicyUpdate} from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
+import {Text} from '#/components/Typography'
 import {BackNextButtons} from '../BackNextButtons'
 
 function sanitizeDate(date: Date): Date {
@@ -35,19 +40,19 @@ function sanitizeDate(date: Date): Date {
 
 export function StepInfo({
   onPressBack,
+  onPressSignIn,
   isServerError,
   refetchServer,
   isLoadingStarterPack,
 }: {
   onPressBack: () => void
+  onPressSignIn: () => void
   isServerError: boolean
   refetchServer: () => void
   isLoadingStarterPack: boolean
 }) {
   const {_} = useLingui()
   const {state, dispatch} = useSignupContext()
-  const preemptivelyCompleteActivePolicyUpdate =
-    usePreemptivelyCompleteActivePolicyUpdate()
 
   const inviteCodeValueRef = useRef<string>(state.inviteCode)
   const emailValueRef = useRef<string>(state.email)
@@ -79,6 +84,15 @@ export function StepInfo({
 
     if (!is13(state.dateOfBirth)) {
       return
+    }
+
+    if (state.serviceUrl === DEFAULT_SERVICE) {
+      return dispatch({
+        type: 'setError',
+        value: _(
+          msg`Please choose a 3rd party service host, or sign up on bsky.app.`,
+        ),
+      })
     }
 
     if (state.serviceDescription?.inviteCodeRequired && !inviteCode) {
@@ -132,7 +146,6 @@ export function StepInfo({
       })
     }
 
-    preemptivelyCompleteActivePolicyUpdate()
     dispatch({type: 'setInviteCode', value: inviteCode})
     dispatch({type: 'setEmail', value: email})
     dispatch({type: 'setPassword', value: password})
@@ -148,18 +161,72 @@ export function StepInfo({
 
   return (
     <ScreenTransition>
-      <View style={[a.gap_md, a.pt_lg]}>
+      <View style={[a.gap_md]}>
+        {state.serviceUrl === DEFAULT_SERVICE && (
+          <View style={[a.gap_xl]}>
+            <Text style={[a.gap_md, a.leading_normal]}>
+              <Trans>
+                blacksky.community is part of the{' '}
+                {
+                  <InlineLinkText
+                    label={_(msg`ATmosphere`)}
+                    to="https://atproto.com/">
+                    <Trans>ATmosphere</Trans>
+                  </InlineLinkText>
+                }
+                —the network of apps, services, and accounts built on the AT
+                Protocol.
+              </Trans>
+            </Text>
+            <Text style={[a.gap_md, a.leading_normal]}>
+              <Trans>
+                If you have one, sign in with an existing Bluesky account.
+              </Trans>
+            </Text>
+            <View style={isWeb && [a.flex_row, a.justify_center]}>
+              <Button
+                testID="signInButton"
+                onPress={onPressSignIn}
+                label={_(msg`Sign in with ATmosphere`)}
+                accessibilityHint={_(
+                  msg`Opens flow to sign in to your existing ATmosphere account`,
+                )}
+                size="large"
+                variant="solid"
+                color="primary">
+                <ButtonText>
+                  <Trans>Sign in with ATmosphere</Trans>
+                </ButtonText>
+              </Button>
+            </View>
+            <Divider style={[a.mb_xl]} />
+          </View>
+        )}
         <FormError error={state.error} />
         <HostingProvider
-          minimal
           serviceUrl={state.serviceUrl}
           onSelectServiceUrl={v => dispatch({type: 'setServiceUrl', value: v})}
         />
+        {state.serviceUrl === DEFAULT_SERVICE && (
+          <Text style={[a.gap_md, a.leading_normal, a.mt_md]}>
+            <Trans>
+              Don't have an account provider or an existing Bluesky account? To
+              create a new account on a Bluesky-hosted PDS, sign up through{' '}
+              {
+                <InlineLinkText label={_(msg`bsky.app`)} to="https://bsky.app">
+                  <Trans>bsky.app</Trans>
+                </InlineLinkText>
+              }{' '}
+              first, then return to blacksky.community and log in with the
+              account you created.
+            </Trans>
+          </Text>
+        )}
         {state.isLoading || isLoadingStarterPack ? (
           <View style={[a.align_center]}>
             <Loader size="xl" />
           </View>
-        ) : state.serviceDescription ? (
+        ) : state.serviceDescription && state.serviceUrl !== DEFAULT_SERVICE ? (
           <>
             {state.serviceDescription.inviteCodeRequired && (
               <View>
@@ -284,7 +351,9 @@ export function StepInfo({
         ) : undefined}
       </View>
       <BackNextButtons
-        hideNext={!is13(state.dateOfBirth)}
+        hideNext={
+          !is13(state.dateOfBirth) || state.serviceUrl === DEFAULT_SERVICE
+        }
         showRetry={isServerError}
         isLoading={state.isLoading}
         onBackPress={onPressBack}

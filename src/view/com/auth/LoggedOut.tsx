@@ -115,6 +115,10 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
             onPressBack={() =>
               setScreenState(ScreenState.S_LoginOrCreateAccount)
             }
+            onPressSignIn={() => {
+              setScreenState(ScreenState.S_Login)
+              logEvent('splash:signInPressed', {})
+            }}
           />
         ) : undefined}
       </ErrorBoundary>

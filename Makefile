@@ -1,5 +1,5 @@
 
-SHELL = /bin/bash
+SHELL = /usr/bin/env bash
 .SHELLFLAGS = -o pipefail -c
 
 .PHONY: help

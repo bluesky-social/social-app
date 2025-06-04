@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 outputIos=$(eas build:version:get -p ios)
 outputAndroid=$(eas build:version:get -p android)
 BSKY_IOS_BUILD_NUMBER=${outputIos#*buildNumber - }

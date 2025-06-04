@@ -25,14 +25,14 @@ export const colors = {
   gray7: '#26272D',
   gray8: '#141417',
 
-  blue0: '#bfe1ff',
-  blue1: '#8bc7fd',
-  blue2: '#52acfe',
-  blue3: '#0085ff',
-  blue4: '#0062bd',
-  blue5: '#034581',
-  blue6: '#012561',
-  blue7: '#001040',
+  blue0: '#d5e8d9',
+  blue1: '#b8d6be',
+  blue2: '#95bd9f',
+  blue3: '#729f7c',
+  blue4: '#528157',
+  blue5: '#3a6141',
+  blue6: '#25422c',
+  blue7: '#14291a',
 
   red1: '#ffe6eb',
   red2: '#fba2b2',
@@ -66,9 +66,9 @@ export const colors = {
 }
 
 export const gradients = {
-  blueLight: {start: '#5A71FA', end: colors.blue3}, // buttons
-  blue: {start: '#5E55FB', end: colors.blue3}, // fab
-  blueDark: {start: '#5F45E0', end: colors.blue3}, // avis, banner
+  blueLight: {start: '#a3b18a', end: colors.blue3}, // buttons
+  blue: {start: '#8a9e7b', end: colors.blue3}, // fab
+  blueDark: {start: '#658764', end: colors.blue3}, // avis, banner
 }
 
 /**

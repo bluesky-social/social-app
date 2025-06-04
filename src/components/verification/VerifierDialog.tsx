@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {logger} from '#/logger'
+import {useBlackskyVerificationEnabled} from '#/state/preferences/blacksky-verification'
 import {useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -59,6 +60,8 @@ function Inner({
     ? _(msg`You are a trusted verifier`)
     : _(msg`${userName} is a trusted verifier`)
 
+  const blackskyVerificationEnabled = useBlackskyVerificationEnabled()
+
   return (
     <Dialog.ScrollableInner
       label={label}
@@ -66,27 +69,29 @@ function Inner({
         gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
       <View style={[a.gap_lg]}>
-        <View
-          style={[
-            a.w_full,
-            a.rounded_md,
-            a.overflow_hidden,
-            t.atoms.bg_contrast_25,
-            {minHeight: 100},
-          ]}>
-          <Image
-            accessibilityIgnoresInvertColors
-            source={require('../../../assets/images/initial_verification_announcement_1.png')}
+        {!blackskyVerificationEnabled && (
+          <View
             style={[
-              {
-                aspectRatio: 353 / 160,
-              },
-            ]}
-            alt={_(
-              msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
-            )}
-          />
-        </View>
+              a.w_full,
+              a.rounded_md,
+              a.overflow_hidden,
+              t.atoms.bg_contrast_25,
+              {minHeight: 100},
+            ]}>
+            <Image
+              accessibilityIgnoresInvertColors
+              source={require('../../../assets/images/initial_verification_announcement_1.png')}
+              style={[
+                {
+                  aspectRatio: 353 / 160,
+                },
+              ]}
+              alt={_(
+                msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
+              )}
+            />
+          </View>
+        )}
 
         <View style={[a.gap_sm]}>
           <Text style={[a.text_2xl, a.font_bold, a.pr_4xl, a.leading_tight]}>
@@ -98,8 +103,8 @@ function Inner({
               <RNText>
                 <VerifierCheck width={14} />
               </RNText>{' '}
-              can verify others. These trusted verifiers are selected by
-              Bluesky.
+              can verify others. These trusted verifiers are selected by{' '}
+              {blackskyVerificationEnabled ? 'you' : 'Bluesky'}.
             </Trans>
           </Text>
         </View>

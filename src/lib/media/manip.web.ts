@@ -3,6 +3,7 @@
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {blobToDataUri, getDataUriSize} from './util'
+import {mimeToExt} from './video/util'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -47,6 +48,22 @@ export async function shareImageModal(_opts: {uri: string}) {
 export async function saveImageToMediaLibrary(_opts: {uri: string}) {
   // TODO
   throw new Error('TODO')
+}
+
+export async function downloadVideoWeb({uri}: {uri: string}) {
+  // download the file to cache
+  const downloadResponse = await fetch(uri)
+    .then(res => res.blob())
+    .catch(() => null)
+  if (downloadResponse == null) return false
+  const extension = mimeToExt(downloadResponse.type)
+
+  const blobUrl = URL.createObjectURL(downloadResponse)
+  const link = document.createElement('a')
+  link.setAttribute('download', uri.slice(-10) + '.' + extension)
+  link.setAttribute('href', blobUrl)
+  link.click()
+  return true
 }
 
 export async function getImageDim(path: string): Promise<Dimensions> {

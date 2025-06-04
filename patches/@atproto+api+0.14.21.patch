@@ -1,0 +1,13 @@
+diff --git a/node_modules/@atproto/api/dist/moderation/decision.js b/node_modules/@atproto/api/dist/moderation/decision.js
+index aaac177..d27c0be 100644
+--- a/node_modules/@atproto/api/dist/moderation/decision.js
++++ b/node_modules/@atproto/api/dist/moderation/decision.js
+@@ -67,6 +67,8 @@ class ModerationDecision {
+     ui(context) {
+         const ui = new ui_1.ModerationUI();
+         for (const cause of this.causes) {
++            if (cause?.label?.val === '!no-unauthenticated') continue;
++
+             if (cause.type === 'blocking' ||
+                 cause.type === 'blocked-by' ||
+                 cause.type === 'block-other') {

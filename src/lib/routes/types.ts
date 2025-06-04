@@ -66,6 +66,7 @@ export type CommonNavigatorParams = {
   MiscellaneousNotificationSettings: undefined
   InterestsSettings: undefined
   AboutSettings: undefined
+  BlackskySettings: undefined
   AppIconSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}

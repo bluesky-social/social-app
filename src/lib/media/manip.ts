@@ -21,6 +21,7 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
+import {mimeToExt} from './video/util'
 
 export async function compressIfNeeded(
   img: PickerImage,
@@ -135,6 +136,27 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   } finally {
     safeDeleteAsync(imagePath)
   }
+}
+
+export async function saveVideoToMediaLibrary({uri}: {uri: string}) {
+  // download the file to cache
+  const downloadResponse = await RNFetchBlob.config({
+    fileCache: true,
+  })
+    .fetch('GET', uri)
+    .catch(() => null)
+  if (downloadResponse == null) return false
+  let videoPath = downloadResponse.path()
+  let extension = mimeToExt(downloadResponse.respInfo.headers['content-type'])
+  videoPath = normalizePath(
+    await moveToPermanentPath(videoPath, '.' + extension),
+    true,
+  )
+
+  // save
+  await MediaLibrary.createAssetAsync(videoPath)
+  safeDeleteAsync(videoPath)
+  return true
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {

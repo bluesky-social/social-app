@@ -40,6 +40,7 @@ import * as userActionHistory from '#/state/userActionHistory'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
+import {useNoDiscoverFallback} from '../preferences/no-discover-fallback'
 import {usePreferencesQuery} from './preferences'
 import {
   didOrHandleUriMatches,
@@ -153,7 +154,9 @@ export function usePostFeedQuery(
     preferences?.savedFeeds?.findIndex(
       f => f.pinned && f.value === 'following',
     ) ?? -1
-  const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
+  const noDiscoverFallback = useNoDiscoverFallback()
+  const enableFollowingToDiscoverFallback =
+    followingPinnedIndex === 0 && !noDiscoverFallback
   const agent = useAgent()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>

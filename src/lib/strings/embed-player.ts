@@ -9,10 +9,10 @@ const IFRAME_HOST = isWeb
   ? // @ts-ignore only for web
     window.location.host === 'localhost:8100'
     ? 'http://localhost:8100'
-    : 'https://bsky.app'
+    : 'https://blacksky.community'
   : __DEV__ && !process.env.JEST_WORKER_ID
-    ? 'http://localhost:8100'
-    : 'https://bsky.app'
+  ? 'http://localhost:8100'
+  : 'https://blacksky.community'
 
 export const embedPlayerSources = [
   'youtube',

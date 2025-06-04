@@ -109,11 +109,11 @@ a[role='link'][data-no-underline='1']:hover {
   pointer-events: none;
 }
 .ProseMirror .mention {
-  color: #0085ff;
+  color: rgb(75, 155, 108);
 }
 .ProseMirror a,
 .ProseMirror .autolink {
-  color: #0085ff;
+  color: rgb(75, 155, 108);
 }
 /* OLLIE: TODO -- this is not accessible */
 /* Remove focus state on inputs */

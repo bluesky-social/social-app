@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="theme-color">
+    <meta name="theme-color" content="#4b9b6c">
     <!--
       This viewport works for phones with notches.
       It's optimized for gestures by disabling global zoom.
@@ -74,7 +74,7 @@
       }
       #splash {
         position: fixed;
-        width: 100px;
+        width: 125px;
         left: 50%;
         top: 50%;
         transform: translateX(-50%) translateY(-50%) translateY(-50px);
@@ -93,60 +93,35 @@
   </head>
 
   <body>
-    <!--
-      A generic no script element with a reload button and a message.
-      Feel free to customize this however you'd like.
-    -->
-    <noscript>
-      <form
-        action=""
-        style="
-          background-color: #fff;
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 9999;
-        "
-      >
-        <div
-          style="
-            font-size: 18px;
-            font-family: Helvetica, sans-serif;
-            line-height: 24px;
-            margin: 10%;
-            width: 80%;
-          "
-        >
-          <p lang="en">Oh no! It looks like JavaScript is not enabled in your browser.</p>
-          <p lang="en" style="margin: 20px 0;">
-            <button
-              type="submit"
-              style="
-                background-color: #4630eb;
-                border-radius: 100px;
-                border: none;
-                box-shadow: none;
-                color: #fff;
-                cursor: pointer;
-                font-weight: bold;
-                line-height: 20px;
-                padding: 6px 16px;
-              "
-            >
-              Reload
-            </button>
-          </p>
-        </div>
-      </form>
-    </noscript>
+  <noscript style="
+     background-color: #fff;
+     position: fixed;
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     z-index: 9999;
+     margin: 1em;
+   ">
+    <h1 lang="en">JavaScript Required</h1>
+    <p lang="en">This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
+    <p lang="en">Learn more about Bluesky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>, or this fork at <a href="https://github.com/blacksky-algorithms/blacksky.community">github.com/a-viv-a/blacksky.community</a>.
+  </noscript>
 
     <!-- The root element for your Expo app. -->
     <div id="root">
       <div id="splash">
-        <!-- Bluesky SVG -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 320"><path fill="#0085ff" d="M180 142c-16.3-31.7-60.7-90.8-102-120C38.5-5.9 23.4-1 13.5 3.4 2.1 8.6 0 26.2 0 36.5c0 10.4 5.7 84.8 9.4 97.2 12.2 41 55.7 55 95.7 50.5-58.7 8.6-110.8 30-42.4 106.1 75.1 77.9 103-16.7 117.3-64.6 14.3 48 30.8 139 116 64.6 64-64.6 17.6-97.5-41.1-106.1 40 4.4 83.5-9.5 95.7-50.5 3.7-12.4 9.4-86.8 9.4-97.2 0-10.3-2-27.9-13.5-33C336.5-1 321.5-6 282 22c-41.3 29.2-85.7 88.3-102 120Z"/></svg>
+        <!-- blacksky SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+
+          <defs>
+            <linearGradient x1="0" y1="0" x2="0" y2="1" id="index_sky"><stop offset="0" stop-color="#a3b18a" stop-opacity="1"></stop><stop offset="1" stop-color="#344e41" stop-opacity="1"></stop></linearGradient>
+          </defs>
+          <path fill="url(#index_sky)"
+            d="m 149.96484,186.56641 46.09766,152.95898 c 0,0 -6.30222,-9.61174 -15.60547,-17.47656 -8.87322,-7.50128 -28.4082,-4.04492 -28.4082,-4.04492 0,0 6.14721,39.88867 15.53125,44.39843 10.71251,5.1482 22.19726,0.16993 22.19726,0.16993 0,0 11.7613,-4.87282 22.82032,31.82421 5.26534,17.47196 15.33258,50.877 20.9707,69.58594 2.16717,7.1913 8.83789,7.25781 8.83789,7.25781 0,0 6.67072,-0.0665 8.83789,-7.25781 5.63812,-18.70894 15.70536,-52.11398 20.9707,-69.58594 11.05902,-36.69703 22.82032,-31.82421 22.82032,-31.82421 0,0 11.48475,4.97827 22.19726,-0.16993 9.38404,-4.50976 15.5332,-44.39843 15.5332,-44.39843 0,0 -19.53693,-3.45636 -28.41015,4.04492 -9.30325,7.86482 -15.60547,17.47656 -15.60547,17.47656 l 46.09766,-152.95898 -49.32618,83.84179 -20.34375,-31.1914 6.35547,54.96875 -23.1582,39.36132 c 0,0 -2.97595,5.06226 -5.94336,4.68946 -0.009,-0.001 -0.0169,0.003 -0.0254,0.01 -0.008,-0.007 -0.0167,-0.0109 -0.0254,-0.01 -2.96741,0.3728 -5.94336,-4.68946 -5.94336,-4.68946 l -23.1582,-39.36132 6.35547,-54.96875 -20.34375,31.1914 z"
+            transform="matrix(2.6921023,0,0,1.7145911,-396.58283,-308.01527)"
+          />
+        </svg>
       </div>
     </div>
   </body>

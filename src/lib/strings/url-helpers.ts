@@ -7,8 +7,11 @@ import {isInvalidHandle} from '#/lib/strings/handles'
 import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 
-export const BSKY_APP_HOST = 'https://bsky.app'
+export const BSKY_APP_HOST = 'https://blacksky.community'
 const BSKY_TRUSTED_HOSTS = [
+  'blacksky\\.community',
+  'blacksky\\.app',
+  'blackskyweb\\.xyz',
   'bsky\\.app',
   'bsky\\.social',
   'blueskyweb\\.xyz',
@@ -79,7 +82,7 @@ export function toShortUrl(url: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
-    const urlp = new URL('https://bsky.app')
+    const urlp = new URL('https://blacksky.community')
     urlp.pathname = url
     url = urlp.toString()
   }
@@ -91,7 +94,11 @@ export function toBskyAppUrl(url: string): string {
 }
 
 export function isBskyAppUrl(url: string): boolean {
-  return url.startsWith('https://bsky.app/')
+  return (
+    url.startsWith('https://bsky.app/') ||
+    (url.startsWith('https://blacksky.community/') &&
+      !url.startsWith('https://blacksky.community/about'))
+  )
 }
 
 export function isRelativeUrl(url: string): boolean {

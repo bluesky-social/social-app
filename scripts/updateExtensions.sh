@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 IOS_SHARE_EXTENSION_DIRECTORY="./ios/Share-with-Bluesky"
 IOS_NOTIFICATION_EXTENSION_DIRECTORY="./ios/BlueskyNSE"
 IOS_APP_CLIP_DIRECTORY="./ios/BlueskyClip"

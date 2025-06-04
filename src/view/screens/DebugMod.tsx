@@ -24,6 +24,7 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {useHideFollowNotifications} from '#/state/preferences/hide-follow-notifications'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {moderationOptsOverrideContext} from '#/state/preferences/moderation-opts'
 import {type FeedNotification} from '#/state/queries/notifications/types'
@@ -877,7 +878,14 @@ function MockNotifItem({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  if (shouldFilterNotif(notif.notification, moderationOpts)) {
+  const hideFollowNotifications = useHideFollowNotifications()
+  if (
+    shouldFilterNotif(
+      notif.notification,
+      moderationOpts,
+      hideFollowNotifications,
+    )
+  ) {
     return (
       <P style={[t.atoms.bg_contrast_25, a.px_lg, a.py_md]}>
         Filtered from the feed

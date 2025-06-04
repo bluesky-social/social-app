@@ -123,6 +123,24 @@ const schema = z.object({
   kawaii: z.boolean().optional(),
   hasCheckedForStarterPack: z.boolean().optional(),
   subtitlesEnabled: z.boolean().optional(),
+
+  // blacksky
+  goLinksEnabled: z.boolean().optional(),
+  constellationEnabled: z.boolean().optional(),
+  directFetchRecords: z.boolean().optional(),
+  noAppLabelers: z.boolean().optional(),
+  noDiscoverFallback: z.boolean().optional(),
+  repostCarouselEnabled: z.boolean().optional(),
+  hideFollowNotifications: z.boolean().optional(),
+  constellationInstance: z.string().optional(),
+  showLinkInHandle: z.boolean().optional(),
+  blackskyVerification: z
+    .object({
+      enabled: z.boolean(),
+      trusted: z.array(z.string()),
+    })
+    .optional(),
+
   /** @deprecated */
   mutedThreads: z.array(z.string()),
   trendingDisabled: z.boolean().optional(),
@@ -174,6 +192,27 @@ export const defaults: Schema = {
   subtitlesEnabled: true,
   trendingDisabled: false,
   trendingVideoDisabled: false,
+
+  // blacksky
+  goLinksEnabled: true,
+  constellationEnabled: false,
+  directFetchRecords: false,
+  noAppLabelers: false,
+  noDiscoverFallback: false,
+  repostCarouselEnabled: false,
+  hideFollowNotifications: false,
+  constellationInstance: 'https://constellation.microcosm.blue/',
+  showLinkInHandle: false,
+  blackskyVerification: {
+    enabled: false,
+    // https://blacksky.community/profile/did:plc:p2cp5gopk7mgjegy6wadk3ep/post/3lndyqyyr4k2k
+    trusted: [
+      'did:plc:z72i7hdynmk6r22z27h6tvur',
+      'did:plc:eclio37ymobqex2ncko63h4r',
+      'did:plc:inz4fkbbp7ms3ixufw6xuvdi',
+      'did:plc:b2kutgxqlltwc6lhs724cfwr',
+    ],
+  },
 }
 
 export function tryParse(rawData: string): Schema | undefined {

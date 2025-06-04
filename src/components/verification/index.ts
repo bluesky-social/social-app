@@ -1,5 +1,6 @@
 import {useMemo} from 'react'
 
+import {useMaybeBlackskyVerificationProfileOverlay} from '#/state/queries/blacksky-verification'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useSession} from '#/state/session'
@@ -46,7 +47,7 @@ export function useFullVerificationState({
     const hasIssuedVerification = Boolean(
       viewerState &&
         viewerState.role === 'verifier' &&
-        profileState.role === 'default' &&
+        // profileState.role === 'default' &&
         verifications.find(v => v.issuer === currentAccount?.did),
     )
 
@@ -79,7 +80,7 @@ export type SimpleVerificationState = {
 }
 
 export function useSimpleVerificationState({
-  profile,
+  profile: baseProfile,
 }: {
   profile?: bsky.profile.AnyProfileView
 }): SimpleVerificationState {
@@ -88,6 +89,8 @@ export function useSimpleVerificationState({
     () => preferences.data?.verificationPrefs || {hideBadges: false},
     [preferences.data?.verificationPrefs],
   )
+  const profile = useMaybeBlackskyVerificationProfileOverlay(baseProfile)
+
   return useMemo(() => {
     if (!profile || !profile.verification) {
       return {

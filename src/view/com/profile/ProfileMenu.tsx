@@ -16,6 +16,11 @@ import {isWeb} from '#/platform/detection'
 import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
+  useBlackskyVerificationEnabled,
+  useBlackskyVerificationTrusted,
+  useSetBlackskyVerificationTrust,
+} from '#/state/preferences/blacksky-verification'
+import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -79,6 +84,12 @@ let ProfileMenu = ({
   const [devModeEnabled] = useDevMode()
   const verification = useFullVerificationState({profile})
   const canGoLive = useCanGoLive(currentAccount?.did)
+
+  const blackskyVerificationEnabled = useBlackskyVerificationEnabled()
+  const blackskyVerificationTrusted = useBlackskyVerificationTrusted().has(
+    profile.did,
+  )
+  const setBlackskyVerificationTrust = useSetBlackskyVerificationTrust()
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -340,6 +351,33 @@ let ProfileMenu = ({
                     <Menu.ItemIcon icon={LiveIcon} />
                   </Menu.Item>
                 )}
+                {!isSelf &&
+                  blackskyVerificationEnabled &&
+                  (blackskyVerificationTrusted ? (
+                    <Menu.Item
+                      testID="profileHeaderDropdownVerificationTrustRemoveButton"
+                      label={_(msg`Remove trust`)}
+                      onPress={() =>
+                        setBlackskyVerificationTrust.remove(profile.did)
+                      }>
+                      <Menu.ItemText>
+                        <Trans>Remove trust</Trans>
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={CircleXIcon} />
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item
+                      testID="profileHeaderDropdownVerificationTrustAddButton"
+                      label={_(msg`Trust verifier`)}
+                      onPress={() =>
+                        setBlackskyVerificationTrust.add(profile.did)
+                      }>
+                      <Menu.ItemText>
+                        <Trans>Trust verifier</Trans>
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={CircleCheckIcon} />
+                    </Menu.Item>
+                  ))}
                 {verification.viewer.role === 'verifier' &&
                   !verification.profile.isViewer &&
                   (verification.viewer.hasIssuedVerification ? (
