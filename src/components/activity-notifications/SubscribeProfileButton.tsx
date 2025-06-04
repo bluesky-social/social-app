@@ -29,8 +29,8 @@ export function SubscribeProfileButton({
   const wrappedOnPress = requireEmailVerification(onPress, {
     instructions: [
       <Trans key="message">
-        Before you can subscribe to {name}'s posts, you must first verify your
-        email.
+        Before you can get notifications for {name}'s posts, you must first
+        verify your email.
       </Trans>,
     ],
   })
@@ -44,7 +44,7 @@ export function SubscribeProfileButton({
         color="secondary"
         variant="solid"
         shape="round"
-        label={_(msg`Subscribe to ${name}'s posts`)}
+        label={_(msg`Get notified when ${name} posts`)}
         style={[a.justify_center]}
         onPress={wrappedOnPress}>
         <ButtonIcon icon={NotificationIcon} size="md" />
