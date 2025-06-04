@@ -261,15 +261,17 @@ export function usePostThread({anchor}: {anchor?: string}) {
    * of server-hidden replies.
    */
   const items = useMemo(() => {
+    const result = [...threadItems]
+
     if (query.isPlaceholderData) {
-      const anchorPost = threadItems.at(0)
+      const anchorPost = result.at(0)
       const skeletonReplies =
         anchorPost && anchorPost.type === 'threadPost'
           ? anchorPost?.value.post.replyCount ?? 4
           : 4
 
-      if (!threadItems.length) {
-        threadItems.push(
+      if (!result.length) {
+        result.push(
           views.skeleton({
             key: anchor!,
             item: 'anchor',
@@ -277,7 +279,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
         )
 
         if (hasSession) {
-          threadItems.push(
+          result.push(
             views.skeleton({
               key: 'replyComposer',
               item: 'replyComposer',
@@ -287,7 +289,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
       }
 
       for (let i = 0; i < skeletonReplies; i++) {
-        threadItems.push(
+        result.push(
           views.skeleton({
             key: `${anchor!}-reply-${i}`,
             item: 'reply',
@@ -295,9 +297,15 @@ export function usePostThread({anchor}: {anchor?: string}) {
         )
       }
 
-      return threadItems
+      return result
     } else {
-      return threadItems.concat(additionalHiddenItems)
+      result.push(...additionalHiddenItems)
+      result.push({
+        type: 'bookend',
+        key: 'bookend-down',
+        direction: 'down',
+      })
+      return result
     }
   }, [
     query.isPlaceholderData,

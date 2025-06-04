@@ -382,15 +382,17 @@ export function combine(
     loadServerHiddenItems: () => Promise<void>
   },
 ) {
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i]
+  const result = [...items]
+
+  for (let i = 0; i < result.length; i++) {
+    const item = result[i]
     if (
       item.type === 'threadPost' &&
       item.depth === 0 &&
       !item.value.post.viewer?.replyDisabled &&
       hasSession
     ) {
-      items.splice(i + 1, 0, {
+      result.splice(i + 1, 0, {
         type: 'replyComposer',
         key: 'replyComposer',
       })
@@ -400,9 +402,9 @@ export function combine(
 
   if (hidden.length || hasServerHiddenItems) {
     if (hiddenItemsVisible) {
-      return items.concat(hidden)
+      result.push(...hidden)
     } else {
-      return items.concat({
+      result.push({
         type: 'showHiddenReplies',
         key: 'showHiddenReplies',
         onLoad: loadServerHiddenItems,
@@ -410,7 +412,7 @@ export function combine(
     }
   }
 
-  return items
+  return result
 }
 
 /**
