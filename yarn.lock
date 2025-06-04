@@ -63,10 +63,10 @@
     "@atproto/xrpc" "^0.7.0"
     "@atproto/xrpc-server" "^0.7.18"
 
-"@atproto/api@^0.15.11":
-  version "0.15.11"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.15.11.tgz#f3f0718216c00bc405d35e0ce89ad30cedb2fb30"
-  integrity sha512-+XNOIqNPa1BWXzoi0mw6Qmx6kYlQPo60bhSrlxdhRYYH9CIgFAGmXrtb+MuAJoKgtSKX/2CBPihDsKEKEj8mfw==
+"@atproto/api@^0.15.12":
+  version "0.15.12"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.15.12.tgz#0b86eef80b052194353926327acf85c6299b9c04"
+  integrity sha512-51IHenZMA+Ekfe2OlZL/mTFqvZQU93jI4xsLvTFhGc4tSQYCHV9r/AJTANPZLFrhm9GfWZ0n90r/9IQl9eicjg==
   dependencies:
     "@atproto/common-web" "^0.4.2"
     "@atproto/lexicon" "^0.4.11"
