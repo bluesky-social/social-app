@@ -8,7 +8,10 @@ import {
   createCacheMutator,
   getThreadPlaceholder,
 } from '#/state/queries/usePostThread/queryCache'
-import {combine, traverse} from '#/state/queries/usePostThread/traversal'
+import {
+  buildThread,
+  sortAndAnnotateThreadItems,
+} from '#/state/queries/usePostThread/traversal'
 import {
   createPostThreadHiddenQueryKey,
   createPostThreadQueryKey,
@@ -119,7 +122,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
   )
 
   const [hiddenItemsVisible, setHiddenItemsVisible] = useState(false)
-  const [additionalHiddenItems, setAdditionalHiddenItems] = useState<
+  const [serverHiddenThreadItems, setServerHiddenThreadItems] = useState<
     ThreadItem[]
   >([])
 
@@ -129,10 +132,10 @@ export function usePostThread({anchor}: {anchor?: string}) {
   const setSort: typeof baseSetSort = useCallback(
     nextSort => {
       setHiddenItemsVisible(false)
-      setAdditionalHiddenItems([])
+      setServerHiddenThreadItems([])
       baseSetSort(nextSort)
     },
-    [baseSetSort, setAdditionalHiddenItems, setHiddenItemsVisible],
+    [baseSetSort, setServerHiddenThreadItems, setHiddenItemsVisible],
   )
 
   /**
@@ -141,10 +144,10 @@ export function usePostThread({anchor}: {anchor?: string}) {
   const setView: typeof baseSetView = useCallback(
     nextView => {
       setHiddenItemsVisible(false)
-      setAdditionalHiddenItems([])
+      setServerHiddenThreadItems([])
       baseSetView(nextView)
     },
-    [baseSetView, setAdditionalHiddenItems, setHiddenItemsVisible],
+    [baseSetView, setServerHiddenThreadItems, setHiddenItemsVisible],
   )
 
   /**
@@ -169,7 +172,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
    * the initial visible response(s) are shown immediately. Remote data is
    * fetched and inserted when it's available.
    */
-  const loadServerHiddenItems = useCallback(async () => {
+  const loadServerHiddenThreadItems = useCallback(async () => {
     /*
      * Show any moderated replies already in memory that were handled here on
      * the client. If there are server-hidden replies, we'll fetch those next.
@@ -181,7 +184,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
      */
     if (!hasServerHiddenItems) return
 
-    setAdditionalHiddenItems(
+    setServerHiddenThreadItems(
       Array.from({length: 2}).map((_, i) =>
         views.skeleton({
           key: `${anchor!}-reply-${i}`,
@@ -207,7 +210,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
       }),
     )
 
-    const {items} = traverse(data || [], {
+    const {threadItems} = sortAndAnnotateThreadItems(data || [], {
       view,
       skipHiddenReplyHandling: true,
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate?.record),
@@ -215,7 +218,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     })
 
     // insert the hidden replies into the state
-    setAdditionalHiddenItems(items)
+    setServerHiddenThreadItems(threadItems)
   }, [
     qc,
     agent,
@@ -229,90 +232,49 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setHiddenItemsVisible,
   ])
 
-  /**
-   * Builds the full set of thread items, minus any server-hidden replies.
+  /*
+   * This is the main thread response, sorted into separate buckets based on
+   * moderation, and annotated with all UI state needed for rendering.
    */
-  const threadItems = useMemo(() => {
-    const traversal = traverse(thread, {
+  const {threadItems, hiddenThreadItems} = useMemo(() => {
+    return sortAndAnnotateThreadItems(thread, {
       view: view,
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate?.record),
       moderationOpts: moderationOpts!,
-    })
-    return combine(traversal, {
-      hasSession,
-      hasServerHiddenItems,
-      hiddenItemsVisible,
-      loadServerHiddenItems,
     })
   }, [
     thread,
     threadgate?.record,
     mergeThreadgateHiddenReplies,
     moderationOpts,
-    hasSession,
     view,
-    hasServerHiddenItems,
-    hiddenItemsVisible,
-    loadServerHiddenItems,
   ])
 
-  /**
-   * Computes the final thread items based on load state and the availability
-   * of server-hidden replies.
+  /*
+   * Take all three sets of thread items and combine them into a single thread,
+   * along with any other thread items required for rendering e.g. "Show hidden
+   * replies" or the reply composer.
    */
   const items = useMemo(() => {
-    const result = [...threadItems]
-
-    if (query.isPlaceholderData) {
-      const anchorPost = result.at(0)
-      const skeletonReplies =
-        anchorPost && anchorPost.type === 'threadPost'
-          ? anchorPost?.value.post.replyCount ?? 4
-          : 4
-
-      if (!result.length) {
-        result.push(
-          views.skeleton({
-            key: anchor!,
-            item: 'anchor',
-          }),
-        )
-
-        if (hasSession) {
-          result.push(
-            views.skeleton({
-              key: 'replyComposer',
-              item: 'replyComposer',
-            }),
-          )
-        }
-      }
-
-      for (let i = 0; i < skeletonReplies; i++) {
-        result.push(
-          views.skeleton({
-            key: `${anchor!}-reply-${i}`,
-            item: 'reply',
-          }),
-        )
-      }
-
-      return result
-    } else {
-      result.push(...additionalHiddenItems)
-      result.push({
-        type: 'bookend',
-        key: 'bookend-down',
-        direction: 'down',
-      })
-      return result
-    }
+    return buildThread({
+      threadItems,
+      hiddenThreadItems,
+      serverHiddenThreadItems,
+      isLoading: query.isPlaceholderData,
+      hasSession,
+      hasServerHiddenItems,
+      hiddenItemsVisible,
+      loadServerHiddenThreadItems,
+    })
   }, [
-    query.isPlaceholderData,
     threadItems,
-    additionalHiddenItems,
-    anchor,
+    hiddenThreadItems,
+    serverHiddenThreadItems,
+    query.isPlaceholderData,
     hasSession,
+    hasServerHiddenItems,
+    hiddenItemsVisible,
+    loadServerHiddenThreadItems,
   ])
 
   return useMemo(
@@ -350,7 +312,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
     }),
     [
       query,
-      items,
       mutator.insertReplies,
       hiddenItemsVisible,
       sort,
@@ -358,6 +319,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
       setSort,
       setView,
       threadgate,
+      items,
     ],
   )
 }

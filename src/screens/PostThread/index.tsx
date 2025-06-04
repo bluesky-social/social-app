@@ -293,7 +293,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         <PostThreadShowHiddenReplies
           type="hidden"
           onPress={() => {
-            item.onLoad()
+            item.onPress()
             /*
              * Bit of a hack. This resets the ref value for the anchor so that
              * the next time `onContentSizeChangeWebOnly` fires, it won't

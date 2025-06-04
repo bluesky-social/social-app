@@ -14,7 +14,7 @@ import {
 } from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
 
-export function traverse(
+export function sortAndAnnotateThreadItems(
   thread: ApiThreadItem[],
   {
     threadgateHiddenReplies,
@@ -30,13 +30,13 @@ export function traverse(
      * post e.g. when fetching server-hidden replies. This will prevent
      * additional sorting or nested-branch truncation, and all replies,
      * regardless of moderation state, will be included in the resulting
-     * `items` array.
+     * `threadItems` array.
      */
     skipHiddenReplyHandling?: boolean
   },
 ) {
-  const items: ThreadItem[] = []
-  const hidden: ThreadItem[] = []
+  const threadItems: ThreadItem[] = []
+  const hiddenThreadItems: ThreadItem[] = []
   const metadatas = new Map<string, TraversalMetadata>()
 
   traversal: for (let i = 0; i < thread.length; i++) {
@@ -64,11 +64,11 @@ export function traverse(
        */
     } else if (item.depth === 0) {
       if (AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item.value)) {
-        items.push(views.threadPostNoUnauthenticated(item))
+        threadItems.push(views.threadPostNoUnauthenticated(item))
       } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(item.value)) {
-        items.push(views.threadPostNotFound(item))
+        threadItems.push(views.threadPostNotFound(item))
       } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(item.value)) {
-        items.push(views.threadPostBlocked(item))
+        threadItems.push(views.threadPostBlocked(item))
       } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
         const post = views.threadPost({
           uri: item.uri,
@@ -77,7 +77,7 @@ export function traverse(
           moderationOpts,
           threadgateHiddenReplies,
         })
-        items.push(post)
+        threadItems.push(post)
 
         parentTraversal: for (let pi = i - 1; pi >= 0; pi--) {
           const parent = thread[pi]
@@ -85,16 +85,16 @@ export function traverse(
           if (
             AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(parent.value)
           ) {
-            items.unshift(views.threadPostNoUnauthenticated(parent))
+            threadItems.unshift(views.threadPostNoUnauthenticated(parent))
             break parentTraversal
           } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(parent.value)) {
-            items.unshift(views.threadPostNotFound(parent))
+            threadItems.unshift(views.threadPostNotFound(parent))
             break parentTraversal
           } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(parent.value)) {
-            items.unshift(views.threadPostBlocked(parent))
+            threadItems.unshift(views.threadPostBlocked(parent))
             break parentTraversal
           } else if (AppBskyUnspeccedDefs.isThreadItemPost(parent.value)) {
-            items.unshift(
+            threadItems.unshift(
               views.threadPost({
                 uri: parent.uri,
                 depth: parent.depth,
@@ -144,7 +144,7 @@ export function traverse(
           /*
            * Not moderated, need to insert it
            */
-          items.push(post)
+          threadItems.push(post)
 
           /*
            * Update seen reply count of parent
@@ -163,7 +163,7 @@ export function traverse(
 
           if (parentIsTopLevelReply) {
             // push branch anchor into sorted array
-            hidden.push(parent)
+            hiddenThreadItems.push(parent)
             // skip branch anchor in branch traversal
             const startIndex = branch.start + 1
 
@@ -206,7 +206,7 @@ export function traverse(
                 if (childPost.isBlurred) {
                   ci = getBranch(thread, ci, child.depth).end
                 } else {
-                  hidden.push(childPost)
+                  hiddenThreadItems.push(childPost)
                 }
               } else {
                 /*
@@ -228,10 +228,10 @@ export function traverse(
   }
 
   /*
-   * Both `items` and `hidden` now need to be traversed again to fully compute
+   * Both `threadItems` and `hiddenThreadItems` now need to be traversed again to fully compute
    * UI state based on collected metadata. These arrays will be muted in situ.
    */
-  for (const subset of [items, hidden]) {
+  for (const subset of [threadItems, hiddenThreadItems]) {
     for (let i = 0; i < subset.length; i++) {
       const item = subset[i]
       const prevItem = subset.at(i - 1)
@@ -363,56 +363,100 @@ export function traverse(
   }
 
   return {
-    items,
-    hidden,
+    threadItems,
+    hiddenThreadItems,
   }
 }
 
-export function combine(
-  {items, hidden}: {items: ThreadItem[]; hidden: ThreadItem[]},
-  {
-    hasSession,
-    hiddenItemsVisible,
-    hasServerHiddenItems,
-    loadServerHiddenItems,
-  }: {
-    hasSession: boolean
-    hiddenItemsVisible: boolean
-    hasServerHiddenItems: boolean
-    loadServerHiddenItems: () => Promise<void>
-  },
-) {
-  const result = [...items]
+export function buildThread({
+  threadItems,
+  hiddenThreadItems,
+  serverHiddenThreadItems,
+  isLoading,
+  hasSession,
+  hiddenItemsVisible,
+  hasServerHiddenItems,
+  loadServerHiddenThreadItems,
+}: {
+  threadItems: ThreadItem[]
+  hiddenThreadItems: ThreadItem[]
+  serverHiddenThreadItems: ThreadItem[]
+  isLoading: boolean
+  hasSession: boolean
+  hiddenItemsVisible: boolean
+  hasServerHiddenItems: boolean
+  loadServerHiddenThreadItems: () => Promise<void>
+}) {
+  /**
+   * `threadItems` is memoized here, so don't mutate it directly.
+   */
+  const items = [...threadItems]
 
-  for (let i = 0; i < result.length; i++) {
-    const item = result[i]
-    if (
-      item.type === 'threadPost' &&
-      item.depth === 0 &&
-      !item.value.post.viewer?.replyDisabled &&
-      hasSession
-    ) {
-      result.splice(i + 1, 0, {
-        type: 'replyComposer',
-        key: 'replyComposer',
-      })
-      break
+  if (isLoading) {
+    const anchorPost = items.at(0)
+    const skeletonReplies =
+      anchorPost && anchorPost.type === 'threadPost'
+        ? anchorPost?.value.post.replyCount ?? 4
+        : 4
+
+    if (!items.length) {
+      items.push(
+        views.skeleton({
+          key: 'anchor-skeleton',
+          item: 'anchor',
+        }),
+      )
+
+      if (hasSession) {
+        items.push(
+          views.skeleton({
+            key: 'replyComposer',
+            item: 'replyComposer',
+          }),
+        )
+      }
+    }
+
+    for (let i = 0; i < skeletonReplies; i++) {
+      items.push(
+        views.skeleton({
+          key: `anchor-skeleton-reply-${i}`,
+          item: 'reply',
+        }),
+      )
+    }
+  } else {
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
+      if (
+        item.type === 'threadPost' &&
+        item.depth === 0 &&
+        !item.value.post.viewer?.replyDisabled &&
+        hasSession
+      ) {
+        items.splice(i + 1, 0, {
+          type: 'replyComposer',
+          key: 'replyComposer',
+        })
+        break
+      }
+    }
+
+    if (hiddenThreadItems.length || hasServerHiddenItems) {
+      if (hiddenItemsVisible) {
+        items.push(...hiddenThreadItems)
+        items.push(...serverHiddenThreadItems)
+      } else {
+        items.push({
+          type: 'showHiddenReplies',
+          key: 'showHiddenReplies',
+          onPress: loadServerHiddenThreadItems,
+        })
+      }
     }
   }
 
-  if (hidden.length || hasServerHiddenItems) {
-    if (hiddenItemsVisible) {
-      result.push(...hidden)
-    } else {
-      result.push({
-        type: 'showHiddenReplies',
-        key: 'showHiddenReplies',
-        onLoad: loadServerHiddenItems,
-      })
-    }
-  }
-
-  return result
+  return items
 }
 
 /**

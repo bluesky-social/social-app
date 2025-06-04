@@ -89,7 +89,7 @@ export type ThreadItem =
   | {
       type: 'showHiddenReplies'
       key: string
-      onLoad: () => Promise<void>
+      onPress: () => Promise<void>
     }
   | {
       type: 'readMore'
