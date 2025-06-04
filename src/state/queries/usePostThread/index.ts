@@ -30,9 +30,9 @@ export function usePostThread({anchor}: {anchor?: string}) {
   const {
     isLoaded: isThreadPreferencesLoaded,
     sort,
-    setSort,
+    setSort: baseSetSort,
     view,
-    setView,
+    setView: baseSetView,
     prioritizeFollowedUsers,
   } = useThreadPreferences()
   const postThreadQueryKey = createPostThreadQueryKey({
@@ -252,6 +252,24 @@ export function usePostThread({anchor}: {anchor?: string}) {
         queryClient: qc,
       }),
     [qc, sort, view, postThreadQueryKey],
+  )
+
+  const setSort: typeof baseSetSort = useCallback(
+    nextSort => {
+      setHiddenRepliesVisible(false)
+      setAdditionalHiddenItems([])
+      baseSetSort(nextSort)
+    },
+    [baseSetSort, setAdditionalHiddenItems, setHiddenRepliesVisible],
+  )
+
+  const setView: typeof baseSetView = useCallback(
+    nextView => {
+      setHiddenRepliesVisible(false)
+      setAdditionalHiddenItems([])
+      baseSetView(nextView)
+    },
+    [baseSetView, setAdditionalHiddenItems, setHiddenRepliesVisible],
   )
 
   return useMemo(
