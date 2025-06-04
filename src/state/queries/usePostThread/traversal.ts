@@ -406,15 +406,13 @@ export function buildThread({
           item: 'anchor',
         }),
       )
+    }
 
-      if (hasSession) {
-        items.push(
-          views.skeleton({
-            key: 'replyComposer',
-            item: 'replyComposer',
-          }),
-        )
-      }
+    if (hasSession) {
+      items.push({
+        type: 'replyComposer',
+        key: 'replyComposer',
+      })
     }
 
     for (let i = 0; i < skeletonReplies; i++) {

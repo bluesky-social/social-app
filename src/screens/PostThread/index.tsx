@@ -30,7 +30,7 @@ import {ListFooter} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 
 const PARENT_CHUNK_SIZE = 5
-const REPLIES_CHUNK_SIZE = 50
+const CHILDREN_CHUNK_SIZE = 50
 
 export function Inner({uri}: {uri: string | undefined}) {
   const t = useTheme()
@@ -132,20 +132,22 @@ export function Inner({uri}: {uri: string | undefined}) {
    */
   const [deferParents, setDeferParents] = useState(isNative)
   const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE)
-  const [maxRepliesCount, setMaxRepliesCount] = useState(REPLIES_CHUNK_SIZE)
-  const hasExhaustedReplies = useRef(false)
+  const [maxChildrenCount, setMaxChildrenCount] = useState(CHILDREN_CHUNK_SIZE)
+  const totalParentCount = useRef(0) // recomputed below
+  const totalChildrenCount = useRef(thread.data.items.length) // recomputed below
 
   const onStartReached = () => {
     if (thread.state.isFetching) return
-    // limit to 100
-    setMaxParentCount(n => Math.min(100, n + PARENT_CHUNK_SIZE))
+    // prevent any state mutations if we know we're done
+    if (maxParentCount >= totalParentCount.current) return
+    setMaxParentCount(n => n + PARENT_CHUNK_SIZE)
   }
 
   const onEndReached = () => {
     if (thread.state.isFetching) return
     // prevent any state mutations if we know we're done
-    if (hasExhaustedReplies.current) return
-    setMaxRepliesCount(prev => prev + REPLIES_CHUNK_SIZE)
+    if (maxChildrenCount >= totalChildrenCount.current) return
+    setMaxChildrenCount(prev => prev + CHILDREN_CHUNK_SIZE)
   }
 
   const slices = useMemo(() => {
@@ -153,46 +155,48 @@ export function Inner({uri}: {uri: string | undefined}) {
 
     if (!thread.data.items.length) return results
 
-    let repliesCount = 0
-    let totalRepliesCount = 0
+    /*
+     * Pagination hack, tracks the # of items below the anchor post.
+     */
+    let childrenCount = 0
 
     for (let i = 0; i < thread.data.items.length; i++) {
       const item = thread.data.items[i]
 
-      if ('depth' in item) {
-        if (item.depth === 0) {
-          results.push(item)
+      /*
+       * Handle anchor post
+       */
+      if (item.type === 'threadPost' && item.depth === 0) {
+        results.push(item)
 
-          if (!deferParents) {
-            const start = i - 1
-            const limit = Math.max(0, start - maxParentCount)
-            for (let pi = start; pi >= limit; pi--) {
-              results.unshift(thread.data.items[pi])
-            }
-          }
-        } else if (item.depth > 0) {
-          totalRepliesCount++
+        // Recalculate total parents current index.
+        totalParentCount.current = i
+        // Recalculate total children using (length - 1) - current index.
+        totalChildrenCount.current = thread.data.items.length - 1 - i
 
-          if (repliesCount <= maxRepliesCount) {
-            results.push(item)
-            repliesCount++
+        /*
+         * Walk up the parents, limiting by `maxParentCount`
+         */
+        if (!deferParents) {
+          const start = i - 1
+          const limit = Math.max(0, start - maxParentCount)
+          for (let pi = start; pi >= limit; pi--) {
+            results.unshift(thread.data.items[pi])
           }
         }
       } else {
+        // ignore parents
+        if (item.type === 'threadPost' && item.depth < 0) continue
+        // can exit early if we've reached the max children count
+        if (childrenCount > maxChildrenCount) break
+
         results.push(item)
+        childrenCount++
       }
     }
 
-    // TODO should really just count these during traversal, can remove isPlaceholder data after that
-    if (
-      maxRepliesCount > totalRepliesCount &&
-      !thread.state.isPlaceholderData
-    ) {
-      hasExhaustedReplies.current = true
-    }
-
     return results
-  }, [thread, deferParents, maxParentCount, maxRepliesCount])
+  }, [thread, deferParents, maxParentCount, maxChildrenCount])
 
   const renderItem = ({item, index}: {item: ThreadItem; index: number}) => {
     if (item.type === 'threadPost') {
