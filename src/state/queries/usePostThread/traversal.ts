@@ -374,18 +374,18 @@ export function buildThread({
   serverHiddenThreadItems,
   isLoading,
   hasSession,
-  hiddenItemsVisible,
-  hasServerHiddenItems,
-  loadServerHiddenThreadItems,
+  hiddenThreadItemsVisible,
+  hasServerHiddenThreadItems,
+  showHiddenThreadItems,
 }: {
   threadItems: ThreadItem[]
   hiddenThreadItems: ThreadItem[]
   serverHiddenThreadItems: ThreadItem[]
   isLoading: boolean
   hasSession: boolean
-  hiddenItemsVisible: boolean
-  hasServerHiddenItems: boolean
-  loadServerHiddenThreadItems: () => Promise<void>
+  hiddenThreadItemsVisible: boolean
+  hasServerHiddenThreadItems: boolean
+  showHiddenThreadItems: () => void
 }) {
   /**
    * `threadItems` is memoized here, so don't mutate it directly.
@@ -440,15 +440,15 @@ export function buildThread({
       }
     }
 
-    if (hiddenThreadItems.length || hasServerHiddenItems) {
-      if (hiddenItemsVisible) {
+    if (hiddenThreadItems.length || hasServerHiddenThreadItems) {
+      if (hiddenThreadItemsVisible) {
         items.push(...hiddenThreadItems)
         items.push(...serverHiddenThreadItems)
       } else {
         items.push({
           type: 'showHiddenReplies',
           key: 'showHiddenReplies',
-          onPress: loadServerHiddenThreadItems,
+          onPress: showHiddenThreadItems,
         })
       }
     }

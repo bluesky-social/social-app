@@ -231,7 +231,8 @@ export function Inner({uri}: {uri: string | undefined}) {
               item={item}
               threadgateRecord={thread.data.threadgate?.record ?? undefined}
               overrides={{
-                moderation: thread.state.hiddenItemsVisible && item.depth > 0,
+                moderation:
+                  thread.state.hiddenThreadItemsVisible && item.depth > 0,
               }}
               onPostSuccess={optimisticOnPostReply}
             />
@@ -242,7 +243,8 @@ export function Inner({uri}: {uri: string | undefined}) {
               item={item}
               threadgateRecord={thread.data.threadgate?.record ?? undefined}
               overrides={{
-                moderation: thread.state.hiddenItemsVisible && item.depth > 0,
+                moderation:
+                  thread.state.hiddenThreadItemsVisible && item.depth > 0,
               }}
               onPostSuccess={optimisticOnPostReply}
             />
