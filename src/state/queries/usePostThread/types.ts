@@ -104,6 +104,11 @@ export type ThreadItem =
       key: string
       item: 'anchor' | 'reply' | 'replyComposer'
     }
+  | {
+      type: 'bookend'
+      key: string
+      direction: 'up' | 'down'
+    }
 
 export type TraversalMetadata = {
   /**
