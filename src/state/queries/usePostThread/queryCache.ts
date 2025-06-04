@@ -12,6 +12,7 @@ import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
+import {BELOW} from '#/state/queries/usePostThread/const'
 import {getBranch} from '#/state/queries/usePostThread/traversal'
 import {
   type createPostThreadQueryKey,
@@ -96,10 +97,15 @@ export function createCacheMutator({
               thread.splice(
                 i + 1,
                 itemsToRemove,
-                ...replies.map((r, ri) => {
-                  r.depth = existingParent.depth + 1 + ri
-                  return r
-                }),
+                ...replies
+                  .map((r, ri) => {
+                    r.depth = existingParent.depth + 1 + ri
+                    return r
+                  })
+                  .filter(r => {
+                    // Filter out replies that are too deep for our UI
+                    return r.depth <= BELOW
+                  }),
               )
             }
           }

@@ -4,6 +4,7 @@ import {useQuery, useQueryClient} from '@tanstack/react-query'
 import {wait} from '#/lib/async/wait'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
+import {BELOW} from '#/state/queries/usePostThread/const'
 import {
   createCacheMutator,
   getThreadPlaceholder,
@@ -57,7 +58,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
         agent.app.bsky.unspecced.getPostThreadV2({
           anchor: anchor!,
           branchingFactor: view === 'linear' ? 1 : undefined,
-          below: 4,
+          below: BELOW,
           sort: sort,
           prioritizeFollowedUsers: prioritizeFollowedUsers,
         }),
