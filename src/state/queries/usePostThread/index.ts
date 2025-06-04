@@ -8,7 +8,7 @@ import {
   createCacheMutator,
   getThreadPlaceholder,
 } from '#/state/queries/usePostThread/queryCache'
-import {traverse} from '#/state/queries/usePostThread/traversal'
+import {combine,traverse} from '#/state/queries/usePostThread/traversal'
 import {
   createPostThreadHiddenQueryKey,
   createPostThreadQueryKey,
@@ -150,50 +150,44 @@ export function usePostThread({anchor}: {anchor?: string}) {
       }),
     )
 
-    const items = traverse(data || [], {
+    const {items} = traverse(data || [], {
+      view,
+      skipHiddenReplyHandling: true,
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(
         query.data?.threadgate?.record,
       ),
       moderationOpts: moderationOpts!,
-      hasSession,
-      view,
-      hasServerHiddenReplies,
-      hiddenRepliesVisible,
-      skipHiddenReplyHandling: true,
-      loadHiddenReplies,
     })
 
     // insert the hidden replies into the state
     setAdditionalHiddenItems(items)
   }, [
+    qc,
     agent,
     view,
     anchor,
     prioritizeFollowedUsers,
-    hasSession,
     mergeThreadgateHiddenReplies,
     moderationOpts,
-    qc,
     query.data?.threadgate?.record,
     hasServerHiddenReplies,
-    hiddenRepliesVisible,
     setHiddenRepliesVisible,
   ])
 
-  const items = useMemo(() => {
-    const results = traverse(query.data?.thread || [], {
+  const combined = useMemo(() => {
+    const traversal = traverse(query.data?.thread || [], {
+      view: view,
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(
         query.data?.threadgate?.record,
       ),
       moderationOpts: moderationOpts!,
+    })
+    return combine(traversal, {
       hasSession,
-      view: view,
       hasServerHiddenReplies,
       hiddenRepliesVisible,
       loadHiddenReplies,
     })
-
-    return results.concat(additionalHiddenItems)
   }, [
     query.data,
     mergeThreadgateHiddenReplies,
@@ -203,8 +197,11 @@ export function usePostThread({anchor}: {anchor?: string}) {
     hasServerHiddenReplies,
     hiddenRepliesVisible,
     loadHiddenReplies,
-    additionalHiddenItems,
   ])
+
+  const items = useMemo(() => {
+    return combined.concat(additionalHiddenItems)
+  }, [combined, additionalHiddenItems])
 
   if (query.isPlaceholderData) {
     const anchorPost = items.at(0)

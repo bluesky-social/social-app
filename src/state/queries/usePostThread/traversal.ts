@@ -23,21 +23,20 @@ export function traverse(
   {
     threadgateHiddenReplies,
     moderationOpts,
-    hasSession,
     view,
-    hasServerHiddenReplies,
-    hiddenRepliesVisible,
     skipHiddenReplyHandling,
-    loadHiddenReplies,
   }: {
     threadgateHiddenReplies: Set<string>
     moderationOpts: ModerationOpts
-    hasSession: boolean
     view: PostThreadParams['view']
-    hasServerHiddenReplies: boolean
-    hiddenRepliesVisible: boolean
+    /**
+     * Set to `true` in cases where we already know the moderation state of the
+     * post e.g. when fetching server-hidden replies. This will prevent
+     * additional sorting or nested-branch truncation, and all replies,
+     * regardless of moderation state, will be included in the resulting
+     * `items` array.
+     */
     skipHiddenReplyHandling?: boolean
-    loadHiddenReplies: () => Promise<void>
   },
 ) {
   const items: ThreadItem[] = []
@@ -80,6 +79,7 @@ export function traverse(
           depth: item.depth,
           value: item.value,
           moderationOpts,
+          threadgateHiddenReplies,
         })
         items.push(post)
 
@@ -104,6 +104,7 @@ export function traverse(
                 depth: parent.depth,
                 value: parent.value,
                 moderationOpts,
+                threadgateHiddenReplies,
               }),
             )
           }
@@ -140,15 +141,12 @@ export function traverse(
           depth: item.depth,
           value: item.value,
           moderationOpts,
+          threadgateHiddenReplies,
         })
-        const postMod = getModerationState(post.moderation)
-        const postIsHiddenByThreadgate = threadgateHiddenReplies.has(item.uri)
-        const postIsModerated =
-          postIsHiddenByThreadgate || postMod.blurred || postMod.muted
 
-        if (!postIsModerated || skipHiddenReplyHandling) {
+        if (!post.isBlurred || skipHiddenReplyHandling) {
           /*
-           * Not moderated, probably need to insert it
+           * Not moderated, need to insert it
            */
           items.push(post)
 
@@ -201,21 +199,15 @@ export function traverse(
                   depth: child.depth,
                   value: child.value,
                   moderationOpts,
+                  threadgateHiddenReplies,
                 })
-                const childPostMod = getModerationState(childPost.moderation)
-                const childPostIsHiddenByThreadgate =
-                  threadgateHiddenReplies.has(child.uri)
 
                 /*
                  * If a child is hidden in any way, drop it an its sub-branch
                  * entirely. To reveal these, the user must navigate to the
                  * parent post directly.
                  */
-                if (
-                  childPostMod.blurred ||
-                  childPostMod.muted ||
-                  childPostIsHiddenByThreadgate
-                ) {
+                if (childPost.isBlurred) {
                   ci = getBranch(thread, ci, child.depth).end
                 } else {
                   hidden.push(childPost)
@@ -239,157 +231,186 @@ export function traverse(
     }
   }
 
-  if (!skipHiddenReplyHandling) {
-    if (hidden.length || hasServerHiddenReplies) {
-      if (hiddenRepliesVisible) {
-        items.push(...hidden)
-      } else {
-        items.push({
-          type: 'showHiddenReplies',
-          key: 'showHiddenReplies',
-          onLoad: loadHiddenReplies,
-        })
-      }
-    }
-  }
+  /*
+   * Both `items` and `hidden` now need to be traversed again to fully compute
+   * UI state based on collected metadata. These arrays will be muted in situ.
+   */
+  for (const subset of [items, hidden]) {
+    for (let i = 0; i < subset.length; i++) {
+      const item = subset[i]
+      const prevItem = subset.at(i - 1)
+      const nextItem = subset.at(i + 1)
 
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i]
-    const prevItem = items.at(i - 1)
-    const nextItem = items.at(i + 1)
+      if (item.type === 'threadPost') {
+        const metadata = metadatas.get(item.uri)
 
-    if (item.type === 'threadPost') {
-      if (
-        item.depth === 0 &&
-        !item.value.post.viewer?.replyDisabled &&
-        hasSession
-      ) {
-        items.splice(i + 1, 0, {
-          type: 'replyComposer',
-          key: 'replyComposer',
-        })
-        i++ // skip next iteration
-      }
+        if (metadata) {
+          if (metadata.parentMetadata) {
+            /*
+             * Track what's before/after now that we've applied moderation
+             */
+            if (prevItem?.type === 'threadPost')
+              metadata.prevItemDepth = prevItem?.depth
+            if (nextItem?.type === 'threadPost')
+              metadata.nextItemDepth = nextItem?.depth
 
-      const metadata = metadatas.get(item.uri)
+            /*
+             * We can now officially calculate `isLastSibling` and `isLastChild`
+             * based on the actual data that we've seen.
+             */
+            metadata.isLastSibling =
+              metadata.replyIndex ===
+              metadata.parentMetadata.repliesSeenCount - 1
+            metadata.isLastChild =
+              metadata.nextItemDepth === undefined ||
+              metadata.nextItemDepth <= metadata.depth
 
-      if (metadata) {
-        if (metadata.parentMetadata) {
-          /*
-           * Track what's before/after now that we've applied moderation
-           */
-          if (prevItem?.type === 'threadPost')
-            metadata.prevItemDepth = prevItem?.depth
-          if (nextItem?.type === 'threadPost')
-            metadata.nextItemDepth = nextItem?.depth
+            /*
+             * If this is the last sibling, it's implicitly part of the last
+             * branch of this sub-tree.
+             */
+            if (metadata.isLastSibling) {
+              metadata.isPartOfLastBranchFromDepth = metadata.depth
 
-          /*
-           * We can now officially calculate `isLastSibling` and `isLastChild`
-           * based on the actual data that we've seen.
-           */
-          metadata.isLastSibling =
-            metadata.replyIndex === metadata.parentMetadata.repliesSeenCount - 1
-          metadata.isLastChild =
-            metadata.nextItemDepth === undefined ||
-            metadata.nextItemDepth <= metadata.depth
+              /**
+               * If the parent is part of the last branch of the sub-tree, so is the child.
+               */
+              if (metadata.parentMetadata.isPartOfLastBranchFromDepth) {
+                metadata.isPartOfLastBranchFromDepth =
+                  metadata.parentMetadata.isPartOfLastBranchFromDepth
+              }
+            }
 
-          /*
-           * If this is the last sibling, it's implicitly part of the last
-           * branch of this sub-tree.
-           */
-          if (metadata.isLastSibling) {
-            metadata.isPartOfLastBranchFromDepth = metadata.depth
+            /*
+             * If this is the last sibling, and the parent has unhydrated replies,
+             * at some point down the line we will need to show a "read more".
+             */
+            if (
+              metadata.parentMetadata.repliesUnhydrated > 0 &&
+              metadata.isLastSibling
+            ) {
+              metadata.upcomingParentReadMore = metadata.parentMetadata
+            }
+
+            /*
+             * Copy in the parent's upcoming read more, if it exists. Once we
+             * reach the bottom, we'll insert a "read more"
+             */
+            if (metadata.parentMetadata.upcomingParentReadMore) {
+              metadata.upcomingParentReadMore =
+                metadata.parentMetadata.upcomingParentReadMore
+            }
+
+            /*
+             * Copy in the parent's skipped indents
+             */
+            metadata.skippedIndentIndices = new Set([
+              ...metadata.parentMetadata.skippedIndentIndices,
+            ])
 
             /**
-             * If the parent is part of the last branch of the sub-tree, so is the child.
+             * If this is the last sibling, and the parent has no unhydrated
+             * replies, then we know we can skip an indent line.
              */
-            if (metadata.parentMetadata.isPartOfLastBranchFromDepth) {
-              metadata.isPartOfLastBranchFromDepth =
-                metadata.parentMetadata.isPartOfLastBranchFromDepth
+            if (
+              metadata.parentMetadata.repliesUnhydrated <= 0 &&
+              metadata.isLastSibling
+            ) {
+              /**
+               * Depth is 2 more than the 0-index of the indent calculation
+               * bc of how we render these. So instead of handling that in the
+               * component, we just adjust that back to 0-index here.
+               */
+              metadata.skippedIndentIndices.add(item.depth - 2)
             }
           }
 
           /*
-           * If this is the last sibling, and the parent has unhydrated replies,
-           * at some point down the line we will need to show a "read more".
+           * If this post has unhydrated replies, and it is the last child, then
+           * it itself needs a "read more"
            */
-          if (
-            metadata.parentMetadata.repliesUnhydrated > 0 &&
-            metadata.isLastSibling
-          ) {
-            metadata.upcomingParentReadMore = metadata.parentMetadata
+          if (metadata.repliesUnhydrated > 0 && metadata.isLastChild) {
+            metadata.precedesChildReadMore = true
+            subset.splice(i + 1, 0, views.readMore(metadata))
+            i++ // skip next iteration
           }
 
           /*
-           * Copy in the parent's upcoming read more, if it exists. Once we
-           * reach the bottom, we'll insert a "read more"
+           * Tree-view only.
+           *
+           * If there's an upcoming parent read more, this branch is part of the
+           * last branch of the sub-tree, and the item itself is the last child,
+           * insert the parent "read more".
            */
-          if (metadata.parentMetadata.upcomingParentReadMore) {
-            metadata.upcomingParentReadMore =
-              metadata.parentMetadata.upcomingParentReadMore
+          if (
+            view === 'tree' &&
+            metadata.upcomingParentReadMore &&
+            metadata.isPartOfLastBranchFromDepth ===
+              metadata.upcomingParentReadMore.depth &&
+            metadata.isLastChild
+          ) {
+            subset.splice(
+              i + 1,
+              0,
+              views.readMore(metadata.upcomingParentReadMore),
+            )
+            i++
           }
 
           /*
-           * Copy in the parent's skipped indents
+           * Calculate the final UI state for the thread item.
            */
-          metadata.skippedIndentIndices = new Set([
-            ...metadata.parentMetadata.skippedIndentIndices,
-          ])
-
-          /**
-           * If this is the last sibling, and the parent has no unhydrated
-           * replies, then we know we can skip an indent line.
-           */
-          if (
-            metadata.parentMetadata.repliesUnhydrated <= 0 &&
-            metadata.isLastSibling
-          ) {
-            /**
-             * Depth is 2 more than the 0-index of the indent calculation
-             * bc of how we render these. So instead of handling that in the
-             * component, we just adjust that back to 0-index here.
-             */
-            metadata.skippedIndentIndices.add(item.depth - 2)
-          }
+          item.ui = getThreadPostUI(metadata)
         }
-
-        /*
-         * If this post has unhydrated replies, and it is the last child, then
-         * it itself needs a "read more"
-         */
-        if (metadata.repliesUnhydrated > 0 && metadata.isLastChild) {
-          metadata.precedesChildReadMore = true
-          items.splice(i + 1, 0, views.readMore(metadata))
-          i++ // skip next iteration
-        }
-
-        /*
-         * Tree-view only.
-         *
-         * If there's an upcoming parent read more, this branch is part of the
-         * last branch of the sub-tree, and the item itself is the last child,
-         * insert the parent "read more".
-         */
-        if (
-          view === 'tree' &&
-          metadata.upcomingParentReadMore &&
-          metadata.isPartOfLastBranchFromDepth ===
-            metadata.upcomingParentReadMore.depth &&
-          metadata.isLastChild
-        ) {
-          items.splice(
-            i + 1,
-            0,
-            views.readMore(metadata.upcomingParentReadMore),
-          )
-          i++
-        }
-
-        /*
-         * Calculate the final UI state for the thread item.
-         */
-        item.ui = getThreadPostUI(metadata)
       }
+    }
+  }
+
+  return {
+    items,
+    hidden,
+  }
+}
+
+export function combine(
+  {items, hidden}: {items: ThreadItem[]; hidden: ThreadItem[]},
+  {
+    hasSession,
+    hiddenRepliesVisible,
+    hasServerHiddenReplies,
+    loadHiddenReplies,
+  }: {
+    hasSession: boolean
+    hiddenRepliesVisible: boolean
+    hasServerHiddenReplies: boolean
+    loadHiddenReplies: () => Promise<void>
+  },
+) {
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i]
+    if (
+      item.type === 'threadPost' &&
+      item.depth === 0 &&
+      !item.value.post.viewer?.replyDisabled &&
+      hasSession
+    ) {
+      items.splice(i + 1, 0, {
+        type: 'replyComposer',
+        key: 'replyComposer',
+      })
+      break
+    }
+  }
+
+  if (hidden.length || hasServerHiddenReplies) {
+    if (hiddenRepliesVisible) {
+      return items.concat(hidden)
+    } else {
+      return items.concat({
+        type: 'showHiddenReplies',
+        key: 'showHiddenReplies',
+        onLoad: loadHiddenReplies,
+      })
     }
   }
 
