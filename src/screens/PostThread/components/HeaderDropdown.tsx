@@ -2,21 +2,20 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {type ThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
 import * as Menu from '#/components/Menu'
 
 export function HeaderDropdown({
-  sortReplies,
-  treeViewEnabled,
-  setSortReplies,
-  setTreeViewEnabled,
-}: {
-  sortReplies: string
-  treeViewEnabled: boolean
-  setSortReplies: (newValue: string) => void
-  setTreeViewEnabled: (newValue: boolean) => void
-}): React.ReactNode {
+  sort,
+  view,
+  setSort,
+  setView,
+}: Pick<
+  ThreadPreferences,
+  'sort' | 'setSort' | 'view' | 'setView'
+>): React.ReactNode {
   const {_} = useLingui()
   return (
     <Menu.Root>
@@ -42,22 +41,22 @@ export function HeaderDropdown({
           <Menu.Item
             label={_(msg`Linear`)}
             onPress={() => {
-              setTreeViewEnabled(false)
+              setView('linear')
             }}>
             <Menu.ItemText>
               <Trans>Linear</Trans>
             </Menu.ItemText>
-            <Menu.ItemRadio selected={!treeViewEnabled} />
+            <Menu.ItemRadio selected={view === 'linear'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Threaded`)}
             onPress={() => {
-              setTreeViewEnabled(true)
+              setView('tree')
             }}>
             <Menu.ItemText>
               <Trans>Threaded</Trans>
             </Menu.ItemText>
-            <Menu.ItemRadio selected={treeViewEnabled} />
+            <Menu.ItemRadio selected={view === 'tree'} />
           </Menu.Item>
         </Menu.Group>
         <Menu.Divider />
@@ -68,32 +67,32 @@ export function HeaderDropdown({
           <Menu.Item
             label={_(msg`Top replies first`)}
             onPress={() => {
-              setSortReplies('top')
+              setSort('top')
             }}>
             <Menu.ItemText>
               <Trans>Top replies first</Trans>
             </Menu.ItemText>
-            <Menu.ItemRadio selected={sortReplies === 'top'} />
+            <Menu.ItemRadio selected={sort === 'top'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Oldest replies first`)}
             onPress={() => {
-              setSortReplies('oldest')
+              setSort('oldest')
             }}>
             <Menu.ItemText>
               <Trans>Oldest replies first</Trans>
             </Menu.ItemText>
-            <Menu.ItemRadio selected={sortReplies === 'oldest'} />
+            <Menu.ItemRadio selected={sort === 'oldest'} />
           </Menu.Item>
           <Menu.Item
             label={_(msg`Newest replies first`)}
             onPress={() => {
-              setSortReplies('newest')
+              setSort('newest')
             }}>
             <Menu.ItemText>
               <Trans>Newest replies first</Trans>
             </Menu.ItemText>
-            <Menu.ItemRadio selected={sortReplies === 'newest'} />
+            <Menu.ItemRadio selected={sort === 'newest'} />
           </Menu.Item>
         </Menu.Group>
       </Menu.Outer>

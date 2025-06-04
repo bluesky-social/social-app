@@ -24,13 +24,14 @@ import {didOrHandleUriMatches, getEmbeddedPost} from '#/state/queries/util'
 import {embedViewRecordToPostView} from '#/state/queries/util'
 
 export function createCacheMutator({
-  params,
-  queryKey,
   queryClient,
+  queryKey,
+  params,
 }: {
-  params: PostThreadParams
-  queryKey: ReturnType<typeof createPostThreadQueryKey>
   queryClient: QueryClient
+  queryKey: ReturnType<typeof createPostThreadQueryKey>
+  // TODO could clean this up?
+  params: PostThreadParams
 }) {
   return {
     insertReplies(

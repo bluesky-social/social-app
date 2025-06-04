@@ -26,7 +26,7 @@ export function traverse(
     hasSession,
     view,
     hasHiddenReplies,
-    showHiddenReplies,
+    hiddenRepliesVisible,
     skipHiddenReplyHandling,
     loadHiddenReplies,
   }: {
@@ -35,7 +35,7 @@ export function traverse(
     hasSession: boolean
     view: PostThreadParams['view']
     hasHiddenReplies: boolean
-    showHiddenReplies: boolean
+    hiddenRepliesVisible: boolean
     skipHiddenReplyHandling?: boolean
     loadHiddenReplies: () => Promise<void>
   },
@@ -241,7 +241,7 @@ export function traverse(
 
   if (!skipHiddenReplyHandling) {
     if (hidden.length || hasHiddenReplies) {
-      if (showHiddenReplies) {
+      if (hiddenRepliesVisible) {
         items.push(...hidden)
       } else {
         items.push({

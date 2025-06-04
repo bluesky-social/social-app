@@ -8,7 +8,6 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {cleanError} from '#/lib/strings/errors'
 import {isNative} from '#/platform/detection'
-import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
@@ -40,45 +39,23 @@ export function Inner({uri}: {uri: string | undefined}) {
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
 
-  const {
-    isLoaded: isThreadPreferencesLoaded,
-    sortReplies,
-    setSortReplies,
-    prioritizeFollowedUsers,
-    treeViewEnabled,
-    setTreeViewEnabled,
-  } = useThreadPreferences()
+  /*
+   * One query to rule them all
+   */
+  const thread = usePostThread({anchor: uri})
 
-  const {
-    isFetching,
-    isPlaceholderData,
-    error,
-    data,
-    refetch,
-    insertReplies,
-    showHiddenReplies,
-  } = usePostThread({
-    enabled: isThreadPreferencesLoaded,
-    params: {
-      anchor: uri,
-      sort: sortReplies,
-      view: treeViewEnabled ? 'tree' : 'linear',
-      prioritizeFollowedUsers,
-    },
-  })
-
-  const optimisticOnPostReply = (data: OnPostSuccessData) => {
-    if (data) {
-      const {replyToUri, posts} = data
+  const optimisticOnPostReply = (payload: OnPostSuccessData) => {
+    if (payload) {
+      const {replyToUri, posts} = payload
       if (replyToUri && posts.length) {
-        insertReplies(replyToUri, posts)
+        thread.actions.insertReplies(replyToUri, posts)
       }
     }
   }
 
   const {openComposer} = useOpenComposer()
   const onReplyToAnchor = () => {
-    const anchorPost = data?.items.find(
+    const anchorPost = thread.data.items.find(
       slice => slice.type === 'threadPost' && slice.ui.isAnchor,
     )
     if (anchorPost?.type !== 'threadPost') {
@@ -159,28 +136,28 @@ export function Inner({uri}: {uri: string | undefined}) {
   const hasExhaustedReplies = useRef(false)
 
   const onStartReached = () => {
-    if (isFetching) return
+    if (thread.state.isFetching) return
     // limit to 100
     setMaxParentCount(n => Math.min(100, n + PARENT_CHUNK_SIZE))
   }
 
   const onEndReached = () => {
-    if (isFetching) return
+    if (thread.state.isFetching) return
     // prevent any state mutations if we know we're done
     if (hasExhaustedReplies.current) return
     setMaxRepliesCount(prev => prev + REPLIES_CHUNK_SIZE)
   }
 
-  const items = useMemo(() => {
+  const slices = useMemo(() => {
     const results: ThreadItem[] = []
 
-    if (!data?.items) return results
+    if (!thread.data.items.length) return results
 
     let repliesCount = 0
     let totalRepliesCount = 0
 
-    for (let i = 0; i < data.items.length; i++) {
-      const item = data.items[i]
+    for (let i = 0; i < thread.data.items.length; i++) {
+      const item = thread.data.items[i]
 
       if ('depth' in item) {
         if (item.depth === 0) {
@@ -190,7 +167,7 @@ export function Inner({uri}: {uri: string | undefined}) {
             const start = i - 1
             const limit = Math.max(0, start - maxParentCount)
             for (let pi = start; pi >= limit; pi--) {
-              results.unshift(data.items[pi])
+              results.unshift(thread.data.items[pi])
             }
           }
         } else if (item.depth > 0) {
@@ -207,12 +184,15 @@ export function Inner({uri}: {uri: string | undefined}) {
     }
 
     // TODO should really just count these during traversal, can remove isPlaceholder data after that
-    if (maxRepliesCount > totalRepliesCount && !isPlaceholderData) {
+    if (
+      maxRepliesCount > totalRepliesCount &&
+      !thread.state.isPlaceholderData
+    ) {
       hasExhaustedReplies.current = true
     }
 
     return results
-  }, [data, deferParents, maxParentCount, maxRepliesCount, isPlaceholderData])
+  }, [thread, deferParents, maxParentCount, maxRepliesCount])
 
   const renderItem = ({item, index}: {item: ThreadItem; index: number}) => {
     if (item.type === 'threadPost') {
@@ -221,7 +201,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         return (
           <ThreadPost
             item={item}
-            threadgateRecord={data?.threadgate?.record ?? undefined}
+            threadgateRecord={thread.data.threadgate?.record ?? undefined}
             overrides={{
               topBorder: index === 0, // && !item.isParentLoading, // TODO
             }}
@@ -235,19 +215,19 @@ export function Inner({uri}: {uri: string | undefined}) {
             onLayout={deferParents ? () => setDeferParents(false) : undefined}>
             <ThreadAnchor
               item={item}
-              threadgateRecord={data?.threadgate?.record ?? undefined}
+              threadgateRecord={thread.data.threadgate?.record ?? undefined}
               onPostSuccess={optimisticOnPostReply}
             />
           </View>
         )
       } else {
-        if (treeViewEnabled) {
+        if (thread.state.view === 'tree') {
           return (
             <ThreadReply
               item={item}
-              threadgateRecord={data?.threadgate?.record ?? undefined}
+              threadgateRecord={thread.data.threadgate?.record ?? undefined}
               overrides={{
-                moderation: showHiddenReplies && item.depth > 0,
+                moderation: thread.state.hiddenRepliesVisible && item.depth > 0,
               }}
               onPostSuccess={optimisticOnPostReply}
             />
@@ -256,9 +236,9 @@ export function Inner({uri}: {uri: string | undefined}) {
           return (
             <ThreadPost
               item={item}
-              threadgateRecord={data?.threadgate?.record ?? undefined}
+              threadgateRecord={thread.data.threadgate?.record ?? undefined}
               overrides={{
-                moderation: showHiddenReplies && item.depth > 0,
+                moderation: thread.state.hiddenRepliesVisible && item.depth > 0,
               }}
               onPostSuccess={optimisticOnPostReply}
             />
@@ -266,7 +246,12 @@ export function Inner({uri}: {uri: string | undefined}) {
         }
       }
     } else if (item.type === 'readMore') {
-      return <ReadMore item={item} view={treeViewEnabled ? 'tree' : 'linear'} />
+      return (
+        <ReadMore
+          item={item}
+          view={thread.state.view === 'tree' ? 'tree' : 'linear'}
+        />
+      )
     } else if (item.type === 'threadPostBlocked') {
       return (
         <View
@@ -340,23 +325,24 @@ export function Inner({uri}: {uri: string | undefined}) {
         </Layout.Header.Content>
         <Layout.Header.Slot>
           <HeaderDropdown
-            sortReplies={sortReplies}
-            treeViewEnabled={treeViewEnabled}
-            setSortReplies={setSortReplies}
-            setTreeViewEnabled={setTreeViewEnabled}
+            sort={thread.state.sort}
+            setSort={thread.actions.setSort}
+            view={thread.state.view}
+            setView={thread.actions.setView}
           />
         </Layout.Header.Slot>
       </Layout.Header.Outer>
 
-      {error ? (
-        <PostThreadError error={error} />
+      {thread.state.error ? (
+        <PostThreadError error={thread.state.error} />
       ) : (
         <ScrollProvider
+        // TODO do we need?
         //onMomentumEnd={onMomentumEnd}
         >
           <List
             ref={listRef}
-            data={items}
+            data={slices}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             onContentSizeChange={onContentSizeChangeWebOnly}
@@ -379,8 +365,8 @@ export function Inner({uri}: {uri: string | undefined}) {
                  * purpose here so we get the loader on initial render
                  */
                 // isFetchingNextPage={isFetching}
-                error={cleanError(error)}
-                onRetry={refetch}
+                error={cleanError(thread.state.error)}
+                onRetry={thread.actions.refetch}
                 /*
                  * 200 is based on the minimum height of a post. This is enough
                  * extra height for the `maintainVisPos` to work without
