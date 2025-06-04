@@ -29,13 +29,18 @@ export function SubscribeProfileDialog({
 function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const {_} = useLingui()
   const t = useTheme()
-  const [state, setState] = useState({posts: false, replies: false})
+  const [state, setState] = useState({
+    posts: false,
+    replies: false,
+    corn: false,
+  })
 
   const values = useMemo(() => {
-    const {posts, replies} = state
+    const {posts, replies, corn} = state
     const res = []
     if (posts) res.push('posts')
     if (replies) res.push('replies')
+    if (corn) res.push('corn')
     return res
   }, [state])
 
@@ -43,6 +48,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     setState({
       posts: newValues.includes('posts'),
       replies: newValues.includes('replies'),
+      corn: newValues.includes('corn'),
     })
 
   const name = createSanitizedDisplayName(profile, false)
@@ -50,19 +56,19 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   return (
     <Dialog.ScrollableInner
       style={web({maxWidth: 400})}
-      label={_(msg`Subscribe to posts`)}>
+      label={_(msg`Get notified of new posts from ${name}`)}>
       <View style={[a.gap_md]}>
         <View style={[a.gap_xs]}>
           <Text style={[a.font_heavy, a.text_2xl]}>
-            <Trans>Subscribe to {name}</Trans>
+            <Trans>Get notified!</Trans>
           </Text>
           <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            <Trans>Get notifications for account activity</Trans>
+            <Trans>Receive notifications when {name} posts</Trans>
           </Text>
         </View>
 
         <Toggle.Group
-          label={_(msg`Subscribe to account`)}
+          label={_(msg`Subscribe to account activity`)}
           values={values}
           onChange={onChange}>
           <View style={[a.gap_sm]}>
@@ -83,6 +89,16 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               <Toggle.LabelText
                 style={[t.atoms.text, a.font_normal, a.text_md]}>
                 <Trans>Replies</Trans>
+              </Toggle.LabelText>
+              <Toggle.Platform />
+            </Toggle.Item>
+            <Toggle.Item
+              label={_(msg`Corn facts`)}
+              name="corn"
+              style={[a.justify_between, a.py_xs]}>
+              <Toggle.LabelText
+                style={[t.atoms.text, a.font_normal, a.text_md]}>
+                <Trans>Corn facts</Trans>
               </Toggle.LabelText>
               <Toggle.Platform />
             </Toggle.Item>
