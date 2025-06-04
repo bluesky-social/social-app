@@ -47,11 +47,14 @@ export function usePostThread({anchor}: {anchor?: string}) {
     view,
     prioritizeFollowedUsers,
   })
+  const postThreadHiddenQueryKey = createPostThreadHiddenQueryKey({
+    anchor,
+    prioritizeFollowedUsers,
+  })
 
   const query = useQuery<UsePostThreadQueryResult>({
     enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
     queryKey: postThreadQueryKey,
-    // gcTime: 0, // TODO faster if we let it cache
     async queryFn(ctx) {
       const {data} = await wait(
         400,
@@ -117,39 +120,12 @@ export function usePostThread({anchor}: {anchor?: string}) {
     () => query.data?.threadgate,
     [query.data?.threadgate],
   )
-  const hasServerHiddenItems = useMemo(
+  const hasServerHiddenThreadItems = useMemo(
     () => !!query.data?.hasHiddenReplies,
     [query.data?.hasHiddenReplies],
   )
-
-  const [hiddenItemsVisible, setHiddenItemsVisible] = useState(false)
-  const [serverHiddenThreadItems, setServerHiddenThreadItems] = useState<
-    ThreadItem[]
-  >([])
-
-  /**
-   * Sets the sort order for the thread and resets the hidden items
-   */
-  const setSort: typeof baseSetSort = useCallback(
-    nextSort => {
-      setHiddenItemsVisible(false)
-      setServerHiddenThreadItems([])
-      baseSetSort(nextSort)
-    },
-    [baseSetSort, setServerHiddenThreadItems, setHiddenItemsVisible],
-  )
-
-  /**
-   * Sets the view variant for the thread and resets the hidden items
-   */
-  const setView: typeof baseSetView = useCallback(
-    nextView => {
-      setHiddenItemsVisible(false)
-      setServerHiddenThreadItems([])
-      baseSetView(nextView)
-    },
-    [baseSetView, setServerHiddenThreadItems, setHiddenItemsVisible],
-  )
+  const [hiddenThreadItemsVisible, setHiddenThreadItemsVisible] =
+    useState(false)
 
   /**
    * Creates a mutator for the post thread cache. This is used to insert
@@ -158,80 +134,92 @@ export function usePostThread({anchor}: {anchor?: string}) {
   const mutator = useMemo(
     () =>
       createCacheMutator({
-        params: {
-          sort,
-          view,
-        },
-        queryKey: postThreadQueryKey,
+        params: {view},
+        postThreadQueryKey,
+        postThreadHiddenQueryKey,
         queryClient: qc,
       }),
-    [qc, sort, view, postThreadQueryKey],
+    [qc, view, postThreadQueryKey, postThreadHiddenQueryKey],
   )
 
   /**
-   * Loads hidden replies for this thread. Any replies that are moderated from
-   * the initial visible response(s) are shown immediately. Remote data is
-   * fetched and inserted when it's available.
+   * If we have server-hidden items and the user has chosen to view them,
+   * start loading data
    */
-  const loadServerHiddenThreadItems = useCallback(async () => {
-    /*
-     * Show any moderated replies already in memory that were handled here on
-     * the client. If there are server-hidden replies, we'll fetch those next.
-     */
-    setHiddenItemsVisible(true)
-
-    /*
-     * If there are no server hidden replies, just stop here.
-     */
-    if (!hasServerHiddenItems) return
-
-    setServerHiddenThreadItems(
-      Array.from({length: 2}).map((_, i) =>
+  const hiddenQueryEnabled =
+    hasServerHiddenThreadItems && hiddenThreadItemsVisible
+  const hiddenQuery = useQuery({
+    enabled: hiddenQueryEnabled,
+    queryKey: postThreadHiddenQueryKey,
+    async queryFn() {
+      const {data} = await wait(
+        400,
+        agent.app.bsky.unspecced.getPostThreadHiddenV2({
+          anchor: anchor!,
+          prioritizeFollowedUsers,
+        }),
+      )
+      return data
+    },
+  })
+  const serverHiddenThreadItems: ThreadItem[] = useMemo(() => {
+    if (!hiddenQueryEnabled) return []
+    if (hiddenQuery.isLoading) {
+      return Array.from({length: 2}).map((_, i) =>
         views.skeleton({
-          key: `${anchor!}-reply-${i}`,
+          key: `hidden-reply-${i}`,
           item: 'reply',
         }),
-      ),
-    )
-
-    const params = {
-      anchor: anchor!,
-      prioritizeFollowedUsers,
-    }
-    const data = await wait(
-      400,
-      qc.fetchQuery({
-        queryKey: createPostThreadHiddenQueryKey(params),
-        async queryFn() {
-          const {data} = await agent.app.bsky.unspecced.getPostThreadHiddenV2(
-            params,
-          )
-          return data.thread || []
+      )
+    } else if (hiddenQuery.isError) {
+      // TODO could insert error component
+      return []
+    } else if (hiddenQuery.data?.thread) {
+      const {threadItems} = sortAndAnnotateThreadItems(
+        hiddenQuery.data.thread,
+        {
+          view,
+          skipHiddenReplyHandling: true,
+          threadgateHiddenReplies: mergeThreadgateHiddenReplies(
+            threadgate?.record,
+          ),
+          moderationOpts: moderationOpts!,
         },
-      }),
-    )
-
-    const {threadItems} = sortAndAnnotateThreadItems(data || [], {
-      view,
-      skipHiddenReplyHandling: true,
-      threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate?.record),
-      moderationOpts: moderationOpts!,
-    })
-
-    // insert the hidden replies into the state
-    setServerHiddenThreadItems(threadItems)
+      )
+      return threadItems
+    } else {
+      return []
+    }
   }, [
-    qc,
-    agent,
     view,
-    anchor,
-    prioritizeFollowedUsers,
+    hiddenQueryEnabled,
+    hiddenQuery,
     mergeThreadgateHiddenReplies,
     moderationOpts,
     threadgate?.record,
-    hasServerHiddenItems,
-    setHiddenItemsVisible,
   ])
+
+  /**
+   * Sets the sort order for the thread and resets the hidden items
+   */
+  const setSort: typeof baseSetSort = useCallback(
+    nextSort => {
+      setHiddenThreadItemsVisible(false)
+      baseSetSort(nextSort)
+    },
+    [baseSetSort, setHiddenThreadItemsVisible],
+  )
+
+  /**
+   * Sets the view variant for the thread and resets the hidden items
+   */
+  const setView: typeof baseSetView = useCallback(
+    nextView => {
+      setHiddenThreadItemsVisible(false)
+      baseSetView(nextView)
+    },
+    [baseSetView, setHiddenThreadItemsVisible],
+  )
 
   /*
    * This is the main thread response, sorted into separate buckets based on
@@ -263,9 +251,9 @@ export function usePostThread({anchor}: {anchor?: string}) {
       serverHiddenThreadItems,
       isLoading: query.isPlaceholderData,
       hasSession,
-      hasServerHiddenItems,
-      hiddenItemsVisible,
-      loadServerHiddenThreadItems,
+      hasServerHiddenThreadItems,
+      hiddenThreadItemsVisible,
+      showHiddenThreadItems: () => setHiddenThreadItemsVisible(true),
     })
   }, [
     threadItems,
@@ -273,9 +261,9 @@ export function usePostThread({anchor}: {anchor?: string}) {
     serverHiddenThreadItems,
     query.isPlaceholderData,
     hasSession,
-    hasServerHiddenItems,
-    hiddenItemsVisible,
-    loadServerHiddenThreadItems,
+    hasServerHiddenThreadItems,
+    hiddenThreadItemsVisible,
+    setHiddenThreadItemsVisible,
   ])
 
   return useMemo(
@@ -292,7 +280,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
          */
         sort,
         view,
-        hiddenItemsVisible,
+        hiddenThreadItemsVisible,
       },
       data: {
         items,
@@ -314,7 +302,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     [
       query,
       mutator.insertReplies,
-      hiddenItemsVisible,
+      hiddenThreadItemsVisible,
       sort,
       view,
       setSort,

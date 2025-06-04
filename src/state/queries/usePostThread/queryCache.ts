@@ -2,6 +2,7 @@ import {
   type $Typed,
   type AppBskyFeedDefs,
   AppBskyUnspeccedDefs,
+  type AppBskyUnspeccedGetPostThreadHiddenV2,
   type AppBskyUnspeccedGetPostThreadV2,
   AtUri,
 } from '@atproto/api'
@@ -15,6 +16,8 @@ import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/
 import {BELOW} from '#/state/queries/usePostThread/const'
 import {getBranch} from '#/state/queries/usePostThread/traversal'
 import {
+  type ApiThreadItem,
+  type createPostThreadHiddenQueryKey,
   type createPostThreadQueryKey,
   type PostThreadParams,
   postThreadQueryKeyRoot,
@@ -26,96 +29,119 @@ import {embedViewRecordToPostView} from '#/state/queries/util'
 
 export function createCacheMutator({
   queryClient,
-  queryKey,
+  postThreadQueryKey,
+  postThreadHiddenQueryKey,
   params,
 }: {
   queryClient: QueryClient
-  queryKey: ReturnType<typeof createPostThreadQueryKey>
-  // TODO could clean this up?
-  params: PostThreadParams
+  postThreadQueryKey: ReturnType<typeof createPostThreadQueryKey>
+  postThreadHiddenQueryKey: ReturnType<typeof createPostThreadHiddenQueryKey>
+  params: Pick<PostThreadParams, 'view'>
 }) {
   return {
     insertReplies(
       parentUri: string,
       replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
     ) {
+      /*
+       * Main thread query mutator.
+       */
       queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
-        queryKey,
-        queryData => {
-          if (!queryData) return
-
-          const thread = [...queryData.thread]
-
-          for (let i = 0; i < thread.length; i++) {
-            const existingParent = thread[i]
-            if (!AppBskyUnspeccedDefs.isThreadItemPost(existingParent.value))
-              continue
-            if (existingParent.uri !== parentUri) continue
-
-            /*
-             * Update parent data
-             */
-            existingParent.value.post = {
-              ...existingParent.value.post,
-              replyCount: (existingParent.value.post.replyCount || 0) + 1,
-            }
-
-            const opDid = getRootPostAtUri(existingParent.value.post)?.host
-            const nextItem = thread.at(i + 1)
-            const isReplyToRoot = existingParent.depth === 0
-            const isEndOfReplyChain =
-              !nextItem || nextItem.depth <= existingParent.depth
-            const firstReply = replies.at(0)
-            const opIsReplier = AppBskyUnspeccedDefs.isThreadItemPost(
-              firstReply?.value,
-            )
-              ? opDid === firstReply.value.post.author.did
-              : false
-
-            /*
-             * Always insert replies if the following conditions are met.
-             */
-            const shouldAlwaysInsertReplies =
-              isReplyToRoot ||
-              params.view === 'tree' ||
-              (params.view === 'linear' && isEndOfReplyChain)
-            /*
-             * Maybe insert replies if the replier is the OP and certain conditions are met
-             */
-            const shouldReplaceWithOPReplies =
-              !isReplyToRoot && params.view === 'linear' && opIsReplier
-
-            if (shouldAlwaysInsertReplies || shouldReplaceWithOPReplies) {
-              const branch = getBranch(thread, i, existingParent.depth)
-              /*
-               * OP insertions replace other replies _in linear view_.
-               */
-              const itemsToRemove = shouldReplaceWithOPReplies
-                ? branch.length
-                : 0
-
-              thread.splice(
-                i + 1,
-                itemsToRemove,
-                ...replies
-                  .map((r, ri) => {
-                    r.depth = existingParent.depth + 1 + ri
-                    return r
-                  })
-                  .filter(r => {
-                    // Filter out replies that are too deep for our UI
-                    return r.depth <= BELOW
-                  }),
-              )
-            }
-          }
-
+        postThreadQueryKey,
+        data => {
+          if (!data) return
           return {
-            ...queryData,
-            thread,
+            ...data,
+            thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([
+              ...data.thread,
+            ]),
           }
         },
       )
+
+      /*
+       * Hidden threads query mutator.
+       */
+      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadHiddenV2.OutputSchema>(
+        postThreadHiddenQueryKey,
+        data => {
+          if (!data) return
+          console.log(data)
+          return {
+            ...data,
+            thread:
+              mutator<AppBskyUnspeccedGetPostThreadHiddenV2.ThreadHiddenItem>([
+                ...data.thread,
+              ]),
+          }
+        },
+      )
+
+      function mutator<T>(thread: ApiThreadItem[]): T[] {
+        for (let i = 0; i < thread.length; i++) {
+          const existingParent = thread[i]
+          if (!AppBskyUnspeccedDefs.isThreadItemPost(existingParent.value))
+            continue
+          if (existingParent.uri !== parentUri) continue
+
+          /*
+           * Update parent data
+           */
+          existingParent.value.post = {
+            ...existingParent.value.post,
+            replyCount: (existingParent.value.post.replyCount || 0) + 1,
+          }
+
+          const opDid = getRootPostAtUri(existingParent.value.post)?.host
+          const nextItem = thread.at(i + 1)
+          const isReplyToRoot = existingParent.depth === 0
+          const isEndOfReplyChain =
+            !nextItem || nextItem.depth <= existingParent.depth
+          const firstReply = replies.at(0)
+          const opIsReplier = AppBskyUnspeccedDefs.isThreadItemPost(
+            firstReply?.value,
+          )
+            ? opDid === firstReply.value.post.author.did
+            : false
+
+          /*
+           * Always insert replies if the following conditions are met.
+           */
+          const shouldAlwaysInsertReplies =
+            isReplyToRoot ||
+            params.view === 'tree' ||
+            (params.view === 'linear' && isEndOfReplyChain)
+          /*
+           * Maybe insert replies if the replier is the OP and certain conditions are met
+           */
+          const shouldReplaceWithOPReplies =
+            !isReplyToRoot && params.view === 'linear' && opIsReplier
+
+          if (shouldAlwaysInsertReplies || shouldReplaceWithOPReplies) {
+            const branch = getBranch(thread, i, existingParent.depth)
+            /*
+             * OP insertions replace other replies _in linear view_.
+             */
+            const itemsToRemove = shouldReplaceWithOPReplies ? branch.length : 0
+
+            thread.splice(
+              i + 1,
+              itemsToRemove,
+              ...replies
+                .map((r, ri) => {
+                  r.depth = existingParent.depth + 1 + ri
+                  return r
+                })
+                .filter(r => {
+                  // Filter out replies that are too deep for our UI
+                  return r.depth <= BELOW
+                }),
+            )
+          }
+        }
+
+        return thread as T[]
+      }
     },
     /**
      * Unused atm, post shadow does the trick, but it would be nice to clean up
@@ -123,7 +149,7 @@ export function createCacheMutator({
      */
     deletePost(post: AppBskyUnspeccedGetPostThreadV2.ThreadItem) {
       queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
-        queryKey,
+        postThreadQueryKey,
         queryData => {
           if (!queryData) return
 
