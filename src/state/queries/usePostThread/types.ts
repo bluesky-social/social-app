@@ -40,6 +40,7 @@ export type ThreadItem =
           record: AppBskyFeedPost.Record
         }
       }
+      isBlurred: boolean
       moderation: ModerationDecision
       ui: {
         isAnchor: boolean

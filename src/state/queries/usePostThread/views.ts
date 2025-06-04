@@ -63,12 +63,20 @@ export function threadPost({
   depth,
   value,
   moderationOpts,
+  threadgateHiddenReplies,
 }: {
   uri: string
   depth: number
   value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
   moderationOpts: ModerationOpts
+  threadgateHiddenReplies: Set<string>
 }): Extract<ThreadItem, {type: 'threadPost'}> {
+  const moderation = moderatePost(value.post, moderationOpts)
+  const modui = moderation.ui('contentList')
+  const blurred = modui.blur || modui.filter
+  const muted = (modui.blurs[0] || modui.filters[0])?.type === 'muted'
+  const hiddenByThreadgate = threadgateHiddenReplies.has(uri)
+  const isBlurred = hiddenByThreadgate || blurred || muted
   return {
     type: 'threadPost',
     key: uri,
@@ -84,7 +92,8 @@ export function threadPost({
         record: AppBskyFeedPost.Record
       },
     },
-    moderation: moderatePost(value.post, moderationOpts),
+    isBlurred,
+    moderation,
     // @ts-ignore populated by the traversal
     ui: {},
   }
