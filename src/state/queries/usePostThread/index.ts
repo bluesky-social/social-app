@@ -8,11 +8,12 @@ import {
   createCacheMutator,
   getThreadPlaceholder,
 } from '#/state/queries/usePostThread/queryCache'
-import {combine,traverse} from '#/state/queries/usePostThread/traversal'
+import {combine, traverse} from '#/state/queries/usePostThread/traversal'
 import {
   createPostThreadHiddenQueryKey,
   createPostThreadQueryKey,
   type ThreadItem,
+  type UsePostThreadQueryResult,
 } from '#/state/queries/usePostThread/types'
 import {getThreadgateRecord} from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
@@ -35,6 +36,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setView: baseSetView,
     prioritizeFollowedUsers,
   } = useThreadPreferences()
+
   const postThreadQueryKey = createPostThreadQueryKey({
     anchor,
     sort,
@@ -42,7 +44,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     prioritizeFollowedUsers,
   })
 
-  const query = useQuery({
+  const query = useQuery<UsePostThreadQueryResult>({
     enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
     queryKey: postThreadQueryKey,
     // gcTime: 0, // TODO faster if we let it cache
@@ -73,10 +75,18 @@ export function usePostThread({anchor}: {anchor?: string}) {
         ctx.meta.hasHiddenReplies = true
       }
 
-      return {
-        ...data,
+      const result = {
+        thread: data.thread || [],
+        threadgate: data.threadgate,
         hasHiddenReplies: !!ctx.meta.hasHiddenReplies,
       }
+
+      const record = getThreadgateRecord(result.threadgate)
+      if (result.threadgate && record) {
+        result.threadgate.record = record
+      }
+
+      return result as UsePostThreadQueryResult
     },
     placeholderData() {
       if (!anchor) return
@@ -90,39 +100,86 @@ export function usePostThread({anchor}: {anchor?: string}) {
       return {thread, threadgate: undefined, hasHiddenReplies: false}
     },
     select(data) {
-      const threadgate = getThreadgateRecord(data.threadgate)
-      return {
-        ...data,
-        threadgate: {
-          ...data.threadgate,
-          record: threadgate,
-        },
+      const record = getThreadgateRecord(data.threadgate)
+      if (data.threadgate && record) {
+        data.threadgate.record = record
       }
+      return data
     },
   })
 
-  const hasServerHiddenReplies = !!query.data?.hasHiddenReplies
-  const [hiddenRepliesVisible, setHiddenRepliesVisible] = useState(false)
+  const thread = useMemo(() => query.data?.thread || [], [query.data?.thread])
+  const threadgate = useMemo(
+    () => query.data?.threadgate,
+    [query.data?.threadgate],
+  )
+  const hasServerHiddenItems = useMemo(
+    () => !!query.data?.hasHiddenReplies,
+    [query.data?.hasHiddenReplies],
+  )
+
+  const [hiddenItemsVisible, setHiddenItemsVisible] = useState(false)
   const [additionalHiddenItems, setAdditionalHiddenItems] = useState<
     ThreadItem[]
   >([])
+
+  /**
+   * Sets the sort order for the thread and resets the hidden items
+   */
+  const setSort: typeof baseSetSort = useCallback(
+    nextSort => {
+      setHiddenItemsVisible(false)
+      setAdditionalHiddenItems([])
+      baseSetSort(nextSort)
+    },
+    [baseSetSort, setAdditionalHiddenItems, setHiddenItemsVisible],
+  )
+
+  /**
+   * Sets the view variant for the thread and resets the hidden items
+   */
+  const setView: typeof baseSetView = useCallback(
+    nextView => {
+      setHiddenItemsVisible(false)
+      setAdditionalHiddenItems([])
+      baseSetView(nextView)
+    },
+    [baseSetView, setAdditionalHiddenItems, setHiddenItemsVisible],
+  )
+
+  /**
+   * Creates a mutator for the post thread cache. This is used to insert
+   * replies into the thread cache after posting.
+   */
+  const mutator = useMemo(
+    () =>
+      createCacheMutator({
+        params: {
+          sort,
+          view,
+        },
+        queryKey: postThreadQueryKey,
+        queryClient: qc,
+      }),
+    [qc, sort, view, postThreadQueryKey],
+  )
 
   /**
    * Loads hidden replies for this thread. Any replies that are moderated from
    * the initial visible response(s) are shown immediately. Remote data is
    * fetched and inserted when it's available.
    */
-  const loadHiddenReplies = useCallback(async () => {
+  const loadServerHiddenItems = useCallback(async () => {
     /*
      * Show any moderated replies already in memory that were handled here on
      * the client. If there are server-hidden replies, we'll fetch those next.
      */
-    setHiddenRepliesVisible(true)
+    setHiddenItemsVisible(true)
 
     /*
      * If there are no server hidden replies, just stop here.
      */
-    if (!hasServerHiddenReplies) return
+    if (!hasServerHiddenItems) return
 
     setAdditionalHiddenItems(
       Array.from({length: 2}).map((_, i) =>
@@ -153,9 +210,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     const {items} = traverse(data || [], {
       view,
       skipHiddenReplyHandling: true,
-      threadgateHiddenReplies: mergeThreadgateHiddenReplies(
-        query.data?.threadgate?.record,
-      ),
+      threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate?.record),
       moderationOpts: moderationOpts!,
     })
 
@@ -169,123 +224,118 @@ export function usePostThread({anchor}: {anchor?: string}) {
     prioritizeFollowedUsers,
     mergeThreadgateHiddenReplies,
     moderationOpts,
-    query.data?.threadgate?.record,
-    hasServerHiddenReplies,
-    setHiddenRepliesVisible,
+    threadgate?.record,
+    hasServerHiddenItems,
+    setHiddenItemsVisible,
   ])
 
-  const combined = useMemo(() => {
-    const traversal = traverse(query.data?.thread || [], {
+  /**
+   * Builds the full set of thread items, minus any server-hidden replies.
+   */
+  const threadItems = useMemo(() => {
+    const traversal = traverse(thread, {
       view: view,
-      threadgateHiddenReplies: mergeThreadgateHiddenReplies(
-        query.data?.threadgate?.record,
-      ),
+      threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate?.record),
       moderationOpts: moderationOpts!,
     })
     return combine(traversal, {
       hasSession,
-      hasServerHiddenReplies,
-      hiddenRepliesVisible,
-      loadHiddenReplies,
+      hasServerHiddenItems,
+      hiddenItemsVisible,
+      loadServerHiddenItems,
     })
   }, [
-    query.data,
+    thread,
+    threadgate?.record,
     mergeThreadgateHiddenReplies,
     moderationOpts,
     hasSession,
     view,
-    hasServerHiddenReplies,
-    hiddenRepliesVisible,
-    loadHiddenReplies,
+    hasServerHiddenItems,
+    hiddenItemsVisible,
+    loadServerHiddenItems,
   ])
 
+  /**
+   * Computes the final thread items based on load state and the availability
+   * of server-hidden replies.
+   */
   const items = useMemo(() => {
-    return combined.concat(additionalHiddenItems)
-  }, [combined, additionalHiddenItems])
+    if (query.isPlaceholderData) {
+      const anchorPost = threadItems.at(0)
+      const skeletonReplies =
+        anchorPost && anchorPost.type === 'threadPost'
+          ? anchorPost?.value.post.replyCount ?? 4
+          : 4
 
-  if (query.isPlaceholderData) {
-    const anchorPost = items.at(0)
-    const skeletonReplies =
-      anchorPost && anchorPost.type === 'threadPost'
-        ? anchorPost?.value.post.replyCount ?? 4
-        : 4
-
-    if (!items.length) {
-      items.push(
-        views.skeleton({
-          key: anchor!,
-          item: 'anchor',
-        }),
-      )
-
-      if (hasSession) {
-        items.push(
+      if (!threadItems.length) {
+        threadItems.push(
           views.skeleton({
-            key: 'replyComposer',
-            item: 'replyComposer',
+            key: anchor!,
+            item: 'anchor',
+          }),
+        )
+
+        if (hasSession) {
+          threadItems.push(
+            views.skeleton({
+              key: 'replyComposer',
+              item: 'replyComposer',
+            }),
+          )
+        }
+      }
+
+      for (let i = 0; i < skeletonReplies; i++) {
+        threadItems.push(
+          views.skeleton({
+            key: `${anchor!}-reply-${i}`,
+            item: 'reply',
           }),
         )
       }
+
+      return threadItems
+    } else {
+      return threadItems.concat(additionalHiddenItems)
     }
-
-    for (let i = 0; i < skeletonReplies; i++) {
-      items.push(
-        views.skeleton({
-          key: `${anchor!}-reply-${i}`,
-          item: 'reply',
-        }),
-      )
-    }
-  }
-
-  const mutator = useMemo(
-    () =>
-      createCacheMutator({
-        params: {
-          sort,
-          view,
-        },
-        queryKey: postThreadQueryKey,
-        queryClient: qc,
-      }),
-    [qc, sort, view, postThreadQueryKey],
-  )
-
-  const setSort: typeof baseSetSort = useCallback(
-    nextSort => {
-      setHiddenRepliesVisible(false)
-      setAdditionalHiddenItems([])
-      baseSetSort(nextSort)
-    },
-    [baseSetSort, setAdditionalHiddenItems, setHiddenRepliesVisible],
-  )
-
-  const setView: typeof baseSetView = useCallback(
-    nextView => {
-      setHiddenRepliesVisible(false)
-      setAdditionalHiddenItems([])
-      baseSetView(nextView)
-    },
-    [baseSetView, setAdditionalHiddenItems, setHiddenRepliesVisible],
-  )
+  }, [
+    query.isPlaceholderData,
+    threadItems,
+    additionalHiddenItems,
+    anchor,
+    hasSession,
+  ])
 
   return useMemo(
     () => ({
       state: {
+        /*
+         * Copy in any query state that is useful
+         */
         isFetching: query.isFetching,
         isPlaceholderData: query.isPlaceholderData,
         error: query.error,
-        hiddenRepliesVisible,
+        /*
+         * Other state
+         */
         sort,
         view,
+        hiddenItemsVisible,
       },
       data: {
-        items: items || [],
-        threadgate: query.data?.threadgate,
+        items,
+        threadgate,
       },
       actions: {
+        /*
+         * Copy in any query actions that are useful
+         */
         insertReplies: mutator.insertReplies,
         refetch: query.refetch,
+        /*
+         * Other actions
+         */
         setSort,
         setView,
       },
@@ -294,11 +344,12 @@ export function usePostThread({anchor}: {anchor?: string}) {
       query,
       items,
       mutator.insertReplies,
-      hiddenRepliesVisible,
+      hiddenItemsVisible,
       sort,
       view,
       setSort,
       setView,
+      threadgate,
     ],
   )
 }
