@@ -79,6 +79,23 @@ export function Inner({uri}: {uri: string | undefined}) {
     })
   }
 
+  /*
+   * On native, any time we navigate to a new post/reply (even if the data is
+   * cached), we skip rendering parents so that the anchor post is the first
+   * item in the list. That way,
+   * `maintainVisibleContentPosition={{minIndexForVisible: 0}}` will pin the
+   * anchor post to the top of the screen, and on the next render, we'll
+   * include parents.
+   *
+   * On the web this is not necessary because we can synchronously adjust the
+   * scroll in onContentSizeChange instead.
+   */
+  const [deferParents, setDeferParents] = useState(isNative)
+  const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE)
+  const [maxChildrenCount, setMaxChildrenCount] = useState(CHILDREN_CHUNK_SIZE)
+  const totalParentCount = useRef(0) // recomputed below
+  const totalChildrenCount = useRef(thread.data.items.length) // recomputed below
+
   const listRef = useRef<ListMethods>(null)
   const headerRef = useRef<View | null>(null)
   const anchorRef = useRef<View | null>(null)
@@ -122,23 +139,6 @@ export function Inner({uri}: {uri: string | undefined}) {
       }
     }
   })
-
-  /*
-   * On native, any time we navigate to a new post/reply (even if the data is
-   * cached), we skip rendering parents so that the anchor post is the first
-   * item in the list. That way,
-   * `maintainVisibleContentPosition={{minIndexForVisible: 0}}` will pin the
-   * anchor post to the top of the screen, and on the next render, we'll
-   * include parents.
-   *
-   * On the web this is not necessary because we can synchronously adjust the
-   * scroll in onContentSizeChange instead.
-   */
-  const [deferParents, setDeferParents] = useState(isNative)
-  const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE)
-  const [maxChildrenCount, setMaxChildrenCount] = useState(CHILDREN_CHUNK_SIZE)
-  const totalParentCount = useRef(0) // recomputed below
-  const totalChildrenCount = useRef(thread.data.items.length) // recomputed below
 
   const onStartReached = () => {
     if (thread.state.isFetching) return
@@ -292,19 +292,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       )
     } else if (item.type === 'showHiddenReplies') {
       return (
-        <PostThreadShowHiddenReplies
-          type="hidden"
-          onPress={() => {
-            item.onPress()
-            /*
-             * Bit of a hack. This resets the ref value for the anchor so that
-             * the next time `onContentSizeChangeWebOnly` fires, it won't
-             * adjust scroll. However, on the next render cycle, it will, which
-             * will give us time to insert the skeleton state and handle scroll.
-             */
-            anchorRef.current = null
-          }}
-        />
+        <PostThreadShowHiddenReplies type="hidden" onPress={item.onPress} />
       )
     } else if (item.type === 'skeleton') {
       if (item.item === 'anchor') {
@@ -368,11 +356,6 @@ export function Inner({uri}: {uri: string | undefined}) {
             // removeClippedSubviews={isAndroid ? false : undefined}
             ListFooterComponent={
               <ListFooter
-                /*
-                 * Using `isFetching` over `isFetchingNextPage` is done on
-                 * purpose here so we get the loader on initial render
-                 */
-                // isFetchingNextPage={isFetching}
                 error={cleanError(thread.state.error)}
                 onRetry={thread.actions.refetch}
                 /*
