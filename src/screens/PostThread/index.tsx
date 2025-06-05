@@ -25,7 +25,10 @@ import {
 import {ThreadItemPostTombstone} from '#/screens/PostThread/components/ThreadItemPostTombstone'
 import {ThreadItemReadMore} from '#/screens/PostThread/components/ThreadItemReadMore'
 import {ThreadItemReadMoreUp} from '#/screens/PostThread/components/ThreadItemReadMoreUp'
-import {ThreadItemTreePost} from '#/screens/PostThread/components/ThreadItemTreePost'
+import {
+  ThreadItemTreePost,
+  ThreadItemTreePostSkeleton,
+} from '#/screens/PostThread/components/ThreadItemTreePost'
 import {useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -306,7 +309,11 @@ export function Inner({uri}: {uri: string | undefined}) {
       if (item.item === 'anchor') {
         return <ThreadAnchorSkeleton />
       } else if (item.item === 'reply') {
-        return <ThreadItemPostSkeleton />
+        if (thread.state.view === 'linear') {
+          return <ThreadItemPostSkeleton index={index} />
+        } else {
+          return <ThreadItemTreePostSkeleton index={index} />
+        }
       }
     }
     return null
