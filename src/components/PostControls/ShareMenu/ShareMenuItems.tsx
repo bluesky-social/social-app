@@ -10,6 +10,7 @@ import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -61,12 +62,16 @@ let ShareMenuItems = ({
     onShareProp()
   }
 
-  const onCopyLink = () => {
+  const onCopyLink = async () => {
     logger.metric('share:press:copyLink', {}, {statsig: true})
     const url = toShareUrl(href)
-    ExpoClipboard.setUrlAsync(url).then(() =>
-      Toast.show(_(msg`Copied to clipboard`), 'clipboard-check'),
-    )
+    if (isIOS) {
+      // iOS only
+      await ExpoClipboard.setUrlAsync(url)
+    } else {
+      await ExpoClipboard.setStringAsync(url)
+    }
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
     onShareProp()
   }
 
