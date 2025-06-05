@@ -210,48 +210,48 @@ const ThreadReplyInner = memo(function ThreadReplyInner({
       })}
       <View style={a.flex_1}>
         <SubtleHover>
-          <View
-            style={[
-              {
-                paddingHorizontal: OUTER_SPACE,
-                paddingTop: OUTER_SPACE / 2,
-              },
-              item.ui.indent === 1 && [
-                !item.ui.showParentReplyLine && a.pt_lg,
-                !item.ui.showChildReplyLine && a.pb_sm,
-              ],
-              item.ui.isLastChild &&
-                !item.ui.precedesChildReadMore && [a.pb_sm],
-            ]}>
-            {item.ui.indent > 1 && (
-              <View
-                style={[
-                  a.absolute,
-                  t.atoms.border_contrast_low,
-                  {
-                    left: -1,
-                    top: 0,
-                    height:
-                      TREE_AVI_WIDTH / 2 +
-                      REPLY_LINE_WIDTH / 2 +
-                      OUTER_SPACE / 2,
-                    width: OUTER_SPACE,
-                    borderLeftWidth: REPLY_LINE_WIDTH,
-                    borderBottomWidth: REPLY_LINE_WIDTH,
-                    borderBottomLeftRadius: a.rounded_sm.borderRadius,
-                  },
-                ]}
-              />
-            )}
-            <PostHider
-              testID={`postThreadItem-by-${post.author.handle}`}
-              href={postHref}
-              disabled={overrides?.moderation === true}
-              modui={moderation.ui('contentList')}
-              iconSize={42}
-              iconStyles={{marginLeft: 2, marginRight: 2}}
-              profile={post.author}
-              interpretFilterAsBlur>
+          <PostHider
+            testID={`postThreadItem-by-${post.author.handle}`}
+            href={postHref}
+            disabled={overrides?.moderation === true}
+            modui={moderation.ui('contentList')}
+            iconSize={42}
+            iconStyles={{marginLeft: 2, marginRight: 2}}
+            profile={post.author}
+            interpretFilterAsBlur>
+            <View
+              style={[
+                {
+                  paddingHorizontal: OUTER_SPACE,
+                  paddingTop: OUTER_SPACE / 2,
+                },
+                item.ui.indent === 1 && [
+                  !item.ui.showParentReplyLine && a.pt_lg,
+                  !item.ui.showChildReplyLine && a.pb_sm,
+                ],
+                item.ui.isLastChild &&
+                  !item.ui.precedesChildReadMore && [a.pb_sm],
+              ]}>
+              {item.ui.indent > 1 && (
+                <View
+                  style={[
+                    a.absolute,
+                    t.atoms.border_contrast_low,
+                    {
+                      left: -1,
+                      top: 0,
+                      height:
+                        TREE_AVI_WIDTH / 2 +
+                        REPLY_LINE_WIDTH / 2 +
+                        OUTER_SPACE / 2,
+                      width: OUTER_SPACE,
+                      borderLeftWidth: REPLY_LINE_WIDTH,
+                      borderBottomWidth: REPLY_LINE_WIDTH,
+                      borderBottomLeftRadius: a.rounded_sm.borderRadius,
+                    },
+                  ]}
+                />
+              )}
               <View style={[a.flex_row, a.gap_md]}>
                 <View style={[a.flex_1]}>
                   <PostMeta
@@ -329,8 +329,8 @@ const ThreadReplyInner = memo(function ThreadReplyInner({
                   </View>
                 </View>
               </View>
-            </PostHider>
-          </View>
+            </View>
+          </PostHider>
         </SubtleHover>
       </View>
     </View>
