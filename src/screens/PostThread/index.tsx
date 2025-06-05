@@ -19,11 +19,11 @@ import {
   ThreadAnchor,
   ThreadAnchorSkeleton,
 } from '#/screens/PostThread/components/ThreadAnchor'
-import {ThreadItemTreePost} from '#/screens/PostThread/components/ThreadItemTreePost'
 import {
-  ThreadPost,
-  ThreadPostSkeleton,
-} from '#/screens/PostThread/components/ThreadPost'
+  ThreadItemPost,
+  ThreadItemPostSkeleton,
+} from '#/screens/PostThread/components/ThreadItemPost'
+import {ThreadItemTreePost} from '#/screens/PostThread/components/ThreadItemTreePost'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -210,7 +210,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       if (item.depth < 0) {
         if (deferParents) return null
         return (
-          <ThreadPost
+          <ThreadItemPost
             item={item}
             threadgateRecord={thread.data.threadgate?.record ?? undefined}
             overrides={{
@@ -246,7 +246,7 @@ export function Inner({uri}: {uri: string | undefined}) {
           )
         } else {
           return (
-            <ThreadPost
+            <ThreadItemPost
               item={item}
               threadgateRecord={thread.data.threadgate?.record ?? undefined}
               overrides={{
@@ -321,7 +321,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       if (item.item === 'anchor') {
         return <ThreadAnchorSkeleton />
       } else if (item.item === 'reply') {
-        return <ThreadPostSkeleton />
+        return <ThreadItemPostSkeleton />
       }
     }
     return null

@@ -56,7 +56,7 @@ export type ThreadItemPostProps = {
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }
 
-export function ThreadPost({
+export function ThreadItemPost({
   item,
   overrides,
   onPostSuccess,
@@ -65,13 +65,11 @@ export function ThreadPost({
   const postShadow = usePostShadow(item.value.post)
 
   if (postShadow === POST_TOMBSTONE) {
-    return <PostThreadItemDeleted item={item} overrides={overrides} />
+    return <ThreadItemPostDeleted item={item} overrides={overrides} />
   }
 
   return (
-    <ThreadPostInner
-      // Safeguard from clobbering per-post state below:
-      key={postShadow.uri}
+    <ThreadItemPostInner
       item={item}
       postShadow={postShadow}
       threadgateRecord={threadgateRecord}
@@ -81,7 +79,7 @@ export function ThreadPost({
   )
 }
 
-function PostThreadItemDeleted({
+function ThreadItemPostDeleted({
   item,
   overrides,
 }: Pick<ThreadItemPostProps, 'item' | 'overrides'>) {
@@ -180,7 +178,7 @@ const ThreadItemPostParentReplyLine = memo(
   },
 )
 
-const ThreadPostInner = memo(function ThreadPostInner({
+const ThreadItemPostInner = memo(function ThreadItemPostInner({
   item,
   postShadow,
   overrides,
@@ -366,7 +364,7 @@ function SubtleHover({children}: {children: React.ReactNode}) {
   )
 }
 
-export function ThreadPostSkeleton() {
+export function ThreadItemPostSkeleton() {
   const t = useTheme()
   return (
     <View
