@@ -23,17 +23,16 @@ import {
   ThreadItemPost,
   ThreadItemPostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemPost'
+import {ThreadItemPostTombstone} from '#/screens/PostThread/components/ThreadItemPostTombstone'
 import {ThreadItemTreePost} from '#/screens/PostThread/components/ThreadItemTreePost'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
-import {Text} from '#/components/Typography'
 
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
 
 export function Inner({uri}: {uri: string | undefined}) {
-  const t = useTheme()
   const {gtPhone} = useBreakpoints()
   // const {hasSession, currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
@@ -205,6 +204,13 @@ export function Inner({uri}: {uri: string | undefined}) {
     return results
   }, [thread, deferParents, maxParentCount, maxChildrenCount])
 
+  const isTombstoneView = useMemo(() => {
+    if (slices.length > 1) return false
+    return slices.every(
+      s => s.type === 'threadPostBlocked' || s.type === 'threadPostNotFound',
+    )
+  }, [slices])
+
   const renderItem = ({item, index}: {item: ThreadItem; index: number}) => {
     if (item.type === 'threadPost') {
       if (item.depth < 0) {
@@ -214,7 +220,7 @@ export function Inner({uri}: {uri: string | undefined}) {
             item={item}
             threadgateRecord={thread.data.threadgate?.record ?? undefined}
             overrides={{
-              topBorder: index === 0, // && !item.isParentLoading, // TODO
+              topBorder: index === 0,
             }}
             onPostSuccess={optimisticOnPostReply}
           />
@@ -266,33 +272,9 @@ export function Inner({uri}: {uri: string | undefined}) {
         />
       )
     } else if (item.type === 'threadPostBlocked') {
-      return (
-        <View
-          style={[
-            a.p_lg,
-            index !== 0 && a.border_t,
-            t.atoms.border_contrast_low,
-            t.atoms.bg_contrast_25,
-          ]}>
-          <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
-            <Trans>Blocked post.</Trans>
-          </Text>
-        </View>
-      )
+      return <ThreadItemPostTombstone type="blocked" />
     } else if (item.type === 'threadPostNotFound') {
-      return (
-        <View
-          style={[
-            a.p_lg,
-            index !== 0 && a.border_t,
-            t.atoms.border_contrast_low,
-            t.atoms.bg_contrast_25,
-          ]}>
-          <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
-            <Trans>Deleted post.</Trans>
-          </Text>
-        </View>
-      )
+      return <ThreadItemPostTombstone type="not-found" />
     } else if (item.type === 'replyComposer') {
       return (
         <View>
@@ -386,6 +368,7 @@ export function Inner({uri}: {uri: string | undefined}) {
                  * causing weird jumps on web or glitches on native
                  */
                 height={windowHeight - 200}
+                style={isTombstoneView ? {borderTopWidth: 0} : undefined}
               />
             }
             initialNumToRender={initialNumToRender}
