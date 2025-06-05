@@ -364,8 +364,9 @@ function SubtleHover({children}: {children: React.ReactNode}) {
   )
 }
 
-export function ThreadItemPostSkeleton() {
+export function ThreadItemPostSkeleton({index}: {index: number}) {
   const t = useTheme()
+  const even = index % 2 === 0
   return (
     <View
       style={[
@@ -375,7 +376,7 @@ export function ThreadItemPostSkeleton() {
         t.atoms.border_contrast_low,
       ]}>
       <Skele.Row style={[a.align_start, a.gap_md]}>
-        <Skele.Circle size={42} />
+        <Skele.Circle size={LINEAR_AVI_WIDTH} />
 
         <Skele.Col style={[a.gap_xs]}>
           <Skele.Row style={[a.gap_sm]}>
@@ -384,8 +385,14 @@ export function ThreadItemPostSkeleton() {
           </Skele.Row>
 
           <Skele.Col>
-            <Skele.Text blend style={[a.text_md, {width: '100%'}]} />
-            <Skele.Text blend style={[a.text_md, {width: '60%'}]} />
+            {even ? (
+              <>
+                <Skele.Text blend style={[a.text_md, {width: '100%'}]} />
+                <Skele.Text blend style={[a.text_md, {width: '60%'}]} />
+              </>
+            ) : (
+              <Skele.Text blend style={[a.text_md, {width: '60%'}]} />
+            )}
           </Skele.Col>
 
           <Skele.Row style={[a.justify_between, a.pt_xs]}>
