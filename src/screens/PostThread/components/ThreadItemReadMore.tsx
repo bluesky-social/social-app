@@ -62,7 +62,7 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
             borderLeftWidth: 2,
             borderBottomWidth: 2,
             borderBottomLeftRadius: a.rounded_sm.borderRadius,
-            height: '50%',
+            height: 18, // magic, Link below is 38px tall
             width: isTreeView ? TREE_INDENT : LINEAR_AVI_WIDTH / 2 + 10,
           },
         ]}
