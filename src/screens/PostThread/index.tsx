@@ -162,12 +162,16 @@ export function Inner({uri}: {uri: string | undefined}) {
 
     for (let i = 0; i < thread.data.items.length; i++) {
       const item = thread.data.items[i]
+      /*
+       * Need to check `depth`, since not found or blocked posts are not
+       * `threadPost`s, but still have `depth`.
+       */
+      const hasDepth = 'depth' in item
 
       /*
-       * Handle anchor post. Need to check only `depth`, since not found or
-       * blocked posts are not `threadPost`s, but still have `depth`.
+       * Handle anchor post.
        */
-      if ('depth' in item && item.depth === 0) {
+      if (hasDepth && item.depth === 0) {
         results.push(item)
 
         // Recalculate total parents current index.
@@ -180,7 +184,7 @@ export function Inner({uri}: {uri: string | undefined}) {
          */
         if (!deferParents) {
           const start = i - 1
-          if (start > 0) {
+          if (start >= 0) {
             const limit = Math.max(0, start - maxParentCount)
             for (let pi = start; pi >= limit; pi--) {
               results.unshift(thread.data.items[pi])
@@ -189,7 +193,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         }
       } else {
         // ignore parents
-        if (item.type === 'threadPost' && item.depth < 0) continue
+        if (hasDepth && item.depth < 0) continue
         // can exit early if we've reached the max children count
         if (childrenCount > maxChildrenCount) break
 
