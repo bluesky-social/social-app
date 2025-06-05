@@ -26,7 +26,7 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
@@ -397,6 +397,12 @@ let PostMenuItems = ({
     openLink(url)
   }
 
+  const gate = useGate()
+  const isDiscoverDebugUser =
+    IS_INTERNAL ||
+    DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
+    gate('debug_show_feedcontext')
+
   return (
     <>
       <Menu.Outer>
@@ -472,17 +478,15 @@ let PostMenuItems = ({
           </>
         )}
 
-        {hasSession &&
-          IS_INTERNAL &&
-          DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
-            <Menu.Item
-              testID="postDropdownReportMisclassificationBtn"
-              label={_(msg`Assign topic for algo`)}
-              onPress={onReportMisclassification}>
-              <Menu.ItemText>{_(msg`Assign topic for algo`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={AtomIcon} position="right" />
-            </Menu.Item>
-          )}
+        {isDiscoverDebugUser && (
+          <Menu.Item
+            testID="postDropdownReportMisclassificationBtn"
+            label={_(msg`Assign topic for algo`)}
+            onPress={onReportMisclassification}>
+            <Menu.ItemText>{_(msg`Assign topic for algo`)}</Menu.ItemText>
+            <Menu.ItemIcon icon={AtomIcon} position="right" />
+          </Menu.Item>
+        )}
 
         {hasSession && (
           <>
