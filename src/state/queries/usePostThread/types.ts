@@ -101,6 +101,11 @@ export type ThreadItem =
       skippedIndentIndices: Set<number>
     }
   | {
+      type: 'readMoreUp'
+      key: string
+      href: string
+    }
+  | {
       type: 'skeleton'
       key: string
       item: 'anchor' | 'reply' | 'replyComposer'
@@ -117,6 +122,11 @@ export type TraversalMetadata = {
    * calculated on the server.
    */
   depth: number
+  /**
+   * Indicates if this item is a "read more" link preceding this post that
+   * continues the thread upwards.
+   */
+  followsReadMoreUp: boolean
   /**
    * Indicates if the post is the last reply beneath its parent post.
    */
