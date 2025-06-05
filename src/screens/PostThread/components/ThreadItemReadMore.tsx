@@ -72,14 +72,22 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
         to={item.href}
         style={[a.pt_sm, a.pb_md, a.gap_xs]}>
         {({hovered, pressed}) => {
+          const interacted = hovered || pressed
           return (
             <>
-              <CirclePlus fill={t.atoms.text_contrast_high.color} width={18} />
+              <CirclePlus
+                fill={
+                  interacted
+                    ? t.atoms.text_contrast_high.color
+                    : t.atoms.text_contrast_low.color
+                }
+                width={18}
+              />
               <Text
                 style={[
                   a.text_sm,
                   t.atoms.text_contrast_medium,
-                  (hovered || pressed) && a.underline,
+                  interacted && a.underline,
                 ]}>
                 <Trans>
                   Read {item.moreReplies} more{' '}
