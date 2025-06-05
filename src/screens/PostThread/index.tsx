@@ -19,11 +19,11 @@ import {
   ThreadAnchor,
   ThreadAnchorSkeleton,
 } from '#/screens/PostThread/components/ThreadAnchor'
+import {ThreadItemTreePost} from '#/screens/PostThread/components/ThreadItemTreePost'
 import {
   ThreadPost,
   ThreadPostSkeleton,
 } from '#/screens/PostThread/components/ThreadPost'
-import {ThreadReply} from '#/screens/PostThread/components/ThreadReply'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -234,7 +234,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       } else {
         if (thread.state.view === 'tree') {
           return (
-            <ThreadReply
+            <ThreadItemTreePost
               item={item}
               threadgateRecord={thread.data.threadgate?.record ?? undefined}
               overrides={{

@@ -49,7 +49,7 @@ import {Text} from '#/components/Typography'
  */
 const TREE_AVI_PLUS_SPACE = TREE_AVI_WIDTH + a.gap_xs.gap
 
-export function ThreadReply({
+export function ThreadItemTreePost({
   item,
   overrides,
   onPostSuccess,
@@ -66,11 +66,11 @@ export function ThreadReply({
   const postShadow = usePostShadow(item.value.post)
 
   if (postShadow === POST_TOMBSTONE) {
-    return <ThreadItemTreeReplyDeleted item={item} />
+    return <ThreadItemTreePostDeleted item={item} />
   }
 
   return (
-    <ThreadReplyInner
+    <ThreadItemTreePostInner
       // Safeguard from clobbering per-post state below:
       key={postShadow.uri}
       item={item}
@@ -82,15 +82,15 @@ export function ThreadReply({
   )
 }
 
-function ThreadItemTreeReplyDeleted({
+function ThreadItemTreePostDeleted({
   item,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
 }) {
   const t = useTheme()
   return (
-    <ThreadItemTreeReplyOuter item={item}>
-      <ThreadItemTreeReplyInner item={item}>
+    <ThreadItemTreePostOuterWrapper item={item}>
+      <ThreadItemTreePostInnerWrapper item={item}>
         <View
           style={[
             a.flex_row,
@@ -111,101 +111,105 @@ function ThreadItemTreeReplyDeleted({
         {item.ui.isLastChild && !item.ui.precedesChildReadMore && (
           <View style={{height: OUTER_SPACE / 2}} />
         )}
-      </ThreadItemTreeReplyInner>
-    </ThreadItemTreeReplyOuter>
+      </ThreadItemTreePostInnerWrapper>
+    </ThreadItemTreePostOuterWrapper>
   )
 }
 
-const ThreadItemTreeReplyOuter = memo(function ThreadItemTreeReplyOuter({
-  item,
-  children,
-}: {
-  item: Extract<ThreadItem, {type: 'threadPost'}>
-  children: React.ReactNode
-}) {
-  const t = useTheme()
-  const indents = Math.max(0, item.ui.indent - 1)
+const ThreadItemTreePostOuterWrapper = memo(
+  function ThreadItemTreePostOuterWrapper({
+    item,
+    children,
+  }: {
+    item: Extract<ThreadItem, {type: 'threadPost'}>
+    children: React.ReactNode
+  }) {
+    const t = useTheme()
+    const indents = Math.max(0, item.ui.indent - 1)
 
-  return (
-    <View
-      style={[
-        a.flex_row,
-        item.ui.indent === 1 &&
-          !item.ui.showParentReplyLine && [
-            a.border_t,
-            t.atoms.border_contrast_low,
+    return (
+      <View
+        style={[
+          a.flex_row,
+          item.ui.indent === 1 &&
+            !item.ui.showParentReplyLine && [
+              a.border_t,
+              t.atoms.border_contrast_low,
+            ],
+        ]}>
+        {Array.from(Array(indents)).map((_, n: number) => {
+          const isSkipped = item.ui.skippedIndentIndices.has(n)
+          return (
+            <View
+              key={`${item.value.post.uri}-padding-${n}`}
+              style={[
+                t.atoms.border_contrast_low,
+                {
+                  borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
+                  width: TREE_INDENT + TREE_AVI_WIDTH / 2,
+                  left: 1,
+                },
+              ]}
+            />
+          )
+        })}
+        {children}
+      </View>
+    )
+  },
+)
+
+const ThreadItemTreePostInnerWrapper = memo(
+  function ThreadItemTreePostInnerWrapper({
+    item,
+    children,
+  }: {
+    item: Extract<ThreadItem, {type: 'threadPost'}>
+    children: React.ReactNode
+  }) {
+    const t = useTheme()
+    return (
+      <View
+        style={[
+          a.flex_1, // TODO check on ios
+          {
+            paddingHorizontal: OUTER_SPACE,
+            paddingTop: OUTER_SPACE / 2,
+          },
+          item.ui.indent === 1 && [
+            !item.ui.showParentReplyLine && a.pt_lg,
+            !item.ui.showChildReplyLine && a.pb_sm,
           ],
-      ]}>
-      {Array.from(Array(indents)).map((_, n: number) => {
-        const isSkipped = item.ui.skippedIndentIndices.has(n)
-        return (
+          item.ui.isLastChild &&
+            !item.ui.precedesChildReadMore && [
+              {
+                paddingBottom: OUTER_SPACE / 2,
+              },
+            ],
+        ]}>
+        {item.ui.indent > 1 && (
           <View
-            key={`${item.value.post.uri}-padding-${n}`}
             style={[
+              a.absolute,
               t.atoms.border_contrast_low,
               {
-                borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
-                width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-                left: 1,
+                left: -1,
+                top: 0,
+                height:
+                  TREE_AVI_WIDTH / 2 + REPLY_LINE_WIDTH / 2 + OUTER_SPACE / 2,
+                width: OUTER_SPACE,
+                borderLeftWidth: REPLY_LINE_WIDTH,
+                borderBottomWidth: REPLY_LINE_WIDTH,
+                borderBottomLeftRadius: a.rounded_sm.borderRadius,
               },
             ]}
           />
-        )
-      })}
-      {children}
-    </View>
-  )
-})
-
-const ThreadItemTreeReplyInner = memo(function ThreadItemTreeReplyInner({
-  item,
-  children,
-}: {
-  item: Extract<ThreadItem, {type: 'threadPost'}>
-  children: React.ReactNode
-}) {
-  const t = useTheme()
-  return (
-    <View
-      style={[
-        a.flex_1, // TODO check on ios
-        {
-          paddingHorizontal: OUTER_SPACE,
-          paddingTop: OUTER_SPACE / 2,
-        },
-        item.ui.indent === 1 && [
-          !item.ui.showParentReplyLine && a.pt_lg,
-          !item.ui.showChildReplyLine && a.pb_sm,
-        ],
-        item.ui.isLastChild &&
-          !item.ui.precedesChildReadMore && [
-            {
-              paddingBottom: OUTER_SPACE / 2,
-            },
-          ],
-      ]}>
-      {item.ui.indent > 1 && (
-        <View
-          style={[
-            a.absolute,
-            t.atoms.border_contrast_low,
-            {
-              left: -1,
-              top: 0,
-              height:
-                TREE_AVI_WIDTH / 2 + REPLY_LINE_WIDTH / 2 + OUTER_SPACE / 2,
-              width: OUTER_SPACE,
-              borderLeftWidth: REPLY_LINE_WIDTH,
-              borderBottomWidth: REPLY_LINE_WIDTH,
-              borderBottomLeftRadius: a.rounded_sm.borderRadius,
-            },
-          ]}
-        />
-      )}
-      {children}
-    </View>
-  )
-})
+        )}
+        {children}
+      </View>
+    )
+  },
+)
 
 const ThreadItemTreeReplyChildReplyLine = memo(
   function ThreadItemTreeReplyChildReplyLine({
@@ -234,7 +238,7 @@ const ThreadItemTreeReplyChildReplyLine = memo(
   },
 )
 
-const ThreadReplyInner = memo(function ThreadReplyInner({
+const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   item,
   postShadow,
   overrides,
@@ -311,7 +315,7 @@ const ThreadReplyInner = memo(function ThreadReplyInner({
   }, [setLimitLines])
 
   return (
-    <ThreadItemTreeReplyOuter item={item}>
+    <ThreadItemTreePostOuterWrapper item={item}>
       <SubtleHover>
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
@@ -322,7 +326,7 @@ const ThreadReplyInner = memo(function ThreadReplyInner({
           iconStyles={{marginLeft: 2, marginRight: 2}}
           profile={post.author}
           interpretFilterAsBlur>
-          <ThreadItemTreeReplyInner item={item}>
+          <ThreadItemTreePostInnerWrapper item={item}>
             <View style={[a.flex_row, a.gap_md]}>
               <View style={[a.flex_1]}>
                 <PostMeta
@@ -386,10 +390,10 @@ const ThreadReplyInner = memo(function ThreadReplyInner({
                 </View>
               </View>
             </View>
-          </ThreadItemTreeReplyInner>
+          </ThreadItemTreePostInnerWrapper>
         </PostHider>
       </SubtleHover>
-    </ThreadItemTreeReplyOuter>
+    </ThreadItemTreePostOuterWrapper>
   )
 })
 
