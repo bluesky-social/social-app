@@ -46,12 +46,7 @@ import * as Skele from '#/components/Skeleton'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
 
-export function ThreadPost({
-  item,
-  overrides,
-  onPostSuccess,
-  threadgateRecord,
-}: {
+export type ThreadItemPostProps = {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   overrides?: {
     moderation?: boolean
@@ -59,11 +54,18 @@ export function ThreadPost({
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
-}) {
+}
+
+export function ThreadPost({
+  item,
+  overrides,
+  onPostSuccess,
+  threadgateRecord,
+}: ThreadItemPostProps) {
   const postShadow = usePostShadow(item.value.post)
 
   if (postShadow === POST_TOMBSTONE) {
-    return <PostThreadItemDeleted />
+    return <PostThreadItemDeleted item={item} overrides={overrides} />
   }
 
   return (
@@ -79,26 +81,104 @@ export function ThreadPost({
   )
 }
 
-function PostThreadItemDeleted({hideTopBorder}: {hideTopBorder?: boolean}) {
+function PostThreadItemDeleted({
+  item,
+  overrides,
+}: Pick<ThreadItemPostProps, 'item' | 'overrides'>) {
   const t = useTheme()
+
+  return (
+    <ThreadItemPostOuterWrapper item={item} overrides={overrides}>
+      <ThreadItemPostParentReplyLine item={item} />
+
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.gap_sm,
+          a.py_md,
+          a.rounded_sm,
+          t.atoms.bg_contrast_25,
+        ]}>
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.justify_center,
+            {
+              width: LINEAR_AVI_WIDTH,
+            },
+          ]}>
+          <TrashIcon style={[t.atoms.text]} />
+        </View>
+        <Text style={[t.atoms.text_contrast_medium, a.mt_2xs]}>
+          <Trans>This post has been deleted.</Trans>
+        </Text>
+      </View>
+
+      <View style={[{height: 4}]} />
+    </ThreadItemPostOuterWrapper>
+  )
+}
+
+const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
+  item,
+  overrides,
+  children,
+}: Pick<ThreadItemPostProps, 'item' | 'overrides'> & {
+  children: React.ReactNode
+}) {
+  const t = useTheme()
+  const showTopBorder =
+    !item.ui.showParentReplyLine && overrides?.topBorder !== true
+
   return (
     <View
       style={[
-        t.atoms.bg,
-        t.atoms.border_contrast_low,
-        a.p_xl,
-        a.pl_lg,
-        a.flex_row,
-        a.gap_md,
-        !hideTopBorder && a.border_t,
+        showTopBorder && [a.border_t, t.atoms.border_contrast_low],
+        {
+          paddingHorizontal: OUTER_SPACE,
+        },
+        // If there's no next child, add a little padding to bottom
+        !item.ui.showChildReplyLine &&
+          !item.ui.precedesChildReadMore && {
+            paddingBottom: OUTER_SPACE / 2,
+          },
       ]}>
-      <TrashIcon style={[t.atoms.text]} />
-      <Text style={[t.atoms.text_contrast_medium, a.mt_2xs]}>
-        <Trans>This post has been deleted.</Trans>
-      </Text>
+      {children}
     </View>
   )
-}
+})
+
+/**
+ * Provides some space between posts as well as contains the reply line
+ */
+const ThreadItemPostParentReplyLine = memo(
+  function ThreadItemPostParentReplyLine({
+    item,
+  }: Pick<ThreadItemPostProps, 'item'>) {
+    const t = useTheme()
+    return (
+      <View style={[a.flex_row, {height: 12}]}>
+        <View style={{width: LINEAR_AVI_WIDTH}}>
+          {item.ui.showParentReplyLine && (
+            <View
+              style={[
+                a.mx_auto,
+                a.flex_1,
+                a.mb_xs,
+                {
+                  width: REPLY_LINE_WIDTH,
+                  backgroundColor: t.atoms.border_contrast_low.borderColor,
+                },
+              ]}
+            />
+          )}
+        </View>
+      </View>
+    )
+  },
+)
 
 const ThreadPostInner = memo(function ThreadPostInner({
   item,
@@ -106,15 +186,8 @@ const ThreadPostInner = memo(function ThreadPostInner({
   overrides,
   onPostSuccess,
   threadgateRecord,
-}: {
-  item: Extract<ThreadItem, {type: 'threadPost'}>
+}: ThreadItemPostProps & {
   postShadow: Shadow<AppBskyFeedDefs.PostView>
-  overrides?: {
-    moderation?: boolean
-    topBorder?: boolean
-  }
-  onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode {
   const t = useTheme()
   const pal = usePalette('default')
@@ -179,24 +252,9 @@ const ThreadPostInner = memo(function ThreadPostInner({
 
   const {isActive: live} = useActorStatus(post.author)
 
-  const showTopBorder =
-    !item.ui.showParentReplyLine && overrides?.topBorder !== true
-
   return (
     <SubtleHover>
-      <View
-        style={[
-          a.pointer,
-          showTopBorder && [a.border_t, t.atoms.border_contrast_low],
-          {
-            paddingHorizontal: OUTER_SPACE,
-          },
-          // If there's no next child, add a little padding to bottom
-          !item.ui.showChildReplyLine &&
-            !item.ui.precedesChildReadMore && {
-              paddingBottom: OUTER_SPACE / 2,
-            },
-        ]}>
+      <ThreadItemPostOuterWrapper item={item} overrides={overrides}>
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
@@ -206,24 +264,7 @@ const ThreadPostInner = memo(function ThreadPostInner({
           iconStyles={{marginLeft: 2, marginRight: 2}}
           profile={post.author}
           interpretFilterAsBlur>
-          {/* Provides some space between posts as well as contains the reply line */}
-          <View style={[a.flex_row, {height: a.pt_md.paddingTop}]}>
-            <View style={{width: LINEAR_AVI_WIDTH}}>
-              {item.ui.showParentReplyLine && (
-                <View
-                  style={[
-                    a.mx_auto,
-                    a.flex_1,
-                    a.mb_xs,
-                    {
-                      width: REPLY_LINE_WIDTH,
-                      backgroundColor: t.atoms.border_contrast_low.borderColor,
-                    },
-                  ]}
-                />
-              )}
-            </View>
-          </View>
+          <ThreadItemPostParentReplyLine item={item} />
 
           <View style={[a.flex_row, a.gap_md]}>
             <View>
@@ -303,7 +344,7 @@ const ThreadPostInner = memo(function ThreadPostInner({
             </View>
           </View>
         </PostHider>
-      </View>
+      </ThreadItemPostOuterWrapper>
     </SubtleHover>
   )
 })
@@ -315,7 +356,10 @@ function SubtleHover({children}: {children: React.ReactNode}) {
     onOut: onHoverOut,
   } = useInteractionState()
   return (
-    <View onPointerEnter={onHoverIn} onPointerLeave={onHoverOut}>
+    <View
+      onPointerEnter={onHoverIn}
+      onPointerLeave={onHoverOut}
+      style={a.pointer}>
       <SubtleWebHover hover={hover} />
       {children}
     </View>
