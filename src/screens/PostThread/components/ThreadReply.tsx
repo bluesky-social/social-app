@@ -66,7 +66,7 @@ export function ThreadReply({
   const postShadow = usePostShadow(item.value.post)
 
   if (postShadow === POST_TOMBSTONE) {
-    return <PostThreadItemDeleted />
+    return <ThreadItemTreeReplyDeleted item={item} />
   }
 
   return (
@@ -82,26 +82,157 @@ export function ThreadReply({
   )
 }
 
-function PostThreadItemDeleted({hideTopBorder}: {hideTopBorder?: boolean}) {
+function ThreadItemTreeReplyDeleted({
+  item,
+}: {
+  item: Extract<ThreadItem, {type: 'threadPost'}>
+}) {
+  const t = useTheme()
+  return (
+    <ThreadItemTreeReplyOuter item={item}>
+      <ThreadItemTreeReplyInner item={item}>
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.rounded_sm,
+            t.atoms.bg_contrast_25,
+            {
+              gap: 6,
+              paddingHorizontal: OUTER_SPACE / 2,
+              height: TREE_AVI_WIDTH,
+            },
+          ]}>
+          <TrashIcon style={[t.atoms.text]} width={14} />
+          <Text style={[t.atoms.text_contrast_medium, a.mt_2xs]}>
+            <Trans>This post has been deleted.</Trans>
+          </Text>
+        </View>
+        {item.ui.isLastChild && !item.ui.precedesChildReadMore && (
+          <View style={{height: OUTER_SPACE / 2}} />
+        )}
+      </ThreadItemTreeReplyInner>
+    </ThreadItemTreeReplyOuter>
+  )
+}
+
+const ThreadItemTreeReplyOuter = memo(function ThreadItemTreeReplyOuter({
+  item,
+  children,
+}: {
+  item: Extract<ThreadItem, {type: 'threadPost'}>
+  children: React.ReactNode
+}) {
+  const t = useTheme()
+  const indents = Math.max(0, item.ui.indent - 1)
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        item.ui.indent === 1 &&
+          !item.ui.showParentReplyLine && [
+            a.border_t,
+            t.atoms.border_contrast_low,
+          ],
+      ]}>
+      {Array.from(Array(indents)).map((_, n: number) => {
+        const isSkipped = item.ui.skippedIndentIndices.has(n)
+        return (
+          <View
+            key={`${item.value.post.uri}-padding-${n}`}
+            style={[
+              t.atoms.border_contrast_low,
+              {
+                borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
+                width: TREE_INDENT + TREE_AVI_WIDTH / 2,
+                left: 1,
+              },
+            ]}
+          />
+        )
+      })}
+      {children}
+    </View>
+  )
+})
+
+const ThreadItemTreeReplyInner = memo(function ThreadItemTreeReplyInner({
+  item,
+  children,
+}: {
+  item: Extract<ThreadItem, {type: 'threadPost'}>
+  children: React.ReactNode
+}) {
   const t = useTheme()
   return (
     <View
       style={[
-        t.atoms.bg,
-        t.atoms.border_contrast_low,
-        a.p_xl,
-        a.pl_lg,
-        a.flex_row,
-        a.gap_md,
-        !hideTopBorder && a.border_t,
+        a.flex_1, // TODO check on ios
+        {
+          paddingHorizontal: OUTER_SPACE,
+          paddingTop: OUTER_SPACE / 2,
+        },
+        item.ui.indent === 1 && [
+          !item.ui.showParentReplyLine && a.pt_lg,
+          !item.ui.showChildReplyLine && a.pb_sm,
+        ],
+        item.ui.isLastChild &&
+          !item.ui.precedesChildReadMore && [
+            {
+              paddingBottom: OUTER_SPACE / 2,
+            },
+          ],
       ]}>
-      <TrashIcon style={[t.atoms.text]} />
-      <Text style={[t.atoms.text_contrast_medium, a.mt_2xs]}>
-        <Trans>This post has been deleted.</Trans>
-      </Text>
+      {item.ui.indent > 1 && (
+        <View
+          style={[
+            a.absolute,
+            t.atoms.border_contrast_low,
+            {
+              left: -1,
+              top: 0,
+              height:
+                TREE_AVI_WIDTH / 2 + REPLY_LINE_WIDTH / 2 + OUTER_SPACE / 2,
+              width: OUTER_SPACE,
+              borderLeftWidth: REPLY_LINE_WIDTH,
+              borderBottomWidth: REPLY_LINE_WIDTH,
+              borderBottomLeftRadius: a.rounded_sm.borderRadius,
+            },
+          ]}
+        />
+      )}
+      {children}
     </View>
   )
-}
+})
+
+const ThreadItemTreeReplyChildReplyLine = memo(
+  function ThreadItemTreeReplyChildReplyLine({
+    item,
+  }: {
+    item: Extract<ThreadItem, {type: 'threadPost'}>
+  }) {
+    const t = useTheme()
+    return (
+      <View style={[a.relative, {width: TREE_AVI_PLUS_SPACE}]}>
+        {item.ui.showChildReplyLine && (
+          <View
+            style={[
+              a.flex_1,
+              t.atoms.border_contrast_low,
+              {
+                borderRightWidth: 2,
+                width: '50%',
+                left: -1,
+              },
+            ]}
+          />
+        )}
+      </View>
+    )
+  },
+)
 
 const ThreadReplyInner = memo(function ThreadReplyInner({
   item,
@@ -119,7 +250,6 @@ const ThreadReplyInner = memo(function ThreadReplyInner({
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode {
-  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openComposer} = useOpenComposer()
@@ -180,160 +310,86 @@ const ThreadReplyInner = memo(function ThreadReplyInner({
     setLimitLines(false)
   }, [setLimitLines])
 
-  const indents = Math.max(0, item.ui.indent - 1)
-
   return (
-    <View
-      style={[
-        a.flex_row,
-        item.ui.indent === 1 &&
-          !item.ui.showParentReplyLine && [
-            a.border_t,
-            t.atoms.border_contrast_low,
-          ],
-      ]}>
-      {Array.from(Array(indents)).map((_, n: number) => {
-        const isSkipped = item.ui.skippedIndentIndices.has(n)
-        return (
-          <View
-            key={`${post.uri}-padding-${n}`}
-            style={[
-              t.atoms.border_contrast_low,
-              {
-                borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
-                width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-                left: 1,
-              },
-            ]}
-          />
-        )
-      })}
-      <View style={a.flex_1}>
-        <SubtleHover>
-          <PostHider
-            testID={`postThreadItem-by-${post.author.handle}`}
-            href={postHref}
-            disabled={overrides?.moderation === true}
-            modui={moderation.ui('contentList')}
-            iconSize={42}
-            iconStyles={{marginLeft: 2, marginRight: 2}}
-            profile={post.author}
-            interpretFilterAsBlur>
-            <View
-              style={[
-                {
-                  paddingHorizontal: OUTER_SPACE,
-                  paddingTop: OUTER_SPACE / 2,
-                },
-                item.ui.indent === 1 && [
-                  !item.ui.showParentReplyLine && a.pt_lg,
-                  !item.ui.showChildReplyLine && a.pb_sm,
-                ],
-                item.ui.isLastChild &&
-                  !item.ui.precedesChildReadMore && [a.pb_sm],
-              ]}>
-              {item.ui.indent > 1 && (
-                <View
-                  style={[
-                    a.absolute,
-                    t.atoms.border_contrast_low,
-                    {
-                      left: -1,
-                      top: 0,
-                      height:
-                        TREE_AVI_WIDTH / 2 +
-                        REPLY_LINE_WIDTH / 2 +
-                        OUTER_SPACE / 2,
-                      width: OUTER_SPACE,
-                      borderLeftWidth: REPLY_LINE_WIDTH,
-                      borderBottomWidth: REPLY_LINE_WIDTH,
-                      borderBottomLeftRadius: a.rounded_sm.borderRadius,
-                    },
-                  ]}
+    <ThreadItemTreeReplyOuter item={item}>
+      <SubtleHover>
+        <PostHider
+          testID={`postThreadItem-by-${post.author.handle}`}
+          href={postHref}
+          disabled={overrides?.moderation === true}
+          modui={moderation.ui('contentList')}
+          iconSize={42}
+          iconStyles={{marginLeft: 2, marginRight: 2}}
+          profile={post.author}
+          interpretFilterAsBlur>
+          <ThreadItemTreeReplyInner item={item}>
+            <View style={[a.flex_row, a.gap_md]}>
+              <View style={[a.flex_1]}>
+                <PostMeta
+                  author={post.author}
+                  moderation={moderation}
+                  timestamp={post.indexedAt}
+                  postHref={postHref}
+                  avatarSize={TREE_AVI_WIDTH}
+                  style={[a.pb_2xs]}
+                  showAvatar
                 />
-              )}
-              <View style={[a.flex_row, a.gap_md]}>
-                <View style={[a.flex_1]}>
-                  <PostMeta
-                    author={post.author}
-                    moderation={moderation}
-                    timestamp={post.indexedAt}
-                    postHref={postHref}
-                    avatarSize={TREE_AVI_WIDTH}
-                    style={[a.pb_2xs]}
-                    showAvatar
-                  />
-                  <View style={[a.flex_row]}>
-                    <View style={[a.relative, {width: TREE_AVI_PLUS_SPACE}]}>
-                      {item.ui.showChildReplyLine && (
-                        <View
-                          style={[
-                            a.flex_1,
-                            t.atoms.border_contrast_low,
-                            {
-                              borderRightWidth: 2,
-                              width: '50%',
-                              left: -1,
-                            },
-                          ]}
+                <View style={[a.flex_row]}>
+                  <ThreadItemTreeReplyChildReplyLine item={item} />
+                  <View style={[a.flex_1]}>
+                    <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
+                    <PostAlerts
+                      modui={moderation.ui('contentList')}
+                      style={[a.pb_2xs]}
+                      additionalCauses={additionalPostAlerts}
+                    />
+                    {richText?.text ? (
+                      <View>
+                        <RichText
+                          enableTags
+                          value={richText}
+                          style={[a.flex_1, a.text_md]}
+                          numberOfLines={
+                            limitLines ? MAX_POST_LINES : undefined
+                          }
+                          authorHandle={post.author.handle}
+                          shouldProxyLinks={true}
                         />
-                      )}
-                    </View>
-                    <View style={[a.flex_1]}>
-                      <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
-                      <PostAlerts
-                        modui={moderation.ui('contentList')}
-                        style={[a.pb_2xs]}
-                        additionalCauses={additionalPostAlerts}
+                      </View>
+                    ) : undefined}
+                    {limitLines ? (
+                      <TextLink
+                        text={_(msg`Show More`)}
+                        style={pal.link}
+                        onPress={onPressShowMore}
+                        href="#"
                       />
-                      {richText?.text ? (
-                        <View>
-                          <RichText
-                            enableTags
-                            value={richText}
-                            style={[a.flex_1, a.text_md]}
-                            numberOfLines={
-                              limitLines ? MAX_POST_LINES : undefined
-                            }
-                            authorHandle={post.author.handle}
-                            shouldProxyLinks={true}
-                          />
-                        </View>
-                      ) : undefined}
-                      {limitLines ? (
-                        <TextLink
-                          text={_(msg`Show More`)}
-                          style={pal.link}
-                          onPress={onPressShowMore}
-                          href="#"
+                    ) : undefined}
+                    {post.embed && (
+                      <View style={[a.pb_xs]}>
+                        <PostEmbeds
+                          embed={post.embed}
+                          moderation={moderation}
+                          viewContext={PostEmbedViewContext.Feed}
                         />
-                      ) : undefined}
-                      {post.embed && (
-                        <View style={[a.pb_xs]}>
-                          <PostEmbeds
-                            embed={post.embed}
-                            moderation={moderation}
-                            viewContext={PostEmbedViewContext.Feed}
-                          />
-                        </View>
-                      )}
-                      <PostControls
-                        post={postShadow}
-                        record={record}
-                        richText={richText}
-                        onPressReply={onPressReply}
-                        logContext="PostThreadItem"
-                        threadgateRecord={threadgateRecord}
-                      />
-                    </View>
+                      </View>
+                    )}
+                    <PostControls
+                      post={postShadow}
+                      record={record}
+                      richText={richText}
+                      onPressReply={onPressReply}
+                      logContext="PostThreadItem"
+                      threadgateRecord={threadgateRecord}
+                    />
                   </View>
                 </View>
               </View>
             </View>
-          </PostHider>
-        </SubtleHover>
-      </View>
-    </View>
+          </ThreadItemTreeReplyInner>
+        </PostHider>
+      </SubtleHover>
+    </ThreadItemTreeReplyOuter>
   )
 })
 
@@ -347,7 +403,7 @@ function SubtleHover({children}: {children: React.ReactNode}) {
     <View
       onPointerEnter={onHoverIn}
       onPointerLeave={onHoverOut}
-      style={a.pointer}>
+      style={[a.flex_1, a.pointer]}>
       <SubtleWebHover hover={hover} />
       {children}
     </View>
