@@ -102,28 +102,27 @@ export function Inner({uri}: {uri: string | undefined}) {
   /**
    * WEB ONLY
    *
-   * Needed after clicking into a post. This handler ensures that once the
-   * parents load in, the anchor post is still at the top of the screen.
-   *
-   * When this fires, the `List` is scrolled all the way to the top, so
-   * measurements taken from `top` correspond to the top of the screen. This
-   * handler scrolls the `List` to the top of the highlighted post after
-   * parents are prepended, offset by any fixed elements like the header.
+   * Needed after clicking into a post or on a cold load of a thread screen.
+   * This handler ensures that once the parents load in, the anchor post is
+   * still at the top of the screen.
    */
-  {
-    /* const hasScrolledToAnchor = useRef(false) */
-  }
+  const hasScrolledToAnchor = useRef(false)
   const onContentSizeChangeWebOnly = web(() => {
     const anchorElement = anchorRef.current as any as Element
     const headerElement = headerRef.current as any as Element
-    if (
-      anchorElement &&
-      headerElement &&
-      !deferParents
-      //!hasScrolledToAnchor.current
-    ) {
-      console.log('HANDLE')
-      // distance from top of the list (screen)
+
+    /*
+     * When this block runs, all posts in place and are about to paint. Thee
+     * `List` is at scroll position 0, so measurements taken from `top`
+     * correspond to the top of the List (screen).
+     *
+     * We measure this synchronously (before paint) and scroll the list to the
+     * top of the `anchorElement`, minus the height of any fixed elements like
+     * the Header.
+     *
+     * We only want this to run once.
+     */
+    if (anchorElement && headerElement && !hasScrolledToAnchor.current) {
       const anchorOffsetTop = anchorElement.getBoundingClientRect().top
       const headerHeight = headerElement.getBoundingClientRect().height
       const scrollPosition = anchorOffsetTop - headerHeight
@@ -134,20 +133,11 @@ export function Inner({uri}: {uri: string | undefined}) {
        * at all.
        */
       if (scrollPosition >= headerHeight) {
-        console.log('Scrolling to anchor post at', scrollPosition)
         listRef.current?.scrollToOffset({
           animated: false,
           offset: scrollPosition,
         })
-        {
-          /* hasScrolledToAnchor.current = true */
-        }
-      } else {
-        console.log('Scrolling to first position')
-        listRef.current?.scrollToOffset({
-          animated: false,
-          offset: headerHeight * -1,
-        })
+        hasScrolledToAnchor.current = true
       }
     }
   })
