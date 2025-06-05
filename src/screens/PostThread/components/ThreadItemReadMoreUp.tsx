@@ -46,13 +46,12 @@ export const ThreadItemReadMoreUp = memo(function ThreadItemReadMoreUp({
                   },
                 ]}>
                 <UpIcon
-                  fill="currentColor"
+                  fill={
+                    interacted
+                      ? t.atoms.text_contrast_high.color
+                      : t.atoms.text_contrast_low.color
+                  }
                   width={24}
-                  style={[
-                    t.atoms.text_contrast_low,
-                    a.transition_all,
-                    interacted && [t.atoms.text_contrast_high],
-                  ]}
                 />
               </View>
               <Text
