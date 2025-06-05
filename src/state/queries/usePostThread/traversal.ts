@@ -353,6 +353,16 @@ export function sortAndAnnotateThreadItems(
             i++
           }
 
+          /**
+           * Only occurs for the first item in the thread, which may have
+           * additional parents not included in this request.
+           */
+          if (item.value.moreParents) {
+            metadata.followsReadMoreUp = true
+            subset.splice(i, 0, views.readMoreUp(metadata))
+            i++
+          }
+
           /*
            * Calculate the final UI state for the thread item.
            */
@@ -361,6 +371,8 @@ export function sortAndAnnotateThreadItems(
       }
     }
   }
+
+  console.log(threadItems)
 
   return {
     threadItems,

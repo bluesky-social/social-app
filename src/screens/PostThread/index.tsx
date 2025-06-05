@@ -24,6 +24,7 @@ import {
 } from '#/screens/PostThread/components/ThreadItemPost'
 import {ThreadItemPostTombstone} from '#/screens/PostThread/components/ThreadItemPostTombstone'
 import {ThreadItemReadMore} from '#/screens/PostThread/components/ThreadItemReadMore'
+import {ThreadItemReadMoreUp} from '#/screens/PostThread/components/ThreadItemReadMoreUp'
 import {ThreadItemTreePost} from '#/screens/PostThread/components/ThreadItemTreePost'
 import {useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
@@ -191,8 +192,8 @@ export function Inner({uri}: {uri: string | undefined}) {
           }
         }
       } else {
-        // ignore parents
-        if (hasDepth && item.depth < 0) continue
+        // ignore any parent items
+        if (item.type === 'readMoreUp' || (hasDepth && item.depth < 0)) continue
         // can exit early if we've reached the max children count
         if (childrenCount > maxChildrenCount) break
 
@@ -271,6 +272,8 @@ export function Inner({uri}: {uri: string | undefined}) {
           view={thread.state.view === 'tree' ? 'tree' : 'linear'}
         />
       )
+    } else if (item.type === 'readMoreUp') {
+      return <ThreadItemReadMoreUp item={item} />
     } else if (item.type === 'threadPostBlocked') {
       return <ThreadItemPostTombstone type="blocked" />
     } else if (item.type === 'threadPostNotFound') {

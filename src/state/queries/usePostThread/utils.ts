@@ -81,6 +81,10 @@ export function getTraversalMetadata({
      * Unknown until after traversal
      */
     precedesChildReadMore: false,
+    /*
+     * Unknown until after traversal
+     */
+    followsReadMoreUp: false,
     postData: {
       uri: item.uri,
       authorHandle: item.value.post.author.handle,
@@ -124,6 +128,7 @@ export function getThreadPostUI({
   repliesSeenCount,
   repliesUnhydrated,
   precedesChildReadMore,
+  followsReadMoreUp,
 }: TraversalMetadata): Extract<ThreadItem, {type: 'threadPost'}>['ui'] {
   // TODO might be able to simplify this
   const isReplyAndHasReplies =
@@ -134,7 +139,8 @@ export function getThreadPostUI({
   return {
     isAnchor: depth === 0,
     showParentReplyLine:
-      !!prevItemDepth && prevItemDepth !== 0 && prevItemDepth < depth,
+      followsReadMoreUp ||
+      (!!prevItemDepth && prevItemDepth !== 0 && prevItemDepth < depth),
     showChildReplyLine: depth < 0 || isReplyAndHasReplies,
     indent: depth,
     /*

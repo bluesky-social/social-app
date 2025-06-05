@@ -124,6 +124,25 @@ export function readMore({
   }
 }
 
+export function readMoreUp({
+  postData,
+}: TraversalMetadata): Extract<ThreadItem, {type: 'readMoreUp'}> {
+  const urip = new AtUri(postData.uri)
+  const href = makeProfileLink(
+    {
+      did: urip.host,
+      handle: postData.authorHandle,
+    },
+    'post',
+    urip.rkey,
+  )
+  return {
+    type: 'readMoreUp' as const,
+    key: `readMoreUp:${postData.uri}`,
+    href,
+  }
+}
+
 export function skeleton({
   key,
   item,
