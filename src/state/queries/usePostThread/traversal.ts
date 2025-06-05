@@ -406,10 +406,10 @@ export function buildThread({
 
   if (isLoading) {
     const anchorPost = items.at(0)
-    const skeletonReplies =
-      anchorPost && anchorPost.type === 'threadPost'
-        ? anchorPost?.value.post.replyCount ?? 4
-        : 4
+    const hasAnchorFromCache = anchorPost && anchorPost.type === 'threadPost'
+    const skeletonReplies = hasAnchorFromCache
+      ? anchorPost.value.post.replyCount ?? 4
+      : 4
 
     if (!items.length) {
       items.push(
@@ -421,10 +421,24 @@ export function buildThread({
     }
 
     if (hasSession) {
-      items.push({
-        type: 'replyComposer',
-        key: 'replyComposer',
-      })
+      // we might have this from cache
+      const replyDisabled =
+        hasAnchorFromCache &&
+        anchorPost.value.post.viewer?.replyDisabled === true
+
+      if (hasAnchorFromCache && !replyDisabled) {
+        items.push({
+          type: 'replyComposer',
+          key: 'replyComposer',
+        })
+      } else {
+        items.push(
+          views.skeleton({
+            key: 'replyComposer',
+            item: 'replyComposer',
+          }),
+        )
+      }
     }
 
     for (let i = 0; i < skeletonReplies; i++) {

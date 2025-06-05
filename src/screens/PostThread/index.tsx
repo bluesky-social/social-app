@@ -25,6 +25,7 @@ import {
 import {ThreadItemPostTombstone} from '#/screens/PostThread/components/ThreadItemPostTombstone'
 import {ThreadItemReadMore} from '#/screens/PostThread/components/ThreadItemReadMore'
 import {ThreadItemReadMoreUp} from '#/screens/PostThread/components/ThreadItemReadMoreUp'
+import {ThreadItemReplyComposerSkeleton} from '#/screens/PostThread/components/ThreadItemReplyComposer'
 import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
@@ -314,6 +315,8 @@ export function Inner({uri}: {uri: string | undefined}) {
         } else {
           return <ThreadItemTreePostSkeleton index={index} />
         }
+      } else if (item.item === 'replyComposer') {
+        return <ThreadItemReplyComposerSkeleton />
       }
     }
     return null
