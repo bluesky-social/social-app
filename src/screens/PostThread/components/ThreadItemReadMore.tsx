@@ -1,3 +1,4 @@
+import {memo} from 'react'
 import {View} from 'react-native'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,7 +18,7 @@ import {CirclePlus_Stroke2_Corner0_Rounded as CirclePlus} from '#/components/ico
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-export function ReadMore({
+export const ThreadItemReadMore = memo(function ThreadItemReadMore({
   item,
   view,
 }: {
@@ -95,4 +96,4 @@ export function ReadMore({
       </Link>
     </View>
   )
-}
+})

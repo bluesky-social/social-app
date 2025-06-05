@@ -14,7 +14,6 @@ import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposeP
 import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
-import {ReadMore} from '#/screens/PostThread/components/ReadMore'
 import {
   ThreadAnchor,
   ThreadAnchorSkeleton,
@@ -24,6 +23,7 @@ import {
   ThreadItemPostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemPost'
 import {ThreadItemPostTombstone} from '#/screens/PostThread/components/ThreadItemPostTombstone'
+import {ThreadItemReadMore} from '#/screens/PostThread/components/ThreadItemReadMore'
 import {ThreadItemTreePost} from '#/screens/PostThread/components/ThreadItemTreePost'
 import {useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
@@ -266,7 +266,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       }
     } else if (item.type === 'readMore') {
       return (
-        <ReadMore
+        <ThreadItemReadMore
           item={item}
           view={thread.state.view === 'tree' ? 'tree' : 'linear'}
         />
