@@ -1,5 +1,11 @@
-import React from 'react'
-import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
+import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
+import {
+  Pressable,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {DropdownMenu} from 'radix-ui'
@@ -29,10 +35,10 @@ import {Text} from '#/components/Typography'
 export {useMenuContext}
 
 export function useMenuControl(): Dialog.DialogControlProps {
-  const id = React.useId()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const id = useId()
+  const [isOpen, setIsOpen] = useState(false)
 
-  return React.useMemo(
+  return useMemo(
     () => ({
       id,
       ref: {current: null},
@@ -56,13 +62,13 @@ export function Root({
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
-  const context = React.useMemo<ContextType>(
+  const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
     }),
     [control, defaultControl],
   )
-  const onOpenChange = React.useCallback(
+  const onOpenChange = useCallback(
     (open: boolean) => {
       if (context.control.isOpen && !open) {
         context.control.close()
@@ -96,7 +102,7 @@ export function Root({
   )
 }
 
-const RadixTriggerPassThrough = React.forwardRef(
+const RadixTriggerPassThrough = forwardRef(
   (
     props: {
       children: (
@@ -355,18 +361,23 @@ export function ItemRadio({selected}: {selected: boolean}) {
   )
 }
 
-export function LabelText({children}: {children: React.ReactNode}) {
+export function LabelText({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<TextStyle>
+}) {
   const t = useTheme()
   return (
     <Text
       style={[
         a.font_bold,
-        a.pt_md,
-        a.pb_sm,
+        a.p_sm,
         t.atoms.text_contrast_low,
-        {
-          paddingHorizontal: 10,
-        },
+        a.leading_snug,
+        {paddingHorizontal: 10},
+        style,
       ]}>
       {children}
     </Text>
