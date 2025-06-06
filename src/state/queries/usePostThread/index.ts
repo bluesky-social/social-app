@@ -170,7 +170,11 @@ export function usePostThread({anchor}: {anchor?: string}) {
         }),
       )
     } else if (additionalItemsQuery.isError) {
-      // TODO could insert error component
+      /*
+       * We could insert an special error component in here, but since these
+       * are optional additional replies, it's not critical that they're shown
+       * atm.
+       */
       return []
     } else if (additionalItemsQuery.data?.thread) {
       const {threadItems} = sortAndAnnotateThreadItems(
