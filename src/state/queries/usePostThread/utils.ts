@@ -130,7 +130,6 @@ export function getThreadPostUI({
   precedesChildReadMore,
   followsReadMoreUp,
 }: TraversalMetadata): Extract<ThreadItem, {type: 'threadPost'}>['ui'] {
-  // TODO might be able to simplify this
   const isReplyAndHasReplies =
     depth > 0 &&
     repliesCount > 0 &&
