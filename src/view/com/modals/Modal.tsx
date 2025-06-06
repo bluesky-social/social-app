@@ -8,7 +8,6 @@ import {useModalControls, useModals} from '#/state/modals'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as ChangePasswordModal from './ChangePassword'
-import * as CreateOrEditListModal from './CreateOrEditList'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
@@ -47,10 +46,7 @@ export function ModalsContainer() {
 
   let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
   let element
-  if (activeModal?.name === 'create-or-edit-list') {
-    snapPoints = CreateOrEditListModal.snapPoints
-    element = <CreateOrEditListModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'user-add-remove-lists') {
+  if (activeModal?.name === 'user-add-remove-lists') {
     snapPoints = UserAddRemoveListsModal.snapPoints
     element = <UserAddRemoveListsModal.Component {...activeModal} />
   } else if (activeModal?.name === 'delete-account') {
