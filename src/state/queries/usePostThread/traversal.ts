@@ -372,8 +372,6 @@ export function sortAndAnnotateThreadItems(
     }
   }
 
-  console.log(threadItems)
-
   return {
     threadItems,
     otherThreadItems,
