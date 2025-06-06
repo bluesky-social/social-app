@@ -72,20 +72,20 @@ export function usePostThread({anchor}: {anchor?: string}) {
        * we could fetch once we hit the end.
        */
       ctx.meta = ctx.meta || {
-        hasHiddenReplies: false,
+        hasOtherReplies: false,
       }
 
       /*
        * If we know we have additional replies, we'll set this to true.
        */
-      if (data.hasHiddenReplies) {
-        ctx.meta.hasHiddenReplies = true
+      if (data.hasOtherReplies) {
+        ctx.meta.hasOtherReplies = true
       }
 
       const result = {
         thread: data.thread || [],
         threadgate: data.threadgate,
-        hasHiddenReplies: !!ctx.meta.hasHiddenReplies,
+        hasOtherReplies: !!ctx.meta.hasOtherReplies,
       }
 
       const record = getThreadgateRecord(result.threadgate)
@@ -104,7 +104,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
        * skeletons.
        */
       const thread = placeholder ? [placeholder] : []
-      return {thread, threadgate: undefined, hasHiddenReplies: false}
+      return {thread, threadgate: undefined, hasOtherReplies: false}
     },
     select(data) {
       const record = getThreadgateRecord(data.threadgate)
@@ -121,8 +121,8 @@ export function usePostThread({anchor}: {anchor?: string}) {
     [query.data?.threadgate],
   )
   const hasOtherThreadItems = useMemo(
-    () => !!query.data?.hasHiddenReplies,
-    [query.data?.hasHiddenReplies],
+    () => !!query.data?.hasOtherReplies,
+    [query.data?.hasOtherReplies],
   )
   const [otherItemsVisible, setOtherItemsVisible] = useState(false)
 
@@ -152,7 +152,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     async queryFn() {
       const {data} = await wait(
         400,
-        agent.app.bsky.unspecced.getPostThreadHiddenV2({
+        agent.app.bsky.unspecced.getPostThreadOtherV2({
           anchor: anchor!,
           prioritizeFollowedUsers,
         }),
