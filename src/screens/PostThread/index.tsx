@@ -1,11 +1,10 @@
-import {useMemo, useRef, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {cleanError} from '#/lib/strings/errors'
+import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
@@ -15,6 +14,7 @@ import {
   ThreadAnchor,
   ThreadAnchorSkeleton,
 } from '#/screens/PostThread/components/ThreadAnchor'
+import {ThreadError} from '#/screens/PostThread/components/ThreadError'
 import {
   ThreadItemPost,
   ThreadItemPostSkeleton,
@@ -46,17 +46,19 @@ export function Inner({uri}: {uri: string | undefined}) {
    */
   const thread = usePostThread({anchor: uri})
 
-  const optimisticOnPostReply = (payload: OnPostSuccessData) => {
-    if (payload) {
-      const {replyToUri, posts} = payload
-      if (replyToUri && posts.length) {
-        thread.actions.insertReplies(replyToUri, posts)
-      }
-    }
-  }
-
   const {openComposer} = useOpenComposer()
-  const onReplyToAnchor = () => {
+  const optimisticOnPostReply = useCallback(
+    (payload: OnPostSuccessData) => {
+      if (payload) {
+        const {replyToUri, posts} = payload
+        if (replyToUri && posts.length) {
+          thread.actions.insertReplies(replyToUri, posts)
+        }
+      }
+    },
+    [thread],
+  )
+  const onReplyToAnchor = useCallback(() => {
     const anchorPost = thread.data.items.find(
       slice => slice.type === 'threadPost' && slice.ui.isAnchor,
     )
@@ -75,7 +77,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       },
       onPostSuccess: optimisticOnPostReply,
     })
-  }
+  }, [thread, openComposer, optimisticOnPostReply])
 
   const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE)
   const [maxChildrenCount, setMaxChildrenCount] = useState(CHILDREN_CHUNK_SIZE)
@@ -239,105 +241,125 @@ export function Inner({uri}: {uri: string | undefined}) {
     )
   }, [slices])
 
-  const renderItem = ({item, index}: {item: ThreadItem; index: number}) => {
-    if (item.type === 'threadPost') {
-      if (item.depth < 0) {
-        if (deferParents) return null
-        return (
-          <ThreadItemPost
-            item={item}
-            threadgateRecord={thread.data.threadgate?.record ?? undefined}
-            overrides={{
-              topBorder: index === 0,
-            }}
-            onPostSuccess={optimisticOnPostReply}
-          />
-        )
-      } else if (item.depth === 0) {
-        return (
-          <View
-            /*
-             * IMPORTANT: this is a load-bearing key. We want to force
-             * `onLayout` to fire any time the thread params change so that
-             * `deferParents` is always reset to `false` once the anchor post is
-             * rendered.
-             *
-             * If we ever add additional thread params to this screen, they
-             * will need to be added here.
-             */
-            key={item.uri + thread.state.view + thread.state.sort}
-            ref={anchorRef}
-            onLayout={() => setDeferParents(false)}>
-            <ThreadAnchor
-              item={item}
-              threadgateRecord={thread.data.threadgate?.record ?? undefined}
-              onPostSuccess={optimisticOnPostReply}
-            />
-          </View>
-        )
-      } else {
-        if (thread.state.view === 'tree') {
-          return (
-            <ThreadItemTreePost
-              item={item}
-              threadgateRecord={thread.data.threadgate?.record ?? undefined}
-              overrides={{
-                moderation: thread.state.otherItemsVisible && item.depth > 0,
-              }}
-              onPostSuccess={optimisticOnPostReply}
-            />
-          )
-        } else {
+  const renderItem = useCallback(
+    ({item, index}: {item: ThreadItem; index: number}) => {
+      if (item.type === 'threadPost') {
+        if (item.depth < 0) {
           return (
             <ThreadItemPost
               item={item}
               threadgateRecord={thread.data.threadgate?.record ?? undefined}
               overrides={{
-                moderation: thread.state.otherItemsVisible && item.depth > 0,
+                topBorder: index === 0,
               }}
               onPostSuccess={optimisticOnPostReply}
             />
           )
-        }
-      }
-    } else if (item.type === 'readMore') {
-      return (
-        <ThreadItemReadMore
-          item={item}
-          view={thread.state.view === 'tree' ? 'tree' : 'linear'}
-        />
-      )
-    } else if (item.type === 'readMoreUp') {
-      return <ThreadItemReadMoreUp item={item} />
-    } else if (item.type === 'threadPostBlocked') {
-      return <ThreadItemPostTombstone type="blocked" />
-    } else if (item.type === 'threadPostNotFound') {
-      return <ThreadItemPostTombstone type="not-found" />
-    } else if (item.type === 'replyComposer') {
-      return (
-        <View>
-          {gtPhone && (
-            <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />
-          )}
-        </View>
-      )
-    } else if (item.type === 'showOtherReplies') {
-      return <ThreadItemShowOtherReplies onPress={item.onPress} />
-    } else if (item.type === 'skeleton') {
-      if (item.item === 'anchor') {
-        return <ThreadAnchorSkeleton />
-      } else if (item.item === 'reply') {
-        if (thread.state.view === 'linear') {
-          return <ThreadItemPostSkeleton index={index} />
+        } else if (item.depth === 0) {
+          return (
+            <View
+              /*
+               * IMPORTANT: this is a load-bearing key. We want to force
+               * `onLayout` to fire any time the thread params change so that
+               * `deferParents` is always reset to `false` once the anchor post is
+               * rendered.
+               *
+               * If we ever add additional thread params to this screen, they
+               * will need to be added here.
+               */
+              key={item.uri + thread.state.view + thread.state.sort}
+              ref={anchorRef}
+              onLayout={() => setDeferParents(false)}>
+              <ThreadAnchor
+                item={item}
+                threadgateRecord={thread.data.threadgate?.record ?? undefined}
+                onPostSuccess={optimisticOnPostReply}
+              />
+            </View>
+          )
         } else {
-          return <ThreadItemTreePostSkeleton index={index} />
+          if (thread.state.view === 'tree') {
+            return (
+              <ThreadItemTreePost
+                item={item}
+                threadgateRecord={thread.data.threadgate?.record ?? undefined}
+                overrides={{
+                  moderation: thread.state.otherItemsVisible && item.depth > 0,
+                }}
+                onPostSuccess={optimisticOnPostReply}
+              />
+            )
+          } else {
+            return (
+              <ThreadItemPost
+                item={item}
+                threadgateRecord={thread.data.threadgate?.record ?? undefined}
+                overrides={{
+                  moderation: thread.state.otherItemsVisible && item.depth > 0,
+                }}
+                onPostSuccess={optimisticOnPostReply}
+              />
+            )
+          }
         }
-      } else if (item.item === 'replyComposer') {
-        return <ThreadItemReplyComposerSkeleton />
+      } else if (item.type === 'readMore') {
+        return (
+          <ThreadItemReadMore
+            item={item}
+            view={thread.state.view === 'tree' ? 'tree' : 'linear'}
+          />
+        )
+      } else if (item.type === 'readMoreUp') {
+        return <ThreadItemReadMoreUp item={item} />
+      } else if (item.type === 'threadPostBlocked') {
+        return <ThreadItemPostTombstone type="blocked" />
+      } else if (item.type === 'threadPostNotFound') {
+        return <ThreadItemPostTombstone type="not-found" />
+      } else if (item.type === 'replyComposer') {
+        return (
+          <View>
+            {gtPhone && (
+              <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />
+            )}
+          </View>
+        )
+      } else if (item.type === 'showOtherReplies') {
+        return <ThreadItemShowOtherReplies onPress={item.onPress} />
+      } else if (item.type === 'skeleton') {
+        if (item.item === 'anchor') {
+          return <ThreadAnchorSkeleton />
+        } else if (item.item === 'reply') {
+          if (thread.state.view === 'linear') {
+            return <ThreadItemPostSkeleton index={index} />
+          } else {
+            return <ThreadItemTreePostSkeleton index={index} />
+          }
+        } else if (item.item === 'replyComposer') {
+          return <ThreadItemReplyComposerSkeleton />
+        }
       }
-    }
-    return null
-  }
+      return null
+    },
+    [thread, optimisticOnPostReply, onReplyToAnchor, gtPhone],
+  )
+
+  const setSortWrapped = useCallback(
+    (sort: string) => {
+      setDeferParents(true)
+      shouldScrollToAnchor.current = true
+      thread.actions.setSort(sort)
+    },
+    [thread, setDeferParents],
+  )
+
+  const setViewWrapped = useCallback(
+    (view: ThreadViewOption) => {
+      thread.actions.setView(view)
+      setDeferParents(true)
+      shouldScrollToAnchor.current = true
+    },
+    [thread, setDeferParents],
+  )
 
   return (
     <>
@@ -351,23 +373,18 @@ export function Inner({uri}: {uri: string | undefined}) {
         <Layout.Header.Slot>
           <HeaderDropdown
             sort={thread.state.sort}
-            setSort={val => {
-              thread.actions.setSort(val)
-              setDeferParents(true)
-              shouldScrollToAnchor.current = true
-            }}
+            setSort={setSortWrapped}
             view={thread.state.view}
-            setView={val => {
-              thread.actions.setView(val)
-              setDeferParents(true)
-              shouldScrollToAnchor.current = true
-            }}
+            setView={setViewWrapped}
           />
         </Layout.Header.Slot>
       </Layout.Header.Outer>
 
       {thread.state.error ? (
-        <PostThreadError error={thread.state.error} />
+        <ThreadError
+          error={thread.state.error}
+          onRetry={thread.actions.refetch}
+        />
       ) : (
         <List
           ref={listRef}
@@ -385,11 +402,10 @@ export function Inner({uri}: {uri: string | undefined}) {
            */
           maintainVisibleContentPosition={{minIndexForVisible: 0}}
           desktopFixedHeight
+          // TODO
           // removeClippedSubviews={isAndroid ? false : undefined}
           ListFooterComponent={
             <ListFooter
-              error={cleanError(thread.state.error)}
-              onRetry={thread.actions.refetch}
               /*
                * 200 is based on the minimum height of a post. This is enough
                * extra height for the `maintainVisPos` to work without
@@ -406,24 +422,6 @@ export function Inner({uri}: {uri: string | undefined}) {
       )}
     </>
   )
-}
-
-function PostThreadError({error}: {error: Error}) {
-  const {_} = useLingui()
-
-  // TODO use new cleanError hook
-  const {title: _title, message: _message} = useMemo(() => {
-    let title = _(msg`An error occurred`)
-    let message = cleanError(error)
-
-    if (error.message.startsWith('Post not found')) {
-      title = _(msg`Post not found`)
-      message = _(msg`The post may have been deleted.`)
-    }
-    return {title, message}
-  }, [_, error])
-
-  return <View />
 }
 
 const keyExtractor = (item: ThreadItem) => {
