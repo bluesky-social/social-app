@@ -2,7 +2,7 @@ import {
   type $Typed,
   type AppBskyFeedDefs,
   AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadHiddenV2,
+  type AppBskyUnspeccedGetPostThreadOtherV2,
   type AppBskyUnspeccedGetPostThreadV2,
   AtUri,
 } from '@atproto/api'
@@ -62,17 +62,15 @@ export function createCacheMutator({
       /*
        * Additional replies query mutator.
        */
-      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadHiddenV2.OutputSchema>(
+      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadOtherV2.OutputSchema>(
         postThreadOtherQueryKey,
         data => {
           if (!data) return
-          console.log(data)
           return {
             ...data,
-            thread:
-              mutator<AppBskyUnspeccedGetPostThreadHiddenV2.ThreadHiddenItem>([
-                ...data.thread,
-              ]),
+            thread: mutator<AppBskyUnspeccedGetPostThreadOtherV2.ThreadItem>([
+              ...data.thread,
+            ]),
           }
         },
       )

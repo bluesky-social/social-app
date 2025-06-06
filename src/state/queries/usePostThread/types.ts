@@ -3,14 +3,14 @@ import {
   type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
   type AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadHiddenV2,
+  type AppBskyUnspeccedGetPostThreadOtherV2,
   type AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
 } from '@atproto/api'
 
 export type ApiThreadItem =
   | AppBskyUnspeccedGetPostThreadV2.ThreadItem
-  | AppBskyUnspeccedGetPostThreadHiddenV2.ThreadHiddenItem
+  | AppBskyUnspeccedGetPostThreadOtherV2.ThreadItem
 
 export const postThreadQueryKeyRoot = 'post-thread-v2' as const
 
@@ -18,7 +18,7 @@ export const createPostThreadQueryKey = (props: PostThreadParams) =>
   [postThreadQueryKeyRoot, props] as const
 
 export const createPostThreadOtherQueryKey = (
-  props: Omit<AppBskyUnspeccedGetPostThreadHiddenV2.QueryParams, 'anchor'> & {
+  props: Omit<AppBskyUnspeccedGetPostThreadOtherV2.QueryParams, 'anchor'> & {
     anchor?: string
   },
 ) => [postThreadQueryKeyRoot, 'other', props] as const
@@ -32,7 +32,7 @@ export type PostThreadParams = Pick<
 }
 
 export type UsePostThreadQueryResult = {
-  hasHiddenReplies: boolean
+  hasOtherReplies: boolean
   thread: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
   threadgate?: Omit<AppBskyFeedDefs.ThreadgateView, 'record'> & {
     record: AppBskyFeedThreadgate.Record
