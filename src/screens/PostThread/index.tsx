@@ -129,7 +129,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       const headerHeight = headerElement.getBoundingClientRect().height
 
       if (shouldScrollToAnchor.current) {
-        /**
+        /*
          * `deferParents` is `true` on a cold load, and always reset to
          * `true` when params change (via the key on the anchor post).
          *
@@ -262,6 +262,9 @@ export function Inner({uri}: {uri: string | undefined}) {
              * `onLayout` to fire any time the thread params change so that
              * `deferParents` is always reset to `false` once the anchor post is
              * rendered.
+             *
+             * If we ever add additional thread params to this screen, they
+             * will need to be added here.
              */
             key={item.uri + thread.state.view + thread.state.sort}
             ref={anchorRef}
