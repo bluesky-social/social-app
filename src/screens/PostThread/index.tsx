@@ -402,8 +402,6 @@ export function Inner({uri}: {uri: string | undefined}) {
            */
           maintainVisibleContentPosition={{minIndexForVisible: 0}}
           desktopFixedHeight
-          // TODO
-          // removeClippedSubviews={isAndroid ? false : undefined}
           ListFooterComponent={
             <ListFooter
               /*
