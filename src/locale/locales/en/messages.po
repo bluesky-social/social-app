@@ -2049,7 +2049,7 @@ msgstr ""
 #: src/components/dms/MessageContextMenu.tsx:56
 #: src/components/PostControls/DiscoverDebug.tsx:42
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:233
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:68
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:74
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
 #: src/view/com/modals/InviteCodes.tsx:153
@@ -2069,7 +2069,7 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:186
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:191
 msgid "Copy anyway"
 msgstr ""
 
@@ -2115,8 +2115,8 @@ msgstr ""
 msgid "Copy link to list"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:139
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:135
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:144
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:93
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:102
 msgid "Copy link to post"
@@ -5227,8 +5227,8 @@ msgstr ""
 msgid "Not Found"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:171
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:181
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:176
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:186
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:165
 #: src/view/com/profile/ProfileMenu.tsx:480
 msgid "Note about sharing"
@@ -7119,8 +7119,8 @@ msgstr ""
 msgid "Send verification email"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:98
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:104
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:103
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:109
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:110
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:116
 msgid "Send via direct message"
@@ -7195,14 +7195,14 @@ msgstr ""
 msgid "Share a fun fact!"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:176
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:181
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:170
 #: src/view/com/profile/ProfileMenu.tsx:485
 msgid "Share anyway"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:158
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:161
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:163
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:166
 msgid "Share author DID"
 msgstr ""
 
@@ -7220,8 +7220,8 @@ msgstr ""
 msgid "Share link dialog"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:149
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:152
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:154
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:157
 msgid "Share post at:// URI"
 msgstr ""
 
@@ -7242,8 +7242,8 @@ msgstr ""
 msgid "Share this starter pack and help people join your community on Bluesky."
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:114
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:123
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:119
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:128
 #: src/screens/StarterPack/StarterPackScreen.tsx:611
 #: src/screens/StarterPack/StarterPackScreen.tsx:619
 #: src/view/com/profile/ProfileMenu.tsx:243
@@ -8240,8 +8240,8 @@ msgstr ""
 msgid "This post has been deleted."
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:173
-#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:183
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:178
+#: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:188
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:167
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
