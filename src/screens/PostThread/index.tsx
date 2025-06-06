@@ -7,7 +7,6 @@ import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {cleanError} from '#/lib/strings/errors'
-import {isNative} from '#/platform/detection'
 import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
@@ -79,65 +78,88 @@ export function Inner({uri}: {uri: string | undefined}) {
     })
   }
 
-  /*
-   * On native, any time we navigate to a new post/reply (even if the data is
-   * cached), we skip rendering parents so that the anchor post is the first
-   * item in the list. That way,
-   * `maintainVisibleContentPosition={{minIndexForVisible: 0}}` will pin the
-   * anchor post to the top of the screen, and on the next render, we'll
-   * include parents.
-   *
-   * On the web this is not necessary because we can synchronously adjust the
-   * scroll in onContentSizeChange instead.
-   */
-  const [deferParents, setDeferParents] = useState(isNative)
   const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE)
   const [maxChildrenCount, setMaxChildrenCount] = useState(CHILDREN_CHUNK_SIZE)
   const totalParentCount = useRef(0) // recomputed below
   const totalChildrenCount = useRef(thread.data.items.length) // recomputed below
-
   const listRef = useRef<ListMethods>(null)
   const headerRef = useRef<View | null>(null)
   const anchorRef = useRef<View | null>(null)
+
+  /*
+   * On a cold load, parents are not prepended until the anchor post has
+   * rendered as the first item in the list. This gives us a consistent
+   * reference point for which to pin the anchor post to the top of the screen.
+   *
+   * We simulate a cold load any time the user changes the view or sort params
+   * so that this handling is consistent.
+   *
+   * On native, `maintainVisibleContentPosition={{minIndexForVisible: 0}}` gives
+   * us this for free, since the anchor post is the first item in the list.
+   *
+   * On web, `onContentSizeChange` is used to get ahead of next paint and handle
+   * this scrolling.
+   */
+  const [deferParents, setDeferParents] = useState(true)
+  /**
+   * Used to flag whether we should scroll to the anchor post. On a cold load,
+   * this is always true. And when a user changes thread parameters, we also
+   * manually set this to true.
+   */
+  const shouldScrollToAnchor = useRef(true)
   /**
    * WEB ONLY
    *
-   * Needed after clicking into a post or on a cold load of a thread screen.
-   * This handler ensures that once the parents load in, the anchor post is
-   * still at the top of the screen.
+   * Called any time the content size of the list changes, just before paint.
+   *
+   * We want this to fire every time we change params (which will reset
+   * `deferParents` via `onLayout` on the anchor post, due to the key change),
+   * or click into a new post (which will result in a fresh `deferParents`
+   * hook).
+   *
+   * The result being: any intentional change in view by the user will result
+   * in the anchor being pinned as the first item.
    */
-  const hasScrolledToAnchor = useRef(false)
   const onContentSizeChangeWebOnly = web(() => {
     const anchorElement = anchorRef.current as any as Element
     const headerElement = headerRef.current as any as Element
 
-    /*
-     * When this block runs, all posts in place and are about to paint. Thee
-     * `List` is at scroll position 0, so measurements taken from `top`
-     * correspond to the top of the List (screen).
-     *
-     * We measure this synchronously (before paint) and scroll the list to the
-     * top of the `anchorElement`, minus the height of any fixed elements like
-     * the Header.
-     *
-     * We only want this to run once.
-     */
-    if (anchorElement && headerElement && !hasScrolledToAnchor.current) {
+    if (anchorElement && headerElement) {
       const anchorOffsetTop = anchorElement.getBoundingClientRect().top
       const headerHeight = headerElement.getBoundingClientRect().height
-      const scrollPosition = anchorOffsetTop - headerHeight
-      /*
-       * If scroll position is negative, it means the anchor post is above the
-       * top of the screen, meaning the user scrolled the list. In that case,
-       * we want to restore the previous scroll position by not scrolling here
-       * at all.
-       */
-      if (scrollPosition >= headerHeight) {
+
+      if (shouldScrollToAnchor.current) {
+        /**
+         * `deferParents` is `true` on a cold load, and always reset to
+         * `true` when params change (via the key on the anchor post).
+         *
+         * On a cold load, on the first pass of this logic, the anchor post is
+         * the first item in the list. Therefore `anchorOffsetTop - headerHeight`
+         * will be 0.
+         *
+         * On a warm load, on the first pass of this logic, the anchor post may
+         * not move (if there are no parents above it), or it may have gone off
+         * the screen above, because of the sudden lack of parents due to
+         * `deferParents === true`. This negative value (minus `headerHeight`)
+         * will result in a _negative_ `offset` value, which will scroll the
+         * anchor post _down_ to the top of the screen.
+         *
+         * Once parents are prepended, this will fire again. Now, the
+         * `anchorOffsetTop` will be positive, which minus the header height,
+         * will give us a _positive_ offset, which will scroll the anchor post
+         * back _up_ to the top of the screen.
+         */
         listRef.current?.scrollToOffset({
-          animated: false,
-          offset: scrollPosition,
+          offset: anchorOffsetTop - headerHeight,
         })
-        hasScrolledToAnchor.current = true
+
+        /*
+         * After the second pass, `deferParents` will be `false`, and we need
+         * to ensure this doesn't run again until scroll handling is requested
+         * again via `shouldScrollToAnchor.current === true` and a params
+         * change.
+         */
+        if (!deferParents) shouldScrollToAnchor.current = false
       }
     }
   })
@@ -235,8 +257,15 @@ export function Inner({uri}: {uri: string | undefined}) {
       } else if (item.depth === 0) {
         return (
           <View
-            ref={item.ui.isAnchor ? anchorRef : undefined}
-            onLayout={deferParents ? () => setDeferParents(false) : undefined}>
+            /*
+             * IMPORTANT: this is a load-bearing key. We want to force
+             * `onLayout` to fire any time the thread params change so that
+             * `deferParents` is always reset to `false` once the anchor post is
+             * rendered.
+             */
+            key={item.uri + thread.state.view + thread.state.sort}
+            ref={anchorRef}
+            onLayout={() => setDeferParents(false)}>
             <ThreadAnchor
               item={item}
               threadgateRecord={thread.data.threadgate?.record ?? undefined}
@@ -320,9 +349,17 @@ export function Inner({uri}: {uri: string | undefined}) {
         <Layout.Header.Slot>
           <HeaderDropdown
             sort={thread.state.sort}
-            setSort={thread.actions.setSort}
+            setSort={val => {
+              thread.actions.setSort(val)
+              setDeferParents(true)
+              shouldScrollToAnchor.current = true
+            }}
             view={thread.state.view}
-            setView={thread.actions.setView}
+            setView={val => {
+              thread.actions.setView(val)
+              setDeferParents(true)
+              shouldScrollToAnchor.current = true
+            }}
           />
         </Layout.Header.Slot>
       </Layout.Header.Outer>
@@ -345,11 +382,10 @@ export function Inner({uri}: {uri: string | undefined}) {
             onEndReachedThreshold={2}
             onStartReachedThreshold={1}
             /**
-             * @see https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition
+             * NATIVE ONLY
+             * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
              */
-            maintainVisibleContentPosition={
-              isNative ? {minIndexForVisible: 0} : undefined
-            }
+            maintainVisibleContentPosition={{minIndexForVisible: 0}}
             desktopFixedHeight
             // removeClippedSubviews={isAndroid ? false : undefined}
             ListFooterComponent={
