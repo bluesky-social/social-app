@@ -48,7 +48,7 @@ import {
   useProfileMuteMutationQueue,
 } from '#/state/queries/profile'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
-import {useSession} from '#/state/session'
+import {useRequireAuth, useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import * as Toast from '#/view/com/util/Toast'
 import {useDialogControl} from '#/components/Dialog'
@@ -113,6 +113,7 @@ let PostMenuItems = ({
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
   const {mutateAsync: pinPostMutate, isPending: isPinPending} =
     usePinnedPostMutation()
+  const requireSignIn = useRequireAuth()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
@@ -397,6 +398,8 @@ let PostMenuItems = ({
     openLink(url)
   }
 
+  const onSignIn = () => requireSignIn(() => {})
+
   const gate = useGate()
   const isDiscoverDebugUser =
     IS_INTERNAL ||
@@ -434,7 +437,7 @@ let PostMenuItems = ({
         )}
 
         <Menu.Group>
-          {(!hideInPWI || hasSession) && (
+          {!hideInPWI || hasSession ? (
             <>
               <Menu.Item
                 testID="postDropdownTranslateBtn"
@@ -452,6 +455,14 @@ let PostMenuItems = ({
                 <Menu.ItemIcon icon={ClipboardIcon} position="right" />
               </Menu.Item>
             </>
+          ) : (
+            <Menu.Item
+              testID="postDropdownSignInBtn"
+              label={_(msg`Sign in to view post`)}
+              onPress={onSignIn}>
+              <Menu.ItemText>{_(msg`Sign in to view post`)}</Menu.ItemText>
+              <Menu.ItemIcon icon={Eye} position="right" />
+            </Menu.Item>
           )}
         </Menu.Group>
 
