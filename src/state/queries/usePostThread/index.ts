@@ -264,12 +264,6 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setOtherItemsVisible,
   ])
 
-  // items.forEach(slice => {
-  //   if (slice.type === 'threadPost' && slice.depth === 0) {
-  //     slice.key = slice.uri + view + sort
-  //   }
-  // })
-
   return useMemo(
     () => ({
       state: {
