@@ -1,6 +1,7 @@
 import React from 'react'
 import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {logger} from '#/logger'
@@ -32,7 +33,10 @@ export function useIntentHandler() {
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
   React.useEffect(() => {
-    const handleIncomingURL = (url: string) => {
+    const handleIncomingURL = async (url: string) => {
+      // Close in-app browser if it's open
+      WebBrowser.dismissBrowser().catch(() => {})
+
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
         logger.metric('deepLink:referrerReceived', {
