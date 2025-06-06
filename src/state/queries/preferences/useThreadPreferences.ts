@@ -1,7 +1,13 @@
-import {useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
+import debounce from 'lodash.debounce'
 
-import {usePreferencesQuery} from '#/state/queries/preferences'
+import {logger} from '#/logger'
+import {
+  usePreferencesQuery,
+  useSetThreadViewPreferencesMutation,
+} from '#/state/queries/preferences'
+import {type ThreadViewPreferences} from '#/state/queries/preferences/types'
 import {type Literal} from '#/types/utils'
 
 export type ThreadSortOption = Literal<
@@ -11,59 +17,101 @@ export type ThreadSortOption = Literal<
 export type ThreadViewOption = 'linear' | 'tree'
 export type ThreadPreferences = {
   isLoaded: boolean
+  isSaving: boolean
   sort: ThreadSortOption
-  setSort: (sort: ThreadSortOption) => void
+  setSort: (sort: string) => void
   view: ThreadViewOption
   setView: (view: ThreadViewOption) => void
   prioritizeFollowedUsers: boolean
   setPrioritizeFollowedUsers: (prioritize: boolean) => void
 }
 
-export function useThreadPreferences(): ThreadPreferences {
+export function useThreadPreferences({
+  save,
+}: {save?: boolean} = {}): ThreadPreferences {
   const {data: preferences} = usePreferencesQuery()
-  const nextThreadPreferences = preferences?.threadViewPrefs
+  const serverPrefs = preferences?.threadViewPrefs
 
   /*
    * Create local state representations of server state
    */
-  const [sort, setSort] = useState(
-    migrateFromSortV1(nextThreadPreferences?.sort || 'top'),
-  )
+  const [sort, setSort] = useState(normalizeSort(serverPrefs?.sort || 'top'))
   const [view, setView] = useState(
-    computeView({
-      treeViewEnabled: !!nextThreadPreferences?.lab_treeViewEnabled,
+    normalizeView({
+      treeViewEnabled: !!serverPrefs?.lab_treeViewEnabled,
     }),
   )
   const [prioritizeFollowedUsers, setPrioritizeFollowedUsers] = useState(
-    !!nextThreadPreferences?.prioritizeFollowedUsers,
+    !!serverPrefs?.prioritizeFollowedUsers,
   )
 
   /**
-   * Cache existing and if we get a server update, reset local state
+   * If we get a server update, update local state
    */
-  const [prevServerPrefs, setPrevServerPrefs] = useState(nextThreadPreferences)
-  if (nextThreadPreferences && prevServerPrefs !== nextThreadPreferences) {
-    setPrevServerPrefs(nextThreadPreferences)
+  const [prevServerPrefs, setPrevServerPrefs] = useState(serverPrefs)
+  const isLoaded = !!prevServerPrefs
+  if (serverPrefs && prevServerPrefs !== serverPrefs) {
+    setPrevServerPrefs(serverPrefs)
 
     /*
-     * Reset
+     * Update
      */
-    setSort(migrateFromSortV1(nextThreadPreferences.sort))
-    setPrioritizeFollowedUsers(nextThreadPreferences.prioritizeFollowedUsers)
+    setSort(normalizeSort(serverPrefs.sort))
+    setPrioritizeFollowedUsers(serverPrefs.prioritizeFollowedUsers)
     setView(
-      computeView({
-        treeViewEnabled: !!nextThreadPreferences.lab_treeViewEnabled,
+      normalizeView({
+        treeViewEnabled: !!serverPrefs.lab_treeViewEnabled,
       }),
     )
   }
 
-  const isLoaded = !!prevServerPrefs
+  const [isSaving, setIsSaving] = useState(false)
+  const {mutateAsync} = useSetThreadViewPreferencesMutation()
+  const savePrefs = useMemo(() => {
+    return debounce(async (prefs: ThreadViewPreferences) => {
+      try {
+        setIsSaving(true)
+        await mutateAsync(prefs)
+      } catch (e) {
+        logger.error('useThreadPreferences failed to save', {
+          safeMessage: e,
+        })
+      } finally {
+        setIsSaving(false)
+      }
+    }, 4e3)
+  }, [mutateAsync])
+
+  if (save && !isSaving) {
+    if (
+      serverPrefs?.sort !== sort ||
+      serverPrefs?.prioritizeFollowedUsers !== prioritizeFollowedUsers ||
+      serverPrefs?.lab_treeViewEnabled !== (view === 'tree' ? true : false)
+    ) {
+      savePrefs({
+        sort,
+        prioritizeFollowedUsers,
+        lab_treeViewEnabled: view === 'tree',
+      })
+    }
+  }
+
+  /*
+   * Wraped for easier migration
+   */
+  const setSortWrapped = useCallback(
+    (next: string) => {
+      setSort(normalizeSort(next))
+    },
+    [setSort],
+  )
 
   return useMemo(
     () => ({
       isLoaded,
+      isSaving,
       sort,
-      setSort,
+      setSort: setSortWrapped,
       prioritizeFollowedUsers,
       setPrioritizeFollowedUsers,
       view,
@@ -71,8 +119,9 @@ export function useThreadPreferences(): ThreadPreferences {
     }),
     [
       isLoaded,
+      isSaving,
       sort,
-      setSort,
+      setSortWrapped,
       prioritizeFollowedUsers,
       setPrioritizeFollowedUsers,
       view,
@@ -84,7 +133,7 @@ export function useThreadPreferences(): ThreadPreferences {
 /**
  * Migrates user thread preferences from the old sort values to V2
  */
-function migrateFromSortV1(sort: string): ThreadSortOption {
+export function normalizeSort(sort: string): ThreadSortOption {
   switch (sort) {
     case 'oldest':
       return 'oldest'
@@ -98,7 +147,7 @@ function migrateFromSortV1(sort: string): ThreadSortOption {
 /**
  * Transforms existing treeViewEnabled preference into a ThreadViewOption
  */
-function computeView({
+export function normalizeView({
   treeViewEnabled,
 }: {
   treeViewEnabled: boolean
