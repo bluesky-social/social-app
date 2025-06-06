@@ -17,7 +17,7 @@ import {BELOW} from '#/state/queries/usePostThread/const'
 import {getBranch} from '#/state/queries/usePostThread/traversal'
 import {
   type ApiThreadItem,
-  type createPostThreadHiddenQueryKey,
+  type createPostThreadOtherQueryKey,
   type createPostThreadQueryKey,
   type PostThreadParams,
   postThreadQueryKeyRoot,
@@ -30,12 +30,12 @@ import {embedViewRecordToPostView} from '#/state/queries/util'
 export function createCacheMutator({
   queryClient,
   postThreadQueryKey,
-  postThreadHiddenQueryKey,
+  postThreadOtherQueryKey,
   params,
 }: {
   queryClient: QueryClient
   postThreadQueryKey: ReturnType<typeof createPostThreadQueryKey>
-  postThreadHiddenQueryKey: ReturnType<typeof createPostThreadHiddenQueryKey>
+  postThreadOtherQueryKey: ReturnType<typeof createPostThreadOtherQueryKey>
   params: Pick<PostThreadParams, 'view'>
 }) {
   return {
@@ -60,10 +60,10 @@ export function createCacheMutator({
       )
 
       /*
-       * Hidden threads query mutator.
+       * Additional replies query mutator.
        */
       queryClient.setQueryData<AppBskyUnspeccedGetPostThreadHiddenV2.OutputSchema>(
-        postThreadHiddenQueryKey,
+        postThreadOtherQueryKey,
         data => {
           if (!data) return
           console.log(data)

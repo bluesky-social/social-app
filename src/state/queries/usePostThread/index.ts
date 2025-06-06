@@ -14,7 +14,7 @@ import {
   sortAndAnnotateThreadItems,
 } from '#/state/queries/usePostThread/traversal'
 import {
-  createPostThreadHiddenQueryKey,
+  createPostThreadOtherQueryKey,
   createPostThreadQueryKey,
   type ThreadItem,
   type UsePostThreadQueryResult,
@@ -47,7 +47,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     view,
     prioritizeFollowedUsers,
   })
-  const postThreadHiddenQueryKey = createPostThreadHiddenQueryKey({
+  const postThreadOtherQueryKey = createPostThreadOtherQueryKey({
     anchor,
     prioritizeFollowedUsers,
   })
@@ -68,15 +68,15 @@ export function usePostThread({anchor}: {anchor?: string}) {
       )
 
       /*
-       * Initialize `ctx.meta` to track if there are hidden replies in any of
-       * the fetched pages of results.
+       * Initialize `ctx.meta` to track if we know we have additional replies
+       * we could fetch once we hit the end.
        */
       ctx.meta = ctx.meta || {
         hasHiddenReplies: false,
       }
 
       /*
-       * If we ever see hidden replies, we'll set this to true.
+       * If we know we have additional replies, we'll set this to true.
        */
       if (data.hasHiddenReplies) {
         ctx.meta.hasHiddenReplies = true
@@ -120,12 +120,11 @@ export function usePostThread({anchor}: {anchor?: string}) {
     () => query.data?.threadgate,
     [query.data?.threadgate],
   )
-  const hasServerHiddenThreadItems = useMemo(
+  const hasOtherThreadItems = useMemo(
     () => !!query.data?.hasHiddenReplies,
     [query.data?.hasHiddenReplies],
   )
-  const [hiddenThreadItemsVisible, setHiddenThreadItemsVisible] =
-    useState(false)
+  const [otherItemsVisible, setOtherItemsVisible] = useState(false)
 
   /**
    * Creates a mutator for the post thread cache. This is used to insert
@@ -136,21 +135,20 @@ export function usePostThread({anchor}: {anchor?: string}) {
       createCacheMutator({
         params: {view},
         postThreadQueryKey,
-        postThreadHiddenQueryKey,
+        postThreadOtherQueryKey,
         queryClient: qc,
       }),
-    [qc, view, postThreadQueryKey, postThreadHiddenQueryKey],
+    [qc, view, postThreadQueryKey, postThreadOtherQueryKey],
   )
 
   /**
-   * If we have server-hidden items and the user has chosen to view them,
-   * start loading data
+   * If we have additional items available from the server and the user has
+   * chosen to view them, start loading data
    */
-  const hiddenQueryEnabled =
-    hasServerHiddenThreadItems && hiddenThreadItemsVisible
-  const hiddenQuery = useQuery({
-    enabled: hiddenQueryEnabled,
-    queryKey: postThreadHiddenQueryKey,
+  const additionalQueryEnabled = hasOtherThreadItems && otherItemsVisible
+  const additionalItemsQuery = useQuery({
+    enabled: additionalQueryEnabled,
+    queryKey: postThreadOtherQueryKey,
     async queryFn() {
       const {data} = await wait(
         400,
@@ -162,24 +160,24 @@ export function usePostThread({anchor}: {anchor?: string}) {
       return data
     },
   })
-  const serverHiddenThreadItems: ThreadItem[] = useMemo(() => {
-    if (!hiddenQueryEnabled) return []
-    if (hiddenQuery.isLoading) {
+  const serverOtherThreadItems: ThreadItem[] = useMemo(() => {
+    if (!additionalQueryEnabled) return []
+    if (additionalItemsQuery.isLoading) {
       return Array.from({length: 2}).map((_, i) =>
         views.skeleton({
-          key: `hidden-reply-${i}`,
+          key: `other-reply-${i}`,
           item: 'reply',
         }),
       )
-    } else if (hiddenQuery.isError) {
+    } else if (additionalItemsQuery.isError) {
       // TODO could insert error component
       return []
-    } else if (hiddenQuery.data?.thread) {
+    } else if (additionalItemsQuery.data?.thread) {
       const {threadItems} = sortAndAnnotateThreadItems(
-        hiddenQuery.data.thread,
+        additionalItemsQuery.data.thread,
         {
           view,
-          skipHiddenReplyHandling: true,
+          skipModerationHandling: true,
           threadgateHiddenReplies: mergeThreadgateHiddenReplies(
             threadgate?.record,
           ),
@@ -192,40 +190,40 @@ export function usePostThread({anchor}: {anchor?: string}) {
     }
   }, [
     view,
-    hiddenQueryEnabled,
-    hiddenQuery,
+    additionalQueryEnabled,
+    additionalItemsQuery,
     mergeThreadgateHiddenReplies,
     moderationOpts,
     threadgate?.record,
   ])
 
   /**
-   * Sets the sort order for the thread and resets the hidden items
+   * Sets the sort order for the thread and resets the additional thread items
    */
   const setSort: typeof baseSetSort = useCallback(
     nextSort => {
-      setHiddenThreadItemsVisible(false)
+      setOtherItemsVisible(false)
       baseSetSort(nextSort)
     },
-    [baseSetSort, setHiddenThreadItemsVisible],
+    [baseSetSort, setOtherItemsVisible],
   )
 
   /**
-   * Sets the view variant for the thread and resets the hidden items
+   * Sets the view variant for the thread and resets the additional thread items
    */
   const setView: typeof baseSetView = useCallback(
     nextView => {
-      setHiddenThreadItemsVisible(false)
+      setOtherItemsVisible(false)
       baseSetView(nextView)
     },
-    [baseSetView, setHiddenThreadItemsVisible],
+    [baseSetView, setOtherItemsVisible],
   )
 
   /*
    * This is the main thread response, sorted into separate buckets based on
    * moderation, and annotated with all UI state needed for rendering.
    */
-  const {threadItems, hiddenThreadItems} = useMemo(() => {
+  const {threadItems, otherThreadItems} = useMemo(() => {
     return sortAndAnnotateThreadItems(thread, {
       view: view,
       threadgateHiddenReplies: mergeThreadgateHiddenReplies(threadgate?.record),
@@ -241,29 +239,29 @@ export function usePostThread({anchor}: {anchor?: string}) {
 
   /*
    * Take all three sets of thread items and combine them into a single thread,
-   * along with any other thread items required for rendering e.g. "Show hidden
+   * along with any other thread items required for rendering e.g. "Show more
    * replies" or the reply composer.
    */
   const items = useMemo(() => {
     return buildThread({
       threadItems,
-      hiddenThreadItems,
-      serverHiddenThreadItems,
+      otherThreadItems,
+      serverOtherThreadItems,
       isLoading: query.isPlaceholderData,
       hasSession,
-      hasServerHiddenThreadItems,
-      hiddenThreadItemsVisible,
-      showHiddenThreadItems: () => setHiddenThreadItemsVisible(true),
+      hasOtherThreadItems,
+      otherItemsVisible,
+      showOtherItems: () => setOtherItemsVisible(true),
     })
   }, [
     threadItems,
-    hiddenThreadItems,
-    serverHiddenThreadItems,
+    otherThreadItems,
+    serverOtherThreadItems,
     query.isPlaceholderData,
     hasSession,
-    hasServerHiddenThreadItems,
-    hiddenThreadItemsVisible,
-    setHiddenThreadItemsVisible,
+    hasOtherThreadItems,
+    otherItemsVisible,
+    setOtherItemsVisible,
   ])
 
   return useMemo(
@@ -280,7 +278,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
          */
         sort,
         view,
-        hiddenThreadItemsVisible,
+        otherItemsVisible,
       },
       data: {
         items,
@@ -302,7 +300,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     [
       query,
       mutator.insertReplies,
-      hiddenThreadItemsVisible,
+      otherItemsVisible,
       sort,
       view,
       setSort,

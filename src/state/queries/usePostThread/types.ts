@@ -17,11 +17,11 @@ export const postThreadQueryKeyRoot = 'post-thread-v2' as const
 export const createPostThreadQueryKey = (props: PostThreadParams) =>
   [postThreadQueryKeyRoot, props] as const
 
-export const createPostThreadHiddenQueryKey = (
+export const createPostThreadOtherQueryKey = (
   props: Omit<AppBskyUnspeccedGetPostThreadHiddenV2.QueryParams, 'anchor'> & {
     anchor?: string
   },
-) => [postThreadQueryKeyRoot, 'hidden', props] as const
+) => [postThreadQueryKeyRoot, 'other', props] as const
 
 export type PostThreadParams = Pick<
   AppBskyUnspeccedGetPostThreadV2.QueryParams,
@@ -88,7 +88,7 @@ export type ThreadItem =
       key: string
     }
   | {
-      type: 'showHiddenReplies'
+      type: 'showOtherReplies'
       key: string
       onPress: () => void
     }
