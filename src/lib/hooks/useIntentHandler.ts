@@ -34,8 +34,10 @@ export function useIntentHandler() {
 
   React.useEffect(() => {
     const handleIncomingURL = async (url: string) => {
-      // Close in-app browser if it's open
-      WebBrowser.dismissBrowser().catch(() => {})
+      if (isNative) {
+        // Close in-app browser if it's open
+        WebBrowser.dismissBrowser().catch(() => {})
+      }
 
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
