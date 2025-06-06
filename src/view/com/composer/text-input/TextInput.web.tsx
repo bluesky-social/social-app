@@ -29,6 +29,7 @@ import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
 import {type Emoji} from './web/EmojiPicker'
+import {useEmojiSuggestion} from './web/EmojiSuggestion'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
@@ -322,6 +323,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     return style
   }, [t, fonts, webForceMinHeight])
 
+  const {suggestions, selectedIndex, insertEmoji, suggestionPos} =
+    useEmojiSuggestion(editor)
+
   return (
     <>
       <View style={[styles.container, hasRightPadding && styles.rightPadding]}>
@@ -342,6 +346,32 @@ export const TextInput = React.forwardRef(function TextInputImpl(
                 <Trans>Drop to add images</Trans>
               </Text>
             </View>
+          </Animated.View>
+        </Portal>
+      )}
+      {suggestionPos && suggestions.length > 0 && (
+        <Portal>
+          <Animated.View
+            style={[
+              pal.view,
+              pal.border,
+              styles.dropdown,
+              {
+                top: suggestionPos.top,
+                left: suggestionPos.left,
+              },
+            ]}>
+            {suggestions.map((e: {id: any; native: any}, i: any) => (
+              <Text
+                key={e.id}
+                style={[
+                  styles.item,
+                  i === selectedIndex && styles.selectedItem,
+                ]}
+                onPress={() => insertEmoji(e.native)}>
+                {e.native} {e.id}
+              </Text>
+            ))}
           </Animated.View>
         </Portal>
       )}
@@ -419,6 +449,21 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderRadius: 8,
     borderWidth: 2,
+  },
+  dropdown: {
+    position: 'absolute',
+    borderWidth: 1,
+    borderRadius: 4,
+    zIndex: 999,
+  },
+  item: {
+    padding: 8,
+    fontSize: 16,
+    color: '#fff',
+  },
+  selectedItem: {
+    backgroundColor: '#007bff',
+    color: '#fff',
   },
 })
 
