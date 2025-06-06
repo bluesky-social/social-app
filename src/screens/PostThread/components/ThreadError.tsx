@@ -22,7 +22,6 @@ export function ThreadError({
   const {_} = useLingui()
   const cleanError = useCleanError()
 
-  // TODO use new cleanError hook
   const {title, message} = useMemo(() => {
     let title = _(msg`Error loading post`)
     let message = _(msg`Something went wrong. Please try again in a moment.`)
