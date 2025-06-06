@@ -252,36 +252,13 @@ class BottomSheetView(
           override fun onSlide(
             bottomSheet: View,
             slideOffset: Float,
-          ) {
-            // Reset any translation we applied to fix initial position
-            // This should only happen in partial state, and only needs to be reset
-            // when the user starts interacting with the sheet
-            if (selectedSnapPoint == 1 && bottomSheet.translationY != 0f) {
-              bottomSheet.translationY = 0f
-            }
-          }
+          ) { }
         },
       )
     }
     this.isOpening = true
     dialog.show()
     this.dialog = dialog
-
-    // When the sheet first opens at partial height, the position is too low - it's beneath the nav bars
-    // We fix by applying a translation initially, and then removing in `onSlide`
-    // since after the user starts interacting, it behaves properly. Probably not the neatest
-    // solution but seems to work consistently -sfn
-    dialog.window?.decorView?.post {
-      // Only apply the hack fix when in partial/half-expanded state (selectedSnapPoint == 1)
-      if (selectedSnapPoint == 1) {
-        val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-        bottomSheet?.let { sheet ->
-          // Apply negative translation to counteract the navigation bar offset
-          val navHeight = getNavigationBarHeight()
-          sheet.translationY = -navHeight.toFloat()
-        }
-      }
-    }
   }
 
   fun updateLayout() {
