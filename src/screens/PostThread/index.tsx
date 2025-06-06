@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {ScrollProvider} from '#/lib/ScrollContext'
 import {cleanError} from '#/lib/strings/errors'
 import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
 import {type OnPostSuccessData} from '#/state/shell/composer'
@@ -370,45 +369,40 @@ export function Inner({uri}: {uri: string | undefined}) {
       {thread.state.error ? (
         <PostThreadError error={thread.state.error} />
       ) : (
-        <ScrollProvider
-        // TODO do we need?
-        //onMomentumEnd={onMomentumEnd}
-        >
-          <List
-            ref={listRef}
-            data={slices}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            onContentSizeChange={onContentSizeChangeWebOnly}
-            onStartReached={onStartReached}
-            onEndReached={onEndReached}
-            onEndReachedThreshold={2}
-            onStartReachedThreshold={1}
-            /**
-             * NATIVE ONLY
-             * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
-             */
-            maintainVisibleContentPosition={{minIndexForVisible: 0}}
-            desktopFixedHeight
-            // removeClippedSubviews={isAndroid ? false : undefined}
-            ListFooterComponent={
-              <ListFooter
-                error={cleanError(thread.state.error)}
-                onRetry={thread.actions.refetch}
-                /*
-                 * 200 is based on the minimum height of a post. This is enough
-                 * extra height for the `maintainVisPos` to work without
-                 * causing weird jumps on web or glitches on native
-                 */
-                height={windowHeight - 200}
-                style={isTombstoneView ? {borderTopWidth: 0} : undefined}
-              />
-            }
-            initialNumToRender={initialNumToRender}
-            windowSize={11}
-            sideBorders={false}
-          />
-        </ScrollProvider>
+        <List
+          ref={listRef}
+          data={slices}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onContentSizeChange={onContentSizeChangeWebOnly}
+          onStartReached={onStartReached}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={2}
+          onStartReachedThreshold={1}
+          /**
+           * NATIVE ONLY
+           * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
+           */
+          maintainVisibleContentPosition={{minIndexForVisible: 0}}
+          desktopFixedHeight
+          // removeClippedSubviews={isAndroid ? false : undefined}
+          ListFooterComponent={
+            <ListFooter
+              error={cleanError(thread.state.error)}
+              onRetry={thread.actions.refetch}
+              /*
+               * 200 is based on the minimum height of a post. This is enough
+               * extra height for the `maintainVisPos` to work without
+               * causing weird jumps on web or glitches on native
+               */
+              height={windowHeight - 200}
+              style={isTombstoneView ? {borderTopWidth: 0} : undefined}
+            />
+          }
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
+          sideBorders={false}
+        />
       )}
     </>
   )
