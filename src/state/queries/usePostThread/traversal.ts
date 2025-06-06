@@ -20,23 +20,23 @@ export function sortAndAnnotateThreadItems(
     threadgateHiddenReplies,
     moderationOpts,
     view,
-    skipHiddenReplyHandling,
+    skipModerationHandling,
   }: {
     threadgateHiddenReplies: Set<string>
     moderationOpts: ModerationOpts
     view: PostThreadParams['view']
     /**
      * Set to `true` in cases where we already know the moderation state of the
-     * post e.g. when fetching server-hidden replies. This will prevent
-     * additional sorting or nested-branch truncation, and all replies,
+     * post e.g. when fetching additional replies from the server. This will
+     * prevent additional sorting or nested-branch truncation, and all replies,
      * regardless of moderation state, will be included in the resulting
      * `threadItems` array.
      */
-    skipHiddenReplyHandling?: boolean
+    skipModerationHandling?: boolean
   },
 ) {
   const threadItems: ThreadItem[] = []
-  const hiddenThreadItems: ThreadItem[] = []
+  const otherThreadItems: ThreadItem[] = []
   const metadatas = new Map<string, TraversalMetadata>()
 
   traversal: for (let i = 0; i < thread.length; i++) {
@@ -140,7 +140,7 @@ export function sortAndAnnotateThreadItems(
           threadgateHiddenReplies,
         })
 
-        if (!post.isBlurred || skipHiddenReplyHandling) {
+        if (!post.isBlurred || skipModerationHandling) {
           /*
            * Not moderated, need to insert it
            */
@@ -163,7 +163,7 @@ export function sortAndAnnotateThreadItems(
 
           if (parentIsTopLevelReply) {
             // push branch anchor into sorted array
-            hiddenThreadItems.push(parent)
+            otherThreadItems.push(parent)
             // skip branch anchor in branch traversal
             const startIndex = branch.start + 1
 
@@ -199,14 +199,14 @@ export function sortAndAnnotateThreadItems(
                 })
 
                 /*
-                 * If a child is hidden in any way, drop it an its sub-branch
+                 * If a child is moderated in any way, drop it an its sub-branch
                  * entirely. To reveal these, the user must navigate to the
                  * parent post directly.
                  */
                 if (childPost.isBlurred) {
                   ci = getBranch(thread, ci, child.depth).end
                 } else {
-                  hiddenThreadItems.push(childPost)
+                  otherThreadItems.push(childPost)
                 }
               } else {
                 /*
@@ -228,10 +228,10 @@ export function sortAndAnnotateThreadItems(
   }
 
   /*
-   * Both `threadItems` and `hiddenThreadItems` now need to be traversed again to fully compute
+   * Both `threadItems` and `otherThreadItems` now need to be traversed again to fully compute
    * UI state based on collected metadata. These arrays will be muted in situ.
    */
-  for (const subset of [threadItems, hiddenThreadItems]) {
+  for (const subset of [threadItems, otherThreadItems]) {
     for (let i = 0; i < subset.length; i++) {
       const item = subset[i]
       const prevItem = subset.at(i - 1)
@@ -376,28 +376,28 @@ export function sortAndAnnotateThreadItems(
 
   return {
     threadItems,
-    hiddenThreadItems,
+    otherThreadItems,
   }
 }
 
 export function buildThread({
   threadItems,
-  hiddenThreadItems,
-  serverHiddenThreadItems,
+  otherThreadItems,
+  serverOtherThreadItems,
   isLoading,
   hasSession,
-  hiddenThreadItemsVisible,
-  hasServerHiddenThreadItems,
-  showHiddenThreadItems,
+  otherItemsVisible,
+  hasOtherThreadItems,
+  showOtherItems,
 }: {
   threadItems: ThreadItem[]
-  hiddenThreadItems: ThreadItem[]
-  serverHiddenThreadItems: ThreadItem[]
+  otherThreadItems: ThreadItem[]
+  serverOtherThreadItems: ThreadItem[]
   isLoading: boolean
   hasSession: boolean
-  hiddenThreadItemsVisible: boolean
-  hasServerHiddenThreadItems: boolean
-  showHiddenThreadItems: () => void
+  otherItemsVisible: boolean
+  hasOtherThreadItems: boolean
+  showOtherItems: () => void
 }) {
   /**
    * `threadItems` is memoized here, so don't mutate it directly.
@@ -466,15 +466,15 @@ export function buildThread({
       }
     }
 
-    if (hiddenThreadItems.length || hasServerHiddenThreadItems) {
-      if (hiddenThreadItemsVisible) {
-        items.push(...hiddenThreadItems)
-        items.push(...serverHiddenThreadItems)
+    if (otherThreadItems.length || hasOtherThreadItems) {
+      if (otherItemsVisible) {
+        items.push(...otherThreadItems)
+        items.push(...serverOtherThreadItems)
       } else {
         items.push({
-          type: 'showHiddenReplies',
-          key: 'showHiddenReplies',
-          onPress: showHiddenThreadItems,
+          type: 'showOtherReplies',
+          key: 'showOtherReplies',
+          onPress: showOtherItems,
         })
       }
     }

@@ -251,8 +251,7 @@ export function Inner({uri}: {uri: string | undefined}) {
               item={item}
               threadgateRecord={thread.data.threadgate?.record ?? undefined}
               overrides={{
-                moderation:
-                  thread.state.hiddenThreadItemsVisible && item.depth > 0,
+                moderation: thread.state.otherItemsVisible && item.depth > 0,
               }}
               onPostSuccess={optimisticOnPostReply}
             />
@@ -263,8 +262,7 @@ export function Inner({uri}: {uri: string | undefined}) {
               item={item}
               threadgateRecord={thread.data.threadgate?.record ?? undefined}
               overrides={{
-                moderation:
-                  thread.state.hiddenThreadItemsVisible && item.depth > 0,
+                moderation: thread.state.otherItemsVisible && item.depth > 0,
               }}
               onPostSuccess={optimisticOnPostReply}
             />
@@ -292,7 +290,7 @@ export function Inner({uri}: {uri: string | undefined}) {
           )}
         </View>
       )
-    } else if (item.type === 'showHiddenReplies') {
+    } else if (item.type === 'showOtherReplies') {
       return (
         <PostThreadShowHiddenReplies type="hidden" onPress={item.onPress} />
       )
