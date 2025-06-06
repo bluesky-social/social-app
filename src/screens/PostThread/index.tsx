@@ -11,7 +11,6 @@ import {isNative} from '#/platform/detection'
 import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
-import {PostThreadShowHiddenReplies} from '#/view/com/post-thread/PostThreadShowHiddenReplies'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
 import {
@@ -26,6 +25,7 @@ import {ThreadItemPostTombstone} from '#/screens/PostThread/components/ThreadIte
 import {ThreadItemReadMore} from '#/screens/PostThread/components/ThreadItemReadMore'
 import {ThreadItemReadMoreUp} from '#/screens/PostThread/components/ThreadItemReadMoreUp'
 import {ThreadItemReplyComposerSkeleton} from '#/screens/PostThread/components/ThreadItemReplyComposer'
+import {ThreadItemShowOtherReplies} from '#/screens/PostThread/components/ThreadItemShowOtherReplies'
 import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
@@ -291,9 +291,7 @@ export function Inner({uri}: {uri: string | undefined}) {
         </View>
       )
     } else if (item.type === 'showOtherReplies') {
-      return (
-        <PostThreadShowHiddenReplies type="hidden" onPress={item.onPress} />
-      )
+      return <ThreadItemShowOtherReplies onPress={item.onPress} />
     } else if (item.type === 'skeleton') {
       if (item.item === 'anchor') {
         return <ThreadAnchorSkeleton />
