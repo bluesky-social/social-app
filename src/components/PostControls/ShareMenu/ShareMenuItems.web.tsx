@@ -79,18 +79,22 @@ let ShareMenuItems = ({
     shareText(postAuthor.did)
   }
 
+  const copyLinkItem = (
+    <Menu.Item
+      testID="postDropdownShareBtn"
+      label={_(msg`Copy link to post`)}
+      onPress={onCopyLink}>
+      <Menu.ItemText>
+        <Trans>Copy link to post</Trans>
+      </Menu.ItemText>
+      <Menu.ItemIcon icon={ChainLinkIcon} position="right" />
+    </Menu.Item>
+  )
+
   return (
     <>
       <Menu.Outer>
-        <Menu.Item
-          testID="postDropdownShareBtn"
-          label={_(msg`Copy link to post`)}
-          onPress={onCopyLink}>
-          <Menu.ItemText>
-            <Trans>Copy link to post</Trans>
-          </Menu.ItemText>
-          <Menu.ItemIcon icon={ChainLinkIcon} position="right" />
-        </Menu.Item>
+        {!hideInPWI && copyLinkItem}
 
         {hasSession && (
           <Menu.Item
@@ -120,6 +124,16 @@ let ShareMenuItems = ({
           </Menu.Item>
         )}
 
+        {hideInPWI && (
+          <>
+            {hasSession && <Menu.Divider />}
+            {copyLinkItem}
+            <Menu.LabelText style={{maxWidth: 220}}>
+              <Trans>Note: This post is only visible to logged-in users.</Trans>
+            </Menu.LabelText>
+          </>
+        )}
+
         {devModeEnabled && (
           <>
             <Menu.Divider />
@@ -141,15 +155,6 @@ let ShareMenuItems = ({
               </Menu.ItemText>
               <Menu.ItemIcon icon={ClipboardIcon} position="right" />
             </Menu.Item>
-          </>
-        )}
-
-        {hideInPWI && (
-          <>
-            <Menu.Divider />
-            <Menu.LabelText style={{maxWidth: 220}}>
-              <Trans>Note: This post is only visible to logged-in users.</Trans>
-            </Menu.LabelText>
           </>
         )}
       </Menu.Outer>
