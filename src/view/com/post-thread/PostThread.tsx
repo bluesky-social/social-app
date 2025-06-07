@@ -297,11 +297,14 @@ export function PostThread({uri}: {uri: string | undefined}) {
       // maintainVisibleContentPosition and onContentSizeChange
       // to "hold onto" the correct row instead of the first one.
 
+      /*
+       * This is basically `!!parents.length`, see notes on `isParentLoading`
+       */
       if (!highlightedPost.ctx.isParentLoading && !deferParents) {
         // When progressively revealing parents, rendering a placeholder
         // here will cause scrolling jumps. Don't add it unless you test it.
         // QT'ing this thread is a great way to test all the scrolling hacks:
-        // https://bsky.app/profile/www.mozzius.dev/post/3kjqhblh6qk2o
+        // https://bsky.app/profile/samuel.bsky.team/post/3kjqhblh6qk2o
 
         // Everything is loaded
         let startIndex = Math.max(0, parents.length - maxParents)
@@ -561,6 +564,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
           onEndReached={onEndReached}
           onEndReachedThreshold={2}
           onScrollToTop={onScrollToTop}
+          /**
+           * @see https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition
+           */
           maintainVisibleContentPosition={
             isNative && hasParents
               ? MAINTAIN_VISIBLE_CONTENT_POSITION

@@ -2,6 +2,7 @@ import React from 'react'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
+  type AppBskyUnspeccedGetPostThreadV2,
   type ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -24,9 +25,17 @@ export interface ComposerOptsPostRef {
   moderation?: ModerationDecision
 }
 
+export type OnPostSuccessData =
+  | {
+      replyToUri?: string
+      posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
+    }
+  | undefined
+
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
+  onPostSuccess?: (data: OnPostSuccessData) => void
   quote?: AppBskyFeedDefs.PostView
   mention?: string // handle of user to mention
   openEmojiPicker?: (pos: EmojiPickerPosition | undefined) => void

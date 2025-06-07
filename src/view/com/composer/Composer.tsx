@@ -45,6 +45,7 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
+  AppBskyUnspeccedDefs,
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
@@ -55,6 +56,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
+import {retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
 import {
   MAX_GRAPHEME_LENGTH,
@@ -87,7 +89,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {type ComposerOpts} from '#/state/shell/composer'
+import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
 import {
@@ -152,6 +154,7 @@ type Props = ComposerOpts
 export const ComposePost = ({
   replyTo,
   onPost,
+  onPostSuccess,
   quote: initQuote,
   mention: initMention,
   openEmojiPicker,
@@ -388,8 +391,10 @@ export const ComposePost = ({
     setError('')
     setIsPublishing(true)
 
-    let postUri
+    let postUri: string | undefined
+    let postSuccessData: OnPostSuccessData
     try {
+      logger.info(`composer: posting...`)
       postUri = (
         await apilib.post(agent, queryClient, {
           thread,
@@ -398,16 +403,48 @@ export const ComposePost = ({
           langs: toPostLanguages(langPrefs.postLanguage),
         })
       ).uris[0]
+
+      /*
+       * Wait for app view to have received the post(s). If this fails, it's
+       * ok, because the post _was_ actually published above.
+       */
       try {
-        await whenAppViewReady(agent, postUri, res => {
-          const postedThread = res?.data?.thread
-          return AppBskyFeedDefs.isThreadViewPost(postedThread)
-        })
+        if (postUri) {
+          logger.info(`composer: waiting for app view`)
+
+          const posts = await retry(
+            5,
+            _e => true,
+            async () => {
+              const res = await agent.app.bsky.unspecced.getPostThreadV2({
+                anchor: postUri!,
+                above: false,
+                below: thread.posts.length - 1,
+                branchingFactor: 1,
+              })
+              if (res.data.thread.length !== thread.posts.length) {
+                throw new Error(`composer: app view is not ready`)
+              }
+              if (
+                !res.data.thread.every(p =>
+                  AppBskyUnspeccedDefs.isThreadItemPost(p.value),
+                )
+              ) {
+                throw new Error(`composer: app view returned non-post items`)
+              }
+              return res.data.thread
+            },
+            1e3,
+          )
+          postSuccessData = {
+            replyToUri: replyTo?.uri,
+            posts,
+          }
+        }
       } catch (waitErr: any) {
-        logger.error(waitErr, {
-          message: `Waiting for app view failed`,
+        logger.info(`composer: waiting for app view failed`, {
+          safeMessage: waitErr,
         })
-        // Keep going because the post *was* published.
       }
     } catch (e: any) {
       logger.error(e, {
@@ -465,12 +502,14 @@ export const ComposePost = ({
           quotedThread.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
+          onPostSuccess?.(postSuccessData)
           return true
         }
         return false
       })
     } else {
       onPost?.(postUri)
+      onPostSuccess?.(postSuccessData)
     }
     onClose()
     Toast.show(
@@ -489,6 +528,7 @@ export const ComposePost = ({
     langPrefs.postLanguage,
     onClose,
     onPost,
+    onPostSuccess,
     initQuote,
     replyTo,
     setLangPrefs,
