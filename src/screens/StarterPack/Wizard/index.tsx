@@ -384,6 +384,12 @@ function Footer({
 
   const textStyles = [a.text_md]
 
+  const BoldText = ({children}: {children: React.ReactNode}) => (
+    <Text style={[a.font_bold, textStyles]} emoji>
+      {children}
+    </Text>
+  )
+
   return (
     <View
       style={[
@@ -438,22 +444,18 @@ function Footer({
                 </Trans>
               ) : items.length === 2 ? (
                 <Trans>
-                  <Text style={[a.font_bold, textStyles]}>You</Text> and
-                  <Text> </Text>
-                  <Text style={[a.font_bold, textStyles]} emoji>
-                    {getName(items[1] /* [0] is self, skip it */)}{' '}
-                  </Text>
+                  <BoldText>You</BoldText> and{' '}
+                  <BoldText>
+                    {getName(items[1] /* [0] is self, skip it */)}
+                  </BoldText>{' '}
                   are included in your starter pack
                 </Trans>
               ) : items.length > 2 ? (
                 <Trans context="profiles">
-                  <Text style={[a.font_bold, textStyles]} emoji>
-                    {getName(items[1] /* [0] is self, skip it */)},{' '}
-                  </Text>
-                  <Text style={[a.font_bold, textStyles]} emoji>
-                    {getName(items[2])},{' '}
-                  </Text>
-                  and{' '}
+                  <BoldText>
+                    {getName(items[1] /* [0] is self, skip it */)},
+                  </BoldText>{' '}
+                  <BoldText>{getName(items[2])},</BoldText> and{' '}
                   <Plural
                     value={items.length - 2}
                     one="# other"
@@ -481,32 +483,19 @@ function Footer({
               {
                 items.length === 1 ? (
                   <Trans>
-                    <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[0])}
-                    </Text>{' '}
-                    is included in your starter pack
+                    <BoldText>{getName(items[0])}</BoldText> is included in your
+                    starter pack
                   </Trans>
                 ) : items.length === 2 ? (
                   <Trans>
-                    <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[0])}
-                    </Text>{' '}
-                    and
-                    <Text> </Text>
-                    <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[1])}{' '}
-                    </Text>
-                    are included in your starter pack
+                    <BoldText>{getName(items[0])}</BoldText> and{' '}
+                    <BoldText>{getName(items[1])}</BoldText> are included in
+                    your starter pack
                   </Trans>
                 ) : items.length > 2 ? (
                   <Trans context="feeds">
-                    <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[0])},{' '}
-                    </Text>
-                    <Text style={[a.font_bold, textStyles]} emoji>
-                      {getName(items[1])},{' '}
-                    </Text>
-                    and{' '}
+                    <BoldText>{getName(items[0])},</BoldText>{' '}
+                    <BoldText>{getName(items[1])},</BoldText> and{' '}
                     <Plural
                       value={items.length - 2}
                       one="# other"
