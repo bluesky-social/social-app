@@ -37,7 +37,7 @@ export function useOpenLink() {
           url,
         })
 
-        if (shouldProxy) {
+        if (isNative && shouldProxy) {
           url = createProxiedUrl(url)
         }
       }
