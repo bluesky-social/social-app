@@ -100,7 +100,6 @@ export function Inner({uri}: {uri: string | undefined}) {
   const listRef = useRef<ListMethods>(null)
   const anchorRef = useRef<View | null>(null)
   const headerRef = useRef<View | null>(null)
-  const headerHeight = useRef(0)
 
   /*
    * On a cold load, parents are not prepended until the anchor post has
@@ -137,9 +136,11 @@ export function Inner({uri}: {uri: string | undefined}) {
   const onContentSizeChangeWebOnly = web(() => {
     const list = listRef.current
     const anchor = anchorRef.current as any as Element
+    const header = headerRef.current as any as Element
 
-    if (list && anchor && shouldHandleScroll.current) {
+    if (list && anchor && header && shouldHandleScroll.current) {
       const anchorOffsetTop = anchor.getBoundingClientRect().top
+      const headerHeight = header.getBoundingClientRect().height
 
       /*
        * `deferParents` is `true` on a cold load, and always reset to
@@ -168,7 +169,7 @@ export function Inner({uri}: {uri: string | undefined}) {
        * back _up_ to the top of the screen.
        */
       list.scrollToOffset({
-        offset: anchorOffsetTop - headerHeight.current,
+        offset: anchorOffsetTop - headerHeight,
       })
 
       /*
@@ -216,6 +217,33 @@ export function Inner({uri}: {uri: string | undefined}) {
       shouldHandleScroll.current = false
     }
   })
+
+  const prepareForParamsUpdate = useCallback(() => {
+    setDeferParents(true)
+    setMaxParentCount(PARENT_CHUNK_SIZE)
+    setMaxChildrenCount(CHILDREN_CHUNK_SIZE)
+    // listRef.current?.scrollToOffset({
+    //   animated: false,
+    //   offset: 0,
+    // })
+    shouldHandleScroll.current = true
+  }, [setDeferParents, setMaxParentCount, setMaxChildrenCount])
+
+  const setSortWrapped = useCallback(
+    (sort: string) => {
+      prepareForParamsUpdate()
+      thread.actions.setSort(sort)
+    },
+    [thread, prepareForParamsUpdate],
+  )
+
+  const setViewWrapped = useCallback(
+    (view: ThreadViewOption) => {
+      prepareForParamsUpdate()
+      thread.actions.setView(view)
+    },
+    [thread, prepareForParamsUpdate],
+  )
 
   const onStartReached = () => {
     if (thread.state.isFetching) return
@@ -309,25 +337,27 @@ export function Inner({uri}: {uri: string | undefined}) {
           )
         } else if (item.depth === 0) {
           return (
-            <View
-              /*
-               * IMPORTANT: this is a load-bearing key on all platforms. We
-               * want to force `onLayout` to fire any time the thread params
-               * change so that `deferParents` is always reset to `false` once
-               * the anchor post is rendered.
-               *
-               * If we ever add additional thread params to this screen, they
-               * will need to be added here.
-               */
-              key={item.uri + thread.state.view + thread.state.sort}
-              ref={anchorRef}
-              onLayout={() => setDeferParents(false)}>
+            <>
+              <View
+                /*
+                 * IMPORTANT: this is a load-bearing key on all platforms. We
+                 * want to force `onLayout` to fire any time the thread params
+                 * change so that `deferParents` is always reset to `false` once
+                 * the anchor post is rendered.
+                 *
+                 * If we ever add additional thread params to this screen, they
+                 * will need to be added here.
+                 */
+                key={item.uri + thread.state.view + thread.state.sort}
+                ref={anchorRef}
+                onLayout={() => setDeferParents(false)}
+              />
               <ThreadAnchor
                 item={item}
                 threadgateRecord={thread.data.threadgate?.record ?? undefined}
                 onPostSuccess={optimisticOnPostReply}
               />
-            </View>
+            </>
           )
         } else {
           if (thread.state.view === 'tree') {
@@ -395,40 +425,9 @@ export function Inner({uri}: {uri: string | undefined}) {
     [thread, optimisticOnPostReply, onReplyToAnchor, gtMobile],
   )
 
-  const prepareForParamsUpdate = useCallback(() => {
-    setDeferParents(true)
-    setMaxParentCount(PARENT_CHUNK_SIZE)
-    setMaxChildrenCount(CHILDREN_CHUNK_SIZE)
-    listRef.current?.scrollToOffset({
-      animated: false,
-      offset: 0,
-    })
-    shouldHandleScroll.current = true
-  }, [setDeferParents, setMaxParentCount, setMaxChildrenCount])
-
-  const setSortWrapped = useCallback(
-    (sort: string) => {
-      prepareForParamsUpdate()
-      thread.actions.setSort(sort)
-    },
-    [thread, prepareForParamsUpdate],
-  )
-
-  const setViewWrapped = useCallback(
-    (view: ThreadViewOption) => {
-      prepareForParamsUpdate()
-      thread.actions.setView(view)
-    },
-    [thread, prepareForParamsUpdate],
-  )
-
   return (
     <>
-      <Layout.Header.Outer
-        headerRef={headerRef}
-        onLayout={e => {
-          headerHeight.current = e.nativeEvent.layout.height
-        }}>
+      <Layout.Header.Outer headerRef={headerRef}>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
