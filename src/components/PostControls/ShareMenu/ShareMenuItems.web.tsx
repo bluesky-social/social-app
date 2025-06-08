@@ -22,7 +22,6 @@ import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/i
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
-import * as Prompt from '#/components/Prompt'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
 
@@ -32,11 +31,10 @@ let ShareMenuItems = ({
   timestamp,
   onShare: onShareProp,
 }: ShareMenuItemsProps): React.ReactNode => {
-  const {hasSession, currentAccount} = useSession()
+  const {hasSession} = useSession()
   const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
@@ -55,9 +53,6 @@ let ShareMenuItems = ({
       label => label.val === '!no-unauthenticated',
     )
   }, [postAuthor])
-
-  const showLoggedOutWarning =
-    postAuthor.did !== currentAccount?.did && hideInPWI
 
   const onCopyLink = () => {
     logger.metric('share:press:copyLink', {}, {statsig: true})
@@ -84,91 +79,85 @@ let ShareMenuItems = ({
     shareText(postAuthor.did)
   }
 
+  const copyLinkItem = (
+    <Menu.Item
+      testID="postDropdownShareBtn"
+      label={_(msg`Copy link to post`)}
+      onPress={onCopyLink}>
+      <Menu.ItemText>
+        <Trans>Copy link to post</Trans>
+      </Menu.ItemText>
+      <Menu.ItemIcon icon={ChainLinkIcon} position="right" />
+    </Menu.Item>
+  )
+
   return (
     <>
       <Menu.Outer>
-        <Menu.Group>
+        {!hideInPWI && copyLinkItem}
+
+        {hasSession && (
           <Menu.Item
-            testID="postDropdownShareBtn"
-            label={_(msg`Copy link to post`)}
+            testID="postDropdownSendViaDMBtn"
+            label={_(msg`Send via direct message`)}
             onPress={() => {
-              if (showLoggedOutWarning) {
-                loggedOutWarningPromptControl.open()
-              } else {
-                onCopyLink()
-              }
+              logger.metric('share:press:openDmSearch', {}, {statsig: true})
+              sendViaChatControl.open()
             }}>
             <Menu.ItemText>
-              <Trans>Copy link to post</Trans>
+              <Trans>Send via direct message</Trans>
             </Menu.ItemText>
-            <Menu.ItemIcon icon={ChainLinkIcon} position="right" />
+            <Menu.ItemIcon icon={Send} position="right" />
           </Menu.Item>
+        )}
 
-          {hasSession && (
-            <Menu.Item
-              testID="postDropdownSendViaDMBtn"
-              label={_(msg`Send via direct message`)}
-              onPress={() => {
-                logger.metric('share:press:openDmSearch', {}, {statsig: true})
-                sendViaChatControl.open()
-              }}>
-              <Menu.ItemText>
-                <Trans>Send via direct message</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={Send} position="right" />
-            </Menu.Item>
-          )}
+        {canEmbed && (
+          <Menu.Item
+            testID="postDropdownEmbedBtn"
+            label={_(msg`Embed post`)}
+            onPress={() => {
+              logger.metric('share:press:embed', {}, {statsig: true})
+              embedPostControl.open()
+            }}>
+            <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
+            <Menu.ItemIcon icon={CodeBracketsIcon} position="right" />
+          </Menu.Item>
+        )}
 
-          {canEmbed && (
-            <Menu.Item
-              testID="postDropdownEmbedBtn"
-              label={_(msg`Embed post`)}
-              onPress={() => {
-                logger.metric('share:press:embed', {}, {statsig: true})
-                embedPostControl.open()
-              }}>
-              <Menu.ItemText>{_(msg`Embed post`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={CodeBracketsIcon} position="right" />
-            </Menu.Item>
-          )}
-        </Menu.Group>
+        {hideInPWI && (
+          <>
+            {hasSession && <Menu.Divider />}
+            {copyLinkItem}
+            <Menu.LabelText style={{maxWidth: 220}}>
+              <Trans>Note: This post is only visible to logged-in users.</Trans>
+            </Menu.LabelText>
+          </>
+        )}
 
         {devModeEnabled && (
           <>
             <Menu.Divider />
-            <Menu.Group>
-              <Menu.Item
-                testID="postAtUriShareBtn"
-                label={_(msg`Copy post at:// URI`)}
-                onPress={onShareATURI}>
-                <Menu.ItemText>
-                  <Trans>Copy post at:// URI</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-              </Menu.Item>
-              <Menu.Item
-                testID="postAuthorDIDShareBtn"
-                label={_(msg`Copy author DID`)}
-                onPress={onShareAuthorDID}>
-                <Menu.ItemText>
-                  <Trans>Copy author DID</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={ClipboardIcon} position="right" />
-              </Menu.Item>
-            </Menu.Group>
+            <Menu.Item
+              testID="postAtUriShareBtn"
+              label={_(msg`Copy post at:// URI`)}
+              onPress={onShareATURI}>
+              <Menu.ItemText>
+                <Trans>Copy post at:// URI</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+            </Menu.Item>
+            <Menu.Item
+              testID="postAuthorDIDShareBtn"
+              label={_(msg`Copy author DID`)}
+              onPress={onShareAuthorDID}>
+              <Menu.ItemText>
+                <Trans>Copy author DID</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+            </Menu.Item>
           </>
         )}
       </Menu.Outer>
-
-      <Prompt.Basic
-        control={loggedOutWarningPromptControl}
-        title={_(msg`Note about sharing`)}
-        description={_(
-          msg`This post is only visible to logged-in users. It won't be visible to people who aren't signed in.`,
-        )}
-        onConfirm={onCopyLink}
-        confirmButtonCta={_(msg`Share anyway`)}
-      />
 
       {canEmbed && (
         <EmbedDialog
