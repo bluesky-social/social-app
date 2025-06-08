@@ -142,6 +142,8 @@ export function Inner({uri}: {uri: string | undefined}) {
       const anchorOffsetTop = anchor.getBoundingClientRect().top
       const headerHeight = header.getBoundingClientRect().height
 
+      console.log({anchorOffsetTop})
+
       /*
        * `deferParents` is `true` on a cold load, and always reset to
        * `true` when params change via `prepareForParamsUpdate`.
@@ -156,6 +158,12 @@ export function Inner({uri}: {uri: string | undefined}) {
        * parents due to `deferParents === true`. This negative value (minus
        * `headerHeight`) will result in a _negative_ `offset` value, which will
        * scroll the anchor post _down_ to the top of the screen.
+       *
+       * However, `prepareForParamsUpdate` also resets scroll to `0`, so when a user
+       * changes params, the anchor post's offset will actually be equivalent
+       * to the `headerHeight` because of how the DOM is stacked on web.
+       * Therefore, `anchorOffsetTop - headerHeight` will once again be 0,
+       * which means the first pass in this case will result in no scroll.
        *
        * Then, once parents are prepended, this will fire again. Now, the
        * `anchorOffsetTop` will be positive, which minus the header height,
@@ -186,7 +194,11 @@ export function Inner({uri}: {uri: string | undefined}) {
     if (list && anchor && shouldHandleScroll.current) {
       /*
        * `prepareForParamsUpdate` is called any time the user changes thread params like
-       * `view` or `sort`, which sets `deferParents(true)`.
+       * `view` or `sort`, which sets `deferParents(true)` and resets the
+       * scroll to the top of the list. However, there is a split second
+       * where the top of the list is wherever the parents _just were_. So if
+       * there were parents, the anchor is not at the top of the list just
+       * prior to this handler being called.
        *
        * Once this handler is called, the anchor post is the first item in
        * the list (because of `deferParents` being `true`), and so we can
@@ -199,21 +211,35 @@ export function Inner({uri}: {uri: string | undefined}) {
       })
 
       /*
-       * Because we reset `deferParents` (so the anchor is the first item in
-       * the list), the anchor post will retain its position because of
-       * `maintainVisibleContentPosition` handling on native. So we don't need
-       * to let this handler run again, like we do on web.
+       * After this first pass, `deferParents` will be `false`, and those
+       * will render in. However, the anchor post will retain its position
+       * because of `maintainVisibleContentPosition` handling on native. So we
+       * don't need to let this handler run again, like we do on web.
        */
       shouldHandleScroll.current = false
     }
   })
 
+  /**
+   * Called any time the user changes thread params, such as `view` or `sort`.
+   * Prepares the UI for repositioning of the scroll so that the anchor post is
+   * always at the top after a params change.
+   *
+   * No need to handle max parents here, deferParents will handle that and we
+   * want it to re-render with the same items above the anchor.
+   */
   const prepareForParamsUpdate = useCallback(() => {
+    /**
+     * Truncate list so that anchor post is the first item in the list. Manual
+     * scroll handling on web is predicated on this, and on native, this allows
+     * `maintainVisibleContentPosition` to do its thing.
+     */
     setDeferParents(true)
-    setMaxParentCount(PARENT_CHUNK_SIZE)
+    // reset this to a lower value for faster re-render
     setMaxChildrenCount(CHILDREN_CHUNK_SIZE)
+    // set flag
     shouldHandleScroll.current = true
-  }, [setDeferParents, setMaxParentCount, setMaxChildrenCount])
+  }, [setDeferParents, setMaxChildrenCount])
 
   const setSortWrapped = useCallback(
     (sort: string) => {
@@ -233,6 +259,8 @@ export function Inner({uri}: {uri: string | undefined}) {
 
   const onStartReached = () => {
     if (thread.state.isFetching) return
+    // can be true after `prepareForParamsUpdate` is called
+    if (deferParents) return
     // prevent any state mutations if we know we're done
     if (maxParentCount >= totalParentCount.current) return
     setMaxParentCount(n => n + PARENT_CHUNK_SIZE)
@@ -240,6 +268,8 @@ export function Inner({uri}: {uri: string | undefined}) {
 
   const onEndReached = () => {
     if (thread.state.isFetching) return
+    // can be true after `prepareForParamsUpdate` is called
+    if (deferParents) return
     // prevent any state mutations if we know we're done
     if (maxChildrenCount >= totalChildrenCount.current) return
     setMaxChildrenCount(prev => prev + CHILDREN_CHUNK_SIZE)
@@ -323,7 +353,7 @@ export function Inner({uri}: {uri: string | undefined}) {
           )
         } else if (item.depth === 0) {
           return (
-            <>
+            <View>
               <View
                 /*
                  * IMPORTANT: this is a load-bearing key on all platforms. We
@@ -343,7 +373,7 @@ export function Inner({uri}: {uri: string | undefined}) {
                 threadgateRecord={thread.data.threadgate?.record ?? undefined}
                 onPostSuccess={optimisticOnPostReply}
               />
-            </>
+            </View>
           )
         } else {
           if (thread.state.view === 'tree') {
@@ -458,11 +488,18 @@ export function Inner({uri}: {uri: string | undefined}) {
           ListFooterComponent={
             <ListFooter
               /*
-               * 200 is based on the minimum height of an anchor post. This is
-               * enough extra height for the `maintainVisPos` to work without
-               * causing weird jumps on web or glitches on native
+               * On native, if `deferParents` is true, we need some extra buffer to
+               * account for the `on*ReachedThreshold` values.
+               *
+               * Otherwise, and on web, this value needs to be the height of
+               * the viewport _minus_ a sensible min-post height e.g. 200, so
+               * that there's enough scroll remaining to get the anchor post
+               * back to the top of the screen when handling scroll.
                */
-              height={windowHeight - 200}
+              height={platform({
+                web: windowHeight - 200,
+                default: deferParents ? windowHeight * 2 : windowHeight - 200,
+              })}
               style={isTombstoneView ? {borderTopWidth: 0} : undefined}
             />
           }
