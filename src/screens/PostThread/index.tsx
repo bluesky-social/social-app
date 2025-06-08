@@ -1,11 +1,16 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
+import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Trans} from '@lingui/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {clamp} from '#/lib/numbers'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
+import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List, type ListMethods} from '#/view/com/util/List'
@@ -28,7 +33,7 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
-import {native, platform,useBreakpoints, web} from '#/alf'
+import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 
@@ -36,9 +41,9 @@ const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
 
 export function Inner({uri}: {uri: string | undefined}) {
-  const {gtPhone} = useBreakpoints()
-  // const {hasSession, currentAccount} = useSession()
-  const initialNumToRender = useInitialNumToRender()
+  const {gtMobile} = useBreakpoints()
+  const {hasSession} = useSession()
+  const initialNumToRender = useInitialNumToRender() // TODO
   const {height: windowHeight} = useWindowDimensions()
 
   /*
@@ -79,6 +84,15 @@ export function Inner({uri}: {uri: string | undefined}) {
     })
   }, [thread, openComposer, optimisticOnPostReply])
 
+  const canReply = useMemo(() => {
+    if (thread.state.error) return false
+    for (const item of thread.data.items) {
+      if (item.type === 'threadPost' && item.depth === 0) {
+        return !item.value.post?.viewer?.replyDisabled
+      }
+    }
+    return false
+  }, [thread.state.error, thread.data.items])
   const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE)
   const [maxChildrenCount, setMaxChildrenCount] = useState(CHILDREN_CHUNK_SIZE)
   const totalParentCount = useRef(0) // recomputed below
@@ -356,7 +370,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       } else if (item.type === 'replyComposer') {
         return (
           <View>
-            {gtPhone && (
+            {gtMobile && (
               <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />
             )}
           </View>
@@ -378,7 +392,7 @@ export function Inner({uri}: {uri: string | undefined}) {
       }
       return null
     },
-    [thread, optimisticOnPostReply, onReplyToAnchor, gtPhone],
+    [thread, optimisticOnPostReply, onReplyToAnchor, gtMobile],
   )
 
   const prepareForParamsUpdate = useCallback(() => {
@@ -459,8 +473,8 @@ export function Inner({uri}: {uri: string | undefined}) {
           ListFooterComponent={
             <ListFooter
               /*
-               * 200 is based on the minimum height of a post. This is enough
-               * extra height for the `maintainVisPos` to work without
+               * 200 is based on the minimum height of an anchor post. This is
+               * enough extra height for the `maintainVisPos` to work without
                * causing weird jumps on web or glitches on native
                */
               height={windowHeight - 200}
@@ -472,7 +486,31 @@ export function Inner({uri}: {uri: string | undefined}) {
           sideBorders={false}
         />
       )}
+
+      {!gtMobile && canReply && hasSession && (
+        <MobileComposePrompt onPressReply={onReplyToAnchor} />
+      )}
     </>
+  )
+}
+
+function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
+  const safeAreaInsets = useSafeAreaInsets()
+  const fabMinimalShellTransform = useMinimalShellFabTransform()
+
+  return (
+    <Animated.View
+      style={[
+        a.fixed,
+        fabMinimalShellTransform,
+        {
+          left: 0,
+          right: 0,
+          bottom: clamp(safeAreaInsets.bottom, 13, 60),
+        },
+      ]}>
+      <PostThreadComposePrompt onPressCompose={onPressReply} />
+    </Animated.View>
   )
 }
 
