@@ -157,12 +157,6 @@ export function Inner({uri}: {uri: string | undefined}) {
        * `headerHeight`) will result in a _negative_ `offset` value, which will
        * scroll the anchor post _down_ to the top of the screen.
        *
-       * However, `prepareForParamsUpdate` also resets scroll to `0`, so when a user
-       * changes params, the anchor post's offset will actually be equivalent
-       * to the `headerHeight` because of how the DOM is stacked on web.
-       * Therefore, `anchorOffsetTop - headerHeight` will once again be 0,
-       * which means the first pass in this case will result in no scroll.
-       *
        * Then, once parents are prepended, this will fire again. Now, the
        * `anchorOffsetTop` will be positive, which minus the header height,
        * will give us a _positive_ offset, which will scroll the anchor post
@@ -192,11 +186,7 @@ export function Inner({uri}: {uri: string | undefined}) {
     if (list && anchor && shouldHandleScroll.current) {
       /*
        * `prepareForParamsUpdate` is called any time the user changes thread params like
-       * `view` or `sort`, which sets `deferParents(true)` and resets the
-       * scroll to the top of the list. However, there is a split second
-       * where the top of the list is wherever the parents _just were_. So if
-       * there were parents, the anchor is not at the top of the list just
-       * prior to this handler being called.
+       * `view` or `sort`, which sets `deferParents(true)`.
        *
        * Once this handler is called, the anchor post is the first item in
        * the list (because of `deferParents` being `true`), and so we can
@@ -209,10 +199,10 @@ export function Inner({uri}: {uri: string | undefined}) {
       })
 
       /*
-       * After this first pass, `deferParents` will be `false`, and those
-       * will render in. However, the anchor post will retain its position
-       * because of `maintainVisibleContentPosition` handling on native. So we
-       * don't need to let this handler run again, like we do on web.
+       * Because we reset `deferParents` (so the anchor is the first item in
+       * the list), the anchor post will retain its position because of
+       * `maintainVisibleContentPosition` handling on native. So we don't need
+       * to let this handler run again, like we do on web.
        */
       shouldHandleScroll.current = false
     }
@@ -222,10 +212,6 @@ export function Inner({uri}: {uri: string | undefined}) {
     setDeferParents(true)
     setMaxParentCount(PARENT_CHUNK_SIZE)
     setMaxChildrenCount(CHILDREN_CHUNK_SIZE)
-    // listRef.current?.scrollToOffset({
-    //   animated: false,
-    //   offset: 0,
-    // })
     shouldHandleScroll.current = true
   }, [setDeferParents, setMaxParentCount, setMaxChildrenCount])
 
