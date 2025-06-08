@@ -28,7 +28,7 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
-import {useBreakpoints, web} from '#/alf'
+import {native, platform,useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 
@@ -84,8 +84,9 @@ export function Inner({uri}: {uri: string | undefined}) {
   const totalParentCount = useRef(0) // recomputed below
   const totalChildrenCount = useRef(thread.data.items.length) // recomputed below
   const listRef = useRef<ListMethods>(null)
-  const headerRef = useRef<View | null>(null)
   const anchorRef = useRef<View | null>(null)
+  const headerRef = useRef<View | null>(null)
+  const headerHeight = useRef(0)
 
   /*
    * On a cold load, parents are not prepended until the anchor post has
@@ -107,11 +108,9 @@ export function Inner({uri}: {uri: string | undefined}) {
    * this is always true. And when a user changes thread parameters, we also
    * manually set this to true.
    */
-  const shouldScrollToAnchor = useRef(true)
+  const shouldHandleScroll = useRef(true)
   /**
-   * WEB ONLY
-   *
-   * Called any time the content size of the list changes, just before paint.
+   * Called any time the content size of the list changes, _just_ before paint.
    *
    * We want this to fire every time we change params (which will reset
    * `deferParents` via `onLayout` on the anchor post, due to the key change),
@@ -122,46 +121,85 @@ export function Inner({uri}: {uri: string | undefined}) {
    * in the anchor being pinned as the first item.
    */
   const onContentSizeChangeWebOnly = web(() => {
-    const anchorElement = anchorRef.current as any as Element
-    const headerElement = headerRef.current as any as Element
+    const list = listRef.current
+    const anchor = anchorRef.current as any as Element
 
-    if (anchorElement && headerElement) {
-      const anchorOffsetTop = anchorElement.getBoundingClientRect().top
-      const headerHeight = headerElement.getBoundingClientRect().height
+    if (list && anchor && shouldHandleScroll.current) {
+      const anchorOffsetTop = anchor.getBoundingClientRect().top
 
-      if (shouldScrollToAnchor.current) {
-        /*
-         * `deferParents` is `true` on a cold load, and always reset to
-         * `true` when params change (via the key on the anchor post).
-         *
-         * On a cold load, on the first pass of this logic, the anchor post is
-         * the first item in the list. Therefore `anchorOffsetTop - headerHeight`
-         * will be 0.
-         *
-         * On a warm load, on the first pass of this logic, the anchor post may
-         * not move (if there are no parents above it), or it may have gone off
-         * the screen above, because of the sudden lack of parents due to
-         * `deferParents === true`. This negative value (minus `headerHeight`)
-         * will result in a _negative_ `offset` value, which will scroll the
-         * anchor post _down_ to the top of the screen.
-         *
-         * Once parents are prepended, this will fire again. Now, the
-         * `anchorOffsetTop` will be positive, which minus the header height,
-         * will give us a _positive_ offset, which will scroll the anchor post
-         * back _up_ to the top of the screen.
-         */
-        listRef.current?.scrollToOffset({
-          offset: anchorOffsetTop - headerHeight,
-        })
+      /*
+       * `deferParents` is `true` on a cold load, and always reset to
+       * `true` when params change via `prepareForParamsUpdate`.
+       *
+       * On a cold load or a push to a new post, on the first pass of this
+       * logic, the anchor post is the first item in the list. Therefore
+       * `anchorOffsetTop - headerHeight` will be 0.
+       *
+       * When a user changes thread params, on the first pass of this logic,
+       * the anchor post may not move (if there are no parents above it), or it
+       * may have gone off the screen above, because of the sudden lack of
+       * parents due to `deferParents === true`. This negative value (minus
+       * `headerHeight`) will result in a _negative_ `offset` value, which will
+       * scroll the anchor post _down_ to the top of the screen.
+       *
+       * However, `prepareForParamsUpdate` also resets scroll to `0`, so when a user
+       * changes params, the anchor post's offset will actually be equivalent
+       * to the `headerHeight` because of how the DOM is stacked on web.
+       * Therefore, `anchorOffsetTop - headerHeight` will once again be 0,
+       * which means the first pass in this case will result in no scroll.
+       *
+       * Then, once parents are prepended, this will fire again. Now, the
+       * `anchorOffsetTop` will be positive, which minus the header height,
+       * will give us a _positive_ offset, which will scroll the anchor post
+       * back _up_ to the top of the screen.
+       */
+      list.scrollToOffset({
+        offset: anchorOffsetTop - headerHeight.current,
+      })
 
-        /*
-         * After the second pass, `deferParents` will be `false`, and we need
-         * to ensure this doesn't run again until scroll handling is requested
-         * again via `shouldScrollToAnchor.current === true` and a params
-         * change.
-         */
-        if (!deferParents) shouldScrollToAnchor.current = false
-      }
+      /*
+       * After the second pass, `deferParents` will be `false`, and we need
+       * to ensure this doesn't run again until scroll handling is requested
+       * again via `shouldHandleScroll.current === true` and a params
+       * change via `prepareForParamsUpdate`.
+       */
+      if (!deferParents) shouldHandleScroll.current = false
+    }
+  })
+
+  /**
+   * Ditto the above, but for native.
+   */
+  const onContentSizeChangeNativeOnly = native(() => {
+    const list = listRef.current
+    const anchor = anchorRef.current
+
+    if (list && anchor && shouldHandleScroll.current) {
+      /*
+       * `prepareForParamsUpdate` is called any time the user changes thread params like
+       * `view` or `sort`, which sets `deferParents(true)` and resets the
+       * scroll to the top of the list. However, there is a split second
+       * where the top of the list is wherever the parents _just were_. So if
+       * there were parents, the anchor is not at the top of the list just
+       * prior to this handler being called.
+       *
+       * Once this handler is called, the anchor post is the first item in
+       * the list (because of `deferParents` being `true`), and so we can
+       * synchronously scroll the list back to the top of the list (which is
+       * 0 on native, no need to handle `headerHeight`).
+       */
+      list.scrollToOffset({
+        animated: false,
+        offset: 0,
+      })
+
+      /*
+       * After this first pass, `deferParents` will be `false`, and those
+       * will render in. However, the anchor post will retain its position
+       * because of `maintainVisibleContentPosition` handling on native. So we
+       * don't need to let this handler run again, like we do on web.
+       */
+      shouldHandleScroll.current = false
     }
   })
 
@@ -259,10 +297,10 @@ export function Inner({uri}: {uri: string | undefined}) {
           return (
             <View
               /*
-               * IMPORTANT: this is a load-bearing key. We want to force
-               * `onLayout` to fire any time the thread params change so that
-               * `deferParents` is always reset to `false` once the anchor post is
-               * rendered.
+               * IMPORTANT: this is a load-bearing key on all platforms. We
+               * want to force `onLayout` to fire any time the thread params
+               * change so that `deferParents` is always reset to `false` once
+               * the anchor post is rendered.
                *
                * If we ever add additional thread params to this screen, they
                * will need to be added here.
@@ -343,27 +381,40 @@ export function Inner({uri}: {uri: string | undefined}) {
     [thread, optimisticOnPostReply, onReplyToAnchor, gtPhone],
   )
 
+  const prepareForParamsUpdate = useCallback(() => {
+    setDeferParents(true)
+    setMaxParentCount(PARENT_CHUNK_SIZE)
+    setMaxChildrenCount(CHILDREN_CHUNK_SIZE)
+    listRef.current?.scrollToOffset({
+      animated: false,
+      offset: 0,
+    })
+    shouldHandleScroll.current = true
+  }, [setDeferParents, setMaxParentCount, setMaxChildrenCount])
+
   const setSortWrapped = useCallback(
     (sort: string) => {
-      setDeferParents(true)
-      shouldScrollToAnchor.current = true
+      prepareForParamsUpdate()
       thread.actions.setSort(sort)
     },
-    [thread, setDeferParents],
+    [thread, prepareForParamsUpdate],
   )
 
   const setViewWrapped = useCallback(
     (view: ThreadViewOption) => {
+      prepareForParamsUpdate()
       thread.actions.setView(view)
-      setDeferParents(true)
-      shouldScrollToAnchor.current = true
     },
-    [thread, setDeferParents],
+    [thread, prepareForParamsUpdate],
   )
 
   return (
     <>
-      <Layout.Header.Outer headerRef={headerRef}>
+      <Layout.Header.Outer
+        headerRef={headerRef}
+        onLayout={e => {
+          headerHeight.current = e.nativeEvent.layout.height
+        }}>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
@@ -391,7 +442,10 @@ export function Inner({uri}: {uri: string | undefined}) {
           data={slices}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          onContentSizeChange={onContentSizeChangeWebOnly}
+          onContentSizeChange={platform({
+            web: onContentSizeChangeWebOnly,
+            default: onContentSizeChangeNativeOnly,
+          })}
           onStartReached={onStartReached}
           onEndReached={onEndReached}
           onEndReachedThreshold={2}
