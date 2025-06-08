@@ -56,16 +56,13 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
     queryKey: postThreadQueryKey,
     async queryFn(ctx) {
-      const {data} = await wait(
-        400,
-        agent.app.bsky.unspecced.getPostThreadV2({
-          anchor: anchor!,
-          branchingFactor: view === 'linear' ? 1 : undefined,
-          below: BELOW,
-          sort: sort,
-          prioritizeFollowedUsers: prioritizeFollowedUsers,
-        }),
-      )
+      const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
+        anchor: anchor!,
+        branchingFactor: view === 'linear' ? 1 : undefined,
+        below: BELOW,
+        sort: sort,
+        prioritizeFollowedUsers: prioritizeFollowedUsers,
+      })
 
       /*
        * Initialize `ctx.meta` to track if we know we have additional replies
