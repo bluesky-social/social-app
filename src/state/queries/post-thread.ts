@@ -46,14 +46,7 @@ export interface ThreadCtx {
   depth: number
   isHighlightedPost?: boolean
   hasMore?: boolean
-  /**
-   * Means the loading state has parents, but once the data loads we don't even
-   * populate this value, so it's the same as `threadNode.parents.length`
-   */
   isParentLoading?: boolean
-  /**
-   * Means the loading state has replies
-   */
   isChildLoading?: boolean
   isSelfThread?: boolean
   hasMoreSelfThread?: boolean
@@ -115,7 +108,6 @@ export function usePostThreadQuery(uri: string | undefined) {
         depth: REPLY_TREE_DEPTH,
       })
       if (res.success) {
-        await new Promise(y => setTimeout(y, 3e3)) // wait for the next tick
         const thread = responseToThreadNodes(res.data.thread)
         annotateSelfThread(thread)
         return {
