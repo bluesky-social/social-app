@@ -65,7 +65,10 @@ export function useEmojiSuggestion(editor: Editor | null) {
       const coords = editor.view.coordsAtPos(pos)
       if (match) {
         setQuery(match[1])
-        setSuggestionPos({top: coords.top + 20, left: coords.left})
+        setSuggestionPos({
+          top: coords.top + window.scrollY + 20,
+          left: coords.left + window.scrollX,
+        })
       } else {
         setQuery('')
         setSuggestionPos(null)
