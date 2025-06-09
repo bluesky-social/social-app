@@ -121,7 +121,7 @@ export function Inner({uri}: {uri: string | undefined}) {
    * this is always true. And when a user changes thread parameters, we also
    * manually set this to true.
    */
-  const shouldHandleScroll = useRef(!isRoot)
+  const shouldHandleScroll = useRef(true)
   /**
    * Called any time the content size of the list changes, _just_ before paint.
    *
