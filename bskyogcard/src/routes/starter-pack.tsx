@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 
-import {AppBskyActorDefs,AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
 import resvg from '@resvg/resvg-js'
 import {Express} from 'express'
 import satori from 'satori'

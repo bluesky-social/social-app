@@ -1,7 +1,7 @@
 import {AtpAgent} from '@atproto/api'
 
 import {Config} from './config.js'
-import {getFontFiles,readFonts} from './util/fonts.js'
+import {getFontFiles, readFonts} from './util/fonts.js'
 
 export type AppContextOptions = {
   cfg: Config
