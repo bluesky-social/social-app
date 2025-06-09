@@ -99,9 +99,11 @@ export function useLink({
   const href = useMemo(() => {
     return typeof to === 'string'
       ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
-      : !to.screen
+      : to.screen
+      ? buildHref(to.screen, to.params)
+      : to.href
       ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
-      : buildHref(to.screen, to.params)
+      : undefined
   }, [to, buildHref])
 
   if (!href) {
