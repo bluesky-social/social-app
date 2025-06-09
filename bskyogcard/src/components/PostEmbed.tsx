@@ -193,15 +193,30 @@ export function StarterPackEmbed({
           <Box cx={[a.flex_row, a.align_center, a.gap_xs, a.w_full]}>
             <StarterPack size={40} fill={t.palette.primary_500} />
             <Box cx={[a.flex_1]}>
-              <Text cx={[a.text_sm, a.font_bold, a.leading_snug]}>{name}</Text>
               <Text
-                cx={[a.leading_snug, a.text_xs, t.atoms.text_contrast_medium]}>
-                Starter pack by {sanitizeHandle(embed.view.creator.handle, '@')}
+                cx={[a.text_sm, a.font_bold, a.leading_snug, a.line_clamp_2]}>
+                {name}
+              </Text>
+              <Text
+                cx={[
+                  a.leading_snug,
+                  a.text_xs,
+                  t.atoms.text_contrast_medium,
+                  a.line_clamp_1,
+                ]}>
+                {`Starter pack by ${sanitizeHandle(
+                  embed.view.creator.handle,
+                  '@',
+                )}`}
               </Text>
             </Box>
           </Box>
           {description ? (
-            <Text cx={[a.leading_snug, a.text_xs]}>{description}</Text>
+            <Box cx={[a.flex_1]}>
+              <Text cx={[a.leading_snug, a.text_xs, a.line_clamp_3]}>
+                {description}
+              </Text>
+            </Box>
           ) : null}
           {embed.view.joinedAllTimeCount >= 50 && (
             <Text cx={[a.font_bold, a.text_xs, t.atoms.text_contrast_medium]}>
