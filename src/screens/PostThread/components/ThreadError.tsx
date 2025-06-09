@@ -40,7 +40,7 @@ export function ThreadError({
     <Layout.Center>
       <View
         style={[
-          a.flex_1,
+          a.w_full,
           a.align_center,
           {
             padding: OUTER_SPACE,
