@@ -5,92 +5,107 @@
       rel="stylesheet"
       href="https://unpkg.com/svbstrate@5.1.0/svbstrate.css" />
     <style>
-      img {
-        width: 100%;
+      body {
+        padding: 2rem;
       }
-      h1, h2, h3, h4, h5, h6 {
-        margin: 1em 0 0.25rem;
+      section {
+        margin-bottom: 4rem;
+      }
+      h1 {
+        margin-bottom: 1rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 2rem;
+      }
+      .item {
+        text-align: center;
+      }
+      .item img {
+        width: 100%;
+        max-width: 400px;
+        display: block;
+        margin: 0 auto 0.5rem;
+        transition: opacity 0.2s ease-in-out;
       }
     </style>
   </head>
   <body class="p12">
-    <div
-      class="mxa w f"
-      style="max-width: 400px; flex-direction: column; gap: 1rem">
 
+    <!-- Base embeds -->
+    <section>
       <h1>Base embeds</h1>
-      <h3>Image</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkch7rnmqs23?mat=1" />
-      <h3>Image w/ label</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchac5lbs23?mat=1" />
-      <h3>Image x2</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchkcokw22h?mat=1" />
-      <h3>Image x3</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkjhqtunc22v?mat=1" />
-      <h3>Image x4</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkjhsgb4vk2z?mat=1" />
-      <h3>Video</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchd5laes23?mat=1" />
-      <h3>Video w/ label</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchdnqmzc23?mat=1" />
-      <h3>GIF</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchef5c2c23?mat=1" />
-      <h3>List</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchgiinq22h?mat=1" />
-      <h3>List w/ label</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchgwpy222h?mat=1" />
-      <h3>List (takendown)</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchhfft722h?mat=1" />
-      <h3>Feed</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchj6t27k2h?mat=1" />
-      <h3>Feed w/ label</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkjid3khps2r?mat=1" />
-      <h3>Link</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchlshes22h?mat=1" />
-      <h3>Link w/ label</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchm7qo622h?mat=1" />
-      <h3>Starter pack</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchnlwlbs2h?mat=1" />
+      <div class="grid">
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkch7rnmqs23?mat=1"><div>Image</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchac5lbs23?mat=1"><div>Image w/ label</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchkcokw22h?mat=1"><div>Image x2</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkjhqtunc22v?mat=1"><div>Image x3</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkjhsgb4vk2z?mat=1"><div>Image x4</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchd5laes23?mat=1"><div>Video</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchdnqmzc23?mat=1"><div>Video w/ label</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchef5c2c23?mat=1"><div>GIF</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchgiinq22h?mat=1"><div>List</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchgwpy222h?mat=1"><div>List w/ label</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchhfft722h?mat=1"><div>List (takendown)</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchj6t27k2h?mat=1"><div>Feed</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkjid3khps2r?mat=1"><div>Feed w/ label</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchlshes22h?mat=1"><div>Link</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchm7qo622h?mat=1"><div>Link w/ label</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchnlwlbs2h?mat=1"><div>Starter pack</div></div>
+      </div>
+    </section>
 
+    <!-- Quote posts -->
+    <section>
       <h1>Quote posts</h1>
-      <h3>Image</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchp7oaq22h?mat=1" />
-      <h3>Image w/ label</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchpijwu22h?mat=1" />
-      <h3>Video</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchpvu6is2h?mat=1" />
-      <h3>Video w/ label</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchq5dfrk2h?mat=1" />
-      <h3>GIF</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkjip5qduk2l?mat=1" />
-      <h3>List</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchqdm3nk2h?mat=1" />
-      <h3>List (takendown)</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchqmp2722h?mat=1" />
-      <h3>Feed</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchqrrigs2h?mat=1" />
-      <h3>Link</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchqyf6u22h?mat=1" />
-      <h3>Link w/ label</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchremdhc2h?mat=1" />
-      <h3>Starter pack</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchrlw4vk2h?mat=1" />
+      <div class="grid">
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchp7oaq22h?mat=1"><div>Image</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchpijwu22h?mat=1"><div>Image w/ label</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchpvu6is2h?mat=1"><div>Video</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchq5dfrk2h?mat=1"><div>Video w/ label</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkjip5qduk2l?mat=1"><div>GIF</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchqdm3nk2h?mat=1"><div>List</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchqmp2722h?mat=1"><div>List (takendown)</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchqrrigs2h?mat=1"><div>Feed</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchqyf6u22h?mat=1"><div>Link</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchremdhc2h?mat=1"><div>Link w/ label</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkchrlw4vk2h?mat=1"><div>Starter pack</div></div>
+      </div>
+    </section>
 
+    <!-- Quote post states -->
+    <section>
       <h1>Quote post states</h1>
-      <h3>Deleted</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkcieaeil22a?mat=1" />
-      <h3>Detached quoted post</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkciefiepk2a?mat=1" />
-      <h3>Blocked</h3>
-      <img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkcikkheys2c?mat=1" />
+      <div class="grid">
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkcieaeil22a?mat=1"><div>Deleted</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkciefiepk2a?mat=1"><div>Detached quoted post</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/test-all-embeds-a.bsky.social/post/3lkcikkheys2c?mat=1"><div>Blocked</div></div>
+      </div>
+    </section>
 
+    <!-- Misc -->
+    <section>
       <h1>Misc</h1>
-      <h3>Post from labeler</h3>
-      <img src="http://localhost:3000/profile/xblock.aendra.dev/post/3ljo3ne5cxk2h?mat=1" />
-      <h3>Long name</h3>
-      <img src="http://localhost:3000/profile/hailey5.bsky.social/post/3kl4psn4zbk2q?mat=1" />
-      <h3>Long handle</h3>
-      <img src="http://localhost:3000/profile/deepfates.com.deepfates.com.deepfates.com.deepfates.com.deepfates.com/post/3jvcrxfpuhy2i?mat=1" />
-    </div>
+      <div class="grid">
+        <div class="item"><img src="http://localhost:3000/profile/xblock.aendra.dev/post/3ljo3ne5cxk2h?mat=1"><div>Post from labeler</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/hailey5.bsky.social/post/3kl4psn4zbk2q?mat=1"><div>Long name</div></div>
+        <div class="item"><img src="http://localhost:3000/profile/deepfates.com.deepfates.com.deepfates.com.deepfates.com.deepfates.com/post/3jvcrxfpuhy2i?mat=1"><div>Long handle</div></div>
+      </div>
+    </section>
+
   </body>
+
+  <!-- reload image on click -->
+  <script>
+    document.querySelectorAll('.item img').forEach(img => {
+      img.onload = () => img.style.opacity = 1;
+      img.addEventListener('click', () => {
+        img.style.opacity = 0.5;
+        const url = new URL(img.src);
+        url.searchParams.set('t', Date.now()); // bust the cache
+        img.src = url.toString();
+      });
+    });
+  </script>
 </html>
