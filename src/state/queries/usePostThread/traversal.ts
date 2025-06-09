@@ -433,11 +433,13 @@ export function buildThread({
         hasAnchorFromCache &&
         anchorPost.value.post.viewer?.replyDisabled === true
 
-      if (hasAnchorFromCache && !replyDisabled) {
-        items.push({
-          type: 'replyComposer',
-          key: 'replyComposer',
-        })
+      if (hasAnchorFromCache) {
+        if (!replyDisabled) {
+          items.push({
+            type: 'replyComposer',
+            key: 'replyComposer',
+          })
+        }
       } else {
         items.push(
           views.skeleton({
