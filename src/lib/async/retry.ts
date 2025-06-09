@@ -3,18 +3,17 @@ import {isNetworkError} from '#/lib/strings/errors'
 
 export async function retry<P>(
   retries: number,
-  cond: (err: any) => boolean,
-  fn: () => Promise<P>,
+  shouldRetry: (err: any) => boolean,
+  action: () => Promise<P>,
   delay?: number,
 ): Promise<P> {
   let lastErr
   while (retries > 0) {
     try {
-      return await fn()
+      return await action()
     } catch (e: any) {
       lastErr = e
-      // should retry?
-      if (cond(e)) {
+      if (shouldRetry(e)) {
         if (delay) {
           await timeout(delay)
         }
