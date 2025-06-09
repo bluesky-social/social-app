@@ -112,7 +112,9 @@ export const SetNewPasswordForm = ({
       </Text>
 
       <View>
-        <TextField.LabelText>Reset code</TextField.LabelText>
+        <TextField.LabelText>
+          <Trans>Reset code</Trans>
+        </TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={Ticket} />
           <TextField.Input
@@ -135,7 +137,9 @@ export const SetNewPasswordForm = ({
       </View>
 
       <View>
-        <TextField.LabelText>New password</TextField.LabelText>
+        <TextField.LabelText>
+          <Trans>New password</Trans>
+        </TextField.LabelText>
         <TextField.Root>
           <TextField.Icon icon={Lock} />
           <TextField.Input
