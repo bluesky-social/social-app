@@ -12,6 +12,7 @@ import {
   type ThreadItem,
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
+import {isDevMode} from '#/storage/hooks/dev-mode'
 import * as bsky from '#/types/bsky'
 
 export function getThreadgateRecord(
@@ -111,7 +112,7 @@ export function storeTraversalMetadata(
 ) {
   metadatas.set(metadata.postData.uri, metadata)
 
-  if (__DEV__) {
+  if (isDevMode()) {
     // @ts-ignore dev only for debugging
     metadatas.set(metadata.postData.text, metadata)
     // @ts-ignore

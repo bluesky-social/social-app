@@ -93,6 +93,9 @@ export type ThreadItem =
       onPress: () => void
     }
   | {
+      /*
+       * Read more replies, downwards in the thread.
+       */
       type: 'readMore'
       key: string
       depth: number
@@ -101,6 +104,9 @@ export type ThreadItem =
       skippedIndentIndices: Set<number>
     }
   | {
+      /*
+       * Read more parents, upwards in the thread.
+       */
       type: 'readMoreUp'
       key: string
       href: string
@@ -110,12 +116,17 @@ export type ThreadItem =
       key: string
       item: 'anchor' | 'reply' | 'replyComposer'
     }
-  | {
-      type: 'bookend'
-      key: string
-      direction: 'up' | 'down'
-    }
 
+/**
+ * Metadata collected while traversing the raw data from the thread response.
+ * Some values here can be computed immediately, while others need to be
+ * computed during a second pass over the thread after we know things like
+ * totaly number of replies, the reply index, etc.
+ *
+ * The idea here is that these values should be objectively true in all cases,
+ * such that we can use them later — either individually on in composite — to
+ * drive rendering behaviors.
+ */
 export type TraversalMetadata = {
   /**
    * The depth of the post in the reply tree, where 0 is the root post. This is
