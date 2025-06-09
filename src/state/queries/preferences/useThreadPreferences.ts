@@ -97,7 +97,7 @@ export function useThreadPreferences({
   }
 
   /*
-   * Wraped for easier migration
+   * Wrapped for easier migration
    */
   const setSortWrapped = useCallback(
     (next: string) => {
