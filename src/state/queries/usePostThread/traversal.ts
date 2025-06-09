@@ -89,11 +89,13 @@ export function sortAndAnnotateThreadItems(
             const post = views.threadPostNoUnauthenticated(parent)
             post.ui = getThreadPostNoUnauthenticatedUI({
               depth: parent.depth,
-              prevItemDepth: thread[pi - 1]?.depth,
+              // ignore for now
+              // prevItemDepth: thread[pi - 1]?.depth,
               nextItemDepth: thread[pi + 1]?.depth,
             })
             threadItems.unshift(post)
-            // break parentTraversal
+            // for now, break parent traversal at first no-unauthed
+            break parentTraversal
           } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(parent.value)) {
             threadItems.unshift(views.threadPostNotFound(parent))
             break parentTraversal
