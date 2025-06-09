@@ -45,8 +45,7 @@ function getLocalizedLanguage(
     const translatedName = allNames.of(langCode)
 
     if (translatedName) {
-      // force simple title case (as languages do not always start with an uppercase in Unicode data)
-      return translatedName[0].toLocaleUpperCase() + translatedName.slice(1)
+      return translatedName
     }
   } catch (e) {
     // ignore RangeError from Intl.DisplayNames APIs
