@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {LINEAR_AVI_WIDTH, OUTER_SPACE} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
+import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons/Person'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Text} from '#/components/Typography'
 
@@ -15,13 +16,13 @@ export type ThreadItemPostTombstoneProps = {
 export function ThreadItemPostTombstone({type}: ThreadItemPostTombstoneProps) {
   const t = useTheme()
   const {_} = useLingui()
-  const copy = useMemo(() => {
+  const {copy, Icon} = useMemo(() => {
     switch (type) {
       case 'blocked':
-        return _(msg`Post blocked.`)
+        return {copy: _(msg`Post blocked.`), Icon: PersonXIcon}
       case 'not-found':
       default:
-        return _(msg`Post not found.`)
+        return {copy: _(msg`Post not found.`), Icon: TrashIcon}
     }
   }, [_, type])
 
@@ -40,19 +41,10 @@ export function ThreadItemPostTombstone({type}: ThreadItemPostTombstoneProps) {
           a.align_center,
           a.rounded_sm,
           t.atoms.bg_contrast_25,
-          {
-            paddingVertical: OUTER_SPACE / 1.2,
-          },
+          {paddingVertical: OUTER_SPACE / 1.2},
         ]}>
-        <View
-          style={[
-            a.flex_row,
-            a.justify_center,
-            {
-              width: LINEAR_AVI_WIDTH,
-            },
-          ]}>
-          <TrashIcon style={[t.atoms.text]} />
+        <View style={[a.flex_row, a.justify_center, {width: LINEAR_AVI_WIDTH}]}>
+          <Icon style={[t.atoms.text_contrast_medium]} />
         </View>
         <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
           {copy}
