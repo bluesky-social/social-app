@@ -1,29 +1,24 @@
 import {createContext, useCallback, useContext} from 'react'
-import {
-  type GestureResponderEvent,
-  Keyboard,
-  View,
-  type ViewProps,
-} from 'react-native'
+import {GestureResponderEvent, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {type NavigationProp} from '#/lib/routes/types'
+import {NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {
   atoms as a,
   platform,
-  type TextStyleProp,
+  TextStyleProp,
   useBreakpoints,
   useGutters,
   useLayoutBreakpoints,
   useTheme,
   web,
 } from '#/alf'
-import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
+import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
@@ -40,13 +35,11 @@ export function Outer({
   noBottomBorder,
   headerRef,
   sticky = true,
-  onLayout,
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
   headerRef?: React.MutableRefObject<View | null>
   sticky?: boolean
-  onLayout?: ViewProps['onLayout']
 }) {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
@@ -57,7 +50,6 @@ export function Outer({
   return (
     <View
       ref={headerRef}
-      onLayout={onLayout}
       style={[
         a.w_full,
         !noBottomBorder && a.border_b,
