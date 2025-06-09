@@ -52,6 +52,14 @@ export function Inner({uri}: {uri: string | undefined}) {
    * One query to rule them all
    */
   const thread = usePostThread({anchor: uri})
+  const anchor = useMemo(() => {
+    for (const item of thread.data.items) {
+      if (item.type === 'threadPost' && item.depth === 0) {
+        return item
+      }
+    }
+    return
+  }, [thread.data.items])
 
   const {openComposer} = useOpenComposer()
   const optimisticOnPostReply = useCallback(
@@ -66,35 +74,25 @@ export function Inner({uri}: {uri: string | undefined}) {
     [thread],
   )
   const onReplyToAnchor = useCallback(() => {
-    const anchorPost = thread.data.items.find(
-      slice => slice.type === 'threadPost' && slice.ui.isAnchor,
-    )
-    if (anchorPost?.type !== 'threadPost') {
+    if (anchor?.type !== 'threadPost') {
       return
     }
-    const post = anchorPost.value.post
+    const post = anchor.value.post
     openComposer({
       replyTo: {
-        uri: anchorPost.uri,
+        uri: anchor.uri,
         cid: post.cid,
         text: post.record.text,
         author: post.author,
         embed: post.embed,
-        moderation: anchorPost.moderation,
+        moderation: anchor.moderation,
       },
       onPostSuccess: optimisticOnPostReply,
     })
-  }, [thread, openComposer, optimisticOnPostReply])
+  }, [anchor, openComposer, optimisticOnPostReply])
 
-  const canReply = useMemo(() => {
-    if (thread.state.error) return false
-    for (const item of thread.data.items) {
-      if (item.type === 'threadPost' && item.depth === 0) {
-        return !item.value.post?.viewer?.replyDisabled
-      }
-    }
-    return false
-  }, [thread.state.error, thread.data.items])
+  const isRoot = !!anchor && anchor.value.post.record.reply === undefined
+  const canReply = !anchor?.value.post?.viewer?.replyDisabled
   const [maxParentCount, setMaxParentCount] = useState(PARENT_CHUNK_SIZE)
   const [maxChildrenCount, setMaxChildrenCount] = useState(CHILDREN_CHUNK_SIZE)
   const totalParentCount = useRef(0) // recomputed below
@@ -123,7 +121,7 @@ export function Inner({uri}: {uri: string | undefined}) {
    * this is always true. And when a user changes thread parameters, we also
    * manually set this to true.
    */
-  const shouldHandleScroll = useRef(true)
+  const shouldHandleScroll = useRef(!isRoot)
   /**
    * Called any time the content size of the list changes, _just_ before paint.
    *
@@ -143,8 +141,6 @@ export function Inner({uri}: {uri: string | undefined}) {
     if (list && anchor && header && shouldHandleScroll.current) {
       const anchorOffsetTop = anchor.getBoundingClientRect().top
       const headerHeight = header.getBoundingClientRect().height
-
-      console.log({anchorOffsetTop})
 
       /*
        * `deferParents` is `true` on a cold load, and always reset to
@@ -181,8 +177,15 @@ export function Inner({uri}: {uri: string | undefined}) {
        * to ensure this doesn't run again until scroll handling is requested
        * again via `shouldHandleScroll.current === true` and a params
        * change via `prepareForParamsUpdate`.
+       *
+       * The `isRoot` here is needed because if we're looking at the anchor
+       * post, this handler will not fire after `deferParents` is set to
+       * `false`, since there are no parents to render above it. In this case,
+       * we want to make sure `shouldHandleScroll` is set to `false` so that
+       * subsequent size changes unrelated to a params change (like pagination)
+       * do not affect scroll.
        */
-      if (!deferParents) shouldHandleScroll.current = false
+      if (!deferParents || isRoot) shouldHandleScroll.current = false
     }
   })
 
