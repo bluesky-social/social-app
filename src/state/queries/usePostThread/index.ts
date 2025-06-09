@@ -2,9 +2,16 @@ import {useCallback, useMemo, useState} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
+import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
-import {BELOW} from '#/state/queries/usePostThread/const'
+import {
+  LINEAR_VIEW_BELOW,
+  LINEAR_VIEW_BF,
+  TREE_VIEW_BELOW,
+  TREE_VIEW_BELOW_DESKTOP,
+  TREE_VIEW_BF,
+} from '#/state/queries/usePostThread/const'
 import {
   createCacheMutator,
   getThreadPlaceholder,
@@ -23,6 +30,7 @@ import {getThreadgateRecord} from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
 import {useAgent, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {useBreakpoints} from '#/alf'
 
 export * from '#/state/queries/usePostThread/types'
 
@@ -30,6 +38,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
   const qc = useQueryClient()
   const agent = useAgent()
   const {hasSession} = useSession()
+  const {gtPhone} = useBreakpoints()
   const moderationOpts = useModerationOpts()
   const mergeThreadgateHiddenReplies = useMergeThreadgateHiddenReplies()
   const {
@@ -58,8 +67,13 @@ export function usePostThread({anchor}: {anchor?: string}) {
     async queryFn(ctx) {
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
         anchor: anchor!,
-        branchingFactor: view === 'linear' ? 1 : undefined,
-        below: BELOW,
+        branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
+        below:
+          view === 'linear'
+            ? LINEAR_VIEW_BELOW
+            : isWeb && gtPhone
+            ? TREE_VIEW_BELOW_DESKTOP
+            : TREE_VIEW_BELOW,
         sort: sort,
         prioritizeFollowedUsers: prioritizeFollowedUsers,
       })
