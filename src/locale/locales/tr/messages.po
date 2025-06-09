@@ -224,11 +224,11 @@ msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formatt
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:254
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişi daha}}</0> gönderinizi beğendi"
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {1 kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> gönderinizi beğendiler"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:466
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
-msgstr ""
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {1 kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> repostunu beğendiler"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:439
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
@@ -240,7 +240,7 @@ msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formatt
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:490
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
-msgstr ""
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {1 kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> repostunuzu tekrar paylaştılar"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
@@ -268,7 +268,7 @@ msgstr "{firstAuthorLink} gönderini beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:478
 msgid "{firstAuthorLink} liked your repost"
-msgstr ""
+msgstr "{firstAuthorLink} repostunu beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:451
 msgid "{firstAuthorLink} removed their verification from your account"
@@ -280,7 +280,7 @@ msgstr "{firstAuthorLink} gönderini yeniden gönderdi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:502
 msgid "{firstAuthorLink} reposted your repost"
-msgstr ""
+msgstr "{firstAuthorLink} repostunu tekrar paylaştı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:397
 msgid "{firstAuthorLink} signed up with your starter pack"
@@ -304,7 +304,7 @@ msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, other {{formattedA
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:459
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
-msgstr ""
+msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, one {1 kişi daha} other {{formattedAuthorsCount} kişi daha}} repostunuzu beğendiler"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:432
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
@@ -316,7 +316,7 @@ msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, other {{formattedA
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:483
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
-msgstr ""
+msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, one {1 kişi daha} other {{formattedAuthorsCount} kişi daha}} repostunuzu tekrar paylaştılar"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:378
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
@@ -344,7 +344,7 @@ msgstr "{firstAuthorName} gönderini beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:464
 msgid "{firstAuthorName} liked your repost"
-msgstr ""
+msgstr "{firstAuthorName} repostunu beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:437
 msgid "{firstAuthorName} removed their verification from your account"
@@ -356,7 +356,7 @@ msgstr "{firstAuthorName} gönderini yeniden gönderdi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:488
 msgid "{firstAuthorName} reposted your repost"
-msgstr ""
+msgstr "{firstAuthorName} repostunu tekrar paylaştı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:383
 msgid "{firstAuthorName} signed up with your starter pack"
@@ -619,9 +619,7 @@ msgstr "Bir içerik uyarısı ekleyin"
 
 #: src/components/live/GoLiveDialog.tsx:101
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
-msgstr ""
-"Profilinize geçici bir canlı yayın durumu ekleyin.\n"
-"Biri profil fotoğrafınıza tıkladığında canlı yayın etkinliğinizle ilgili bilgileri görecektir."
+msgstr "Profilinize geçici bir canlı yayın durumu ekleyin. \nBirisi profil fotoğrafınıza tıkladığında canlı yayın etkinliğiniz hakkında bilgi görecektir."
 
 #: src/view/screens/ProfileList.tsx:924
 #: src/view/screens/ProfileList.tsx:942
