@@ -13,7 +13,6 @@ import {useLingui} from '@lingui/react'
 import {useActorStatus} from '#/lib/actor-status'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -134,8 +133,6 @@ let PostThreadItemLoaded = ({
     [record],
   )
 
-  // TODO
-  const pal = usePalette('default')
   const threadRootUri = record.reply?.root?.uri || post.uri
   const isThreadRoot = threadRootUri === post.uri
   const authorHref = makeProfileLink(post.author)
@@ -205,7 +202,7 @@ let PostThreadItemLoaded = ({
                   marginLeft: 'auto',
                   marginRight: 'auto',
                   flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
+                  backgroundColor: t.atoms.border_contrast_low.borderColor,
                 },
               ]}
             />
@@ -401,7 +398,6 @@ function ExpandedPostDetails({
   isThreadAuthor: boolean
 }) {
   const t = useTheme()
-  const pal = usePalette('default')
   const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const langPrefs = useLanguagePrefs()
@@ -459,7 +455,7 @@ function ExpandedPostDetails({
             <InlineLinkText
               to={translatorUrl}
               label={_(msg`Translate`)}
-              style={[a.text_sm, pal.link]}
+              style={[a.text_sm]}
               onPress={onTranslatePress}>
               <Trans>Translate</Trans>
             </InlineLinkText>
