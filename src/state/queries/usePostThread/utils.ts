@@ -98,7 +98,7 @@ export function getTraversalMetadata({
     skippedIndentIndices: new Set<number>(),
   }
 
-  if (__DEV__) {
+  if (isDevMode()) {
     // @ts-ignore dev only for debugging
     metadata.postData.text = getPostRecord(item.value.post).text
   }
