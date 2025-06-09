@@ -4,6 +4,7 @@ import {ModeratorData} from '../data/getModeratorData.js'
 import {Image as ImageSource} from '../data/getPostData.js'
 import {atoms as a, theme as t} from '../theme/index.js'
 import {Box} from './Box.js'
+import {DefaultUser} from './icons/avatars/DefaultUser.js'
 import {Image} from './Image.js'
 
 export function Avatar({
@@ -35,7 +36,11 @@ export function Avatar({
           filter: 'blur(2.5px)',
         },
       ]}>
-      {image && <Image height="100%" width="100%" image={image} />}
+      {image ? (
+        <Image height="100%" width="100%" image={image} />
+      ) : (
+        <DefaultUser size={size} />
+      )}
     </Box>
   )
 }

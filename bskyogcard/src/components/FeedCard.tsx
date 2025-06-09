@@ -6,6 +6,7 @@ import {atoms as a, theme as t} from '../theme/index.js'
 import {formatCount} from '../util/formatCount.js'
 import {getModerationCauseInfo} from '../util/getModerationCauseInfo.js'
 import {Box} from './Box.js'
+import {DefaultFeed} from './icons/avatars/DefaultFeed.js'
 import {Image} from './Image.js'
 import {ModeratedEmbed} from './ModeratedEmbed.js'
 import {Text} from './Text.js'
@@ -47,7 +48,7 @@ export function FeedCard({
         t.atoms.border_contrast_low,
       ]}>
       <Box cx={[a.flex_row, a.align_center, a.gap_sm]}>
-        {image && (
+        {image ? (
           <Image
             image={image}
             cx={[
@@ -57,6 +58,8 @@ export function FeedCard({
               },
             ]}
           />
+        ) : (
+          <DefaultFeed size={40} />
         )}
         <Box cx={[a.pt_2xs]}>
           <Text cx={[a.text_md, a.font_bold, a.pb_2xs]}>{displayName}</Text>

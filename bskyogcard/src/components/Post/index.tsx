@@ -53,6 +53,9 @@ export function Post({
     const hasInteractions = post.likeCount > 0 || post.repostCount > 0
     const moderation = moderatePost(post, moderatorData.moderationOptions)
 
+    const bgTop = avatar?.colors?.muted ?? '#1083fe'
+    const bgBottom = avatar?.colors?.lightMuted ?? '#67b0fe'
+
     return (
       <Box
         cx={[
@@ -64,7 +67,7 @@ export function Post({
             a.p_xl,
             {
               borderRadius: '22px',
-              backgroundImage: `linear-gradient(to bottom, ${avatar.colors.muted} 0%, ${avatar.colors.lightMuted} 100%)`,
+              backgroundImage: `linear-gradient(to bottom, ${bgTop} 0%, ${bgBottom} 100%)`,
             },
           ],
         ]}>
