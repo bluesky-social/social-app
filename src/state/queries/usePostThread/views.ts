@@ -27,6 +27,8 @@ export function threadPostNoUnauthenticated({
     uri,
     depth,
     value: value as AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated,
+    // @ts-ignore populated by the traversal
+    ui: {},
   }
 }
 

@@ -28,7 +28,7 @@ export function PostThreadScreen({route}: Props) {
 
   return (
     <Layout.Screen testID="postThreadScreen">
-      {gate('post_threads_v2_unspecced') ? (
+      {gate('post_threads_v2_unspecced') || __DEV__ ? (
         <Inner uri={uri} />
       ) : (
         <PostThreadComponent uri={uri} />

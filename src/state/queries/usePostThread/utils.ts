@@ -154,3 +154,23 @@ export function getThreadPostUI({
     precedesChildReadMore: precedesChildReadMore ?? false,
   }
 }
+
+export function getThreadPostNoUnauthenticatedUI({
+  depth,
+  prevItemDepth,
+  nextItemDepth,
+}: {
+  depth: number
+  prevItemDepth?: number
+  nextItemDepth?: number
+}): Extract<ThreadItem, {type: 'threadPostNoUnauthenticated'}>['ui'] {
+  console.log('getThreadPostNoUnauthenticatedUI', {
+    depth,
+    prevItemDepth,
+    nextItemDepth,
+  })
+  return {
+    showChildReplyLine: depth < 0,
+    showParentReplyLine: Boolean(prevItemDepth && prevItemDepth < depth),
+  }
+}

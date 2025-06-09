@@ -20,10 +20,12 @@ import {
   ThreadAnchorSkeleton,
 } from '#/screens/PostThread/components/ThreadAnchor'
 import {ThreadError} from '#/screens/PostThread/components/ThreadError'
+import {ThreadItemAnchorNoUnauthenticated} from '#/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated'
 import {
   ThreadItemPost,
   ThreadItemPostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemPost'
+import {ThreadItemPostNoUnauthenticated} from '#/screens/PostThread/components/ThreadItemPostNoUnauthenticated'
 import {ThreadItemPostTombstone} from '#/screens/PostThread/components/ThreadItemPostTombstone'
 import {ThreadItemReadMore} from '#/screens/PostThread/components/ThreadItemReadMore'
 import {ThreadItemReadMoreUp} from '#/screens/PostThread/components/ThreadItemReadMoreUp'
@@ -399,6 +401,12 @@ export function Inner({uri}: {uri: string | undefined}) {
               />
             )
           }
+        }
+      } else if (item.type === 'threadPostNoUnauthenticated') {
+        if (item.depth < 0) {
+          return <ThreadItemPostNoUnauthenticated item={item} />
+        } else if (item.depth === 0) {
+          return <ThreadItemAnchorNoUnauthenticated />
         }
       } else if (item.type === 'readMore') {
         return (

@@ -1,3 +1,4 @@
+import {type ReactNode} from 'react'
 import {View} from 'react-native'
 
 import {
@@ -44,14 +45,17 @@ export function Text({blend, style}: TextStyleProp & SkeletonProps) {
 }
 
 export function Circle({
+  children,
   size,
   blend,
   style,
-}: ViewStyleProp & {size: number} & SkeletonProps) {
+}: ViewStyleProp & {children?: ReactNode; size: number} & SkeletonProps) {
   const t = useTheme()
   return (
     <View
       style={[
+        a.justify_center,
+        a.align_center,
         a.rounded_full,
         t.atoms.bg_contrast_25,
         {
@@ -60,8 +64,9 @@ export function Circle({
           opacity: blend ? 0.6 : 1,
         },
         style,
-      ]}
-    />
+      ]}>
+      {children}
+    </View>
   )
 }
 

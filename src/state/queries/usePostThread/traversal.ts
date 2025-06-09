@@ -8,6 +8,7 @@ import {
 } from '#/state/queries/usePostThread/types'
 import {
   getPostRecord,
+  getThreadPostNoUnauthenticatedUI,
   getThreadPostUI,
   getTraversalMetadata,
   storeTraversalMetadata,
@@ -59,7 +60,7 @@ export function sortAndAnnotateThreadItems(
 
     if (item.depth < 0) {
       /*
-       * Parents are ignored until we find the highlighted post, then we walk
+       * Parents are ignored until we find the anchor post, then we walk
        * _up_ from there.
        */
     } else if (item.depth === 0) {
@@ -85,8 +86,14 @@ export function sortAndAnnotateThreadItems(
           if (
             AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(parent.value)
           ) {
-            threadItems.unshift(views.threadPostNoUnauthenticated(parent))
-            break parentTraversal
+            const post = views.threadPostNoUnauthenticated(parent)
+            post.ui = getThreadPostNoUnauthenticatedUI({
+              depth: parent.depth,
+              prevItemDepth: thread[pi - 1]?.depth,
+              nextItemDepth: thread[pi + 1]?.depth,
+            })
+            threadItems.unshift(post)
+            // break parentTraversal
           } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(parent.value)) {
             threadItems.unshift(views.threadPostNotFound(parent))
             break parentTraversal
@@ -105,6 +112,8 @@ export function sortAndAnnotateThreadItems(
             )
           }
         }
+
+        console.log(threadItems)
       }
     } else if (item.depth > 0) {
       /*

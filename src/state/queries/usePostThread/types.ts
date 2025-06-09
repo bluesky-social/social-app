@@ -68,6 +68,10 @@ export type ThreadItem =
       uri: string
       depth: number
       value: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated
+      ui: {
+        showParentReplyLine: boolean
+        showChildReplyLine: boolean
+      }
     }
   | {
       type: 'threadPostNotFound'
