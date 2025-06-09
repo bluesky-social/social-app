@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
@@ -65,6 +65,7 @@ export function useThreadPreferences({
     )
   }
 
+  const userUpdatedPrefs = useRef(false)
   const [isSaving, setIsSaving] = useState(false)
   const {mutateAsync} = useSetThreadViewPreferencesMutation()
   const savePrefs = useMemo(() => {
@@ -82,28 +83,35 @@ export function useThreadPreferences({
     }, 4e3)
   }, [mutateAsync])
 
-  if (save && !isSaving) {
-    if (
-      serverPrefs?.sort !== sort ||
-      serverPrefs?.prioritizeFollowedUsers !== prioritizeFollowedUsers ||
-      serverPrefs?.lab_treeViewEnabled !== (view === 'tree' ? true : false)
-    ) {
-      savePrefs({
-        sort,
-        prioritizeFollowedUsers,
-        lab_treeViewEnabled: view === 'tree',
-      })
-    }
+  if (save && userUpdatedPrefs.current) {
+    savePrefs({
+      sort,
+      prioritizeFollowedUsers,
+      lab_treeViewEnabled: view === 'tree',
+    })
+    userUpdatedPrefs.current = false
   }
 
-  /*
-   * Wrapped for easier migration
-   */
   const setSortWrapped = useCallback(
     (next: string) => {
+      userUpdatedPrefs.current = true
       setSort(normalizeSort(next))
     },
     [setSort],
+  )
+  const setViewWrapped = useCallback(
+    (next: ThreadViewOption) => {
+      userUpdatedPrefs.current = true
+      setView(next)
+    },
+    [setView],
+  )
+  const setPrioritizeFollowedUsersWrapped = useCallback(
+    (next: boolean) => {
+      userUpdatedPrefs.current = true
+      setPrioritizeFollowedUsers(next)
+    },
+    [setPrioritizeFollowedUsers],
   )
 
   return useMemo(
@@ -112,20 +120,20 @@ export function useThreadPreferences({
       isSaving,
       sort,
       setSort: setSortWrapped,
-      prioritizeFollowedUsers,
-      setPrioritizeFollowedUsers,
       view,
-      setView,
+      setView: setViewWrapped,
+      prioritizeFollowedUsers,
+      setPrioritizeFollowedUsers: setPrioritizeFollowedUsersWrapped,
     }),
     [
       isLoaded,
       isSaving,
       sort,
       setSortWrapped,
-      prioritizeFollowedUsers,
-      setPrioritizeFollowedUsers,
       view,
-      setView,
+      setViewWrapped,
+      prioritizeFollowedUsers,
+      setPrioritizeFollowedUsersWrapped,
     ],
   )
 }
