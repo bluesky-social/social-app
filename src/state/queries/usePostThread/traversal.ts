@@ -114,8 +114,6 @@ export function sortAndAnnotateThreadItems(
             )
           }
         }
-
-        console.log(threadItems)
       }
     } else if (item.depth > 0) {
       /*
@@ -497,16 +495,17 @@ export function buildThread({
  * parent and it's children (not siblings). Returned indices are inclusive of
  * the parent and its last child.
  *
- *    items[]            (index, depth)
- *      ├── branch ───── (0, 1)
- *      ├─┬ branch ───── (1, 1) (start)
- *      │ ├──┬ leaf ──── (2, 2)
- *      │ │  └── leaf ── (3, 3)
- *      │ └── leaf ───── (4, 2) (end)
- *      ├── branch ───── (5, 1)
- *      ├── branch ───── (6, 1)
+ *   items[]               (index, depth)
+ *     └─┬ anchor ──────── (0, 0)
+ *       ├─── branch ───── (1, 1)
+ *       ├──┬ branch ───── (2, 1) (start)
+ *       │  ├──┬ leaf ──── (3, 2)
+ *       │  │  └── leaf ── (4, 3)
+ *       │  └─── leaf ──── (5, 2) (end)
+ *       ├─── branch ───── (6, 1)
+ *       └─── branch ───── (7, 1)
  *
- *    const { start: 1, end: 3 } = getBranch(items, 1, 1)
+ *   const { start: 2, end: 5, length: 3 } = getBranch(items, 2, 1)
  */
 export function getBranch(
   thread: ApiThreadItem[],
