@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {IconProps} from './types.js'
 
 export function Heart({size, fill}: IconProps) {

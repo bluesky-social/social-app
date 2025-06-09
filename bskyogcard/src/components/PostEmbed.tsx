@@ -7,6 +7,7 @@ import {
 import {ModeratorData} from '../data/getModeratorData.js'
 import {Image as ImageSource, PostData} from '../data/getPostData.js'
 import {atoms as a, theme as t} from '../theme/index.js'
+import * as bsky from '../types/bsky.js'
 import {getModerationCauseInfo} from '../util/getModerationCauseInfo.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
 import {Embed, EmbedType, parseEmbed} from '../util/parseEmbed.js'
@@ -148,7 +149,14 @@ export function StarterPackEmbed({
   embed: EmbedType<'starter_pack'>
 }) {
   const uri = getStarterPackImageUri(embed.view)
-  if (!AppBskyGraphStarterpack.isValidRecord(embed.view.record)) return null
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      embed.view.record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
+    return null
+  }
   const {name, description} = embed.view.record
   const image = rest.data.images.get(uri)
   return (

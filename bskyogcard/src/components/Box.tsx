@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {atoms as a, style as s} from '../theme/index.js'
 
 export function Box({

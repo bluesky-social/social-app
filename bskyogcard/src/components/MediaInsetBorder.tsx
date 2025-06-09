@@ -1,6 +1,4 @@
-import React from 'react'
-
-import {atoms as a, StyleProp,theme as t} from '../theme/index.js'
+import {atoms as a, StyleProp, theme as t} from '../theme/index.js'
 import {Box} from './Box.js'
 
 /**

@@ -7,6 +7,7 @@ import {
 import {ModeratorData} from '../../data/getModeratorData.js'
 import {PostData} from '../../data/getPostData.js'
 import {atoms as a, theme as t} from '../../theme/index.js'
+import * as bsky from '../../types/bsky.js'
 import {formatCount} from '../../util/formatCount.js'
 import {formatDate} from '../../util/formatDate.js'
 import {moderatePost} from '../../util/moderatePost.js'
@@ -36,7 +37,12 @@ export function Post({
     mat?: boolean
   }
 }) {
-  if (AppBskyFeedPost.isValidRecord(post.record)) {
+  if (
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post.record,
+      AppBskyFeedPost.isRecord,
+    )
+  ) {
     const avatar = data.images.get(post.author.avatar)
     const rt = post.record.text
       ? new RichTextApi({

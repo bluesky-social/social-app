@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   AppBskyEmbedRecord,
   AppBskyFeedPost,
@@ -8,6 +7,7 @@ import {
 import {ModeratorData} from '../../data/getModeratorData.js'
 import {PostData} from '../../data/getPostData.js'
 import {atoms as a, theme as t} from '../../theme/index.js'
+import * as bsky from '../../types/bsky.js'
 import {getModerationCauseInfo} from '../../util/getModerationCauseInfo.js'
 import {moderatePost} from '../../util/moderatePost.js'
 import {sanitizeHandle} from '../../util/sanitizeHandle.js'
@@ -32,7 +32,10 @@ export function QuotePost({
   const {author, value: post, embeds} = embed
   const avatar = data.images.get(author.avatar || '')
   const rt =
-    AppBskyFeedPost.isValidRecord(post) && post.text
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post,
+      AppBskyFeedPost.isRecord,
+    ) && post.text
       ? new RichTextApi({
           text: post.text,
           facets: post.facets,

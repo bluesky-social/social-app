@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {atoms as a} from '../theme/index.js'
 import {Box} from './Box.js'
 

@@ -1,5 +1,3 @@
-import React from 'react'
-
 export function Img(
   props: Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & {src: Buffer},
 ) {

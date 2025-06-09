@@ -1,4 +1,3 @@
-import React from 'react'
 import {AppBskyRichtextFacet, RichText as RichTextApi} from '@atproto/api'
 
 import {atoms as a, style as s, theme as t} from '../theme/index.js'

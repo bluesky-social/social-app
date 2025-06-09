@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {IconProps} from './types.js'
 
 export function Warning({size, fill}: IconProps) {

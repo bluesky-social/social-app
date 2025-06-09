@@ -1,5 +1,3 @@
-/* eslint-disable react-native-a11y/has-valid-accessibility-ignores-invert-colors */
-import React from 'react'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 
 import {ModeratorData} from '../data/getModeratorData.js'

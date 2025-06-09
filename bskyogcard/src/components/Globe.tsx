@@ -1,5 +1,3 @@
-import React from 'react'
-
 export function Globe(props: React.SVGAttributes<SVGSVGElement>) {
   return (
     <svg

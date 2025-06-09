@@ -1,6 +1,6 @@
-/* eslint-disable bsky-internal/avoid-unwrapped-text */
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 
+import * as bsky from '../types/bsky.js'
 import {Butterfly} from './Butterfly.js'
 import {Img} from './Img.js'
 
@@ -17,7 +17,10 @@ export function StarterPack(props: {
   images: Map<string, Buffer>
 }) {
   const {starterPack, images} = props
-  const record = AppBskyGraphStarterpack.isValidRecord(starterPack.record)
+  const record = bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    starterPack.record,
+    AppBskyGraphStarterpack.isRecord,
+  )
     ? starterPack.record
     : null
   const imagesArray = [...images.values()]

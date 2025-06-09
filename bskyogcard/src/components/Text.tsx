@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {atoms as a, style as s, theme as t} from '../theme/index.js'
 
 const SCALE_MULTIPLIER = 1 - 0.0625
