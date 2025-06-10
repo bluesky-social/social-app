@@ -1,7 +1,10 @@
 import {createContext, useCallback, useContext, useRef, useState} from 'react'
 import {type AppBskyFeedDefs} from '@atproto/api'
 
-import {type FeedDescriptor} from './queries/post-feed'
+import {Logger} from '#/logger'
+import {type FeedDescriptor} from '#/state/queries/post-feed'
+
+const logger = Logger.create(Logger.Context.PostSource)
 
 /**
  * For passing the source of the post (i.e. the original post, from the feed) to the threadview,
@@ -15,7 +18,7 @@ type Source = {
 }
 
 const SetUnstablePostSourceContext = createContext<
-  (key: string, source: Source) => void
+  (uri: string, source: Source) => void
 >(() => {})
 const ConsumeUnstablePostSourceContext = createContext<
   (uri: string) => Source | undefined
@@ -24,14 +27,22 @@ const ConsumeUnstablePostSourceContext = createContext<
 export function Provider({children}: {children: React.ReactNode}) {
   const sourcesRef = useRef<Map<string, Source>>(new Map())
 
-  const setUnstablePostSource = useCallback((key: string, source: Source) => {
-    sourcesRef.current.set(key, source)
+  const setUnstablePostSource = useCallback((uri: string, source: Source) => {
+    sourcesRef.current.set(uri, source)
+    logger.debug('set', {
+      uri,
+      source,
+    })
   }, [])
 
   const consumeUnstablePostSource = useCallback((uri: string) => {
     const source = sourcesRef.current.get(uri)
     if (source) {
       sourcesRef.current.delete(uri)
+      logger.debug('consume', {
+        uri,
+        source,
+      })
     }
     return source
   }, [])
