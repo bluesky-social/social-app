@@ -5,6 +5,7 @@ import {PostData} from '../data/getPostData.js'
 import {atoms as a, theme as t} from '../theme/index.js'
 import {formatCount} from '../util/formatCount.js'
 import {getModerationCauseInfo} from '../util/getModerationCauseInfo.js'
+import {sanitizeHandle} from '../util/sanitizeHandle.js'
 import {Box} from './Box.js'
 import {DefaultFeed} from './icons/avatars/DefaultFeed.js'
 import {Image} from './Image.js'
@@ -61,14 +62,30 @@ export function FeedCard({
         ) : (
           <DefaultFeed size={40} />
         )}
-        <Box cx={[a.pt_2xs]}>
-          <Text cx={[a.text_md, a.font_bold, a.pb_2xs]}>{displayName}</Text>
-          <Text cx={[a.text_sm, a.leading_snug]}>By @{creator.handle}</Text>
+        <Box cx={[a.pt_2xs, a.flex_1]}>
+          <Text cx={[a.text_md, a.font_bold, a.pb_2xs, a.line_clamp_1]}>
+            {displayName}
+          </Text>
+          <Text
+            cx={[
+              a.text_sm,
+              a.leading_snug,
+              t.atoms.text_contrast_medium,
+              a.line_clamp_1,
+            ]}>
+            {`By ${sanitizeHandle(creator.handle, '@')}`}
+          </Text>
         </Box>
       </Box>
 
       {likeCount > 1 && (
-        <Text cx={[a.text_sm, a.leading_snug]}>
+        <Text
+          cx={[
+            a.text_xs,
+            t.atoms.text_contrast_medium,
+            a.font_bold,
+            a.leading_snug,
+          ]}>
           Liked by {formatCount(likeCount)} users
         </Text>
       )}

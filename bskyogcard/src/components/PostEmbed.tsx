@@ -8,6 +8,7 @@ import {ModeratorData} from '../data/getModeratorData.js'
 import {Image as ImageSource, PostData} from '../data/getPostData.js'
 import {atoms as a, theme as t} from '../theme/index.js'
 import * as bsky from '../types/bsky/index.js'
+import {formatCount} from '../util/formatCount.js'
 import {getModerationCauseInfo} from '../util/getModerationCauseInfo.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
 import {Embed, EmbedType, parseEmbed} from '../util/parseEmbed.js'
@@ -220,7 +221,7 @@ export function StarterPackEmbed({
           ) : null}
           {embed.view.joinedAllTimeCount >= 50 && (
             <Text cx={[a.font_bold, a.text_xs, t.atoms.text_contrast_medium]}>
-              {embed.view.joinedAllTimeCount} users have joined!
+              {formatCount(embed.view.joinedAllTimeCount)} users have joined!
             </Text>
           )}
         </Box>
