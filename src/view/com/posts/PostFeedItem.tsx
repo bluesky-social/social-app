@@ -37,7 +37,7 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {
-  buildPostSourceUri,
+  buildPostSourceKey,
   useSetUnstablePostSource,
 } from '#/state/unstable-post-source'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
@@ -235,7 +235,7 @@ let FeedItemInner = ({
       reqId,
     })
     unstableCacheProfileView(queryClient, post.author)
-    unstableSetPostSource(buildPostSourceUri(post.uri, post.author.handle), {
+    unstableSetPostSource(buildPostSourceKey(post.uri, post.author.handle), {
       feed: feedDescriptor,
       post: {
         post,

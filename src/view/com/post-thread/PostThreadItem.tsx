@@ -40,7 +40,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {type Source} from '#/state/unstable-post-source'
+import {type PostSource} from '#/state/unstable-post-source'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {Link, TextLink} from '#/view/com/util/Link'
@@ -105,7 +105,7 @@ export function PostThreadItem({
   onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
-  anchorPostSource?: Source
+  anchorPostSource?: PostSource
 }) {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -206,7 +206,7 @@ let PostThreadItemLoaded = ({
   onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
-  anchorPostSource?: Source
+  anchorPostSource?: PostSource
 }): React.ReactNode => {
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)

@@ -1,73 +1,69 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useId,
-  useRef,
-  useState,
-} from 'react'
+import {createContext, useCallback, useContext, useId, useState} from 'react'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
 import {Logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 
+/**
+ * Separate logger for better debugging
+ */
 const logger = Logger.create(Logger.Context.PostSource)
 
-/**
- * For passing the source of the post (i.e. the original post, from the feed) to the threadview,
- * without using query params. Deliberately unstable to avoid using query params, use for FeedFeedback
- * and other ephemeral non-critical systems.
- */
-
-export type Source = {
+export type PostSource = {
   post: AppBskyFeedDefs.FeedViewPost
   feed?: FeedDescriptor
 }
-
 const SetUnstablePostSourceContext = createContext<
-  (uri: string, source: Source) => void
+  (key: string, source: PostSource) => void
 >(() => {})
 const ConsumeUnstablePostSourceContext = createContext<
-  (uri: string, id: string) => Source | undefined
+  (key: string, id: string) => PostSource | undefined
 >(() => undefined)
 
-const persistentSourcesRef = new Map<string, Source>(new Map())
+/**
+ * A cache of sources that will be consumed by the post thread view. This is
+ * cleaned up any time a source is consumed.
+ */
+const transientSourcesRef = new Map<string, PostSource>()
 
+/**
+ * A cache of sources that have been consumed by the post thread view. This is
+ * not cleaned up, but because we use a new ID for each post thread view that
+ * consumes a source, this is never reused unless a user navigates back to a
+ * post thread view that has not been dropped from memory.
+ */
+const consumedSourcesRef = new Map<string, PostSource>()
+
+/**
+ * For passing the source of the post (i.e. the original post, from the feed)
+ * to the threadview, without using query params. Deliberately unstable to
+ * avoid using query params, use for FeedFeedback and other ephemeral
+ * non-critical systems.
+ */
 export function Provider({children}: {children: React.ReactNode}) {
-  const sourcesRef = useRef<Map<string, Source>>(new Map())
+  const setUnstablePostSource = useCallback(
+    (key: string, source: PostSource) => {
+      assertValid(
+        key,
+        `setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
+      )
+      logger.debug('set', {key, source})
+      transientSourcesRef.set(key, source)
+    },
+    [],
+  )
 
-  const setUnstablePostSource = useCallback((uri: string, source: Source) => {
-    if (__DEV__) {
-      const urip = new AtUri(uri)
-      if (urip.host.startsWith('did:')) {
-        throw new Error(
-          `URI passed to setUnstablePostSource should contain a handle — use buildPostSourceUri`,
-        )
-      }
-    }
-
-    logger.debug('set', {uri, source})
-    sourcesRef.current.set(uri, source)
-  }, [])
-
-  const consumeUnstablePostSource = useCallback((uri: string, id: string) => {
-    if (__DEV__) {
-      const urip = new AtUri(uri)
-      if (urip.host.startsWith('did:')) {
-        throw new Error(
-          `URI passed to consumeUnstablePostSource should contain a handle — use buildPostSourceUri`,
-        )
-      }
-    }
-
-    const source = persistentSourcesRef.get(id) || sourcesRef.current.get(uri)
-
+  const consumeUnstablePostSource = useCallback((key: string, id: string) => {
+    assertValid(
+      key,
+      `consumeUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
+    )
+    const source = consumedSourcesRef.get(id) || transientSourcesRef.get(key)
     if (source) {
-      logger.debug('consume', {uri, source})
-      sourcesRef.current.delete(uri)
-      persistentSourcesRef.set(id, source)
+      logger.debug('consume', {key, source})
+      transientSourcesRef.delete(key)
+      consumedSourcesRef.set(id, source)
     }
-
     return source
   }, [])
 
@@ -89,15 +85,28 @@ export function useSetUnstablePostSource() {
  * DANGER - This hook is unstable and should only be used for FeedFeedback
  * and other ephemeral non-critical systems. Does not change when the URI changes.
  */
-export function useUnstablePostSource(uri: string) {
+export function useUnstablePostSource(key: string) {
   const id = useId()
   const consume = useContext(ConsumeUnstablePostSourceContext)
-  const [source] = useState(() => consume(uri, id))
+  const [source] = useState(() => consume(key, id))
   return source
 }
 
-export function buildPostSourceUri(uri: string, handle: string) {
-  const urip = new AtUri(uri)
+/**
+ * Builds a post source key. This (atm) is a URI where the `host` is the post
+ * author's handle, not DID.
+ */
+export function buildPostSourceKey(key: string, handle: string) {
+  const urip = new AtUri(key)
   urip.host = handle
   return urip.toString()
+}
+
+function assertValid(key: string, message: string) {
+  if (__DEV__) {
+    const urip = new AtUri(key)
+    if (urip.host.startsWith('did:')) {
+      throw new Error(message)
+    }
+  }
 }
