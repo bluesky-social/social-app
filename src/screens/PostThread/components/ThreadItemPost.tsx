@@ -365,15 +365,12 @@ function SubtleHover({children}: {children: React.ReactNode}) {
 }
 
 export function ThreadItemPostSkeleton({index}: {index: number}) {
-  const t = useTheme()
   const even = index % 2 === 0
   return (
     <View
       style={[
         {paddingHorizontal: OUTER_SPACE, paddingVertical: OUTER_SPACE / 1.5},
         a.gap_md,
-        a.border_t,
-        t.atoms.border_contrast_low,
       ]}>
       <Skele.Row style={[a.align_start, a.gap_md]}>
         <Skele.Circle size={LINEAR_AVI_WIDTH} />
