@@ -1,4 +1,4 @@
-import {createContext, useCallback, useContext, useId, useState} from 'react'
+import {useCallback, useId, useState} from 'react'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
 import {Logger} from '#/logger'
@@ -13,12 +13,6 @@ export type PostSource = {
   post: AppBskyFeedDefs.FeedViewPost
   feed?: FeedDescriptor
 }
-const SetUnstablePostSourceContext = createContext<
-  (key: string, source: PostSource) => void
->(() => {})
-const ConsumeUnstablePostSourceContext = createContext<
-  (key: string, id: string) => PostSource | undefined
->(() => undefined)
 
 /**
  * A cache of sources that will be consumed by the post thread view. This is
@@ -35,25 +29,30 @@ const transientSourcesRef = new Map<string, PostSource>()
 const consumedSourcesRef = new Map<string, PostSource>()
 
 /**
- * For passing the source of the post (i.e. the original post, from the feed)
- * to the threadview, without using query params. Deliberately unstable to
- * avoid using query params, use for FeedFeedback and other ephemeral
- * non-critical systems.
+ * For stashing the feed that the user was browsing when they clicked on a post.
+ *
+ * Used for FeedFeedback and other ephemeral non-critical systems.
  */
-export function Provider({children}: {children: React.ReactNode}) {
-  const setUnstablePostSource = useCallback(
-    (key: string, source: PostSource) => {
-      assertValid(
-        key,
-        `setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
-      )
-      logger.debug('set', {key, source})
-      transientSourcesRef.set(key, source)
-    },
-    [],
-  )
+export function useSetUnstablePostSource() {
+  return useCallback((key: string, source: PostSource) => {
+    assertValid(
+      key,
+      `setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
+    )
+    logger.debug('set', {key, source})
+    transientSourcesRef.set(key, source)
+  }, [])
+}
 
-  const consumeUnstablePostSource = useCallback((key: string, id: string) => {
+/**
+ * This hook is unstable and should only be used for FeedFeedback and other
+ * ephemeral non-critical systems. Views that use this hook will continue to
+ * return a reference to the same source until those views are dropped from
+ * memory.
+ */
+export function useUnstablePostSource(key: string) {
+  const id = useId()
+  const [source] = useState(() => {
     assertValid(
       key,
       `consumeUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
@@ -65,30 +64,7 @@ export function Provider({children}: {children: React.ReactNode}) {
       consumedSourcesRef.set(id, source)
     }
     return source
-  }, [])
-
-  return (
-    <SetUnstablePostSourceContext.Provider value={setUnstablePostSource}>
-      <ConsumeUnstablePostSourceContext.Provider
-        value={consumeUnstablePostSource}>
-        {children}
-      </ConsumeUnstablePostSourceContext.Provider>
-    </SetUnstablePostSourceContext.Provider>
-  )
-}
-
-export function useSetUnstablePostSource() {
-  return useContext(SetUnstablePostSourceContext)
-}
-
-/**
- * DANGER - This hook is unstable and should only be used for FeedFeedback
- * and other ephemeral non-critical systems. Does not change when the URI changes.
- */
-export function useUnstablePostSource(key: string) {
-  const id = useId()
-  const consume = useContext(ConsumeUnstablePostSourceContext)
-  const [source] = useState(() => consume(key, id))
+  })
   return source
 }
 
@@ -102,6 +78,9 @@ export function buildPostSourceKey(key: string, handle: string) {
   return urip.toString()
 }
 
+/**
+ * Just a lil dev helper
+ */
 function assertValid(key: string, message: string) {
   if (__DEV__) {
     const urip = new AtUri(key)
