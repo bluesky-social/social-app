@@ -442,4 +442,5 @@ export type MetricEvents = {
   'thread:preferences:update': {
     [key: string]: any
   }
+  'thread:click:headerMenuOpen': {}
 }

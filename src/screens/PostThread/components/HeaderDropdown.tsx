@@ -2,6 +2,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
+import {logger} from '#/logger'
 import {type ThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {Button, ButtonIcon} from '#/components/Button'
 import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
@@ -20,7 +21,7 @@ export function HeaderDropdown({
   return (
     <Menu.Root>
       <Menu.Trigger label={_(msg`Thread options`)}>
-        {({props}) => (
+        {({props: {onPress, ...props}}) => (
           <Button
             label={_(msg`Thread options`)}
             size="small"
@@ -28,6 +29,10 @@ export function HeaderDropdown({
             color="secondary"
             shape="round"
             hitSlop={HITSLOP_10}
+            onPress={() => {
+              logger.metric('thread:click:headerMenuOpen', {})
+              onPress()
+            }}
             {...props}>
             <ButtonIcon icon={SettingsSlider} size="md" />
           </Button>
