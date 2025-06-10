@@ -95,7 +95,7 @@ export function Post({
             </Box>
             <Box cx={[a.flex_col, a.flex_1]}>
               <Box cx={[a.flex_1, a.flex_row]}>
-                <Text cx={[a.text_md, a.font_heavy, a.pb_2xs, a.line_clamp_2]}>
+                <Text cx={[a.text_md, a.font_heavy, a.pb_2xs, a.line_clamp_1]}>
                   {post.author.displayName || post.author.handle}
                 </Text>
                 {verification.isVerified && (
