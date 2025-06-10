@@ -6,9 +6,9 @@ import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import * as BandwidthEstimate from '#/view/com/util/post-embeds/VideoEmbedInner/bandwidth-estimate'
 import {atoms as a} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import * as BandwidthEstimate from './bandwidth-estimate'
 import {Controls} from './web-controls/VideoControls'
 
 export function VideoEmbedInnerWeb({
