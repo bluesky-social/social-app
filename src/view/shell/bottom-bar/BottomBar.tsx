@@ -4,11 +4,7 @@ import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {
-  type NavigationProp,
-  StackActions,
-  useNavigation,
-} from '@react-navigation/native'
+import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -21,7 +17,7 @@ import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
-import {type BottomTabNavigatorParams} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {useHomeBadge} from '#/state/home-badge'
@@ -60,7 +56,7 @@ import {styles} from './BottomBarStyles'
 type TabOptions = 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile'
 
 export function BottomBar() {
-  const navigation = useNavigation<NavigationProp<BottomTabNavigatorParams>>()
+  const navigation = useNavigation<NavigationProp>()
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -119,7 +115,6 @@ export function BottomBar() {
           }
         })
       } else {
-        // @ts-ignore FIXME: This type seems to be wrong
         dedupe(() => navigation.navigate(`${tab}Tab`))
       }
     },
