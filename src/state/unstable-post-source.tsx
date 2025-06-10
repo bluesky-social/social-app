@@ -1,5 +1,12 @@
-import {createContext, useCallback, useContext, useRef, useState} from 'react'
-import {type AppBskyFeedDefs,AtUri} from '@atproto/api'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useId,
+  useRef,
+  useState,
+} from 'react'
+import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
 import {Logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
@@ -12,7 +19,7 @@ const logger = Logger.create(Logger.Context.PostSource)
  * and other ephemeral non-critical systems.
  */
 
-type Source = {
+export type Source = {
   post: AppBskyFeedDefs.FeedViewPost
   feed?: FeedDescriptor
 }
@@ -21,8 +28,10 @@ const SetUnstablePostSourceContext = createContext<
   (uri: string, source: Source) => void
 >(() => {})
 const ConsumeUnstablePostSourceContext = createContext<
-  (uri: string) => Source | undefined
+  (uri: string, id: string) => Source | undefined
 >(() => undefined)
+
+const persistentSourcesRef = new Map<string, Source>(new Map())
 
 export function Provider({children}: {children: React.ReactNode}) {
   const sourcesRef = useRef<Map<string, Source>>(new Map())
@@ -41,7 +50,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     sourcesRef.current.set(uri, source)
   }, [])
 
-  const consumeUnstablePostSource = useCallback((uri: string) => {
+  const consumeUnstablePostSource = useCallback((uri: string, id: string) => {
     if (__DEV__) {
       const urip = new AtUri(uri)
       if (urip.host.startsWith('did:')) {
@@ -51,11 +60,12 @@ export function Provider({children}: {children: React.ReactNode}) {
       }
     }
 
-    const source = sourcesRef.current.get(uri)
+    const source = persistentSourcesRef.get(id) || sourcesRef.current.get(uri)
 
     if (source) {
       logger.debug('consume', {uri, source})
       sourcesRef.current.delete(uri)
+      persistentSourcesRef.set(id, source)
     }
 
     return source
@@ -80,9 +90,9 @@ export function useSetUnstablePostSource() {
  * and other ephemeral non-critical systems. Does not change when the URI changes.
  */
 export function useUnstablePostSource(uri: string) {
+  const id = useId()
   const consume = useContext(ConsumeUnstablePostSourceContext)
-
-  const [source] = useState(() => consume(uri))
+  const [source] = useState(() => consume(uri, id))
   return source
 }
 

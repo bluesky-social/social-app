@@ -141,12 +141,12 @@ export function useFeedFeedback(
 
   const sendInteraction = useCallback(
     (interaction: AppBskyFeedDefs.Interaction) => {
-      logger.debug('sendInteraction', {
-        ...interaction,
-      })
       if (!enabled) {
         return
       }
+      logger.debug('sendInteraction', {
+        ...interaction,
+      })
       if (!history.current.has(interaction)) {
         history.current.add(interaction)
         queue.current.add(toString(interaction))
