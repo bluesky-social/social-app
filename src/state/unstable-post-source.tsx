@@ -1,4 +1,4 @@
-import {createContext, useCallback, useContext, useState} from 'react'
+import {createContext, useCallback, useContext, useRef, useState} from 'react'
 import {type AppBskyFeedDefs} from '@atproto/api'
 
 import {type FeedDescriptor} from './queries/post-feed'
@@ -22,30 +22,19 @@ const ConsumeUnstablePostSourceContext = createContext<
 >(() => undefined)
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [sources, setSources] = useState<Map<string, Source>>(() => new Map())
+  const sourcesRef = useRef<Map<string, Source>>(new Map())
 
   const setUnstablePostSource = useCallback((key: string, source: Source) => {
-    setSources(prev => {
-      const newMap = new Map(prev)
-      newMap.set(key, source)
-      return newMap
-    })
+    sourcesRef.current.set(key, source)
   }, [])
 
-  const consumeUnstablePostSource = useCallback(
-    (uri: string) => {
-      const source = sources.get(uri)
-      if (source) {
-        setSources(prev => {
-          const newMap = new Map(prev)
-          newMap.delete(uri)
-          return newMap
-        })
-      }
-      return source
-    },
-    [sources],
-  )
+  const consumeUnstablePostSource = useCallback((uri: string) => {
+    const source = sourcesRef.current.get(uri)
+    if (source) {
+      sourcesRef.current.delete(uri)
+    }
+    return source
+  }, [])
 
   return (
     <SetUnstablePostSourceContext.Provider value={setUnstablePostSource}>
