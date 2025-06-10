@@ -49,6 +49,13 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setView: baseSetView,
     prioritizeFollowedUsers,
   } = useThreadPreferences()
+  const below = useMemo(() => {
+    return view === 'linear'
+      ? LINEAR_VIEW_BELOW
+      : isWeb && gtPhone
+      ? TREE_VIEW_BELOW_DESKTOP
+      : TREE_VIEW_BELOW
+  }, [view, gtPhone])
 
   const postThreadQueryKey = createPostThreadQueryKey({
     anchor,
@@ -68,12 +75,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
       const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
         anchor: anchor!,
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
-        below:
-          view === 'linear'
-            ? LINEAR_VIEW_BELOW
-            : isWeb && gtPhone
-            ? TREE_VIEW_BELOW_DESKTOP
-            : TREE_VIEW_BELOW,
+        below,
         sort: sort,
         prioritizeFollowedUsers: prioritizeFollowedUsers,
       })
@@ -144,12 +146,12 @@ export function usePostThread({anchor}: {anchor?: string}) {
   const mutator = useMemo(
     () =>
       createCacheMutator({
-        params: {view},
+        params: {view, below},
         postThreadQueryKey,
         postThreadOtherQueryKey,
         queryClient: qc,
       }),
-    [qc, view, postThreadQueryKey, postThreadOtherQueryKey],
+    [qc, view, below, postThreadQueryKey, postThreadOtherQueryKey],
   )
 
   /**
