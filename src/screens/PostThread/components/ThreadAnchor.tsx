@@ -36,6 +36,11 @@ import {Link} from '#/view/com/util/Link'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {
+  LINEAR_AVI_WIDTH,
+  OUTER_SPACE,
+  REPLY_LINE_WIDTH,
+} from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
@@ -65,9 +70,11 @@ export function ThreadAnchor({
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }) {
   const postShadow = usePostShadow(item.value.post)
+  const threadRootUri = item.value.post.record.reply?.root?.uri || item.uri
+  const isRoot = threadRootUri === item.uri
 
   if (postShadow === POST_TOMBSTONE) {
-    return <PostThreadItemDeleted />
+    return <PostThreadItemDeleted isRoot={isRoot} />
   }
 
   return (
@@ -75,6 +82,7 @@ export function ThreadAnchor({
       // Safeguard from clobbering per-post state below:
       key={postShadow.uri}
       item={item}
+      isRoot={isRoot}
       postShadow={postShadow}
       onPostSuccess={onPostSuccess}
       threadgateRecord={threadgateRecord}
@@ -82,34 +90,80 @@ export function ThreadAnchor({
   )
 }
 
-function PostThreadItemDeleted({hideTopBorder}: {hideTopBorder?: boolean}) {
+function PostThreadItemDeleted({isRoot}: {isRoot: boolean}) {
   const t = useTheme()
+
   return (
-    <View
-      style={[
-        t.atoms.bg,
-        t.atoms.border_contrast_low,
-        a.p_xl,
-        a.pl_lg,
-        a.flex_row,
-        a.gap_md,
-        !hideTopBorder && a.border_t,
-      ]}>
-      <TrashIcon style={[t.atoms.text]} />
-      <Text style={[t.atoms.text_contrast_medium, a.mt_2xs]}>
-        <Trans>This post has been deleted.</Trans>
-      </Text>
-    </View>
+    <>
+      <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
+
+      <View
+        style={[
+          {
+            paddingHorizontal: OUTER_SPACE,
+            paddingBottom: OUTER_SPACE,
+          },
+          isRoot && [a.pt_lg],
+        ]}>
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.py_md,
+            a.rounded_sm,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_center,
+              {
+                width: LINEAR_AVI_WIDTH,
+              },
+            ]}>
+            <TrashIcon style={[t.atoms.text_contrast_medium]} />
+          </View>
+          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+            <Trans>Post has been deleted</Trans>
+          </Text>
+        </View>
+      </View>
+    </>
   )
+}
+
+function ThreadItemAnchorParentReplyLine({isRoot}: {isRoot: boolean}) {
+  const t = useTheme()
+
+  return !isRoot ? (
+    <View style={[a.pl_lg, a.flex_row, a.pb_xs, {height: a.pt_lg.paddingTop}]}>
+      <View style={{width: 42}}>
+        <View
+          style={[
+            {
+              width: REPLY_LINE_WIDTH,
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              flexGrow: 1,
+              backgroundColor: t.atoms.border_contrast_low.borderColor,
+            },
+          ]}
+        />
+      </View>
+    </View>
+  ) : null
 }
 
 let PostThreadItemLoaded = ({
   item,
+  isRoot,
   postShadow,
   onPostSuccess,
   threadgateRecord,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
+  isRoot: boolean
   postShadow: Shadow<AppBskyFeedDefs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
@@ -134,7 +188,6 @@ let PostThreadItemLoaded = ({
   )
 
   const threadRootUri = record.reply?.root?.uri || post.uri
-  const isThreadRoot = threadRootUri === post.uri
   const authorHref = makeProfileLink(post.author)
   const authorTitle = post.author.handle
   const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
@@ -191,31 +244,15 @@ let PostThreadItemLoaded = ({
 
   return (
     <>
-      {!isThreadRoot && (
-        <View
-          style={[a.pl_lg, a.flex_row, a.pb_xs, {height: a.pt_lg.paddingTop}]}>
-          <View style={{width: 42}}>
-            <View
-              style={[
-                {
-                  width: 2,
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                  flexGrow: 1,
-                  backgroundColor: t.atoms.border_contrast_low.borderColor,
-                },
-              ]}
-            />
-          </View>
-        </View>
-      )}
+      <ThreadItemAnchorParentReplyLine isRoot={isRoot} />
 
       <View
         testID={`postThreadItem-by-${post.author.handle}`}
         style={[
-          a.px_lg,
-          t.atoms.border_contrast_low,
-          isThreadRoot && [a.pt_lg],
+          {
+            paddingHorizontal: OUTER_SPACE,
+          },
+          isRoot && [a.pt_lg],
         ]}>
         <View style={[a.flex_row, a.gap_md, a.pb_md]}>
           <PreviewableUserAvatar
