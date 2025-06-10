@@ -135,11 +135,11 @@ export function sortAndAnnotateThreadItems(
       } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
         if (parentMetadata) {
           /*
-           * Set this value before incrementing the parent's repliesSeenCount
+           * Set this value before incrementing the parent's repliesSeenCounter
            */
-          metadata!.replyIndex = parentMetadata.repliesIndexCount
-          // Increment the parent's repliesIndexCount
-          parentMetadata.repliesIndexCount += 1
+          metadata!.replyIndex = parentMetadata.repliesIndexCounter
+          // Increment the parent's repliesIndexCounter
+          parentMetadata.repliesIndexCounter += 1
         }
 
         const post = views.threadPost({
@@ -160,7 +160,7 @@ export function sortAndAnnotateThreadItems(
            * Update seen reply count of parent
            */
           if (parentMetadata) {
-            parentMetadata.repliesSeenCount += 1
+            parentMetadata.repliesSeenCounter += 1
           }
         } else {
           /*
@@ -193,11 +193,11 @@ export function sortAndAnnotateThreadItems(
                 storeTraversalMetadata(metadatas, childMetadata)
                 if (childParentMetadata) {
                   /*
-                   * Set this value before incrementing the parent's repliesIndexCount
+                   * Set this value before incrementing the parent's repliesIndexCounter
                    */
                   childMetadata!.replyIndex =
-                    childParentMetadata.repliesIndexCount
-                  childParentMetadata.repliesIndexCount += 1
+                    childParentMetadata.repliesIndexCounter
+                  childParentMetadata.repliesIndexCounter += 1
                 }
 
                 const childPost = views.threadPost({
@@ -266,7 +266,7 @@ export function sortAndAnnotateThreadItems(
              */
             metadata.isLastSibling =
               metadata.replyIndex ===
-              metadata.parentMetadata.repliesSeenCount - 1
+              metadata.parentMetadata.repliesSeenCounter - 1
             metadata.isLastChild =
               metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth <= metadata.depth

@@ -92,8 +92,8 @@ export function getTraversalMetadata({
     },
     repliesCount,
     repliesUnhydrated,
-    repliesSeenCount: 0,
-    repliesIndexCount: 0,
+    repliesSeenCounter: 0,
+    repliesIndexCounter: 0,
     replyIndex: 0,
     skippedIndentIndices: new Set<number>(),
   }
@@ -126,7 +126,7 @@ export function getThreadPostUI({
   prevItemDepth,
   isLastChild,
   skippedIndentIndices,
-  repliesSeenCount,
+  repliesSeenCounter,
   repliesUnhydrated,
   precedesChildReadMore,
   followsReadMoreUp,
@@ -134,8 +134,8 @@ export function getThreadPostUI({
   const isReplyAndHasReplies =
     depth > 0 &&
     repliesCount > 0 &&
-    (repliesCount - repliesUnhydrated === repliesSeenCount ||
-      repliesSeenCount > 0)
+    (repliesCount - repliesUnhydrated === repliesSeenCounter ||
+      repliesSeenCounter > 0)
   return {
     isAnchor: depth === 0,
     showParentReplyLine:
