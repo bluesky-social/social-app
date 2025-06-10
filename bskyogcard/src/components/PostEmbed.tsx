@@ -7,7 +7,7 @@ import {
 import {ModeratorData} from '../data/getModeratorData.js'
 import {Image as ImageSource, PostData} from '../data/getPostData.js'
 import {atoms as a, theme as t} from '../theme/index.js'
-import * as bsky from '../types/bsky.js'
+import * as bsky from '../types/bsky/index.js'
 import {getModerationCauseInfo} from '../util/getModerationCauseInfo.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
 import {Embed, EmbedType, parseEmbed} from '../util/parseEmbed.js'

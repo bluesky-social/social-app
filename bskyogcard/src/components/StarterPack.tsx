@@ -1,6 +1,6 @@
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 
-import * as bsky from '../types/bsky.js'
+import * as bsky from '../types/bsky/index.js'
 import {Butterfly} from './Butterfly.js'
 import {Img} from './Img.js'
 

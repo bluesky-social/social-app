@@ -1,5 +1,7 @@
 import {ValidationResult} from '@atproto/lexicon'
 
+export * as profile from './profile.js'
+
 /**
  * Fast type checking without full schema validation, for use with data we
  * trust, or for non-critical path use cases. Why? Our SDK's `is*` identity

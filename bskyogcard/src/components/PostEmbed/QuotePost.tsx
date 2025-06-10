@@ -7,10 +7,11 @@ import {
 import {ModeratorData} from '../../data/getModeratorData.js'
 import {PostData} from '../../data/getPostData.js'
 import {atoms as a, theme as t} from '../../theme/index.js'
-import * as bsky from '../../types/bsky.js'
+import * as bsky from '../../types/bsky/index.js'
 import {getModerationCauseInfo} from '../../util/getModerationCauseInfo.js'
 import {moderatePost} from '../../util/moderatePost.js'
 import {sanitizeHandle} from '../../util/sanitizeHandle.js'
+import {getVerificationState} from '../../util/verificationState.js'
 import {viewRecordToPostView} from '../../util/viewRecordToPostView.js'
 import {Avatar} from '../Avatar.js'
 import {Box} from '../Box.js'
@@ -19,6 +20,7 @@ import {ModeratedEmbed} from '../ModeratedEmbed.js'
 import {PostEmbed} from '../PostEmbed.js'
 import {RichText} from '../RichText.js'
 import {Text} from '../Text.js'
+import {VerificationCheck} from '../VerificationCheck.js'
 
 export function QuotePost({
   embed,
@@ -43,6 +45,7 @@ export function QuotePost({
       : undefined
   const postView = viewRecordToPostView(embed)
   const moderation = moderatePost(postView, moderatorData.moderationOptions)
+  const verification = getVerificationState({profile: embed.author})
 
   const mod = moderation.ui('contentView')
   const info = getModerationCauseInfo({
@@ -79,10 +82,32 @@ export function QuotePost({
           moderatorData={moderatorData}
         />
         <Box cx={[a.flex_row, a.align_center, a.gap_xs, a.pt_2xs]}>
-          <Text cx={[a.text_sm, a.font_bold]}>
+          <Text
+            cx={[
+              a.text_sm,
+              a.font_bold,
+              a.flex_shrink_0,
+              {maxWidth: '70%'},
+              a.line_clamp_1,
+            ]}>
             {author.displayName || author.handle}
           </Text>
-          <Text cx={[a.text_xs, t.atoms.text_contrast_medium]}>
+          {verification.isVerified && (
+            <Box cx={[{marginTop: -2}]}>
+              <VerificationCheck
+                size={12}
+                verifier={verification.role === 'verifier'}
+                fill={t.palette.primary_500}
+              />
+            </Box>
+          )}
+          <Text
+            cx={[
+              a.text_xs,
+              t.atoms.text_contrast_medium,
+              {flexShrink: 10},
+              a.line_clamp_1,
+            ]}>
             {sanitizeHandle(author.handle, '@')}
           </Text>
         </Box>

@@ -7,11 +7,12 @@ import {
 import {ModeratorData} from '../../data/getModeratorData.js'
 import {PostData} from '../../data/getPostData.js'
 import {atoms as a, theme as t} from '../../theme/index.js'
-import * as bsky from '../../types/bsky.js'
+import * as bsky from '../../types/bsky/index.js'
 import {formatCount} from '../../util/formatCount.js'
 import {formatDate} from '../../util/formatDate.js'
 import {moderatePost} from '../../util/moderatePost.js'
 import {sanitizeHandle} from '../../util/sanitizeHandle.js'
+import {getVerificationState} from '../../util/verificationState.js'
 import {Avatar} from '../Avatar.js'
 import {Box} from '../Box.js'
 import {Heart} from '../icons/Heart.js'
@@ -21,6 +22,7 @@ import {Repost} from '../icons/Repost.js'
 import {PostEmbed} from '../PostEmbed.js'
 import {RichText} from '../RichText.js'
 import {Text} from '../Text.js'
+import {VerificationCheck} from '../VerificationCheck.js'
 
 export function Post({
   post,
@@ -52,6 +54,7 @@ export function Post({
       : undefined
     const hasInteractions = post.likeCount > 0 || post.repostCount > 0
     const moderation = moderatePost(post, moderatorData.moderationOptions)
+    const verification = getVerificationState({profile: post.author})
 
     const bgTop = avatar?.colors?.muted ?? '#1083fe'
     const bgBottom = avatar?.colors?.lightMuted ?? '#67b0fe'
@@ -91,9 +94,20 @@ export function Post({
               />
             </Box>
             <Box cx={[a.flex_col, a.flex_1]}>
-              <Text cx={[a.text_md, a.font_heavy, a.pb_2xs, a.line_clamp_2]}>
-                {post.author.displayName || post.author.handle}
-              </Text>
+              <Box cx={[a.flex_1, a.flex_row]}>
+                <Text cx={[a.text_md, a.font_heavy, a.pb_2xs, a.line_clamp_2]}>
+                  {post.author.displayName || post.author.handle}
+                </Text>
+                {verification.isVerified && (
+                  <Box cx={[a.pl_xs, a.pt_2xs]}>
+                    <VerificationCheck
+                      size={12}
+                      verifier={verification.role === 'verifier'}
+                      fill={t.palette.primary_500}
+                    />
+                  </Box>
+                )}
+              </Box>
               <Text
                 cx={[a.text_sm, t.atoms.text_contrast_medium, a.line_clamp_1]}>
                 {sanitizeHandle(post.author.handle, '@')}
