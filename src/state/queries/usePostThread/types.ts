@@ -198,7 +198,7 @@ export type TraversalMetadata = {
    * "seen" on first load. Use `repliesIndexCount` for the total number of
    * replies that were hydrated in the response.
    *
-   * After traverssal, we can use this to calculate if we actually got all the
+   * After traversal, we can use this to calculate if we actually got all the
    * replies we expected, or if some were blocked, etc.
    */
   repliesSeenCount: number
