@@ -125,7 +125,7 @@ export type ThreadItem =
  * Metadata collected while traversing the raw data from the thread response.
  * Some values here can be computed immediately, while others need to be
  * computed during a second pass over the thread after we know things like
- * totaly number of replies, the reply index, etc.
+ * total number of replies, the reply index, etc.
  *
  * The idea here is that these values should be objectively true in all cases,
  * such that we can use them later — either individually on in composite — to
