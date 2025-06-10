@@ -1,4 +1,4 @@
-import {memo,useCallback, useMemo} from 'react'
+import {memo, useCallback, useMemo} from 'react'
 import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
 import {
   type AppBskyFeedDefs,

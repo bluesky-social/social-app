@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import {memo, type ReactNode, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -123,7 +123,7 @@ const ThreadItemPostOuterWrapper = memo(function ThreadItemPostOuterWrapper({
   overrides,
   children,
 }: Pick<ThreadItemPostProps, 'item' | 'overrides'> & {
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const t = useTheme()
   const showTopBorder =
@@ -185,7 +185,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   threadgateRecord,
 }: ThreadItemPostProps & {
   postShadow: Shadow<AppBskyFeedDefs.PostView>
-}): React.ReactNode {
+}) {
   const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -203,18 +203,18 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
       }),
     [record],
   )
-  const [limitLines, setLimitLines] = React.useState(
+  const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const threadRootUri = record.reply?.root?.uri || post.uri
-  const postHref = React.useMemo(() => {
+  const postHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,
   })
-  const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
+  const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
     const isControlledByViewer =
       new AtUri(threadRootUri).host === currentAccount?.did
@@ -229,7 +229,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
       : []
   }, [post, currentAccount?.did, threadgateHiddenReplies, threadRootUri])
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -243,7 +243,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
     })
   }, [openComposer, post, record, onPostSuccess, moderation])
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
 
@@ -346,7 +346,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   )
 })
 
-function SubtleHover({children}: {children: React.ReactNode}) {
+function SubtleHover({children}: {children: ReactNode}) {
   const {
     state: hover,
     onIn: onHoverIn,
