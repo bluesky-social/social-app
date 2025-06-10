@@ -1,5 +1,6 @@
 import {
   type $Typed,
+  type AppBskyActorDefs,
   type AppBskyFeedDefs,
   AppBskyUnspeccedDefs,
   type AppBskyUnspeccedGetPostThreadOtherV2,
@@ -267,6 +268,35 @@ export function* findAllPostsInQueryData(
         const qp = getEmbeddedPost(item.value.post.embed)
         if (qp && didOrHandleUriMatches(atUri, qp)) {
           yield embedViewRecordToPostView(qp)
+        }
+      }
+    }
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
+  const queryDatas =
+    queryClient.getQueriesData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>({
+      queryKey: [postThreadQueryKeyRoot],
+    })
+
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) continue
+
+    const {thread} = queryData
+
+    for (const item of thread) {
+      if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+        if (item.value.post.author.did === did) {
+          yield item.value.post.author
+        }
+
+        const qp = getEmbeddedPost(item.value.post.embed)
+        if (qp && qp.author.did === did) {
+          yield qp.author
         }
       }
     }
