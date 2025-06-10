@@ -1,4 +1,4 @@
-import {useCallback, useId, useState} from 'react'
+import {useId, useState} from 'react'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
 import {Logger} from '#/logger'
@@ -33,15 +33,13 @@ const consumedSourcesRef = new Map<string, PostSource>()
  *
  * Used for FeedFeedback and other ephemeral non-critical systems.
  */
-export function useSetUnstablePostSource() {
-  return useCallback((key: string, source: PostSource) => {
-    assertValid(
-      key,
-      `setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
-    )
-    logger.debug('set', {key, source})
-    transientSourcesRef.set(key, source)
-  }, [])
+export function setUnstablePostSource(key: string, source: PostSource) {
+  assertValid(
+    key,
+    `setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
+  )
+  logger.debug('set', {key, source})
+  transientSourcesRef.set(key, source)
 }
 
 /**
