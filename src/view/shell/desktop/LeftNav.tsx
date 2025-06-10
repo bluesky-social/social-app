@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {type JSX, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
