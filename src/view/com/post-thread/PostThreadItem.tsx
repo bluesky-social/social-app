@@ -40,7 +40,10 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {useUnstablePostSource} from '#/state/unstable-post-source'
+import {
+  buildPostSourceUri,
+  useUnstablePostSource,
+} from '#/state/unstable-post-source'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {Link, TextLink} from '#/view/com/util/Link'
@@ -204,7 +207,9 @@ let PostThreadItemLoaded = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const {currentAccount, hasSession} = useSession()
-  const source = useUnstablePostSource(post.uri)
+  const source = useUnstablePostSource(
+    buildPostSourceUri(post.uri, post.author.handle),
+  )
   const feedFeedback = useFeedFeedback(source?.feed, hasSession)
 
   const t = useTheme()

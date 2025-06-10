@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext, useRef, useState} from 'react'
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyFeedDefs,AtUri} from '@atproto/api'
 
 import {Logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
@@ -28,22 +28,36 @@ export function Provider({children}: {children: React.ReactNode}) {
   const sourcesRef = useRef<Map<string, Source>>(new Map())
 
   const setUnstablePostSource = useCallback((uri: string, source: Source) => {
+    if (__DEV__) {
+      const urip = new AtUri(uri)
+      if (urip.host.startsWith('did:')) {
+        throw new Error(
+          `URI passed to setUnstablePostSource should contain a handle — use buildPostSourceUri`,
+        )
+      }
+    }
+
+    logger.debug('set', {uri, source})
     sourcesRef.current.set(uri, source)
-    logger.debug('set', {
-      uri,
-      source,
-    })
   }, [])
 
   const consumeUnstablePostSource = useCallback((uri: string) => {
-    const source = sourcesRef.current.get(uri)
-    if (source) {
-      sourcesRef.current.delete(uri)
-      logger.debug('consume', {
-        uri,
-        source,
-      })
+    if (__DEV__) {
+      const urip = new AtUri(uri)
+      if (urip.host.startsWith('did:')) {
+        throw new Error(
+          `URI passed to consumeUnstablePostSource should contain a handle — use buildPostSourceUri`,
+        )
+      }
     }
+
+    const source = sourcesRef.current.get(uri)
+
+    if (source) {
+      logger.debug('consume', {uri, source})
+      sourcesRef.current.delete(uri)
+    }
+
     return source
   }, [])
 
@@ -70,4 +84,10 @@ export function useUnstablePostSource(uri: string) {
 
   const [source] = useState(() => consume(uri))
   return source
+}
+
+export function buildPostSourceUri(uri: string, handle: string) {
+  const urip = new AtUri(uri)
+  urip.host = handle
+  return urip.toString()
 }
