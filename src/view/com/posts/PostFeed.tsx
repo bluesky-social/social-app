@@ -586,7 +586,7 @@ let PostFeed = ({
   // events
   // =
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     logEvent('feed:refresh', {
       feedType: feedType,
       feedUrl: feed,
