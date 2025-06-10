@@ -1,5 +1,5 @@
 import React from 'react'
-import {Alert, AppState, AppStateStatus} from 'react-native'
+import {Alert, AppState, type AppStateStatus} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
   checkForUpdateAsync,
@@ -35,7 +35,7 @@ export function useOTAUpdates() {
   const appState = React.useRef<AppStateStatus>('active')
   const lastMinimize = React.useRef(0)
   const ranInitialCheck = React.useRef(false)
-  const timeout = React.useRef<NodeJS.Timeout>()
+  const timeout = React.useRef<NodeJS.Timeout>(undefined)
   const {isUpdatePending} = useUpdates()
 
   const setCheckTimeout = React.useCallback(() => {
