@@ -2,6 +2,7 @@ import {useCallback, useMemo, useRef, useState} from 'react'
 import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
+import {OnceKey,useCallOnce} from '#/lib/hooks/useCallOnce'
 import {logger} from '#/logger'
 import {
   usePreferencesQuery,
@@ -31,6 +32,7 @@ export function useThreadPreferences({
 }: {save?: boolean} = {}): ThreadPreferences {
   const {data: preferences} = usePreferencesQuery()
   const serverPrefs = preferences?.threadViewPrefs
+  const once = useCallOnce(OnceKey.PreferencesThread)
 
   /*
    * Create local state representations of server state
@@ -63,6 +65,14 @@ export function useThreadPreferences({
         treeViewEnabled: !!serverPrefs.lab_treeViewEnabled,
       }),
     )
+
+    once(() => {
+      logger.metric('thread:preferences:load', {
+        sort: serverPrefs.sort,
+        view: serverPrefs.lab_treeViewEnabled ? 'tree' : 'linear',
+        prioritizeFollowedUsers: serverPrefs.prioritizeFollowedUsers,
+      })
+    })
   }
 
   const userUpdatedPrefs = useRef(false)
@@ -73,6 +83,11 @@ export function useThreadPreferences({
       try {
         setIsSaving(true)
         await mutateAsync(prefs)
+        logger.metric('thread:preferences:update', {
+          sort: prefs.sort,
+          view: prefs.lab_treeViewEnabled ? 'tree' : 'linear',
+          prioritizeFollowedUsers: prefs.prioritizeFollowedUsers,
+        })
       } catch (e) {
         logger.error('useThreadPreferences failed to save', {
           safeMessage: e,

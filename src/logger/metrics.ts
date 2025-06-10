@@ -434,4 +434,12 @@ export type MetricEvents = {
   'share:press:dmSelected': {}
   'share:press:recentDm': {}
   'share:press:embed': {}
+
+  'thread:click:showOtherReplies': {}
+  'thread:preferences:load': {
+    [key: string]: any
+  }
+  'thread:preferences:update': {
+    [key: string]: any
+  }
 }
