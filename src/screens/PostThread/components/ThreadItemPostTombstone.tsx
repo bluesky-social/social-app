@@ -19,10 +19,10 @@ export function ThreadItemPostTombstone({type}: ThreadItemPostTombstoneProps) {
   const {copy, Icon} = useMemo(() => {
     switch (type) {
       case 'blocked':
-        return {copy: _(msg`Post blocked.`), Icon: PersonXIcon}
+        return {copy: _(msg`Post blocked`), Icon: PersonXIcon}
       case 'not-found':
       default:
-        return {copy: _(msg`Post not found.`), Icon: TrashIcon}
+        return {copy: _(msg`Post not found`), Icon: TrashIcon}
     }
   }, [_, type])
 
@@ -46,7 +46,7 @@ export function ThreadItemPostTombstone({type}: ThreadItemPostTombstoneProps) {
         <View style={[a.flex_row, a.justify_center, {width: LINEAR_AVI_WIDTH}]}>
           <Icon style={[t.atoms.text_contrast_medium]} />
         </View>
-        <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
           {copy}
         </Text>
       </View>

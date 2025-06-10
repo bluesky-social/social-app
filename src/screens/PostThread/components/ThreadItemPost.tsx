@@ -93,7 +93,6 @@ function ThreadItemPostDeleted({
         style={[
           a.flex_row,
           a.align_center,
-          a.gap_sm,
           a.py_md,
           a.rounded_sm,
           t.atoms.bg_contrast_25,
@@ -107,10 +106,10 @@ function ThreadItemPostDeleted({
               width: LINEAR_AVI_WIDTH,
             },
           ]}>
-          <TrashIcon style={[t.atoms.text]} />
+          <TrashIcon style={[t.atoms.text_contrast_medium]} />
         </View>
-        <Text style={[t.atoms.text_contrast_medium, a.mt_2xs]}>
-          <Trans>This post has been deleted.</Trans>
+        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+          <Trans>Post has been deleted</Trans>
         </Text>
       </View>
 
