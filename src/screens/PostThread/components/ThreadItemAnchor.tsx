@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import {memo,useCallback, useMemo} from 'react'
 import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -60,7 +60,7 @@ import {VerificationCheckButton} from '#/components/verification/VerificationChe
 import {WhoCanReply} from '#/components/WhoCanReply'
 import * as bsky from '#/types/bsky'
 
-export function ThreadAnchor({
+export function ThreadItemAnchor({
   item,
   onPostSuccess,
   threadgateRecord,
@@ -74,11 +74,11 @@ export function ThreadAnchor({
   const isRoot = threadRootUri === item.uri
 
   if (postShadow === POST_TOMBSTONE) {
-    return <PostThreadItemDeleted isRoot={isRoot} />
+    return <ThreadItemAnchorDeleted isRoot={isRoot} />
   }
 
   return (
-    <PostThreadItemLoaded
+    <ThreadItemAnchorInner
       // Safeguard from clobbering per-post state below:
       key={postShadow.uri}
       item={item}
@@ -90,7 +90,7 @@ export function ThreadAnchor({
   )
 }
 
-function PostThreadItemDeleted({isRoot}: {isRoot: boolean}) {
+function ThreadItemAnchorDeleted({isRoot}: {isRoot: boolean}) {
   const t = useTheme()
 
   return (
@@ -155,7 +155,7 @@ function ThreadItemAnchorParentReplyLine({isRoot}: {isRoot: boolean}) {
   ) : null
 }
 
-let PostThreadItemLoaded = ({
+const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   item,
   isRoot,
   postShadow,
@@ -167,7 +167,7 @@ let PostThreadItemLoaded = ({
   postShadow: Shadow<AppBskyFeedDefs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
-}): React.ReactNode => {
+}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {openComposer} = useOpenComposer()
@@ -192,15 +192,15 @@ let PostThreadItemLoaded = ({
   const authorTitle = post.author.handle
   const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
 
-  const likesHref = React.useMemo(() => {
+  const likesHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
   }, [post.uri, post.author])
-  const repostsHref = React.useMemo(() => {
+  const repostsHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
-  const quotesHref = React.useMemo(() => {
+  const quotesHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
   }, [post.uri, post.author])
@@ -208,7 +208,7 @@ let PostThreadItemLoaded = ({
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,
   })
-  const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
+  const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
     const isControlledByViewer =
       new AtUri(threadRootUri).host === currentAccount?.did
@@ -228,7 +228,7 @@ let PostThreadItemLoaded = ({
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -425,7 +425,7 @@ let PostThreadItemLoaded = ({
       </View>
     </>
   )
-}
+})
 
 function ExpandedPostDetails({
   post,
@@ -452,7 +452,7 @@ function ExpandedPostDetails({
     [post, langPrefs.primaryLanguage],
   )
 
-  const onTranslatePress = React.useCallback(
+  const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
       openLink(translatorUrl, true)
@@ -609,7 +609,7 @@ function getThreadAuthor(
   }
 }
 
-export function ThreadAnchorSkeleton() {
+export function ThreadItemAnchorSkeleton() {
   return (
     <View style={[a.p_lg, a.gap_md]}>
       <Skele.Row style={[a.align_center, a.gap_md]}>

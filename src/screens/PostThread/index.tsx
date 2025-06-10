@@ -15,11 +15,11 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
-import {
-  ThreadAnchor,
-  ThreadAnchorSkeleton,
-} from '#/screens/PostThread/components/ThreadAnchor'
 import {ThreadError} from '#/screens/PostThread/components/ThreadError'
+import {
+  ThreadItemAnchor,
+  ThreadItemAnchorSkeleton,
+} from '#/screens/PostThread/components/ThreadItemAnchor'
 import {ThreadItemAnchorNoUnauthenticated} from '#/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated'
 import {
   ThreadItemPost,
@@ -378,7 +378,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
                 ref={anchorRef}
                 onLayout={() => setDeferParents(false)}
               />
-              <ThreadAnchor
+              <ThreadItemAnchor
                 item={item}
                 threadgateRecord={thread.data.threadgate?.record ?? undefined}
                 onPostSuccess={optimisticOnPostReply}
@@ -441,7 +441,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
         return <ThreadItemShowOtherReplies onPress={item.onPress} />
       } else if (item.type === 'skeleton') {
         if (item.item === 'anchor') {
-          return <ThreadAnchorSkeleton />
+          return <ThreadItemAnchorSkeleton />
         } else if (item.item === 'reply') {
           if (thread.state.view === 'linear') {
             return <ThreadItemPostSkeleton index={index} />
