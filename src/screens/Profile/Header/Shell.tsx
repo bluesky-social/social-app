@@ -1,4 +1,4 @@
-import React, {memo, useEffect} from 'react'
+import {memo, useCallback, useEffect, useMemo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import Animated, {
   measure,
@@ -62,7 +62,7 @@ let ProfileHeaderShell = ({
 
   const aviRef = useAnimatedRef()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -70,7 +70,7 @@ let ProfileHeaderShell = ({
     }
   }, [navigation])
 
-  const _openLightbox = React.useCallback(
+  const _openLightbox = useCallback(
     (uri: string, thumbRect: MeasuredDimensions | null) => {
       openLightbox({
         images: [
@@ -93,19 +93,7 @@ let ProfileHeaderShell = ({
     [openLightbox],
   )
 
-  const onPressAvi = React.useCallback(() => {
-    const modui = moderation.ui('avatar')
-    const avatar = profile.avatar
-    if (avatar && !(modui.blur && modui.noOverride)) {
-      runOnUI(() => {
-        'worklet'
-        const rect = measure(aviRef)
-        runOnJS(_openLightbox)(avatar, rect)
-      })()
-    }
-  }, [profile, moderation, _openLightbox, aviRef])
-
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
@@ -122,7 +110,7 @@ let ProfileHeaderShell = ({
     }
   }, [live.isActive, profile.did])
 
-  const onPressAvi = React.useCallback(() => {
+  const onPressAvi = useCallback(() => {
     if (live.isActive) {
       playHaptic('Light')
       logger.metric(
@@ -135,10 +123,9 @@ let ProfileHeaderShell = ({
       const modui = moderation.ui('avatar')
       const avatar = profile.avatar
       if (avatar && !(modui.blur && modui.noOverride)) {
-        const aviHandle = aviRef.current
         runOnUI(() => {
           'worklet'
-          const rect = measureHandle(aviHandle)
+          const rect = measure(aviRef)
           runOnJS(_openLightbox)(avatar, rect)
         })()
       }
