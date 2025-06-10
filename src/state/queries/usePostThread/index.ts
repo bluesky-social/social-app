@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {wait} from '#/lib/async/wait'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
@@ -163,13 +162,10 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: additionalQueryEnabled,
     queryKey: postThreadOtherQueryKey,
     async queryFn() {
-      const {data} = await wait(
-        400,
-        agent.app.bsky.unspecced.getPostThreadOtherV2({
-          anchor: anchor!,
-          prioritizeFollowedUsers,
-        }),
-      )
+      const {data} = await agent.app.bsky.unspecced.getPostThreadOtherV2({
+        anchor: anchor!,
+        prioritizeFollowedUsers,
+      })
       return data
     },
   })
