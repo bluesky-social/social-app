@@ -133,14 +133,14 @@ export function ThreadPreferencesV2() {
             <Toggle.Item
               type="checkbox"
               name="threaded-mode"
-              label={_(msg`Threaded mode`)}
+              label={_(msg`Tree view`)}
               value={view === 'tree'}
               onChange={value =>
                 setView(normalizeView({treeViewEnabled: value}))
               }
               style={[a.w_full, a.gap_md]}>
               <Toggle.LabelText style={[a.flex_1]}>
-                <Trans>Show replies as threaded</Trans>
+                <Trans>Show post replies in a threaded tree view</Trans>
               </Toggle.LabelText>
               <Toggle.Platform />
             </Toggle.Item>
