@@ -21,6 +21,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
+import {Tree_Stroke2_Corner0_Rounded as TreeIcon} from '#/components/icons/Tree'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import * as SettingsList from './components/SettingsList'
@@ -125,7 +126,7 @@ export function ThreadPreferencesV2() {
           </SettingsList.Group>
 
           <SettingsList.Group>
-            <SettingsList.ItemIcon icon={BeakerIcon} />
+            <SettingsList.ItemIcon icon={TreeIcon} />
             <SettingsList.ItemText>
               <Trans>Tree view</Trans>
             </SettingsList.ItemText>
