@@ -2,7 +2,8 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -22,6 +23,7 @@ export function ViewFullThread({uri}: {uri: string}) {
     const urip = new AtUri(uri)
     return makeProfileLink({did: urip.hostname, handle: ''}, 'post', urip.rkey)
   }, [uri])
+  const {_} = useLingui()
 
   return (
     <Link
@@ -53,7 +55,8 @@ export function ViewFullThread({uri}: {uri: string}) {
       </View>
 
       <Text type="md" style={[pal.link, {paddingTop: 18, paddingBottom: 4}]}>
-        <Trans>View full thread</Trans>
+        {/* HACKFIX: Trans isn't working after SDK 53 upgrade -sfn */}
+        {_(msg`View full thread`)}
       </Text>
     </Link>
   )

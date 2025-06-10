@@ -4,8 +4,7 @@ import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {NavigationProp} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
+import {type NavigationProp} from '#/lib/routes/types'
 import {Logger} from '#/logger'
 import {isAndroid} from '#/platform/detection'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
@@ -17,7 +16,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {resetToTab} from '#/Navigation'
 
-type NotificationReason =
+export type NotificationReason =
   | 'like'
   | 'repost'
   | 'follow'
@@ -27,7 +26,13 @@ type NotificationReason =
   | 'chat-message'
   | 'starterpack-joined'
 
+/**
+ * Manually overridden type, but retains the possibility of
+ * `notification.request.trigger.payload` being `undefined`, as specified in
+ * the source types.
+ */
 type NotificationPayload =
+  | undefined
   | {
       reason: Exclude<NotificationReason, 'chat-message'>
       uri: string
@@ -41,13 +46,14 @@ type NotificationPayload =
     }
 
 const DEFAULT_HANDLER_OPTIONS = {
-  shouldShowAlert: false,
+  shouldShowBanner: false,
+  shouldShowList: false,
   shouldPlaySound: false,
   shouldSetBadge: true,
-}
+} satisfies Notifications.NotificationBehavior
 
 // These need to stay outside the hook to persist between account switches
-let storedPayload: NotificationPayload | undefined
+let storedPayload: NotificationPayload
 let prevDate = 0
 
 const logger = Logger.create(Logger.Context.Notifications)
@@ -191,15 +197,22 @@ export function useNotificationsHandler() {
         logger.debug('Notifications: received', {e})
 
         const payload = e.request.trigger.payload as NotificationPayload
+
+        if (!payload) {
+          return DEFAULT_HANDLER_OPTIONS
+        }
+
         if (
           payload.reason === 'chat-message' &&
           payload.recipientDid === currentAccount?.did
         ) {
+          const shouldAlert = payload.convoId !== currentConvoId
           return {
-            shouldShowAlert: payload.convoId !== currentConvoId,
+            shouldShowList: shouldAlert,
+            shouldShowBanner: shouldAlert,
             shouldPlaySound: false,
             shouldSetBadge: false,
-          }
+          } satisfies Notifications.NotificationBehavior
         }
 
         // Any notification other than a chat message should invalidate the unread page
@@ -226,15 +239,24 @@ export function useNotificationsHandler() {
           'type' in e.notification.request.trigger &&
           e.notification.request.trigger.type === 'push'
         ) {
+          const payload = e.notification.request.trigger
+            .payload as NotificationPayload
+
+          if (!payload) return
+
           logger.debug(
             'User pressed a notification, opening notifications tab',
             {},
           )
-          logEvent('notifications:openApp', {})
+          logger.metric(
+            'notifications:openApp',
+            {reason: payload.reason},
+            {statsig: false},
+          )
+
           invalidateCachedUnreadPage()
-          const payload = e.notification.request.trigger
-            .payload as NotificationPayload
           truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
+
           if (
             payload.reason === 'mention' ||
             payload.reason === 'quote' ||
@@ -242,10 +264,12 @@ export function useNotificationsHandler() {
           ) {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
           }
+
           logger.debug('Notifications: handleNotification', {
             content: e.notification.request.content,
             payload: e.notification.request.trigger.payload,
           })
+
           handleNotification(payload)
           Notifications.dismissAllNotificationsAsync()
         }

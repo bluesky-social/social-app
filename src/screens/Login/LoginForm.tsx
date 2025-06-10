@@ -3,12 +3,12 @@ import {
   ActivityIndicator,
   Keyboard,
   LayoutAnimation,
-  TextInput,
+  type TextInput,
   View,
 } from 'react-native'
 import {
   ComAtprotoServerCreateSession,
-  ComAtprotoServerDescribeServer,
+  type ComAtprotoServerDescribeServer,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -215,7 +215,7 @@ export const LoginForm = ({
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
               editable={!isProcessing}
               accessibilityHint={_(
-                msg`Input the username or email address you used at signup`,
+                msg`Enter the username or email address you used when you created your account`,
               )}
             />
           </TextField.Root>

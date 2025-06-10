@@ -1,28 +1,29 @@
 import {createContext, useCallback, useContext} from 'react'
-import {GestureResponderEvent, Keyboard, View} from 'react-native'
+import {type GestureResponderEvent, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {
   atoms as a,
   platform,
-  TextStyleProp,
+  type TextStyleProp,
   useBreakpoints,
   useGutters,
   useLayoutBreakpoints,
   useTheme,
   web,
 } from '#/alf'
-import {Button, ButtonIcon, ButtonProps} from '#/components/Button'
+import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {
   BUTTON_VISUAL_ALIGNMENT_OFFSET,
+  CENTER_COLUMN_OFFSET,
   HEADER_SLOT_SIZE,
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
@@ -65,7 +66,7 @@ export function Outer({
         gtMobile && [a.mx_auto, {maxWidth: 600}],
         !isWithinOffsetView && {
           transform: [
-            {translateX: centerColumnOffset ? -150 : 0},
+            {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
             {translateX: web(SCROLLBAR_OFFSET) ?? 0},
           ],
         },

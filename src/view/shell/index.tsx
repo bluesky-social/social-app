@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useState} from 'react'
 import {BackHandler, useWindowDimensions, View} from 'react-native'
 import {Drawer} from 'react-native-drawer-layout'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {StatusBar} from 'expo-status-bar'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
@@ -19,13 +19,14 @@ import {
   useIsDrawerSwipeDisabled,
   useSetDrawerOpen,
 } from '#/state/shell'
-import {useLightStatusBar} from '#/state/shell/light-status-bar'
 import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
-import {setNavigationBar} from '#/alf/util/navigationBar'
+import {setSystemUITheme} from '#/alf/util/systemUI'
+import {EmailDialog} from '#/components/dialogs/EmailDialog'
+import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
@@ -152,6 +153,8 @@ function ShellInner() {
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
+      <EmailDialog />
+      <InAppBrowserConsentDialog />
       <Lightbox />
       <PortalOutlet />
       <BottomSheetOutlet />
@@ -161,25 +164,23 @@ function ShellInner() {
 
 export const Shell: React.FC = function ShellImpl() {
   const {fullyExpandedCount} = useDialogStateControlContext()
-  const lightStatusBar = useLightStatusBar()
   const t = useTheme()
   useIntentHandler()
 
   useEffect(() => {
-    setNavigationBar('theme', t)
+    setSystemUITheme('theme', t)
   }, [t])
 
   return (
     <View testID="mobileShellView" style={[a.h_full, t.atoms.bg]}>
-      <StatusBar
-        style={
-          t.name !== 'light' ||
-          (isIOS && fullyExpandedCount > 0) ||
-          lightStatusBar
-            ? 'light'
-            : 'dark'
-        }
-        animated
+      <SystemBars
+        style={{
+          statusBar:
+            t.name !== 'light' || (isIOS && fullyExpandedCount > 0)
+              ? 'light'
+              : 'dark',
+          navigationBar: t.name !== 'light' ? 'light' : 'dark',
+        }}
       />
       <RoutesContainer>
         <ShellInner />

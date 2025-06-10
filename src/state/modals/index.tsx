@@ -1,14 +1,7 @@
 import React from 'react'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
+import {type AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-
-export interface EditProfileModal {
-  name: 'edit-profile'
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  onUpdate?: () => void
-}
 
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
@@ -24,24 +17,6 @@ export interface UserAddRemoveListsModal {
   displayName: string
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
-}
-
-export interface ListAddRemoveUsersModal {
-  name: 'list-add-remove-users'
-  list: AppBskyGraphDefs.ListView
-  onChange?: (
-    type: 'add' | 'remove',
-    profile: AppBskyActorDefs.ProfileViewBasic,
-  ) => void
-}
-
-export interface CropImageModal {
-  name: 'crop-image'
-  uri: string
-  dimensions?: {width: number; height: number}
-  aspect?: number
-  circular?: boolean
-  onSelect: (img?: RNImage) => void
 }
 
 export interface DeleteAccountModal {
@@ -64,16 +39,6 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
-export interface VerifyEmailModal {
-  name: 'verify-email'
-  showReminder?: boolean
-  onSuccess?: () => void
-}
-
-export interface ChangeEmailModal {
-  name: 'change-email'
-}
-
 export interface ChangePasswordModal {
   name: 'change-password'
 }
@@ -85,20 +50,10 @@ export interface LinkWarningModal {
   share?: boolean
 }
 
-export interface InAppBrowserConsentModal {
-  name: 'in-app-browser-consent'
-  href: string
-}
-
 export type Modal =
   // Account
   | DeleteAccountModal
-  | VerifyEmailModal
-  | ChangeEmailModal
   | ChangePasswordModal
-
-  // Temp
-  | EditProfileModal
 
   // Curation
   | ContentLanguagesSettingsModal
@@ -107,10 +62,6 @@ export type Modal =
   // Lists
   | CreateOrEditListModal
   | UserAddRemoveListsModal
-  | ListAddRemoveUsersModal
-
-  // Posts
-  | CropImageModal
 
   // Bluesky access
   | WaitlistModal
@@ -118,7 +69,6 @@ export type Modal =
 
   // Generic
   | LinkWarningModal
-  | InAppBrowserConsentModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean
@@ -137,20 +87,6 @@ const ModalControlContext = React.createContext<{
   closeModal: () => false,
   closeAllModals: () => false,
 })
-
-/**
- * @deprecated DO NOT USE THIS unless you have no other choice.
- */
-export let unstable__openModal: (modal: Modal) => void = () => {
-  throw new Error(`ModalContext is not initialized`)
-}
-
-/**
- * @deprecated DO NOT USE THIS unless you have no other choice.
- */
-export let unstable__closeModal: () => boolean = () => {
-  throw new Error(`ModalContext is not initialized`)
-}
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeModals, setActiveModals] = React.useState<Modal[]>([])
@@ -172,9 +108,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     setActiveModals([])
     return wasActive
   })
-
-  unstable__openModal = openModal
-  unstable__closeModal = closeModal
 
   const state = React.useMemo(
     () => ({

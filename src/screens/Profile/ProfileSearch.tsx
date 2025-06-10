@@ -2,11 +2,14 @@ import {useMemo} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
-import {SearchScreenShell} from '#/view/screens/Search/Search'
+import {SearchScreenShell} from '#/screens/Search/Shell'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileSearch'>
 export const ProfileSearchScreen = ({route}: Props) => {

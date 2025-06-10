@@ -33,27 +33,28 @@ import {Provider as PrefsStateProvider} from '#/state/preferences'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
+import {Provider as ServiceConfigProvider} from '#/state/service-config'
 import {
   Provider as SessionProvider,
-  SessionAccount,
+  type SessionAccount,
   useSession,
   useSessionApi,
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
-import {Provider as LightStatusBarProvider} from '#/state/shell/light-status-bar'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
-import {Provider as TrendingConfigProvider} from '#/state/trending-config'
+import {Provider as UnstablePostSourceProvider} from '#/state/unstable-post-source'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
@@ -107,54 +108,58 @@ function InnerApp() {
   return (
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
-        <RootSiblingParent>
-          <VideoVolumeProvider>
-            <ActiveVideoProvider>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <ComposerProvider>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <HomeBadgeProvider>
-                                    <UnreadNotifsProvider>
-                                      <BackgroundNotificationPreferencesProvider>
-                                        <MutedThreadsProvider>
-                                          <SafeAreaProvider>
-                                            <ProgressGuideProvider>
-                                              <TrendingConfigProvider>
-                                                <IntentDialogProvider>
-                                                  <Shell />
-                                                  <NuxDialogs />
-                                                </IntentDialogProvider>
-                                              </TrendingConfigProvider>
-                                            </ProgressGuideProvider>
-                                          </SafeAreaProvider>
-                                        </MutedThreadsProvider>
-                                      </BackgroundNotificationPreferencesProvider>
-                                    </UnreadNotifsProvider>
-                                  </HomeBadgeProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
-                  </ComposerProvider>
-                </QueryProvider>
-                <ToastContainer />
-              </React.Fragment>
-            </ActiveVideoProvider>
-          </VideoVolumeProvider>
-        </RootSiblingParent>
+        <ContextMenuProvider>
+          <RootSiblingParent>
+            <VideoVolumeProvider>
+              <ActiveVideoProvider>
+                <React.Fragment
+                  // Resets the entire tree below when it changes:
+                  key={currentAccount?.did}>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <ComposerProvider>
+                      <StatsigProvider>
+                        <MessagesProvider>
+                          {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                          <LabelDefsProvider>
+                            <ModerationOptsProvider>
+                              <LoggedOutViewProvider>
+                                <SelectedFeedProvider>
+                                  <HiddenRepliesProvider>
+                                    <HomeBadgeProvider>
+                                      <UnreadNotifsProvider>
+                                        <BackgroundNotificationPreferencesProvider>
+                                          <MutedThreadsProvider>
+                                            <SafeAreaProvider>
+                                              <ProgressGuideProvider>
+                                                <ServiceConfigProvider>
+                                                  <UnstablePostSourceProvider>
+                                                    <IntentDialogProvider>
+                                                      <Shell />
+                                                      <NuxDialogs />
+                                                    </IntentDialogProvider>
+                                                  </UnstablePostSourceProvider>
+                                                </ServiceConfigProvider>
+                                              </ProgressGuideProvider>
+                                            </SafeAreaProvider>
+                                          </MutedThreadsProvider>
+                                        </BackgroundNotificationPreferencesProvider>
+                                      </UnreadNotifsProvider>
+                                    </HomeBadgeProvider>
+                                  </HiddenRepliesProvider>
+                                </SelectedFeedProvider>
+                              </LoggedOutViewProvider>
+                            </ModerationOptsProvider>
+                          </LabelDefsProvider>
+                        </MessagesProvider>
+                      </StatsigProvider>
+                    </ComposerProvider>
+                  </QueryProvider>
+                  <ToastContainer />
+                </React.Fragment>
+              </ActiveVideoProvider>
+            </VideoVolumeProvider>
+          </RootSiblingParent>
+        </ContextMenuProvider>
       </ThemeProvider>
     </Alf>
   )
@@ -190,9 +195,7 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <LightStatusBarProvider>
-                              <InnerApp />
-                            </LightStatusBarProvider>
+                            <InnerApp />
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>

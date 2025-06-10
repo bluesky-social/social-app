@@ -8,16 +8,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import Animated, {FadeOut} from 'react-native-reanimated'
 import {LinearGradient} from 'expo-linear-gradient'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {MAX_DESCRIPTION, MAX_DISPLAY_NAME} from '#/lib/constants'
+import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {compressIfNeeded} from '#/lib/media/manip'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {cleanError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {colors, gradients, s} from '#/lib/styles'
@@ -30,6 +30,9 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
+import {Admonition} from '#/components/Admonition'
+import {InlineLinkText} from '#/components/Link'
+import {useSimpleVerificationState} from '#/components/verification'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 
 const AnimatedTouchableOpacity =
@@ -50,6 +53,7 @@ export function Component({
   const {closeModal} = useModalControls()
   const updateMutation = useProfileUpdateMutation()
   const [imageError, setImageError] = useState<string>('')
+  const initialDisplayName = profile.displayName || ''
   const [displayName, setDisplayName] = useState<string>(
     profile.displayName || '',
   )
@@ -63,16 +67,16 @@ export function Component({
     profile.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<
-    RNImage | undefined | null
+    PickerImage | undefined | null
   >()
   const [newUserAvatar, setNewUserAvatar] = useState<
-    RNImage | undefined | null
+    PickerImage | undefined | null
   >()
   const onPressCancel = () => {
     closeModal()
   }
   const onSelectNewAvatar = useCallback(
-    async (img: RNImage | null) => {
+    async (img: PickerImage | null) => {
       setImageError('')
       if (img === null) {
         setNewUserAvatar(null)
@@ -91,7 +95,7 @@ export function Component({
   )
 
   const onSelectNewBanner = useCallback(
-    async (img: RNImage | null) => {
+    async (img: PickerImage | null) => {
       setImageError('')
       if (!img) {
         setNewUserBanner(null)
@@ -139,6 +143,9 @@ export function Component({
     setImageError,
     _,
   ])
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   return (
     <KeyboardAvoidingView style={s.flex1} behavior="height">
@@ -187,6 +194,24 @@ export function Component({
               accessibilityLabel={_(msg`Display name`)}
               accessibilityHint={_(msg`Edit your display name`)}
             />
+
+            {verification.isVerified &&
+              verification.role === 'default' &&
+              displayName !== initialDisplayName && (
+                <View style={{paddingTop: 8}}>
+                  <Admonition type="error">
+                    <Trans>
+                      You are verified. You will lose your verification status
+                      if you change your display name.{' '}
+                      <InlineLinkText
+                        label={_(msg`Learn more`)}
+                        to={urls.website.blog.initialVerificationAnnouncement}>
+                        <Trans>Learn more.</Trans>
+                      </InlineLinkText>
+                    </Trans>
+                  </Admonition>
+                </View>
+              )}
           </View>
           <View style={s.pb10}>
             <Text style={[styles.label, pal.text]}>

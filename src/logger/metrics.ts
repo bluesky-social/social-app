@@ -1,3 +1,6 @@
+import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
+import {type FeedDescriptor} from '#/state/queries/post-feed'
+
 export type MetricEvents = {
   // App events
   init: {
@@ -21,7 +24,9 @@ export type MetricEvents = {
       | 'Takendown'
     scope: 'current' | 'every'
   }
-  'notifications:openApp': {}
+  'notifications:openApp': {
+    reason: NotificationReason
+  }
   'notifications:request': {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
     status: 'granted' | 'denied' | 'undetermined'
@@ -51,6 +56,17 @@ export type MetricEvents = {
   }
   'signup:captchaSuccess': {}
   'signup:captchaFailure': {}
+  'signup:fieldError': {
+    field: string
+    errorCount: number
+    errorMessage: string
+    activeStep: number
+  }
+  'signup:backgrounded': {
+    activeStep: number
+    backgroundCount: number
+  }
+  'signup:handleTaken': {}
   'signin:hostingProviderPressed': {
     hostingProviderDidChange: boolean
   }
@@ -114,6 +130,33 @@ export type MetricEvents = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
+  'feed:save': {
+    feedUrl: string
+  }
+  'feed:unsave': {
+    feedUrl: string
+  }
+  'feed:pin': {
+    feedUrl: string
+  }
+  'feed:unpin': {
+    feedUrl: string
+  }
+  'feed:like': {
+    feedUrl: string
+  }
+  'feed:unlike': {
+    feedUrl: string
+  }
+  'feed:share': {
+    feedUrl: string
+  }
+  'feed:suggestion:seen': {
+    feedUrl: string
+  }
+  'feed:suggestion:press': {
+    feedUrl: string
+  }
   'discover:showMore': {
     feedContext: string
   }
@@ -135,7 +178,11 @@ export type MetricEvents = {
 
   // Data events
   'account:create:begin': {}
-  'account:create:success': {}
+  'account:create:success': {
+    signupDuration: number
+    fieldErrorsTotal: number
+    backgroundCount: number
+  }
   'post:create': {
     imageCount: number
     isReply: boolean
@@ -155,15 +202,19 @@ export type MetricEvents = {
     likerClout: number | undefined
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:repost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:unlike': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:unrepost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:mute': {}
   'post:unmute': {}
@@ -187,6 +238,7 @@ export type MetricEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
+      | 'ExploreSuggestedAccounts'
   }
   'suggestedUser:follow': {
     logContext:
@@ -224,6 +276,7 @@ export type MetricEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
+      | 'ExploreSuggestedAccounts'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -303,6 +356,22 @@ export type MetricEvents = {
     context: 'interstitial:discover' | 'interstitial:explore' | 'feed'
   }
 
+  'explore:module:seen': {
+    module:
+      | 'trendingTopics'
+      | 'trendingVideos'
+      | 'suggestedAccounts'
+      | 'suggestedFeeds'
+      | 'suggestedStarterPacks'
+      | `feed:${FeedDescriptor}`
+  }
+  'explore:module:searchButtonPress': {
+    module: 'suggestedAccounts' | 'suggestedFeeds'
+  }
+  'explore:suggestedAccounts:tabPressed': {
+    tab: string
+  }
+
   'progressGuide:hide': {}
   'progressGuide:followDialog:open': {}
 
@@ -329,4 +398,40 @@ export type MetricEvents = {
     details: boolean
   }
   'reportDialog:failure': {}
+
+  translate: {
+    sourceLanguages: string[]
+    targetLanguage: string
+    textLength: number
+  }
+
+  'verification:create': {}
+  'verification:revoke': {}
+  'verification:badge:click': {}
+  'verification:learn-more': {
+    location:
+      | 'initialAnnouncementeNux'
+      | 'verificationsDialog'
+      | 'verifierDialog'
+      | 'verificationSettings'
+  }
+  'verification:settings:hideBadges': {}
+  'verification:settings:unHideBadges': {}
+
+  'live:create': {duration: number}
+  'live:edit': {}
+  'live:remove': {}
+  'live:card:open': {subject: string; from: 'post' | 'profile'}
+  'live:card:watch': {subject: string}
+  'live:card:openProfile': {subject: string}
+  'live:view:profile': {subject: string}
+  'live:view:post': {subject: string; feed?: string}
+
+  'share:open': {context: 'feed' | 'thread'}
+  'share:press:copyLink': {}
+  'share:press:nativeShare': {}
+  'share:press:openDmSearch': {}
+  'share:press:dmSelected': {}
+  'share:press:recentDm': {}
+  'share:press:embed': {}
 }

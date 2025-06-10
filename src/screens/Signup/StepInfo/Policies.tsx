@@ -1,6 +1,6 @@
-import {ReactElement} from 'react'
+import {type ReactElement} from 'react'
 import {View} from 'react-native'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -103,7 +103,9 @@ export const Policies = ({
 
       {under13 ? (
         <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
-          <Trans>You must be 13 years of age or older to sign up.</Trans>
+          <Trans>
+            You must be 13 years of age or older to create an account.
+          </Trans>
         </Text>
       ) : needsGuardian ? (
         <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>

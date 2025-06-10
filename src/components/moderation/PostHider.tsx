@@ -1,6 +1,6 @@
-import React, {ComponentProps} from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {AppBskyActorDefs, ModerationCause, ModerationUI} from '@atproto/api'
+import React, {type ComponentProps} from 'react'
+import {Pressable, type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
+import {type AppBskyActorDefs, type ModerationCause, type ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -114,7 +114,9 @@ export function PostHider({
           <desc.icon size="sm" fill={t.atoms.text_contrast_medium.color} />
         </View>
       </Pressable>
-      <Text style={[t.atoms.text_contrast_medium, a.flex_1]} numberOfLines={1}>
+      <Text
+        style={[t.atoms.text_contrast_medium, a.flex_1, a.leading_snug]}
+        numberOfLines={1}>
         {desc.name}
       </Text>
       {!modui.noOverride && (

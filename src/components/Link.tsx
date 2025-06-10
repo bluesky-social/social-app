@@ -1,12 +1,16 @@
-import React from 'react'
-import {GestureResponderEvent} from 'react-native'
+import React, {useMemo} from 'react'
+import {type GestureResponderEvent} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
-import {StackActions, useLinkProps} from '@react-navigation/native'
+import {
+  type LinkProps as RNLinkProps,
+  StackActions,
+  useLinkBuilder,
+} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {AllNavigatorParams} from '#/lib/routes/types'
+import {type AllNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
@@ -16,10 +20,10 @@ import {
 } from '#/lib/strings/url-helpers'
 import {isNative, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
-import {Button, ButtonProps} from '#/components/Button'
+import {atoms as a, flatten, type TextStyleProp, useTheme, web} from '#/alf'
+import {Button, type ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Text, TextProps} from '#/components/Typography'
+import {Text, type TextProps} from '#/components/Typography'
 import {router} from '#/routes'
 
 /**
@@ -28,11 +32,10 @@ import {router} from '#/routes'
  */
 export {useButtonContext as useLinkContext} from '#/components/Button'
 
-type BaseLinkProps = Pick<
-  Parameters<typeof useLinkProps<AllNavigatorParams>>[0],
-  'to'
-> & {
+type BaseLinkProps = {
   testID?: string
+
+  to: RNLinkProps<AllNavigatorParams> | string
 
   /**
    * The React Navigation `StackAction` to perform when the link is pressed.
@@ -92,10 +95,23 @@ export function useLink({
   shouldProxy?: boolean
 }) {
   const navigation = useNavigationDeduped()
-  const {href} = useLinkProps<AllNavigatorParams>({
-    to:
-      typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
-  })
+  const {buildHref} = useLinkBuilder()
+  const href = useMemo(() => {
+    return typeof to === 'string'
+      ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
+      : to.screen
+      ? buildHref(to.screen, to.params)
+      : to.href
+      ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
+      : undefined
+  }, [to, buildHref])
+
+  if (!href) {
+    throw new Error(
+      'Link `to` prop must be a string or an object with `screen` and `params` properties',
+    )
+  }
+
   const isExternal = isExternalUrl(href)
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
@@ -210,7 +226,9 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
-  Omit<ButtonProps, 'onPress' | 'disabled'>
+  Omit<ButtonProps, 'onPress' | 'disabled'> & {
+    overridePresentation?: boolean
+  }
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -228,6 +246,7 @@ export function Link({
   onLongPress: outerOnLongPress,
   download,
   shouldProxy,
+  overridePresentation,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress, onLongPress} = useLink({
@@ -237,6 +256,7 @@ export function Link({
     onPress: outerOnPress,
     onLongPress: outerOnLongPress,
     shouldProxy: shouldProxy,
+    overridePresentation,
   })
 
   return (
@@ -267,7 +287,7 @@ export function Link({
 export type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps &
     TextStyleProp &
-    Pick<TextProps, 'selectable' | 'numberOfLines'> &
+    Pick<TextProps, 'selectable' | 'numberOfLines' | 'emoji'> &
     Pick<ButtonProps, 'label' | 'accessibilityHint'> & {
       disableUnderline?: boolean
       title?: TextProps['title']

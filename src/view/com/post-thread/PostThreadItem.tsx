@@ -1,6 +1,6 @@
-import React, {memo, useMemo} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {
-  GestureResponderEvent,
+  type GestureResponderEvent,
   StyleSheet,
   Text as RNText,
   View,
@@ -8,15 +8,17 @@ import {
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyFeedThreadgate,
+  type AppBskyFeedThreadgate,
   AtUri,
-  ModerationDecision,
+  type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {MAX_POST_LINES} from '#/lib/constants'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -26,17 +28,23 @@ import {countLines} from '#/lib/strings/helpers'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
 import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
-import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {logger} from '#/logger'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
-import {ThreadPost} from '#/state/queries/post-thread'
+import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {useUnstablePostSource} from '#/state/unstable-post-source'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {Link, TextLink} from '#/view/com/util/Link'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -51,12 +59,14 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
-import {AppModerationCause} from '#/components/Pills'
+import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {PostControls} from '#/components/PostControls'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
+import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
 import * as bsky from '#/types/bsky'
 
@@ -193,17 +203,21 @@ let PostThreadItemLoaded = ({
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
+  const {currentAccount, hasSession} = useSession()
+  const source = useUnstablePostSource(post.uri)
+  const feedFeedback = useFeedFeedback(source?.feed, hasSession)
+
   const t = useTheme()
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const {openComposer} = useComposerControls()
-  const [limitLines, setLimitLines] = React.useState(
+  const {openComposer} = useOpenComposer()
+  const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
-  const {currentAccount} = useSession()
+  const shadowedPostAuthor = useProfileShadow(post.author)
   const rootUri = record.reply?.root?.uri || post.uri
-  const postHref = React.useMemo(() => {
+  const postHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
@@ -211,12 +225,12 @@ let PostThreadItemLoaded = ({
   const authorHref = makeProfileLink(post.author)
   const authorTitle = post.author.handle
   const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
-  const likesHref = React.useMemo(() => {
+  const likesHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
   }, [post.uri, post.author])
   const likesTitle = _(msg`Likes on this post`)
-  const repostsHref = React.useMemo(() => {
+  const repostsHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
@@ -224,7 +238,7 @@ let PostThreadItemLoaded = ({
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,
   })
-  const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
+  const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
     const isControlledByViewer = new AtUri(rootUri).host === currentAccount?.did
     return isControlledByViewer && isPostHiddenByThreadgate
@@ -237,7 +251,7 @@ let PostThreadItemLoaded = ({
         ]
       : []
   }, [post, currentAccount?.did, threadgateHiddenReplies, rootUri])
-  const quotesHref = React.useMemo(() => {
+  const quotesHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
   }, [post.uri, post.author])
@@ -261,7 +275,15 @@ let PostThreadItemLoaded = ({
     [post, langPrefs.primaryLanguage],
   )
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = () => {
+    if (source) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#interactionReply',
+        feedContext: source.post.feedContext,
+        reqId: source.post.reqId,
+      })
+    }
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -273,11 +295,45 @@ let PostThreadItemLoaded = ({
       },
       onPost: onPostReply,
     })
-  }, [openComposer, post, record, onPostReply, moderation])
+  }
 
-  const onPressShowMore = React.useCallback(() => {
+  const onOpenAuthor = () => {
+    if (source) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#clickthroughAuthor',
+        feedContext: source.post.feedContext,
+        reqId: source.post.reqId,
+      })
+    }
+  }
+
+  const onOpenEmbed = () => {
+    if (source) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#clickthroughEmbed',
+        feedContext: source.post.feedContext,
+        reqId: source.post.reqId,
+      })
+    }
+  }
+
+  const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
+
+  const {isActive: live} = useActorStatus(post.author)
+
+  const reason = source?.post.reason
+  const viaRepost = useMemo(() => {
+    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+      return {
+        uri: reason.uri,
+        cid: reason.cid,
+      }
+    }
+  }, [reason])
 
   if (!record) {
     return <ErrorMessage message={_(msg`Invalid or unsupported post record`)} />
@@ -298,10 +354,8 @@ let PostThreadItemLoaded = ({
               <View
                 style={[
                   styles.replyLine,
-                  {
-                    flexGrow: 1,
-                    backgroundColor: pal.colors.replyLine,
-                  },
+                  a.flex_grow,
+                  {backgroundColor: pal.colors.replyLine},
                 ]}
               />
             </View>
@@ -322,20 +376,40 @@ let PostThreadItemLoaded = ({
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              live={live}
+              onBeforePress={onOpenAuthor}
             />
             <View style={[a.flex_1]}>
-              <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                <Text
-                  emoji
-                  style={[a.text_lg, a.font_bold, a.leading_snug, a.self_start]}
-                  numberOfLines={1}>
-                  {sanitizeDisplayName(
-                    post.author.displayName ||
-                      sanitizeHandle(post.author.handle),
-                    moderation.ui('displayName'),
-                  )}
-                </Text>
-              </Link>
+              <View style={[a.flex_row, a.align_center]}>
+                <Link
+                  style={[a.flex_shrink]}
+                  href={authorHref}
+                  title={authorTitle}
+                  onBeforePress={onOpenAuthor}>
+                  <Text
+                    emoji
+                    style={[
+                      a.text_lg,
+                      a.font_bold,
+                      a.leading_snug,
+                      a.self_start,
+                    ]}
+                    numberOfLines={1}>
+                    {sanitizeDisplayName(
+                      post.author.displayName ||
+                        sanitizeHandle(post.author.handle),
+                      moderation.ui('displayName'),
+                    )}
+                  </Text>
+                </Link>
+
+                <View style={[{paddingLeft: 3, top: -1}]}>
+                  <VerificationCheckButton
+                    profile={shadowedPostAuthor}
+                    size="md"
+                  />
+                </View>
+              </View>
               <Link style={s.flex1} href={authorHref} title={authorTitle}>
                 <Text
                   emoji
@@ -384,6 +458,7 @@ let PostThreadItemLoaded = ({
                     embed={post.embed}
                     moderation={moderation}
                     viewContext={PostEmbedViewContext.ThreadHighlighted}
+                    onOpen={onOpenEmbed}
                   />
                 </View>
               )}
@@ -465,16 +540,21 @@ let PostThreadItemLoaded = ({
                   marginLeft: -5,
                 },
               ]}>
-              <PostCtrls
-                big
-                post={post}
-                record={record}
-                richText={richText}
-                onPressReply={onPressReply}
-                onPostReply={onPostReply}
-                logContext="PostThreadItem"
-                threadgateRecord={threadgateRecord}
-              />
+              <FeedFeedbackProvider value={feedFeedback}>
+                <PostControls
+                  big
+                  post={post}
+                  record={record}
+                  richText={richText}
+                  onPressReply={onPressReply}
+                  onPostReply={onPostReply}
+                  logContext="PostThreadItem"
+                  threadgateRecord={threadgateRecord}
+                  feedContext={source?.post?.feedContext}
+                  reqId={source?.post?.reqId}
+                  viaRepost={viaRepost}
+                />
+              </FeedFeedbackProvider>
             </View>
           </View>
         </View>
@@ -550,6 +630,7 @@ let PostThreadItemLoaded = ({
                   profile={post.author}
                   moderation={moderation.ui('avatar')}
                   type={post.author.associated?.labeler ? 'labeler' : 'user'}
+                  live={live}
                 />
 
                 {showChildReplyLine && (
@@ -612,7 +693,7 @@ let PostThreadItemLoaded = ({
                   />
                 </View>
               )}
-              <PostCtrls
+              <PostControls
                 post={post}
                 record={record}
                 richText={richText}
@@ -747,14 +828,33 @@ function ExpandedPostDetails({
   const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
+  const langPrefs = useLanguagePrefs()
 
-  const onTranslatePress = React.useCallback(
+  const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
       openLink(translatorUrl, true)
+
+      if (
+        bsky.dangerousIsType<AppBskyFeedPost.Record>(
+          post.record,
+          AppBskyFeedPost.isRecord,
+        )
+      ) {
+        logger.metric(
+          'translate',
+          {
+            sourceLanguages: post.record.langs ?? [],
+            targetLanguage: langPrefs.primaryLanguage,
+            textLength: post.record.text.length,
+          },
+          {statsig: false},
+        )
+      }
+
       return false
     },
-    [openLink, translatorUrl],
+    [openLink, translatorUrl, langPrefs, post],
   )
 
   return (

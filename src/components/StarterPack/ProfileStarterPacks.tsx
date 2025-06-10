@@ -6,30 +6,30 @@ import React, {
 } from 'react'
 import {
   findNodeHandle,
-  ListRenderItemInfo,
-  StyleProp,
+  type ListRenderItemInfo,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {AppBskyGraphDefs} from '@atproto/api'
+import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
-import {useEmail} from '#/lib/hooks/useEmail'
+import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
-import {List, ListRef} from '#/view/com/util/List'
+import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Loader} from '#/components/Loader'
@@ -75,8 +75,14 @@ export const ProfileStarterPacks = React.forwardRef<
   const t = useTheme()
   const bottomBarOffset = useBottomBarOffset(100)
   const [isPTRing, setIsPTRing] = useState(false)
-  const {data, refetch, isFetching, hasNextPage, fetchNextPage} =
-    useActorStarterPacksQuery({did, enabled})
+  const {
+    data,
+    refetch,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useActorStarterPacksQuery({did, enabled})
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
@@ -95,38 +101,37 @@ export const ProfileStarterPacks = React.forwardRef<
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = useCallback(async () => {
-    if (isFetching || !hasNextPage) return
-
+  const onEndReached = React.useCallback(async () => {
+    if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more starter packs', {message: err})
     }
-  }, [isFetching, hasNextPage, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   useEffect(() => {
-    if (enabled && scrollElRef.current) {
+    if (isIOS && enabled && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [enabled, scrollElRef, setScrollViewTag])
 
-  const renderItem = ({
-    item,
-    index,
-  }: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
-    return (
-      <View
-        style={[
-          a.p_lg,
-          (isTabletOrDesktop || index !== 0) && a.border_t,
-          t.atoms.border_contrast_low,
-        ]}>
-        <StarterPackCard starterPack={item} />
-      </View>
-    )
-  }
+  const renderItem = useCallback(
+    ({item, index}: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
+      return (
+        <View
+          style={[
+            a.p_lg,
+            (isTabletOrDesktop || index !== 0) && a.border_t,
+            t.atoms.border_contrast_low,
+          ]}>
+          <StarterPackCard starterPack={item} />
+        </View>
+      )
+    },
+    [isTabletOrDesktop, t.atoms.border_contrast_low],
+  )
 
   return (
     <View testID={testID} style={style}>
@@ -191,9 +196,7 @@ function Empty() {
   const confirmDialogControl = useDialogControl()
   const followersDialogControl = useDialogControl()
   const errorDialogControl = useDialogControl()
-
-  const {needsEmailVerification} = useEmail()
-  const verifyEmailControl = useDialogControl()
+  const requireEmailVerification = useRequireEmailVerification()
 
   const [isGenerating, setIsGenerating] = useState(false)
 
@@ -224,6 +227,27 @@ function Empty() {
     generateStarterPack()
   }
 
+  const openConfirmDialog = useCallback(() => {
+    confirmDialogControl.open()
+  }, [confirmDialogControl])
+  const wrappedOpenConfirmDialog = requireEmailVerification(openConfirmDialog, {
+    instructions: [
+      <Trans key="confirm">
+        Before creating a starter pack, you must first verify your email.
+      </Trans>,
+    ],
+  })
+  const navToWizard = useCallback(() => {
+    navigation.navigate('StarterPackWizard')
+  }, [navigation])
+  const wrappedNavToWizard = requireEmailVerification(navToWizard, {
+    instructions: [
+      <Trans key="nav">
+        Before creating a starter pack, you must first verify your email.
+      </Trans>,
+    ],
+  })
+
   return (
     <LinearGradientBackground
       style={[
@@ -252,13 +276,7 @@ function Empty() {
           color="primary"
           size="small"
           disabled={isGenerating}
-          onPress={() => {
-            if (needsEmailVerification) {
-              verifyEmailControl.open()
-            } else {
-              confirmDialogControl.open()
-            }
-          }}
+          onPress={wrappedOpenConfirmDialog}
           style={{backgroundColor: 'transparent'}}>
           <ButtonText style={{color: 'white'}}>
             <Trans>Make one for me</Trans>
@@ -271,13 +289,7 @@ function Empty() {
           color="primary"
           size="small"
           disabled={isGenerating}
-          onPress={() => {
-            if (needsEmailVerification) {
-              verifyEmailControl.open()
-            } else {
-              navigation.navigate('StarterPackWizard')
-            }
-          }}
+          onPress={wrappedNavToWizard}
           style={{
             backgroundColor: 'white',
             borderColor: 'white',
@@ -332,12 +344,6 @@ function Empty() {
         )}
         onConfirm={generate}
         confirmButtonCta={_(msg`Retry`)}
-      />
-      <VerifyEmailDialog
-        reasonText={_(
-          msg`Before creating a starter pack, you must first verify your email.`,
-        )}
-        control={verifyEmailControl}
       />
     </LinearGradientBackground>
   )

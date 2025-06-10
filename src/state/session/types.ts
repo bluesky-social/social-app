@@ -1,5 +1,5 @@
-import {LogEvents} from '#/lib/statsig/statsig'
-import {PersistedAccount} from '#/state/persisted'
+import {type LogEvents} from '#/lib/statsig/statsig'
+import {type PersistedAccount} from '#/state/persisted'
 
 export type SessionAccount = PersistedAccount
 
@@ -10,16 +10,19 @@ export type SessionStateContext = {
 }
 
 export type SessionApiContext = {
-  createAccount: (props: {
-    service: string
-    email: string
-    password: string
-    handle: string
-    birthDate: Date
-    inviteCode?: string
-    verificationPhone?: string
-    verificationCode?: string
-  }) => Promise<void>
+  createAccount: (
+    props: {
+      service: string
+      email: string
+      password: string
+      handle: string
+      birthDate: Date
+      inviteCode?: string
+      verificationPhone?: string
+      verificationCode?: string
+    },
+    metrics: LogEvents['account:create:success'],
+  ) => Promise<void>
   login: (
     props: {
       service: string

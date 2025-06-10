@@ -5,8 +5,8 @@ import {
   moveAsync,
 } from 'expo-file-system'
 import {
-  Action,
-  ActionCrop,
+  type Action,
+  type ActionCrop,
   manipulateAsync,
   SaveFormat,
 } from 'expo-image-manipulator'
@@ -15,8 +15,9 @@ import {nanoid} from 'nanoid/non-secure'
 import {POST_IMG_MAX} from '#/lib/constants'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
-import {isIOS, isNative} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 
 export type ImageTransformation = {
   crop?: ActionCrop['crop']
@@ -122,25 +123,13 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
     return img
   }
 
-  // NOTE
-  // on ios, react-native-image-crop-picker gives really bad quality
-  // without specifying width and height. on android, however, the
-  // crop stretches incorrectly if you do specify it. these are
-  // both separate bugs in the library. we deal with that by
-  // providing width & height for ios only
-  // -prf
-
   const source = img.source
-  const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)
 
   // @todo: we're always passing the original image here, does image-cropper
   // allows for setting initial crop dimensions? -mary
   try {
     const cropped = await openCropper({
-      mediaType: 'photo',
-      path: source.path,
-      freeStyleCropEnabled: true,
-      ...(isIOS ? {width: w, height: h} : {}),
+      imageUri: source.path,
     })
 
     return {
@@ -206,40 +195,48 @@ export function resetImageManipulation(
   return img
 }
 
-export async function compressImage(img: ComposerImage): Promise<ImageMeta> {
+export async function compressImage(img: ComposerImage): Promise<PickerImage> {
   const source = img.transformed || img.source
 
   const [w, h] = containImageRes(source.width, source.height, POST_IMG_MAX)
-  const cacheDir = isNative && getImageCacheDirectory()
 
-  for (let i = 10; i > 0; i--) {
-    // Float precision
-    const factor = i / 10
+  let minQualityPercentage = 0
+  let maxQualityPercentage = 101 // exclusive
+  let newDataUri
+
+  while (maxQualityPercentage - minQualityPercentage > 1) {
+    const qualityPercentage = Math.round(
+      (maxQualityPercentage + minQualityPercentage) / 2,
+    )
 
     const res = await manipulateAsync(
       source.path,
       [{resize: {width: w, height: h}}],
       {
-        compress: factor,
+        compress: qualityPercentage / 100,
         format: SaveFormat.JPEG,
         base64: true,
       },
     )
 
     const base64 = res.base64
-
-    if (base64 !== undefined && getDataUriSize(base64) <= POST_IMG_MAX.size) {
-      return {
+    const size = base64 ? getDataUriSize(base64) : 0
+    if (base64 && size <= POST_IMG_MAX.size) {
+      minQualityPercentage = qualityPercentage
+      newDataUri = {
         path: await moveIfNecessary(res.uri),
         width: res.width,
         height: res.height,
         mime: 'image/jpeg',
+        size,
       }
+    } else {
+      maxQualityPercentage = qualityPercentage
     }
+  }
 
-    if (cacheDir) {
-      await deleteAsync(res.uri)
-    }
+  if (newDataUri) {
+    return newDataUri
   }
 
   throw new Error(`Unable to compress image`)

@@ -12,17 +12,17 @@ import {
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
-  LayoutChangeEvent,
+  type LayoutChangeEvent,
   ScrollView,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
-  AnimatedRef,
+  type AnimatedRef,
   Easing,
   FadeIn,
   FadeOut,
@@ -41,15 +41,15 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {ImagePickerAsset} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
-  AppBskyFeedGetPostThread,
-  BskyAgent,
-  RichText,
+  type AppBskyFeedGetPostThread,
+  type BskyAgent,
+  type RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -59,10 +59,9 @@ import {until} from '#/lib/async/until'
 import {
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
-  SupportedMimeTypes,
+  type SupportedMimeTypes,
 } from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {useEmail} from '#/lib/hooks/useEmail'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -75,7 +74,7 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
-import {ComposerImage, pasteImage} from '#/state/gallery'
+import {type ComposerImage, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -85,10 +84,10 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {ComposerOpts} from '#/state/shell/composer'
+import {type ComposerOpts} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
 import {
@@ -105,7 +104,10 @@ import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
-import {TextInput, TextInputRef} from '#/view/com/composer/text-input/TextInput'
+import {
+  TextInput,
+  type TextInputRef,
+} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
@@ -115,10 +117,8 @@ import {LazyQuoteEmbed, QuoteX} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -126,16 +126,21 @@ import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
-  ComposerAction,
+  type ComposerAction,
   composerReducer,
   createComposerState,
-  EmbedDraft,
+  type EmbedDraft,
   MAX_IMAGES,
-  PostAction,
-  PostDraft,
-  ThreadDraft,
+  type PostAction,
+  type PostDraft,
+  type ThreadDraft,
 } from './state/composer'
-import {NO_VIDEO, NoVideoState, processVideo, VideoState} from './state/video'
+import {
+  NO_VIDEO,
+  type NoVideoState,
+  processVideo,
+  type VideoState,
+} from './state/video'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
@@ -323,15 +328,6 @@ export const ComposePost = ({
     }
   }, [onPressCancel, closeAllDialogs, closeAllModals])
 
-  const {needsEmailVerification} = useEmail()
-  const emailVerificationControl = useDialogControl()
-
-  useEffect(() => {
-    if (needsEmailVerification) {
-      emailVerificationControl.open()
-    }
-  }, [needsEmailVerification, emailVerificationControl])
-
   const missingAltError = useMemo(() => {
     if (!requireAltTextEnabled) {
       return
@@ -404,7 +400,7 @@ export const ComposePost = ({
       ).uris[0]
       try {
         await whenAppViewReady(agent, postUri, res => {
-          const postedThread = res.data.thread
+          const postedThread = res?.data?.thread
           return AppBskyFeedDefs.isThreadViewPost(postedThread)
         })
       } catch (waitErr: any) {
@@ -612,15 +608,6 @@ export const ComposePost = ({
   const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
-      <VerifyEmailDialog
-        control={emailVerificationControl}
-        onCloseWithoutVerifying={() => {
-          onClose()
-        }}
-        reasonText={_(
-          msg`Before creating a post, you must first verify your email.`,
-        )}
-      />
       <KeyboardAvoidingView
         testID="composePostView"
         behavior={isIOS ? 'padding' : 'height'}
@@ -657,6 +644,7 @@ export const ComposePost = ({
             ref={scrollViewRef}
             layout={native(LinearTransition)}
             onScroll={scrollHandler}
+            contentContainerStyle={a.flex_grow}
             style={a.flex_1}
             keyboardShouldPersistTaps="always"
             onContentSizeChange={onScrollViewContentSizeChange}
@@ -795,19 +783,22 @@ let ComposerPost = React.memo(function ComposerPost({
   )
 
   return (
-    <View style={[styles.post, !isActive && styles.inactivePost]}>
-      <View
-        style={[
-          styles.textInputLayout,
-          isNative && styles.textInputLayoutMobile,
-        ]}>
+    <View
+      style={[
+        a.mx_lg,
+        !isActive && styles.inactivePost,
+        isTextOnly && isNative && a.flex_grow,
+      ]}>
+      <View style={[a.flex_row, isNative && a.flex_1]}>
         <UserAvatar
           avatar={currentProfile?.avatar}
           size={50}
           type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+          style={[a.mt_xs]}
         />
         <TextInput
           ref={textInput}
+          style={[a.pt_xs]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
           autoFocus
@@ -831,7 +822,9 @@ let ComposerPost = React.memo(function ComposerPost({
           accessible={true}
           accessibilityLabel={_(msg`Write post`)}
           accessibilityHint={_(
-            msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+            msg`Compose posts up to ${plural(MAX_GRAPHEME_LENGTH || 0, {
+              other: '# characters',
+            })} in length`,
           )}
         />
       </View>
@@ -913,20 +906,23 @@ function ComposerTopBar({
   children?: React.ReactNode
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   return (
     <Animated.View
       style={topBarAnimatedStyle}
       layout={native(LinearTransition)}>
       <View style={styles.topbarInner}>
         <Button
-          label="Cancel"
+          label={_(msg`Cancel`)}
           variant="ghost"
           color="primary"
           shape="default"
           size="small"
           style={[a.rounded_full, a.py_sm, {paddingLeft: 7, paddingRight: 7}]}
           onPress={onCancel}
-          accessibilityHint="Closes post composer and discards post draft">
+          accessibilityHint={_(
+            msg`Closes post composer and discards post draft`,
+          )}>
           <ButtonText style={[a.text_md]}>
             <Trans>Cancel</Trans>
           </ButtonText>
@@ -942,7 +938,39 @@ function ComposerTopBar({
         ) : (
           <Button
             testID="composerPublishBtn"
-            label={isReply ? 'Publish reply' : 'Publish post'}
+            label={
+              isReply
+                ? isThread
+                  ? _(
+                      msg({
+                        message: 'Publish replies',
+                        comment:
+                          'Accessibility label for button to publish multiple replies in a thread',
+                      }),
+                    )
+                  : _(
+                      msg({
+                        message: 'Publish reply',
+                        comment:
+                          'Accessibility label for button to publish a single reply',
+                      }),
+                    )
+                : isThread
+                ? _(
+                    msg({
+                      message: 'Publish posts',
+                      comment:
+                        'Accessibility label for button to publish multiple posts in a thread',
+                    }),
+                  )
+                : _(
+                    msg({
+                      message: 'Publish post',
+                      comment:
+                        'Accessibility label for button to publish a single post',
+                    }),
+                  )
+            }
             variant="solid"
             color="primary"
             shape="default"
@@ -1077,9 +1105,8 @@ function ComposerEmbeds({
           </Animated.View>
         )}
       </LayoutAnimationConfig>
-
-      <View style={!video ? [a.mt_md] : []}>
-        {embed.quote?.uri ? (
+      {embed.quote?.uri ? (
+        <View style={!video ? [a.mt_md] : []}>
           <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
             <View style={{pointerEvents: 'none'}}>
               <LazyQuoteEmbed uri={embed.quote.uri} />
@@ -1088,8 +1115,8 @@ function ComposerEmbeds({
               <QuoteX onRemove={() => dispatch({type: 'embed_remove_quote'})} />
             )}
           </View>
-        ) : null}
-      </View>
+        </View>
+      ) : null}
     </>
   )
 }
@@ -1218,39 +1245,41 @@ function ComposerFooter({
         a.justify_between,
       ]}>
       <View style={[a.flex_row, a.align_center]}>
-        {video && video.status !== 'done' ? (
-          <VideoUploadToolbar state={video} />
-        ) : (
-          <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <SelectPhotoBtn
-              size={images.length}
-              disabled={media?.type === 'images' ? isMaxImages : !!media}
-              onAdd={onImageAdd}
-            />
-            <SelectVideoBtn
-              onSelectVideo={asset => onSelectVideo(post.id, asset)}
-              disabled={!!media}
-              setError={onError}
-            />
-            <OpenCameraBtn
-              disabled={media?.type === 'images' ? isMaxImages : !!media}
-              onAdd={onImageAdd}
-            />
-            <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
-            {!isMobile ? (
-              <Button
-                onPress={onEmojiButtonPress}
-                style={a.p_sm}
-                label={_(msg`Open emoji picker`)}
-                accessibilityHint={_(msg`Opens emoji picker`)}
-                variant="ghost"
-                shape="round"
-                color="primary">
-                <EmojiSmile size="lg" />
-              </Button>
-            ) : null}
-          </ToolbarWrapper>
-        )}
+        <LayoutAnimationConfig skipEntering skipExiting>
+          {video && video.status !== 'done' ? (
+            <VideoUploadToolbar state={video} />
+          ) : (
+            <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <SelectPhotoBtn
+                size={images.length}
+                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                onAdd={onImageAdd}
+              />
+              <SelectVideoBtn
+                onSelectVideo={asset => onSelectVideo(post.id, asset)}
+                disabled={!!media}
+                setError={onError}
+              />
+              <OpenCameraBtn
+                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                onAdd={onImageAdd}
+              />
+              <SelectGifBtn onSelectGif={onSelectGif} disabled={!!media} />
+              {!isMobile ? (
+                <Button
+                  onPress={onEmojiButtonPress}
+                  style={a.p_sm}
+                  label={_(msg`Open emoji picker`)}
+                  accessibilityHint={_(msg`Opens emoji picker`)}
+                  variant="ghost"
+                  shape="round"
+                  color="primary">
+                  <EmojiSmile size="lg" />
+                </Button>
+              ) : null}
+            </ToolbarWrapper>
+          )}
+        </LayoutAnimationConfig>
       </View>
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
         {showAddButton && (
@@ -1416,8 +1445,7 @@ function useKeyboardVerticalOffset() {
 
   // Android etc
   if (!isIOS) {
-    // if Android <35 or web, bottom is 0 anyway. if >=35, this is needed to account
-    // for the edge-to-edge nav bar
+    // need to account for the edge-to-edge nav bar
     return bottom * -1
   }
 
@@ -1468,11 +1496,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginLeft: 12,
   },
-  stickyFooterWeb: {
-    // @ts-ignore web-only
+  stickyFooterWeb: web({
     position: 'sticky',
     bottom: 0,
-  },
+  }),
   errorLine: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1503,18 +1530,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 5,
   },
-  post: {
-    marginHorizontal: 16,
-  },
   inactivePost: {
     opacity: 0.5,
-  },
-  textInputLayout: {
-    flexDirection: 'row',
-    paddingTop: 4,
-  },
-  textInputLayoutMobile: {
-    flex: 1,
   },
   addExtLinkBtn: {
     borderWidth: 1,

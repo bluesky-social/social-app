@@ -1,9 +1,8 @@
 import * as React from 'react'
-import {JSX} from 'react/jsx-runtime'
-import {i18n, MessageDescriptor} from '@lingui/core'
+import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
-  BottomTabBarProps,
+  type BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
@@ -20,21 +19,20 @@ import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
-  AllNavigatorParams,
-  BottomTabNavigatorParams,
-  FlatNavigatorParams,
-  HomeTabNavigatorParams,
-  MessagesTabNavigatorParams,
-  MyProfileTabNavigatorParams,
-  NotificationsTabNavigatorParams,
-  SearchTabNavigatorParams,
+  type AllNavigatorParams,
+  type BottomTabNavigatorParams,
+  type FlatNavigatorParams,
+  type HomeTabNavigatorParams,
+  type MessagesTabNavigatorParams,
+  type MyProfileTabNavigatorParams,
+  type NotificationsTabNavigatorParams,
+  type SearchTabNavigatorParams,
 } from '#/lib/routes/types'
-import {RouteParams, State} from '#/lib/routes/types'
+import {type RouteParams, type State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {
@@ -59,7 +57,6 @@ import {ProfileScreen} from '#/view/screens/Profile'
 import {ProfileFeedLikedByScreen} from '#/view/screens/ProfileFeedLikedBy'
 import {ProfileListScreen} from '#/view/screens/ProfileList'
 import {SavedFeeds} from '#/view/screens/SavedFeeds'
-import {SearchScreen} from '#/view/screens/Search'
 import {Storybook} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
@@ -72,6 +69,7 @@ import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
 import {MessagesInboxScreen} from '#/screens/Messages/Inbox'
 import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
+import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
@@ -81,31 +79,37 @@ import {ProfileFeedScreen} from '#/screens/Profile/ProfileFeed'
 import {ProfileFollowersScreen} from '#/screens/Profile/ProfileFollowers'
 import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {ProfileSearchScreen} from '#/screens/Profile/ProfileSearch'
+import {SearchScreen} from '#/screens/Search'
+import {AboutSettingsScreen} from '#/screens/Settings/AboutSettings'
+import {AccessibilitySettingsScreen} from '#/screens/Settings/AccessibilitySettings'
+import {AccountSettingsScreen} from '#/screens/Settings/AccountSettings'
 import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {AppIconSettingsScreen} from '#/screens/Settings/AppIconSettings'
+import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
+import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
+import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
+import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
+import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
+import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
+import {SettingsScreen} from '#/screens/Settings/Settings'
+import {SettingsInterests} from '#/screens/Settings/SettingsInterests'
+import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
 } from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
+import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
-import {useTheme} from '#/alf'
+import {type Theme, useTheme} from '#/alf'
+import {
+  EmailDialogScreenID,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
-import {ProfileSearchScreen} from './screens/Profile/ProfileSearch'
-import {AboutSettingsScreen} from './screens/Settings/AboutSettings'
-import {AccessibilitySettingsScreen} from './screens/Settings/AccessibilitySettings'
-import {AccountSettingsScreen} from './screens/Settings/AccountSettings'
-import {AppPasswordsScreen} from './screens/Settings/AppPasswords'
-import {ContentAndMediaSettingsScreen} from './screens/Settings/ContentAndMediaSettings'
-import {ExternalMediaPreferencesScreen} from './screens/Settings/ExternalMediaPreferences'
-import {FollowingFeedPreferencesScreen} from './screens/Settings/FollowingFeedPreferences'
-import {LanguageSettingsScreen} from './screens/Settings/LanguageSettings'
-import {PrivacyAndSecuritySettingsScreen} from './screens/Settings/PrivacyAndSecuritySettings'
-import {SettingsScreen} from './screens/Settings/Settings'
-import {ThreadPreferencesScreen} from './screens/Settings/ThreadPreferences'
-import TopicScreen from './screens/Topic'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -123,7 +127,7 @@ const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 /**
  * These "common screens" are reused across stacks.
  */
-function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
+function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
   const title = (page: MessageDescriptor) =>
     bskyTitle(i18n._(page), unreadCountLabel)
 
@@ -164,6 +168,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => ModerationInteractionSettings}
         options={{
           title: title(msg`Post Interaction Settings`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="ModerationVerificationSettings"
+        getComponent={() => ModerationVerificationSettings}
+        options={{
+          title: title(msg`Verification Settings`),
           requireAuth: true,
         }}
       />
@@ -377,6 +389,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="SettingsInterests"
+        getComponent={() => SettingsInterests}
+        options={{
+          title: title(msg`Your interests`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="AboutSettings"
         getComponent={() => AboutSettingsScreen}
         options={{
@@ -480,6 +500,10 @@ function TabsNavigator() {
       <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
       <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
       <Tab.Screen
+        name="MessagesTab"
+        getComponent={() => MessagesTabNavigator}
+      />
+      <Tab.Screen
         name="NotificationsTab"
         getComponent={() => NotificationsTabNavigator}
       />
@@ -487,29 +511,26 @@ function TabsNavigator() {
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
       />
-      <Tab.Screen
-        name="MessagesTab"
-        getComponent={() => MessagesTabNavigator}
-      />
     </Tab.Navigator>
   )
+}
+
+function screenOptions(t: Theme) {
+  return {
+    fullScreenGestureEnabled: true,
+    headerShown: false,
+    contentStyle: t.atoms.bg,
+  } as const
 }
 
 function HomeTabNavigator() {
   const t = useTheme()
 
   return (
-    <HomeTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}>
+    <HomeTab.Navigator screenOptions={screenOptions(t)} initialRouteName="Home">
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
       <HomeTab.Screen name="Start" getComponent={() => HomeScreen} />
-      {commonScreens(HomeTab)}
+      {commonScreens(HomeTab as typeof Flat)}
     </HomeTab.Navigator>
   )
 }
@@ -518,15 +539,10 @@ function SearchTabNavigator() {
   const t = useTheme()
   return (
     <SearchTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}>
+      screenOptions={screenOptions(t)}
+      initialRouteName="Search">
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
-      {commonScreens(SearchTab as typeof HomeTab)}
+      {commonScreens(SearchTab as typeof Flat)}
     </SearchTab.Navigator>
   )
 }
@@ -535,19 +551,14 @@ function NotificationsTabNavigator() {
   const t = useTheme()
   return (
     <NotificationsTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}>
+      screenOptions={screenOptions(t)}
+      initialRouteName="Notifications">
       <NotificationsTab.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
         options={{requireAuth: true}}
       />
-      {commonScreens(NotificationsTab as typeof HomeTab)}
+      {commonScreens(NotificationsTab as typeof Flat)}
     </NotificationsTab.Navigator>
   )
 }
@@ -556,23 +567,16 @@ function MyProfileTabNavigator() {
   const t = useTheme()
   return (
     <MyProfileTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}>
+      screenOptions={screenOptions(t)}
+      initialRouteName="MyProfile">
       <MyProfileTab.Screen
-        // @ts-ignore // TODO: fix this broken type in ProfileScreen
-        name="MyProfile"
+        // MyProfile is not in AllNavigationParams - asserting as Profile at least
+        // gives us typechecking for initialParams -sfn
+        name={'MyProfile' as 'Profile'}
         getComponent={() => ProfileScreen}
-        initialParams={{
-          name: 'me',
-          hideBackButton: true,
-        }}
+        initialParams={{name: 'me', hideBackButton: true}}
       />
-      {commonScreens(MyProfileTab as typeof HomeTab)}
+      {commonScreens(MyProfileTab as unknown as typeof Flat)}
     </MyProfileTab.Navigator>
   )
 }
@@ -581,13 +585,8 @@ function MessagesTabNavigator() {
   const t = useTheme()
   return (
     <MessagesTab.Navigator
-      screenOptions={{
-        animationDuration: 285,
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}>
+      screenOptions={screenOptions(t)}
+      initialRouteName="Messages">
       <MessagesTab.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
@@ -596,7 +595,7 @@ function MessagesTabNavigator() {
           animationTypeForReplace: route.params?.animation ?? 'push',
         })}
       />
-      {commonScreens(MessagesTab as typeof HomeTab)}
+      {commonScreens(MessagesTab as typeof Flat)}
     </MessagesTab.Navigator>
   )
 }
@@ -614,13 +613,7 @@ const FlatNavigator = () => {
   return (
     <Flat.Navigator
       screenListeners={screenListeners}
-      screenOptions={{
-        animationDuration: 285,
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-        contentStyle: t.atoms.bg,
-      }}>
+      screenOptions={screenOptions(t)}>
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
@@ -629,7 +622,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
-        options={{title: title(msg`Search`)}}
+        options={{title: title(msg`Explore`)}}
       />
       <Flat.Screen
         name="Notifications"
@@ -646,7 +639,7 @@ const FlatNavigator = () => {
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`)}}
       />
-      {commonScreens(Flat as typeof HomeTab, numUnread)}
+      {commonScreens(Flat, numUnread)}
     </Flat.Navigator>
   )
 }
@@ -719,36 +712,51 @@ const LINKING = {
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
-  const {openModal} = useModalControls()
   const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
+  const emailDialogControl = useEmailDialogControl()
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
-      openModal({name: 'verify-email', showReminder: true})
+      emailDialogControl.open({
+        id: EmailDialogScreenID.VerificationReminder,
+      })
       snoozeEmailConfirmationPrompt()
     }
   }
 
   return (
-    <NavigationContainer
-      ref={navigationRef}
-      linking={LINKING}
-      theme={theme}
-      onStateChange={() => {
-        logger.metric('router:navigate', {
-          from: prevLoggedRouteName.current,
-        })
-        prevLoggedRouteName.current = getCurrentRouteName()
-      }}
-      onReady={() => {
-        attachRouteToLogEvents(getCurrentRouteName)
-        logModuleInitTime()
-        onReady()
-        logger.metric('router:navigate', {})
-      }}>
-      {children}
-    </NavigationContainer>
+    <>
+      <NavigationContainer
+        ref={navigationRef}
+        linking={LINKING}
+        theme={theme}
+        onStateChange={() => {
+          logger.metric(
+            'router:navigate',
+            {
+              from: prevLoggedRouteName.current,
+            },
+            {statsig: false},
+          )
+          prevLoggedRouteName.current = getCurrentRouteName()
+        }}
+        onReady={() => {
+          attachRouteToLogEvents(getCurrentRouteName)
+          logModuleInitTime()
+          onReady()
+          logger.metric('router:navigate', {}, {statsig: false})
+        }}
+        // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
+        // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
+        // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
+        // I'm scared of missing a spot (esp. with push notifications etc) so let's enable this legacy behaviour for now.
+        // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
+        // -sfn
+        navigationInChildEnabled>
+        {children}
+      </NavigationContainer>
+    </>
   )
 }
 

@@ -1,4 +1,4 @@
-import {BskyAgent, ChatBskyConvoGetLog} from '@atproto/api'
+import {type BskyAgent, type ChatBskyConvoGetLog} from '@atproto/api'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -9,11 +9,11 @@ import {
   DEFAULT_POLL_INTERVAL,
 } from '#/state/messages/events/const'
 import {
-  MessagesEventBusDispatch,
+  type MessagesEventBusDispatch,
   MessagesEventBusDispatchEvent,
   MessagesEventBusErrorCode,
-  MessagesEventBusEvent,
-  MessagesEventBusParams,
+  type MessagesEventBusEvent,
+  type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
@@ -208,12 +208,17 @@ export class MessagesEventBus {
       }
       case MessagesEventBusStatus.Error: {
         switch (action.event) {
-          case MessagesEventBusDispatchEvent.UpdatePoll:
-          case MessagesEventBusDispatchEvent.Resume: {
+          case MessagesEventBusDispatchEvent.UpdatePoll: {
             // basically reset
             this.status = MessagesEventBusStatus.Initializing
             this.latestRev = undefined
             this.init()
+            break
+          }
+          case MessagesEventBusDispatchEvent.Resume: {
+            this.status = MessagesEventBusStatus.Ready
+            this.resetPoll()
+            this.emitter.emit('event', {type: 'connect'})
             break
           }
         }
@@ -329,7 +334,7 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.getLog(
+        return this.agent.chat.bsky.convo.getLog(
           {
             cursor: this.latestRev,
           },

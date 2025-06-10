@@ -1,24 +1,24 @@
 import React from 'react'
 import {View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {SeenPost} from '#/state/userActionHistory'
+import {type SeenPost} from '#/state/userActionHistory'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
@@ -27,7 +27,7 @@ import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/P
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 import {ProgressGuideList} from './ProgressGuide/List'
 
 const MOBILE_CARD_WIDTH = 300
@@ -360,35 +360,37 @@ export function ProfileGrid({
         </View>
       ) : (
         <BlockDrawerGesture>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-            decelerationRate="fast">
-            <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
-              {content}
+          <View>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+              decelerationRate="fast">
+              <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
+                {content}
 
-              <Button
-                label={_(msg`Browse more accounts on the Explore page`)}
-                onPress={() => {
-                  navigation.navigate('SearchTab')
-                }}>
-                <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
-                  <View style={[a.flex_1, a.justify_center]}>
-                    <View style={[a.flex_row, a.px_lg]}>
-                      <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                        <Trans>
-                          Browse more suggestions on the Explore page
-                        </Trans>
-                      </Text>
+                <Button
+                  label={_(msg`Browse more accounts on the Explore page`)}
+                  onPress={() => {
+                    navigation.navigate('SearchTab')
+                  }}>
+                  <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
+                    <View style={[a.flex_1, a.justify_center]}>
+                      <View style={[a.flex_row, a.px_lg]}>
+                        <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
+                          <Trans>
+                            Browse more suggestions on the Explore page
+                          </Trans>
+                        </Text>
 
-                      <Arrow size="xl" />
+                        <Arrow size="xl" />
+                      </View>
                     </View>
-                  </View>
-                </CardOuter>
-              </Button>
-            </View>
-          </ScrollView>
+                  </CardOuter>
+                </Button>
+              </View>
+            </ScrollView>
+          </View>
         </BlockDrawerGesture>
       )}
     </View>

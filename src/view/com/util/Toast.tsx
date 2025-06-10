@@ -19,7 +19,7 @@ import RootSiblings from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   FontAwesomeIcon,
-  Props as FontAwesomeProps,
+  type Props as FontAwesomeProps,
 } from '@fortawesome/react-native-fontawesome'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'

@@ -4,10 +4,10 @@ import {useLingui} from '@lingui/react'
 
 import {
   ADULT_CONTENT_LABELS,
-  AdultSelfLabel,
+  type AdultSelfLabel,
   OTHER_SELF_LABELS,
-  OtherSelfLabel,
-  SelfLabel,
+  type OtherSelfLabel,
+  type SelfLabel,
 } from '#/lib/moderation'
 import {isWeb} from '#/platform/detection'
 import {atoms as a, native, useTheme, web} from '#/alf'
@@ -113,9 +113,8 @@ function DialogInner({
           </Text>
           <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             <Trans>
-              Choose self-labels that are applicable for the media you are
-              posting. If none are selected, this post is suitable for all
-              audiences.
+              Please add any content warning labels that are applicable for the
+              media you are posting.
             </Trans>
           </Text>
         </View>

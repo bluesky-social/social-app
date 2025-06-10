@@ -1,4 +1,9 @@
-import {Platform, StyleProp, StyleSheet, ViewStyle} from 'react-native'
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {ios, native, platform, web} from '#/alf/util/platform'
@@ -21,6 +26,9 @@ export const atoms = {
   },
   relative: {
     position: 'relative',
+  },
+  static: {
+    position: 'static',
   },
   sticky: web({
     position: 'sticky',
@@ -126,6 +134,9 @@ export const atoms = {
   rounded_md: {
     borderRadius: tokens.borderRadius.md,
   },
+  rounded_lg: {
+    borderRadius: tokens.borderRadius.lg,
+  },
   rounded_full: {
     borderRadius: tokens.borderRadius.full,
   },
@@ -195,6 +206,9 @@ export const atoms = {
   },
   flex_grow: {
     flexGrow: 1,
+  },
+  flex_grow_0: {
+    flexGrow: 0,
   },
   flex_shrink: {
     flexShrink: 1,
@@ -357,6 +371,9 @@ export const atoms = {
   },
   border_r: {
     borderRightWidth: StyleSheet.hairlineWidth,
+  },
+  border_transparent: {
+    borderColor: 'transparent',
   },
   curve_circular: ios({
     borderCurve: 'circular',
@@ -940,8 +957,8 @@ export const atoms = {
     userSelect: 'all',
   },
   outline_inset_1: {
-    outlineOffset: '-1px',
-  } as StyleProp<ViewStyle>,
+    outlineOffset: -1,
+  },
 
   /*
    * Text decoration

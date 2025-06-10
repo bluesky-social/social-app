@@ -5,7 +5,7 @@ import {
   AppBskyGraphDefs,
   AtUri,
   moderateUserList,
-  ModerationOpts,
+  type ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -16,13 +16,17 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useHaptics} from '#/lib/haptics'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
 import {makeListLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {toShareUrl} from '#/lib/strings/url-helpers'
@@ -38,12 +42,12 @@ import {
   useListMuteMutation,
   useListQuery,
 } from '#/state/queries/list'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
   useAddSavedFeedsMutation,
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
   useRemoveFeedMutation,
   useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
@@ -51,7 +55,6 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useComposerControls} from '#/state/shell/composer'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {PostFeed} from '#/view/com/posts/PostFeed'
@@ -60,10 +63,10 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {Button} from '#/view/com/util/forms/Button'
 import {
-  DropdownItem,
+  type DropdownItem,
   NativeDropdown,
 } from '#/view/com/util/forms/NativeDropdown'
-import {ListRef} from '#/view/com/util/List'
+import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {LoadingScreen} from '#/view/com/util/LoadingScreen'
 import {Text} from '#/view/com/util/text/Text'
@@ -72,6 +75,7 @@ import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
 import {atoms as a} from '#/alf'
 import {Button as NewButton, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {ListAddRemoveUsersDialog} from '#/components/dialogs/lists/ListAddRemoveUsersDialog'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import * as Layout from '#/components/Layout'
 import * as Hider from '#/components/moderation/Hider'
@@ -81,8 +85,6 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
-
-const SECTION_TITLES_CURATE = ['Posts', 'People']
 
 interface SectionRef {
   scrollToTop: () => void
@@ -153,18 +155,19 @@ function ProfileListScreenLoaded({
 }) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {currentAccount} = useSession()
   const {rkey} = route.params
   const feedSectionRef = React.useRef<SectionRef>(null)
   const aboutSectionRef = React.useRef<SectionRef>(null)
-  const {openModal} = useModalControls()
   const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
   const isScreenFocused = useIsFocused()
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did
   const scrollElRef = useAnimatedRef()
+  const addUserDialogControl = useDialogControl()
+  const sectionTitlesCurate = [_(msg`Posts`), _(msg`People`)]
 
   const moderation = React.useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -178,17 +181,11 @@ function ProfileListScreenLoaded({
     }, [setMinimalShellMode]),
   )
 
-  const onPressAddUser = useCallback(() => {
-    openModal({
-      name: 'list-add-remove-users',
-      list,
-      onChange() {
-        if (isCurateList) {
-          truncateAndInvalidate(queryClient, FEED_RQKEY(`list|${list.uri}`))
-        }
-      },
-    })
-  }, [openModal, list, isCurateList, queryClient])
+  const onChangeMembers = useCallback(() => {
+    if (isCurateList) {
+      truncateAndInvalidate(queryClient, FEED_RQKEY(`list|${list.uri}`))
+    }
+  }, [list.uri, isCurateList, queryClient])
 
   const onCurrentPageSelected = React.useCallback(
     (index: number) => {
@@ -214,7 +211,7 @@ function ProfileListScreenLoaded({
         <Hider.Content>
           <View style={s.hContentRegion}>
             <PagerWithHeader
-              items={SECTION_TITLES_CURATE}
+              items={sectionTitlesCurate}
               isHeaderReady={true}
               renderHeader={renderHeader}
               onCurrentPageSelected={onCurrentPageSelected}>
@@ -226,7 +223,7 @@ function ProfileListScreenLoaded({
                   headerHeight={headerHeight}
                   isFocused={isScreenFocused && isFocused}
                   isOwner={isOwner}
-                  onPressAddUser={onPressAddUser}
+                  onPressAddUser={addUserDialogControl.open}
                 />
               )}
               {({headerHeight, scrollElRef}) => (
@@ -234,7 +231,7 @@ function ProfileListScreenLoaded({
                   ref={aboutSectionRef}
                   scrollElRef={scrollElRef as ListRef}
                   list={list}
-                  onPressAddUser={onPressAddUser}
+                  onPressAddUser={addUserDialogControl.open}
                   headerHeight={headerHeight}
                 />
               )}
@@ -254,6 +251,11 @@ function ProfileListScreenLoaded({
               accessibilityHint=""
             />
           </View>
+          <ListAddRemoveUsersDialog
+            control={addUserDialogControl}
+            list={list}
+            onChange={onChangeMembers}
+          />
         </Hider.Content>
       </Hider.Outer>
     )
@@ -269,7 +271,7 @@ function ProfileListScreenLoaded({
           <AboutSection
             list={list}
             scrollElRef={scrollElRef as ListRef}
-            onPressAddUser={onPressAddUser}
+            onPressAddUser={addUserDialogControl.open}
             headerHeight={0}
           />
           <FAB
@@ -287,6 +289,11 @@ function ProfileListScreenLoaded({
             accessibilityHint=""
           />
         </View>
+        <ListAddRemoveUsersDialog
+          control={addUserDialogControl}
+          list={list}
+          onChange={onChangeMembers}
+        />
       </Hider.Content>
     </Hider.Outer>
   )
@@ -546,7 +553,7 @@ function Header({
       })
       items.push({
         testID: 'listHeaderDropdownDeleteBtn',
-        label: _(msg`Delete List`),
+        label: _(msg`Delete list`),
         onPress: deleteListPromptControl.open,
         icon: {
           ios: {
@@ -560,7 +567,7 @@ function Header({
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownReportBtn',
-        label: _(msg`Report List`),
+        label: _(msg`Report list`),
         onPress: onPressReport,
         icon: {
           ios: {
@@ -595,7 +602,7 @@ function Header({
       if (isMuting) {
         items.push({
           testID: 'listHeaderDropdownMuteBtn',
-          label: _(msg`Un-mute list`),
+          label: _(msg`Unmute list`),
           onPress: onUnsubscribeMute,
           icon: {
             ios: {
@@ -610,7 +617,7 @@ function Header({
       if (isBlocking) {
         items.push({
           testID: 'listHeaderDropdownBlockBtn',
-          label: _(msg`Un-block list`),
+          label: _(msg`Unblock list`),
           onPress: onUnsubscribeBlock,
           icon: {
             ios: {

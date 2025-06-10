@@ -1,10 +1,10 @@
 import React, {useCallback, useMemo, useState} from 'react'
-import {GestureResponderEvent, View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyEmbedRecord,
   ChatBskyConvoDefs,
   moderateProfile,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -43,7 +43,9 @@ import {Link} from '#/components/Link'
 import {useMenuControl} from '#/components/Menu'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import {useSimpleVerificationState} from '#/components/verification'
+import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import type * as bsky from '#/types/bsky'
 
 export let ChatListItem = ({
   convo,
@@ -106,6 +108,9 @@ function ChatListItemReady({
   const playHaptic = useHaptics()
   const queryClient = useQueryClient()
   const isUnread = convo.unreadCount > 0
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const blockInfo = useMemo(() => {
     const modui = moderation.ui('profileView')
@@ -185,9 +190,63 @@ function ChatListItemReady({
         lastMessageSentAt = convo.lastMessage.sentAt
       }
       if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
+        lastMessageSentAt = convo.lastMessage.sentAt
+
         lastMessage = isDeletedAccount
           ? _(msg`Conversation deleted`)
           : _(msg`Message deleted`)
+      }
+
+      if (ChatBskyConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
+        if (
+          !lastMessageSentAt ||
+          new Date(lastMessageSentAt) <
+            new Date(convo.lastReaction.reaction.createdAt)
+        ) {
+          const isFromMe =
+            convo.lastReaction.reaction.sender.did === currentAccount?.did
+          const lastMessageText = convo.lastReaction.message.text
+          const fallbackMessage = _(
+            msg({
+              message: 'a message',
+              comment: `If last message does not contain text, fall back to "{user} reacted to {a message}"`,
+            }),
+          )
+
+          if (isFromMe) {
+            lastMessage = _(
+              msg`You reacted ${convo.lastReaction.reaction.value} to ${
+                lastMessageText
+                  ? `"${convo.lastReaction.message.text}"`
+                  : fallbackMessage
+              }`,
+            )
+          } else {
+            const senderDid = convo.lastReaction.reaction.sender.did
+            const sender = convo.members.find(
+              member => member.did === senderDid,
+            )
+            if (sender) {
+              lastMessage = _(
+                msg`${sanitizeDisplayName(
+                  sender.displayName || sender.handle,
+                )} reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            } else {
+              lastMessage = _(
+                msg`Someone reacted ${convo.lastReaction.reaction.value} to ${
+                  lastMessageText
+                    ? `"${convo.lastReaction.message.text}"`
+                    : fallbackMessage
+                }`,
+              )
+            }
+          }
+        }
       }
 
       return {
@@ -195,7 +254,14 @@ function ChatListItemReady({
         lastMessageSentAt,
         latestReportableMessage,
       }
-    }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
+    }, [
+      _,
+      convo.lastMessage,
+      convo.lastReaction,
+      currentAccount?.did,
+      isDeletedAccount,
+      convo.members,
+    ])
 
   const [showActions, setShowActions] = useState(false)
 
@@ -324,11 +390,10 @@ function ChatListItemReady({
               <View
                 style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
                 <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
-                  <Text
-                    numberOfLines={1}
-                    style={[{maxWidth: '85%'}, web([a.leading_normal])]}>
+                  <View style={[a.flex_shrink]}>
                     <Text
                       emoji
+                      numberOfLines={1}
                       style={[
                         a.text_md,
                         t.atoms.text,
@@ -338,22 +403,31 @@ function ChatListItemReady({
                       ]}>
                       {displayName}
                     </Text>
-                  </Text>
+                  </View>
+                  {verification.showBadge && (
+                    <View style={[a.pl_xs, a.self_center]}>
+                      <VerificationCheck
+                        width={14}
+                        verifier={verification.role === 'verifier'}
+                      />
+                    </View>
+                  )}
                   {lastMessageSentAt && (
-                    <TimeElapsed timestamp={lastMessageSentAt}>
-                      {({timeElapsed}) => (
-                        <Text
-                          style={[
-                            a.text_sm,
-                            {lineHeight: 21},
-                            t.atoms.text_contrast_medium,
-                            web({whiteSpace: 'preserve nowrap'}),
-                          ]}>
-                          {' '}
-                          &middot; {timeElapsed}
-                        </Text>
-                      )}
-                    </TimeElapsed>
+                    <View style={[a.pl_xs]}>
+                      <TimeElapsed timestamp={lastMessageSentAt}>
+                        {({timeElapsed}) => (
+                          <Text
+                            style={[
+                              a.text_sm,
+                              {lineHeight: 21},
+                              t.atoms.text_contrast_medium,
+                              web({whiteSpace: 'preserve nowrap'}),
+                            ]}>
+                            &middot; {timeElapsed}
+                          </Text>
+                        )}
+                      </TimeElapsed>
+                    </View>
                   )}
                   {(convo.muted || moderation.blocked) && (
                     <Text
