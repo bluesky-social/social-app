@@ -42,7 +42,7 @@ import {ListFooter} from '#/components/Lists'
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
 
-export function Inner({uri}: {uri: string | undefined}) {
+export function PostThread({uri}: {uri: string | undefined}) {
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender() // TODO
@@ -358,7 +358,12 @@ export function Inner({uri}: {uri: string | undefined}) {
           )
         } else if (item.depth === 0) {
           return (
-            <View>
+            /*
+             * Keep this view wrapped so that the anchor post is always index 0
+             * in the list and `maintainVisibleContentPosition` can do its
+             * thing.
+             */
+            <View collapsable={false}>
               <View
                 /*
                  * IMPORTANT: this is a load-bearing key on all platforms. We
