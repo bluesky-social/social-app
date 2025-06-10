@@ -217,6 +217,10 @@ export function sortAndAnnotateThreadItems(
                   ci = getBranch(thread, ci, child.depth).end
                 } else {
                   otherThreadItems.push(childPost)
+
+                  if (childParentMetadata) {
+                    childParentMetadata.repliesSeenCounter += 1
+                  }
                 }
               } else {
                 /*
