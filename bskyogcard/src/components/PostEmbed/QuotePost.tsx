@@ -68,12 +68,12 @@ export function QuotePost({
           a.flex_row,
           a.align_center,
           {gap: 6},
-          a.pb_sm,
+          a.pb_xs,
           a.w_full,
           a.overflow_hidden,
         ]}>
         <Avatar
-          size={18}
+          size={16}
           image={avatar}
           profile={author}
           moderatorData={moderatorData}
