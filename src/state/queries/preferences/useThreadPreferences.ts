@@ -2,7 +2,7 @@ import {useCallback, useMemo, useRef, useState} from 'react'
 import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
-import {OnceKey,useCallOnce} from '#/lib/hooks/useCallOnce'
+import {OnceKey, useCallOnce} from '#/lib/hooks/useCallOnce'
 import {logger} from '#/logger'
 import {
   usePreferencesQuery,
