@@ -74,9 +74,9 @@ msgstr ""
 msgid "{0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:215
-#: src/view/shell/bottom-bar/BottomBar.tsx:247
-#: src/view/shell/Drawer.tsx:473
+#: src/view/shell/bottom-bar/BottomBar.tsx:223
+#: src/view/shell/bottom-bar/BottomBar.tsx:255
+#: src/view/shell/Drawer.tsx:487
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -1158,8 +1158,8 @@ msgstr ""
 #: src/screens/Login/ForgotPasswordForm.tsx:129
 #: src/screens/Login/LoginForm.tsx:310
 #: src/screens/Login/LoginForm.tsx:316
-#: src/screens/Login/SetNewPasswordForm.tsx:164
-#: src/screens/Login/SetNewPasswordForm.tsx:170
+#: src/screens/Login/SetNewPasswordForm.tsx:168
+#: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Messages/components/ChatDisabled.tsx:133
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:158
@@ -1592,9 +1592,9 @@ msgid "Changes hosting provider"
 msgstr ""
 
 #: src/Navigation.tsx:428
-#: src/view/shell/bottom-bar/BottomBar.tsx:211
+#: src/view/shell/bottom-bar/BottomBar.tsx:219
 #: src/view/shell/desktop/LeftNav.tsx:553
-#: src/view/shell/Drawer.tsx:441
+#: src/view/shell/Drawer.tsx:455
 msgid "Chat"
 msgstr ""
 
@@ -2196,8 +2196,8 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
-#: src/view/shell/bottom-bar/BottomBar.tsx:335
-#: src/view/shell/bottom-bar/BottomBar.tsx:340
+#: src/view/shell/bottom-bar/BottomBar.tsx:343
+#: src/view/shell/bottom-bar/BottomBar.tsx:348
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:199
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
 #: src/view/shell/NavSignupCard.tsx:47
@@ -2954,7 +2954,7 @@ msgstr ""
 msgid "Ensure you have selected a language for each subtitle file."
 msgstr ""
 
-#: src/screens/Login/SetNewPasswordForm.tsx:143
+#: src/screens/Login/SetNewPasswordForm.tsx:147
 msgid "Enter a password"
 msgstr ""
 
@@ -3144,10 +3144,10 @@ msgstr ""
 msgid "Explicit sexual images."
 msgstr ""
 
-#: src/Navigation.tsx:652
+#: src/Navigation.tsx:625
 #: src/screens/Search/Shell.tsx:307
 #: src/view/shell/desktop/LeftNav.tsx:635
-#: src/view/shell/Drawer.tsx:389
+#: src/view/shell/Drawer.tsx:403
 msgid "Explore"
 msgstr ""
 
@@ -3364,7 +3364,7 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/desktop/RightNav.tsx:103
-#: src/view/shell/Drawer.tsx:343
+#: src/view/shell/Drawer.tsx:357
 msgid "Feedback"
 msgstr ""
 
@@ -3381,7 +3381,7 @@ msgstr ""
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:96
 #: src/view/shell/desktop/LeftNav.tsx:673
-#: src/view/shell/Drawer.tsx:505
+#: src/view/shell/Drawer.tsx:519
 msgid "Feeds"
 msgstr ""
 
@@ -3651,7 +3651,7 @@ msgstr ""
 msgid "Generate a starter pack"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:347
+#: src/view/shell/Drawer.tsx:361
 msgid "Get help"
 msgstr ""
 
@@ -3818,7 +3818,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:221
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
-#: src/view/shell/Drawer.tsx:356
+#: src/view/shell/Drawer.tsx:370
 msgid "Help"
 msgstr ""
 
@@ -3954,11 +3954,11 @@ msgstr ""
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
-#: src/Navigation.tsx:647
-#: src/Navigation.tsx:667
-#: src/view/shell/bottom-bar/BottomBar.tsx:168
+#: src/Navigation.tsx:620
+#: src/Navigation.tsx:640
+#: src/view/shell/bottom-bar/BottomBar.tsx:176
 #: src/view/shell/desktop/LeftNav.tsx:617
-#: src/view/shell/Drawer.tsx:415
+#: src/view/shell/Drawer.tsx:429
 msgid "Home"
 msgstr ""
 
@@ -4096,7 +4096,7 @@ msgstr ""
 msgid "Incorrect username or password"
 msgstr ""
 
-#: src/screens/Login/SetNewPasswordForm.tsx:131
+#: src/screens/Login/SetNewPasswordForm.tsx:133
 msgid "Input code sent to your email for password reset"
 msgstr ""
 
@@ -4104,7 +4104,7 @@ msgstr ""
 msgid "Input confirmation code for account deletion"
 msgstr ""
 
-#: src/screens/Login/SetNewPasswordForm.tsx:155
+#: src/screens/Login/SetNewPasswordForm.tsx:159
 msgid "Input new password"
 msgstr ""
 
@@ -4495,7 +4495,7 @@ msgstr ""
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
 #: src/view/shell/desktop/LeftNav.tsx:691
-#: src/view/shell/Drawer.tsx:520
+#: src/view/shell/Drawer.tsx:534
 msgid "Lists"
 msgstr ""
 
@@ -4556,7 +4556,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:658
+#: src/view/shell/Drawer.tsx:672
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
 
@@ -4564,7 +4564,7 @@ msgstr ""
 msgid "Long press to open tag menu for #{tag}"
 msgstr ""
 
-#: src/screens/Login/SetNewPasswordForm.tsx:120
+#: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
 msgstr ""
 
@@ -4686,7 +4686,7 @@ msgstr ""
 msgid "Message options"
 msgstr ""
 
-#: src/Navigation.tsx:662
+#: src/Navigation.tsx:635
 msgid "Messages"
 msgstr ""
 
@@ -5010,6 +5010,7 @@ msgstr ""
 msgid "New Moderation List"
 msgstr ""
 
+#: src/screens/Login/SetNewPasswordForm.tsx:141
 #: src/view/com/modals/ChangePassword.tsx:224
 msgid "New password"
 msgstr ""
@@ -5062,8 +5063,8 @@ msgstr ""
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:343
 #: src/screens/Login/LoginForm.tsx:350
-#: src/screens/Login/SetNewPasswordForm.tsx:178
-#: src/screens/Login/SetNewPasswordForm.tsx:184
+#: src/screens/Login/SetNewPasswordForm.tsx:182
+#: src/screens/Login/SetNewPasswordForm.tsx:188
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -5260,11 +5261,11 @@ msgstr ""
 msgid "Notification Sounds"
 msgstr ""
 
-#: src/Navigation.tsx:657
+#: src/Navigation.tsx:630
 #: src/view/screens/Notifications.tsx:128
-#: src/view/shell/bottom-bar/BottomBar.tsx:242
+#: src/view/shell/bottom-bar/BottomBar.tsx:250
 #: src/view/shell/desktop/LeftNav.tsx:654
-#: src/view/shell/Drawer.tsx:468
+#: src/view/shell/Drawer.tsx:482
 msgid "Notifications"
 msgstr ""
 
@@ -6035,8 +6036,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:92
 #: src/screens/Settings/AboutSettings.tsx:95
 #: src/view/screens/PrivacyPolicy.tsx:31
-#: src/view/shell/Drawer.tsx:653
-#: src/view/shell/Drawer.tsx:654
+#: src/view/shell/Drawer.tsx:667
+#: src/view/shell/Drawer.tsx:668
 msgid "Privacy Policy"
 msgstr ""
 
@@ -6054,10 +6055,10 @@ msgstr ""
 msgid "profile"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:306
+#: src/view/shell/bottom-bar/BottomBar.tsx:314
 #: src/view/shell/desktop/LeftNav.tsx:709
 #: src/view/shell/Drawer.tsx:76
-#: src/view/shell/Drawer.tsx:545
+#: src/view/shell/Drawer.tsx:559
 msgid "Profile"
 msgstr ""
 
@@ -6651,6 +6652,7 @@ msgstr ""
 msgid "Resend Verification Email"
 msgstr ""
 
+#: src/screens/Login/SetNewPasswordForm.tsx:116
 #: src/view/com/modals/ChangePassword.tsx:197
 msgid "Reset code"
 msgstr ""
@@ -6823,7 +6825,7 @@ msgstr ""
 #: src/components/forms/SearchInput.tsx:36
 #: src/screens/Search/Shell.tsx:307
 #: src/screens/Search/Shell.tsx:464
-#: src/view/shell/bottom-bar/BottomBar.tsx:188
+#: src/view/shell/bottom-bar/BottomBar.tsx:196
 msgid "Search"
 msgstr ""
 
@@ -7078,7 +7080,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:336
+#: src/view/shell/Drawer.tsx:350
 msgid "Send feedback"
 msgstr ""
 
@@ -7154,7 +7156,7 @@ msgstr ""
 #: src/Navigation.tsx:185
 #: src/screens/Settings/Settings.tsx:90
 #: src/view/shell/desktop/LeftNav.tsx:727
-#: src/view/shell/Drawer.tsx:558
+#: src/view/shell/Drawer.tsx:572
 msgid "Settings"
 msgstr ""
 
@@ -7384,8 +7386,8 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:69
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
-#: src/view/shell/bottom-bar/BottomBar.tsx:345
-#: src/view/shell/bottom-bar/BottomBar.tsx:350
+#: src/view/shell/bottom-bar/BottomBar.tsx:353
+#: src/view/shell/bottom-bar/BottomBar.tsx:358
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:209
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:214
 #: src/view/shell/NavSignupCard.tsx:57
@@ -7810,8 +7812,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:84
 #: src/screens/Settings/AboutSettings.tsx:87
 #: src/view/screens/TermsOfService.tsx:31
-#: src/view/shell/Drawer.tsx:646
-#: src/view/shell/Drawer.tsx:648
+#: src/view/shell/Drawer.tsx:660
+#: src/view/shell/Drawer.tsx:662
 msgid "Terms of Service"
 msgstr ""
 
@@ -8679,7 +8681,7 @@ msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
 
-#: src/screens/Login/SetNewPasswordForm.tsx:190
+#: src/screens/Login/SetNewPasswordForm.tsx:194
 msgid "Updating..."
 msgstr ""
 
