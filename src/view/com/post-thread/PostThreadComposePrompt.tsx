@@ -44,7 +44,7 @@ export function PostThreadComposePrompt({
               t.atoms.border_contrast_low,
               t.atoms.bg,
             ]
-          : [a.px_md, a.pt_sm],
+          : [a.px_md, a.pb_2xs],
       ]}>
       {!gtMobile && (
         <LinearGradient
