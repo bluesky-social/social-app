@@ -36,7 +36,10 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {useSetUnstablePostSource} from '#/state/unstable-post-source'
+import {
+  buildPostSourceKey,
+  setUnstablePostSource,
+} from '#/state/unstable-post-source'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
 import {Link, TextLink, TextLinkOnWebOnly} from '#/view/com/util/Link'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
@@ -176,7 +179,6 @@ let FeedItemInner = ({
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
   const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
-  const unstableSetPostSource = useSetUnstablePostSource()
 
   const onPressReply = () => {
     sendInteraction({
@@ -232,7 +234,7 @@ let FeedItemInner = ({
       reqId,
     })
     unstableCacheProfileView(queryClient, post.author)
-    unstableSetPostSource(post.uri, {
+    setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
       feed: feedDescriptor,
       post: {
         post,
