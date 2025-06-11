@@ -61,6 +61,7 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 /**
  * Begin geolocation ASAP
@@ -131,10 +132,12 @@ function InnerApp() {
                                             <SafeAreaProvider>
                                               <ProgressGuideProvider>
                                                 <ServiceConfigProvider>
-                                                  <IntentDialogProvider>
-                                                    <Shell />
-                                                    <NuxDialogs />
-                                                  </IntentDialogProvider>
+                                                  <HideBottomBarBorderProvider>
+                                                    <IntentDialogProvider>
+                                                      <Shell />
+                                                      <NuxDialogs />
+                                                    </IntentDialogProvider>
+                                                  </HideBottomBarBorderProvider>
                                                 </ServiceConfigProvider>
                                               </ProgressGuideProvider>
                                             </SafeAreaProvider>

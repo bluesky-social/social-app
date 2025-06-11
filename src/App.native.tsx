@@ -72,6 +72,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 SplashScreen.preventAutoHideAsync()
 if (isIOS) {
@@ -150,14 +151,16 @@ function InnerApp() {
                                           <MutedThreadsProvider>
                                             <ProgressGuideProvider>
                                               <ServiceAccountManager>
-                                                <GestureHandlerRootView
-                                                  style={s.h100pct}>
-                                                  <IntentDialogProvider>
-                                                    <TestCtrls />
-                                                    <Shell />
-                                                    <NuxDialogs />
-                                                  </IntentDialogProvider>
-                                                </GestureHandlerRootView>
+                                                <HideBottomBarBorderProvider>
+                                                  <GestureHandlerRootView
+                                                    style={s.h100pct}>
+                                                    <IntentDialogProvider>
+                                                      <TestCtrls />
+                                                      <Shell />
+                                                      <NuxDialogs />
+                                                    </IntentDialogProvider>
+                                                  </GestureHandlerRootView>
+                                                </HideBottomBarBorderProvider>
                                               </ServiceAccountManager>
                                             </ProgressGuideProvider>
                                           </MutedThreadsProvider>

@@ -21,6 +21,7 @@ import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '#/state/queries/profile-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '#/state/queries/suggested-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersQueryData} from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
 import type * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
 
@@ -167,6 +168,7 @@ function* findProfilesInCache(
   yield* findAllProfilesInListConvosQueryData(queryClient, did)
   yield* findAllProfilesInFeedsQueryData(queryClient, did)
   yield* findAllProfilesInPostThreadQueryData(queryClient, did)
+  yield* findAllProfilesInPostThreadV2QueryData(queryClient, did)
   yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
   yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did)
 }
