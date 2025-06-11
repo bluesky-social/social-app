@@ -7,7 +7,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
-import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
+// import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
 import {
   Heart2_Stroke2_Corner0_Rounded as HeartIcon,
@@ -21,12 +21,14 @@ import {
 import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import * as SettingsList from './components/SettingsList'
+import * as SettingsList from '../components/SettingsList'
+import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>
 export function NotificationSettingsScreen({}: Props) {
   const {_} = useLingui()
   const t = useTheme()
+
   return (
     <Layout.Screen>
       <Layout.Header.Outer>
@@ -42,7 +44,7 @@ export function NotificationSettingsScreen({}: Props) {
         <SettingsList.Container>
           <SettingsList.LinkItem
             label={_(msg`Settings for reply, mention, and quote notifications`)}
-            to="/settings/notifications/replies"
+            to={{screen: 'PostNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={BubbleIcon} />
             <ItemTextWithSubtitle
@@ -52,7 +54,7 @@ export function NotificationSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             label={_(msg`Settings for like notifications`)}
-            to="/settings/notifications/likes"
+            to={{screen: 'LikeNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={HeartIcon} />
             <ItemTextWithSubtitle
@@ -62,7 +64,7 @@ export function NotificationSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             label={_(msg`Settings for repost notifications`)}
-            to="/settings/notifications/reposts"
+            to={{screen: 'RepostNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={RepostIcon} />
             <ItemTextWithSubtitle
@@ -72,7 +74,7 @@ export function NotificationSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             label={_(msg`Settings for new follower notifications`)}
-            to="/settings/notifications/new-followers"
+            to={{screen: 'NewFollowerNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={PersonPlusIcon} />
             <ItemTextWithSubtitle
@@ -82,7 +84,7 @@ export function NotificationSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             label={_(msg`Settings for notifications for likes on your reposts`)}
-            to="/settings/notifications/likes-on-reposts"
+            to={{screen: 'LikesOnRepostsNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={LikeRepostIcon} />
             <ItemTextWithSubtitle
@@ -94,7 +96,7 @@ export function NotificationSettingsScreen({}: Props) {
             label={_(
               msg`Settings for notifications for reposts on your reposts`,
             )}
-            to="/settings/notifications/reposts-on-reposts"
+            to={{screen: 'RepostsOnRepostsNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={RepostRepostIcon} />
             <ItemTextWithSubtitle
@@ -102,9 +104,9 @@ export function NotificationSettingsScreen({}: Props) {
               subtitleText={<Trans>In-app, Push, Everyone</Trans>}
             />
           </SettingsList.LinkItem>
-          <SettingsList.LinkItem
+          {/* <SettingsList.LinkItem
             label={_(msg`Settings for other's activity`)}
-            to="/settings/notifications/account-subscriptions"
+            to={{screen: 'AccountSubscriptionSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={BellRingingIcon} />
 
@@ -112,10 +114,10 @@ export function NotificationSettingsScreen({}: Props) {
               titleText={<Trans>Other's activity</Trans>}
               subtitleText={<Trans>In-app, Push, Everyone</Trans>}
             />
-          </SettingsList.LinkItem>
+          </SettingsList.LinkItem> */}
           <SettingsList.LinkItem
             label={_(msg`Settings for notifications for everything else`)}
-            to="/settings/notifications/miscellaneous"
+            to={{screen: 'MiscellaneousNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={ShapesIcon} />
             <View style={[a.flex_1]}>
@@ -130,25 +132,5 @@ export function NotificationSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
-  )
-}
-
-function ItemTextWithSubtitle({
-  titleText,
-  subtitleText,
-}: {
-  titleText: React.ReactNode
-  subtitleText: React.ReactNode
-}) {
-  const t = useTheme()
-  return (
-    <View style={[a.flex_1, a.gap_2xs]}>
-      <SettingsList.ItemText>
-        <Trans>{titleText}</Trans>
-      </SettingsList.ItemText>
-      <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-        <Trans>{subtitleText}</Trans>
-      </Text>
-    </View>
   )
 }

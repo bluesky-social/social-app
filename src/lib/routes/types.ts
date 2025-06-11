@@ -53,6 +53,13 @@ export type CommonNavigatorParams = {
   PrivacyAndSecuritySettings: undefined
   ContentAndMediaSettings: undefined
   NotificationSettings: undefined
+  PostNotificationSettings: undefined
+  LikeNotificationSettings: undefined
+  RepostNotificationSettings: undefined
+  NewFollowerNotificationSettings: undefined
+  LikesOnRepostsNotificationSettings: undefined
+  RepostsOnRepostsNotificationSettings: undefined
+  MiscellaneousNotificationSettings: undefined
   SettingsInterests: undefined
   AboutSettings: undefined
   AppIconSettings: undefined

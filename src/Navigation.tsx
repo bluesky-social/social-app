@@ -111,6 +111,13 @@ import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {LegacyNotificationSettingsScreen} from './screens/Settings/LegacyNotificationSettings'
 import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
+import {LikeNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikeNotificationSettings'
+import {LikesOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
+import {MiscellaneousNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
+import {NewFollowerNotificationSettingsScreen} from './screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
+import {PostNotificationSettingsScreen} from './screens/Settings/NotificationSettings/PostNotificationSettings'
+import {RepostNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostNotificationSettings'
+import {RepostsOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -385,6 +392,62 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="NotificationSettings"
         getComponent={() => NotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="PostNotificationSettings"
+        getComponent={() => PostNotificationSettingsScreen}
+        options={{
+          title: title(msg`Reply, mention, and quote notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="LikeNotificationSettings"
+        getComponent={() => LikeNotificationSettingsScreen}
+        options={{
+          title: title(msg`Like notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="RepostNotificationSettings"
+        getComponent={() => RepostNotificationSettingsScreen}
+        options={{
+          title: title(msg`Repost notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="NewFollowerNotificationSettings"
+        getComponent={() => NewFollowerNotificationSettingsScreen}
+        options={{
+          title: title(msg`Repost notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="LikesOnRepostsNotificationSettings"
+        getComponent={() => LikesOnRepostsNotificationSettingsScreen}
+        options={{
+          title: title(msg`Likes on your reposts notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="RepostsOnRepostsNotificationSettings"
+        getComponent={() => RepostsOnRepostsNotificationSettingsScreen}
+        options={{
+          title: title(msg`Reposts on your reposts notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="MiscellaneousNotificationSettings"
+        getComponent={() => MiscellaneousNotificationSettingsScreen}
+        options={{
+          title: title(msg`Miscellaneous notifications`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="ContentAndMediaSettings"
