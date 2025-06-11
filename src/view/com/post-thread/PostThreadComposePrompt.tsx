@@ -1,4 +1,4 @@
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -16,8 +16,10 @@ import {Text} from '#/components/Typography'
 
 export function PostThreadComposePrompt({
   onPressCompose,
+  style,
 }: {
   onPressCompose: () => void
+  style?: StyleProp<ViewStyle>
 }) {
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
@@ -45,6 +47,7 @@ export function PostThreadComposePrompt({
               t.atoms.bg,
             ]
           : [a.px_md, a.pb_2xs],
+        style,
       ]}>
       {!gtMobile && (
         <LinearGradient
