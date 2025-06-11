@@ -41,7 +41,7 @@ import {type ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {useUnstablePostSource} from '#/state/unstable-post-source'
+import {type PostSource} from '#/state/unstable-post-source'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {Link, TextLink} from '#/view/com/util/Link'
@@ -89,6 +89,7 @@ export function PostThreadItem({
   onPostSuccess,
   hideTopBorder,
   threadgateRecord,
+  anchorPostSource,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
@@ -107,6 +108,7 @@ export function PostThreadItem({
   onPostSuccess?: (data: OnPostSuccessData) => void
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  anchorPostSource?: PostSource
 }) {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -143,6 +145,7 @@ export function PostThreadItem({
         onPostSuccess={onPostSuccess}
         hideTopBorder={hideTopBorder}
         threadgateRecord={threadgateRecord}
+        anchorPostSource={anchorPostSource}
       />
     )
   }
@@ -189,6 +192,7 @@ let PostThreadItemLoaded = ({
   onPostSuccess,
   hideTopBorder,
   threadgateRecord,
+  anchorPostSource,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
@@ -208,10 +212,10 @@ let PostThreadItemLoaded = ({
   onPostSuccess?: (data: OnPostSuccessData) => void
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  anchorPostSource?: PostSource
 }): React.ReactNode => {
   const {currentAccount, hasSession} = useSession()
-  const source = useUnstablePostSource(post.uri)
-  const feedFeedback = useFeedFeedback(source?.feed, hasSession)
+  const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
 
   const t = useTheme()
   const pal = usePalette('default')
@@ -282,12 +286,12 @@ let PostThreadItemLoaded = ({
   )
 
   const onPressReply = () => {
-    if (source) {
+    if (anchorPostSource && isHighlightedPost) {
       feedFeedback.sendInteraction({
         item: post.uri,
         event: 'app.bsky.feed.defs#interactionReply',
-        feedContext: source.post.feedContext,
-        reqId: source.post.reqId,
+        feedContext: anchorPostSource.post.feedContext,
+        reqId: anchorPostSource.post.reqId,
       })
     }
     openComposer({
@@ -305,23 +309,23 @@ let PostThreadItemLoaded = ({
   }
 
   const onOpenAuthor = () => {
-    if (source) {
+    if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
         event: 'app.bsky.feed.defs#clickthroughAuthor',
-        feedContext: source.post.feedContext,
-        reqId: source.post.reqId,
+        feedContext: anchorPostSource.post.feedContext,
+        reqId: anchorPostSource.post.reqId,
       })
     }
   }
 
   const onOpenEmbed = () => {
-    if (source) {
+    if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
         event: 'app.bsky.feed.defs#clickthroughEmbed',
-        feedContext: source.post.feedContext,
-        reqId: source.post.reqId,
+        feedContext: anchorPostSource.post.feedContext,
+        reqId: anchorPostSource.post.reqId,
       })
     }
   }
@@ -332,7 +336,7 @@ let PostThreadItemLoaded = ({
 
   const {isActive: live} = useActorStatus(post.author)
 
-  const reason = source?.post.reason
+  const reason = anchorPostSource?.post.reason
   const viaRepost = useMemo(() => {
     if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
       return {
@@ -557,8 +561,8 @@ let PostThreadItemLoaded = ({
                   onPostReply={onPostReply}
                   logContext="PostThreadItem"
                   threadgateRecord={threadgateRecord}
-                  feedContext={source?.post?.feedContext}
-                  reqId={source?.post?.reqId}
+                  feedContext={anchorPostSource?.post?.feedContext}
+                  reqId={anchorPostSource?.post?.reqId}
                   viaRepost={viaRepost}
                 />
               </FeedFeedbackProvider>

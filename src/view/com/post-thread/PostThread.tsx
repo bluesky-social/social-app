@@ -19,6 +19,7 @@ import {ScrollProvider} from '#/lib/ScrollContext'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {useFeedFeedback} from '#/state/feed-feedback'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   fillThreadModerationCache,
@@ -35,6 +36,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {useUnstablePostSource} from '#/state/unstable-post-source'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -91,7 +93,7 @@ const keyExtractor = (item: RowItem) => {
   return item._reactKey
 }
 
-export function PostThread({uri}: {uri: string | undefined}) {
+export function PostThread({uri}: {uri: string}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
@@ -102,6 +104,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
     HiddenRepliesState.Hide,
   )
   const headerRef = React.useRef<View | null>(null)
+  const anchorPostSource = useUnstablePostSource(uri)
+  const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
 
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -396,9 +400,17 @@ export function PostThread({uri}: {uri: string | undefined}) {
   )
 
   const {openComposer} = useOpenComposer()
-  const onPressReply = React.useCallback(() => {
+  const onReplyToAnchor = React.useCallback(() => {
     if (thread?.type !== 'post') {
       return
+    }
+    if (anchorPostSource) {
+      feedFeedback.sendInteraction({
+        item: thread.post.uri,
+        event: 'app.bsky.feed.defs#interactionReply',
+        feedContext: anchorPostSource.post.feedContext,
+        reqId: anchorPostSource.post.reqId,
+      })
     }
     openComposer({
       replyTo: {
@@ -411,7 +423,14 @@ export function PostThread({uri}: {uri: string | undefined}) {
       },
       onPost: onPostReply,
     })
-  }, [openComposer, thread, onPostReply, threadModerationCache])
+  }, [
+    openComposer,
+    thread,
+    onPostReply,
+    threadModerationCache,
+    anchorPostSource,
+    feedFeedback,
+  ])
 
   const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
   const hasParents =
@@ -424,7 +443,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
       return (
         <View>
           {!isMobile && (
-            <PostThreadComposePrompt onPressCompose={onPressReply} />
+            <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />
           )}
         </View>
       )
@@ -512,6 +531,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
             }
             onPostReply={onPostReply}
             hideTopBorder={index === 0 && !item.ctx.isParentLoading}
+            anchorPostSource={anchorPostSource}
           />
         </View>
       )
@@ -590,7 +610,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
         />
       </ScrollProvider>
       {isMobile && canReply && hasSession && (
-        <MobileComposePrompt onPressReply={onPressReply} />
+        <MobileComposePrompt onPressReply={onReplyToAnchor} />
       )}
     </>
   )

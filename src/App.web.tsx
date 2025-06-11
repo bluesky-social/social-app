@@ -48,7 +48,6 @@ import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
-import {Provider as UnstablePostSourceProvider} from '#/state/unstable-post-source'
 import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
@@ -133,14 +132,12 @@ function InnerApp() {
                                             <SafeAreaProvider>
                                               <ProgressGuideProvider>
                                                 <ServiceConfigProvider>
-                                                  <UnstablePostSourceProvider>
-                                                    <HideBottomBarBorderProvider>
-                                                      <IntentDialogProvider>
-                                                        <Shell />
-                                                        <NuxDialogs />
-                                                      </IntentDialogProvider>
-                                                    </HideBottomBarBorderProvider>
-                                                  </UnstablePostSourceProvider>
+                                                  <HideBottomBarBorderProvider>
+                                                    <IntentDialogProvider>
+                                                      <Shell />
+                                                      <NuxDialogs />
+                                                    </IntentDialogProvider>
+                                                  </HideBottomBarBorderProvider>
                                                 </ServiceConfigProvider>
                                               </ProgressGuideProvider>
                                             </SafeAreaProvider>
