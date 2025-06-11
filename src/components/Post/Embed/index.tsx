@@ -1,8 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  $Typed,
-  AppBskyFeedDefs,
+  type $Typed,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
   moderatePost,
@@ -17,7 +17,6 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {Link} from '#/view/com/util/Link'
-import {} from '#/view/com/util/post-embeds/types'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {atoms as a, useTheme} from '#/alf'
 import {ContentHider} from '#/components/moderation/ContentHider'
@@ -26,15 +25,15 @@ import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
-import {Embed as TEmbed, EmbedType, parseEmbed} from '#/types/bsky/post'
+import {type Embed as TEmbed, type EmbedType, parseEmbed} from '#/types/bsky/post'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
 import {ModeratedListEmbed} from './ListEmbed'
 import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
 import {
-  CommonProps,
-  EmbedProps,
+  type CommonProps,
+  type EmbedProps,
   PostEmbedViewContext,
   QuoteEmbedViewContext,
 } from './types'
