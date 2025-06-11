@@ -10,6 +10,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, ios, native, useBreakpoints, useTheme} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
 
@@ -47,12 +48,11 @@ export function PostThreadComposePrompt({
       ]}>
       {!gtMobile && (
         <LinearGradient
+          key={t.name} // android does not update when you change the colors. sigh.
           start={[0.5, 0]}
           end={[0.5, 1]}
           colors={[
-            // "white transparent" - the CSS transparent keyword
-            // is black transparent
-            'rgba(255, 255, 255, 0)',
+            transparentifyColor(t.atoms.bg.backgroundColor, 0),
             t.atoms.bg.backgroundColor,
           ]}
           locations={[0.15, 0.4]}
