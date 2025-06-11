@@ -1,4 +1,4 @@
-import React, {useEffect, useId, useRef, useState} from 'react'
+import {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -7,6 +7,7 @@ import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as BandwidthEstimate from './bandwidth-estimate'
 import {Controls} from './web-controls/VideoControls'
@@ -25,10 +26,11 @@ export function VideoEmbedInnerWeb({
   lastKnownTime: React.MutableRefObject<number | undefined>
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isFullscreen, toggleFullscreen] = useFullscreen(containerRef)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
-  const [hlsLoading, setHlsLoading] = React.useState(false)
+  const [hlsLoading, setHlsLoading] = useState(false)
   const figId = useId()
   const {_} = useLingui()
 
@@ -51,6 +53,15 @@ export function VideoEmbedInnerWeb({
       videoRef.current.currentTime = lastKnownTime.current
     }
   }, [lastKnownTime])
+
+  useEffect(() => {
+    if (isFullscreen) {
+      document.documentElement.style.scrollbarGutter = 'unset'
+      return () => {
+        document.documentElement.style.removeProperty('scrollbar-gutter')
+      }
+    }
+  }, [isFullscreen])
 
   return (
     <View
@@ -98,10 +109,11 @@ export function VideoEmbedInnerWeb({
           setFocused={setFocused}
           hlsLoading={hlsLoading}
           onScreen={onScreen}
-          fullscreenRef={containerRef}
+          isFullscreen={isFullscreen}
+          toggleFullscreen={toggleFullscreen}
           hasSubtitleTrack={hasSubtitleTrack}
         />
-        <MediaInsetBorder />
+        {!isFullscreen && <MediaInsetBorder />}
       </div>
     </View>
   )
