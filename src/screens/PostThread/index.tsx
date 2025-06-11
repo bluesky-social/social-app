@@ -481,6 +481,11 @@ export function PostThread({uri}: {uri: string}) {
     ],
   )
 
+  const footerHeight = useMemo(
+    () => Math.max(180, windowHeight - 200 - thread.state.replyCount * 100),
+    [windowHeight, thread.state.replyCount],
+  )
+
   return (
     <>
       <Layout.Header.Outer headerRef={headerRef}>
@@ -532,13 +537,14 @@ export function PostThread({uri}: {uri: string}) {
                * account for the `on*ReachedThreshold` values.
                *
                * Otherwise, and on web, this value needs to be the height of
-               * the viewport _minus_ a sensible min-post height e.g. 200, so
-               * that there's enough scroll remaining to get the anchor post
-               * back to the top of the screen when handling scroll.
+               * the viewport _minus_ a sensible min-post height e.g. 200 plus
+               * 100 per reply, so that there's enough scroll remaining to get the
+               * anchor post back to the top of the screen when handling scroll,
+               * while trying to minimize the height if there's enough replies.
                */
               height={platform({
-                web: windowHeight - 200,
-                default: deferParents ? windowHeight * 2 : windowHeight - 200,
+                web: footerHeight,
+                default: deferParents ? windowHeight * 2 : footerHeight,
               })}
               style={isTombstoneView ? {borderTopWidth: 0} : undefined}
             />
