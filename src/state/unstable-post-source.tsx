@@ -1,4 +1,4 @@
-import {useId, useState} from 'react'
+import {useEffect, useId, useState} from 'react'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 
 import {Logger} from '#/logger'
@@ -57,12 +57,20 @@ export function useUnstablePostSource(key: string) {
     )
     const source = consumedSources.get(id) || transientSources.get(key)
     if (source) {
-      logger.debug('consume', {key, source})
+      logger.debug('consume', {id, key, source})
       transientSources.delete(key)
       consumedSources.set(id, source)
     }
     return source
   })
+
+  useEffect(() => {
+    return () => {
+      consumedSources.delete(id)
+      logger.debug('cleanup', {id})
+    }
+  }, [id])
+
   return source
 }
 
