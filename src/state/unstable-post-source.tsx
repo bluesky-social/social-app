@@ -18,7 +18,7 @@ export type PostSource = {
  * A cache of sources that will be consumed by the post thread view. This is
  * cleaned up any time a source is consumed.
  */
-const transientSourcesRef = new Map<string, PostSource>()
+const transientSources = new Map<string, PostSource>()
 
 /**
  * A cache of sources that have been consumed by the post thread view. This is
@@ -26,7 +26,7 @@ const transientSourcesRef = new Map<string, PostSource>()
  * consumes a source, this is never reused unless a user navigates back to a
  * post thread view that has not been dropped from memory.
  */
-const consumedSourcesRef = new Map<string, PostSource>()
+const consumedSources = new Map<string, PostSource>()
 
 /**
  * For stashing the feed that the user was browsing when they clicked on a post.
@@ -39,7 +39,7 @@ export function setUnstablePostSource(key: string, source: PostSource) {
     `setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
   )
   logger.debug('set', {key, source})
-  transientSourcesRef.set(key, source)
+  transientSources.set(key, source)
 }
 
 /**
@@ -55,11 +55,11 @@ export function useUnstablePostSource(key: string) {
       key,
       `consumeUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
     )
-    const source = consumedSourcesRef.get(id) || transientSourcesRef.get(key)
+    const source = consumedSources.get(id) || transientSources.get(key)
     if (source) {
       logger.debug('consume', {key, source})
-      transientSourcesRef.delete(key)
-      consumedSourcesRef.set(id, source)
+      transientSources.delete(key)
+      consumedSources.set(id, source)
     }
     return source
   })
