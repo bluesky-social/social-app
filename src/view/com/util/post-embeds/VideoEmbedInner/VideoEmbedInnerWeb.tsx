@@ -1,4 +1,4 @@
-import React, {useEffect, useId, useRef, useState} from 'react'
+import {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -28,7 +28,7 @@ export function VideoEmbedInnerWeb({
   const videoRef = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
-  const [hlsLoading, setHlsLoading] = React.useState(false)
+  const [hlsLoading, setHlsLoading] = useState(false)
   const figId = useId()
   const {_} = useLingui()
 
@@ -101,8 +101,8 @@ export function VideoEmbedInnerWeb({
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
         />
-        <MediaInsetBorder />
       </div>
+      <MediaInsetBorder />
     </View>
   )
 }
