@@ -1,4 +1,4 @@
-import {Route, RouteParams} from './types'
+import {type Route, type RouteParams} from './types'
 
 export class Router {
   routes: [string, Route][] = []
@@ -55,7 +55,7 @@ function createRoute(pattern: string): Route {
       }
       return undefined
     },
-    build(params: Record<string, string>) {
+    build(params: Record<string, string> = {}) {
       const str = pattern.replace(
         /:([\w]+)/g,
         (_m, name) => params[name] || 'undefined',

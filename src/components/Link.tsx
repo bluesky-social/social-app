@@ -4,7 +4,6 @@ import {sanitizeUrl} from '@braintree/sanitize-url'
 import {
   type LinkProps as RNLinkProps,
   StackActions,
-  useLinkBuilder,
 } from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
@@ -95,20 +94,19 @@ export function useLink({
   shouldProxy?: boolean
 }) {
   const navigation = useNavigationDeduped()
-  const {buildHref} = useLinkBuilder()
   const href = useMemo(() => {
     return typeof to === 'string'
       ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
       : to.screen
-      ? buildHref(to.screen, to.params)
+      ? router.matchName(to.screen)?.build(to.params)
       : to.href
       ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
       : undefined
-  }, [to, buildHref])
+  }, [to])
 
   if (!href) {
     throw new Error(
-      'Link `to` prop must be a string or an object with `screen` and `params` properties',
+      'Could not resolve screen. Link `to` prop must be a string or an object with `screen` and `params` properties',
     )
   }
 
