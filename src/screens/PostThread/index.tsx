@@ -41,6 +41,7 @@ import {ListFooter} from '#/components/Lists'
 
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
+const MIN_FOOTER_HEIGHT = 140
 
 export function PostThread({uri}: {uri: string}) {
   const {gtMobile} = useBreakpoints()
@@ -117,6 +118,8 @@ export function PostThread({uri}: {uri: string}) {
   const listRef = useRef<ListMethods>(null)
   const anchorRef = useRef<View | null>(null)
   const headerRef = useRef<View | null>(null)
+  const bookendRef = useRef<View | null>(null)
+  const [bookendOffset, setBookendOffset] = useState(0)
 
   /*
    * On a cold load, parents are not prepended until the anchor post has
@@ -203,6 +206,13 @@ export function PostThread({uri}: {uri: string}) {
        * do not affect scroll.
        */
       if (!deferParents || isRoot) shouldHandleScroll.current = false
+
+      bookendRef.current?.measure(
+        (_x, _y, _width, _height, _pageX, pageY) => {
+          console.log('Bookend offset:', pageY)
+          setBookendOffset(pageY)
+        },
+      )
     }
   })
 
@@ -349,7 +359,7 @@ export function PostThread({uri}: {uri: string}) {
       }
     }
 
-    return results
+    return results.concat({type: 'bookend', key: 'bookend'})
   }, [thread, deferParents, maxParentCount, maxChildrenCount])
 
   const isTombstoneView = useMemo(() => {
@@ -469,6 +479,22 @@ export function PostThread({uri}: {uri: string}) {
         } else if (item.item === 'replyComposer') {
           return <ThreadItemReplyComposerSkeleton />
         }
+      } else if (item.type === 'bookend') {
+        return (
+          <View
+            key={uri + JSON.stringify(thread.state)}
+            ref={bookendRef}
+            onLayout={() => {
+              return
+              bookendRef.current?.measure(
+                (_x, _y, _width, _height, _pageX, pageY) => {
+                  console.log('Bookend offset:', pageY)
+                  setBookendOffset(pageY)
+                },
+              )
+            }}
+          />
+        )
       }
       return null
     },
@@ -482,8 +508,8 @@ export function PostThread({uri}: {uri: string}) {
   )
 
   const footerHeight = useMemo(
-    () => Math.max(180, windowHeight - 200 - thread.state.replyCount * 100),
-    [windowHeight, thread.state.replyCount],
+    () => Math.max(MIN_FOOTER_HEIGHT, windowHeight - bookendOffset),
+    [bookendOffset],
   )
 
   return (

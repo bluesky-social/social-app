@@ -120,6 +120,10 @@ export type ThreadItem =
       key: string
       item: 'anchor' | 'reply' | 'replyComposer'
     }
+  | {
+      type: 'bookend'
+      key: 'bookend'
+    }
 
 /**
  * Metadata collected while traversing the raw data from the thread response.
