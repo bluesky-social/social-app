@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -14,6 +14,7 @@ import {
 } from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
   ArrowsDiagonalIn_Stroke2_Corner0_Rounded as ArrowsInIcon,
@@ -41,8 +42,7 @@ export function Controls({
   focused,
   setFocused,
   onScreen,
-  isFullscreen,
-  toggleFullscreen,
+  fullscreenRef,
   hlsLoading,
   hasSubtitleTrack,
 }: {
@@ -53,8 +53,7 @@ export function Controls({
   focused: boolean
   setFocused: (focused: boolean) => void
   onScreen: boolean
-  isFullscreen: boolean
-  toggleFullscreen: () => void
+  fullscreenRef: React.RefObject<HTMLDivElement>
   hlsLoading: boolean
   hasSubtitleTrack: boolean
 }) {
@@ -80,6 +79,7 @@ export function Controls({
     onIn: onHover,
     onOut: onEndHover,
   } = useInteractionState()
+  const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef)
   const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [interactingViaKeypress, setInteractingViaKeypress] = useState(false)
   const showSpinner = hlsLoading || buffering
@@ -103,6 +103,15 @@ export function Controls({
       }
     }
   }, [interactingViaKeypress])
+
+  useEffect(() => {
+    if (isFullscreen) {
+      document.documentElement.style.scrollbarGutter = 'unset'
+      return () => {
+        document.documentElement.style.removeProperty('scrollbar-gutter')
+      }
+    }
+  }, [isFullscreen])
 
   // pause + unfocus when another video is active
   useEffect(() => {
