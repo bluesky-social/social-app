@@ -48,7 +48,6 @@ import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
-import {Provider as UnstablePostSourceProvider} from '#/state/unstable-post-source'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
@@ -62,6 +61,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 /**
  * Begin geolocation ASAP
@@ -132,12 +132,12 @@ function InnerApp() {
                                             <SafeAreaProvider>
                                               <ProgressGuideProvider>
                                                 <ServiceConfigProvider>
-                                                  <UnstablePostSourceProvider>
+                                                  <HideBottomBarBorderProvider>
                                                     <IntentDialogProvider>
                                                       <Shell />
                                                       <NuxDialogs />
                                                     </IntentDialogProvider>
-                                                  </UnstablePostSourceProvider>
+                                                  </HideBottomBarBorderProvider>
                                                 </ServiceConfigProvider>
                                               </ProgressGuideProvider>
                                             </SafeAreaProvider>
