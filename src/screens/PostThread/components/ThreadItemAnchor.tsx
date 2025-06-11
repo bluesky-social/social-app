@@ -1,7 +1,7 @@
 import {memo, useCallback, useMemo} from 'react'
 import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
 import {
-  type AppBskyFeedDefs,
+  AppBskyFeedDefs,
   AppBskyFeedPost,
   type AppBskyFeedThreadgate,
   AtUri,
@@ -26,11 +26,13 @@ import {
   usePostShadow,
 } from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {type PostSource} from '#/state/unstable-post-source'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {Link} from '#/view/com/util/Link'
 import {formatCount} from '#/view/com/util/numeric/format'
@@ -64,10 +66,12 @@ export function ThreadItemAnchor({
   item,
   onPostSuccess,
   threadgateRecord,
+  postSource,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  postSource?: PostSource
 }) {
   const postShadow = usePostShadow(item.value.post)
   const threadRootUri = item.value.post.record.reply?.root?.uri || item.uri
@@ -86,6 +90,7 @@ export function ThreadItemAnchor({
       postShadow={postShadow}
       onPostSuccess={onPostSuccess}
       threadgateRecord={threadgateRecord}
+      postSource={postSource}
     />
   )
 }
@@ -161,17 +166,20 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   postShadow,
   onPostSuccess,
   threadgateRecord,
+  postSource,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   isRoot: boolean
   postShadow: Shadow<AppBskyFeedDefs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  postSource?: PostSource
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {openComposer} = useOpenComposer()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
+  const feedFeedback = useFeedFeedback(postSource?.feed, hasSession)
 
   const post = item.value.post
   const record = item.value.post.record
@@ -228,6 +236,17 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
 
+  const viaRepost = useMemo(() => {
+    const reason = postSource?.post.reason
+
+    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+      return {
+        uri: reason.uri,
+        cid: reason.cid,
+      }
+    }
+  }, [postSource])
+
   const onPressReply = useCallback(() => {
     openComposer({
       replyTo: {
@@ -240,7 +259,46 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       },
       onPostSuccess: onPostSuccess,
     })
-  }, [openComposer, post, record, onPostSuccess, moderation])
+
+    if (postSource) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#interactionReply',
+        feedContext: postSource.post.feedContext,
+        reqId: postSource.post.reqId,
+      })
+    }
+  }, [
+    openComposer,
+    post,
+    record,
+    onPostSuccess,
+    moderation,
+    postSource,
+    feedFeedback,
+  ])
+
+  const onOpenAuthor = () => {
+    if (postSource) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#clickthroughAuthor',
+        feedContext: postSource.post.feedContext,
+        reqId: postSource.post.reqId,
+      })
+    }
+  }
+
+  const onOpenEmbed = () => {
+    if (postSource) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#clickthroughEmbed',
+        feedContext: postSource.post.feedContext,
+        reqId: postSource.post.reqId,
+      })
+    }
+  }
 
   return (
     <>
@@ -261,13 +319,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             moderation={moderation.ui('avatar')}
             type={post.author.associated?.labeler ? 'labeler' : 'user'}
             live={live}
+            onBeforePress={onOpenAuthor}
           />
           <View style={[a.flex_1]}>
             <View style={[a.flex_row, a.align_center]}>
               <Link
                 style={[a.flex_shrink]}
                 href={authorHref}
-                title={authorTitle}>
+                title={authorTitle}
+                onBeforePress={onOpenAuthor}>
                 <Text
                   emoji
                   style={[a.text_lg, a.font_bold, a.leading_snug, a.self_start]}
@@ -332,6 +392,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   embed={post.embed}
                   moderation={moderation}
                   viewContext={PostEmbedViewContext.ThreadHighlighted}
+                  onOpen={onOpenEmbed}
                 />
               </View>
             )}
@@ -411,15 +472,20 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 marginLeft: -5,
               },
             ]}>
-            <PostControls
-              big
-              post={postShadow}
-              record={record}
-              richText={richText}
-              onPressReply={onPressReply}
-              logContext="PostThreadItem"
-              threadgateRecord={threadgateRecord}
-            />
+            <FeedFeedbackProvider value={feedFeedback}>
+              <PostControls
+                big
+                post={postShadow}
+                record={record}
+                richText={richText}
+                onPressReply={onPressReply}
+                logContext="PostThreadItem"
+                threadgateRecord={threadgateRecord}
+                feedContext={postSource?.post?.feedContext}
+                reqId={postSource?.post?.reqId}
+                viaRepost={viaRepost}
+              />
+            </FeedFeedbackProvider>
           </View>
         </View>
       </View>

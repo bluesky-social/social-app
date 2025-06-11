@@ -5,11 +5,13 @@ import {Trans} from '@lingui/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {useFeedFeedback} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {useUnstablePostSource} from '#/state/unstable-post-source'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
@@ -40,11 +42,13 @@ import {ListFooter} from '#/components/Lists'
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
 
-export function PostThread({uri}: {uri: string | undefined}) {
+export function PostThread({uri}: {uri: string}) {
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender() // TODO
   const {height: windowHeight} = useWindowDimensions()
+  const anchorPostSource = useUnstablePostSource(uri)
+  const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
 
   /*
    * One query to rule them all
@@ -87,7 +91,22 @@ export function PostThread({uri}: {uri: string | undefined}) {
       },
       onPostSuccess: optimisticOnPostReply,
     })
-  }, [anchor, openComposer, optimisticOnPostReply])
+
+    if (anchorPostSource) {
+      feedFeedback.sendInteraction({
+        item: post.uri,
+        event: 'app.bsky.feed.defs#interactionReply',
+        feedContext: anchorPostSource.post.feedContext,
+        reqId: anchorPostSource.post.reqId,
+      })
+    }
+  }, [
+    anchor,
+    openComposer,
+    optimisticOnPostReply,
+    anchorPostSource,
+    feedFeedback,
+  ])
 
   const isRoot = !!anchor && anchor.value.post.record.reply === undefined
   const canReply = !anchor?.value.post?.viewer?.replyDisabled
@@ -380,6 +399,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
                 item={item}
                 threadgateRecord={thread.data.threadgate?.record ?? undefined}
                 onPostSuccess={optimisticOnPostReply}
+                postSource={anchorPostSource}
               />
             </View>
           )
@@ -452,7 +472,13 @@ export function PostThread({uri}: {uri: string | undefined}) {
       }
       return null
     },
-    [thread, optimisticOnPostReply, onReplyToAnchor, gtMobile],
+    [
+      thread,
+      optimisticOnPostReply,
+      onReplyToAnchor,
+      gtMobile,
+      anchorPostSource,
+    ],
   )
 
   return (
