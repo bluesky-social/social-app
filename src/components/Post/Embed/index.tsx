@@ -25,7 +25,11 @@ import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
-import {type Embed as TEmbed, type EmbedType, parseEmbed} from '#/types/bsky/post'
+import {
+  type Embed as TEmbed,
+  type EmbedType,
+  parseEmbed,
+} from '#/types/bsky/post'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
