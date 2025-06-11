@@ -24,7 +24,7 @@ export function ThreadItemAnchorNoUnauthenticated() {
 
       <View style={[a.py_sm]}>
         <Text style={[a.text_xl, a.italic, t.atoms.text_contrast_medium]}>
-          <Trans>You must sign-in to view this post.</Trans>
+          <Trans>You must sign in to view this post.</Trans>
         </Text>
       </View>
     </View>
