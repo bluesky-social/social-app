@@ -1,17 +1,15 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import Animated from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {Trans} from '@lingui/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {clamp} from '#/lib/numbers'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
 import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
@@ -533,20 +531,16 @@ export function PostThread({uri}: {uri: string | undefined}) {
 }
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
-  const safeAreaInsets = useSafeAreaInsets()
-  const fabMinimalShellTransform = useMinimalShellFabTransform()
+  const {footerHeight} = useShellLayout()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      bottom: footerHeight.get(),
+    }
+  })
 
   return (
-    <Animated.View
-      style={[
-        a.fixed,
-        fabMinimalShellTransform,
-        {
-          left: 0,
-          right: 0,
-          bottom: clamp(safeAreaInsets.bottom, 13, 60),
-        },
-      ]}>
+    <Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
       <PostThreadComposePrompt onPressCompose={onPressReply} />
     </Animated.View>
   )
