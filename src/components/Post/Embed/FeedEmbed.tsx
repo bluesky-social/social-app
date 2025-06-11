@@ -6,8 +6,8 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {ContentHider} from '#/components/moderation/ContentHider'
-import {EmbedType} from '#/types/bsky/post'
-import {CommonProps} from './types'
+import {type EmbedType} from '#/types/bsky/post'
+import {type CommonProps} from './types'
 
 export function FeedEmbed({
   embed,
@@ -35,7 +35,6 @@ export function ModeratedFeedEmbed({
       ? moderateFeedGenerator(embed.view, moderationOpts)
       : undefined
   }, [embed.view, moderationOpts])
-  console.log(moderation)
   return (
     <ContentHider modui={moderation?.ui('contentList')}>
       <FeedEmbed embed={embed} />
