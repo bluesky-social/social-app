@@ -56,6 +56,8 @@ export function useUnstablePostSource(key: string) {
       logger.debug('consume', {id, key, source})
       transientSources.delete(key)
       consumedSources.set(id, source)
+    } else {
+      logger.warn('Could not find source for key ' + key)
     }
     return source
   })
@@ -84,10 +86,8 @@ export function buildPostSourceKey(key: string, handle: string) {
  * Just a lil dev helper
  */
 function assertValid(key: string, message: string) {
-  if (__DEV__) {
-    const urip = new AtUri(key)
-    if (urip.host.startsWith('did:')) {
-      logger.error(message)
-    }
+  const urip = new AtUri(key)
+  if (urip.host.startsWith('did:')) {
+    logger.error(message)
   }
 }
