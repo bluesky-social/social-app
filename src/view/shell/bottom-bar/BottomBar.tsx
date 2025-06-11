@@ -12,6 +12,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {BOTTOM_BAR_AVI} from '#/lib/demo'
 import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
+import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -73,6 +74,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const playHaptic = useHaptics()
   const hasHomeBadge = useHomeBadge()
   const gate = useGate()
+  const hideBorder = useHideBottomBarBorder()
   const iconWidth = 28
 
   const showSignIn = useCallback(() => {
@@ -146,7 +148,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         style={[
           styles.bottomBar,
           pal.view,
-          pal.border,
+          hideBorder ? {borderColor: pal.view.backgroundColor} : pal.border,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}

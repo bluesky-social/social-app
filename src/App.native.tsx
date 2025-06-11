@@ -73,6 +73,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 SplashScreen.preventAutoHideAsync()
 if (isIOS) {
@@ -152,14 +153,16 @@ function InnerApp() {
                                             <ProgressGuideProvider>
                                               <ServiceAccountManager>
                                                 <UnstablePostSourceProvider>
-                                                  <GestureHandlerRootView
-                                                    style={s.h100pct}>
-                                                    <IntentDialogProvider>
-                                                      <TestCtrls />
-                                                      <Shell />
-                                                      <NuxDialogs />
-                                                    </IntentDialogProvider>
-                                                  </GestureHandlerRootView>
+                                                  <HideBottomBarBorderProvider>
+                                                    <GestureHandlerRootView
+                                                      style={s.h100pct}>
+                                                      <IntentDialogProvider>
+                                                        <TestCtrls />
+                                                        <Shell />
+                                                        <NuxDialogs />
+                                                      </IntentDialogProvider>
+                                                    </GestureHandlerRootView>
+                                                  </HideBottomBarBorderProvider>
                                                 </UnstablePostSourceProvider>
                                               </ServiceAccountManager>
                                             </ProgressGuideProvider>

@@ -5,16 +5,18 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
+import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Link} from '#/view/com/util/Link'
 import {Logo} from '#/view/icons/Logo'
@@ -49,6 +51,8 @@ export function BottomBarWeb() {
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const {footerHeight} = useShellLayout()
+  const hideBorder = useHideBottomBarBorder()
   const iconWidth = 26
 
   const unreadMessageCount = useUnreadMessageCount()
@@ -74,9 +78,12 @@ export function BottomBarWeb() {
         styles.bottomBar,
         styles.bottomBarWeb,
         t.atoms.bg,
-        t.atoms.border_contrast_low,
+        hideBorder
+          ? {borderColor: t.atoms.bg.backgroundColor}
+          : t.atoms.border_contrast_low,
         footerMinimalShellTransform,
-      ]}>
+      ]}
+      onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>
       {hasSession ? (
         <>
           <NavItem
