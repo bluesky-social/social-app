@@ -51,10 +51,6 @@ export function setUnstablePostSource(key: string, source: PostSource) {
 export function useUnstablePostSource(key: string) {
   const id = useId()
   const [source] = useState(() => {
-    assertValid(
-      key,
-      `consumeUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
-    )
     const source = consumedSources.get(id) || transientSources.get(key)
     if (source) {
       logger.debug('consume', {id, key, source})
@@ -91,7 +87,7 @@ function assertValid(key: string, message: string) {
   if (__DEV__) {
     const urip = new AtUri(key)
     if (urip.host.startsWith('did:')) {
-      throw new Error(message)
+      logger.error(message)
     }
   }
 }
