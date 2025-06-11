@@ -34,7 +34,7 @@ const consumedSources = new Map<string, PostSource>()
  * Used for FeedFeedback and other ephemeral non-critical systems.
  */
 export function setUnstablePostSource(key: string, source: PostSource) {
-  assertValid(
+  assertValidDevOnly(
     key,
     `setUnstablePostSource key should be a URI containing a handle, received ${key} — use buildPostSourceKey`,
   )
@@ -51,13 +51,16 @@ export function setUnstablePostSource(key: string, source: PostSource) {
 export function useUnstablePostSource(key: string) {
   const id = useId()
   const [source] = useState(() => {
+    assertValidDevOnly(
+      key,
+      `consumeUnstablePostSource key should be a URI containing a handle, received ${key} — be sure to use buildPostSourceKey when setting the source`,
+      true,
+    )
     const source = consumedSources.get(id) || transientSources.get(key)
     if (source) {
       logger.debug('consume', {id, key, source})
       transientSources.delete(key)
       consumedSources.set(id, source)
-    } else {
-      logger.warn('Could not find source for key ' + key)
     }
     return source
   })
@@ -85,9 +88,15 @@ export function buildPostSourceKey(key: string, handle: string) {
 /**
  * Just a lil dev helper
  */
-function assertValid(key: string, message: string) {
-  const urip = new AtUri(key)
-  if (urip.host.startsWith('did:')) {
-    logger.error(message)
+function assertValidDevOnly(key: string, message: string, beChill = false) {
+  if (__DEV__) {
+    const urip = new AtUri(key)
+    if (urip.host.startsWith('did:')) {
+      if (beChill) {
+        logger.warn(message)
+      } else {
+        throw new Error(message)
+      }
+    }
   }
 }
