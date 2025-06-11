@@ -540,7 +540,7 @@ export function PostThread({uri}: {uri: string}) {
                * the viewport _minus_ a sensible min-post height e.g. 200 plus
                * 100 per reply, so that there's enough scroll remaining to get the
                * anchor post back to the top of the screen when handling scroll,
-               * while trying to minimize the height if there's enough replies.
+               * but letting the replies handle it if there's enough of them.
                */
               height={platform({
                 web: footerHeight,
