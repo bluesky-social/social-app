@@ -67,19 +67,19 @@ export function IS_PROD_SERVICE(url?: string) {
 }
 
 export const PROD_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
+  `at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/${rkey}`
 
 export const STAGING_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/${rkey}`
+  `at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/${rkey}`
 
 export const PROD_FEEDS = [
-  `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`,
-  `feedgen|${PROD_DEFAULT_FEED('thevids')}`,
+  `feedgen|${PROD_DEFAULT_FEED('blacksky-trend')}`,
+  `feedgen|${PROD_DEFAULT_FEED('blacksky-videos')}`,
 ]
 
 export const STAGING_FEEDS = [
-  `feedgen|${STAGING_DEFAULT_FEED('whats-hot')}`,
-  `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
+  `feedgen|${STAGING_DEFAULT_FEED('blacksky-trend')}`,
+  `feedgen|${STAGING_DEFAULT_FEED('blacksky-videos')}`,
 ]
 
 export const POST_IMG_MAX = {
@@ -126,11 +126,11 @@ export const BSKY_FEED_OWNER_DIDS = [
 ]
 
 export const DISCOVER_FEED_URI =
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
+  'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-trend'
 export const VIDEO_FEED_URI =
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids'
+  'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-videos'
 export const STAGING_VIDEO_FEED_URI =
-  'at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/thevids'
+  'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-videos'
 export const VIDEO_FEED_URIS = [VIDEO_FEED_URI, STAGING_VIDEO_FEED_URI]
 export const DISCOVER_SAVED_FEED = {
   type: 'feed',

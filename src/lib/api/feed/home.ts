@@ -45,7 +45,7 @@ export class HomeFeedAPI implements FeedAPI {
     this.following = new FollowingFeedAPI({agent})
     this.discover = new CustomFeedAPI({
       agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      feedParams: {feed: PROD_DEFAULT_FEED('blacksky-trend')},
     })
     this.userInterests = userInterests
   }
@@ -54,7 +54,7 @@ export class HomeFeedAPI implements FeedAPI {
     this.following = new FollowingFeedAPI({agent: this.agent})
     this.discover = new CustomFeedAPI({
       agent: this.agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      feedParams: {feed: PROD_DEFAULT_FEED('blacksky-trend')},
       userInterests: this.userInterests,
     })
     this.usingDiscover = false
