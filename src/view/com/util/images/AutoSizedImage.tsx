@@ -1,12 +1,15 @@
 import React, {useRef} from 'react'
-import {DimensionValue, Pressable, View} from 'react-native'
+import {type DimensionValue, Pressable, View} from 'react-native'
+import Animated, {
+  type AnimatedRef,
+  useAnimatedRef,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {AppBskyEmbedImages} from '@atproto/api'
+import {type AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HandleRef, useHandleRef} from '#/lib/hooks/useHandleRef'
-import type {Dimensions} from '#/lib/media/types'
+import {type Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -68,14 +71,17 @@ export function AutoSizedImage({
   image: AppBskyEmbedImages.ViewImage
   crop?: 'none' | 'square' | 'constrained'
   hideBadge?: boolean
-  onPress?: (containerRef: HandleRef, fetchedDims: Dimensions | null) => void
+  onPress?: (
+    containerRef: AnimatedRef<any>,
+    fetchedDims: Dimensions | null,
+  ) => void
   onLongPress?: () => void
   onPressIn?: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
-  const containerRef = useHandleRef()
+  const containerRef = useAnimatedRef()
   const fetchedDimsRef = useRef<{width: number; height: number} | null>(null)
 
   let aspectRatio: number | undefined
@@ -103,7 +109,7 @@ export function AutoSizedImage({
   const hasAlt = !!image.alt
 
   const contents = (
-    <View ref={containerRef} collapsable={false} style={{flex: 1}}>
+    <Animated.View ref={containerRef} collapsable={false} style={{flex: 1}}>
       <Image
         contentFit={isContain ? 'contain' : 'cover'}
         style={[a.w_full, a.h_full]}
@@ -185,7 +191,7 @@ export function AutoSizedImage({
           )}
         </View>
       ) : null}
-    </View>
+    </Animated.View>
   )
 
   if (cropDisabled) {

@@ -1,3 +1,32 @@
+diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
+index 914a249..0deac55 100644
+--- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
++++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.h
+@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
+  */
+ @interface RCTPullToRefreshViewComponentView : RCTViewComponentView <RCTCustomPullToRefreshViewProtocol>
+ 
++- (void)beginRefreshingProgrammatically;
++
+ @end
+ 
+ NS_ASSUME_NONNULL_END
+diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+index d029337..0f63ea3 100644
+--- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
++++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+@@ -1003,6 +1003,11 @@ - (void)_adjustForMaintainVisibleContentPosition
+   }
+ }
+ 
+++ (BOOL)shouldBeRecycled
++{
++  return NO;
++}
++
+ @end
+ 
+ Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
 index e9b330f..ec5f58c 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
@@ -15,7 +44,7 @@ diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshCont
 index 53bfd04..ff1b1ed 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
-@@ -23,6 +23,7 @@
+@@ -23,6 +23,7 @@ @implementation RCTRefreshControl {
    UIColor *_titleColor;
    CGFloat _progressViewOffset;
    BOOL _hasMovedToWindow;
@@ -23,7 +52,7 @@ index 53bfd04..ff1b1ed 100644
  }
  
  - (instancetype)init
-@@ -58,6 +59,12 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : (NSCoder *)aDecoder)
+@@ -58,6 +59,12 @@ - (void)layoutSubviews
    _isInitialRender = false;
  }
  
@@ -36,7 +65,7 @@ index 53bfd04..ff1b1ed 100644
  - (void)didMoveToWindow
  {
    [super didMoveToWindow];
-@@ -221,4 +228,50 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : (NSCoder *)aDecoder)
+@@ -221,4 +228,50 @@ - (void)refreshControlValueChanged
    }
  }
  
@@ -91,7 +120,7 @@ diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshCont
 index 40aaf9c..1c60164 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControlManager.m
-@@ -22,11 +22,12 @@ RCT_EXPORT_MODULE()
+@@ -22,11 +22,12 @@ - (UIView *)view
  
  RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
  RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
@@ -105,15 +134,3 @@ index 40aaf9c..1c60164 100644
  RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
  {
    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-diff --git a/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m b/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m
-index cd1e7eb..c1d0172 100644
---- a/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m
-+++ b/node_modules/react-native/React/Views/ScrollView/RCTScrollViewManager.m
-@@ -83,6 +83,7 @@ RCT_EXPORT_VIEW_PROPERTY(showsVerticalScrollIndicator, BOOL)
- RCT_EXPORT_VIEW_PROPERTY(scrollEventThrottle, NSTimeInterval)
- RCT_EXPORT_VIEW_PROPERTY(zoomScale, CGFloat)
- RCT_EXPORT_VIEW_PROPERTY(contentInset, UIEdgeInsets)
-+RCT_EXPORT_VIEW_PROPERTY(scrollIndicatorInsets, UIEdgeInsets)
- RCT_EXPORT_VIEW_PROPERTY(verticalScrollIndicatorInsets, UIEdgeInsets)
- RCT_EXPORT_VIEW_PROPERTY(scrollToOverflowEnabled, BOOL)
- RCT_EXPORT_VIEW_PROPERTY(snapToInterval, int)
