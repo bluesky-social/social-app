@@ -15,7 +15,6 @@ import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/q
 import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '#/state/queries/post-thread'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
 import {findAllPostsInQueryData as findAllPostsInThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
-import {useProfileShadow} from './profile-shadow'
 import {castAsShadow, type Shadow} from './types'
 export type {Shadow} from './types'
 
@@ -45,10 +44,6 @@ export function usePostShadow(
     setShadow(shadows.get(post))
   }
 
-  const authorShadow = useProfileShadow(post.author)
-  const wasMuted = !!authorShadow.viewer?.muted
-  const wasBlocked = !!authorShadow.viewer?.blocking
-
   useEffect(() => {
     function onUpdate() {
       setShadow(shadows.get(post))
@@ -60,18 +55,15 @@ export function usePostShadow(
   }, [post, setShadow])
 
   return useMemo(() => {
-    if (wasMuted || wasBlocked) {
-      return POST_TOMBSTONE
-    }
     if (shadow) {
       return mergeShadow(post, shadow)
     } else {
       return castAsShadow(post)
     }
-  }, [post, shadow, wasMuted, wasBlocked])
+  }, [post, shadow])
 }
 
-export function mergeShadow(
+function mergeShadow(
   post: AppBskyFeedDefs.PostView,
   shadow: Partial<PostShadow>,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
