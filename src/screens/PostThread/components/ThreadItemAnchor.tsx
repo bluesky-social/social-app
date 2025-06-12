@@ -17,7 +17,6 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {s} from '#/lib/styles'
 import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {
@@ -54,6 +53,7 @@ import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {PostControls} from '#/components/PostControls'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
@@ -323,39 +323,52 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           />
           <View style={[a.flex_1]}>
             <View style={[a.flex_row, a.align_center]}>
-              <Link
-                style={[a.flex_shrink]}
-                href={authorHref}
-                title={authorTitle}
-                onBeforePress={onOpenAuthor}>
-                <Text
-                  emoji
-                  style={[a.text_lg, a.font_bold, a.leading_snug, a.self_start]}
-                  numberOfLines={1}>
-                  {sanitizeDisplayName(
-                    post.author.displayName ||
-                      sanitizeHandle(post.author.handle),
-                    moderation.ui('displayName'),
-                  )}
-                </Text>
-              </Link>
+              <ProfileHoverCard inline did={post.author.did}>
+                <Link
+                  style={[a.flex_shrink]}
+                  href={authorHref}
+                  title={authorTitle}
+                  onBeforePress={onOpenAuthor}>
+                  <Text
+                    emoji
+                    style={[
+                      a.text_lg,
+                      a.font_bold,
+                      a.leading_snug,
+                      a.self_start,
+                    ]}
+                    numberOfLines={1}>
+                    {sanitizeDisplayName(
+                      post.author.displayName ||
+                        sanitizeHandle(post.author.handle),
+                      moderation.ui('displayName'),
+                    )}
+                  </Text>
+                </Link>
+              </ProfileHoverCard>
 
               <View style={[{paddingLeft: 3, top: -1}]}>
                 <VerificationCheckButton profile={authorShadow} size="md" />
               </View>
             </View>
-            <Link style={s.flex1} href={authorHref} title={authorTitle}>
-              <Text
-                emoji
-                style={[
-                  a.text_md,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                ]}
-                numberOfLines={1}>
-                {sanitizeHandle(post.author.handle, '@')}
-              </Text>
-            </Link>
+            <View style={[a.align_start]}>
+              <ProfileHoverCard inline did={post.author.did}>
+                <Link
+                  style={[a.flex_shrink]}
+                  href={authorHref}
+                  title={authorTitle}>
+                  <Text
+                    style={[
+                      a.text_md,
+                      a.leading_snug,
+                      t.atoms.text_contrast_medium,
+                    ]}
+                    numberOfLines={1}>
+                    {sanitizeHandle(post.author.handle, '@')}
+                  </Text>
+                </Link>
+              </ProfileHoverCard>
+            </View>
           </View>
           {showFollowButton && (
             <View>
