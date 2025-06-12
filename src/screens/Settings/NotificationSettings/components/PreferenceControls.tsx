@@ -6,7 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -101,8 +101,15 @@ export function Inner({
           <Toggle.Item
             label={_(msg`Receive push notifications`)}
             name="push"
-            style={[a.justify_between, a.py_xs]}>
-            <Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md]}>
+            style={[
+              a.py_xs,
+              platform({
+                native: [a.justify_between],
+                web: [a.flex_row_reverse, a.gap_md],
+              }),
+            ]}>
+            <Toggle.LabelText
+              style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
               <Trans>Push notifications</Trans>
             </Toggle.LabelText>
             <Toggle.Platform />
@@ -111,9 +118,15 @@ export function Inner({
             <Toggle.Item
               label={_(msg`Receive in-app notifications`)}
               name="list"
-              style={[a.justify_between, a.py_xs]}>
+              style={[
+                a.py_xs,
+                platform({
+                  native: [a.justify_between],
+                  web: [a.flex_row_reverse, a.gap_md],
+                }),
+              ]}>
               <Toggle.LabelText
-                style={[t.atoms.text, a.font_normal, a.text_md]}>
+                style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
                 <Trans>In-app notifications</Trans>
               </Toggle.LabelText>
               <Toggle.Platform />
@@ -130,26 +143,43 @@ export function Inner({
             type="radio"
             label={_('Filter who you receive notifications from')}
             values={[preference.filter]}
-            onChange={onChangeFilter}>
+            onChange={onChangeFilter}
+            disabled={channels.length === 0}>
             <View style={[a.gap_sm]}>
               <Toggle.Item
                 label={_(msg`Everyone`)}
                 name="all"
-                style={[a.flex_row, a.gap_sm, a.py_xs]}>
+                style={[
+                  a.flex_row,
+                  a.py_xs,
+                  platform({native: [a.gap_sm], web: [a.gap_md]}),
+                ]}>
                 <Toggle.Radio />
                 <Toggle.LabelText
-                  style={[t.atoms.text, a.font_normal, a.text_md]}>
-                  <Trans>Push notifications</Trans>
+                  style={[
+                    channels.length > 0 && t.atoms.text,
+                    a.font_normal,
+                    a.text_md,
+                  ]}>
+                  <Trans>Everyone</Trans>
                 </Toggle.LabelText>
               </Toggle.Item>
               {allowDisableInApp && (
                 <Toggle.Item
                   label={_(msg`People I follow`)}
                   name="follows"
-                  style={[a.flex_row, a.gap_sm, a.py_xs]}>
+                  style={[
+                    a.flex_row,
+                    a.py_xs,
+                    platform({native: [a.gap_sm], web: [a.gap_md]}),
+                  ]}>
                   <Toggle.Radio />
                   <Toggle.LabelText
-                    style={[t.atoms.text, a.font_normal, a.text_md]}>
+                    style={[
+                      channels.length > 0 && t.atoms.text,
+                      a.font_normal,
+                      a.text_md,
+                    ]}>
                     <Trans>People I follow</Trans>
                   </Toggle.LabelText>
                 </Toggle.Item>
