@@ -1,21 +1,25 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {View} from 'react-native'
+import {Trans} from '@lingui/macro'
 
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
 import {atoms as a} from '#/alf'
-import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
+import {Admonition} from '#/components/Admonition'
+import {RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon} from '#/components/icons/Repost'
 import * as Layout from '#/components/Layout'
 import * as SettingsList from '../components/SettingsList'
+import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
+import {PreferenceControls} from './components/PreferenceControls'
 
 type Props = NativeStackScreenProps<
   AllNavigatorParams,
   'RepostsOnRepostsNotificationSettings'
 >
 export function RepostsOnRepostsNotificationSettingsScreen({}: Props) {
-  const {_} = useLingui()
+  const {data: preferences, isError} = useNotificationSettingsQuery()
 
   return (
     <Layout.Screen>
@@ -30,12 +34,30 @@ export function RepostsOnRepostsNotificationSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
-          <SettingsList.LinkItem
-            label={_(msg`Settings for reply, mention, and quote notifications`)}
-            to="/settings/notifications/replies"
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={BubbleIcon} />
-          </SettingsList.LinkItem>
+          <SettingsList.Item style={[a.align_start]}>
+            <SettingsList.ItemIcon icon={RepostRepostIcon} />
+            <ItemTextWithSubtitle
+              bold
+              titleText={<Trans>Likes on your reposts</Trans>}
+              subtitleText={
+                <Trans>
+                  Get notifications when people like posts that you've reposted.
+                </Trans>
+              }
+            />
+          </SettingsList.Item>
+          {isError ? (
+            <View style={[a.px_lg, a.pt_md]}>
+              <Admonition type="error">
+                <Trans>Failed to load notification settings.</Trans>
+              </Admonition>
+            </View>
+          ) : (
+            <PreferenceControls
+              name="repostViaRepost"
+              preference={preferences?.repostViaRepost}
+            />
+          )}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>

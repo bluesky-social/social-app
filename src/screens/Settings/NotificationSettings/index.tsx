@@ -7,7 +7,7 @@ import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useNotificationSettingsQuery} from '#/state/queries/notification-settings'
+import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
@@ -47,13 +47,13 @@ export function NotificationSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
-          <View style={[a.px_lg, a.pb_md]}>
-            {isError && (
+          {isError && (
+            <View style={[a.px_lg, a.pb_md]}>
               <Admonition type="error">
                 <Trans>Failed to load notification settings.</Trans>
               </Admonition>
-            )}
-          </View>
+            </View>
+          )}
           <SettingsList.LinkItem
             label={_(msg`Settings for reply notifications`)}
             to={{screen: 'ReplyNotificationSettings'}}
@@ -67,7 +67,7 @@ export function NotificationSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             label={_(msg`Settings for mention notifications`)}
-            to={{screen: 'ReplyNotificationSettings'}}
+            to={{screen: 'MentionNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={AtIcon} />
             <ItemTextWithSubtitle
@@ -78,7 +78,7 @@ export function NotificationSettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             label={_(msg`Settings for quote notifications`)}
-            to={{screen: 'ReplyNotificationSettings'}}
+            to={{screen: 'QuoteNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={CloseQuoteIcon} />
             <ItemTextWithSubtitle
@@ -166,7 +166,7 @@ export function NotificationSettingsScreen({}: Props) {
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={ShapesIcon} />
             <ItemTextWithSubtitle
-              titleText={<Trans>Reposts on your reposts</Trans>}
+              titleText={<Trans>Everything else</Trans>}
               // technically a bundle of several settings, but since they're set together
               // and are most likely in sync we'll just show the state of one of them
               subtitleText={
