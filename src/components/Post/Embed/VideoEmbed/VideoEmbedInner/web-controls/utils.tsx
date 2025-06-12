@@ -1,4 +1,5 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
+import type React from 'react';
 
 import {isSafari} from '#/lib/browser'
 import {useVideoVolumeState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
@@ -68,14 +69,22 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
       setError(true)
     }
 
-    const handleCanPlay = () => {
+    const handleCanPlay = async () => {
       if (bufferingTimeout) clearTimeout(bufferingTimeout)
       setBuffering(false)
       setCanPlay(true)
 
       if (!ref.current) return
       if (playWhenReadyRef.current) {
-        ref.current.play()
+        try {
+          await ref.current.play()
+        } catch (e: any) {
+          if (
+            !e.message?.includes(`The request is not allowed by the user agent`)
+          ) {
+            throw e
+          }
+        }
         playWhenReadyRef.current = false
       }
     }
