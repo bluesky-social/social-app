@@ -12,9 +12,9 @@ import * as SettingsList from '../components/SettingsList'
 
 type Props = NativeStackScreenProps<
   AllNavigatorParams,
-  'NewFollowerNotificationSettings'
+  'QuoteNotificationSettings'
 >
-export function NewFollowerNotificationSettingsScreen({}: Props) {
+export function QuoteNotificationSettingsScreen({}: Props) {
   const {_} = useLingui()
 
   return (

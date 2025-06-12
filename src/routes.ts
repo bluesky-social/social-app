@@ -1,6 +1,12 @@
 import {Router} from '#/lib/routes/router'
+import {type FlatNavigatorParams} from './lib/routes/types'
 
-export const router = new Router({
+type AllNavigatableRoutes = Omit<
+  FlatNavigatorParams,
+  'NotFound' | 'SharedPreferencesTester'
+>
+
+export const router = new Router<AllNavigatableRoutes>({
   Home: '/',
   Search: '/search',
   Feeds: '/feeds',
@@ -45,11 +51,13 @@ export const router = new Router({
   AccountSettings: '/settings/account',
   PrivacyAndSecuritySettings: '/settings/privacy-and-security',
   ContentAndMediaSettings: '/settings/content-and-media',
-  SettingsInterests: '/settings/interests',
+  InterestsSettings: '/settings/interests',
   AboutSettings: '/settings/about',
   AppIconSettings: '/settings/app-icon',
   NotificationSettings: '/settings/notifications',
-  PostNotificationSettings: '/settings/notifications/posts',
+  ReplyNotificationSettings: '/settings/notifications/replies',
+  MentionNotificationSettings: '/settings/notifications/mentions',
+  QuoteNotificationSettings: '/settings/notifications/quotes',
   LikeNotificationSettings: '/settings/notifications/likes',
   RepostNotificationSettings: '/settings/notifications/reposts',
   NewFollowerNotificationSettings: '/settings/notifications/new-followers',

@@ -1,5 +1,4 @@
 import {Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {
   type AllNavigatorParams,
@@ -16,15 +15,13 @@ type Props = NativeStackScreenProps<
   'MiscellaneousNotificationSettings'
 >
 export function MiscellaneousNotificationSettingsScreen({}: Props) {
-  const {_} = useLingui()
-
   return (
     <Layout.Screen>
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Everything else</Trans>
+            <Trans>Notifications</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
@@ -37,7 +34,10 @@ export function MiscellaneousNotificationSettingsScreen({}: Props) {
               bold
               titleText={<Trans>Everything else</Trans>}
               subtitleText={
-                <Trans>Notifications for everything else, such as</Trans>
+                <Trans>
+                  Notifications for everything else, such as when someone joins
+                  via one of your starter packs.
+                </Trans>
               }
             />
           </SettingsList.Item>
