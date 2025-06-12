@@ -1,8 +1,9 @@
-import {Image as RNImage, Share as RNShare} from 'react-native'
+import {Image as RNImage} from 'react-native'
 import uuid from 'react-native-uuid'
 import {
   cacheDirectory,
   copyAsync,
+  createDownloadResumable,
   deleteAsync,
   EncodingType,
   getInfoAsync,
@@ -14,7 +15,6 @@ import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {Buffer} from 'buffer'
-import RNFetchBlob from 'rn-fetch-blob'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -68,28 +68,13 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
     return
   }
 
-  let downloadRes
+  const path = createPath(appendExt)
+
   try {
-    const downloadResPromise = RNFetchBlob.config({
-      fileCache: true,
-      appendExt,
-    }).fetch('GET', opts.uri)
-    const to1 = setTimeout(() => downloadResPromise.cancel(), opts.timeout)
-    downloadRes = await downloadResPromise
-    clearTimeout(to1)
-
-    const status = downloadRes.info().status
-    if (status !== 200) {
-      return
-    }
-
-    const localUri = normalizePath(downloadRes.path(), true)
-    return await doResize(localUri, opts)
+    await downloadImage(opts.uri, path, opts.timeout)
+    return await doResize(path, opts)
   } finally {
-    // TODO Whenever we remove `rn-fetch-blob`, we will need to replace this `flush()` with a `deleteAsync()` -hailey
-    if (downloadRes) {
-      downloadRes.flush()
-    }
+    safeDeleteAsync(path)
   }
 }
 
@@ -98,32 +83,16 @@ export async function shareImageModal({uri}: {uri: string}) {
     // TODO might need to give an error to the user in this case -prf
     return
   }
-  const downloadResponse = await RNFetchBlob.config({
-    fileCache: true,
-  }).fetch('GET', uri)
 
-  // NOTE
-  // assuming PNG
   // we're currently relying on the fact our CDN only serves pngs
   // -prf
-
-  let imagePath = downloadResponse.path()
-  imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
-
-  // NOTE
-  // for some reason expo-sharing refuses to work on iOS
-  // ...and visa versa
-  // -prf
-  if (isIOS) {
-    await RNShare.share({url: imagePath})
-  } else {
-    await Sharing.shareAsync(imagePath, {
-      mimeType: 'image/png',
-      UTI: 'image/png',
-    })
-  }
-
-  safeDeleteAsync(imagePath)
+  const imageUri = await downloadImage(uri, createPath('png'), 5e3)
+  const imagePath = await moveToPermanentPath(imageUri, '.png')
+  safeDeleteAsync(imageUri)
+  await Sharing.shareAsync(imagePath, {
+    mimeType: 'image/png',
+    UTI: 'image/png',
+  })
 }
 
 const ALBUM_NAME = 'Bluesky'
@@ -134,11 +103,8 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
   // assuming PNG
   // we're currently relying on the fact our CDN only serves pngs
   // -prf
-  const downloadResponse = await RNFetchBlob.config({
-    fileCache: true,
-  }).fetch('GET', uri)
-  let imagePath = downloadResponse.path()
-  imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
+  const imageUri = await downloadImage(uri, createPath('png'), 5e3)
+  const imagePath = await moveToPermanentPath(imageUri, '.png')
 
   // save
   try {
@@ -402,4 +368,25 @@ export function getResizedDimensions(originalDims: {
     width: Math.round(originalDims.width * ratio),
     height: Math.round(originalDims.height * ratio),
   }
+}
+
+function createPath(ext: string) {
+  // cacheDirectory will never be null on native, so the null check here is not necessary except for typescript.
+  // we use a web-only function for downloadAndResize on web
+  return `${cacheDirectory ?? ''}/${uuid.v4()}.${ext}`
+}
+
+async function downloadImage(uri: string, path: string, timeout: number) {
+  const dlResumable = createDownloadResumable(uri, path, {cache: true})
+
+  const to1 = setTimeout(() => dlResumable.cancelAsync(), timeout)
+
+  const dlRes = await dlResumable.downloadAsync()
+  clearTimeout(to1)
+
+  if (!dlRes?.uri) {
+    throw new Error('Failed to download image - dlRes is undefined')
+  }
+
+  return normalizePath(dlRes.uri)
 }

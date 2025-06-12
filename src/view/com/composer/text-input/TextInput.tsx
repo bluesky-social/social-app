@@ -16,7 +16,7 @@ import {
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
   type PastedFile,
-  type PasteInputRef,
+  type PasteInputRef, // @ts-expect-error no types when installing from github
 } from '@mattermost/react-native-paste-input'
 
 import {POST_IMG_MAX} from '#/lib/constants'

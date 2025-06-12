@@ -1,16 +1,21 @@
 import {InteractionManager, View} from 'react-native'
-import {MeasuredDimensions, runOnJS, runOnUI} from 'react-native-reanimated'
+import {
+  type AnimatedRef,
+  measure,
+  type MeasuredDimensions,
+  runOnJS,
+  runOnUI,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
-import {HandleRef, measureHandle} from '#/lib/hooks/useHandleRef'
 import {useLightboxControls} from '#/state/lightbox'
-import {Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
+import {type Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
 import {AutoSizedImage} from '#/view/com/util/images/AutoSizedImage'
 import {ImageLayoutGrid} from '#/view/com/util/images/ImageLayoutGrid'
 import {atoms as a} from '#/alf'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
-import {EmbedType} from '#/types/bsky/post'
-import {CommonProps} from './types'
+import {type EmbedType} from '#/types/bsky/post'
+import {type CommonProps} from './types'
 
 export function ImageEmbed({
   embed,
@@ -45,13 +50,15 @@ export function ImageEmbed({
     }
     const onPress = (
       index: number,
-      refs: HandleRef[],
+      refs: AnimatedRef<any>[],
       fetchedDims: (Dimensions | null)[],
     ) => {
-      const handles = refs.map(r => r.current)
       runOnUI(() => {
         'worklet'
-        const rects = handles.map(measureHandle)
+        const rects: (MeasuredDimensions | null)[] = []
+        for (const r of refs) {
+          rects.push(measure(r))
+        }
         runOnJS(_openLightbox)(index, rects, fetchedDims)
       })()
     }

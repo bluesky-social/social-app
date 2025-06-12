@@ -64,6 +64,7 @@ import {
   type SupportedMimeTypes,
 } from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useAppState} from '#/lib/hooks/useAppState'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -823,6 +824,8 @@ let ComposerPost = React.memo(function ComposerPost({
     [post.id, onSelectVideo, onImageAdd, _],
   )
 
+  useHideKeyboardOnBackground()
+
   return (
     <View
       style={[
@@ -1525,6 +1528,18 @@ function isEmptyPost(post: PostDraft) {
     !post.embed.link &&
     !post.embed.quote
   )
+}
+
+function useHideKeyboardOnBackground() {
+  const appState = useAppState()
+
+  useEffect(() => {
+    if (isIOS) {
+      if (appState === 'inactive') {
+        Keyboard.dismiss()
+      }
+    }
+  }, [appState])
 }
 
 const styles = StyleSheet.create({

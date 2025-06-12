@@ -33,15 +33,10 @@ jest.mock('react-native-safe-area-context', () => {
   }
 })
 
-jest.mock('rn-fetch-blob', () => ({
-  config: jest.fn().mockReturnThis(),
-  cancel: jest.fn(),
-  fetch: jest.fn(),
-}))
-
 jest.mock('expo-file-system', () => ({
   getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
   deleteAsync: jest.fn(),
+  createDownloadResumable: jest.fn(),
 }))
 
 jest.mock('expo-image-manipulator', () => ({
@@ -101,7 +96,7 @@ jest.mock('expo-modules-core', () => ({
       }
     }
   }),
-  requireNativeViewManager: jest.fn().mockImplementation(moduleName => {
+  requireNativeViewManager: jest.fn().mockImplementation(_ => {
     return () => null
   }),
 }))
