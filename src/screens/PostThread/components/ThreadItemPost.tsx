@@ -6,13 +6,11 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
 import {
@@ -24,7 +22,6 @@ import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {TextLink} from '#/view/com/util/Link'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -42,6 +39,7 @@ import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
+import {ShowMore} from '#/components/ShowMore'
 import * as Skele from '#/components/Skeleton'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
@@ -187,8 +185,6 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   postShadow: Shadow<AppBskyFeedDefs.PostView>
 }) {
   const t = useTheme()
-  const pal = usePalette('default')
-  const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
 
@@ -313,14 +309,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                   shouldProxyLinks={true}
                 />
               ) : undefined}
-              {limitLines ? (
-                <TextLink
-                  text={_(msg`Show More`)}
-                  style={pal.link}
-                  onPress={onPressShowMore}
-                  href="#"
-                />
-              ) : undefined}
+              {limitLines && <ShowMore onPress={onPressShowMore} />}
               {post.embed && (
                 <View style={[a.pb_xs]}>
                   <PostEmbeds

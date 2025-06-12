@@ -41,7 +41,7 @@ import {
   setUnstablePostSource,
 } from '#/state/unstable-post-source'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
-import {Link, TextLink, TextLinkOnWebOnly} from '#/view/com/util/Link'
+import {Link, TextLinkOnWebOnly} from '#/view/com/util/Link'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
@@ -57,6 +57,7 @@ import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
+import {ShowMore} from '#/components/ShowMore'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 
@@ -500,8 +501,6 @@ let PostContent = ({
   post: AppBskyFeedDefs.PostView
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
-  const pal = usePalette('default')
-  const {_} = useLingui()
   const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
@@ -558,14 +557,7 @@ let PostContent = ({
           />
         </View>
       ) : undefined}
-      {limitLines ? (
-        <TextLink
-          text={_(msg`Show More`)}
-          style={pal.link}
-          onPress={onPressShowMore}
-          href="#"
-        />
-      ) : undefined}
+      {limitLines && <ShowMore onPress={onPressShowMore} />}
       {postEmbed ? (
         <View style={[a.pb_xs]}>
           <PostEmbeds

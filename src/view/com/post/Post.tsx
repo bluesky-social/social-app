@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -9,8 +9,7 @@ import {
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
@@ -27,7 +26,7 @@ import {
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {Link, TextLink} from '#/view/com/util/Link'
+import {Link} from '#/view/com/util/Link'
 import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
@@ -40,6 +39,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostControls} from '#/components/PostControls'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
+import {ShowMore} from '#/components/ShowMore'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 
@@ -115,7 +115,6 @@ function PostInner({
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
@@ -128,7 +127,7 @@ function PostInner({
     replyAuthorDid = urip.hostname
   }
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -141,18 +140,18 @@ function PostInner({
     })
   }, [openComposer, post, record, moderation])
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
 
-  const onBeforePress = React.useCallback(() => {
+  const onBeforePress = useCallback(() => {
     precacheProfile(queryClient, post.author)
   }, [queryClient, post.author])
 
   const {currentAccount} = useSession()
   const isMe = replyAuthorDid === currentAccount?.did
 
-  const [hover, setHover] = React.useState(false)
+  const [hover, setHover] = useState(false)
   return (
     <Link
       href={itemHref}
@@ -239,14 +238,7 @@ function PostInner({
                 />
               </View>
             ) : undefined}
-            {limitLines ? (
-              <TextLink
-                text={_(msg`Show More`)}
-                style={pal.link}
-                onPress={onPressShowMore}
-                href="#"
-              />
-            ) : undefined}
+            {limitLines && <ShowMore onPress={onPressShowMore} />}
             {post.embed ? (
               <PostEmbeds
                 embed={post.embed}
