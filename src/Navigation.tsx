@@ -1,10 +1,7 @@
 import * as React from 'react'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
-import {
-  type BottomTabBarProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs'
+import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -20,7 +17,6 @@ import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
-  type BottomTabNavigatorParams,
   type FlatNavigatorParams,
   type HomeTabNavigatorParams,
   type MessagesTabNavigatorParams,
@@ -32,7 +28,7 @@ import {type RouteParams, type State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {
@@ -110,6 +106,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {Tab} from './BottomBarNavigator'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -122,7 +119,6 @@ const MyProfileTab =
 const MessagesTab =
   createNativeStackNavigatorWithAuth<MessagesTabNavigatorParams>()
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
-const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
 /**
  * These "common screens" are reused across stacks.
@@ -496,7 +492,8 @@ function TabsNavigator() {
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
       screenOptions={{headerShown: false, lazy: true}}
-      tabBar={tabBar}>
+      tabBar={tabBar}
+      disablePageAnimations={isAndroid}>
       <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
       <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
       <Tab.Screen

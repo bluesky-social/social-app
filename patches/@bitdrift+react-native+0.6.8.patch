@@ -1,0 +1,15 @@
+diff --git a/node_modules/@bitdrift/react-native/ios/BdReactNative.mm b/node_modules/@bitdrift/react-native/ios/BdReactNative.mm
+index 78e6b9f..fa57299 100644
+--- a/node_modules/@bitdrift/react-native/ios/BdReactNative.mm
++++ b/node_modules/@bitdrift/react-native/ios/BdReactNative.mm
+@@ -1,6 +1,10 @@
+ #import "BdReactNative.h"
+ #import "Capture/Capture.h"
++#if __has_include("BdReactNative/BdReactNative-Swift.h")
++#import "BdReactNative/BdReactNative-Swift.h"
++#else
+ #import "BdReactNative-Swift.h"
++#endif
+ 
+ @implementation BdReactNative
+ RCT_EXPORT_MODULE()
