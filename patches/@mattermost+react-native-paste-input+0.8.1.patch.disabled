@@ -262,3 +262,19 @@ index 31e07e3..7f0ebfb 100644
    newState.mostRecentEventCount = getConcreteProps().mostRecentEventCount;
    setStateData(std::move(newState));
  }
+diff --git a/node_modules/@mattermost/react-native-paste-input/ios/UIPasteboard+GetImageInfo.m b/node_modules/@mattermost/react-native-paste-input/ios/UIPasteboard+GetImageInfo.m
+index df52bb7..7477ecf 100644
+--- a/node_modules/@mattermost/react-native-paste-input/ios/UIPasteboard+GetImageInfo.m
++++ b/node_modules/@mattermost/react-native-paste-input/ios/UIPasteboard+GetImageInfo.m
+@@ -8,7 +8,11 @@
+
+ #import "UIPasteboard+GetImageInfo.h"
+ #import "NSData+MimeType.h"
++#if __has_include("react_native_paste_input/react_native_paste_input-Swift.h")
++#import "react_native_paste_input/react_native_paste_input-Swift.h"
++#else
+ #import "react_native_paste_input-Swift.h"
++#endif
+ #import "UIImage+vImageScaling.h"
+
+ @implementation UIPasteboard (GetImageInfo)
