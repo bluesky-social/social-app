@@ -90,6 +90,7 @@ import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
 import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
+import {KeyBackupsScreen} from '#/screens/Settings/KeyBackups'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
 import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
@@ -321,6 +322,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="AppPasswords"
         getComponent={() => AppPasswordsScreen}
         options={{title: title(msg`App Passwords`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="KeyBackups"
+        getComponent={() => KeyBackupsScreen}
+        options={{title: title(msg`Key Backups`), requireAuth: false}}
       />
       <Stack.Screen
         name="SavedFeeds"

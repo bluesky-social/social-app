@@ -71,6 +71,14 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
               </SettingsList.BadgeText>
             )}
           </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/key-backups"
+            label={_(msg`Key backups`)}>
+            <SettingsList.ItemIcon icon={KeyIcon} />
+            <SettingsList.ItemText>
+              <Trans>Key backups</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
           <SettingsList.Divider />
           <SettingsList.Group>
             <SettingsList.ItemIcon icon={EyeSlashIcon} />

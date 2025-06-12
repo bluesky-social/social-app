@@ -358,6 +358,14 @@ module.exports = function (_config) {
           },
         ],
         ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
+        [
+          'expo-secure-store',
+          {
+            configureAndroidBackup: true,
+            faceIDPermission:
+              'Allow Bluesky to access your Face ID biometric data.',
+          },
+        ],
       ].filter(Boolean),
       extra: {
         eas: {

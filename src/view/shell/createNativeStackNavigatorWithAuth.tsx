@@ -112,7 +112,12 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || isNative)) {
+  const bypassLoggedOut = activeRoute.key.includes('KeyBackups')
+  if (
+    !hasSession &&
+    (!PWI_ENABLED || activeRouteRequiresAuth || isNative) &&
+    !bypassLoggedOut
+  ) {
     return <LoggedOut />
   }
   if (hasSession && currentAccount?.signupQueued) {
