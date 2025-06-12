@@ -92,16 +92,6 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
               </Toggle.LabelText>
               <Toggle.Platform />
             </Toggle.Item>
-            <Toggle.Item
-              label={_(msg`Corn facts`)}
-              name="corn"
-              style={[a.justify_between, a.py_xs]}>
-              <Toggle.LabelText
-                style={[t.atoms.text, a.font_normal, a.text_md]}>
-                <Trans>Corn facts</Trans>
-              </Toggle.LabelText>
-              <Toggle.Platform />
-            </Toggle.Item>
           </View>
         </Toggle.Group>
       </View>
