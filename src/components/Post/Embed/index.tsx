@@ -149,6 +149,10 @@ function RecordEmbed({
       return null
     }
     case 'post': {
+      if (rest.isWithinQuote && !rest.allowNestedQuotes) {
+        return null
+      }
+
       return (
         <QuoteEmbed
           {...rest}
@@ -158,6 +162,8 @@ function RecordEmbed({
               ? QuoteEmbedViewContext.FeedEmbedRecordWithMedia
               : undefined
           }
+          isWithinQuote={rest.isWithinQuote}
+          allowNestedQuotes={rest.allowNestedQuotes}
         />
       )
     }
@@ -213,6 +219,8 @@ export function QuoteEmbed({
   embed,
   onOpen,
   style,
+  isWithinQuote: parentIsWithinQuote,
+  allowNestedQuotes: parentAllowNestedQuotes,
 }: Omit<CommonProps, 'viewContext'> & {
   embed: EmbedType<'post'>
   viewContext?: QuoteEmbedViewContext
@@ -306,7 +314,17 @@ export function QuoteEmbed({
               disableLinks
             />
           ) : null}
-          {quote.embed && <Embed embed={quote.embed} moderation={moderation} />}
+          {quote.embed && (
+            <Embed
+              embed={quote.embed}
+              moderation={moderation}
+              isWithinQuote={parentIsWithinQuote ?? true}
+              // already within quote? override nested
+              allowNestedQuotes={
+                parentIsWithinQuote ? false : parentAllowNestedQuotes
+              }
+            />
+          )}
         </Link>
       </ContentHider>
     </View>

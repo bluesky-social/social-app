@@ -1,5 +1,5 @@
-import {StyleProp, ViewStyle} from 'react-native'
-import {AppBskyFeedDefs, ModerationDecision} from '@atproto/api'
+import {type StyleProp, type ViewStyle} from 'react-native'
+import {type AppBskyFeedDefs, type ModerationDecision} from '@atproto/api'
 
 export enum PostEmbedViewContext {
   ThreadHighlighted = 'ThreadHighlighted',
@@ -15,8 +15,9 @@ export type CommonProps = {
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
-  allowNestedQuotes?: boolean
   viewContext?: PostEmbedViewContext
+  isWithinQuote?: boolean
+  allowNestedQuotes?: boolean
 }
 
 export type EmbedProps = CommonProps & {
