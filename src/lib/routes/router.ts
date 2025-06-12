@@ -1,8 +1,8 @@
 import {type Route, type RouteParams} from './types'
 
-export class Router {
+export class Router<T extends Record<string, any>> {
   routes: [string, Route][] = []
-  constructor(description: Record<string, string | string[]>) {
+  constructor(description: Record<keyof T, string | string[]>) {
     for (const [screen, pattern] of Object.entries(description)) {
       if (typeof pattern === 'string') {
         this.routes.push([screen, createRoute(pattern)])
@@ -14,7 +14,7 @@ export class Router {
     }
   }
 
-  matchName(name: string): Route | undefined {
+  matchName(name: keyof T | (string & {})): Route | undefined {
     for (const [screenName, route] of this.routes) {
       if (screenName === name) {
         return route

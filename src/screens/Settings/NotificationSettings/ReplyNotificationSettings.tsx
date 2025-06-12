@@ -12,9 +12,9 @@ import * as SettingsList from '../components/SettingsList'
 
 type Props = NativeStackScreenProps<
   AllNavigatorParams,
-  'PostNotificationSettings'
+  'ReplyNotificationSettings'
 >
-export function PostNotificationSettingsScreen({}: Props) {
+export function ReplyNotificationSettingsScreen({}: Props) {
   const {_} = useLingui()
 
   return (
@@ -23,7 +23,7 @@ export function PostNotificationSettingsScreen({}: Props) {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Replies, mentions, and quotes</Trans>
+            <Trans>Notifications</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />

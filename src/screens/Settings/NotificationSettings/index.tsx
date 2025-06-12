@@ -7,6 +7,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
+import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 // import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
 import {
@@ -14,6 +15,7 @@ import {
   LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon,
 } from '#/components/icons/Heart2'
 import {PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import {CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon} from '#/components/icons/Quote'
 import {
   Repost_Stroke2_Corner2_Rounded as RepostIcon,
   RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
@@ -43,12 +45,32 @@ export function NotificationSettingsScreen({}: Props) {
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.LinkItem
-            label={_(msg`Settings for reply, mention, and quote notifications`)}
-            to={{screen: 'PostNotificationSettings'}}
+            label={_(msg`Settings for reply notifications`)}
+            to={{screen: 'ReplyNotificationSettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={BubbleIcon} />
             <ItemTextWithSubtitle
-              titleText={<Trans>Replies, Mentions, and Quotes</Trans>}
+              titleText={<Trans>Replies</Trans>}
+              subtitleText={<Trans>In-app, Push, Everyone</Trans>}
+            />
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            label={_(msg`Settings for mention notifications`)}
+            to={{screen: 'ReplyNotificationSettings'}}
+            contentContainerStyle={[a.align_start]}>
+            <SettingsList.ItemIcon icon={AtIcon} />
+            <ItemTextWithSubtitle
+              titleText={<Trans>Mentions</Trans>}
+              subtitleText={<Trans>In-app, Push, Everyone</Trans>}
+            />
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            label={_(msg`Settings for quote notifications`)}
+            to={{screen: 'ReplyNotificationSettings'}}
+            contentContainerStyle={[a.align_start]}>
+            <SettingsList.ItemIcon icon={CloseQuoteIcon} />
+            <ItemTextWithSubtitle
+              titleText={<Trans>Quotes</Trans>}
               subtitleText={<Trans>In-app, Push, Everyone</Trans>}
             />
           </SettingsList.LinkItem>

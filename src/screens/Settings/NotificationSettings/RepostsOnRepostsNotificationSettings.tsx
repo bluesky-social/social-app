@@ -23,7 +23,7 @@ export function RepostsOnRepostsNotificationSettingsScreen({}: Props) {
         <Layout.Header.BackButton />
         <Layout.Header.Content>
           <Layout.Header.TitleText>
-            <Trans>Reposts on your reposts</Trans>
+            <Trans>Notifications</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
