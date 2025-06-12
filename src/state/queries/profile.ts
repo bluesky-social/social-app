@@ -499,10 +499,9 @@ function useProfileBlockMutation() {
         {subject: did, createdAt: new Date().toISOString()},
       )
     },
-    onSuccess(data, {did}) {
+    onSuccess(_, {did}) {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
       resetProfilePostsQueries(queryClient, did, 1000)
-      updateProfileShadow(queryClient, did, {blockingUri: data.uri})
     },
   })
 }
@@ -524,7 +523,6 @@ function useProfileUnblockMutation() {
     },
     onSuccess(_, {did}) {
       resetProfilePostsQueries(queryClient, did, 1000)
-      updateProfileShadow(queryClient, did, {blockingUri: undefined})
     },
   })
 }
