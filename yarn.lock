@@ -3493,10 +3493,10 @@
     "@expo/config-plugins" "^9.0.14"
     fast-json-stringify "^6.0.0"
 
-"@bottom-tabs/react-navigation@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@bottom-tabs/react-navigation/-/react-navigation-0.6.0.tgz#119517b6f2a8045b2e2c44291dcef157c95d0108"
-  integrity sha512-BiHjD9/TGy+mFB68imvxzM8G5UFRZA1kY9ELpxA0116i3TWR5TrzH+bgVHHCM7ovh9anvGc3Ht4YPItxmEDtgQ==
+"@bottom-tabs/react-navigation@0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@bottom-tabs/react-navigation/-/react-navigation-0.9.2.tgz#f08d20ff691f39817170733eee3f0c2211478174"
+  integrity sha512-IZZKllcaqCGsKIgeXmYFGU95IXxbBpXtwKws4Lg2GJw/qqAYYsPFEl0JBvnymSD7G1zkHYEilg5UHuTd0NmX7A==
   dependencies:
     color "^4.2.3"
 
@@ -16813,10 +16813,10 @@ react-keyed-flatten-children@^5.0.0:
   resolved "https://registry.yarnpkg.com/react-keyed-flatten-children/-/react-keyed-flatten-children-5.0.0.tgz#3024fc8819f7b60fc5039b527f133d9ac3a02a82"
   integrity sha512-XA5ah02sZAeDrbz4Lusd4acqG5q5BtVwPHWierruVhrgX6CMCldbGcTZZM14cQZ+GWq+tzRzEpsCvnTtLODvjw==
 
-react-native-bottom-tabs@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/react-native-bottom-tabs/-/react-native-bottom-tabs-0.9.1.tgz#2937c07e7deb88bf2144aca789cb08bf05d0bb7d"
-  integrity sha512-qIqlQZ13O/iN5QEeD1Eup2YcS3kQLm/iLjSsms2yjxCcv9t0Vn6GumwghXXdigTO57IpVC5lr8ceUhz6OPKiOA==
+react-native-bottom-tabs@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/react-native-bottom-tabs/-/react-native-bottom-tabs-0.9.2.tgz#04d355194f2ccaeeaa013af00d27b590ccd252ac"
+  integrity sha512-kwLx9OM6v5P10TdmNhlEgb8nmwBOpwy3ULIxEv1v6cYjzuRkeYtA2dqYeFhJAn1rmWMrl3MnL3xzW5Q3IQyfAg==
   dependencies:
     react-freeze "^1.0.0"
     sf-symbols-typescript "^2.0.0"
