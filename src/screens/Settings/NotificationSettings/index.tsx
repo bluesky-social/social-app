@@ -192,19 +192,7 @@ function SettingPreview({
   if (!preference) {
     return null
   } else {
-    if (!preference.$type) throw new Error('Preference lacks $type')
-
-    if (preference.$type === 'app.bsky.notification.defs#preference') {
-      if (preference.list && preference.push) {
-        return _(msg`In-app, Push`)
-      } else if (preference.list) {
-        return _(msg`In-app`)
-      } else if (preference.push) {
-        return _(msg`Push`)
-      }
-    } else if (
-      preference.$type === 'app.bsky.notification.defs#filterablePreference'
-    ) {
+    if ('filter' in preference) {
       if (preference.filter === 'all') {
         if (preference.list && preference.push) {
           return _(msg`In-app, Push, Everyone`)
@@ -221,6 +209,14 @@ function SettingPreview({
         } else if (preference.push) {
           return _(msg`Push, People you follow`)
         }
+      }
+    } else {
+      if (preference.list && preference.push) {
+        return _(msg`In-app, Push`)
+      } else if (preference.list) {
+        return _(msg`In-app`)
+      } else if (preference.push) {
+        return _(msg`Push`)
       }
     }
   }
