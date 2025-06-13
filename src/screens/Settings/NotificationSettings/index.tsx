@@ -116,127 +116,133 @@ export function NotificationSettingsScreen({}: Props) {
               </Admonition>
             </View>
           )}
-          <SettingsList.LinkItem
-            label={_(msg`Settings for reply notifications`)}
-            to={{screen: 'ReplyNotificationSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={BubbleIcon} />
-            <ItemTextWithSubtitle
-              titleText={<Trans>Replies</Trans>}
-              subtitleText={<SettingPreview preference={settings?.reply} />}
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            label={_(msg`Settings for mention notifications`)}
-            to={{screen: 'MentionNotificationSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={AtIcon} />
-            <ItemTextWithSubtitle
-              titleText={<Trans>Mentions</Trans>}
-              subtitleText={<SettingPreview preference={settings?.mention} />}
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            label={_(msg`Settings for quote notifications`)}
-            to={{screen: 'QuoteNotificationSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={CloseQuoteIcon} />
-            <ItemTextWithSubtitle
-              titleText={<Trans>Quotes</Trans>}
-              subtitleText={<SettingPreview preference={settings?.quote} />}
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            label={_(msg`Settings for like notifications`)}
-            to={{screen: 'LikeNotificationSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={HeartIcon} />
-            <ItemTextWithSubtitle
-              titleText={<Trans>Likes</Trans>}
-              subtitleText={<SettingPreview preference={settings?.like} />}
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            label={_(msg`Settings for repost notifications`)}
-            to={{screen: 'RepostNotificationSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={RepostIcon} />
-            <ItemTextWithSubtitle
-              titleText={<Trans>Reposts</Trans>}
-              subtitleText={<SettingPreview preference={settings?.repost} />}
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            label={_(msg`Settings for new follower notifications`)}
-            to={{screen: 'NewFollowerNotificationSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={PersonPlusIcon} />
-            <ItemTextWithSubtitle
-              titleText={<Trans>New followers</Trans>}
-              subtitleText={<SettingPreview preference={settings?.follow} />}
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            label={_(msg`Settings for notifications for likes on your reposts`)}
-            to={{screen: 'LikesOnRepostsNotificationSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={LikeRepostIcon} />
-            <ItemTextWithSubtitle
-              titleText={<Trans>Likes on your reposts</Trans>}
-              subtitleText={
-                <SettingPreview preference={settings?.likeViaRepost} />
-              }
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem>
-          <SettingsList.LinkItem
-            label={_(
-              msg`Settings for notifications for reposts on your reposts`,
-            )}
-            to={{screen: 'RepostsOnRepostsNotificationSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={RepostRepostIcon} />
-            <ItemTextWithSubtitle
-              titleText={<Trans>Reposts on your reposts</Trans>}
-              subtitleText={
-                <SettingPreview preference={settings?.repostViaRepost} />
-              }
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem>
-          {/* <SettingsList.LinkItem
-            label={_(msg`Settings for other's activity`)}
-            to={{screen: 'AccountSubscriptionSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={BellRingingIcon} />
+          <View style={[a.gap_sm]}>
+            <SettingsList.LinkItem
+              label={_(msg`Settings for reply notifications`)}
+              to={{screen: 'ReplyNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={BubbleIcon} />
+              <ItemTextWithSubtitle
+                titleText={<Trans>Replies</Trans>}
+                subtitleText={<SettingPreview preference={settings?.reply} />}
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem>
+            <SettingsList.LinkItem
+              label={_(msg`Settings for mention notifications`)}
+              to={{screen: 'MentionNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={AtIcon} />
+              <ItemTextWithSubtitle
+                titleText={<Trans>Mentions</Trans>}
+                subtitleText={<SettingPreview preference={settings?.mention} />}
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem>
+            <SettingsList.LinkItem
+              label={_(msg`Settings for quote notifications`)}
+              to={{screen: 'QuoteNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={CloseQuoteIcon} />
+              <ItemTextWithSubtitle
+                titleText={<Trans>Quotes</Trans>}
+                subtitleText={<SettingPreview preference={settings?.quote} />}
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem>
+            <SettingsList.LinkItem
+              label={_(msg`Settings for like notifications`)}
+              to={{screen: 'LikeNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={HeartIcon} />
+              <ItemTextWithSubtitle
+                titleText={<Trans>Likes</Trans>}
+                subtitleText={<SettingPreview preference={settings?.like} />}
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem>
+            <SettingsList.LinkItem
+              label={_(msg`Settings for repost notifications`)}
+              to={{screen: 'RepostNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={RepostIcon} />
+              <ItemTextWithSubtitle
+                titleText={<Trans>Reposts</Trans>}
+                subtitleText={<SettingPreview preference={settings?.repost} />}
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem>
+            <SettingsList.LinkItem
+              label={_(msg`Settings for new follower notifications`)}
+              to={{screen: 'NewFollowerNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={PersonPlusIcon} />
+              <ItemTextWithSubtitle
+                titleText={<Trans>New followers</Trans>}
+                subtitleText={<SettingPreview preference={settings?.follow} />}
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem>
+            {/* <SettingsList.LinkItem
+              label={_(msg`Settings for activity alerts`)}
+              to={{screen: 'ActivityNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={BellRingingIcon} />
 
-            <ItemTextWithSubtitle
-              titleText={<Trans>Other's activity</Trans>}
-              subtitleText={<SettingPreview preference={settings?.subscribedPost} />}
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem> */}
-          <SettingsList.LinkItem
-            label={_(msg`Settings for notifications for everything else`)}
-            to={{screen: 'MiscellaneousNotificationSettings'}}
-            contentContainerStyle={[a.align_start]}>
-            <SettingsList.ItemIcon icon={ShapesIcon} />
-            <ItemTextWithSubtitle
-              titleText={<Trans>Everything else</Trans>}
-              // technically a bundle of several settings, but since they're set together
-              // and are most likely in sync we'll just show the state of one of them
-              subtitleText={
-                <SettingPreview preference={settings?.starterpackJoined} />
-              }
-              showSkeleton={!settings}
-            />
-          </SettingsList.LinkItem>
+              <ItemTextWithSubtitle
+                titleText={<Trans>Activity alerts</Trans>}
+                subtitleText={
+                  <SettingPreview preference={settings?.subscribedPost} />
+                }
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem> */}
+            <SettingsList.LinkItem
+              label={_(
+                msg`Settings for notifications for likes on your reposts`,
+              )}
+              to={{screen: 'LikesOnRepostsNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={LikeRepostIcon} />
+              <ItemTextWithSubtitle
+                titleText={<Trans>Likes on your reposts</Trans>}
+                subtitleText={
+                  <SettingPreview preference={settings?.likeViaRepost} />
+                }
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem>
+            <SettingsList.LinkItem
+              label={_(
+                msg`Settings for notifications for reposts on your reposts`,
+              )}
+              to={{screen: 'RepostsOnRepostsNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={RepostRepostIcon} />
+              <ItemTextWithSubtitle
+                titleText={<Trans>Reposts on your reposts</Trans>}
+                subtitleText={
+                  <SettingPreview preference={settings?.repostViaRepost} />
+                }
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem>
+            <SettingsList.LinkItem
+              label={_(msg`Settings for notifications for everything else`)}
+              to={{screen: 'MiscellaneousNotificationSettings'}}
+              contentContainerStyle={[a.align_start]}>
+              <SettingsList.ItemIcon icon={ShapesIcon} />
+              <ItemTextWithSubtitle
+                titleText={<Trans>Everything else</Trans>}
+                // technically a bundle of several settings, but since they're set together
+                // and are most likely in sync we'll just show the state of one of them
+                subtitleText={
+                  <SettingPreview preference={settings?.starterpackJoined} />
+                }
+                showSkeleton={!settings}
+              />
+            </SettingsList.LinkItem>
+          </View>
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
