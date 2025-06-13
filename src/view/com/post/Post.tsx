@@ -36,10 +36,10 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
-import {ShowMore} from '#/components/ShowMore'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 
@@ -237,7 +237,10 @@ function PostInner({
                   shouldProxyLinks={true}
                 />
                 {limitLines && (
-                  <ShowMore style={[a.text_md]} onPress={onPressShowMore} />
+                  <ShowMoreTextButton
+                    style={[a.text_md]}
+                    onPress={onPressShowMore}
+                  />
                 )}
               </View>
             ) : undefined}

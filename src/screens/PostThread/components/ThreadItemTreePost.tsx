@@ -36,9 +36,9 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
-import {ShowMore} from '#/components/ShowMore'
 import * as Skele from '#/components/Skeleton'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
@@ -354,7 +354,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         shouldProxyLinks={true}
                       />
                       {limitLines && (
-                        <ShowMore
+                        <ShowMoreTextButton
                           style={[a.text_md]}
                           onPress={onPressShowMore}
                         />

@@ -4,11 +4,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {atoms as a, flatten, type TextStyleProp,useTheme} from '#/alf'
+import {atoms as a, flatten, type TextStyleProp, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
 
-export function ShowMore({
+export function ShowMoreTextButton({
   onPress: onPressProp,
   style,
 }: TextStyleProp & {onPress: () => void}) {
@@ -44,7 +44,8 @@ export function ShowMore({
             textStyle,
             {
               color: t.palette.primary_500,
-              opacity: pressed || hovered ? 0.6 : 1,
+              opacity: pressed ? 0.6 : 1,
+              textDecorationLine: hovered ? 'underline' : undefined,
             },
           ]}>
           <Trans>Show More</Trans>

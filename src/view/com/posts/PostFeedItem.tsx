@@ -54,11 +54,11 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed} from '#/components/Post/Embed'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
+import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
-import {ShowMore} from '#/components/ShowMore'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import * as bsky from '#/types/bsky'
 
@@ -557,7 +557,7 @@ let PostContent = ({
             shouldProxyLinks={true}
           />
           {limitLines && (
-            <ShowMore style={[a.text_md]} onPress={onPressShowMore} />
+            <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />
           )}
         </>
       ) : undefined}
