@@ -38,7 +38,7 @@ export function RepostsOnRepostsNotificationSettingsScreen({}: Props) {
             <SettingsList.ItemIcon icon={RepostRepostIcon} />
             <ItemTextWithSubtitle
               bold
-              titleText={<Trans>Likes on your reposts</Trans>}
+              titleText={<Trans>Reposts on your reposts</Trans>}
               subtitleText={
                 <Trans>
                   Get notifications when people repost posts that you've
