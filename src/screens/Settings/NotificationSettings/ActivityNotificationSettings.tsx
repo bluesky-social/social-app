@@ -84,7 +84,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                 <View style={[a.flex_1, a.gap_sm]}>
                   <Admonition.Text>
                     <Trans>
-                      Enable Activity Alerts for an account by visiting their
+                      Enable activity alerts for an account by visiting their
                       profile and pressing the{' '}
                       <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
                         bell icon
