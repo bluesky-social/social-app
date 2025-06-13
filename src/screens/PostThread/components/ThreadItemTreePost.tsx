@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyFeedDefs,
@@ -6,12 +6,10 @@ import {
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
 import {
@@ -23,7 +21,6 @@ import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {TextLink} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {
   OUTER_SPACE,
@@ -39,6 +36,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
@@ -255,8 +253,6 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   onPostSuccess?: (data: OnPostSuccessData) => void
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode {
-  const pal = usePalette('default')
-  const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
 
@@ -271,18 +267,18 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
       }),
     [record],
   )
-  const [limitLines, setLimitLines] = React.useState(
+  const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const threadRootUri = record.reply?.root?.uri || post.uri
-  const postHref = React.useMemo(() => {
+  const postHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,
   })
-  const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
+  const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
     const isControlledByViewer =
       new AtUri(threadRootUri).host === currentAccount?.did
@@ -297,7 +293,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
       : []
   }, [post, currentAccount?.did, threadgateHiddenReplies, threadRootUri])
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -311,7 +307,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
     })
   }, [openComposer, post, record, onPostSuccess, moderation])
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
 
@@ -348,7 +344,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     additionalCauses={additionalPostAlerts}
                   />
                   {richText?.text ? (
-                    <View>
+                    <>
                       <RichText
                         enableTags
                         value={richText}
@@ -357,15 +353,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
                       />
-                    </View>
-                  ) : undefined}
-                  {limitLines ? (
-                    <TextLink
-                      text={_(msg`Show More`)}
-                      style={pal.link}
-                      onPress={onPressShowMore}
-                      href="#"
-                    />
+                      {limitLines && (
+                        <ShowMoreTextButton
+                          style={[a.text_md]}
+                          onPress={onPressShowMore}
+                        />
+                      )}
+                    </>
                   ) : undefined}
                   {post.embed && (
                     <View style={[a.pb_xs]}>

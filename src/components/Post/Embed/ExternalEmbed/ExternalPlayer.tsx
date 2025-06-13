@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   ActivityIndicator,
-  GestureResponderEvent,
+  type GestureResponderEvent,
   Pressable,
   StyleSheet,
   useWindowDimensions,
@@ -16,13 +16,16 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
-import {AppBskyEmbedExternal} from '@atproto/api'
+import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
-import {EmbedPlayerParams, getPlayerAspect} from '#/lib/strings/embed-player'
+import {type NavigationProp} from '#/lib/routes/types'
+import {
+  type EmbedPlayerParams,
+  getPlayerAspect,
+} from '#/lib/strings/embed-player'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {EventStopper} from '#/view/com/util/EventStopper'

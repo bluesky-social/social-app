@@ -41,7 +41,7 @@ import {
   setUnstablePostSource,
 } from '#/state/unstable-post-source'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
-import {Link, TextLink, TextLinkOnWebOnly} from '#/view/com/util/Link'
+import {Link, TextLinkOnWebOnly} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -54,6 +54,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed} from '#/components/Post/Embed'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
+import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -501,8 +502,6 @@ let PostContent = ({
   post: AppBskyFeedDefs.PostView
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
-  const pal = usePalette('default')
-  const {_} = useLingui()
   const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
@@ -547,7 +546,7 @@ let PostContent = ({
         additionalCauses={additionalPostAlerts}
       />
       {richText.text ? (
-        <View style={styles.postTextContainer}>
+        <>
           <RichText
             enableTags
             testID="postText"
@@ -557,15 +556,10 @@ let PostContent = ({
             authorHandle={postAuthor.handle}
             shouldProxyLinks={true}
           />
-        </View>
-      ) : undefined}
-      {limitLines ? (
-        <TextLink
-          text={_(msg`Show More`)}
-          style={pal.link}
-          onPress={onPressShowMore}
-          href="#"
-        />
+          {limitLines && (
+            <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />
+          )}
+        </>
       ) : undefined}
       {postEmbed ? (
         <View style={[a.pb_xs]}>
@@ -688,13 +682,6 @@ const styles = StyleSheet.create({
   alert: {
     marginTop: 6,
     marginBottom: 6,
-  },
-  postTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    paddingBottom: 2,
-    overflow: 'hidden',
   },
   contentHiderChild: {
     marginTop: 6,
