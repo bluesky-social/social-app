@@ -368,7 +368,7 @@ let FeedItemInner = ({
                 ) : (
                   <Trans>
                     Reposted by{' '}
-                    <ProfileHoverCard inline did={reason.by.did}>
+                    <ProfileHoverCard did={reason.by.did}>
                       <TextLinkOnWebOnly
                         type="sm-bold"
                         style={pal.textLight}
@@ -607,7 +607,7 @@ function ReplyToLabel({
       label = (
         <Trans context="description">
           Reply to{' '}
-          <ProfileHoverCard inline did={profile.did}>
+          <ProfileHoverCard did={profile.did}>
             <TextLinkOnWebOnly
               type="md"
               style={pal.textLight}
