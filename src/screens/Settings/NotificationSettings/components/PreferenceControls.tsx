@@ -163,26 +163,24 @@ export function Inner({
                   <Trans>Everyone</Trans>
                 </Toggle.LabelText>
               </Toggle.Item>
-              {allowDisableInApp && (
-                <Toggle.Item
-                  label={_(msg`People I follow`)}
-                  name="follows"
+              <Toggle.Item
+                label={_(msg`People I follow`)}
+                name="follows"
+                style={[
+                  a.flex_row,
+                  a.py_xs,
+                  platform({native: [a.gap_sm], web: [a.gap_md]}),
+                ]}>
+                <Toggle.Radio />
+                <Toggle.LabelText
                   style={[
-                    a.flex_row,
-                    a.py_xs,
-                    platform({native: [a.gap_sm], web: [a.gap_md]}),
+                    channels.length > 0 && t.atoms.text,
+                    a.font_normal,
+                    a.text_md,
                   ]}>
-                  <Toggle.Radio />
-                  <Toggle.LabelText
-                    style={[
-                      channels.length > 0 && t.atoms.text,
-                      a.font_normal,
-                      a.text_md,
-                    ]}>
-                    <Trans>People I follow</Trans>
-                  </Toggle.LabelText>
-                </Toggle.Item>
-              )}
+                  <Trans>People I follow</Trans>
+                </Toggle.LabelText>
+              </Toggle.Item>
             </View>
           </Toggle.Group>
         </>
