@@ -344,7 +344,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     additionalCauses={additionalPostAlerts}
                   />
                   {richText?.text ? (
-                    <View>
+                    <>
                       <RichText
                         enableTags
                         value={richText}
@@ -353,9 +353,14 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
                       />
-                    </View>
+                      {limitLines && (
+                        <ShowMore
+                          style={[a.text_md]}
+                          onPress={onPressShowMore}
+                        />
+                      )}
+                    </>
                   ) : undefined}
-                  {limitLines && <ShowMore onPress={onPressShowMore} />}
                   {post.embed && (
                     <View style={[a.pb_xs]}>
                       <PostEmbeds

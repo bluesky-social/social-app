@@ -226,7 +226,7 @@ function PostInner({
               style={[a.py_xs]}
             />
             {richText.text ? (
-              <View style={styles.postTextContainer}>
+              <View>
                 <RichText
                   enableTags
                   testID="postText"
@@ -236,9 +236,11 @@ function PostInner({
                   authorHandle={post.author.handle}
                   shouldProxyLinks={true}
                 />
+                {limitLines && (
+                  <ShowMore style={[a.text_md]} onPress={onPressShowMore} />
+                )}
               </View>
             ) : undefined}
-            {limitLines && <ShowMore onPress={onPressShowMore} />}
             {post.embed ? (
               <PostEmbeds
                 embed={post.embed}
@@ -281,12 +283,6 @@ const styles = StyleSheet.create({
   },
   alert: {
     marginBottom: 6,
-  },
-  postTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    overflow: 'hidden',
   },
   replyLine: {
     position: 'absolute',

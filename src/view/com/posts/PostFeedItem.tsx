@@ -545,7 +545,7 @@ let PostContent = ({
         additionalCauses={additionalPostAlerts}
       />
       {richText.text ? (
-        <View style={styles.postTextContainer}>
+        <>
           <RichText
             enableTags
             testID="postText"
@@ -555,9 +555,11 @@ let PostContent = ({
             authorHandle={postAuthor.handle}
             shouldProxyLinks={true}
           />
-        </View>
+          {limitLines && (
+            <ShowMore style={[a.text_md]} onPress={onPressShowMore} />
+          )}
+        </>
       ) : undefined}
-      {limitLines && <ShowMore onPress={onPressShowMore} />}
       {postEmbed ? (
         <View style={[a.pb_xs]}>
           <PostEmbeds
@@ -679,13 +681,6 @@ const styles = StyleSheet.create({
   alert: {
     marginTop: 6,
     marginBottom: 6,
-  },
-  postTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    paddingBottom: 2,
-    overflow: 'hidden',
   },
   contentHiderChild: {
     marginTop: 6,

@@ -1,13 +1,18 @@
-import {useCallback} from 'react'
-import {LayoutAnimation} from 'react-native'
+import {useCallback, useMemo} from 'react'
+import {LayoutAnimation, type TextStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {atoms as a, flatten, type TextStyleProp,useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {Text} from '#/components/Typography'
 
-export function ShowMore({onPress: onPressProp}: {onPress: () => void}) {
+export function ShowMore({
+  onPress: onPressProp,
+  style,
+}: TextStyleProp & {onPress: () => void}) {
+  const t = useTheme()
   const {_} = useLingui()
 
   const onPress = useCallback(() => {
@@ -15,17 +20,36 @@ export function ShowMore({onPress: onPressProp}: {onPress: () => void}) {
     onPressProp()
   }, [onPressProp])
 
+  const textStyle = useMemo(() => {
+    return flatten([a.leading_snug, a.text_sm, style]) as TextStyle & {
+      fontSize: number
+      lineHeight: number
+    }
+  }, [style])
+
   return (
     <Button
       label={_(msg`Expand post text`)}
       onPress={onPress}
-      color="primary"
-      variant="ghost"
-      style={[a.self_start, a.my_xs, a.rounded_2xs]}
+      style={[
+        a.self_start,
+        {
+          paddingBottom: textStyle.fontSize / 3,
+        },
+      ]}
       hitSlop={HITSLOP_10}>
-      <ButtonText>
-        <Trans>Show More</Trans>
-      </ButtonText>
+      {({pressed, hovered}) => (
+        <Text
+          style={[
+            textStyle,
+            {
+              color: t.palette.primary_500,
+              opacity: pressed || hovered ? 0.6 : 1,
+            },
+          ]}>
+          <Trans>Show More</Trans>
+        </Text>
+      )}
     </Button>
   )
 }

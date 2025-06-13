@@ -686,9 +686,11 @@ let PostThreadItemLoaded = ({
                     authorHandle={post.author.handle}
                     shouldProxyLinks={true}
                   />
+                  {limitLines && (
+                    <ShowMore style={[a.text_md]} onPress={onPressShowMore} />
+                  )}
                 </View>
               ) : undefined}
-              {limitLines && <ShowMore onPress={onPressShowMore} />}
               {post.embed && (
                 <View style={[a.pb_xs]}>
                   <PostEmbeds

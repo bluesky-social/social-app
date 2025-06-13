@@ -300,16 +300,20 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
-                <RichText
-                  enableTags
-                  value={richText}
-                  style={[a.flex_1, a.text_md]}
-                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                  authorHandle={post.author.handle}
-                  shouldProxyLinks={true}
-                />
+                <>
+                  <RichText
+                    enableTags
+                    value={richText}
+                    style={[a.flex_1, a.text_md]}
+                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                    authorHandle={post.author.handle}
+                    shouldProxyLinks={true}
+                  />
+                  {limitLines && (
+                    <ShowMore style={[a.text_md]} onPress={onPressShowMore} />
+                  )}
+                </>
               ) : undefined}
-              {limitLines && <ShowMore onPress={onPressShowMore} />}
               {post.embed && (
                 <View style={[a.pb_xs]}>
                   <PostEmbeds
