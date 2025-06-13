@@ -111,6 +111,7 @@ import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {LegacyNotificationSettingsScreen} from './screens/Settings/LegacyNotificationSettings'
 import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
+import {ActivityNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ActivityNotificationSettings'
 import {LikeNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikeNotificationSettings'
 import {LikesOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
 import {MentionNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MentionNotificationSettings'
@@ -456,6 +457,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => RepostsOnRepostsNotificationSettingsScreen}
         options={{
           title: title(msg`Reposts of your reposts notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="ActivityNotificationSettings"
+        getComponent={() => ActivityNotificationSettingsScreen}
+        options={{
+          title: title(msg`Activity notifications`),
           requireAuth: true,
         }}
       />
