@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyFeedThreadgate} from '@atproto/api'
+import {type AppBskyFeedThreadgate} from '@atproto/api'
 
 type StateContext = {
   uris: Set<string>

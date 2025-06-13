@@ -25,12 +25,12 @@ import {NavigationProp} from '#/lib/routes/types'
 import {EmbedPlayerParams, getPlayerAspect} from '#/lib/strings/embed-player'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
+import {EventStopper} from '#/view/com/util/EventStopper'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {EventStopper} from '../EventStopper'
 
 interface ShouldStartLoadRequest {
   url: string

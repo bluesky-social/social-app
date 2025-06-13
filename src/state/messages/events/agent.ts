@@ -1,4 +1,4 @@
-import {BskyAgent, ChatBskyConvoGetLog} from '@atproto/api'
+import {type BskyAgent, type ChatBskyConvoGetLog} from '@atproto/api'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -9,11 +9,11 @@ import {
   DEFAULT_POLL_INTERVAL,
 } from '#/state/messages/events/const'
 import {
-  MessagesEventBusDispatch,
+  type MessagesEventBusDispatch,
   MessagesEventBusDispatchEvent,
   MessagesEventBusErrorCode,
-  MessagesEventBusEvent,
-  MessagesEventBusParams,
+  type MessagesEventBusEvent,
+  type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'

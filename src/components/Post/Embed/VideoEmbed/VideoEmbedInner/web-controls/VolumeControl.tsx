@@ -8,7 +8,7 @@ import {isSafari, isTouchDevice} from '#/lib/browser'
 import {atoms as a} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {useVideoVolumeState} from '../../VideoVolumeContext'
+import {useVideoVolumeState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {ControlButton} from './ControlButton'
 
 export function VolumeControl({

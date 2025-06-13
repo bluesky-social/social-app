@@ -14,7 +14,7 @@ import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
-export function ExternalGifEmbed({
+export function ExternalGif({
   link,
   params,
 }: {
