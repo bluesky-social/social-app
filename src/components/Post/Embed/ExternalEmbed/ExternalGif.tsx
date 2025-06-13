@@ -1,5 +1,9 @@
 import React from 'react'
-import {ActivityIndicator, type GestureResponderEvent, Pressable} from 'react-native'
+import {
+  ActivityIndicator,
+  type GestureResponderEvent,
+  Pressable,
+} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'

@@ -22,7 +22,10 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {type EmbedPlayerParams, getPlayerAspect} from '#/lib/strings/embed-player'
+import {
+  type EmbedPlayerParams,
+  getPlayerAspect,
+} from '#/lib/strings/embed-player'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {EventStopper} from '#/view/com/util/EventStopper'
