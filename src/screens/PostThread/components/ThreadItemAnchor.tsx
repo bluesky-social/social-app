@@ -319,9 +319,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             live={live}
             onBeforePress={onOpenAuthor}
           />
-          <View style={[a.flex_1]}>
-            <View style={[a.flex_row, a.align_center]}>
-              <ProfileHoverCard inline did={post.author.did}>
+          <ProfileHoverCard did={post.author.did}>
+            <View style={[a.flex_1]}>
+              <View style={[a.flex_row, a.align_center]}>
                 <Link
                   to={authorHref}
                   style={[a.flex_shrink]}
@@ -347,14 +347,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     )}
                   </Text>
                 </Link>
-              </ProfileHoverCard>
 
-              <View style={[{paddingLeft: 3, top: -1}]}>
-                <VerificationCheckButton profile={authorShadow} size="md" />
+                <View style={[{paddingLeft: 3, top: -1}]}>
+                  <VerificationCheckButton profile={authorShadow} size="md" />
+                </View>
               </View>
-            </View>
-            <View style={[a.align_start]}>
-              <ProfileHoverCard inline did={post.author.did}>
+              <View style={[a.align_start]}>
                 <Link
                   style={[a.flex_shrink]}
                   to={authorHref}
@@ -369,9 +367,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     {sanitizeHandle(post.author.handle, '@')}
                   </Text>
                 </Link>
-              </ProfileHoverCard>
+              </View>
             </View>
-          </View>
+          </ProfileHoverCard>
           {showFollowButton && (
             <View>
               <PostThreadFollowBtn did={post.author.did} />

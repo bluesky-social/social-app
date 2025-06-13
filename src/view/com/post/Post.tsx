@@ -204,7 +204,7 @@ function PostInner({
                 ) : (
                   <Trans context="description">
                     Reply to{' '}
-                    <ProfileHoverCard inline did={replyAuthorDid}>
+                    <ProfileHoverCard did={replyAuthorDid}>
                       <UserInfoText
                         type="sm"
                         did={replyAuthorDid}
