@@ -134,8 +134,7 @@ export function Inner({
           )}
         </View>
       </Toggle.Group>
-      {preference.$type ===
-        'app.bsky.notification.defs#filterablePreference' && (
+      {'filter' in preference && (
         <>
           <Divider />
           <Text style={[a.font_bold, a.text_md]}>From</Text>
