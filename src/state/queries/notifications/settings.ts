@@ -25,11 +25,10 @@ export function useNotificationSettingsQuery() {
     },
   })
 }
-export function useNotificationSettingsUpdateMutation(
-  existing?: AppBskyNotificationDefs.Preferences,
-) {
+export function useNotificationSettingsUpdateMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
+  const {data: existing} = useNotificationSettingsQuery()
 
   return useMutation({
     mutationFn: async (
