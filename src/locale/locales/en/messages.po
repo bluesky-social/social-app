@@ -4469,11 +4469,11 @@ msgstr ""
 msgid "List by {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:156
+#: src/view/com/profile/ProfileSubpageHeader.tsx:160
 msgid "List by <0/>"
 msgstr ""
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:154
+#: src/view/com/profile/ProfileSubpageHeader.tsx:158
 msgid "List by you"
 msgstr ""
 
@@ -4740,12 +4740,12 @@ msgstr ""
 msgid "Moderation list by {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:169
+#: src/view/com/profile/ProfileSubpageHeader.tsx:173
 msgid "Moderation list by <0/>"
 msgstr ""
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:220
-#: src/view/com/profile/ProfileSubpageHeader.tsx:167
+#: src/view/com/profile/ProfileSubpageHeader.tsx:171
 msgid "Moderation list by you"
 msgstr ""
 
@@ -5905,14 +5905,14 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1030
-msgctxt "action"
-msgid "Post"
-msgstr ""
-
 #: src/screens/PostThread/index.tsx:490
 #: src/view/com/post-thread/PostThread.tsx:561
 msgctxt "description"
+msgid "Post"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:1030
+msgctxt "action"
 msgid "Post"
 msgstr ""
 
@@ -7681,12 +7681,12 @@ msgstr ""
 msgid "Starter pack by {0}"
 msgstr ""
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:182
+#: src/view/com/profile/ProfileSubpageHeader.tsx:186
 msgid "Starter pack by <0/>"
 msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:89
-#: src/view/com/profile/ProfileSubpageHeader.tsx:180
+#: src/view/com/profile/ProfileSubpageHeader.tsx:184
 msgid "Starter pack by you"
 msgstr ""
 
@@ -9126,7 +9126,7 @@ msgstr ""
 msgid "View profile"
 msgstr ""
 
-#: src/view/com/profile/ProfileSubpageHeader.tsx:119
+#: src/view/com/profile/ProfileSubpageHeader.tsx:123
 msgid "View the avatar"
 msgstr ""
 
@@ -9171,8 +9171,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/view/com/util/images/AutoSizedImage.tsx:199
-#: src/view/com/util/images/AutoSizedImage.tsx:221
+#: src/view/com/util/images/AutoSizedImage.tsx:205
+#: src/view/com/util/images/AutoSizedImage.tsx:227
 msgid "Views full image"
 msgstr ""
 
