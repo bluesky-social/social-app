@@ -1,18 +1,24 @@
-import {View} from 'react-native'
+import {useEffect} from 'react'
+import {Linking, View} from 'react-native'
+import * as Notification from 'expo-notifications'
 import {type AppBskyNotificationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {useAppState} from '#/lib/hooks/useAppState'
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {isAndroid, isIOS, isWeb} from '#/platform/detection'
 import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 // import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
+import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
 import {
   Heart2_Stroke2_Corner0_Rounded as HeartIcon,
   LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon,
@@ -28,11 +34,54 @@ import * as Layout from '#/components/Layout'
 import * as SettingsList from '../components/SettingsList'
 import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
 
+const RQKEY = ['notification-permissions']
+
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationSettings'>
 export function NotificationSettingsScreen({}: Props) {
   const {_} = useLingui()
-
+  const queryClient = useQueryClient()
   const {data: settings, isError} = useNotificationSettingsQuery()
+
+  const {data: permissions, refetch} = useQuery({
+    queryKey: RQKEY,
+    queryFn: async () => {
+      if (isWeb) return null
+      return await Notification.getPermissionsAsync()
+    },
+  })
+
+  const appState = useAppState()
+  useEffect(() => {
+    if (appState === 'active') {
+      refetch()
+    }
+  }, [appState, refetch])
+
+  const onRequestPermissions = async () => {
+    if (isWeb) return
+    if (permissions?.canAskAgain) {
+      const response = await Notification.requestPermissionsAsync()
+      queryClient.setQueryData(RQKEY, response)
+    } else {
+      if (isAndroid) {
+        try {
+          await Linking.sendIntent(
+            'android.settings.APP_NOTIFICATION_SETTINGS',
+            [
+              {
+                key: 'android.provider.extra.APP_PACKAGE',
+                value: 'xyz.blueskyweb.app',
+              },
+            ],
+          )
+        } catch {
+          Linking.openSettings()
+        }
+      } else if (isIOS) {
+        Linking.openSettings()
+      }
+    }
+  }
 
   return (
     <Layout.Screen>
@@ -47,6 +96,19 @@ export function NotificationSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
+          {permissions && !permissions.granted && (
+            <>
+              <SettingsList.PressableItem
+                label={_(msg`Enable push notifications`)}
+                onPress={onRequestPermissions}>
+                <SettingsList.ItemIcon icon={HapticIcon} />
+                <SettingsList.ItemText>
+                  <Trans>Enable push notifications</Trans>
+                </SettingsList.ItemText>
+              </SettingsList.PressableItem>
+              <SettingsList.Divider />
+            </>
+          )}
           {isError && (
             <View style={[a.px_lg, a.pb_md]}>
               <Admonition type="error">
