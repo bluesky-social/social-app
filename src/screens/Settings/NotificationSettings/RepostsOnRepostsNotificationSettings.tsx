@@ -41,7 +41,8 @@ export function RepostsOnRepostsNotificationSettingsScreen({}: Props) {
               titleText={<Trans>Likes on your reposts</Trans>}
               subtitleText={
                 <Trans>
-                  Get notifications when people like posts that you've reposted.
+                  Get notifications when people repost posts that you've
+                  reposted.
                 </Trans>
               }
             />
