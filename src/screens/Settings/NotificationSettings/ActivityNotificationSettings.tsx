@@ -1,6 +1,7 @@
 import {useCallback} from 'react'
 import {Text, View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {
   type AllNavigatorParams,
@@ -13,6 +14,7 @@ import * as Admonition from '#/components/Admonition'
 import {Bell_Filled_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
 import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import * as Layout from '#/components/Layout'
+import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import * as SettingsList from '../components/SettingsList'
 import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
@@ -24,6 +26,7 @@ type Props = NativeStackScreenProps<
 >
 export function ActivityNotificationSettingsScreen({}: Props) {
   const t = useTheme()
+  const {_} = useLingui()
   const {data: preferences, isError} = useNotificationSettingsQuery()
 
   // TODO: Fetch subscriptions
@@ -96,9 +99,12 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                     <Trans>
                       By default, only accounts you follow can receive alerts
                       from you – this can be changed in{' '}
-                      <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+                      <InlineLinkText
+                        label={_(msg`Privacy & Security settings`)}
+                        to={{screen: 'PrivacyAndSecuritySettings'}}
+                        style={[a.font_bold]}>
                         Settings &rarr; Privacy &amp; Security
-                      </Text>
+                      </InlineLinkText>
                       .
                     </Trans>
                   </Admonition.Text>
