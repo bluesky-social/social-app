@@ -36,7 +36,6 @@ import {type PostSource} from '#/state/unstable-post-source'
 import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {Link} from '#/view/com/util/Link'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {
   LINEAR_AVI_WIDTH,
@@ -53,6 +52,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
+import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostControls} from '#/components/PostControls'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -388,7 +388,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             ) : undefined}
             {post.embed && (
               <View style={[a.py_xs]}>
-                <PostEmbeds
+                <Embed
                   embed={post.embed}
                   moderation={moderation}
                   viewContext={PostEmbedViewContext.ThreadHighlighted}

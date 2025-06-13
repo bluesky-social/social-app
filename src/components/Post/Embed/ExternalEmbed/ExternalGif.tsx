@@ -1,11 +1,11 @@
 import React from 'react'
-import {ActivityIndicator, GestureResponderEvent, Pressable} from 'react-native'
+import {ActivityIndicator, type GestureResponderEvent, Pressable} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyEmbedExternal} from '@atproto/api'
+import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {EmbedPlayerParams} from '#/lib/strings/embed-player'
+import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
@@ -14,7 +14,7 @@ import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
-export function ExternalGifEmbed({
+export function ExternalGif({
   link,
   params,
 }: {

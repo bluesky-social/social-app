@@ -13,12 +13,13 @@ import {useLingui} from '@lingui/react'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type ComposerOptsPostRef} from '#/state/shell/composer'
-import {MaybeQuoteEmbed} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme, web} from '#/alf'
+import {QuoteEmbed} from '#/components/Post/Embed'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {parseEmbed} from '#/types/bsky/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
@@ -51,6 +52,12 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
     }
     return null
   }, [embed])
+  const parsedQuoteEmbed = quoteEmbed
+    ? parseEmbed({
+        $type: 'app.bsky.embed.record#view',
+        ...quoteEmbed,
+      })
+    : null
 
   const images = useMemo(() => {
     if (AppBskyEmbedImages.isView(embed)) {
@@ -124,7 +131,9 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
             <ComposerReplyToImages images={images} showFull={showFull} />
           )}
         </View>
-        {showFull && quoteEmbed && <MaybeQuoteEmbed embed={quoteEmbed} />}
+        {showFull && parsedQuoteEmbed && parsedQuoteEmbed.type === 'post' && (
+          <QuoteEmbed embed={parsedQuoteEmbed} />
+        )}
       </View>
     </Pressable>
   )
