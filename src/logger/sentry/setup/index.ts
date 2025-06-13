@@ -38,4 +38,12 @@ init({
      */
     `Network request failed`,
   ],
+  /**
+   * Does not affect traces of error events or other logs, just disables
+   * automatically attaching stack traces to events. This helps us group events
+   * and prevents explosions of separate issues.
+   *
+   * @see https://docs.sentry.io/platforms/react-native/configuration/options/#attach-stacktrace
+   */
+  attachStacktrace: false,
 })
