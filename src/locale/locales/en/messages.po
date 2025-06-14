@@ -95,8 +95,8 @@ msgstr ""
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:461
-#: src/view/com/post-thread/PostThreadItem.tsx:540
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:474
+#: src/view/com/post-thread/PostThreadItem.tsx:541
 msgid "{0, plural, one {like} other {likes}}"
 msgstr ""
 
@@ -104,13 +104,13 @@ msgstr ""
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:445
-#: src/view/com/post-thread/PostThreadItem.tsx:524
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:458
+#: src/view/com/post-thread/PostThreadItem.tsx:525
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:427
-#: src/view/com/post-thread/PostThreadItem.tsx:506
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:440
+#: src/view/com/post-thread/PostThreadItem.tsx:507
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr ""
 msgid "{0} joined this week"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:201
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:202
 msgid "{0} of {1}"
 msgstr ""
 
@@ -212,155 +212,155 @@ msgstr ""
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:335
+#: src/view/com/notifications/NotificationFeedItem.tsx:336
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:361
+#: src/view/com/notifications/NotificationFeedItem.tsx:362
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:254
+#: src/view/com/notifications/NotificationFeedItem.tsx:255
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:466
+#: src/view/com/notifications/NotificationFeedItem.tsx:467
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:439
+#: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:278
+#: src/view/com/notifications/NotificationFeedItem.tsx:279
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:490
+#: src/view/com/notifications/NotificationFeedItem.tsx:491
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:385
+#: src/view/com/notifications/NotificationFeedItem.tsx:386
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:414
+#: src/view/com/notifications/NotificationFeedItem.tsx:415
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:347
+#: src/view/com/notifications/NotificationFeedItem.tsx:348
 msgid "{firstAuthorLink} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:324
+#: src/view/com/notifications/NotificationFeedItem.tsx:325
 msgid "{firstAuthorLink} followed you back"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:373
+#: src/view/com/notifications/NotificationFeedItem.tsx:374
 msgid "{firstAuthorLink} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:266
+#: src/view/com/notifications/NotificationFeedItem.tsx:267
 msgid "{firstAuthorLink} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:478
+#: src/view/com/notifications/NotificationFeedItem.tsx:479
 msgid "{firstAuthorLink} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:451
+#: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:290
+#: src/view/com/notifications/NotificationFeedItem.tsx:291
 msgid "{firstAuthorLink} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:502
+#: src/view/com/notifications/NotificationFeedItem.tsx:503
 msgid "{firstAuthorLink} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:397
+#: src/view/com/notifications/NotificationFeedItem.tsx:398
 msgid "{firstAuthorLink} signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:426
+#: src/view/com/notifications/NotificationFeedItem.tsx:427
 msgid "{firstAuthorLink} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:328
+#: src/view/com/notifications/NotificationFeedItem.tsx:329
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:354
+#: src/view/com/notifications/NotificationFeedItem.tsx:355
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:247
+#: src/view/com/notifications/NotificationFeedItem.tsx:248
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:459
+#: src/view/com/notifications/NotificationFeedItem.tsx:460
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:432
+#: src/view/com/notifications/NotificationFeedItem.tsx:433
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:271
+#: src/view/com/notifications/NotificationFeedItem.tsx:272
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:483
+#: src/view/com/notifications/NotificationFeedItem.tsx:484
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:378
+#: src/view/com/notifications/NotificationFeedItem.tsx:379
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:407
+#: src/view/com/notifications/NotificationFeedItem.tsx:408
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:333
+#: src/view/com/notifications/NotificationFeedItem.tsx:334
 msgid "{firstAuthorName} followed you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:323
+#: src/view/com/notifications/NotificationFeedItem.tsx:324
 msgid "{firstAuthorName} followed you back"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:359
+#: src/view/com/notifications/NotificationFeedItem.tsx:360
 msgid "{firstAuthorName} liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:252
+#: src/view/com/notifications/NotificationFeedItem.tsx:253
 msgid "{firstAuthorName} liked your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:464
+#: src/view/com/notifications/NotificationFeedItem.tsx:465
 msgid "{firstAuthorName} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:437
+#: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:276
+#: src/view/com/notifications/NotificationFeedItem.tsx:277
 msgid "{firstAuthorName} reposted your post"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:488
+#: src/view/com/notifications/NotificationFeedItem.tsx:489
 msgid "{firstAuthorName} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:383
+#: src/view/com/notifications/NotificationFeedItem.tsx:384
 msgid "{firstAuthorName} signed up with your starter pack"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:412
+#: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
@@ -650,7 +650,7 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:772
+#: src/view/com/composer/Composer.tsx:773
 msgid "Add another post"
 msgstr ""
 
@@ -681,7 +681,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1330
+#: src/view/com/composer/Composer.tsx:1335
 msgid "Add new post"
 msgstr ""
 
@@ -826,9 +826,9 @@ msgstr ""
 msgid "Already signed in as @{0}"
 msgstr ""
 
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:186
 #: src/view/com/composer/GifAltText.tsx:100
 #: src/view/com/composer/photos/Gallery.tsx:187
-#: src/view/com/util/post-embeds/GifEmbed.tsx:186
 msgid "ALT"
 msgstr ""
 
@@ -842,7 +842,7 @@ msgstr ""
 msgid "Alt text"
 msgstr ""
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:191
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:191
 msgid "Alt Text"
 msgstr ""
 
@@ -871,7 +871,7 @@ msgstr ""
 msgid "An error has occurred"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:420
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:420
 msgid "An error occurred"
 msgstr ""
 
@@ -887,11 +887,11 @@ msgstr ""
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:160
+#: src/components/Post/Embed/VideoEmbed/index.tsx:160
 msgid "An error occurred while loading the video. Please try again later."
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:198
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:199
 msgid "An error occurred while loading the video. Please try again."
 msgstr ""
 
@@ -961,7 +961,7 @@ msgstr ""
 msgid "Animals"
 msgstr ""
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:149
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:149
 msgid "Animated GIF"
 msgstr ""
 
@@ -1063,15 +1063,15 @@ msgstr ""
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
-#: src/view/com/post-thread/PostThreadItem.tsx:956
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:640
+#: src/view/com/post-thread/PostThreadItem.tsx:955
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:596
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:635
-#: src/view/com/post-thread/PostThreadItem.tsx:925
-#: src/view/com/post-thread/PostThreadItem.tsx:964
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:609
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:648
+#: src/view/com/post-thread/PostThreadItem.tsx:924
+#: src/view/com/post-thread/PostThreadItem.tsx:963
 msgid "Archived post"
 msgstr ""
 
@@ -1107,11 +1107,11 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:723
+#: src/view/com/composer/Composer.tsx:724
 msgid "Are you sure you'd like to discard this draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:904
+#: src/view/com/composer/Composer.tsx:905
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1263,7 +1263,7 @@ msgstr ""
 msgid "Block User"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:84
+#: src/components/Post/Embed/index.tsx:180
 msgid "Blocked"
 msgstr ""
 
@@ -1310,8 +1310,8 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:652
-#: src/view/com/post-thread/PostThreadItem.tsx:981
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:665
+#: src/view/com/post-thread/PostThreadItem.tsx:980
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -1370,23 +1370,23 @@ msgstr ""
 msgid "Books"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:373
+#: src/components/FeedInterstitials.tsx:379
 msgid "Browse more accounts on the Explore page"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:511
+#: src/components/FeedInterstitials.tsx:517
 msgid "Browse more feeds on the Explore page"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:353
-#: src/components/FeedInterstitials.tsx:356
-#: src/components/FeedInterstitials.tsx:492
-#: src/components/FeedInterstitials.tsx:495
+#: src/components/FeedInterstitials.tsx:359
+#: src/components/FeedInterstitials.tsx:362
+#: src/components/FeedInterstitials.tsx:498
+#: src/components/FeedInterstitials.tsx:501
 msgid "Browse more suggestions"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:381
-#: src/components/FeedInterstitials.tsx:520
+#: src/components/FeedInterstitials.tsx:387
+#: src/components/FeedInterstitials.tsx:526
 msgid "Browse more suggestions on the Explore page"
 msgstr ""
 
@@ -1471,8 +1471,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:270
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:959
-#: src/view/com/composer/Composer.tsx:970
+#: src/view/com/composer/Composer.tsx:960
+#: src/view/com/composer/Composer.tsx:971
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:52
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1767,6 +1767,7 @@ msgstr ""
 #: src/components/live/EditLiveDialog.tsx:235
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
 #: src/components/ProgressGuide/FollowDialog.tsx:386
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
@@ -1774,7 +1775,6 @@ msgstr ""
 #: src/components/verification/VerifierDialog.tsx:144
 #: src/view/com/modals/ChangePassword.tsx:279
 #: src/view/com/modals/ChangePassword.tsx:282
-#: src/view/com/util/post-embeds/GifEmbed.tsx:197
 msgid "Close"
 msgstr ""
 
@@ -1832,7 +1832,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:967
+#: src/view/com/composer/Composer.tsx:968
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -1845,11 +1845,11 @@ msgstr ""
 msgid "Closes viewer for header image"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:537
+#: src/view/com/notifications/NotificationFeedItem.tsx:538
 msgid "Collapse list of users"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:748
+#: src/view/com/notifications/NotificationFeedItem.tsx:749
 msgid "Collapses list of users for a given notification"
 msgstr ""
 
@@ -1889,7 +1889,7 @@ msgstr ""
 msgid "Compose new post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:868
+#: src/view/com/composer/Composer.tsx:869
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -1897,7 +1897,7 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1724
+#: src/view/com/composer/Composer.tsx:1729
 msgid "Compressing video..."
 msgstr ""
 
@@ -2395,7 +2395,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:682
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:684
-#: src/view/com/composer/Composer.tsx:878
+#: src/view/com/composer/Composer.tsx:879
 msgid "Delete post"
 msgstr ""
 
@@ -2416,7 +2416,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:94
+#: src/components/Post/Embed/index.tsx:173
 msgid "Deleted"
 msgstr ""
 
@@ -2500,7 +2500,7 @@ msgstr ""
 msgid "Disable haptic feedback"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:386
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:386
 msgid "Disable subtitles"
 msgstr ""
 
@@ -2514,8 +2514,8 @@ msgid "Disabled"
 msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:88
-#: src/view/com/composer/Composer.tsx:725
-#: src/view/com/composer/Composer.tsx:911
+#: src/view/com/composer/Composer.tsx:726
+#: src/view/com/composer/Composer.tsx:912
 msgid "Discard"
 msgstr ""
 
@@ -2523,11 +2523,11 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:722
+#: src/view/com/composer/Composer.tsx:723
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:903
+#: src/view/com/composer/Composer.tsx:904
 msgid "Discard post?"
 msgstr ""
 
@@ -2553,7 +2553,7 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1648
+#: src/view/com/composer/Composer.tsx:1653
 msgid "Dismiss error"
 msgstr ""
 
@@ -2895,7 +2895,7 @@ msgstr ""
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb.tsx:58
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:58
 msgid "Embedded video player"
 msgstr ""
 
@@ -2931,7 +2931,7 @@ msgstr ""
 msgid "Enable priority notifications"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:387
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:387
 msgid "Enable subtitles"
 msgstr ""
 
@@ -2984,7 +2984,7 @@ msgstr ""
 msgid "Enter Code"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:405
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
 msgstr ""
 
@@ -3025,7 +3025,7 @@ msgstr ""
 msgid "Enter your username and password"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Enters full screen"
 msgstr ""
 
@@ -3033,7 +3033,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1733
+#: src/view/com/composer/Composer.tsx:1738
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr ""
@@ -3093,7 +3093,7 @@ msgstr ""
 msgid "Excludes users you follow"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:404
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:404
 msgid "Exit fullscreen"
 msgstr ""
 
@@ -3113,12 +3113,16 @@ msgstr ""
 msgid "Expand alt text"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:538
+#: src/view/com/notifications/NotificationFeedItem.tsx:539
 msgid "Expand list of users"
 msgstr ""
 
-#: src/view/com/composer/ComposerReplyTo.tsx:84
+#: src/view/com/composer/ComposerReplyTo.tsx:91
 msgid "Expand or collapse the full post you are replying to"
+msgstr ""
+
+#: src/components/Post/ShowMoreTextButton.tsx:32
+msgid "Expand post text"
 msgstr ""
 
 #: src/screens/VideoFeed/index.tsx:965
@@ -3654,7 +3658,7 @@ msgstr ""
 msgid "From @{sanitizedAuthor}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:328
+#: src/view/com/posts/PostFeedItem.tsx:330
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
@@ -3753,7 +3757,7 @@ msgstr ""
 msgid "Go live for"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:204
+#: src/view/com/notifications/NotificationFeedItem.tsx:205
 msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
@@ -3863,7 +3867,7 @@ msgstr ""
 #: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:135
-#: src/components/moderation/PostHider.tsx:124
+#: src/components/moderation/PostHider.tsx:134
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:712
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
@@ -3873,7 +3877,7 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:755
+#: src/view/com/notifications/NotificationFeedItem.tsx:756
 msgctxt "action"
 msgid "Hide"
 msgstr ""
@@ -3924,7 +3928,7 @@ msgstr ""
 msgid "Hide trending videos?"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:746
+#: src/view/com/notifications/NotificationFeedItem.tsx:747
 msgid "Hide user list"
 msgstr ""
 
@@ -3934,7 +3938,7 @@ msgid "Hide verification badges"
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:151
-#: src/components/moderation/PostHider.tsx:79
+#: src/components/moderation/PostHider.tsx:89
 msgid "Hides the content"
 msgstr ""
 
@@ -4149,7 +4153,7 @@ msgstr ""
 msgid "Invalid handle. Please try a different one."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:350
+#: src/view/com/post-thread/PostThreadItem.tsx:351
 msgid "Invalid or unsupported post record"
 msgstr ""
 
@@ -4201,7 +4205,7 @@ msgstr ""
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1667
+#: src/view/com/composer/Composer.tsx:1672
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -4313,7 +4317,7 @@ msgstr ""
 msgid "Learn more about the moderation applied to this content."
 msgstr ""
 
-#: src/components/moderation/PostHider.tsx:100
+#: src/components/moderation/PostHider.tsx:110
 #: src/components/moderation/ScreenHider.tsx:127
 msgid "Learn more about this warning"
 msgstr ""
@@ -4439,8 +4443,8 @@ msgstr ""
 msgid "Likes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:454
-#: src/view/com/post-thread/PostThreadItem.tsx:242
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:467
+#: src/view/com/post-thread/PostThreadItem.tsx:243
 msgid "Likes on this post"
 msgstr ""
 
@@ -4785,7 +4789,7 @@ msgstr ""
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:732
+#: src/view/com/post-thread/PostThreadItem.tsx:731
 msgid "More"
 msgstr ""
 
@@ -4818,8 +4822,8 @@ msgstr ""
 msgid "Music"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:95
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Mute"
 msgstr ""
@@ -5332,8 +5336,8 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:657
-#: src/view/com/post-thread/PostThreadItem.tsx:986
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:670
+#: src/view/com/post-thread/PostThreadItem.tsx:985
 msgid "Okay"
 msgstr ""
 
@@ -5356,15 +5360,15 @@ msgstr ""
 msgid "Onboarding reset"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:346
+#: src/view/com/composer/Composer.tsx:347
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:343
+#: src/view/com/composer/Composer.tsx:344
 msgid "One or more images is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:353
+#: src/view/com/composer/Composer.tsx:354
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -5420,7 +5424,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1315
+#: src/view/com/composer/Composer.tsx:1320
 msgid "Open emoji picker"
 msgstr ""
 
@@ -5437,7 +5441,7 @@ msgstr ""
 msgid "Open full emoji list"
 msgstr ""
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:79
+#: src/components/Post/Embed/ExternalEmbed/index.tsx:79
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -5523,7 +5527,7 @@ msgstr ""
 msgid "Opens device photo gallery"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1316
+#: src/view/com/composer/Composer.tsx:1321
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -5561,7 +5565,7 @@ msgstr ""
 msgid "Opens the linked website"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:849
+#: src/view/com/notifications/NotificationFeedItem.tsx:850
 #: src/view/com/util/UserAvatar.tsx:581
 msgid "Opens this profile"
 msgstr ""
@@ -5663,13 +5667,13 @@ msgstr ""
 msgid "Password updated!"
 msgstr ""
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:43
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:369
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:43
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:369
 msgid "Pause"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:320
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:320
 msgid "Pause video"
 msgstr ""
 
@@ -5730,7 +5734,7 @@ msgstr ""
 msgid "Pin to your profile"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:409
+#: src/view/com/posts/PostFeedItem.tsx:411
 msgid "Pinned"
 msgstr ""
 
@@ -5747,38 +5751,38 @@ msgstr ""
 msgid "Pinned to your feeds"
 msgstr ""
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:43
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:370
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:43
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:370
 msgid "Play"
 msgstr ""
 
-#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:107
+#: src/components/Post/Embed/ExternalEmbed/ExternalGif.tsx:111
 msgid "Play {0}"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:134
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:321
+#: src/components/Post/Embed/VideoEmbed/index.tsx:134
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr ""
 
-#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
+#: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:61
 msgid "Play Video"
 msgstr ""
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:42
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:42
 msgid "Plays or pauses the GIF"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
 msgid "Plays or pauses the video"
 msgstr ""
 
-#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:106
+#: src/components/Post/Embed/ExternalEmbed/ExternalGif.tsx:110
 msgid "Plays the GIF"
 msgstr ""
 
-#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
+#: src/components/Post/Embed/ExternalEmbed/ExternalPlayer.tsx:62
 msgid "Plays the video"
 msgstr ""
 
@@ -5911,12 +5915,12 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1030
+#: src/view/com/composer/Composer.tsx:1031
 msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1028
+#: src/view/com/composer/Composer.tsx:1029
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -5925,7 +5929,7 @@ msgstr ""
 msgid "Post blocked"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:234
+#: src/view/com/post-thread/PostThreadItem.tsx:235
 msgid "Post by {0}"
 msgstr ""
 
@@ -5945,9 +5949,9 @@ msgstr ""
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:133
-#: src/screens/PostThread/components/ThreadItemPost.tsx:112
-#: src/screens/PostThread/components/ThreadItemTreePost.tsx:109
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:132
+#: src/screens/PostThread/components/ThreadItemPost.tsx:110
+#: src/screens/PostThread/components/ThreadItemTreePost.tsx:107
 #: src/screens/VideoFeed/index.tsx:529
 msgid "Post has been deleted"
 msgstr ""
@@ -6081,7 +6085,7 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1730
+#: src/view/com/composer/Composer.tsx:1735
 msgid "Processing video..."
 msgstr ""
 
@@ -6121,22 +6125,22 @@ msgid "Public, sharable lists which can be used to drive feeds."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1010
+#: src/view/com/composer/Composer.tsx:1011
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1003
+#: src/view/com/composer/Composer.tsx:1004
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:988
+#: src/view/com/composer/Composer.tsx:989
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:995
+#: src/view/com/composer/Composer.tsx:996
 msgid "Publish reply"
 msgstr ""
 
@@ -6182,8 +6186,8 @@ msgstr ""
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:438
-#: src/view/com/post-thread/PostThreadItem.tsx:268
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:451
+#: src/view/com/post-thread/PostThreadItem.tsx:269
 msgid "Quotes of this post"
 msgstr ""
 
@@ -6306,7 +6310,7 @@ msgstr ""
 msgid "Remove account"
 msgstr ""
 
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:15
+#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:19
 msgid "Remove attachment"
 msgstr ""
 
@@ -6374,10 +6378,6 @@ msgstr ""
 msgid "Remove profile"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:290
-msgid "Remove quote"
-msgstr ""
-
 #: src/components/PostControls/RepostButton.tsx:140
 #: src/components/PostControls/RepostButton.tsx:150
 msgid "Remove repost"
@@ -6406,11 +6406,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:110
+#: src/components/Post/Embed/index.tsx:208
 msgid "Removed by author"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:108
+#: src/components/Post/Embed/index.tsx:206
 msgid "Removed by you"
 msgstr ""
 
@@ -6437,10 +6437,6 @@ msgstr ""
 msgid "Removed verification"
 msgstr ""
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:291
-msgid "Removes quoted post"
-msgstr ""
-
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
 msgid "Replace with Discover"
@@ -6458,7 +6454,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1026
+#: src/view/com/composer/Composer.tsx:1027
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -6491,24 +6487,24 @@ msgstr ""
 msgid "Reply sorting"
 msgstr ""
 
-#: src/view/com/post/Post.tsx:205
-#: src/view/com/posts/PostFeedItem.tsx:607
+#: src/view/com/post/Post.tsx:204
+#: src/view/com/posts/PostFeedItem.tsx:602
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:598
+#: src/view/com/posts/PostFeedItem.tsx:593
 msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:600
+#: src/view/com/posts/PostFeedItem.tsx:595
 msgctxt "description"
 msgid "Reply to a post"
 msgstr ""
 
-#: src/view/com/post/Post.tsx:203
-#: src/view/com/posts/PostFeedItem.tsx:604
+#: src/view/com/post/Post.tsx:202
+#: src/view/com/posts/PostFeedItem.tsx:599
 msgctxt "description"
 msgid "Reply to you"
 msgstr ""
@@ -6637,21 +6633,21 @@ msgstr ""
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:349
+#: src/view/com/posts/PostFeedItem.tsx:351
 msgid "Reposted by {0}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:368
+#: src/view/com/posts/PostFeedItem.tsx:370
 msgid "Reposted by <0><1/></0>"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:347
-#: src/view/com/posts/PostFeedItem.tsx:366
+#: src/view/com/posts/PostFeedItem.tsx:349
+#: src/view/com/posts/PostFeedItem.tsx:368
 msgid "Reposted by you"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:420
-#: src/view/com/post-thread/PostThreadItem.tsx:247
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:433
+#: src/view/com/post-thread/PostThreadItem.tsx:248
 msgid "Reposts of this post"
 msgstr ""
 
@@ -6734,6 +6730,8 @@ msgstr ""
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
 #: src/components/moderation/ReportDialog/index.tsx:229
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:57
 #: src/components/StarterPack/ProfileStarterPacks.tsx:346
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
@@ -6747,8 +6745,6 @@ msgstr ""
 #: src/screens/Signup/BackNextButtons.tsx:53
 #: src/view/com/util/error/ErrorMessage.tsx:60
 #: src/view/com/util/error/ErrorScreen.tsx:97
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:55
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:57
 msgid "Retry"
 msgstr ""
 
@@ -6859,8 +6855,8 @@ msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/NotificationFeedItem.tsx:694
-#: src/view/com/notifications/NotificationFeedItem.tsx:719
+#: src/view/com/notifications/NotificationFeedItem.tsx:695
+#: src/view/com/notifications/NotificationFeedItem.tsx:720
 msgid "Say hello!"
 msgstr ""
 
@@ -6987,7 +6983,7 @@ msgstr ""
 msgid "See this guide"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:194
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:195
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
 msgstr ""
 
@@ -7315,11 +7311,11 @@ msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:200
 #: src/components/moderation/LabelPreference.tsx:137
-#: src/components/moderation/PostHider.tsx:124
+#: src/components/moderation/PostHider.tsx:134
 msgid "Show"
 msgstr ""
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:178
+#: src/components/Post/Embed/ExternalEmbed/Gif.tsx:178
 msgid "Show alt text"
 msgstr ""
 
@@ -7357,11 +7353,7 @@ msgstr ""
 msgid "Show list anyway"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemPost.tsx:318
-#: src/screens/PostThread/components/ThreadItemTreePost.tsx:364
-#: src/view/com/post-thread/PostThreadItem.tsx:692
-#: src/view/com/post/Post.tsx:244
-#: src/view/com/posts/PostFeedItem.tsx:563
+#: src/components/Post/ShowMoreTextButton.tsx:51
 msgid "Show More"
 msgstr ""
 
@@ -7429,8 +7421,8 @@ msgstr ""
 msgid "Show warning and filter from feeds"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:598
-#: src/view/com/post-thread/PostThreadItem.tsx:927
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:611
+#: src/view/com/post-thread/PostThreadItem.tsx:926
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -7439,7 +7431,7 @@ msgid "Shows other accounts you can switch to"
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:152
-#: src/components/moderation/PostHider.tsx:79
+#: src/components/moderation/PostHider.tsx:89
 msgid "Shows the content"
 msgstr ""
 
@@ -7522,7 +7514,7 @@ msgstr ""
 msgid "Signed in as @{0}"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:337
+#: src/components/FeedInterstitials.tsx:343
 msgid "Similar accounts"
 msgstr ""
 
@@ -7553,7 +7545,7 @@ msgstr ""
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:474
+#: src/components/FeedInterstitials.tsx:480
 msgid "Some other feeds you might like"
 msgstr ""
 
@@ -7775,7 +7767,7 @@ msgstr ""
 msgid "Suggested Accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:339
+#: src/components/FeedInterstitials.tsx:345
 msgid "Suggested for you"
 msgstr ""
 
@@ -8303,8 +8295,8 @@ msgstr ""
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:638
-#: src/view/com/post-thread/PostThreadItem.tsx:967
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:651
+#: src/view/com/post-thread/PostThreadItem.tsx:966
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -8312,7 +8304,7 @@ msgstr ""
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:170
+#: src/view/com/post-thread/PostThreadItem.tsx:171
 msgid "This post has been deleted."
 msgstr ""
 
@@ -8324,7 +8316,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:462
+#: src/view/com/composer/Composer.tsx:463
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -8425,7 +8417,7 @@ msgstr ""
 msgid "Threads Preferences"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/TimeIndicator.tsx:34
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
@@ -8458,7 +8450,7 @@ msgstr ""
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
 msgid "Toggles the sound"
 msgstr ""
 
@@ -8483,10 +8475,10 @@ msgstr ""
 #: src/components/dms/MessageContextMenu.tsx:145
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:560
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:563
-#: src/view/com/post-thread/PostThreadItem.tsx:889
-#: src/view/com/post-thread/PostThreadItem.tsx:892
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:573
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:576
+#: src/view/com/post-thread/PostThreadItem.tsx:888
+#: src/view/com/post-thread/PostThreadItem.tsx:891
 msgid "Translate"
 msgstr ""
 
@@ -8628,8 +8620,8 @@ msgstr ""
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Unmute"
 msgstr ""
@@ -8663,7 +8655,7 @@ msgstr ""
 msgid "Unmute thread"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
 msgstr ""
 
@@ -8724,7 +8716,7 @@ msgstr ""
 msgid "Unsubscribed from list"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:810
+#: src/view/com/composer/Composer.tsx:811
 msgid "Unsupported video type"
 msgstr ""
 
@@ -8814,7 +8806,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1727
+#: src/view/com/composer/Composer.tsx:1732
 msgid "Uploading video..."
 msgstr ""
 
@@ -9007,8 +8999,8 @@ msgstr ""
 msgid "Version {appVersion}"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:134
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:134
 msgid "Video"
 msgstr ""
 
@@ -9038,7 +9030,7 @@ msgstr ""
 msgid "Video is playing"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:191
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:192
 msgid "Video not found."
 msgstr ""
 
@@ -9046,11 +9038,11 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1737
+#: src/view/com/composer/Composer.tsx:1742
 msgid "Video uploaded"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
 msgid "Video: {0}"
 msgstr ""
 
@@ -9071,7 +9063,7 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:454
 #: src/screens/Search/components/SearchProfileCard.tsx:36
 #: src/screens/VideoFeed/index.tsx:790
-#: src/view/com/notifications/NotificationFeedItem.tsx:545
+#: src/view/com/notifications/NotificationFeedItem.tsx:546
 msgid "View {0}'s profile"
 msgstr ""
 
@@ -9185,7 +9177,7 @@ msgstr ""
 msgid "Visit Site"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:80
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:81
 msgid "Volume"
 msgstr ""
 
@@ -9297,7 +9289,7 @@ msgstr ""
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:459
+#: src/view/com/composer/Composer.tsx:460
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -9328,7 +9320,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:773
+#: src/view/com/composer/Composer.tsx:774
 msgid "What's up?"
 msgstr ""
 
@@ -9410,11 +9402,11 @@ msgstr ""
 msgid "Write a message"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:866
+#: src/view/com/composer/Composer.tsx:867
 msgid "Write post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:771
+#: src/view/com/composer/Composer.tsx:772
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:95
 msgid "Write your reply"
 msgstr ""
@@ -9848,7 +9840,7 @@ msgstr ""
 msgid "Your birth date"
 msgstr ""
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:195
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:196
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr ""
 
@@ -9932,11 +9924,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:521
+#: src/view/com/composer/Composer.tsx:522
 msgid "Your post has been published"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:518
+#: src/view/com/composer/Composer.tsx:519
 msgid "Your posts have been published"
 msgstr ""
 
@@ -9948,7 +9940,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:520
+#: src/view/com/composer/Composer.tsx:521
 msgid "Your reply has been published"
 msgstr ""
 
