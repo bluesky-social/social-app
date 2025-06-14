@@ -277,6 +277,18 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setOtherItemsVisible,
   ])
 
+  /*
+   * Count the number of posts beneath the anchor
+   */
+  const replyCount = useMemo(() => {
+    return items.reduce((acc, item) => {
+      if (item.type === 'threadPost' && item.depth > 0) {
+        return acc + 1
+      }
+      return acc
+    }, 0)
+  }, [items])
+
   return useMemo(
     () => ({
       state: {
@@ -292,6 +304,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
         sort,
         view,
         otherItemsVisible,
+        replyCount,
       },
       data: {
         items,
@@ -320,6 +333,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
       setView,
       threadgate,
       items,
+      replyCount,
     ],
   )
 }
