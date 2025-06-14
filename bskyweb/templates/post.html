@@ -11,7 +11,7 @@
 {% block html_head_extra -%}
 {%- if postView -%}
   <meta property="og:type" content="article">
-  <meta property="profile:username" content="{{ profileView.Handle }}">
+  <meta property="profile:username" content="{{ postView.Author.Handle }}">
   {%- if requestURI %}
   <meta property="og:url" content="{{ requestURI }}">
   {% endif -%}
