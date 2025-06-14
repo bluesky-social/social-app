@@ -162,7 +162,7 @@ function ThreadItemAnchorParentReplyLine({isRoot}: {isRoot: boolean}) {
 const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   item,
   isRoot,
-  postShadow,
+  // postShadow,
   onPostSuccess,
   threadgateRecord,
   postSource,
@@ -488,7 +488,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             <FeedFeedbackProvider value={feedFeedback}>
               <PostControls
                 big
-                post={postShadow}
+                // @ts-expect-error TODO no more shadow here
+                post={post}
                 record={record}
                 richText={richText}
                 onPressReply={onPressReply}
