@@ -133,8 +133,10 @@ function DialogInner({
           label="Preferences"
           values={[fixedOption]}
           onChange={values => setFixedOption(values[0])}>
-          <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Bluesky`)}>
-            <ToggleButton.ButtonText>{_(msg`Bluesky`)}</ToggleButton.ButtonText>
+          <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Blacksky`)}>
+            <ToggleButton.ButtonText>
+              {_(msg`Blacksky`)}
+            </ToggleButton.ButtonText>
           </ToggleButton.Button>
           <ToggleButton.Button
             testID="customSelectBtn"
@@ -147,9 +149,9 @@ function DialogInner({
         {fixedOption === BSKY_SERVICE && isFirstTimeUser && (
           <Admonition type="tip">
             <Trans>
-              Bluesky is an open network where you can choose your own provider.
-              If you're new here, we recommend sticking with the default Bluesky
-              Social option.
+              Blacksky is an open network where you can choose your own
+              provider. If you're new here, we recommend sticking with the
+              default Blacksky Algorithms option.
             </Trans>
           </Admonition>
         )}
