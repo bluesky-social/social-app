@@ -301,19 +301,19 @@ export function Explore({
   const onPTR = useCallback(async () => {
     setIsPTR(true)
     await Promise.all([
-      await qc.resetQueries({
+      qc.resetQueries({
         queryKey: createGetTrendsQueryKey(),
       }),
-      await qc.resetQueries({
+      qc.resetQueries({
         queryKey: createSuggestedStarterPacksQueryKey(),
       }),
-      await qc.resetQueries({
+      qc.resetQueries({
         queryKey: [getSuggestedUsersQueryKeyRoot],
       }),
-      await qc.resetQueries({
+      qc.resetQueries({
         queryKey: [useActorSearchPaginatedQueryKeyRoot],
       }),
-      await qc.resetQueries({
+      qc.resetQueries({
         queryKey: createGetSuggestedFeedsQueryKey(),
       }),
     ])
