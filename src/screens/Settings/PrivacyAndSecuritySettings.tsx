@@ -9,6 +9,7 @@ import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
+import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
 import {Key_Stroke2_Corner2_Rounded as KeyIcon} from '#/components/icons/Key'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
@@ -16,6 +17,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Email2FAToggle} from './components/Email2FAToggle'
 import {PwiOptOut} from './components/PwiOptOut'
+import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -70,6 +72,17 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                 {appPasswords.length}
               </SettingsList.BadgeText>
             )}
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            label={_(msg`Settings for activity alerts`)}
+            to={{screen: 'ActivityPrivacySettings'}}
+            contentContainerStyle={[a.align_start]}>
+            <SettingsList.ItemIcon icon={BellRingingIcon} />
+            <ItemTextWithSubtitle
+              titleText={<Trans>Allow others get notified of your posts</Trans>}
+              // TODO: make dynamic
+              subtitleText={<Trans>No one</Trans>}
+            />
           </SettingsList.LinkItem>
           <SettingsList.Divider />
           <SettingsList.Group>
