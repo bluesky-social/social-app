@@ -1,7 +1,7 @@
 import {AtpAgent} from '@atproto/api'
 
 import {Config} from './config.js'
-import {getFontFiles, readFonts} from './util/fonts.js'
+import {getFontDefinitions} from './util/fonts.js'
 
 export type AppContextOptions = {
   cfg: Config
@@ -23,8 +23,8 @@ export class AppContext {
 
   static async fromConfig(cfg: Config, overrides?: Partial<AppContextOptions>) {
     const appviewAgent = new AtpAgent({service: cfg.service.appviewUrl})
-    const fontFiles = getFontFiles()
-    const fonts = readFonts(fontFiles)
+    const fonts = getFontDefinitions()
+
     return new AppContext({
       cfg,
       appviewAgent,

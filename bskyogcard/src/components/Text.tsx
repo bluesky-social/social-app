@@ -1,4 +1,5 @@
 import {atoms as a, style as s, theme as t} from '../theme/index.js'
+import {FONT_FAMILY_DEF} from '../util/fonts.js'
 
 const SCALE_MULTIPLIER = 1 - 0.0625
 
@@ -20,7 +21,7 @@ export function Text({
     a.tracking_wide,
     t.atoms.text,
     {
-      fontFamily: 'Inter',
+      fontFamily: FONT_FAMILY_DEF,
       fontWeight: 400,
     },
     ...(cx ?? []),
