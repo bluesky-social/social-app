@@ -199,21 +199,22 @@ export function BottomBarWeb() {
         ) : (
           <>
             <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingTop: 14,
-                paddingBottom: 14,
-                paddingLeft: 14,
-                paddingRight: 6,
-                gap: 8,
-              }}>
-              <View
-                style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
+              style={[
+                a.w_full,
+                a.flex_row,
+                a.align_center,
+                a.justify_between,
+                a.gap_sm,
+                {
+                  paddingTop: 14,
+                  paddingBottom: 14,
+                  paddingLeft: 14,
+                  paddingRight: 6,
+                },
+              ]}>
+              <View style={[a.flex_row, a.align_center, a.gap_md]}>
                 <Logo width={32} />
-                <View style={{paddingTop: 4}}>
+                <View style={[a.pt_xs]}>
                   <Logotype width={80} fill={t.atoms.text.color} />
                 </View>
               </View>
