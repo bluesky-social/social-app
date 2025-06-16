@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
 import {formatCount} from '#/view/com/util/numeric/format'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -46,7 +45,7 @@ let RepostButton = ({
   const onLongPress = () =>
     requireAuth(() => {
       if (embeddingDisabled) {
-        Toast.show(_(msg`Quote posts are disabled for this post`))
+        dialogControl.open()
       } else {
         onQuote()
       }
