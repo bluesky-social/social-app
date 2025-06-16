@@ -9,7 +9,7 @@ async function main() {
   const cfg = envToCfg(env)
   const card = await CardService.create(cfg)
   await card.start()
-  httpLogger.info('card service is running')
+  httpLogger.info(`card service is running on port ${cfg.service.port}`)
   process.on('SIGTERM', async () => {
     httpLogger.info('card service is stopping')
     await card.destroy()
