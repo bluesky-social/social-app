@@ -19,6 +19,10 @@ export function PreferenceControls({
   allowDisableInApp = true,
 }: {
   name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
+  /**
+   * Keep other prefs in sync with `name`. For use in the "everything else" category
+   * which groups starterpack joins + verified + unverified notifications into a single toggle.
+   */
   syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
   preference?: AppBskyNotificationDefs.Preference | FilterablePreference
   allowDisableInApp?: boolean
