@@ -38,15 +38,10 @@ export function PostThreadComposePrompt({
   return (
     <View
       style={[
+        a.px_sm,
         gtMobile
-          ? [
-              a.py_xs,
-              a.px_sm,
-              a.border_t,
-              t.atoms.border_contrast_low,
-              t.atoms.bg,
-            ]
-          : [a.px_md, a.pb_2xs],
+          ? [a.py_xs, a.border_t, t.atoms.border_contrast_low, t.atoms.bg]
+          : [a.pb_2xs],
         style,
       ]}>
       {!gtMobile && (
@@ -87,7 +82,7 @@ export function PostThreadComposePrompt({
           a.transition_color,
         ]}>
         <UserAvatar
-          size={gtMobile ? 24 : 22}
+          size={24}
           avatar={profile?.avatar}
           type={profile?.associated?.labeler ? 'labeler' : 'user'}
         />
