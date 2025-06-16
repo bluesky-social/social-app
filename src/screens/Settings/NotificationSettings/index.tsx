@@ -188,7 +188,6 @@ export function NotificationSettingsScreen({}: Props) {
               to={{screen: 'ActivityNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={BellRingingIcon} />
-
               <ItemTextWithSubtitle
                 titleText={<Trans>Activity from others</Trans>}
                 subtitleText={
