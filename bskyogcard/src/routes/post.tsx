@@ -89,7 +89,10 @@ export default function (ctx: AppContext, app: Express) {
 
         return res.end(output.asPng())
       } catch (err) {
-        httpLogger.warn({err, uri: uri.toString()}, 'could not fetch post')
+        httpLogger.warn(
+          {err, uri: uri.toString()},
+          `Failed to render post ${uri}`,
+        )
         return res.status(404).end('not found')
       }
     }),
