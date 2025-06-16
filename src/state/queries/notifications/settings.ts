@@ -28,24 +28,13 @@ export function useNotificationSettingsQuery() {
 export function useNotificationSettingsUpdateMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
-  const {data: existing} = useNotificationSettingsQuery()
 
   return useMutation({
     mutationFn: async (
       update: Partial<AppBskyNotificationDefs.Preferences>,
     ) => {
-      let newPreferences
-      if (existing) {
-        newPreferences = {...existing}
-      } else {
-        const response = await agent.app.bsky.notification.getPreferences()
-        newPreferences = response.data.preferences
-      }
-
-      newPreferences = {...newPreferences, ...update}
-
       const response = await agent.app.bsky.notification.putPreferencesV2(
-        newPreferences,
+        update,
       )
       return response.data.preferences
     },
