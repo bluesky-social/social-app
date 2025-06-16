@@ -10,6 +10,7 @@ import {atoms as a, theme as t} from '../../theme/index.js'
 import * as bsky from '../../types/bsky/index.js'
 import {formatCount} from '../../util/formatCount.js'
 import {formatDate} from '../../util/formatDate.js'
+import {computeMatBorderRadius, MAT_WIDTH} from '../../util/frameMatting.js'
 import {moderatePost} from '../../util/moderatePost.js'
 import {sanitizeHandle} from '../../util/sanitizeHandle.js'
 import {getVerificationState} from '../../util/verificationState.js'
@@ -58,6 +59,7 @@ export function Post({
 
     const bgTop = avatar?.colors?.muted ?? '#1083fe'
     const bgBottom = avatar?.colors?.lightMuted ?? '#67b0fe'
+    const rounding = a.rounded_md
 
     return (
       <Box
@@ -67,9 +69,9 @@ export function Post({
           a.w_full,
           a.h_full,
           opts.mat && [
-            a.p_xl,
             {
-              borderRadius: '22px',
+              padding: MAT_WIDTH,
+              borderRadius: computeMatBorderRadius(rounding.borderRadius),
               backgroundImage: `linear-gradient(to bottom, ${bgTop} 0%, ${bgBottom} 100%)`,
             },
           ],
@@ -80,7 +82,7 @@ export function Post({
             a.flex_col,
             a.w_full,
             a.p_xl,
-            a.rounded_md,
+            rounding,
             t.atoms.bg,
             {boxShadow: `0 0 20px rgb(0, 25, 51, 0.2)`},
           ]}>

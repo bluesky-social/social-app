@@ -42,7 +42,13 @@ export default function (ctx: AppContext, app: Express) {
         }
 
         const [postData, moderatorData] = await Promise.all([
+          /*
+           * Fetch any remote post data, like images and their metadata.
+           */
           getPostData(post),
+          /*
+           * Fetches labeler definitions and builds `moderationOpts`
+           */
           getModeratorData(ctx.appviewAgent),
         ])
         const displayOptions = parseDisplayOptionsFromQuery(req.query)
