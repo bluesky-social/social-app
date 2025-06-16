@@ -270,7 +270,7 @@ export function sortAndAnnotateThreadItems(
              */
             metadata.isLastSibling =
               metadata.replyIndex ===
-              metadata.parentMetadata.repliesSeenCounter - 1
+              metadata.parentMetadata.repliesIndexCounter - 1
             metadata.isLastChild =
               metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth <= metadata.depth
