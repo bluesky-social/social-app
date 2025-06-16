@@ -265,12 +265,36 @@ export function sortAndAnnotateThreadItems(
               metadata.nextItemDepth = nextItem?.depth
 
             /*
-             * We can now officially calculate `isLastSibling` and `isLastChild`
-             * based on the actual data that we've seen.
+             * Item is the last "sibling" if we know for sure we're out of
+             * replies on the parent (even though this item itself may have its
+             * own reply branches).
+             */
+            const isLastSiblingByCounts =
+              metadata.replyIndex ===
+              metadata.parentMetadata.repliesIndexCounter - 1
+
+            /*
+             * Item can also be the last "sibling" if we know we don't have a
+             * next item, OR if that next item's depth is less than this item's
+             * depth (meaning it's a sibling of the parent, not a child of this
+             * item).
+             */
+            const isImplicitlyLastSibling =
+              metadata.nextItemDepth === undefined ||
+              metadata.nextItemDepth < metadata.depth
+
+            /*
+             * Ok now we can set the last sibling state.
              */
             metadata.isLastSibling =
-              metadata.replyIndex ===
-              metadata.parentMetadata.repliesSeenCounter - 1
+              isLastSiblingByCounts || isImplicitlyLastSibling
+
+            /*
+             * Item is the last "child" in a branch if there is no next item,
+             * or if the next item's depth is less than this item's depth (a
+             * sibling of the parent) or equal to this item's depth (a sibling
+             * of this item)
+             */
             metadata.isLastChild =
               metadata.nextItemDepth === undefined ||
               metadata.nextItemDepth <= metadata.depth
