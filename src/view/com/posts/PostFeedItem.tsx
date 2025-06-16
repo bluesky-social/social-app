@@ -36,10 +36,12 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {useSetUnstablePostSource} from '#/state/unstable-post-source'
+import {
+  buildPostSourceKey,
+  setUnstablePostSource,
+} from '#/state/unstable-post-source'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
-import {Link, TextLink, TextLinkOnWebOnly} from '#/view/com/util/Link'
-import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
+import {Link, TextLinkOnWebOnly} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -50,6 +52,9 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
+import {Embed} from '#/components/Post/Embed'
+import {PostEmbedViewContext} from '#/components/Post/Embed/types'
+import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -176,7 +181,6 @@ let FeedItemInner = ({
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
   const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
-  const unstableSetPostSource = useSetUnstablePostSource()
 
   const onPressReply = () => {
     sendInteraction({
@@ -232,7 +236,7 @@ let FeedItemInner = ({
       reqId,
     })
     unstableCacheProfileView(queryClient, post.author)
-    unstableSetPostSource(post.uri, {
+    setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
       feed: feedDescriptor,
       post: {
         post,
@@ -365,7 +369,7 @@ let FeedItemInner = ({
                 ) : (
                   <Trans>
                     Reposted by{' '}
-                    <ProfileHoverCard inline did={reason.by.did}>
+                    <ProfileHoverCard did={reason.by.did}>
                       <TextLinkOnWebOnly
                         type="sm-bold"
                         style={pal.textLight}
@@ -498,8 +502,6 @@ let PostContent = ({
   post: AppBskyFeedDefs.PostView
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
-  const pal = usePalette('default')
-  const {_} = useLingui()
   const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
@@ -544,7 +546,7 @@ let PostContent = ({
         additionalCauses={additionalPostAlerts}
       />
       {richText.text ? (
-        <View style={styles.postTextContainer}>
+        <>
           <RichText
             enableTags
             testID="postText"
@@ -554,19 +556,14 @@ let PostContent = ({
             authorHandle={postAuthor.handle}
             shouldProxyLinks={true}
           />
-        </View>
-      ) : undefined}
-      {limitLines ? (
-        <TextLink
-          text={_(msg`Show More`)}
-          style={pal.link}
-          onPress={onPressShowMore}
-          href="#"
-        />
+          {limitLines && (
+            <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />
+          )}
+        </>
       ) : undefined}
       {postEmbed ? (
         <View style={[a.pb_xs]}>
-          <PostEmbeds
+          <Embed
             embed={postEmbed}
             moderation={moderation}
             onOpen={onOpenEmbed}
@@ -604,7 +601,7 @@ function ReplyToLabel({
       label = (
         <Trans context="description">
           Reply to{' '}
-          <ProfileHoverCard inline did={profile.did}>
+          <ProfileHoverCard did={profile.did}>
             <TextLinkOnWebOnly
               type="md"
               style={pal.textLight}
@@ -685,13 +682,6 @@ const styles = StyleSheet.create({
   alert: {
     marginTop: 6,
     marginBottom: 6,
-  },
-  postTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    paddingBottom: 2,
-    overflow: 'hidden',
   },
   contentHiderChild: {
     marginTop: 6,

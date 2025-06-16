@@ -1,4 +1,4 @@
-import {Route, RouteParams} from './types'
+import {type Route, type RouteParams} from './types'
 
 export class Router {
   routes: [string, Route][] = []
@@ -45,7 +45,7 @@ function createRoute(pattern: string): Route {
   })
   const matcherRe = new RegExp(`^${matcherReInternal}([?]|$)`, 'i')
   return {
-    match(path: string) {
+    match(path) {
       const {pathname, searchParams} = new URL(path, 'http://throwaway.com')
       const addedParams = Object.fromEntries(searchParams.entries())
 
@@ -55,10 +55,10 @@ function createRoute(pattern: string): Route {
       }
       return undefined
     },
-    build(params: Record<string, string>) {
+    build(params = {}) {
       const str = pattern.replace(
         /:([\w]+)/g,
-        (_m, name) => params[name] || 'undefined',
+        (_m, name) => params[encodeURIComponent(name)] || 'undefined',
       )
 
       let hasQp = false

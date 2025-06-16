@@ -1,9 +1,11 @@
-import React, {memo, useEffect} from 'react'
+import {memo, useCallback, useEffect, useMemo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {
+import Animated, {
+  measure,
   type MeasuredDimensions,
   runOnJS,
   runOnUI,
+  useAnimatedRef,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
@@ -14,7 +16,6 @@ import {useNavigation} from '@react-navigation/native'
 import {useActorStatus} from '#/lib/actor-status'
 import {BACK_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {measureHandle, useHandleRef} from '#/lib/hooks/useHandleRef'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
@@ -59,9 +60,9 @@ let ProfileHeaderShell = ({
   const playHaptic = useHaptics()
   const liveStatusControl = useDialogControl()
 
-  const aviRef = useHandleRef()
+  const aviRef = useAnimatedRef()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -69,7 +70,7 @@ let ProfileHeaderShell = ({
     }
   }, [navigation])
 
-  const _openLightbox = React.useCallback(
+  const _openLightbox = useCallback(
     (uri: string, thumbRect: MeasuredDimensions | null) => {
       openLightbox({
         images: [
@@ -92,7 +93,7 @@ let ProfileHeaderShell = ({
     [openLightbox],
   )
 
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
@@ -109,7 +110,7 @@ let ProfileHeaderShell = ({
     }
   }, [live.isActive, profile.did])
 
-  const onPressAvi = React.useCallback(() => {
+  const onPressAvi = useCallback(() => {
     if (live.isActive) {
       playHaptic('Light')
       logger.metric(
@@ -122,10 +123,9 @@ let ProfileHeaderShell = ({
       const modui = moderation.ui('avatar')
       const avatar = profile.avatar
       if (avatar && !(modui.blur && modui.noOverride)) {
-        const aviHandle = aviRef.current
         runOnUI(() => {
           'worklet'
-          const rect = measureHandle(aviHandle)
+          const rect = measure(aviRef)
           runOnJS(_openLightbox)(avatar, rect)
         })()
       }
@@ -223,7 +223,7 @@ let ProfileHeaderShell = ({
               styles.avi,
               profile.associated?.labeler && styles.aviLabeler,
             ]}>
-            <View ref={aviRef} collapsable={false}>
+            <Animated.View ref={aviRef} collapsable={false}>
               <UserAvatar
                 type={profile.associated?.labeler ? 'labeler' : 'user'}
                 size={live.isActive ? 88 : 90}
@@ -231,7 +231,7 @@ let ProfileHeaderShell = ({
                 moderation={moderation.ui('avatar')}
               />
               {live.isActive && <LiveIndicator size="large" />}
-            </View>
+            </Animated.View>
           </View>
         </TouchableWithoutFeedback>
       </GrowableAvatar>
