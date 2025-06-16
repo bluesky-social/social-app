@@ -289,5 +289,5 @@ function SettingPreview({
     }
   }
 
-  return _(msg`Disabled`)
+  return _(msg`Off`)
 }
