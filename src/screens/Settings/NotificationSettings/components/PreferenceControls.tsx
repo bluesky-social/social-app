@@ -94,7 +94,7 @@ export function Inner({
     <View style={[a.px_xl, a.pt_md, a.gap_sm]}>
       <Toggle.Group
         type="checkbox"
-        label={_('Change which channels you can receive notifications from')}
+        label={_(`Select your preferred notification channels`)}
         values={channels}
         onChange={onChangeChannels}>
         <View style={[a.gap_sm]}>

@@ -214,13 +214,13 @@ export function NotificationSettingsScreen({}: Props) {
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
               label={_(
-                msg`Settings for notifications for reposts on your reposts`,
+                msg`Settings for notifications for reposts of your reposts`,
               )}
               to={{screen: 'RepostsOnRepostsNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={RepostRepostIcon} />
               <ItemTextWithSubtitle
-                titleText={<Trans>Reposts on your reposts</Trans>}
+                titleText={<Trans>Reposts of your reposts</Trans>}
                 subtitleText={
                   <SettingPreview preference={settings?.repostViaRepost} />
                 }
