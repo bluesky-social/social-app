@@ -439,7 +439,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="NewFollowerNotificationSettings"
         getComponent={() => NewFollowerNotificationSettingsScreen}
         options={{
-          title: title(msg`Repost notifications`),
+          title: title(msg`New follower notifications`),
           requireAuth: true,
         }}
       />
