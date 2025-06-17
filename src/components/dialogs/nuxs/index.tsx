@@ -33,12 +33,12 @@ const queuedNuxs: {
     preferences: UsePreferencesQueryResponse
   }) => boolean
 }[] = [
-  // {
-  //   id: Nux.InitialVerificationAnnouncement,
-  //   enabled: ({currentProfile}) => {
-  //     return isDaysOld(2, currentProfile.createdAt)
-  //   },
-  // },
+  {
+    id: Nux.InitialVerificationAnnouncement,
+    enabled: ({currentProfile}) => {
+      return isDaysOld(2, currentProfile.createdAt)
+    },
+  },
   {
     id: Nux.ActivityNotificationsAnnouncement,
     enabled: ({currentProfile}) => {

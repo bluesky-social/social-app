@@ -105,7 +105,7 @@ export function ActivityNotificationsAnnouncement() {
                 },
               ]}
               alt={_(
-                msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
+                msg`A screenshot of the Bluesky app showing a profile screen with a button with a bell icon inside. This button is used to subscribe to notifications for new posts from that user.`,
               )}
             />
           </View>
@@ -145,7 +145,7 @@ export function ActivityNotificationsAnnouncement() {
               </ButtonText>
             </Button>
             <Button
-              label={_(msg`Edit who can subscribe`)}
+              label={_(msg`Edit who can subscribe to your posts`)}
               size="large"
               variant="solid"
               color="secondary"
