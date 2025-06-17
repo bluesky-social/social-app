@@ -3,8 +3,10 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {urls} from '#/lib/constants'
+import {type NavigationProp} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -22,6 +24,7 @@ export function InitialVerificationAnnouncement() {
   const {gtMobile} = useBreakpoints()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
+  const nav = useNavigation<NavigationProp>()
 
   Dialog.useAutoOpen(control)
 
@@ -181,7 +184,9 @@ export function InitialVerificationAnnouncement() {
                 color="secondary"
                 style={[a.justify_center, a.w_full]}
                 onPress={() => {
-                  control.close()
+                  control.close(() => {
+                    nav.navigate('PrivacyAndSecuritySettings')
+                  })
                 }}>
                 <ButtonText>
                   <Trans>Close</Trans>

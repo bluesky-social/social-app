@@ -111,7 +111,7 @@ function Inner({
   }
 
   React.useEffect(() => {
-    if (snoozed) return
+    // if (snoozed) return
     if (!nuxs) return
 
     for (const {id, enabled} of queuedNuxs) {
@@ -119,7 +119,7 @@ function Inner({
 
       // check if completed first
       if (nux && nux.completed) {
-        continue
+        // continue
       }
 
       // then check gate (track exposure)
