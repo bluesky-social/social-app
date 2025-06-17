@@ -113,13 +113,9 @@ function Inner({
           },
         )
         await Promise.all([
-          await qc.resetQueries({
-            queryKey: createSuggestedStarterPacksQueryKey(),
-          }),
-          await qc.resetQueries({queryKey: createGetSuggestedFeedsQueryKey()}),
-          await qc.resetQueries({
-            queryKey: createGetSuggestedUsersQueryKey({}),
-          }),
+          qc.resetQueries({queryKey: createSuggestedStarterPacksQueryKey()}),
+          qc.resetQueries({queryKey: createGetSuggestedFeedsQueryKey()}),
+          qc.resetQueries({queryKey: createGetSuggestedUsersQueryKey({})}),
         ])
 
         Toast.show(
