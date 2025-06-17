@@ -35,7 +35,6 @@ import {
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {LoggedOut} from '#/view/com/auth/LoggedOut'
-import {ModalsContainer} from '#/view/com/modals/Modal'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
@@ -177,7 +176,6 @@ function NativeStackNavigator({
       )}
 
       {/* Start: individual dialogs and outlets */}
-      <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />

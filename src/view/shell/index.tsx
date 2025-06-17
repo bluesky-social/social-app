@@ -21,6 +21,7 @@ import {
 } from '#/state/shell'
 import {useCloseAnyActiveElement} from '#/state/util'
 import {Lightbox} from '#/view/com/lightbox/Lightbox'
+import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
@@ -143,6 +144,7 @@ function ShellInner() {
         </ErrorBoundary>
       </View>
       <Composer winHeight={winDim.height} />
+      <ModalsContainer />
       <Lightbox />
     </>
   )
