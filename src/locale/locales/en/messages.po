@@ -1457,7 +1457,7 @@ msgstr ""
 #: src/components/live/GoLiveDialog.tsx:247
 #: src/components/live/GoLiveDialog.tsx:253
 #: src/components/Menu/index.tsx:350
-#: src/components/PostControls/RepostButton.tsx:198
+#: src/components/PostControls/RepostButton.tsx:209
 #: src/components/Prompt.tsx:143
 #: src/components/Prompt.tsx:145
 #: src/screens/Deactivated.tsx:158
@@ -1506,7 +1506,7 @@ msgstr ""
 msgid "Cancel profile editing"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:192
+#: src/components/PostControls/RepostButton.tsx:203
 msgid "Cancel quote post"
 msgstr ""
 
@@ -1893,7 +1893,7 @@ msgstr ""
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadComposePrompt.tsx:67
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:62
 msgid "Compose reply"
 msgstr ""
 
@@ -5519,7 +5519,7 @@ msgstr ""
 msgid "Opens change handle dialog"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadComposePrompt.tsx:68
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:63
 msgid "Opens composer"
 msgstr ""
 
@@ -6156,8 +6156,8 @@ msgstr ""
 msgid "QR code saved to your camera roll!"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:163
-#: src/components/PostControls/RepostButton.tsx:186
+#: src/components/PostControls/RepostButton.tsx:174
+#: src/components/PostControls/RepostButton.tsx:197
 #: src/components/PostControls/RepostButton.web.tsx:78
 #: src/components/PostControls/RepostButton.web.tsx:85
 msgid "Quote post"
@@ -6171,8 +6171,8 @@ msgstr ""
 msgid "Quote post was successfully detached"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:162
-#: src/components/PostControls/RepostButton.tsx:184
+#: src/components/PostControls/RepostButton.tsx:173
+#: src/components/PostControls/RepostButton.tsx:195
 #: src/components/PostControls/RepostButton.web.tsx:77
 #: src/components/PostControls/RepostButton.web.tsx:84
 msgid "Quote posts disabled"
@@ -6378,8 +6378,8 @@ msgstr ""
 msgid "Remove profile"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:140
-#: src/components/PostControls/RepostButton.tsx:150
+#: src/components/PostControls/RepostButton.tsx:151
+#: src/components/PostControls/RepostButton.tsx:161
 msgid "Remove repost"
 msgstr ""
 
@@ -6606,8 +6606,8 @@ msgstr ""
 msgid "Report this user"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:141
 #: src/components/PostControls/RepostButton.tsx:152
+#: src/components/PostControls/RepostButton.tsx:163
 msgctxt "action"
 msgid "Repost"
 msgstr ""
@@ -6618,11 +6618,11 @@ msgid "Repost"
 msgstr ""
 
 #. Accessibility label for the repost button when the post has not been reposted, verb form followed by number of reposts and noun form
-#: src/components/PostControls/RepostButton.tsx:65
+#: src/components/PostControls/RepostButton.tsx:76
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:133
+#: src/components/PostControls/RepostButton.tsx:144
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:97
 #: src/screens/StarterPack/StarterPackScreen.tsx:561
@@ -8581,7 +8581,7 @@ msgid "Undo repost"
 msgstr ""
 
 #. Accessibility label for the repost button when the post has been reposted, verb followed by number of reposts and noun
-#: src/components/PostControls/RepostButton.tsx:55
+#: src/components/PostControls/RepostButton.tsx:66
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr ""
 
@@ -9407,7 +9407,7 @@ msgid "Write post"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:772
-#: src/view/com/post-thread/PostThreadComposePrompt.tsx:95
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:90
 msgid "Write your reply"
 msgstr ""
 
