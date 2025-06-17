@@ -90,11 +90,10 @@ import {AppPasswordsScreen} from '#/screens/Settings/AppPasswords'
 import {ContentAndMediaSettingsScreen} from '#/screens/Settings/ContentAndMediaSettings'
 import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPreferences'
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
+import {InterestsSettingsScreen} from '#/screens/Settings/InterestsSettings'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
-import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
 import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from '#/screens/Settings/Settings'
-import {SettingsInterests} from '#/screens/Settings/SettingsInterests'
 import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
 import {
   StarterPackScreen,
@@ -110,6 +109,17 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {LegacyNotificationSettingsScreen} from './screens/Settings/LegacyNotificationSettings'
+import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
+import {LikeNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikeNotificationSettings'
+import {LikesOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
+import {MentionNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MentionNotificationSettings'
+import {MiscellaneousNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
+import {NewFollowerNotificationSettingsScreen} from './screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
+import {QuoteNotificationSettingsScreen} from './screens/Settings/NotificationSettings/QuoteNotificationSettings'
+import {ReplyNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ReplyNotificationSettings'
+import {RepostNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostNotificationSettings'
+import {RepostsOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -381,6 +391,83 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="NotificationSettings"
+        getComponent={() => NotificationSettingsScreen}
+        options={{title: title(msg`Notification settings`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ReplyNotificationSettings"
+        getComponent={() => ReplyNotificationSettingsScreen}
+        options={{
+          title: title(msg`Reply notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="MentionNotificationSettings"
+        getComponent={() => MentionNotificationSettingsScreen}
+        options={{
+          title: title(msg`Mention notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="QuoteNotificationSettings"
+        getComponent={() => QuoteNotificationSettingsScreen}
+        options={{
+          title: title(msg`Quote notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="LikeNotificationSettings"
+        getComponent={() => LikeNotificationSettingsScreen}
+        options={{
+          title: title(msg`Like notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="RepostNotificationSettings"
+        getComponent={() => RepostNotificationSettingsScreen}
+        options={{
+          title: title(msg`Repost notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="NewFollowerNotificationSettings"
+        getComponent={() => NewFollowerNotificationSettingsScreen}
+        options={{
+          title: title(msg`New follower notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="LikesOnRepostsNotificationSettings"
+        getComponent={() => LikesOnRepostsNotificationSettingsScreen}
+        options={{
+          title: title(msg`Likes on your reposts notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="RepostsOnRepostsNotificationSettings"
+        getComponent={() => RepostsOnRepostsNotificationSettingsScreen}
+        options={{
+          title: title(msg`Reposts on your reposts notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="MiscellaneousNotificationSettings"
+        getComponent={() => MiscellaneousNotificationSettingsScreen}
+        options={{
+          title: title(msg`Miscellaneous notifications`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="ContentAndMediaSettings"
         getComponent={() => ContentAndMediaSettingsScreen}
         options={{
@@ -389,8 +476,8 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
-        name="SettingsInterests"
-        getComponent={() => SettingsInterests}
+        name="InterestsSettings"
+        getComponent={() => InterestsSettingsScreen}
         options={{
           title: title(msg`Your interests`),
           requireAuth: true,
@@ -438,8 +525,8 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{title: title(msg`Chat request inbox`), requireAuth: true}}
       />
       <Stack.Screen
-        name="NotificationSettings"
-        getComponent={() => NotificationSettingsScreen}
+        name="LegacyNotificationSettings"
+        getComponent={() => LegacyNotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
       />
       <Stack.Screen

@@ -130,7 +130,7 @@ export function NotificationsScreen({}: Props) {
         </Layout.Header.Content>
         <Layout.Header.Slot>
           <Link
-            to="/notifications/settings"
+            to={{screen: 'NotificationSettings'}}
             label={_(msg`Notification settings`)}
             size="small"
             variant="ghost"
