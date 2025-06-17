@@ -39,8 +39,8 @@ module.exports = function (_config) {
     expo: {
       version: VERSION,
       name: 'smol life',
-      slug: 'bluesky',
-      scheme: 'bluesky',
+      slug: 'smol-life',
+      scheme: 'smol-life',
       owner: 'blueskysocial',
       runtimeVersion: {
         policy: 'appVersion',
@@ -50,7 +50,7 @@ module.exports = function (_config) {
       primaryColor: '#61389d',
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: 'life.smol',
         config: {
           usesNonExemptEncryption: false,
         },
