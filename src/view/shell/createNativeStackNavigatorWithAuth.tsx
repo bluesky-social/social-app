@@ -179,7 +179,7 @@ function NativeStackNavigator({
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
-      <InAppBrowserConsentDialog />
+      {!isWeb && <InAppBrowserConsentDialog />}
       <PortalOutlet />
       <BottomSheetOutlet />
       {/* End: individual dialogs and outlets */}
