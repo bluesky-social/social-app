@@ -1,12 +1,12 @@
 import React from 'react'
-import {StyleSheet, TextProps} from 'react-native'
+import {StyleSheet, type TextProps} from 'react-native'
 import Svg, {
   Defs,
   LinearGradient,
   Path,
-  PathProps,
+  type PathProps,
   Stop,
-  SvgProps,
+  type SvgProps,
 } from 'react-native-svg'
 import {Image} from 'expo-image'
 
@@ -38,7 +38,7 @@ export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
             ? require('../../../assets/kawaii.png')
             : require('../../../assets/kawaii_smol.png')
         }
-        accessibilityLabel="Bluesky"
+        accessibilityLabel="smol life"
         accessibilityHint=""
         accessibilityIgnoresInvertColors
         style={[{height: size, aspectRatio: 1.4}]}

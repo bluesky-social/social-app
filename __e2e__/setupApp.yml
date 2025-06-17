@@ -9,5 +9,5 @@ appId: xyz.blueskyweb.app
 - extendedWaitUntil:
     visible: "Continue"
 - swipe:
-   from: "Bluesky"
+   from: "smol life"
    direction: DOWN

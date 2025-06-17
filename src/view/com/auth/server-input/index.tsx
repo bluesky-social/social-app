@@ -133,8 +133,10 @@ function DialogInner({
           label="Preferences"
           values={[fixedOption]}
           onChange={values => setFixedOption(values[0])}>
-          <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Bluesky`)}>
-            <ToggleButton.ButtonText>{_(msg`Bluesky`)}</ToggleButton.ButtonText>
+          <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`smol life`)}>
+            <ToggleButton.ButtonText>
+              {_(msg`smol life`)}
+            </ToggleButton.ButtonText>
           </ToggleButton.Button>
           <ToggleButton.Button
             testID="customSelectBtn"

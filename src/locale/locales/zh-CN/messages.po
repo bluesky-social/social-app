@@ -1306,8 +1306,8 @@ msgstr "博客"
 
 #: src/view/com/auth/server-input/index.tsx:136
 #: src/view/com/auth/server-input/index.tsx:137
-msgid "Bluesky"
-msgstr "Bluesky"
+msgid "smol life"
+msgstr "smol life"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:970
 msgid "Bluesky cannot confirm the authenticity of the claimed date."

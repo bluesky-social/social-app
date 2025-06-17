@@ -1307,7 +1307,7 @@ msgstr ""
 
 #: src/view/com/auth/server-input/index.tsx:136
 #: src/view/com/auth/server-input/index.tsx:137
-msgid "Bluesky"
+msgid "smol life"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:665

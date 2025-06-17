@@ -1306,7 +1306,7 @@ msgstr "ब्लग"
 
 #: src/view/com/auth/server-input/index.tsx:136
 #: src/view/com/auth/server-input/index.tsx:137
-msgid "Bluesky"
+msgid "smol life"
 msgstr "ब्लूस्काई"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:970

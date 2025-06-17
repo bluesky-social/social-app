@@ -919,7 +919,7 @@ msgstr "Video yüklenirken bir hata oluştu."
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:84
 #: src/components/verification/VerifierDialog.tsx:86
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
-msgstr "Bluesky'ın güvenilir doğrulayıcıları seçmesini ve güvenilir doğrulayıcıların da bireysel hesapları doğrulamasını gösteren bir çizim."
+msgstr "smol life'ın güvenilir doğrulayıcıları seçmesini ve güvenilir doğrulayıcıların da bireysel hesapları doğrulamasını gösteren bir çizim."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:28
 #: src/lib/moderation/useReportOptions.ts:28
@@ -971,7 +971,7 @@ msgstr "Animasyonlu GIF"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:37
 msgid "Announcing verification on Bluesky"
-msgstr "Bluesky'da doğrulamayı duyurma"
+msgstr "smol life'da doğrulamayı duyurma"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:33
 #: src/lib/moderation/useReportOptions.ts:33
@@ -1308,8 +1308,8 @@ msgstr "Blog"
 
 #: src/view/com/auth/server-input/index.tsx:136
 #: src/view/com/auth/server-input/index.tsx:137
-msgid "Bluesky"
-msgstr "Bluesky"
+msgid "smol life"
+msgstr "smol life"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:970
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
@@ -2668,7 +2668,7 @@ msgstr "Beğenmek için çift dokunun"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "Download Bluesky"
-msgstr "Bluesky'ı İndir"
+msgstr "smol life'ı İndir"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:79
 #: src/screens/Settings/components/ExportCarDialog.tsx:84
@@ -3448,7 +3448,7 @@ msgstr "Takip edilecek kişiler bulun"
 
 #: src/screens/Search/Shell.tsx:476
 msgid "Find posts, users, and feeds on Bluesky"
-msgstr "Bluesky'da gönderileri, kullanıcıları ve akışları bulun"
+msgstr "smol life'da gönderileri, kullanıcıları ve akışları bulun"
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Finish"
@@ -4210,7 +4210,7 @@ msgstr "İşler"
 #: src/screens/StarterPack/StarterPackScreen.tsx:466
 #: src/screens/StarterPack/StarterPackScreen.tsx:477
 msgid "Join Bluesky"
-msgstr "Bluesky'a Katıl"
+msgstr "smol life'a Katıl"
 
 #: src/components/StarterPack/QrCode.tsx:68
 #: src/view/shell/NavSignupCard.tsx:40
@@ -4316,12 +4316,12 @@ msgstr "Bu uyarı hakkında daha fazla bilgi edinin"
 #: src/components/verification/VerificationsDialog.tsx:150
 #: src/components/verification/VerifierDialog.tsx:117
 msgid "Learn more about verification on Bluesky"
-msgstr "Bluesky'da doğrulama ile ilgili daha fazla bilgi edinin"
+msgstr "smol life'da doğrulama ile ilgili daha fazla bilgi edinin"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:102
 msgid "Learn more about what is public on Bluesky."
-msgstr "Bluesky'da neyin herkese açık olduğu hakkında daha fazla bilgi edinin."
+msgstr "smol life'da neyin herkese açık olduğu hakkında daha fazla bilgi edinin."
 
 #: src/components/moderation/ContentHider.tsx:239
 #: src/view/com/auth/server-input/index.tsx:220
@@ -4351,7 +4351,7 @@ msgstr "Tüm dilleri görmek için hiçbirini seçmeyin."
 
 #: src/view/com/modals/LinkWarning.tsx:65
 msgid "Leaving Bluesky"
-msgstr "Bluesky'dan ayrılıyor"
+msgstr "smol life'dan ayrılıyor"
 
 #: src/screens/SignupQueued.tsx:155
 msgid "left to go."
@@ -6936,7 +6936,7 @@ msgstr "Kullanıcının #{tag} gönderilerini gör"
 
 #: src/view/com/auth/SplashScreen.web.tsx:178
 msgid "See jobs at Bluesky"
-msgstr "Bluesky'daki iş fırsatlarını görün"
+msgstr "smol life'daki iş fırsatlarını görün"
 
 #: src/view/screens/SavedFeeds.tsx:205
 msgid "See this guide"
@@ -7428,7 +7428,7 @@ msgstr "Listelenmeyen bir hesaba giriş yap"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Bluesky or create a new account"
-msgstr "Bluesky'da oturum aç veya yeni bir üyelik oluştur"
+msgstr "smol life'da oturum aç veya yeni bir üyelik oluştur"
 
 #: src/screens/Settings/Settings.tsx:235
 #: src/screens/Settings/Settings.tsx:237
@@ -8089,7 +8089,7 @@ msgstr "Uygulamada beklenmeyen bir sorun oluştu. Bu size de olduysa lütfen biz
 
 #: src/screens/SignupQueued.tsx:130
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Bluesky'e bir dizi yeni kullanıcı geldi! Hesabınızı en kısa sürede etkinleştireceğiz."
+msgstr "smol life'e bir dizi yeni kullanıcı geldi! Hesabınızı en kısa sürede etkinleştireceğiz."
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:62
 msgid "These settings only apply to the Following feed."
@@ -8859,7 +8859,7 @@ msgstr "Doğrulama Ayarları"
 
 #: src/screens/Moderation/VerificationSettings.tsx:41
 msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
-msgstr "Bluesky'daki doğrulamalar diğer platformlardan farklı çalışır. <0>Buradan daha fazlasını öğrenin.</0>"
+msgstr "smol life'daki doğrulamalar diğer platformlardan farklı çalışır. <0>Buradan daha fazlasını öğrenin.</0>"
 
 #: src/components/verification/VerificationsDialog.tsx:103
 msgid "Verified by:"
@@ -9193,7 +9193,7 @@ msgstr "Ağ sorunları yaşıyoruz, tekrar deneyin"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:94
 msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
-msgstr "Bluesky'da yeni bir doğrulama katmanı sunuyoruz - kolay görülebilen bir onay işareti."
+msgstr "smol life'da yeni bir doğrulama katmanı sunuyoruz - kolay görülebilen bir onay işareti."
 
 #: src/screens/Signup/index.tsx:109
 msgid "We're so excited to have you join us!"
