@@ -4,6 +4,8 @@ import {Box} from './Box.js'
 /**
  * Applies and thin border within a bounding box. Used to contrast media from
  * bg of the container.
+ *
+ * @see `#/components/MediaInsetBorder.tsx`
  */
 export function MediaInsetBorder({
   children,
@@ -33,9 +35,6 @@ export function MediaInsetBorder({
                 : t.atoms.border_contrast_high,
               {opacity: 0.6},
             ],
-        {
-          pointerEvents: 'none',
-        },
         style,
       ]}>
       {children}
