@@ -88,4 +88,7 @@ export const router = new Router<AllNavigatableRoutes>({
   StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
   VideoFeed: '/video-feed',
+
+  // smol.life custom
+  Games: '/games',
 })

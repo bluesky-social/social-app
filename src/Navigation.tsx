@@ -43,6 +43,7 @@ import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
 import {DebugModScreen} from '#/view/screens/DebugMod'
 import {FeedsScreen} from '#/view/screens/Feeds'
+import {GamesScreen} from '#/view/screens/Games'
 import {HomeScreen} from '#/view/screens/Home'
 import {ListsScreen} from '#/view/screens/Lists'
 import {LogScreen} from '#/view/screens/Log'
@@ -152,6 +153,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Lists"
         component={ListsScreen}
         options={{title: title(msg`Lists`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="Games"
+        component={GamesScreen}
+        options={{title: title(msg`Games`), requireAuth: true}}
       />
       <Stack.Screen
         name="Moderation"

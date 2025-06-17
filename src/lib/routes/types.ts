@@ -80,6 +80,9 @@ export type CommonNavigatorParams = {
   StarterPackWizard: undefined
   StarterPackEdit: {rkey?: string}
   VideoFeed: VideoFeedSourceContext
+
+  /* smol.life custom */
+  Games: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
