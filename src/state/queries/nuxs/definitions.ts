@@ -6,6 +6,7 @@ export enum Nux {
   NeueTypography = 'NeueTypography',
   ExploreInterestsCard = 'ExploreInterestsCard',
   InitialVerificationAnnouncement = 'InitialVerificationAnnouncement',
+  ActivityNotificationsAnnouncement = 'ActivityNotificationsAnnouncement',
 }
 
 export const nuxNames = new Set(Object.values(Nux))
@@ -23,10 +24,15 @@ export type AppNux = BaseNux<
       id: Nux.InitialVerificationAnnouncement
       data: undefined
     }
+  | {
+      id: Nux.ActivityNotificationsAnnouncement
+      data: undefined
+    }
 >
 
 export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.NeueTypography]: undefined,
   [Nux.ExploreInterestsCard]: undefined,
   [Nux.InitialVerificationAnnouncement]: undefined,
+  [Nux.ActivityNotificationsAnnouncement]: undefined,
 }

@@ -11,6 +11,7 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
+import {ActivityNotificationsAnnouncement} from '#/components/dialogs/nuxs/ActivityNotificationsAnnouncement'
 import {InitialVerificationAnnouncement} from '#/components/dialogs/nuxs/InitialVerificationAnnouncement'
 /*
  * NUXs
@@ -32,8 +33,14 @@ const queuedNuxs: {
     preferences: UsePreferencesQueryResponse
   }) => boolean
 }[] = [
+  // {
+  //   id: Nux.InitialVerificationAnnouncement,
+  //   enabled: ({currentProfile}) => {
+  //     return isDaysOld(2, currentProfile.createdAt)
+  //   },
+  // },
   {
-    id: Nux.InitialVerificationAnnouncement,
+    id: Nux.ActivityNotificationsAnnouncement,
     enabled: ({currentProfile}) => {
       return isDaysOld(2, currentProfile.createdAt)
     },
@@ -174,6 +181,9 @@ function Inner({
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
       {activeNux === Nux.InitialVerificationAnnouncement && (
         <InitialVerificationAnnouncement />
+      )}
+      {activeNux === Nux.ActivityNotificationsAnnouncement && (
+        <ActivityNotificationsAnnouncement />
       )}
     </Context.Provider>
   )
