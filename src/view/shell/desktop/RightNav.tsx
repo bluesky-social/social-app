@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/core'
 
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
+//import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
@@ -44,7 +44,8 @@ function useWebQueryParams() {
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {hasSession, currentAccount} = useSession()
+  //const {hasSession, currentAccount} = useSession()
+  const {hasSession} = useSession()
   const kawaii = useKawaiiMode()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
   const isSearchScreen = routeName === 'Search'
@@ -91,7 +92,30 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
 
       {showTrending && <SidebarTrendingTopics />}
 
-      <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
+      {kawaii && (
+        <Text style={[t.atoms.text_contrast_medium, {marginTop: 12}]}>
+          <Trans>
+            Logo by{' '}
+            <InlineLinkText
+              label={_(msg`Logo by @sawaratsuki.bsky.social`)}
+              to="/profile/sawaratsuki.bsky.social">
+              @sawaratsuki.bsky.social
+            </InlineLinkText>
+          </Trans>
+        </Text>
+      )}
+
+      {!hasSession && leftNavMinimal && (
+        <View style={[a.w_full, {height: 32}]}>
+          <AppLanguageDropdown />
+        </View>
+      )}
+    </View>
+  )
+}
+
+/*
+<Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
         {hasSession && (
           <>
             <InlineLinkText
@@ -120,26 +144,4 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         <InlineLinkText label={_(msg`Help`)} to={HELP_DESK_URL}>
           {_(msg`Help`)}
         </InlineLinkText>
-      </Text>
-
-      {kawaii && (
-        <Text style={[t.atoms.text_contrast_medium, {marginTop: 12}]}>
-          <Trans>
-            Logo by{' '}
-            <InlineLinkText
-              label={_(msg`Logo by @sawaratsuki.bsky.social`)}
-              to="/profile/sawaratsuki.bsky.social">
-              @sawaratsuki.bsky.social
-            </InlineLinkText>
-          </Trans>
-        </Text>
-      )}
-
-      {!hasSession && leftNavMinimal && (
-        <View style={[a.w_full, {height: 32}]}>
-          <AppLanguageDropdown />
-        </View>
-      )}
-    </View>
-  )
-}
+      </Text>*/
