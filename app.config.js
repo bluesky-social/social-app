@@ -47,7 +47,7 @@ module.exports = function (_config) {
       },
       icon: './assets/app-icons/ios_icon_default_light.png',
       userInterfaceStyle: 'automatic',
-      primaryColor: '#1083fe',
+      primaryColor: '#61389d',
       ios: {
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
