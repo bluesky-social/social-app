@@ -5,13 +5,21 @@ const __DIRNAME = path.join(process.cwd(), 'src')
 
 export const ADDITIONAL_FONTS = [
   'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-jp@5.0/japanese-700-normal.ttf',
+  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-jp@5.0/japanese-400-normal.ttf',
   'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-tc@5.0/chinese-traditional-700-normal.ttf',
+  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-tc@5.0/chinese-traditional-400-normal.ttf',
   'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-sc@5.0/chinese-simplified-700-normal.ttf',
+  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-sc@5.0/chinese-simplified-400-normal.ttf',
   'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-hk@5.0/chinese-hongkong-700-normal.ttf',
+  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-hk@5.0/chinese-hongkong-400-normal.ttf',
   'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-kr@5.0/korean-700-normal.ttf',
+  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-kr@5.0/korean-400-normal.ttf',
   'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-thai@5.0/thai-700-normal.ttf',
+  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-thai@5.0/thai-400-normal.ttf',
   'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-arabic@5.0/arabic-700-normal.ttf',
+  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-arabic@5.0/arabic-400-normal.ttf',
   'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-hebrew@5.0/hebrew-700-normal.ttf',
+  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-hebrew@5.0/hebrew-400-normal.ttf',
 ]
 
 /**
