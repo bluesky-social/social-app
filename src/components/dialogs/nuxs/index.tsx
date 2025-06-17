@@ -17,7 +17,7 @@ import {InitialVerificationAnnouncement} from '#/components/dialogs/nuxs/Initial
  * NUXs
  */
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-import {isDaysOld} from '#/components/dialogs/nuxs/utils'
+import {isExistingUserAsOf} from '#/components/dialogs/nuxs/utils'
 
 type Context = {
   activeNux: Nux | undefined
@@ -34,15 +34,13 @@ const queuedNuxs: {
   }) => boolean
 }[] = [
   {
-    id: Nux.InitialVerificationAnnouncement,
-    enabled: ({currentProfile}) => {
-      return isDaysOld(2, currentProfile.createdAt)
-    },
-  },
-  {
     id: Nux.ActivityNotificationsAnnouncement,
     enabled: ({currentProfile}) => {
-      return isDaysOld(2, currentProfile.createdAt)
+      // TODO just filler rn
+      return isExistingUserAsOf(
+        '2025-06-17T00:00:00.000Z',
+        currentProfile.createdAt,
+      )
     },
   },
 ]
