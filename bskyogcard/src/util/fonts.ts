@@ -21,7 +21,7 @@ export const ADDITIONAL_FONTS = [
  */
 export const ADDITIONAL_FONTS_POSTSCRIPT_NAMES: Record<string, string> = {
   arabic: 'Noto Sans Arabic',
-  hebrew: 'Noto Sans Arabic',
+  hebrew: 'Noto Sans Hebrew',
   japanese: 'Noto Sans JP Thin',
   korean: 'Noto Sans KR',
   thai: 'Noto Sans Thai',
