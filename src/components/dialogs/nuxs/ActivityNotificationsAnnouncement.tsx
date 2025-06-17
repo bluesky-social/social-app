@@ -3,13 +3,14 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
+import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
-import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function ActivityNotificationsAnnouncement() {
@@ -18,6 +19,7 @@ export function ActivityNotificationsAnnouncement() {
   const {gtMobile} = useBreakpoints()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
+  const nav = useNavigation<NavigationProp>()
 
   Dialog.useAutoOpen(control)
 
@@ -142,20 +144,21 @@ export function ActivityNotificationsAnnouncement() {
                 <Trans>Close</Trans>
               </ButtonText>
             </Button>
-            <Link
-              to={{screen: 'NotificationSettings'}}
+            <Button
               label={_(msg`Edit who can subscribe`)}
               size="large"
               variant="solid"
               color="secondary"
               style={[a.justify_center]}
               onPress={() => {
-                control.close()
+                control.close(() => {
+                  nav.navigate('NotificationSettings')
+                })
               }}>
               <ButtonText>
                 <Trans>Edit who can subscribe</Trans>
               </ButtonText>
-            </Link>
+            </Button>
           </View>
         </View>
 
