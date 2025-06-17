@@ -29,6 +29,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useProfileLinksQuery} from '#/state/queries/profile-links'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useAgent, useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -41,6 +42,7 @@ import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
+import {ProfileLinksSection} from '#/screens/Profile/Sections/Links'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
@@ -177,6 +179,11 @@ function ProfileScreenLoaded({
     did: profile.did,
     enabled: !!profile.associated?.labeler,
   })
+  const {
+    data: links,
+    error: linksError,
+    isLoading: isLinksLoading,
+  } = useProfileLinksQuery(profile.did)
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
 
@@ -191,6 +198,7 @@ function ProfileScreenLoaded({
   const listsSectionRef = React.useRef<SectionRef>(null)
   const starterPacksSectionRef = React.useRef<SectionRef>(null)
   const labelsSectionRef = React.useRef<SectionRef>(null)
+  const linksSectionRef = React.useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -210,6 +218,7 @@ function ProfileScreenLoaded({
   const showRepliesTab = hasSession
   const showMediaTab = !hasLabeler
   const showVideosTab = !hasLabeler
+  const showLinksTab = (links?.length ?? 0) > 0
   const showLikesTab = isMe
   const feedGenCount = profile.associated?.feedgens || 0
   const showFeedsTab = isMe || feedGenCount > 0
@@ -225,6 +234,7 @@ function ProfileScreenLoaded({
     showPostsTab ? _(msg`Posts`) : undefined,
     showRepliesTab ? _(msg`Replies`) : undefined,
     showMediaTab ? _(msg`Media`) : undefined,
+    showLinksTab ? _(msg`Links`) : undefined,
     showVideosTab ? _(msg`Videos`) : undefined,
     showLikesTab ? _(msg`Likes`) : undefined,
     showFeedsTab ? _(msg`Feeds`) : undefined,
@@ -237,6 +247,7 @@ function ProfileScreenLoaded({
   let postsIndex: number | null = null
   let repliesIndex: number | null = null
   let mediaIndex: number | null = null
+  let linksIndex: number | null = null
   let videosIndex: number | null = null
   let likesIndex: number | null = null
   let feedsIndex: number | null = null
@@ -253,6 +264,9 @@ function ProfileScreenLoaded({
   }
   if (showMediaTab) {
     mediaIndex = nextIndex++
+  }
+  if (showLinksTab) {
+    linksIndex = nextIndex++
   }
   if (showVideosTab) {
     videosIndex = nextIndex++
@@ -280,6 +294,8 @@ function ProfileScreenLoaded({
         repliesSectionRef.current?.scrollToTop()
       } else if (index === mediaIndex) {
         mediaSectionRef.current?.scrollToTop()
+      } else if (index === linksIndex) {
+        linksSectionRef.current?.scrollToTop()
       } else if (index === videosIndex) {
         videosSectionRef.current?.scrollToTop()
       } else if (index === likesIndex) {
@@ -302,6 +318,7 @@ function ProfileScreenLoaded({
       feedsIndex,
       listsIndex,
       starterPacksIndex,
+      linksIndex,
     ],
   )
 
@@ -437,6 +454,21 @@ function ProfileScreenLoaded({
               />
             )
           : null}
+        {showLinksTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileLinksSection
+                ref={linksSectionRef}
+                linkCards={links ?? []}
+                loading={isLinksLoading}
+                error={linksError}
+                scrollElRef={scrollElRef as ListRef}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                setScrollViewTag={setScrollViewTag}
+              />
+            )
+          : null}
+
         {showVideosTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileFeedSection
