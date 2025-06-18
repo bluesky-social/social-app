@@ -87,7 +87,7 @@ export function GranularNotificationsSettings() {
               a.w_full,
               a.overflow_hidden,
               {
-                height: isWeb ? 240 : 400,
+                height: isWeb ? 240 : 340,
               },
             ]}>
             <View
