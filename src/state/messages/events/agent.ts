@@ -261,8 +261,8 @@ export class MessagesEventBus {
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
     } catch (e: any) {
       if (!isNetworkError(e)) {
-        logger.error(e, {
-          safeMessage: `init failed`,
+        logger.error(`init failed`, {
+          safeMessage: e.message,
         })
       }
 
