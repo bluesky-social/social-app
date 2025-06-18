@@ -35,9 +35,8 @@ const queuedNuxs: {
   {
     id: Nux.GranularNotificationsSettings,
     enabled: ({currentProfile}) => {
-      // TODO just filler rn
       return isExistingUserAsOf(
-        '2025-06-17T00:00:00.000Z',
+        '2025-06-23T00:00:00.000Z',
         currentProfile.createdAt,
       )
     },
