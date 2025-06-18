@@ -63,10 +63,10 @@
     "@atproto/xrpc" "^0.7.0"
     "@atproto/xrpc-server" "^0.8.0"
 
-"@atproto/api@^0.15.15":
-  version "0.15.15"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.15.15.tgz#a506a1a26f3dfef9adb77234f451c0e784b071e7"
-  integrity sha512-Wn8jv76pCvffnkNj68w0CGZ3PT4DJGM8DUZnYq9kEW2im6jbRBYI0yYrHNhSiE92A5Ox0HjL2jMhalsI2p9VlQ==
+"@atproto/api@^0.15.16":
+  version "0.15.16"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.15.16.tgz#1962e7067e03a661e17c3164874596ef1e7ed7ad"
+  integrity sha512-ZNBrzBg2l0lHreKik1lJn8lrhAktwlY8NUPBU/hO9dwjAnDHQTiSzNFZt65dp9djmqZ75sX/VJ+heNuaJBvnhQ==
   dependencies:
     "@atproto/common-web" "^0.4.2"
     "@atproto/lexicon" "^0.4.11"
@@ -77,14 +77,14 @@
     tlds "^1.234.0"
     zod "^3.23.8"
 
-"@atproto/aws@^0.2.21":
-  version "0.2.21"
-  resolved "https://registry.yarnpkg.com/@atproto/aws/-/aws-0.2.21.tgz#06006a101c8004db11384a19366296cd87468326"
-  integrity sha512-bosExZ3YdFjOehNBcNWsC2mZBrAVLO8Ut/JquypXSahFeeXZP/9rd9F1VGf+vAmjFEKagHXQCb6CRFfJyN+I7A==
+"@atproto/aws@^0.2.22":
+  version "0.2.22"
+  resolved "https://registry.yarnpkg.com/@atproto/aws/-/aws-0.2.22.tgz#14a664c06e3569945e4ab143d3a8a03400c7d1de"
+  integrity sha512-xZ+0/zHHmpgzdLJGTDkFl5Wd39Wm5MyyMLdGYSzyt0wGTBmH6Ktp7ZgR8rmQVNYN1+VkMcdClAiNhg+BSH3mRw==
   dependencies:
     "@atproto/common" "^0.4.11"
     "@atproto/crypto" "^0.4.4"
-    "@atproto/repo" "^0.8.1"
+    "@atproto/repo" "^0.8.2"
     "@aws-sdk/client-cloudfront" "^3.261.0"
     "@aws-sdk/client-kms" "^3.196.0"
     "@aws-sdk/client-s3" "^3.224.0"
@@ -94,21 +94,21 @@
     multiformats "^9.9.0"
     uint8arrays "3.0.0"
 
-"@atproto/bsky@^0.0.159":
-  version "0.0.159"
-  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.159.tgz#6fcfd7d6c73e4041c5abc9ac3b99dbe0e1e6cf76"
-  integrity sha512-kRjDCW6FbByeafrEoUD5YMhhjuKTvSqrE2/QJ5xe9CP8UIhl8BShm2PcBh9gJtYc7lO83aJPqDSqb5gJwNAJUg==
+"@atproto/bsky@^0.0.161":
+  version "0.0.161"
+  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.161.tgz#671280c1d40f5c4eb0cc31d338a9e950acbf0ce0"
+  integrity sha512-L4uzadjt+oyVq3+W7rc1A+X2DyZDsTfeSD15w7k6+6JzICp32qavDuVjut3CIBqXCt7ykvSDujApyLsB/lcWJQ==
   dependencies:
     "@atproto-labs/fetch-node" "0.1.9"
     "@atproto-labs/xrpc-utils" "0.0.16"
-    "@atproto/api" "^0.15.15"
+    "@atproto/api" "^0.15.16"
     "@atproto/common" "^0.4.11"
     "@atproto/crypto" "^0.4.4"
     "@atproto/did" "^0.1.5"
     "@atproto/identity" "^0.4.8"
     "@atproto/lexicon" "^0.4.11"
-    "@atproto/repo" "^0.8.1"
-    "@atproto/sync" "^0.1.25"
+    "@atproto/repo" "^0.8.2"
+    "@atproto/sync" "^0.1.26"
     "@atproto/syntax" "^0.4.0"
     "@atproto/xrpc-server" "^0.8.0"
     "@bufbuild/protobuf" "^1.5.0"
@@ -218,21 +218,21 @@
     "@noble/hashes" "^1.6.1"
     uint8arrays "3.0.0"
 
-"@atproto/dev-env@^0.3.142":
-  version "0.3.142"
-  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.142.tgz#466cff00c92d53ad148709ae50bcca816fcee1bc"
-  integrity sha512-NiNb3Pdj93goEmKBIF5rIlLSmkfZiwnYmo7U6cGvGXoopRNG5e4Vm2PXb1n7uVdzuvEtiPtpswQxaf0x6jJsWA==
+"@atproto/dev-env@^0.3.144":
+  version "0.3.144"
+  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.144.tgz#cd2949ff870ca4cde23b4c377b08740a2e64151f"
+  integrity sha512-ND0oGp7itSnXxlAHlFxYjGFyCcu0f4eSucImVtKRxTcW8UeyyTtJcQP8OyNvtC8j13YjbW124r0g25Wlm0j9XQ==
   dependencies:
-    "@atproto/api" "^0.15.15"
-    "@atproto/bsky" "^0.0.159"
+    "@atproto/api" "^0.15.16"
+    "@atproto/bsky" "^0.0.161"
     "@atproto/bsync" "^0.0.20"
     "@atproto/common-web" "^0.4.2"
     "@atproto/crypto" "^0.4.4"
     "@atproto/identity" "^0.4.8"
     "@atproto/lexicon" "^0.4.11"
-    "@atproto/ozone" "^0.1.120"
-    "@atproto/pds" "^0.4.148"
-    "@atproto/sync" "^0.1.25"
+    "@atproto/ozone" "^0.1.121"
+    "@atproto/pds" "^0.4.150"
+    "@atproto/sync" "^0.1.26"
     "@atproto/syntax" "^0.4.0"
     "@atproto/xrpc-server" "^0.8.0"
     "@did-plc/lib" "^0.0.1"
@@ -308,10 +308,10 @@
   optionalDependencies:
     "@atproto/oauth-provider-api" "0.1.4"
 
-"@atproto/oauth-provider@^0.9.0":
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@atproto/oauth-provider/-/oauth-provider-0.9.0.tgz#3598924978c2e3d5fdf62bced54574156d15cf92"
-  integrity sha512-LbZS9rbR5l9gVO97wJ3ls+ENXwv6BakmArRyjc5EfaQ4Xc3eLbvE629hpu9LV8LyCkBpseum0l+D+rYXsemNUw==
+"@atproto/oauth-provider@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@atproto/oauth-provider/-/oauth-provider-0.9.1.tgz#0147b75d1ad444455159f0a687ce87b3b49a2894"
+  integrity sha512-2Gm3jv45cGLmUQV0C4/orCJBsHu4wajy+JTN9f/ATX3vvjnFtAd/1GRvAMKDGXtdF7VIjNFlD+4lqhoDxYJpng==
   dependencies:
     "@atproto-labs/fetch" "0.2.3"
     "@atproto-labs/fetch-node" "0.1.9"
@@ -347,12 +347,12 @@
     "@atproto/jwk" "0.3.0"
     zod "^3.23.8"
 
-"@atproto/ozone@^0.1.120":
-  version "0.1.120"
-  resolved "https://registry.yarnpkg.com/@atproto/ozone/-/ozone-0.1.120.tgz#b5c431a538558179de0465cfbfea512d65e092bf"
-  integrity sha512-zu2f16K/z/3r4mC4z/8qISPt0j+Y0GwtjmSE+VOJvVT363iOd9a834K+QHJqnD6B3iTBHR1VPlZ/4fsZ3+4UaA==
+"@atproto/ozone@^0.1.121":
+  version "0.1.121"
+  resolved "https://registry.yarnpkg.com/@atproto/ozone/-/ozone-0.1.121.tgz#309b7e876f3b598ed4e79bb5a79e2346931588fe"
+  integrity sha512-kc3NxiXSPqQmWz8yXlV5cFnZ469ViQd0AexEMw467AcB8ikK1WSxhLsa1EiNAQuLOOpyeXSmAKGAUFHzSOIMpw==
   dependencies:
-    "@atproto/api" "^0.15.15"
+    "@atproto/api" "^0.15.16"
     "@atproto/common" "^0.4.11"
     "@atproto/crypto" "^0.4.4"
     "@atproto/identity" "^0.4.8"
@@ -377,21 +377,21 @@
     undici "^6.14.1"
     ws "^8.12.0"
 
-"@atproto/pds@^0.4.148":
-  version "0.4.148"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.148.tgz#7af82480e42174ea1c284f5975bf0aff3bd4da24"
-  integrity sha512-PbxTpxRAcsdu3zANjwNH+Pfbu0pfj5z6UDmcnc3eaEP11xsExu3+B84jOYKAkIN/PbM1A9EbiBjKb95yBQxGAw==
+"@atproto/pds@^0.4.150":
+  version "0.4.150"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.150.tgz#45686b05b8ed46e265efa5231ab16e6eda72a8e8"
+  integrity sha512-CPT6H2uDTe4ZAyxQbws2dIlmdFFf6GQGwMc0OE3kI1wBBaLHprpexjM2Gd4ObtYNxGOOV0fwoCDAth8qqZ4XVw==
   dependencies:
     "@atproto-labs/fetch-node" "0.1.9"
     "@atproto-labs/xrpc-utils" "0.0.16"
-    "@atproto/api" "^0.15.15"
-    "@atproto/aws" "^0.2.21"
+    "@atproto/api" "^0.15.16"
+    "@atproto/aws" "^0.2.22"
     "@atproto/common" "^0.4.11"
     "@atproto/crypto" "^0.4.4"
     "@atproto/identity" "^0.4.8"
     "@atproto/lexicon" "^0.4.11"
-    "@atproto/oauth-provider" "^0.9.0"
-    "@atproto/repo" "^0.8.1"
+    "@atproto/oauth-provider" "^0.9.1"
+    "@atproto/repo" "^0.8.2"
     "@atproto/syntax" "^0.4.0"
     "@atproto/xrpc" "^0.7.0"
     "@atproto/xrpc-server" "^0.8.0"
@@ -424,10 +424,10 @@
     undici "^6.19.8"
     zod "^3.23.8"
 
-"@atproto/repo@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@atproto/repo/-/repo-0.8.1.tgz#be8c6b93c000944b81aaa1026d6c50d82c025d74"
-  integrity sha512-d1NtHhXYJVJlFVI6mbVOUnpB0rnhqxPnZcALkJoYJjaDPVr4NNqRFAtrwb+GHzxT6DhijoXYQf24pKGfEFDd4g==
+"@atproto/repo@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@atproto/repo/-/repo-0.8.2.tgz#7953cb2c637c94505da76f74a784b2aae050c204"
+  integrity sha512-lP0g5Uw3TUC2Tc7te8YKCpRoIhBYI+Uvn11fupGEaMcMjgLdYtB0Kc0AiqWXF42KqlBG9dAEoJITi2GRzDNHUg==
   dependencies:
     "@atproto/common" "^0.4.11"
     "@atproto/common-web" "^0.4.2"
@@ -439,15 +439,15 @@
     varint "^6.0.0"
     zod "^3.23.8"
 
-"@atproto/sync@^0.1.25":
-  version "0.1.25"
-  resolved "https://registry.yarnpkg.com/@atproto/sync/-/sync-0.1.25.tgz#66b3453e3cf0ba6a155dbbf207ea46d632c2d6b0"
-  integrity sha512-4UsQgQsUK+hKFAEDi10Ops6n2W/kfk2JYP8AU6FSHAzOadB1hKRDJbGF5vLiLP9ACBhCzoJerZ31DCnhjzRzfw==
+"@atproto/sync@^0.1.26":
+  version "0.1.26"
+  resolved "https://registry.yarnpkg.com/@atproto/sync/-/sync-0.1.26.tgz#6be2876be612d9cd704452598ee679b2e912cfe3"
+  integrity sha512-bpUIajtPrE3RgFW8mIfrI4EM/LJ4JjQhI5fsqc78zCHZawuflpllf1aH70roDWWiskMWoiLWnVRxdYXdeEgbXA==
   dependencies:
     "@atproto/common" "^0.4.11"
     "@atproto/identity" "^0.4.8"
     "@atproto/lexicon" "^0.4.11"
-    "@atproto/repo" "^0.8.1"
+    "@atproto/repo" "^0.8.2"
     "@atproto/syntax" "^0.4.0"
     "@atproto/xrpc-server" "^0.8.0"
     multiformats "^9.9.0"

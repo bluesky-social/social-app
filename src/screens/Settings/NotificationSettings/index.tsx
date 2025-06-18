@@ -260,8 +260,8 @@ function SettingPreview({
   if (!preference) {
     return null
   } else {
-    if ('filter' in preference) {
-      if (preference.filter === 'all') {
+    if ('include' in preference) {
+      if (preference.include === 'all') {
         if (preference.list && preference.push) {
           return _(msg`In-app, Push, Everyone`)
         } else if (preference.list) {
@@ -269,7 +269,7 @@ function SettingPreview({
         } else if (preference.push) {
           return _(msg`Push, Everyone`)
         }
-      } else if (preference.filter === 'follows') {
+      } else if (preference.include === 'follows') {
         if (preference.list && preference.push) {
           return _(msg`In-app, Push, People you follow`)
         } else if (preference.list) {
