@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {isWeb} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -13,7 +14,7 @@ import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
 
-export function ActivityNotificationsAnnouncement() {
+export function GranularNotificationsSettings() {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
@@ -32,7 +33,7 @@ export function ActivityNotificationsAnnouncement() {
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
-        label={_(msg`You're now able to be notified when someone posts`)}
+        label={_(msg`Introducing fine-grained notification settings.`)}
         style={[
           gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
         ]}
@@ -49,8 +50,10 @@ export function ActivityNotificationsAnnouncement() {
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
             {
-              gap: 24,
-              paddingTop: 48,
+              gap: isWeb ? 16 : 24,
+              paddingTop: isWeb ? 24 : 48,
+              borderTopLeftRadius: a.rounded_md.borderRadius,
+              borderTopRightRadius: a.rounded_md.borderRadius,
             },
           ]}>
           <View
@@ -78,7 +81,15 @@ export function ActivityNotificationsAnnouncement() {
             </Text>
           </View>
 
-          <View style={[a.relative]}>
+          <View
+            style={[
+              a.relative,
+              a.w_full,
+              a.overflow_hidden,
+              {
+                height: isWeb ? 240 : 400,
+              },
+            ]}>
             <View
               style={[
                 a.absolute,
@@ -87,9 +98,9 @@ export function ActivityNotificationsAnnouncement() {
                 {
                   top: 5,
                   bottom: 0,
-                  left: '15%',
-                  right: '15%',
-                  width: '70%',
+                  left: '20%',
+                  right: '20%',
+                  width: '60%',
                   borderTopLeftRadius: 40,
                   borderTopRightRadius: 40,
                 },
@@ -97,58 +108,70 @@ export function ActivityNotificationsAnnouncement() {
             />
             <Image
               accessibilityIgnoresInvertColors
-              source={require('../../../../assets/images/activity_notifications_announcement.png')}
+              source={require('../../../../assets/images/notification_settings_announcement.png')}
               style={[
                 a.w_full,
                 {
-                  aspectRatio: 380 / 231,
+                  aspectRatio: 380 / 421,
                 },
               ]}
               alt={_(
-                msg`A screenshot of the Bluesky app showing a profile screen with a button with a bell icon inside. This button is used to subscribe to notifications for new posts from that user.`,
+                msg`A screenshot of the new notification settings screen, showing many options to configure the notifications you care about.`,
               )}
             />
           </View>
         </View>
-        <View style={[a.pt_4xl, a.p_xl, a.gap_5xl]}>
-          <View style={[a.gap_sm]}>
-            <Text style={[a.text_3xl, a.leading_tight, a.font_bold]}>
-              <Trans>Get notified when someone posts</Trans>
+        <View
+          style={[
+            a.px_xl,
+            isWeb ? [a.pt_xl, a.gap_xl, a.pb_sm] : [a.pt_4xl, a.gap_3xl],
+          ]}>
+          <View style={[a.gap_sm, a.align_center]}>
+            <Text
+              style={[
+                a.text_3xl,
+                a.leading_tight,
+                a.font_heavy,
+                a.text_center,
+              ]}>
+              <Trans>More control over your notifications</Trans>
             </Text>
-            <Text style={[a.text_md, a.leading_snug]}>
+            <Text
+              style={[
+                a.text_md,
+                a.leading_snug,
+                a.text_center,
+                {
+                  maxWidth: 340,
+                },
+              ]}>
               <Trans>
-                You can now choose to receive notifications for when specific
-                people make new posts. If there’s someone you want timely
-                updates from, go to their profile and find the new bell icon
-                near the follow button.
-              </Trans>
-            </Text>
-            <Text style={[a.text_md, a.leading_snug]}>
-              <Trans>
-                By default, only people you follow can subscribe to you. You can
-                change this in Settings.
+                Now you can choose exactly what you want to be notified about.
+                Visit your notification settings to fine-tune your preferences.
               </Trans>
             </Text>
           </View>
 
-          <View style={[a.gap_md]}>
+          <View style={[a.gap_md, isWeb && a.align_center]}>
+            {!isWeb && (
+              <Button
+                label={_(msg`Close`)}
+                size="large"
+                variant="solid"
+                color="primary"
+                onPress={() => {
+                  control.close()
+                }}>
+                <ButtonText>
+                  <Trans>Close</Trans>
+                </ButtonText>
+              </Button>
+            )}
             <Button
-              label={_(msg`Close`)}
+              label={_(msg`Open settings`)}
               size="large"
               variant="solid"
-              color="primary"
-              onPress={() => {
-                control.close()
-              }}>
-              <ButtonText>
-                <Trans>Close</Trans>
-              </ButtonText>
-            </Button>
-            <Button
-              label={_(msg`Edit who can subscribe to your posts`)}
-              size="large"
-              variant="solid"
-              color="secondary"
+              color={isWeb ? 'primary' : 'secondary'}
               style={[a.justify_center]}
               onPress={() => {
                 control.close(() => {
@@ -156,7 +179,7 @@ export function ActivityNotificationsAnnouncement() {
                 })
               }}>
               <ButtonText>
-                <Trans>Edit who can subscribe</Trans>
+                <Trans>Open settings</Trans>
               </ButtonText>
             </Button>
           </View>
