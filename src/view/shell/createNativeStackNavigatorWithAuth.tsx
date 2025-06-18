@@ -40,6 +40,14 @@ import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
 import {Takendown} from '#/screens/Takendown'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
+import {EmailDialog} from '#/components/dialogs/EmailDialog'
+import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
+import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
+import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
+import {NuxDialogs} from '#/components/dialogs/nuxs'
+import {SigninDialog} from '#/components/dialogs/Signin'
+import {Outlet as PortalOutlet} from '#/components/Portal'
+import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -167,6 +175,20 @@ function NativeStackNavigator({
           {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
         </>
       )}
+
+      {/* Start: individual dialogs and outlets */}
+      <MutedWordsDialog />
+      <SigninDialog />
+      <EmailDialog />
+      <LinkWarningDialog />
+      {!isWeb && <InAppBrowserConsentDialog />}
+      <PortalOutlet />
+      <BottomSheetOutlet />
+      {/* End: individual dialogs and outlets */}
+
+      {/* Start: dialog controllers */}
+      <NuxDialogs />
+      {/* End: dialog controllers */}
     </NavigationContent>
   )
 }
