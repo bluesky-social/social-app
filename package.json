@@ -191,7 +191,7 @@
     "react-native-gesture-handler": "2.25.0",
     "react-native-get-random-values": "~1.11.0",
     "react-native-ios-context-menu": "^1.15.3",
-    "react-native-keyboard-controller": "^1.17.1",
+    "react-native-keyboard-controller": "^1.17.5",
     "react-native-mmkv": "^2.12.2",
     "react-native-pager-view": "^6.7.1",
     "react-native-progress": "bluesky-social/react-native-progress",
