@@ -2,7 +2,6 @@ import {ToolsOzoneSafelinkDefs} from '@atproto/api'
 
 import {type ServiceConfig} from '../config.js'
 import {redirectLogger} from '../logger.js'
-// import {ozoneAgent} from './agent.js'
 import {OzoneAgent} from './ozoneAgent.js'
 let cacheCursor: string | undefined
 
