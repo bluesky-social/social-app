@@ -11,8 +11,7 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
-import {ActivityNotificationsAnnouncement} from '#/components/dialogs/nuxs/ActivityNotificationsAnnouncement'
-import {InitialVerificationAnnouncement} from '#/components/dialogs/nuxs/InitialVerificationAnnouncement'
+import {GranularNotificationsSettings} from '#/components/dialogs/nuxs/GranularNotificationsSettings'
 /*
  * NUXs
  */
@@ -34,7 +33,7 @@ const queuedNuxs: {
   }) => boolean
 }[] = [
   {
-    id: Nux.ActivityNotificationsAnnouncement,
+    id: Nux.GranularNotificationsSettings,
     enabled: ({currentProfile}) => {
       // TODO just filler rn
       return isExistingUserAsOf(
@@ -116,7 +115,7 @@ function Inner({
   }
 
   React.useEffect(() => {
-    if (snoozed) return
+    // if (snoozed) return
     if (!nuxs) return
 
     for (const {id, enabled} of queuedNuxs) {
@@ -124,7 +123,7 @@ function Inner({
 
       // check if completed first
       if (nux && nux.completed) {
-        continue
+        // continue
       }
 
       // then check gate (track exposure)
@@ -177,11 +176,8 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.InitialVerificationAnnouncement && (
-        <InitialVerificationAnnouncement />
-      )}
-      {activeNux === Nux.ActivityNotificationsAnnouncement && (
-        <ActivityNotificationsAnnouncement />
+      {activeNux === Nux.GranularNotificationsSettings && (
+        <GranularNotificationsSettings />
       )}
     </Context.Provider>
   )
