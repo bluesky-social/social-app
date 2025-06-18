@@ -169,7 +169,7 @@ export function GranularNotificationsSettings() {
             )}
             <Button
               label={_(msg`Open settings`)}
-              size="large"
+              size={isWeb ? 'small' : 'large'}
               variant="solid"
               color={isWeb ? 'primary' : 'secondary'}
               style={[a.justify_center]}
