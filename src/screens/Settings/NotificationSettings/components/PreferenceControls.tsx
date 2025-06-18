@@ -85,7 +85,7 @@ export function Inner({
 
     const newPreference = {
       ...preference,
-      filter: change,
+      include: change,
     } satisfies typeof preference
 
     mutate({
@@ -138,7 +138,7 @@ export function Inner({
           )}
         </View>
       </Toggle.Group>
-      {'filter' in preference && (
+      {'include' in preference && (
         <>
           <Divider />
           <Text style={[a.font_bold, a.text_md]}>
@@ -147,7 +147,7 @@ export function Inner({
           <Toggle.Group
             type="radio"
             label={_(msg`Filter who you receive notifications from`)}
-            values={[preference.filter]}
+            values={[preference.include]}
             onChange={onChangeFilter}
             disabled={channels.length === 0}>
             <View style={[a.gap_sm]}>
