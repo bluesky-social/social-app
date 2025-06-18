@@ -5,8 +5,6 @@ import {DAY, SECOND} from '@atproto/common'
 import escapeHTML from 'escape-html'
 import {type Express} from 'express'
 
-// IMPORTANT: Ensure this import path matches exactly (including casing and extension) everywhere it's used
-// Ensure this import path matches exactly everywhere in your project to avoid module duplication
 import {type AppContext} from '../context.js'
 import {redirectLogger} from '../logger.js'
 import {handler} from './util.js'

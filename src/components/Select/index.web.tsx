@@ -244,6 +244,7 @@ export function Item({ref, value, style, children}: ItemProps) {
       onFocus={onFocus}
       onBlur={onBlur}
       style={flatten([
+        t.atoms.text,
         a.relative,
         a.flex,
         {minHeight: 25, paddingLeft: 30, paddingRight: 35},

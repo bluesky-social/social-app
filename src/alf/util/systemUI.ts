@@ -1,7 +1,7 @@
 import * as SystemUI from 'expo-system-ui'
 
 import {isAndroid} from '#/platform/detection'
-import {Theme} from '../types'
+import {type Theme} from '../types'
 
 export function setSystemUITheme(themeType: 'theme' | 'lightbox', t: Theme) {
   if (isAndroid) {

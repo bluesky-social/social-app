@@ -1,8 +1,7 @@
 import React, {memo, useRef, useState} from 'react'
-import {StyleSheet, useWindowDimensions, View} from 'react-native'
-import {runOnJS} from 'react-native-reanimated'
+import {useWindowDimensions, View} from 'react-native'
+import {runOnJS, useAnimatedStyle} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyFeedDefs,
   type AppBskyFeedThreadgate,
@@ -13,15 +12,14 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {useFeedFeedback} from '#/state/feed-feedback'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   fillThreadModerationCache,
@@ -36,7 +34,9 @@ import {
 import {useSetThreadViewPreferencesMutation} from '#/state/queries/preferences'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {useUnstablePostSource} from '#/state/unstable-post-source'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
@@ -93,7 +93,7 @@ const keyExtractor = (item: RowItem) => {
   return item._reactKey
 }
 
-export function PostThread({uri}: {uri: string | undefined}) {
+export function PostThread({uri}: {uri: string}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
@@ -104,6 +104,8 @@ export function PostThread({uri}: {uri: string | undefined}) {
     HiddenRepliesState.Hide,
   )
   const headerRef = React.useRef<View | null>(null)
+  const anchorPostSource = useUnstablePostSource(uri)
+  const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
 
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -297,11 +299,14 @@ export function PostThread({uri}: {uri: string | undefined}) {
       // maintainVisibleContentPosition and onContentSizeChange
       // to "hold onto" the correct row instead of the first one.
 
+      /*
+       * This is basically `!!parents.length`, see notes on `isParentLoading`
+       */
       if (!highlightedPost.ctx.isParentLoading && !deferParents) {
         // When progressively revealing parents, rendering a placeholder
         // here will cause scrolling jumps. Don't add it unless you test it.
         // QT'ing this thread is a great way to test all the scrolling hacks:
-        // https://bsky.app/profile/www.mozzius.dev/post/3kjqhblh6qk2o
+        // https://bsky.app/profile/samuel.bsky.team/post/3kjqhblh6qk2o
 
         // Everything is loaded
         let startIndex = Math.max(0, parents.length - maxParents)
@@ -395,9 +400,17 @@ export function PostThread({uri}: {uri: string | undefined}) {
   )
 
   const {openComposer} = useOpenComposer()
-  const onPressReply = React.useCallback(() => {
+  const onReplyToAnchor = React.useCallback(() => {
     if (thread?.type !== 'post') {
       return
+    }
+    if (anchorPostSource) {
+      feedFeedback.sendInteraction({
+        item: thread.post.uri,
+        event: 'app.bsky.feed.defs#interactionReply',
+        feedContext: anchorPostSource.post.feedContext,
+        reqId: anchorPostSource.post.reqId,
+      })
     }
     openComposer({
       replyTo: {
@@ -410,7 +423,14 @@ export function PostThread({uri}: {uri: string | undefined}) {
       },
       onPost: onPostReply,
     })
-  }, [openComposer, thread, onPostReply, threadModerationCache])
+  }, [
+    openComposer,
+    thread,
+    onPostReply,
+    threadModerationCache,
+    anchorPostSource,
+    feedFeedback,
+  ])
 
   const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
   const hasParents =
@@ -423,7 +443,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
       return (
         <View>
           {!isMobile && (
-            <PostThreadComposePrompt onPressCompose={onPressReply} />
+            <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />
           )}
         </View>
       )
@@ -511,6 +531,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
             }
             onPostReply={onPostReply}
             hideTopBorder={index === 0 && !item.ctx.isParentLoading}
+            anchorPostSource={anchorPostSource}
           />
         </View>
       )
@@ -561,6 +582,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
           onEndReached={onEndReached}
           onEndReachedThreshold={2}
           onScrollToTop={onScrollToTop}
+          /**
+           * @see https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition
+           */
           maintainVisibleContentPosition={
             isNative && hasParents
               ? MAINTAIN_VISIBLE_CONTENT_POSITION
@@ -586,7 +610,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
         />
       </ScrollProvider>
       {isMobile && canReply && hasSession && (
-        <MobileComposePrompt onPressReply={onPressReply} />
+        <MobileComposePrompt onPressReply={onReplyToAnchor} />
       )}
     </>
   )
@@ -709,17 +733,16 @@ let ThreadMenu = ({
 ThreadMenu = memo(ThreadMenu)
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
-  const safeAreaInsets = useSafeAreaInsets()
-  const fabMinimalShellTransform = useMinimalShellFabTransform()
+  const {footerHeight} = useShellLayout()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      bottom: footerHeight.get(),
+    }
+  })
+
   return (
-    <Animated.View
-      style={[
-        styles.prompt,
-        fabMinimalShellTransform,
-        {
-          bottom: clamp(safeAreaInsets.bottom, 13, 60),
-        },
-      ]}>
+    <Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
       <PostThreadComposePrompt onPressCompose={onPressReply} />
     </Animated.View>
   )
@@ -884,12 +907,3 @@ function hasBranchingReplies(node?: ThreadNode) {
   }
   return true
 }
-
-const styles = StyleSheet.create({
-  prompt: {
-    // @ts-ignore web-only
-    position: isWeb ? 'fixed' : 'absolute',
-    left: 0,
-    right: 0,
-  },
-})
