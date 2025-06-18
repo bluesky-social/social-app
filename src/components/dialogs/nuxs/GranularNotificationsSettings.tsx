@@ -108,7 +108,7 @@ export function GranularNotificationsSettings() {
             />
             <Image
               accessibilityIgnoresInvertColors
-              source={require('../../../../assets/images/notification_settings_announcement.png')}
+              source={require('../../../../assets/images/notification_settings_announcement.webp')}
               style={[
                 a.w_full,
                 {
