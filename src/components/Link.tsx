@@ -175,7 +175,7 @@ export function useLink({
                   // thus we need to navigate to the child screen
                   // via the parent navigator
                   // see https://reactnavigation.org/docs/upgrading-from-6.x/#changes-to-the-navigate-action
-                  // TODO: can we support the other kinds of actions? push/replace
+                  // TODO: can we support the other kinds of actions? push/replace -sfn
 
                   // @ts-expect-error include does not narrow the type unfortunately
                   parent.navigate(`${screen}Tab`, {screen, params})
