@@ -5,6 +5,7 @@ import {type FilterablePreference} from '@atproto/api/dist/client/types/app/bsky
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
 import {atoms as a, platform, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
@@ -27,6 +28,10 @@ export function PreferenceControls({
   preference?: AppBskyNotificationDefs.Preference | FilterablePreference
   allowDisableInApp?: boolean
 }) {
+  const gate = useGate()
+
+  if (!gate('reengagement_features')) return null
+
   if (!preference)
     return (
       <View style={[a.w_full, a.pt_5xl, a.align_center]}>
