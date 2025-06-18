@@ -141,7 +141,9 @@ export function Inner({
       {'filter' in preference && (
         <>
           <Divider />
-          <Text style={[a.font_bold, a.text_md]}>From</Text>
+          <Text style={[a.font_bold, a.text_md]}>
+            <Trans>From</Trans>
+          </Text>
           <Toggle.Group
             type="radio"
             label={_('Filter who you receive notifications from')}
