@@ -37,6 +37,14 @@ init({
      * Un-useful errors
      */
     `Network request failed`,
+
+    /**
+     * IMPORTANT: anything below here is temporary, and should probably be
+     * allowed through once enough clients have updated that the noise is
+     * reduced.
+     */
+    `Directory does not exist`, // silenced in 342f820ec0
+    `geolocation: failed retries`, // silenced in 342f820ec0
   ],
   /**
    * Does not affect traces of error events or other logs, just disables
