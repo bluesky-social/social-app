@@ -146,7 +146,7 @@ export function Inner({
           </Text>
           <Toggle.Group
             type="radio"
-            label={_(`Filter who you receive notifications from`)}
+            label={_(msg`Filter who you receive notifications from`)}
             values={[preference.filter]}
             onChange={onChangeFilter}
             disabled={channels.length === 0}>
