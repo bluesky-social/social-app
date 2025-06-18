@@ -260,7 +260,7 @@ export class MessagesEventBus {
 
       this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
     } catch (e: any) {
-      logger.error(e, {
+      logger.info(e, {
         message: `${LOGGER_CONTEXT}: init failed`,
       })
 
@@ -379,7 +379,9 @@ export class MessagesEventBus {
         }
       }
     } catch (e: any) {
-      logger.error(e, {message: `${LOGGER_CONTEXT}: poll events failed`})
+      logger.info(`${LOGGER_CONTEXT}: poll events failed`, {
+        safeMessage: e.message,
+      })
 
       this.dispatch({
         event: MessagesEventBusDispatchEvent.Error,
