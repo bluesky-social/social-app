@@ -120,10 +120,10 @@ jobs:
       - name: 🏗️ Create Bundle
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: |
-          SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export --platform ios
+          SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export-ios
           sed -i 's/"react-native-mmkv": "\^2\.12\.2"/"react-native-mmkv": "^3.3.0"/' package.json
           yarn install
-          SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export --platform android
+          SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export-android
 
 
       - name: 📦 Package Bundle and 🚀 Deploy
