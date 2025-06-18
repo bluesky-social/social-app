@@ -447,7 +447,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="LikesOnRepostsNotificationSettings"
         getComponent={() => LikesOnRepostsNotificationSettingsScreen}
         options={{
-          title: title(msg`Likes on your reposts notifications`),
+          title: title(msg`Likes of your reposts notifications`),
           requireAuth: true,
         }}
       />
@@ -455,7 +455,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="RepostsOnRepostsNotificationSettings"
         getComponent={() => RepostsOnRepostsNotificationSettingsScreen}
         options={{
-          title: title(msg`Reposts on your reposts notifications`),
+          title: title(msg`Reposts of your reposts notifications`),
           requireAuth: true,
         }}
       />

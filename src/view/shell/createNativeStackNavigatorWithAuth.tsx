@@ -42,6 +42,7 @@ import {Takendown} from '#/screens/Takendown'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
+import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {SigninDialog} from '#/components/dialogs/Signin'
@@ -179,6 +180,7 @@ function NativeStackNavigator({
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
+      <LinkWarningDialog />
       {!isWeb && <InAppBrowserConsentDialog />}
       <PortalOutlet />
       <BottomSheetOutlet />

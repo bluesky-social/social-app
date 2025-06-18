@@ -464,10 +464,6 @@ msgstr ""
 msgid "<0>{date}</0> at {time}"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings.tsx:85
-msgid "<0>Experimental:</0> When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr ""
-
 #: src/screens/StarterPack/Wizard/index.tsx:440
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr ""
@@ -501,10 +497,10 @@ msgstr ""
 msgid "A new form of verification"
 msgstr ""
 
-#: src/Navigation.tsx:403
+#: src/Navigation.tsx:490
 #: src/screens/Settings/AboutSettings.tsx:75
-#: src/screens/Settings/Settings.tsx:225
-#: src/screens/Settings/Settings.tsx:228
+#: src/screens/Settings/Settings.tsx:234
+#: src/screens/Settings/Settings.tsx:237
 msgid "About"
 msgstr ""
 
@@ -523,20 +519,20 @@ msgid "Accept Request"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
-#: src/screens/Settings/Settings.tsx:201
-#: src/screens/Settings/Settings.tsx:204
+#: src/screens/Settings/Settings.tsx:210
+#: src/screens/Settings/Settings.tsx:213
 msgid "Accessibility"
 msgstr ""
 
-#: src/Navigation.tsx:355
+#: src/Navigation.tsx:365
 msgid "Accessibility Settings"
 msgstr ""
 
-#: src/Navigation.tsx:371
+#: src/Navigation.tsx:381
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:48
-#: src/screens/Settings/Settings.tsx:163
-#: src/screens/Settings/Settings.tsx:166
+#: src/screens/Settings/Settings.tsx:164
+#: src/screens/Settings/Settings.tsx:167
 msgid "Account"
 msgstr ""
 
@@ -567,11 +563,11 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:505
+#: src/screens/Settings/Settings.tsx:514
 msgid "Account options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:541
+#: src/screens/Settings/Settings.tsx:550
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -643,8 +639,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:445
-#: src/screens/Settings/Settings.tsx:448
+#: src/screens/Settings/Settings.tsx:454
+#: src/screens/Settings/Settings.tsx:457
 #: src/view/shell/desktop/LeftNav.tsx:260
 #: src/view/shell/desktop/LeftNav.tsx:264
 msgid "Add another account"
@@ -772,7 +768,6 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:143
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:223
 msgid "alice@example.com"
 msgstr ""
@@ -857,14 +852,6 @@ msgstr ""
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:93
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr ""
-
-#: src/components/dialogs/ChangeEmailDialog.tsx:59
-msgid "An email has been sent to your previous address, {currentEmail}. It includes a confirmation code which you can enter below."
-msgstr ""
-
-#: src/components/dialogs/VerifyEmailDialog.tsx:120
-msgid "An email has been sent! Please enter the confirmation code included in the email below."
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:265
@@ -978,7 +965,7 @@ msgstr ""
 msgid "Anybody can interact"
 msgstr ""
 
-#: src/Navigation.tsx:411
+#: src/Navigation.tsx:498
 #: src/screens/Settings/AppIconSettings/index.tsx:67
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
@@ -1015,7 +1002,7 @@ msgstr ""
 msgid "App passwords"
 msgstr ""
 
-#: src/Navigation.tsx:323
+#: src/Navigation.tsx:333
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr ""
@@ -1051,10 +1038,10 @@ msgstr ""
 msgid "Appeal this decision"
 msgstr ""
 
-#: src/Navigation.tsx:363
+#: src/Navigation.tsx:373
 #: src/screens/Settings/AppearanceSettings.tsx:85
-#: src/screens/Settings/Settings.tsx:193
-#: src/screens/Settings/Settings.tsx:196
+#: src/screens/Settings/Settings.tsx:202
+#: src/screens/Settings/Settings.tsx:205
 msgid "Appearance"
 msgstr ""
 
@@ -1271,7 +1258,7 @@ msgstr ""
 msgid "Blocked accounts"
 msgstr ""
 
-#: src/Navigation.tsx:164
+#: src/Navigation.tsx:174
 #: src/view/screens/ModerationBlockedAccounts.tsx:104
 msgid "Blocked Accounts"
 msgstr ""
@@ -1468,7 +1455,7 @@ msgstr ""
 #: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:78
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:85
-#: src/screens/Settings/Settings.tsx:270
+#: src/screens/Settings/Settings.tsx:279
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
 #: src/view/com/composer/Composer.tsx:960
@@ -1479,7 +1466,6 @@ msgstr ""
 #: src/view/com/modals/ChangePassword.tsx:282
 #: src/view/com/modals/CreateOrEditList.tsx:333
 #: src/view/com/modals/CropImage.web.tsx:97
-#: src/view/com/modals/EditProfile.tsx:269
 #: src/view/com/modals/LinkWarning.tsx:105
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/shell/desktop/LeftNav.tsx:213
@@ -1500,10 +1486,6 @@ msgstr ""
 
 #: src/view/com/modals/CropImage.web.tsx:94
 msgid "Cancel image crop"
-msgstr ""
-
-#: src/view/com/modals/EditProfile.tsx:264
-msgid "Cancel profile editing"
 msgstr ""
 
 #: src/components/PostControls/RepostButton.tsx:203
@@ -1555,11 +1537,6 @@ msgstr ""
 msgid "Change app language"
 msgstr ""
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:200
-#: src/components/dialogs/VerifyEmailDialog.tsx:225
-msgid "Change email address"
-msgstr ""
-
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:94
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:98
 msgid "Change Handle"
@@ -1581,14 +1558,6 @@ msgstr ""
 msgid "Change report reason"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:53
-msgid "Change Your Email"
-msgstr ""
-
-#: src/components/dialogs/VerifyEmailDialog.tsx:209
-msgid "Change your email address"
-msgstr ""
-
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
 msgstr ""
@@ -1598,7 +1567,7 @@ msgstr ""
 msgid "Changes hosting provider"
 msgstr ""
 
-#: src/Navigation.tsx:428
+#: src/Navigation.tsx:515
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
 #: src/view/shell/desktop/LeftNav.tsx:553
 #: src/view/shell/Drawer.tsx:455
@@ -1616,7 +1585,7 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
 
-#: src/Navigation.tsx:438
+#: src/Navigation.tsx:525
 #: src/screens/Messages/components/InboxPreview.tsx:24
 msgid "Chat request inbox"
 msgstr ""
@@ -1627,7 +1596,7 @@ msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:75
-#: src/Navigation.tsx:433
+#: src/Navigation.tsx:520
 #: src/screens/Messages/ChatList.tsx:341
 msgid "Chat settings"
 msgstr ""
@@ -1699,11 +1668,11 @@ msgstr ""
 msgid "Choose your username"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:423
+#: src/screens/Settings/Settings.tsx:432
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:425
+#: src/screens/Settings/Settings.tsx:434
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -1752,14 +1721,10 @@ msgstr ""
 msgid "Clip 🐴 clop 🐴"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:244
-#: src/components/dialogs/ChangeEmailDialog.tsx:250
 #: src/components/dialogs/GifSelect.tsx:281
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/VerifyEmailDialog.tsx:346
-#: src/components/dialogs/VerifyEmailDialog.tsx:352
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -1872,7 +1837,7 @@ msgstr ""
 msgid "Comics"
 msgstr ""
 
-#: src/Navigation.tsx:313
+#: src/Navigation.tsx:323
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
 msgstr ""
@@ -1909,10 +1874,6 @@ msgstr ""
 msgid "Configured in <0>moderation settings</0>."
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:203
-#: src/components/dialogs/ChangeEmailDialog.tsx:210
-#: src/components/dialogs/VerifyEmailDialog.tsx:316
-#: src/components/dialogs/VerifyEmailDialog.tsx:323
 #: src/components/Prompt.tsx:186
 #: src/components/Prompt.tsx:189
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:185
@@ -1936,20 +1897,13 @@ msgstr ""
 msgid "Confirm your birthdate"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:160
-#: src/components/dialogs/ChangeEmailDialog.tsx:164
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
-#: src/components/dialogs/VerifyEmailDialog.tsx:252
 #: src/screens/Login/LoginForm.tsx:274
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
 #: src/view/com/modals/DeleteAccount.tsx:220
 #: src/view/com/modals/DeleteAccount.tsx:226
 msgid "Confirmation code"
-msgstr ""
-
-#: src/components/dialogs/VerifyEmailDialog.tsx:248
-msgid "Confirmation Code"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:337
@@ -1966,12 +1920,12 @@ msgid "Content & Media"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
-#: src/screens/Settings/Settings.tsx:185
-#: src/screens/Settings/Settings.tsx:188
+#: src/screens/Settings/Settings.tsx:194
+#: src/screens/Settings/Settings.tsx:197
 msgid "Content and media"
 msgstr ""
 
-#: src/Navigation.tsx:387
+#: src/Navigation.tsx:474
 msgid "Content and Media"
 msgstr ""
 
@@ -2162,7 +2116,7 @@ msgstr ""
 msgid "Copy TXT record value"
 msgstr ""
 
-#: src/Navigation.tsx:318
+#: src/Navigation.tsx:328
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
 msgstr ""
@@ -2188,6 +2142,10 @@ msgstr ""
 msgid "Could not process your video"
 msgstr ""
 
+#: src/state/queries/notifications/settings.ts:47
+msgid "Could not update notification settings"
+msgstr ""
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr ""
@@ -2198,7 +2156,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:178
 #: src/components/StarterPack/ProfileStarterPacks.tsx:287
-#: src/Navigation.tsx:463
+#: src/Navigation.tsx:550
 msgid "Create a starter pack"
 msgstr ""
 
@@ -2309,7 +2267,7 @@ msgstr ""
 msgid "Deactivate account"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:397
+#: src/screens/Settings/Settings.tsx:406
 msgid "Debug Moderation"
 msgstr ""
 
@@ -2358,7 +2316,7 @@ msgstr ""
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:404
+#: src/screens/Settings/Settings.tsx:413
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -2432,8 +2390,6 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:369
 #: src/view/com/modals/CreateOrEditList.tsx:278
 #: src/view/com/modals/CreateOrEditList.tsx:299
-#: src/view/com/modals/EditProfile.tsx:218
-#: src/view/com/modals/EditProfile.tsx:230
 msgid "Description"
 msgstr ""
 
@@ -2469,8 +2425,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:252
-#: src/screens/Settings/Settings.tsx:255
+#: src/screens/Settings/Settings.tsx:261
+#: src/screens/Settings/Settings.tsx:264
 msgid "Developer options"
 msgstr ""
 
@@ -2577,12 +2533,7 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:320
 #: src/screens/Profile/Header/EditProfileDialog.tsx:326
 #: src/screens/Profile/Header/EditProfileDialog.tsx:376
-#: src/view/com/modals/EditProfile.tsx:194
 msgid "Display name"
-msgstr ""
-
-#: src/view/com/modals/EditProfile.tsx:182
-msgid "Display Name"
 msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:339
@@ -2692,16 +2643,8 @@ msgstr ""
 msgid "e.g. Alice Lastname"
 msgstr ""
 
-#: src/view/com/modals/EditProfile.tsx:187
-msgid "e.g. Alice Roberts"
-msgstr ""
-
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:376
 msgid "e.g. alice.com"
-msgstr ""
-
-#: src/view/com/modals/EditProfile.tsx:223
-msgid "e.g. Artist, dog-lover, and avid reader."
 msgstr ""
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:43
@@ -2779,13 +2722,9 @@ msgstr ""
 msgid "Edit Moderation List"
 msgstr ""
 
-#: src/Navigation.tsx:328
+#: src/Navigation.tsx:338
 #: src/view/screens/Feeds.tsx:518
 msgid "Edit My Feeds"
-msgstr ""
-
-#: src/view/com/modals/EditProfile.tsx:154
-msgid "Edit my profile"
 msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
@@ -2821,15 +2760,7 @@ msgstr ""
 msgid "Edit who can reply"
 msgstr ""
 
-#: src/view/com/modals/EditProfile.tsx:195
-msgid "Edit your display name"
-msgstr ""
-
-#: src/view/com/modals/EditProfile.tsx:231
-msgid "Edit your profile description"
-msgstr ""
-
-#: src/Navigation.tsx:468
+#: src/Navigation.tsx:555
 msgid "Edit your starter pack"
 msgstr ""
 
@@ -2866,10 +2797,6 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:208
 msgid "Email sent!"
-msgstr ""
-
-#: src/components/dialogs/ChangeEmailDialog.tsx:63
-msgid "Email Updated!"
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:182
@@ -2926,9 +2853,9 @@ msgstr ""
 msgid "Enable media players for"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings.tsx:74
-#: src/screens/Settings/NotificationSettings.tsx:77
-msgid "Enable priority notifications"
+#: src/screens/Settings/NotificationSettings/index.tsx:102
+#: src/screens/Settings/NotificationSettings/index.tsx:106
+msgid "Enable push notifications"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:387
@@ -2980,10 +2907,6 @@ msgstr ""
 msgid "Enter code"
 msgstr ""
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:118
-msgid "Enter Code"
-msgstr ""
-
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
 msgid "Enter fullscreen"
 msgstr ""
@@ -3011,10 +2934,6 @@ msgstr ""
 #: src/screens/Login/ForgotPasswordForm.tsx:99
 #: src/screens/Signup/StepInfo/index.tsx:213
 msgid "Enter your email address"
-msgstr ""
-
-#: src/components/dialogs/ChangeEmailDialog.tsx:138
-msgid "Enter your new email address below."
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:243
@@ -3072,7 +2991,14 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:153
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:167
 msgid "Everyone"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:236
+#: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:41
+msgid "Everything else"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:73
@@ -3164,7 +3090,7 @@ msgstr ""
 msgid "Explicit sexual images."
 msgstr ""
 
-#: src/Navigation.tsx:625
+#: src/Navigation.tsx:712
 #: src/screens/Search/Shell.tsx:307
 #: src/view/shell/desktop/LeftNav.tsx:635
 #: src/view/shell/Drawer.tsx:403
@@ -3195,7 +3121,7 @@ msgstr ""
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr ""
 
-#: src/Navigation.tsx:347
+#: src/Navigation.tsx:357
 #: src/screens/Settings/ExternalMediaPreferences.tsx:31
 msgid "External Media Preferences"
 msgstr ""
@@ -3265,6 +3191,19 @@ msgstr ""
 msgid "Failed to load GIFs"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/index.tsx:115
+#: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:50
+#: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:52
+#: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:50
+#: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:53
+#: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:50
+#: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:50
+#: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:52
+#: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:50
+#: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:53
+msgid "Failed to load notification settings."
+msgstr ""
+
 #: src/screens/Messages/components/MessageListError.tsx:23
 msgid "Failed to load past messages"
 msgstr ""
@@ -3302,15 +3241,11 @@ msgstr ""
 msgid "Failed to save image: {0}"
 msgstr ""
 
-#: src/state/queries/notifications/settings.ts:39
-msgid "Failed to save notification preferences, please try again"
-msgstr ""
-
 #: src/screens/ModerationInteractionSettings/index.tsx:108
 msgid "Failed to save settings. Please try again."
 msgstr ""
 
-#: src/screens/Settings/SettingsInterests.tsx:133
+#: src/screens/Settings/InterestsSettings.tsx:136
 msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr ""
@@ -3365,7 +3300,7 @@ msgstr ""
 msgid "Failed to verify handle. Please try again."
 msgstr ""
 
-#: src/Navigation.tsx:263
+#: src/Navigation.tsx:273
 msgid "Feed"
 msgstr ""
 
@@ -3394,7 +3329,7 @@ msgctxt "toast"
 msgid "Feedback sent!"
 msgstr ""
 
-#: src/Navigation.tsx:448
+#: src/Navigation.tsx:535
 #: src/screens/Search/SearchResults.tsx:68
 #: src/screens/StarterPack/StarterPackScreen.tsx:190
 #: src/view/screens/Feeds.tsx:511
@@ -3555,7 +3490,7 @@ msgstr ""
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr ""
 
-#: src/Navigation.tsx:217
+#: src/Navigation.tsx:227
 msgid "Followers of @{0} that you know"
 msgstr ""
 
@@ -3590,7 +3525,7 @@ msgstr ""
 msgid "Following feed preferences"
 msgstr ""
 
-#: src/Navigation.tsx:334
+#: src/Navigation.tsx:344
 #: src/screens/Settings/FollowingFeedPreferences.tsx:53
 msgid "Following Feed Preferences"
 msgstr ""
@@ -3675,10 +3610,40 @@ msgstr ""
 msgid "Get help"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:43
+msgid "Get notifications when people follow you."
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:43
+msgid "Get notifications when people like posts that you've reposted."
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:43
+msgid "Get notifications when people like your posts."
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:43
+msgid "Get notifications when people mention you."
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:43
+msgid "Get notifications when people quote your posts."
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:43
+msgid "Get notifications when people reply to your posts."
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:43
+msgid "Get notifications when people repost posts that you've reposted."
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:43
+msgid "Get notifications when people repost your posts."
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
-#: src/components/dialogs/VerifyEmailDialog.tsx:263
-#: src/components/dialogs/VerifyEmailDialog.tsx:269
 msgid "Get started"
 msgstr ""
 
@@ -3817,7 +3782,7 @@ msgstr ""
 msgid "Harassment, trolling, or intolerance"
 msgstr ""
 
-#: src/Navigation.tsx:418
+#: src/Navigation.tsx:505
 msgid "Hashtag"
 msgstr ""
 
@@ -3834,8 +3799,8 @@ msgstr ""
 msgid "Having trouble?"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:217
-#: src/screens/Settings/Settings.tsx:221
+#: src/screens/Settings/Settings.tsx:226
+#: src/screens/Settings/Settings.tsx:230
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
 #: src/view/shell/Drawer.tsx:370
@@ -3974,8 +3939,8 @@ msgstr ""
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
-#: src/Navigation.tsx:620
-#: src/Navigation.tsx:640
+#: src/Navigation.tsx:707
+#: src/Navigation.tsx:727
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
 #: src/view/shell/desktop/LeftNav.tsx:617
 #: src/view/shell/Drawer.tsx:429
@@ -4007,10 +3972,6 @@ msgstr ""
 msgid "How should we open this link?"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:189
-#: src/components/dialogs/ChangeEmailDialog.tsx:196
-#: src/components/dialogs/VerifyEmailDialog.tsx:302
-#: src/components/dialogs/VerifyEmailDialog.tsx:309
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:133
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
 msgid "I have a code"
@@ -4100,6 +4061,34 @@ msgstr ""
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:68
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:285
+msgid "In-app"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:134
+msgid "In-app notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:268
+msgid "In-app, Everyone"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:276
+msgid "In-app, People you follow"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:283
+msgid "In-app, Push"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:266
+msgid "In-app, Push, Everyone"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:274
+msgid "In-app, Push, People you follow"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:91
@@ -4264,13 +4253,13 @@ msgstr ""
 msgid "Language selection"
 msgstr ""
 
-#: src/Navigation.tsx:190
+#: src/Navigation.tsx:200
 msgid "Language Settings"
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:78
-#: src/screens/Settings/Settings.tsx:209
-#: src/screens/Settings/Settings.tsx:212
+#: src/screens/Settings/Settings.tsx:218
+#: src/screens/Settings/Settings.tsx:221
 msgid "Languages"
 msgstr ""
 
@@ -4293,7 +4282,6 @@ msgstr ""
 #: src/screens/Moderation/VerificationSettings.tsx:47
 #: src/screens/Profile/Header/EditProfileDialog.tsx:359
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:212
-#: src/view/com/modals/EditProfile.tsx:207
 msgid "Learn more"
 msgstr ""
 
@@ -4408,6 +4396,10 @@ msgstr ""
 msgid "Like 10 posts to train the Discover feed"
 msgstr ""
 
+#: src/Navigation.tsx:426
+msgid "Like notifications"
+msgstr ""
+
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:505
 msgid "Like this feed"
 msgstr ""
@@ -4416,8 +4408,8 @@ msgstr ""
 msgid "Like this labeler"
 msgstr ""
 
-#: src/Navigation.tsx:268
-#: src/Navigation.tsx:273
+#: src/Navigation.tsx:278
+#: src/Navigation.tsx:283
 msgid "Liked by"
 msgstr ""
 
@@ -4439,8 +4431,19 @@ msgstr ""
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/index.tsx:159
+#: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:41
 #: src/view/screens/Profile.tsx:229
 msgid "Likes"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:208
+#: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:41
+msgid "Likes of your reposts"
+msgstr ""
+
+#: src/Navigation.tsx:450
+msgid "Likes of your reposts notifications"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:467
@@ -4455,7 +4458,7 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/Navigation.tsx:223
+#: src/Navigation.tsx:233
 msgid "List"
 msgstr ""
 
@@ -4513,7 +4516,7 @@ msgctxt "toast"
 msgid "List unmuted"
 msgstr ""
 
-#: src/Navigation.tsx:144
+#: src/Navigation.tsx:154
 #: src/view/screens/Lists.tsx:65
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
@@ -4566,7 +4569,7 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/Navigation.tsx:293
+#: src/Navigation.tsx:303
 msgid "Log"
 msgstr ""
 
@@ -4646,8 +4649,6 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:90
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:97
-#: src/components/dialogs/VerifyEmailDialog.tsx:273
-#: src/components/dialogs/VerifyEmailDialog.tsx:281
 msgid "Maybe later"
 msgstr ""
 
@@ -4659,6 +4660,10 @@ msgstr ""
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
 
+#: src/Navigation.tsx:410
+msgid "Mention notifications"
+msgstr ""
+
 #: src/components/WhoCanReply.tsx:263
 msgid "mentioned users"
 msgstr ""
@@ -4667,6 +4672,8 @@ msgstr ""
 msgid "Mentioned users"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/index.tsx:137
+#: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:41
 #: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
 msgstr ""
@@ -4709,13 +4716,17 @@ msgstr ""
 msgid "Message options"
 msgstr ""
 
-#: src/Navigation.tsx:635
+#: src/Navigation.tsx:722
 msgid "Messages"
 msgstr ""
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:81
 msgctxt "Name of app icon variant"
 msgid "Midnight"
+msgstr ""
+
+#: src/Navigation.tsx:466
+msgid "Miscellaneous notifications"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:47
@@ -4728,10 +4739,10 @@ msgstr ""
 msgid "Misleading Post"
 msgstr ""
 
-#: src/Navigation.tsx:149
+#: src/Navigation.tsx:159
 #: src/screens/Moderation/index.tsx:93
-#: src/screens/Settings/Settings.tsx:177
-#: src/screens/Settings/Settings.tsx:180
+#: src/screens/Settings/Settings.tsx:178
+#: src/screens/Settings/Settings.tsx:181
 msgid "Moderation"
 msgstr ""
 
@@ -4767,7 +4778,7 @@ msgstr ""
 msgid "Moderation lists"
 msgstr ""
 
-#: src/Navigation.tsx:154
+#: src/Navigation.tsx:164
 #: src/view/screens/ModerationModlists.tsx:65
 msgid "Moderation Lists"
 msgstr ""
@@ -4776,7 +4787,7 @@ msgstr ""
 msgid "moderation settings"
 msgstr ""
 
-#: src/Navigation.tsx:283
+#: src/Navigation.tsx:293
 msgid "Moderation states"
 msgstr ""
 
@@ -4899,7 +4910,7 @@ msgstr ""
 msgid "Muted accounts"
 msgstr ""
 
-#: src/Navigation.tsx:159
+#: src/Navigation.tsx:169
 #: src/view/screens/ModerationMutedAccounts.tsx:118
 msgid "Muted Accounts"
 msgstr ""
@@ -4972,10 +4983,6 @@ msgstr ""
 msgid "Navigates to your profile"
 msgstr ""
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:234
-msgid "Need to change it?"
-msgstr ""
-
 #: src/components/moderation/ReportDialog/index.tsx:288
 #: src/components/ReportDialog/SelectReportOptionView.tsx:128
 msgid "Need to report a copyright violation?"
@@ -5005,13 +5012,21 @@ msgstr ""
 msgid "New chat"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:142
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:222
 msgid "New email address"
 msgstr ""
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:63
 msgid "New Feature"
+msgstr ""
+
+#: src/Navigation.tsx:442
+msgid "New follower notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:181
+#: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:41
+msgid "New followers"
 msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:221
@@ -5246,7 +5261,7 @@ msgstr ""
 msgid "Not followed by anyone you're following"
 msgstr ""
 
-#: src/Navigation.tsx:139
+#: src/Navigation.tsx:149
 #: src/view/screens/Profile.tsx:125
 msgid "Not Found"
 msgstr ""
@@ -5267,17 +5282,10 @@ msgstr ""
 msgid "Nothing here"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings.tsx:64
-msgid "Notification filters"
-msgstr ""
-
-#: src/Navigation.tsx:443
+#: src/Navigation.tsx:396
+#: src/Navigation.tsx:530
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
-msgstr ""
-
-#: src/screens/Settings/NotificationSettings.tsx:46
-msgid "Notification Settings"
 msgstr ""
 
 #: src/screens/Messages/Settings.tsx:123
@@ -5288,12 +5296,28 @@ msgstr ""
 msgid "Notification Sounds"
 msgstr ""
 
-#: src/Navigation.tsx:630
+#: src/Navigation.tsx:717
+#: src/screens/Settings/NotificationSettings/index.tsx:92
+#: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:30
+#: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:30
+#: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:30
+#: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:30
+#: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:30
+#: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:30
+#: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
+#: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
+#: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
+#: src/screens/Settings/Settings.tsx:186
+#: src/screens/Settings/Settings.tsx:189
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:654
 #: src/view/shell/Drawer.tsx:482
 msgid "Notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:43
+msgid "Notifications for everything else, such as when someone joins via one of your starter packs."
 msgstr ""
 
 #: src/lib/hooks/useTimeAgo.ts:135
@@ -5315,6 +5339,7 @@ msgid "Nudity or adult content not labeled as such"
 msgstr ""
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
+#: src/screens/Settings/NotificationSettings/index.tsx:292
 msgid "Off"
 msgstr ""
 
@@ -5356,7 +5381,7 @@ msgstr ""
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:358
+#: src/screens/Settings/Settings.tsx:367
 msgid "Onboarding reset"
 msgstr ""
 
@@ -5401,7 +5426,6 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:341
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:106
-#: src/screens/Settings/NotificationSettings.tsx:54
 #: src/view/screens/Profile.tsx:125
 msgid "Oops!"
 msgstr ""
@@ -5449,7 +5473,7 @@ msgstr ""
 msgid "Open message options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:395
+#: src/screens/Settings/Settings.tsx:404
 msgid "Open moderation debug page"
 msgstr ""
 
@@ -5478,12 +5502,12 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:388
-#: src/screens/Settings/Settings.tsx:402
+#: src/screens/Settings/Settings.tsx:397
+#: src/screens/Settings/Settings.tsx:411
 msgid "Open storybook page"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:381
+#: src/screens/Settings/Settings.tsx:390
 msgid "Open system log"
 msgstr ""
 
@@ -5545,7 +5569,7 @@ msgstr ""
 msgid "Opens GIF select dialog"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:218
+#: src/screens/Settings/Settings.tsx:227
 msgid "Opens helpdesk in browser"
 msgstr ""
 
@@ -5683,12 +5707,17 @@ msgstr ""
 msgid "People"
 msgstr ""
 
-#: src/Navigation.tsx:210
+#: src/Navigation.tsx:220
 msgid "People followed by @{0}"
 msgstr ""
 
-#: src/Navigation.tsx:203
+#: src/Navigation.tsx:213
 msgid "People following @{0}"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:171
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:185
+msgid "People I follow"
 msgstr ""
 
 #: src/lib/media/save-image.ts:51
@@ -5895,10 +5924,6 @@ msgstr ""
 msgid "Please verify your email"
 msgstr ""
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:108
-msgid "Please Verify Your Email"
-msgstr ""
-
 #: src/screens/Onboarding/index.tsx:34
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:235
@@ -5933,10 +5958,10 @@ msgstr ""
 msgid "Post by {0}"
 msgstr ""
 
-#: src/Navigation.tsx:236
-#: src/Navigation.tsx:243
-#: src/Navigation.tsx:250
-#: src/Navigation.tsx:257
+#: src/Navigation.tsx:246
+#: src/Navigation.tsx:253
+#: src/Navigation.tsx:260
+#: src/Navigation.tsx:267
 msgid "Post by @{0}"
 msgstr ""
 
@@ -5974,7 +5999,7 @@ msgstr ""
 msgid "Post interaction settings"
 msgstr ""
 
-#: src/Navigation.tsx:170
+#: src/Navigation.tsx:180
 #: src/screens/ModerationInteractionSettings/index.tsx:34
 msgid "Post Interaction Settings"
 msgstr ""
@@ -6022,11 +6047,6 @@ msgstr ""
 msgid "Potentially Misleading Link"
 msgstr ""
 
-#: src/state/queries/notifications/settings.ts:44
-msgctxt "toast"
-msgid "Preference saved"
-msgstr ""
-
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
 msgstr ""
@@ -6057,26 +6077,22 @@ msgstr ""
 msgid "Prioritize your Follows"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings.tsx:67
-msgid "Priority notifications"
-msgstr ""
-
 #: src/view/shell/desktop/RightNav.tsx:110
 #: src/view/shell/desktop/RightNav.tsx:111
 msgid "Privacy"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:171
-#: src/screens/Settings/Settings.tsx:174
+#: src/screens/Settings/Settings.tsx:172
+#: src/screens/Settings/Settings.tsx:175
 msgid "Privacy and security"
 msgstr ""
 
-#: src/Navigation.tsx:379
+#: src/Navigation.tsx:389
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:36
 msgid "Privacy and Security"
 msgstr ""
 
-#: src/Navigation.tsx:303
+#: src/Navigation.tsx:313
 #: src/screens/Settings/AboutSettings.tsx:92
 #: src/screens/Settings/AboutSettings.tsx:95
 #: src/view/screens/PrivacyPolicy.tsx:31
@@ -6107,7 +6123,6 @@ msgid "Profile"
 msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:196
-#: src/view/com/modals/EditProfile.tsx:128
 msgctxt "toast"
 msgid "Profile updated"
 msgstr ""
@@ -6144,6 +6159,22 @@ msgstr ""
 msgid "Publish reply"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/index.tsx:287
+msgid "Push"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:117
+msgid "Push notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:270
+msgid "Push, Everyone"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:278
+msgid "Push, People you follow"
+msgstr ""
+
 #: src/components/StarterPack/QrCodeDialog.tsx:134
 msgid "QR code copied to your clipboard!"
 msgstr ""
@@ -6154,6 +6185,10 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:113
 msgid "QR code saved to your camera roll!"
+msgstr ""
+
+#: src/Navigation.tsx:418
+msgid "Quote notifications"
 msgstr ""
 
 #: src/components/PostControls/RepostButton.tsx:174
@@ -6183,6 +6218,8 @@ msgid "Quote settings"
 msgstr ""
 
 #: src/screens/Post/PostQuotes.tsx:38
+#: src/screens/Settings/NotificationSettings/index.tsx:148
+#: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:41
 msgid "Quotes"
 msgstr ""
 
@@ -6259,6 +6296,14 @@ msgstr ""
 msgid "Reason:"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:123
+msgid "Receive in-app notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:106
+msgid "Receive push notifications"
+msgstr ""
+
 #: src/screens/Search/components/SearchHistory.tsx:49
 msgid "Recent Searches"
 msgstr ""
@@ -6290,7 +6335,7 @@ msgstr ""
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
-#: src/screens/Settings/Settings.tsx:543
+#: src/screens/Settings/Settings.tsx:552
 #: src/view/com/feeds/FeedSourceCard.tsx:322
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:213
@@ -6305,8 +6350,8 @@ msgstr ""
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:522
-#: src/screens/Settings/Settings.tsx:525
+#: src/screens/Settings/Settings.tsx:531
+#: src/screens/Settings/Settings.tsx:534
 msgid "Remove account"
 msgstr ""
 
@@ -6347,7 +6392,7 @@ msgstr ""
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:535
+#: src/screens/Settings/Settings.tsx:544
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -6442,6 +6487,8 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/index.tsx:126
+#: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:41
 #: src/view/screens/Profile.tsx:226
 msgid "Replies"
 msgstr ""
@@ -6472,6 +6519,10 @@ msgstr ""
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:124
 msgid "Reply Hidden by You"
+msgstr ""
+
+#: src/Navigation.tsx:402
+msgid "Reply notifications"
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
@@ -6622,6 +6673,10 @@ msgstr ""
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr ""
 
+#: src/Navigation.tsx:434
+msgid "Repost notifications"
+msgstr ""
+
 #: src/components/PostControls/RepostButton.tsx:144
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:97
@@ -6646,14 +6701,23 @@ msgstr ""
 msgid "Reposted by you"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/index.tsx:170
+#: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:41
+msgid "Reposts"
+msgstr ""
+
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:433
 #: src/view/com/post-thread/PostThreadItem.tsx:248
 msgid "Reposts of this post"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:175
-#: src/components/dialogs/ChangeEmailDialog.tsx:182
-msgid "Request change"
+#: src/screens/Settings/NotificationSettings/index.tsx:223
+#: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:41
+msgid "Reposts of your reposts"
+msgstr ""
+
+#: src/Navigation.tsx:458
+msgid "Reposts of your reposts notifications"
 msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:253
@@ -6682,10 +6746,6 @@ msgstr ""
 msgid "Resend"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:217
-#: src/components/dialogs/ChangeEmailDialog.tsx:227
-#: src/components/dialogs/VerifyEmailDialog.tsx:330
-#: src/components/dialogs/VerifyEmailDialog.tsx:340
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:176
 msgid "Resend email"
@@ -6708,8 +6768,8 @@ msgstr ""
 msgid "Reset Code"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:409
-#: src/screens/Settings/Settings.tsx:411
+#: src/screens/Settings/Settings.tsx:418
+#: src/screens/Settings/Settings.tsx:420
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -6790,7 +6850,6 @@ msgstr ""
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:153
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:163
 #: src/view/com/modals/CreateOrEditList.tsx:315
-#: src/view/com/modals/EditProfile.tsx:244
 #: src/view/screens/SavedFeeds.tsx:109
 msgid "Save"
 msgstr ""
@@ -6808,10 +6867,6 @@ msgstr ""
 #: src/view/screens/SavedFeeds.tsx:105
 #: src/view/screens/SavedFeeds.tsx:109
 msgid "Save changes"
-msgstr ""
-
-#: src/view/com/modals/EditProfile.tsx:252
-msgid "Save Changes"
 msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -6845,10 +6900,6 @@ msgstr ""
 msgid "Saved to your feeds"
 msgstr ""
 
-#: src/view/com/modals/EditProfile.tsx:245
-msgid "Saves any changes to your profile"
-msgstr ""
-
 #: src/view/com/modals/CropImage.web.tsx:105
 msgid "Saves image crop settings"
 msgstr ""
@@ -6878,7 +6929,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: src/Navigation.tsx:229
+#: src/Navigation.tsx:239
 #: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search @{0}'s posts"
 msgstr ""
@@ -6953,10 +7004,6 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:243
 msgid "Security step required"
-msgstr ""
-
-#: src/components/dialogs/ChangeEmailDialog.tsx:57
-msgid "Security Step Required"
 msgstr ""
 
 #: src/components/RichTextTag.tsx:111
@@ -7093,7 +7140,7 @@ msgid "Select your date of birth"
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
-#: src/screens/Settings/SettingsInterests.tsx:162
+#: src/screens/Settings/InterestsSettings.tsx:165
 msgid "Select your interests from the options below"
 msgstr ""
 
@@ -7107,14 +7154,6 @@ msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
-msgstr ""
-
-#: src/components/dialogs/VerifyEmailDialog.tsx:295
-msgid "Send confirmation"
-msgstr ""
-
-#: src/components/dialogs/VerifyEmailDialog.tsx:288
-msgid "Send confirmation email"
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
@@ -7202,11 +7241,47 @@ msgstr ""
 msgid "Sets email for password reset"
 msgstr ""
 
-#: src/Navigation.tsx:185
-#: src/screens/Settings/Settings.tsx:90
+#: src/Navigation.tsx:195
+#: src/screens/Settings/Settings.tsx:91
 #: src/view/shell/desktop/LeftNav.tsx:727
 #: src/view/shell/Drawer.tsx:572
 msgid "Settings"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:154
+msgid "Settings for like notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:132
+msgid "Settings for mention notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:176
+msgid "Settings for new follower notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:231
+msgid "Settings for notifications for everything else"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:202
+msgid "Settings for notifications for likes of your reposts"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:217
+msgid "Settings for notifications for reposts of your reposts"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:143
+msgid "Settings for quote notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:121
+msgid "Settings for reply notifications"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/index.tsx:165
+msgid "Settings for repost notifications"
 msgstr ""
 
 #: src/screens/ModerationInteractionSettings/index.tsx:102
@@ -7301,7 +7376,7 @@ msgstr ""
 msgid "Share your favorite feed!"
 msgstr ""
 
-#: src/Navigation.tsx:288
+#: src/Navigation.tsx:298
 msgid "Shared Preferences Tester"
 msgstr ""
 
@@ -7426,7 +7501,7 @@ msgstr ""
 msgid "Shows information about when this post was created"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:114
+#: src/screens/Settings/Settings.tsx:115
 msgid "Shows other accounts you can switch to"
 msgstr ""
 
@@ -7483,9 +7558,9 @@ msgstr ""
 msgid "Sign in to view post"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:235
-#: src/screens/Settings/Settings.tsx:237
-#: src/screens/Settings/Settings.tsx:269
+#: src/screens/Settings/Settings.tsx:244
+#: src/screens/Settings/Settings.tsx:246
+#: src/screens/Settings/Settings.tsx:278
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:85
@@ -7499,7 +7574,7 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:266
+#: src/screens/Settings/Settings.tsx:275
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Sign out?"
 msgstr ""
@@ -7532,7 +7607,6 @@ msgid "Smaller"
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:91
-#: src/components/dialogs/VerifyEmailDialog.tsx:274
 msgid "Snoozes the reminder"
 msgstr ""
 
@@ -7582,7 +7656,6 @@ msgid "Something went wrong, please try again."
 msgstr ""
 
 #: src/components/Lists.tsx:174
-#: src/screens/Settings/NotificationSettings.tsx:55
 msgid "Something went wrong!"
 msgstr ""
 
@@ -7663,8 +7736,8 @@ msgstr ""
 msgid "Start chat with {displayName}"
 msgstr ""
 
-#: src/Navigation.tsx:453
-#: src/Navigation.tsx:458
+#: src/Navigation.tsx:540
+#: src/Navigation.tsx:545
 #: src/screens/StarterPack/Wizard/index.tsx:186
 msgid "Starter Pack"
 msgstr ""
@@ -7704,12 +7777,12 @@ msgstr ""
 msgid "Step {0} of {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:363
+#: src/screens/Settings/Settings.tsx:372
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
-#: src/Navigation.tsx:278
-#: src/screens/Settings/Settings.tsx:390
+#: src/Navigation.tsx:288
+#: src/screens/Settings/Settings.tsx:399
 msgid "Storybook"
 msgstr ""
 
@@ -7755,7 +7828,6 @@ msgid "Subscribe to this list"
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:286
-#: src/components/dialogs/VerifyEmailDialog.tsx:124
 msgid "Success!"
 msgstr ""
 
@@ -7786,15 +7858,15 @@ msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr ""
 
-#: src/Navigation.tsx:298
+#: src/Navigation.tsx:308
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/Support.tsx:34
 msgid "Support"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:112
-#: src/screens/Settings/Settings.tsx:126
-#: src/screens/Settings/Settings.tsx:485
+#: src/screens/Settings/Settings.tsx:113
+#: src/screens/Settings/Settings.tsx:127
+#: src/screens/Settings/Settings.tsx:494
 #: src/view/shell/desktop/LeftNav.tsx:246
 msgid "Switch account"
 msgstr ""
@@ -7821,7 +7893,7 @@ msgstr ""
 
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:383
+#: src/screens/Settings/Settings.tsx:392
 msgid "System log"
 msgstr ""
 
@@ -7873,7 +7945,7 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
-#: src/Navigation.tsx:308
+#: src/Navigation.tsx:318
 #: src/screens/Settings/AboutSettings.tsx:84
 #: src/screens/Settings/AboutSettings.tsx:87
 #: src/view/screens/TermsOfService.tsx:31
@@ -7908,10 +7980,6 @@ msgstr ""
 
 #: src/view/com/posts/ShowLessFollowup.tsx:39
 msgid "Thank you for your feedback! It has been sent to the feed operator."
-msgstr ""
-
-#: src/components/dialogs/VerifyEmailDialog.tsx:125
-msgid "Thank you! Your email has been successfully verified."
 msgstr ""
 
 #: src/components/ReportDialog/SubmitView.tsx:83
@@ -7980,10 +8048,6 @@ msgstr ""
 
 #: src/state/shell/progress-guide.tsx:224
 msgid "The Discover feed now knows what you like"
-msgstr ""
-
-#: src/components/dialogs/ChangeEmailDialog.tsx:74
-msgid "The email address you entered is the same as your current email address."
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:324
@@ -8377,7 +8441,7 @@ msgstr ""
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:537
+#: src/screens/Settings/Settings.tsx:546
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -8413,7 +8477,7 @@ msgstr ""
 msgid "Threaded mode"
 msgstr ""
 
-#: src/Navigation.tsx:341
+#: src/Navigation.tsx:351
 msgid "Threads Preferences"
 msgstr ""
 
@@ -8467,7 +8531,7 @@ msgstr ""
 msgid "Top replies first"
 msgstr ""
 
-#: src/Navigation.tsx:423
+#: src/Navigation.tsx:510
 msgid "Topic"
 msgstr ""
 
@@ -8694,8 +8758,8 @@ msgstr ""
 msgid "Unpinned from your feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:416
-#: src/screens/Settings/Settings.tsx:418
+#: src/screens/Settings/Settings.tsx:425
+#: src/screens/Settings/Settings.tsx:427
 msgid "Unsnooze email reminder"
 msgstr ""
 
@@ -8930,7 +8994,7 @@ msgstr ""
 msgid "Verification settings"
 msgstr ""
 
-#: src/Navigation.tsx:178
+#: src/Navigation.tsx:188
 #: src/screens/Moderation/VerificationSettings.tsx:32
 msgid "Verification Settings"
 msgstr ""
@@ -8960,17 +9024,10 @@ msgstr ""
 msgid "Verify DNS Record"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:234
-#: src/components/dialogs/ChangeEmailDialog.tsx:240
-msgid "Verify email"
-msgstr ""
-
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:214
 msgid "Verify email code"
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:122
-#: src/components/dialogs/VerifyEmailDialog.tsx:163
 #: src/components/intents/VerifyEmailIntentDialog.tsx:67
 msgid "Verify email dialog"
 msgstr ""
@@ -8990,10 +9047,6 @@ msgstr ""
 msgid "Verify your email"
 msgstr ""
 
-#: src/components/dialogs/VerifyEmailDialog.tsx:114
-msgid "Verify Your Email"
-msgstr ""
-
 #: src/screens/Settings/AboutSettings.tsx:126
 #: src/screens/Settings/AboutSettings.tsx:155
 msgid "Version {appVersion}"
@@ -9008,7 +9061,7 @@ msgstr ""
 msgid "Video failed to process"
 msgstr ""
 
-#: src/Navigation.tsx:474
+#: src/Navigation.tsx:561
 msgid "Video Feed"
 msgstr ""
 
@@ -9228,7 +9281,7 @@ msgstr ""
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr ""
 
-#: src/screens/Settings/SettingsInterests.tsx:155
+#: src/screens/Settings/InterestsSettings.tsx:158
 msgid "We recommend selecting at least two interests."
 msgstr ""
 
@@ -9500,7 +9553,6 @@ msgid "You are verified"
 msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:355
-#: src/view/com/modals/EditProfile.tsx:203
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr ""
 
@@ -9701,7 +9753,7 @@ msgstr ""
 msgid "You previously deactivated @{0}."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:374
+#: src/screens/Settings/Settings.tsx:383
 msgid "You probably want to restart the app now."
 msgstr ""
 
@@ -9713,7 +9765,7 @@ msgstr ""
 msgid "You reacted {0} to {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:267
+#: src/screens/Settings/Settings.tsx:276
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "You will be signed out of all your accounts."
 msgstr ""
@@ -9756,10 +9808,6 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:234
 msgid "You'll follow these people right away"
-msgstr ""
-
-#: src/components/dialogs/VerifyEmailDialog.tsx:216
-msgid "You'll receive an email at <0>{0}</0> to verify it's you."
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:274
@@ -9856,10 +9904,6 @@ msgstr ""
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr ""
 
-#: src/components/dialogs/ChangeEmailDialog.tsx:65
-msgid "Your email address has been updated but it is not yet verified. As a next step, please verify your new email."
-msgstr ""
-
 #: src/screens/Login/ForgotPasswordForm.tsx:51
 #: src/screens/Signup/state.ts:270
 #: src/screens/Signup/StepInfo/index.tsx:98
@@ -9869,10 +9913,6 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:65
 msgid "Your email has not yet been verified. Please verify your email in order to enjoy all the features of Bluesky."
-msgstr ""
-
-#: src/components/dialogs/VerifyEmailDialog.tsx:110
-msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr ""
 
 #: src/state/shell/progress-guide.tsx:213
@@ -9895,15 +9935,15 @@ msgstr ""
 msgid "Your full username will be <0>@{0}</0>"
 msgstr ""
 
-#: src/Navigation.tsx:395
+#: src/Navigation.tsx:482
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
 #: src/screens/Settings/ContentAndMediaSettings.tsx:92
 #: src/screens/Settings/ContentAndMediaSettings.tsx:95
-#: src/screens/Settings/SettingsInterests.tsx:39
+#: src/screens/Settings/InterestsSettings.tsx:42
 msgid "Your interests"
 msgstr ""
 
-#: src/screens/Settings/SettingsInterests.tsx:124
+#: src/screens/Settings/InterestsSettings.tsx:127
 msgctxt "toast"
 msgid "Your interests have been updated!"
 msgstr ""
@@ -9952,7 +9992,7 @@ msgstr ""
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr ""
 
-#: src/screens/Settings/SettingsInterests.tsx:53
+#: src/screens/Settings/InterestsSettings.tsx:56
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
