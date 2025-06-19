@@ -1,19 +1,11 @@
-import React from 'react'
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {useCallback, useMemo, useState} from 'react'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -21,11 +13,12 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {Text} from '#/view/com/util/text/Text'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
+import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
+import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -33,13 +26,11 @@ type Props = NativeStackScreenProps<
 >
 export function ModerationMutedAccounts({}: Props) {
   const t = useTheme()
-  const pal = usePalette('default')
+  const moderationOpts = useModerationOpts()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isTabletOrDesktop} = useWebMediaQueries()
-  const moderationOpts = useModerationOpts()
 
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const {
     data,
     isFetching,
@@ -51,7 +42,7 @@ export function ModerationMutedAccounts({}: Props) {
     isFetchingNextPage,
   } = useMyMutedAccountsQuery()
   const isEmpty = !isFetching && !data?.pages[0]?.mutes.length
-  const profiles = React.useMemo(() => {
+  const profiles = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.mutes)
     }
@@ -59,12 +50,12 @@ export function ModerationMutedAccounts({}: Props) {
   }, [data])
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -74,7 +65,7 @@ export function ModerationMutedAccounts({}: Props) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
     try {
@@ -120,25 +111,19 @@ export function ModerationMutedAccounts({}: Props) {
   }
   return (
     <Layout.Screen testID="mutedAccountsScreen">
-      <ViewHeader title={_(msg`Muted Accounts`)} showOnDesktop />
-      <Layout.Center style={[a.flex_1, {paddingBottom: 100}]}>
-        <Text
-          type="sm"
-          style={[
-            styles.description,
-            pal.text,
-            isTabletOrDesktop && styles.descriptionDesktop,
-            {
-              marginTop: 20,
-            },
-          ]}>
-          <Trans>
-            Muted accounts have their posts removed from your feed and from your
-            notifications. Mutes are completely private.
-          </Trans>
-        </Text>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Muted Accounts</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Center>
         {isEmpty ? (
-          <View style={[pal.border]}>
+          <View>
+            <Info style={[a.border_b]} />
             {isError ? (
               <ErrorScreen
                 title="Oops!"
@@ -146,42 +131,29 @@ export function ModerationMutedAccounts({}: Props) {
                 onPressTryAgain={refetch}
               />
             ) : (
-              <View style={[styles.empty, pal.viewLight]}>
-                <Text type="lg" style={[pal.text, styles.emptyText]}>
-                  <Trans>
-                    You have not muted any accounts yet. To mute an account, go
-                    to their profile and select "Mute account" from the menu on
-                    their account.
-                  </Trans>
-                </Text>
-              </View>
+              <Empty />
             )}
           </View>
         ) : (
-          <FlatList
-            style={[!isTabletOrDesktop && styles.flex1]}
+          <List
             data={profiles}
             keyExtractor={item => item.did}
-            refreshControl={
-              <RefreshControl
-                refreshing={isPTRing}
-                onRefresh={onRefresh}
-                tintColor={pal.colors.text}
-                titleColor={pal.colors.text}
-              />
-            }
+            refreshing={isPTRing}
+            onRefresh={onRefresh}
             onEndReached={onEndReached}
             renderItem={renderItem}
             initialNumToRender={15}
             // FIXME(dan)
 
-            ListFooterComponent={() => (
-              <View style={styles.footer}>
-                {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
-              </View>
-            )}
-            // @ts-ignore our .web version only -prf
-            desktopFixedHeight
+            ListHeaderComponent={Info}
+            ListFooterComponent={
+              <ListFooter
+                isFetchingNextPage={isFetchingNextPage}
+                hasNextPage={hasNextPage}
+                error={cleanError(error)}
+                onRetry={fetchNextPage}
+              />
+            }
           />
         )}
       </Layout.Center>
@@ -189,37 +161,51 @@ export function ModerationMutedAccounts({}: Props) {
   )
 }
 
-const styles = StyleSheet.create({
-  title: {
-    textAlign: 'center',
-    marginTop: 12,
-    marginBottom: 12,
-  },
-  description: {
-    textAlign: 'center',
-    paddingHorizontal: 30,
-    marginBottom: 14,
-  },
-  descriptionDesktop: {
-    marginTop: 14,
-  },
+function Empty() {
+  const t = useTheme()
+  return (
+    <View style={[a.pt_2xl, a.px_xl, a.align_center]}>
+      <View
+        style={[
+          a.py_md,
+          a.px_lg,
+          a.rounded_sm,
+          t.atoms.bg_contrast_25,
+          a.border,
+          t.atoms.border_contrast_low,
+          {maxWidth: 400},
+        ]}>
+        <Text style={[a.text_sm, a.text_center, t.atoms.text_contrast_high]}>
+          <Trans>
+            You have not muted any accounts yet. To mute an account, go to their
+            profile and select "Mute account" from the menu on their account.
+          </Trans>
+        </Text>
+      </View>
+    </View>
+  )
+}
 
-  flex1: {
-    flex: 1,
-  },
-  empty: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    borderRadius: 16,
-    marginHorizontal: 24,
-    marginTop: 10,
-  },
-  emptyText: {
-    textAlign: 'center',
-  },
-
-  footer: {
-    height: 200,
-    paddingTop: 20,
-  },
-})
+function Info({style}: {style?: StyleProp<ViewStyle>}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.w_full,
+        t.atoms.bg_contrast_25,
+        a.py_md,
+        a.px_xl,
+        a.border_t,
+        {marginTop: a.border.borderWidth * -1},
+        t.atoms.border_contrast_low,
+        style,
+      ]}>
+      <Text style={[a.text_center, a.text_sm, t.atoms.text_contrast_high]}>
+        <Trans>
+          Muted accounts have their posts removed from your feed and from your
+          notifications. Mutes are completely private.
+        </Trans>
+      </Text>
+    </View>
+  )
+}

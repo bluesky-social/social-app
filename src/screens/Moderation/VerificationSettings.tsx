@@ -46,9 +46,13 @@ export function Screen() {
                   to={urls.website.blog.initialVerificationAnnouncement}
                   label={_(msg`Learn more`)}
                   onPress={() => {
-                    logger.metric('verification:learn-more', {
-                      location: 'verificationSettings',
-                    })
+                    logger.metric(
+                      'verification:learn-more',
+                      {
+                        location: 'verificationSettings',
+                      },
+                      {statsig: true},
+                    )
                   }}>
                   Learn more here.
                 </InlineLinkText>

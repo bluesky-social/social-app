@@ -8,7 +8,7 @@ import {useCameraPermission} from '#/lib/hooks/usePermissions'
 import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
 import {isMobileWeb, isNative} from '#/platform/detection'
-import {ComposerImage, createComposerImage} from '#/state/gallery'
+import {type ComposerImage, createComposerImage} from '#/state/gallery'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
@@ -35,9 +35,7 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
       }
 
       const img = await openCamera({
-        width: POST_IMG_MAX.width,
-        height: POST_IMG_MAX.height,
-        freeStyleCropEnabled: true,
+        aspect: [POST_IMG_MAX.width, POST_IMG_MAX.height],
       })
 
       // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to

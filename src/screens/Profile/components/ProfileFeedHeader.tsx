@@ -12,7 +12,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {FeedSourceFeedInfo} from '#/state/queries/feed'
+import {type FeedSourceFeedInfo} from '#/state/queries/feed'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {
   useAddSavedFeedsMutation,
@@ -29,7 +29,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {useRichText} from '#/components/hooks/useRichText'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {
@@ -94,9 +94,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const {data: preferences} = usePreferencesQuery()
 
   const [likeUri, setLikeUri] = React.useState(info.likeUri || '')
-  const isLiked = !!likeUri
   const likeCount =
-    isLiked && likeUri ? (info.likeCount || 0) + 1 : info.likeCount || 0
+    (info.likeCount || 0) +
+    (likeUri && !info.likeUri ? 1 : !likeUri && info.likeUri ? -1 : 0)
 
   const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
     useAddSavedFeedsMutation()
@@ -113,13 +113,14 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
   const isSaved = Boolean(savedFeedConfig)
   const isPinned = Boolean(savedFeedConfig?.pinned)
 
-  const onToggleSaved = React.useCallback(async () => {
+  const onToggleSaved = async () => {
     try {
       playHaptic()
 
       if (savedFeedConfig) {
         await removeFeed(savedFeedConfig)
         Toast.show(_(msg`Removed from your feeds`))
+        logger.metric('feed:unsave', {feedUrl: info.uri})
       } else {
         await addSavedFeeds([
           {
@@ -129,6 +130,7 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
           },
         ])
         Toast.show(_(msg`Saved to your feeds`))
+        logger.metric('feed:save', {feedUrl: info.uri})
       }
     } catch (err) {
       Toast.show(
@@ -139,9 +141,9 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
       )
       logger.error('Failed to update feeds', {message: err})
     }
-  }, [_, playHaptic, info, removeFeed, addSavedFeeds, savedFeedConfig])
+  }
 
-  const onTogglePinned = React.useCallback(async () => {
+  const onTogglePinned = async () => {
     try {
       playHaptic()
 
@@ -156,8 +158,10 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
 
         if (pinned) {
           Toast.show(_(msg`Pinned ${info.displayName} to Home`))
+          logger.metric('feed:pin', {feedUrl: info.uri})
         } else {
           Toast.show(_(msg`Unpinned ${info.displayName} from Home`))
+          logger.metric('feed:unpin', {feedUrl: info.uri})
         }
       } else {
         await addSavedFeeds([
@@ -168,12 +172,13 @@ export function ProfileFeedHeader({info}: {info: FeedSourceFeedInfo}) {
           },
         ])
         Toast.show(_(msg`Pinned ${info.displayName} to Home`))
+        logger.metric('feed:pin', {feedUrl: info.uri})
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [playHaptic, info, _, savedFeedConfig, updateSavedFeeds, addSavedFeeds])
+  }
 
   return (
     <>
@@ -394,16 +399,18 @@ function DialogInner({
   const isLiked = !!likeUri
   const feedRkey = React.useMemo(() => new AtUri(info.uri).rkey, [info.uri])
 
-  const onToggleLiked = React.useCallback(async () => {
+  const onToggleLiked = async () => {
     try {
       playHaptic()
 
       if (isLiked && likeUri) {
         await unlikeFeed({uri: likeUri})
         setLikeUri('')
+        logger.metric('feed:unlike', {feedUrl: info.uri})
       } else {
         const res = await likeFeed({uri: info.uri, cid: info.cid})
         setLikeUri(res.uri)
+        logger.metric('feed:like', {feedUrl: info.uri})
       }
     } catch (err) {
       Toast.show(
@@ -414,12 +421,13 @@ function DialogInner({
       )
       logger.error('Failed to toggle like', {message: err})
     }
-  }, [playHaptic, isLiked, likeUri, unlikeFeed, setLikeUri, likeFeed, info, _])
+  }
 
   const onPressShare = React.useCallback(() => {
     playHaptic()
     const url = toShareUrl(info.route.href)
     shareUrl(url)
+    logger.metric('feed:share', {feedUrl: info.uri})
   }, [info, playHaptic])
 
   const onPressReport = React.useCallback(() => {

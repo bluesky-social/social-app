@@ -397,6 +397,7 @@ function DefaultProfileCard({
             <ProfileCard.Avatar
               profile={profile}
               moderationOpts={moderationOpts}
+              disabledPreview
             />
             <View style={[a.flex_1]}>
               <ProfileCard.Name

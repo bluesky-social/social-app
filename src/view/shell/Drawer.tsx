@@ -5,6 +5,7 @@ import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
@@ -67,6 +68,7 @@ let DrawerProfileCard = ({
   const t = useTheme()
   const {data: profile} = useProfileQuery({did: account.did})
   const verification = useSimpleVerificationState({profile})
+  const {isActive: live} = useActorStatus(profile)
 
   return (
     <TouchableOpacity
@@ -81,6 +83,7 @@ let DrawerProfileCard = ({
         // See https://github.com/bluesky-social/social-app/pull/1801:
         usePlainRNImage={true}
         type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        live={live}
       />
       <View style={[a.gap_2xs]}>
         <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
@@ -157,7 +160,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   // =
 
   const onPressTab = React.useCallback(
-    (tab: string) => {
+    (tab: 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile') => {
       const state = navigation.getState()
       setDrawerOpen(false)
       if (isWeb) {
@@ -165,7 +168,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
         if (tab === 'MyProfile') {
           navigation.navigate('Profile', {name: currentAccount!.handle})
         } else {
-          // @ts-ignore must be Home, Search, Notifications, or MyProfile
+          // @ts-expect-error struggles with string unions, apparently
           navigation.navigate(tab)
         }
       } else {
@@ -173,9 +176,23 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
         if (tabState === TabState.InsideAtRoot) {
           emitSoftReset()
         } else if (tabState === TabState.Inside) {
-          navigation.dispatch(StackActions.popToTop())
+          // find the correct navigator in which to pop-to-top
+          const target = state.routes.find(route => route.name === `${tab}Tab`)
+            ?.state?.key
+          if (target) {
+            // if we found it, trigger pop-to-top
+            navigation.dispatch({
+              ...StackActions.popToTop(),
+              target,
+            })
+          } else {
+            // fallback: reset navigation
+            navigation.reset({
+              index: 0,
+              routes: [{name: `${tab}Tab`}],
+            })
+          }
         } else {
-          // @ts-ignore must be Home, Search, Notifications, or MyProfile
           navigation.navigate(`${tab}Tab`)
         }
       }

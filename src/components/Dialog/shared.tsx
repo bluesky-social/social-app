@@ -1,5 +1,11 @@
-import React from 'react'
-import {StyleProp, TextStyle, View, ViewStyle} from 'react-native'
+import {
+  type LayoutChangeEvent,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import type React from 'react'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -9,15 +15,18 @@ export function Header({
   renderRight,
   children,
   style,
+  onLayout,
 }: {
   renderLeft?: () => React.ReactNode
   renderRight?: () => React.ReactNode
   children?: React.ReactNode
   style?: StyleProp<ViewStyle>
+  onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const t = useTheme()
   return (
     <View
+      onLayout={onLayout}
       style={[
         a.relative,
         a.w_full,

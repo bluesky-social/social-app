@@ -8,7 +8,7 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {colors} from '#/lib/styles'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
@@ -17,6 +17,8 @@ import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
+import {EmailDialog} from '#/components/dialogs/EmailDialog'
+import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
@@ -67,6 +69,8 @@ function ShellInner() {
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
+      <EmailDialog />
+      <LinkWarningDialog />
       <Lightbox />
       <PortalOutlet />
 
@@ -130,7 +134,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black, // TODO
   },
   drawerMask: {
-    position: 'fixed',
+    ...a.fixed,
     width: '100%',
     height: '100%',
     top: 0,
@@ -138,7 +142,7 @@ const styles = StyleSheet.create({
   },
   drawerContainer: {
     display: 'flex',
-    position: 'fixed',
+    ...a.fixed,
     top: 0,
     left: 0,
     height: '100%',

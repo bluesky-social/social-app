@@ -1,6 +1,6 @@
-import {ReactElement} from 'react'
+import {type ReactElement} from 'react'
 import {View} from 'react-native'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

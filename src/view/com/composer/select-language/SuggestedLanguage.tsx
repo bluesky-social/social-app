@@ -1,23 +1,19 @@
 import {useEffect, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import lande from 'lande'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {s} from '#/lib/styles'
 import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
 import {
   toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {Button} from '../../util/forms/Button'
-import {Text} from '../../util/text/Text'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
+import {Text} from '#/components/Typography'
 
 // fallbacks for safari
 const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
@@ -29,7 +25,7 @@ export function SuggestedLanguage({text}: {text: string}) {
   >()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
 
   useEffect(() => {
@@ -59,32 +55,37 @@ export function SuggestedLanguage({text}: {text: string}) {
     )
 
     return (
-      <View style={[pal.border, styles.infoBar]}>
-        <FontAwesomeIcon
-          icon="language"
-          style={pal.text as FontAwesomeIconStyle}
-          size={24}
-        />
-        <Text style={[pal.text, s.flex1]}>
+      <View
+        style={[
+          t.atoms.border_contrast_low,
+          a.gap_sm,
+          a.border,
+          a.flex_row,
+          a.align_center,
+          a.rounded_sm,
+          a.px_lg,
+          a.py_md,
+          a.mx_md,
+          a.my_sm,
+          t.atoms.bg,
+        ]}>
+        <EarthIcon />
+        <Text style={[a.flex_1]}>
           <Trans>
             Are you writing in{' '}
-            <Text type="sm-bold" style={pal.text}>
-              {suggestedLanguageName}
-            </Text>
-            ?
+            <Text style={[a.font_bold]}>{suggestedLanguageName}</Text>?
           </Trans>
         </Text>
 
         <Button
-          type="default"
+          color="secondary"
+          size="small"
+          variant="solid"
           onPress={() => setLangPrefs.setPostLanguage(suggestedLanguage)}
-          accessibilityLabel={_(
-            msg`Change post language to ${suggestedLanguageName}`,
-          )}
-          accessibilityHint="">
-          <Text type="button" style={[pal.link, s.fw600]}>
+          label={_(msg`Change post language to ${suggestedLanguageName}`)}>
+          <ButtonText>
             <Trans>Yes</Trans>
-          </Text>
+          </ButtonText>
         </Button>
       </View>
     )
@@ -92,20 +93,6 @@ export function SuggestedLanguage({text}: {text: string}) {
     return null
   }
 }
-
-const styles = StyleSheet.create({
-  infoBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    borderWidth: 1,
-    borderRadius: 6,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginHorizontal: 10,
-    marginBottom: 10,
-  },
-})
 
 /**
  * This function is using the lande language model to attempt to detect the language

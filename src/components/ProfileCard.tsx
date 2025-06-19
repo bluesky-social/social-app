@@ -8,6 +8,7 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {type LogEvents} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -16,7 +17,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {
   Button,
@@ -130,17 +131,35 @@ export function Link({
 export function Avatar({
   profile,
   moderationOpts,
+  onPress,
+  disabledPreview,
+  liveOverride,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  onPress?: () => void
+  disabledPreview?: boolean
+  liveOverride?: boolean
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
 
-  return (
+  const {isActive: live} = useActorStatus(profile)
+
+  return disabledPreview ? (
+    <UserAvatar
+      size={40}
+      avatar={profile.avatar}
+      type={profile.associated?.labeler ? 'labeler' : 'user'}
+      moderation={moderation.ui('avatar')}
+      live={liveOverride ?? live}
+    />
+  ) : (
     <PreviewableUserAvatar
       size={40}
       profile={profile}
       moderation={moderation.ui('avatar')}
+      onBeforePress={onPress}
+      live={liveOverride ?? live}
     />
   )
 }

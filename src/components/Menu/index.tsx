@@ -1,5 +1,11 @@
-import React from 'react'
-import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {cloneElement, Fragment, isValidElement, useMemo} from 'react'
+import {
+  Pressable,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
@@ -16,12 +22,12 @@ import {
   useMenuItemContext,
 } from '#/components/Menu/context'
 import {
-  ContextType,
-  GroupProps,
-  ItemIconProps,
-  ItemProps,
-  ItemTextProps,
-  TriggerProps,
+  type ContextType,
+  type GroupProps,
+  type ItemIconProps,
+  type ItemProps,
+  type ItemTextProps,
+  type TriggerProps,
 } from '#/components/Menu/types'
 import {Text} from '#/components/Typography'
 
@@ -39,7 +45,7 @@ export function Root({
   control?: Dialog.DialogControlProps
 }>) {
   const defaultControl = Dialog.useDialogControl()
-  const context = React.useMemo<ContextType>(
+  const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
     }),
@@ -244,16 +250,53 @@ export function ItemRadio({selected}: {selected: boolean}) {
   )
 }
 
-export function LabelText({children}: {children: React.ReactNode}) {
+/**
+ * NATIVE ONLY - for adding non-pressable items to the menu
+ *
+ * @platform ios, android
+ */
+export function ContainerItem({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.px_md,
+        a.rounded_md,
+        a.border,
+        t.atoms.bg_contrast_25,
+        t.atoms.border_contrast_low,
+        {paddingVertical: 10},
+        style,
+      ]}>
+      {children}
+    </View>
+  )
+}
+
+export function LabelText({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<TextStyle>
+}) {
   const t = useTheme()
   return (
     <Text
       style={[
         a.font_bold,
         t.atoms.text_contrast_medium,
-        {
-          marginBottom: -8,
-        },
+        {marginBottom: -8},
+        style,
       ]}>
       {children}
     </Text>
@@ -272,19 +315,20 @@ export function Group({children, style}: GroupProps) {
         style,
       ]}>
       {flattenReactChildren(children).map((child, i) => {
-        return React.isValidElement(child) && child.type === Item ? (
-          <React.Fragment key={i}>
+        return isValidElement(child) &&
+          (child.type === Item || child.type === ContainerItem) ? (
+          <Fragment key={i}>
             {i > 0 ? (
               <View style={[a.border_b, t.atoms.border_contrast_low]} />
             ) : null}
-            {React.cloneElement(child, {
-              // @ts-ignore
+            {cloneElement(child, {
+              // @ts-expect-error cloneElement is not aware of the types
               style: {
                 borderRadius: 0,
                 borderWidth: 0,
               },
             })}
-          </React.Fragment>
+          </Fragment>
         ) : null
       })}
     </View>
