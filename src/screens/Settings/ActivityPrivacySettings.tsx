@@ -51,7 +51,7 @@ export function ActivityPrivacySettingsScreen({}: Props) {
               }
             />
           </SettingsList.Item>
-          <View style={[a.px_lg, a.pt_md]}>
+          <View style={[a.px_xl, a.pt_md]}>
             {isError ? (
               <Admonition type="error">
                 <Trans>Failed to load preference.</Trans>
