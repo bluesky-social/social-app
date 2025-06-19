@@ -1,12 +1,18 @@
-import React from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 import {type SharedValue, useSharedValue} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-type StateContext = {
+import {clamp} from '#/lib/numbers'
+import {isWeb} from '#/platform/detection'
+import {atoms as a, platform, useBreakpoints} from '#/alf'
+
+type LayoutContextValue = {
   headerHeight: SharedValue<number>
-  footerHeight: SharedValue<number>
+  footerHeight: number
+  setFooterHeight: (height: number) => void
 }
 
-const stateContext = React.createContext<StateContext>({
+const LayoutContext = createContext<LayoutContextValue>({
   headerHeight: {
     value: 0,
     addListener() {},
@@ -17,34 +23,46 @@ const stateContext = React.createContext<StateContext>({
     },
     set() {},
   },
-  footerHeight: {
-    value: 0,
-    addListener() {},
-    removeListener() {},
-    modify() {},
-    get() {
-      return 0
-    },
-    set() {},
-  },
+  footerHeight: 0,
+  setFooterHeight: () => {},
 })
-stateContext.displayName = 'ShellLayoutContext'
+LayoutContext.displayName = 'ShellLayoutContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const headerHeight = useSharedValue(0)
-  const footerHeight = useSharedValue(0)
-
-  const value = React.useMemo(
-    () => ({
-      headerHeight,
-      footerHeight,
+  const insets = useSafeAreaInsets()
+  const {gtMobile} = useBreakpoints()
+  const [footerHeight, setFooterHeight] = useState(() =>
+    platform({
+      // try and precisely guess the footer height, then round it to 4 decimal places
+      // to remove floating point imprecision. if we can guess it exactly,
+      // we get to skip a rerender
+      native: round4dp(
+        47 + a.border.borderWidth + clamp(insets.bottom, 15, 60),
+      ),
+      web: 58,
+      default: 0,
     }),
-    [headerHeight, footerHeight],
   )
 
-  return <stateContext.Provider value={value}>{children}</stateContext.Provider>
+  const value = useMemo(
+    () => ({
+      headerHeight,
+      footerHeight: isWeb && gtMobile ? 0 : footerHeight,
+      setFooterHeight: (height: number) => setFooterHeight(round4dp(height)),
+    }),
+    [headerHeight, footerHeight, setFooterHeight, gtMobile],
+  )
+
+  return (
+    <LayoutContext.Provider value={value}>{children}</LayoutContext.Provider>
+  )
 }
 
 export function useShellLayout() {
-  return React.useContext(stateContext)
+  return useContext(LayoutContext)
+}
+
+function round4dp(value: number) {
+  return Math.round(value * 10000) / 10000
 }

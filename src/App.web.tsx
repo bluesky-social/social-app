@@ -3,7 +3,10 @@ import '#/view/icons'
 import './style.css'
 
 import {Fragment, useEffect, useState} from 'react'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as Sentry from '@sentry/react-native'
@@ -143,20 +146,18 @@ function InnerApp() {
                                             <UnreadNotifsProvider>
                                               <BackgroundNotificationPreferencesProvider>
                                                 <MutedThreadsProvider>
-                                                  <SafeAreaProvider>
-                                                    <ProgressGuideProvider>
-                                                      <ServiceConfigProvider>
-                                                        <EmailVerificationProvider>
-                                                          <HideBottomBarBorderProvider>
-                                                            <IntentDialogProvider>
-                                                              <Shell />
-                                                              <ToastOutlet />
-                                                            </IntentDialogProvider>
-                                                          </HideBottomBarBorderProvider>
-                                                        </EmailVerificationProvider>
-                                                      </ServiceConfigProvider>
-                                                    </ProgressGuideProvider>
-                                                  </SafeAreaProvider>
+                                                  <ProgressGuideProvider>
+                                                    <ServiceConfigProvider>
+                                                      <EmailVerificationProvider>
+                                                        <HideBottomBarBorderProvider>
+                                                          <IntentDialogProvider>
+                                                            <Shell />
+                                                            <ToastOutlet />
+                                                          </IntentDialogProvider>
+                                                        </HideBottomBarBorderProvider>
+                                                      </EmailVerificationProvider>
+                                                    </ServiceConfigProvider>
+                                                  </ProgressGuideProvider>
                                                 </MutedThreadsProvider>
                                               </BackgroundNotificationPreferencesProvider>
                                             </UnreadNotifsProvider>
@@ -201,33 +202,35 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <Geo.Provider>
-      <A11yProvider>
-        <OnboardingProvider>
-          <AnalyticsContext>
-            <SessionProvider>
-              <PrefsStateProvider>
-                <I18nProvider>
-                  <ShellStateProvider>
-                    <ModalStateProvider>
-                      <DialogStateProvider>
-                        <LightboxStateProvider>
-                          <PortalProvider>
-                            <StarterPackProvider>
-                              <InnerApp />
-                            </StarterPackProvider>
-                          </PortalProvider>
-                        </LightboxStateProvider>
-                      </DialogStateProvider>
-                    </ModalStateProvider>
-                  </ShellStateProvider>
-                </I18nProvider>
-              </PrefsStateProvider>
-            </SessionProvider>
-          </AnalyticsContext>
-        </OnboardingProvider>
-      </A11yProvider>
-    </Geo.Provider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <Geo.Provider>
+        <A11yProvider>
+          <OnboardingProvider>
+            <AnalyticsContext>
+              <SessionProvider>
+                <PrefsStateProvider>
+                  <I18nProvider>
+                    <ShellStateProvider>
+                      <ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <StarterPackProvider>
+                                <InnerApp />
+                              </StarterPackProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
+                      </ModalStateProvider>
+                    </ShellStateProvider>
+                  </I18nProvider>
+                </PrefsStateProvider>
+              </SessionProvider>
+            </AnalyticsContext>
+          </OnboardingProvider>
+        </A11yProvider>
+      </Geo.Provider>
+    </SafeAreaProvider>
   )
 }
 

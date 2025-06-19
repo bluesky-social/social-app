@@ -13,8 +13,9 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useLightbox} from '#/state/lightbox'
-import {useTheme} from '#/alf'
-import {IS_IOS} from '#/env'
+import {useShellLayout} from '#/state/shell/shell-layout'
+import {ios, useTheme} from '#/alf'
+import {IS_ANDROID, IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -39,6 +40,7 @@ export type ListProps<ItemT = any> = Omit<
   disableFullWindowScroll?: boolean
   sideBorders?: boolean
   progressViewOffset?: number
+  footerExtensionHeight?: number
 }
 export type ListRef = React.RefObject<FlatList_INTERNAL | null>
 
@@ -55,6 +57,8 @@ let List = forwardRef<ListMethods, ListProps>(
       style,
       progressViewOffset,
       automaticallyAdjustsScrollIndicatorInsets = false,
+      contentContainerStyle,
+      footerExtensionHeight = 0,
       ...props
     },
     ref,
@@ -63,6 +67,7 @@ let List = forwardRef<ListMethods, ListProps>(
     const t = useTheme()
     const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
+    const {footerHeight} = useShellLayout()
 
     const handleScrolledDownChange = useNonReactiveCallback(
       (didScrollDown: boolean) => {
@@ -159,14 +164,26 @@ let List = forwardRef<ListMethods, ListProps>(
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         {...props}
+        contentContainerStyle={[
+          IS_ANDROID && {paddingBottom: footerHeight + footerExtensionHeight},
+          contentContainerStyle,
+        ]}
         automaticallyAdjustsScrollIndicatorInsets={
           automaticallyAdjustsScrollIndicatorInsets
         }
         scrollIndicatorInsets={{
           top: headerOffset,
           right: 1,
+          bottom: footerHeight + footerExtensionHeight,
           ...props.scrollIndicatorInsets,
         }}
+        contentInset={ios({
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: footerHeight + footerExtensionHeight,
+          ...props.contentInset,
+        })}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
