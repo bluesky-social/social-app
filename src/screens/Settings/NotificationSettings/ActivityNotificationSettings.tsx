@@ -54,11 +54,11 @@ export function ActivityNotificationSettingsScreen({}: Props) {
               <SettingsList.ItemIcon icon={BellRingingIcon} />
               <ItemTextWithSubtitle
                 bold
-                titleText={<Trans>Activity alerts</Trans>}
+                titleText={<Trans>Activity from others</Trans>}
                 subtitleText={
                   <Trans>
-                    Activity Alerts notify you instantly when your favorite
-                    accounts post or reply.
+                    Get notified about posts and replies from accounts you
+                    choose.
                   </Trans>
                 }
               />
@@ -87,7 +87,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                 <View style={[a.flex_1, a.gap_sm]}>
                   <Admonition.Text>
                     <Trans>
-                      Enable activity alerts for an account by visiting their
+                      Enable notifications for an account by visiting their
                       profile and pressing the{' '}
                       <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
                         bell icon

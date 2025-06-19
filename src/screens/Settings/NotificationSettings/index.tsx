@@ -190,7 +190,7 @@ export function NotificationSettingsScreen({}: Props) {
               <SettingsList.ItemIcon icon={BellRingingIcon} />
 
               <ItemTextWithSubtitle
-                titleText={<Trans>Activity alerts</Trans>}
+                titleText={<Trans>Activity from others</Trans>}
                 subtitleText={
                   <SettingPreview preference={settings?.subscribedPost} />
                 }
