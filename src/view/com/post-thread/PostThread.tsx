@@ -1,6 +1,6 @@
 import React, {memo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {runOnJS, useAnimatedStyle} from 'react-native-reanimated'
+import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {
   AppBskyFeedDefs,
@@ -735,14 +735,9 @@ ThreadMenu = memo(ThreadMenu)
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
   const {footerHeight} = useShellLayout()
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      bottom: footerHeight.get(),
-    }
-  })
-
   return (
-    <Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
+    <Animated.View
+      style={[a.fixed, a.left_0, a.right_0, {bottom: footerHeight}]}>
       <PostThreadComposePrompt onPressCompose={onPressReply} />
     </Animated.View>
   )

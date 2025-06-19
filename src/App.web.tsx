@@ -4,7 +4,10 @@ import './style.css'
 
 import React, {useEffect, useState} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
+import {
+  initialWindowMetrics,
+  SafeAreaProvider,
+} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as Sentry from '@sentry/react-native'
@@ -129,18 +132,16 @@ function InnerApp() {
                                       <UnreadNotifsProvider>
                                         <BackgroundNotificationPreferencesProvider>
                                           <MutedThreadsProvider>
-                                            <SafeAreaProvider>
-                                              <ProgressGuideProvider>
-                                                <ServiceConfigProvider>
-                                                  <HideBottomBarBorderProvider>
-                                                    <IntentDialogProvider>
-                                                      <Shell />
-                                                      <NuxDialogs />
-                                                    </IntentDialogProvider>
-                                                  </HideBottomBarBorderProvider>
-                                                </ServiceConfigProvider>
-                                              </ProgressGuideProvider>
-                                            </SafeAreaProvider>
+                                            <ProgressGuideProvider>
+                                              <ServiceConfigProvider>
+                                                <HideBottomBarBorderProvider>
+                                                  <IntentDialogProvider>
+                                                    <Shell />
+                                                    <NuxDialogs />
+                                                  </IntentDialogProvider>
+                                                </HideBottomBarBorderProvider>
+                                              </ServiceConfigProvider>
+                                            </ProgressGuideProvider>
                                           </MutedThreadsProvider>
                                         </BackgroundNotificationPreferencesProvider>
                                       </UnreadNotifsProvider>
@@ -183,31 +184,33 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <GeolocationProvider>
-      <A11yProvider>
-        <SessionProvider>
-          <PrefsStateProvider>
-            <I18nProvider>
-              <ShellStateProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <StarterPackProvider>
-                            <InnerApp />
-                          </StarterPackProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </InvitesStateProvider>
-              </ShellStateProvider>
-            </I18nProvider>
-          </PrefsStateProvider>
-        </SessionProvider>
-      </A11yProvider>
-    </GeolocationProvider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <GeolocationProvider>
+        <A11yProvider>
+          <SessionProvider>
+            <PrefsStateProvider>
+              <I18nProvider>
+                <ShellStateProvider>
+                  <InvitesStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <StarterPackProvider>
+                              <InnerApp />
+                            </StarterPackProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </InvitesStateProvider>
+                </ShellStateProvider>
+              </I18nProvider>
+            </PrefsStateProvider>
+          </SessionProvider>
+        </A11yProvider>
+      </GeolocationProvider>
+    </SafeAreaProvider>
   )
 }
 
