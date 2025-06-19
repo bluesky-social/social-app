@@ -27,6 +27,9 @@ export const atoms = {
   relative: {
     position: 'relative',
   },
+  static: {
+    position: 'static',
+  },
   sticky: web({
     position: 'sticky',
   }),
@@ -203,6 +206,9 @@ export const atoms = {
   },
   flex_grow: {
     flexGrow: 1,
+  },
+  flex_grow_0: {
+    flexGrow: 0,
   },
   flex_shrink: {
     flexShrink: 1,
@@ -951,8 +957,8 @@ export const atoms = {
     userSelect: 'all',
   },
   outline_inset_1: {
-    outlineOffset: '-1px',
-  } as StyleProp<ViewStyle>,
+    outlineOffset: -1,
+  },
 
   /*
    * Text decoration
@@ -1045,4 +1051,8 @@ export const atoms = {
       transform: [],
     },
   }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
+
+  pointer: web({
+    cursor: 'pointer',
+  }),
 } as const

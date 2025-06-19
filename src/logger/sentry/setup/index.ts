@@ -5,14 +5,14 @@
 
 import {init} from '@sentry/react-native'
 
-import {version} from '#/../package.json'
+import pkgJson from '#/../package.json'
 
 /**
  * Examples:
  * - `dev`
  * - `1.99.0`
  */
-const release = process.env.SENTRY_RELEASE || version
+const release = process.env.SENTRY_RELEASE || pkgJson.version
 
 /**
  * The latest deployed commit hash
@@ -20,12 +20,30 @@ const release = process.env.SENTRY_RELEASE || version
 const dist = process.env.SENTRY_DIST || 'dev'
 
 init({
-  enabled: !__DEV__,
+  enabled: !__DEV__ && !!process.env.SENTRY_DSN,
   autoSessionTracking: false,
-  dsn: 'https://8fb55ba4807fca137eedfc8403ee27ba@o4505071687041024.ingest.us.sentry.io/4508807082278912',
+  dsn: process.env.SENTRY_DSN,
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: process.env.NODE_ENV,
   dist,
   release,
-  ignoreErrors: [`t is not defined`, `Can't find variable: t`],
+  ignoreErrors: [
+    /*
+     * Unknown internals errors
+     */
+    `t is not defined`,
+    `Can't find variable: t`,
+    /*
+     * Un-useful errors
+     */
+    `Network request failed`,
+  ],
+  /**
+   * Does not affect traces of error events or other logs, just disables
+   * automatically attaching stack traces to events. This helps us group events
+   * and prevents explosions of separate issues.
+   *
+   * @see https://docs.sentry.io/platforms/react-native/configuration/options/#attach-stacktrace
+   */
+  attachStacktrace: false,
 })

@@ -30,6 +30,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -97,25 +98,36 @@ let NotificationFeedItem = ({
   const {_, i18n} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
-    if (item.type === 'post-like' || item.type === 'repost') {
-      if (item.subjectUri) {
-        const urip = new AtUri(item.subjectUri)
-        return `/profile/${urip.host}/post/${urip.rkey}`
+    switch (item.type) {
+      case 'post-like':
+      case 'repost':
+      case 'like-via-repost':
+      case 'repost-via-repost': {
+        if (item.subjectUri) {
+          const urip = new AtUri(item.subjectUri)
+          return `/profile/${urip.host}/post/${urip.rkey}`
+        }
+        break
       }
-    } else if (item.type === 'follow') {
-      return makeProfileLink(item.notification.author)
-    } else if (item.type === 'reply') {
-      const urip = new AtUri(item.notification.uri)
-      return `/profile/${urip.host}/post/${urip.rkey}`
-    } else if (
-      item.type === 'feedgen-like' ||
-      item.type === 'starterpack-joined'
-    ) {
-      if (item.subjectUri) {
-        const urip = new AtUri(item.subjectUri)
-        return `/profile/${urip.host}/feed/${urip.rkey}`
+      case 'follow':
+      case 'verified':
+      case 'unverified': {
+        return makeProfileLink(item.notification.author)
+      }
+      case 'reply': {
+        const uripReply = new AtUri(item.notification.uri)
+        return `/profile/${uripReply.host}/post/${uripReply.rkey}`
+      }
+      case 'feedgen-like':
+      case 'starterpack-joined': {
+        if (item.subjectUri) {
+          const urip = new AtUri(item.subjectUri)
+          return `/profile/${urip.host}/feed/${urip.rkey}`
+        }
+        break
       }
     }
+
     return ''
   }, [item])
 
@@ -390,7 +402,6 @@ let NotificationFeedItem = ({
         <StarterPack width={30} gradient="sky" />
       </View>
     )
-    // @ts-ignore TODO
   } else if (item.type === 'verified') {
     a11yLabel = hasMultipleAuthors
       ? _(
@@ -416,7 +427,6 @@ let NotificationFeedItem = ({
       <Trans>{firstAuthorLink} verified you</Trans>
     )
     icon = <VerifiedCheck size="xl" />
-    // @ts-ignore TODO
   } else if (item.type === 'unverified') {
     a11yLabel = hasMultipleAuthors
       ? _(
@@ -444,6 +454,55 @@ let NotificationFeedItem = ({
       </Trans>
     )
     icon = <VerifiedCheck size="xl" fill={t.palette.contrast_500} />
+  } else if (item.type === 'like-via-repost') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} liked your repost`,
+        )
+      : _(msg`${firstAuthorName} liked your repost`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        liked your repost
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} liked your repost</Trans>
+    )
+  } else if (item.type === 'repost-via-repost') {
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`${firstAuthorName} and ${plural(additionalAuthorsCount, {
+            one: `${formattedAuthorsCount} other`,
+            other: `${formattedAuthorsCount} others`,
+          })} reposted your repost`,
+        )
+      : _(msg`${firstAuthorName} reposted your repost`)
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        {firstAuthorLink} and{' '}
+        <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+        reposted your repost
+      </Trans>
+    ) : (
+      <Trans>{firstAuthorLink} reposted your repost</Trans>
+    )
+    icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else {
     return null
   }
@@ -551,7 +610,10 @@ let NotificationFeedItem = ({
                 </TimeElapsed>
               </Text>
             </ExpandListPressable>
-            {item.type === 'post-like' || item.type === 'repost' ? (
+            {item.type === 'post-like' ||
+            item.type === 'repost' ||
+            item.type === 'like-via-repost' ||
+            item.type === 'repost-via-repost' ? (
               <View style={[a.pt_2xs]}>
                 <AdditionalPostText post={item.subject} />
               </View>
@@ -857,7 +919,8 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
         {text?.length > 0 && (
           <Text
             emoji
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
+            numberOfLines={MAX_POST_LINES}>
             {text}
           </Text>
         )}

@@ -9,7 +9,10 @@ import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {
+  EmailDialogScreenID,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon} from '#/components/icons/BirthdayCake'
 import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
@@ -30,7 +33,7 @@ export function AccountSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
-  const verifyEmailControl = useDialogControl()
+  const emailDialogControl = useEmailDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
   const exportCarControl = useDialogControl()
@@ -73,7 +76,11 @@ export function AccountSettingsScreen({}: Props) {
           {currentAccount && !currentAccount.emailConfirmed && (
             <SettingsList.PressableItem
               label={_(msg`Verify your email`)}
-              onPress={() => verifyEmailControl.open()}
+              onPress={() =>
+                emailDialogControl.open({
+                  id: EmailDialogScreenID.Verify,
+                })
+              }
               style={[
                 a.my_xs,
                 a.mx_lg,
@@ -94,11 +101,15 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.PressableItem>
           )}
           <SettingsList.PressableItem
-            label={_(msg`Change email`)}
-            onPress={() => openModal({name: 'change-email'})}>
+            label={_(msg`Update email`)}
+            onPress={() =>
+              emailDialogControl.open({
+                id: EmailDialogScreenID.Update,
+              })
+            }>
             <SettingsList.ItemIcon icon={PencilIcon} />
             <SettingsList.ItemText>
-              <Trans>Change email</Trans>
+              <Trans>Update email</Trans>
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
@@ -165,7 +176,6 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
-      <VerifyEmailDialog control={verifyEmailControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
       <ExportCarDialog control={exportCarControl} />

@@ -15,7 +15,7 @@ This is NOT required when developing for web.
 
 - Set up your environment [using the expo instructions](https://docs.expo.dev/guides/local-app-development/).
   - make sure that the JAVA_HOME points to the zulu-17 directory in your `.zshrc` or `.bashrc` file: `export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`. DO NOT use another JDK or you will encounter build errors.
-- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:- 
+- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:-
   - If you are using Apple Silicon and this is the first time you are building for RN 0.74+, you may need to run:
     - `arch -arm64 brew install llvm`
     - `sudo gem install ffi`
@@ -33,7 +33,7 @@ This is NOT required when developing for web.
 - After initial setup:
   - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
   - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
- 
+
 ### Running the Native App
 
 - iOS: `yarn ios`
@@ -162,6 +162,9 @@ See [testing.md](./testing.md).
 `./platform/polyfills.*.ts` adds polyfills to the environment. Currently, this includes:
 
 - TextEncoder / TextDecoder
+- react-native-url-polyfill
+- Array#findLast (on web)
+- atob (on native)
 
 ### Sentry sourcemaps
 

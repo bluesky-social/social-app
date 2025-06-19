@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
@@ -115,7 +115,6 @@ function StorybookInner() {
             <Typography />
             <Spacing />
             <Shadows />
-            <Buttons />
             <Icons />
             <Links />
             <Dialogs />

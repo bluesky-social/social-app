@@ -2,7 +2,7 @@ import {Pressable} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
-  SharedValue,
+  type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {msg} from '@lingui/macro'

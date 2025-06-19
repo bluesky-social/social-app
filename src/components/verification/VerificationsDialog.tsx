@@ -35,12 +35,12 @@ export function VerificationsDialog({
 }) {
   return (
     <Dialog.Outer control={control}>
+      <Dialog.Handle />
       <Inner
         control={control}
         profile={profile}
         verificationState={verificationState}
       />
-      <Dialog.Close />
     </Dialog.Outer>
   )
 }
@@ -78,8 +78,6 @@ function Inner({
       style={[
         gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
-      <Dialog.Handle />
-
       <View style={[a.gap_sm, a.pb_lg]}>
         <Text style={[a.text_2xl, a.font_bold, a.pr_4xl, a.leading_tight]}>
           {label}
@@ -92,8 +90,8 @@ function Inner({
             </Trans>
           ) : (
             <Trans>
-              This account has one or more verifications, but it is not
-              currently verified.
+              This account has one or more attempted verifications, but it is
+              not currently verified.
             </Trans>
           )}
         </Text>
@@ -155,9 +153,13 @@ function Inner({
           color="secondary"
           style={[a.justify_center]}
           onPress={() => {
-            logger.metric('verification:learn-more', {
-              location: 'verificationsDialog',
-            })
+            logger.metric(
+              'verification:learn-more',
+              {
+                location: 'verificationsDialog',
+              },
+              {statsig: true},
+            )
           }}>
           <ButtonText>
             <Trans>Learn more</Trans>
@@ -180,7 +182,7 @@ function VerifierCard({
   outerDialogControl: Dialog.DialogControlProps
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const {data: profile, error} = useProfileQuery({did: verification.issuer})
@@ -213,14 +215,32 @@ function VerifierCard({
             </>
           ) : profile && moderationOpts ? (
             <>
-              <ProfileCard.Avatar
+              <ProfileCard.Link
                 profile={profile}
-                moderationOpts={moderationOpts}
-              />
-              <ProfileCard.NameAndHandle
-                profile={profile}
-                moderationOpts={moderationOpts}
-              />
+                style={[a.flex_row, a.align_center, a.gap_sm, a.flex_1]}
+                onPress={() => {
+                  outerDialogControl.close()
+                }}>
+                <ProfileCard.Avatar
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  disabledPreview
+                />
+                <View style={[a.flex_1]}>
+                  <ProfileCard.Name
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                  <Text
+                    emoji
+                    style={[a.leading_snug, t.atoms.text_contrast_medium]}
+                    numberOfLines={1}>
+                    {i18n.date(new Date(verification.createdAt), {
+                      dateStyle: 'long',
+                    })}
+                  </Text>
+                </View>
+              </ProfileCard.Link>
               {canAdminister && (
                 <View>
                   <Button

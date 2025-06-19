@@ -1,17 +1,18 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   LayoutAnimation,
-  ListRenderItem,
+  type ListRenderItem,
   Pressable,
   ScrollView,
   View,
-  ViewabilityConfig,
-  ViewToken,
+  type ViewabilityConfig,
+  type ViewToken,
 } from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 import {
   Gesture,
   GestureDetector,
-  NativeGesture,
+  type NativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
@@ -23,38 +24,46 @@ import {
 } from 'react-native-safe-area-context'
 import {useEvent} from 'expo'
 import {useEventListener} from 'expo'
-import {Image, ImageStyle} from 'expo-image'
+import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {createVideoPlayer, VideoPlayer, VideoView} from 'expo-video'
+import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
 import {
   AppBskyEmbedVideo,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  ModerationDecision,
+  type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
-  RouteProp,
+  type RouteProp,
   useFocusEffect,
   useIsFocused,
   useNavigation,
   useRoute,
 } from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
-import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {
   FeedFeedbackProvider,
@@ -63,21 +72,20 @@ import {
 import {useFeedFeedback} from '#/state/feed-feedback'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
-  AuthorFilter,
-  FeedPostSliceItem,
+  type AuthorFilter,
+  type FeedPostSliceItem,
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {useComposerControls, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List} from '#/view/com/util/List'
-import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
-import {setNavigationBar} from '#/alf/util/navigationBar'
+import {setSystemUITheme} from '#/alf/util/systemUI'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -88,6 +96,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
+import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
@@ -126,10 +135,10 @@ export function VideoFeed({}: NativeStackScreenProps<
   useFocusEffect(
     useCallback(() => {
       setMinShellMode(true)
-      setNavigationBar('lightbox', t)
+      setSystemUITheme('lightbox', t)
       return () => {
         setMinShellMode(false)
-        setNavigationBar('theme', t)
+        setSystemUITheme('theme', t)
       }
     }, [setMinShellMode, t]),
   )
@@ -140,6 +149,7 @@ export function VideoFeed({}: NativeStackScreenProps<
   return (
     <ThemeProvider theme="dark">
       <Layout.Screen noInsetTop style={{backgroundColor: 'black'}}>
+        <SystemBars style={{statusBar: 'light', navigationBar: 'light'}} />
         <View
           style={[
             a.absolute,
@@ -168,6 +178,7 @@ type VideoItem = {
   post: AppBskyFeedDefs.PostView
   video: AppBskyEmbedVideo.View
   feedContext: string | undefined
+  reqId: string | undefined
 }
 
 function Feed() {
@@ -206,6 +217,7 @@ function Feed() {
           post: AppBskyFeedDefs.PostView
           video: AppBskyEmbedVideo.View
           feedContext: string | undefined
+          reqId: string | undefined
         }[] = []
         for (const slice of page.slices) {
           const feedPost = slice.items.find(
@@ -218,6 +230,7 @@ function Feed() {
               post: feedPost.post,
               video: feedPost.post.embed,
               feedContext: slice.feedContext,
+              reqId: slice.reqId,
             })
           }
         }
@@ -264,6 +277,7 @@ function Feed() {
           moderation={item.moderation}
           scrollGesture={scrollGesture}
           feedContext={item.feedContext}
+          reqId={item.reqId}
         />
       )
     },
@@ -460,6 +474,7 @@ let VideoItem = ({
   scrollGesture,
   moderation,
   feedContext,
+  reqId,
 }: {
   player?: VideoPlayer
   post: AppBskyFeedDefs.PostView
@@ -469,6 +484,7 @@ let VideoItem = ({
   scrollGesture: NativeGesture
   moderation?: ModerationDecision
   feedContext: string | undefined
+  reqId: string | undefined
 }): React.ReactNode => {
   const postShadow = usePostShadow(post)
   const {width, height} = useSafeAreaFrame()
@@ -480,9 +496,10 @@ let VideoItem = ({
         item: post.uri,
         event: 'app.bsky.feed.defs#interactionSeen',
         feedContext,
+        reqId,
       })
     }
-  }, [active, post.uri, feedContext, sendInteraction])
+  }, [active, post.uri, feedContext, reqId, sendInteraction])
 
   // TODO: high-performance android phones should also
   // be capable of rendering 3 video players, but currently
@@ -527,6 +544,7 @@ let VideoItem = ({
               scrollGesture={scrollGesture}
               moderation={moderation}
               feedContext={feedContext}
+              reqId={reqId}
             />
           )}
         </>
@@ -672,6 +690,7 @@ function Overlay({
   scrollGesture,
   moderation,
   feedContext,
+  reqId,
 }: {
   player?: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -680,10 +699,11 @@ function Overlay({
   scrollGesture: NativeGesture
   moderation: ModerationDecision
   feedContext: string | undefined
+  reqId: string | undefined
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
   const seekingAnimationSV = useSharedValue(0)
@@ -750,6 +770,7 @@ function Overlay({
                 player={player}
                 post={post}
                 feedContext={feedContext}
+                reqId={reqId}
               />
             )}
           </View>
@@ -840,7 +861,7 @@ function Overlay({
               )}
               {record && (
                 <View style={[{left: -5}]}>
-                  <PostCtrls
+                  <PostControls
                     richText={richText}
                     post={post}
                     record={record}
@@ -861,7 +882,10 @@ function Overlay({
               player={player}
               seekingAnimationSV={seekingAnimationSV}
               scrollGesture={scrollGesture}>
-              <PostThreadComposePrompt onPressCompose={onPressReply} />
+              <PostThreadComposePrompt
+                onPressCompose={onPressReply}
+                style={[a.pt_md, a.pb_sm]}
+              />
             </Scrubber>
           </LinearGradient>
         </View>
@@ -992,15 +1016,23 @@ function PlayPauseTapArea({
   player,
   post,
   feedContext,
+  reqId,
 }: {
   player: VideoPlayer
   post: Shadow<AppBskyFeedDefs.PostView>
   feedContext: string | undefined
+  reqId: string | undefined
 }) {
   const {_} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const playHaptic = useHaptics()
-  const [queueLike] = usePostLikeMutationQueue(post, 'ImmersiveVideo')
+  // TODO: implement viaRepost -sfn
+  const [queueLike] = usePostLikeMutationQueue(
+    post,
+    undefined,
+    undefined,
+    'ImmersiveVideo',
+  )
   const {sendInteraction} = useFeedFeedbackContext()
   const {isPlaying} = useEvent(player, 'playingChange', {
     isPlaying: player.playing,
@@ -1026,6 +1058,7 @@ function PlayPauseTapArea({
         item: post.uri,
         event: 'app.bsky.feed.defs#interactionLike',
         feedContext,
+        reqId,
       })
     } else {
       doubleTapRef.current = setTimeout(togglePlayPause, 200)

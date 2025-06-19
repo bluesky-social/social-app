@@ -1,6 +1,6 @@
-import {Express} from 'express'
+import {type Express} from 'express'
 
-import {AppContext} from '../context.js'
+import {type AppContext} from '../context.js'
 import {default as createShortLink} from './createShortLink.js'
 import {default as health} from './health.js'
 import {default as redirect} from './redirect.js'

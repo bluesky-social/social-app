@@ -1,25 +1,29 @@
 import * as React from 'react'
 import {View} from 'react-native'
-// Based on @react-navigation/native-stack/src/createNativeStackNavigator.ts
+// Based on @react-navigation/native-stack/src/navigators/createNativeStackNavigator.ts
 // MIT License
 // Copyright (c) 2017 React Navigation Contributors
 import {
   createNavigatorFactory,
-  EventArg,
-  ParamListBase,
-  StackActionHelpers,
+  type EventArg,
+  type NavigatorTypeBagBase,
+  type ParamListBase,
+  type StackActionHelpers,
   StackActions,
-  StackNavigationState,
+  type StackNavigationState,
   StackRouter,
-  StackRouterOptions,
+  type StackRouterOptions,
+  type StaticConfig,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native'
-import type {
-  NativeStackNavigationEventMap,
-  NativeStackNavigationOptions,
-} from '@react-navigation/native-stack'
 import {NativeStackView} from '@react-navigation/native-stack'
-import type {NativeStackNavigatorProps} from '@react-navigation/native-stack/src/types'
+import {
+  type NativeStackNavigationEventMap,
+  type NativeStackNavigationOptions,
+  type NativeStackNavigationProp,
+  type NativeStackNavigatorProps,
+} from '@react-navigation/native-stack'
 
 import {PWI_ENABLED} from '#/lib/build-flags'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -35,7 +39,7 @@ import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
 import {Takendown} from '#/screens/Takendown'
-import {atoms as a} from '#/alf'
+import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -48,12 +52,14 @@ function NativeStackNavigator({
   id,
   initialRouteName,
   children,
+  layout,
   screenListeners,
   screenOptions,
+  screenLayout,
   ...rest
 }: NativeStackNavigatorProps) {
   // --- this is copy and pasted from the original native stack navigator ---
-  const {state, descriptors, navigation, NavigationContent} =
+  const {state, describe, descriptors, navigation, NavigationContent} =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -64,9 +70,12 @@ function NativeStackNavigator({
       id,
       initialRouteName,
       children,
+      layout,
       screenListeners,
       screenOptions,
+      screenLayout,
     })
+
   React.useEffect(
     () =>
       // @ts-expect-error: there may not be a tab navigator in parent
@@ -101,7 +110,8 @@ function NativeStackNavigator({
   const onboardingState = useOnboardingState()
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
+  const {leftNavMinimal} = useLayoutBreakpoints()
   if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || isNative)) {
     return <LoggedOut />
   }
@@ -138,7 +148,7 @@ function NativeStackNavigator({
 
   // Show the bottom bar if we have a session only on mobile web. If we don't have a session, we want to show it
   // on both tablet and mobile web so that we see the create account CTA.
-  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+  const showBottomBar = hasSession ? isMobile : leftNavMinimal
 
   return (
     <NavigationContent>
@@ -147,7 +157,8 @@ function NativeStackNavigator({
           {...rest}
           state={state}
           navigation={navigation}
-          descriptors={newDescriptors}
+          descriptors={descriptors}
+          describe={describe}
         />
       </View>
       {isWeb && (
@@ -160,9 +171,25 @@ function NativeStackNavigator({
   )
 }
 
-export const createNativeStackNavigatorWithAuth = createNavigatorFactory<
-  StackNavigationState<ParamListBase>,
-  NativeStackNavigationOptionsWithAuth,
-  NativeStackNavigationEventMap,
-  typeof NativeStackNavigator
->(NativeStackNavigator)
+export function createNativeStackNavigatorWithAuth<
+  const ParamList extends ParamListBase,
+  const NavigatorID extends string | undefined = undefined,
+  const TypeBag extends NavigatorTypeBagBase = {
+    ParamList: ParamList
+    NavigatorID: NavigatorID
+    State: StackNavigationState<ParamList>
+    ScreenOptions: NativeStackNavigationOptionsWithAuth
+    EventMap: NativeStackNavigationEventMap
+    NavigationList: {
+      [RouteName in keyof ParamList]: NativeStackNavigationProp<
+        ParamList,
+        RouteName,
+        NavigatorID
+      >
+    }
+    Navigator: typeof NativeStackNavigator
+  },
+  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
+>(config?: Config): TypedNavigator<TypeBag, Config> {
+  return createNavigatorFactory(NativeStackNavigator)(config)
+}

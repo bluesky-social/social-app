@@ -1,6 +1,6 @@
 import {AtUri} from '@atproto/api'
 
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export function createStarterPackLinkFromAndroidReferrer(
   referrerQueryString: string,

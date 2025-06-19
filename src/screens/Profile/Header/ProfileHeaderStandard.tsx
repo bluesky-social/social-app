@@ -9,13 +9,13 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
-import {useModalControls} from '#/state/modals'
 import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -78,19 +78,7 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
 
-  const {openModal} = useModalControls()
   const editProfileControl = useDialogControl()
-  const onPressEditProfile = React.useCallback(() => {
-    if (isWeb) {
-      // temp, while we figure out the nested dialog bug
-      openModal({
-        name: 'edit-profile',
-        profile,
-      })
-    } else {
-      editProfileControl.open()
-    }
-  }, [editProfileControl, openModal, profile])
 
   const onPressFollow = () => {
     requireAuth(async () => {
@@ -151,6 +139,8 @@ let ProfileHeaderStandard = ({
     [currentAccount, profile],
   )
 
+  const {isActive: live} = useActorStatus(profile)
+
   return (
     <ProfileHeaderShell
       profile={profile}
@@ -178,7 +168,7 @@ let ProfileHeaderStandard = ({
                 size="small"
                 color="secondary"
                 variant="solid"
-                onPress={onPressEditProfile}
+                onPress={editProfileControl.open}
                 label={_(msg`Edit profile`)}
                 style={[a.rounded_full]}>
                 <ButtonText>
@@ -241,7 +231,8 @@ let ProfileHeaderStandard = ({
           ) : null}
           <ProfileMenu profile={profile} />
         </View>
-        <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_sm]}>
+        <View
+          style={[a.flex_col, a.gap_2xs, a.pb_sm, live ? a.pt_sm : a.pt_2xs]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
             <Text
               emoji

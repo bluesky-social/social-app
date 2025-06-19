@@ -33,24 +33,21 @@ import {Provider as PrefsStateProvider} from '#/state/preferences'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import {Provider as ModerationOptsProvider} from '#/state/preferences/moderation-opts'
 import {Provider as UnreadNotifsProvider} from '#/state/queries/notifications/unread'
+import {Provider as ServiceConfigProvider} from '#/state/service-config'
 import {
   Provider as SessionProvider,
-  SessionAccount,
+  type SessionAccount,
   useSession,
   useSessionApi,
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as ComposerProvider} from '#/state/shell/composer'
-import {Provider as LightStatusBarProvider} from '#/state/shell/light-status-bar'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
-import {Provider as TrendingConfigProvider} from '#/state/trending-config'
-import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoWebContext'
-import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
@@ -61,7 +58,10 @@ import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
+import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 /**
  * Begin geolocation ASAP
@@ -131,12 +131,14 @@ function InnerApp() {
                                           <MutedThreadsProvider>
                                             <SafeAreaProvider>
                                               <ProgressGuideProvider>
-                                                <TrendingConfigProvider>
-                                                  <IntentDialogProvider>
-                                                    <Shell />
-                                                    <NuxDialogs />
-                                                  </IntentDialogProvider>
-                                                </TrendingConfigProvider>
+                                                <ServiceConfigProvider>
+                                                  <HideBottomBarBorderProvider>
+                                                    <IntentDialogProvider>
+                                                      <Shell />
+                                                      <NuxDialogs />
+                                                    </IntentDialogProvider>
+                                                  </HideBottomBarBorderProvider>
+                                                </ServiceConfigProvider>
                                               </ProgressGuideProvider>
                                             </SafeAreaProvider>
                                           </MutedThreadsProvider>
@@ -193,9 +195,7 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <LightStatusBarProvider>
-                              <InnerApp />
-                            </LightStatusBarProvider>
+                            <InnerApp />
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>

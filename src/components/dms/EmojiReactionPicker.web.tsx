@@ -4,10 +4,10 @@ import {type ChatBskyConvoDefs} from '@atproto/api'
 import EmojiPicker from '@emoji-mart/react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import {DropdownMenu} from 'radix-ui'
 
 import {useSession} from '#/state/session'
-import {type Emoji} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+import {type Emoji} from '#/view/com/composer/text-input/web/EmojiPicker'
 import {useWebPreloadEmoji} from '#/view/com/composer/text-input/web/useWebPreloadEmoji'
 import {atoms as a, flatten, useTheme} from '#/alf'
 import {DotGrid_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons/DotGrid'
@@ -33,9 +33,7 @@ export function EmojiReactionPicker({
   return (
     <Menu.Root>
       <Menu.Trigger label={_(msg`Add emoji reaction`)}>{children}</Menu.Trigger>
-      <Menu.Outer>
-        <MenuInner message={message} onEmojiSelect={onEmojiSelect} />
-      </Menu.Outer>
+      <MenuInner message={message} onEmojiSelect={onEmojiSelect} />
     </Menu.Root>
   )
 }
@@ -55,6 +53,15 @@ function MenuInner({
 
   const [expanded, setExpanded] = useState(false)
 
+  const [prevOpen, setPrevOpen] = useState(control.isOpen)
+
+  if (control.isOpen !== prevOpen) {
+    setPrevOpen(control.isOpen)
+    if (!control.isOpen) {
+      setExpanded(false)
+    }
+  }
+
   const handleEmojiPickerResponse = (emoji: Emoji) => {
     handleEmojiSelect(emoji.native)
   }
@@ -67,7 +74,16 @@ function MenuInner({
   const limitReacted = hasReachedReactionLimit(message, currentAccount?.did)
 
   return expanded ? (
-    <EmojiPicker onEmojiSelect={handleEmojiPickerResponse} autoFocus={true} />
+    <DropdownMenu.Portal>
+      <DropdownMenu.Content
+        sideOffset={5}
+        collisionPadding={{left: 5, right: 5, bottom: 5}}>
+        <EmojiPicker
+          onEmojiSelect={handleEmojiPickerResponse}
+          autoFocus={true}
+        />
+      </DropdownMenu.Content>
+    </DropdownMenu.Portal>
   ) : (
     <Menu.Outer style={[a.rounded_full]}>
       <View style={[a.flex_row, a.gap_xs]}>

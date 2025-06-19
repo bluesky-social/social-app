@@ -1,8 +1,9 @@
 import React from 'react'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  ModerationDecision,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyUnspeccedGetPostThreadV2,
+  type ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,7 +13,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
 import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
-import type {EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
 
 export interface ComposerOptsPostRef {
@@ -24,9 +25,17 @@ export interface ComposerOptsPostRef {
   moderation?: ModerationDecision
 }
 
+export type OnPostSuccessData =
+  | {
+      replyToUri?: string
+      posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
+    }
+  | undefined
+
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
+  onPostSuccess?: (data: OnPostSuccessData) => void
   quote?: AppBskyFeedDefs.PostView
   mention?: string // handle of user to mention
   openEmojiPicker?: (pos: EmojiPickerPosition | undefined) => void
@@ -125,5 +134,17 @@ export function useComposerState() {
 }
 
 export function useComposerControls() {
-  return React.useContext(controlsContext)
+  const {closeComposer} = React.useContext(controlsContext)
+  return React.useMemo(() => ({closeComposer}), [closeComposer])
+}
+
+/**
+ * DO NOT USE DIRECTLY. The deprecation notice as a warning only, it's not
+ * actually deprecated.
+ *
+ * @deprecated use `#/lib/hooks/useOpenComposer` instead
+ */
+export function useOpenComposer() {
+  const {openComposer} = React.useContext(controlsContext)
+  return React.useMemo(() => ({openComposer}), [openComposer])
 }

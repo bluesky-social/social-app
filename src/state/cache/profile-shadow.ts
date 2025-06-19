@@ -21,6 +21,7 @@ import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '#/state/queries/profile-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '#/state/queries/suggested-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersQueryData} from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
 import type * as bsky from '#/types/bsky'
 import {castAsShadow, type Shadow} from './types'
 
@@ -31,6 +32,7 @@ export interface ProfileShadow {
   muted: boolean | undefined
   blockingUri: string | undefined
   verification: AppBskyActorDefs.VerificationState
+  status: AppBskyActorDefs.StatusView | undefined
 }
 
 const shadows: WeakMap<
@@ -138,6 +140,12 @@ function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
     },
     verification:
       'verification' in shadow ? shadow.verification : profile.verification,
+    status:
+      'status' in shadow
+        ? shadow.status
+        : 'status' in profile
+        ? profile.status
+        : undefined,
   })
 }
 
@@ -160,6 +168,7 @@ function* findProfilesInCache(
   yield* findAllProfilesInListConvosQueryData(queryClient, did)
   yield* findAllProfilesInFeedsQueryData(queryClient, did)
   yield* findAllProfilesInPostThreadQueryData(queryClient, did)
+  yield* findAllProfilesInPostThreadV2QueryData(queryClient, did)
   yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
   yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did)
 }
