@@ -28,6 +28,10 @@ export type NotificationReason =
   | 'quote'
   | 'chat-message'
   | 'starterpack-joined'
+  | 'like-via-repost'
+  | 'repost-via-repost'
+  | 'verified'
+  | 'unverified'
 
 /**
  * Manually overridden type, but retains the possibility of
@@ -223,6 +227,10 @@ export function useNotificationsHandler() {
           case 'quote':
           case 'reply':
           case 'starterpack-joined':
+          case 'like-via-repost':
+          case 'repost-via-repost':
+          case 'verified':
+          case 'unverified':
             resetToTab('NotificationsTab')
             break
           // TODO implement these after we have an idea of how to handle each individual case
