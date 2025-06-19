@@ -294,14 +294,19 @@ function DisabledNotificationsWarning({active}: {active: boolean}) {
 
   if (!data) return null
 
-  return (
-    <View style={[a.py_md, a.px_lg, a.border_b, t.atoms.border_contrast_low]}>
-      <Admonition type="warning">
-        <Trans>
-          You have completely disabled reply, quote, and mention notifications,
-          so this tab will no longer update.
-        </Trans>
-      </Admonition>
-    </View>
-  )
+  if (!data.reply.list && !data.quote.list && !data.mention.list) {
+    // mention tab notifications are disabled
+    return (
+      <View style={[a.py_md, a.px_lg, a.border_b, t.atoms.border_contrast_low]}>
+        <Admonition type="warning">
+          <Trans>
+            You have completely disabled reply, quote, and mention
+            notifications, so this tab will no longer update.
+          </Trans>
+        </Admonition>
+      </View>
+    )
+  }
+
+  return null
 }
