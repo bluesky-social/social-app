@@ -285,12 +285,7 @@ function NotificationsTab({
 
 function DisabledNotificationsWarning({active}: {active: boolean}) {
   const t = useTheme()
-  const [hasBeenActive, setHasBeenActive] = useState(false)
-  const {data} = useNotificationSettingsQuery({enabled: hasBeenActive})
-
-  if (active && !hasBeenActive) {
-    setHasBeenActive(true)
-  }
+  const {data} = useNotificationSettingsQuery({enabled: active})
 
   if (!data) return null
 
