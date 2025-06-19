@@ -95,7 +95,7 @@ msgstr ""
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:474
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:468
 #: src/view/com/post-thread/PostThreadItem.tsx:541
 msgid "{0, plural, one {like} other {likes}}"
 msgstr ""
@@ -104,12 +104,12 @@ msgstr ""
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:458
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:452
 #: src/view/com/post-thread/PostThreadItem.tsx:525
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:440
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:434
 #: src/view/com/post-thread/PostThreadItem.tsx:507
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr ""
@@ -499,8 +499,8 @@ msgstr ""
 
 #: src/Navigation.tsx:490
 #: src/screens/Settings/AboutSettings.tsx:75
-#: src/screens/Settings/Settings.tsx:234
-#: src/screens/Settings/Settings.tsx:237
+#: src/screens/Settings/Settings.tsx:238
+#: src/screens/Settings/Settings.tsx:241
 msgid "About"
 msgstr ""
 
@@ -519,8 +519,8 @@ msgid "Accept Request"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:46
-#: src/screens/Settings/Settings.tsx:210
-#: src/screens/Settings/Settings.tsx:213
+#: src/screens/Settings/Settings.tsx:214
+#: src/screens/Settings/Settings.tsx:217
 msgid "Accessibility"
 msgstr ""
 
@@ -531,8 +531,8 @@ msgstr ""
 #: src/Navigation.tsx:381
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:48
-#: src/screens/Settings/Settings.tsx:164
-#: src/screens/Settings/Settings.tsx:167
+#: src/screens/Settings/Settings.tsx:166
+#: src/screens/Settings/Settings.tsx:169
 msgid "Account"
 msgstr ""
 
@@ -563,11 +563,11 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:514
+#: src/screens/Settings/Settings.tsx:518
 msgid "Account options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:550
+#: src/screens/Settings/Settings.tsx:554
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -639,8 +639,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:454
-#: src/screens/Settings/Settings.tsx:457
+#: src/screens/Settings/Settings.tsx:458
+#: src/screens/Settings/Settings.tsx:461
 #: src/view/shell/desktop/LeftNav.tsx:260
 #: src/view/shell/desktop/LeftNav.tsx:264
 msgid "Add another account"
@@ -1040,8 +1040,8 @@ msgstr ""
 
 #: src/Navigation.tsx:373
 #: src/screens/Settings/AppearanceSettings.tsx:85
-#: src/screens/Settings/Settings.tsx:202
-#: src/screens/Settings/Settings.tsx:205
+#: src/screens/Settings/Settings.tsx:206
+#: src/screens/Settings/Settings.tsx:209
 msgid "Appearance"
 msgstr ""
 
@@ -1050,13 +1050,13 @@ msgstr ""
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:640
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:634
 #: src/view/com/post-thread/PostThreadItem.tsx:955
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:609
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:648
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:603
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:642
 #: src/view/com/post-thread/PostThreadItem.tsx:924
 #: src/view/com/post-thread/PostThreadItem.tsx:963
 msgid "Archived post"
@@ -1297,7 +1297,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:665
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:659
 #: src/view/com/post-thread/PostThreadItem.tsx:980
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
@@ -1455,7 +1455,7 @@ msgstr ""
 #: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:78
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:85
-#: src/screens/Settings/Settings.tsx:279
+#: src/screens/Settings/Settings.tsx:283
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
 #: src/view/com/composer/Composer.tsx:960
@@ -1466,8 +1466,6 @@ msgstr ""
 #: src/view/com/modals/ChangePassword.tsx:282
 #: src/view/com/modals/CreateOrEditList.tsx:333
 #: src/view/com/modals/CropImage.web.tsx:97
-#: src/view/com/modals/LinkWarning.tsx:105
-#: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/shell/desktop/LeftNav.tsx:213
 msgid "Cancel"
 msgstr ""
@@ -1498,10 +1496,6 @@ msgstr ""
 
 #: src/screens/Search/Shell.tsx:341
 msgid "Cancel search"
-msgstr ""
-
-#: src/view/com/modals/LinkWarning.tsx:106
-msgid "Cancels opening the linked website"
 msgstr ""
 
 #: src/components/PostControls/index.tsx:101
@@ -1668,11 +1662,11 @@ msgstr ""
 msgid "Choose your username"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:432
+#: src/screens/Settings/Settings.tsx:436
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:434
+#: src/screens/Settings/Settings.tsx:438
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -1762,7 +1756,7 @@ msgstr ""
 msgid "Close dialog"
 msgstr ""
 
-#: src/view/shell/index.web.tsx:85
+#: src/view/shell/index.web.tsx:87
 msgid "Close drawer menu"
 msgstr ""
 
@@ -1920,8 +1914,8 @@ msgid "Content & Media"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:109
-#: src/screens/Settings/Settings.tsx:194
-#: src/screens/Settings/Settings.tsx:197
+#: src/screens/Settings/Settings.tsx:198
+#: src/screens/Settings/Settings.tsx:201
 msgid "Content and media"
 msgstr ""
 
@@ -2267,7 +2261,7 @@ msgstr ""
 msgid "Deactivate account"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:406
+#: src/screens/Settings/Settings.tsx:410
 msgid "Debug Moderation"
 msgstr ""
 
@@ -2316,7 +2310,7 @@ msgstr ""
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:413
+#: src/screens/Settings/Settings.tsx:417
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -2425,8 +2419,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:261
-#: src/screens/Settings/Settings.tsx:264
+#: src/screens/Settings/Settings.tsx:265
+#: src/screens/Settings/Settings.tsx:268
 msgid "Developer options"
 msgstr ""
 
@@ -2991,8 +2985,8 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:83
 #: src/screens/Messages/Settings.tsx:86
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:153
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:167
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:160
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:174
 msgid "Everyone"
 msgstr ""
 
@@ -3245,7 +3239,7 @@ msgstr ""
 msgid "Failed to save settings. Please try again."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:136
+#: src/screens/Settings/InterestsSettings.tsx:132
 msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr ""
@@ -3372,6 +3366,10 @@ msgstr ""
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:154
+msgid "Filter who you receive notifications from"
 msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:314
@@ -3589,6 +3587,10 @@ msgstr ""
 msgid "Frequently Posts Unwanted Content"
 msgstr ""
 
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:150
+msgid "From"
+msgstr ""
+
 #: src/screens/Hashtag.tsx:120
 msgid "From @{sanitizedAuthor}"
 msgstr ""
@@ -3664,6 +3666,8 @@ msgstr ""
 msgid "Glaring violations of law or terms of service"
 msgstr ""
 
+#: src/components/dialogs/LinkWarning.tsx:111
+#: src/components/dialogs/LinkWarning.tsx:117
 #: src/components/Layout/Header/index.tsx:127
 #: src/components/moderation/ScreenHider.tsx:154
 #: src/components/moderation/ScreenHider.tsx:163
@@ -3799,8 +3803,8 @@ msgstr ""
 msgid "Having trouble?"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:226
 #: src/screens/Settings/Settings.tsx:230
+#: src/screens/Settings/Settings.tsx:234
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
 #: src/view/shell/Drawer.tsx:370
@@ -4067,7 +4071,7 @@ msgstr ""
 msgid "In-app"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:134
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:139
 msgid "In-app notifications"
 msgstr ""
 
@@ -4258,8 +4262,8 @@ msgid "Language Settings"
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:78
-#: src/screens/Settings/Settings.tsx:218
-#: src/screens/Settings/Settings.tsx:221
+#: src/screens/Settings/Settings.tsx:222
+#: src/screens/Settings/Settings.tsx:225
 msgid "Languages"
 msgstr ""
 
@@ -4346,7 +4350,8 @@ msgstr ""
 msgid "Leave them all unchecked to see any language."
 msgstr ""
 
-#: src/view/com/modals/LinkWarning.tsx:65
+#: src/components/dialogs/LinkWarning.tsx:67
+#: src/components/dialogs/LinkWarning.tsx:75
 msgid "Leaving Bluesky"
 msgstr ""
 
@@ -4431,7 +4436,7 @@ msgstr ""
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:159
+#: src/screens/Settings/NotificationSettings/index.tsx:126
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:41
 #: src/view/screens/Profile.tsx:229
 msgid "Likes"
@@ -4446,7 +4451,7 @@ msgstr ""
 msgid "Likes of your reposts notifications"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:467
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:461
 #: src/view/com/post-thread/PostThreadItem.tsx:243
 msgid "Likes on this post"
 msgstr ""
@@ -4614,7 +4619,7 @@ msgstr ""
 msgid "Make one for me"
 msgstr ""
 
-#: src/view/com/modals/LinkWarning.tsx:79
+#: src/components/dialogs/LinkWarning.tsx:85
 msgid "Make sure this is where you intend to go!"
 msgstr ""
 
@@ -4672,7 +4677,7 @@ msgstr ""
 msgid "Mentioned users"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:137
+#: src/screens/Settings/NotificationSettings/index.tsx:159
 #: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:41
 #: src/view/screens/Notifications.tsx:99
 msgid "Mentions"
@@ -4741,8 +4746,8 @@ msgstr ""
 
 #: src/Navigation.tsx:159
 #: src/screens/Moderation/index.tsx:93
-#: src/screens/Settings/Settings.tsx:178
-#: src/screens/Settings/Settings.tsx:181
+#: src/screens/Settings/Settings.tsx:180
+#: src/screens/Settings/Settings.tsx:183
 msgid "Moderation"
 msgstr ""
 
@@ -5024,7 +5029,7 @@ msgstr ""
 msgid "New follower notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:181
+#: src/screens/Settings/NotificationSettings/index.tsx:137
 #: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:41
 msgid "New followers"
 msgstr ""
@@ -5307,8 +5312,8 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:186
 #: src/screens/Settings/Settings.tsx:189
+#: src/screens/Settings/Settings.tsx:192
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:654
@@ -5361,7 +5366,7 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:670
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:664
 #: src/view/com/post-thread/PostThreadItem.tsx:985
 msgid "Okay"
 msgstr ""
@@ -5381,7 +5386,7 @@ msgstr ""
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:367
+#: src/screens/Settings/Settings.tsx:371
 msgid "Onboarding reset"
 msgstr ""
 
@@ -5473,7 +5478,7 @@ msgstr ""
 msgid "Open message options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:404
+#: src/screens/Settings/Settings.tsx:408
 msgid "Open moderation debug page"
 msgstr ""
 
@@ -5502,12 +5507,12 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:397
-#: src/screens/Settings/Settings.tsx:411
+#: src/screens/Settings/Settings.tsx:401
+#: src/screens/Settings/Settings.tsx:415
 msgid "Open storybook page"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:390
+#: src/screens/Settings/Settings.tsx:394
 msgid "Open system log"
 msgstr ""
 
@@ -5569,8 +5574,12 @@ msgstr ""
 msgid "Opens GIF select dialog"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:227
+#: src/screens/Settings/Settings.tsx:231
 msgid "Opens helpdesk in browser"
+msgstr ""
+
+#: src/components/dialogs/LinkWarning.tsx:97
+msgid "Opens link {0}"
 msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:173
@@ -5583,10 +5592,6 @@ msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:249
 msgid "Opens password reset form"
-msgstr ""
-
-#: src/view/com/modals/LinkWarning.tsx:93
-msgid "Opens the linked website"
 msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:850
@@ -5715,8 +5720,8 @@ msgstr ""
 msgid "People following @{0}"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:171
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:185
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:178
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:192
 msgid "People I follow"
 msgstr ""
 
@@ -6043,8 +6048,12 @@ msgstr ""
 msgid "Posts hidden"
 msgstr ""
 
-#: src/view/com/modals/LinkWarning.tsx:60
-msgid "Potentially Misleading Link"
+#: src/components/dialogs/LinkWarning.tsx:73
+msgid "Potentially misleading link"
+msgstr ""
+
+#: src/components/dialogs/LinkWarning.tsx:66
+msgid "Potentially misleading link warning"
 msgstr ""
 
 #: src/screens/Messages/components/MessageListError.tsx:19
@@ -6082,8 +6091,8 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:172
-#: src/screens/Settings/Settings.tsx:175
+#: src/screens/Settings/Settings.tsx:174
+#: src/screens/Settings/Settings.tsx:177
 msgid "Privacy and security"
 msgstr ""
 
@@ -6163,7 +6172,7 @@ msgstr ""
 msgid "Push"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:117
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:122
 msgid "Push notifications"
 msgstr ""
 
@@ -6218,12 +6227,12 @@ msgid "Quote settings"
 msgstr ""
 
 #: src/screens/Post/PostQuotes.tsx:38
-#: src/screens/Settings/NotificationSettings/index.tsx:148
+#: src/screens/Settings/NotificationSettings/index.tsx:170
 #: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:41
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:451
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:445
 #: src/view/com/post-thread/PostThreadItem.tsx:269
 msgid "Quotes of this post"
 msgstr ""
@@ -6296,11 +6305,11 @@ msgstr ""
 msgid "Reason:"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:123
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:128
 msgid "Receive in-app notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:106
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:111
 msgid "Receive push notifications"
 msgstr ""
 
@@ -6335,7 +6344,7 @@ msgstr ""
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
-#: src/screens/Settings/Settings.tsx:552
+#: src/screens/Settings/Settings.tsx:556
 #: src/view/com/feeds/FeedSourceCard.tsx:322
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:213
@@ -6350,8 +6359,8 @@ msgstr ""
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:531
-#: src/screens/Settings/Settings.tsx:534
+#: src/screens/Settings/Settings.tsx:535
+#: src/screens/Settings/Settings.tsx:538
 msgid "Remove account"
 msgstr ""
 
@@ -6392,7 +6401,7 @@ msgstr ""
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:544
+#: src/screens/Settings/Settings.tsx:548
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -6487,7 +6496,7 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:126
+#: src/screens/Settings/NotificationSettings/index.tsx:148
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:41
 #: src/view/screens/Profile.tsx:226
 msgid "Replies"
@@ -6701,12 +6710,12 @@ msgstr ""
 msgid "Reposted by you"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:170
+#: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:41
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:433
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:427
 #: src/view/com/post-thread/PostThreadItem.tsx:248
 msgid "Reposts of this post"
 msgstr ""
@@ -6768,8 +6777,8 @@ msgstr ""
 msgid "Reset Code"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:418
-#: src/screens/Settings/Settings.tsx:420
+#: src/screens/Settings/Settings.tsx:422
+#: src/screens/Settings/Settings.tsx:424
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -7140,12 +7149,16 @@ msgid "Select your date of birth"
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:192
-#: src/screens/Settings/InterestsSettings.tsx:165
+#: src/screens/Settings/InterestsSettings.tsx:161
 msgid "Select your interests from the options below"
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:124
 msgid "Select your preferred language for translations in your feed."
+msgstr ""
+
+#: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:106
+msgid "Select your preferred notification channels"
 msgstr ""
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
@@ -7242,21 +7255,21 @@ msgid "Sets email for password reset"
 msgstr ""
 
 #: src/Navigation.tsx:195
-#: src/screens/Settings/Settings.tsx:91
+#: src/screens/Settings/Settings.tsx:93
 #: src/view/shell/desktop/LeftNav.tsx:727
 #: src/view/shell/Drawer.tsx:572
 msgid "Settings"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:154
+#: src/screens/Settings/NotificationSettings/index.tsx:121
 msgid "Settings for like notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:132
+#: src/screens/Settings/NotificationSettings/index.tsx:154
 msgid "Settings for mention notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:176
+#: src/screens/Settings/NotificationSettings/index.tsx:132
 msgid "Settings for new follower notifications"
 msgstr ""
 
@@ -7272,15 +7285,15 @@ msgstr ""
 msgid "Settings for notifications for reposts of your reposts"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:143
+#: src/screens/Settings/NotificationSettings/index.tsx:165
 msgid "Settings for quote notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:121
+#: src/screens/Settings/NotificationSettings/index.tsx:143
 msgid "Settings for reply notifications"
 msgstr ""
 
-#: src/screens/Settings/NotificationSettings/index.tsx:165
+#: src/screens/Settings/NotificationSettings/index.tsx:176
 msgid "Settings for repost notifications"
 msgstr ""
 
@@ -7327,14 +7340,11 @@ msgstr ""
 msgid "Share author DID"
 msgstr ""
 
+#: src/components/dialogs/LinkWarning.tsx:96
+#: src/components/dialogs/LinkWarning.tsx:104
 #: src/components/StarterPack/ShareDialog.tsx:104
 #: src/components/StarterPack/ShareDialog.tsx:111
 msgid "Share link"
-msgstr ""
-
-#: src/view/com/modals/LinkWarning.tsx:89
-#: src/view/com/modals/LinkWarning.tsx:95
-msgid "Share Link"
 msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:68
@@ -7378,10 +7388,6 @@ msgstr ""
 
 #: src/Navigation.tsx:298
 msgid "Shared Preferences Tester"
-msgstr ""
-
-#: src/view/com/modals/LinkWarning.tsx:92
-msgid "Shares the linked website"
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:200
@@ -7496,12 +7502,12 @@ msgstr ""
 msgid "Show warning and filter from feeds"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:611
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:605
 #: src/view/com/post-thread/PostThreadItem.tsx:926
 msgid "Shows information about when this post was created"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:115
+#: src/screens/Settings/Settings.tsx:117
 msgid "Shows other accounts you can switch to"
 msgstr ""
 
@@ -7558,9 +7564,9 @@ msgstr ""
 msgid "Sign in to view post"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:244
-#: src/screens/Settings/Settings.tsx:246
-#: src/screens/Settings/Settings.tsx:278
+#: src/screens/Settings/Settings.tsx:248
+#: src/screens/Settings/Settings.tsx:250
+#: src/screens/Settings/Settings.tsx:282
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:85
@@ -7574,7 +7580,7 @@ msgstr ""
 msgid "Sign Out"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:275
+#: src/screens/Settings/Settings.tsx:279
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Sign out?"
 msgstr ""
@@ -7777,12 +7783,12 @@ msgstr ""
 msgid "Step {0} of {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:372
+#: src/screens/Settings/Settings.tsx:376
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
 #: src/Navigation.tsx:288
-#: src/screens/Settings/Settings.tsx:399
+#: src/screens/Settings/Settings.tsx:403
 msgid "Storybook"
 msgstr ""
 
@@ -7864,9 +7870,9 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:113
-#: src/screens/Settings/Settings.tsx:127
-#: src/screens/Settings/Settings.tsx:494
+#: src/screens/Settings/Settings.tsx:115
+#: src/screens/Settings/Settings.tsx:129
+#: src/screens/Settings/Settings.tsx:498
 #: src/view/shell/desktop/LeftNav.tsx:246
 msgid "Switch account"
 msgstr ""
@@ -7893,7 +7899,7 @@ msgstr ""
 
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:392
+#: src/screens/Settings/Settings.tsx:396
 msgid "System log"
 msgstr ""
 
@@ -8339,7 +8345,7 @@ msgstr ""
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
-#: src/view/com/modals/LinkWarning.tsx:72
+#: src/components/dialogs/LinkWarning.tsx:79
 msgid "This link is taking you to the following website:"
 msgstr ""
 
@@ -8359,7 +8365,7 @@ msgstr ""
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:651
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:645
 #: src/view/com/post-thread/PostThreadItem.tsx:966
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
@@ -8441,7 +8447,7 @@ msgstr ""
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:546
+#: src/screens/Settings/Settings.tsx:550
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -8539,8 +8545,8 @@ msgstr ""
 #: src/components/dms/MessageContextMenu.tsx:145
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:573
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:576
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:567
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:570
 #: src/view/com/post-thread/PostThreadItem.tsx:888
 #: src/view/com/post-thread/PostThreadItem.tsx:891
 msgid "Translate"
@@ -8758,8 +8764,8 @@ msgstr ""
 msgid "Unpinned from your feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:425
-#: src/screens/Settings/Settings.tsx:427
+#: src/screens/Settings/Settings.tsx:429
+#: src/screens/Settings/Settings.tsx:431
 msgid "Unsnooze email reminder"
 msgstr ""
 
@@ -9225,9 +9231,9 @@ msgstr ""
 msgid "Views video in immersive mode"
 msgstr ""
 
-#: src/view/com/modals/LinkWarning.tsx:89
-#: src/view/com/modals/LinkWarning.tsx:95
-msgid "Visit Site"
+#: src/components/dialogs/LinkWarning.tsx:96
+#: src/components/dialogs/LinkWarning.tsx:106
+msgid "Visit site"
 msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:81
@@ -9281,7 +9287,7 @@ msgstr ""
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:158
+#: src/screens/Settings/InterestsSettings.tsx:154
 msgid "We recommend selecting at least two interests."
 msgstr ""
 
@@ -9753,7 +9759,7 @@ msgstr ""
 msgid "You previously deactivated @{0}."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:383
+#: src/screens/Settings/Settings.tsx:387
 msgid "You probably want to restart the app now."
 msgstr ""
 
@@ -9765,7 +9771,7 @@ msgstr ""
 msgid "You reacted {0} to {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:276
+#: src/screens/Settings/Settings.tsx:280
 #: src/view/shell/desktop/LeftNav.tsx:210
 msgid "You will be signed out of all your accounts."
 msgstr ""
@@ -9943,7 +9949,7 @@ msgstr ""
 msgid "Your interests"
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:127
+#: src/screens/Settings/InterestsSettings.tsx:123
 msgctxt "toast"
 msgid "Your interests have been updated!"
 msgstr ""
