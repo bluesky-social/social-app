@@ -1,6 +1,11 @@
-import {useEffect} from 'react'
+import {useEffect, useMemo} from 'react'
+import {useWindowDimensions} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
-import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  type LayoutAnimation,
+  withTiming,
+} from 'react-native-reanimated'
 
 import {useComposerState} from '#/state/shell/composer'
 import {ComposePost} from '#/view/com/composer/Composer'
@@ -9,8 +14,48 @@ import {atoms as a, useTheme} from '#/alf'
 export function Composer() {
   const state = useComposerState()
   const t = useTheme()
+  const {height} = useWindowDimensions()
 
   const open = !!state
+
+  // HACKFIX: the builtin "SlideInDown" and "SlideOutDown"
+  // animations are broken, because they rely on getting the window
+  // height from reanimated and it appears to be 0 initially.
+  // We can recreate the same animation but just pass in the window
+  // dimensions from JS -sfn
+  // TODO: Fix upstream
+  const {EnterAnimation, ExitAnimation} = useMemo(() => {
+    return {
+      EnterAnimation: (): LayoutAnimation => {
+        'worklet'
+        return {
+          animations: {
+            originY: withTiming(0, {
+              duration: 200,
+              easing: Easing.out(Easing.quad),
+            }),
+          },
+          initialValues: {
+            originY: height,
+          },
+        }
+      },
+      ExitAnimation: (): LayoutAnimation => {
+        'worklet'
+        return {
+          animations: {
+            originY: withTiming(height, {
+              duration: 200,
+              easing: Easing.in(Easing.quad),
+            }),
+          },
+          initialValues: {
+            originY: 0,
+          },
+        }
+      },
+    }
+  }, [height])
 
   useEffect(() => {
     if (open) {
@@ -30,8 +75,8 @@ export function Composer() {
   return (
     <Animated.View
       style={[a.absolute, a.inset_0, t.atoms.bg]}
-      entering={SlideInDown}
-      exiting={SlideOutDown}
+      entering={EnterAnimation}
+      exiting={ExitAnimation}
       aria-modal
       accessibilityViewIsModal>
       <ComposePost
