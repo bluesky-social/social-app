@@ -1,4 +1,3 @@
-import {adaptiveFetchAndUpdate, eventCache} from './cache/cache.js'
 import {Database, envToCfg, httpLogger, LinkService, readEnv} from './index.js'
 async function main() {
   const env = readEnv()
@@ -15,13 +14,11 @@ async function main() {
   const link = await LinkService.create(cfg)
 
   if (cfg.service.safelink === 1) {
-    eventCache.init(cfg.service)
-    adaptiveFetchAndUpdate()
+    cfg.eventCache.adaptiveFetchAndUpdate()
   }
 
   await link.start()
   httpLogger.info('link service is running')
-  console.log('running service')
   process.on('SIGTERM', async () => {
     httpLogger.info('link service is stopping')
     await link.destroy()

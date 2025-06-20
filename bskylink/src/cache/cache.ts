@@ -8,11 +8,9 @@ let cacheCursor: string | undefined
 export class EventCache {
   private rules = new Map<string, ToolsOzoneSafelinkDefs.Event>()
   private cfg: ServiceConfig | undefined = undefined
+  private pollInterval = 1 * 1000 // start at 1 second
 
-  constructor() {
-    this.cfg = undefined
-  }
-  async init(cfg: ServiceConfig) {
+  constructor(cfg: ServiceConfig) {
     this.cfg = cfg
   }
 
@@ -37,14 +35,12 @@ export class EventCache {
       )
 
       if (event.action === ToolsOzoneSafelinkDefs.REMOVERULE) {
-        // If the action is to remove the rule, delete it from the cache
         this.insert(domain, event)
         redirectLogger.info(
           `[EventCache] Removed rule for domain, adjusted audit log: ${domain}`,
         )
         return
       }
-      // if update should happen
       if (event.action === ToolsOzoneSafelinkDefs.WHITELIST) {
         this.insert(domain, event)
         redirectLogger.info(`[EventCache] Whitelisted domain: ${domain}`)
@@ -75,12 +71,10 @@ export class EventCache {
       `[EventCache] smartUpdateUrl called for url: ${event.url}, action: ${event.action}`,
     )
     if (event.action === ToolsOzoneSafelinkDefs.REMOVERULE) {
-      // If the action is to remove the rule, update it from the cache
       this.insert(event.url, event)
       redirectLogger.info(`[EventCache] Removed rule for url: ${event.url}`)
       return
     }
-    // if update should happen
     if (event.action === ToolsOzoneSafelinkDefs.WHITELIST) {
       this.insert(event.url, event)
       redirectLogger.info(`[EventCache] Whitelisted url: ${event.url}`)
@@ -98,7 +92,6 @@ export class EventCache {
     }
   }
 
-  // Insert or update an event
   smartUpdate(event: ToolsOzoneSafelinkDefs.Event) {
     if (event.pattern === ToolsOzoneSafelinkDefs.DOMAIN) {
       redirectLogger.info(
@@ -124,19 +117,16 @@ export class EventCache {
     const domain = parsedUrl.hostname
     const domainAndPath = domain + parsedUrl.pathname
 
-    // 1. Check for a rule by domain only
     const byDomain = this.rules.get(domain)
     if (byDomain) {
       return byDomain
     }
 
-    // 2. Check for a rule by domain + path
     const byDomainAndPath = this.rules.get(domainAndPath)
     if (byDomainAndPath) {
       return byDomainAndPath
     }
 
-    // 3. Check for a rule by full URL
     return this.rules.get(url)
   }
 
@@ -144,112 +134,106 @@ export class EventCache {
     this.rules.delete(event.url)
   }
 
-  // Get an event by full URL
   get(url: string): ToolsOzoneSafelinkDefs.Event | undefined {
     const event = this.rules.get(url)
     return event
   }
 
-  // List all events
   list(): ToolsOzoneSafelinkDefs.Event[] {
     return Array.from(this.rules.values())
   }
-}
 
-// Adaptive polling: slow down if no new events, speed up if updates found
-let pollInterval = 1 * 1000 // start at 1 seconds
+  // Adaptive polling: slow down if no new events, speed up if updates found
+  async adaptiveFetchAndUpdate() {
+    const prevCursor = cacheCursor
+    const eventConfig = await this.getConfig()
+    if (eventConfig === undefined) {
+      redirectLogger.info(
+        `[adaptiveFetchAndUpdate] No Configuration found, skipping fetch.`,
+      )
+    } else {
+      await this.fetchAndUpdateEvents(eventConfig)
+    }
+    if (cacheCursor === prevCursor) {
+      this.pollInterval = Math.min(this.pollInterval * 2, 10 * 60 * 1000)
+      redirectLogger.info(
+        `[adaptiveFetchAndUpdate] No new events, backing off. Next poll in ${
+          this.pollInterval / 1000
+        }s`,
+      )
+    } else {
+      this.pollInterval = 5 * 1000
+      redirectLogger.info(
+        `[adaptiveFetchAndUpdate] New events found, resetting poll interval to ${
+          this.pollInterval / 1000
+        }s`,
+      )
+    }
+    setTimeout(() => this.adaptiveFetchAndUpdate(), this.pollInterval)
+  }
 
-export async function adaptiveFetchAndUpdate() {
-  const prevCursor = cacheCursor
-  const eventConfig = await eventCache.getConfig()
-  if (eventConfig === undefined) {
+  // Fetch and update events from the server
+  async fetchAndUpdateEvents(cfg: ServiceConfig) {
+    if (!cfg || !cfg.ozoneUrl || !cfg.ozoneAgentHandle || !cfg.ozoneAgentPass) {
+      console.error(
+        '[eventCache:fetchAndUpdateEvents] No active config, skipping actions',
+      )
+      return
+    }
     redirectLogger.info(
-      `[adaptiveFetchAndUpdate] No Configuration found, skipping fetch.`,
+      `[eventCache] Fetching events with cursor: ${cacheCursor}`,
     )
-  } else {
-    await fetchAndUpdateEvents(eventConfig)
-  }
-  // If no new events, increase interval (up to 10 minutes), else reset to 5s
-  if (cacheCursor === prevCursor) {
-    pollInterval = Math.min(pollInterval * 2, 10 * 60 * 1000)
+    const ozoneAgent = new OzoneAgent(cfg)
+    const ozoneSession = await ozoneAgent.getSession?.()
+    if (!ozoneSession) {
+      console.error(
+        '[eventCache:fetchAndUpdateEvents] No active session found.',
+      )
+      return
+    }
+    const ozoneDid = ozoneSession.did
+    if (!ozoneDid || ozoneDid === 'did:plc:invalid') {
+      console.error(
+        '[eventCache:fetchAndUpdateEvents] Invalid or missing session DID.',
+      )
+      return
+    }
+    ozoneAgent.agent.setHeader?.('atproto-proxy', `${ozoneDid}#atproto_labeler`)
+
+    const res = await ozoneAgent.agent.tools?.ozone?.safelink?.queryEvents?.({
+      cursor: cacheCursor,
+      limit: 100,
+    })
+
+    if (res?.data.cursor === cacheCursor) {
+      redirectLogger.info(
+        '[eventCache:fetchAndUpdateEvents] No new events to update.',
+      )
+      return
+    }
+
     redirectLogger.info(
-      `[adaptiveFetchAndUpdate] No new events, backing off. Next poll in ${
-        pollInterval / 1000
-      }s`,
+      `[eventCache:fetchAndUpdateEvents] Received response:`,
+      {
+        ...res,
+        data: {
+          ...res?.data,
+          rules: Array.isArray(res?.data?.events)
+            ? res.data.events.map(event => JSON.stringify(event))
+            : res?.data?.events,
+        },
+      },
     )
-  } else {
-    pollInterval = 5 * 1000
+
+    for (const event of res.data.events) {
+      this.smartUpdate(event)
+    }
+
+    cacheCursor = res.data?.cursor
+
     redirectLogger.info(
-      `[adaptiveFetchAndUpdate] New events found, resetting poll interval to ${
-        pollInterval / 1000
-      }s`,
+      '[eventCache:fetchAndUpdateEvents] Current cache contents:',
     )
+    redirectLogger.info(this.list())
   }
-  setTimeout(adaptiveFetchAndUpdate, pollInterval)
-}
-
-// Export a singleton instance
-export const eventCache = new EventCache()
-// Start adaptive polling
-// adaptiveFetchAndUpdate()
-
-// Function to fetch and update events from the server
-export async function fetchAndUpdateEvents(cfg: ServiceConfig) {
-  if (!cfg || !cfg.ozoneUrl || !cfg.ozoneAgentHandle || !cfg.ozoneAgentPass) {
-    console.error(
-      '[eventCache:fetchAndUpdateEvents] No active config, skipping actions',
-    )
-    return
-  }
-  redirectLogger.info(
-    `[eventCache] Fetching events with cursor: ${cacheCursor}`,
-  )
-  // Use current session DID instead of env variable
-  const ozoneAgent = await new OzoneAgent(cfg)
-  const ozoneSession = await ozoneAgent.getSession?.()
-  if (!ozoneSession) {
-    console.error('[eventCache:fetchAndUpdateEvents] No active session found.')
-    return
-  }
-  const ozoneDid = ozoneSession.did
-  if (!ozoneDid || ozoneDid === 'did:plc:invalid') {
-    console.error(
-      '[eventCache:fetchAndUpdateEvents] Invalid or missing session DID.',
-    )
-    return
-  }
-  ozoneAgent.agent.setHeader?.('atproto-proxy', `${ozoneDid}#atproto_labeler`)
-
-  const res = await ozoneAgent.agent.tools?.ozone?.safelink?.queryEvents?.({
-    cursor: cacheCursor,
-    limit: 100, // Adjust as needed
-  })
-
-  if (res?.data.cursor === cacheCursor) {
-    redirectLogger.info(
-      '[eventCache:fetchAndUpdateEvents] No new events to update.',
-    )
-    return
-  }
-
-  redirectLogger.info(`[eventCache:fetchAndUpdateEvents] Received response:`, {
-    ...res,
-    data: {
-      ...res?.data,
-      rules: Array.isArray(res?.data?.events)
-        ? res.data.events.map(event => JSON.stringify(event))
-        : res?.data?.events,
-    },
-  })
-
-  for (const event of res.data.events) {
-    eventCache.smartUpdate(event)
-  }
-
-  cacheCursor = res.data?.cursor
-
-  redirectLogger.info(
-    '[eventCache:fetchAndUpdateEvents] Current cache contents:',
-  )
-  redirectLogger.info(eventCache.list())
 }

@@ -1,7 +1,7 @@
 import {envInt, envList, envStr} from '@atproto/common'
 
 // import { type EventCache, eventCache } from '../cache/cache.js'
-import {type EventCache, eventCache} from './cache/cache.js'
+import {EventCache} from './cache/cache.js'
 
 export type Config = {
   service: ServiceConfig
@@ -95,6 +95,8 @@ export const envToCfg = (env: Environment): Config => {
       size: env.dbPostgresPoolSize ?? 10,
     },
   }
+
+  const eventCache = new EventCache(serviceCfg)
 
   return {
     service: serviceCfg,

@@ -81,9 +81,8 @@ describe('link service', async () => {
       reason: ToolsOzoneSafelinkDefs.SPAM,
       createdBy: 'did:example:admin',
       createdAt: now,
-      comment: 'BONES has been erroneously blocked by due to an error',
+      comment: 'BONES has been erroneously blocked for the sake of this test',
     })
-    // Ensure 'later' is after 'now'
     const later = new Date(Date.now() + 1000).toISOString()
     linkService.ctx.cfg.eventCache.smartUpdate({
       $type: 'tools.ozone.safelink.defs#event',
@@ -98,12 +97,6 @@ describe('link service', async () => {
       comment:
         'BONES has been resurrected to bring good music to the world once again',
     })
-
-    console.log(
-      linkService.ctx.cfg.eventCache.smartGet(
-        'https://www.instagram.com/teamseshbones/?hl=en',
-      ),
-    )
   })
   after(async () => {
     await linkService?.destroy()
