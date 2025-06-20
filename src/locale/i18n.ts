@@ -13,6 +13,7 @@ import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
 import {messages as messagesAn} from '#/locale/locales/an/messages'
 import {messages as messagesAst} from '#/locale/locales/ast/messages'
+import {messages as messagesAz} from '#/locale/locales/az/messages'
 import {messages as messagesCa} from '#/locale/locales/ca/messages'
 import {messages as messagesCy} from '#/locale/locales/cy/messages'
 import {messages as messagesDa} from '#/locale/locales/da/messages'
@@ -72,6 +73,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/ast'),
         import('@formatjs/intl-numberformat/locale-data/ast'),
+      ])
+      break
+    }
+    case AppLanguage.az: {
+      i18n.loadAndActivate({locale, messages: messagesAz})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/az'),
+        import('@formatjs/intl-numberformat/locale-data/az'),
       ])
       break
     }
