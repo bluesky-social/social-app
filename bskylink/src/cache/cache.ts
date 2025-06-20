@@ -26,39 +26,34 @@ export class EventCache {
   }
 
   smartUpdateDomain(event: ToolsOzoneSafelinkDefs.Event) {
+    let domain: string
     try {
-      const domain = new URL(event.url).hostname
-      event.url = domain
+      domain = new URL(event.url).hostname
+    } catch (error) {
+      redirectLogger.error(
+        `[EventCache:smartUpdateDomain] Invalid URL: ${event.url}, error: ${error}`,
+      )
+      throw new Error(
+        `[EventCache:smartUpdateDomain] Error parsing domain from URL: ${error}`,
+      )
+    }
+    event.url = domain
 
+    try {
       redirectLogger.info(
         `[EventCache] smartUpdateDomain called for domain: ${domain}, action: ${event.action}`,
       )
 
-      if (event.action === ToolsOzoneSafelinkDefs.REMOVERULE) {
+      if (event.action) {
         this.insert(domain, event)
         redirectLogger.info(
-          `[EventCache] Removed rule for domain, adjusted audit log: ${domain}`,
+          `[EventCache] rule updated or inserted for: ${domain}`,
         )
-        return
-      }
-      if (event.action === ToolsOzoneSafelinkDefs.WHITELIST) {
-        this.insert(domain, event)
-        redirectLogger.info(`[EventCache] Whitelisted domain: ${domain}`)
-        return
-      }
-      if (event.action === ToolsOzoneSafelinkDefs.BLOCK) {
-        this.insert(domain, event)
-        redirectLogger.info(`[EventCache] Blocked domain: ${domain}`)
-        return
-      }
-      if (event.action === ToolsOzoneSafelinkDefs.WARN) {
-        this.insert(domain, event)
-        redirectLogger.info(`[EventCache] Warned domain: ${domain}`)
         return
       }
     } catch (error) {
       redirectLogger.error(
-        `[EventCache:smartUpdateDomain] Error in smartUpdateDomain: ${error}`,
+        `[EventCache:smartUpdateDomain] Error updating rule for domain: ${domain}, error: ${error}`,
       )
       throw new Error(
         `[EventCache:smartUpdateDomain] Error processing domain event: ${error}`,
@@ -67,28 +62,36 @@ export class EventCache {
   }
 
   smartUpdateUrl(event: ToolsOzoneSafelinkDefs.Event) {
-    redirectLogger.info(
-      `[EventCache] smartUpdateUrl called for url: ${event.url}, action: ${event.action}`,
-    )
-    if (event.action === ToolsOzoneSafelinkDefs.REMOVERULE) {
-      this.insert(event.url, event)
-      redirectLogger.info(`[EventCache] Removed rule for url: ${event.url}`)
-      return
+    let url: string
+    try {
+      url = new URL(event.url).toString()
+    } catch (error) {
+      redirectLogger.error(
+        `[EventCache:smartUpdateUrl] Invalid URL: ${event.url}, error: ${error}`,
+      )
+      throw new Error(`[EventCache:smartUpdateUrl] Error parsing URL: ${error}`)
     }
-    if (event.action === ToolsOzoneSafelinkDefs.WHITELIST) {
-      this.insert(event.url, event)
-      redirectLogger.info(`[EventCache] Whitelisted url: ${event.url}`)
-      return
-    }
-    if (event.action === ToolsOzoneSafelinkDefs.BLOCK) {
-      this.insert(event.url, event)
-      redirectLogger.info(`[EventCache] Blocked url: ${event.url}`)
-      return
-    }
-    if (event.action === ToolsOzoneSafelinkDefs.WARN) {
-      this.insert(event.url, event)
-      redirectLogger.info(`[EventCache] Warned url: ${event.url}`)
-      return
+    event.url = url
+
+    try {
+      redirectLogger.info(
+        `[EventCache] smartUpdateUrl called for url: ${url}, action: ${event.action}`,
+      )
+
+      if (event.action) {
+        this.insert(url, event)
+        redirectLogger.info(
+          `[EventCache] rule updated or inserted for url: ${url}`,
+        )
+        return
+      }
+    } catch (error) {
+      redirectLogger.error(
+        `[EventCache:smartUpdateUrl] Error updating rule for url: ${url}, error: ${error}`,
+      )
+      throw new Error(
+        `[EventCache:smartUpdateUrl] Error processing url event: ${error}`,
+      )
     }
   }
 
