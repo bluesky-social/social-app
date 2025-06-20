@@ -1,20 +1,25 @@
 import {forwardRef, memo, useContext, useMemo} from 'react'
-import {StyleSheet, View, type ViewProps, type ViewStyle} from 'react-native'
+import {
+  ScrollView,
+  type ScrollViewProps,
+  StyleSheet,
+  View,
+  type ViewProps,
+  type ViewStyle,
+} from 'react-native'
 import {type StyleProp} from 'react-native'
 import {
   KeyboardAwareScrollView,
   type KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-controller'
-import Animated, {
-  type AnimatedScrollViewProps,
-  useAnimatedProps,
-} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {isWeb} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {
+  android,
   atoms as a,
+  ios,
   useBreakpoints,
   useLayoutBreakpoints,
   useTheme,
@@ -52,9 +57,7 @@ export const Screen = memo(function Screen({
   )
 })
 
-export type ContentProps = AnimatedScrollViewProps & {
-  style?: StyleProp<ViewStyle>
-  contentContainerStyle?: StyleProp<ViewStyle>
+export type ContentProps = ScrollViewProps & {
   ignoreTabletLayoutOffset?: boolean
 }
 
@@ -62,7 +65,7 @@ export type ContentProps = AnimatedScrollViewProps & {
  * Default scroll view for simple pages
  */
 export const Content = memo(
-  forwardRef<Animated.ScrollView, ContentProps>(function Content(
+  forwardRef<ScrollView, ContentProps>(function Content(
     {
       children,
       style,
@@ -74,39 +77,33 @@ export const Content = memo(
   ) {
     const t = useTheme()
     const {footerHeight} = useShellLayout()
-    const animatedProps = useAnimatedProps(() => {
-      return {
-        scrollIndicatorInsets: {
-          bottom: footerHeight.get(),
-          top: 0,
-          right: 1,
-        },
-      } satisfies AnimatedScrollViewProps
-    })
 
     return (
-      <Animated.ScrollView
+      <ScrollView
         ref={ref}
         id="content"
         automaticallyAdjustsScrollIndicatorInsets={false}
+        scrollIndicatorInsets={{
+          bottom: footerHeight,
+          top: 0,
+          right: 1,
+        }}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        // sets the scroll inset to the height of the footer
-        animatedProps={animatedProps}
         style={[scrollViewStyles.common, style]}
+        contentInset={ios({top: 0, left: 0, bottom: footerHeight, right: 0})}
         contentContainerStyle={[
-          scrollViewStyles.contentContainer,
+          !isIOS && {paddingBottom: footerHeight},
           contentContainerStyle,
         ]}
         {...props}>
         {isWeb ? (
           <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
-            {/* @ts-expect-error web only -esb */}
             {children}
           </Center>
         ) : (
           children
         )}
-      </Animated.ScrollView>
+      </ScrollView>
     )
   }),
 )
@@ -114,9 +111,6 @@ export const Content = memo(
 const scrollViewStyles = StyleSheet.create({
   common: {
     width: '100%',
-  },
-  contentContainer: {
-    paddingBottom: 100,
   },
 })
 
@@ -136,11 +130,14 @@ export const KeyboardAwareContent = memo(function LayoutKeyboardAwareContent({
   contentContainerStyle,
   ...props
 }: KeyboardAwareContentProps) {
+  const {footerHeight} = useShellLayout()
   return (
     <KeyboardAwareScrollView
       style={[scrollViewStyles.common, style]}
+      contentInset={ios({top: 0, left: 0, bottom: footerHeight, right: 0})}
       contentContainerStyle={[
-        scrollViewStyles.contentContainer,
+        android({paddingBottom: footerHeight}),
+        web({paddingBottom: footerHeight}),
         contentContainerStyle,
       ]}
       keyboardShouldPersistTaps="handled"
