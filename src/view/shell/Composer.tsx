@@ -4,8 +4,8 @@ import Animated, {SlideInDown, SlideOutDown} from 'react-native-reanimated'
 
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
 import {useComposerState} from '#/state/shell/composer'
+import {ComposePost} from '#/view/com/composer/Composer'
 import {atoms as a, useTheme} from '#/alf'
-import {ComposePost} from '../com/composer/Composer'
 
 export function Composer() {
   const state = useComposerState()
