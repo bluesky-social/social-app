@@ -37,7 +37,7 @@ import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
-import {Link} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 
 // We don't currently persist this across reloads since
@@ -285,6 +285,7 @@ function NotificationsTab({
 
 function DisabledNotificationsWarning({active}: {active: boolean}) {
   const t = useTheme()
+  const {_} = useLingui()
   const {data} = useNotificationSettingsQuery({enabled: active})
 
   if (!data) return null
@@ -296,7 +297,14 @@ function DisabledNotificationsWarning({active}: {active: boolean}) {
         <Admonition type="warning">
           <Trans>
             You have completely disabled reply, quote, and mention
-            notifications, so this tab will no longer update.
+            notifications, so this tab will no longer update. To adjust this,
+            visit your{' '}
+            <InlineLinkText
+              label={_(msg`Visit your notification settings`)}
+              to={{screen: 'NotificationSettings'}}>
+              notification settings
+            </InlineLinkText>
+            .
           </Trans>
         </Admonition>
       </View>
