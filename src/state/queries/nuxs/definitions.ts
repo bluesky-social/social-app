@@ -24,14 +24,6 @@ export type AppNux = BaseNux<
     }
 >
 
-/**
- * Nuxes that have been retired and should be cleared from storage.
- */
-export enum RetiredNux {
-  NeueTypography = 'NeueTypography',
-}
-export const retiredNuxNames = Object.values(RetiredNux)
-
 export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.NeueTypography]: undefined,
   [Nux.ExploreInterestsCard]: undefined,
