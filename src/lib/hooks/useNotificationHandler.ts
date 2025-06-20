@@ -322,7 +322,19 @@ export function useNotificationsHandler() {
           const payload = e.notification.request.trigger
             .payload as NotificationPayload
 
-          if (!payload) return
+          if (!payload) {
+            logger.error('useNotificationsHandler: received no payload', {
+              identifier: e.notification.request.identifier,
+            })
+            return
+          }
+          if (!payload.reason) {
+            logger.error('useNotificationsHandler: received unknown payload', {
+              payload,
+              identifier: e.notification.request.identifier,
+            })
+            return
+          }
 
           logger.debug(
             'User pressed a notification, opening notifications tab',
