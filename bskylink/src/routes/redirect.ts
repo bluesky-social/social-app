@@ -55,11 +55,16 @@ export default function (ctx: AppContext, app: Express) {
           rulePresent.eventType === ToolsOzoneSafelinkDefs.REMOVERULE
         ) {
           redirectLogger.info(
-            `No rule or remove rule matched for ${rulePresent.url}`,
+            `No rule or Remove rule matched for ${rulePresent.url}`,
           )
           const escaped = escapeHTML(url.href)
-
-          return safe_redirect(escaped)
+          const html = safe_redirect(escaped)
+          res.writeHead(200, {
+            'Content-Type': 'text/html',
+            'Content-Length': Buffer.byteLength(html),
+          })
+          res.end(html) // Critical - must call end()
+          return
         }
 
         if (
@@ -68,8 +73,13 @@ export default function (ctx: AppContext, app: Express) {
         ) {
           redirectLogger.info(`Whitelist rule matched for ${rulePresent.url}`)
           const escaped = escapeHTML(url.href)
-
-          return safe_redirect(escaped)
+          const html = safe_redirect(escaped)
+          res.writeHead(200, {
+            'Content-Type': 'text/html',
+            'Content-Length': Buffer.byteLength(html),
+          })
+          res.end(html) // Critical - must call end()
+          return
         }
 
         if (
@@ -78,39 +88,50 @@ export default function (ctx: AppContext, app: Express) {
         ) {
           redirectLogger.info(`Block rule matched for ${rulePresent.url}`)
           res.setHeader('Cache-Control', 'no-store')
-          res.status(403)
-          return res.send(
-            warnRedirect(
-              'Blocked Link',
-              'This link has been identified as malicious, it has been blocked to protect your account and data',
-              'Go Back To BlueSky',
-              'DANGER',
-              escapeHTML(url.toString()),
-              `https://${ctx.cfg.service.appHostname}`,
-            ),
+          const html = warnRedirect(
+            'Blocked Link',
+            'This link has been identified as malicious, it has been blocked to protect your account and data',
+            'Go Back To BlueSky',
+            'DANGER',
+            escapeHTML(url.toString()),
+            `https://${ctx.cfg.service.appHostname}`,
           )
+          res.writeHead(403, {
+            'Content-Type': 'text/html',
+            'Content-Length': Buffer.byteLength(html),
+          })
+          res.end(html) // Critical - must call end()
+          return
         }
 
         if (rulePresent && rulePresent.action === ToolsOzoneSafelinkDefs.WARN) {
           redirectLogger.info(`Warn rule matched for ${rulePresent.url}`)
           res.setHeader('Cache-Control', 'no-store')
-          res.status(403)
-          const escaped = escapeHTML(url.href)
-          return res.send(
-            warnRedirect(
-              'Warning: Potentially Malicious Link',
-              'This link could be malicious, proceed at your own risk',
-              'Proceed at Your Own Risk',
-              'WARNING',
-              escapeHTML(url.toString()),
-              escaped, // Pass the actual URL as returnUrl so the button proceeds to the link
-            ),
+          const html = warnRedirect(
+            'Blocked Link',
+            'This link has been identified as malicious, it has been blocked to protect your account and data',
+            'Go Back To BlueSky',
+            'DANGER',
+            escapeHTML(url.toString()),
+            `https://${ctx.cfg.service.appHostname}`,
           )
+          res.writeHead(403, {
+            'Content-Type': 'text/html',
+            'Content-Length': Buffer.byteLength(html),
+          })
+          res.end(html) // Critical - must call end()
+          return
         }
       }
 
       const escaped = escapeHTML(url.href)
-      return safe_redirect(escaped)
+      const html = safe_redirect(escaped)
+      res.writeHead(200, {
+        'Content-Type': 'text/html',
+        'Content-Length': Buffer.byteLength(html),
+      })
+      res.end(html) // Critical - must call end()
+      return
     }),
   )
 }

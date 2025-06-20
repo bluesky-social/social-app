@@ -75,7 +75,7 @@ export class EventCache {
       `[EventCache] smartUpdateUrl called for url: ${event.url}, action: ${event.action}`,
     )
     if (event.action === ToolsOzoneSafelinkDefs.REMOVERULE) {
-      // If the action is to remove the rule, delete it from the cache
+      // If the action is to remove the rule, update it from the cache
       this.insert(event.url, event)
       redirectLogger.info(`[EventCache] Removed rule for url: ${event.url}`)
       return
@@ -102,13 +102,13 @@ export class EventCache {
   smartUpdate(event: ToolsOzoneSafelinkDefs.Event) {
     if (event.pattern === ToolsOzoneSafelinkDefs.DOMAIN) {
       redirectLogger.info(
-        `[EventCache] smartUpdate called for domain event: ${event.url}, performing$ ${event.action}`,
+        `[EventCache] smartUpdate called for domain event: ${event.url}, performing ${event.action}`,
       )
       return this.smartUpdateDomain(event)
     }
     if (event.pattern === ToolsOzoneSafelinkDefs.URL) {
       redirectLogger.info(
-        `[EventCache] smartUpdate called for domain event: ${event.url}`,
+        `[EventCache] smartUpdate called for url event: ${event.url}`,
       )
       return this.smartUpdateUrl(event)
     }
