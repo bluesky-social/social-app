@@ -38,12 +38,12 @@ export default function (ctx: AppContext, app: Express) {
       ) {
         res.setHeader('Cache-Control', 'no-store')
         res.setHeader('Location', `https://${ctx.cfg.service.appHostname}`)
-        return res.status(302).end()
+        return res.status(200).end()
       }
 
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
       res.type('html')
-      res.status(302)
+      res.status(200)
 
       if (ctx.cfg.service.safelinkEnabled) {
         const rulePresent: ToolsOzoneSafelinkDefs.Event | undefined =
