@@ -11,6 +11,7 @@ import {
   isRelativeUrl,
   toNiceDomain,
 } from '#/lib/strings/url-helpers'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useInAppBrowser} from '#/state/preferences/in-app-browser'
 import {useTheme} from '#/alf'
@@ -57,15 +58,21 @@ export function useOpenLink() {
           }
           return
         } else if (override ?? enabled) {
-          await sheetWrapper(
-            WebBrowser.openBrowserAsync(url, {
-              presentationStyle:
-                WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
-              toolbarColor: t.atoms.bg.backgroundColor,
-              controlsColor: t.palette.primary_500,
-              createTask: false,
-            }),
-          )
+          try {
+            await sheetWrapper(
+              WebBrowser.openBrowserAsync(url, {
+                presentationStyle:
+                  WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
+                toolbarColor: t.atoms.bg.backgroundColor,
+                controlsColor: t.palette.primary_500,
+                createTask: false,
+              }),
+            )
+          } catch (err) {
+            if (__DEV__)
+              logger.error('Could not open web browser', {message: err})
+            Linking.openURL(url)
+          }
           return
         }
       }
