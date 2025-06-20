@@ -800,11 +800,11 @@ msgstr ""
 msgid "Allow new messages from"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:344
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
 msgid "Allow quote posts"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:393
 msgid "Allow replies from:"
 msgstr ""
 
@@ -1691,11 +1691,11 @@ msgstr ""
 msgid "Click here to update your email"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:337
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:341
 msgid "Click to disable quote posts of this post."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:338
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:342
 msgid "Click to enable quote posts of this post."
 msgstr ""
 
@@ -2223,7 +2223,7 @@ msgstr ""
 msgid "Customization options"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:103
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:107
 msgid "Customize who can interact with this post."
 msgstr ""
 
@@ -2725,8 +2725,8 @@ msgstr ""
 msgid "Edit People"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:69
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:239
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:73
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:243
 msgid "Edit post interaction settings"
 msgstr ""
 
@@ -2971,7 +2971,7 @@ msgstr ""
 msgid "Error: {error}"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:394
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:398
 msgid "Everybody"
 msgstr ""
 
@@ -4673,7 +4673,7 @@ msgstr ""
 msgid "mentioned users"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:423
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:427
 msgid "Mentioned users"
 msgstr ""
 
@@ -5237,7 +5237,7 @@ msgstr ""
 msgid "No thanks"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:405
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:409
 msgid "Nobody"
 msgstr ""
 
@@ -5612,7 +5612,7 @@ msgstr ""
 msgid "Options:"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:418
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:422
 msgid "Or combine these options:"
 msgstr ""
 
@@ -6000,7 +6000,7 @@ msgstr ""
 msgid "Post Hidden by You"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:100
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:104
 msgid "Post interaction settings"
 msgstr ""
 
@@ -6222,7 +6222,7 @@ msgstr ""
 msgid "Quote posts disabled"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:329
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:333
 msgid "Quote settings"
 msgstr ""
 
@@ -6534,11 +6534,11 @@ msgstr ""
 msgid "Reply notifications"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:385
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Reply settings"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:370
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:374
 msgid "Reply settings are chosen by the author of the thread"
 msgstr ""
 
@@ -6844,8 +6844,8 @@ msgid "Returns to the previous step"
 msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:121
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:479
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:485
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:483
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:489
 #: src/components/live/EditLiveDialog.tsx:216
 #: src/components/live/EditLiveDialog.tsx:223
 #: src/components/StarterPack/QrCodeDialog.tsx:192
@@ -8201,7 +8201,7 @@ msgstr ""
 msgid "There was an issue! {0}"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:217
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:221
 #: src/screens/List/ListHiddenScreen.tsx:63
 #: src/screens/List/ListHiddenScreen.tsx:77
 #: src/screens/List/ListHiddenScreen.tsx:99
@@ -8980,11 +8980,11 @@ msgstr ""
 msgid "Users I follow"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:456
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:460
 msgid "Users in \"{0}\""
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:433
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:437
 msgid "Users you follow"
 msgstr ""
 
@@ -9592,7 +9592,7 @@ msgstr ""
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:81
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:85
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
 msgstr ""
 
@@ -9925,7 +9925,7 @@ msgstr ""
 msgid "Your first like!"
 msgstr ""
 
-#: src/components/dialogs/PostInteractionSettingsDialog.tsx:443
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:447
 msgid "Your followers"
 msgstr ""
 
