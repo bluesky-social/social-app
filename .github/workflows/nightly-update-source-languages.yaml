@@ -47,3 +47,4 @@ jobs:
           create_pull_request: false
         env:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        if: env.CROWDIN_PERSONAL_TOKEN != ''
