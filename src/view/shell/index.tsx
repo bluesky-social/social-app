@@ -108,8 +108,7 @@ function ShellInner() {
           <TabsNavigator layout={drawerLayout} />
         </ErrorBoundary>
       </View>
-
-      <Composer winHeight={winDim.height} />
+      <Composer />
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
