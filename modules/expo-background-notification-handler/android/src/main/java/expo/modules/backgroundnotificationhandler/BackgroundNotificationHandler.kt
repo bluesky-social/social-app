@@ -15,6 +15,8 @@ class BackgroundNotificationHandler(
 
     if (remoteMessage.data["reason"] == "chat-message") {
       mutateWithChatMessage(remoteMessage)
+    } else {
+      mutateWithOtherReason(remoteMessage)
     }
 
     notifInterface.showMessage(remoteMessage)
@@ -38,5 +40,18 @@ class BackgroundNotificationHandler(
 
     // TODO - Remove this once we have more backend capability
     remoteMessage.data["badge"] = null
+  }
+
+  private fun mutateWithOtherReason(remoteMessage: RemoteMessage) {
+    // If oreo or higher
+    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+      // If one of "like", "repost", "follow", "mention", "reply", "quote", "like-via-repost", "repost-via-repost"
+      // assign to it's eponymous channel. otherwise do nothing, let expo handle it
+      when (remoteMessage.data["reason"]) {
+        "like", "repost", "follow", "mention", "reply", "quote", "like-via-repost", "repost-via-repost" -> {
+          remoteMessage.data["channelId"] = remoteMessage.data["reason"]
+        }
+      }
+    }
   }
 }

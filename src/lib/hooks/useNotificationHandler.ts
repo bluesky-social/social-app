@@ -1,5 +1,8 @@
-import React from 'react'
+import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
+import {type AppBskyNotificationListNotifications} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -25,6 +28,10 @@ export type NotificationReason =
   | 'quote'
   | 'chat-message'
   | 'starterpack-joined'
+  | 'like-via-repost'
+  | 'repost-via-repost'
+  | 'verified'
+  | 'unverified'
 
 /**
  * Manually overridden type, but retains the possibility of
@@ -66,34 +73,103 @@ export function useNotificationsHandler() {
   const {currentConvoId} = useCurrentConvoId()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const {_} = useLingui()
 
   // On Android, we cannot control which sound is used for a notification on Android
   // 28 or higher. Instead, we have to configure a notification channel ahead of time
   // which has the sounds we want in the configuration for that channel. These two
   // channels allow for the mute/unmute functionality we want for the background
   // handler.
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isAndroid) return
+    // assign both chat notifications to a group
+    // NOTE: I don't think that it will retroactively move them into the group
+    // if the channels already exist. no big deal imo -sfn
+    const CHAT_GROUP = 'chat'
+    Notifications.setNotificationChannelGroupAsync(CHAT_GROUP, {
+      name: _(msg`Chat`),
+      description: _(
+        msg`You can choose whether chat notifications have sound in the chat settings within the app`,
+      ),
+    })
     Notifications.setNotificationChannelAsync('chat-messages', {
-      name: 'Chat',
+      name: _(msg`Chat messages - sound`),
+      groupId: CHAT_GROUP,
       importance: Notifications.AndroidImportance.MAX,
       sound: 'dm.mp3',
       showBadge: true,
       vibrationPattern: [250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
     })
-
     Notifications.setNotificationChannelAsync('chat-messages-muted', {
-      name: 'Chat - Muted',
+      name: _(msg`Chat messages - silent`),
+      groupId: CHAT_GROUP,
       importance: Notifications.AndroidImportance.MAX,
       sound: null,
       showBadge: true,
       vibrationPattern: [250],
       lockscreenVisibility: Notifications.AndroidNotificationVisibility.PRIVATE,
     })
-  }, [])
 
-  React.useEffect(() => {
+    Notifications.setNotificationChannelAsync(
+      'like' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      {
+        name: _(msg`Likes`),
+        importance: Notifications.AndroidImportance.HIGH,
+      },
+    )
+    Notifications.setNotificationChannelAsync(
+      'repost' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      {
+        name: _(msg`Reposts`),
+        importance: Notifications.AndroidImportance.HIGH,
+      },
+    )
+    Notifications.setNotificationChannelAsync(
+      'reply' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      {
+        name: _(msg`Replies`),
+        importance: Notifications.AndroidImportance.HIGH,
+      },
+    )
+    Notifications.setNotificationChannelAsync(
+      'mention' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      {
+        name: _(msg`Mentions`),
+        importance: Notifications.AndroidImportance.HIGH,
+      },
+    )
+    Notifications.setNotificationChannelAsync(
+      'quote' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      {
+        name: _(msg`Quotes`),
+        importance: Notifications.AndroidImportance.HIGH,
+      },
+    )
+    Notifications.setNotificationChannelAsync(
+      'follow' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      {
+        name: _(msg`New followers`),
+        importance: Notifications.AndroidImportance.HIGH,
+      },
+    )
+    Notifications.setNotificationChannelAsync(
+      'like-via-repost' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      {
+        name: _(msg`Likes of your reposts`),
+        importance: Notifications.AndroidImportance.HIGH,
+      },
+    )
+    Notifications.setNotificationChannelAsync(
+      'repost-via-repost' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      {
+        name: _(msg`Reposts of your reposts`),
+        importance: Notifications.AndroidImportance.HIGH,
+      },
+    )
+  }, [_])
+
+  useEffect(() => {
     const handleNotification = (payload?: NotificationPayload) => {
       if (!payload) return
 
@@ -151,6 +227,10 @@ export function useNotificationsHandler() {
           case 'quote':
           case 'reply':
           case 'starterpack-joined':
+          case 'like-via-repost':
+          case 'repost-via-repost':
+          case 'verified':
+          case 'unverified':
             resetToTab('NotificationsTab')
             break
           // TODO implement these after we have an idea of how to handle each individual case
