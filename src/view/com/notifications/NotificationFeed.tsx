@@ -16,7 +16,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {List, type ListRef} from '#/view/com/util/List'
+import {List, type ListProps, type ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {NotificationFeedItem} from './NotificationFeedItem'
@@ -39,7 +39,7 @@ export function NotificationFeed({
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
-  ListHeaderComponent?: () => JSX.Element
+  ListHeaderComponent?: ListProps['ListHeaderComponent']
   refreshNotifications: () => Promise<void>
 }) {
   const initialNumToRender = useInitialNumToRender()

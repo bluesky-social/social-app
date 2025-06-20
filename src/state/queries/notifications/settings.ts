@@ -14,7 +14,9 @@ import * as Toast from '#/view/com/util/Toast'
 const RQKEY_ROOT = 'notification-settings'
 const RQKEY = [RQKEY_ROOT]
 
-export function useNotificationSettingsQuery() {
+export function useNotificationSettingsQuery({
+  enabled,
+}: {enabled?: boolean} = {}) {
   const agent = useAgent()
 
   return useQuery({
@@ -23,6 +25,7 @@ export function useNotificationSettingsQuery() {
       const response = await agent.app.bsky.notification.getPreferences()
       return response.data.preferences
     },
+    enabled,
   })
 }
 export function useNotificationSettingsUpdateMutation() {
