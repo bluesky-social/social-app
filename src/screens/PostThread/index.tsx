@@ -54,13 +54,16 @@ export function PostThread({uri}: {uri: string}) {
    * One query to rule them all
    */
   const thread = usePostThread({anchor: uri})
-  const anchor = useMemo(() => {
+  const {anchor, hasParents} = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    let hasParents = false
     for (const item of thread.data.items) {
       if (item.type === 'threadPost' && item.depth === 0) {
-        return item
+        return {anchor: item, hasParents}
       }
+      hasParents = true
     }
-    return
+    return {hasParents}
   }, [thread.data.items])
 
   const {openComposer} = useOpenComposer()
@@ -481,6 +484,8 @@ export function PostThread({uri}: {uri: string}) {
     ],
   )
 
+  const defaultListFooterHeight = hasParents ? windowHeight - 200 : undefined
+
   return (
     <>
       <Layout.Header.Outer headerRef={headerRef}>
@@ -537,8 +542,10 @@ export function PostThread({uri}: {uri: string}) {
                * back to the top of the screen when handling scroll.
                */
               height={platform({
-                web: windowHeight - 200,
-                default: deferParents ? windowHeight * 2 : windowHeight - 200,
+                web: defaultListFooterHeight,
+                default: deferParents
+                  ? windowHeight * 2
+                  : defaultListFooterHeight,
               })}
               style={isTombstoneView ? {borderTopWidth: 0} : undefined}
             />
