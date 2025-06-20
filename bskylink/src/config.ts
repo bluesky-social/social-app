@@ -1,4 +1,4 @@
-import {envInt, envList, envStr} from '@atproto/common'
+import {envBool, envInt, envList, envStr} from '@atproto/common'
 
 // import { type EventCache, eventCache } from '../cache/cache.js'
 import {EventCache} from './cache/cache.js'
@@ -14,7 +14,7 @@ export type ServiceConfig = {
   version?: string
   hostnames: string[]
   appHostname: string
-  safelink: number
+  safelinkEnabled: boolean
   ozoneUrl?: string
   ozoneAgentHandle?: string
   ozoneAgentPass?: string
@@ -44,7 +44,7 @@ export type Environment = {
   dbPostgresPoolSize?: number
   dbPostgresPoolMaxUses?: number
   dbPostgresPoolIdleTimeoutMs?: number
-  safelink?: number
+  safelinkEnabled?: boolean
   ozoneUrl?: string
   ozoneAgentHandle?: string
   ozoneAgentPass?: string
@@ -64,7 +64,7 @@ export const readEnv = (): Environment => {
     dbPostgresPoolIdleTimeoutMs: envInt(
       'LINK_DB_POSTGRES_POOL_IDLE_TIMEOUT_MS',
     ),
-    safelink: envInt('SAFELINK'),
+    safelinkEnabled: envBool('SAFELINK_ENABLED'),
     ozoneUrl: envStr('OZONE_URL'),
     ozoneAgentHandle: envStr('OZONE_AGENT_HANDLE'),
     ozoneAgentPass: envStr('OZONE_AGENT_PASS'),
@@ -77,7 +77,7 @@ export const envToCfg = (env: Environment): Config => {
     version: env.version,
     hostnames: env.hostnames,
     appHostname: env.appHostname || 'bsky.app',
-    safelink: env.safelink || 0,
+    safelinkEnabled: env.safelinkEnabled || false,
     ozoneUrl: env.ozoneUrl || undefined,
     ozoneAgentHandle: env.ozoneAgentHandle || undefined,
     ozoneAgentPass: env.ozoneAgentPass || undefined,

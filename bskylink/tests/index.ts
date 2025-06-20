@@ -17,7 +17,7 @@ describe('link service', async () => {
       appHostname: 'test.bsky.app',
       dbPostgresSchema: 'link_test',
       dbPostgresUrl: process.env.DB_POSTGRES_URL,
-      safelink: 1,
+      safelinkEnabled: true,
       ozoneUrl: 'http://localhost:2583',
       ozoneAgentHandle: 'mod-authority.test',
       ozoneAgentPass: 'hunter2',

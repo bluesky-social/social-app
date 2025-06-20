@@ -45,7 +45,7 @@ export default function (ctx: AppContext, app: Express) {
       res.type('html')
       res.status(302)
 
-      if (ctx.cfg.service.safelink) {
+      if (ctx.cfg.service.safelinkEnabled) {
         const rulePresent: ToolsOzoneSafelinkDefs.Event | undefined =
           ctx.cfg.eventCache.smartGet(link)
 

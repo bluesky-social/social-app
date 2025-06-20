@@ -13,7 +13,7 @@ async function main() {
 
   const link = await LinkService.create(cfg)
 
-  if (cfg.service.safelink === 1) {
+  if (cfg.service.safelinkEnabled) {
     cfg.eventCache.adaptiveFetchAndUpdate()
   }
 
