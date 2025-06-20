@@ -7,7 +7,7 @@ let cacheCursor: string | undefined
 
 export class EventCache {
   private rules = new Map<string, ToolsOzoneSafelinkDefs.Event>()
-  private cfg: ServiceConfig | undefined = undefined
+  private cfg: ServiceConfig
   private pollInterval = 1 * 1000 // start at 1 second
 
   constructor(cfg: ServiceConfig) {
