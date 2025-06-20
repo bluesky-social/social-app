@@ -1,10 +1,8 @@
 import React from 'react'
-import * as Device from 'expo-device'
 import {impactAsync, ImpactFeedbackStyle} from 'expo-haptics'
 
 import {isIOS, isWeb} from '#/platform/detection'
 import {useHapticsDisabled} from '#/state/preferences/disable-haptics'
-import * as Toast from '#/view/com/util/Toast'
 
 export function useHaptics() {
   const isHapticsDisabled = useHapticsDisabled()
@@ -22,9 +20,10 @@ export function useHaptics() {
       impactAsync(style)
 
       // DEV ONLY - show a toast when a haptic is meant to fire on simulator
-      if (__DEV__ && !Device.isDevice) {
-        Toast.show(`Buzzz!`)
-      }
+      // currently disabled because it's annoying
+      // if (__DEV__ && !Device.isDevice) {
+      //   Toast.show(`Buzzz!`)
+      // }
     },
     [isHapticsDisabled],
   )
