@@ -16,12 +16,9 @@ import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 const BOTTOM_BAR_HEIGHT = 61
 
-export function Composer({}: {winHeight: number}) {
+export function Composer() {
   const state = useComposerState()
   const isActive = !!state
-
-  // rendering
-  // =
 
   if (!isActive) {
     return null

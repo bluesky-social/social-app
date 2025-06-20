@@ -150,7 +150,7 @@ function ShellInner() {
           </Drawer>
         </ErrorBoundary>
       </View>
-      <Composer winHeight={winDim.height} />
+      <Composer />
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
