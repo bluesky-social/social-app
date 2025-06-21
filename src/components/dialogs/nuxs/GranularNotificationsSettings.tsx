@@ -1,0 +1,192 @@
+import {useCallback} from 'react'
+import {View} from 'react-native'
+import {Image} from 'expo-image'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
+
+import {type NavigationProp} from '#/lib/routes/types'
+import {isWeb} from '#/platform/detection'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {useNuxDialogContext} from '#/components/dialogs/nuxs'
+import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
+import {Text} from '#/components/Typography'
+
+export function GranularNotificationsSettings() {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
+  const nuxDialogs = useNuxDialogContext()
+  const control = Dialog.useDialogControl()
+  const nav = useNavigation<NavigationProp>()
+
+  Dialog.useAutoOpen(control)
+
+  const onClose = useCallback(() => {
+    nuxDialogs.dismissActiveNux()
+  }, [nuxDialogs])
+
+  return (
+    <Dialog.Outer control={control} onClose={onClose}>
+      <Dialog.Handle />
+
+      <Dialog.ScrollableInner
+        label={_(msg`Introducing fine-grained notification settings.`)}
+        style={[
+          gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+        ]}
+        contentContainerStyle={[
+          {
+            paddingTop: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
+          },
+        ]}>
+        <View
+          style={[
+            a.align_center,
+            a.overflow_hidden,
+            t.atoms.bg_contrast_25,
+            {
+              gap: isWeb ? 16 : 24,
+              paddingTop: isWeb ? 24 : 48,
+              borderTopLeftRadius: a.rounded_md.borderRadius,
+              borderTopRightRadius: a.rounded_md.borderRadius,
+            },
+          ]}>
+          <View
+            style={[
+              a.pl_sm,
+              a.pr_md,
+              a.py_sm,
+              a.rounded_full,
+              a.flex_row,
+              a.align_center,
+              a.gap_xs,
+              {
+                backgroundColor: t.palette.primary_100,
+              },
+            ]}>
+            <SparkleIcon fill={t.palette.primary_800} size="sm" />
+            <Text
+              style={[
+                a.font_bold,
+                {
+                  color: t.palette.primary_800,
+                },
+              ]}>
+              <Trans>New Feature</Trans>
+            </Text>
+          </View>
+
+          <View
+            style={[
+              a.relative,
+              a.w_full,
+              a.overflow_hidden,
+              {
+                height: isWeb ? 240 : 340,
+              },
+            ]}>
+            <View
+              style={[
+                a.absolute,
+                t.atoms.bg_contrast_25,
+                t.atoms.shadow_md,
+                {
+                  top: 5,
+                  bottom: 0,
+                  left: '20%',
+                  right: '20%',
+                  width: '60%',
+                  borderTopLeftRadius: 40,
+                  borderTopRightRadius: 40,
+                },
+              ]}
+            />
+            <Image
+              accessibilityIgnoresInvertColors
+              source={require('../../../../assets/images/notification_settings_announcement.webp')}
+              style={[
+                a.w_full,
+                {
+                  aspectRatio: 380 / 421,
+                },
+              ]}
+              alt={_(
+                msg`A screenshot of the new notification settings screen, showing many options to configure the notifications you care about.`,
+              )}
+            />
+          </View>
+        </View>
+        <View
+          style={[
+            a.px_xl,
+            isWeb ? [a.pt_xl, a.gap_xl, a.pb_sm] : [a.pt_4xl, a.gap_3xl],
+          ]}>
+          <View style={[a.gap_sm, a.align_center]}>
+            <Text
+              style={[
+                a.text_3xl,
+                a.leading_tight,
+                a.font_heavy,
+                a.text_center,
+              ]}>
+              <Trans>More control over your notifications</Trans>
+            </Text>
+            <Text
+              style={[
+                a.text_md,
+                a.leading_snug,
+                a.text_center,
+                {
+                  maxWidth: 340,
+                },
+              ]}>
+              <Trans>
+                Now you can choose exactly what you want to be notified about.
+                Visit your notification settings to fine-tune your preferences.
+              </Trans>
+            </Text>
+          </View>
+
+          <View style={[a.gap_md, isWeb && a.align_center]}>
+            {!isWeb && (
+              <Button
+                label={_(msg`Close`)}
+                size="large"
+                variant="solid"
+                color="primary"
+                onPress={() => {
+                  control.close()
+                }}>
+                <ButtonText>
+                  <Trans>Close</Trans>
+                </ButtonText>
+              </Button>
+            )}
+            <Button
+              label={_(msg`Open settings`)}
+              size={isWeb ? 'small' : 'large'}
+              variant="solid"
+              color={isWeb ? 'primary' : 'secondary'}
+              style={[a.justify_center]}
+              onPress={() => {
+                control.close(() => {
+                  nav.navigate('NotificationSettings')
+                })
+              }}>
+              <ButtonText>
+                <Trans>Open settings</Trans>
+              </ButtonText>
+            </Button>
+          </View>
+        </View>
+
+        <Dialog.Close />
+      </Dialog.ScrollableInner>
+    </Dialog.Outer>
+  )
+}
