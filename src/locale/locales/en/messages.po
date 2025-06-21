@@ -772,7 +772,7 @@ msgstr ""
 msgid "alice@example.com"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:86
+#: src/view/screens/Notifications.tsx:88
 msgid "All"
 msgstr ""
 
@@ -1561,6 +1561,7 @@ msgstr ""
 msgid "Changes hosting provider"
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:90
 #: src/Navigation.tsx:515
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
 #: src/view/shell/desktop/LeftNav.tsx:553
@@ -1572,6 +1573,14 @@ msgstr ""
 #: src/screens/Messages/components/RequestButtons.tsx:304
 msgctxt "toast"
 msgid "Chat deleted"
+msgstr ""
+
+#: src/lib/hooks/useNotificationHandler.ts:105
+msgid "Chat messages - silent"
+msgstr ""
+
+#: src/lib/hooks/useNotificationHandler.ts:96
+msgid "Chat messages - sound"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:176
@@ -2136,7 +2145,7 @@ msgstr ""
 msgid "Could not process your video"
 msgstr ""
 
-#: src/state/queries/notifications/settings.ts:47
+#: src/state/queries/notifications/settings.ts:50
 msgid "Could not update notification settings"
 msgstr ""
 
@@ -4436,12 +4445,14 @@ msgstr ""
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:117
 #: src/screens/Settings/NotificationSettings/index.tsx:126
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:41
 #: src/view/screens/Profile.tsx:229
 msgid "Likes"
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:159
 #: src/screens/Settings/NotificationSettings/index.tsx:208
 #: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:41
 msgid "Likes of your reposts"
@@ -4559,7 +4570,7 @@ msgstr ""
 msgid "Load more suggested feeds"
 msgstr ""
 
-#: src/view/screens/Notifications.tsx:270
+#: src/view/screens/Notifications.tsx:278
 msgid "Load new notifications"
 msgstr ""
 
@@ -4677,9 +4688,10 @@ msgstr ""
 msgid "Mentioned users"
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:138
 #: src/screens/Settings/NotificationSettings/index.tsx:159
 #: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:41
-#: src/view/screens/Notifications.tsx:99
+#: src/view/screens/Notifications.tsx:101
 msgid "Mentions"
 msgstr ""
 
@@ -5029,6 +5041,7 @@ msgstr ""
 msgid "New follower notifications"
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:152
 #: src/screens/Settings/NotificationSettings/index.tsx:137
 #: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:41
 msgid "New followers"
@@ -5064,7 +5077,7 @@ msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:241
 #: src/view/screens/Feeds.tsx:552
-#: src/view/screens/Notifications.tsx:165
+#: src/view/screens/Notifications.tsx:167
 #: src/view/screens/Profile.tsx:510
 #: src/view/screens/ProfileList.tsx:250
 #: src/view/screens/ProfileList.tsx:288
@@ -5289,7 +5302,7 @@ msgstr ""
 
 #: src/Navigation.tsx:396
 #: src/Navigation.tsx:530
-#: src/view/screens/Notifications.tsx:134
+#: src/view/screens/Notifications.tsx:136
 msgid "Notification settings"
 msgstr ""
 
@@ -5314,7 +5327,7 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
 #: src/screens/Settings/Settings.tsx:189
 #: src/screens/Settings/Settings.tsx:192
-#: src/view/screens/Notifications.tsx:128
+#: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:654
 #: src/view/shell/Drawer.tsx:482
@@ -5939,7 +5952,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/screens/PostThread/index.tsx:490
+#: src/screens/PostThread/index.tsx:495
 #: src/view/com/post-thread/PostThread.tsx:561
 msgctxt "description"
 msgid "Post"
@@ -6226,6 +6239,7 @@ msgstr ""
 msgid "Quote settings"
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:145
 #: src/screens/Post/PostQuotes.tsx:38
 #: src/screens/Settings/NotificationSettings/index.tsx:170
 #: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:41
@@ -6496,6 +6510,7 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:131
 #: src/screens/Settings/NotificationSettings/index.tsx:148
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:41
 #: src/view/screens/Profile.tsx:226
@@ -6710,6 +6725,7 @@ msgstr ""
 msgid "Reposted by you"
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:124
 #: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:41
 msgid "Reposts"
@@ -6720,6 +6736,7 @@ msgstr ""
 msgid "Reposts of this post"
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:166
 #: src/screens/Settings/NotificationSettings/index.tsx:223
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:41
 msgid "Reposts of your reposts"
@@ -9236,6 +9253,10 @@ msgstr ""
 msgid "Visit site"
 msgstr ""
 
+#: src/view/screens/Notifications.tsx:303
+msgid "Visit your notification settings"
+msgstr ""
+
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:81
 msgid "Volume"
 msgstr ""
@@ -9579,6 +9600,10 @@ msgstr ""
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
 msgstr ""
 
+#: src/lib/hooks/useNotificationHandler.ts:92
+msgid "You can choose whether chat notifications have sound in the chat settings within the app"
+msgstr ""
+
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr ""
@@ -9638,6 +9663,10 @@ msgstr ""
 #: src/lib/moderation/useModerationCauseDescription.ts:57
 #: src/lib/moderation/useModerationCauseDescription.ts:65
 msgid "You have blocked this user. You cannot view their content."
+msgstr ""
+
+#: src/view/screens/Notifications.tsx:298
+msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr ""
 
 #: src/screens/Login/SetNewPasswordForm.tsx:49
