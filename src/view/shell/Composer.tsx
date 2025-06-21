@@ -1,49 +1,82 @@
-import {useEffect} from 'react'
-import {Animated, Easing} from 'react-native'
+import {useEffect, useMemo} from 'react'
+import {useWindowDimensions} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
+import Animated, {
+  Easing,
+  type LayoutAnimation,
+  withTiming,
+} from 'react-native-reanimated'
 
-import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {useComposerState} from '#/state/shell/composer'
+import {ComposePost} from '#/view/com/composer/Composer'
 import {atoms as a, useTheme} from '#/alf'
-import {ComposePost} from '../com/composer/Composer'
 
-export function Composer({winHeight}: {winHeight: number}) {
+export function Composer() {
   const state = useComposerState()
   const t = useTheme()
-  const initInterp = useAnimatedValue(0)
+  const {height} = useWindowDimensions()
+
+  const open = !!state
+
+  // HACKFIX: the builtin "SlideInDown" and "SlideOutDown"
+  // animations are broken, because they rely on getting the window
+  // height from reanimated and it appears to be 0 initially.
+  // We can recreate the same animation but just pass in the window
+  // dimensions from JS -sfn
+  // TODO: Fix upstream
+  const {EnterAnimation, ExitAnimation} = useMemo(() => {
+    return {
+      EnterAnimation: (): LayoutAnimation => {
+        'worklet'
+        return {
+          animations: {
+            originY: withTiming(0, {
+              duration: 200,
+              easing: Easing.out(Easing.quad),
+            }),
+          },
+          initialValues: {
+            originY: height,
+          },
+        }
+      },
+      ExitAnimation: (): LayoutAnimation => {
+        'worklet'
+        return {
+          animations: {
+            originY: withTiming(height, {
+              duration: 200,
+              easing: Easing.in(Easing.quad),
+            }),
+          },
+          initialValues: {
+            originY: 0,
+          },
+        }
+      },
+    }
+  }, [height])
 
   useEffect(() => {
-    if (state) {
-      Animated.timing(initInterp, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.out(Easing.exp),
-        useNativeDriver: true,
-      }).start()
-    } else {
-      initInterp.setValue(0)
+    if (open) {
+      const entry = SystemBars.pushStackEntry({
+        style: {
+          statusBar: t.name !== 'light' ? 'light' : 'dark',
+        },
+      })
+      return () => SystemBars.popStackEntry(entry)
     }
-  }, [initInterp, state])
-  const wrapperAnimStyle = {
-    transform: [
-      {
-        translateY: initInterp.interpolate({
-          inputRange: [0, 1],
-          outputRange: [winHeight, 0],
-        }),
-      },
-    ],
-  }
+  }, [open, t.name])
 
-  // rendering
-  // =
-
-  if (!state) {
+  if (!open) {
     return null
   }
 
   return (
     <Animated.View
-      style={[a.absolute, a.inset_0, t.atoms.bg, wrapperAnimStyle]}
+      style={[a.absolute, a.inset_0, t.atoms.bg]}
+      entering={EnterAnimation}
+      exiting={ExitAnimation}
       aria-modal
       accessibilityViewIsModal>
       <ComposePost
