@@ -1,11 +1,11 @@
 import events from 'node:events'
-import http from 'node:http'
+import type http from 'node:http'
 
 import cors from 'cors'
 import express from 'express'
-import {createHttpTerminator, HttpTerminator} from 'http-terminator'
+import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
 
-import {Config} from './config.js'
+import {type Config} from './config.js'
 import {AppContext} from './context.js'
 import {default as routes, errorHandler} from './routes/index.js'
 

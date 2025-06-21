@@ -1,9 +1,9 @@
 import assert from 'node:assert'
 
 import bodyParser from 'body-parser'
-import {Express, Request} from 'express'
+import {type Express, type Request} from 'express'
 
-import {AppContext} from '../context.js'
+import {type AppContext} from '../context.js'
 import {LinkType} from '../db/schema.js'
 import {randomId} from '../util.js'
 import {handler} from './util.js'
@@ -78,13 +78,14 @@ const getUrl = (ctx: AppContext, req: Request, id: string) => {
   if (!ctx.cfg.service.hostnames.length) {
     assert(req.headers.host, 'request must be made with host header')
     const baseUrl =
-      req.protocol === 'http' && req.headers.host.startsWith('localhost:')
+      req.protocol === 'http' && req.headers.host!.startsWith('localhost:')
         ? `http://${req.headers.host}`
         : `https://${req.headers.host}`
     return `${baseUrl}/${id}`
   }
-  const baseUrl = ctx.cfg.service.hostnames.includes(req.headers.host)
-    ? `https://${req.headers.host}`
+  const host = req.headers.host ?? ''
+  const baseUrl = ctx.cfg.service.hostnames.includes(host)
+    ? `https://${host}`
     : `https://${ctx.cfg.service.hostnames[0]}`
   return `${baseUrl}/${id}`
 }
@@ -94,7 +95,7 @@ const normalizedPathFromParts = (parts: string[]): string => {
     '/' +
     parts
       .map(encodeURIComponent)
-      .map(part => part.replaceAll('%3A', ':')) // preserve colons
+      .map(part => part.replace(/%3A/g, ':')) // preserve colons
       .join('/')
   )
 }
