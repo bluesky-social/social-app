@@ -1,6 +1,6 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {AppNux, Nux} from '#/state/queries/nuxs/definitions'
+import {type AppNux, type Nux} from '#/state/queries/nuxs/definitions'
 import {parseAppNux, serializeAppNux} from '#/state/queries/nuxs/util'
 import {
   preferencesQueryKey,
