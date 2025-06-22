@@ -12,10 +12,14 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Portal} from '#/components/Portal'
 import {atoms as a, useTheme} from '#/alf'
 import {useOnInteract} from '#/state/shell/GlobalGestureEvents'
+import {TIP_SIZE} from '#/components/Tooltip/const'
 
-type Context = {
-  visible: boolean
+type TooltipContextType = {
+  ready: boolean
   onVisibleChange: (visible: boolean) => void
+}
+
+type TargetContextType = {
   targetMeasurements:
     | {
         x: number
@@ -27,9 +31,12 @@ type Context = {
   targetRef: React.RefObject<View>
 }
 
-const TooltipContext = createContext<Context>({
-  visible: false,
+const TooltipContext = createContext<TooltipContextType>({
+  ready: false,
   onVisibleChange: () => {},
+})
+
+const TargetContext = createContext<TargetContextType>({
   targetMeasurements: undefined,
   targetRef: {current: null},
 })
@@ -43,12 +50,22 @@ export function Outer({
   visible: boolean
   onVisibleChange: (visible: boolean) => void
 }) {
-  const targetRef = useRef<View>(null)
+  /**
+   * Whether we have measured the target and are ready to show the tooltip.
+   */
+  const [ready, setReady] = useState(false)
+  /**
+   * Lagging state to track the externally-controlled visibility of the
+   * tooltip.
+   */
   const [prevRequestVisible, setPrevRequestVisible] = useState<
     boolean | undefined
   >()
-  const [visible, setVisible] = useState(false)
-  const [measurements, setMeasurements] = useState<
+  /**
+   * Needs to reference the element this Tooltip is attached to.
+   */
+  const targetRef = useRef<View>(null)
+  const [targetMeasurements, setTargetMeasurements] = useState<
     | {
         x: number
         y: number
@@ -59,89 +76,100 @@ export function Outer({
   >(undefined)
 
   if (requestVisible && !prevRequestVisible) {
-    setPrevRequestVisible(requestVisible)
+    setPrevRequestVisible(true)
+
     if (targetRef.current) {
+      /*
+       * Once opened, measure the dimensions and position of the target
+       */
       targetRef.current.measure((_x, _y, width, height, pageX, pageY) => {
-        setMeasurements({x: pageX, y: pageY, width, height})
-        setVisible(true)
+        setTargetMeasurements({x: pageX, y: pageY, width, height})
+        setReady(true)
       })
     }
   } else if (!requestVisible && prevRequestVisible) {
-    setPrevRequestVisible(requestVisible)
-    setMeasurements(undefined)
-    setVisible(false)
+    setPrevRequestVisible(false)
+    setTargetMeasurements(undefined)
+    setReady(false)
   }
 
   const ctx = useMemo(
-    () => ({
-      visible,
-      onVisibleChange,
-      targetMeasurements: measurements,
-      targetRef,
-    }),
-    [visible, onVisibleChange, measurements, targetRef],
+    () => ({ready, onVisibleChange}),
+    [ready, onVisibleChange],
+  )
+  const targetCtx = useMemo(
+    () => ({targetMeasurements, targetRef}),
+    [targetMeasurements, targetRef],
   )
 
   return (
-    <TooltipContext.Provider value={ctx}>{children}</TooltipContext.Provider>
+    <TooltipContext.Provider value={ctx}>
+      <TargetContext.Provider value={targetCtx}>
+        {children}
+      </TargetContext.Provider>
+    </TooltipContext.Provider>
   )
 }
 
 export function Target({
   children,
 }: {
-  children: (props: {ref: Context['targetRef']}) => React.ReactNode
+  children: (props: {ref: TargetContextType['targetRef']}) => React.ReactNode
 }) {
-  const {targetRef} = useContext(TooltipContext)
+  const {targetRef} = useContext(TargetContext)
 
   return children({
     ref: targetRef,
   })
 }
 
-const TIP_SIZE = 12
-
 export function Content({children}: {children: React.ReactNode}) {
-  const {visible, onVisibleChange, targetMeasurements} =
-    useContext(TooltipContext)
+  const {ready, onVisibleChange} = useContext(TooltipContext)
+  const {targetMeasurements} = useContext(TargetContext)
   const requestClose = useCallback(() => {
     onVisibleChange(false)
   }, [onVisibleChange])
 
-  if (!visible || !targetMeasurements) return null
+  if (!ready || !targetMeasurements) return null
 
   return (
     <Portal>
-      <Tooltip
+      <Bubble
+        /*
+         * Gotta pass these in here. Inside the Bubble, we're Potal-ed outside
+         * the context providers.
+         */
         targetMeasurements={targetMeasurements}
         requestClose={requestClose}>
         {children}
-      </Tooltip>
+      </Bubble>
     </Portal>
   )
 }
 
-function Tooltip({
+function Bubble({
   children,
   requestClose,
   targetMeasurements,
 }: {
   children: React.ReactNode
   requestClose: () => void
-  targetMeasurements: Context['targetMeasurements']
+  targetMeasurements: Exclude<
+    TargetContextType['targetMeasurements'],
+    undefined
+  >
 }) {
   const t = useTheme()
-  const [ready, setReady] = useState(false)
-  const [measurements, setMeasurements] = useState<
+  const insets = useSafeAreaInsets()
+  const [bubbleMeasurements, setBubbleMeasurements] = useState<
     | {
         width: number
         height: number
       }
     | undefined
   >(undefined)
-  const safe = useSafeAreaInsets()
   const coords = useMemo(() => {
-    if (!targetMeasurements || !measurements)
+    if (!bubbleMeasurements)
       return {
         top: 0,
         bottom: 0,
@@ -153,9 +181,9 @@ function Tooltip({
 
     const win = Dimensions.get('window')
     const {width: ww, height: wh} = win
-    const maxTop = safe.top
-    const maxBottom = wh - safe.bottom
-    const {width: cw, height: ch} = measurements
+    const maxTop = insets.top
+    const maxBottom = wh - insets.bottom
+    const {width: cw, height: ch} = bubbleMeasurements
     const minLeft = a.px_xl.paddingLeft
     const maxLeft = ww - minLeft
 
@@ -183,11 +211,10 @@ function Tooltip({
       tipTop,
       tipLeft,
     }
-  }, [targetMeasurements, measurements, safe])
+  }, [targetMeasurements, bubbleMeasurements, insets])
 
   const requestCloseWrapped = useCallback(() => {
-    setReady(false)
-    setMeasurements(undefined)
+    setBubbleMeasurements(undefined)
     requestClose()
   }, [requestClose])
 
@@ -216,12 +243,11 @@ function Tooltip({
         a.align_start,
         {
           width: 200,
-          opacity: ready ? 1 : 0,
+          opacity: !!bubbleMeasurements ? 1 : 0,
           top: coords.top,
           left: coords.left,
         },
       ]}>
-      {/* The triangle "tip" */}
       <View
         style={[
           a.absolute,
@@ -238,16 +264,13 @@ function Tooltip({
           },
         ]}
       />
-
-      {/* The content itself */}
       <View
         style={[a.px_md, a.py_sm, a.rounded_sm, t.atoms.bg, t.atoms.shadow_sm]}
         onLayout={e => {
-          setMeasurements({
+          setBubbleMeasurements({
             width: e.nativeEvent.layout.width,
             height: e.nativeEvent.layout.height,
           })
-          setReady(true)
         }}>
         {children}
       </View>
