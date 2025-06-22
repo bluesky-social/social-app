@@ -5112,9 +5112,9 @@
     "@babel/runtime" "^7.20.13"
     "@lingui/core" "4.14.1"
 
-"@mattermost/react-native-paste-input@haileyok/react-native-paste-input":
+"@mattermost/react-native-paste-input@bluesky-social/react-native-paste-input#rn-079":
   version "0.8.1"
-  resolved "https://codeload.github.com/haileyok/react-native-paste-input/tar.gz/f260447edc645a817ab1ba7b46d8341d84dba8e9"
+  resolved "https://codeload.github.com/bluesky-social/react-native-paste-input/tar.gz/0be30b2ae86395c01edf58e7040c73c712bce472"
   dependencies:
     semver "7.6.3"
 
