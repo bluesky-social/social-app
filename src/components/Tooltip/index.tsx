@@ -1,17 +1,17 @@
 import {
+  createContext,
   useCallback,
+  useContext,
   useMemo,
   useRef,
-  createContext,
-  useContext,
   useState,
 } from 'react'
-import {View, Dimensions} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {Dimensions, View} from 'react-native'
 
-import {Portal} from '#/components/Portal'
 import {atoms as a, useTheme} from '#/alf'
-import {useOnInteract} from '#/state/shell/GlobalGestureEvents'
+import {useOnGesture} from '#/components/hooks/useOnGesture'
+// import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {Portal} from '#/components/Portal'
 import {TIP_SIZE} from '#/components/Tooltip/const'
 
 type TooltipContextType = {
@@ -160,7 +160,7 @@ function Bubble({
   >
 }) {
   const t = useTheme()
-  const insets = useSafeAreaInsets()
+  // const insets = useSafeAreaInsets()
   const [bubbleMeasurements, setBubbleMeasurements] = useState<
     | {
         width: number
@@ -180,9 +180,9 @@ function Bubble({
       }
 
     const win = Dimensions.get('window')
-    const {width: ww, height: wh} = win
-    const maxTop = insets.top
-    const maxBottom = wh - insets.bottom
+    const {width: ww, height: _wh} = win
+    // const maxTop = insets.top
+    // const maxBottom = wh - insets.bottom
     const {width: cw, height: ch} = bubbleMeasurements
     const minLeft = a.px_xl.paddingLeft
     const maxLeft = ww - minLeft
@@ -211,14 +211,14 @@ function Bubble({
       tipTop,
       tipLeft,
     }
-  }, [targetMeasurements, bubbleMeasurements, insets])
+  }, [targetMeasurements, bubbleMeasurements])
 
   const requestCloseWrapped = useCallback(() => {
     setBubbleMeasurements(undefined)
     requestClose()
   }, [requestClose])
 
-  useOnInteract(
+  useOnGesture(
     useCallback(
       e => {
         const {x, y} = e
@@ -243,7 +243,7 @@ function Bubble({
         a.align_start,
         {
           width: 200,
-          opacity: !!bubbleMeasurements ? 1 : 0,
+          opacity: bubbleMeasurements ? 1 : 0,
           top: coords.top,
           left: coords.left,
         },

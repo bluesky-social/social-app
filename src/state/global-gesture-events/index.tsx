@@ -1,49 +1,56 @@
-import {createContext, useContext, useMemo, useEffect, useRef, useState} from 'react'
-import EventEmitter from 'eventemitter3'
+import {createContext, useContext, useMemo, useRef, useState} from 'react'
 import {
-  GestureDetector,
   Gesture,
-  GestureStateChangeEvent,
-  GestureUpdateEvent,
-  PanGestureHandlerEventPayload,
+  GestureDetector,
+  type GestureStateChangeEvent,
+  type GestureUpdateEvent,
+  type PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
+import EventEmitter from 'eventemitter3'
 
-const events = new EventEmitter<{
+export type GlobalGestureEvents = {
   begin: GestureStateChangeEvent<PanGestureHandlerEventPayload>
   update: GestureUpdateEvent<PanGestureHandlerEventPayload>
   end: GestureStateChangeEvent<PanGestureHandlerEventPayload>
   finalize: GestureStateChangeEvent<PanGestureHandlerEventPayload>
-}>()
+}
 
 const Context = createContext<{
+  events: EventEmitter<GlobalGestureEvents>
   register: () => void
   unregister: () => void
 }>({
+  events: new EventEmitter<GlobalGestureEvents>(),
   register: () => {},
   unregister: () => {},
 })
 
-export function GlobalGestureEvents({
+export function GlobalGestureEventsProvider({
   children,
 }: {
   children: React.ReactNode
-}): React.ReactElement {
+}) {
   const refCount = useRef(0)
+  const events = useMemo(() => new EventEmitter<GlobalGestureEvents>(), [])
   const [enabled, setEnabled] = useState(false)
-  const ctx = useMemo(() => ({
-    register() {
-      refCount.current += 1
-      if (refCount.current === 1) {
-        setEnabled(true)
-      }
-    },
-    unregister() {
-      refCount.current -= 1
-      if (refCount.current === 0) {
-        setEnabled(false)
-      }
-    },
-  }), [setEnabled])
+  const ctx = useMemo(
+    () => ({
+      events,
+      register() {
+        refCount.current += 1
+        if (refCount.current === 1) {
+          setEnabled(true)
+        }
+      },
+      unregister() {
+        refCount.current -= 1
+        if (refCount.current === 0) {
+          setEnabled(false)
+        }
+      },
+    }),
+    [events, setEnabled],
+  )
   const gesture = Gesture.Pan()
     .runOnJS(true)
     .enabled(enabled)
@@ -68,19 +75,6 @@ export function GlobalGestureEvents({
   )
 }
 
-export function useOnInteract(
-  onInteract: (
-    e: GestureStateChangeEvent<PanGestureHandlerEventPayload>,
-  ) => void,
-) {
-  const ctx = useContext(Context)
-  useEffect(() => {
-    ctx.register()
-    events.on('begin', onInteract)
-
-    return () => {
-      ctx.unregister()
-      events.off('begin', onInteract)
-    }
-  }, [ctx, onInteract])
+export function useGlobalGestureEvents() {
+  return useContext(Context)
 }

@@ -33,6 +33,7 @@ import {
   ensureGeolocationResolved,
   Provider as GeolocationProvider,
 } from '#/state/geolocation'
+import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
@@ -73,7 +74,6 @@ import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
-import {GlobalGestureEvents} from '#/state/shell/GlobalGestureEvents'
 
 SplashScreen.preventAutoHideAsync()
 if (isIOS) {
@@ -155,13 +155,13 @@ function InnerApp() {
                                                 <HideBottomBarBorderProvider>
                                                   <GestureHandlerRootView
                                                     style={s.h100pct}>
-                                                    <GlobalGestureEvents>
+                                                    <GlobalGestureEventsProvider>
                                                       <IntentDialogProvider>
                                                         <TestCtrls />
                                                         <Shell />
                                                         <NuxDialogs />
                                                       </IntentDialogProvider>
-                                                    </GlobalGestureEvents>
+                                                    </GlobalGestureEventsProvider>
                                                   </GestureHandlerRootView>
                                                 </HideBottomBarBorderProvider>
                                               </ServiceAccountManager>
