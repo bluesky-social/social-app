@@ -34,13 +34,13 @@ import {
 } from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
+import * as Tooltip from '#/components/Tooltip'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
-import * as Tooltip from '#/components/Tooltip'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -202,15 +202,36 @@ let ProfileHeaderStandard = ({
           ) : !profile.viewer?.blockedBy ? (
             <>
               <Button
-                label='test'
-                size='small'
-                variant='solid'
-                color='secondary'
-                shape='round'
-                onPress={() => setVisible(!visible)}
-              >
+                label="test"
+                size="small"
+                variant="solid"
+                color="secondary"
+                shape="round"
+                onPress={() => setVisible(!visible)}>
                 <ButtonIcon position="left" icon={Plus} />
               </Button>
+
+              {hasSession && (
+                <>
+                  <Tooltip.Outer
+                    position="top"
+                    visible={visible}
+                    onVisibleChange={setVisible}>
+                    <Tooltip.Target>
+                      {({ref}) => (
+                        <View ref={ref}>
+                          <MessageProfileButton profile={profile} />
+                        </View>
+                      )}
+                    </Tooltip.Target>
+                    <Tooltip.Content>
+                      <Text selectable>
+                        The quick brown fox jumps over the lazy dog
+                      </Text>
+                    </Tooltip.Content>
+                  </Tooltip.Outer>
+                </>
+              )}
 
               <Button
                 testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
@@ -239,24 +260,6 @@ let ProfileHeaderStandard = ({
                   )}
                 </ButtonText>
               </Button>
-
-
-              {hasSession && (
-                <>
-                  <Tooltip.Outer visible={visible} onVisibleChange={setVisible}>
-                    <Tooltip.Target>
-                      {({ref}) => (
-                        <View ref={ref}>
-                          <MessageProfileButton profile={profile} />
-                        </View>
-                      )}
-                    </Tooltip.Target>
-                    <Tooltip.Content>
-                      <Text>The quick brown fox jumps over the lazy dog</Text>
-                    </Tooltip.Content>
-                  </Tooltip.Outer>
-                </>
-              )}
             </>
           ) : null}
           <ProfileMenu profile={profile} />

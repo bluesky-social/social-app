@@ -7,14 +7,18 @@ import {
   useState,
 } from 'react'
 import {Dimensions, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {atoms as a, useTheme} from '#/alf'
 import {useOnGesture} from '#/components/hooks/useOnGesture'
-// import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Portal} from '#/components/Portal'
 import {TIP_SIZE} from '#/components/Tooltip/const'
 
+const HALF_TIP = TIP_SIZE / 2
+const TIP_VISUAL_OFFSET = TIP_SIZE / 3
+
 type TooltipContextType = {
+  position: 'top' | 'bottom'
   ready: boolean
   onVisibleChange: (visible: boolean) => void
 }
@@ -32,6 +36,7 @@ type TargetContextType = {
 }
 
 const TooltipContext = createContext<TooltipContextType>({
+  position: 'bottom',
   ready: false,
   onVisibleChange: () => {},
 })
@@ -43,10 +48,12 @@ const TargetContext = createContext<TargetContextType>({
 
 export function Outer({
   children,
+  position = 'bottom',
   visible: requestVisible,
   onVisibleChange,
 }: {
   children: React.ReactNode
+  position?: 'top' | 'bottom'
   visible: boolean
   onVisibleChange: (visible: boolean) => void
 }) {
@@ -94,8 +101,8 @@ export function Outer({
   }
 
   const ctx = useMemo(
-    () => ({ready, onVisibleChange}),
-    [ready, onVisibleChange],
+    () => ({position, ready, onVisibleChange}),
+    [position, ready, onVisibleChange],
   )
   const targetCtx = useMemo(
     () => ({targetMeasurements, targetRef}),
@@ -124,7 +131,7 @@ export function Target({
 }
 
 export function Content({children}: {children: React.ReactNode}) {
-  const {ready, onVisibleChange} = useContext(TooltipContext)
+  const {position, ready, onVisibleChange} = useContext(TooltipContext)
   const {targetMeasurements} = useContext(TargetContext)
   const requestClose = useCallback(() => {
     onVisibleChange(false)
@@ -135,6 +142,7 @@ export function Content({children}: {children: React.ReactNode}) {
   return (
     <Portal>
       <Bubble
+        position={position}
         /*
          * Gotta pass these in here. Inside the Bubble, we're Potal-ed outside
          * the context providers.
@@ -149,10 +157,12 @@ export function Content({children}: {children: React.ReactNode}) {
 
 function Bubble({
   children,
+  position,
   requestClose,
   targetMeasurements,
 }: {
   children: React.ReactNode
+  position: TooltipContextType['position']
   requestClose: () => void
   targetMeasurements: Exclude<
     TargetContextType['targetMeasurements'],
@@ -160,7 +170,7 @@ function Bubble({
   >
 }) {
   const t = useTheme()
-  // const insets = useSafeAreaInsets()
+  const insets = useSafeAreaInsets()
   const [bubbleMeasurements, setBubbleMeasurements] = useState<
     | {
         width: number
@@ -179,39 +189,74 @@ function Bubble({
         tipLeft: 0,
       }
 
-    const win = Dimensions.get('window')
-    const {width: ww, height: _wh} = win
-    // const maxTop = insets.top
-    // const maxBottom = wh - insets.bottom
+    const {width: ww, height: wh} = Dimensions.get('window')
+    const maxTop = insets.top
+    const maxBottom = wh - insets.bottom
     const {width: cw, height: ch} = bubbleMeasurements
     const minLeft = a.px_xl.paddingLeft
     const maxLeft = ww - minLeft
 
+    let computedPosition: 'top' | 'bottom' = position
     let top = targetMeasurements.y + targetMeasurements.height
     let left = Math.max(
       minLeft,
       targetMeasurements.x + targetMeasurements.width / 2 - cw / 2,
     )
-    let tipTop = (TIP_SIZE / 2) * -1
+    const tipTranslate = HALF_TIP * -1
+    let tipTop = tipTranslate
 
     if (left + cw > maxLeft) {
       left -= left + cw - maxLeft
     }
 
     let tipLeft =
-      targetMeasurements.x - left + targetMeasurements.width / 2 - TIP_SIZE / 2
+      targetMeasurements.x - left + targetMeasurements.width / 2 - HALF_TIP
 
-    top += TIP_SIZE / 3
+    let bottom = top + ch
+
+    function positionTop() {
+      top = top - ch - targetMeasurements.height
+      bottom = top + ch
+      tipTop = tipTop + ch
+      computedPosition = 'top'
+    }
+
+    function positionBottom() {
+      top = targetMeasurements.y + targetMeasurements.height
+      bottom = top + ch
+      tipTop = tipTranslate
+      computedPosition = 'bottom'
+    }
+
+    if (position === 'top') {
+      positionTop()
+      if (top < maxTop) {
+        positionBottom()
+      }
+    } else {
+      if (bottom > maxBottom) {
+        positionTop()
+      }
+    }
+
+    if (computedPosition === 'bottom') {
+      top += TIP_VISUAL_OFFSET
+      bottom += TIP_VISUAL_OFFSET
+    } else {
+      top -= TIP_VISUAL_OFFSET
+      bottom -= TIP_VISUAL_OFFSET
+    }
 
     return {
+      computedPosition,
       top,
-      bottom: top + ch,
+      bottom,
       left,
       right: left + cw,
       tipTop,
       tipLeft,
     }
-  }, [targetMeasurements, bubbleMeasurements])
+  }, [position, targetMeasurements, bubbleMeasurements, insets])
 
   const requestCloseWrapped = useCallback(() => {
     setBubbleMeasurements(undefined)
@@ -265,7 +310,23 @@ function Bubble({
         ]}
       />
       <View
-        style={[a.px_md, a.py_sm, a.rounded_sm, t.atoms.bg, t.atoms.shadow_sm]}
+        style={[
+          a.px_md,
+          a.py_sm,
+          a.rounded_sm,
+          t.atoms.bg,
+          t.atoms.shadow_md,
+          {
+            shadowOpacity: 0.2,
+            shadowOffset: {
+              width: 0,
+              // provide more shadow beneath tip
+              height:
+                TIP_VISUAL_OFFSET *
+                (coords.computedPosition === 'bottom' ? -1 : 1),
+            },
+          },
+        ]}
         onLayout={e => {
           setBubbleMeasurements({
             width: e.nativeEvent.layout.width,
