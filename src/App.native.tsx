@@ -73,6 +73,7 @@ import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
+import {GlobalGestureEvents} from '#/state/shell/GlobalGestureEvents'
 
 SplashScreen.preventAutoHideAsync()
 if (isIOS) {
@@ -154,11 +155,13 @@ function InnerApp() {
                                                 <HideBottomBarBorderProvider>
                                                   <GestureHandlerRootView
                                                     style={s.h100pct}>
-                                                    <IntentDialogProvider>
-                                                      <TestCtrls />
-                                                      <Shell />
-                                                      <NuxDialogs />
-                                                    </IntentDialogProvider>
+                                                    <GlobalGestureEvents>
+                                                      <IntentDialogProvider>
+                                                        <TestCtrls />
+                                                        <Shell />
+                                                        <NuxDialogs />
+                                                      </IntentDialogProvider>
+                                                    </GlobalGestureEvents>
                                                   </GestureHandlerRootView>
                                                 </HideBottomBarBorderProvider>
                                               </ServiceAccountManager>

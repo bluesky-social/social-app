@@ -1,17 +1,17 @@
 import {
+  useCallback,
   useMemo,
   useRef,
   createContext,
   useContext,
   useState,
-  isValidElement,
 } from 'react'
-import {View, Modal, Dimensions, Pressable} from 'react-native'
+import {View, Dimensions} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import flattenReactChildren from 'react-keyed-flatten-children'
 
 import {Portal} from '#/components/Portal'
 import {atoms as a, useTheme} from '#/alf'
+import {useOnInteract} from '#/state/shell/GlobalGestureEvents'
 
 type Context = {
   visible: boolean
@@ -25,7 +25,6 @@ type Context = {
       }
     | undefined
   targetRef: React.RefObject<View>
-  targetElement: any
 }
 
 const TooltipContext = createContext<Context>({
@@ -33,7 +32,6 @@ const TooltipContext = createContext<Context>({
   onVisibleChange: () => {},
   targetMeasurements: undefined,
   targetRef: {current: null},
-  targetElement: null,
 })
 
 export function Outer({
@@ -80,11 +78,6 @@ export function Outer({
       onVisibleChange,
       targetMeasurements: measurements,
       targetRef,
-      targetElement: flattenReactChildren(children).find(child => {
-        if (isValidElement(child) && child.type === Target) {
-          return true
-        }
-      }),
     }),
     [visible, onVisibleChange, measurements, targetRef],
   )
@@ -109,9 +102,35 @@ export function Target({
 const TIP_SIZE = 12
 
 export function Content({children}: {children: React.ReactNode}) {
-  const t = useTheme()
-  const {visible, onVisibleChange, targetMeasurements, targetElement} =
+  const {visible, onVisibleChange, targetMeasurements} =
     useContext(TooltipContext)
+  const requestClose = useCallback(() => {
+    onVisibleChange(false)
+  }, [onVisibleChange])
+
+  if (!visible || !targetMeasurements) return null
+
+  return (
+    <Portal>
+      <Tooltip
+        targetMeasurements={targetMeasurements}
+        requestClose={requestClose}>
+        {children}
+      </Tooltip>
+    </Portal>
+  )
+}
+
+function Tooltip({
+  children,
+  requestClose,
+  targetMeasurements,
+}: {
+  children: React.ReactNode
+  requestClose: () => void
+  targetMeasurements: Context['targetMeasurements']
+}) {
+  const t = useTheme()
   const [ready, setReady] = useState(false)
   const [measurements, setMeasurements] = useState<
     | {
@@ -121,18 +140,13 @@ export function Content({children}: {children: React.ReactNode}) {
     | undefined
   >(undefined)
   const safe = useSafeAreaInsets()
-
-  const requestClose = () => {
-    onVisibleChange(false)
-    setReady(false)
-    setMeasurements(undefined)
-  }
-
-  const {positionTop, contentLeft, tipTop, tipLeft} = useMemo(() => {
+  const coords = useMemo(() => {
     if (!targetMeasurements || !measurements)
       return {
-        positionTop: 0,
-        contentLeft: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
         tipTop: 0,
         tipLeft: 0,
       }
@@ -145,118 +159,98 @@ export function Content({children}: {children: React.ReactNode}) {
     const minLeft = a.px_xl.paddingLeft
     const maxLeft = ww - minLeft
 
-    let positionTop = targetMeasurements.y + targetMeasurements.height
-    let contentLeft = Math.max(
+    let top = targetMeasurements.y + targetMeasurements.height
+    let left = Math.max(
       minLeft,
       targetMeasurements.x + targetMeasurements.width / 2 - cw / 2,
     )
     let tipTop = (TIP_SIZE / 2) * -1
-    let tipLeft =
-      targetMeasurements.x + targetMeasurements.width / 2 - TIP_SIZE / 2
 
-    if (contentLeft + cw > maxLeft) {
-      contentLeft -= contentLeft + cw - maxLeft
+    if (left + cw > maxLeft) {
+      left -= left + cw - maxLeft
     }
 
-    positionTop += TIP_SIZE / 3
+    let tipLeft =
+      targetMeasurements.x - left + targetMeasurements.width / 2 - TIP_SIZE / 2
+
+    top += TIP_SIZE / 3
 
     return {
-      positionTop,
-      contentLeft,
+      top,
+      bottom: top + ch,
+      left,
+      right: left + cw,
       tipTop,
       tipLeft,
     }
   }, [targetMeasurements, measurements, safe])
 
-  if (!visible || !targetMeasurements) return null
+  const requestCloseWrapped = useCallback(() => {
+    setReady(false)
+    setMeasurements(undefined)
+    requestClose()
+  }, [requestClose])
+
+  useOnInteract(
+    useCallback(
+      e => {
+        const {x, y} = e
+        const isInside =
+          x > coords.left &&
+          x < coords.right &&
+          y > coords.top &&
+          y < coords.bottom
+
+        if (!isInside) {
+          requestCloseWrapped()
+        }
+      },
+      [coords, requestCloseWrapped],
+    ),
+  )
 
   return (
-    <Portal>
-      <Modal
-        transparent
-        onRequestClose={() => {}} // TODO
-        style={[a.absolute, a.inset_0]}>
-        {/* Backdrop */}
-        <Pressable
-          style={[
-            a.absolute,
-            a.inset_0,
-            t.atoms.bg,
-            {
-              opacity: 0.4,
-            },
-          ]}
-          onPress={requestClose}
-        />
+    <View
+      style={[
+        a.absolute,
+        a.align_start,
+        {
+          width: 200,
+          opacity: ready ? 1 : 0,
+          top: coords.top,
+          left: coords.left,
+        },
+      ]}>
+      {/* The triangle "tip" */}
+      <View
+        style={[
+          a.absolute,
+          a.top_0,
+          a.z_10,
+          t.atoms.bg,
+          {
+            borderTopLeftRadius: a.rounded_xs.borderRadius,
+            width: TIP_SIZE,
+            height: TIP_SIZE,
+            transform: [{rotate: '45deg'}],
+            top: coords.tipTop,
+            left: coords.tipLeft,
+          },
+        ]}
+      />
 
-        {/* Replica of the target element */}
-        <View
-          style={[
-            a.absolute,
-            {
-              top: targetMeasurements.y,
-              left: targetMeasurements.x,
-              height: targetMeasurements.height,
-              width: targetMeasurements.width,
-            },
-          ]}>
-          {targetElement}
-        </View>
-
-        {/* Outer content container */}
-        <View
-          style={[
-            a.absolute,
-            a.align_start,
-            {
-              opacity: ready ? 1 : 0,
-              top: positionTop,
-              left: 0,
-              right: 0,
-            },
-          ]}>
-          {/* The triangle "tip" */}
-          <View
-            style={[
-              a.absolute,
-              a.top_0,
-              a.z_10,
-              t.atoms.bg,
-              {
-                borderTopLeftRadius: a.rounded_xs.borderRadius,
-                width: TIP_SIZE,
-                height: TIP_SIZE,
-                transform: [{rotate: '45deg'}],
-                top: tipTop,
-                left: tipLeft,
-              },
-            ]}
-          />
-
-          {/* The content itself */}
-          <View
-            style={[
-              a.px_md,
-              a.py_sm,
-              a.rounded_sm,
-              t.atoms.bg,
-              t.atoms.shadow_sm,
-              {
-                maxWidth: 200,
-                left: contentLeft,
-              },
-            ]}
-            onLayout={e => {
-              setReady(true)
-              setMeasurements({
-                width: e.nativeEvent.layout.width,
-                height: e.nativeEvent.layout.height,
-              })
-            }}>
-            {children}
-          </View>
-        </View>
-      </Modal>
-    </Portal>
+      {/* The content itself */}
+      <View
+        style={[a.px_md, a.py_sm, a.rounded_sm, t.atoms.bg, t.atoms.shadow_sm]}
+        onLayout={e => {
+          setMeasurements({
+            width: e.nativeEvent.layout.width,
+            height: e.nativeEvent.layout.height,
+          })
+          setReady(true)
+        }}>
+        {children}
+      </View>
+    </View>
   )
 }
