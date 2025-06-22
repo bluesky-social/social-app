@@ -40,6 +40,7 @@ import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
+import * as Tooltip from '#/components/Tooltip'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -141,6 +142,8 @@ let ProfileHeaderStandard = ({
 
   const {isActive: live} = useActorStatus(profile)
 
+  const [visible, setVisible] = React.useState(false)
+
   return (
     <ProfileHeaderShell
       profile={profile}
@@ -198,7 +201,16 @@ let ProfileHeaderStandard = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              {hasSession && <MessageProfileButton profile={profile} />}
+              <Button
+                label='test'
+                size='small'
+                variant='solid'
+                color='secondary'
+                shape='round'
+                onPress={() => setVisible(!visible)}
+              >
+                <ButtonIcon position="left" icon={Plus} />
+              </Button>
 
               <Button
                 testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
@@ -227,6 +239,24 @@ let ProfileHeaderStandard = ({
                   )}
                 </ButtonText>
               </Button>
+
+
+              {hasSession && (
+                <>
+                  <Tooltip.Outer visible={visible} onVisibleChange={setVisible}>
+                    <Tooltip.Target>
+                      {({ref}) => (
+                        <View ref={ref}>
+                          <MessageProfileButton profile={profile} />
+                        </View>
+                      )}
+                    </Tooltip.Target>
+                    <Tooltip.Content>
+                      <Text>The quick brown fox jumps over the lazy dog</Text>
+                    </Tooltip.Content>
+                  </Tooltip.Outer>
+                </>
+              )}
             </>
           ) : null}
           <ProfileMenu profile={profile} />
