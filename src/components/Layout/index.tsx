@@ -88,11 +88,7 @@ export const Content = memo(
         ref={ref}
         id="content"
         automaticallyAdjustsScrollIndicatorInsets={false}
-        scrollIndicatorInsets={{
-          bottom: footerHeight,
-          top: 0,
-          right: 1,
-        }}
+        scrollIndicatorInsets={{bottom: footerHeight, top: 0, right: 1}}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         style={[scrollViewStyles.common, style]}
         contentInset={ios({top: 0, left: 0, bottom: footerHeight, right: 0})}
@@ -139,6 +135,8 @@ export const KeyboardAwareContent = memo(function LayoutKeyboardAwareContent({
   return (
     <KeyboardAwareScrollView
       style={[scrollViewStyles.common, style]}
+      automaticallyAdjustsScrollIndicatorInsets={false}
+      scrollIndicatorInsets={{bottom: footerHeight, top: 0, right: 1}}
       contentInset={ios({top: 0, left: 0, bottom: footerHeight, right: 0})}
       contentContainerStyle={[
         !isIOS && {paddingBottom: footerHeight},
