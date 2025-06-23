@@ -111,8 +111,8 @@ export function Trigger({children, label}: TriggerProps) {
             borderColor: focused
               ? t.palette.primary_500
               : hovered
-              ? t.palette.contrast_100
-              : t.palette.contrast_25,
+                ? t.palette.contrast_100
+                : t.palette.contrast_25,
           },
         ])}>
         {children}
@@ -244,6 +244,7 @@ export function Item({ref, value, style, children}: ItemProps) {
       onFocus={onFocus}
       onBlur={onBlur}
       style={flatten([
+        t.atoms.text,
         a.relative,
         a.flex,
         {minHeight: 25, paddingLeft: 30, paddingRight: 35},

@@ -214,8 +214,8 @@ let ProfileHeaderLabeler = ({
                             ? t.palette.contrast_50
                             : t.palette.contrast_25
                           : state.hovered || state.pressed
-                          ? tokens.color.temp_purple_dark
-                          : tokens.color.temp_purple,
+                            ? tokens.color.temp_purple_dark
+                            : tokens.color.temp_purple,
                       },
                     ]}>
                     <Text

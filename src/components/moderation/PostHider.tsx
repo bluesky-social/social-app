@@ -1,6 +1,16 @@
-import React, {ComponentProps} from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {AppBskyActorDefs, ModerationCause, ModerationUI} from '@atproto/api'
+import React, {type ComponentProps} from 'react'
+import {
+  Pressable,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import {
+  type AppBskyActorDefs,
+  type ModerationCause,
+  type ModerationUI,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'

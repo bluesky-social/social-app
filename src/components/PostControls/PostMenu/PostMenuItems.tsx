@@ -26,7 +26,7 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
@@ -48,7 +48,7 @@ import {
   useProfileMuteMutationQueue,
 } from '#/state/queries/profile'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
-import {useSession} from '#/state/session'
+import {useRequireAuth, useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import * as Toast from '#/view/com/util/Toast'
 import {useDialogControl} from '#/components/Dialog'
@@ -113,6 +113,7 @@ let PostMenuItems = ({
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
   const {mutateAsync: pinPostMutate, isPending: isPinPending} =
     usePinnedPostMutation()
+  const requireSignIn = useRequireAuth()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
@@ -397,6 +398,14 @@ let PostMenuItems = ({
     openLink(url)
   }
 
+  const onSignIn = () => requireSignIn(() => {})
+
+  const gate = useGate()
+  const isDiscoverDebugUser =
+    IS_INTERNAL ||
+    DISCOVER_DEBUG_DIDS[currentAccount?.did || ''] ||
+    gate('debug_show_feedcontext')
+
   return (
     <>
       <Menu.Outer>
@@ -428,7 +437,7 @@ let PostMenuItems = ({
         )}
 
         <Menu.Group>
-          {(!hideInPWI || hasSession) && (
+          {!hideInPWI || hasSession ? (
             <>
               <Menu.Item
                 testID="postDropdownTranslateBtn"
@@ -446,6 +455,14 @@ let PostMenuItems = ({
                 <Menu.ItemIcon icon={ClipboardIcon} position="right" />
               </Menu.Item>
             </>
+          ) : (
+            <Menu.Item
+              testID="postDropdownSignInBtn"
+              label={_(msg`Sign in to view post`)}
+              onPress={onSignIn}>
+              <Menu.ItemText>{_(msg`Sign in to view post`)}</Menu.ItemText>
+              <Menu.ItemIcon icon={Eye} position="right" />
+            </Menu.Item>
           )}
         </Menu.Group>
 
@@ -472,17 +489,15 @@ let PostMenuItems = ({
           </>
         )}
 
-        {hasSession &&
-          IS_INTERNAL &&
-          DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
-            <Menu.Item
-              testID="postDropdownReportMisclassificationBtn"
-              label={_(msg`Assign topic for algo`)}
-              onPress={onReportMisclassification}>
-              <Menu.ItemText>{_(msg`Assign topic for algo`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={AtomIcon} position="right" />
-            </Menu.Item>
-          )}
+        {isDiscoverDebugUser && (
+          <Menu.Item
+            testID="postDropdownReportMisclassificationBtn"
+            label={_(msg`Assign topic for algo`)}
+            onPress={onReportMisclassification}>
+            <Menu.ItemText>{_(msg`Assign topic for algo`)}</Menu.ItemText>
+            <Menu.ItemIcon icon={AtomIcon} position="right" />
+          </Menu.Item>
+        )}
 
         {hasSession && (
           <>
@@ -585,8 +600,8 @@ let PostMenuItems = ({
                         isDetachPending
                           ? Loader
                           : quoteEmbed.isDetached
-                          ? Eye
-                          : EyeSlash
+                            ? Eye
+                            : EyeSlash
                       }
                       position="right"
                     />

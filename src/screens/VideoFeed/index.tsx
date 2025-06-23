@@ -882,7 +882,10 @@ function Overlay({
               player={player}
               seekingAnimationSV={seekingAnimationSV}
               scrollGesture={scrollGesture}>
-              <PostThreadComposePrompt onPressCompose={onPressReply} />
+              <PostThreadComposePrompt
+                onPressCompose={onPressReply}
+                style={[a.pt_md, a.pb_sm]}
+              />
             </Scrubber>
           </LinearGradient>
         </View>

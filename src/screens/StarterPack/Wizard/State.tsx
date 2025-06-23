@@ -1,6 +1,6 @@
 import React from 'react'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {type GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, plural} from '@lingui/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'

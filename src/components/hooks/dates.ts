@@ -8,7 +8,7 @@
  */
 
 import React from 'react'
-import {formatDistance, Locale} from 'date-fns'
+import {formatDistance, type Locale} from 'date-fns'
 import {
   ar,
   ca,
@@ -48,7 +48,7 @@ import {
   zhTW,
 } from 'date-fns/locale'
 
-import {AppLanguage} from '#/locale/languages'
+import {type AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 
 /**

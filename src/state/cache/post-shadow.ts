@@ -14,6 +14,7 @@ import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/qu
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '#/state/queries/post-thread'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
+import {findAllPostsInQueryData as findAllPostsInThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
 import {castAsShadow, type Shadow} from './types'
 export type {Shadow} from './types'
 
@@ -148,6 +149,9 @@ function* findPostsInCache(
     if (node.type === 'post') {
       yield node.post
     }
+  }
+  for (let post of findAllPostsInThreadV2QueryData(queryClient, uri)) {
+    yield post
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield post

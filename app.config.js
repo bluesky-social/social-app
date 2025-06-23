@@ -29,8 +29,8 @@ module.exports = function (_config) {
   const UPDATES_CHANNEL = IS_TESTFLIGHT
     ? 'testflight'
     : IS_PRODUCTION
-    ? 'production'
-    : undefined
+      ? 'production'
+      : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)

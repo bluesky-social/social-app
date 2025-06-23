@@ -1,6 +1,6 @@
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {ModerationUI} from '@atproto/api'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -148,8 +148,8 @@ function ContentHiderActive({
           modui.noOverride
             ? _(msg`Learn more about the moderation applied to this content`)
             : override
-            ? _(msg`Hides the content`)
-            : _(msg`Shows the content`)
+              ? _(msg`Hides the content`)
+              : _(msg`Shows the content`)
         }>
         {state => (
           <View

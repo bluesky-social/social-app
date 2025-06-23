@@ -1,9 +1,15 @@
 import React from 'react'
-import {Keyboard, Platform, StyleProp, View, ViewStyle} from 'react-native'
 import {
-  AppBskyFeedDefs,
+  Keyboard,
+  Platform,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import {
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyGraphDefs,
+  type AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -13,7 +19,7 @@ import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
 import {isNative} from '#/platform/detection'
 import {
-  ThreadgateAllowUISetting,
+  type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
 import {atoms as a, useTheme} from '#/alf'
@@ -70,8 +76,8 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const description = anyoneCanReply
     ? _(msg`Everybody can reply`)
     : noOneCanReply
-    ? _(msg`Replies disabled`)
-    : _(msg`Some people can reply`)
+      ? _(msg`Replies disabled`)
+      : _(msg`Some people can reply`)
 
   const onPressOpen = () => {
     if (isNative && Keyboard.isVisible()) {

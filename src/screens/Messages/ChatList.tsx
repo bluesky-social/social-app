@@ -155,7 +155,7 @@ export function MessagesScreen({navigation, route}: Props) {
           profiles: inboxPreviewConvos.slice(0, 3),
         },
         ...conversations.map(
-          convo => ({type: 'CONVERSATION', conversation: convo} as const),
+          convo => ({type: 'CONVERSATION', conversation: convo}) as const,
         ),
       ] satisfies ListItem[]
     }

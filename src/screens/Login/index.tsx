@@ -49,8 +49,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     requestedAccount
       ? Forms.Login
       : accounts.length
-      ? Forms.ChooseAccount
-      : Forms.Login,
+        ? Forms.ChooseAccount
+        : Forms.Login,
   )
 
   const {
