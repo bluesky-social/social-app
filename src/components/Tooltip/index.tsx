@@ -10,7 +10,7 @@ import {Dimensions, View} from 'react-native'
 import Animated, {Easing, ZoomIn} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
 import {useOnGesture} from '#/components/hooks/useOnGesture'
 import {Portal} from '#/components/Portal'
 import {TIP_SIZE} from '#/components/Tooltip/const'
@@ -320,8 +320,14 @@ function Bubble({
             a.top_0,
             a.z_10,
             t.atoms.bg,
+            select(t.name, {
+              light: t.atoms.bg,
+              dark: t.atoms.bg_contrast_100,
+              dim: t.atoms.bg_contrast_100,
+            }),
             {
-              borderTopLeftRadius: a.rounded_xs.borderRadius,
+              borderTopLeftRadius: a.rounded_2xs.borderRadius,
+              borderBottomRightRadius: a.rounded_2xs.borderRadius,
               width: TIP_SIZE,
               height: TIP_SIZE,
               transform: [{rotate: '45deg'}],
@@ -335,7 +341,11 @@ function Bubble({
             a.px_md,
             a.py_sm,
             a.rounded_sm,
-            t.atoms.bg,
+            select(t.name, {
+              light: t.atoms.bg,
+              dark: t.atoms.bg_contrast_100,
+              dim: t.atoms.bg_contrast_100,
+            }),
             t.atoms.shadow_md,
             {
               shadowOpacity: 0.2,
