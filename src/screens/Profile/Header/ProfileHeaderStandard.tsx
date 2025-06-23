@@ -204,7 +204,10 @@ let ProfileHeaderStandard = ({
           ) : !profile.viewer?.blockedBy ? (
             <>
               {hasSession && !subscriptionsDisallowed && (
-                <SubscribeProfileButton profile={profile} />
+                <SubscribeProfileButton
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
               )}
               {hasSession && <MessageProfileButton profile={profile} />}
 

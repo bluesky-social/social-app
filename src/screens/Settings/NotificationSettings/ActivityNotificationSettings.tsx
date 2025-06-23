@@ -16,8 +16,10 @@ import {useActivitySubscriptionsQuery} from '#/state/queries/activity-subscripti
 import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
+import {SubscribeProfileDialog} from '#/components/activity-notifications/SubscribeProfileDialog'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {Bell_Filled_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
 import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import * as Layout from '#/components/Layout'
@@ -197,6 +199,7 @@ function ActivitySubscriptionCard({
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
+  const control = useDialogControl()
   const {_} = useLingui()
   const t = useTheme()
 
@@ -226,7 +229,8 @@ function ActivitySubscriptionCard({
             )}
             size="small"
             color="primary"
-            variant="solid">
+            variant="solid"
+            onPress={control.open}>
             <ButtonText>
               <Trans>Edit</Trans>
             </ButtonText>
@@ -234,6 +238,13 @@ function ActivitySubscriptionCard({
         </ProfileCard.Header>
         {/* <ProfileCard.Labels profile={profile} moderationOpts={moderationOpts} /> */}
       </ProfileCard.Outer>
+
+      <SubscribeProfileDialog
+        control={control}
+        profile={profile}
+        moderationOpts={moderationOpts}
+        includeProfile
+      />
     </View>
   )
 }

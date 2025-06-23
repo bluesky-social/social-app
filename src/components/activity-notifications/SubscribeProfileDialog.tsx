@@ -1,5 +1,6 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
+import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -10,20 +11,29 @@ import {atoms as a} from '#/alf'
 import {Button, type ButtonProps, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
+import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 
 export function SubscribeProfileDialog({
   control,
   profile,
+  moderationOpts,
+  includeProfile,
 }: {
   control: Dialog.DialogControlProps
   profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+  includeProfile?: boolean
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
-      <DialogInner profile={profile} />
+      <DialogInner
+        profile={profile}
+        moderationOpts={moderationOpts}
+        includeProfile={includeProfile}
+      />
     </Dialog.Outer>
   )
 }
@@ -34,7 +44,15 @@ const initialState = {
   replies: false,
 }
 
-function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
+function DialogInner({
+  profile,
+  moderationOpts,
+  includeProfile,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+  includeProfile?: boolean
+}) {
   const {_} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
@@ -89,6 +107,20 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             <Trans>Get notified of this account’s activity</Trans>
           </Text>
         </View>
+
+        {includeProfile && (
+          <ProfileCard.Header>
+            <ProfileCard.Avatar
+              profile={profile}
+              moderationOpts={moderationOpts}
+              disabledPreview
+            />
+            <ProfileCard.NameAndHandle
+              profile={profile}
+              moderationOpts={moderationOpts}
+            />
+          </ProfileCard.Header>
+        )}
 
         <Toggle.Group
           label={_(msg`Subscribe to account activity`)}

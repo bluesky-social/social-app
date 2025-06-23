@@ -1,4 +1,5 @@
 import {useCallback} from 'react'
+import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,8 +14,10 @@ import {SubscribeProfileDialog} from './SubscribeProfileDialog'
 
 export function SubscribeProfileButton({
   profile,
+  moderationOpts,
 }: {
   profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
 }) {
   const {_} = useLingui()
   const requireEmailVerification = useRequireEmailVerification()
@@ -53,6 +56,7 @@ export function SubscribeProfileButton({
       <SubscribeProfileDialog
         control={subscribeDialogControl}
         profile={profile}
+        moderationOpts={moderationOpts}
       />
     </>
   )
