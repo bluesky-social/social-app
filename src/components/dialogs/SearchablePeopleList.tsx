@@ -390,13 +390,14 @@ function DefaultProfileCard({
             !enabled
               ? {opacity: 0.5}
               : pressed || focused || hovered
-              ? t.atoms.bg_contrast_25
-              : t.atoms.bg,
+                ? t.atoms.bg_contrast_25
+                : t.atoms.bg,
           ]}>
           <ProfileCard.Header>
             <ProfileCard.Avatar
               profile={profile}
               moderationOpts={moderationOpts}
+              disabledPreview
             />
             <View style={[a.flex_1]}>
               <ProfileCard.Name

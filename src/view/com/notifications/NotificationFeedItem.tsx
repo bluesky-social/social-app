@@ -30,6 +30,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {MAX_POST_LINES} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -918,7 +919,8 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
         {text?.length > 0 && (
           <Text
             emoji
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
+            numberOfLines={MAX_POST_LINES}>
             {text}
           </Text>
         )}

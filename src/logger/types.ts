@@ -10,6 +10,8 @@ export enum LogContext {
   ConversationAgent = 'conversation-agent',
   DMsAgent = 'dms-agent',
   ReportDialog = 'report-dialog',
+  FeedFeedback = 'feed-feedback',
+  PostSource = 'post-source',
 
   /**
    * METRIC IS FOR INTERNAL USE ONLY, don't create any other loggers using this

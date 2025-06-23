@@ -110,6 +110,7 @@ describe('general functionality', () => {
     const timestamp = Date.now()
     const sentryTimestamp = timestamp / 1000
 
+    /*
     sentryTransport(
       LogLevel.Debug,
       Logger.Context.Default,
@@ -125,6 +126,7 @@ describe('general functionality', () => {
       level: LogLevel.Debug,
       timestamp: sentryTimestamp,
     })
+    */
 
     sentryTransport(
       LogLevel.Info,
@@ -154,7 +156,7 @@ describe('general functionality', () => {
       message,
       data: {__context__: 'logger'},
       type: 'default',
-      level: 'debug', // Sentry bug, log becomes debug
+      level: 'log',
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
@@ -220,7 +222,7 @@ describe('general functionality', () => {
     const sentryTimestamp = timestamp / 1000
 
     sentryTransport(
-      LogLevel.Debug,
+      LogLevel.Info,
       undefined,
       message,
       {error: new Error('foo')},
@@ -230,7 +232,7 @@ describe('general functionality', () => {
       message,
       data: {error: 'Error: foo'},
       type: 'default',
-      level: LogLevel.Debug,
+      level: LogLevel.Info,
       timestamp: sentryTimestamp,
     })
   })

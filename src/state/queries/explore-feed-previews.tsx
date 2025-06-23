@@ -36,38 +36,27 @@ const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
 const LIMIT = 8 // sliced to 6, overfetch to account for moderation
 const PINNED_POST_URIS: Record<string, boolean> = {
   // 📰 News
-  'at://did:plc:kkf4naxqmweop7dv4l2iqqf5/app.bsky.feed.post/3lgh27w2ngc2b':
-    true,
+  'at://did:plc:kkf4naxqmweop7dv4l2iqqf5/app.bsky.feed.post/3lgh27w2ngc2b': true,
   // Gardening
-  'at://did:plc:5rw2on4i56btlcajojaxwcat/app.bsky.feed.post/3kjorckgcwc27':
-    true,
+  'at://did:plc:5rw2on4i56btlcajojaxwcat/app.bsky.feed.post/3kjorckgcwc27': true,
   // Web Development Trending
-  'at://did:plc:m2sjv3wncvsasdapla35hzwj/app.bsky.feed.post/3lfaw445axs22':
-    true,
+  'at://did:plc:m2sjv3wncvsasdapla35hzwj/app.bsky.feed.post/3lfaw445axs22': true,
   // Anime & Manga EN
-  'at://did:plc:tazrmeme4dzahimsykusrwrk/app.bsky.feed.post/3knxx2gmkns2y':
-    true,
+  'at://did:plc:tazrmeme4dzahimsykusrwrk/app.bsky.feed.post/3knxx2gmkns2y': true,
   // 📽️ Film
-  'at://did:plc:2hwwem55ce6djnk6bn62cstr/app.bsky.feed.post/3llhpzhbq7c2g':
-    true,
+  'at://did:plc:2hwwem55ce6djnk6bn62cstr/app.bsky.feed.post/3llhpzhbq7c2g': true,
   // PopSky
-  'at://did:plc:lfdf4srj43iwdng7jn35tjsp/app.bsky.feed.post/3lbblgly65c2g':
-    true,
+  'at://did:plc:lfdf4srj43iwdng7jn35tjsp/app.bsky.feed.post/3lbblgly65c2g': true,
   // Science
-  'at://did:plc:hu2obebw3nhfj667522dahfg/app.bsky.feed.post/3kl33otd6ob2s':
-    true,
+  'at://did:plc:hu2obebw3nhfj667522dahfg/app.bsky.feed.post/3kl33otd6ob2s': true,
   // Birds! 🦉
-  'at://did:plc:ffkgesg3jsv2j7aagkzrtcvt/app.bsky.feed.post/3lbg4r57yk22d':
-    true,
+  'at://did:plc:ffkgesg3jsv2j7aagkzrtcvt/app.bsky.feed.post/3lbg4r57yk22d': true,
   // Astronomy
-  'at://did:plc:xy2zorw2ys47poflotxthlzg/app.bsky.feed.post/3kyzye4lujs2w':
-    true,
+  'at://did:plc:xy2zorw2ys47poflotxthlzg/app.bsky.feed.post/3kyzye4lujs2w': true,
   // What's Cooking 🍽️
-  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3lfqhgvxbqc2q':
-    true,
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3lfqhgvxbqc2q': true,
   // BookSky 💙📚 #booksky
-  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3kgrm2rw5ww2e':
-    true,
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3kgrm2rw5ww2e': true,
 }
 
 export type FeedPreviewItem =

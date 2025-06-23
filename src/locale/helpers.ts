@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 

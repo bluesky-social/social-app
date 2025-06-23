@@ -45,6 +45,7 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
+  AppBskyUnspeccedDefs,
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
@@ -55,6 +56,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
+import {retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
 import {
   MAX_GRAPHEME_LENGTH,
@@ -62,6 +64,7 @@ import {
   type SupportedMimeTypes,
 } from '#/lib/constants'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useAppState} from '#/lib/hooks/useAppState'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -69,7 +72,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
-import {colors, s} from '#/lib/styles'
+import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -87,13 +90,14 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {type ComposerOpts} from '#/state/shell/composer'
+import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
 import {
   ExternalEmbedGif,
   ExternalEmbedLink,
 } from '#/view/com/composer/ExternalEmbed'
+import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
@@ -113,7 +117,6 @@ import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
-import {LazyQuoteEmbed, QuoteX} from '#/view/com/util/post-embeds/QuoteEmbed'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -122,6 +125,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
@@ -152,6 +156,7 @@ type Props = ComposerOpts
 export const ComposePost = ({
   replyTo,
   onPost,
+  onPostSuccess,
   quote: initQuote,
   mention: initMention,
   openEmojiPicker,
@@ -388,8 +393,10 @@ export const ComposePost = ({
     setError('')
     setIsPublishing(true)
 
-    let postUri
+    let postUri: string | undefined
+    let postSuccessData: OnPostSuccessData
     try {
+      logger.info(`composer: posting...`)
       postUri = (
         await apilib.post(agent, queryClient, {
           thread,
@@ -398,16 +405,48 @@ export const ComposePost = ({
           langs: toPostLanguages(langPrefs.postLanguage),
         })
       ).uris[0]
+
+      /*
+       * Wait for app view to have received the post(s). If this fails, it's
+       * ok, because the post _was_ actually published above.
+       */
       try {
-        await whenAppViewReady(agent, postUri, res => {
-          const postedThread = res?.data?.thread
-          return AppBskyFeedDefs.isThreadViewPost(postedThread)
-        })
+        if (postUri) {
+          logger.info(`composer: waiting for app view`)
+
+          const posts = await retry(
+            5,
+            _e => true,
+            async () => {
+              const res = await agent.app.bsky.unspecced.getPostThreadV2({
+                anchor: postUri!,
+                above: false,
+                below: thread.posts.length - 1,
+                branchingFactor: 1,
+              })
+              if (res.data.thread.length !== thread.posts.length) {
+                throw new Error(`composer: app view is not ready`)
+              }
+              if (
+                !res.data.thread.every(p =>
+                  AppBskyUnspeccedDefs.isThreadItemPost(p.value),
+                )
+              ) {
+                throw new Error(`composer: app view returned non-post items`)
+              }
+              return res.data.thread
+            },
+            1e3,
+          )
+          postSuccessData = {
+            replyToUri: replyTo?.uri,
+            posts,
+          }
+        }
       } catch (waitErr: any) {
-        logger.error(waitErr, {
-          message: `Waiting for app view failed`,
+        logger.info(`composer: waiting for app view failed`, {
+          safeMessage: waitErr,
         })
-        // Keep going because the post *was* published.
       }
     } catch (e: any) {
       logger.error(e, {
@@ -465,20 +504,22 @@ export const ComposePost = ({
           quotedThread.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
+          onPostSuccess?.(postSuccessData)
           return true
         }
         return false
       })
     } else {
       onPost?.(postUri)
+      onPostSuccess?.(postSuccessData)
     }
     onClose()
     Toast.show(
       thread.posts.length > 1
         ? _(msg`Your posts have been published`)
         : replyTo
-        ? _(msg`Your reply has been published`)
-        : _(msg`Your post has been published`),
+          ? _(msg`Your reply has been published`)
+          : _(msg`Your post has been published`),
     )
   }, [
     _,
@@ -489,6 +530,7 @@ export const ComposePost = ({
     langPrefs.postLanguage,
     onClose,
     onPost,
+    onPostSuccess,
     initQuote,
     replyTo,
     setLangPrefs,
@@ -782,6 +824,8 @@ let ComposerPost = React.memo(function ComposerPost({
     [post.id, onSelectVideo, onImageAdd, _],
   )
 
+  useHideKeyboardOnBackground()
+
   return (
     <View
       style={[
@@ -956,20 +1000,20 @@ function ComposerTopBar({
                       }),
                     )
                 : isThread
-                ? _(
-                    msg({
-                      message: 'Publish posts',
-                      comment:
-                        'Accessibility label for button to publish multiple posts in a thread',
-                    }),
-                  )
-                : _(
-                    msg({
-                      message: 'Publish post',
-                      comment:
-                        'Accessibility label for button to publish a single post',
-                    }),
-                  )
+                  ? _(
+                      msg({
+                        message: 'Publish posts',
+                        comment:
+                          'Accessibility label for button to publish multiple posts in a thread',
+                      }),
+                    )
+                  : _(
+                      msg({
+                        message: 'Publish post',
+                        comment:
+                          'Accessibility label for button to publish a single post',
+                      }),
+                    )
             }
             variant="solid"
             color="primary"
@@ -1106,13 +1150,17 @@ function ComposerEmbeds({
         )}
       </LayoutAnimationConfig>
       {embed.quote?.uri ? (
-        <View style={!video ? [a.mt_md] : []}>
-          <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
+        <View
+          style={[a.pb_sm, video ? [a.pt_md] : [a.pt_xl], isWeb && [a.pb_md]]}>
+          <View style={[a.relative]}>
             <View style={{pointerEvents: 'none'}}>
               <LazyQuoteEmbed uri={embed.quote.uri} />
             </View>
             {canRemoveQuote && (
-              <QuoteX onRemove={() => dispatch({type: 'embed_remove_quote'})} />
+              <ExternalEmbedRemoveBtn
+                onRemove={() => dispatch({type: 'embed_remove_quote'})}
+                style={{top: 16}}
+              />
             )}
           </View>
         </View>
@@ -1480,6 +1528,18 @@ function isEmptyPost(post: PostDraft) {
     !post.embed.link &&
     !post.embed.quote
   )
+}
+
+function useHideKeyboardOnBackground() {
+  const appState = useAppState()
+
+  useEffect(() => {
+    if (isIOS) {
+      if (appState === 'inactive') {
+        Keyboard.dismiss()
+      }
+    }
+  }, [appState])
 }
 
 const styles = StyleSheet.create({

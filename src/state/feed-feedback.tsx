@@ -12,13 +12,15 @@ import throttle from 'lodash.throttle'
 
 import {FEEDBACK_FEEDS, STAGING_FEEDS} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
+import {Logger} from '#/logger'
 import {
   type FeedDescriptor,
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAgent} from './session'
+
+const logger = Logger.create(Logger.Context.FeedFeedback)
 
 export type StateContext = {
   enabled: boolean
@@ -89,6 +91,7 @@ export function useFeedFeedback(
     }
     sendOrAggregateInteractionsForStats(aggregatedStats.current, interactions)
     throttledFlushAggregatedStats()
+    logger.debug('flushed')
   }, [agent, throttledFlushAggregatedStats, feed])
 
   const sendToFeed = useMemo(
@@ -141,6 +144,9 @@ export function useFeedFeedback(
       if (!enabled) {
         return
       }
+      logger.debug('sendInteraction', {
+        ...interaction,
+      })
       if (!history.current.has(interaction)) {
         history.current.add(interaction)
         queue.current.add(toString(interaction))

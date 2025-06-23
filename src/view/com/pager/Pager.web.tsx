@@ -1,8 +1,19 @@
-import React from 'react'
+import {
+  Children,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {flushSync} from 'react-dom'
 
 import {s} from '#/lib/styles'
+import {atoms as a} from '#/alf'
+
+export interface PagerRef {
+  setPage: (index: number) => void
+}
 
 export interface RenderTabBarFnProps {
   selectedPage: number
@@ -12,30 +23,30 @@ export interface RenderTabBarFnProps {
 export type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
 
 interface Props {
+  ref?: React.Ref<PagerRef>
   initialPage?: number
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
 }
-export const Pager = React.forwardRef(function PagerImpl(
-  {
-    children,
-    initialPage = 0,
-    renderTabBar,
-    onPageSelected,
-  }: React.PropsWithChildren<Props>,
-  ref,
-) {
-  const [selectedPage, setSelectedPage] = React.useState(initialPage)
-  const scrollYs = React.useRef<Array<number | null>>([])
-  const anchorRef = React.useRef(null)
 
-  React.useImperativeHandle(ref, () => ({
+export function Pager({
+  ref,
+  children,
+  initialPage = 0,
+  renderTabBar,
+  onPageSelected,
+}: React.PropsWithChildren<Props>) {
+  const [selectedPage, setSelectedPage] = useState(initialPage)
+  const scrollYs = useRef<Array<number | null>>([])
+  const anchorRef = useRef(null)
+
+  useImperativeHandle(ref, () => ({
     setPage: (index: number) => {
       onTabBarSelect(index)
     },
   }))
 
-  const onTabBarSelect = React.useCallback(
+  const onTabBarSelect = useCallback(
     (index: number) => {
       const scrollY = window.scrollY
       // We want to determine if the tabbar is already "sticking" at the top (in which
@@ -75,11 +86,13 @@ export const Pager = React.forwardRef(function PagerImpl(
         tabBarAnchor: <View ref={anchorRef} />,
         onSelect: e => onTabBarSelect(e),
       })}
-      {React.Children.map(children, (child, i) => (
-        <View style={selectedPage === i ? s.flex1 : s.hidden} key={`page-${i}`}>
+      {Children.map(children, (child, i) => (
+        <View
+          style={selectedPage === i ? a.flex_1 : a.hidden}
+          key={`page-${i}`}>
           {child}
         </View>
       ))}
     </View>
   )
-})
+}

@@ -1,5 +1,5 @@
-import {LogEvents} from '#/lib/statsig/statsig'
-import {PersistedAccount} from '#/state/persisted'
+import {type LogEvents} from '#/lib/statsig/statsig'
+import {type PersistedAccount} from '#/state/persisted'
 
 export type SessionAccount = PersistedAccount
 

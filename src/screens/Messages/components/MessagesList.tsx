@@ -16,6 +16,7 @@ import {
   RichText,
 } from '@atproto/api'
 
+import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorder'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
@@ -105,6 +106,8 @@ export function MessagesList({
   const agent = useAgent()
   const getPost = useGetPost()
   const {embedUri, setEmbed} = useMessageEmbed()
+
+  useHideBottomBarBorderForScreen()
 
   const flatListRef = useAnimatedRef<ListMethods>()
 
