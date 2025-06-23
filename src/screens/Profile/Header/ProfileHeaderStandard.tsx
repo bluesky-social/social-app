@@ -224,11 +224,11 @@ let ProfileHeaderStandard = ({
                         </View>
                       )}
                     </Tooltip.Target>
-                    <Tooltip.Content>
-                      <Text selectable>
-                        The quick brown fox jumps over the lazy dog
+                    <Tooltip.TextBubble>
+                      <Text>
+                        <Trans>Boop</Trans>
                       </Text>
-                    </Tooltip.Content>
+                    </Tooltip.TextBubble>
                   </Tooltip.Outer>
                 </>
               )}
