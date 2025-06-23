@@ -1,4 +1,5 @@
 import {
+  Children,
   createContext,
   useCallback,
   useContext,
@@ -14,6 +15,7 @@ import {atoms as a, select, useTheme} from '#/alf'
 import {useOnGesture} from '#/components/hooks/useOnGesture'
 import {Portal} from '#/components/Portal'
 import {TIP_SIZE} from '#/components/Tooltip/const'
+import {Text} from '#/components/Typography'
 
 const HALF_TIP = TIP_SIZE / 2
 const TIP_VISUAL_OFFSET = TIP_SIZE / 3
@@ -380,4 +382,19 @@ function oppposite(position: 'top' | 'bottom') {
     default:
       return 'center'
   }
+}
+
+export function TextBubble({children}: {children: React.ReactNode}) {
+  const c = Children.toArray(children)
+  return (
+    <Content label={c.join(' ')}>
+      <View style={[a.gap_xs]}>
+        {c.map((child, i) => (
+          <Text key={i} style={[a.text_sm, a.leading_snug]}>
+            {child}
+          </Text>
+        ))}
+      </View>
+    </Content>
+  )
 }
