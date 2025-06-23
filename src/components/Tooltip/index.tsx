@@ -14,11 +14,18 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {atoms as a, select, useTheme} from '#/alf'
 import {useOnGesture} from '#/components/hooks/useOnGesture'
 import {Portal} from '#/components/Portal'
-import {TIP_SIZE} from '#/components/Tooltip/const'
+import {MIN_EDGE_SPACE, TIP_SIZE} from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
 
 const HALF_TIP = TIP_SIZE / 2
 const TIP_VISUAL_OFFSET = TIP_SIZE / 3
+
+/**
+ * Only needed on web
+ */
+export function Provider({children}: {children: React.ReactNode}) {
+  return children
+}
 
 type TooltipContextType = {
   position: 'top' | 'bottom'
@@ -205,7 +212,7 @@ function Bubble({
     const maxTop = insets.top
     const maxBottom = wh - insets.bottom
     const {width: cw, height: ch} = bubbleMeasurements
-    const minLeft = a.px_xl.paddingLeft
+    const minLeft = MIN_EDGE_SPACE
     const maxLeft = ww - minLeft
 
     let computedPosition: 'top' | 'bottom' = position
