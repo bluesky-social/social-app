@@ -98,8 +98,8 @@ export function EmojiReactionPicker({
                           : t.palette.primary_500,
                       }
                     : alreadyReacted
-                    ? {backgroundColor: t.palette.primary_200}
-                    : bgColor,
+                      ? {backgroundColor: t.palette.primary_200}
+                      : bgColor,
                   {height: 40, width: 40},
                   a.justify_center,
                   a.align_center,

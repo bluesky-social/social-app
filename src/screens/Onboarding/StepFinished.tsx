@@ -176,8 +176,8 @@ export function StepFinished() {
             avatarResult: profileStepResults.isCreatedAvatar
               ? 'created'
               : profileStepResults.image
-              ? 'uploaded'
-              : 'default',
+                ? 'uploaded'
+                : 'default',
           })
         })(),
         requestNotificationsPermission('AfterOnboarding'),

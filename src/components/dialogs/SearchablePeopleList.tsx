@@ -390,8 +390,8 @@ function DefaultProfileCard({
             !enabled
               ? {opacity: 0.5}
               : pressed || focused || hovered
-              ? t.atoms.bg_contrast_25
-              : t.atoms.bg,
+                ? t.atoms.bg_contrast_25
+                : t.atoms.bg,
           ]}>
           <ProfileCard.Header>
             <ProfileCard.Avatar

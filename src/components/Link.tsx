@@ -99,10 +99,10 @@ export function useLink({
     return typeof to === 'string'
       ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
       : to.screen
-      ? router.matchName(to.screen)?.build(to.params)
-      : to.href
-      ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
-      : undefined
+        ? router.matchName(to.screen)?.build(to.params)
+        : to.href
+          ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
+          : undefined
   }, [to])
 
   if (!href) {

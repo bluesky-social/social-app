@@ -36,9 +36,8 @@ export function useNotificationSettingsUpdateMutation() {
     mutationFn: async (
       update: Partial<AppBskyNotificationDefs.Preferences>,
     ) => {
-      const response = await agent.app.bsky.notification.putPreferencesV2(
-        update,
-      )
+      const response =
+        await agent.app.bsky.notification.putPreferencesV2(update)
       return response.data.preferences
     },
     onMutate: update => {
