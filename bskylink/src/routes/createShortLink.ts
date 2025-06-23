@@ -78,7 +78,7 @@ const getUrl = (ctx: AppContext, req: Request, id: string) => {
   if (!ctx.cfg.service.hostnames.length) {
     assert(req.headers.host, 'request must be made with host header')
     const baseUrl =
-      req.protocol === 'http' && req.headers.host!.startsWith('localhost:')
+      req.protocol === 'http' && req.headers.host.startsWith('localhost:')
         ? `http://${req.headers.host}`
         : `https://${req.headers.host}`
     return `${baseUrl}/${id}`

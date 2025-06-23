@@ -173,7 +173,7 @@ describe('link service', async () => {
     // League of Legends is set to WARN, not BLOCK, so expect a warning (blocked-site div present)
     assert.match(
       html,
-      /"Warning: Malicious Link/,
+      /Warning: Malicious Link/,
       'Expected warning not found in HTML',
     )
   })
