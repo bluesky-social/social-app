@@ -1,0 +1,26 @@
+diff --git a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioHelper.kt b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioHelper.kt
+index 0958648..42040b4 100644
+--- a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioHelper.kt
++++ b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Audio/AudioHelper.kt
+@@ -58,7 +58,7 @@ class AudioHelper {
+       var destinationBitrate = originalBitrate
+       Utils.addLog("source bitrate: $originalBitrate")
+ 
+-      when (quality.toLowerCase()) {
++      when (quality.lowercase()) {
+         "low" -> destinationBitrate = maxOf(64, (originalBitrate * 0.3).toInt())
+         "medium" -> destinationBitrate = (originalBitrate * 0.5).toInt()
+         "high" -> destinationBitrate = minOf(320, (originalBitrate * 0.7).toInt())
+diff --git a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Utils/Uploader.kt b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Utils/Uploader.kt
+index 8fd7c6a..7b6b498 100644
+--- a/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Utils/Uploader.kt
++++ b/node_modules/react-native-compressor/android/src/main/java/com/reactnativecompressor/Utils/Uploader.kt
+@@ -161,7 +161,7 @@ class Uploader(private val reactContext: ReactApplicationContext) {
+     if (mimeType == null) {
+       val fileExtension = MimeTypeMap.getFileExtensionFromUrl(fileUri.toString())
+       if (fileExtension != null) {
+-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase())
++        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.lowercase())
+       }
+     }
+ 
