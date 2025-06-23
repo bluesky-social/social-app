@@ -108,9 +108,9 @@ export default function (ctx: AppContext, app: Express) {
           redirectLogger.info(`Warn rule matched for ${rulePresent.url}`)
           res.setHeader('Cache-Control', 'no-store')
           const html = warnRedirect(
-            'Blocked Link',
-            'This link has been identified as malicious, it has been blocked to protect your account and data',
-            'Go Back To BlueSky',
+            'Warning: Malicious Link',
+            'This link has been identified as malicious, continue at your own risk',
+            'continue at your own risk',
             'DANGER',
             escapeHTML(url.toString()),
             `https://${ctx.cfg.service.appHostname}`,

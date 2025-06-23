@@ -41,7 +41,7 @@ describe('link service', async () => {
       eventType: ToolsOzoneSafelinkDefs.ADDRULE,
       url: 'https://en.wikipedia.org/wiki/Fight_Club',
       pattern: ToolsOzoneSafelinkDefs.URL,
-      action: ToolsOzoneSafelinkDefs.BLOCK,
+      action: ToolsOzoneSafelinkDefs.WARN,
       reason: ToolsOzoneSafelinkDefs.SPAM,
       createdBy: 'did:example:admin',
       createdAt: now,
@@ -97,6 +97,19 @@ describe('link service', async () => {
       comment:
         'BONES has been resurrected to bring good music to the world once again',
     })
+    linkService.ctx.cfg.eventCache.smartUpdate({
+      $type: 'tools.ozone.safelink.defs#event',
+      id: 6,
+      eventType: ToolsOzoneSafelinkDefs.ADDRULE,
+      url: 'https://www.leagueoflegends.com/en-us/',
+      pattern: ToolsOzoneSafelinkDefs.URL,
+      action: ToolsOzoneSafelinkDefs.WARN,
+      reason: ToolsOzoneSafelinkDefs.SPAM,
+      createdBy: 'did:example:admin',
+      createdAt: now,
+      comment:
+        'Could be quite the mistake to get into this addicting game, but we will warn instead of block',
+    })
   })
   after(async () => {
     await linkService?.destroy()
@@ -146,13 +159,30 @@ describe('link service', async () => {
     assert.strictEqual(json.message, 'Link not found')
   })
 
-  it(' Wikipedia whitelisted, url restricted. Redirect safely since wikipedia is whitelisted', async () => {
+  it('League of Legends warned', async () => {
+    const urlToRedirect = 'https://www.leagueoflegends.com/en-us/'
+    const url = new URL(`${baseUrl}/redirect`)
+    url.searchParams.set('u', urlToRedirect)
+    const res = await fetch(url, {redirect: 'manual'})
+    assert.strictEqual(res.status, 200)
+    const html = await res.text()
+    assert.match(
+      html,
+      new RegExp(urlToRedirect.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+    )
+    // League of Legends is set to WARN, not BLOCK, so expect a warning (blocked-site div present)
+    assert.match(
+      html,
+      /"Warning: Malicious Link/,
+      'Expected warning not found in HTML',
+    )
+  })
+
+  it('Wikipedia whitelisted, url restricted. Redirect safely since wikipedia is whitelisted', async () => {
     const urlToRedirect = 'https://en.wikipedia.org/wiki/Fight_Club'
     const url = new URL(`${baseUrl}/redirect`)
     url.searchParams.set('u', urlToRedirect)
     const res = await fetch(url, {redirect: 'manual'})
-    // The server returns an HTML meta refresh, not a real HTTP redirect
-    // So status will be 200, not 301/303, and there is no Location header
     assert.strictEqual(res.status, 200)
     const html = await res.text()
     assert.match(html, /meta http-equiv="refresh"/)
@@ -160,6 +190,8 @@ describe('link service', async () => {
       html,
       new RegExp(urlToRedirect.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
     )
+    // Wikipedia domain is whitelisted, so no blocked-site div should be present
+    assert.doesNotMatch(html, /"blocked-site"/)
   })
 
   it('Unsafe redirect with block rule, due to the content of webpage.', async () => {
@@ -168,13 +200,16 @@ describe('link service', async () => {
     const url = new URL(`${baseUrl}/redirect`)
     url.searchParams.set('u', urlToRedirect)
     const res = await fetch(url, {redirect: 'manual'})
-    // The server returns an HTML meta refresh, not a real HTTP redirect
-    // So status will be 200, not 301/303, and there is no Location header
-    assert.strictEqual(res.status, 403)
+    assert.strictEqual(res.status, 200)
     const html = await res.text()
     assert.match(
       html,
       new RegExp(urlToRedirect.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+    )
+    assert.match(
+      html,
+      /"blocked-site"/,
+      'Expected blocked-site div not found in HTML',
     )
   })
 
@@ -189,8 +224,6 @@ describe('link service', async () => {
     const url = new URL(`${baseUrl}/redirect`)
     url.searchParams.set('u', urlToRedirect)
     const res = await fetch(url, {redirect: 'manual'})
-    // The server returns an HTML meta refresh, not a real HTTP redirect
-    // So status will be 200, not 301/303, and there is no Location header
     assert.strictEqual(res.status, 200)
     const html = await res.text()
     assert.match(html, /meta http-equiv="refresh"/)
@@ -244,4 +277,84 @@ describe('link service', async () => {
     assert(typeof payload.url === 'string')
     return payload.url
   }
+})
+
+describe('link service no safelink', async () => {
+  let linkService: LinkService
+  let baseUrl: string
+  before(async () => {
+    const env = readEnv()
+    const cfg = envToCfg({
+      ...env,
+      hostnames: ['test.bsky.link'],
+      appHostname: 'test.bsky.app',
+      dbPostgresSchema: 'link_test',
+      dbPostgresUrl: process.env.DB_POSTGRES_URL,
+      safelinkEnabled: false,
+      ozoneUrl: 'http://localhost:2583',
+      ozoneAgentHandle: 'mod-authority.test',
+      ozoneAgentPass: 'hunter2',
+    })
+    const migrateDb = Database.postgres({
+      url: cfg.db.url,
+      schema: cfg.db.schema,
+    })
+    await migrateDb.migrateToLatestOrThrow()
+    await migrateDb.close()
+    linkService = await LinkService.create(cfg)
+    await linkService.start()
+    const {port} = linkService.server?.address() as AddressInfo
+    baseUrl = `http://localhost:${port}`
+  })
+  after(async () => {
+    await linkService?.destroy()
+  })
+  it('Wikipedia whitelisted, url restricted. Safelink is disabled, so redirect is always safe', async () => {
+    const urlToRedirect = 'https://en.wikipedia.org/wiki/Fight_Club'
+    const url = new URL(`${baseUrl}/redirect`)
+    url.searchParams.set('u', urlToRedirect)
+    const res = await fetch(url, {redirect: 'manual'})
+    assert.strictEqual(res.status, 200)
+    const html = await res.text()
+    assert.match(html, /meta http-equiv="refresh"/)
+    assert.match(
+      html,
+      new RegExp(urlToRedirect.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+    )
+    // No blocked-site div, always safe
+    assert.doesNotMatch(html, /"blocked-site"/)
+  })
+
+  it('Unsafe redirect with block rule, but safelink is disabled so redirect is always safe', async () => {
+    const urlToRedirect =
+      'https://gist.github.com/MattIPv4/045239bc27b16b2bcf7a3a9a4648c08a'
+    const url = new URL(`${baseUrl}/redirect`)
+    url.searchParams.set('u', urlToRedirect)
+    const res = await fetch(url, {redirect: 'manual'})
+    assert.strictEqual(res.status, 200)
+    const html = await res.text()
+    assert.match(html, /meta http-equiv="refresh"/)
+    assert.match(
+      html,
+      new RegExp(urlToRedirect.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+    )
+    // No blocked-site div, always safe
+    assert.doesNotMatch(html, /"blocked-site"/)
+  })
+
+  it('Rule adjustment, safe redirect, safelink is disabled so always safe', async () => {
+    const urlToRedirect = 'https://www.instagram.com/teamseshbones/?hl=en'
+    const url = new URL(`${baseUrl}/redirect`)
+    url.searchParams.set('u', urlToRedirect)
+    const res = await fetch(url, {redirect: 'manual'})
+    assert.strictEqual(res.status, 200)
+    const html = await res.text()
+    assert.match(html, /meta http-equiv="refresh"/)
+    assert.match(
+      html,
+      new RegExp(urlToRedirect.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+    )
+    // No blocked-site div, always safe
+    assert.doesNotMatch(html, /"blocked-site"/)
+  })
 })
