@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - hailey/eas-fab
   workflow_dispatch:
     inputs:
       channel:
@@ -119,14 +118,7 @@ jobs:
 
       - name: 🏗️ Create Bundle
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
-        run: |
-          SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export-ios
-          mv ./dist ./ios-dist
-          sed -i 's/"react-native-mmkv": "\^2\.12\.2"/"react-native-mmkv": "^3.3.0"/' package.json
-          yarn install
-          SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export-android
-          mv ./dist ./android-dist
-
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
@@ -282,10 +274,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: "Use upgraded MMKV for Fabric"
-        run: |
-          sed -i 's/"react-native-mmkv": "\^2\.12\.2"/"react-native-mmkv": "^3.3.0"/' package.json
 
       - name: ⚙️ Install dependencies
         run: yarn install

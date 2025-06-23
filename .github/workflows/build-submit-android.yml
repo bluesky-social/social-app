@@ -52,10 +52,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: "Use upgraded MMKV for Fabric"
-        run: |
-          sed -i 's/"react-native-mmkv": "\^2\.12\.2"/"react-native-mmkv": "^3.3.0"/' package.json
-
       - name: ⚙️ Install dependencies
         run: yarn install
 

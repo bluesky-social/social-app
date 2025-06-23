@@ -3,25 +3,17 @@ const fs = require('fs')
 const fsp = fs.promises
 const path = require('path')
 
-const IOS_DIST_DIR = './ios-dist'
-const ANDROID_DIST_DIR = './android-dist'
-
+const DIST_DIR = './dist'
 const BUNDLES_DIR = '/_expo/static/js'
-
-const IOS_BUNDLE_DIR = path.join(IOS_DIST_DIR, BUNDLES_DIR, '/ios')
-const ANDROID_BUNDLE_DIR = path.join(ANDROID_DIST_DIR, BUNDLES_DIR, '/android')
-
-const IOS_METADATA_PATH = path.join(IOS_DIST_DIR, '/metadata.json')
-const ANDROID_METADATA_PATH = path.join(ANDROID_DIST_DIR, '/metadata.json')
-
+const IOS_BUNDLE_DIR = path.join(DIST_DIR, BUNDLES_DIR, '/ios')
+const ANDROID_BUNDLE_DIR = path.join(DIST_DIR, BUNDLES_DIR, '/android')
+const METADATA_PATH = path.join(DIST_DIR, '/metadata.json')
 const DEST_DIR = './bundleTempDir'
 
 // Weird, don't feel like figuring out _why_ it wants this
-const IOS_METADATA = require(`../${IOS_METADATA_PATH}`)
-const ANDROID_METADATA = require(`../${ANDROID_METADATA_PATH}`)
-
-const IOS_METADATA_ASSETS = IOS_METADATA.fileMetadata.ios.assets
-const ANDROID_METADATA_ASSETS = ANDROID_METADATA.fileMetadata.android.assets
+const METADATA = require(`../${METADATA_PATH}`)
+const IOS_METADATA_ASSETS = METADATA.fileMetadata.ios.assets
+const ANDROID_METADATA_ASSETS = METADATA.fileMetadata.android.assets
 
 const getMd5 = async path => {
   return new Promise(res => {
@@ -68,7 +60,7 @@ const moveFiles = async () => {
 
   console.log('Getting ios asset md5s and moving them...')
   for (const asset of IOS_METADATA_ASSETS) {
-    const currPath = path.join(IOS_DIST_DIR, asset.path)
+    const currPath = path.join(DIST_DIR, asset.path)
     const md5 = await getMd5(currPath)
     const withExtPath = `assets/${md5}.${asset.ext}`
     iosAssets.push(withExtPath)
@@ -77,7 +69,7 @@ const moveFiles = async () => {
 
   console.log('Getting android asset md5s and moving them...')
   for (const asset of ANDROID_METADATA_ASSETS) {
-    const currPath = path.join(ANDROID_DIST_DIR, asset.path)
+    const currPath = path.join(DIST_DIR, asset.path)
     const md5 = await getMd5(currPath)
     const withExtPath = `assets/${md5}.${asset.ext}`
     androidAssets.push(withExtPath)
