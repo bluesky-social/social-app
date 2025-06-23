@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react'
 import {Dimensions, View} from 'react-native'
+import Animated, {Easing, ZoomIn} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -293,48 +294,50 @@ function Bubble({
           left: coords.left,
         },
       ]}>
-      <View
-        style={[
-          a.absolute,
-          a.top_0,
-          a.z_10,
-          t.atoms.bg,
-          {
-            borderTopLeftRadius: a.rounded_xs.borderRadius,
-            width: TIP_SIZE,
-            height: TIP_SIZE,
-            transform: [{rotate: '45deg'}],
-            top: coords.tipTop,
-            left: coords.tipLeft,
-          },
-        ]}
-      />
-      <View
-        style={[
-          a.px_md,
-          a.py_sm,
-          a.rounded_sm,
-          t.atoms.bg,
-          t.atoms.shadow_md,
-          {
-            shadowOpacity: 0.2,
-            shadowOffset: {
-              width: 0,
-              // provide more shadow beneath tip
-              height:
-                TIP_VISUAL_OFFSET *
-                (coords.computedPosition === 'bottom' ? -1 : 1),
+      <Animated.View entering={ZoomIn.easing(Easing.out(Easing.exp))}>
+        <View
+          style={[
+            a.absolute,
+            a.top_0,
+            a.z_10,
+            t.atoms.bg,
+            {
+              borderTopLeftRadius: a.rounded_xs.borderRadius,
+              width: TIP_SIZE,
+              height: TIP_SIZE,
+              transform: [{rotate: '45deg'}],
+              top: coords.tipTop,
+              left: coords.tipLeft,
             },
-          },
-        ]}
-        onLayout={e => {
-          setBubbleMeasurements({
-            width: e.nativeEvent.layout.width,
-            height: e.nativeEvent.layout.height,
-          })
-        }}>
-        {children}
-      </View>
+          ]}
+        />
+        <View
+          style={[
+            a.px_md,
+            a.py_sm,
+            a.rounded_sm,
+            t.atoms.bg,
+            t.atoms.shadow_md,
+            {
+              shadowOpacity: 0.2,
+              shadowOffset: {
+                width: 0,
+                // provide more shadow beneath tip
+                height:
+                  TIP_VISUAL_OFFSET *
+                  (coords.computedPosition === 'bottom' ? -1 : 1),
+              },
+            },
+          ]}
+          onLayout={e => {
+            setBubbleMeasurements({
+              width: e.nativeEvent.layout.width,
+              height: e.nativeEvent.layout.height,
+            })
+          }}>
+          {children}
+        </View>
+      </Animated.View>
     </View>
   )
 }
