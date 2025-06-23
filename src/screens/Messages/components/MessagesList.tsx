@@ -446,6 +446,7 @@ export function MessagesList({
           }
           contentInset={{bottom: 0}}
           contentContainerStyle={{paddingBottom: 0}}
+          scrollIndicatorInsets={{bottom: 0}}
         />
       </ScrollProvider>
       <Animated.View style={animatedStickyViewStyle}>
