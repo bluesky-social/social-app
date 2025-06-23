@@ -13,9 +13,8 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {ios, useTheme} from '#/alf'
-import {useLightbox} from '#/components/Lightbox/state'
-import {IS_ANDROID, IS_IOS} from '#/env'
+import {useTheme} from '#/alf'
+import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -165,7 +164,7 @@ let List = forwardRef<ListMethods, ListProps>(
         viewabilityConfig={viewabilityConfig}
         {...props}
         contentContainerStyle={[
-          IS_ANDROID && {paddingBottom: footerHeight + footerExtensionHeight},
+          !IS_IOS && {paddingBottom: footerHeight + footerExtensionHeight},
           contentContainerStyle,
         ]}
         automaticallyAdjustsScrollIndicatorInsets={
@@ -177,13 +176,13 @@ let List = forwardRef<ListMethods, ListProps>(
           bottom: footerHeight + footerExtensionHeight,
           ...props.scrollIndicatorInsets,
         }}
-        contentInset={ios({
+        contentInset={{
           top: 0,
           left: 0,
           right: 0,
           bottom: footerHeight + footerExtensionHeight,
           ...props.contentInset,
-        })}
+        }}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         contentOffset={contentOffset}
         refreshControl={refreshControl}
