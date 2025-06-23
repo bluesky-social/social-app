@@ -1,4 +1,4 @@
-import {Children, createContext, useContext, useMemo, useState} from 'react'
+import {Children, createContext, useContext, useMemo} from 'react'
 import {View} from 'react-native'
 import {Popover} from 'radix-ui'
 
@@ -58,13 +58,6 @@ export function Content({
 }) {
   const t = useTheme()
   const {position} = useContext(TooltipContext)
-  const [bubbleMeasurements, setBubbleMeasurements] = useState<
-    | {
-        width: number
-        height: number
-      }
-    | undefined
-  >(undefined)
   return (
     <Popover.Portal>
       <Popover.Content
@@ -75,16 +68,13 @@ export function Content({
         collisionPadding={MIN_EDGE_SPACE}
         style={flatten([
           a.rounded_sm,
-          a.transition_timing_default,
-          {
-            transitionProperty: 'transform, opacity',
-          },
           select(t.name, {
             light: t.atoms.bg,
             dark: t.atoms.bg_contrast_100,
             dim: t.atoms.bg_contrast_100,
           }),
           {
+            minWidth: 'max-content',
             boxShadow: select(t.name, {
               light: `0 ${TIP_VISUAL_OFFSET}px 16px ${transparentifyColor(
                 t.palette.black,
@@ -100,15 +90,6 @@ export function Content({
               )}`,
             }),
           },
-          bubbleMeasurements
-            ? {
-                width: Math.min(200, bubbleMeasurements.width),
-                height: bubbleMeasurements.height,
-              }
-            : {
-                width: 200,
-                opacity: 0,
-              },
         ])}>
         <Popover.Arrow
           width={TIP_SIZE}
@@ -119,23 +100,7 @@ export function Content({
             dim: t.atoms.bg_contrast_100.backgroundColor,
           })}
         />
-        <View
-          style={[
-            a.absolute,
-            a.px_md,
-            a.py_sm,
-            {
-              maxWidth: 200,
-            },
-          ]}
-          onLayout={e => {
-            setBubbleMeasurements({
-              width: Math.ceil(e.nativeEvent.layout.width),
-              height: Math.ceil(e.nativeEvent.layout.height),
-            })
-          }}>
-          {children}
-        </View>
+        <View style={[a.px_md, a.py_sm, {maxWidth: 200}]}>{children}</View>
       </Popover.Content>
     </Popover.Portal>
   )
