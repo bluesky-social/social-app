@@ -31,7 +31,7 @@ jobs:
       - name: Lint lockfile
         run: yarn lockfile-lint
       - name: Prettier check
-        run: yarn prettier --check .
+        run: yarn prettier --check . --experimental-cli
       - name: Check & compile i18n
         run: yarn intl:build
       - name: Type check

@@ -74,7 +74,7 @@ jobs:
         run: yarn lockfile-lint
 
       - name: Prettier check
-        run: yarn prettier --check .
+        run: yarn prettier --check . --experimental-cli
 
       - name: 🔤 Compile translations
         run: yarn intl:build 2>&1 | tee i18n.log
