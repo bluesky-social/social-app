@@ -4,8 +4,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {isNative} from '#/platform/detection'
 import {useTheme, web} from '#/alf'
 import {atoms as a} from '#/alf'
+import {Button, type ButtonProps, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
@@ -26,21 +28,24 @@ export function SubscribeProfileDialog({
   )
 }
 
+// TEMP - should be derived from profile view
+const initialState = {
+  posts: false,
+  replies: false,
+}
+
 function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
   const {_} = useLingui()
   const t = useTheme()
-  const [state, setState] = useState({
-    posts: false,
-    replies: false,
-    corn: false,
-  })
+  const control = Dialog.useDialogContext()
+
+  const [state, setState] = useState(initialState)
 
   const values = useMemo(() => {
-    const {posts, replies, corn} = state
+    const {posts, replies} = state
     const res = []
     if (posts) res.push('posts')
     if (replies) res.push('replies')
-    if (corn) res.push('corn')
     return res
   }, [state])
 
@@ -48,8 +53,26 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     setState({
       posts: newValues.includes('posts'),
       replies: newValues.includes('replies'),
-      corn: newValues.includes('corn'),
     })
+
+  const buttonProps: Omit<ButtonProps, 'children'> = useMemo(() => {
+    const isDirty =
+      state.posts !== initialState.posts ||
+      state.replies !== initialState.replies
+    const hasAny = state.posts || state.replies
+
+    if (isDirty) {
+      return {
+        label: _(msg`Save changes`),
+        color: hasAny ? 'primary' : 'negative',
+      }
+    } else {
+      return {
+        label: _(msg`Cancel`),
+        color: 'secondary',
+      }
+    }
+  }, [state, _])
 
   const name = createSanitizedDisplayName(profile, false)
 
@@ -57,13 +80,13 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
     <Dialog.ScrollableInner
       style={web({maxWidth: 400})}
       label={_(msg`Get notified of new posts from ${name}`)}>
-      <View style={[a.gap_md]}>
+      <View style={[a.gap_lg]}>
         <View style={[a.gap_xs]}>
           <Text style={[a.font_heavy, a.text_2xl]}>
-            <Trans>Get notified!</Trans>
+            <Trans>Keep me posted</Trans>
           </Text>
           <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            <Trans>Receive notifications when {name} posts</Trans>
+            <Trans>Get notified of this account’s activity</Trans>
           </Text>
         </View>
 
@@ -94,6 +117,17 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
             </Toggle.Item>
           </View>
         </Toggle.Group>
+
+        {/* don't show cancel button on web */}
+        {(isNative || buttonProps.color !== 'secondary') && (
+          <Button
+            {...buttonProps}
+            size="large"
+            variant="solid"
+            onPress={() => control.close()}>
+            <ButtonText>{buttonProps.label}</ButtonText>
+          </Button>
+        )}
       </View>
 
       <Dialog.Close />
