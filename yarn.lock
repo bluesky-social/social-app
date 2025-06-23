@@ -5473,9 +5473,9 @@
     "@babel/runtime" "^7.20.13"
     "@lingui/core" "4.14.1"
 
-"@mattermost/react-native-paste-input@mattermost/react-native-paste-input":
+"@mattermost/react-native-paste-input@bluesky-social/react-native-paste-input#112383d08e1581214dc4beb864b996cb32e023c7":
   version "0.8.1"
-  resolved "https://codeload.github.com/mattermost/react-native-paste-input/tar.gz/f260447edc645a817ab1ba7b46d8341d84dba8e9"
+  resolved "https://codeload.github.com/bluesky-social/react-native-paste-input/tar.gz/112383d08e1581214dc4beb864b996cb32e023c7"
   dependencies:
     semver "7.6.3"
 
@@ -6856,10 +6856,10 @@
   resolved "https://registry.yarnpkg.com/@sentry/babel-plugin-component-annotate/-/babel-plugin-component-annotate-3.2.2.tgz#0c5f26e417b8f524924fa4531b82ad5603216e90"
   integrity sha512-D+SKQ266ra/wo87s9+UI/rKQi3qhGPCR8eSCDe0VJudhjHsqyNU+JJ5lnIGCgmZaWFTXgdBP/gdr1Iz1zqGs4Q==
 
-"@sentry/babel-plugin-component-annotate@3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@sentry/babel-plugin-component-annotate/-/babel-plugin-component-annotate-3.4.0.tgz#f47a7652e16f84556df82cbc38f0004bca1335d1"
-  integrity sha512-tSzfc3aE7m0PM0Aj7HBDet5llH9AB9oc+tBQ8AvOqUSnWodLrNCuWeQszJ7mIBovD3figgCU3h0cvI6U5cDtsg==
+"@sentry/babel-plugin-component-annotate@3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@sentry/babel-plugin-component-annotate/-/babel-plugin-component-annotate-3.5.0.tgz#1b0d01f903b725da876117d551610085c3dd21c7"
+  integrity sha512-s2go8w03CDHbF9luFGtBHKJp4cSpsQzNVqgIa9Pfa4wnjipvrK6CxVT4icpLA3YO6kg5u622Yoa5GF3cJdippw==
 
 "@sentry/browser@8.54.0":
   version "8.54.0"
@@ -6891,75 +6891,75 @@
   resolved "https://registry.yarnpkg.com/@sentry/cli-darwin/-/cli-darwin-2.42.2.tgz#a32a4f226e717122b37d9969e8d4d0e14779f720"
   integrity sha512-GtJSuxER7Vrp1IpxdUyRZzcckzMnb4N5KTW7sbTwUiwqARRo+wxS+gczYrS8tdgtmXs5XYhzhs+t4d52ITHMIg==
 
-"@sentry/cli-darwin@2.45.0":
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-darwin/-/cli-darwin-2.45.0.tgz#e3d6feae4fadcfdf91db9c7b9c4689a66d3d8d19"
-  integrity sha512-p4Uxfv/L2fQdP3/wYnKVVz9gzZJf/1Xp9D+6raax/3Bu5y87yHYUqcdt98y/VAXQD4ofp2QgmhGUVPofvQNZmg==
+"@sentry/cli-darwin@2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-darwin/-/cli-darwin-2.46.0.tgz#e07ff66f03e8cb6e1988b7673ae5dbd6ff957b1d"
+  integrity sha512-5Ll+e5KAdIk9OYiZO8aifMBRNWmNyPjSqdjaHlBC1Qfh7pE3b1zyzoHlsUazG0bv0sNrSGea8e7kF5wIO1hvyg==
 
 "@sentry/cli-linux-arm64@2.42.2":
   version "2.42.2"
   resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm64/-/cli-linux-arm64-2.42.2.tgz#1c06c83ff21f51ec23acf5be3b1f8c7553bf86b1"
   integrity sha512-BOxzI7sgEU5Dhq3o4SblFXdE9zScpz6EXc5Zwr1UDZvzgXZGosUtKVc7d1LmkrHP8Q2o18HcDWtF3WvJRb5Zpw==
 
-"@sentry/cli-linux-arm64@2.45.0":
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm64/-/cli-linux-arm64-2.45.0.tgz#384c8e17f7e7dc007d164033d0e7c75aa83a2e9b"
-  integrity sha512-gUcLoEjzg7AIc4QQGEZwRHri+EHf3Gcms9zAR1VHiNF3/C/jL4WeDPJF2YiWAQt6EtH84tHiyhw1Ab/R8XFClg==
+"@sentry/cli-linux-arm64@2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm64/-/cli-linux-arm64-2.46.0.tgz#d5b27e5813e7b3add65c9e3dbdd75a8bea4ef324"
+  integrity sha512-OEJN8yAjI9y5B4telyqzu27Hi3+S4T8VxZCqJz1+z2Mp0Q/MZ622AahVPpcrVq/5bxrnlZR16+lKh8L1QwNFPg==
 
 "@sentry/cli-linux-arm@2.42.2":
   version "2.42.2"
   resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm/-/cli-linux-arm-2.42.2.tgz#00cadc359ae3c051efb3e63873c033c61dbd1ca1"
   integrity sha512-7udCw+YL9lwq+9eL3WLspvnuG+k5Icg92YE7zsteTzWLwgPVzaxeZD2f8hwhsu+wmL+jNqbpCRmktPteh3i2mg==
 
-"@sentry/cli-linux-arm@2.45.0":
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm/-/cli-linux-arm-2.45.0.tgz#b9d6f86f3934b4d9ced5b45a8158ff2ac2bdd25d"
-  integrity sha512-6sEskFLlFKJ+e0MOYgIclBTUX5jYMyYhHIxXahEkI/4vx6JO0uvpyRAkUJRpJkRh/lPog0FM+tbP3so+VxB2qQ==
+"@sentry/cli-linux-arm@2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm/-/cli-linux-arm-2.46.0.tgz#d2a0f21cd208ef8e844bc5e565b337640d125441"
+  integrity sha512-WRrLNq/TEX/TNJkGqq6Ad0tGyapd5dwlxtsPbVBrIdryuL1mA7VCBoaHBr3kcwJLsgBHFH0lmkMee2ubNZZdkg==
 
 "@sentry/cli-linux-i686@2.42.2":
   version "2.42.2"
   resolved "https://registry.yarnpkg.com/@sentry/cli-linux-i686/-/cli-linux-i686-2.42.2.tgz#3b817b715dd806c20dfbffd539725ad8089c310a"
   integrity sha512-Sw/dQp5ZPvKnq3/y7wIJyxTUJYPGoTX/YeMbDs8BzDlu9to2LWV3K3r7hE7W1Lpbaw4tSquUHiQjP5QHCOS7aQ==
 
-"@sentry/cli-linux-i686@2.45.0":
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-i686/-/cli-linux-i686-2.45.0.tgz#39e22beb84cfa26e11bdc198364315fdfb4da4d5"
-  integrity sha512-VmmOaEAzSW23YdGNdy/+oQjCNAMY+HmOGA77A25/ep/9AV7PQB6FI7xO5Y1PVvlkxZFJ23e373njSsEeg4uDZw==
+"@sentry/cli-linux-i686@2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-i686/-/cli-linux-i686-2.46.0.tgz#73368ebe30236c8647caec420f717a7f45410f29"
+  integrity sha512-xko3/BVa4LX8EmRxVOCipV+PwfcK5Xs8lP6lgF+7NeuAHMNL4DqF6iV9rrN8gkGUHCUI9RXSve37uuZnFy55+Q==
 
 "@sentry/cli-linux-x64@2.42.2":
   version "2.42.2"
   resolved "https://registry.yarnpkg.com/@sentry/cli-linux-x64/-/cli-linux-x64-2.42.2.tgz#ddf906bc3071cc79ce6e633eddcb76bb9068e688"
   integrity sha512-mU4zUspAal6TIwlNLBV5oq6yYqiENnCWSxtSQVzWs0Jyq97wtqGNG9U+QrnwjJZ+ta/hvye9fvL2X25D/RxHQw==
 
-"@sentry/cli-linux-x64@2.45.0":
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-x64/-/cli-linux-x64-2.45.0.tgz#25cd3699297f9433835fb5edd42dad722c11f041"
-  integrity sha512-a0Oj68mrb25a0WjX/ShZ6AAd4PPiuLcgyzQr7bl2+DvYxIOajwkGbR+CZFEhOVZcfhTnixKy/qIXEzApEPHPQg==
+"@sentry/cli-linux-x64@2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-x64/-/cli-linux-x64-2.46.0.tgz#49da3dfd873e0e72abef968e1c213b9397e5d70e"
+  integrity sha512-hJ1g5UEboYcOuRia96LxjJ0jhnmk8EWLDvlGnXLnYHkwy3ree/L7sNgdp/QsY8Z4j2PGO5f22Va+UDhSjhzlfQ==
 
-"@sentry/cli-win32-arm64@2.45.0":
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-arm64/-/cli-win32-arm64-2.45.0.tgz#50c7d29ea2169bdb4d98bbde81c5f7dac0dd3955"
-  integrity sha512-vn+CwS4p+52pQSLNPoi20ZOrQmv01ZgAmuMnjkh1oUZfTyBAwWLrAh6Cy4cztcN8DfL5dOWKQBo8DBKURE4ttg==
+"@sentry/cli-win32-arm64@2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-arm64/-/cli-win32-arm64-2.46.0.tgz#4e26b254d5283eb114ac916ac504283a30b2ecdb"
+  integrity sha512-mN7cpPoCv2VExFRGHt+IoK11yx4pM4ADZQGEso5BAUZ5duViXB2WrAXCLd8DrwMnP0OE978a7N8OtzsFqjkbNA==
 
 "@sentry/cli-win32-i686@2.42.2":
   version "2.42.2"
   resolved "https://registry.yarnpkg.com/@sentry/cli-win32-i686/-/cli-win32-i686-2.42.2.tgz#9036085c7c6ce455ad45fda411c55ff39c06eb95"
   integrity sha512-iHvFHPGqgJMNqXJoQpqttfsv2GI3cGodeTq4aoVLU/BT3+hXzbV0x1VpvvEhncJkDgDicJpFLM8sEPHb3b8abw==
 
-"@sentry/cli-win32-i686@2.45.0":
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-i686/-/cli-win32-i686-2.45.0.tgz#201075c4aec37a3e797160e0b468641245437f0c"
-  integrity sha512-8mMoDdlwxtcdNIMtteMK7dbi7054jak8wKSHJ5yzMw8UmWxC5thc/gXBc1uPduiaI56VjoJV+phWHBKCD+6I4w==
+"@sentry/cli-win32-i686@2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-i686/-/cli-win32-i686-2.46.0.tgz#72f7c0a611f17b7e5b34e2b47309d165195a8276"
+  integrity sha512-6F73AUE3lm71BISUO19OmlnkFD5WVe4/wA1YivtLZTc1RU3eUYJLYxhDfaH3P77+ycDppQ2yCgemLRaA4A8mNQ==
 
 "@sentry/cli-win32-x64@2.42.2":
   version "2.42.2"
   resolved "https://registry.yarnpkg.com/@sentry/cli-win32-x64/-/cli-win32-x64-2.42.2.tgz#7d6464b63f32c9f97fff428f246b1f039b402233"
   integrity sha512-vPPGHjYoaGmfrU7xhfFxG7qlTBacroz5NdT+0FmDn6692D8IvpNXl1K+eV3Kag44ipJBBeR8g1HRJyx/F/9ACw==
 
-"@sentry/cli-win32-x64@2.45.0":
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-x64/-/cli-win32-x64-2.45.0.tgz#2075e9e1ea3c3609e0fa1a758ca033e94e1c600f"
-  integrity sha512-ZvK9cIqFaq7vZ0jkHJ/xh5au6902Dr+AUxSk6L6vCL7JCe2p93KGL/4d8VFB5PD/P7Y9b+105G/e0QIFKzpeOw==
+"@sentry/cli-win32-x64@2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-x64/-/cli-win32-x64-2.46.0.tgz#8cfd438ec365b0ee925d9724a24b533b4cb75587"
+  integrity sha512-yuGVcfepnNL84LGA0GjHzdMIcOzMe0bjPhq/rwPsPN+zu11N+nPR2wV2Bum4U0eQdqYH3iAlMdL5/BEQfuLJww==
 
 "@sentry/cli@2.42.2":
   version "2.42.2"
@@ -6980,10 +6980,10 @@
     "@sentry/cli-win32-i686" "2.42.2"
     "@sentry/cli-win32-x64" "2.42.2"
 
-"@sentry/cli@2.45.0":
-  version "2.45.0"
-  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-2.45.0.tgz#35feed7a2fee54faf25daed73001a2a2a3143396"
-  integrity sha512-4sWu7zgzgHAjIxIjXUA/66qgeEf5ZOlloO+/JaGD5qXNSW0G7KMTR6iYjReNKMgdBCTH6bUUt9qiuA+Ex9Masw==
+"@sentry/cli@2.46.0":
+  version "2.46.0"
+  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-2.46.0.tgz#790864874ea04f804053aa85dc94501b2cc321bb"
+  integrity sha512-nqoPl7UCr446QFkylrsRrUXF51x8Z9dGquyf4jaQU+OzbOJMqclnYEvU6iwbwvaw3tu/2DnoZE/Og+Nq1h63sA==
   dependencies:
     https-proxy-agent "^5.0.0"
     node-fetch "^2.6.7"
@@ -6991,28 +6991,28 @@
     proxy-from-env "^1.1.0"
     which "^2.0.2"
   optionalDependencies:
-    "@sentry/cli-darwin" "2.45.0"
-    "@sentry/cli-linux-arm" "2.45.0"
-    "@sentry/cli-linux-arm64" "2.45.0"
-    "@sentry/cli-linux-i686" "2.45.0"
-    "@sentry/cli-linux-x64" "2.45.0"
-    "@sentry/cli-win32-arm64" "2.45.0"
-    "@sentry/cli-win32-i686" "2.45.0"
-    "@sentry/cli-win32-x64" "2.45.0"
+    "@sentry/cli-darwin" "2.46.0"
+    "@sentry/cli-linux-arm" "2.46.0"
+    "@sentry/cli-linux-arm64" "2.46.0"
+    "@sentry/cli-linux-i686" "2.46.0"
+    "@sentry/cli-linux-x64" "2.46.0"
+    "@sentry/cli-win32-arm64" "2.46.0"
+    "@sentry/cli-win32-i686" "2.46.0"
+    "@sentry/cli-win32-x64" "2.46.0"
 
 "@sentry/core@8.54.0":
   version "8.54.0"
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-8.54.0.tgz#a2ebec965cadcb6de89e116689feeef79d5862a6"
   integrity sha512-03bWf+D1j28unOocY/5FDB6bUHtYlm6m6ollVejhg45ZmK9iPjdtxNWbrLsjT1WRym0Tjzowu+A3p+eebYEv0Q==
 
-"@sentry/react-native@~6.14.0":
-  version "6.14.0"
-  resolved "https://registry.yarnpkg.com/@sentry/react-native/-/react-native-6.14.0.tgz#bc6bdaf03860bb8946f8c30570a9abd82ed6cfc0"
-  integrity sha512-BBqixN6oV6tCNp1ABXfzvD531zxj1fUAH0HDPvOR/jX0h9f9pYfxCyI64B+DoQbVZKFsg8nte0QIHkZDhRAW9A==
+"@sentry/react-native@~6.15.1":
+  version "6.15.1"
+  resolved "https://registry.yarnpkg.com/@sentry/react-native/-/react-native-6.15.1.tgz#f4a5e609a7f1cba1d2557ab30e59421d42bdd740"
+  integrity sha512-uNYjkhi7LUeXe+a3ui3N+sUZ4PbBh/P3Q6Pz5esOQOAEV1N7hxkdnHVic1cVHsirEQvy9rUJPBnja47Va7OpQA==
   dependencies:
-    "@sentry/babel-plugin-component-annotate" "3.4.0"
+    "@sentry/babel-plugin-component-annotate" "3.5.0"
     "@sentry/browser" "8.54.0"
-    "@sentry/cli" "2.45.0"
+    "@sentry/cli" "2.46.0"
     "@sentry/core" "8.54.0"
     "@sentry/react" "8.54.0"
     "@sentry/types" "8.54.0"
@@ -17385,15 +17385,15 @@ react-native-keyboard-controller@^1.17.5:
   dependencies:
     react-native-is-edge-to-edge "^1.1.6"
 
-react-native-mmkv@^2.12.2:
-  version "2.12.2"
-  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
-  integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
+react-native-mmkv@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-3.3.0.tgz#a0816babdf68afd2bfd881a48e28c8815795286b"
+  integrity sha512-2iPjIJ+IAODXN35wm53EN6nv+hR/0NXLLiLWOdPA/0gXDB2dYVrr6MqvoiFpxhLhdj0B8fkf5ARNVavJaSvuuQ==
 
-react-native-pager-view@6.8.1:
-  version "6.8.1"
-  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.8.1.tgz#fa0ec09ea7c44190c7c013d75dd09fdc17b96100"
-  integrity sha512-XIyVEMhwq7sZqM7GobOJZXxFCfdFgVNq/CFB2rZIRNRSVPJqE1k1fsc8xfQKfdzsp6Rpt6I7VOIvhmP7/YHdVg==
+react-native-pager-view@6.8.0:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.8.0.tgz#5bac05203d911bf9bf039d47db41b1313dbd1a7a"
+  integrity sha512-/wgFV8nB4TLnQ6j9e3TvNrHbPF5TINMZHaXt86GOV0NSJNMVGkWguniJVKrYLm85LL8KVhRkgdh43Rdu7PvW1A==
 
 react-native-progress@bluesky-social/react-native-progress:
   version "5.0.0"
@@ -17445,10 +17445,10 @@ react-native-svg@15.12.0:
     css-tree "^1.1.3"
     warn-once "0.1.1"
 
-react-native-uitextview@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.4.0.tgz#d1b583cc173cec00f4fdd03744cca76c54a12fbb"
-  integrity sha512-itm/frzkn/ma3+lwmKn2CkBOXPNo4bL8iVwQwjlzix5gVO59T2+axdfoj/Wi+Ra6F76KzNKxSah+7Y8dYmCHbQ==
+react-native-uitextview@^2.1.0-rc.0:
+  version "2.1.0-rc.0"
+  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-2.1.0-rc.0.tgz#5ae10f760a1c1d84a5621e39e8de01e0902aed90"
+  integrity sha512-krYfssKJyDoyjFduG063gmXQyXy7GIt092k1HfL7QzMTMWN1l2uvq3h/DIw86/xw6Sfv17TPz0R3RSzB1h4ndw==
 
 react-native-url-polyfill@^1.3.0:
   version "1.3.0"
