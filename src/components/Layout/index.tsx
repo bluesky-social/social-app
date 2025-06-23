@@ -16,7 +16,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {
-  android,
   atoms as a,
   ios,
   useBreakpoints,
@@ -136,8 +135,7 @@ export const KeyboardAwareContent = memo(function LayoutKeyboardAwareContent({
       style={[scrollViewStyles.common, style]}
       contentInset={ios({top: 0, left: 0, bottom: footerHeight, right: 0})}
       contentContainerStyle={[
-        android({paddingBottom: footerHeight}),
-        web({paddingBottom: footerHeight}),
+        !isIOS && {paddingBottom: footerHeight},
         contentContainerStyle,
       ]}
       keyboardShouldPersistTaps="handled"
