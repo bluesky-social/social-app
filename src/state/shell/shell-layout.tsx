@@ -1,6 +1,9 @@
 import {createContext, useContext, useMemo, useState} from 'react'
 import {type SharedValue, useSharedValue} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  type EdgeInsets,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 
 import {clamp} from '#/lib/numbers'
 import {isWeb} from '#/platform/detection'
@@ -33,16 +36,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const [footerHeight, setFooterHeight] = useState(() =>
-    platform({
-      // try and precisely guess the footer height, then round it to 4 decimal places
-      // to remove floating point imprecision. if we can guess it exactly,
-      // we get to skip a rerender
-      native: round4dp(
-        47 + a.border.borderWidth + clamp(insets.bottom, 15, 60),
-      ),
-      web: 58,
-      default: 0,
-    }),
+    estimateInitialHeight(insets),
   )
 
   const value = useMemo(
@@ -61,6 +55,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
 export function useShellLayout() {
   return useContext(LayoutContext)
+}
+
+function estimateInitialHeight(insets: EdgeInsets): number {
+  return platform({
+    // try and precisely guess the footer height, then round it to 4 decimal places
+    // to remove floating point imprecision. if we can guess it exactly,
+    // we get to skip a rerender
+    native: round4dp(47 + a.border.borderWidth + clamp(insets.bottom, 15, 60)),
+    web: 58,
+    default: 0,
+  })
 }
 
 function round4dp(value: number) {
