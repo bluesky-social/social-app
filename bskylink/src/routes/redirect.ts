@@ -96,7 +96,7 @@ export default function (ctx: AppContext, app: Express) {
             escapeHTML(url.toString()),
             `https://${ctx.cfg.service.appHostname}`,
           )
-          res.writeHead(403, {
+          res.writeHead(200, {
             'Content-Type': 'text/html',
             'Content-Length': Buffer.byteLength(html),
           })
@@ -115,7 +115,7 @@ export default function (ctx: AppContext, app: Express) {
             escapeHTML(url.toString()),
             `https://${ctx.cfg.service.appHostname}`,
           )
-          res.writeHead(403, {
+          res.writeHead(200, {
             'Content-Type': 'text/html',
             'Content-Length': Buffer.byteLength(html),
           })
