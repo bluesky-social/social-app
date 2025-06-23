@@ -2,7 +2,7 @@ import {useMemo} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {AppIconSet} from '#/screens/Settings/AppIconSettings/types'
+import {type AppIconSet} from '#/screens/Settings/AppIconSettings/types'
 
 export function useAppIconSets() {
   const {_} = useLingui()
@@ -13,20 +13,28 @@ export function useAppIconSets() {
         id: 'default_light',
         name: _(msg({context: 'Name of app icon variant', message: 'Light'})),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_default_light.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_default_light.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_default_light.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_default_light.png`,
+          )
         },
       },
       {
         id: 'default_dark',
         name: _(msg({context: 'Name of app icon variant', message: 'Dark'})),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_default_dark.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_default_dark.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_default_dark.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_default_dark.png`,
+          )
         },
       },
     ] satisfies AppIconSet[]
@@ -39,10 +47,14 @@ export function useAppIconSets() {
         id: 'core_aurora',
         name: _(msg({context: 'Name of app icon variant', message: 'Aurora'})),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_core_aurora.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_core_aurora.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_core_aurora.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_core_aurora.png`,
+          )
         },
       },
       // {
@@ -59,20 +71,28 @@ export function useAppIconSets() {
         id: 'core_sunrise',
         name: _(msg({context: 'Name of app icon variant', message: 'Sunrise'})),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_core_sunrise.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_core_sunrise.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_core_sunrise.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_core_sunrise.png`,
+          )
         },
       },
       {
         id: 'core_sunset',
         name: _(msg({context: 'Name of app icon variant', message: 'Sunset'})),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_core_sunset.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_core_sunset.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_core_sunset.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_core_sunset.png`,
+          )
         },
       },
       {
@@ -81,10 +101,14 @@ export function useAppIconSets() {
           msg({context: 'Name of app icon variant', message: 'Midnight'}),
         ),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_core_midnight.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_core_midnight.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_core_midnight.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_core_midnight.png`,
+          )
         },
       },
       {
@@ -93,10 +117,14 @@ export function useAppIconSets() {
           msg({context: 'Name of app icon variant', message: 'Flat Blue'}),
         ),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_core_flat_blue.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_core_flat_blue.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_core_flat_blue.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_core_flat_blue.png`,
+          )
         },
       },
       {
@@ -105,10 +133,14 @@ export function useAppIconSets() {
           msg({context: 'Name of app icon variant', message: 'Flat White'}),
         ),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_core_flat_white.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_core_flat_white.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_core_flat_white.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_core_flat_white.png`,
+          )
         },
       },
       {
@@ -117,10 +149,14 @@ export function useAppIconSets() {
           msg({context: 'Name of app icon variant', message: 'Flat Black'}),
         ),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_core_flat_black.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_core_flat_black.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_core_flat_black.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_core_flat_black.png`,
+          )
         },
       },
       {
@@ -132,10 +168,14 @@ export function useAppIconSets() {
           }),
         ),
         iosImage: () => {
-          return require(`../../../../assets/app-icons/ios_icon_core_classic.png`)
+          return require(
+            `../../../../assets/app-icons/ios_icon_core_classic.png`,
+          )
         },
         androidImage: () => {
-          return require(`../../../../assets/app-icons/android_icon_core_classic.png`)
+          return require(
+            `../../../../assets/app-icons/android_icon_core_classic.png`,
+          )
         },
       },
     ] satisfies AppIconSet[]

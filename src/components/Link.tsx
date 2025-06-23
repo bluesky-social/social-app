@@ -9,7 +9,7 @@ import {
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {type AllNavigatorParams} from '#/lib/routes/types'
+import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
@@ -24,6 +24,7 @@ import {Button, type ButtonProps} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text, type TextProps} from '#/components/Typography'
 import {router} from '#/routes'
+import {useGlobalDialogsControlContext} from './dialogs/Context'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -98,10 +99,10 @@ export function useLink({
     return typeof to === 'string'
       ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
       : to.screen
-      ? router.matchName(to.screen)?.build(to.params)
-      : to.href
-      ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
-      : undefined
+        ? router.matchName(to.screen)?.build(to.params)
+        : to.href
+          ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
+          : undefined
   }, [to])
 
   if (!href) {
@@ -111,7 +112,8 @@ export function useLink({
   }
 
   const isExternal = isExternalUrl(href)
-  const {openModal, closeModal} = useModalControls()
+  const {closeModal} = useModalControls()
+  const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
 
   const onPress = React.useCallback(
@@ -132,10 +134,9 @@ export function useLink({
       }
 
       if (requiresWarning) {
-        openModal({
-          name: 'link-warning',
-          text: displayText,
-          href: href,
+        linkWarningDialogControl.open({
+          displayText,
+          href,
         })
       } else {
         if (isExternal) {
@@ -154,15 +155,44 @@ export function useLink({
           } else {
             closeModal() // close any active modals
 
+            const [screen, params] = router.matchPath(href) as [
+              screen: keyof AllNavigatorParams,
+              params?: RouteParams,
+            ]
+
+            // does not apply to web's flat navigator
+            if (isNative && screen !== 'NotFound') {
+              const state = navigation.getState()
+              // if screen is not in the current navigator, it means it's
+              // most likely a tab screen
+              if (!state.routeNames.includes(screen)) {
+                const parent = navigation.getParent()
+                if (
+                  parent &&
+                  parent.getState().routeNames.includes(`${screen}Tab`)
+                ) {
+                  // yep, it's a tab screen. i.e. SearchTab
+                  // thus we need to navigate to the child screen
+                  // via the parent navigator
+                  // see https://reactnavigation.org/docs/upgrading-from-6.x/#changes-to-the-navigate-action
+                  // TODO: can we support the other kinds of actions? push/replace -sfn
+
+                  // @ts-expect-error include does not narrow the type unfortunately
+                  parent.navigate(`${screen}Tab`, {screen, params})
+                  return
+                } else {
+                  // will probably fail, but let's try anyway
+                }
+              }
+            }
+
             if (action === 'push') {
-              navigation.dispatch(StackActions.push(...router.matchPath(href)))
+              navigation.dispatch(StackActions.push(screen, params))
             } else if (action === 'replace') {
-              navigation.dispatch(
-                StackActions.replace(...router.matchPath(href)),
-              )
+              navigation.dispatch(StackActions.replace(screen, params))
             } else if (action === 'navigate') {
-              // @ts-ignore
-              navigation.navigate(...router.matchPath(href))
+              // @ts-expect-error not typed
+              navigation.navigate(screen, params)
             } else {
               throw Error('Unsupported navigator action.')
             }
@@ -176,13 +206,13 @@ export function useLink({
       displayText,
       isExternal,
       href,
-      openModal,
       openLink,
       closeModal,
       action,
       navigation,
       overridePresentation,
       shouldProxy,
+      linkWarningDialogControl,
     ],
   )
 
@@ -195,16 +225,21 @@ export function useLink({
     )
 
     if (requiresWarning) {
-      openModal({
-        name: 'link-warning',
-        text: displayText,
-        href: href,
+      linkWarningDialogControl.open({
+        displayText,
+        href,
         share: true,
       })
     } else {
       shareUrl(href)
     }
-  }, [disableMismatchWarning, displayText, href, isExternal, openModal])
+  }, [
+    disableMismatchWarning,
+    displayText,
+    href,
+    isExternal,
+    linkWarningDialogControl,
+  ])
 
   const onLongPress = React.useCallback(
     (e: GestureResponderEvent) => {

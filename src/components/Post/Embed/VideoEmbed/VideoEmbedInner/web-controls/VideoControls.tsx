@@ -317,8 +317,8 @@ export function Controls({
           !focused
             ? msg`Unmute video`
             : playing
-            ? msg`Pause video`
-            : msg`Play video`,
+              ? msg`Pause video`
+              : msg`Play video`,
         )}
         accessibilityHint=""
         style={[

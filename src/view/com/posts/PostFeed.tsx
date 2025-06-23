@@ -132,12 +132,11 @@ type FeedRow =
       key: string
     }
 
-export function getItemsForFeedback(feedRow: FeedRow):
-  | {
-      item: FeedPostSliceItem
-      feedContext: string | undefined
-      reqId: string | undefined
-    }[] {
+export function getItemsForFeedback(feedRow: FeedRow): {
+  item: FeedPostSliceItem
+  feedContext: string | undefined
+  reqId: string | undefined
+}[] {
   if (feedRow.type === 'sliceItem') {
     return feedRow.slice.items.map(item => ({
       item,

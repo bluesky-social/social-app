@@ -311,33 +311,34 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           isRoot && [a.pt_lg],
         ]}>
         <View style={[a.flex_row, a.gap_md, a.pb_md]}>
-          <PreviewableUserAvatar
-            size={42}
-            profile={post.author}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
-            live={live}
-            onBeforePress={onOpenAuthor}
-          />
-          <ProfileHoverCard did={post.author.did}>
-            <View style={[a.flex_1]}>
-              <View style={[a.flex_row, a.align_center]}>
-                <Link
-                  to={authorHref}
-                  style={[a.flex_shrink]}
-                  label={sanitizeDisplayName(
-                    post.author.displayName ||
-                      sanitizeHandle(post.author.handle),
-                    moderation.ui('displayName'),
-                  )}
-                  onPress={onOpenAuthor}>
+          <View collapsable={false}>
+            <PreviewableUserAvatar
+              size={42}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              live={live}
+              onBeforePress={onOpenAuthor}
+            />
+          </View>
+          <Link
+            to={authorHref}
+            style={[a.flex_1]}
+            label={sanitizeDisplayName(
+              post.author.displayName || sanitizeHandle(post.author.handle),
+              moderation.ui('displayName'),
+            )}
+            onPress={onOpenAuthor}>
+            <View style={[a.flex_1, a.align_start]}>
+              <ProfileHoverCard did={post.author.did} style={[a.w_full]}>
+                <View style={[a.flex_row, a.align_center]}>
                   <Text
                     emoji
                     style={[
+                      a.flex_shrink,
                       a.text_lg,
                       a.font_bold,
                       a.leading_snug,
-                      a.self_start,
                     ]}
                     numberOfLines={1}>
                     {sanitizeDisplayName(
@@ -346,32 +347,25 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                       moderation.ui('displayName'),
                     )}
                   </Text>
-                </Link>
 
-                <View style={[{paddingLeft: 3, top: -1}]}>
-                  <VerificationCheckButton profile={authorShadow} size="md" />
+                  <View style={[{paddingLeft: 3, top: -1}]}>
+                    <VerificationCheckButton profile={authorShadow} size="md" />
+                  </View>
                 </View>
-              </View>
-              <View style={[a.align_start]}>
-                <Link
-                  style={[a.flex_shrink]}
-                  to={authorHref}
-                  label={sanitizeHandle(post.author.handle, '@')}>
-                  <Text
-                    style={[
-                      a.text_md,
-                      a.leading_snug,
-                      t.atoms.text_contrast_medium,
-                    ]}
-                    numberOfLines={1}>
-                    {sanitizeHandle(post.author.handle, '@')}
-                  </Text>
-                </Link>
-              </View>
+                <Text
+                  style={[
+                    a.text_md,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  numberOfLines={1}>
+                  {sanitizeHandle(post.author.handle, '@')}
+                </Text>
+              </ProfileHoverCard>
             </View>
-          </ProfileHoverCard>
+          </Link>
           {showFollowButton && (
-            <View>
+            <View collapsable={false}>
               <PostThreadFollowBtn did={post.author.did} />
             </View>
           )}

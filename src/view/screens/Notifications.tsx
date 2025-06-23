@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,6 +17,7 @@ import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {emitSoftReset, listenSoftReset} from '#/state/events'
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
+import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
 import {
   useUnreadNotifications,
   useUnreadNotificationsApi,
@@ -30,12 +31,13 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
-import {Link} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 
 // We don't currently persist this across reloads since
@@ -53,13 +55,13 @@ export function NotificationsScreen({}: Props) {
   const unreadNotifs = useUnreadNotifications()
   const hasNew = !!unreadNotifs
   const {checkUnread: checkUnreadAll} = useUnreadNotificationsApi()
-  const [isLoadingAll, setIsLoadingAll] = React.useState(false)
-  const [isLoadingMentions, setIsLoadingMentions] = React.useState(false)
+  const [isLoadingAll, setIsLoadingAll] = useState(false)
+  const [isLoadingMentions, setIsLoadingMentions] = useState(false)
   const initialActiveTab = lastActiveTab
-  const [activeTab, setActiveTab] = React.useState(initialActiveTab)
+  const [activeTab, setActiveTab] = useState(initialActiveTab)
   const isLoading = activeTab === 0 ? isLoadingAll : isLoadingMentions
 
-  const onPageSelected = React.useCallback(
+  const onPageSelected = useCallback(
     (index: number) => {
       setActiveTab(index)
       lastActiveTab = index
@@ -68,7 +70,7 @@ export function NotificationsScreen({}: Props) {
   )
 
   const queryClient = useQueryClient()
-  const checkUnreadMentions = React.useCallback(
+  const checkUnreadMentions = useCallback(
     async ({invalidate}: {invalidate: boolean}) => {
       if (invalidate) {
         return truncateAndInvalidate(queryClient, NOTIFS_RQKEY('mentions'))
@@ -80,7 +82,7 @@ export function NotificationsScreen({}: Props) {
     [queryClient],
   )
 
-  const sections = React.useMemo(() => {
+  const sections = useMemo(() => {
     return [
       {
         title: _(msg`All`),
@@ -130,7 +132,7 @@ export function NotificationsScreen({}: Props) {
         </Layout.Header.Content>
         <Layout.Header.Slot>
           <Link
-            to="/notifications/settings"
+            to={{screen: 'NotificationSettings'}}
             label={_(msg`Notification settings`)}
             size="small"
             variant="ghost"
@@ -186,20 +188,20 @@ function NotificationsTab({
 }) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
-  const scrollElRef = React.useRef<ListMethods>(null)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
+  const scrollElRef = useRef<ListMethods>(null)
   const queryClient = useQueryClient()
   const isScreenFocused = useIsFocused()
   const isFocusedAndActive = isScreenFocused && isActive
 
   // event handlers
   // =
-  const scrollToTop = React.useCallback(() => {
+  const scrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({animated: isNative, offset: 0})
     setMinimalShellMode(false)
   }, [scrollElRef, setMinimalShellMode])
 
-  const onPressLoadLatest = React.useCallback(() => {
+  const onPressLoadLatest = useCallback(() => {
     scrollToTop()
     if (hasNew) {
       // render what we have now
@@ -238,7 +240,7 @@ function NotificationsTab({
   // on-visible setup
   // =
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (isFocusedAndActive) {
         setMinimalShellMode(false)
         logger.debug('NotificationsScreen: Focus')
@@ -246,7 +248,8 @@ function NotificationsTab({
       }
     }, [setMinimalShellMode, onFocusCheckLatest, isFocusedAndActive]),
   )
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (!isFocusedAndActive) {
       return
     }
@@ -262,6 +265,11 @@ function NotificationsTab({
           refreshNotifications={() => checkUnread({invalidate: true})}
           onScrolledDownChange={setIsScrolledDown}
           scrollElRef={scrollElRef}
+          ListHeaderComponent={
+            filter === 'mentions' ? (
+              <DisabledNotificationsWarning active={isFocusedAndActive} />
+            ) : null
+          }
         />
       </MainScrollProvider>
       {(isScrolledDown || hasNew) && (
@@ -273,4 +281,35 @@ function NotificationsTab({
       )}
     </>
   )
+}
+
+function DisabledNotificationsWarning({active}: {active: boolean}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {data} = useNotificationSettingsQuery({enabled: active})
+
+  if (!data) return null
+
+  if (!data.reply.list && !data.quote.list && !data.mention.list) {
+    // mention tab notifications are disabled
+    return (
+      <View style={[a.py_md, a.px_lg, a.border_b, t.atoms.border_contrast_low]}>
+        <Admonition type="warning">
+          <Trans>
+            You have completely disabled reply, quote, and mention
+            notifications, so this tab will no longer update. To adjust this,
+            visit your{' '}
+            <InlineLinkText
+              label={_(msg`Visit your notification settings`)}
+              to={{screen: 'NotificationSettings'}}>
+              notification settings
+            </InlineLinkText>
+            .
+          </Trans>
+        </Admonition>
+      </View>
+    )
+  }
+
+  return null
 }

@@ -16,6 +16,7 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -36,6 +37,7 @@ import {AvatarStackWithFetch} from '#/components/AvatarStack'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
+import {Bell_Stroke2_Corner0_Rounded as NotificationIcon} from '#/components/icons/Bell'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import {ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon} from '#/components/icons/Chevron'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
@@ -80,6 +82,7 @@ export function SettingsScreen({}: Props) {
   const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
   const [showAccounts, setShowAccounts] = useState(false)
   const [showDevOptions, setShowDevOptions] = useState(false)
+  const gate = useGate()
 
   return (
     <Layout.Screen>
@@ -180,6 +183,16 @@ export function SettingsScreen({}: Props) {
               <Trans>Moderation</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
+          {gate('reengagement_features') && (
+            <SettingsList.LinkItem
+              to="/settings/notifications"
+              label={_(msg`Notifications`)}>
+              <SettingsList.ItemIcon icon={NotificationIcon} />
+              <SettingsList.ItemText>
+                <Trans>Notifications</Trans>
+              </SettingsList.ItemText>
+            </SettingsList.LinkItem>
+          )}
           <SettingsList.LinkItem
             to="/settings/content-and-media"
             label={_(msg`Content and media`)}>

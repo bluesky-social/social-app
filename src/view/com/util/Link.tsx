@@ -30,6 +30,7 @@ import {emitSoftReset} from '#/state/events'
 import {useModalControls} from '#/state/modals'
 import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
 import {useTheme} from '#/alf'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {router} from '../../../routes'
 import {PressableWithHover} from './PressableWithHover'
 import {Text} from './text/Text'
@@ -189,7 +190,8 @@ export const TextLink = memo(function TextLink({
   onBeforePress?: () => void
 } & TextProps) {
   const navigation = useNavigationDeduped()
-  const {openModal, closeModal} = useModalControls()
+  const {closeModal} = useModalControls()
+  const {linkWarningDialogControl} = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
 
   if (!disableMismatchWarning && typeof text !== 'string') {
@@ -211,9 +213,8 @@ export const TextLink = memo(function TextLink({
         linkRequiresWarning(href, typeof text === 'string' ? text : '')
       if (requiresWarning) {
         e?.preventDefault?.()
-        openModal({
-          name: 'link-warning',
-          text: typeof text === 'string' ? text : '',
+        linkWarningDialogControl.open({
+          displayText: typeof text === 'string' ? text : '',
           href,
         })
       }
@@ -245,13 +246,13 @@ export const TextLink = memo(function TextLink({
       onBeforePress,
       onPressProp,
       closeModal,
-      openModal,
       navigation,
       href,
       text,
       disableMismatchWarning,
       navigationAction,
       openLink,
+      linkWarningDialogControl,
     ],
   )
   const hrefAttrs = useMemo(() => {

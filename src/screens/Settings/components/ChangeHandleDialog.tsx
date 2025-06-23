@@ -525,8 +525,8 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             isVerified
               ? _(msg`Update to ${domain}`)
               : dnsPanel
-              ? _(msg`Verify DNS Record`)
-              : _(msg`Verify Text File`)
+                ? _(msg`Verify DNS Record`)
+                : _(msg`Verify Text File`)
           }
           variant="solid"
           size="large"

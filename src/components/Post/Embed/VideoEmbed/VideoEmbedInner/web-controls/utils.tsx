@@ -1,6 +1,7 @@
 import {type RefObject, useCallback, useEffect, useRef, useState} from 'react'
 
 import {isSafari} from '#/lib/browser'
+import {logger} from '#/logger'
 import {useVideoVolumeState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 
 export function useVideoElement(ref: RefObject<HTMLVideoElement>) {
@@ -79,7 +80,12 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement>) {
           await ref.current.play()
         } catch (e: any) {
           if (
-            !e.message?.includes(`The request is not allowed by the user agent`)
+            !e.message?.includes(
+              `The request is not allowed by the user agent`,
+            ) &&
+            !e.message?.includes(
+              `The play() request was interrupted by a call to pause()`,
+            )
           ) {
             throw e
           }
@@ -176,8 +182,15 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement>) {
     } else {
       const promise = ref.current.play()
       if (promise !== undefined) {
-        promise.catch(err => {
-          console.error('Error playing video:', err)
+        promise.catch((err: any) => {
+          if (
+            // ignore this common error. it's fine
+            !err.message?.includes(
+              `The play() request was interrupted by a call to pause()`,
+            )
+          ) {
+            logger.error('Error playing video:', {message: err})
+          }
         })
       }
     }

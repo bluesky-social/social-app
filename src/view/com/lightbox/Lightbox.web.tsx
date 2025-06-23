@@ -1,17 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {
   Image,
-  ImageStyle,
+  type ImageStyle,
   Pressable,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -21,7 +21,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {colors, s} from '#/lib/styles'
 import {useLightbox, useLightboxControls} from '#/state/lightbox'
 import {Text} from '../util/text/Text'
-import {ImageSource} from './ImageViewing/@types'
+import {type ImageSource} from './ImageViewing/@types'
 import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 export function Lightbox() {
@@ -121,8 +121,8 @@ function LightboxInner({
                     img.type === 'circle-avi'
                       ? '50%'
                       : img.type === 'rect-avi'
-                      ? '10%'
-                      : 0,
+                        ? '10%'
+                        : 0,
                 } as ImageStyle
               }
               alt={img.alt}

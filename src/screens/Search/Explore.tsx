@@ -342,11 +342,11 @@ export function Explore({
   ])
 
   const topBorder = useMemo(
-    () => ({type: 'topBorder', key: 'top-border'} as const),
+    () => ({type: 'topBorder', key: 'top-border'}) as const,
     [],
   )
   const trendingTopicsModule = useMemo(
-    () => ({type: 'trendingTopics', key: 'trending-topics'} as const),
+    () => ({type: 'trendingTopics', key: 'trending-topics'}) as const,
     [],
   )
   const suggestedFollowsModule = useMemo(() => {

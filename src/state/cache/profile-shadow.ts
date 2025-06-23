@@ -144,8 +144,8 @@ function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
       'status' in shadow
         ? shadow.status
         : 'status' in profile
-        ? profile.status
-        : undefined,
+          ? profile.status
+          : undefined,
   })
 }
 

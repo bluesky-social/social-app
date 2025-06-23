@@ -2,9 +2,11 @@ import {useMemo, useState} from 'react'
 import {type TextStyle, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 import debounce from 'lodash.debounce'
 
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {
   preferencesQueryKey,
   usePreferencesQuery,
@@ -24,7 +26,8 @@ import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-export function SettingsInterests() {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'InterestsSettings'>
+export function InterestsSettingsScreen({}: Props) {
   const t = useTheme()
   const gutters = useGutters(['base'])
   const {data: preferences} = usePreferencesQuery()
@@ -110,13 +113,9 @@ function Inner({
           },
         )
         await Promise.all([
-          await qc.resetQueries({
-            queryKey: createSuggestedStarterPacksQueryKey(),
-          }),
-          await qc.resetQueries({queryKey: createGetSuggestedFeedsQueryKey()}),
-          await qc.resetQueries({
-            queryKey: createGetSuggestedUsersQueryKey({}),
-          }),
+          qc.resetQueries({queryKey: createSuggestedStarterPacksQueryKey()}),
+          qc.resetQueries({queryKey: createGetSuggestedFeedsQueryKey()}),
+          qc.resetQueries({queryKey: createGetSuggestedUsersQueryKey({})}),
         ])
 
         Toast.show(

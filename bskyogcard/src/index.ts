@@ -1,10 +1,10 @@
 import events from 'node:events'
-import http from 'node:http'
+import type http from 'node:http'
 
 import express from 'express'
-import {createHttpTerminator, HttpTerminator} from 'http-terminator'
+import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
 
-import {Config} from './config.js'
+import {type Config} from './config.js'
 import {AppContext} from './context.js'
 import {default as routes, errorHandler} from './routes/index.js'
 
@@ -15,7 +15,10 @@ export class CardService {
   public server?: http.Server
   private terminator?: HttpTerminator
 
-  constructor(public app: express.Application, public ctx: AppContext) {}
+  constructor(
+    public app: express.Application,
+    public ctx: AppContext,
+  ) {}
 
   static async create(cfg: Config): Promise<CardService> {
     let app = express()

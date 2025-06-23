@@ -461,12 +461,12 @@ let ProfileMenu = ({
                 msg`The account will be able to interact with you after unblocking.`,
               )
             : profile.associated?.labeler
-            ? _(
-                msg`Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you.`,
-              )
-            : _(
-                msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-              )
+              ? _(
+                  msg`Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you.`,
+                )
+              : _(
+                  msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+                )
         }
         onConfirm={blockAccount}
         confirmButtonCta={

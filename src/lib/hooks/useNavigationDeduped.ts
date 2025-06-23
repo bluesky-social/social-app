@@ -14,6 +14,7 @@ export type DebouncedNavigationProp = Pick<
   | 'dispatch'
   | 'goBack'
   | 'getState'
+  | 'getParent'
 >
 
 export function useNavigationDeduped() {
@@ -45,6 +46,9 @@ export function useNavigationDeduped() {
       },
       getState: () => {
         return navigation.getState()
+      },
+      getParent: (...args: Parameters<typeof navigation.getParent>) => {
+        return navigation.getParent(...args)
       },
     }),
     [dedupe, navigation],

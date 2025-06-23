@@ -328,7 +328,8 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
 
 /* #/components/Select/index.web.tsx */
 .radix-select-content {
-  box-shadow: 0px 6px 24px -10px rgba(22, 23, 24, 0.25),
+  box-shadow:
+    0px 6px 24px -10px rgba(22, 23, 24, 0.25),
     0px 6px 12px -12px rgba(22, 23, 24, 0.15);
   min-width: var(--radix-select-trigger-width);
   max-height: var(--radix-select-content-available-height);

@@ -185,8 +185,8 @@ export function Disable() {
                   state.emailStatus === 'pending'
                     ? Loader
                     : state.emailStatus === 'success'
-                    ? Check
-                    : Envelope
+                      ? Check
+                      : Envelope
                 }
               />
             </Button>

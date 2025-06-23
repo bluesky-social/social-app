@@ -69,7 +69,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.15.15",
+    "@atproto/api": "^0.15.16",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -190,7 +190,7 @@
     "react-native-gesture-handler": "2.25.0",
     "react-native-get-random-values": "~1.11.0",
     "react-native-ios-context-menu": "^1.15.3",
-    "react-native-keyboard-controller": "^1.17.1",
+    "react-native-keyboard-controller": "^1.17.5",
     "react-native-mmkv": "^2.12.2",
     "react-native-pager-view": "^6.7.1",
     "react-native-progress": "bluesky-social/react-native-progress",
@@ -218,7 +218,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.3.133",
+    "@atproto/dev-env": "^0.3.144",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/runtime": "^7.26.0",
@@ -265,7 +265,7 @@
     "lint-staged": "^13.2.3",
     "lockfile-lint": "^4.14.0",
     "metro-react-native-babel-preset": "^0.77.0",
-    "prettier": "^2.8.3",
+    "prettier": "^3.6.0",
     "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
     "svgo": "^3.3.2",

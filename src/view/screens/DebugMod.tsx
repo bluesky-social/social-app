@@ -112,14 +112,14 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               }),
             ]
           : scenario[0] === 'label' && target[0] === 'profile'
-          ? [
-              mock.label({
-                src: isSelfLabel ? did : undefined,
-                val: label[0],
-                uri: `at://${did}/app.bsky.actor.profile/self`,
-              }),
-            ]
-          : undefined,
+            ? [
+                mock.label({
+                  src: isSelfLabel ? did : undefined,
+                  val: label[0],
+                  uri: `at://${did}/app.bsky.actor.profile/self`,
+                }),
+              ]
+            : undefined,
       viewer: mock.actorViewerState({
         following: isFollowing
           ? `at://${currentAccount?.did || ''}/app.bsky.graph.follow/1234`
