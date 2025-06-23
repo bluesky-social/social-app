@@ -38,12 +38,12 @@ export function Outer({
   )
 }
 
-export function Target({
-  children,
-}: {
-  children: (props: {ref: undefined}) => React.ReactNode
-}) {
-  return <Popover.Trigger asChild>{children({ref: undefined})}</Popover.Trigger>
+export function Target({children}: {children: React.ReactNode}) {
+  return (
+    <Popover.Trigger asChild>
+      <View collapsable={false}>{children}</View>
+    </Popover.Trigger>
+  )
 }
 
 export function Content({

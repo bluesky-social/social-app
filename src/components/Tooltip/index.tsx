@@ -95,8 +95,10 @@ export function Outer({
        * Once opened, measure the dimensions and position of the target
        */
       targetRef.current.measure((_x, _y, width, height, pageX, pageY) => {
-        setTargetMeasurements({x: pageX, y: pageY, width, height})
-        setReady(true)
+        if (pageX !== undefined && pageY !== undefined && width && height) {
+          setTargetMeasurements({x: pageX, y: pageY, width, height})
+          setReady(true)
+        }
       })
     }
   } else if (!requestVisible && prevRequestVisible) {
@@ -123,16 +125,14 @@ export function Outer({
   )
 }
 
-export function Target({
-  children,
-}: {
-  children: (props: {ref: TargetContextType['targetRef']}) => React.ReactNode
-}) {
+export function Target({children}: {children: React.ReactNode}) {
   const {targetRef} = useContext(TargetContext)
 
-  return children({
-    ref: targetRef,
-  })
+  return (
+    <View collapsable={false} ref={targetRef}>
+      {children}
+    </View>
+  )
 }
 
 export function Content({

@@ -218,11 +218,7 @@ let ProfileHeaderStandard = ({
                     visible={visible}
                     onVisibleChange={setVisible}>
                     <Tooltip.Target>
-                      {({ref}) => (
-                        <View ref={ref}>
-                          <MessageProfileButton profile={profile} />
-                        </View>
-                      )}
+                      <MessageProfileButton profile={profile} />
                     </Tooltip.Target>
                     <Tooltip.TextBubble>
                       <Text>
