@@ -38,7 +38,7 @@ export default function (ctx: AppContext, app: Express) {
       ) {
         res.setHeader('Cache-Control', 'no-store')
         res.setHeader('Location', `https://${ctx.cfg.service.appHostname}`)
-        return res.status(200).end()
+        return res.status(302).end()
       }
 
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
