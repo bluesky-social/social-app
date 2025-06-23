@@ -14,18 +14,13 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {atoms as a, select, useTheme} from '#/alf'
 import {useOnGesture} from '#/components/hooks/useOnGesture'
 import {Portal} from '#/components/Portal'
-import {MIN_EDGE_SPACE, TIP_SIZE} from '#/components/Tooltip/const'
+import {
+  ARROW_HALF_SIZE,
+  ARROW_SIZE,
+  ARROW_VISUAL_OFFSET,
+  MIN_EDGE_SPACE,
+} from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
-
-const HALF_TIP = TIP_SIZE / 2
-const TIP_VISUAL_OFFSET = TIP_SIZE / 3
-
-/**
- * Only needed on web
- */
-export function Provider({children}: {children: React.ReactNode}) {
-  return children
-}
 
 type TooltipContextType = {
   position: 'top' | 'bottom'
@@ -221,7 +216,7 @@ function Bubble({
       minLeft,
       targetMeasurements.x + targetMeasurements.width / 2 - cw / 2,
     )
-    const tipTranslate = HALF_TIP * -1
+    const tipTranslate = ARROW_HALF_SIZE * -1
     let tipTop = tipTranslate
 
     if (left + cw > maxLeft) {
@@ -229,7 +224,10 @@ function Bubble({
     }
 
     let tipLeft =
-      targetMeasurements.x - left + targetMeasurements.width / 2 - HALF_TIP
+      targetMeasurements.x -
+      left +
+      targetMeasurements.width / 2 -
+      ARROW_HALF_SIZE
 
     let bottom = top + ch
 
@@ -259,11 +257,11 @@ function Bubble({
     }
 
     if (computedPosition === 'bottom') {
-      top += TIP_VISUAL_OFFSET
-      bottom += TIP_VISUAL_OFFSET
+      top += ARROW_VISUAL_OFFSET
+      bottom += ARROW_VISUAL_OFFSET
     } else {
-      top -= TIP_VISUAL_OFFSET
-      bottom -= TIP_VISUAL_OFFSET
+      top -= ARROW_VISUAL_OFFSET
+      bottom -= ARROW_VISUAL_OFFSET
     }
 
     return {
@@ -337,8 +335,8 @@ function Bubble({
             {
               borderTopLeftRadius: a.rounded_2xs.borderRadius,
               borderBottomRightRadius: a.rounded_2xs.borderRadius,
-              width: TIP_SIZE,
-              height: TIP_SIZE,
+              width: ARROW_SIZE,
+              height: ARROW_SIZE,
               transform: [{rotate: '45deg'}],
               top: coords.tipTop,
               left: coords.tipLeft,
@@ -362,7 +360,7 @@ function Bubble({
                 width: 0,
                 // provide more shadow beneath tip
                 height:
-                  TIP_VISUAL_OFFSET *
+                  ARROW_VISUAL_OFFSET *
                   (coords.computedPosition === 'bottom' ? -1 : 1),
               },
             },

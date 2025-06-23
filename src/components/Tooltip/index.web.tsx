@@ -4,10 +4,12 @@ import {Popover} from 'radix-ui'
 
 import {atoms as a, flatten, select, useTheme} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
-import {MIN_EDGE_SPACE, TIP_SIZE} from '#/components/Tooltip/const'
+import {
+  ARROW_SIZE,
+  ARROW_VISUAL_OFFSET,
+  MIN_EDGE_SPACE,
+} from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
-
-const TIP_VISUAL_OFFSET = TIP_SIZE / 3
 
 type TooltipContextType = {
   position: 'top' | 'bottom'
@@ -16,10 +18,6 @@ type TooltipContextType = {
 const TooltipContext = createContext<TooltipContextType>({
   position: 'bottom',
 })
-
-export function Provider({children}: {children: React.ReactNode}) {
-  return children
-}
 
 export function Outer({
   children,
@@ -43,10 +41,9 @@ export function Outer({
 export function Target({
   children,
 }: {
-  children: (props: object) => React.ReactNode
+  children: (props: {ref: undefined}) => React.ReactNode
 }) {
-  const child = useMemo(() => children({}), [children])
-  return <Popover.Trigger asChild>{child}</Popover.Trigger>
+  return <Popover.Trigger asChild>{children({ref: undefined})}</Popover.Trigger>
 }
 
 export function Content({
@@ -64,7 +61,7 @@ export function Content({
         className="radix-popover-content"
         aria-label={label}
         side={position}
-        sideOffset={(TIP_SIZE / 3) * -1}
+        sideOffset={(ARROW_SIZE / 3) * -1}
         collisionPadding={MIN_EDGE_SPACE}
         style={flatten([
           a.rounded_sm,
@@ -76,15 +73,15 @@ export function Content({
           {
             minWidth: 'max-content',
             boxShadow: select(t.name, {
-              light: `0 ${TIP_VISUAL_OFFSET}px 16px ${transparentifyColor(
+              light: `0 ${ARROW_VISUAL_OFFSET}px 16px ${transparentifyColor(
                 t.palette.black,
                 0.2,
               )}`,
-              dark: `0 ${TIP_VISUAL_OFFSET}px 16px ${transparentifyColor(
+              dark: `0 ${ARROW_VISUAL_OFFSET}px 16px ${transparentifyColor(
                 t.palette.black,
                 0.2,
               )}`,
-              dim: `0 ${TIP_VISUAL_OFFSET}px 16px ${transparentifyColor(
+              dim: `0 ${ARROW_VISUAL_OFFSET}px 16px ${transparentifyColor(
                 t.palette.black,
                 0.2,
               )}`,
@@ -92,8 +89,8 @@ export function Content({
           },
         ])}>
         <Popover.Arrow
-          width={TIP_SIZE}
-          height={TIP_SIZE / 2}
+          width={ARROW_SIZE}
+          height={ARROW_SIZE / 2}
           fill={select(t.name, {
             light: t.atoms.bg.backgroundColor,
             dark: t.atoms.bg_contrast_100.backgroundColor,
