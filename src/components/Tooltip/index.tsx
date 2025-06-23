@@ -294,7 +294,9 @@ function Bubble({
           left: coords.left,
         },
       ]}>
-      <Animated.View entering={ZoomIn.easing(Easing.out(Easing.exp))}>
+      <Animated.View
+        entering={ZoomIn.easing(Easing.out(Easing.exp))}
+        style={{transformOrigin: oppposite(position)}}>
         <View
           style={[
             a.absolute,
@@ -340,4 +342,15 @@ function Bubble({
       </Animated.View>
     </View>
   )
+}
+
+function oppposite(position: 'top' | 'bottom') {
+  switch (position) {
+    case 'top':
+      return 'center bottom'
+    case 'bottom':
+      return 'center top'
+    default:
+      return 'center'
+  }
 }
