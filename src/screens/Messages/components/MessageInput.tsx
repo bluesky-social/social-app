@@ -26,7 +26,7 @@ import {
 } from '#/state/messages/message-drafts'
 import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
-import {android, atoms as a, useTheme} from '#/alf'
+import {android, atoms as a, useTheme, web} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
@@ -132,7 +132,7 @@ export function MessageInput({
   }))
 
   return (
-    <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
+    <View style={[a.px_md, a.pb_sm, web([a.pt_xs])]}>
       {children}
       <View
         style={[

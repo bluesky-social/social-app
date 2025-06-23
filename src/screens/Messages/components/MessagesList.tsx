@@ -4,11 +4,13 @@ import {useKeyboardHandler} from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
   scrollTo,
+  useAnimatedProps,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
 import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import {LinearGradient} from 'expo-linear-gradient'
 import {
   type $Typed,
   type AppBskyEmbedRecord,
@@ -24,7 +26,7 @@ import {
   isBskyPostUrl,
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {isWeb} from '#/platform/detection'
 import {
   type ActiveConvoStates,
@@ -43,10 +45,12 @@ import {
   EmojiPicker,
   type EmojiPickerState,
 } from '#/view/com/composer/text-input/web/EmojiPicker'
-import {List, type ListMethods} from '#/view/com/util/List'
+import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/components/MessageInput'
 import {MessageListError} from '#/screens/Messages/components/MessageListError'
+import {atoms as a, useTheme} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
 import {MessageItem} from '#/components/dms/MessageItem'
 import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
@@ -102,6 +106,7 @@ export function MessagesList({
   footer?: React.ReactNode
   hasAcceptOverride?: boolean
 }) {
+  const t = useTheme()
   const convoState = useConvoActive()
   const agent = useAgent()
   const getPost = useGetPost()
@@ -133,6 +138,9 @@ export function MessagesList({
   // onStartReached to fire.
   const prevContentHeight = useRef(0)
   const prevItemCount = useRef(0)
+
+  // Keep track of the message input height
+  const messageInputHeight = useSharedValue(52)
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
@@ -294,10 +302,41 @@ export function MessagesList({
     },
     [footerHeight],
   )
+  const animatedListStyle = useAnimatedStyle(() => {
+    if (!isIOS) {
+      return {
+        marginBottom: Math.max(
+          keyboardHeight.get(),
+          footerHeight + messageInputHeight.get(),
+        ),
+      }
+    }
+    return {}
+  })
 
-  const animatedListStyle = useAnimatedStyle(() => ({
-    marginBottom: Math.max(keyboardHeight.get(), footerHeight),
-  }))
+  const animatedProps: Partial<ListProps> = useAnimatedProps(() => {
+    if (isIOS) {
+      return {
+        scrollIndicatorInsets: {
+          top: 0,
+          left: 0,
+          right: 1,
+          bottom:
+            Math.max(keyboardHeight.get(), footerHeight) +
+            messageInputHeight.get(),
+        },
+        contentInset: {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom:
+            Math.max(keyboardHeight.get(), footerHeight) +
+            messageInputHeight.get(),
+        },
+      }
+    }
+    return {}
+  })
 
   const animatedStickyViewStyle = useAnimatedStyle(() => ({
     transform: [{translateY: -Math.max(keyboardHeight.get(), footerHeight)}],
@@ -431,9 +470,7 @@ export function MessagesList({
           maxToRenderPerBatch={isWeb ? 32 : 62}
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
-          maintainVisibleContentPosition={{
-            minIndexForVisible: 0,
-          }}
+          maintainVisibleContentPosition={{minIndexForVisible: 0}}
           removeClippedSubviews={false}
           sideBorders={false}
           onContentSizeChange={onContentSizeChange}
@@ -444,28 +481,52 @@ export function MessagesList({
           ListHeaderComponent={
             <MaybeLoader isLoading={convoState.isFetchingHistory} />
           }
-          contentInset={{bottom: 0}}
-          contentContainerStyle={{paddingBottom: 0}}
-          scrollIndicatorInsets={{bottom: 0}}
+          animatedProps={animatedProps}
+          automaticallyAdjustKeyboardInsets={false}
+          automaticallyAdjustContentInsets={false}
         />
       </ScrollProvider>
-      <Animated.View style={animatedStickyViewStyle}>
+      <Animated.View
+        style={[
+          a.absolute,
+          {bottom: 0, left: 0, right: 0},
+          animatedStickyViewStyle,
+        ]}>
+        <LinearGradient
+          key={t.name} // android does not update when you change the colors. sigh.
+          start={[0.5, 0]}
+          end={[0.5, 1]}
+          colors={[
+            transparentifyColor(t.atoms.bg.backgroundColor, 0),
+            t.atoms.bg.backgroundColor,
+          ]}
+          locations={[0.15, 0.4]}
+          style={[a.absolute, a.inset_0]}
+        />
         {convoState.status === ConvoStatus.Disabled ? (
           <ChatDisabled />
         ) : blocked ? (
           footer
         ) : (
-          <ConversationFooter
-            convoState={convoState}
-            hasAcceptOverride={hasAcceptOverride}>
-            <MessageInput
-              onSendMessage={onSendMessage}
-              hasEmbed={!!embedUri}
-              setEmbed={setEmbed}
-              openEmojiPicker={onOpenEmojiPicker}>
-              <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
-            </MessageInput>
-          </ConversationFooter>
+          <View
+            onLayout={evt => {
+              const height = evt.nativeEvent.layout.height
+              if (height) {
+                messageInputHeight.set(height)
+              }
+            }}>
+            <ConversationFooter
+              convoState={convoState}
+              hasAcceptOverride={hasAcceptOverride}>
+              <MessageInput
+                onSendMessage={onSendMessage}
+                hasEmbed={!!embedUri}
+                setEmbed={setEmbed}
+                openEmojiPicker={onOpenEmojiPicker}>
+                <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
+              </MessageInput>
+            </ConversationFooter>
+          </View>
         )}
       </Animated.View>
 
