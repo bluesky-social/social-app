@@ -111,8 +111,8 @@ export function Trigger({children, label}: TriggerProps) {
             borderColor: focused
               ? t.palette.primary_500
               : hovered
-              ? t.palette.contrast_100
-              : t.palette.contrast_25,
+                ? t.palette.contrast_100
+                : t.palette.contrast_25,
           },
         ])}>
         {children}

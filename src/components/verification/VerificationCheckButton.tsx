@@ -130,8 +130,8 @@ export function Badge({
                 verifiedByHidden
                   ? t.atoms.bg_contrast_100.backgroundColor
                   : state.profile.isVerified
-                  ? t.palette.primary_500
-                  : t.atoms.bg_contrast_100.backgroundColor
+                    ? t.palette.primary_500
+                    : t.atoms.bg_contrast_100.backgroundColor
               }
               verifier={state.profile.role === 'verifier'}
             />

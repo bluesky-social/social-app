@@ -1,13 +1,13 @@
-import {ImagePickerAsset} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {
-  AppBskyFeedPostgate,
+  type AppBskyFeedPostgate,
   AppBskyRichtextFacet,
-  BskyPreferences,
+  type BskyPreferences,
   RichText,
 } from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
-import {SelfLabel} from '#/lib/moderation'
+import {type SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {
@@ -15,17 +15,22 @@ import {
   postUriToRelativePath,
   toBskyAppUrl,
 } from '#/lib/strings/url-helpers'
-import {ComposerImage, createInitialImages} from '#/state/gallery'
+import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
-import {Gif} from '#/state/queries/tenor'
+import {type Gif} from '#/state/queries/tenor'
 import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {ComposerOpts} from '#/state/shell/composer'
+import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {type ComposerOpts} from '#/state/shell/composer'
 import {
-  LinkFacetMatch,
+  type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
-import {createVideoState, VideoAction, videoReducer, VideoState} from './video'
+import {
+  createVideoState,
+  type VideoAction,
+  videoReducer,
+  type VideoState,
+} from './video'
 
 type ImagesMedia = {
   type: 'images'
@@ -514,12 +519,12 @@ export function createComposerState({
     text: initText
       ? initText
       : initMention
-      ? insertMentionAt(
-          `@${initMention}`,
-          initMention.length + 1,
-          `${initMention}`,
-        )
-      : '',
+        ? insertMentionAt(
+            `@${initMention}`,
+            initMention.length + 1,
+            `${initMention}`,
+          )
+        : '',
   })
 
   let link: Link | undefined

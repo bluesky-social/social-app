@@ -518,8 +518,8 @@ export const ComposePost = ({
       thread.posts.length > 1
         ? _(msg`Your posts have been published`)
         : replyTo
-        ? _(msg`Your reply has been published`)
-        : _(msg`Your post has been published`),
+          ? _(msg`Your reply has been published`)
+          : _(msg`Your post has been published`),
     )
   }, [
     _,
@@ -1000,20 +1000,20 @@ function ComposerTopBar({
                       }),
                     )
                 : isThread
-                ? _(
-                    msg({
-                      message: 'Publish posts',
-                      comment:
-                        'Accessibility label for button to publish multiple posts in a thread',
-                    }),
-                  )
-                : _(
-                    msg({
-                      message: 'Publish post',
-                      comment:
-                        'Accessibility label for button to publish a single post',
-                    }),
-                  )
+                  ? _(
+                      msg({
+                        message: 'Publish posts',
+                        comment:
+                          'Accessibility label for button to publish multiple posts in a thread',
+                      }),
+                    )
+                  : _(
+                      msg({
+                        message: 'Publish post',
+                        comment:
+                          'Accessibility label for button to publish a single post',
+                      }),
+                    )
             }
             variant="solid"
             color="primary"

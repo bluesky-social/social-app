@@ -128,8 +128,7 @@ export let MessageContextMenu = ({
           label={_(msg`Message options`)}
           contentLabel={_(
             msg`Message from @${
-              sender?.handle ?? // should always be defined
-              'unknown'
+              sender?.handle ?? 'unknown' // should always be defined
             }: ${message.text}`,
           )}>
           {children}

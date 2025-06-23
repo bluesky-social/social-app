@@ -444,7 +444,7 @@ export function buildThread({
     const anchorPost = items.at(0)
     const hasAnchorFromCache = anchorPost && anchorPost.type === 'threadPost'
     const skeletonReplies = hasAnchorFromCache
-      ? anchorPost.value.post.replyCount ?? 4
+      ? (anchorPost.value.post.replyCount ?? 4)
       : 4
 
     if (!items.length) {

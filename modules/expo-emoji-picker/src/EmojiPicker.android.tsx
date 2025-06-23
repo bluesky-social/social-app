@@ -12,7 +12,7 @@ const EmojiPicker = ({onEmojiSelected}: EmojiPickerViewProps) => {
         flex: 1,
         width: '100%',
         backgroundColor: scheme === 'dark' ? '#000' : '#fff',
-      } as const),
+      }) as const,
     [scheme],
   )
 
