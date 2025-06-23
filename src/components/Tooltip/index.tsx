@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import {Dimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import Animated, {Easing, ZoomIn} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
@@ -185,6 +185,7 @@ function Bubble({
 }) {
   const t = useTheme()
   const insets = useSafeAreaInsets()
+  const dimensions = useWindowDimensions()
   const [bubbleMeasurements, setBubbleMeasurements] = useState<
     | {
         width: number
@@ -203,7 +204,7 @@ function Bubble({
         tipLeft: 0,
       }
 
-    const {width: ww, height: wh} = Dimensions.get('window')
+    const {width: ww, height: wh} = dimensions
     const maxTop = insets.top
     const maxBottom = wh - insets.bottom
     const {width: cw, height: ch} = bubbleMeasurements
@@ -273,7 +274,7 @@ function Bubble({
       tipTop,
       tipLeft,
     }
-  }, [position, targetMeasurements, bubbleMeasurements, insets])
+  }, [position, targetMeasurements, bubbleMeasurements, insets, dimensions])
 
   const requestCloseWrapped = useCallback(() => {
     setBubbleMeasurements(undefined)
