@@ -131,7 +131,13 @@ export function Target({
   })
 }
 
-export function Content({children}: {children: React.ReactNode}) {
+export function Content({
+  children,
+  label,
+}: {
+  children: React.ReactNode
+  label: string
+}) {
   const {position, ready, onVisibleChange} = useContext(TooltipContext)
   const {targetMeasurements} = useContext(TargetContext)
   const requestClose = useCallback(() => {
@@ -143,6 +149,7 @@ export function Content({children}: {children: React.ReactNode}) {
   return (
     <Portal>
       <Bubble
+        label={label}
         position={position}
         /*
          * Gotta pass these in here. Inside the Bubble, we're Potal-ed outside
@@ -158,11 +165,13 @@ export function Content({children}: {children: React.ReactNode}) {
 
 function Bubble({
   children,
+  label,
   position,
   requestClose,
   targetMeasurements,
 }: {
   children: React.ReactNode
+  label: string
   position: TooltipContextType['position']
   requestClose: () => void
   targetMeasurements: Exclude<
@@ -284,6 +293,14 @@ function Bubble({
 
   return (
     <View
+      accessible
+      role="alert"
+      accessibilityHint=""
+      accessibilityLabel={label}
+      // android
+      importantForAccessibility="yes"
+      // ios
+      accessibilityViewIsModal
       style={[
         a.absolute,
         a.align_start,
