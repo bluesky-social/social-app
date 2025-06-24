@@ -1,10 +1,9 @@
-import {useEffect, useMemo} from 'react'
-import {useWindowDimensions} from 'react-native'
+import {useEffect} from 'react'
 import {SystemBars} from 'react-native-edge-to-edge'
 import Animated, {
   Easing,
-  type LayoutAnimation,
-  withTiming,
+  SlideInDown,
+  SlideOutDown,
 } from 'react-native-reanimated'
 
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
@@ -15,48 +14,8 @@ import {atoms as a, useTheme} from '#/alf'
 export function Composer() {
   const state = useComposerState()
   const t = useTheme()
-  const {height} = useWindowDimensions()
 
   const open = !!state
-
-  // HACKFIX: the builtin "SlideInDown" and "SlideOutDown"
-  // animations are broken, because they rely on getting the window
-  // height from reanimated and it appears to be 0 initially.
-  // We can recreate the same animation but just pass in the window
-  // dimensions from JS -sfn
-  // TODO: Fix upstream
-  const {EnterAnimation, ExitAnimation} = useMemo(() => {
-    return {
-      EnterAnimation: (): LayoutAnimation => {
-        'worklet'
-        return {
-          animations: {
-            originY: withTiming(0, {
-              duration: 200,
-              easing: Easing.out(Easing.quad),
-            }),
-          },
-          initialValues: {
-            originY: height,
-          },
-        }
-      },
-      ExitAnimation: (): LayoutAnimation => {
-        'worklet'
-        return {
-          animations: {
-            originY: withTiming(height, {
-              duration: 200,
-              easing: Easing.in(Easing.quad),
-            }),
-          },
-          initialValues: {
-            originY: 0,
-          },
-        }
-      },
-    }
-  }, [height])
 
   useEffect(() => {
     if (open) {
@@ -78,8 +37,8 @@ export function Composer() {
   return (
     <Animated.View
       style={[a.absolute, a.inset_0, t.atoms.bg]}
-      entering={EnterAnimation}
-      exiting={ExitAnimation}
+      entering={SlideInDown.duration(300).easing(Easing.out(Easing.exp))}
+      exiting={SlideOutDown.duration(200).easing(Easing.in(Easing.quad))}
       aria-modal
       accessibilityViewIsModal>
       <ComposePost
