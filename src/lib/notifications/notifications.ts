@@ -6,17 +6,22 @@ import {type AtpAgent} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {Logger} from '#/logger'
-import {isAndroid, isNative} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
 
 const logger = Logger.create(Logger.Context.Notifications)
 
-async function registerPushToken(
+/**
+ * Registers the device's push notification token with the Bluesky server.
+ */
+async function _registerPushToken(
   agent: AtpAgent,
   account: SessionAccount,
   token: Notifications.DevicePushToken,
 ) {
+  logger.debug(`registerPushToken`)
+
   try {
     await agent.app.bsky.notification.registerPush({
       serviceDid: account.service?.includes('staging')
@@ -31,7 +36,7 @@ async function registerPushToken(
       appId: 'xyz.blueskyweb.app',
     })
 
-    logger.debug(`registerPushToken`, {
+    logger.debug(`registerPushToken: success`, {
       tokenType: token.type,
       token: token.data,
     })
@@ -40,13 +45,61 @@ async function registerPushToken(
   }
 }
 
-const registerPushTokenDebounced = debounce(registerPushToken, 100)
+/**
+ * Debounced version of `_registerPushToken` to prevent multiple calls. Use this
+ * instead of using `_registerPushToken` directly.
+ */
+const registerPushToken = debounce(_registerPushToken, 100)
 
-async function getPushToken(skipPermissionCheck = false) {
-  const granted =
-    skipPermissionCheck || (await Notifications.getPermissionsAsync()).granted
+/**
+ * Retreive the device's push notification token, if permissions are granted.
+ */
+async function getPushToken() {
+  const granted = (await Notifications.getPermissionsAsync()).granted
   if (granted) {
     return Notifications.getDevicePushTokenAsync()
+  }
+}
+
+/**
+ * Gets the device push token and registers it with the Bluesky server.
+ *
+ * N.B. A previous regression in `expo-notifications` caused
+ * `addPushTokenListener` to not fire on Android after calling
+ * `getPushToken()`. Therefore, as insurance, we also call
+ * `registerPushToken` here.
+ *
+ * Because `registerPushToken` is debounced, we can safely call it on every
+ * platform and only a single call will be made to the server.
+ *
+ * @see https://github.com/bluesky-social/social-app/pull/4467
+ * @see https://github.com/expo/expo/issues/28656
+ * @see https://github.com/expo/expo/issues/29909
+ */
+async function getAndRegisterPushToken(
+  agent: AtpAgent,
+  currentAccount: SessionAccount,
+) {
+  try {
+    /**
+     * This will also fire the listener added via `addPushTokenListener`. That
+     * listener also handles registration.
+     */
+    const token = await getPushToken()
+
+    logger.debug(`getAndRegisterPushToken`, {token})
+
+    if (token) {
+      /**
+       * The listener should have registered the token already, but just in
+       * case, call the debounced function again.
+       */
+      registerPushToken(agent, currentAccount, token)
+    }
+
+    return token
+  } catch (e: any) {
+    logger.error(`getPushToken: failed`, {safeMessage: e.message})
   }
 }
 
@@ -57,26 +110,10 @@ export function useNotificationsRegistration() {
   React.useEffect(() => {
     if (!currentAccount) return
 
-    /**
-     * HACK — An apparent regression in expo-notifications causes
-     * `addPushTokenListener` to not fire on Android whenever the token changes
-     * by calling `getPushToken()`. This is a workaround to ensure we register
-     * the token once it is generated on Android.
-     *
-     * @see https://github.com/bluesky-social/social-app/pull/4467
-     */
-    if (isAndroid) {
-      ;(async () => {
-        const token = await getPushToken()
+    logger.debug(`useNotificationsRegistration`)
 
-        // Token will be undefined if we don't have notifications permission
-        if (token) {
-          registerPushTokenDebounced(agent, currentAccount, token)
-        }
-      })()
-    } else {
-      getPushToken()
-    }
+    // init push token
+    getAndRegisterPushToken(agent, currentAccount)
 
     /**
      * According to the Expo docs, there is a chance that the token will change
@@ -86,7 +123,7 @@ export function useNotificationsRegistration() {
      * @see https://docs.expo.dev/versions/latest/sdk/notifications/#addpushtokenlistenerlistener
      */
     const subscription = Notifications.addPushTokenListener(async newToken => {
-      registerPushTokenDebounced(agent, currentAccount, newToken)
+      registerPushToken(agent, currentAccount, newToken)
       logger.debug(`addPushTokenListener callback`, {newToken})
     })
 
@@ -120,40 +157,30 @@ export function useRequestNotificationsPermission() {
     }
 
     const res = await Notifications.requestPermissionsAsync()
+
     logger.metric(`notifications:request`, {
       context: context,
       status: res.status,
     })
 
-    if (res.granted) {
-      /*
-       * This will fire a pushTokenEvent, which will handle registration of the
-       * token
-       */
-      const token = await getPushToken(true)
-
-      /**
-       * Same hack as above. We cannot rely on the `addPushTokenListener` to
-       * fire on Android due to an Expo bug, so we will manually register it
-       * here. Note that this will occur only:
-       *
-       *    1) Right after the user signs in, leading to no `currentAccount`
-       *    account being available - this will be instead picked up from the
-       *    useEffect above on `currentAccount` change
-       *
-       *    2) Right after onboarding. In this case, we _need_ this
-       *    registration, since `currentAccount` will not change and we need to
-       *    ensure the token is registered right after permission is granted.
-       *    `currentAccount` will already be available in this case, so the
-       *    registration will succeed. We should remove this once
-       *    expo-notifications (and possibly FCMv1) is fixed and the
-       *    `addPushTokenListener` is working again.
-       *
-       * @see https://github.com/expo/expo/issues/28656
-       */
-      if (isAndroid && currentAccount && token) {
-        registerPushTokenDebounced(agent, currentAccount, token)
-      }
+    /**
+     * Note that this will run:
+     *
+     *    1) Right after the user signs in, leading to no `currentAccount`
+     *    account being available - this will be instead picked up from the
+     *    useEffect above on `currentAccount` change
+     *
+     *    2) Right after onboarding. In this case, we _need_ this
+     *    registration, since `currentAccount` will not change and we need to
+     *    ensure the token is registered right after permission is granted.
+     *    `currentAccount` will already be available in this case, so the
+     *    registration will succeed. We should remove this once
+     *    expo-notifications (and possibly FCMv1) is fixed and the
+     *    `addPushTokenListener` is working again.
+     */
+    if (res.granted && currentAccount) {
+      logger.debug(`useRequestNotificationsPermission`, {context})
+      getAndRegisterPushToken(agent, currentAccount)
     }
   }
 }
