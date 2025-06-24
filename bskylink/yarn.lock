@@ -62,6 +62,11 @@
     cborg "^1.6.0"
     multiformats "^9.5.4"
 
+"@preact/signals-core@^1.8.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@preact/signals-core/-/signals-core-1.10.0.tgz#765eb7045998b98c437e1ad1a660e5ff96a40136"
+  integrity sha512-qlKeXlfqtlC+sjxCPHt6Sk0/dXBrKZVcPlianqjNc/vW263YBFiP5mRrgKpHoO0q222Thm1TdYQWfCKpbbgvwA==
+
 "@types/cors@^2.8.17":
   version "2.8.17"
   resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.17.tgz#5d718a5e494a8166f569d986794e49c48b216b2b"
@@ -89,6 +94,18 @@
     "@types/node" "*"
     pg-protocol "*"
     pg-types "^4.0.1"
+
+"@webreflection/signal@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@webreflection/signal/-/signal-2.1.2.tgz#8adcf99b33f7e8ddfade4742b171c1743dc930d2"
+  integrity sha512-0dW0fstQQkIt588JwhDiPS4xgeeQcQnBHn6MVInrBzmFlnLtzoSJL9G7JqdAlZVVi19tfb8R1QisZIT31cgiug==
+
+"@webreflection/uparser@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@webreflection/uparser/-/uparser-0.4.0.tgz#49c105455e9482f9a7398f96eb398e421e440f26"
+  integrity sha512-kAFWUEw5eool295y01VDr+DOsyog6lURX9l288JCJAD2gxc0tFk34dYaAi6O3BbJyfSoncVEV+nw87bsssdppQ==
+  dependencies:
+    domconstants "^1.1.6"
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -223,6 +240,11 @@ cors@^2.8.5:
     object-assign "^4"
     vary "^1"
 
+custom-function@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/custom-function/-/custom-function-2.0.0.tgz#e421ce1712fa5f8e240a518080a4c82ae97e8606"
+  integrity sha512-2OPHkZzq3mK1nWpJqWWkGD6Z+0AajNeIxmXl+MRVL8Vysjjf5tf9B5mo713/X2khEwBn/3BKQ7NphpP1vpVKug==
+
 debug@2.6.9:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -259,6 +281,41 @@ detect-libc@^2.0.1:
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-2.0.3.tgz#f0cd503b40f9939b894697d19ad50895e30cf700"
   integrity sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==
 
+dom-serializer@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/dom-serializer/-/dom-serializer-2.0.0.tgz#e41b802e1eedf9f6cae183ce5e622d789d7d8e53"
+  integrity sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==
+  dependencies:
+    domelementtype "^2.3.0"
+    domhandler "^5.0.2"
+    entities "^4.2.0"
+
+domconstants@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/domconstants/-/domconstants-1.1.6.tgz#c6dd4e181a3ddf641a3d2f55ec79569a409d82d4"
+  integrity sha512-CuaDrThJ4VM+LyZ4ax8n52k0KbLJZtffyGkuj1WhpTRRcSfcy/9DfOBa68jenhX96oNUTunblSJEUNC4baFdmQ==
+
+domelementtype@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/domelementtype/-/domelementtype-2.3.0.tgz#5c45e8e869952626331d7aab326d01daf65d589d"
+  integrity sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==
+
+domhandler@^5.0.2, domhandler@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/domhandler/-/domhandler-5.0.3.tgz#cc385f7f751f1d1fc650c21374804254538c7d31"
+  integrity sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==
+  dependencies:
+    domelementtype "^2.3.0"
+
+domutils@^3.1.0:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/domutils/-/domutils-3.2.2.tgz#edbfe2b668b0c1d97c24baf0f1062b132221bc78"
+  integrity sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==
+  dependencies:
+    dom-serializer "^2.0.0"
+    domelementtype "^2.3.0"
+    domhandler "^5.0.3"
+
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
@@ -268,6 +325,11 @@ encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==
+
+entities@^4.2.0, entities@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/entities/-/entities-4.5.0.tgz#5d268ea5e7113ec74c4d033b79ea5a35a488fb48"
+  integrity sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==
 
 es-define-property@^1.0.0:
   version "1.0.0"
@@ -378,6 +440,11 @@ function-bind@^1.1.2:
   resolved "https://registry.yarnpkg.com/function-bind/-/function-bind-1.1.2.tgz#2c02d864d97f3ea6c8830c464cbd11ab6eab7a1c"
   integrity sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==
 
+gc-hook@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/gc-hook/-/gc-hook-0.4.1.tgz#61e0ef4c5c2a13ae6f938cc2b0b9a71a94a12e68"
+  integrity sha512-uiF+uUftDVLr+VRdudsdsT3/LQYnv2ntwhRH964O7xXDI57Smrek5olv75Wb8Nnz6U+7iVTRXsBlxKcsaDTJTQ==
+
 get-intrinsic@^1.1.3, get-intrinsic@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/get-intrinsic/-/get-intrinsic-1.2.4.tgz#e385f5a4b5227d449c3eabbad05494ef0abbeadd"
@@ -424,6 +491,21 @@ hasown@^2.0.0:
   integrity sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==
   dependencies:
     function-bind "^1.1.2"
+
+html-escaper@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/html-escaper/-/html-escaper-3.0.3.tgz#4d336674652beb1dcbc29ef6b6ba7f6be6fdfed6"
+  integrity sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==
+
+htmlparser2@^9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-9.1.0.tgz#cdb498d8a75a51f739b61d3f718136c369bc8c23"
+  integrity sha512-5zfg6mHUoaer/97TxnGpxmbR7zJtPwIYFMZ/H5ucTlPZhKvtum05yiPK3Mgai3a0DyVxv7qYqoweaEd2nrYQzQ==
+  dependencies:
+    domelementtype "^2.3.0"
+    domhandler "^5.0.3"
+    domutils "^3.1.0"
+    entities "^4.5.0"
 
 http-errors@2.0.0:
   version "2.0.0"
@@ -986,6 +1068,27 @@ typescript@^5.4.5:
   version "5.4.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.4.5.tgz#42ccef2c571fdbd0f6718b1d1f5e6e5ef006f611"
   integrity sha512-vcI4UpRgg81oIRUFwR0WSIHKt11nJ7SAVlYNIu+QpqeyXP+gpQJy/Z4+F0aGxSE4MqwjyXvW/TzgkLAx2AGHwQ==
+
+udomdiff@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/udomdiff/-/udomdiff-1.1.2.tgz#2979769943afddfb1e6f40e8bda41e431bdcd813"
+  integrity sha512-v+Z8Jal+GtmKGtJ34GIQlCJAxrDt9kbjpNsNvYoAXFyr4gNfWlD4uJJuoNNu/0UTVaKvQwHaSU095YDl71lKPw==
+
+uhtml@^4.7.1:
+  version "4.7.1"
+  resolved "https://registry.yarnpkg.com/uhtml/-/uhtml-4.7.1.tgz#5a0e9c08aefb08c8e9d59e208d7d52f1646561e3"
+  integrity sha512-2Nv8m2WTVBAmep42aYDnMDTRf87yHRWFSif9uEqkCB1fgX85q7rxTXkP6PNINCNUs9/KmQJ+RBgSH1BNZmxEtg==
+  dependencies:
+    "@webreflection/uparser" "^0.4.0"
+    custom-function "^2.0.0"
+    domconstants "^1.1.6"
+    gc-hook "^0.4.1"
+    html-escaper "^3.0.3"
+    htmlparser2 "^9.1.0"
+    udomdiff "^1.1.2"
+  optionalDependencies:
+    "@preact/signals-core" "^1.8.0"
+    "@webreflection/signal" "^2.1.2"
 
 uint8arrays@3.0.0:
   version "3.0.0"
