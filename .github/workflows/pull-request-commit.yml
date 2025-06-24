@@ -33,6 +33,7 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: yarn
+          cache-dependency-path: yarn.lock
 
       - name: Ensure tracking relevant branches and checkout base
         env:
@@ -121,6 +122,7 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: yarn
+          cache-dependency-path: yarn.lock
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
