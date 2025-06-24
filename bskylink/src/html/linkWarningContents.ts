@@ -1,3 +1,4 @@
+import escapeHTML from 'escape-html'
 import {type Hole, html} from 'uhtml'
 
 export function linkWarningContents(opts: {
@@ -15,11 +16,11 @@ export function linkWarningContents(opts: {
         : 'This link has been identified as malicious and has blocked for your safety.'}
     </p>
     <div class="blocked-site">
-      <p class="site-url">${opts.link}</p>
+      <p class="site-url">${escapeHTML(opts.link)}</p>
     </div>
     <div class="button-group">
       ${opts.type === 'warn'
-        ? html`<a class="button secondary" href="${opts.link}"
+        ? html`<a class="button secondary" href="${escapeHTML(opts.link)}"
             >Continue Anyway</a
           >`
         : null}

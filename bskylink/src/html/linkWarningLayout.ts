@@ -1,3 +1,4 @@
+import escapeHTML from 'escape-html'
 import {type Hole, html} from 'uhtml'
 
 export function linkWarningLayout(
@@ -15,7 +16,7 @@ export function linkWarningLayout(
         <meta http-equiv="Pragma" content="no-cache" />
         <meta http-equiv="Expires" content="0" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>${title}</title>
+        <title>${escapeHTML(title)}</title>
         <style>
           * {
             margin: 0;
