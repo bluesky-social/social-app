@@ -456,7 +456,7 @@ msgstr ""
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:296
+#: src/components/WhoCanReply.tsx:302
 msgid "<0>{0}</0> members"
 msgstr ""
 
@@ -866,7 +866,7 @@ msgstr ""
 msgid "An error occurred while compressing the video."
 msgstr ""
 
-#: src/state/queries/explore-feed-previews.tsx:184
+#: src/state/queries/explore-feed-previews.tsx:173
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
@@ -939,7 +939,7 @@ msgstr ""
 msgid "an unknown labeler"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:317
+#: src/components/WhoCanReply.tsx:323
 msgid "and"
 msgstr ""
 
@@ -1066,7 +1066,7 @@ msgstr ""
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:189
+#: src/components/dms/MessageContextMenu.tsx:188
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr ""
 
@@ -1128,7 +1128,7 @@ msgstr ""
 msgid "At least 3 characters"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:40
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:48
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr ""
@@ -1302,7 +1302,7 @@ msgstr ""
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:129
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:165
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr ""
@@ -2096,8 +2096,8 @@ msgstr ""
 msgid "Copy link to starter pack"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:150
-#: src/components/dms/MessageContextMenu.tsx:153
+#: src/components/dms/MessageContextMenu.tsx:149
+#: src/components/dms/MessageContextMenu.tsx:152
 msgid "Copy message text"
 msgstr ""
 
@@ -2145,7 +2145,7 @@ msgstr ""
 msgid "Could not process your video"
 msgstr ""
 
-#: src/state/queries/notifications/settings.ts:50
+#: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
 msgstr ""
 
@@ -2247,7 +2247,7 @@ msgstr ""
 msgid "Dark"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:24
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:28
 msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr ""
@@ -2286,7 +2286,7 @@ msgstr ""
 msgid "Default icons"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:191
+#: src/components/dms/MessageContextMenu.tsx:190
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:701
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
@@ -2334,7 +2334,7 @@ msgstr ""
 msgid "Delete Conversation"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:164
+#: src/components/dms/MessageContextMenu.tsx:163
 msgid "Delete for me"
 msgstr ""
 
@@ -2342,11 +2342,11 @@ msgstr ""
 msgid "Delete list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:187
+#: src/components/dms/MessageContextMenu.tsx:186
 msgid "Delete message"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:162
+#: src/components/dms/MessageContextMenu.tsx:161
 msgid "Delete message for me"
 msgstr ""
 
@@ -2433,7 +2433,7 @@ msgstr ""
 msgid "Developer options"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:179
+#: src/components/WhoCanReply.tsx:185
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
@@ -2759,7 +2759,7 @@ msgstr ""
 msgid "Edit User List"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:91
+#: src/components/WhoCanReply.tsx:97
 msgid "Edit who can reply"
 msgstr ""
 
@@ -2984,11 +2984,11 @@ msgstr ""
 msgid "Everybody"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:71
+#: src/components/WhoCanReply.tsx:77
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:222
+#: src/components/WhoCanReply.tsx:228
 msgid "Everybody can reply to this post."
 msgstr ""
 
@@ -3409,17 +3409,17 @@ msgstr ""
 msgid "Fitness"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:117
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:149
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:93
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:117
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:105
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:133
 msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr ""
@@ -3920,23 +3920,23 @@ msgstr ""
 msgid "Hides the content"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:117
+#: src/view/com/posts/PostFeedErrorMessage.tsx:121
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:105
+#: src/view/com/posts/PostFeedErrorMessage.tsx:109
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:111
+#: src/view/com/posts/PostFeedErrorMessage.tsx:115
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:108
+#: src/view/com/posts/PostFeedErrorMessage.tsx:112
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:102
+#: src/view/com/posts/PostFeedErrorMessage.tsx:106
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr ""
 
@@ -4680,7 +4680,7 @@ msgstr ""
 msgid "Mention notifications"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:263
+#: src/components/WhoCanReply.tsx:269
 msgid "mentioned users"
 msgstr ""
 
@@ -4716,7 +4716,7 @@ msgstr ""
 msgid "Message from @{0}: {1}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:201
+#: src/view/com/posts/PostFeedErrorMessage.tsx:205
 msgid "Message from server: {0}"
 msgstr ""
 
@@ -4737,7 +4737,7 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:81
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:101
 msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr ""
@@ -5193,7 +5193,7 @@ msgstr ""
 msgid "No one"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:246
+#: src/components/WhoCanReply.tsx:252
 msgid "No one but the author can quote this post."
 msgstr ""
 
@@ -5419,7 +5419,7 @@ msgstr ""
 msgid "Only .jpg and .png files are supported"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:226
+#: src/components/WhoCanReply.tsx:232
 msgid "Only {0} can reply."
 msgstr ""
 
@@ -6057,7 +6057,7 @@ msgstr ""
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:68
+#: src/view/com/posts/PostFeedErrorMessage.tsx:72
 msgid "Posts hidden"
 msgstr ""
 
@@ -6361,7 +6361,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:556
 #: src/view/com/feeds/FeedSourceCard.tsx:322
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
-#: src/view/com/posts/PostFeedErrorMessage.tsx:213
+#: src/view/com/posts/PostFeedErrorMessage.tsx:217
 msgid "Remove"
 msgstr ""
 
@@ -6398,11 +6398,11 @@ msgstr ""
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:116
 #: src/view/com/posts/FeedShutdownMsg.tsx:120
-#: src/view/com/posts/PostFeedErrorMessage.tsx:169
+#: src/view/com/posts/PostFeedErrorMessage.tsx:173
 msgid "Remove feed"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:210
+#: src/view/com/posts/PostFeedErrorMessage.tsx:214
 msgid "Remove feed?"
 msgstr ""
 
@@ -6455,7 +6455,7 @@ msgstr ""
 msgid "Remove subtitle file"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:211
+#: src/view/com/posts/PostFeedErrorMessage.tsx:215
 msgid "Remove this feed from your saved feeds"
 msgstr ""
 
@@ -6517,11 +6517,11 @@ msgstr ""
 msgid "Replies"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:73
+#: src/components/WhoCanReply.tsx:79
 msgid "Replies disabled"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:224
+#: src/components/WhoCanReply.tsx:230
 msgid "Replies to this post are disabled."
 msgstr ""
 
@@ -6593,7 +6593,7 @@ msgstr ""
 msgid "Reply was successfully hidden"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:172
+#: src/components/dms/MessageContextMenu.tsx:171
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -6627,7 +6627,7 @@ msgstr ""
 msgid "Report list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:170
+#: src/components/dms/MessageContextMenu.tsx:169
 msgid "Report message"
 msgstr ""
 
@@ -7646,7 +7646,7 @@ msgstr ""
 msgid "Some other feeds you might like"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:74
+#: src/components/WhoCanReply.tsx:80
 msgid "Some people can reply"
 msgstr ""
 
@@ -7871,12 +7871,12 @@ msgstr ""
 msgid "Suggestive"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:60
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:72
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:70
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:86
 msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr ""
@@ -8165,7 +8165,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:990
-#: src/view/com/posts/PostFeed.tsx:657
+#: src/view/com/posts/PostFeed.tsx:656
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -8186,7 +8186,7 @@ msgstr ""
 msgid "There was an issue fetching your service info"
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:145
+#: src/view/com/posts/PostFeedErrorMessage.tsx:149
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr ""
 
@@ -8295,7 +8295,7 @@ msgstr ""
 msgid "This content is not available because one of the users involved has blocked the other."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:114
+#: src/view/com/posts/PostFeedErrorMessage.tsx:118
 msgid "This content is not viewable without a Bluesky account."
 msgstr ""
 
@@ -8319,7 +8319,7 @@ msgstr ""
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
 msgstr ""
 
-#: src/view/com/posts/PostFeedErrorMessage.tsx:120
+#: src/view/com/posts/PostFeedErrorMessage.tsx:124
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr ""
 
@@ -8387,7 +8387,7 @@ msgstr ""
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:217
+#: src/components/WhoCanReply.tsx:223
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
@@ -8558,8 +8558,8 @@ msgstr ""
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:143
-#: src/components/dms/MessageContextMenu.tsx:145
+#: src/components/dms/MessageContextMenu.tsx:142
+#: src/components/dms/MessageContextMenu.tsx:144
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:567
@@ -8984,11 +8984,11 @@ msgstr ""
 msgid "Username or email address"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:280
+#: src/components/WhoCanReply.tsx:286
 msgid "users followed by <0>@{0}</0>"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:267
+#: src/components/WhoCanReply.tsx:273
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
@@ -9188,7 +9188,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:464
 #: src/components/ProfileHoverCard/index.web.tsx:484
 #: src/components/ProfileHoverCard/index.web.tsx:511
-#: src/view/com/posts/PostFeedErrorMessage.tsx:175
+#: src/view/com/posts/PostFeedErrorMessage.tsx:179
 #: src/view/com/util/PostMeta.tsx:91
 #: src/view/com/util/PostMeta.tsx:126
 msgid "View profile"
@@ -9416,11 +9416,11 @@ msgstr ""
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:183
+#: src/components/WhoCanReply.tsx:189
 msgid "Who can interact with this post?"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:91
+#: src/components/WhoCanReply.tsx:97
 msgid "Who can reply"
 msgstr ""
 
