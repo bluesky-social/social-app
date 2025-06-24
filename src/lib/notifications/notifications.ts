@@ -20,8 +20,6 @@ async function _registerPushToken(
   account: SessionAccount,
   token: Notifications.DevicePushToken,
 ) {
-  logger.debug(`registerPushToken`)
-
   try {
     await agent.app.bsky.notification.registerPush({
       serviceDid: account.service?.includes('staging')
@@ -56,6 +54,7 @@ const registerPushToken = debounce(_registerPushToken, 100)
  */
 async function getPushToken() {
   const granted = (await Notifications.getPermissionsAsync()).granted
+  logger.debug(`getPushToken`, {granted})
   if (granted) {
     return Notifications.getDevicePushTokenAsync()
   }
@@ -76,7 +75,7 @@ async function getPushToken() {
  * @see https://github.com/expo/expo/issues/28656
  * @see https://github.com/expo/expo/issues/29909
  */
-async function getAndRegisterPushToken(
+export async function getAndRegisterPushToken(
   agent: AtpAgent,
   currentAccount: SessionAccount,
 ) {
@@ -87,7 +86,7 @@ async function getAndRegisterPushToken(
      */
     const token = await getPushToken()
 
-    logger.debug(`getAndRegisterPushToken`, {token})
+    logger.debug(`getAndRegisterPushToken`, {token: token ?? 'undefined'})
 
     if (token) {
       /**
@@ -103,6 +102,13 @@ async function getAndRegisterPushToken(
   }
 }
 
+/**
+ * Hook to register the device's push notification token with the Bluesky
+ * server, as well as listen for push token updates, should they occurr.
+ *
+ * Registered via the shell, which wraps the navigation stack, meaning if we
+ * have a current account, this handling will be registered and ready to go.
+ */
 export function useNotificationsRegistration() {
   const agent = useAgent()
   const {currentAccount} = useSession()
@@ -112,7 +118,11 @@ export function useNotificationsRegistration() {
 
     logger.debug(`useNotificationsRegistration`)
 
-    // init push token
+    /**
+     * Init push token, if permissions are granted already. If they weren't,
+     * they'll be requested by the `useRequestNotificationsPermission` hook
+     * below.
+     */
     getAndRegisterPushToken(agent, currentAccount)
 
     /**
@@ -163,24 +173,27 @@ export function useRequestNotificationsPermission() {
       status: res.status,
     })
 
-    /**
-     * Note that this will run:
-     *
-     *    1) Right after the user signs in, leading to no `currentAccount`
-     *    account being available - this will be instead picked up from the
-     *    useEffect above on `currentAccount` change
-     *
-     *    2) Right after onboarding. In this case, we _need_ this
-     *    registration, since `currentAccount` will not change and we need to
-     *    ensure the token is registered right after permission is granted.
-     *    `currentAccount` will already be available in this case, so the
-     *    registration will succeed. We should remove this once
-     *    expo-notifications (and possibly FCMv1) is fixed and the
-     *    `addPushTokenListener` is working again.
-     */
-    if (res.granted && currentAccount) {
-      logger.debug(`useRequestNotificationsPermission`, {context})
-      getAndRegisterPushToken(agent, currentAccount)
+    if (res.granted) {
+      /**
+       * Load bearing. The `addPushTokenListener` will be registered by the
+       * time this runs, and this should fire that listener automatically to
+       * register the token with our server. If for some reason it does not, we
+       * have a fallback below. See above for more info.
+       */
+      const token = await getPushToken()
+
+      /**
+       * This call is our insurance policy in case `addPushTokenListener`
+       * didn't fire as a result of `getPushToken`. See comments above for more
+       * details.
+       *
+       * Right after login, `currentAccount` in this scope will be undefined,
+       * hence the guard here. For other callsites, it should be defined
+       * already.
+       */
+      if (token && currentAccount) {
+        registerPushToken(agent, currentAccount, token)
+      }
     }
   }
 }
