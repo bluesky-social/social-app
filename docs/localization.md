@@ -105,16 +105,14 @@ const text = t`Hello World`;
 ```
 
 We can then run `yarn intl:extract` to update the catalog in `src/locale/locales/{locale}/messages.po`. This will add the new string to the catalog.
-We can then run `yarn intl:compile` to update the translation files in `src/locale/locales/{locale}/messages.js`. This will add the new string to the translation files. 
 The configuration for translations is defined in `lingui.config.js`
 
 So the workflow is as follows:
 1. Wrap messages in Trans macro
 2. Run `yarn intl:extract` command to generate message catalogs
 3. Translate message catalogs (send them to translators usually)
-4. Run `yarn intl:compile` to create runtime catalogs
-5. Load runtime catalog
-6. Enjoy translated app!
+4. Load runtime catalog
+5. Enjoy translated app!
 
 ### Common pitfalls
 
