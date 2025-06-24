@@ -3,6 +3,7 @@ import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {type AtpAgent} from '@atproto/api'
+import debounce from 'lodash.debounce'
 
 import {Logger} from '#/logger'
 import {isAndroid, isNative} from '#/platform/detection'
@@ -39,6 +40,8 @@ async function registerPushToken(
   }
 }
 
+const registerPushTokenDebounced = debounce(registerPushToken, 100)
+
 async function getPushToken(skipPermissionCheck = false) {
   const granted =
     skipPermissionCheck || (await Notifications.getPermissionsAsync()).granted
@@ -68,7 +71,7 @@ export function useNotificationsRegistration() {
 
         // Token will be undefined if we don't have notifications permission
         if (token) {
-          registerPushToken(agent, currentAccount, token)
+          registerPushTokenDebounced(agent, currentAccount, token)
         }
       })()
     } else {
@@ -81,7 +84,8 @@ export function useNotificationsRegistration() {
      * `registerPushToken` whenever that happens.
      */
     const subscription = Notifications.addPushTokenListener(async newToken => {
-      registerPushToken(agent, currentAccount, newToken)
+      registerPushTokenDebounced(agent, currentAccount, newToken)
+      logger.debug(`addPushTokenListener callback`, {newToken})
     })
 
     return () => {
@@ -146,7 +150,7 @@ export function useRequestNotificationsPermission() {
        * @see https://github.com/expo/expo/issues/28656
        */
       if (isAndroid && currentAccount && token) {
-        registerPushToken(agent, currentAccount, token)
+        registerPushTokenDebounced(agent, currentAccount, token)
       }
     }
   }
