@@ -61,7 +61,6 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: yarn
-          cache-dependency-path: yarn.lock
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
@@ -182,7 +181,6 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: yarn
-          cache-dependency-path: yarn.lock
 
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@main
@@ -289,7 +287,6 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: yarn
-          cache-dependency-path: yarn.lock
 
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@main
