@@ -78,10 +78,12 @@ export function useNotificationsRegistration() {
       getPushToken()
     }
 
-    /*
+    /**
      * According to the Expo docs, there is a chance that the token will change
      * while the app is open in some rare cases. This will fire
      * `registerPushToken` whenever that happens.
+     *
+     * @see https://docs.expo.dev/versions/latest/sdk/notifications/#addpushtokenlistenerlistener
      */
     const subscription = Notifications.addPushTokenListener(async newToken => {
       registerPushTokenDebounced(agent, currentAccount, newToken)
