@@ -57,6 +57,14 @@ export default function (ctx: AppContext, app: Express) {
 
         if (rulePresent) {
           switch (rulePresent.action) {
+            case ToolsOzoneSafelinkDefs.WHITELIST:
+              redirectLogger.info(
+                `Whitelist rule matched for ${rulePresent.url}`,
+              )
+              break
+            case ToolsOzoneSafelinkDefs.REMOVERULE:
+              redirectLogger.info(`Remove rule matched for ${rulePresent.url}`)
+              break
             case ToolsOzoneSafelinkDefs.BLOCK:
               hole = linkWarningLayout(
                 'Blocked Link Warning',
@@ -78,14 +86,6 @@ export default function (ctx: AppContext, app: Express) {
               )
               res.setHeader('Cache-Control', 'no-store')
               redirectLogger.info(`Warn rule matched for ${rulePresent.url}`)
-              break
-            case ToolsOzoneSafelinkDefs.WHITELIST:
-              redirectLogger.info(
-                `Whitelist rule matched for ${rulePresent.url}`,
-              )
-              break
-            case ToolsOzoneSafelinkDefs.REMOVERULE:
-              redirectLogger.info(`Remove rule matched for ${rulePresent.url}`)
               break
             default:
               redirectLogger.warn(
