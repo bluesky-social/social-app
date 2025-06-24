@@ -76,11 +76,11 @@ export const envToCfg = (env: Environment): Config => {
     port: env.port ?? 3000,
     version: env.version,
     hostnames: env.hostnames,
-    appHostname: env.appHostname || 'bsky.app',
-    safelinkEnabled: env.safelinkEnabled || false,
-    ozoneUrl: env.ozoneUrl || undefined,
-    ozoneAgentHandle: env.ozoneAgentHandle || undefined,
-    ozoneAgentPass: env.ozoneAgentPass || undefined,
+    appHostname: env.appHostname ?? 'bsky.app',
+    safelinkEnabled: env.safelinkEnabled ?? false,
+    ozoneUrl: env.ozoneUrl,
+    ozoneAgentHandle: env.ozoneAgentHandle,
+    ozoneAgentPass: env.ozoneAgentPass,
   }
   if (!env.dbPostgresUrl) {
     throw new Error('Must configure postgres url (LINK_DB_POSTGRES_URL)')
