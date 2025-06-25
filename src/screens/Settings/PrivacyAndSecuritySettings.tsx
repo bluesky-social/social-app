@@ -30,8 +30,11 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
   const t = useTheme()
   const {data: appPasswords} = useAppPasswordsQuery()
   const {currentAccount} = useSession()
-  const {data: notificationDeclaration, isPending} =
-    useNotificationDeclarationQuery()
+  const {
+    data: notificationDeclaration,
+    isPending,
+    isError,
+  } = useNotificationDeclarationQuery()
 
   return (
     <Layout.Screen>
@@ -85,7 +88,10 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             <ItemTextWithSubtitle
               titleText={<Trans>Allow others get notified of your posts</Trans>}
               subtitleText={
-                <NotificationDeclaration data={notificationDeclaration} />
+                <NotificationDeclaration
+                  data={notificationDeclaration}
+                  isError={isError}
+                />
               }
               showSkeleton={isPending}
             />
@@ -133,11 +139,16 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
 
 function NotificationDeclaration({
   data,
+  isError,
 }: {
   data?: {
     value: AppBskyNotificationDeclaration.Record
   }
+  isError?: boolean
 }) {
+  if (isError) {
+    return <Trans>Error loading preference</Trans>
+  }
   switch (data?.value?.allowSubscriptions) {
     case 'mutuals':
       return <Trans>Only people you follow</Trans>

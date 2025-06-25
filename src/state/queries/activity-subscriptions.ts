@@ -11,11 +11,26 @@ export function useNotificationDeclarationQuery() {
   return useQuery({
     queryKey: RQKEY_getNotificationDeclaration,
     queryFn: async () => {
-      const response = await agent.app.bsky.notification.declaration.get({
-        repo: currentAccount!.did,
-        rkey: 'self',
-      })
-      return response
+      try {
+        const response = await agent.app.bsky.notification.declaration.get({
+          repo: currentAccount!.did,
+          rkey: 'self',
+        })
+        return response
+      } catch (err) {
+        if (
+          err instanceof Error &&
+          err.message.startsWith('Could not locate record')
+        ) {
+          return {
+            value: {
+              allowSubscriptions: 'followers',
+            },
+          }
+        } else {
+          throw err
+        }
+      }
     },
   })
 }
