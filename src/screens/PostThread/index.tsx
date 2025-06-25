@@ -45,7 +45,7 @@ const CHILDREN_CHUNK_SIZE = 50
 export function PostThread({uri}: {uri: string}) {
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
-  const initialNumToRender = useInitialNumToRender() // TODO
+  const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const anchorPostSource = useUnstablePostSource(uri)
   const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
@@ -555,15 +555,15 @@ export function PostThread({uri}: {uri: string}) {
           /**
            * Default: 21
            */
-          windowSize={platform({android: 11})}
+          windowSize={7}
           /**
            * Default: 10
            */
-          maxToRenderPerBatch={platform({android: 5})}
+          maxToRenderPerBatch={5}
           /**
            * Default: 50
            */
-          updateCellsBatchingPeriod={platform({android: 25})}
+          updateCellsBatchingPeriod={100}
         />
       )}
 
