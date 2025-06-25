@@ -215,7 +215,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           }
         },
         handleKeyDown: (_, event) => {
-          if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
+          if ((event.metaKey || event.ctrlKey) && (event.code === 'Enter' || event.code === 'NumpadEnter')) {
             textInputWebEmitter.emit('publish')
             return true
           }
