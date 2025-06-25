@@ -68,7 +68,9 @@ export function beginResolveGeolocation() {
    */
   if (__DEV__) {
     geolocationResolution = new Promise(y => y({success: true}))
-    device.set(['geolocation'], DEFAULT_GEOLOCATION)
+    if (!device.get(['geolocation'])) {
+      device.set(['geolocation'], DEFAULT_GEOLOCATION)
+    }
     return
   }
 
@@ -176,4 +178,18 @@ export function Provider({children}: {children: React.ReactNode}) {
 
 export function useGeolocation() {
   return React.useContext(context)
+}
+
+if (__DEV__) {
+  // @ts-ignore
+  window.setGeolocation = (geo: Device['geolocation']) => {
+    if (!geo?.countryCode || !geo?.isAgeRestrictedGeo) {
+      throw new Error(
+        `Expected {countryCode: string, isAgeRestrictedGeo: boolean}`,
+      )
+    }
+
+    device.set(['geolocation'], geo)
+    emitGeolocationUpdate(geo)
+  }
 }

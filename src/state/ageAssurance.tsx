@@ -46,7 +46,7 @@ export function Provider({children}: {children: React.ReactNode}) {
         (() => ({
           data: {
             updatedAt: undefined,
-            status: 'pending',
+            status: 'unknown',
           } as TempAgeAssuranceState,
         }))(),
       )
