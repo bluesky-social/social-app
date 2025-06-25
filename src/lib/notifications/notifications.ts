@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
@@ -13,16 +13,21 @@ import BackgroundNotificationHandler from '../../../modules/expo-background-noti
 const logger = Logger.create(Logger.Context.Notifications)
 
 /**
+ * @private
  * Registers the device's push notification token with the Bluesky server.
  */
-async function _registerPushToken(
-  agent: AtpAgent,
-  account: SessionAccount,
-  token: Notifications.DevicePushToken,
-) {
+async function _registerPushToken({
+  agent,
+  currentAccount,
+  token,
+}: {
+  agent: AtpAgent
+  currentAccount: SessionAccount
+  token: Notifications.DevicePushToken
+}) {
   try {
     await agent.app.bsky.notification.registerPush({
-      serviceDid: account.service?.includes('staging')
+      serviceDid: currentAccount.service?.includes('staging')
         ? 'did:web:api.staging.bsky.dev'
         : 'did:web:api.bsky.app',
       platform: Platform.select({
@@ -44,10 +49,34 @@ async function _registerPushToken(
 }
 
 /**
- * Debounced version of `_registerPushToken` to prevent multiple calls. Use this
- * instead of using `_registerPushToken` directly.
+ * @private
+ * Debounced version of `_registerPushToken` to prevent multiple calls.
  */
-const registerPushToken = debounce(_registerPushToken, 100)
+const _registerPushTokenDebounced = debounce(_registerPushToken, 100)
+
+/**
+ * Hook to register the device's push notification token with the Bluesky. If
+ * the user is not logged in, this will do nothing.
+ *
+ * Use this instead of using `_registerPushToken` or
+ * `_registerPushTokenDebounced` directly.
+ */
+export function useRegisterPushToken() {
+  const agent = useAgent()
+  const {currentAccount} = useSession()
+
+  return useCallback(
+    ({token}: {token: Notifications.DevicePushToken}) => {
+      if (!currentAccount) return
+      return _registerPushTokenDebounced({
+        agent,
+        currentAccount,
+        token,
+      })
+    },
+    [agent, currentAccount],
+  )
+}
 
 /**
  * Retreive the device's push notification token, if permissions are granted.
@@ -61,7 +90,7 @@ async function getPushToken() {
 }
 
 /**
- * Gets the device push token and registers it with the Bluesky server.
+ * Hook to get the device push token and register it with the Bluesky server.
  *
  * N.B. A previous regression in `expo-notifications` caused
  * `addPushTokenListener` to not fire on Android after calling
@@ -69,37 +98,35 @@ async function getPushToken() {
  * `registerPushToken` here.
  *
  * Because `registerPushToken` is debounced, we can safely call it on every
- * platform and only a single call will be made to the server.
+ * platform and only a single call will be made to the server. This does race
+ * the listener (if it fires), so there's a possibility that multiple calls
+ * will be made, but that is acceptable.
  *
  * @see https://github.com/bluesky-social/social-app/pull/4467
  * @see https://github.com/expo/expo/issues/28656
  * @see https://github.com/expo/expo/issues/29909
  */
-export async function getAndRegisterPushToken(
-  agent: AtpAgent,
-  currentAccount: SessionAccount,
-) {
-  try {
+export function useGetAndRegisterPushToken() {
+  const registerPushToken = useRegisterPushToken()
+  return useCallback(async () => {
     /**
      * This will also fire the listener added via `addPushTokenListener`. That
      * listener also handles registration.
      */
     const token = await getPushToken()
 
-    logger.debug(`getAndRegisterPushToken`, {token: token ?? 'undefined'})
+    logger.debug(`useGetAndRegisterPushToken`, {token: token ?? 'undefined'})
 
     if (token) {
       /**
        * The listener should have registered the token already, but just in
        * case, call the debounced function again.
        */
-      registerPushToken(agent, currentAccount, token)
+      registerPushToken({token})
     }
 
     return token
-  } catch (e: any) {
-    logger.error(`getPushToken: failed`, {safeMessage: e.message})
-  }
+  }, [registerPushToken])
 }
 
 /**
@@ -110,10 +137,14 @@ export async function getAndRegisterPushToken(
  * have a current account, this handling will be registered and ready to go.
  */
 export function useNotificationsRegistration() {
-  const agent = useAgent()
   const {currentAccount} = useSession()
+  const registerPushToken = useRegisterPushToken()
+  const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
-  React.useEffect(() => {
+  useEffect(() => {
+    /**
+     * We want this to init right away _after_ we have a logged in user.
+     */
     if (!currentAccount) return
 
     logger.debug(`useNotificationsRegistration`)
@@ -123,7 +154,7 @@ export function useNotificationsRegistration() {
      * they'll be requested by the `useRequestNotificationsPermission` hook
      * below.
      */
-    getAndRegisterPushToken(agent, currentAccount)
+    getAndRegisterPushToken()
 
     /**
      * Register the push token with the Bluesky server, whenever it changes.
@@ -135,20 +166,20 @@ export function useNotificationsRegistration() {
      *
      * @see https://docs.expo.dev/versions/latest/sdk/notifications/#addpushtokenlistenerlistener
      */
-    const subscription = Notifications.addPushTokenListener(async newToken => {
-      registerPushToken(agent, currentAccount, newToken)
-      logger.debug(`addPushTokenListener callback`, {newToken})
+    const subscription = Notifications.addPushTokenListener(async token => {
+      registerPushToken({token})
+      logger.debug(`addPushTokenListener callback`, {token})
     })
 
     return () => {
       subscription.remove()
     }
-  }, [currentAccount, agent])
+  }, [currentAccount, getAndRegisterPushToken, registerPushToken])
 }
 
 export function useRequestNotificationsPermission() {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
   return async (
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home',
@@ -182,7 +213,7 @@ export function useRequestNotificationsPermission() {
          * If we have an account in scope, we can safely call
          * `getAndRegisterPushToken`.
          */
-        getAndRegisterPushToken(agent, currentAccount)
+        getAndRegisterPushToken()
       } else {
         /**
          * Right after login, `currentAccount` in this scope will be undefined,
