@@ -5,8 +5,8 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {isNative} from '#/platform/detection'
-import {useTheme, web} from '#/alf'
+import {isWeb} from '#/platform/detection'
+import {platform, useTheme, web} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, type ButtonProps, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -85,9 +85,18 @@ function DialogInner({
         color: hasAny ? 'primary' : 'negative',
       }
     } else {
-      return {
-        label: _(msg`Cancel`),
-        color: 'secondary',
+      // on web, a disabled save button feels more natural than a massive close button
+      if (isWeb) {
+        return {
+          label: _(msg`Save changes`),
+          color: 'secondary',
+          disabled: true,
+        }
+      } else {
+        return {
+          label: _(msg`Cancel`),
+          color: 'secondary',
+        }
       }
     }
   }, [state, _])
@@ -130,36 +139,47 @@ function DialogInner({
             <Toggle.Item
               label={_(msg`Posts`)}
               name="posts"
-              style={[a.justify_between, a.py_xs]}>
+              style={[
+                a.flex_1,
+                a.py_xs,
+                platform({
+                  native: [a.justify_between],
+                  web: [a.flex_row_reverse, a.gap_sm],
+                }),
+              ]}>
               <Toggle.LabelText
-                style={[t.atoms.text, a.font_normal, a.text_md]}>
+                style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
                 <Trans>Posts</Trans>
               </Toggle.LabelText>
-              <Toggle.Platform />
+              <Toggle.Switch />
             </Toggle.Item>
             <Toggle.Item
               label={_(msg`Replies`)}
               name="replies"
-              style={[a.justify_between, a.py_xs]}>
+              style={[
+                a.flex_1,
+                a.py_xs,
+                platform({
+                  native: [a.justify_between],
+                  web: [a.flex_row_reverse, a.gap_sm],
+                }),
+              ]}>
               <Toggle.LabelText
-                style={[t.atoms.text, a.font_normal, a.text_md]}>
+                style={[t.atoms.text, a.font_normal, a.text_md, a.flex_1]}>
                 <Trans>Replies</Trans>
               </Toggle.LabelText>
-              <Toggle.Platform />
+              <Toggle.Switch />
             </Toggle.Item>
           </View>
         </Toggle.Group>
 
-        {/* don't show cancel button on web */}
-        {(isNative || buttonProps.color !== 'secondary') && (
-          <Button
-            {...buttonProps}
-            size="large"
-            variant="solid"
-            onPress={() => control.close()}>
-            <ButtonText>{buttonProps.label}</ButtonText>
-          </Button>
-        )}
+        <Button
+          {...buttonProps}
+          size="large"
+          variant="solid"
+          onPress={() => control.close()}>
+          <ButtonText>{buttonProps.label}</ButtonText>
+        </Button>
       </View>
 
       <Dialog.Close />
