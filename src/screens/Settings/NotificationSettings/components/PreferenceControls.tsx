@@ -114,7 +114,7 @@ export function Inner({
               a.py_xs,
               platform({
                 native: [a.justify_between],
-                web: [a.flex_row_reverse, a.gap_md],
+                web: [a.flex_row_reverse, a.gap_sm],
               }),
             ]}>
             <Toggle.LabelText
@@ -131,7 +131,7 @@ export function Inner({
                 a.py_xs,
                 platform({
                   native: [a.justify_between],
-                  web: [a.flex_row_reverse, a.gap_md],
+                  web: [a.flex_row_reverse, a.gap_sm],
                 }),
               ]}>
               <Toggle.LabelText
