@@ -87,7 +87,6 @@ export function ProfileLabelsSection({
       if (!labelerInfo) return null
       return (
         <View
-          key={item.identifier}
           style={[
             t.atoms.bg_contrast_25,
             index === 0 && [
@@ -123,6 +122,7 @@ export function ProfileLabelsSection({
         ref={scrollElRef}
         data={labelValues}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
         contentContainerStyle={a.px_xl}
         headerOffset={headerHeight}
         progressViewOffset={ios(0)}
@@ -144,6 +144,10 @@ export function ProfileLabelsSection({
       />
     </View>
   )
+}
+
+function keyExtractor(item: InterpretedLabelValueDefinition) {
+  return item.identifier
 }
 
 export function LabelerListHeader({
