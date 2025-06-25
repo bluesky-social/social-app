@@ -7,8 +7,11 @@ import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useNotificationDeclarationQuery} from '#/state/queries/activity-subscriptions'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {
+  useNotificationDeclarationMutation,
+  useNotificationDeclarationQuery,
+} from '#/state/queries/activity-subscriptions'
+import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
 import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
@@ -75,33 +78,37 @@ export function ActivityPrivacySettingsScreen({}: Props) {
   )
 }
 
-export function Inner({}: {
+export function Inner({
+  notificationDeclaration,
+}: {
   notificationDeclaration: {
-    uri: string
-    cid: string
+    uri?: string
+    cid?: string
     value: AppBskyNotificationDeclaration.Record
   }
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {mutate} = useNotificationDeclarationMutation()
 
-  const onChangeFilter = ([]: string[]) => {}
+  const onChangeFilter = ([declaration]: string[]) => {
+    mutate({
+      $type: 'app.bsky.notification.declaration',
+      allowSubscriptions: declaration,
+    })
+  }
 
   return (
     <Toggle.Group
       type="radio"
       label={_('Filter who can opt to receive notifications for your activity')}
-      values={[]}
+      values={[notificationDeclaration.value.allowSubscriptions]}
       onChange={onChangeFilter}>
       <View style={[a.gap_sm]}>
         <Toggle.Item
           label={_(msg`Anyone who follows me`)}
-          name="all"
-          style={[
-            a.flex_row,
-            a.py_xs,
-            platform({native: [a.gap_sm], web: [a.gap_md]}),
-          ]}>
+          name="followers"
+          style={[a.flex_row, a.py_xs, a.gap_sm]}>
           <Toggle.Radio />
           <Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md]}>
             <Trans>Anyone who follows me</Trans>
@@ -109,12 +116,8 @@ export function Inner({}: {
         </Toggle.Item>
         <Toggle.Item
           label={_(msg`Only followers who I follow`)}
-          name="follows"
-          style={[
-            a.flex_row,
-            a.py_xs,
-            platform({native: [a.gap_sm], web: [a.gap_md]}),
-          ]}>
+          name="mutuals"
+          style={[a.flex_row, a.py_xs, a.gap_sm]}>
           <Toggle.Radio />
           <Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md]}>
             <Trans>Only followers who I follow</Trans>
@@ -123,11 +126,7 @@ export function Inner({}: {
         <Toggle.Item
           label={_(msg`No one`)}
           name="none"
-          style={[
-            a.flex_row,
-            a.py_xs,
-            platform({native: [a.gap_sm], web: [a.gap_md]}),
-          ]}>
+          style={[a.flex_row, a.py_xs, a.gap_sm]}>
           <Toggle.Radio />
           <Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md]}>
             <Trans>No one</Trans>

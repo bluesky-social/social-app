@@ -159,11 +159,7 @@ export function Inner({
               <Toggle.Item
                 label={_(msg`Everyone`)}
                 name="all"
-                style={[
-                  a.flex_row,
-                  a.py_xs,
-                  platform({native: [a.gap_sm], web: [a.gap_md]}),
-                ]}>
+                style={[a.flex_row, a.py_xs, a.gap_sm]}>
                 <Toggle.Radio />
                 <Toggle.LabelText
                   style={[
@@ -177,11 +173,7 @@ export function Inner({
               <Toggle.Item
                 label={_(msg`People I follow`)}
                 name="follows"
-                style={[
-                  a.flex_row,
-                  a.py_xs,
-                  platform({native: [a.gap_sm], web: [a.gap_md]}),
-                ]}>
+                style={[a.flex_row, a.py_xs, a.gap_sm]}>
                 <Toggle.Radio />
                 <Toggle.LabelText
                   style={[
