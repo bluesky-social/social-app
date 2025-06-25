@@ -33,6 +33,7 @@ import {
   ensureGeolocationResolved,
   Provider as GeolocationProvider,
 } from '#/state/geolocation'
+import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
@@ -154,11 +155,13 @@ function InnerApp() {
                                                 <HideBottomBarBorderProvider>
                                                   <GestureHandlerRootView
                                                     style={s.h100pct}>
-                                                    <IntentDialogProvider>
-                                                      <TestCtrls />
-                                                      <Shell />
-                                                      <NuxDialogs />
-                                                    </IntentDialogProvider>
+                                                    <GlobalGestureEventsProvider>
+                                                      <IntentDialogProvider>
+                                                        <TestCtrls />
+                                                        <Shell />
+                                                        <NuxDialogs />
+                                                      </IntentDialogProvider>
+                                                    </GlobalGestureEventsProvider>
                                                   </GestureHandlerRootView>
                                                 </HideBottomBarBorderProvider>
                                               </ServiceAccountManager>
