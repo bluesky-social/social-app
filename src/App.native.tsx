@@ -26,6 +26,10 @@ import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
+import {
+  Provider as AgeAssuranceProvider,
+  useAgeAssuranceAPIContext,
+} from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {listenSessionDropped} from '#/state/events'
@@ -95,8 +99,8 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
-
   const hasCheckedReferrer = useStarterPackEntry()
+  const {refresh: refreshAgeAssurance} = useAgeAssuranceAPIContext()
 
   // init
   useEffect(() => {
@@ -104,6 +108,7 @@ function InnerApp() {
       try {
         if (account) {
           await resumeSession(account)
+          await refreshAgeAssurance()
         } else {
           await tryFetchGates(undefined, 'prefer-fresh-gates')
         }
@@ -115,7 +120,7 @@ function InnerApp() {
     }
     const account = readLastActiveAccount()
     onLaunch(account)
-  }, [resumeSession])
+  }, [resumeSession, refreshAgeAssurance])
 
   useEffect(() => {
     return listenSessionDropped(() => {
@@ -211,30 +216,32 @@ function App() {
       <A11yProvider>
         <KeyboardControllerProvider>
           <SessionProvider>
-            <PrefsStateProvider>
-              <I18nProvider>
-                <ShellStateProvider>
-                  <InvitesStateProvider>
-                    <ModalStateProvider>
-                      <DialogStateProvider>
-                        <LightboxStateProvider>
-                          <PortalProvider>
-                            <BottomSheetProvider>
-                              <StarterPackProvider>
-                                <SafeAreaProvider
-                                  initialMetrics={initialWindowMetrics}>
-                                  <InnerApp />
-                                </SafeAreaProvider>
-                              </StarterPackProvider>
-                            </BottomSheetProvider>
-                          </PortalProvider>
-                        </LightboxStateProvider>
-                      </DialogStateProvider>
-                    </ModalStateProvider>
-                  </InvitesStateProvider>
-                </ShellStateProvider>
-              </I18nProvider>
-            </PrefsStateProvider>
+            <AgeAssuranceProvider>
+              <PrefsStateProvider>
+                <I18nProvider>
+                  <ShellStateProvider>
+                    <InvitesStateProvider>
+                      <ModalStateProvider>
+                        <DialogStateProvider>
+                          <LightboxStateProvider>
+                            <PortalProvider>
+                              <BottomSheetProvider>
+                                <StarterPackProvider>
+                                  <SafeAreaProvider
+                                    initialMetrics={initialWindowMetrics}>
+                                    <InnerApp />
+                                  </SafeAreaProvider>
+                                </StarterPackProvider>
+                              </BottomSheetProvider>
+                            </PortalProvider>
+                          </LightboxStateProvider>
+                        </DialogStateProvider>
+                      </ModalStateProvider>
+                    </InvitesStateProvider>
+                  </ShellStateProvider>
+                </I18nProvider>
+              </PrefsStateProvider>
+            </AgeAssuranceProvider>
           </SessionProvider>
         </KeyboardControllerProvider>
       </A11yProvider>

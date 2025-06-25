@@ -15,6 +15,10 @@ import {ThemeProvider} from '#/lib/ThemeContext'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
+import {
+  Provider as AgeAssuranceProvider,
+  useAgeAssuranceAPIContext,
+} from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {listenSessionDropped} from '#/state/events'
@@ -75,6 +79,7 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
+  const {refresh: refreshAgeAssurance} = useAgeAssuranceAPIContext()
 
   // init
   useEffect(() => {
@@ -82,6 +87,7 @@ function InnerApp() {
       try {
         if (account) {
           await resumeSession(account)
+          await refreshAgeAssurance()
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
@@ -91,7 +97,7 @@ function InnerApp() {
     }
     const account = readLastActiveAccount()
     onLaunch(account)
-  }, [resumeSession])
+  }, [resumeSession, refreshAgeAssurance])
 
   useEffect(() => {
     return listenSessionDropped(() => {
@@ -186,25 +192,27 @@ function App() {
     <GeolocationProvider>
       <A11yProvider>
         <SessionProvider>
-          <PrefsStateProvider>
-            <I18nProvider>
-              <ShellStateProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <StarterPackProvider>
-                            <InnerApp />
-                          </StarterPackProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </InvitesStateProvider>
-              </ShellStateProvider>
-            </I18nProvider>
-          </PrefsStateProvider>
+          <AgeAssuranceProvider>
+            <PrefsStateProvider>
+              <I18nProvider>
+                <ShellStateProvider>
+                  <InvitesStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <StarterPackProvider>
+                              <InnerApp />
+                            </StarterPackProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </InvitesStateProvider>
+                </ShellStateProvider>
+              </I18nProvider>
+            </PrefsStateProvider>
+          </AgeAssuranceProvider>
         </SessionProvider>
       </A11yProvider>
     </GeolocationProvider>
