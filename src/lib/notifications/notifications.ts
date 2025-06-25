@@ -126,6 +126,9 @@ export function useNotificationsRegistration() {
     getAndRegisterPushToken(agent, currentAccount)
 
     /**
+     * Register the push token with the Bluesky server, whenever it changes.
+     * This is also fired any time `getDevicePushTokenAsync` is called.
+     *
      * According to the Expo docs, there is a chance that the token will change
      * while the app is open in some rare cases. This will fire
      * `registerPushToken` whenever that happens.
@@ -174,25 +177,20 @@ export function useRequestNotificationsPermission() {
     })
 
     if (res.granted) {
-      /**
-       * Load bearing. The `addPushTokenListener` will be registered by the
-       * time this runs, and this should fire that listener automatically to
-       * register the token with our server. If for some reason it does not, we
-       * have a fallback below. See above for more info.
-       */
-      const token = await getPushToken()
-
-      /**
-       * This call is our insurance policy in case `addPushTokenListener`
-       * didn't fire as a result of `getPushToken`. See comments above for more
-       * details.
-       *
-       * Right after login, `currentAccount` in this scope will be undefined,
-       * hence the guard here. For other callsites, it should be defined
-       * already.
-       */
-      if (token && currentAccount) {
-        registerPushToken(agent, currentAccount, token)
+      if (currentAccount) {
+        /**
+         * If we have an account in scope, we can safely call
+         * `getAndRegisterPushToken`.
+         */
+        getAndRegisterPushToken(agent, currentAccount)
+      } else {
+        /**
+         * Right after login, `currentAccount` in this scope will be undefined,
+         * but calling `getPushToken` will result in `addPushTokenListener`
+         * listeners being called, which will handle the registration with the
+         * Bluesky server.
+         */
+        getPushToken()
       }
     }
   }
