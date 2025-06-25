@@ -14,7 +14,7 @@ type TempAgeAssuranceState = {
 }
 
 export type AgeAssuranceContextType = {
-  required: boolean
+  isAgeRestricted: boolean
   status: TempAgeAssuranceState['status']
 }
 
@@ -23,7 +23,7 @@ export type AgeAssuranceAPIContextType = {
 }
 
 const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
-  required: false,
+  isAgeRestricted: false,
   status: 'unknown',
 })
 
@@ -64,7 +64,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
     const {status} = ageAssuranceState
     const ctx: AgeAssuranceContextType = {
-      required: Boolean(
+      isAgeRestricted: Boolean(
         geolocation?.isAgeRestrictedGeo && status !== 'assured',
       ),
       status,
