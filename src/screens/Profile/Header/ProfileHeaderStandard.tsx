@@ -34,7 +34,6 @@ import {
 } from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
-import * as Tooltip from '#/components/Tooltip'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {EditProfileDialog} from './EditProfileDialog'
@@ -142,8 +141,6 @@ let ProfileHeaderStandard = ({
 
   const {isActive: live} = useActorStatus(profile)
 
-  const [visible, setVisible] = React.useState(false)
-
   return (
     <ProfileHeaderShell
       profile={profile}
@@ -201,30 +198,7 @@ let ProfileHeaderStandard = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              <Button
-                label="test"
-                size="small"
-                variant="solid"
-                color="secondary"
-                shape="round"
-                onPress={() => setVisible(!visible)}>
-                <ButtonIcon position="left" icon={Plus} />
-              </Button>
-
-              {hasSession && (
-                <>
-                  <Tooltip.Outer visible={visible} onVisibleChange={setVisible}>
-                    <Tooltip.Target>
-                      <MessageProfileButton profile={profile} />
-                    </Tooltip.Target>
-                    <Tooltip.TextBubble>
-                      <Text>
-                        <Trans>Get notified about new posts</Trans>
-                      </Text>
-                    </Tooltip.TextBubble>
-                  </Tooltip.Outer>
-                </>
-              )}
+              {hasSession && <MessageProfileButton profile={profile} />}
 
               <Button
                 testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
