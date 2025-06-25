@@ -91,6 +91,8 @@ async function getPushToken() {
 
 /**
  * Hook to get the device push token and register it with the Bluesky server.
+ * Should only be called after a user has logged-in, since registration is an
+ * authed endpoint.
  *
  * N.B. A previous regression in `expo-notifications` caused
  * `addPushTokenListener` to not fire on Android after calling
