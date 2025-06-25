@@ -67,11 +67,29 @@ function DialogInner({
     return res
   }, [state])
 
-  const onChange = (newValues: string[]) =>
-    setState({
-      posts: newValues.includes('posts'),
-      replies: newValues.includes('replies'),
+  const onChange = (newValues: string[]) => {
+    setState(oldValues => {
+      // ensure you can't have replies without posts
+      if (!oldValues.replies && newValues.includes('replies')) {
+        return {
+          posts: true,
+          replies: true,
+        }
+      }
+
+      if (oldValues.posts && !newValues.includes('posts')) {
+        return {
+          posts: false,
+          replies: false,
+        }
+      }
+
+      return {
+        posts: newValues.includes('posts'),
+        replies: newValues.includes('replies'),
+      }
     })
+  }
 
   const buttonProps: Omit<ButtonProps, 'children'> = useMemo(() => {
     const isDirty =
