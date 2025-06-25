@@ -1,4 +1,4 @@
-import React, {useContext, useMemo} from 'react'
+import {createContext, useContext, useMemo} from 'react'
 import {
   type GestureResponderEvent,
   type StyleProp,
@@ -14,7 +14,7 @@ import {Link, type LinkProps} from '#/components/Link'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
-const ItemContext = React.createContext({
+const ItemContext = createContext({
   destructive: false,
   withinGroup: false,
 })
