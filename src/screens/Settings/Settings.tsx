@@ -3,7 +3,7 @@ import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {msg, t, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -384,7 +384,7 @@ function DevOptions() {
       ...persisted.get('reminders'),
       lastEmailConfirm: lastEmailConfirm.toISOString(),
     })
-    Toast.show(t`You probably want to restart the app now.`)
+    Toast.show(_(msg`You probably want to restart the app now.`))
   }
 
   return (
