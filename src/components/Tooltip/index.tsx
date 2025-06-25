@@ -17,10 +17,16 @@ import {Portal} from '#/components/Portal'
 import {
   ARROW_HALF_SIZE,
   ARROW_SIZE,
-  ARROW_VISUAL_OFFSET,
+  BUBBLE_MAX_WIDTH,
   MIN_EDGE_SPACE,
 } from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
+
+/**
+ * These are native specific values, not shared with web
+ */
+const ARROW_VISUAL_OFFSET = ARROW_SIZE / 1.25 // vibes-based, slightly off the target
+const BUBBLE_SHADOW_OFFSET = ARROW_SIZE / 3 // vibes-based, provide more shadow beneath tip
 
 type TooltipContextType = {
   position: 'top' | 'bottom'
@@ -313,7 +319,7 @@ function Bubble({
         a.absolute,
         a.align_start,
         {
-          width: 200,
+          width: BUBBLE_MAX_WIDTH,
           opacity: bubbleMeasurements ? 1 : 0,
           top: coords.top,
           left: coords.left,
@@ -359,9 +365,8 @@ function Bubble({
               shadowOpacity: 0.2,
               shadowOffset: {
                 width: 0,
-                // provide more shadow beneath tip
                 height:
-                  ARROW_VISUAL_OFFSET *
+                  BUBBLE_SHADOW_OFFSET *
                   (coords.computedPosition === 'bottom' ? -1 : 1),
               },
             },

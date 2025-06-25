@@ -213,16 +213,13 @@ let ProfileHeaderStandard = ({
 
               {hasSession && (
                 <>
-                  <Tooltip.Outer
-                    position="top"
-                    visible={visible}
-                    onVisibleChange={setVisible}>
+                  <Tooltip.Outer visible={visible} onVisibleChange={setVisible}>
                     <Tooltip.Target>
                       <MessageProfileButton profile={profile} />
                     </Tooltip.Target>
                     <Tooltip.TextBubble>
                       <Text>
-                        <Trans>Boop</Trans>
+                        <Trans>Get notified about new posts</Trans>
                       </Text>
                     </Tooltip.TextBubble>
                   </Tooltip.Outer>

@@ -6,7 +6,7 @@ import {atoms as a, flatten, select, useTheme} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {
   ARROW_SIZE,
-  ARROW_VISUAL_OFFSET,
+  BUBBLE_MAX_WIDTH,
   MIN_EDGE_SPACE,
 } from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
@@ -61,7 +61,7 @@ export function Content({
         className="radix-popover-content"
         aria-label={label}
         side={position}
-        sideOffset={(ARROW_SIZE / 3) * -1}
+        sideOffset={4}
         collisionPadding={MIN_EDGE_SPACE}
         style={flatten([
           a.rounded_sm,
@@ -73,18 +73,9 @@ export function Content({
           {
             minWidth: 'max-content',
             boxShadow: select(t.name, {
-              light: `0 ${ARROW_VISUAL_OFFSET}px 16px ${transparentifyColor(
-                t.palette.black,
-                0.2,
-              )}`,
-              dark: `0 ${ARROW_VISUAL_OFFSET}px 16px ${transparentifyColor(
-                t.palette.black,
-                0.2,
-              )}`,
-              dim: `0 ${ARROW_VISUAL_OFFSET}px 16px ${transparentifyColor(
-                t.palette.black,
-                0.2,
-              )}`,
+              light: `0 0 24px ${transparentifyColor(t.palette.black, 0.2)}`,
+              dark: `0 0 24px ${transparentifyColor(t.palette.black, 0.2)}`,
+              dim: `0 0 24px ${transparentifyColor(t.palette.black, 0.2)}`,
             }),
           },
         ])}>
@@ -97,7 +88,9 @@ export function Content({
             dim: t.atoms.bg_contrast_100.backgroundColor,
           })}
         />
-        <View style={[a.px_md, a.py_sm, {maxWidth: 200}]}>{children}</View>
+        <View style={[a.px_md, a.py_sm, {maxWidth: BUBBLE_MAX_WIDTH}]}>
+          {children}
+        </View>
       </Popover.Content>
     </Popover.Portal>
   )
