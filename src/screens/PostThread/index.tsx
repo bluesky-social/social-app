@@ -522,7 +522,7 @@ export function PostThread({uri}: {uri: string}) {
           })}
           onStartReached={onStartReached}
           onEndReached={onEndReached}
-          onEndReachedThreshold={2}
+          onEndReachedThreshold={4}
           onStartReachedThreshold={1}
           /**
            * NATIVE ONLY
@@ -530,6 +530,7 @@ export function PostThread({uri}: {uri: string}) {
            */
           maintainVisibleContentPosition={{minIndexForVisible: 0}}
           desktopFixedHeight
+          sideBorders={false}
           ListFooterComponent={
             <ListFooter
               /*
@@ -551,8 +552,18 @@ export function PostThread({uri}: {uri: string}) {
             />
           }
           initialNumToRender={initialNumToRender}
-          windowSize={11}
-          sideBorders={false}
+          /**
+           * Default: 21
+           */
+          windowSize={platform({android: 11})}
+          /**
+           * Default: 10
+           */
+          maxToRenderPerBatch={platform({android: 5})}
+          /**
+           * Default: 50
+           */
+          updateCellsBatchingPeriod={platform({android: 25})}
         />
       )}
 
