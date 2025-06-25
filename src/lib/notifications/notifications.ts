@@ -8,7 +8,7 @@ import debounce from 'lodash.debounce'
 import {Logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
-import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
+import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
 
 const logger = Logger.create(Logger.Context.Notifications)
 
