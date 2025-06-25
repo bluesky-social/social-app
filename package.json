@@ -192,7 +192,7 @@
     "react-native-ios-context-menu": "^1.15.3",
     "react-native-keyboard-controller": "^1.17.5",
     "react-native-mmkv": "^2.12.2",
-    "react-native-pager-view": "^6.7.1",
+    "react-native-pager-view": "6.8.0",
     "react-native-progress": "bluesky-social/react-native-progress",
     "react-native-qrcode-styled": "^0.3.3",
     "react-native-reanimated": "~3.17.5",
