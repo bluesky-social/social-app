@@ -1,9 +1,11 @@
 import {View} from 'react-native'
+import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {useNotificationDeclarationQuery} from '#/state/queries/activity-subscriptions'
 import {useAppPasswordsQuery} from '#/state/queries/app-passwords'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
@@ -28,6 +30,8 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
   const t = useTheme()
   const {data: appPasswords} = useAppPasswordsQuery()
   const {currentAccount} = useSession()
+  const {data: notificationDeclaration, isPending} =
+    useNotificationDeclarationQuery()
 
   return (
     <Layout.Screen>
@@ -80,8 +84,10 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             <SettingsList.ItemIcon icon={BellRingingIcon} />
             <ItemTextWithSubtitle
               titleText={<Trans>Allow others get notified of your posts</Trans>}
-              // TODO: make dynamic
-              subtitleText={<Trans>No one</Trans>}
+              subtitleText={
+                <NotificationDeclaration data={notificationDeclaration} />
+              }
+              showSkeleton={isPending}
             />
           </SettingsList.LinkItem>
           <SettingsList.Divider />
@@ -123,4 +129,22 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
       </Layout.Content>
     </Layout.Screen>
   )
+}
+
+function NotificationDeclaration({
+  data,
+}: {
+  data?: {
+    value: AppBskyNotificationDeclaration.Record
+  }
+}) {
+  switch (data?.value?.allowSubscriptions) {
+    case 'mutuals':
+      return <Trans>Only people you follow</Trans>
+    case 'none':
+      return <Trans>No one</Trans>
+    case 'followers':
+    default:
+      return <Trans>Only your followers</Trans>
+  }
 }

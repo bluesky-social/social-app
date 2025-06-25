@@ -1,4 +1,5 @@
 import {View} from 'react-native'
+import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -6,7 +7,7 @@ import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
+import {useNotificationDeclarationQuery} from '#/state/queries/activity-subscriptions'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
@@ -21,7 +22,11 @@ type Props = NativeStackScreenProps<
   'ActivityPrivacySettings'
 >
 export function ActivityPrivacySettingsScreen({}: Props) {
-  const {isPending, isError} = useNotificationSettingsQuery()
+  const {
+    data: notificationDeclaration,
+    isPending,
+    isError,
+  } = useNotificationDeclarationQuery()
 
   return (
     <Layout.Screen>
@@ -61,7 +66,7 @@ export function ActivityPrivacySettingsScreen({}: Props) {
                 <Loader size="xl" />
               </View>
             ) : (
-              <Inner />
+              <Inner notificationDeclaration={notificationDeclaration} />
             )}
           </View>
         </SettingsList.Container>
@@ -70,7 +75,13 @@ export function ActivityPrivacySettingsScreen({}: Props) {
   )
 }
 
-export function Inner({}: {}) {
+export function Inner({}: {
+  notificationDeclaration: {
+    uri: string
+    cid: string
+    value: AppBskyNotificationDeclaration.Record
+  }
+}) {
   const t = useTheme()
   const {_} = useLingui()
 
