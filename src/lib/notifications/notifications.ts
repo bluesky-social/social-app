@@ -5,6 +5,7 @@ import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {type AtpAgent} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
+import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
 import {Logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
@@ -28,13 +29,9 @@ async function _registerPushToken({
   try {
     await agent.app.bsky.notification.registerPush({
       serviceDid: currentAccount.service?.includes('staging')
-        ? 'did:web:api.staging.bsky.dev'
-        : 'did:web:api.bsky.app',
-      platform: Platform.select({
-        ios: 'ios',
-        android: 'android',
-        default: 'web',
-      }),
+        ? PUBLIC_STAGING_APPVIEW_DID
+        : PUBLIC_APPVIEW_DID,
+      platform: Platform.OS,
       token: token.data,
       appId: 'xyz.blueskyweb.app',
     })
