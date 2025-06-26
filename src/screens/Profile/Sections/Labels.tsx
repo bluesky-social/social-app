@@ -74,7 +74,7 @@ export function ProfileLabelsSection({
     if (isLabelerLoading || !labelerInfo || labelerError) return []
     const customDefs = interpretLabelValueDefinitions(labelerInfo)
     return labelerInfo.policies.labelValues
-      .filter((val, i, arr) => arr.indexOf(val) === i)
+      .filter((val, i, arr) => arr.indexOf(val) === i) // dedupe
       .map(val => lookupLabelValueDefinition(val, customDefs))
       .filter(
         def => def && def?.configurable,
