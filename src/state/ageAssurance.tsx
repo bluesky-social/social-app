@@ -9,7 +9,7 @@ import {useGeolocation} from '#/state/geolocation'
 const logger = Logger.create(Logger.Context.AgeAssurance)
 
 type TempAgeAssuranceState = {
-  updatedAt?: string
+  lastInitiatedAt?: string
   status: 'unknown' | 'pending' | 'assured'
 }
 
@@ -23,6 +23,14 @@ export type AgeAssuranceContextType = {
    * The current age assurance status retrieved from the server.
    */
   status: TempAgeAssuranceState['status']
+  /**
+   * The last time the age assurance state was attempted by the user.
+   */
+  lastInitiatedAt: string | undefined
+  /**
+   * Whether the user has initiated an age assurance check.
+   */
+  hasInitiated: boolean
 }
 
 export type AgeAssuranceAPIContextType = {
@@ -35,6 +43,8 @@ export type AgeAssuranceAPIContextType = {
 const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   isAgeRestricted: false,
   status: 'unknown',
+  lastInitiatedAt: undefined,
+  hasInitiated: false,
 })
 
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
@@ -55,7 +65,7 @@ export function Provider({children}: {children: React.ReactNode}) {
         200,
         (() => ({
           data: {
-            updatedAt: undefined,
+            lastInitiatedAt: undefined,
             status: 'unknown',
           } as TempAgeAssuranceState,
         }))(),
@@ -72,12 +82,14 @@ export function Provider({children}: {children: React.ReactNode}) {
   }, [setAgeAssuranceState])
 
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
-    const {status} = ageAssuranceState
+    const {status, lastInitiatedAt} = ageAssuranceState
     const ctx: AgeAssuranceContextType = {
+      status,
+      lastInitiatedAt,
+      hasInitiated: !!lastInitiatedAt,
       isAgeRestricted: Boolean(
         geolocation?.isAgeRestrictedGeo && status !== 'assured',
       ),
-      status,
     }
 
     logger.debug(`context`, ctx)

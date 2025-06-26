@@ -12,9 +12,9 @@ import {Text} from '#/components/Typography'
 export function AgeAssurancePrompt({style}: ViewStyleProp & {}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {isAgeRestricted} = useAgeAssuranceContext()
+  const {hasInitiated} = useAgeAssuranceContext()
 
-  return !isAgeRestricted ? null : (
+  return hasInitiated ? null : (
     <View style={style}>
       <View
         style={[
@@ -65,7 +65,7 @@ export function AgeAssurancePrompt({style}: ViewStyleProp & {}) {
                   }),
                 },
               ]}>
-              <Trans>Age Asurrance</Trans>
+              <Trans>Age Assurance</Trans>
             </Text>
           </View>
         </View>
