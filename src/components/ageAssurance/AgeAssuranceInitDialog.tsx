@@ -4,11 +4,14 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {validate as validateEmail} from 'email-validator'
 
+import {useCleanError} from '#/lib/hooks/useCleanError'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {urls} from '#/components/ageAssurance/const'
+import {useInitAgeAssurance} from '#/components/ageAssurance/useInitAgeAssurance'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -16,6 +19,7 @@ import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {LanguageSelect} from '#/components/LanguageSelect'
 import {InlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export {useDialogControl} from '#/components/Dialog/context'
@@ -51,10 +55,16 @@ function Inner() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const langPrefs = useLanguagePrefs()
+  const cleanError = useCleanError()
+  const {close} = Dialog.useDialogContext()
 
+  const [success, setSuccess] = useState(false)
   const [email, setEmail] = useState(currentAccount?.email || '')
   const [emailValid, setEmailValid] = useState(validateEmail(email))
   const [language, setLanguage] = useState(langPrefs.appLanguage)
+  const [error, setError] = useState<string>('')
+
+  const {mutateAsync: init, isPending} = useInitAgeAssurance()
 
   const onSubmit = async () => {
     try {
@@ -62,7 +72,17 @@ function Inner() {
         setEmailValid(false)
         return
       }
-    } catch (e) {}
+
+      await init({
+        email,
+        language,
+      })
+
+      setSuccess(true)
+    } catch (e) {
+      const {clean} = cleanError(e)
+      setError(clean || _(msg`Something went wrong, please try again`))
+    }
   }
 
   return (
@@ -71,108 +91,139 @@ function Inner() {
         <AgeAssuranceBadge />
 
         <Text style={[a.text_xl, a.font_heavy, a.pt_xl, a.pb_md]}>
-          <Trans>Verify your age</Trans>
+          {success ? <Trans>Success!</Trans> : <Trans>Verify your age</Trans>}
         </Text>
 
         <View style={[a.pb_xl, a.gap_sm]}>
-          <Text style={[a.text_sm, a.leading_snug]}>
-            <Trans>
-              We use{' '}
-              <InlineLinkText
-                label={urls.kwsHome}
-                to={urls.kwsHome}
-                style={[a.text_sm, a.leading_snug]}>
-                KWS
-              </InlineLinkText>{' '}
-              to verify that you’re an adult. When you click "Get an email"
-              below, Bluesky will share your email address with KWS.
-            </Trans>
-          </Text>
-          <Text style={[a.text_sm, a.leading_snug]}>
-            <Trans>
-              If KWS cannot use your email address to confirm that you
-              previously verified your age, you’ll be taken to the KWS website
-              to provide more details.
-            </Trans>
-          </Text>
-          <Text style={[a.text_sm, a.leading_snug]}>
-            <Trans>This should only take a few minutes.</Trans>
-          </Text>
+          {success ? (
+            <Text style={[a.text_sm, a.leading_snug]}>
+              <Trans>Please check your email to contine the process.</Trans>
+            </Text>
+          ) : (
+            <>
+              <Text style={[a.text_sm, a.leading_snug]}>
+                <Trans>
+                  We use{' '}
+                  <InlineLinkText
+                    label={urls.kwsHome}
+                    to={urls.kwsHome}
+                    style={[a.text_sm, a.leading_snug]}>
+                    KWS
+                  </InlineLinkText>{' '}
+                  to verify that you’re an adult. When you click "Get an email"
+                  below, Bluesky will share your email address with KWS.
+                </Trans>
+              </Text>
+              <Text style={[a.text_sm, a.leading_snug]}>
+                <Trans>
+                  If KWS cannot use your email address to confirm that you
+                  previously verified your age, you’ll be taken to the KWS
+                  website to provide more details.
+                </Trans>
+              </Text>
+              <Text style={[a.text_sm, a.leading_snug]}>
+                <Trans>This should only take a few minutes.</Trans>
+              </Text>
+            </>
+          )}
         </View>
 
-        <Divider />
-
-        <View style={[a.w_full, a.pt_xl, a.gap_md]}>
-          <View>
-            <TextField.LabelText>
-              <Trans>Your email</Trans>
-            </TextField.LabelText>
-            <TextField.Root isInvalid={!emailValid}>
-              <TextField.Input
-                label={_(msg`Your email`)}
-                placeholder={_(msg`Your email`)}
-                value={email}
-                onChangeText={setEmail}
-                onFocus={() => setEmailValid(true)}
-                onBlur={() => {
-                  setEmailValid(validateEmail(email))
-                }}
-                returnKeyType="done"
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect={false}
-                onSubmitEditing={onSubmit}
-              />
-            </TextField.Root>
+        {success ? (
+          <View style={[a.w_full]}>
+            <Button
+              label={_(msg`Close dialog`)}
+              size="large"
+              variant="solid"
+              color="secondary"
+              onPress={() => close()}>
+              <ButtonText>
+                <Trans>Close dialog</Trans>
+              </ButtonText>
+            </Button>
           </View>
+        ) : (
+          <>
+            <Divider />
 
-          <View>
-            <TextField.LabelText>
-              <Trans>Your preferred language</Trans>
-            </TextField.LabelText>
-            <LanguageSelect value={language} onChange={setLanguage} />
-          </View>
+            <View style={[a.w_full, a.pt_xl, a.gap_md]}>
+              <View>
+                <TextField.LabelText>
+                  <Trans>Your email</Trans>
+                </TextField.LabelText>
+                <TextField.Root isInvalid={!emailValid}>
+                  <TextField.Input
+                    label={_(msg`Your email`)}
+                    placeholder={_(msg`Your email`)}
+                    value={email}
+                    onChangeText={setEmail}
+                    onFocus={() => setEmailValid(true)}
+                    onBlur={() => {
+                      setEmailValid(validateEmail(email))
+                    }}
+                    returnKeyType="done"
+                    autoCapitalize="none"
+                    autoComplete="off"
+                    autoCorrect={false}
+                    onSubmitEditing={onSubmit}
+                  />
+                </TextField.Root>
+              </View>
 
-          <Button
-            label={_(msg`Get an email`)}
-            size="large"
-            variant="solid"
-            color="primary">
-            <ButtonText>
-              <Trans>Get an email</Trans>
-            </ButtonText>
-            <ButtonIcon icon={Envelope} position="right" />
-          </Button>
-        </View>
+              <View>
+                <TextField.LabelText>
+                  <Trans>Your preferred language</Trans>
+                </TextField.LabelText>
+                <LanguageSelect value={language} onChange={setLanguage} />
+              </View>
 
-        <Text
-          style={[
-            a.text_xs,
-            a.leading_snug,
-            a.pt_lg,
-            t.atoms.text_contrast_medium,
-          ]}>
-          <Trans>
-            By continuing, you agree to the{' '}
-            <InlineLinkText
-              label={urls.kwsTermsOfUse}
-              to={urls.kwsTermsOfUse}
-              style={[a.text_xs, a.leading_snug]}>
-              KWS Terms of Use
-            </InlineLinkText>{' '}
-            and acknowledge that KWS will store your verified status alongside
-            your hashed email address in accordance with the{' '}
-            <InlineLinkText
-              label={urls.kwsPrivacyPolicy}
-              to={urls.kwsPrivacyPolicy}
-              style={[a.text_xs, a.leading_snug]}>
-              KWS Privacy Policy
-            </InlineLinkText>
-            . This means you won’t need to verify again the next time you use
-            this email for other apps, games, and services powered by KWS
-            technology.
-          </Trans>
-        </Text>
+              {error && <Admonition type="error">{error}</Admonition>}
+
+              <Button
+                label={_(msg`Get an email`)}
+                size="large"
+                variant="solid"
+                color="primary"
+                onPress={onSubmit}>
+                <ButtonText>
+                  <Trans>Get an email</Trans>
+                </ButtonText>
+                <ButtonIcon
+                  icon={isPending ? Loader : Envelope}
+                  position="right"
+                />
+              </Button>
+            </View>
+
+            <Text
+              style={[
+                a.text_xs,
+                a.leading_snug,
+                a.pt_lg,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>
+                By continuing, you agree to the{' '}
+                <InlineLinkText
+                  label={urls.kwsTermsOfUse}
+                  to={urls.kwsTermsOfUse}
+                  style={[a.text_xs, a.leading_snug]}>
+                  KWS Terms of Use
+                </InlineLinkText>{' '}
+                and acknowledge that KWS will store your verified status
+                alongside your hashed email address in accordance with the{' '}
+                <InlineLinkText
+                  label={urls.kwsPrivacyPolicy}
+                  to={urls.kwsPrivacyPolicy}
+                  style={[a.text_xs, a.leading_snug]}>
+                  KWS Privacy Policy
+                </InlineLinkText>
+                . This means you won’t need to verify again the next time you
+                use this email for other apps, games, and services powered by
+                KWS technology.
+              </Trans>
+            </Text>
+          </>
+        )}
       </View>
     </View>
   )
