@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
-import {getDateAgo} from '#/lib/strings/time'
+import {getDateAgo, simpleAreDatesEqual} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
@@ -13,6 +13,7 @@ import {
   usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {is13} from '#/screens/Signup/state'
 import {atoms as a, platform, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {DateField} from '#/components/forms/DateField'
@@ -36,7 +37,7 @@ export function BirthDateSettingsDialog({
         label={_(msg`My Birthday`)}
         style={web({maxWidth: 400})}>
         <View style={[a.gap_sm, a.pb_lg]}>
-          <Text style={[a.text_2xl, a.font_bold]}>
+          <Text style={[a.text_2xl, a.font_heavy]}>
             <Trans>My Birthday</Trans>
           </Text>
           <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -74,6 +75,7 @@ function BirthdayInner({
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
+  const t = useTheme()
   const [date, setDate] = React.useState(preferences.birthDate || new Date())
   const {
     isPending,
@@ -81,7 +83,8 @@ function BirthdayInner({
     error,
     mutateAsync: setBirthDate,
   } = usePreferencesSetBirthDateMutation()
-  const hasChanged = date !== preferences.birthDate
+  const hasChanged =
+    !preferences.birthDate || !simpleAreDatesEqual(date, preferences.birthDate)
 
   const onSave = React.useCallback(async () => {
     try {
@@ -94,6 +97,8 @@ function BirthdayInner({
       logger.error(`setBirthDate failed`, {message: e.message})
     }
   }, [date, setBirthDate, control, hasChanged])
+
+  const isUnder13 = !is13(date)
 
   return (
     <View style={a.gap_lg} testID="birthDateSettingsDialog">
@@ -112,18 +117,37 @@ function BirthdayInner({
         <ErrorMessage message={cleanError(error)} style={[a.rounded_sm]} />
       ) : undefined}
 
-      <View style={isWeb && [a.flex_row, a.justify_end]}>
+      {isUnder13 && (
+        <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+          <Trans>You must be at least 13 years of age.</Trans>
+        </Text>
+      )}
+
+      <View style={isWeb && [a.flex_row, a.justify_end, a.gap_sm]}>
+        {isWeb && (
+          <Button
+            label={_(msg`Cancel`)}
+            size="small"
+            onPress={() => control.close()}
+            variant="solid"
+            color="secondary">
+            <ButtonText>
+              <Trans>Cancel</Trans>
+            </ButtonText>
+          </Button>
+        )}
         <Button
-          label={hasChanged ? _(msg`Save birthday`) : _(msg`Done`)}
+          label={hasChanged || isWeb ? _(msg`Save birthday`) : _(msg`Done`)}
           size={platform({
             native: 'large',
             web: 'small',
           })}
           onPress={onSave}
           variant="solid"
-          color="primary">
+          color="primary"
+          disabled={isUnder13 || (isWeb && !hasChanged)}>
           <ButtonText>
-            {hasChanged ? <Trans>Save</Trans> : <Trans>Done</Trans>}
+            {hasChanged || isWeb ? <Trans>Save</Trans> : <Trans>Done</Trans>}
           </ButtonText>
           {isPending && <ButtonIcon icon={Loader} />}
         </Button>
