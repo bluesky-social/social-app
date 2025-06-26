@@ -65,6 +65,11 @@ const _registerPushTokenDebounced = debounce(_registerPushToken, 100)
 export function useRegisterPushToken() {
   const agent = useAgent()
   const {currentAccount} = useSession()
+  /**
+   * At the time of writing, this data is guaranteed to be available here,
+   * since we await both geolocation and age assurance requirements before
+   * rendering `shell/index.tsx`.
+   */
   const {isAgeRestricted} = useAgeAssuranceContext()
 
   return useCallback(

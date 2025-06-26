@@ -14,11 +14,21 @@ type TempAgeAssuranceState = {
 }
 
 export type AgeAssuranceContextType = {
+  /**
+   * Whether the current user is age-restricted based on their geolocation and
+   * age assurance state retrieved from the server.
+   */
   isAgeRestricted: boolean
+  /**
+   * The current age assurance status retrieved from the server.
+   */
   status: TempAgeAssuranceState['status']
 }
 
 export type AgeAssuranceAPIContextType = {
+  /**
+   * Refreshes the age assurance state by fetching it from the server.
+   */
   refresh: () => Promise<void>
 }
 
@@ -91,6 +101,12 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
+/**
+ * Returns the current age assurance state from context. This data is awaited
+ * prior to rendering the app, and therefore the data here should be up to date
+ * and trustworth by the time we're rendering anything inside the `Splash`
+ * wrapper in the root component files.
+ */
 export function useAgeAssuranceContext() {
   return useContext(AgeAssuranceContext)
 }
