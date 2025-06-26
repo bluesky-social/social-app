@@ -12,6 +12,7 @@ import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
@@ -21,7 +22,16 @@ import {useBackgroundNotificationPreferences} from '../../../modules/expo-backgr
 type AllowIncoming = 'all' | 'none' | 'following'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>
-export function MessagesSettingsScreen({}: Props) {
+
+export function MessagesSettingsScreen(props: Props) {
+  return (
+    <AgeRestrictedScreen>
+      <MessagesSettingsScreenInner {...props} />
+    </AgeRestrictedScreen>
+  )
+}
+
+export function MessagesSettingsScreenInner({}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({
