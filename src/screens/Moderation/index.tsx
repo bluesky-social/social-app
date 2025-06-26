@@ -23,6 +23,7 @@ import {isNonConfigurableModerationAuthority} from '#/state/session/additional-m
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
+import {AgeAssurancePrompt} from '#/components/ageAssurance/AgeAssurancePrompt'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
@@ -307,6 +308,8 @@ export function ModerationScreenInner({
         ]}>
         <Trans>Content filters</Trans>
       </Text>
+
+      <AgeAssurancePrompt style={[a.pb_md]} />
 
       <View style={[a.gap_md]}>
         {ageNotSet && (
