@@ -28,9 +28,9 @@ import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
 import {
-  AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
+  AppGndrEmbedVideo,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
   AtUri,
   type ModerationDecision,
   RichText as RichTextAPI,
@@ -99,7 +99,7 @@ import * as Hider from '#/components/moderation/Hider'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 
 function createThreeVideoPlayers(
@@ -175,8 +175,8 @@ type CurrentSource = {
 
 type VideoItem = {
   moderation: ModerationDecision
-  post: AppBskyFeedDefs.PostView
-  video: AppBskyEmbedVideo.View
+  post: AppGndrFeedDefs.PostView
+  video: AppGndrEmbedVideo.View
   feedContext: string | undefined
   reqId: string | undefined
 }
@@ -214,8 +214,8 @@ function Feed() {
         const items: {
           _reactKey: string
           moderation: ModerationDecision
-          post: AppBskyFeedDefs.PostView
-          video: AppBskyEmbedVideo.View
+          post: AppGndrFeedDefs.PostView
+          video: AppGndrEmbedVideo.View
           feedContext: string | undefined
           reqId: string | undefined
         }[] = []
@@ -223,7 +223,7 @@ function Feed() {
           const feedPost = slice.items.find(
             item => item.uri === slice.feedPostUri,
           )
-          if (feedPost && AppBskyEmbedVideo.isView(feedPost.post.embed)) {
+          if (feedPost && AppGndrEmbedVideo.isView(feedPost.post.embed)) {
             items.push({
               _reactKey: feedPost._reactKey,
               moderation: feedPost.moderation,
@@ -292,14 +292,14 @@ function Feed() {
       const prevPost = prevSlice?.post
       const prevEmbed = prevPost?.embed
       const prevVideo =
-        prevEmbed && AppBskyEmbedVideo.isView(prevEmbed)
+        prevEmbed && AppGndrEmbedVideo.isView(prevEmbed)
           ? prevEmbed.playlist
           : null
       const currSlice = videos.at(index)
       const currPost = currSlice?.post
       const currEmbed = currPost?.embed
       const currVideo =
-        currEmbed && AppBskyEmbedVideo.isView(currEmbed)
+        currEmbed && AppGndrEmbedVideo.isView(currEmbed)
           ? currEmbed.playlist
           : null
       const currVideoModeration = currSlice?.moderation
@@ -307,7 +307,7 @@ function Feed() {
       const nextPost = nextSlice?.post
       const nextEmbed = nextPost?.embed
       const nextVideo =
-        nextEmbed && AppBskyEmbedVideo.isView(nextEmbed)
+        nextEmbed && AppGndrEmbedVideo.isView(nextEmbed)
           ? nextEmbed.playlist
           : null
 
@@ -477,8 +477,8 @@ let VideoItem = ({
   reqId,
 }: {
   player?: VideoPlayer
-  post: AppBskyFeedDefs.PostView
-  embed: AppBskyEmbedVideo.View
+  post: AppGndrFeedDefs.PostView
+  embed: AppGndrEmbedVideo.View
   active: boolean
   adjacent: boolean
   scrollGesture: NativeGesture
@@ -494,7 +494,7 @@ let VideoItem = ({
     if (active) {
       sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#interactionSeen',
+        event: 'app.gndr.feed.defs#interactionSeen',
         feedContext,
         reqId,
       })
@@ -559,7 +559,7 @@ function VideoItemInner({
   embed,
 }: {
   player: VideoPlayer
-  embed: AppBskyEmbedVideo.View
+  embed: AppGndrEmbedVideo.View
 }) {
   const {bottom} = useSafeAreaInsets()
   const [isReady, setIsReady] = useState(!isAndroid)
@@ -595,7 +595,7 @@ function ModerationOverlay({
   embed,
   onPressShow,
 }: {
-  embed: AppBskyEmbedVideo.View
+  embed: AppGndrEmbedVideo.View
   onPressShow: () => void
 }) {
   const {_} = useLingui()
@@ -693,8 +693,8 @@ function Overlay({
   reqId,
 }: {
   player?: VideoPlayer
-  post: Shadow<AppBskyFeedDefs.PostView>
-  embed: AppBskyEmbedVideo.View
+  post: Shadow<AppGndrFeedDefs.PostView>
+  embed: AppGndrEmbedVideo.View
   active: boolean
   scrollGesture: NativeGesture
   moderation: ModerationDecision
@@ -715,9 +715,9 @@ function Overlay({
   )
 
   const rkey = new AtUri(post.uri).rkey
-  const record = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+  const record = gndr.dangerousIsType<AppGndrFeedPost.Record>(
     post.record,
-    AppBskyFeedPost.isRecord,
+    AppGndrFeedPost.isRecord,
   )
     ? post.record
     : undefined
@@ -978,7 +978,7 @@ function VideoItemPlaceholder({
   style,
   blur,
 }: {
-  embed: AppBskyEmbedVideo.View
+  embed: AppGndrEmbedVideo.View
   style?: ImageStyle
   blur?: boolean
 }) {
@@ -1019,7 +1019,7 @@ function PlayPauseTapArea({
   reqId,
 }: {
   player: VideoPlayer
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<AppGndrFeedDefs.PostView>
   feedContext: string | undefined
   reqId: string | undefined
 }) {
@@ -1056,7 +1056,7 @@ function PlayPauseTapArea({
       queueLike()
       sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#interactionLike',
+        event: 'app.gndr.feed.defs#interactionLike',
         feedContext,
         reqId,
       })
@@ -1152,7 +1152,7 @@ function EndMessage() {
 /*
  * If the video is taller than 9:16
  */
-function isTallAspectRatio(aspectRatio: AppBskyEmbedVideo.View['aspectRatio']) {
+function isTallAspectRatio(aspectRatio: AppGndrEmbedVideo.View['aspectRatio']) {
   const videoAspectRatio =
     (aspectRatio?.width ?? 1) / (aspectRatio?.height ?? 1)
   return videoAspectRatio <= 9 / 16

@@ -1,12 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorProfile,
-  type AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
+  type AppGndrActorProfile,
+  type AppGndrGraphDefs,
+  AppGndrGraphStarterpack,
   type Un$Typed,
 } from '@atproto/api'
-import {type SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import {type SavedFeed} from '@atproto/api/dist/client/types/app/gndr/actor/defs'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -14,7 +14,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
 import {
-  BSKY_APP_ACCOUNT_DID,
+  GNDR_APP_ACCOUNT_DID,
   DISCOVER_SAVED_FEED,
   TIMELINE_SAVED_FEED,
   VIDEO_SAVED_FEED,
@@ -49,7 +49,7 @@ import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function StepFinished() {
   const {_} = useLingui()
@@ -69,12 +69,12 @@ export function StepFinished() {
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
-    let starterPack: AppBskyGraphDefs.StarterPackView | undefined
-    let listItems: AppBskyGraphDefs.ListItemView[] | undefined
+    let starterPack: AppGndrGraphDefs.StarterPackView | undefined
+    let listItems: AppGndrGraphDefs.ListItemView[] | undefined
 
     if (activeStarterPack?.uri) {
       try {
-        const spRes = await agent.app.bsky.graph.getStarterPack({
+        const spRes = await agent.app.gndr.graph.getStarterPack({
           starterPack: activeStarterPack.uri,
         })
         starterPack = spRes.data.starterPack
@@ -100,7 +100,7 @@ export function StepFinished() {
 
       await Promise.all([
         bulkWriteFollows(agent, [
-          BSKY_APP_ACCOUNT_DID,
+          GNDR_APP_ACCOUNT_DID,
           ...(listItems?.map(i => i.subject.did) ?? []),
         ]),
         (async () => {
@@ -147,7 +147,7 @@ export function StepFinished() {
               : undefined
 
           await agent.upsertProfile(async existing => {
-            let next: Un$Typed<AppBskyActorProfile.Record> = existing ?? {}
+            let next: Un$Typed<AppGndrActorProfile.Record> = existing ?? {}
 
             if (blobPromise) {
               const res = await blobPromise
@@ -213,9 +213,9 @@ export function StepFinished() {
       usedStarterPack: Boolean(starterPack),
       starterPackName:
         starterPack &&
-        bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+        gndr.dangerousIsType<AppGndrGraphStarterpack.Record>(
           starterPack.record,
-          AppBskyGraphStarterpack.isRecord,
+          AppGndrGraphStarterpack.isRecord,
         )
           ? starterPack.record.name
           : undefined,

@@ -1,18 +1,18 @@
 import {
-  type BskyAgent,
-  type ChatBskyActorDefs,
-  type ChatBskyConvoDefs,
-  type ChatBskyConvoSendMessage,
+  type GndrAgent,
+  type ChatGndrActorDefs,
+  type ChatGndrConvoDefs,
+  type ChatGndrConvoSendMessage,
 } from '@atproto/api'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 
 export type ConvoParams = {
   convoId: string
-  agent: BskyAgent
+  agent: GndrAgent
   events: MessagesEventBus
   placeholderData?: {
-    convo: ChatBskyConvoDefs.ConvoView
+    convo: ChatGndrConvoDefs.ConvoView
   }
 }
 
@@ -85,27 +85,27 @@ export type ConvoItem =
   | {
       type: 'message'
       key: string
-      message: ChatBskyConvoDefs.MessageView
+      message: ChatGndrConvoDefs.MessageView
       nextMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
+        | ChatGndrConvoDefs.MessageView
+        | ChatGndrConvoDefs.DeletedMessageView
         | null
       prevMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
+        | ChatGndrConvoDefs.MessageView
+        | ChatGndrConvoDefs.DeletedMessageView
         | null
     }
   | {
       type: 'pending-message'
       key: string
-      message: ChatBskyConvoDefs.MessageView
+      message: ChatGndrConvoDefs.MessageView
       nextMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
+        | ChatGndrConvoDefs.MessageView
+        | ChatGndrConvoDefs.DeletedMessageView
         | null
       prevMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
+        | ChatGndrConvoDefs.MessageView
+        | ChatGndrConvoDefs.DeletedMessageView
         | null
       failed: boolean
       /**
@@ -116,14 +116,14 @@ export type ConvoItem =
   | {
       type: 'deleted-message'
       key: string
-      message: ChatBskyConvoDefs.DeletedMessageView
+      message: ChatGndrConvoDefs.DeletedMessageView
       nextMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
+        | ChatGndrConvoDefs.MessageView
+        | ChatGndrConvoDefs.DeletedMessageView
         | null
       prevMessage:
-        | ChatBskyConvoDefs.MessageView
-        | ChatBskyConvoDefs.DeletedMessageView
+        | ChatGndrConvoDefs.MessageView
+        | ChatGndrConvoDefs.DeletedMessageView
         | null
     }
   | {
@@ -138,7 +138,7 @@ export type ConvoItem =
 
 type DeleteMessage = (messageId: string) => Promise<void>
 type SendMessage = (
-  message: ChatBskyConvoSendMessage.InputSchema['message'],
+  message: ChatGndrConvoSendMessage.InputSchema['message'],
 ) => void
 type FetchMessageHistory = () => Promise<void>
 type MarkConvoAccepted = () => void
@@ -148,10 +148,10 @@ type RemoveReaction = (messageId: string, reaction: string) => Promise<void>
 export type ConvoStateUninitialized = {
   status: ConvoStatus.Uninitialized
   items: []
-  convo: ChatBskyConvoDefs.ConvoView | undefined
+  convo: ChatGndrConvoDefs.ConvoView | undefined
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
+  sender: ChatGndrActorDefs.ProfileViewBasic | undefined
+  recipients: ChatGndrActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: false
   deleteMessage: undefined
   sendMessage: undefined
@@ -163,10 +163,10 @@ export type ConvoStateUninitialized = {
 export type ConvoStateInitializing = {
   status: ConvoStatus.Initializing
   items: []
-  convo: ChatBskyConvoDefs.ConvoView | undefined
+  convo: ChatGndrConvoDefs.ConvoView | undefined
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
+  sender: ChatGndrActorDefs.ProfileViewBasic | undefined
+  recipients: ChatGndrActorDefs.ProfileViewBasic[] | undefined
   isFetchingHistory: boolean
   deleteMessage: undefined
   sendMessage: undefined
@@ -178,10 +178,10 @@ export type ConvoStateInitializing = {
 export type ConvoStateReady = {
   status: ConvoStatus.Ready
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ChatGndrConvoDefs.ConvoView
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
+  sender: ChatGndrActorDefs.ProfileViewBasic
+  recipients: ChatGndrActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
@@ -193,10 +193,10 @@ export type ConvoStateReady = {
 export type ConvoStateBackgrounded = {
   status: ConvoStatus.Backgrounded
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ChatGndrConvoDefs.ConvoView
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
+  sender: ChatGndrActorDefs.ProfileViewBasic
+  recipients: ChatGndrActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
@@ -208,10 +208,10 @@ export type ConvoStateBackgrounded = {
 export type ConvoStateSuspended = {
   status: ConvoStatus.Suspended
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ChatGndrConvoDefs.ConvoView
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
+  sender: ChatGndrActorDefs.ProfileViewBasic
+  recipients: ChatGndrActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage
@@ -238,10 +238,10 @@ export type ConvoStateError = {
 export type ConvoStateDisabled = {
   status: ConvoStatus.Disabled
   items: ConvoItem[]
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ChatGndrConvoDefs.ConvoView
   error: undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic
-  recipients: ChatBskyActorDefs.ProfileViewBasic[]
+  sender: ChatGndrActorDefs.ProfileViewBasic
+  recipients: ChatGndrActorDefs.ProfileViewBasic[]
   isFetchingHistory: boolean
   deleteMessage: DeleteMessage
   sendMessage: SendMessage

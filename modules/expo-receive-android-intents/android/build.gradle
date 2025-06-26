@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
-group = 'xyz.blueskyweb.app.exporeceiveandroidintents'
+group = 'xyz.ganderweb.app.exporeceiveandroidintents'
 version = '0.4.1'
 
 buildscript {
@@ -65,7 +65,7 @@ android {
     }
   }
 
-  namespace "xyz.blueskyweb.app.exporeceiveandroidintents"
+  namespace "xyz.ganderweb.app.exporeceiveandroidintents"
   defaultConfig {
     minSdkVersion safeExtGet("minSdkVersion", 21)
     targetSdkVersion safeExtGet("targetSdkVersion", 34)

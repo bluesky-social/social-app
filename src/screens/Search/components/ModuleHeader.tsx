@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppGndrFeedDefs, AtUri} from '@atproto/api'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {makeCustomFeedLink} from '#/lib/routes/links'
@@ -45,7 +45,7 @@ export function FeedLink({
   feed,
   children,
 }: {
-  feed: AppBskyFeedDefs.GeneratorView
+  feed: AppGndrFeedDefs.GeneratorView
   children?: React.ReactNode
 }) {
   const t = useTheme()
@@ -74,7 +74,7 @@ export function FeedLink({
   )
 }
 
-export function FeedAvatar({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+export function FeedAvatar({feed}: {feed: AppGndrFeedDefs.GeneratorView}) {
   return <UserAvatar type="algo" size={38} avatar={feed.avatar} />
 }
 
@@ -148,7 +148,7 @@ export function SearchButton({
   )
 }
 
-export function PinButton({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+export function PinButton({feed}: {feed: AppGndrFeedDefs.GeneratorView}) {
   return (
     <View style={[a.z_20, {marginRight: -6}]}>
       <FeedCard.SaveButton

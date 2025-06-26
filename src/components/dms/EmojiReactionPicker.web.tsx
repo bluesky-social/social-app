@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatGndrConvoDefs} from '@atproto/api'
 import EmojiPicker from '@emoji-mart/react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -21,7 +21,7 @@ export function EmojiReactionPicker({
   children,
   onEmojiSelect,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: ChatGndrConvoDefs.MessageView
   children?: TriggerProps['children']
   onEmojiSelect: (emoji: string) => void
 }) {
@@ -42,7 +42,7 @@ function MenuInner({
   message,
   onEmojiSelect,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: ChatGndrConvoDefs.MessageView
   onEmojiSelect: (emoji: string) => void
 }) {
   const t = useTheme()

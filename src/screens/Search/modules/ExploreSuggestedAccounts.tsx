@@ -1,6 +1,6 @@
 import {memo, useEffect} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorSearchActors, type ModerationOpts} from '@atproto/api'
+import {type AppGndrActorSearchActors, type ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type InfiniteData} from '@tanstack/react-query'
@@ -19,7 +19,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {boostInterests, Tabs} from '#/components/ProgressGuide/FollowDialog'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function useLoadEnoughProfiles({
   interest,
@@ -30,7 +30,7 @@ export function useLoadEnoughProfiles({
   fetchNextPage,
 }: {
   interest: string | null
-  data?: InfiniteData<AppBskyActorSearchActors.OutputSchema>
+  data?: InfiniteData<AppGndrActorSearchActors.OutputSchema>
   isLoading: boolean
   isFetchingNextPage: boolean
   hasNextPage: boolean
@@ -171,7 +171,7 @@ let SuggestedProfileCard = ({
   recId,
   position,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   recId?: number
   position: number

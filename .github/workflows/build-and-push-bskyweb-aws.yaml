@@ -1,4 +1,4 @@
-name: build-and-push-bskyweb-aws
+name: build-and-push-gndrweb-aws
 on:
   workflow_dispatch:
   push:
@@ -9,11 +9,11 @@ env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
   USERNAME: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_USERNAME }}
   PASSWORD: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_PASSWORD }}
-  IMAGE_NAME: bskyweb
+  IMAGE_NAME: gndrweb
 
 jobs:
-  bskyweb-container-aws:
-    if: github.repository == 'bluesky-social/social-app'
+  gndrweb-container-aws:
+    if: github.repository == 'gander-social/social-app'
     runs-on: ubuntu-latest
     permissions:
       contents: read

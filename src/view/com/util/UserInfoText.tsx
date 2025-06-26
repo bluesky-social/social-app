@@ -1,5 +1,5 @@
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
-import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
+import {AppGndrActorGetProfile as GetProfile} from '@atproto/api'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'

@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, type ModerationOpts} from '@atproto/api'
+import {type AppGndrActorDefs, type ModerationOpts} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -16,7 +16,7 @@ export function SearchProfileCard({
   moderationOpts,
   onPress: onPressInner,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppGndrActorDefs.ProfileViewBasic
   moderationOpts: ModerationOpts
   onPress?: () => void
 }) {

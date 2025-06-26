@@ -771,8 +771,8 @@ msgid "Adult Content"
 msgstr "Contingut per a adults"
 
 #: src/screens/Moderation/index.tsx:374
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "El contingut per a adults només es pot activar a través del web a <0>bsky.app</0>."
+msgid "Adult content can only be enabled via the Web at <0>gndr.app</0>."
+msgstr "El contingut per a adults només es pot activar a través del web a <0>gndr.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -1342,8 +1342,8 @@ msgid "Bluesky is an open network where you can choose your hosting provider. If
 msgstr "Bluesky és una xarxa oberta on pots escollir el teu proveïdor d'allotjament. Si ets un desenvolupador pots allotjar el teu propi servidor."
 
 #: src/view/com/auth/server-input/index.tsx:149
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "Bluesky és una xarxa oberta on pots triar el proveïdor. Si estàs començant, et recomanem l'opció per defecte, Bluesky Social."
+msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
+msgstr "Bluesky és una xarxa oberta on pots triar el proveïdor. Si estàs començant, et recomanem l'opció per defecte, Gander Social."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1351,8 +1351,8 @@ msgid "Bluesky is better with friends!"
 msgstr "Bluesky és millor amb col·legues!"
 
 #: src/screens/Takendown.tsx:217
-msgid "Bluesky Social Terms of Service"
-msgstr "Condicions del servei de Bluesky Social"
+msgid "Gander Social Terms of Service"
+msgstr "Condicions del servei de Gander Social"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -4698,13 +4698,13 @@ msgid "Logged-out visibility"
 msgstr "Visibilitat pels usuaris no connectats"
 
 #: src/view/shell/desktop/RightNav.tsx:130
-msgid "Logo by @sawaratsuki.bsky.social"
-msgstr "Logo per @sawaratsuki.bsky.social"
+msgid "Logo by @sawaratsuki.gndr.social"
+msgstr "Logo per @sawaratsuki.gndr.social"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
-msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "Logo per <0>@sawaratsuki.bsky.social</0>"
+#: src/view/shell/Drawer.tsx:658
+msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
+msgstr "Logo per <0>@sawaratsuki.gndr.social</0>"
 
 #: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
@@ -10101,8 +10101,8 @@ msgid "Your account repository, containing all public data records, can be downl
 msgstr "El repositori del teu compte, que conté tots els registres de dades públiques, es pot baixar com a fitxer \"CAR\". Aquest fitxer no inclou incrustacions multimèdia, com ara imatges, ni les teves dades privades, que s'han d'obtenir per separat."
 
 #: src/screens/Takendown.tsx:214
-msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
-msgstr "S'ha detectat que el teu compte incompleix les <0>Condicions del servei de Bluesky Social</0>. Se t'ha enviat un correu electrònic que detalla la infracció específica i el període de suspensió, si escau. Pots apel·lar aquesta decisió si creus que s'ha comès un error."
+msgid "Your account was found to be in violation of the <0>Gander Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgstr "S'ha detectat que el teu compte incompleix les <0>Condicions del servei de Gander Social</0>. Se t'ha enviat un correu electrònic que detalla la infracció específica i el període de suspensió, si escau. Pots apel·lar aquesta decisió si creus que s'ha comès un error."
 
 #: src/screens/Takendown.tsx:154
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."

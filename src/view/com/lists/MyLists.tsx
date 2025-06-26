@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
+import {AppGndrGraphDefs as GraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

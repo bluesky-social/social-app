@@ -3,8 +3,8 @@ import {useWindowDimensions, View} from 'react-native'
 import {runOnJS, useAnimatedStyle} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {
-  AppBskyFeedDefs,
-  type AppBskyFeedThreadgate,
+  AppGndrFeedDefs,
+  type AppGndrFeedThreadgate,
   moderatePost,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -161,7 +161,7 @@ export function PostThread({uri}: {uri: string}) {
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
   const threadgateRecord = threadgate?.record as
-    | AppBskyFeedThreadgate.Record
+    | AppGndrFeedThreadgate.Record
     | undefined
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
     threadgateRecord,
@@ -261,7 +261,7 @@ export function PostThread({uri}: {uri: string}) {
   ])
 
   const error = React.useMemo(() => {
-    if (AppBskyFeedDefs.isNotFoundPost(thread)) {
+    if (AppGndrFeedDefs.isNotFoundPost(thread)) {
       return {
         title: _(msg`Post not found`),
         message: _(msg`The post may have been deleted.`),

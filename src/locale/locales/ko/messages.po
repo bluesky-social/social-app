@@ -771,8 +771,8 @@ msgid "Adult Content"
 msgstr "성인 콘텐츠"
 
 #: src/screens/Moderation/index.tsx:374
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "성인 콘텐츠는 <0>bsky.app</0>에서 웹을 통해서만 활성화할 수 있습니다."
+msgid "Adult content can only be enabled via the Web at <0>gndr.app</0>."
+msgstr "성인 콘텐츠는 <0>gndr.app</0>에서 웹을 통해서만 활성화할 수 있습니다."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -1342,8 +1342,8 @@ msgid "Bluesky is an open network where you can choose your hosting provider. If
 msgstr "Bluesky는 호스팅 제공자를 선택할 수 있는 개방형 네트워크입니다. 개발자라면 직접 서버를 호스팅할 수 있습니다."
 
 #: src/view/com/auth/server-input/index.tsx:149
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "Bluesky는 직접 제공자를 선택할 수 있는 개방형 네트워크입니다. 처음 사용하는 경우 기본으로 Bluesky Social을 선택하는 것이 좋습니다."
+msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
+msgstr "Bluesky는 직접 제공자를 선택할 수 있는 개방형 네트워크입니다. 처음 사용하는 경우 기본으로 Gander Social을 선택하는 것이 좋습니다."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1351,8 +1351,8 @@ msgid "Bluesky is better with friends!"
 msgstr "Bluesky는 친구와 함께하면 더 좋답니다!"
 
 #: src/screens/Takendown.tsx:217
-msgid "Bluesky Social Terms of Service"
-msgstr "Bluesky Social 서비스 이용약관"
+msgid "Gander Social Terms of Service"
+msgstr "Gander Social 서비스 이용약관"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -4698,13 +4698,13 @@ msgid "Logged-out visibility"
 msgstr "로그아웃 표시"
 
 #: src/view/shell/desktop/RightNav.tsx:130
-msgid "Logo by @sawaratsuki.bsky.social"
-msgstr "@sawaratsuki.bsky.social 님의 로고"
+msgid "Logo by @sawaratsuki.gndr.social"
+msgstr "@sawaratsuki.gndr.social 님의 로고"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
-msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "<0>@sawaratsuki.bsky.social</0> 님의 로고"
+#: src/view/shell/Drawer.tsx:658
+msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
+msgstr "<0>@sawaratsuki.gndr.social</0> 님의 로고"
 
 #: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
@@ -10101,8 +10101,8 @@ msgid "Your account repository, containing all public data records, can be downl
 msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 \"CAR\" 파일로 다운로드할 수 있습니다. 이 파일에는 이미지와 같은 미디어 임베드나 별도로 가져와야 하는 비공개 데이터는 포함되지 않습니다."
 
 #: src/screens/Takendown.tsx:214
-msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
-msgstr "귀하의 계정이 <0>Bluesky Social 서비스 이용약관</0>을 위반한 것으로 확인되었습니다. 구체적인 위반 사항과 정지 기간(해당하는 경우)이 명시된 이메일을 보내드렸습니다. 이 결정이 잘못되었다고 생각되면 이의를 신청할 수 있습니다."
+msgid "Your account was found to be in violation of the <0>Gander Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgstr "귀하의 계정이 <0>Gander Social 서비스 이용약관</0>을 위반한 것으로 확인되었습니다. 구체적인 위반 사항과 정지 기간(해당하는 경우)이 명시된 이메일을 보내드렸습니다. 이 결정이 잘못되었다고 생각되면 이의를 신청할 수 있습니다."
 
 #: src/screens/Takendown.tsx:154
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."

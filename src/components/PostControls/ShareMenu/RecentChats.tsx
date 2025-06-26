@@ -18,7 +18,7 @@ import {useDialogContext} from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function RecentChats({postUri}: {postUri: string}) {
   const control = useDialogContext()
@@ -91,7 +91,7 @@ function RecentChatItem({
   onPress,
   moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   onPress: () => void
   moderationOpts: ModerationOpts
 }) {

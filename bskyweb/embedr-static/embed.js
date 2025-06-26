@@ -1,1 +1,0 @@
-/* embed javascript widget will go here */

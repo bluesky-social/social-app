@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
+import {AppGndrActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -65,7 +65,7 @@ function MutedWordsInner() {
     const sanitizedValue = sanitizeMutedWordValue(field)
     const surfaces = ['tag', targets.includes('content') && 'content'].filter(
       Boolean,
-    ) as AppBskyActorDefs.MutedWord['targets']
+    ) as AppGndrActorDefs.MutedWord['targets']
     const actorTarget = excludeFollowing ? 'exclude-following' : 'all'
 
     const now = Date.now()
@@ -412,7 +412,7 @@ function MutedWordsInner() {
 function MutedWordRow({
   style,
   word,
-}: ViewStyleProp & {word: AppBskyActorDefs.MutedWord}) {
+}: ViewStyleProp & {word: AppGndrActorDefs.MutedWord}) {
   const t = useTheme()
   const {_} = useLingui()
   const {isPending, mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()

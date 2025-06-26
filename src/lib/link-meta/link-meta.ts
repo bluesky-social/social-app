@@ -1,9 +1,9 @@
-import {BskyAgent} from '@atproto/api'
+import {GndrAgent} from '@atproto/api'
 
 import {LINK_META_PROXY} from '#/lib/constants'
 import {getGiphyMetaUri} from '#/lib/strings/embed-player'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
-import {isBskyAppUrl} from '../strings/url-helpers'
+import {isGndrAppUrl} from '../strings/url-helpers'
 
 export enum LikelyType {
   HTML,
@@ -25,11 +25,11 @@ export interface LinkMeta {
 }
 
 export async function getLinkMeta(
-  agent: BskyAgent,
+  agent: GndrAgent,
   url: string,
   timeout = 15e3,
 ): Promise<LinkMeta> {
-  if (isBskyAppUrl(url) && !parseStarterPackUri(url)) {
+  if (isGndrAppUrl(url) && !parseStarterPackUri(url)) {
     return {
       likelyType: LikelyType.AtpData,
       url,

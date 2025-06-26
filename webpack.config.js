@@ -49,7 +49,7 @@ module.exports = async function (env, argv) {
   if (process.env.SENTRY_AUTH_TOKEN) {
     config.plugins.push(
       sentryWebpackPlugin({
-        org: 'blueskyweb',
+        org: 'ganderweb',
         project: 'app',
         authToken: process.env.SENTRY_AUTH_TOKEN,
         release: {

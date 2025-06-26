@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppGndrActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -21,7 +21,7 @@ function renderItem({
   item,
   index,
 }: {
-  item: AppBskyActorDefs.ProfileView
+  item: AppGndrActorDefs.ProfileView
   index: number
 }) {
   return (
@@ -33,7 +33,7 @@ function renderItem({
   )
 }
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
+function keyExtractor(item: AppGndrActorDefs.ProfileViewBasic) {
   return item.did
 }
 

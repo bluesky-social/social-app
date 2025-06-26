@@ -1,7 +1,7 @@
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AnimatedRef} from 'react-native-reanimated'
 import {Image, type ImageStyle} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
+import {type AppGndrEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type React from 'react'
@@ -16,7 +16,7 @@ import {Text} from '#/components/Typography'
 type EventFunction = (index: number) => void
 
 interface Props {
-  images: AppBskyEmbedImages.ViewImage[]
+  images: AppGndrEmbedImages.ViewImage[]
   index: number
   onPress?: (
     index: number,

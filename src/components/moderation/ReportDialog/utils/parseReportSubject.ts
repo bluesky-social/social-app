@@ -1,15 +1,15 @@
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyGraphDefs,
+  AppGndrActorDefs,
+  AppGndrFeedDefs,
+  AppGndrFeedPost,
+  AppGndrGraphDefs,
 } from '@atproto/api'
 
 import {
   ParsedReportSubject,
   ReportSubject,
 } from '#/components/moderation/ReportDialog/types'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function parseReportSubject(
   subject: ReportSubject,
@@ -24,50 +24,50 @@ export function parseReportSubject(
   }
 
   if (
-    AppBskyActorDefs.isProfileViewBasic(subject) ||
-    AppBskyActorDefs.isProfileView(subject) ||
-    AppBskyActorDefs.isProfileViewDetailed(subject)
+    AppGndrActorDefs.isProfileViewBasic(subject) ||
+    AppGndrActorDefs.isProfileView(subject) ||
+    AppGndrActorDefs.isProfileViewDetailed(subject)
   ) {
     return {
       type: 'account',
       did: subject.did,
-      nsid: 'app.bsky.actor.profile',
+      nsid: 'app.gndr.actor.profile',
     }
-  } else if (AppBskyGraphDefs.isListView(subject)) {
+  } else if (AppGndrGraphDefs.isListView(subject)) {
     return {
       type: 'list',
       uri: subject.uri,
       cid: subject.cid,
-      nsid: 'app.bsky.graph.list',
+      nsid: 'app.gndr.graph.list',
     }
-  } else if (AppBskyFeedDefs.isGeneratorView(subject)) {
+  } else if (AppGndrFeedDefs.isGeneratorView(subject)) {
     return {
       type: 'feed',
       uri: subject.uri,
       cid: subject.cid,
-      nsid: 'app.bsky.feed.generator',
+      nsid: 'app.gndr.feed.generator',
     }
-  } else if (AppBskyGraphDefs.isStarterPackView(subject)) {
+  } else if (AppGndrGraphDefs.isStarterPackView(subject)) {
     return {
       type: 'starterPack',
       uri: subject.uri,
       cid: subject.cid,
-      nsid: 'app.bsky.graph.starterPack',
+      nsid: 'app.gndr.graph.starterPack',
     }
-  } else if (AppBskyFeedDefs.isPostView(subject)) {
+  } else if (AppGndrFeedDefs.isPostView(subject)) {
     const record = subject.record
-    const embed = bsky.post.parseEmbed(subject.embed)
+    const embed = gndr.post.parseEmbed(subject.embed)
     if (
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      gndr.dangerousIsType<AppGndrFeedPost.Record>(
         record,
-        AppBskyFeedPost.isRecord,
+        AppGndrFeedPost.isRecord,
       )
     ) {
       return {
         type: 'post',
         uri: subject.uri,
         cid: subject.cid,
-        nsid: 'app.bsky.feed.post',
+        nsid: 'app.gndr.feed.post',
         attributes: {
           reply: !!record.reply,
           image:

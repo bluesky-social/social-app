@@ -1,16 +1,16 @@
-import {type AppBskyFeedDefs, type BskyAgent} from '@atproto/api'
+import {type AppGndrFeedDefs, type GndrAgent} from '@atproto/api'
 
 import {DEMO_FEED} from '#/lib/demo'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class DemoFeedAPI implements FeedAPI {
-  agent: BskyAgent
+  agent: GndrAgent
 
-  constructor({agent}: {agent: BskyAgent}) {
+  constructor({agent}: {agent: GndrAgent}) {
     this.agent = agent
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost> {
     return DEMO_FEED.feed[0]
   }
 

@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@atproto/api'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'
@@ -10,7 +10,7 @@ export function ProfileCardWithFollowBtn({
   noBorder,
   logContext = 'ProfileCard',
 }: {
-  profile: AppBskyActorDefs.ProfileView
+  profile: AppGndrActorDefs.ProfileView
   noBorder?: boolean
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {

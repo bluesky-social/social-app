@@ -3,7 +3,7 @@ import {useMemo} from 'react'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useSession} from '#/state/session'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export type FullVerificationState = {
   profile: {
@@ -28,7 +28,7 @@ export type FullVerificationState = {
 export function useFullVerificationState({
   profile,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
 }): FullVerificationState {
   const {currentAccount} = useSession()
   const currentAccountProfile = useCurrentAccountProfile()
@@ -81,7 +81,7 @@ export type SimpleVerificationState = {
 export function useSimpleVerificationState({
   profile,
 }: {
-  profile?: bsky.profile.AnyProfileView
+  profile?: gndr.profile.AnyProfileView
 }): SimpleVerificationState {
   const preferences = usePreferencesQuery()
   const prefs = useMemo(

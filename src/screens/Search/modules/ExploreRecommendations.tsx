@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
+import {type AppGndrUnspeccedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'
@@ -115,7 +115,7 @@ function Inner() {
   )
 }
 
-function isAllFeeds(topics: AppBskyUnspeccedDefs.TrendingTopic[]) {
+function isAllFeeds(topics: AppGndrUnspeccedDefs.TrendingTopic[]) {
   return topics.every(topic => {
     const segments = topic.link.split('/').slice(1)
     return segments[0] === 'profile' && segments[2] === 'feed'

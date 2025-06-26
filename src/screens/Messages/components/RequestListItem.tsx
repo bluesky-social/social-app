@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatGndrConvoDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -10,7 +10,7 @@ import {Text} from '#/components/Typography'
 import {ChatListItem} from './ChatListItem'
 import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
 
-export function RequestListItem({convo}: {convo: ChatBskyConvoDefs.ConvoView}) {
+export function RequestListItem({convo}: {convo: ChatGndrConvoDefs.ConvoView}) {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 

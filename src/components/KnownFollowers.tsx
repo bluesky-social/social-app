@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {AppGndrActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -10,7 +10,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Link, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 const AVI_SIZE = 30
 const AVI_SIZE_SMALL = 20
@@ -23,7 +23,7 @@ const AVI_BORDER = 1
  * `count` includes blocked users and `followers` does not.
  */
 export function shouldShowKnownFollowers(
-  knownFollowers?: AppBskyActorDefs.KnownFollowers,
+  knownFollowers?: AppGndrActorDefs.KnownFollowers,
 ) {
   return knownFollowers && knownFollowers.followers.length > 0
 }
@@ -35,13 +35,13 @@ export function KnownFollowers({
   minimal,
   showIfEmpty,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onLinkPress?: LinkProps['onPress']
   minimal?: boolean
   showIfEmpty?: boolean
 }) {
-  const cache = React.useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(
+  const cache = React.useRef<Map<string, AppGndrActorDefs.KnownFollowers>>(
     new Map(),
   )
 
@@ -82,9 +82,9 @@ function KnownFollowersInner({
   minimal,
   showIfEmpty,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  cachedKnownFollowers: AppBskyActorDefs.KnownFollowers
+  cachedKnownFollowers: AppGndrActorDefs.KnownFollowers
   onLinkPress?: LinkProps['onPress']
   minimal?: boolean
   showIfEmpty?: boolean

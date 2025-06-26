@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react'
 import {ScrollView, View} from 'react-native'
-import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
+import {AppGndrEmbedVideo, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -156,7 +156,7 @@ function VideoCards({
       .flatMap(page => page.slices)
       .map(slice => slice.items[0])
       .filter(Boolean)
-      .filter(item => AppBskyEmbedVideo.isView(item.post.embed))
+      .filter(item => AppGndrEmbedVideo.isView(item.post.embed))
       .slice(0, 8)
   }, [data])
   const href = React.useMemo(() => {

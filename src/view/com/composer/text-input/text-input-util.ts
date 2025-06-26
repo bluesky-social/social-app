@@ -1,8 +1,8 @@
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppGndrRichtextFacet, RichText} from '@atproto/api'
 
 export type LinkFacetMatch = {
   rt: RichText
-  facet: AppBskyRichtextFacet.Main
+  facet: AppGndrRichtextFacet.Main
 }
 
 export function suggestLinkCardUri(

@@ -2,8 +2,8 @@ import React from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
+  AppGndrGraphDefs,
+  AppGndrGraphStarterpack,
   AtUri,
   type ModerationOpts,
 } from '@atproto/api'
@@ -38,7 +38,7 @@ import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -72,8 +72,8 @@ export function LandingScreen({
   const isValid =
     starterPack &&
     starterPack.list &&
-    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
-    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+    AppGndrGraphDefs.validateStarterPackView(starterPack) &&
+    AppGndrGraphStarterpack.validateRecord(starterPack.record)
 
   React.useEffect(() => {
     if (isErrorStarterPack || (starterPack && !isValid)) {
@@ -87,9 +87,9 @@ export function LandingScreen({
 
   // Just for types, this cannot be hit
   if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    !gndr.dangerousIsType<AppGndrGraphStarterpack.Record>(
       starterPack.record,
-      AppBskyGraphStarterpack.isRecord,
+      AppGndrGraphStarterpack.isRecord,
     )
   ) {
     return null
@@ -113,8 +113,8 @@ function LandingScreenLoaded({
 
   moderationOpts,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
-  starterPackRecord: AppBskyGraphStarterpack.Record
+  starterPack: AppGndrGraphDefs.StarterPackView
+  starterPackRecord: AppGndrGraphStarterpack.Record
   setScreenState: (state: LoggedOutScreenState) => void
   moderationOpts: ModerationOpts
 }) {
@@ -353,7 +353,7 @@ function LandingScreenLoaded({
       {isWeb && (
         <meta
           name="apple-itunes-app"
-          content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card"
+          content="app-id=xyz.ganderweb.app, app-clip-bundle-id=xyz.ganderweb.app.AppClip, app-clip-display=card"
         />
       )}
     </View>

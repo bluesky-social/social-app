@@ -1,8 +1,8 @@
 import React, {useCallback} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyGraphGetList,
+  AppGndrActorDefs,
+  AppGndrGraphGetList,
   AtUri,
   ModerationOpts,
 } from '@atproto/api'
@@ -20,14 +20,14 @@ import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
+function keyExtractor(item: AppGndrActorDefs.ProfileViewBasic, index: number) {
   return `${item.did}-${index}`
 }
 
 interface ProfilesListProps {
   listUri: string
   listMembersQuery: UseInfiniteQueryResult<
-    InfiniteData<AppBskyGraphGetList.OutputSchema>
+    InfiniteData<AppGndrGraphGetList.OutputSchema>
   >
   moderationOpts: ModerationOpts
   headerHeight: number
@@ -84,7 +84,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const renderItem = ({
       item,
       index,
-    }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
+    }: ListRenderItemInfo<AppGndrActorDefs.ProfileViewBasic>) => {
       return (
         <View
           style={[

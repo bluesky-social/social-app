@@ -1,7 +1,7 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import {
-  ChatBskyConvoDefs,
-  type ChatBskyConvoListConvos,
+  ChatGndrConvoDefs,
+  type ChatGndrConvoListConvos,
   moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
@@ -42,7 +42,7 @@ export function useListConvosQuery({
     enabled,
     queryKey: RQKEY(status ?? 'all', readState),
     queryFn: async ({pageParam}) => {
-      const {data} = await agent.chat.bsky.convo.listConvos(
+      const {data} = await agent.chat.gndr.convo.listConvos(
         {
           limit: 20,
           cursor: pageParam,
@@ -59,8 +59,8 @@ export function useListConvosQuery({
 }
 
 const ListConvosContext = createContext<{
-  accepted: ChatBskyConvoDefs.ConvoView[]
-  request: ChatBskyConvoDefs.ConvoView[]
+  accepted: ChatGndrConvoDefs.ConvoView[]
+  request: ChatGndrConvoDefs.ConvoView[]
 } | null>(null)
 
 export function useListConvos() {
@@ -115,25 +115,25 @@ export function ListConvosProviderInner({
         if (events.type !== 'logs') return
 
         for (const log of events.logs) {
-          if (ChatBskyConvoDefs.isLogBeginConvo(log)) {
+          if (ChatGndrConvoDefs.isLogBeginConvo(log)) {
             debouncedRefetch()
-          } else if (ChatBskyConvoDefs.isLogLeaveConvo(log)) {
+          } else if (ChatGndrConvoDefs.isLogLeaveConvo(log)) {
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
               (old?: ConvoListQueryData) => optimisticDelete(log.convoId, old),
             )
-          } else if (ChatBskyConvoDefs.isLogDeleteMessage(log)) {
+          } else if (ChatGndrConvoDefs.isLogDeleteMessage(log)) {
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
               (old?: ConvoListQueryData) =>
                 optimisticUpdate(log.convoId, old, convo => {
                   if (
-                    (ChatBskyConvoDefs.isDeletedMessageView(log.message) ||
-                      ChatBskyConvoDefs.isMessageView(log.message)) &&
-                    (ChatBskyConvoDefs.isDeletedMessageView(
+                    (ChatGndrConvoDefs.isDeletedMessageView(log.message) ||
+                      ChatGndrConvoDefs.isMessageView(log.message)) &&
+                    (ChatGndrConvoDefs.isDeletedMessageView(
                       convo.lastMessage,
                     ) ||
-                      ChatBskyConvoDefs.isMessageView(convo.lastMessage))
+                      ChatGndrConvoDefs.isMessageView(convo.lastMessage))
                   ) {
                     return log.message.id === convo.lastMessage.id
                       ? {
@@ -147,9 +147,9 @@ export function ListConvosProviderInner({
                   }
                 }),
             )
-          } else if (ChatBskyConvoDefs.isLogCreateMessage(log)) {
+          } else if (ChatGndrConvoDefs.isLogCreateMessage(log)) {
             // Store in a new var to avoid TS errors due to closures.
-            const logRef: ChatBskyConvoDefs.LogCreateMessage = log
+            const logRef: ChatGndrConvoDefs.LogCreateMessage = log
 
             // Get all matching queries
             const queries = queryClient.getQueriesData<ConvoListQueryData>({
@@ -157,7 +157,7 @@ export function ListConvosProviderInner({
             })
 
             // Check if convo exists in any query
-            let foundConvo: ChatBskyConvoDefs.ConvoView | null = null
+            let foundConvo: ChatGndrConvoDefs.ConvoView | null = null
             for (const [_key, query] of queries) {
               if (!query) continue
               const convo = getConvoFromQueryData(logRef.convoId, query)
@@ -180,15 +180,15 @@ export function ListConvosProviderInner({
               lastMessage: logRef.message,
               unreadCount:
                 foundConvo.id !== currentConvoId
-                  ? (ChatBskyConvoDefs.isMessageView(logRef.message) ||
-                      ChatBskyConvoDefs.isDeletedMessageView(logRef.message)) &&
+                  ? (ChatGndrConvoDefs.isMessageView(logRef.message) ||
+                      ChatGndrConvoDefs.isDeletedMessageView(logRef.message)) &&
                     logRef.message.sender.did !== currentAccount?.did
                     ? foundConvo.unreadCount + 1
                     : foundConvo.unreadCount
                   : 0,
             }
 
-            function filterConvoFromPage(convo: ChatBskyConvoDefs.ConvoView[]) {
+            function filterConvoFromPage(convo: ChatGndrConvoDefs.ConvoView[]) {
               return convo.filter(c => c.id !== logRef.convoId)
             }
 
@@ -234,8 +234,8 @@ export function ListConvosProviderInner({
             } else if (updatedConvo.status === 'request') {
               queryClient.setQueriesData({queryKey: RQKEY('request')}, updateFn)
             }
-          } else if (ChatBskyConvoDefs.isLogReadMessage(log)) {
-            const logRef: ChatBskyConvoDefs.LogReadMessage = log
+          } else if (ChatGndrConvoDefs.isLogReadMessage(log)) {
+            const logRef: ChatGndrConvoDefs.LogReadMessage = log
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
               (old?: ConvoListQueryData) =>
@@ -245,8 +245,8 @@ export function ListConvosProviderInner({
                   rev: logRef.rev,
                 })),
             )
-          } else if (ChatBskyConvoDefs.isLogAcceptConvo(log)) {
-            const logRef: ChatBskyConvoDefs.LogAcceptConvo = log
+          } else if (ChatGndrConvoDefs.isLogAcceptConvo(log)) {
+            const logRef: ChatGndrConvoDefs.LogAcceptConvo = log
             const requests = queryClient.getQueryData<ConvoListQueryData>(
               RQKEY('request'),
             )
@@ -288,8 +288,8 @@ export function ListConvosProviderInner({
                 }
               },
             )
-          } else if (ChatBskyConvoDefs.isLogMuteConvo(log)) {
-            const logRef: ChatBskyConvoDefs.LogMuteConvo = log
+          } else if (ChatGndrConvoDefs.isLogMuteConvo(log)) {
+            const logRef: ChatGndrConvoDefs.LogMuteConvo = log
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
               (old?: ConvoListQueryData) =>
@@ -299,8 +299,8 @@ export function ListConvosProviderInner({
                   rev: logRef.rev,
                 })),
             )
-          } else if (ChatBskyConvoDefs.isLogUnmuteConvo(log)) {
-            const logRef: ChatBskyConvoDefs.LogUnmuteConvo = log
+          } else if (ChatGndrConvoDefs.isLogUnmuteConvo(log)) {
+            const logRef: ChatGndrConvoDefs.LogUnmuteConvo = log
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
               (old?: ConvoListQueryData) =>
@@ -310,23 +310,23 @@ export function ListConvosProviderInner({
                   rev: logRef.rev,
                 })),
             )
-          } else if (ChatBskyConvoDefs.isLogAddReaction(log)) {
-            const logRef: ChatBskyConvoDefs.LogAddReaction = log
+          } else if (ChatGndrConvoDefs.isLogAddReaction(log)) {
+            const logRef: ChatGndrConvoDefs.LogAddReaction = log
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
               (old?: ConvoListQueryData) =>
                 optimisticUpdate(logRef.convoId, old, convo => ({
                   ...convo,
                   lastReaction: {
-                    $type: 'chat.bsky.convo.defs#messageAndReactionView',
+                    $type: 'chat.gndr.convo.defs#messageAndReactionView',
                     reaction: logRef.reaction,
                     message: logRef.message,
                   },
                   rev: logRef.rev,
                 })),
             )
-          } else if (ChatBskyConvoDefs.isLogRemoveReaction(log)) {
-            const logRef: ChatBskyConvoDefs.LogRemoveReaction = log
+          } else if (ChatGndrConvoDefs.isLogRemoveReaction(log)) {
+            const logRef: ChatGndrConvoDefs.LogRemoveReaction = log
             queryClient.setQueriesData(
               {queryKey: [RQKEY_ROOT]},
               (old?: ConvoListQueryData) =>
@@ -334,10 +334,10 @@ export function ListConvosProviderInner({
                   if (
                     // if the convo is the same
                     logRef.convoId === convo.id &&
-                    ChatBskyConvoDefs.isMessageAndReactionView(
+                    ChatGndrConvoDefs.isMessageAndReactionView(
                       convo.lastReaction,
                     ) &&
-                    ChatBskyConvoDefs.isMessageView(logRef.message) &&
+                    ChatGndrConvoDefs.isMessageView(logRef.message) &&
                     // ...and the message is the same
                     convo.lastReaction.message.id === logRef.message.id &&
                     // ...and the reaction is the same
@@ -440,7 +440,7 @@ export function useUnreadMessageCount() {
 }
 
 function calculateCount(
-  convos: ChatBskyConvoDefs.ConvoView[],
+  convos: ChatGndrConvoDefs.ConvoView[],
   currentAccountDid: string | undefined,
   currentConvoId: string | undefined,
   moderationOpts: ModerationOpts | undefined,
@@ -469,7 +469,7 @@ function calculateCount(
 
 export type ConvoListQueryData = {
   pageParams: Array<string | undefined>
-  pages: Array<ChatBskyConvoListConvos.OutputSchema>
+  pages: Array<ChatGndrConvoListConvos.OutputSchema>
 }
 
 export function useOnMarkAsRead() {
@@ -496,8 +496,8 @@ function optimisticUpdate(
   chatId: string,
   old?: ConvoListQueryData,
   updateFn?: (
-    convo: ChatBskyConvoDefs.ConvoView,
-  ) => ChatBskyConvoDefs.ConvoView,
+    convo: ChatGndrConvoDefs.ConvoView,
+  ) => ChatGndrConvoDefs.ConvoView,
 ) {
   if (!old || !updateFn) return old
 
@@ -540,7 +540,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ) {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<ChatBskyConvoListConvos.OutputSchema>
+    InfiniteData<ChatGndrConvoListConvos.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })

@@ -1,7 +1,7 @@
 import {
-  AppBskyFeedDefs,
-  AppBskyFeedGetFeed as GetCustomFeed,
-  BskyAgent,
+  AppGndrFeedDefs,
+  AppGndrFeedGetFeed as GetCustomFeed,
+  GndrAgent,
   jsonStringToLex,
 } from '@atproto/api'
 
@@ -10,10 +10,10 @@ import {
   getContentLanguages,
 } from '#/state/preferences/languages'
 import {FeedAPI, FeedAPIResponse} from './types'
-import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
+import {createGndrTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
-  agent: BskyAgent
+  agent: GndrAgent
   params: GetCustomFeed.QueryParams
   userInterests?: string
 
@@ -22,7 +22,7 @@ export class CustomFeedAPI implements FeedAPI {
     feedParams,
     userInterests,
   }: {
-    agent: BskyAgent
+    agent: GndrAgent
     feedParams: GetCustomFeed.QueryParams
     userInterests?: string
   }) {
@@ -31,9 +31,9 @@ export class CustomFeedAPI implements FeedAPI {
     this.userInterests = userInterests
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await this.agent.app.bsky.feed.getFeed(
+    const res = await this.agent.app.gndr.feed.getFeed(
       {
         ...this.params,
         limit: 1,
@@ -55,7 +55,7 @@ export class CustomFeedAPI implements FeedAPI {
     const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
 
     const res = agent.did
-      ? await this.agent.app.bsky.feed.getFeed(
+      ? await this.agent.app.gndr.feed.getFeed(
           {
             ...this.params,
             cursor,
@@ -64,7 +64,7 @@ export class CustomFeedAPI implements FeedAPI {
           {
             headers: {
               ...(isBlueskyOwned
-                ? createBskyTopicsHeader(this.userInterests)
+                ? createGndrTopicsHeader(this.userInterests)
                 : {}),
               'Accept-Language': contentLangs,
             },
@@ -110,17 +110,17 @@ async function loggedOutFetch({
 
   /**
    * Copied from our root `Agent` class
-   * @see https://github.com/bluesky-social/atproto/blob/60df3fc652b00cdff71dd9235d98a7a4bb828f05/packages/api/src/agent.ts#L120
+   * @see https://github.com/gander-social/atproto/blob/60df3fc652b00cdff71dd9235d98a7a4bb828f05/packages/api/src/agent.ts#L120
    */
   const labelersHeader = {
-    'atproto-accept-labelers': BskyAgent.appLabelers
+    'atproto-accept-labelers': GndrAgent.appLabelers
       .map(l => `${l};redact`)
       .join(', '),
   }
 
   // manually construct fetch call so we can add the `lang` cache-busting param
   let res = await fetch(
-    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
+    `https://api.gndr.app/xrpc/app.gndr.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}&lang=${contentLangs}`,
     {
@@ -140,7 +140,7 @@ async function loggedOutFetch({
 
   // no data, try again with language headers removed
   res = await fetch(
-    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
+    `https://api.gndr.app/xrpc/app.gndr.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}`,
     {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},

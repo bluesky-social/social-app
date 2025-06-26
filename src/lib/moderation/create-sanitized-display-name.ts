@@ -3,7 +3,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import type * as bsky from '#/types/bsky'
 
 export function createSanitizedDisplayName(
-  profile: bsky.profile.AnyProfileView,
+  profile: gndr.profile.AnyProfileView,
   noAt = false,
 ) {
   if (profile.displayName != null && profile.displayName !== '') {

@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {ChatBskyActorDefs} from '@atproto/api'
+import {ChatGndrActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -14,7 +14,7 @@ export function InboxPreview({
   profiles,
 }: // count,
 {
-  profiles: ChatBskyActorDefs.ProfileViewBasic[]
+  profiles: ChatGndrActorDefs.ProfileViewBasic[]
   count: number
 }) {
   const {_} = useLingui()

@@ -1,14 +1,14 @@
 import {
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  AppBskyGraphGetStarterPack,
-  AppBskyGraphStarterpack,
-  AppBskyRichtextFacet,
+  AppGndrFeedDefs,
+  AppGndrGraphDefs,
+  AppGndrGraphGetStarterPack,
+  AppGndrGraphStarterpack,
+  AppGndrRichtextFacet,
   AtUri,
-  BskyAgent,
+  GndrAgent,
   RichText,
 } from '@atproto/api'
-import {StarterPackView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
+import {StarterPackView} from '@atproto/api/dist/client/types/app/gndr/graph/defs'
 import {
   QueryClient,
   useMutation,
@@ -28,7 +28,7 @@ import {invalidateActorStarterPacksQuery} from '#/state/queries/actor-starter-pa
 import {STALE} from '#/state/queries/index'
 import {invalidateListMembersQuery} from '#/state/queries/list-members'
 import {useAgent} from '#/state/session'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 const RQKEY_ROOT = 'starter-pack'
 const RQKEY = ({
@@ -63,12 +63,12 @@ export function useStarterPackQuery({
     queryKey: RQKEY(uri ? {uri} : {did, rkey}),
     queryFn: async () => {
       if (!uri) {
-        uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
+        uri = `at://${did}/app.gndr.graph.starterpack/${rkey}`
       } else if (uri && !uri.startsWith('at://')) {
         uri = httpStarterPackUriToAtUri(uri) as string
       }
 
-      const res = await agent.app.bsky.graph.getStarterPack({
+      const res = await agent.app.gndr.graph.getStarterPack({
         starterPack: uri,
       })
       return res.data.starterPack
@@ -93,8 +93,8 @@ export async function invalidateStarterPack({
 interface UseCreateStarterPackMutationParams {
   name: string
   description?: string
-  profiles: bsky.profile.AnyProfileView[]
-  feeds?: AppBskyFeedDefs.GeneratorView[]
+  profiles: gndr.profile.AnyProfileView[]
+  feeds?: AppGndrFeedDefs.GeneratorView[]
 }
 
 export function useCreateStarterPackMutation({
@@ -113,7 +113,7 @@ export function useCreateStarterPackMutation({
     UseCreateStarterPackMutationParams
   >({
     mutationFn: async ({name, description, feeds, profiles}) => {
-      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      let descriptionFacets: AppGndrRichtextFacet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
         await rt.detectFacets(agent)
@@ -129,7 +129,7 @@ export function useCreateStarterPackMutation({
         agent,
       })
 
-      return await agent.app.bsky.graph.starterpack.create(
+      return await agent.app.gndr.graph.starterpack.create(
         {
           repo: agent.assertDid,
         },
@@ -173,8 +173,8 @@ export function useEditStarterPackMutation({
     void,
     Error,
     UseCreateStarterPackMutationParams & {
-      currentStarterPack: AppBskyGraphDefs.StarterPackView
-      currentListItems: AppBskyGraphDefs.ListItemView[]
+      currentStarterPack: AppGndrGraphDefs.StarterPackView
+      currentListItems: AppGndrGraphDefs.ListItemView[]
     }
   >({
     mutationFn: async ({
@@ -185,14 +185,14 @@ export function useEditStarterPackMutation({
       currentStarterPack,
       currentListItems,
     }) => {
-      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      let descriptionFacets: AppGndrRichtextFacet.Main[] | undefined
       if (description) {
         const rt = new RichText({text: description})
         await rt.detectFacets(agent)
         descriptionFacets = rt.facets
       }
 
-      if (!AppBskyGraphStarterpack.isRecord(currentStarterPack.record)) {
+      if (!AppGndrGraphStarterpack.isRecord(currentStarterPack.record)) {
         throw new Error('Invalid starter pack')
       }
 
@@ -208,7 +208,7 @@ export function useEditStarterPackMutation({
             repo: agent.session!.did,
             writes: chunk.map(i => ({
               $type: 'com.atproto.repo.applyWrites#delete',
-              collection: 'app.bsky.graph.listitem',
+              collection: 'app.gndr.graph.listitem',
               rkey: new AtUri(i.uri).rkey,
             })),
           })
@@ -225,9 +225,9 @@ export function useEditStarterPackMutation({
             repo: agent.session!.did,
             writes: chunk.map(p => ({
               $type: 'com.atproto.repo.applyWrites#create',
-              collection: 'app.bsky.graph.listitem',
+              collection: 'app.gndr.graph.listitem',
               value: {
-                $type: 'app.bsky.graph.listitem',
+                $type: 'app.gndr.graph.listitem',
                 subject: p.did,
                 list: currentStarterPack.list?.uri,
                 createdAt: new Date().toISOString(),
@@ -240,7 +240,7 @@ export function useEditStarterPackMutation({
       const rkey = parseStarterPackUri(currentStarterPack.uri)!.rkey
       await agent.com.atproto.repo.putRecord({
         repo: agent.session!.did,
-        collection: 'app.bsky.graph.starterpack',
+        collection: 'app.gndr.graph.starterpack',
         rkey,
         record: {
           name,
@@ -298,12 +298,12 @@ export function useDeleteStarterPackMutation({
       }
 
       if (listUri) {
-        await agent.app.bsky.graph.list.delete({
+        await agent.app.gndr.graph.list.delete({
           repo: agent.session.did,
           rkey: new AtUri(listUri).rkey,
         })
       }
-      await agent.app.bsky.graph.starterpack.delete({
+      await agent.app.gndr.graph.starterpack.delete({
         repo: agent.session.did,
         rkey,
       })
@@ -341,45 +341,45 @@ export function useDeleteStarterPackMutation({
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: GndrAgent,
   uri: string,
-  fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
+  fn: (res?: AppGndrGraphGetStarterPack.Response) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
+    () => agent.app.gndr.graph.getStarterPack({starterPack: uri}),
   )
 }
 
 export async function precacheStarterPack(
   queryClient: QueryClient,
   starterPack:
-    | AppBskyGraphDefs.StarterPackViewBasic
-    | AppBskyGraphDefs.StarterPackView,
+    | AppGndrGraphDefs.StarterPackViewBasic
+    | AppGndrGraphDefs.StarterPackView,
 ) {
-  if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+  if (!AppGndrGraphStarterpack.isRecord(starterPack.record)) {
     return
   }
 
-  let starterPackView: AppBskyGraphDefs.StarterPackView | undefined
-  if (AppBskyGraphDefs.isStarterPackView(starterPack)) {
+  let starterPackView: AppGndrGraphDefs.StarterPackView | undefined
+  if (AppGndrGraphDefs.isStarterPackView(starterPack)) {
     starterPackView = starterPack
   } else if (
-    AppBskyGraphDefs.isStarterPackViewBasic(starterPack) &&
-    bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
+    AppGndrGraphDefs.isStarterPackViewBasic(starterPack) &&
+    gndr.validate(starterPack.record, AppGndrGraphStarterpack.validateRecord)
   ) {
-    const listView: AppBskyGraphDefs.ListViewBasic = {
+    const listView: AppGndrGraphDefs.ListViewBasic = {
       uri: starterPack.record.list,
       // This will be populated once the data from server is fetched
       cid: '',
       name: starterPack.record.name,
-      purpose: 'app.bsky.graph.defs#referencelist',
+      purpose: 'app.gndr.graph.defs#referencelist',
     }
     starterPackView = {
       ...starterPack,
-      $type: 'app.bsky.graph.defs#starterPackView',
+      $type: 'app.gndr.graph.defs#starterPackView',
       list: listView,
     }
   }

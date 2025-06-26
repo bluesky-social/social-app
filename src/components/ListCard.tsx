@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyGraphDefs,
+  AppGndrGraphDefs,
   AtUri,
   moderateUserList,
   ModerationUI,
@@ -25,7 +25,7 @@ import {
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 /*
  * This component is based on `FeedCard` and is tightly coupled with that
@@ -42,11 +42,11 @@ export {
   TitleAndBylinePlaceholder,
 } from '#/components/FeedCard'
 
-const CURATELIST = 'app.bsky.graph.defs#curatelist'
-const MODLIST = 'app.bsky.graph.defs#modlist'
+const CURATELIST = 'app.gndr.graph.defs#curatelist'
+const MODLIST = 'app.gndr.graph.defs#modlist'
 
 type Props = {
-  view: AppBskyGraphDefs.ListView
+  view: AppGndrGraphDefs.ListView
   showPinButton?: boolean
 }
 
@@ -107,8 +107,8 @@ export function TitleAndByline({
   modUi,
 }: {
   title: string
-  creator?: bsky.profile.AnyProfileView
-  purpose?: AppBskyGraphDefs.ListView['purpose']
+  creator?: gndr.profile.AnyProfileView
+  purpose?: AppGndrGraphDefs.ListView['purpose']
   modUi?: ModerationUI
 }) {
   const t = useTheme()
@@ -157,7 +157,7 @@ export function TitleAndByline({
 export function createProfileListHref({
   list,
 }: {
-  list: AppBskyGraphDefs.ListView
+  list: AppGndrGraphDefs.ListView
 }) {
   const urip = new AtUri(list.uri)
   const handleOrDid = list.creator.handle || list.creator.did

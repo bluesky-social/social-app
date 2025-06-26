@@ -1,10 +1,10 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
-  type AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyFeedThreadgate,
+  type AppGndrActorDefs,
+  AppGndrFeedDefs,
+  AppGndrFeedPost,
+  AppGndrFeedThreadgate,
   AtUri,
   type ModerationDecision,
   RichText as RichTextAPI,
@@ -60,18 +60,18 @@ import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 interface FeedItemProps {
-  record: AppBskyFeedPost.Record
+  record: AppGndrFeedPost.Record
   reason:
-    | AppBskyFeedDefs.ReasonRepost
-    | AppBskyFeedDefs.ReasonPin
+    | AppGndrFeedDefs.ReasonRepost
+    | AppGndrFeedDefs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
     | undefined
   moderation: ModerationDecision
-  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  parentAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
   showReplyTo: boolean
   isThreadChild?: boolean
   isThreadLastChild?: boolean
@@ -101,9 +101,9 @@ export function PostFeedItem({
   rootPost,
   onShowLess,
 }: FeedItemProps & {
-  post: AppBskyFeedDefs.PostView
-  rootPost: AppBskyFeedDefs.PostView
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  post: AppGndrFeedDefs.PostView
+  rootPost: AppGndrFeedDefs.PostView
+  onShowLess?: (interaction: AppGndrFeedDefs.Interaction) => void
 }): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -165,9 +165,9 @@ let FeedItemInner = ({
   onShowLess,
 }: FeedItemProps & {
   richText: RichTextAPI
-  post: Shadow<AppBskyFeedDefs.PostView>
-  rootPost: AppBskyFeedDefs.PostView
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  post: Shadow<AppGndrFeedDefs.PostView>
+  rootPost: AppGndrFeedDefs.PostView
+  onShowLess?: (interaction: AppGndrFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
@@ -185,7 +185,7 @@ let FeedItemInner = ({
   const onPressReply = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#interactionReply',
+      event: 'app.gndr.feed.defs#interactionReply',
       feedContext,
       reqId,
     })
@@ -204,7 +204,7 @@ let FeedItemInner = ({
   const onOpenAuthor = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughAuthor',
+      event: 'app.gndr.feed.defs#clickthroughAuthor',
       feedContext,
       reqId,
     })
@@ -213,7 +213,7 @@ let FeedItemInner = ({
   const onOpenReposter = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughReposter',
+      event: 'app.gndr.feed.defs#clickthroughReposter',
       feedContext,
       reqId,
     })
@@ -222,7 +222,7 @@ let FeedItemInner = ({
   const onOpenEmbed = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughEmbed',
+      event: 'app.gndr.feed.defs#clickthroughEmbed',
       feedContext,
       reqId,
     })
@@ -231,7 +231,7 @@ let FeedItemInner = ({
   const onBeforePress = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughItem',
+      event: 'app.gndr.feed.defs#clickthroughItem',
       feedContext,
       reqId,
     })
@@ -240,7 +240,7 @@ let FeedItemInner = ({
       feed: feedDescriptor,
       post: {
         post,
-        reason: AppBskyFeedDefs.isReasonRepost(reason) ? reason : undefined,
+        reason: AppGndrFeedDefs.isReasonRepost(reason) ? reason : undefined,
         feedContext,
         reqId,
       },
@@ -262,16 +262,16 @@ let FeedItemInner = ({
 
   const {currentAccount} = useSession()
   const isOwner =
-    AppBskyFeedDefs.isReasonRepost(reason) &&
+    AppGndrFeedDefs.isReasonRepost(reason) &&
     reason.by.did === currentAccount?.did
 
   /**
    * If `post[0]` in this slice is the actual root post (not an orphan thread),
    * then we may have a threadgate record to reference
    */
-  const threadgateRecord = bsky.dangerousIsType<AppBskyFeedThreadgate.Record>(
+  const threadgateRecord = gndr.dangerousIsType<AppGndrFeedThreadgate.Record>(
     rootPost.threadgate?.record,
-    AppBskyFeedThreadgate.isRecord,
+    AppGndrFeedThreadgate.isRecord,
   )
     ? rootPost.threadgate.record
     : undefined
@@ -279,7 +279,7 @@ let FeedItemInner = ({
   const {isActive: live} = useActorStatus(post.author)
 
   const viaRepost = useMemo(() => {
-    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+    if (AppGndrFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
       return {
         uri: reason.uri,
         cid: reason.cid,
@@ -340,7 +340,7 @@ let FeedItemInner = ({
                 </Trans>
               </Text>
             </Link>
-          ) : AppBskyFeedDefs.isReasonRepost(reason) ? (
+          ) : AppGndrFeedDefs.isReasonRepost(reason) ? (
             <Link
               style={styles.includeReason}
               href={makeProfileLink(reason.by)}
@@ -396,7 +396,7 @@ let FeedItemInner = ({
                 )}
               </Text>
             </Link>
-          ) : AppBskyFeedDefs.isReasonPin(reason) ? (
+          ) : AppGndrFeedDefs.isReasonPin(reason) ? (
             <View style={styles.includeReason}>
               <PinIcon
                 style={{color: pal.colors.textLight, marginRight: 3}}
@@ -496,11 +496,11 @@ let PostContent = ({
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
-  postEmbed: AppBskyFeedDefs.PostView['embed']
-  postAuthor: AppBskyFeedDefs.PostView['author']
+  postEmbed: AppGndrFeedDefs.PostView['embed']
+  postAuthor: AppGndrFeedDefs.PostView['author']
   onOpenEmbed: () => void
-  post: AppBskyFeedDefs.PostView
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  post: AppGndrFeedDefs.PostView
+  threadgateRecord?: AppGndrFeedThreadgate.Record
 }): React.ReactNode => {
   const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = useState(
@@ -511,9 +511,9 @@ let PostContent = ({
   })
   const additionalPostAlerts: AppModerationCause[] = useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
-    const rootPostUri = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    const rootPostUri = gndr.dangerousIsType<AppGndrFeedPost.Record>(
       post.record,
-      AppBskyFeedPost.isRecord,
+      AppGndrFeedPost.isRecord,
     )
       ? post.record?.reply?.root?.uri || post.uri
       : undefined
@@ -581,7 +581,7 @@ function ReplyToLabel({
   blocked,
   notFound,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic | undefined
+  profile: AppGndrActorDefs.ProfileViewBasic | undefined
   blocked?: boolean
   notFound?: boolean
 }) {

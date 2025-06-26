@@ -1,9 +1,9 @@
-name: build-and-push-bskyweb-ghcr
+name: build-and-push-gndrweb-ghcr
 on:
   push:
     branches:
       - main
-      - jake/bskyweb-additions
+      - jake/gndrweb-additions
 env:
   REGISTRY: ghcr.io
   USERNAME: ${{ github.actor }}
@@ -13,8 +13,8 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  bskyweb-container-ghcr:
-    if: github.repository == 'bluesky-social/social-app'
+  gndrweb-container-ghcr:
+    if: github.repository == 'gander-social/social-app'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -42,7 +42,7 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,enable=true,priority=100,prefix=bskyweb:,suffix=,format=long
+            type=sha,enable=true,priority=100,prefix=gndrweb:,suffix=,format=long
 
       - name: Build and push Docker image
         id: build-and-push

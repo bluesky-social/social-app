@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
+import {type AppGndrEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type React from 'react'
@@ -23,7 +23,7 @@ export function VideoEmbed({
   embed,
   crop,
 }: {
-  embed: AppBskyEmbedVideo.View
+  embed: AppGndrEmbedVideo.View
   crop?: 'none' | 'square' | 'constrained'
 }) {
   const ref = useRef<HTMLDivElement>(null)

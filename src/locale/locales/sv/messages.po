@@ -771,8 +771,8 @@ msgid "Adult Content"
 msgstr "Vuxeninnehåll"
 
 #: src/screens/Moderation/index.tsx:374
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "Vuxeninnehåll går bara att aktivera via webben på <0>bsky.app</0>."
+msgid "Adult content can only be enabled via the Web at <0>gndr.app</0>."
+msgstr "Vuxeninnehåll går bara att aktivera via webben på <0>gndr.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -1342,8 +1342,8 @@ msgid "Bluesky is an open network where you can choose your hosting provider. If
 msgstr "Bluesky är ett öppet nätverk där du kan välja din värdleverantör. Om du är en utvecklare kan du vara värd för din egen server."
 
 #: src/view/com/auth/server-input/index.tsx:149
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "Bluesky är ett öppet nätverk där du kan välja din leverantör. Om du är ny här rekommenderar vi att du håller dig till standardalternativet Bluesky Social."
+msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
+msgstr "Bluesky är ett öppet nätverk där du kan välja din leverantör. Om du är ny här rekommenderar vi att du håller dig till standardalternativet Gander Social."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1351,8 +1351,8 @@ msgid "Bluesky is better with friends!"
 msgstr "Bluesky är bättre med vänner!"
 
 #: src/screens/Takendown.tsx:217
-msgid "Bluesky Social Terms of Service"
-msgstr "Användarvillkor för Bluesky Social"
+msgid "Gander Social Terms of Service"
+msgstr "Användarvillkor för Gander Social"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -4698,13 +4698,13 @@ msgid "Logged-out visibility"
 msgstr "Synlighet för utloggade"
 
 #: src/view/shell/desktop/RightNav.tsx:130
-msgid "Logo by @sawaratsuki.bsky.social"
-msgstr "Logotyp av @sawaratsuki.bsky.social"
+msgid "Logo by @sawaratsuki.gndr.social"
+msgstr "Logotyp av @sawaratsuki.gndr.social"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
-msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "Logotyp av <0>@sawaratsuki.bsky.social</0>"
+#: src/view/shell/Drawer.tsx:658
+msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
+msgstr "Logotyp av <0>@sawaratsuki.gndr.social</0>"
 
 #: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
@@ -10101,8 +10101,8 @@ msgid "Your account repository, containing all public data records, can be downl
 msgstr "Datakatalogen för ditt konto innehåller alla offentliga dataposter och kan laddas ner som en CAR-fil. Filen innehåller inte medieinbäddningar såsom bilder; eller privata uppgifter som behöver hämtas separat."
 
 #: src/screens/Takendown.tsx:214
-msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
-msgstr "Ditt konto har visats sig bryta mot <0>Bluesky Socials användarvillkor</0>. Ett e-postmeddelande har skickats till dig med information om den specifika överträdelsen och avstängningsperioden, om tillämpligt. Om du anser att detta beslut är felaktigt kan du begära att det omprövas."
+msgid "Your account was found to be in violation of the <0>Gander Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgstr "Ditt konto har visats sig bryta mot <0>Gander Socials användarvillkor</0>. Ett e-postmeddelande har skickats till dig med information om den specifika överträdelsen och avstängningsperioden, om tillämpligt. Om du anser att detta beslut är felaktigt kan du begära att det omprövas."
 
 #: src/screens/Takendown.tsx:154
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."

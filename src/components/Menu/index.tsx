@@ -146,7 +146,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         } else if (isIOS) {
           /**
            * Fixes a subtle bug on iOS
-           * {@link https://github.com/bluesky-social/social-app/pull/5849/files#diff-de516ef5e7bd9840cd639213301df38cf03acfcad5bda85a1d63efd249ba79deL124-L127}
+           * {@link https://github.com/gander-social/social-app/pull/5849/files#diff-de516ef5e7bd9840cd639213301df38cf03acfcad5bda85a1d63efd249ba79deL124-L127}
            */
           context.control.close(() => {
             onPress?.(e)

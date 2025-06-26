@@ -1,4 +1,4 @@
-import {AppBskyActorDefs, AppBskyGraphGetBlocks} from '@atproto/api'
+import {AppGndrActorDefs, AppGndrGraphGetBlocks} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -15,15 +15,15 @@ type RQPageParam = string | undefined
 export function useMyBlockedAccountsQuery() {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyGraphGetBlocks.OutputSchema,
+    AppGndrGraphGetBlocks.OutputSchema,
     Error,
-    InfiniteData<AppBskyGraphGetBlocks.OutputSchema>,
+    InfiniteData<AppGndrGraphGetBlocks.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getBlocks({
+      const res = await agent.app.gndr.graph.getBlocks({
         limit: 30,
         cursor: pageParam,
       })
@@ -37,9 +37,9 @@ export function useMyBlockedAccountsQuery() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyGraphGetBlocks.OutputSchema>
+    InfiniteData<AppGndrGraphGetBlocks.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })

@@ -280,7 +280,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       <UserAvatar
                         avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
                         size={iconWidth - 2}
-                        // See https://github.com/bluesky-social/social-app/pull/1801:
+                        // See https://github.com/gander-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
                         live={live}
@@ -300,7 +300,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       <UserAvatar
                         avatar={demoMode ? BOTTOM_BAR_AVI : profile?.avatar}
                         size={iconWidth - 2}
-                        // See https://github.com/bluesky-social/social-app/pull/1801:
+                        // See https://github.com/gander-social/social-app/pull/1801:
                         usePlainRNImage={true}
                         type={profile?.associated?.labeler ? 'labeler' : 'user'}
                         live={live}

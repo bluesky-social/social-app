@@ -1,7 +1,7 @@
 import {
   type $Typed,
-  type AppBskyActorStatus,
-  type AppBskyEmbedExternal,
+  type AppGndrActorStatus,
+  type AppGndrEmbedExternal,
   ComAtprotoRepoPutRecord,
 } from '@atproto/api'
 import {retry} from '@atproto/common-web'
@@ -59,7 +59,7 @@ export function useUpsertLiveStatusMutation(
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      let embed: $Typed<AppBskyEmbedExternal.Main> | undefined
+      let embed: $Typed<AppGndrEmbedExternal.Main> | undefined
 
       if (linkMeta) {
         let thumb
@@ -85,9 +85,9 @@ export function useUpsertLiveStatusMutation(
         }
 
         embed = {
-          $type: 'app.bsky.embed.external',
+          $type: 'app.gndr.embed.external',
           external: {
-            $type: 'app.bsky.embed.external#external',
+            $type: 'app.gndr.embed.external#external',
             title: linkMeta.title ?? '',
             description: linkMeta.description ?? '',
             uri: linkMeta.url,
@@ -97,16 +97,16 @@ export function useUpsertLiveStatusMutation(
       }
 
       const record = {
-        $type: 'app.bsky.actor.status',
+        $type: 'app.gndr.actor.status',
         createdAt: createdAt ?? new Date().toISOString(),
-        status: 'app.bsky.actor.status#live',
+        status: 'app.gndr.actor.status#live',
         durationMinutes: duration,
         embed,
-      } satisfies AppBskyActorStatus.Record
+      } satisfies AppGndrActorStatus.Record
 
       const upsert = async () => {
         const repo = currentAccount.did
-        const collection = 'app.bsky.actor.status'
+        const collection = 'app.gndr.actor.status'
 
         const existing = await agent.com.atproto.repo
           .getRecord({repo, collection, rkey: 'self'})
@@ -162,17 +162,17 @@ export function useUpsertLiveStatusMutation(
 
         updateProfileShadow(queryClient, currentAccount.did, {
           status: {
-            $type: 'app.bsky.actor.defs#statusView',
-            status: 'app.bsky.actor.status#live',
+            $type: 'app.gndr.actor.defs#statusView',
+            status: 'app.gndr.actor.status#live',
             isActive: true,
             expiresAt: expiresAt.toISOString(),
             embed:
               record.embed && image
                 ? {
-                    $type: 'app.bsky.embed.external#view',
+                    $type: 'app.gndr.embed.external#view',
                     external: {
                       ...record.embed.external,
-                      $type: 'app.bsky.embed.external#viewExternal',
+                      $type: 'app.gndr.embed.external#viewExternal',
                       thumb: image,
                     },
                   }
@@ -196,7 +196,7 @@ export function useRemoveLiveStatusMutation() {
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      await agent.app.bsky.actor.status.delete({
+      await agent.app.gndr.actor.status.delete({
         repo: currentAccount.did,
         rkey: 'self',
       })

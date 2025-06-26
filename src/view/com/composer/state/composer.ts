@@ -1,8 +1,8 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
-  type AppBskyFeedPostgate,
-  AppBskyRichtextFacet,
-  type BskyPreferences,
+  type AppGndrFeedPostgate,
+  AppGndrRichtextFacet,
+  type GndrPreferences,
   RichText,
 } from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
@@ -11,9 +11,9 @@ import {type SelfLabel} from '#/lib/moderation'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {
-  isBskyPostUrl,
+  isGndrPostUrl,
   postUriToRelativePath,
-  toBskyAppUrl,
+  toGndrAppUrl,
 } from '#/lib/strings/url-helpers'
 import {type ComposerImage, createInitialImages} from '#/state/gallery'
 import {createPostgateRecord} from '#/state/queries/postgate/util'
@@ -93,7 +93,7 @@ export type PostAction =
 
 export type ThreadDraft = {
   posts: PostDraft[]
-  postgate: AppBskyFeedPostgate.Record
+  postgate: AppGndrFeedPostgate.Record
   threadgate: ThreadgateAllowUISetting[]
 }
 
@@ -104,7 +104,7 @@ export type ComposerState = {
 }
 
 export type ComposerAction =
-  | {type: 'update_postgate'; postgate: AppBskyFeedPostgate.Record}
+  | {type: 'update_postgate'; postgate: AppGndrFeedPostgate.Record}
   | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
   | {
       type: 'update_post'
@@ -383,7 +383,7 @@ function postReducer(state: PostDraft, action: PostAction): PostDraft {
       const prevLink = state.embed.link
       let nextQuote = prevQuote
       let nextLink = prevLink
-      if (isBskyPostUrl(action.uri)) {
+      if (isGndrPostUrl(action.uri)) {
         if (!prevQuote) {
           nextQuote = {
             type: 'link',
@@ -494,7 +494,7 @@ export function createComposerState({
   initImageUris: ComposerOpts['imageUris']
   initQuoteUri: string | undefined
   initInteractionSettings:
-    | BskyPreferences['postInteractionSettings']
+    | GndrPreferences['postInteractionSettings']
     | undefined
 }): ComposerState {
   let media: ImagesMedia | undefined
@@ -511,7 +511,7 @@ export function createComposerState({
     if (path) {
       quote = {
         type: 'link',
-        uri: toBskyAppUrl(path),
+        uri: toGndrAppUrl(path),
       }
     }
   }
@@ -545,8 +545,8 @@ export function createComposerState({
     if (initRichText.facets) {
       for (const facet of initRichText.facets) {
         for (const feature of facet.features) {
-          if (AppBskyRichtextFacet.isLink(feature)) {
-            if (isBskyPostUrl(feature.uri)) {
+          if (AppGndrRichtextFacet.isLink(feature)) {
+            if (isGndrPostUrl(feature.uri)) {
               detectedPostUris.set(feature.uri, {facet, rt: initRichText})
             } else {
               detectedExtUris.set(feature.uri, {facet, rt: initRichText})
@@ -610,7 +610,7 @@ export function createComposerState({
         embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
       }),
       threadgate: threadgateRecordToAllowUISetting({
-        $type: 'app.bsky.feed.threadgate',
+        $type: 'app.gndr.feed.threadgate',
         post: '',
         createdAt: new Date().toString(),
         allow: initInteractionSettings?.threadgateAllowRules,

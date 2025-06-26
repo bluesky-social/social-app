@@ -46,9 +46,9 @@ function createTenorApi<Input extends object>(
     params.set(
       'client_key',
       Platform.select({
-        ios: 'bluesky-ios',
-        android: 'bluesky-android',
-        default: 'bluesky-web',
+        ios: 'gander-ios',
+        android: 'gander-android',
+        default: 'gander-web',
       }),
     )
 

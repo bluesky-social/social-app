@@ -378,10 +378,10 @@ export function ModerationScreenInner({
                         to=""
                         onPress={evt => {
                           evt.preventDefault()
-                          Linking.openURL('https://bsky.app/')
+                          Linking.openURL('https://gndr.app/')
                           return false
                         }}>
-                        bsky.app
+                        gndr.app
                       </InlineLinkText>
                       .
                     </Trans>

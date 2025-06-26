@@ -1,4 +1,4 @@
-import {AppBskyFeedGetActorFeeds, moderateFeedGenerator} from '@atproto/api'
+import {AppGndrFeedGetActorFeeds, moderateFeedGenerator} from '@atproto/api'
 import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
@@ -19,15 +19,15 @@ export function useProfileFeedgensQuery(
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyFeedGetActorFeeds.OutputSchema,
+    AppGndrFeedGetActorFeeds.OutputSchema,
     Error,
-    InfiniteData<AppBskyFeedGetActorFeeds.OutputSchema>,
+    InfiniteData<AppGndrFeedGetActorFeeds.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.feed.getActorFeeds({
+      const res = await agent.app.gndr.feed.getActorFeeds({
         actor: did,
         limit: PAGE_SIZE,
         cursor: pageParam,

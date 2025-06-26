@@ -12,7 +12,7 @@ import * as Layout from '#/components/Layout'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>
 export const PostRepostedByScreen = ({route}: Props) => {
   const {name, rkey} = route.params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+  const uri = makeRecordUri(name, 'app.gndr.feed.post', rkey)
   const setMinimalShellMode = useSetMinimalShellMode()
   const {data: post} = usePostThreadQuery(uri)
 

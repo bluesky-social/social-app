@@ -89,7 +89,7 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
 
     /**
      * Overridden to previous spacing for the `system` font option.
-     * https://github.com/bluesky-social/social-app/commit/2419096e2409008b7d71fd6b8f8d0dd5b016e267
+     * https://github.com/gander-social/social-app/commit/2419096e2409008b7d71fd6b8f8d0dd5b016e267
      */
     style.letterSpacing = 0.25
   }

@@ -5,7 +5,7 @@ import {
   runOnJS,
   useSharedValue,
 } from 'react-native-reanimated'
-import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
+import {updateActiveVideoViewAsync} from '@haileyok/gander-video'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useDedupe} from '#/lib/hooks/useDedupe'
@@ -68,7 +68,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
     }
 
     // Intentionally destructured outside the main thread closure.
-    // See https://github.com/bluesky-social/social-app/pull/4108.
+    // See https://github.com/gander-social/social-app/pull/4108.
     const {
       onBeginDrag: onBeginDragFromContext,
       onEndDrag: onEndDragFromContext,

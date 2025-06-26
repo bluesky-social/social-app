@@ -76,7 +76,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const activeProgressGuide = useMemo(() => {
     const rawProgressGuide = (
-      isPending ? variables : preferences?.bskyAppState?.activeProgressGuide
+      isPending ? variables : preferences?.gndrAppState?.activeProgressGuide
     ) as ProgressGuide
 
     if (!rawProgressGuide) return undefined

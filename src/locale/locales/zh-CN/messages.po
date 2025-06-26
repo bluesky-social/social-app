@@ -771,8 +771,8 @@ msgid "Adult Content"
 msgstr "成人内容"
 
 #: src/screens/Moderation/index.tsx:374
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "仅可通过网页端（<0>bsky.app</0>）启用成人内容显示。"
+msgid "Adult content can only be enabled via the Web at <0>gndr.app</0>."
+msgstr "仅可通过网页端（<0>gndr.app</0>）启用成人内容显示。"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -1342,8 +1342,8 @@ msgid "Bluesky is an open network where you can choose your hosting provider. If
 msgstr "Bluesky 是一个开放的社交网络，你可以自行选择托管服务提供商。如果你是开发者，你还可以托管自己的服务器。"
 
 #: src/view/com/auth/server-input/index.tsx:149
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "Bluesky 是一个开放的社交网络，你可以自行选择托管服务提供商。但如果你是新用户，我们建议你选择默认的 Bluesky Social 选项。"
+msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
+msgstr "Bluesky 是一个开放的社交网络，你可以自行选择托管服务提供商。但如果你是新用户，我们建议你选择默认的 Gander Social 选项。"
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1351,7 +1351,7 @@ msgid "Bluesky is better with friends!"
 msgstr "与天友们一起，Bluesky 更美好！"
 
 #: src/screens/Takendown.tsx:217
-msgid "Bluesky Social Terms of Service"
+msgid "Gander Social Terms of Service"
 msgstr "Bluesky 服务条款"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
@@ -4698,13 +4698,13 @@ msgid "Logged-out visibility"
 msgstr "未登录用户可见性"
 
 #: src/view/shell/desktop/RightNav.tsx:130
-msgid "Logo by @sawaratsuki.bsky.social"
-msgstr "网站标志由 @sawaratsuki.bsky.social 绘制"
+msgid "Logo by @sawaratsuki.gndr.social"
+msgstr "网站标志由 @sawaratsuki.gndr.social 绘制"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
-msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "网站标志由 <0>@sawaratsuki.bsky.social</0> 绘制"
+#: src/view/shell/Drawer.tsx:658
+msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
+msgstr "网站标志由 <0>@sawaratsuki.gndr.social</0> 绘制"
 
 #: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
@@ -10101,7 +10101,7 @@ msgid "Your account repository, containing all public data records, can be downl
 msgstr "你可以将你的账户数据导出为一个“CAR”文件，该文件包含了该账户所有公开的数据记录，但不包括任何嵌入媒体，例如图像或你的私人资料，这些数据需要另外获取。"
 
 #: src/screens/Takendown.tsx:214
-msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgid "Your account was found to be in violation of the <0>Gander Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr "你的账户被判定违反了<0>Bluesky 服务条款</0>。你应该已收到一封电子邮件，其中包含了具体的停用原因及停用时长（如适用）。若你认为你的账户被错误停用，你可以随时提出申诉。"
 
 #: src/screens/Takendown.tsx:154

@@ -1,9 +1,9 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
-  AppBskyActorStatus,
-  type AppBskyEmbedExternal,
+  type AppGndrActorDefs,
+  AppGndrActorStatus,
+  type AppGndrEmbedExternal,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -35,8 +35,8 @@ export function EditLiveDialog({
   embed,
 }: {
   control: Dialog.DialogControlProps
-  status: AppBskyActorDefs.StatusView
-  embed: AppBskyEmbedExternal.View
+  status: AppGndrActorDefs.StatusView
+  embed: AppGndrEmbedExternal.View
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -50,8 +50,8 @@ function DialogInner({
   status,
   embed,
 }: {
-  status: AppBskyActorDefs.StatusView
-  embed: AppBskyEmbedExternal.View
+  status: AppGndrActorDefs.StatusView
+  embed: AppGndrEmbedExternal.View
 }) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
@@ -74,8 +74,8 @@ function DialogInner({
   } = useLiveLinkMetaQuery(debouncedUrl)
 
   const record = useMemo(() => {
-    if (!AppBskyActorStatus.isRecord(status.record)) return null
-    const validation = AppBskyActorStatus.validateRecord(status.record)
+    if (!AppGndrActorStatus.isRecord(status.record)) return null
+    const validation = AppGndrActorStatus.validateRecord(status.record)
     if (validation.success) {
       return validation.value
     }

@@ -1,7 +1,7 @@
 import React from 'react'
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -208,7 +208,7 @@ function SavedFeedsInner({
               <TextLink
                 type="sm"
                 style={pal.link}
-                href="https://github.com/bluesky-social/feed-generator"
+                href="https://github.com/gander-social/feed-generator"
                 text={_(msg`See this guide`)}
               />{' '}
               for more information.
@@ -226,10 +226,10 @@ function ListItem({
   currentFeeds,
   setCurrentFeeds,
 }: {
-  feed: AppBskyActorDefs.SavedFeed
+  feed: AppGndrActorDefs.SavedFeed
   isPinned: boolean
-  currentFeeds: AppBskyActorDefs.SavedFeed[]
-  setCurrentFeeds: React.Dispatch<AppBskyActorDefs.SavedFeed[]>
+  currentFeeds: AppGndrActorDefs.SavedFeed[]
+  setCurrentFeeds: React.Dispatch<AppGndrActorDefs.SavedFeed[]>
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()

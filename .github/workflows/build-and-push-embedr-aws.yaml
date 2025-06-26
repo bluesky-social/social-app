@@ -12,7 +12,7 @@ env:
 
 jobs:
   embedr-container-aws:
-    if: github.repository == 'bluesky-social/social-app'
+    if: github.repository == 'gander-social/social-app'
     runs-on: ubuntu-latest
     permissions:
       contents: read

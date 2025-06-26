@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs, AppBskyFeedGetTimeline, BskyAgent} from '@atproto/api'
+import {AppGndrFeedDefs, AppGndrFeedGetTimeline, GndrAgent} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
 
 import {bundleAsync} from '#/lib/async/bundle'
@@ -9,14 +9,14 @@ import {FeedParams} from '#/state/queries/post-feed'
 import {FeedTuner} from '../feed-manip'
 import {FeedTunerFn} from '../feed-manip'
 import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
-import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
+import {createGndrTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
 
 export class MergeFeedAPI implements FeedAPI {
   userInterests?: string
-  agent: BskyAgent
+  agent: GndrAgent
   params: FeedParams
   feedTuners: FeedTunerFn[]
   following: MergeFeedSource_Following
@@ -31,7 +31,7 @@ export class MergeFeedAPI implements FeedAPI {
     feedTuners,
     userInterests,
   }: {
-    agent: BskyAgent
+    agent: GndrAgent
     feedParams: FeedParams
     feedTuners: FeedTunerFn[]
     userInterests?: string
@@ -72,7 +72,7 @@ export class MergeFeedAPI implements FeedAPI {
     }
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost> {
     const res = await this.agent.getTimeline({
       limit: 1,
     })
@@ -119,7 +119,7 @@ export class MergeFeedAPI implements FeedAPI {
     await Promise.all(promises)
 
     // assemble a response by sampling from feeds with content
-    const posts: AppBskyFeedDefs.FeedViewPost[] = []
+    const posts: AppGndrFeedDefs.FeedViewPost[] = []
     while (posts.length < limit) {
       let slice = this.sampleItem()
       if (slice[0]) {
@@ -167,18 +167,18 @@ export class MergeFeedAPI implements FeedAPI {
 }
 
 class MergeFeedSource {
-  agent: BskyAgent
+  agent: GndrAgent
   feedTuners: FeedTunerFn[]
   sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
-  queue: AppBskyFeedDefs.FeedViewPost[] = []
+  queue: AppGndrFeedDefs.FeedViewPost[] = []
   hasMore = true
 
   constructor({
     agent,
     feedTuners,
   }: {
-    agent: BskyAgent
+    agent: GndrAgent
     feedTuners: FeedTunerFn[]
   }) {
     this.agent = agent
@@ -193,7 +193,7 @@ class MergeFeedSource {
     return this.hasMore && this.queue.length === 0
   }
 
-  take(n: number): AppBskyFeedDefs.FeedViewPost[] {
+  take(n: number): AppGndrFeedDefs.FeedViewPost[] {
     return this.queue.splice(0, n)
   }
 
@@ -218,7 +218,7 @@ class MergeFeedSource {
   protected _getFeed(
     _cursor: string | undefined,
     _limit: number,
-  ): Promise<AppBskyFeedGetTimeline.Response> {
+  ): Promise<AppGndrFeedGetTimeline.Response> {
     throw new Error('Must be overridden')
   }
 }
@@ -233,7 +233,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
   protected async _getFeed(
     cursor: string | undefined,
     limit: number,
-  ): Promise<AppBskyFeedGetTimeline.Response> {
+  ): Promise<AppGndrFeedGetTimeline.Response> {
     const res = await this.agent.getTimeline({cursor, limit})
     // run the tuner pre-emptively to ensure better mixing
     const slices = this.tuner.tune(res.data.feed, {
@@ -245,7 +245,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
 }
 
 class MergeFeedSource_Custom extends MergeFeedSource {
-  agent: BskyAgent
+  agent: GndrAgent
   minDate: Date
   feedUri: string
   userInterests?: string
@@ -256,7 +256,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     feedTuners,
     userInterests,
   }: {
-    agent: BskyAgent
+    agent: GndrAgent
     feedUri: string
     feedTuners: FeedTunerFn[]
     userInterests?: string
@@ -279,11 +279,11 @@ class MergeFeedSource_Custom extends MergeFeedSource {
   protected async _getFeed(
     cursor: string | undefined,
     limit: number,
-  ): Promise<AppBskyFeedGetTimeline.Response> {
+  ): Promise<AppGndrFeedGetTimeline.Response> {
     try {
       const contentLangs = getContentLanguages().join(',')
       const isBlueskyOwned = isBlueskyOwnedFeed(this.feedUri)
-      const res = await this.agent.app.bsky.feed.getFeed(
+      const res = await this.agent.app.gndr.feed.getFeed(
         {
           cursor,
           limit,
@@ -292,7 +292,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
         {
           headers: {
             ...(isBlueskyOwned
-              ? createBskyTopicsHeader(this.userInterests)
+              ? createGndrTopicsHeader(this.userInterests)
               : {}),
             'Accept-Language': contentLangs,
           },

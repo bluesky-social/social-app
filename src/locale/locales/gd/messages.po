@@ -771,8 +771,8 @@ msgid "Adult Content"
 msgstr "Susbaint inbheach"
 
 #: src/screens/Moderation/index.tsx:374
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "Chan urrainn dhut susbaint inbheach a chur an comas ach air an lìon aig <0>bsky.app</0>."
+msgid "Adult content can only be enabled via the Web at <0>gndr.app</0>."
+msgstr "Chan urrainn dhut susbaint inbheach a chur an comas ach air an lìon aig <0>gndr.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -1342,8 +1342,8 @@ msgid "Bluesky is an open network where you can choose your hosting provider. If
 msgstr "’S e lìonra fosgailte a th’ ann am Bluesky far an urrainn dhut solaraiche òstaireachd a thaghadh thu fhèin. Mas e neach-leasachaidh a th’ annad, is urrainn dhut frithealaiche a chur air chois thu fhèin."
 
 #: src/view/com/auth/server-input/index.tsx:149
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "’S e lìonra fosgailte a th’ ann am Bluesky far an urrainn dhut solaraiche a thaghadh thu fhèin. Ma tha thu air ùr-thighinn dhan àite, mholamaid dhut a’ bhun-roghainn, Bluesky Social, a chleachdadh an toiseach."
+msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
+msgstr "’S e lìonra fosgailte a th’ ann am Bluesky far an urrainn dhut solaraiche a thaghadh thu fhèin. Ma tha thu air ùr-thighinn dhan àite, mholamaid dhut a’ bhun-roghainn, Gander Social, a chleachdadh an toiseach."
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1351,8 +1351,8 @@ msgid "Bluesky is better with friends!"
 msgstr "Tha Bluesky nas fheàrr le caraidean!"
 
 #: src/screens/Takendown.tsx:217
-msgid "Bluesky Social Terms of Service"
-msgstr "Teirmichean na seirbheise aig Bluesky Social"
+msgid "Gander Social Terms of Service"
+msgstr "Teirmichean na seirbheise aig Gander Social"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -4698,13 +4698,13 @@ msgid "Logged-out visibility"
 msgstr "Faicsinneachd do dhaoine a chlàraich a-mach"
 
 #: src/view/shell/desktop/RightNav.tsx:130
-msgid "Logo by @sawaratsuki.bsky.social"
-msgstr "An suaicheantas le @sawaratsuki.bsky.social"
+msgid "Logo by @sawaratsuki.gndr.social"
+msgstr "An suaicheantas le @sawaratsuki.gndr.social"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
-msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "An suaicheantas le <0>@sawaratsuki.bsky.social</0>"
+#: src/view/shell/Drawer.tsx:658
+msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
+msgstr "An suaicheantas le <0>@sawaratsuki.gndr.social</0>"
 
 #: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
@@ -10101,8 +10101,8 @@ msgid "Your account repository, containing all public data records, can be downl
 msgstr "’S urrainn dhut ionad-tasgaidh a’ chunntais agad, a’ gabhail a-staigh na clàran dàta poblach air fad, a luchdadh a-nuas mar fhaidhle “CAR”. Cha bhi meadhanan leabaichte, mar dhealbhan, no an dàta prìobhaideach agad san fhaidhle seo agus feumaidh tu greim fhaighinn air seo fa leth."
 
 #: src/screens/Takendown.tsx:214
-msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
-msgstr "Chaidh co-dhùnadh gu bheil an cunntas agad a’ briseadh <0>teirmichean na seirbheise aig Bluesky Social</0>. Chaidh post-d a chur thugad a mhìnicheas mar a bhris thu iad agus dè cho fada ’s a bhios e na dhàil, mas e sin a rinneadh. ’S urrainn dhut ath-thagradh a thogail an aghaidh a’ cho-dhùnaidh seo mas e mearachd a th’ ann nad bheachd."
+msgid "Your account was found to be in violation of the <0>Gander Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgstr "Chaidh co-dhùnadh gu bheil an cunntas agad a’ briseadh <0>teirmichean na seirbheise aig Gander Social</0>. Chaidh post-d a chur thugad a mhìnicheas mar a bhris thu iad agus dè cho fada ’s a bhios e na dhàil, mas e sin a rinneadh. ’S urrainn dhut ath-thagradh a thogail an aghaidh a’ cho-dhùnaidh seo mas e mearachd a th’ ann nad bheachd."
 
 #: src/screens/Takendown.tsx:154
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."

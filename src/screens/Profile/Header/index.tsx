@@ -8,8 +8,8 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
-  AppBskyActorDefs,
-  AppBskyLabelerDefs,
+  AppGndrActorDefs,
+  AppGndrLabelerDefs,
   ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -48,8 +48,8 @@ ProfileHeaderLoading = memo(ProfileHeaderLoading)
 export {ProfileHeaderLoading}
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  profile: AppGndrActorDefs.ProfileViewDetailed
+  labeler: AppGndrLabelerDefs.LabelerViewDetailed | undefined
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -89,7 +89,7 @@ const MinimalHeader = React.memo(function MinimalHeader({
   onLayout,
 }: {
   onLayout: (e: LayoutChangeEvent) => void
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
   hideBackButton?: boolean
 }) {
   const t = useTheme()

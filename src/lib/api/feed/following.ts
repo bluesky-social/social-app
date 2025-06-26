@@ -1,15 +1,15 @@
-import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
+import {AppGndrFeedDefs, GndrAgent} from '@atproto/api'
 
 import {FeedAPI, FeedAPIResponse} from './types'
 
 export class FollowingFeedAPI implements FeedAPI {
-  agent: BskyAgent
+  agent: GndrAgent
 
-  constructor({agent}: {agent: BskyAgent}) {
+  constructor({agent}: {agent: GndrAgent}) {
     this.agent = agent
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost> {
     const res = await this.agent.getTimeline({
       limit: 1,
     })

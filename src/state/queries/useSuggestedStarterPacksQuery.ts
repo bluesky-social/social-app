@@ -2,7 +2,7 @@ import {useQuery} from '@tanstack/react-query'
 
 import {
   aggregateUserInterests,
-  createBskyTopicsHeader,
+  createGndrTopicsHeader,
 } from '#/lib/api/feed/utils'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
@@ -23,11 +23,11 @@ export function useSuggestedStarterPacksQuery({enabled}: {enabled?: boolean}) {
     staleTime: STALE.MINUTES.THREE,
     queryKey: createSuggestedStarterPacksQueryKey(),
     async queryFn() {
-      const {data} = await agent.app.bsky.unspecced.getSuggestedStarterPacks(
+      const {data} = await agent.app.gndr.unspecced.getSuggestedStarterPacks(
         undefined,
         {
           headers: {
-            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+            ...createGndrTopicsHeader(aggregateUserInterests(preferences)),
             'Accept-Language': contentLangs,
           },
         },

@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppGndrActorDefs} from '@atproto/api'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,7 +13,7 @@ import {Text} from '#/components/Typography'
 export function ProfileHeaderMetrics({
   profile,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<AppGndrActorDefs.ProfileViewDetailed>
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()

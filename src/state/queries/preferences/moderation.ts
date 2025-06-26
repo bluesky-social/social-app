@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  BskyAgent,
+  GndrAgent,
   DEFAULT_LABEL_SETTINGS,
   interpretLabelValueDefinitions,
 } from '@atproto/api'
@@ -25,7 +25,7 @@ export function useMyLabelersQuery({
   const prefs = usePreferencesQuery()
   let dids = Array.from(
     new Set(
-      BskyAgent.appLabelers.concat(
+      GndrAgent.appLabelers.concat(
         prefs.data?.moderationPrefs.labelers.map(l => l.did) || [],
       ),
     ),

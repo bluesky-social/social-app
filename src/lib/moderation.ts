@@ -1,7 +1,7 @@
 import React from 'react'
 import {
-  type AppBskyLabelerDefs,
-  BskyAgent,
+  type AppGndrLabelerDefs,
+  GndrAgent,
   type ComAtprotoLabelDefs,
   type InterpretedLabelValueDefinition,
   LABELS,
@@ -84,20 +84,20 @@ export function lookupLabelValueDefinition(
 export function isAppLabeler(
   labeler:
     | string
-    | AppBskyLabelerDefs.LabelerView
-    | AppBskyLabelerDefs.LabelerViewDetailed,
+    | AppGndrLabelerDefs.LabelerView
+    | AppGndrLabelerDefs.LabelerViewDetailed,
 ): boolean {
   if (typeof labeler === 'string') {
-    return BskyAgent.appLabelers.includes(labeler)
+    return GndrAgent.appLabelers.includes(labeler)
   }
-  return BskyAgent.appLabelers.includes(labeler.creator.did)
+  return GndrAgent.appLabelers.includes(labeler.creator.did)
 }
 
 export function isLabelerSubscribed(
   labeler:
     | string
-    | AppBskyLabelerDefs.LabelerView
-    | AppBskyLabelerDefs.LabelerViewDetailed,
+    | AppGndrLabelerDefs.LabelerView
+    | AppGndrLabelerDefs.LabelerViewDetailed,
   modOpts: ModerationOpts,
 ) {
   labeler = typeof labeler === 'string' ? labeler : labeler.creator.did

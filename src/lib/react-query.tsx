@@ -21,7 +21,7 @@ async function checkIsOnline(): Promise<boolean> {
     setTimeout(() => {
       controller.abort()
     }, 15e3)
-    const res = await fetch('https://public.api.bsky.app/xrpc/_health', {
+    const res = await fetch('https://public.api.gndr.app/xrpc/_health', {
       cache: 'no-store',
       signal: controller.signal,
     })

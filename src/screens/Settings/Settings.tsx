@@ -2,7 +2,7 @@ import {useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {type AppGndrActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -289,7 +289,7 @@ export function SettingsScreen({}: Props) {
 function ProfilePreview({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -481,7 +481,7 @@ function AccountRow({
   pendingDid,
   onPressSwitchAccount,
 }: {
-  profile?: AppBskyActorDefs.ProfileViewDetailed
+  profile?: AppGndrActorDefs.ProfileViewDetailed
   account: SessionAccount
   pendingDid: string | null
   onPressSwitchAccount: (

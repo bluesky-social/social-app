@@ -33,7 +33,7 @@ import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
-import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
+import {updateActiveViewAsync} from '../../../modules/expo-gander-swiss-army/src/VisibilityView'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 

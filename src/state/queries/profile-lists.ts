@@ -1,4 +1,4 @@
-import {AppBskyGraphGetLists, moderateUserList} from '@atproto/api'
+import {AppGndrGraphGetLists, moderateUserList} from '@atproto/api'
 import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
@@ -15,15 +15,15 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyGraphGetLists.OutputSchema,
+    AppGndrGraphGetLists.OutputSchema,
     Error,
-    InfiniteData<AppBskyGraphGetLists.OutputSchema>,
+    InfiniteData<AppGndrGraphGetLists.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getLists({
+      const res = await agent.app.gndr.graph.getLists({
         actor: did,
         limit: PAGE_SIZE,
         cursor: pageParam,

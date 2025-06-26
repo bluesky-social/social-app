@@ -771,8 +771,8 @@ msgid "Adult Content"
 msgstr "Вміст для дорослих"
 
 #: src/screens/Moderation/index.tsx:374
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "Вміст для дорослих може бути увімкнено лише через вебверсію <0>bsky.app</0>."
+msgid "Adult content can only be enabled via the Web at <0>gndr.app</0>."
+msgstr "Вміст для дорослих може бути увімкнено лише через вебверсію <0>gndr.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -1342,7 +1342,7 @@ msgid "Bluesky is an open network where you can choose your hosting provider. If
 msgstr "Bluesky — відкрита мережа, в якій ви можете обрати свого хостинг-провайдера. Якщо ви розробник, ви можете розмістити свій власний сервер."
 
 #: src/view/com/auth/server-input/index.tsx:149
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
+msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
 msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:53
@@ -1351,7 +1351,7 @@ msgid "Bluesky is better with friends!"
 msgstr "Bluesky найкращий з друзями!"
 
 #: src/screens/Takendown.tsx:217
-msgid "Bluesky Social Terms of Service"
+msgid "Gander Social Terms of Service"
 msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
@@ -4698,13 +4698,13 @@ msgid "Logged-out visibility"
 msgstr "Видимість для користувачів без облікового запису"
 
 #: src/view/shell/desktop/RightNav.tsx:130
-msgid "Logo by @sawaratsuki.bsky.social"
+msgid "Logo by @sawaratsuki.gndr.social"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
-msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "Лого від <0>@sawaratsuki.bsky.social</0>"
+#: src/view/shell/Drawer.tsx:658
+msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
+msgstr "Лого від <0>@sawaratsuki.gndr.social</0>"
 
 #: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
@@ -10101,7 +10101,7 @@ msgid "Your account repository, containing all public data records, can be downl
 msgstr "Дані з вашого облікового запису, які містять усі загальнодоступні записи, можна завантажити як \"CAR\" файл. Цей файл не містить медіафайлів, таких як зображення, або особисті дані, які необхідно отримати окремо."
 
 #: src/screens/Takendown.tsx:214
-msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgid "Your account was found to be in violation of the <0>Gander Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr ""
 
 #: src/screens/Takendown.tsx:154

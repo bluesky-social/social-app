@@ -42,14 +42,14 @@ import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/componen
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 import {ProgressGuideTask} from './Task'
 
 type Item =
   | {
       type: 'profile'
       key: string
-      profile: bsky.profile.AnyProfileView
+      profile: gndr.profile.AnyProfileView
     }
   | {
       type: 'empty'
@@ -559,7 +559,7 @@ let FollowProfileCard = ({
   moderationOpts,
   noBorder,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   noBorder?: boolean
 }): React.ReactNode => {
@@ -579,7 +579,7 @@ function FollowProfileCardInner({
   onFollow,
   noBorder,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onFollow?: () => void
   noBorder?: boolean

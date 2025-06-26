@@ -1,4 +1,4 @@
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppGndrActorDefs} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {preferencesQueryKey} from '#/state/queries/preferences'
@@ -8,7 +8,7 @@ export function usePostInteractionSettingsMutation() {
   const qc = useQueryClient()
   const agent = useAgent()
   return useMutation({
-    async mutationFn(props: AppBskyActorDefs.PostInteractionSettingsPref) {
+    async mutationFn(props: AppGndrActorDefs.PostInteractionSettingsPref) {
       await agent.setPostInteractionSettings(props)
     },
     async onSuccess() {

@@ -71,7 +71,7 @@ export function MessageInput({
       // Don't submit the form when the Japanese or any other IME is composing
       if (isComposing.current) return
 
-      // see https://github.com/bluesky-social/social-app/issues/4178
+      // see https://github.com/gander-social/social-app/issues/4178
       // see https://www.stum.de/2016/06/24/handling-ime-events-in-javascript/
       // see https://lists.w3.org/Archives/Public/www-dom/2010JulSep/att-0182/keyCode-spec.html
       //

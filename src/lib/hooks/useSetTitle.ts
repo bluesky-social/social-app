@@ -2,7 +2,7 @@ import {useEffect} from 'react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
-import {bskyTitle} from '#/lib/strings/headings'
+import {gndrTitle} from '#/lib/strings/headings'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 
 export function useSetTitle(title?: string) {
@@ -10,7 +10,7 @@ export function useSetTitle(title?: string) {
   const numUnread = useUnreadNotifications()
   useEffect(() => {
     if (title) {
-      navigation.setOptions({title: bskyTitle(title, numUnread)})
+      navigation.setOptions({title: gndrTitle(title, numUnread)})
     }
   }, [title, navigation, numUnread])
 }

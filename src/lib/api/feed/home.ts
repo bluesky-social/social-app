@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
+import {AppGndrFeedDefs, GndrAgent} from '@atproto/api'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {CustomFeedAPI} from './custom'
@@ -13,7 +13,7 @@ import {FeedAPI, FeedAPIResponse} from './types'
 // we use this fallback marker post to drive this instead. see Feed.tsx
 // for the usage.
 // -prf
-export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
+export const FALLBACK_MARKER_POST: AppGndrFeedDefs.FeedViewPost = {
   post: {
     uri: 'fallback-marker-post',
     cid: 'fake',
@@ -27,7 +27,7 @@ export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
 }
 
 export class HomeFeedAPI implements FeedAPI {
-  agent: BskyAgent
+  agent: GndrAgent
   following: FollowingFeedAPI
   discover: CustomFeedAPI
   usingDiscover = false
@@ -39,7 +39,7 @@ export class HomeFeedAPI implements FeedAPI {
     agent,
   }: {
     userInterests?: string
-    agent: BskyAgent
+    agent: GndrAgent
   }) {
     this.agent = agent
     this.following = new FollowingFeedAPI({agent})
@@ -61,7 +61,7 @@ export class HomeFeedAPI implements FeedAPI {
     this.itemCursor = 0
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost> {
     if (this.usingDiscover) {
       return this.discover.peekLatest()
     }
@@ -80,7 +80,7 @@ export class HomeFeedAPI implements FeedAPI {
     }
 
     let returnCursor
-    let posts: AppBskyFeedDefs.FeedViewPost[] = []
+    let posts: AppGndrFeedDefs.FeedViewPost[] = []
 
     if (!this.usingDiscover) {
       const res = await this.following.fetch({cursor, limit})

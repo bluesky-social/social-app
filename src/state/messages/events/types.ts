@@ -1,7 +1,7 @@
-import {BskyAgent, ChatBskyConvoGetLog} from '@atproto/api'
+import {GndrAgent, ChatGndrConvoGetLog} from '@atproto/api'
 
 export type MessagesEventBusParams = {
-  agent: BskyAgent
+  agent: GndrAgent
 }
 
 export enum MessagesEventBusStatus {
@@ -64,5 +64,5 @@ export type MessagesEventBusEvent =
     }
   | {
       type: 'logs'
-      logs: ChatBskyConvoGetLog.OutputSchema['logs']
+      logs: ChatGndrConvoGetLog.OutputSchema['logs']
     }

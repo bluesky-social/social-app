@@ -48,7 +48,7 @@ const withXcodeTarget = (config, {targetName}) => {
           buildSettingsObj.CODE_SIGN_ENTITLEMENTS = `"${targetName}/${targetName}.entitlements"`
           buildSettingsObj.CODE_SIGN_STYLE = 'Automatic'
           buildSettingsObj.CURRENT_PROJECT_VERSION = `"${
-            process.env.BSKY_IOS_BUILD_NUMBER ?? '1'
+            process.env.GNDR_IOS_BUILD_NUMBER ?? '1'
           }"`
           buildSettingsObj.GENERATE_INFOPLIST_FILE = 'YES'
           buildSettingsObj.MARKETING_VERSION = `"${config.version}"`

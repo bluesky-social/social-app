@@ -1,6 +1,6 @@
 import React from 'react'
 import {type TextStyle} from 'react-native'
-import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
+import {AppGndrRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, flatten, type TextStyleProp} from '#/alf'
@@ -101,7 +101,7 @@ export function RichText({
     const tag = segment.tag
     if (
       mention &&
-      AppBskyRichtextFacet.validateMention(mention).success &&
+      AppGndrRichtextFacet.validateMention(mention).success &&
       !disableLinks
     ) {
       els.push(
@@ -118,7 +118,7 @@ export function RichText({
           </InlineLinkText>
         </ProfileHoverCard>,
       )
-    } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
+    } else if (link && AppGndrRichtextFacet.validateLink(link).success) {
       if (disableLinks) {
         els.push(toShortUrl(segment.text))
       } else {
@@ -142,7 +142,7 @@ export function RichText({
       !disableLinks &&
       enableTags &&
       tag &&
-      AppBskyRichtextFacet.validateTag(tag).success
+      AppGndrRichtextFacet.validateTag(tag).success
     ) {
       els.push(
         <RichTextTag

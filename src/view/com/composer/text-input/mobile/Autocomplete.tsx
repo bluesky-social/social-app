@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -71,7 +71,7 @@ function AutocompleteProfileCard({
   totalItems,
   onPress,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppGndrActorDefs.ProfileViewBasic
   itemIndex: number
   totalItems: number
   onPress: () => void

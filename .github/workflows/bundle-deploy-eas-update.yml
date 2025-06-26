@@ -61,7 +61,7 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@main
+        uses: gander-social/github-actions/fingerprint-native@main
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}

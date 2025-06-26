@@ -48,7 +48,7 @@ export function StepInterests() {
     queryKey: ['interests'],
     queryFn: async () => {
       try {
-        const {data} = await agent.app.bsky.unspecced.getTaggedSuggestions()
+        const {data} = await agent.app.gndr.unspecced.getTaggedSuggestions()
         return data.suggestions.reduce(
           (agg, s) => {
             const {tag, subject, subjectType} = s

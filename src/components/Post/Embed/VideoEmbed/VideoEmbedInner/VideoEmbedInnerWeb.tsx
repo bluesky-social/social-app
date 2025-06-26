@@ -1,6 +1,6 @@
 import {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
+import {type AppGndrEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
@@ -18,7 +18,7 @@ export function VideoEmbedInnerWeb({
   onScreen,
   lastKnownTime,
 }: {
-  embed: AppBskyEmbedVideo.View
+  embed: AppGndrEmbedVideo.View
   active: boolean
   setActive: () => void
   onScreen: boolean

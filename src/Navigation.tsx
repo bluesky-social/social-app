@@ -30,7 +30,7 @@ import {
 } from '#/lib/routes/types'
 import {type RouteParams, type State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
-import {bskyTitle} from '#/lib/strings/headings'
+import {gndrTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -109,7 +109,7 @@ import {
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
-import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {Referrer} from '../modules/expo-gander-swiss-army'
 import {NotificationsActivityListScreen} from './screens/Notifications/ActivityList'
 import {LegacyNotificationSettingsScreen} from './screens/Settings/LegacyNotificationSettings'
 import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
@@ -142,7 +142,7 @@ const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
  */
 function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
   const title = (page: MessageDescriptor) =>
-    bskyTitle(i18n._(page), unreadCountLabel)
+    gndrTitle(i18n._(page), unreadCountLabel)
 
   return (
     <>
@@ -206,7 +206,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Profile"
         getComponent={() => ProfileScreen}
         options={({route}) => ({
-          title: bskyTitle(`@${route.params.name}`, unreadCountLabel),
+          title: gndrTitle(`@${route.params.name}`, unreadCountLabel),
         })}
       />
       <Stack.Screen
@@ -719,7 +719,7 @@ const FlatNavigator = () => {
   const t = useTheme()
   const numUnread = useUnreadNotifications()
   const screenListeners = useWebScrollRestoration()
-  const title = (page: MessageDescriptor) => bskyTitle(i18n._(page), numUnread)
+  const title = (page: MessageDescriptor) => gndrTitle(i18n._(page), numUnread)
 
   return (
     <Flat.Navigator
@@ -762,7 +762,7 @@ const FlatNavigator = () => {
 
 const LINKING = {
   // TODO figure out what we are going to use
-  prefixes: ['bsky://', 'bluesky://', 'https://bsky.app'],
+  prefixes: ['gndr://', 'gander://', 'https://gndr.app'],
 
   getPathFromState(state: State) {
     // find the current node in the navigation tree
@@ -990,7 +990,7 @@ function logModuleInitTime() {
 
   if (isWeb) {
     const referrerInfo = Referrer.getReferrerInfo()
-    if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+    if (referrerInfo && referrerInfo.hostname !== 'gndr.app') {
       logEvent('deepLink:referrerReceived', {
         to: window.location.href,
         referrer: referrerInfo?.referrer,

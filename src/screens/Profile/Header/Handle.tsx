@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -14,7 +14,7 @@ export function ProfileHeaderHandle({
   profile,
   disableTaps,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   disableTaps?: boolean
 }) {
   const t = useTheme()

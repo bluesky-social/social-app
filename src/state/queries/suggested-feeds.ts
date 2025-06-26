@@ -1,4 +1,4 @@
-import {AppBskyFeedGetSuggestedFeeds} from '@atproto/api'
+import {AppGndrFeedGetSuggestedFeeds} from '@atproto/api'
 import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
@@ -10,16 +10,16 @@ export const suggestedFeedsQueryKey = [suggestedFeedsQueryKeyRoot]
 export function useSuggestedFeedsQuery() {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyFeedGetSuggestedFeeds.OutputSchema,
+    AppGndrFeedGetSuggestedFeeds.OutputSchema,
     Error,
-    InfiniteData<AppBskyFeedGetSuggestedFeeds.OutputSchema>,
+    InfiniteData<AppGndrFeedGetSuggestedFeeds.OutputSchema>,
     QueryKey,
     string | undefined
   >({
     staleTime: STALE.HOURS.ONE,
     queryKey: suggestedFeedsQueryKey,
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.bsky.feed.getSuggestedFeeds({
+      const res = await agent.app.gndr.feed.getSuggestedFeeds({
         limit: 10,
         cursor: pageParam,
       })

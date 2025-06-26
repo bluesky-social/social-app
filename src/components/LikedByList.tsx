@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
+import {AppGndrFeedGetLikes as GetLikes} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

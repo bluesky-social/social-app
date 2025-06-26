@@ -14,7 +14,7 @@ import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export {useDialogControl} from '#/components/Dialog'
 
@@ -24,7 +24,7 @@ export function VerifierDialog({
   verificationState,
 }: {
   control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   verificationState: FullVerificationState
 }) {
   return (
@@ -45,7 +45,7 @@ function Inner({
   control,
 }: {
   control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   verificationState: FullVerificationState
 }) {
   const t = useTheme()

@@ -7,7 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {
-  type AppBskyActorDefs,
+  type AppGndrActorDefs,
   type ModerationCause,
   type ModerationUI,
 } from '@atproto/api'
@@ -32,7 +32,7 @@ interface Props extends ComponentProps<typeof Link> {
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppGndrActorDefs.ProfileViewBasic
   interpretFilterAsBlur?: boolean
 }
 

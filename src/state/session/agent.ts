@@ -1,12 +1,12 @@
-import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {AtpSessionData, AtpSessionEvent, GndrAgent} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
-  BSKY_SERVICE,
+  GNDR_SERVICE,
   DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
-  PUBLIC_BSKY_SERVICE,
+  PUBLIC_GNDR_SERVICE,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
@@ -24,18 +24,18 @@ import {isSessionExpired, isSignupQueued} from './util'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
-  return new BskyAppAgent({service: PUBLIC_BSKY_SERVICE})
+  return new GndrAppAgent({service: PUBLIC_GNDR_SERVICE})
 }
 
 export async function createAgentAndResume(
   storedAccount: SessionAccount,
   onSessionChange: (
-    agent: BskyAgent,
+    agent: GndrAgent,
     did: string,
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAppAgent({service: storedAccount.service})
+  const agent = new GndrAppAgent({service: storedAccount.service})
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
@@ -77,12 +77,12 @@ export async function createAgentAndLogin(
     authFactorToken?: string
   },
   onSessionChange: (
-    agent: BskyAgent,
+    agent: GndrAgent,
     did: string,
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAppAgent({service})
+  const agent = new GndrAppAgent({service})
   await agent.login({
     identifier,
     password,
@@ -117,12 +117,12 @@ export async function createAgentAndCreateAccount(
     verificationCode?: string
   },
   onSessionChange: (
-    agent: BskyAgent,
+    agent: GndrAgent,
     did: string,
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAppAgent({service})
+  const agent = new GndrAppAgent({service})
   await agent.createAccount({
     email,
     password,
@@ -155,10 +155,10 @@ export async function createAgentAndCreateAccount(
         if (getAge(birthDate) < 18) {
           await agent.api.com.atproto.repo.putRecord({
             repo: account.did,
-            collection: 'chat.bsky.actor.declaration',
+            collection: 'chat.gndr.actor.declaration',
             rkey: 'self',
             record: {
-              $type: 'chat.bsky.actor.declaration',
+              $type: 'chat.gndr.actor.declaration',
               allowIncoming: 'none',
             },
           })
@@ -183,7 +183,7 @@ export async function createAgentAndCreateAccount(
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
-export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
+export function agentToSessionAccountOrThrow(agent: GndrAgent): SessionAccount {
   const account = agentToSessionAccount(agent)
   if (!account) {
     throw Error('Expected an active session')
@@ -192,7 +192,7 @@ export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
 }
 
 export function agentToSessionAccount(
-  agent: BskyAgent,
+  agent: GndrAgent,
 ): SessionAccount | undefined {
   if (!agent.session) {
     return undefined
@@ -210,7 +210,7 @@ export function agentToSessionAccount(
     active: agent.session.active,
     status: agent.session.status as SessionAccount['status'],
     pdsUrl: agent.pdsUrl?.toString(),
-    isSelfHosted: !agent.serviceUrl.toString().startsWith(BSKY_SERVICE),
+    isSelfHosted: !agent.serviceUrl.toString().startsWith(GNDR_SERVICE),
   }
 }
 
@@ -218,7 +218,7 @@ export function sessionAccountToSession(
   account: SessionAccount,
 ): AtpSessionData {
   return {
-    // Sorted in the same property order as when returned by BskyAgent (alphabetical).
+    // Sorted in the same property order as when returned by GndrAgent (alphabetical).
     accessJwt: account.accessJwt ?? '',
     did: account.did,
     email: account.email,
@@ -227,7 +227,7 @@ export function sessionAccountToSession(
     handle: account.handle,
     refreshJwt: account.refreshJwt ?? '',
     /**
-     * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
+     * @see https://github.com/gander-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
      */
     active: account.active ?? true,
     status: account.status,
@@ -236,7 +236,7 @@ export function sessionAccountToSession(
 
 // Not exported. Use factories above to create it.
 let realFetch = globalThis.fetch
-class BskyAppAgent extends BskyAgent {
+class GndrAppAgent extends GndrAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined
 
@@ -273,7 +273,7 @@ class BskyAppAgent extends BskyAgent {
     gates: Promise<void>,
     moderation: Promise<void>,
     onSessionChange: (
-      agent: BskyAgent,
+      agent: GndrAgent,
       did: string,
       event: AtpSessionEvent,
     ) => void,
@@ -306,4 +306,4 @@ class BskyAppAgent extends BskyAgent {
   }
 }
 
-export type {BskyAppAgent}
+export type {GndrAppAgent}

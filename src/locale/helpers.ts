@@ -1,4 +1,4 @@
-import {type AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {type AppGndrFeedDefs, AppGndrFeedPost} from '@atproto/api'
 import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
@@ -73,7 +73,7 @@ export function codeToLanguageName(lang2or3: string, appLang: string): string {
 }
 
 export function getPostLanguage(
-  post: AppBskyFeedDefs.PostView,
+  post: AppGndrFeedDefs.PostView,
 ): string | undefined {
   let candidates: string[] = []
   let postText: string = ''
@@ -82,7 +82,7 @@ export function getPostLanguage(
   }
 
   if (
-    AppBskyFeedPost.isRecord(post.record) &&
+    AppGndrFeedPost.isRecord(post.record) &&
     hasProp(post.record, 'langs') &&
     Array.isArray(post.record.langs)
   ) {
@@ -117,7 +117,7 @@ export function getPostLanguage(
 }
 
 export function isPostInLanguage(
-  post: AppBskyFeedDefs.PostView,
+  post: AppGndrFeedDefs.PostView,
   targetLangs: string[],
 ): boolean {
   const lang = getPostLanguage(post)
@@ -245,7 +245,7 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
 /**
  * Handles legacy migration for Java devices.
  *
- * {@link https://github.com/bluesky-social/social-app/pull/4461}
+ * {@link https://github.com/gander-social/social-app/pull/4461}
  * {@link https://xml.coverpages.org/iso639a.html}
  */
 export function fixLegacyLanguageCode(code: string | null): string | null {

@@ -1,5 +1,5 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
-import {AppBskyVideoDefs, BskyAgent} from '@atproto/api'
+import {AppGndrVideoDefs, GndrAgent} from '@atproto/api'
 import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {nanoid} from 'nanoid/non-secure'
@@ -19,7 +19,7 @@ export async function uploadVideo({
   _,
 }: {
   video: CompressedVideo
-  agent: BskyAgent
+  agent: GndrAgent
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
@@ -30,7 +30,7 @@ export async function uploadVideo({
   }
   await getVideoUploadLimits(agent, _)
 
-  const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
+  const uri = createVideoEndpointUrl('/xrpc/app.gndr.video.uploadVideo', {
     did,
     name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
   })
@@ -66,7 +66,7 @@ export async function uploadVideo({
     throw new Error('No response')
   }
 
-  const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
+  const responseBody = JSON.parse(res.body) as AppGndrVideoDefs.JobStatus
 
   if (!responseBody.jobId) {
     throw new ServerError(responseBody.error || _(msg`Failed to upload video`))

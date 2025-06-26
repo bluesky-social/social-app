@@ -1,4 +1,4 @@
-import {AppBskyGraphGetActorStarterPacks} from '@atproto/api'
+import {AppGndrGraphGetActorStarterPacks} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -21,15 +21,15 @@ export function useActorStarterPacksQuery({
   const agent = useAgent()
 
   return useInfiniteQuery<
-    AppBskyGraphGetActorStarterPacks.OutputSchema,
+    AppGndrGraphGetActorStarterPacks.OutputSchema,
     Error,
-    InfiniteData<AppBskyGraphGetActorStarterPacks.OutputSchema>,
+    InfiniteData<AppGndrGraphGetActorStarterPacks.OutputSchema>,
     QueryKey,
     string | undefined
   >({
     queryKey: RQKEY(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      const res = await agent.app.bsky.graph.getActorStarterPacks({
+      const res = await agent.app.gndr.graph.getActorStarterPacks({
         actor: did!,
         limit: 10,
         cursor: pageParam,

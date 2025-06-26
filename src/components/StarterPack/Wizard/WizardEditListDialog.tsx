@@ -1,8 +1,8 @@
 import {useRef} from 'react'
 import type {ListRenderItemInfo} from 'react-native'
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {AppGndrActorDefs, ModerationOpts} from '@atproto/api'
+import {GeneratorView} from '@atproto/api/dist/client/types/app/gndr/feed/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -21,7 +21,7 @@ import {
 import {Text} from '#/components/Typography'
 
 function keyExtractor(
-  item: AppBskyActorDefs.ProfileViewBasic | GeneratorView,
+  item: AppGndrActorDefs.ProfileViewBasic | GeneratorView,
   index: number,
 ) {
   return `${item.did}-${index}`
@@ -38,7 +38,7 @@ export function WizardEditListDialog({
   state: WizardState
   dispatch: (action: WizardAction) => void
   moderationOpts: ModerationOpts
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()

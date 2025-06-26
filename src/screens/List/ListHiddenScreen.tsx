@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs} from '@atproto/api'
+import {AppGndrGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -28,7 +28,7 @@ export function ListHiddenScreen({
   list,
   preferences,
 }: {
-  list: AppBskyGraphDefs.ListView
+  list: AppGndrGraphDefs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
@@ -39,7 +39,7 @@ export function ListHiddenScreen({
   const goBack = useGoBack()
   const queryClient = useQueryClient()
 
-  const isModList = list.purpose === AppBskyGraphDefs.MODLIST
+  const isModList = list.purpose === AppGndrGraphDefs.MODLIST
 
   const [isProcessing, setIsProcessing] = React.useState(false)
   const listBlockMutation = useListBlockMutation()

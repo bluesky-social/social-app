@@ -1,8 +1,8 @@
 import {memo, useMemo, useState} from 'react'
 import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
+  type AppGndrFeedDefs,
+  type AppGndrFeedPost,
+  type AppGndrFeedThreadgate,
   type RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -30,15 +30,15 @@ let PostMenuButton = ({
   onShowLess,
 }: {
   testID: string
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<AppGndrFeedDefs.PostView>
   postFeedContext: string | undefined
   postReqId: string | undefined
   big?: boolean
-  record: AppBskyFeedPost.Record
+  record: AppGndrFeedPost.Record
   richText: RichTextAPI
   timestamp: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  threadgateRecord?: AppGndrFeedThreadgate.Record
+  onShowLess?: (interaction: AppGndrFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const {_} = useLingui()
 

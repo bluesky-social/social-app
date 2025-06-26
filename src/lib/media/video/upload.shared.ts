@@ -1,4 +1,4 @@
-import {BskyAgent} from '@atproto/api'
+import {GndrAgent} from '@atproto/api'
 import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
@@ -13,7 +13,7 @@ export async function getServiceAuthToken({
   lxm,
   exp,
 }: {
-  agent: BskyAgent
+  agent: GndrAgent
   aud?: string
   lxm: string
   exp?: number
@@ -30,14 +30,14 @@ export async function getServiceAuthToken({
   return serviceAuth.token
 }
 
-export async function getVideoUploadLimits(agent: BskyAgent, _: I18n['_']) {
+export async function getVideoUploadLimits(agent: GndrAgent, _: I18n['_']) {
   const token = await getServiceAuthToken({
     agent,
-    lxm: 'app.bsky.video.getUploadLimits',
+    lxm: 'app.gndr.video.getUploadLimits',
     aud: VIDEO_SERVICE_DID,
   })
   const videoAgent = createVideoAgent()
-  const {data: limits} = await videoAgent.app.bsky.video
+  const {data: limits} = await videoAgent.app.gndr.video
     .getUploadLimits({}, {headers: {Authorization: `Bearer ${token}`}})
     .catch(err => {
       if (err instanceof Error) {

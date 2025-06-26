@@ -16,7 +16,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedExternal} from '@atproto/api'
+import {type AppGndrEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -83,7 +83,7 @@ function Player({
   onLoad: () => void
 }) {
   // ensures we only load what's requested
-  // when it's a youtube video, we need to allow both bsky.app and youtube.com
+  // when it's a youtube video, we need to allow both gndr.app and youtube.com
   const onShouldStartLoadWithRequest = React.useCallback(
     (event: ShouldStartLoadRequest) =>
       event.url === params.playerUri ||
@@ -119,7 +119,7 @@ export function ExternalPlayer({
   link,
   params,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
+  link: AppGndrEmbedExternal.ViewExternal
   params: EmbedPlayerParams
 }) {
   const t = useTheme()

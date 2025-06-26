@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {AppGndrActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {differenceInSeconds} from 'date-fns'
@@ -23,7 +23,7 @@ export function NewskieDialog({
   profile,
   disabled,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
   disabled?: boolean
 }) {
   const {_} = useLingui()

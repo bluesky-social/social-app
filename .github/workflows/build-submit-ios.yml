@@ -104,7 +104,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}```"
+              "text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.GNDR_IOS_BUILD_NUMBER }}```"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}

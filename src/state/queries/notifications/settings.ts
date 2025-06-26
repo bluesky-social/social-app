@@ -34,10 +34,10 @@ export function useNotificationSettingsUpdateMutation() {
 
   return useMutation({
     mutationFn: async (
-      update: Partial<AppBskyNotificationDefs.Preferences>,
+      update: Partial<AppGndrNotificationDefs.Preferences>,
     ) => {
       const response =
-        await agent.app.bsky.notification.putPreferencesV2(update)
+        await agent.app.gndr.notification.putPreferencesV2(update)
       return response.data.preferences
     },
     onMutate: update => {

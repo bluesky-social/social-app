@@ -1,4 +1,4 @@
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {ChatGndrConvoDefs} from '@atproto/api'
 import {
   QueryClient,
   useMutation,
@@ -19,13 +19,13 @@ import {
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
-export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
+export function useConvoQuery(convo: ChatGndrConvoDefs.ConvoView) {
   const agent = useAgent()
 
   return useQuery({
     queryKey: RQKEY(convo.id),
     queryFn: async () => {
-      const {data} = await agent.chat.bsky.convo.getConvo(
+      const {data} = await agent.chat.gndr.convo.getConvo(
         {convoId: convo.id},
         {headers: DM_SERVICE_HEADERS},
       )
@@ -38,7 +38,7 @@ export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
 
 export function precacheConvoQuery(
   queryClient: QueryClient,
-  convo: ChatBskyConvoDefs.ConvoView,
+  convo: ChatGndrConvoDefs.ConvoView,
 ) {
   queryClient.setQueryData(RQKEY(convo.id), convo)
 }
@@ -58,7 +58,7 @@ export function useMarkAsReadMutation() {
     }) => {
       if (!convoId) throw new Error('No convoId provided')
 
-      await agent.api.chat.bsky.convo.updateRead(
+      await agent.api.chat.gndr.convo.updateRead(
         {
           convoId,
           messageId,

@@ -6,11 +6,11 @@ env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
   USERNAME: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_USERNAME }}
   PASSWORD: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_PASSWORD }}
-  IMAGE_NAME: bskyogcard
+  IMAGE_NAME: gndrogcard
 
 jobs:
   ogcard-container-aws:
-    if: github.repository == 'bluesky-social/social-app'
+    if: github.repository == 'gander-social/social-app'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -46,7 +46,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          file: ./Dockerfile.bskyogcard
+          file: ./Dockerfile.gndrogcard
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

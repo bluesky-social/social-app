@@ -1,27 +1,27 @@
 import {
-  AppBskyFeedDefs,
-  AppBskyFeedGetActorLikes as GetActorLikes,
-  BskyAgent,
+  AppGndrFeedDefs,
+  AppGndrFeedGetActorLikes as GetActorLikes,
+  GndrAgent,
 } from '@atproto/api'
 
 import {FeedAPI, FeedAPIResponse} from './types'
 
 export class LikesFeedAPI implements FeedAPI {
-  agent: BskyAgent
+  agent: GndrAgent
   params: GetActorLikes.QueryParams
 
   constructor({
     agent,
     feedParams,
   }: {
-    agent: BskyAgent
+    agent: GndrAgent
     feedParams: GetActorLikes.QueryParams
   }) {
     this.agent = agent
     this.params = feedParams
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost> {
     const res = await this.agent.getActorLikes({
       ...this.params,
       limit: 1,

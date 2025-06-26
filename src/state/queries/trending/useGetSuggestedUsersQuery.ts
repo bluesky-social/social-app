@@ -1,12 +1,12 @@
 import {
-  type AppBskyActorDefs,
-  type AppBskyUnspeccedGetSuggestedUsers,
+  type AppGndrActorDefs,
+  type AppGndrUnspeccedGetSuggestedUsers,
 } from '@atproto/api'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {
   aggregateUserInterests,
-  createBskyTopicsHeader,
+  createGndrTopicsHeader,
 } from '#/lib/api/feed/utils'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
@@ -36,14 +36,14 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const {data} = await agent.app.bsky.unspecced.getSuggestedUsers(
+      const {data} = await agent.app.gndr.unspecced.getSuggestedUsers(
         {
           category: props.category ?? undefined,
           limit: props.limit || 10,
         },
         {
           headers: {
-            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+            ...createGndrTopicsHeader(aggregateUserInterests(preferences)),
             'Accept-Language': contentLangs,
           },
         },
@@ -57,9 +57,9 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   const responses =
-    queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsers.OutputSchema>({
+    queryClient.getQueriesData<AppGndrUnspeccedGetSuggestedUsers.OutputSchema>({
       queryKey: [getSuggestedUsersQueryKeyRoot],
     })
   for (const [_, response] of responses) {

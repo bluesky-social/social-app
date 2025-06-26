@@ -1,6 +1,6 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyGraphDefs} from '@atproto/api'
+import {type AppGndrGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -18,7 +18,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 interface Props {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: AppGndrGraphDefs.StarterPackView
   link?: string
   imageLoaded?: boolean
   qrDialogControl: DialogControlProps

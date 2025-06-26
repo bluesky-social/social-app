@@ -4,12 +4,12 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 import {
-  AppBskyActorDefs,
-  AppBskyGraphDefs,
+  AppGndrActorDefs,
+  AppGndrGraphDefs,
   AtUri,
   ModerationOpts,
 } from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {GeneratorView} from '@atproto/api/dist/client/types/app/gndr/feed/defs'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -53,7 +53,7 @@ import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 import {Provider} from './State'
 
 export function Wizard({
@@ -139,9 +139,9 @@ function WizardInner({
   profile,
   moderationOpts,
 }: {
-  currentStarterPack?: AppBskyGraphDefs.StarterPackView
-  currentListItems?: AppBskyGraphDefs.ListItemView[]
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  currentStarterPack?: AppGndrGraphDefs.StarterPackView
+  currentListItems?: AppGndrGraphDefs.ListItemView[]
+  profile: AppGndrActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -363,7 +363,7 @@ function Footer({
   onNext: () => void
   nextBtnText: string
   moderationOpts: ModerationOpts
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -577,7 +577,7 @@ function Footer({
   )
 }
 
-function getName(item: bsky.profile.AnyProfileView | GeneratorView) {
+function getName(item: gndr.profile.AnyProfileView | GeneratorView) {
   if (typeof item.displayName === 'string') {
     return enforceLen(sanitizeDisplayName(item.displayName), 28, true)
   } else if ('handle' in item && typeof item.handle === 'string') {

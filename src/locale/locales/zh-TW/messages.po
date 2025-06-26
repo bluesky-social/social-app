@@ -771,8 +771,8 @@ msgid "Adult Content"
 msgstr "成人內容"
 
 #: src/screens/Moderation/index.tsx:374
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "成人內容只能透過網頁版 (<0>bsky.app</0>) 啟用。"
+msgid "Adult content can only be enabled via the Web at <0>gndr.app</0>."
+msgstr "成人內容只能透過網頁版 (<0>gndr.app</0>) 啟用。"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -1342,8 +1342,8 @@ msgid "Bluesky is an open network where you can choose your hosting provider. If
 msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務提供者。如果您是開發人員，也可以託管自己的伺服器。"
 
 #: src/view/com/auth/server-input/index.tsx:149
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
-msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務提供者。但如果您是新用戶，我們建議使用預設的 Bluesky Social 選項。"
+msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
+msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務提供者。但如果您是新用戶，我們建議使用預設的 Gander Social 選項。"
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
@@ -1351,8 +1351,8 @@ msgid "Bluesky is better with friends!"
 msgstr "Bluesky 因朋友而更好！"
 
 #: src/screens/Takendown.tsx:217
-msgid "Bluesky Social Terms of Service"
-msgstr "Bluesky Social 服務條款"
+msgid "Gander Social Terms of Service"
+msgstr "Gander Social 服務條款"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -4698,13 +4698,13 @@ msgid "Logged-out visibility"
 msgstr "登出可見度"
 
 #: src/view/shell/desktop/RightNav.tsx:130
-msgid "Logo by @sawaratsuki.bsky.social"
-msgstr "網站標誌由 @sawaratsuki.bsky.social 繪製"
+msgid "Logo by @sawaratsuki.gndr.social"
+msgstr "網站標誌由 @sawaratsuki.gndr.social 繪製"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
-msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
-msgstr "網站標誌由 <0>@sawaratsuki.bsky.social</0> 繪製"
+#: src/view/shell/Drawer.tsx:658
+msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
+msgstr "網站標誌由 <0>@sawaratsuki.gndr.social</0> 繪製"
 
 #: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
@@ -10101,8 +10101,8 @@ msgid "Your account repository, containing all public data records, can be downl
 msgstr "您可以將帳號的所有公開資料匯出為一個「CAR」檔案。但請注意，這不包括嵌入媒體 (如圖片和影片) 或私人資料，這些資料需要另外擷取。"
 
 #: src/screens/Takendown.tsx:214
-msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
-msgstr "您的帳號被判定違反了 <0>Bluesky Social 服務條款</0>。您應該已收到一封電子郵件，其中包含具體的違規事項和停權期限。 如果您對此決策有異議，可以隨時提出上訴。"
+msgid "Your account was found to be in violation of the <0>Gander Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
+msgstr "您的帳號被判定違反了 <0>Gander Social 服務條款</0>。您應該已收到一封電子郵件，其中包含具體的違規事項和停權期限。 如果您對此決策有異議，可以隨時提出上訴。"
 
 #: src/screens/Takendown.tsx:154
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."

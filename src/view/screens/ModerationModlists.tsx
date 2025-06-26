@@ -35,7 +35,7 @@ export function ModerationModlistsScreen({}: Props) {
   const onPressNewList = React.useCallback(() => {
     openModal({
       name: 'create-or-edit-list',
-      purpose: 'app.bsky.graph.defs#modlist',
+      purpose: 'app.gndr.graph.defs#modlist',
       onSave: (uri: string) => {
         try {
           const urip = new AtUri(uri)
