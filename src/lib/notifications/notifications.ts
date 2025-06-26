@@ -115,9 +115,9 @@ async function getPushToken() {
  * it fires), so there's a possibility that multiple calls will be made, but
  * that is acceptable.
  *
- * @see https://github.com/bluesky-social/social-app/pull/4467
  * @see https://github.com/expo/expo/issues/28656
  * @see https://github.com/expo/expo/issues/29909
+ * @see https://github.com/bluesky-social/social-app/pull/4467
  */
 export function useGetAndRegisterPushToken() {
   const registerPushToken = useRegisterPushToken()
