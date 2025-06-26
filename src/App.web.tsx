@@ -17,7 +17,6 @@ import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {
   Provider as AgeAssuranceProvider,
-  useAgeAssuranceAPIContext,
 } from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
@@ -79,7 +78,6 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
-  const {refresh: refreshAgeAssurance} = useAgeAssuranceAPIContext()
 
   // init
   useEffect(() => {
@@ -87,7 +85,6 @@ function InnerApp() {
       try {
         if (account) {
           await resumeSession(account)
-          await refreshAgeAssurance()
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
@@ -97,7 +94,7 @@ function InnerApp() {
     }
     const account = readLastActiveAccount()
     onLaunch(account)
-  }, [resumeSession, refreshAgeAssurance])
+  }, [resumeSession])
 
   useEffect(() => {
     return listenSessionDropped(() => {
@@ -122,43 +119,45 @@ function InnerApp() {
                   // Resets the entire tree below when it changes:
                   key={currentAccount?.did}>
                   <QueryProvider currentDid={currentAccount?.did}>
-                    <ComposerProvider>
-                      <StatsigProvider>
-                        <MessagesProvider>
-                          {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                          <LabelDefsProvider>
-                            <ModerationOptsProvider>
-                              <LoggedOutViewProvider>
-                                <SelectedFeedProvider>
-                                  <HiddenRepliesProvider>
-                                    <HomeBadgeProvider>
-                                      <UnreadNotifsProvider>
-                                        <BackgroundNotificationPreferencesProvider>
-                                          <MutedThreadsProvider>
-                                            <SafeAreaProvider>
-                                              <ProgressGuideProvider>
-                                                <ServiceConfigProvider>
-                                                  <HideBottomBarBorderProvider>
-                                                    <IntentDialogProvider>
-                                                      <Shell />
-                                                      <NuxDialogs />
-                                                    </IntentDialogProvider>
-                                                  </HideBottomBarBorderProvider>
-                                                </ServiceConfigProvider>
-                                              </ProgressGuideProvider>
-                                            </SafeAreaProvider>
-                                          </MutedThreadsProvider>
-                                        </BackgroundNotificationPreferencesProvider>
-                                      </UnreadNotifsProvider>
-                                    </HomeBadgeProvider>
-                                  </HiddenRepliesProvider>
-                                </SelectedFeedProvider>
-                              </LoggedOutViewProvider>
-                            </ModerationOptsProvider>
-                          </LabelDefsProvider>
-                        </MessagesProvider>
-                      </StatsigProvider>
-                    </ComposerProvider>
+                    <AgeAssuranceProvider>
+                      <ComposerProvider>
+                        <StatsigProvider>
+                          <MessagesProvider>
+                            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                            <LabelDefsProvider>
+                              <ModerationOptsProvider>
+                                <LoggedOutViewProvider>
+                                  <SelectedFeedProvider>
+                                    <HiddenRepliesProvider>
+                                      <HomeBadgeProvider>
+                                        <UnreadNotifsProvider>
+                                          <BackgroundNotificationPreferencesProvider>
+                                            <MutedThreadsProvider>
+                                              <SafeAreaProvider>
+                                                <ProgressGuideProvider>
+                                                  <ServiceConfigProvider>
+                                                    <HideBottomBarBorderProvider>
+                                                      <IntentDialogProvider>
+                                                        <Shell />
+                                                        <NuxDialogs />
+                                                      </IntentDialogProvider>
+                                                    </HideBottomBarBorderProvider>
+                                                  </ServiceConfigProvider>
+                                                </ProgressGuideProvider>
+                                              </SafeAreaProvider>
+                                            </MutedThreadsProvider>
+                                          </BackgroundNotificationPreferencesProvider>
+                                        </UnreadNotifsProvider>
+                                      </HomeBadgeProvider>
+                                    </HiddenRepliesProvider>
+                                  </SelectedFeedProvider>
+                                </LoggedOutViewProvider>
+                              </ModerationOptsProvider>
+                            </LabelDefsProvider>
+                          </MessagesProvider>
+                        </StatsigProvider>
+                      </ComposerProvider>
+                    </AgeAssuranceProvider>
                   </QueryProvider>
                   <ToastContainer />
                 </React.Fragment>
@@ -192,27 +191,25 @@ function App() {
     <GeolocationProvider>
       <A11yProvider>
         <SessionProvider>
-          <AgeAssuranceProvider>
-            <PrefsStateProvider>
-              <I18nProvider>
-                <ShellStateProvider>
-                  <InvitesStateProvider>
-                    <ModalStateProvider>
-                      <DialogStateProvider>
-                        <LightboxStateProvider>
-                          <PortalProvider>
-                            <StarterPackProvider>
-                              <InnerApp />
-                            </StarterPackProvider>
-                          </PortalProvider>
-                        </LightboxStateProvider>
-                      </DialogStateProvider>
-                    </ModalStateProvider>
-                  </InvitesStateProvider>
-                </ShellStateProvider>
-              </I18nProvider>
-            </PrefsStateProvider>
-          </AgeAssuranceProvider>
+          <PrefsStateProvider>
+            <I18nProvider>
+              <ShellStateProvider>
+                <InvitesStateProvider>
+                  <ModalStateProvider>
+                    <DialogStateProvider>
+                      <LightboxStateProvider>
+                        <PortalProvider>
+                          <StarterPackProvider>
+                            <InnerApp />
+                          </StarterPackProvider>
+                        </PortalProvider>
+                      </LightboxStateProvider>
+                    </DialogStateProvider>
+                  </ModalStateProvider>
+                </InvitesStateProvider>
+              </ShellStateProvider>
+            </I18nProvider>
+          </PrefsStateProvider>
         </SessionProvider>
       </A11yProvider>
     </GeolocationProvider>

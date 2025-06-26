@@ -1,12 +1,21 @@
-import {createContext, useCallback, useContext, useMemo, useState} from 'react'
+import {createContext, useContext, useMemo} from 'react'
+import {
+  // useQueryClient,
+  type QueryObserverBaseResult,
+  useQuery,
+} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
-// import {useAgent} from '#/state/session'
 import {useGeolocation} from '#/state/geolocation'
+import {useAgent} from '#/state/session'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
+const ageAssuranceQueryKey = ['ageAssurance'] as const
+const DEFAULT_AGE_ASSURANCE_STATE: TempAgeAssuranceState = {
+  status: 'unknown',
+}
 
 type TempAgeAssuranceState = {
   lastInitiatedAt?: string
@@ -14,6 +23,7 @@ type TempAgeAssuranceState = {
 }
 
 export type AgeAssuranceContextType = {
+  isLoaded: boolean
   /**
    * Whether the current user is age-restricted based on their geolocation and
    * age assurance state retrieved from the server.
@@ -37,10 +47,11 @@ export type AgeAssuranceAPIContextType = {
   /**
    * Refreshes the age assurance state by fetching it from the server.
    */
-  refresh: () => Promise<void>
+  refetch: QueryObserverBaseResult['refetch']
 }
 
 const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
+  isLoaded: false,
   isAgeRestricted: false,
   status: 'unknown',
   lastInitiatedAt: undefined,
@@ -48,42 +59,49 @@ const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
 })
 
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
-  refresh: () => Promise.resolve(),
+  // @ts-ignore
+  refetch: () => Promise.resolve(),
 })
 
 export function Provider({children}: {children: React.ReactNode}) {
-  // const agent = useAgent()
+  // const qc = useQueryClient()
+  const agent = useAgent()
   const {geolocation} = useGeolocation()
-  const [ageAssuranceState, setAgeAssuranceState] =
-    useState<TempAgeAssuranceState>({
-      status: 'unknown',
-    })
 
-  const refresh = useCallback(async () => {
-    try {
-      const {data} = await wait(
-        200,
-        (() => ({
-          data: {
-            lastInitiatedAt: undefined,
-            status: 'unknown',
-          } as TempAgeAssuranceState,
-        }))(),
-      )
+  const {data, refetch} = useQuery({
+    queryKey: ageAssuranceQueryKey,
+    async queryFn() {
+      try {
+        const {data} = await wait(
+          1e3,
+          (() => ({
+            data: {
+              lastInitiatedAt: new Date().toISOString(),
+              status: 'assured',
+            } as TempAgeAssuranceState,
+          }))(),
+        )
 
-      logger.debug(`refresh`, {data})
+        logger.debug(`fetch`, {
+          data,
+          account: agent.session?.did,
+        })
 
-      setAgeAssuranceState(data)
-    } catch (e) {
-      if (!isNetworkError(e)) {
-        logger.error(`ageAssurance: failed to refresh`, {safeMessage: e})
+        return data
+      } catch (e) {
+        if (!isNetworkError(e)) {
+          logger.error(`ageAssurance: failed to fetch`, {safeMessage: e})
+        }
+
+        return DEFAULT_AGE_ASSURANCE_STATE
       }
-    }
-  }, [setAgeAssuranceState])
+    },
+  })
 
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
-    const {status, lastInitiatedAt} = ageAssuranceState
+    const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
+      isLoaded: !!data,
       status,
       lastInitiatedAt,
       hasInitiated: !!lastInitiatedAt,
@@ -95,13 +113,13 @@ export function Provider({children}: {children: React.ReactNode}) {
     logger.debug(`context`, ctx)
 
     return ctx
-  }, [geolocation, ageAssuranceState])
+  }, [geolocation, data])
 
   const ageAssuranceAPIContext = useMemo<AgeAssuranceAPIContextType>(
     () => ({
-      refresh,
+      refetch,
     }),
-    [refresh],
+    [refetch],
   )
 
   return (

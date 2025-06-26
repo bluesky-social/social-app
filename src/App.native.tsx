@@ -26,10 +26,7 @@ import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {Provider as A11yProvider} from '#/state/a11y'
-import {
-  Provider as AgeAssuranceProvider,
-  useAgeAssuranceAPIContext,
-} from '#/state/ageAssurance'
+import {Provider as AgeAssuranceProvider} from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {listenSessionDropped} from '#/state/events'
@@ -100,7 +97,6 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
-  const {refresh: refreshAgeAssurance} = useAgeAssuranceAPIContext()
 
   // init
   useEffect(() => {
@@ -108,7 +104,6 @@ function InnerApp() {
       try {
         if (account) {
           await resumeSession(account)
-          await refreshAgeAssurance()
         } else {
           await tryFetchGates(undefined, 'prefer-fresh-gates')
         }
@@ -120,7 +115,7 @@ function InnerApp() {
     }
     const account = readLastActiveAccount()
     onLaunch(account)
-  }, [resumeSession, refreshAgeAssurance])
+  }, [resumeSession])
 
   useEffect(() => {
     return listenSessionDropped(() => {
@@ -142,47 +137,49 @@ function InnerApp() {
                   // Resets the entire tree below when it changes:
                   key={currentAccount?.did}>
                   <QueryProvider currentDid={currentAccount?.did}>
-                    <ComposerProvider>
-                      <StatsigProvider>
-                        <MessagesProvider>
-                          {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                          <LabelDefsProvider>
-                            <ModerationOptsProvider>
-                              <LoggedOutViewProvider>
-                                <SelectedFeedProvider>
-                                  <HiddenRepliesProvider>
-                                    <HomeBadgeProvider>
-                                      <UnreadNotifsProvider>
-                                        <BackgroundNotificationPreferencesProvider>
-                                          <MutedThreadsProvider>
-                                            <ProgressGuideProvider>
-                                              <ServiceAccountManager>
-                                                <HideBottomBarBorderProvider>
-                                                  <GestureHandlerRootView
-                                                    style={s.h100pct}>
-                                                    <GlobalGestureEventsProvider>
-                                                      <IntentDialogProvider>
-                                                        <TestCtrls />
-                                                        <Shell />
-                                                        <NuxDialogs />
-                                                      </IntentDialogProvider>
-                                                    </GlobalGestureEventsProvider>
-                                                  </GestureHandlerRootView>
-                                                </HideBottomBarBorderProvider>
-                                              </ServiceAccountManager>
-                                            </ProgressGuideProvider>
-                                          </MutedThreadsProvider>
-                                        </BackgroundNotificationPreferencesProvider>
-                                      </UnreadNotifsProvider>
-                                    </HomeBadgeProvider>
-                                  </HiddenRepliesProvider>
-                                </SelectedFeedProvider>
-                              </LoggedOutViewProvider>
-                            </ModerationOptsProvider>
-                          </LabelDefsProvider>
-                        </MessagesProvider>
-                      </StatsigProvider>
-                    </ComposerProvider>
+                    <AgeAssuranceProvider>
+                      <ComposerProvider>
+                        <StatsigProvider>
+                          <MessagesProvider>
+                            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                            <LabelDefsProvider>
+                              <ModerationOptsProvider>
+                                <LoggedOutViewProvider>
+                                  <SelectedFeedProvider>
+                                    <HiddenRepliesProvider>
+                                      <HomeBadgeProvider>
+                                        <UnreadNotifsProvider>
+                                          <BackgroundNotificationPreferencesProvider>
+                                            <MutedThreadsProvider>
+                                              <ProgressGuideProvider>
+                                                <ServiceAccountManager>
+                                                  <HideBottomBarBorderProvider>
+                                                    <GestureHandlerRootView
+                                                      style={s.h100pct}>
+                                                      <GlobalGestureEventsProvider>
+                                                        <IntentDialogProvider>
+                                                          <TestCtrls />
+                                                          <Shell />
+                                                          <NuxDialogs />
+                                                        </IntentDialogProvider>
+                                                      </GlobalGestureEventsProvider>
+                                                    </GestureHandlerRootView>
+                                                  </HideBottomBarBorderProvider>
+                                                </ServiceAccountManager>
+                                              </ProgressGuideProvider>
+                                            </MutedThreadsProvider>
+                                          </BackgroundNotificationPreferencesProvider>
+                                        </UnreadNotifsProvider>
+                                      </HomeBadgeProvider>
+                                    </HiddenRepliesProvider>
+                                  </SelectedFeedProvider>
+                                </LoggedOutViewProvider>
+                              </ModerationOptsProvider>
+                            </LabelDefsProvider>
+                          </MessagesProvider>
+                        </StatsigProvider>
+                      </ComposerProvider>
+                    </AgeAssuranceProvider>
                   </QueryProvider>
                 </React.Fragment>
               </VideoVolumeProvider>
@@ -216,32 +213,30 @@ function App() {
       <A11yProvider>
         <KeyboardControllerProvider>
           <SessionProvider>
-            <AgeAssuranceProvider>
-              <PrefsStateProvider>
-                <I18nProvider>
-                  <ShellStateProvider>
-                    <InvitesStateProvider>
-                      <ModalStateProvider>
-                        <DialogStateProvider>
-                          <LightboxStateProvider>
-                            <PortalProvider>
-                              <BottomSheetProvider>
-                                <StarterPackProvider>
-                                  <SafeAreaProvider
-                                    initialMetrics={initialWindowMetrics}>
-                                    <InnerApp />
-                                  </SafeAreaProvider>
-                                </StarterPackProvider>
-                              </BottomSheetProvider>
-                            </PortalProvider>
-                          </LightboxStateProvider>
-                        </DialogStateProvider>
-                      </ModalStateProvider>
-                    </InvitesStateProvider>
-                  </ShellStateProvider>
-                </I18nProvider>
-              </PrefsStateProvider>
-            </AgeAssuranceProvider>
+            <PrefsStateProvider>
+              <I18nProvider>
+                <ShellStateProvider>
+                  <InvitesStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <BottomSheetProvider>
+                              <StarterPackProvider>
+                                <SafeAreaProvider
+                                  initialMetrics={initialWindowMetrics}>
+                                  <InnerApp />
+                                </SafeAreaProvider>
+                              </StarterPackProvider>
+                            </BottomSheetProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </InvitesStateProvider>
+                </ShellStateProvider>
+              </I18nProvider>
+            </PrefsStateProvider>
           </SessionProvider>
         </KeyboardControllerProvider>
       </A11yProvider>
