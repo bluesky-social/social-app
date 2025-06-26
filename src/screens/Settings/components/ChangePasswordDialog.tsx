@@ -50,18 +50,22 @@ function Inner() {
 
   const uiStrings = {
     RequestCode: {
-      title: _(msg`Change Password`),
+      title: _(msg`Change your password`),
       message: _(
         msg`If you want to change your password, we will send you a code to verify that this is your account.`,
       ),
     },
     ChangePassword: {
-      title: _(msg`Enter Code`),
-      message: _(msg`Enter the code you received to change your password.`),
+      title: _(msg`Enter code`),
+      message: _(
+        msg`Please enter the code you received and the new password you would like to use.`,
+      ),
     },
     Done: {
-      title: _(msg`Password Changed`),
-      message: _(msg`Your password has been changed successfully!`),
+      title: _(msg`Password changed`),
+      message: _(
+        msg`Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on.`,
+      ),
     },
   }
 
@@ -85,7 +89,7 @@ function Inner() {
       if (isNetworkError(e)) {
         setError(
           _(
-            msg`Unable to contact your service. Please check your Internet connection.`,
+            msg`Unable to contact your service. Please check your internet connection and try again.`,
           ),
         )
       } else {
@@ -130,7 +134,7 @@ function Inner() {
       if (isNetworkError(e)) {
         setError(
           _(
-            msg`Unable to contact your service. Please check your Internet connection.`,
+            msg`Unable to contact your service. Please check your internet connection and try again.`,
           ),
         )
       } else {
@@ -174,7 +178,7 @@ function Inner() {
           <View style={[a.gap_md]}>
             <View>
               <TextField.LabelText>
-                <Trans>Confirmation Code</Trans>
+                <Trans>Confirmation code</Trans>
               </TextField.LabelText>
               <TextField.Root>
                 <TextField.Input
@@ -191,7 +195,7 @@ function Inner() {
             </View>
             <View>
               <TextField.LabelText>
-                <Trans>New Password</Trans>
+                <Trans>New password</Trans>
               </TextField.LabelText>
               <TextField.Root>
                 <TextField.Input
