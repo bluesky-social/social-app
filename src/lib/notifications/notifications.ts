@@ -96,10 +96,11 @@ async function getPushToken() {
  * `getPushToken()`. Therefore, as insurance, we also call
  * `registerPushToken` here.
  *
- * Because `registerPushToken` is debounced, we can safely call it on every
- * platform and only a single call will be made to the server. This does race
- * the listener (if it fires), so there's a possibility that multiple calls
- * will be made, but that is acceptable.
+ * Because `registerPushToken` is debounced, even if the the listener _does_
+ * fire, it's OK to also call `registerPushToken` below since only a single
+ * call will be made to the server (ideally). This does race the listener (if
+ * it fires), so there's a possibility that multiple calls will be made, but
+ * that is acceptable.
  *
  * @see https://github.com/bluesky-social/social-app/pull/4467
  * @see https://github.com/expo/expo/issues/28656
