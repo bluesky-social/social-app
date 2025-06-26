@@ -12,6 +12,7 @@ import {
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
+import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
@@ -157,6 +158,7 @@ export function ModerationScreenInner({
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
+  const {isAgeRestricted} = useAgeAssuranceContext()
 
   useFocusEffect(
     useCallback(() => {
@@ -352,7 +354,7 @@ export function ModerationScreenInner({
                 </Text>
                 <Toggle.Item
                   label={_(msg`Toggle to enable or disable adult content`)}
-                  disabled={disabledOnIOS}
+                  disabled={disabledOnIOS || isAgeRestricted}
                   name="adultContent"
                   value={adultContentEnabled}
                   onChange={onToggleAdultContentEnabled}>
@@ -403,7 +405,10 @@ export function ModerationScreenInner({
               <Divider />
             </>
           )}
-          <GlobalLabelPreference labelDefinition={LABELS.nudity} />
+          <GlobalLabelPreference
+            disabled={isAgeRestricted}
+            labelDefinition={LABELS.nudity}
+          />
         </View>
       </View>
 
