@@ -183,7 +183,7 @@ export function useGeolocation() {
 if (__DEV__) {
   // @ts-ignore
   window.setGeolocation = (geo: Device['geolocation']) => {
-    if (!geo?.countryCode || !geo?.isAgeRestrictedGeo) {
+    if (!geo?.countryCode || typeof geo?.isAgeRestrictedGeo !== 'boolean') {
       throw new Error(
         `Expected {countryCode: string, isAgeRestrictedGeo: boolean}`,
       )
