@@ -342,6 +342,12 @@ async function resolveMedia(
     // posting will fail if aspect ratio is set to 0
     const aspectRatio = width > 0 && height > 0 ? {width, height} : undefined
 
+    if (!aspectRatio) {
+      logger.error(
+        `Invalid aspect ratio - got { width: ${videoDraft.asset.width}, height: ${videoDraft.asset.height} }`,
+      )
+    }
+
     return {
       $type: 'app.bsky.embed.video',
       video: videoDraft.pendingPublish.blobRef,
