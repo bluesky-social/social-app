@@ -14,6 +14,7 @@ import {isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   type FeedSourceInfo,
+  getFeedTypeFromUri,
   hydrateFeedGenerator,
   hydrateList,
   useFeedSourceInfoQuery,
@@ -25,7 +26,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
-import {Warning_Stroke2_Corner0_Rounded} from '#/components/icons/Warning'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {RichText} from '#/components/RichText'
@@ -247,10 +248,16 @@ function MissingFeed({
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogControl()
 
+  const type = getFeedTypeFromUri(uri)
+
   return (
     <>
       <Button
-        label={_(msg`Could not connect to custom feed`)}
+        label={
+          type === 'feed'
+            ? _(msg`Could not connect to custom feed`)
+            : _(msg`Deleted list`)
+        }
         accessibilityHint={_(msg`Tap for more information`)}
         onPress={control.open}
         style={[
@@ -272,14 +279,18 @@ function MissingFeed({
               a.align_center,
               a.justify_center,
             ]}>
-            <Warning_Stroke2_Corner0_Rounded size="lg" />
+            <WarningIcon size="lg" />
           </View>
           <View style={[a.flex_1]}>
             <Text
               emoji
               style={[a.text_sm, a.font_bold, a.leading_snug, a.italic]}
               numberOfLines={1}>
-              <Trans>Feed unavailable</Trans>
+              {type === 'feed' ? (
+                <Trans>Feed unavailable</Trans>
+              ) : (
+                <Trans>Deleted list</Trans>
+              )}
             </Text>
             <Text
               style={[
@@ -307,18 +318,32 @@ function MissingFeed({
           style={web({maxWidth: 500})}>
           <View style={[a.gap_sm]}>
             <Text style={[a.font_heavy, a.text_2xl]}>
-              <Trans>Could not connect to feed service</Trans>
+              {type === 'feed' ? (
+                <Trans>Could not connect to feed service</Trans>
+              ) : (
+                <Trans>Deleted list</Trans>
+              )}
             </Text>
             <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-              <Trans>
-                We could not connect to the service that provides this custom
-                feed. It may be temporarily unavailable and experiencing issues,
-                or permanently unavailable.
-              </Trans>
+              {type === 'feed' ? (
+                <Trans>
+                  We could not connect to the service that provides this custom
+                  feed. It may be temporarily unavailable and experiencing
+                  issues, or permanently unavailable.
+                </Trans>
+              ) : (
+                <Trans>
+                  We could not find this list. It was probably deleted.
+                </Trans>
+              )}
             </Text>
             <Divider style={[a.my_md]} />
             <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
-              <Trans>Feed creator</Trans>
+              {type === 'feed' ? (
+                <Trans>Feed creator</Trans>
+              ) : (
+                <Trans>List creator</Trans>
+              )}
             </Text>
             {profile && moderationOpts && (
               <View style={[a.w_full, a.align_start]}>
@@ -350,12 +375,17 @@ function MissingFeed({
                 <Trans>Could not find profile</Trans>
               </Text>
             )}
-            <Text style={[a.font_bold, t.atoms.text_contrast_high, a.mt_md]}>
-              <Trans>Feed identifier</Trans>
-            </Text>
-            <Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>
-              {atUri.rkey}
-            </Text>
+            {type === 'feed' && (
+              <>
+                <Text
+                  style={[a.font_bold, t.atoms.text_contrast_high, a.mt_md]}>
+                  <Trans>Feed identifier</Trans>
+                </Text>
+                <Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>
+                  {atUri.rkey}
+                </Text>
+              </>
+            )}
             {error instanceof Error && (
               <>
                 <Text
