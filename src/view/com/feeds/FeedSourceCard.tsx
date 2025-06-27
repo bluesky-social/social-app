@@ -2,7 +2,6 @@ import {
   Linking,
   Pressable,
   type StyleProp,
-  StyleSheet,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -15,9 +14,7 @@ import {
 import {Plural, Trans} from '@lingui/macro'
 
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {s} from '#/lib/styles'
 import {
   type FeedSourceInfo,
   hydrateFeedGenerator,
@@ -25,11 +22,11 @@ import {
   useFeedSourceInfoQuery,
 } from '#/state/queries/feed'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {shouldClickOpenNewTab} from '#/components/Link'
 import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 
 type FeedSourceCardProps = {
   feedUri: string
@@ -90,8 +87,6 @@ export function FeedSourceCardLoaded({
   hideTopBorder?: boolean
 }) {
   const t = useTheme()
-  const pal = usePalette('default')
-
   const navigation = useNavigationDeduped()
 
   /*
@@ -102,30 +97,16 @@ export function FeedSourceCardLoaded({
    */
   if (!feed)
     return (
-      <View
+      <FeedLoadingPlaceholder
         style={[
-          pal.border,
-          {
-            borderTopWidth:
-              showMinimalPlaceholder || hideTopBorder
-                ? 0
-                : StyleSheet.hairlineWidth,
-            flexDirection: 'row',
-            alignItems: 'center',
-            flex: 1,
-            paddingRight: 18,
-          },
-        ]}>
-        {showMinimalPlaceholder ? (
-          <FeedLoadingPlaceholder
-            style={[a.flex_1]}
-            showTopBorder={false}
-            showLowerPlaceholder={false}
-          />
-        ) : (
-          <FeedLoadingPlaceholder style={[a.flex_1]} showTopBorder={false} />
-        )}
-      </View>
+          t.atoms.border_contrast_low,
+          !(showMinimalPlaceholder || hideTopBorder) && a.border_t,
+          a.flex_1,
+          style,
+        ]}
+        showTopBorder={false}
+        showLowerPlaceholder={!showMinimalPlaceholder}
+      />
     )
 
   return (
@@ -168,14 +149,19 @@ export function FeedSourceCardLoaded({
       }}
       key={feed.uri}>
       <View style={[a.flex_row, a.align_center]}>
-        <View style={[s.mr10]}>
+        <View style={[a.mr_md]}>
           <UserAvatar type="algo" size={36} avatar={feed.avatar} />
         </View>
-        <View style={[a.flex_1, a.gap_2xs]}>
-          <Text emoji style={[pal.text, s.bold]} numberOfLines={1}>
+        <View style={[a.flex_1, a.gap_xs]}>
+          <Text
+            emoji
+            style={[a.text_md, a.font_bold, a.leading_tight]}
+            numberOfLines={1}>
             {feed.displayName}
           </Text>
-          <Text type="sm" style={[pal.textLight]} numberOfLines={1}>
+          <Text
+            style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_tight]}
+            numberOfLines={1}>
             {feed.type === 'feed' ? (
               <Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
             ) : (
@@ -194,7 +180,13 @@ export function FeedSourceCardLoaded({
       ) : null}
 
       {showLikes && feed.type === 'feed' ? (
-        <Text type="sm-medium" style={[pal.text, pal.textLight]}>
+        <Text
+          style={[
+            a.text_sm,
+            a.font_bold,
+            t.atoms.text_contrast_medium,
+            a.leading_tight,
+          ]}>
           <Trans>
             Liked by{' '}
             <Plural value={feed.likeCount || 0} one="# user" other="# users" />

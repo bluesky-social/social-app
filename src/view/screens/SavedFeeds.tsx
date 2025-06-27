@@ -296,7 +296,7 @@ function ListItem({
         <FeedSourceCard
           key={feedUri}
           feedUri={feedUri}
-          style={[isPinned && {paddingRight: 8}]}
+          style={[isPinned && a.pr_sm]}
           showMinimalPlaceholder
           hideTopBorder={true}
         />
@@ -391,26 +391,17 @@ function ListItem({
 function FollowingFeedCard() {
   const t = useTheme()
   return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.flex_1,
-        {
-          paddingHorizontal: 16,
-          paddingVertical: 16,
-        },
-      ]}>
+    <View style={[a.flex_row, a.align_center, a.flex_1, a.p_lg]}>
       <View
         style={[
           a.align_center,
           a.justify_center,
           a.rounded_sm,
+          a.mr_md,
           {
             width: 36,
             height: 36,
             backgroundColor: t.palette.primary_500,
-            marginRight: 10,
           },
         ]}>
         <FilterTimeline
@@ -423,8 +414,7 @@ function FollowingFeedCard() {
           fill={t.palette.white}
         />
       </View>
-      <View
-        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+      <View style={[a.flex_1, a.flex_row, a.gap_sm, a.align_center]}>
         <Text type="lg-medium" style={[t.atoms.text]} numberOfLines={1}>
           <Trans>Following</Trans>
         </Text>

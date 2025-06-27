@@ -233,8 +233,7 @@ export function FeedLoadingPlaceholder({
     <View
       style={[
         {
-          paddingHorizontal: 16,
-          paddingVertical: 16,
+          padding: 16,
           borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
         },
         pal.border,
@@ -252,12 +251,7 @@ export function FeedLoadingPlaceholder({
         </View>
       </View>
       {showLowerPlaceholder && (
-        <View style={{paddingHorizontal: 5, marginTop: 10}}>
-          <LoadingPlaceholder
-            width={260}
-            height={8}
-            style={{marginVertical: 12}}
-          />
+        <View style={{marginTop: 12}}>
           <LoadingPlaceholder width={120} height={8} />
         </View>
       )}
@@ -352,7 +346,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     borderRadius: 999,
-    marginRight: 10,
+    marginRight: 12,
   },
   notification: {
     flexDirection: 'row',
