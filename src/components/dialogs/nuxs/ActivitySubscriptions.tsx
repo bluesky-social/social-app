@@ -5,7 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isWeb} from '#/platform/detection'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
@@ -15,7 +15,6 @@ import {Text} from '#/components/Typography'
 export function ActivitySubscriptionsNUX() {
   const t = useTheme()
   const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
 
@@ -31,9 +30,7 @@ export function ActivitySubscriptionsNUX() {
 
       <Dialog.ScrollableInner
         label={_(msg`Introducing activity notifications`)}
-        style={[
-          gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
-        ]}
+        style={[web({maxWidth: 400})]}
         contentContainerStyle={[
           {
             paddingTop: 0,
@@ -100,7 +97,7 @@ export function ActivitySubscriptionsNUX() {
               style={[
                 a.overflow_hidden,
                 {
-                  height: isWeb ? 228 : 228,
+                  aspectRatio: 398 / 228,
                 },
               ]}>
               <Image
@@ -133,7 +130,7 @@ export function ActivitySubscriptionsNUX() {
                 a.font_heavy,
                 a.text_center,
                 {
-                  fontSize: 32,
+                  fontSize: isWeb ? 28 : 32,
                   maxWidth: 300,
                 },
               ]}>
