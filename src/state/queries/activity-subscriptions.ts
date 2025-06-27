@@ -44,12 +44,13 @@ export function useNotificationDeclarationMutation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (record: AppBskyNotificationDeclaration.Record) => {
-      const response = await agent.com.atproto.repo.putRecord({
-        repo: currentAccount!.did,
-        collection: 'app.bsky.notification.declaration',
-        rkey: 'self',
+      const response = await agent.app.bsky.notification.declaration.put(
+        {
+          repo: currentAccount!.did,
+          rkey: 'self',
+        },
         record,
-      })
+      )
       return response
     },
     onMutate: value => {
