@@ -30,12 +30,6 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
           msg`This user has requested that their content only be shown to signed-in users.`,
         ),
       },
-      '!no-subscriptions': {
-        name: _(msg`No subscriptions allowed`),
-        description: _(
-          msg`This user has requested that they cannot be subscribed to for post notifications.`,
-        ),
-      },
       porn: {
         name: _(msg`Adult Content`),
         description: _(msg`Explicit sexual images.`),
