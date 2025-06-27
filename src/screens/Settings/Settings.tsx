@@ -64,6 +64,7 @@ import {
   shouldShowVerificationCheckButton,
   VerificationCheckButton,
 } from '#/components/verification/VerificationCheckButton'
+import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
@@ -364,6 +365,7 @@ function DevOptions() {
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
+  const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged()
 
   const resetOnboarding = async () => {
     navigation.navigate('Home')
@@ -385,6 +387,10 @@ function DevOptions() {
       lastEmailConfirm: lastEmailConfirm.toISOString(),
     })
     Toast.show(_(msg`You probably want to restart the app now.`))
+  }
+
+  const onPressActySubsUnNudge = () => {
+    setActyNotifNudged(false)
   }
 
   return (
@@ -431,6 +437,15 @@ function DevOptions() {
           <Trans>Unsnooze email reminder</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
+      {actyNotifNudged && (
+        <SettingsList.PressableItem
+          onPress={onPressActySubsUnNudge}
+          label={_(msg`Reset activity subscription nudge`)}>
+          <SettingsList.ItemText>
+            <Trans>Reset activity subscription nudge</Trans>
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      )}
       <SettingsList.PressableItem
         onPress={() => clearAllStorage()}
         label={_(msg`Clear all storage data`)}>

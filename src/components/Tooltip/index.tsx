@@ -3,6 +3,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -30,31 +31,33 @@ const BUBBLE_SHADOW_OFFSET = ARROW_SIZE / 3 // vibes-based, provide more shadow 
 
 type TooltipContextType = {
   position: 'top' | 'bottom'
-  ready: boolean
+  visible: boolean
   onVisibleChange: (visible: boolean) => void
 }
 
+type TargetMeasurements = {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
 type TargetContextType = {
-  targetMeasurements:
-    | {
-        x: number
-        y: number
-        width: number
-        height: number
-      }
-    | undefined
-  targetRef: React.RefObject<View>
+  targetMeasurements: TargetMeasurements | undefined
+  setTargetMeasurements: (measurements: TargetMeasurements) => void
+  shouldMeasure: boolean
 }
 
 const TooltipContext = createContext<TooltipContextType>({
   position: 'bottom',
-  ready: false,
+  visible: false,
   onVisibleChange: () => {},
 })
 
 const TargetContext = createContext<TargetContextType>({
   targetMeasurements: undefined,
-  targetRef: {current: null},
+  setTargetMeasurements: () => {},
+  shouldMeasure: false,
 })
 
 export function Outer({
@@ -69,20 +72,11 @@ export function Outer({
   onVisibleChange: (visible: boolean) => void
 }) {
   /**
-   * Whether we have measured the target and are ready to show the tooltip.
-   */
-  const [ready, setReady] = useState(false)
-  /**
    * Lagging state to track the externally-controlled visibility of the
-   * tooltip.
+   * tooltip, which needs to wait for the target to be measured before
+   * actually being shown.
    */
-  const [prevRequestVisible, setPrevRequestVisible] = useState<
-    boolean | undefined
-  >()
-  /**
-   * Needs to reference the element this Tooltip is attached to.
-   */
-  const targetRef = useRef<View>(null)
+  const [visible, setVisible] = useState<boolean>(false)
   const [targetMeasurements, setTargetMeasurements] = useState<
     | {
         x: number
@@ -93,33 +87,24 @@ export function Outer({
     | undefined
   >(undefined)
 
-  if (requestVisible && !prevRequestVisible) {
-    setPrevRequestVisible(true)
-
-    if (targetRef.current) {
-      /*
-       * Once opened, measure the dimensions and position of the target
-       */
-      targetRef.current.measure((_x, _y, width, height, pageX, pageY) => {
-        if (pageX !== undefined && pageY !== undefined && width && height) {
-          setTargetMeasurements({x: pageX, y: pageY, width, height})
-          setReady(true)
-        }
-      })
-    }
-  } else if (!requestVisible && prevRequestVisible) {
-    setPrevRequestVisible(false)
+  if (requestVisible && !visible && targetMeasurements) {
+    setVisible(true)
+  } else if (!requestVisible && visible) {
+    setVisible(false)
     setTargetMeasurements(undefined)
-    setReady(false)
   }
 
   const ctx = useMemo(
-    () => ({position, ready, onVisibleChange}),
-    [position, ready, onVisibleChange],
+    () => ({position, visible, onVisibleChange}),
+    [position, visible, onVisibleChange],
   )
   const targetCtx = useMemo(
-    () => ({targetMeasurements, targetRef}),
-    [targetMeasurements, targetRef],
+    () => ({
+      targetMeasurements,
+      setTargetMeasurements,
+      shouldMeasure: requestVisible,
+    }),
+    [requestVisible, targetMeasurements, setTargetMeasurements],
   )
 
   return (
@@ -132,7 +117,20 @@ export function Outer({
 }
 
 export function Target({children}: {children: React.ReactNode}) {
-  const {targetRef} = useContext(TargetContext)
+  const {shouldMeasure, setTargetMeasurements} = useContext(TargetContext)
+  const targetRef = useRef<View>(null)
+
+  useEffect(() => {
+    if (!shouldMeasure) return
+    /*
+     * Once opened, measure the dimensions and position of the target
+     */
+    targetRef.current?.measure((_x, _y, width, height, pageX, pageY) => {
+      if (pageX !== undefined && pageY !== undefined && width && height) {
+        setTargetMeasurements({x: pageX, y: pageY, width, height})
+      }
+    })
+  }, [shouldMeasure, setTargetMeasurements])
 
   return (
     <View collapsable={false} ref={targetRef}>
@@ -148,13 +146,13 @@ export function Content({
   children: React.ReactNode
   label: string
 }) {
-  const {position, ready, onVisibleChange} = useContext(TooltipContext)
+  const {position, visible, onVisibleChange} = useContext(TooltipContext)
   const {targetMeasurements} = useContext(TargetContext)
   const requestClose = useCallback(() => {
     onVisibleChange(false)
   }, [onVisibleChange])
 
-  if (!ready || !targetMeasurements) return null
+  if (!visible || !targetMeasurements) return null
 
   return (
     <Portal>

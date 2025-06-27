@@ -443,4 +443,8 @@ export type MetricEvents = {
     [key: string]: any
   }
   'thread:click:headerMenuOpen': {}
+  'activitySubscription:enable': {
+    setting: 'posts' | 'posts_and_replies'
+  }
+  'activitySubscription:disable': {}
 }

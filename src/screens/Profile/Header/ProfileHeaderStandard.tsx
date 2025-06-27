@@ -15,7 +15,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {type Shadow} from '#/state/cache/types'
 import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -24,6 +23,7 @@ import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
+import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
@@ -58,8 +58,8 @@ let ProfileHeaderStandard = ({
 }: Props): React.ReactNode => {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
-    useProfileShadow(profileUnshadowed)
+  const profile =
+    useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed)
   const {currentAccount, hasSession} = useSession()
   const {_} = useLingui()
   const moderation = useMemo(
@@ -134,12 +134,25 @@ let ProfileHeaderStandard = ({
     }
   }, [_, queueUnblock])
 
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
 
   const {isActive: live} = useActorStatus(profile)
+
+  const subscriptionsAllowed = useMemo(() => {
+    switch (profile.associated?.activitySubscription?.allowSubscriptions) {
+      case 'followers':
+      case undefined:
+        return !!profile.viewer?.following
+      case 'mutuals':
+        return !!profile.viewer?.following && !!profile.viewer.followedBy
+      case 'none':
+      default:
+        return false
+    }
+  }, [profile])
 
   return (
     <ProfileHeaderShell
@@ -198,6 +211,12 @@ let ProfileHeaderStandard = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
+              {hasSession && subscriptionsAllowed && (
+                <SubscribeProfileButton
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+              )}
               {hasSession && <MessageProfileButton profile={profile} />}
 
               <Button
