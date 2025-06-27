@@ -2,12 +2,17 @@ import React from 'react'
 import {
   Linking,
   Pressable,
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {AtUri} from '@atproto/api'
+import {
+  type $Typed,
+  AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  AtUri,
+} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,34 +22,31 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
+import {
+  type FeedSourceInfo,
+  hydrateFeedGenerator,
+  hydrateList,
+  useFeedSourceInfoQuery,
+} from '#/state/queries/feed'
 import {
   useAddSavedFeedsMutation,
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, useTheme} from '#/alf'
 import {shouldClickOpenNewTab} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
-import {Text} from '../util/text/Text'
-import {UserAvatar} from '../util/UserAvatar'
 
-export function FeedSourceCard({
-  feedUri,
-  style,
-  showSaveBtn = false,
-  showDescription = false,
-  showLikes = false,
-  pinOnSave = false,
-  showMinimalPlaceholder,
-  hideTopBorder,
-}: {
+type FeedSourceCardProps = {
   feedUri: string
+  feedData?:
+    | $Typed<AppBskyFeedDefs.GeneratorView>
+    | $Typed<AppBskyGraphDefs.ListView>
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
@@ -52,30 +54,40 @@ export function FeedSourceCard({
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
   hideTopBorder?: boolean
-}) {
-  const {data: preferences} = usePreferencesQuery()
-  const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
+}
 
-  return (
-    <FeedSourceCardLoaded
-      feedUri={feedUri}
-      feed={feed}
-      preferences={preferences}
-      style={style}
-      showSaveBtn={showSaveBtn}
-      showDescription={showDescription}
-      showLikes={showLikes}
-      pinOnSave={pinOnSave}
-      showMinimalPlaceholder={showMinimalPlaceholder}
-      hideTopBorder={hideTopBorder}
-    />
-  )
+export function FeedSourceCard({
+  feedUri,
+  feedData,
+  ...props
+}: FeedSourceCardProps) {
+  if (feedData) {
+    let feed: FeedSourceInfo
+    if (AppBskyFeedDefs.isGeneratorView(feedData)) {
+      feed = hydrateFeedGenerator(feedData)
+    } else {
+      feed = hydrateList(feedData)
+    }
+    return <FeedSourceCardLoaded feedUri={feedUri} feed={feed} {...props} />
+  } else {
+    return <FeedSourceCardWithoutData feedUri={feedUri} {...props} />
+  }
+}
+
+export function FeedSourceCardWithoutData({
+  feedUri,
+  ...props
+}: Omit<FeedSourceCardProps, 'feedData'>) {
+  const {data: feed} = useFeedSourceInfoQuery({
+    uri: feedUri,
+  })
+
+  return <FeedSourceCardLoaded feedUri={feedUri} feed={feed} {...props} />
 }
 
 export function FeedSourceCardLoaded({
   feedUri,
   feed,
-  preferences,
   style,
   showSaveBtn = false,
   showDescription = false,
@@ -86,7 +98,6 @@ export function FeedSourceCardLoaded({
 }: {
   feedUri: string
   feed?: FeedSourceInfo
-  preferences?: UsePreferencesQueryResponse
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
@@ -95,6 +106,7 @@ export function FeedSourceCardLoaded({
   showMinimalPlaceholder?: boolean
   hideTopBorder?: boolean
 }) {
+  const {data: preferences} = usePreferencesQuery()
   const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -248,7 +260,7 @@ export function FeedSourceCardLoaded({
             <Text emoji style={[pal.text, s.bold]} numberOfLines={1}>
               {feed.displayName}
             </Text>
-            <Text style={[pal.textLight]} numberOfLines={1}>
+            <Text type="sm" style={[pal.textLight]} numberOfLines={1}>
               {feed.type === 'feed' ? (
                 <Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
               ) : (

@@ -1,10 +1,9 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
 import {moderateFeedGenerator} from '@atproto/api'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
+import {atoms as a, useTheme} from '#/alf'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {type EmbedType} from '#/types/bsky/post'
 import {type CommonProps} from './types'
@@ -14,11 +13,18 @@ export function FeedEmbed({
 }: CommonProps & {
   embed: EmbedType<'feed'>
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   return (
     <FeedSourceCard
       feedUri={embed.view.uri}
-      style={[pal.view, pal.border, styles.customFeedOuter]}
+      feedData={embed.view}
+      style={[
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        a.p_md,
+        a.rounded_sm,
+        a.border,
+      ]}
       showLikes
     />
   )
@@ -41,12 +47,3 @@ export function ModeratedFeedEmbed({
     </ContentHider>
   )
 }
-
-const styles = StyleSheet.create({
-  customFeedOuter: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-  },
-})
