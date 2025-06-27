@@ -21,11 +21,11 @@ msgstr ""
 #: src/components/ProgressGuide/FollowDialog.tsx:516
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:127
 msgid "(active)"
-msgstr "(etkin)"
+msgstr "(aktif)"
 
 #: src/screens/Messages/components/ChatListItem.tsx:160
 msgid "(contains embedded content)"
-msgstr "(gömülü içerik içeriyor)"
+msgstr "(gömülü içerik var)"
 
 #: src/screens/Settings/AccountSettings.tsx:68
 msgid "(no email)"
@@ -37,11 +37,11 @@ msgstr "{0, plural, one {# gün} other {# gün}}"
 
 #: src/screens/Profile/ProfileFollowers.tsx:40
 msgid "{0, plural, one {# follower} other {# followers}}"
-msgstr "{0, plural, one {takipçi} other {takipçi}}"
+msgstr "{0, plural, one {# takipçi} other {# takipçi}}"
 
 #: src/screens/Profile/ProfileFollows.tsx:40
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr "{0, plural, other {# takip edilen}}"
+msgstr "{0, plural, one {# takip edilen} other {# takip edilen}}"
 
 #: src/lib/hooks/useTimeAgo.ts:159
 msgid "{0, plural, one {# hour} other {# hours}}"
@@ -49,27 +49,27 @@ msgstr "{0, plural, one {# saat} other {# saat}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:53
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this account"
-msgstr "Bu hesaba {0, plural, other {# işaret}} konmuş"
+msgstr "Bu hesaba {0, plural, one {# işaret} other {# işaret}} konmuş"
 
 #: src/components/moderation/LabelsOnMe.tsx:62
 msgid "{0, plural, one {# label has} other {# labels have}} been placed on this content"
-msgstr "Bu içeriğe {0, plural, other {# işaret}} konmuş"
+msgstr "Bu içeriğe {0, plural, one {# işaret} other {# işaret}} konmuş"
 
 #: src/screens/Post/PostLikedBy.tsx:41
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr "{0, plural, other {# beğeni}}"
+msgstr "{0, plural, one {# beğeni} other {# beğeni}}"
 
 #: src/lib/hooks/useTimeAgo.ts:149
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, other {# dakika}}"
+msgstr "{0, plural, one {# dakika} other {# dakika}}"
 
 #: src/lib/hooks/useTimeAgo.ts:180
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, other {# ay}}"
+msgstr "{0, plural, one {# ay} other {# ay}}"
 
 #: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr "{0, plural, other {# alıntı}}"
+msgstr "{0, plural, one {# alıntı} other {# alıntı}}"
 
 #: src/screens/Post/PostRepostedBy.tsx:41
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -77,53 +77,53 @@ msgstr "{0, plural, one {# yeniden gönderi} other {# yeniden gönderi}}"
 
 #: src/lib/hooks/useTimeAgo.ts:139
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, other {# saniye}}"
+msgstr "{0, plural, one {# saniye} other {# saniye}}"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:215
-#: src/view/shell/bottom-bar/BottomBar.tsx:247
+#: src/view/shell/BottomBar.tsx:215
+#: src/view/shell/BottomBar.tsx:247
 #: src/view/shell/Drawer.tsx:473
 msgid "{0, plural, one {# unread item} other {# unread items}}"
-msgstr "{0, plural, other {# okunmamış öğe}}"
+msgstr "{0, plural, one {# okunmamış öğe} other {# okunmamış öğe}}"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:182
 msgid "{0, plural, one {#mo} other {#mo}}"
-msgstr "{0, plural, other {#a}}"
+msgstr "{0, plural, one {# ay} other {# ay}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:442
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, other {takipçi}}"
+msgstr "{0, plural, one {takipçi} other {takipçi}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, other {takip edilen}}"
+msgstr "{0, plural, one {takip edilen} other {takip edilen}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:529
 msgid "{0, plural, one {like} other {likes}}"
-msgstr "{0, plural, other {beğeni}}"
+msgstr "{0, plural, one {beğeni} other {beğeni}}"
 
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, other {gönderi}}"
+msgstr "{0, plural, one {gönderi} other {gönderi}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:513
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr "{0, plural, other {alıntı}}"
+msgstr "{0, plural, one {alıntı} other {alıntı}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:495
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, other {yeniden gönderi}}"
+msgstr "{0, plural, one {yeniden gönderi} other {yeniden gönderi}}"
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:82
 msgid "{0, plural, other {{1} posts}}"
-msgstr "{0, plural, other {{1} gönderi}}"
+msgstr "{0, plural, one {{1} gönderi} other {{1} gönderi}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #: src/screens/StarterPack/StarterPackScreen.tsx:490
 msgid "{0, plural, other {# people have}} used this starter pack!"
-msgstr "{0, plural, other {# kişi}} bu başlangıç paketini kullandı!"
+msgstr "{0, plural, one {# kişi} other {# kişi}} bu başlangıç paketini kullandı!"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -154,15 +154,15 @@ msgstr "{0}/{1}"
 #. Accessibility label describing how many characters the user has entered out of a 50-character limit in a text input field
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:55
 msgid "{0} out of 50"
-msgstr "50'de {0}"
+msgstr "50 üzerinden {0}"
 
 #: src/components/dms/MessageItem.tsx:143
 msgid "{0} reacted {1}"
-msgstr "{0} şu tepkiyi verdi: {1}"
+msgstr "{0} tepki gösterdi: {1}"
 
 #: src/screens/Messages/components/ChatListItem.tsx:231
 msgid "{0} reacted {1} to {2}"
-msgstr "{0} şuna {1} tepkisi verdi: {2}"
+msgstr "{0} {2} için {1} tepkisi gösterdi"
 
 #: src/view/com/util/UserAvatar.tsx:559
 #: src/view/com/util/UserAvatar.tsx:577
@@ -199,7 +199,7 @@ msgstr "{0}sn"
 
 #: src/view/shell/desktop/LeftNav.tsx:401
 msgid "{count, plural, one {# unread item} other {# unread items}}"
-msgstr "{count, plural, other {# okunmamış öğe}}"
+msgstr "{count, plural, one {# okunmamış öğe} other {# okunmamış öğe}}"
 
 #: src/lib/generate-starterpack.ts:111
 #: src/screens/StarterPack/Wizard/index.tsx:178
@@ -216,39 +216,39 @@ msgstr "{estimatedTimeMins, plural, one {dakika} other {dakika}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:335
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişi daha}}</0> sizi takip etti"
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> sizi takip etti"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:361
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
-msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişi daha}}</0> özelleştirilmiş akışınızı beğendi"
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> özelleştirilmiş akışınızı beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:254
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
-msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişi daha}}</0> gönderinizi beğendi"
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> gönderinizi beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:466
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
-msgstr ""
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> repostunuzu beğendi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:439
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
-msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişi daha}}</0> doğrulamalarını hesabınızdan kaldırdı"
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> doğrulamalarını hesabınızdan kaldırdı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:278
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
-msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişi daha}}</0> gönderinizi yeniden gönderdi"
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> gönderinizi yeniden gönderdi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:490
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
-msgstr ""
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> repostunuzu yeniden paylaştı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişi daha}}</0> başlangıç paketinizle kaydoldu"
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> başlangıç paketinizle kaydoldu"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:414
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
-msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişi daha}}</0> sizi doğruladı"
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} kişi daha} other {{formattedAuthorsCount} kişi daha}}</0> sizi doğruladı"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorLink} followed you"
