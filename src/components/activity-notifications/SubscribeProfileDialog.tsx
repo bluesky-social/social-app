@@ -14,6 +14,7 @@ import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {platform, useTheme, web} from '#/alf'
 import {atoms as a} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {
   Button,
   ButtonIcon,
@@ -26,7 +27,6 @@ import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {Admonition} from '../Admonition'
 
 export function SubscribeProfileDialog({
   control,

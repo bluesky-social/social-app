@@ -8,8 +8,9 @@ import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-disp
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon} from '#/components/icons/BellPlus'
+import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import type * as bsky from '#/types/bsky'
-import {Bell_Stroke2_Corner0_Rounded as NotificationIcon} from '../icons/Bell'
 import {SubscribeProfileDialog} from './SubscribeProfileDialog'
 
 export function SubscribeProfileButton({
@@ -38,6 +39,12 @@ export function SubscribeProfileButton({
     ],
   })
 
+  const isSubscribed =
+    profile.viewer?.activitySubscription?.post ||
+    profile.viewer?.activitySubscription?.reply
+
+  const Icon = isSubscribed ? BellRingingIcon : BellPlusIcon
+
   return (
     <>
       <Button
@@ -50,7 +57,7 @@ export function SubscribeProfileButton({
         label={_(msg`Get notified when ${name} posts`)}
         style={[a.justify_center]}
         onPress={wrappedOnPress}>
-        <ButtonIcon icon={NotificationIcon} size="md" />
+        <ButtonIcon icon={Icon} size="md" />
       </Button>
 
       <SubscribeProfileDialog
