@@ -276,7 +276,6 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/account", server.WebGeneric)
 	e.GET("/settings/privacy-and-security", server.WebGeneric)
 	e.GET("/settings/privacy-and-security/activity", server.WebGeneric)
-	e.GET("/settings/notifications/activity", server.WebGeneric)
 	e.GET("/settings/content-and-media", server.WebGeneric)
 	e.GET("/settings/interests", server.WebGeneric)
 	e.GET("/settings/about", server.WebGeneric)
