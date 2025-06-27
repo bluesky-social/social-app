@@ -133,7 +133,7 @@ export function Target({children}: {children: React.ReactNode}) {
   }, [shouldMeasure, setTargetMeasurements])
 
   return (
-    <View collapsable={false} ref={targetRef} onLayout={() => {}}>
+    <View collapsable={false} ref={targetRef}>
       {children}
     </View>
   )
