@@ -1,19 +1,13 @@
-import {
-  Linking,
-  Pressable,
-  type StyleProp,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type $Typed,
   AppBskyFeedDefs,
   type AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {Plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {
   type FeedSourceInfo,
@@ -24,7 +18,7 @@ import {
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {shouldClickOpenNewTab} from '#/components/Link'
+import {Link} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
@@ -40,6 +34,7 @@ type FeedSourceCardProps = {
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
   hideTopBorder?: boolean
+  link?: boolean
 }
 
 export function FeedSourceCard({
@@ -78,6 +73,7 @@ export function FeedSourceCardLoaded({
   showLikes = false,
   showMinimalPlaceholder,
   hideTopBorder,
+  link = true,
 }: {
   feed?: FeedSourceInfo
   style?: StyleProp<ViewStyle>
@@ -85,9 +81,10 @@ export function FeedSourceCardLoaded({
   showLikes?: boolean
   showMinimalPlaceholder?: boolean
   hideTopBorder?: boolean
+  link?: boolean
 }) {
   const t = useTheme()
-  const navigation = useNavigationDeduped()
+  const {_} = useLingui()
 
   /*
    * LOAD STATE
@@ -109,45 +106,8 @@ export function FeedSourceCardLoaded({
       />
     )
 
-  return (
-    <Pressable
-      testID={`feed-${feed.displayName}`}
-      accessibilityRole="button"
-      style={[
-        a.flex_1,
-        a.p_lg,
-        a.gap_md,
-        !hideTopBorder && !a.border_t,
-        t.atoms.border_contrast_low,
-        style,
-      ]}
-      onPress={e => {
-        const shouldOpenInNewTab = shouldClickOpenNewTab(e)
-        if (feed.type === 'feed') {
-          if (shouldOpenInNewTab) {
-            Linking.openURL(
-              `/profile/${feed.creatorDid}/feed/${new AtUri(feed.uri).rkey}`,
-            )
-          } else {
-            navigation.push('ProfileFeed', {
-              name: feed.creatorDid,
-              rkey: new AtUri(feed.uri).rkey,
-            })
-          }
-        } else if (feed.type === 'list') {
-          if (shouldOpenInNewTab) {
-            Linking.openURL(
-              `/profile/${feed.creatorDid}/lists/${new AtUri(feed.uri).rkey}`,
-            )
-          } else {
-            navigation.push('ProfileList', {
-              name: feed.creatorDid,
-              rkey: new AtUri(feed.uri).rkey,
-            })
-          }
-        }
-      }}
-      key={feed.uri}>
+  const inner = (
+    <>
       <View style={[a.flex_row, a.align_center]}>
         <View style={[a.mr_md]}>
           <UserAvatar type="algo" size={36} avatar={feed.avatar} />
@@ -170,7 +130,6 @@ export function FeedSourceCardLoaded({
           </Text>
         </View>
       </View>
-
       {showDescription && feed.description ? (
         <RichText
           style={[t.atoms.text_contrast_high, a.flex_1, a.flex_wrap]}
@@ -178,7 +137,6 @@ export function FeedSourceCardLoaded({
           numberOfLines={3}
         />
       ) : null}
-
       {showLikes && feed.type === 'feed' ? (
         <Text
           style={[
@@ -193,6 +151,46 @@ export function FeedSourceCardLoaded({
           </Trans>
         </Text>
       ) : null}
-    </Pressable>
+    </>
   )
+
+  if (link) {
+    return (
+      <Link
+        testID={`feed-${feed.displayName}`}
+        label={_(
+          feed.type === 'feed'
+            ? msg`${feed.displayName}, a feed by ${sanitizeHandle(feed.creatorHandle, '@')}, liked by ${feed.likeCount || 0}`
+            : msg`${feed.displayName}, a list by ${sanitizeHandle(feed.creatorHandle, '@')}`,
+        )}
+        to={{
+          screen: feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList',
+          params: {name: feed.creatorDid, rkey: new AtUri(feed.uri).rkey},
+        }}
+        style={[
+          a.flex_1,
+          a.p_lg,
+          a.gap_md,
+          !hideTopBorder && !a.border_t,
+          t.atoms.border_contrast_low,
+          style,
+        ]}>
+        {inner}
+      </Link>
+    )
+  } else {
+    return (
+      <View
+        style={[
+          a.flex_1,
+          a.p_lg,
+          a.gap_md,
+          !hideTopBorder && !a.border_t,
+          t.atoms.border_contrast_low,
+          style,
+        ]}>
+        {inner}
+      </View>
+    )
+  }
 }
