@@ -8,6 +8,7 @@ import {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -362,7 +363,7 @@ function MissingFeed({
                   <Trans>Error message</Trans>
                 </Text>
                 <Text style={[a.text_md, t.atoms.text_contrast_high, a.italic]}>
-                  {error.message}
+                  {cleanError(error.message)}
                 </Text>
               </>
             )}
