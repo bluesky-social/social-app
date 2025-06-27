@@ -1,3 +1,4 @@
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Trans} from '@lingui/macro'
 
@@ -6,11 +7,27 @@ import {IsAgeRestricted} from '#/components/ageAssurance/IsAgeRestricted'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 
-export function AgeRestrictedScreen({children}: {children: React.ReactNode}) {
+export function AgeRestrictedScreen({
+  children,
+  fallback,
+}: {
+  children: React.ReactNode
+  fallback?: React.ReactNode
+}) {
+  const screenFallback = useMemo(() => {
+    return (
+      fallback || (
+        <Layout.Screen>
+          <Layout.Content />
+        </Layout.Screen>
+      )
+    )
+  }, [fallback])
+
   return (
     <>
-      <IsAgeRestricted.True>
-        <Layout.Screen testID="messagesSettingsScreen">
+      <IsAgeRestricted.True fallback={screenFallback}>
+        <Layout.Screen>
           <Layout.Header.Outer>
             <Layout.Header.BackButton />
             <Layout.Header.Content>
@@ -30,7 +47,9 @@ export function AgeRestrictedScreen({children}: {children: React.ReactNode}) {
         </Layout.Screen>
       </IsAgeRestricted.True>
 
-      <IsAgeRestricted.False>{children}</IsAgeRestricted.False>
+      <IsAgeRestricted.False fallback={screenFallback}>
+        {children}
+      </IsAgeRestricted.False>
     </>
   )
 }
