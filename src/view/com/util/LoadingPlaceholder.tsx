@@ -1,10 +1,10 @@
 import {useMemo} from 'react'
 import {
-  DimensionValue,
-  StyleProp,
+  type DimensionValue,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -234,7 +234,7 @@ export function FeedLoadingPlaceholder({
       style={[
         {
           paddingHorizontal: 12,
-          paddingVertical: 18,
+          paddingVertical: 20,
           borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
         },
         pal.border,
