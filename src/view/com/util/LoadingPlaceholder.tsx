@@ -243,7 +243,7 @@ export function FeedLoadingPlaceholder({
         <LoadingPlaceholder
           width={36}
           height={36}
-          style={[styles.avatar, {borderRadius: 6}]}
+          style={[styles.avatar, {borderRadius: 8}]}
         />
         <View style={[s.flex1]}>
           <LoadingPlaceholder width={100} height={8} style={[s.mt5, s.mb10]} />
