@@ -1,15 +1,20 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyNotificationDefs, type ModerationOpts} from '@atproto/api'
+import {
+  type AppBskyNotificationDefs,
+  type ModerationOpts,
+  type Un$Typed,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {platform, useTheme, web} from '#/alf'
@@ -51,11 +56,6 @@ export function SubscribeProfileDialog({
   )
 }
 
-const defaultState = {
-  post: false,
-  reply: false,
-} satisfies AppBskyNotificationDefs.ActivitySubscription
-
 function DialogInner({
   profile,
   moderationOpts,
@@ -69,7 +69,10 @@ function DialogInner({
   const t = useTheme()
   const agent = useAgent()
   const control = Dialog.useDialogContext()
-  const initialState = profile.viewer?.activitySubscription || defaultState
+  const queryClient = useQueryClient()
+  const initialState = parseActivitySubscription(
+    profile.viewer?.activitySubscription,
+  )
   const [state, setState] = useState(initialState)
 
   const values = useMemo(() => {
@@ -110,7 +113,7 @@ function DialogInner({
     error,
   } = useMutation({
     mutationFn: async (
-      activitySubscription: AppBskyNotificationDefs.ActivitySubscription,
+      activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>,
     ) => {
       await new Promise(resolve => setTimeout(resolve, 1000))
       await agent.app.bsky.notification.putActivitySubscription({
@@ -118,9 +121,13 @@ function DialogInner({
         activitySubscription,
       })
     },
-    onSuccess: (_data, variables) => {
-      control.close()
-      if (!variables.post && !variables.reply) {
+    onSuccess: (_data, activitySubscription) => {
+      control.close(() =>
+        updateProfileShadow(queryClient, profile.did, {
+          activitySubscription,
+        }),
+      )
+      if (!activitySubscription.post && !activitySubscription.reply) {
         Toast.show(
           _(
             msg`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
@@ -138,8 +145,8 @@ function DialogInner({
         Toast.show(_(msg`Changes saved`), 'check')
       }
     },
-    onError: error => {
-      logger.error('Could not save activity subscription', {message: error})
+    onError: err => {
+      logger.error('Could not save activity subscription', {message: err})
     },
   })
 
@@ -260,4 +267,12 @@ function DialogInner({
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
+}
+
+function parseActivitySubscription(
+  sub?: AppBskyNotificationDefs.ActivitySubscription,
+): Un$Typed<AppBskyNotificationDefs.ActivitySubscription> {
+  if (!sub) return {post: false, reply: false}
+  const {post, reply} = sub
+  return {post, reply}
 }

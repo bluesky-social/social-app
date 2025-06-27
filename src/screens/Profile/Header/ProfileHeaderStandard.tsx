@@ -15,7 +15,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {type Shadow} from '#/state/cache/types'
 import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
@@ -59,8 +58,8 @@ let ProfileHeaderStandard = ({
 }: Props): React.ReactNode => {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
-    useProfileShadow(profileUnshadowed)
+  const profile =
+    useProfileShadow<AppBskyActorDefs.ProfileViewDetailed>(profileUnshadowed)
   const {currentAccount, hasSession} = useSession()
   const {_} = useLingui()
   const moderation = useMemo(
