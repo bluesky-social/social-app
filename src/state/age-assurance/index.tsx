@@ -1,8 +1,5 @@
 import {createContext, useContext, useMemo} from 'react'
-import {
-  // useQueryClient,
-  useQuery,
-} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
 import {isNetworkError} from '#/lib/strings/errors'
@@ -13,6 +10,7 @@ import {
   type AppBskyUnspeccedDefs,
 } from '#/state/age-assurance/types'
 import {useGeolocation} from '#/state/geolocation'
+import {preferencesQueryKey} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
@@ -35,7 +33,7 @@ const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
 })
 
 export function Provider({children}: {children: React.ReactNode}) {
-  // const qc = useQueryClient()
+  const qc = useQueryClient()
   const agent = useAgent()
   const {geolocation} = useGeolocation()
 
@@ -58,6 +56,8 @@ export function Provider({children}: {children: React.ReactNode}) {
           data,
           account: agent.session?.did,
         })
+
+        qc.invalidateQueries({queryKey: preferencesQueryKey})
 
         return data
       } catch (e) {
