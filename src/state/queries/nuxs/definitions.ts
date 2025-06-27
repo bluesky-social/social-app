@@ -6,7 +6,7 @@ export enum Nux {
   NeueTypography = 'NeueTypography',
   ExploreInterestsCard = 'ExploreInterestsCard',
   InitialVerificationAnnouncement = 'InitialVerificationAnnouncement',
-  GranularNotificationsSettings = 'GranularNotificationsSettings',
+  ActivitySubscriptions = 'ActivitySubscriptions',
 }
 
 export const nuxNames = new Set(Object.values(Nux))
@@ -25,7 +25,7 @@ export type AppNux = BaseNux<
       data: undefined
     }
   | {
-      id: Nux.GranularNotificationsSettings
+      id: Nux.ActivitySubscriptions
       data: undefined
     }
 >
@@ -34,5 +34,5 @@ export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.NeueTypography]: undefined,
   [Nux.ExploreInterestsCard]: undefined,
   [Nux.InitialVerificationAnnouncement]: undefined,
-  [Nux.GranularNotificationsSettings]: undefined,
+  [Nux.ActivitySubscriptions]: undefined,
 }
