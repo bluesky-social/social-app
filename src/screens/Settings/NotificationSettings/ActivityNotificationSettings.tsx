@@ -3,7 +3,6 @@ import {type ListRenderItemInfo, Text as RNText, View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useInfiniteQuery} from '@tanstack/react-query'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
@@ -13,8 +12,8 @@ import {
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useActivitySubscriptionsQuery} from '#/state/queries/activity-subscriptions'
 import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
-import {useAgent} from '#/state/session'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
@@ -40,10 +39,9 @@ export function ActivityNotificationSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const {data: preferences, isError} = useNotificationSettingsQuery()
-  const agent = useAgent()
+
   const moderationOpts = useModerationOpts()
 
-  // TODO: Fetch subscriptions
   const {
     data: subscriptions,
     isPending,
@@ -51,22 +49,11 @@ export function ActivityNotificationSettingsScreen({}: Props) {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['TEMP'],
-    queryFn: async ({pageParam}) => {
-      const response = await agent.getFollows({
-        actor: agent.assertDid,
-        cursor: pageParam,
-      })
-      return response.data
-    },
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: prev => prev.cursor,
-  })
+  } = useActivitySubscriptionsQuery()
 
   const items = useMemo(() => {
     if (!subscriptions) return []
-    return subscriptions?.pages.flatMap(page => page.follows)
+    return subscriptions?.pages.flatMap(page => page.subscriptions)
   }, [subscriptions])
 
   const renderItem = useCallback(
@@ -138,49 +125,51 @@ export function ActivityNotificationSettingsScreen({}: Props) {
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
         ListEmptyComponent={
-          <View style={[a.px_xl, a.py_md]}>
-            {!isPending ? (
-              <Admonition.Outer type="tip">
-                <Admonition.Row>
-                  <Admonition.Icon />
-                  <View style={[a.flex_1, a.gap_sm]}>
-                    <Admonition.Text>
-                      <Trans>
-                        Enable notifications for an account by visiting their
-                        profile and pressing the{' '}
-                        <RNText
-                          style={[a.font_bold, t.atoms.text_contrast_high]}>
-                          bell icon
-                        </RNText>{' '}
-                        <BellIcon
-                          size="xs"
-                          style={t.atoms.text_contrast_high}
-                        />
-                        .
-                      </Trans>
-                    </Admonition.Text>
-                    <Admonition.Text>
-                      <Trans>
-                        By default, only accounts you follow can receive alerts
-                        from you – this can be changed in{' '}
-                        <InlineLinkText
-                          label={_(msg`Privacy & Security settings`)}
-                          to={{screen: 'PrivacyAndSecuritySettings'}}
-                          style={[a.font_bold]}>
-                          Settings &rarr; Privacy &amp; Security
-                        </InlineLinkText>
-                        .
-                      </Trans>
-                    </Admonition.Text>
-                  </View>
-                </Admonition.Row>
-              </Admonition.Outer>
-            ) : (
-              <View style={[a.flex_1, a.align_center, a.pt_xl]}>
-                <Loader size="lg" />
-              </View>
-            )}
-          </View>
+          error ? null : (
+            <View style={[a.px_xl, a.py_md]}>
+              {!isPending ? (
+                <Admonition.Outer type="tip">
+                  <Admonition.Row>
+                    <Admonition.Icon />
+                    <View style={[a.flex_1, a.gap_sm]}>
+                      <Admonition.Text>
+                        <Trans>
+                          Enable notifications for an account by visiting their
+                          profile and pressing the{' '}
+                          <RNText
+                            style={[a.font_bold, t.atoms.text_contrast_high]}>
+                            bell icon
+                          </RNText>{' '}
+                          <BellIcon
+                            size="xs"
+                            style={t.atoms.text_contrast_high}
+                          />
+                          .
+                        </Trans>
+                      </Admonition.Text>
+                      <Admonition.Text>
+                        <Trans>
+                          By default, only accounts you follow can receive
+                          alerts from you – this can be changed in{' '}
+                          <InlineLinkText
+                            label={_(msg`Privacy & Security settings`)}
+                            to={{screen: 'PrivacyAndSecuritySettings'}}
+                            style={[a.font_bold]}>
+                            Settings &rarr; Privacy &amp; Security
+                          </InlineLinkText>
+                          .
+                        </Trans>
+                      </Admonition.Text>
+                    </View>
+                  </Admonition.Row>
+                </Admonition.Outer>
+              ) : (
+                <View style={[a.flex_1, a.align_center, a.pt_xl]}>
+                  <Loader size="lg" />
+                </View>
+              )}
+            </View>
+          )
         }
         ListFooterComponent={
           <ListFooter
