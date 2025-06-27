@@ -36,6 +36,7 @@ import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/compon
 import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {Text as NewText} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 export function SavedFeeds({}: Props) {
@@ -415,9 +416,9 @@ function FollowingFeedCard() {
         />
       </View>
       <View style={[a.flex_1, a.flex_row, a.gap_sm, a.align_center]}>
-        <Text type="lg-medium" style={[t.atoms.text]} numberOfLines={1}>
+        <NewText style={[a.text_sm, a.font_bold, a.leading_snug]}>
           <Trans>Following</Trans>
-        </Text>
+        </NewText>
       </View>
     </View>
   )
