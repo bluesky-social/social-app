@@ -12,7 +12,9 @@ import {useGeolocation} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
-const ageAssuranceQueryKey = ['ageAssurance'] as const
+export const ageAssuranceQueryKeyRoot = 'ageAssurance' as const
+export const createAgeAssuranceQueryKey = (did: string) =>
+  [ageAssuranceQueryKeyRoot, did] as const
 const DEFAULT_AGE_ASSURANCE_STATE: TempAgeAssuranceState = {
   status: 'unknown',
 }
@@ -29,10 +31,7 @@ export type AgeAssuranceContextType = {
    * age assurance state retrieved from the server.
    */
   isAgeRestricted: boolean
-  /**
-   * The current age assurance status retrieved from the server.
-   */
-  status: TempAgeAssuranceState['status']
+  isExempt: boolean
   /**
    * The last time the age assurance state was attempted by the user.
    */
@@ -53,7 +52,7 @@ export type AgeAssuranceAPIContextType = {
 const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   isLoaded: false,
   isAgeRestricted: false,
-  status: 'unknown',
+  isExempt: false,
   lastInitiatedAt: undefined,
   hasInitiated: false,
 })
@@ -69,7 +68,8 @@ export function Provider({children}: {children: React.ReactNode}) {
   const {geolocation} = useGeolocation()
 
   const {data, refetch} = useQuery({
-    queryKey: ageAssuranceQueryKey,
+    enabled: !!agent.session,
+    queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
     async queryFn() {
       try {
         const {data} = await wait(
@@ -99,15 +99,15 @@ export function Provider({children}: {children: React.ReactNode}) {
   })
 
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
+    const isLoaded = Boolean(data)
+    const isAgeRestrictedGeo = !!geolocation?.isAgeRestrictedGeo
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
-      isLoaded: !!data,
-      status,
+      isLoaded,
       lastInitiatedAt,
       hasInitiated: !!lastInitiatedAt,
-      isAgeRestricted: Boolean(
-        geolocation?.isAgeRestrictedGeo && status !== 'assured',
-      ),
+      isExempt: !isAgeRestrictedGeo,
+      isAgeRestricted: Boolean(isAgeRestrictedGeo && status !== 'assured'),
     }
 
     logger.debug(`context`, ctx)

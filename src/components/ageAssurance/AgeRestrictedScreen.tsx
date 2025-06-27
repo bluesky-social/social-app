@@ -18,6 +18,12 @@ export function AgeRestrictedScreen({
     return (
       fallback || (
         <Layout.Screen>
+          <Layout.Header.Outer>
+            <Layout.Header.Content>
+              <Layout.Header.TitleText> </Layout.Header.TitleText>
+            </Layout.Header.Content>
+            <Layout.Header.Slot />
+          </Layout.Header.Outer>
           <Layout.Content />
         </Layout.Screen>
       )

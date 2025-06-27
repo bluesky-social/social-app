@@ -7,9 +7,15 @@ export function True({
   children: React.ReactNode
   fallback?: React.ReactNode
 }) {
-  const {isLoaded, isAgeRestricted} = useAgeAssuranceContext()
+  const {isLoaded, isAgeRestricted, isExempt} = useAgeAssuranceContext()
+  /**
+   * For the true case, if the user is exempt, return nothing
+   */
+  if (isExempt) return null
+
   const isDefinitelyAgeRestricted = isLoaded && isAgeRestricted
   const notSureYet = isAgeRestricted
+
   return isDefinitelyAgeRestricted
     ? children
     : notSureYet
@@ -24,9 +30,16 @@ export function False({
   children: React.ReactNode
   fallback?: React.ReactNode
 }) {
-  const {isLoaded, isAgeRestricted} = useAgeAssuranceContext()
+  const {isLoaded, isAgeRestricted, isExempt} = useAgeAssuranceContext()
+
+  /**
+   * For the false case, if the user is exempt, return children
+   */
+  if (isExempt) return children
+
   const isDefinitelyNotAgeRestricted = isLoaded && !isAgeRestricted
   const notSureYet = !isAgeRestricted
+
   return isDefinitelyNotAgeRestricted
     ? children
     : notSureYet
