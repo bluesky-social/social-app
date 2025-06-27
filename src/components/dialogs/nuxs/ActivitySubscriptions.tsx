@@ -121,6 +121,7 @@ export function ActivitySubscriptionsNUX() {
         </View>
         <View
           style={[
+            a.align_center,
             a.px_xl,
             isWeb ? [a.pt_xl, a.gap_xl, a.pb_sm] : [a.pt_3xl, a.gap_3xl],
           ]}>
@@ -132,7 +133,7 @@ export function ActivitySubscriptionsNUX() {
                 a.font_heavy,
                 a.text_center,
                 {
-                  fontSize: 29,
+                  fontSize: 32,
                   maxWidth: 300,
                 },
               ]}>
@@ -163,7 +164,8 @@ export function ActivitySubscriptionsNUX() {
               color="primary"
               onPress={() => {
                 control.close()
-              }}>
+              }}
+              style={[a.w_full, {maxWidth: 280}]}>
               <ButtonText>
                 <Trans>Close</Trans>
               </ButtonText>
