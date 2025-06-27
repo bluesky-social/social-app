@@ -1276,7 +1276,7 @@ msgstr ""
 msgid "Blocked post."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:170
+#: src/screens/Profile/Sections/Labels.tsx:203
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr ""
 
@@ -4250,7 +4250,7 @@ msgstr ""
 msgid "Labels added"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:160
+#: src/screens/Profile/Sections/Labels.tsx:194
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
@@ -7674,7 +7674,7 @@ msgstr ""
 
 #: src/components/ReportDialog/index.tsx:54
 #: src/screens/Moderation/index.tsx:101
-#: src/screens/Profile/Sections/Labels.tsx:121
+#: src/screens/Profile/Sections/Labels.tsx:184
 msgid "Something went wrong, please try again."
 msgstr ""
 
@@ -7834,7 +7834,7 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:198
+#: src/screens/Profile/Sections/Labels.tsx:231
 msgid "Subscribe to @{0} to use these labels:"
 msgstr ""
 
@@ -8358,7 +8358,7 @@ msgstr ""
 msgid "This label was applied by you."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:185
+#: src/screens/Profile/Sections/Labels.tsx:218
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
