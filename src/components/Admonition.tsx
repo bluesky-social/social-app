@@ -14,6 +14,10 @@ export const colors = {
     light: '#DFBC00',
     dark: '#BFAF1F',
   },
+  danger: {
+    light: '#DF3F00',
+    dark: '#BF3F00',
+  },
 }
 
 type Context = {
