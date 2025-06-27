@@ -86,7 +86,9 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={BellRingingIcon} />
             <ItemTextWithSubtitle
-              titleText={<Trans>Allow others get notified of your posts</Trans>}
+              titleText={
+                <Trans>Allow others to get notified of your posts</Trans>
+              }
               subtitleText={
                 <NotificationDeclaration
                   data={notificationDeclaration}
