@@ -78,21 +78,14 @@ export function ActivitySubscriptionsNUX() {
             </Text>
           </View>
 
-          <View
-            style={[
-              a.relative,
-              a.w_full,
-              a.overflow_hidden,
-              {
-                height: isWeb ? 228 : 228,
-              },
-            ]}>
+          <View style={[a.relative, a.w_full]}>
             <View
               style={[
                 a.absolute,
                 t.atoms.bg_contrast_25,
                 t.atoms.shadow_md,
                 {
+                  shadowOpacity: 0.4,
                   top: 5,
                   bottom: 0,
                   left: '17%',
@@ -103,19 +96,27 @@ export function ActivitySubscriptionsNUX() {
                 },
               ]}
             />
-            <Image
-              accessibilityIgnoresInvertColors
-              source={require('../../../../assets/images/activity_notifications_announcement.webp')}
+            <View
               style={[
-                a.w_full,
+                a.overflow_hidden,
                 {
-                  aspectRatio: 398 / 268,
+                  height: isWeb ? 228 : 228,
                 },
-              ]}
-              alt={_(
-                msg`A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature.`,
-              )}
-            />
+              ]}>
+              <Image
+                accessibilityIgnoresInvertColors
+                source={require('../../../../assets/images/activity_notifications_announcement.webp')}
+                style={[
+                  a.w_full,
+                  {
+                    aspectRatio: 398 / 268,
+                  },
+                ]}
+                alt={_(
+                  msg`A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature.`,
+                )}
+              />
+            </View>
           </View>
         </View>
         <View
@@ -131,6 +132,7 @@ export function ActivitySubscriptionsNUX() {
                 a.font_heavy,
                 a.text_center,
                 {
+                  fontSize: 29,
                   maxWidth: 300,
                 },
               ]}>
