@@ -142,8 +142,17 @@ let ProfileHeaderStandard = ({
 
   const {isActive: live} = useActorStatus(profile)
 
-  const subscriptionsDisallowed = useMemo(() => {
-    return !!profile.labels?.find(label => label.val === '!no-subscriptions')
+  const subscriptionsAllowed = useMemo(() => {
+    switch (profile.associated?.activitySubscription?.allowSubscriptions) {
+      case 'followers':
+      case undefined:
+        return !!profile.viewer?.following
+      case 'mutuals':
+        return !!profile.viewer?.following && !!profile.viewer.followedBy
+      case 'none':
+      default:
+        return false
+    }
   }, [profile])
 
   return (
@@ -203,7 +212,7 @@ let ProfileHeaderStandard = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              {hasSession && !subscriptionsDisallowed && (
+              {hasSession && subscriptionsAllowed && (
                 <SubscribeProfileButton
                   profile={profile}
                   moderationOpts={moderationOpts}
