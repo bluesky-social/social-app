@@ -128,21 +128,27 @@ function DialogInner({
         }),
       )
       if (!activitySubscription.post && !activitySubscription.reply) {
+        logger.metric('activitySubscription:disable', {})
         Toast.show(
           _(
             msg`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
           ),
           'check',
         )
-      } else if (!initialState.post && !initialState) {
-        Toast.show(
-          _(
-            msg`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`,
-          ),
-          'check',
-        )
       } else {
-        Toast.show(_(msg`Changes saved`), 'check')
+        logger.metric('activitySubscription:enable', {
+          setting: activitySubscription.reply ? 'posts_and_replies' : 'posts',
+        })
+        if (!initialState.post && !initialState.reply) {
+          Toast.show(
+            _(
+              msg`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`,
+            ),
+            'check',
+          )
+        } else {
+          Toast.show(_(msg`Changes saved`), 'check')
+        }
       }
     },
     onError: err => {
