@@ -115,7 +115,6 @@ function DialogInner({
     mutationFn: async (
       activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>,
     ) => {
-      await new Promise(resolve => setTimeout(resolve, 1000))
       await agent.app.bsky.notification.putActivitySubscription({
         subject: profile.did,
         activitySubscription,
