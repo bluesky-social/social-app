@@ -1,11 +1,34 @@
 import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {t} from '@lingui/macro'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 
+const RQKEY_getActivitySubscriptions = ['activity-subscriptions']
 const RQKEY_getNotificationDeclaration = ['notification-declaration']
+
+export function useActivitySubscriptionsQuery() {
+  const agent = useAgent()
+
+  return useInfiniteQuery({
+    queryKey: RQKEY_getActivitySubscriptions,
+    queryFn: async ({pageParam}) => {
+      const response =
+        await agent.app.bsky.notification.listActivitySubscriptions({
+          cursor: pageParam,
+        })
+      return response.data
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: prev => prev.cursor,
+  })
+}
 
 export function useNotificationDeclarationQuery() {
   const agent = useAgent()
