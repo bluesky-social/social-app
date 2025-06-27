@@ -84,7 +84,7 @@ export function ActivitySubscriptionsNUX() {
               a.w_full,
               a.overflow_hidden,
               {
-                height: isWeb ? 240 : 340,
+                height: isWeb ? 228 : 228,
               },
             ]}>
             <View
@@ -95,9 +95,9 @@ export function ActivitySubscriptionsNUX() {
                 {
                   top: 5,
                   bottom: 0,
-                  left: '20%',
-                  right: '20%',
-                  width: '60%',
+                  left: '17%',
+                  right: '17%',
+                  width: '66%',
                   borderTopLeftRadius: 40,
                   borderTopRightRadius: 40,
                 },
@@ -105,15 +105,15 @@ export function ActivitySubscriptionsNUX() {
             />
             <Image
               accessibilityIgnoresInvertColors
-              source={require('../../../../assets/images/activity_notifications_annoucement.png')}
+              source={require('../../../../assets/images/activity_notifications_announcement.webp')}
               style={[
                 a.w_full,
                 {
-                  aspectRatio: 380 / 421,
+                  aspectRatio: 398 / 268,
                 },
               ]}
               alt={_(
-                msg`A screenshot of the new notification settings screen, showing many options to configure the notifications you care about.`,
+                msg`A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature.`,
               )}
             />
           </View>
@@ -121,15 +121,18 @@ export function ActivitySubscriptionsNUX() {
         <View
           style={[
             a.px_xl,
-            isWeb ? [a.pt_xl, a.gap_xl, a.pb_sm] : [a.pt_4xl, a.gap_3xl],
+            isWeb ? [a.pt_xl, a.gap_xl, a.pb_sm] : [a.pt_3xl, a.gap_3xl],
           ]}>
-          <View style={[a.gap_sm, a.align_center]}>
+          <View style={[a.gap_md, a.align_center]}>
             <Text
               style={[
                 a.text_3xl,
                 a.leading_tight,
                 a.font_heavy,
                 a.text_center,
+                {
+                  maxWidth: 300,
+                },
               ]}>
               <Trans>Get notified when someone posts</Trans>
             </Text>
@@ -145,7 +148,7 @@ export function ActivitySubscriptionsNUX() {
               <Trans>
                 You can now choose to be notified when specific people post. If
                 there’s someone you want timely updates from, go to their
-                profile and find the new bell icon near the follow button
+                profile and find the new bell icon near the follow button.
               </Trans>
             </Text>
           </View>
