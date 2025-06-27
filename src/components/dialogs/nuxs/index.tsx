@@ -11,7 +11,7 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
-import {GranularNotificationsSettings} from '#/components/dialogs/nuxs/GranularNotificationsSettings'
+import {ActivitySubscriptionsNUX} from '#/components/dialogs/nuxs/ActivitySubscriptions'
 /*
  * NUXs
  */
@@ -33,10 +33,10 @@ const queuedNuxs: {
   }) => boolean
 }[] = [
   {
-    id: Nux.GranularNotificationsSettings,
+    id: Nux.ActivitySubscriptions,
     enabled: ({currentProfile}) => {
       return isExistingUserAsOf(
-        '2025-06-23T00:00:00.000Z',
+        '2025-07-01T00:00:00.000Z',
         currentProfile.createdAt,
       )
     },
@@ -175,9 +175,7 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.GranularNotificationsSettings && (
-        <GranularNotificationsSettings />
-      )}
+      {activeNux === Nux.ActivitySubscriptions && <ActivitySubscriptionsNUX />}
     </Context.Provider>
   )
 }

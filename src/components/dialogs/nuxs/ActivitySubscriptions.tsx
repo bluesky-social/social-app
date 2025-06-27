@@ -3,9 +3,7 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
-import {type NavigationProp} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -14,13 +12,12 @@ import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import {Text} from '#/components/Typography'
 
-export function GranularNotificationsSettings() {
+export function ActivitySubscriptionsNUX() {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
-  const nav = useNavigation<NavigationProp>()
 
   Dialog.useAutoOpen(control)
 
@@ -33,7 +30,7 @@ export function GranularNotificationsSettings() {
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
-        label={_(msg`Introducing fine-grained notification settings.`)}
+        label={_(msg`Introducing activity notifications`)}
         style={[
           gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
         ]}
@@ -108,7 +105,7 @@ export function GranularNotificationsSettings() {
             />
             <Image
               accessibilityIgnoresInvertColors
-              source={require('../../../../assets/images/notification_settings_announcement.webp')}
+              source={require('../../../../assets/images/activity_notifications_annoucement.png')}
               style={[
                 a.w_full,
                 {
@@ -134,7 +131,7 @@ export function GranularNotificationsSettings() {
                 a.font_heavy,
                 a.text_center,
               ]}>
-              <Trans>More control over your notifications</Trans>
+              <Trans>Get notified when someone posts</Trans>
             </Text>
             <Text
               style={[
@@ -146,43 +143,27 @@ export function GranularNotificationsSettings() {
                 },
               ]}>
               <Trans>
-                Now you can choose exactly what you want to be notified about.
-                Visit your notification settings to fine-tune your preferences.
+                You can now choose to be notified when specific people post. If
+                there’s someone you want timely updates from, go to their
+                profile and find the new bell icon near the follow button
               </Trans>
             </Text>
           </View>
 
-          <View style={[a.gap_md, isWeb && a.align_center]}>
-            {!isWeb && (
-              <Button
-                label={_(msg`Close`)}
-                size="large"
-                variant="solid"
-                color="primary"
-                onPress={() => {
-                  control.close()
-                }}>
-                <ButtonText>
-                  <Trans>Close</Trans>
-                </ButtonText>
-              </Button>
-            )}
+          {!isWeb && (
             <Button
-              label={_(msg`Open settings`)}
-              size={isWeb ? 'small' : 'large'}
+              label={_(msg`Close`)}
+              size="large"
               variant="solid"
-              color={isWeb ? 'primary' : 'secondary'}
-              style={[a.justify_center]}
+              color="primary"
               onPress={() => {
-                control.close(() => {
-                  nav.navigate('NotificationSettings')
-                })
+                control.close()
               }}>
               <ButtonText>
-                <Trans>Open settings</Trans>
+                <Trans>Close</Trans>
               </ButtonText>
             </Button>
-          </View>
+          )}
         </View>
 
         <Dialog.Close />
