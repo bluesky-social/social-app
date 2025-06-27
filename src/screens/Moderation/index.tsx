@@ -12,7 +12,7 @@ import {
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
+import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,

@@ -1,54 +1,27 @@
 import {createContext, useContext, useMemo} from 'react'
 import {
   // useQueryClient,
-  type QueryObserverBaseResult,
   useQuery,
 } from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
+import {
+  type AgeAssuranceAPIContextType,
+  type AgeAssuranceContextType,
+  type AppBskyUnspeccedDefs,
+} from '#/state/age-assurance/types'
 import {useGeolocation} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
-export const ageAssuranceQueryKeyRoot = 'ageAssurance' as const
-export const createAgeAssuranceQueryKey = (did: string) =>
-  [ageAssuranceQueryKeyRoot, did] as const
-const DEFAULT_AGE_ASSURANCE_STATE: TempAgeAssuranceState = {
+const createAgeAssuranceQueryKey = (did: string) =>
+  ['ageAssurance', did] as const
+const DEFAULT_AGE_ASSURANCE_STATE: AppBskyUnspeccedDefs.AgeAssuranceState = {
+  lastInitiatedAt: undefined,
   status: 'unknown',
 }
-
-type TempAgeAssuranceState = {
-  lastInitiatedAt?: string
-  status: 'unknown' | 'pending' | 'assured'
-}
-
-export type AgeAssuranceContextType = {
-  isLoaded: boolean
-  /**
-   * Whether the current user is age-restricted based on their geolocation and
-   * age assurance state retrieved from the server.
-   */
-  isAgeRestricted: boolean
-  isExempt: boolean
-  /**
-   * The last time the age assurance state was attempted by the user.
-   */
-  lastInitiatedAt: string | undefined
-  /**
-   * Whether the user has initiated an age assurance check.
-   */
-  hasInitiated: boolean
-}
-
-export type AgeAssuranceAPIContextType = {
-  /**
-   * Refreshes the age assurance state by fetching it from the server.
-   */
-  refetch: QueryObserverBaseResult['refetch']
-}
-
 const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   isLoaded: false,
   isAgeRestricted: false,
@@ -56,7 +29,6 @@ const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   lastInitiatedAt: undefined,
   hasInitiated: false,
 })
-
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
   // @ts-ignore
   refetch: () => Promise.resolve(),
@@ -67,7 +39,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const agent = useAgent()
   const {geolocation} = useGeolocation()
 
-  const {data, refetch} = useQuery({
+  const {data, isFetched, refetch} = useQuery({
     enabled: !!agent.session,
     queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
     async queryFn() {
@@ -76,9 +48,9 @@ export function Provider({children}: {children: React.ReactNode}) {
           1e3,
           (() => ({
             data: {
-              lastInitiatedAt: new Date().toISOString(),
+              lastInitiatedAt: undefined,
               status: 'unknown',
-            } as TempAgeAssuranceState,
+            } as AppBskyUnspeccedDefs.AgeAssuranceState,
           }))(),
         )
 
@@ -92,18 +64,15 @@ export function Provider({children}: {children: React.ReactNode}) {
         if (!isNetworkError(e)) {
           logger.error(`ageAssurance: failed to fetch`, {safeMessage: e})
         }
-
-        return DEFAULT_AGE_ASSURANCE_STATE
       }
     },
   })
 
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
-    const isLoaded = Boolean(data)
     const isAgeRestrictedGeo = !!geolocation?.isAgeRestrictedGeo
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
-      isLoaded,
+      isLoaded: isFetched,
       lastInitiatedAt,
       hasInitiated: !!lastInitiatedAt,
       isExempt: !isAgeRestrictedGeo,
@@ -113,7 +82,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     logger.debug(`context`, ctx)
 
     return ctx
-  }, [geolocation, data])
+  }, [geolocation, isFetched, data])
 
   const ageAssuranceAPIContext = useMemo<AgeAssuranceAPIContextType>(
     () => ({
@@ -131,12 +100,6 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-/**
- * Returns the current age assurance state from context. This data is awaited
- * prior to rendering the app, and therefore the data here should be up to date
- * and trustworth by the time we're rendering anything inside the `Splash`
- * wrapper in the root component files.
- */
 export function useAgeAssuranceContext() {
   return useContext(AgeAssuranceContext)
 }

@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
+import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {atoms as a, select, useTheme, type ViewStyleProp} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {
