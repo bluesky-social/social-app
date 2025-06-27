@@ -220,10 +220,12 @@ export function FeedSourceCardLoaded({
         testID={`feed-${feed.displayName}`}
         accessibilityRole="button"
         style={[
-          styles.container,
-          pal.border,
+          a.flex_1,
+          a.p_lg,
+          a.gap_md,
+          !hideTopBorder && !a.border_t,
+          t.atoms.border_contrast_low,
           style,
-          {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
         ]}
         onPress={e => {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
@@ -252,11 +254,11 @@ export function FeedSourceCardLoaded({
           }
         }}
         key={feed.uri}>
-        <View style={[styles.headerContainer, a.align_center]}>
+        <View style={[a.flex_row, a.align_center]}>
           <View style={[s.mr10]}>
             <UserAvatar type="algo" size={36} avatar={feed.avatar} />
           </View>
-          <View style={[styles.headerTextContainer]}>
+          <View style={[a.flex_1, a.gap_2xs]}>
             <Text emoji style={[pal.text, s.bold]} numberOfLines={1}>
               {feed.displayName}
             </Text>
@@ -304,7 +306,7 @@ export function FeedSourceCardLoaded({
 
         {showDescription && feed.description ? (
           <RichText
-            style={[t.atoms.text_contrast_high, styles.description]}
+            style={[t.atoms.text_contrast_high, a.flex_1, a.flex_wrap]}
             value={feed.description}
             numberOfLines={3}
           />
@@ -339,28 +341,6 @@ export function FeedSourceCardLoaded({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 18,
-    paddingVertical: 20,
-    flexDirection: 'column',
-    flex: 1,
-    gap: 14,
-  },
-  border: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-  },
-  headerTextContainer: {
-    flexDirection: 'column',
-    columnGap: 4,
-    flex: 1,
-  },
-  description: {
-    flex: 1,
-    flexWrap: 'wrap',
-  },
   btn: {
     paddingVertical: 6,
   },

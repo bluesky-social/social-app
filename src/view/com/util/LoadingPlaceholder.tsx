@@ -233,8 +233,8 @@ export function FeedLoadingPlaceholder({
     <View
       style={[
         {
-          paddingHorizontal: 12,
-          paddingVertical: 20,
+          paddingHorizontal: 16,
+          paddingVertical: 16,
           borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
         },
         pal.border,
@@ -353,7 +353,6 @@ const styles = StyleSheet.create({
   avatar: {
     borderRadius: 999,
     marginRight: 10,
-    marginLeft: 8,
   },
   notification: {
     flexDirection: 'row',
