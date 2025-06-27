@@ -152,15 +152,15 @@ export function FeedSourceCardLoaded({
         <View style={[a.mr_md]}>
           <UserAvatar type="algo" size={36} avatar={feed.avatar} />
         </View>
-        <View style={[a.flex_1, a.gap_xs]}>
+        <View style={[a.flex_1]}>
           <Text
             emoji
-            style={[a.text_md, a.font_bold, a.leading_tight]}
+            style={[a.text_sm, a.font_bold, a.leading_snug]}
             numberOfLines={1}>
             {feed.displayName}
           </Text>
           <Text
-            style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_tight]}
+            style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}
             numberOfLines={1}>
             {feed.type === 'feed' ? (
               <Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
@@ -185,7 +185,7 @@ export function FeedSourceCardLoaded({
             a.text_sm,
             a.font_bold,
             t.atoms.text_contrast_medium,
-            a.leading_tight,
+            a.leading_snug,
           ]}>
           <Trans>
             Liked by{' '}
