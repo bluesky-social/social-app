@@ -456,7 +456,7 @@ msgstr ""
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:302
+#: src/components/WhoCanReply.tsx:317
 msgid "<0>{0}</0> members"
 msgstr ""
 
@@ -939,7 +939,7 @@ msgstr ""
 msgid "an unknown labeler"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:323
+#: src/components/WhoCanReply.tsx:338
 msgid "and"
 msgstr ""
 
@@ -1741,6 +1741,8 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:144
+#: src/components/WhoCanReply.tsx:200
+#: src/components/WhoCanReply.tsx:207
 #: src/view/com/modals/ChangePassword.tsx:279
 #: src/view/com/modals/ChangePassword.tsx:282
 msgid "Close"
@@ -2433,7 +2435,7 @@ msgstr ""
 msgid "Developer options"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:185
+#: src/components/WhoCanReply.tsx:186
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
@@ -2988,7 +2990,7 @@ msgstr ""
 msgid "Everybody can reply"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:228
+#: src/components/WhoCanReply.tsx:243
 msgid "Everybody can reply to this post."
 msgstr ""
 
@@ -3058,7 +3060,7 @@ msgstr ""
 msgid "Expands or collapses post text"
 msgstr ""
 
-#: src/lib/api/index.ts:406
+#: src/lib/api/index.ts:418
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
@@ -4680,7 +4682,7 @@ msgstr ""
 msgid "Mention notifications"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:269
+#: src/components/WhoCanReply.tsx:284
 msgid "mentioned users"
 msgstr ""
 
@@ -5193,7 +5195,7 @@ msgstr ""
 msgid "No one"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:252
+#: src/components/WhoCanReply.tsx:267
 msgid "No one but the author can quote this post."
 msgstr ""
 
@@ -5419,7 +5421,7 @@ msgstr ""
 msgid "Only .jpg and .png files are supported"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:232
+#: src/components/WhoCanReply.tsx:247
 msgid "Only {0} can reply."
 msgstr ""
 
@@ -6521,7 +6523,7 @@ msgstr ""
 msgid "Replies disabled"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:230
+#: src/components/WhoCanReply.tsx:245
 msgid "Replies to this post are disabled."
 msgstr ""
 
@@ -8387,7 +8389,7 @@ msgstr ""
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:223
+#: src/components/WhoCanReply.tsx:238
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
 msgstr ""
 
@@ -8888,8 +8890,8 @@ msgstr ""
 msgid "Uploading images..."
 msgstr ""
 
-#: src/lib/api/index.ts:356
-#: src/lib/api/index.ts:380
+#: src/lib/api/index.ts:368
+#: src/lib/api/index.ts:392
 msgid "Uploading link thumbnail..."
 msgstr ""
 
@@ -8984,11 +8986,11 @@ msgstr ""
 msgid "Username or email address"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:286
+#: src/components/WhoCanReply.tsx:301
 msgid "users followed by <0>@{0}</0>"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:273
+#: src/components/WhoCanReply.tsx:288
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
@@ -9416,7 +9418,7 @@ msgstr ""
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr ""
 
-#: src/components/WhoCanReply.tsx:189
+#: src/components/WhoCanReply.tsx:190
 msgid "Who can interact with this post?"
 msgstr ""
 
