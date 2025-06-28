@@ -3,6 +3,8 @@ import {getLocales} from 'expo-localization'
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
 
 import {GIF_FEATURED, GIF_SEARCH} from '#/lib/constants'
+import {is18} from '#/screens/Signup/state'
+import {usePreferencesQuery} from './preferences'
 
 export const RQKEY_ROOT = 'gif-service'
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']
@@ -13,18 +15,21 @@ const getTrendingGifs = createTenorApi(GIF_FEATURED)
 const searchGifs = createTenorApi<{q: string}>(GIF_SEARCH)
 
 export function useFeaturedGifsQuery() {
+  const contentFilter = usePreferredContentFilter()
   return useInfiniteQuery({
     queryKey: RQKEY_FEATURED,
-    queryFn: ({pageParam}) => getTrendingGifs({pos: pageParam}),
+    queryFn: ({pageParam}) => getTrendingGifs({pos: pageParam}, contentFilter),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.next,
   })
 }
 
 export function useGifSearchQuery(query: string) {
+  const contentFilter = usePreferredContentFilter()
   return useInfiniteQuery({
     queryKey: RQKEY_SEARCH(query),
-    queryFn: ({pageParam}) => searchGifs({q: query, pos: pageParam}),
+    queryFn: ({pageParam}) =>
+      searchGifs({q: query, pos: pageParam}, contentFilter),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.next,
     enabled: !!query,
@@ -32,13 +37,25 @@ export function useGifSearchQuery(query: string) {
   })
 }
 
+function usePreferredContentFilter() {
+  const {data: preferences} = usePreferencesQuery()
+  if (!preferences?.birthDate) return 'high'
+  if (!is18(preferences.birthDate)) return 'high'
+  return 'medium'
+}
+
 function createTenorApi<Input extends object>(
   urlFn: (params: string) => string,
-): (input: Input & {pos?: string}) => Promise<{
+): (
+  input: Input & {
+    pos?: string
+  },
+  contentFilter: 'off' | 'low' | 'medium' | 'high',
+) => Promise<{
   next: string
   results: Gif[]
 }> {
-  return async input => {
+  return async (input, contentFilter) => {
     const params = new URLSearchParams()
 
     // set client key based on platform
@@ -54,7 +71,7 @@ function createTenorApi<Input extends object>(
     // 30 is divisible by 2 and 3, so both 2 and 3 column layouts can be used
     params.set('limit', '30')
 
-    params.set('contentfilter', 'high')
+    params.set('contentfilter', contentFilter)
 
     params.set(
       'media_filter',
