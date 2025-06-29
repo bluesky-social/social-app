@@ -100,11 +100,17 @@ export function useComposeIntent() {
 
       closeAllActiveElements()
 
+      // Replace newlines with <p> tags to preserve formatting in composer
+      const formattedText = text
+        ?.split('\n')
+        .map(fragment => `<p>${fragment}</p>`)
+        .join('')
+
       // Whenever a video URI is present, we don't support adding images right now.
       if (videoUri) {
         const [uri, width, height] = videoUri.split('|')
         openComposer({
-          text: text ?? undefined,
+          text: formattedText,
           videoUri: {uri, width: Number(width), height: Number(height)},
         })
         return
@@ -129,7 +135,7 @@ export function useComposeIntent() {
 
       setTimeout(() => {
         openComposer({
-          text: text ?? undefined,
+          text: formattedText,
           imageUris: isNative ? imageUris : undefined,
         })
       }, 500)
