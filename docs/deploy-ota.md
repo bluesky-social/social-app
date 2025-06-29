@@ -44,7 +44,7 @@ Double check yourself by ensuring that the `version` in `package.json` matches
 what's in the latest release.
 
 This new OTA branch should follow the format `1.X.0-ota-1`. If one or more OTAs
-have already been deployed for this release, incremement the branch name e.g.
+have already been deployed for this release, increment the branch name e.g.
 `1.x.0-ota-2`.
 
 ### 4. Add commits to the OTA branch
