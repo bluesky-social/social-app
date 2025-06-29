@@ -621,10 +621,12 @@ let NotificationFeedItem = ({
             {item.type === 'feedgen-like' && item.subjectUri ? (
               <FeedSourceCard
                 feedUri={item.subjectUri}
+                link={false}
                 style={[
                   t.atoms.bg,
                   t.atoms.border_contrast_low,
                   a.border,
+                  a.p_md,
                   styles.feedcard,
                 ]}
                 showLikes
@@ -950,7 +952,6 @@ const styles = StyleSheet.create({
   },
   feedcard: {
     borderRadius: 8,
-    paddingVertical: 12,
     marginTop: 6,
   },
   addedContainer: {

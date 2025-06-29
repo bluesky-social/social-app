@@ -214,7 +214,7 @@ export function DescriptionPlaceholder() {
 export function Likes({count}: {count: number}) {
   const t = useTheme()
   return (
-    <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+    <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.font_bold]}>
       <Trans>
         Liked by <Plural value={count || 0} one="# user" other="# users" />
       </Trans>
