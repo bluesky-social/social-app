@@ -42,7 +42,7 @@ import {Loader} from '#/components/Loader'
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
-// But let's at least persist it during the sesssion.
+// But let's at least persist it during the session.
 let lastActiveTab = 0
 
 type Props = NativeStackScreenProps<
@@ -225,7 +225,7 @@ function NotificationsTab({
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
     // on focus, check for latest, but only invalidate if the user
-    // isnt scrolled down to avoid moving content underneath them
+    // isn't scrolled down to avoid moving content underneath them
     let currentIsScrolledDown
     if (isNative) {
       currentIsScrolledDown = isScrolledDown

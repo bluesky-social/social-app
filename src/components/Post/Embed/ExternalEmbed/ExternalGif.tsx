@@ -123,7 +123,7 @@ export function ExternalGif({
           accessibilityIgnoresInvertColors
           accessibilityLabel={link.title}
           accessibilityHint={link.title}
-          cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
+          cachePolicy={isIOS ? 'disk' : 'memory-disk'} // can't control playback with memory-disk on ios
         />
 
         {(!isPrefetched || !isAnimating) && (

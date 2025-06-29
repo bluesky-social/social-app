@@ -51,7 +51,7 @@ export function createSuggestion({
             return
           }
 
-          // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
+          // @ts-ignore getReferenceClientRect doesn't like that clientRect can return null -prf
           popup = tippy('body', {
             getReferenceClientRect: props.clientRect,
             appendTo: () => document.body,
@@ -71,7 +71,7 @@ export function createSuggestion({
           }
 
           popup?.[0]?.setProps({
-            // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
+            // @ts-ignore getReferenceClientRect doesn't like that clientRect can return null -prf
             getReferenceClientRect: props.clientRect,
           })
         },

@@ -939,11 +939,11 @@ function handleLink(url: string) {
       resetToTab('NotificationsTab')
     } else {
       resetToTab('HomeTab')
-      // @ts-ignore matchPath doesnt give us type-checked output -prf
+      // @ts-ignore matchPath doesn't give us type-checked output -prf
       navigate(name, params)
     }
   } else {
-    // @ts-ignore matchPath doesnt give us type-checked output -prf
+    // @ts-ignore matchPath doesn't give us type-checked output -prf
     navigate(name, params)
   }
 }

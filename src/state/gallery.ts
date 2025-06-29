@@ -257,7 +257,7 @@ async function moveIfNecessary(from: string) {
   return from
 }
 
-/** Purge files that were created to accomodate image manipulation */
+/** Purge files that were created to accommodate image manipulation */
 export async function purgeTemporaryImageFiles() {
   const cacheDir = isNative && getImageCacheDirectory()
 

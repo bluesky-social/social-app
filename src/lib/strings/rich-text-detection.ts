@@ -21,7 +21,7 @@ export function detectLinkables(text: string): DetectedLinkable[] {
     if (/\s|\(/.test(matchValue)) {
       // HACK
       // skip the starting space
-      // we have to do this because RN doesnt support negative lookaheads
+      // we have to do this because RN doesn't support negative lookaheads
       // -prf
       matchIndex++
       matchValue = matchValue.slice(1)
