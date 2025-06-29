@@ -4358,7 +4358,7 @@ msgid "Leave conversation"
 msgstr ""
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:84
-msgid "Leave them all unchecked to see any language."
+msgid "Leave them all unselected to see any language."
 msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:67
