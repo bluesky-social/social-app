@@ -89,7 +89,7 @@ If you change `SENTRY_AUTH_TOKEN`, you need to do `yarn prebuild` before running
 
 ### Adding bitdrift
 
-Adding bitdirft is NOT required. You can keep `BITDRIFT_API_KEY=` in `.env` which will avoid initializing bitdrift during startup.
+Adding bitdrift is NOT required. You can keep `BITDRIFT_API_KEY=` in `.env` which will avoid initializing bitdrift during startup.
 
 However, if you're a part of the Bluesky team and want to enable bitdrift, fill in `BITDRIFT_API_KEY` in your `.env` to enable bitdrift.
 
