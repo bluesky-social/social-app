@@ -44,7 +44,7 @@ export function Settings() {
         label="Accessibility and appearance">
         <SettingsList.ItemIcon icon={PaintRollerIcon} />
         <SettingsList.ItemText>
-          Accessibilty and appearance
+          Accessibility and appearance
         </SettingsList.ItemText>
       </SettingsList.LinkItem>
       <SettingsList.LinkItem to="/settings" label="Languages">

@@ -38,7 +38,7 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
         aspect: [POST_IMG_MAX.width, POST_IMG_MAX.height],
       })
 
-      // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to
+      // If we don't have permissions it's fine, we just won't save it. The post itself will still have access to
       // the image even without these permissions
       if (mediaPermissionRes) {
         await MediaLibrary.createAssetAsync(img.path)
