@@ -16,7 +16,7 @@ import {useNotificationSettingsQuery} from '#/state/queries/notifications/settin
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
-// import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
+import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
 import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
 import {
@@ -183,20 +183,19 @@ export function NotificationSettingsScreen({}: Props) {
                 showSkeleton={!settings}
               />
             </SettingsList.LinkItem>
-            {/* <SettingsList.LinkItem
+            <SettingsList.LinkItem
               label={_(msg`Settings for activity alerts`)}
               to={{screen: 'ActivityNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={BellRingingIcon} />
-
               <ItemTextWithSubtitle
-                titleText={<Trans>Activity alerts</Trans>}
+                titleText={<Trans>Activity from others</Trans>}
                 subtitleText={
                   <SettingPreview preference={settings?.subscribedPost} />
                 }
                 showSkeleton={!settings}
               />
-            </SettingsList.LinkItem> */}
+            </SettingsList.LinkItem>
             <SettingsList.LinkItem
               label={_(
                 msg`Settings for notifications for likes of your reposts`,

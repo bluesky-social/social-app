@@ -1,15 +1,20 @@
-import React, {useContext, useMemo} from 'react'
-import {GestureResponderEvent, StyleProp, View, ViewStyle} from 'react-native'
+import {createContext, useContext, useMemo} from 'react'
+import {
+  type GestureResponderEvent,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import * as Button from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
-import {Link, LinkProps} from '#/components/Link'
+import {Link, type LinkProps} from '#/components/Link'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
-const ItemContext = React.createContext({
+const ItemContext = createContext({
   destructive: false,
   withinGroup: false,
 })
@@ -91,7 +96,7 @@ export function Item({
         a.px_xl,
         a.py_sm,
         a.align_center,
-        a.gap_md,
+        a.gap_sm,
         a.w_full,
         a.flex_row,
         {minHeight: 48},
@@ -100,9 +105,9 @@ export function Item({
             // existing padding
             a.pl_xl.paddingLeft +
             // icon
-            28 +
+            24 +
             // gap
-            a.gap_md.gap,
+            a.gap_sm.gap,
         },
         style,
       ]}>
@@ -175,7 +180,7 @@ export function PressableItem({
 
 export function ItemIcon({
   icon: Comp,
-  size = 'xl',
+  size = 'lg',
   color: colorProp,
 }: Omit<React.ComponentProps<typeof Button.ButtonIcon>, 'position'> & {
   color?: string
