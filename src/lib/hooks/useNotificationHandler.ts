@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
-import {type AppBskyNotificationListNotifications} from '@atproto/api'
+import {AtUri} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {CommonActions, useNavigation} from '@react-navigation/native'
@@ -32,6 +32,7 @@ export type NotificationReason =
   | 'repost-via-repost'
   | 'verified'
   | 'unverified'
+  | 'subscribed-post'
 
 /**
  * Manually overridden type, but retains the possibility of
@@ -112,58 +113,65 @@ export function useNotificationsHandler() {
     })
 
     Notifications.setNotificationChannelAsync(
-      'like' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      'like' satisfies NotificationReason,
       {
         name: _(msg`Likes`),
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
-      'repost' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      'repost' satisfies NotificationReason,
       {
         name: _(msg`Reposts`),
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
-      'reply' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      'reply' satisfies NotificationReason,
       {
         name: _(msg`Replies`),
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
-      'mention' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      'mention' satisfies NotificationReason,
       {
         name: _(msg`Mentions`),
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
-      'quote' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      'quote' satisfies NotificationReason,
       {
         name: _(msg`Quotes`),
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
-      'follow' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      'follow' satisfies NotificationReason,
       {
         name: _(msg`New followers`),
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
-      'like-via-repost' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      'like-via-repost' satisfies NotificationReason,
       {
         name: _(msg`Likes of your reposts`),
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
     Notifications.setNotificationChannelAsync(
-      'repost-via-repost' satisfies AppBskyNotificationListNotifications.Notification['reason'],
+      'repost-via-repost' satisfies NotificationReason,
       {
         name: _(msg`Reposts of your reposts`),
+        importance: Notifications.AndroidImportance.HIGH,
+      },
+    )
+    Notifications.setNotificationChannelAsync(
+      'subscribed-post' satisfies NotificationReason,
+      {
+        name: _(msg`Activity from others`),
         importance: Notifications.AndroidImportance.HIGH,
       },
     )
@@ -220,6 +228,23 @@ export function useNotificationsHandler() {
         }
       } else {
         switch (payload.reason) {
+          case 'subscribed-post':
+            const urip = new AtUri(payload.uri)
+            if (urip.collection === 'app.bsky.feed.post') {
+              setTimeout(() => {
+                // @ts-expect-error types are weird here
+                navigation.navigate('HomeTab', {
+                  screen: 'PostThread',
+                  params: {
+                    name: urip.host,
+                    rkey: urip.rkey,
+                  },
+                })
+              }, 500)
+            } else {
+              resetToTab('NotificationsTab')
+            }
+            break
           case 'like':
           case 'repost':
           case 'follow':
@@ -231,6 +256,7 @@ export function useNotificationsHandler() {
           case 'repost-via-repost':
           case 'verified':
           case 'unverified':
+          default:
             resetToTab('NotificationsTab')
             break
           // TODO implement these after we have an idea of how to handle each individual case
