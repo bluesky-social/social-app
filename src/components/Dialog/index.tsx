@@ -26,7 +26,7 @@ import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, ios, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -262,7 +262,10 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         scrollEventThrottle={50}
         onScroll={isAndroid ? onScroll : undefined}
         keyboardShouldPersistTaps="handled"
-        stickyHeaderIndices={header ? [0] : undefined}>
+        // TODO: figure out why this positions the header absolutely (rather than stickily)
+        // on Android. fine to disable for now, because we don't have any
+        // dialogs that use this that actually scroll -sfn
+        stickyHeaderIndices={ios(header ? [0] : undefined)}>
         {header}
         {children}
       </KeyboardAwareScrollView>
