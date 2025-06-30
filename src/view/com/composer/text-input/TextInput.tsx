@@ -186,7 +186,7 @@ export const TextInput = forwardRef(function TextInputImpl(
 
   const inputTextStyle = React.useMemo(() => {
     const style = normalizeTextStyles(
-      [a.text_xl, a.leading_snug, t.atoms.text],
+      [a.text_lg, a.leading_snug, t.atoms.text],
       {
         fontScale: fonts.scaleMultiplier,
         fontFamily: fonts.family,
