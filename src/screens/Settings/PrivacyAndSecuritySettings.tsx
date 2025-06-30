@@ -153,11 +153,11 @@ function NotificationDeclaration({
   }
   switch (data?.value?.allowSubscriptions) {
     case 'mutuals':
-      return <Trans>Only people you follow</Trans>
+      return <Trans>Only followers who I follow</Trans>
     case 'none':
       return <Trans>No one</Trans>
     case 'followers':
     default:
-      return <Trans>Only your followers</Trans>
+      return <Trans>Anyone who follows me</Trans>
   }
 }
