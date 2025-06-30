@@ -2,12 +2,17 @@ import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyNotificationDefs,
+  type AppBskyNotificationListActivitySubscriptions,
   type ModerationOpts,
   type Un$Typed,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {cleanError} from '#/lib/strings/errors'
@@ -15,6 +20,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
+import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {platform, useTheme, web} from '#/alf'
@@ -121,34 +127,54 @@ function DialogInner({
       })
     },
     onSuccess: (_data, activitySubscription) => {
-      control.close(() =>
+      control.close(() => {
         updateProfileShadow(queryClient, profile.did, {
           activitySubscription,
-        }),
-      )
-      if (!activitySubscription.post && !activitySubscription.reply) {
-        logger.metric('activitySubscription:disable', {})
-        Toast.show(
-          _(
-            msg`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
-          ),
-          'check',
-        )
-      } else {
-        logger.metric('activitySubscription:enable', {
-          setting: activitySubscription.reply ? 'posts_and_replies' : 'posts',
         })
-        if (!initialState.post && !initialState.reply) {
+
+        if (!activitySubscription.post && !activitySubscription.reply) {
+          logger.metric('activitySubscription:disable', {})
           Toast.show(
             _(
-              msg`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`,
+              msg`You will no longer receive notifications for ${sanitizeHandle(profile.handle, '@')}`,
             ),
             'check',
           )
+
+          // filter out the subscription
+          queryClient.setQueryData(
+            RQKEY_getActivitySubscriptions,
+            (
+              old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>,
+            ) => {
+              if (!old) return old
+              return {
+                ...old,
+                pages: old.pages.map(page => ({
+                  ...page,
+                  subscriptions: page.subscriptions.filter(
+                    item => item.did !== profile.did,
+                  ),
+                })),
+              }
+            },
+          )
         } else {
-          Toast.show(_(msg`Changes saved`), 'check')
+          logger.metric('activitySubscription:enable', {
+            setting: activitySubscription.reply ? 'posts_and_replies' : 'posts',
+          })
+          if (!initialState.post && !initialState.reply) {
+            Toast.show(
+              _(
+                msg`You'll start receiving notifications for ${sanitizeHandle(profile.handle, '@')}!`,
+              ),
+              'check',
+            )
+          } else {
+            Toast.show(_(msg`Changes saved`), 'check')
+          }
         }
-      }
+      })
     },
     onError: err => {
       logger.error('Could not save activity subscription', {message: err})

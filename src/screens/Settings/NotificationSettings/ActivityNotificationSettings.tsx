@@ -154,10 +154,10 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                           By default, only accounts you follow can receive
                           alerts from you – this can be changed in{' '}
                           <InlineLinkText
-                            label={_(msg`Privacy & Security settings`)}
+                            label={_(msg`Privacy and Security settings`)}
                             to={{screen: 'PrivacyAndSecuritySettings'}}
                             style={[a.font_bold]}>
-                            Settings &rarr; Privacy &amp; Security
+                            Settings &rarr; Privacy and Security
                           </InlineLinkText>
                           .
                         </Trans>

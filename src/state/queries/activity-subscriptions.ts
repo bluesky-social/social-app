@@ -10,8 +10,8 @@ import {
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 
-const RQKEY_getActivitySubscriptions = ['activity-subscriptions']
-const RQKEY_getNotificationDeclaration = ['notification-declaration']
+export const RQKEY_getActivitySubscriptions = ['activity-subscriptions']
+export const RQKEY_getNotificationDeclaration = ['notification-declaration']
 
 export function useActivitySubscriptionsQuery() {
   const agent = useAgent()
