@@ -101,7 +101,9 @@ export function Inner({
   return (
     <Toggle.Group
       type="radio"
-      label={_('Filter who can opt to receive notifications for your activity')}
+      label={_(
+        msg`Filter who can opt to receive notifications for your activity`,
+      )}
       values={[notificationDeclaration.value.allowSubscriptions]}
       onChange={onChangeFilter}>
       <View style={[a.gap_sm]}>
