@@ -28,6 +28,7 @@ const GROUPABLE_REASONS = [
   'follow',
   'like-via-repost',
   'repost-via-repost',
+  'subscribed-post',
 ]
 const MS_1HR = 1e3 * 60 * 60
 const MS_2DAY = MS_1HR * 48
@@ -252,7 +253,8 @@ function toKnownType(
     notif.reason === 'verified' ||
     notif.reason === 'unverified' ||
     notif.reason === 'like-via-repost' ||
-    notif.reason === 'repost-via-repost'
+    notif.reason === 'repost-via-repost' ||
+    notif.reason === 'subscribed-post'
   ) {
     return notif.reason as NotificationType
   }
@@ -263,7 +265,12 @@ function getSubjectUri(
   type: NotificationType,
   notif: AppBskyNotificationListNotifications.Notification,
 ): string | undefined {
-  if (type === 'reply' || type === 'quote' || type === 'mention') {
+  if (
+    type === 'reply' ||
+    type === 'quote' ||
+    type === 'mention' ||
+    type === 'subscribed-post'
+  ) {
     return notif.uri
   } else if (
     type === 'post-like' ||

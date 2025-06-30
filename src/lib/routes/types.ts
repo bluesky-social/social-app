@@ -73,6 +73,7 @@ export type CommonNavigatorParams = {
   MessagesConversation: {conversation: string; embed?: string; accept?: true}
   MessagesSettings: undefined
   MessagesInbox: undefined
+  NotificationsActivityList: {posts: string}
   LegacyNotificationSettings: undefined
   Feeds: undefined
   Start: {name: string; rkey: string}

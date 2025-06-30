@@ -52,6 +52,7 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
@@ -114,7 +115,9 @@ let NotificationFeedItem = ({
       case 'unverified': {
         return makeProfileLink(item.notification.author)
       }
-      case 'reply': {
+      case 'reply':
+      case 'mention':
+      case 'quote': {
         const uripReply = new AtUri(item.notification.uri)
         return `/profile/${uripReply.host}/post/${uripReply.rkey}`
       }
@@ -125,6 +128,13 @@ let NotificationFeedItem = ({
           return `/profile/${urip.host}/feed/${urip.rkey}`
         }
         break
+      }
+      case 'subscribed-post': {
+        const posts: string[] = []
+        for (const post of [item.notification, ...(item.additional ?? [])]) {
+          posts.push(post.uri)
+        }
+        return `/notifications/activity?posts=${encodeURIComponent(posts.join(','))}`
       }
     }
 
@@ -503,6 +513,42 @@ let NotificationFeedItem = ({
       <Trans>{firstAuthorLink} reposted your repost</Trans>
     )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
+  } else if (item.type === 'subscribed-post') {
+    const postsCount = 1 + (item.additional?.length || 0)
+    a11yLabel = hasMultipleAuthors
+      ? _(
+          msg`New posts from ${firstAuthorName} and ${plural(
+            additionalAuthorsCount,
+            {
+              one: `${formattedAuthorsCount} other`,
+              other: `${formattedAuthorsCount} others`,
+            },
+          )}`,
+        )
+      : _(
+          msg`New ${plural(postsCount, {
+            one: 'post',
+            other: 'posts',
+          })} from ${firstAuthorName}`,
+        )
+    notificationContent = hasMultipleAuthors ? (
+      <Trans>
+        New posts from {firstAuthorLink} and{' '}
+        <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Plural
+            value={additionalAuthorsCount}
+            one={`${formattedAuthorsCount} other`}
+            other={`${formattedAuthorsCount} others`}
+          />
+        </Text>{' '}
+      </Trans>
+    ) : (
+      <Trans>
+        New <Plural value={postsCount} one="post" other="posts" /> from{' '}
+        {firstAuthorLink}
+      </Trans>
+    )
+    icon = <BellRingingIcon size="xl" style={{color: t.palette.primary_500}} />
   } else {
     return null
   }

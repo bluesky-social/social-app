@@ -24,6 +24,7 @@ import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
+import {PostListFeedAPI} from '#/lib/api/feed/posts'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
@@ -53,6 +54,7 @@ export type AuthorFilter =
   | 'posts_with_video'
 type FeedUri = string
 type ListUri = string
+type PostsUriList = string
 
 export type FeedDescriptor =
   | 'following'
@@ -60,6 +62,7 @@ export type FeedDescriptor =
   | `feedgen|${FeedUri}`
   | `likes|${ActorDid}`
   | `list|${ListUri}`
+  | `posts|${PostsUriList}`
   | 'demo'
 export interface FeedParams {
   mergeFeedEnabled?: boolean
@@ -488,6 +491,9 @@ function createApi({
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
     return new ListFeedAPI({agent, feedParams: {list}})
+  } else if (feedDesc.startsWith('posts')) {
+    const [_, uriList] = feedDesc.split('|')
+    return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
   } else if (feedDesc === 'demo') {
     return new DemoFeedAPI({agent})
   } else {
