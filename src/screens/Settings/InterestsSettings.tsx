@@ -1,5 +1,11 @@
 import {useMemo, useState} from 'react'
 import {type TextStyle, View, type ViewStyle} from 'react-native'
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  LinearTransition,
+} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -46,20 +52,6 @@ export function InterestsSettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <View style={[gutters, a.gap_lg]}>
-          <Text
-            style={[
-              a.flex_1,
-              a.text_sm,
-              a.leading_snug,
-              t.atoms.text_contrast_medium,
-            ]}>
-            <Trans>
-              Your selected interests help us serve you content you care about.
-            </Trans>
-          </Text>
-
-          <Divider />
-
           {preferences ? (
             <Inner preferences={preferences} setIsSaving={setIsSaving} />
           ) : (
@@ -73,96 +65,33 @@ export function InterestsSettingsScreen({}: Props) {
   )
 }
 
-function Inner({
-  preferences,
-  setIsSaving,
-}: {
+function Inner({}: {
   preferences: UsePreferencesQueryResponse
   setIsSaving: (isSaving: boolean) => void
 }) {
   const {_} = useLingui()
-  const agent = useAgent()
-  const qc = useQueryClient()
   const interestsDisplayNames = useInterestsDisplayNames()
-  const preselectedInterests = useMemo(
-    () => preferences.interests.tags || [],
-    [preferences.interests.tags],
-  )
-  const [interests, setInterests] = useState<string[]>(preselectedInterests)
-
-  const saveInterests = useMemo(() => {
-    return debounce(async (interests: string[]) => {
-      const noEdits =
-        interests.length === preselectedInterests.length &&
-        preselectedInterests.every(pre => {
-          return interests.find(int => int === pre)
-        })
-
-      if (noEdits) return
-
-      setIsSaving(true)
-
-      try {
-        await agent.setInterestsPref({tags: interests})
-        qc.setQueriesData(
-          {queryKey: preferencesQueryKey},
-          (old?: UsePreferencesQueryResponse) => {
-            if (!old) return old
-            old.interests.tags = interests
-            return old
-          },
-        )
-        await Promise.all([
-          qc.resetQueries({queryKey: createSuggestedStarterPacksQueryKey()}),
-          qc.resetQueries({queryKey: createGetSuggestedFeedsQueryKey()}),
-          qc.resetQueries({queryKey: createGetSuggestedUsersQueryKey({})}),
-        ])
-
-        Toast.show(
-          _(
-            msg({
-              message: 'Your interests have been updated!',
-              context: 'toast',
-            }),
-          ),
-        )
-      } catch (error) {
-        Toast.show(
-          _(
-            msg({
-              message: 'Failed to save your interests.',
-              context: 'toast',
-            }),
-          ),
-          'xmark',
-        )
-      } finally {
-        setIsSaving(false)
-      }
-    }, 1500)
-  }, [_, agent, setIsSaving, qc, preselectedInterests])
+  const [interests, setInterests] = useState<string[]>([])
 
   const onChangeInterests = async (interests: string[]) => {
     setInterests(interests)
-    saveInterests(interests)
   }
+
+  const additional = interests.filter(
+    interest =>
+      Object.keys(findRecursive(interest, INTERESTS) ?? {}).length > 0,
+  )
+
+  console.log('react', findRecursive('react', INTERESTS))
 
   return (
     <>
-      {interests.length === 0 && (
-        <Admonition type="tip">
-          <Trans>We recommend selecting at least two interests.</Trans>
-        </Admonition>
-      )}
-
       <Toggle.Group
         values={interests}
         onChange={onChangeInterests}
         label={_(msg`Select your interests from the options below`)}>
         <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-          {INTERESTS.map(interest => {
-            const name = interestsDisplayNames[interest]
-            if (!name) return null
+          {Object.keys(INTERESTS).map(interest => {
             return (
               <Toggle.Item
                 key={interest}
@@ -173,6 +102,56 @@ function Inner({
             )
           })}
         </View>
+        {additional.map(interest => {
+          const found = findRecursive(interest, INTERESTS) ?? {}
+          console.log(interest)
+          console.log(found)
+          console.log(
+            interests.map(
+              interest => interest + findRecursive(interest, found),
+            ),
+          )
+          console.log(
+            interests
+              .map(interest =>
+                Object.keys(findRecursive(interest, found) ?? {}),
+              )
+              .filter(x => Boolean(x) && x.length > 0)
+              .flat(),
+          )
+          const pills = [
+            ...Object.keys(found),
+            ...interests
+              .map(interest =>
+                Object.keys(findRecursive(interest, found) ?? {}),
+              )
+              .filter(x => Boolean(x) && x.length > 0)
+              .flat(),
+          ]
+          return (
+            <Animated.View
+              key={interest}
+              style={[a.mt_xl]}
+              entering={FadeInDown}
+              exiting={FadeOut}
+              layout={LinearTransition.duration(100)}>
+              <Text style={[a.font_heavy, a.text_lg, a.mb_lg]}>{interest}</Text>
+              <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+                {pills.map((interest, index) => {
+                  return (
+                    <Animated.View
+                      key={interest}
+                      entering={FadeIn.delay(index * 100)}>
+                      <Toggle.Item name={interest} label={interest}>
+                        <InterestButton interest={interest} />
+                      </Toggle.Item>
+                    </Animated.View>
+                  )
+                })}
+              </View>
+            </Animated.View>
+          )
+        })}
       </Toggle.Group>
     </>
   )
@@ -180,7 +159,6 @@ function Inner({
 
 export function InterestButton({interest}: {interest: string}) {
   const t = useTheme()
-  const interestsDisplayNames = useInterestsDisplayNames()
   const ctx = Toggle.useItemContext()
 
   const styles = useMemo(() => {
@@ -219,40 +197,91 @@ export function InterestButton({interest}: {interest: string}) {
       <Text
         selectable={false}
         style={[
-          {
-            color: t.palette.contrast_900,
-          },
+          {color: t.palette.contrast_900},
           a.font_bold,
           ctx.selected ? styles.textSelected : {},
         ]}>
-        {interestsDisplayNames[interest]}
+        {interest}
       </Text>
     </View>
   )
 }
 
-const INTERESTS = [
-  'animals',
-  'art',
-  'books',
-  'comedy',
-  'comics',
-  'culture',
-  'dev',
-  'education',
-  'food',
-  'gaming',
-  'journalism',
-  'movies',
-  'music',
-  'nature',
-  'news',
-  'pets',
-  'photography',
-  'politics',
-  'science',
-  'sports',
-  'tech',
-  'tv',
-  'writers',
-]
+type Interests = Record<
+  string,
+  {} | Record<string, {} | Record<string, {} | Record<string, {}>>>
+>
+
+function findRecursive(
+  interest: string,
+  interests: Interests,
+): Interests | null {
+  if (interests[interest]) return interests[interest]
+  for (const key in interests) {
+    const found = findRecursive(key, interests[key])
+    if (found) return found
+  }
+  return null
+}
+
+const INTERESTS = {
+  animals: {},
+  art: {
+    comics: {},
+    illustration: {
+      'digital art': {},
+      'hand drawn': {},
+      'furry art': {},
+    },
+    painting: {
+      watercolor: {},
+      'fine art': {},
+    },
+    'fan art': {},
+    sculpture: {},
+    'art history': {},
+  },
+  books: {},
+  comedy: {},
+  culture: {},
+  dev: {
+    'web dev': {
+      design: {},
+      css: {},
+      react: {
+        'react native': {},
+      },
+      svelte: {},
+      typescript: {},
+    },
+    'game dev': {},
+    atproto: {},
+  },
+  education: {},
+  food: {},
+  gaming: {},
+  journalism: {},
+  movies: {},
+  music: {},
+  nature: {},
+  news: {},
+  pets: {
+    cats: {},
+    dogs: {},
+    birds: {
+      parrots: {},
+      canaries: {},
+      finches: {},
+    },
+    fish: {},
+    reptiles: {},
+    bunnies: {},
+  },
+  photography: {},
+  politics: {},
+  science: {},
+  sports: {},
+  tech: {},
+  tv: {},
+  writers: {},
+}
