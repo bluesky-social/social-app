@@ -203,6 +203,18 @@ function ActivitySubscriptionCard({
   const {_} = useLingui()
   const t = useTheme()
 
+  const preview = useMemo(() => {
+    const actSub = profile.viewer?.activitySubscription
+    if (actSub?.post && actSub?.reply) {
+      return _(msg`Posts, Replies`)
+    } else if (actSub?.post) {
+      return _(msg`Posts`)
+    } else if (actSub?.reply) {
+      return _(msg`Replies`)
+    }
+    return _(msg`None`)
+  }, [_, profile.viewer?.activitySubscription])
+
   return (
     <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
       <ProfileCard.Outer>
@@ -218,7 +230,7 @@ function ActivitySubscriptionCard({
               inline
             />
             <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
-              <Trans>Posts, Replies</Trans>
+              {preview}
             </Text>
           </View>
           <Button
