@@ -16,6 +16,8 @@
     "terser": "^5.30.3"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "autoprefixer": "^10.4.19",
     "eslint": "^8.19.0",
     "eslint-config-preact": "^1.3.0",
