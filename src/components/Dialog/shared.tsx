@@ -43,8 +43,7 @@ export function Header({
         {borderTopLeftRadius: a.rounded_md.borderRadius},
         {borderTopRightRadius: a.rounded_md.borderRadius},
         style,
-      ]}
-      onLayout={onLayout}>
+      ]}>
       {renderLeft && (
         <View style={[a.absolute, {left: 6}]}>{renderLeft()}</View>
       )}
