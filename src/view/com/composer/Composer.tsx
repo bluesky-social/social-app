@@ -836,7 +836,7 @@ let ComposerPost = React.memo(function ComposerPost({
       <View style={[a.flex_row, isNative && a.flex_1]}>
         <UserAvatar
           avatar={currentProfile?.avatar}
-          size={50}
+          size={42}
           type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
           style={[a.mt_xs]}
         />
