@@ -5,6 +5,7 @@ import {type FilterablePreference} from '@atproto/api/dist/client/types/app/bsky
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logger} from '#/logger'
 import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
 import {atoms as a, platform, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
@@ -73,6 +74,11 @@ export function Inner({
       push: change.includes('push'),
     } satisfies typeof preference
 
+    logger.metric('activityPreference:changeChannel', {
+      name,
+      value: newPreference.push,
+    })
+
     mutate({
       [name]: newPreference,
       ...Object.fromEntries(syncOthers.map(key => [key, newPreference])),
@@ -87,6 +93,8 @@ export function Inner({
       ...preference,
       include: change,
     } satisfies typeof preference
+
+    logger.metric('activityPreference:changeFilter', {name, value: change})
 
     mutate({
       [name]: newPreference,
