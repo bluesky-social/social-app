@@ -4,6 +4,7 @@ import {
   type AppBskyFeedGetPosts,
 } from '@atproto/api'
 
+import {logger} from '#/logger'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class PostListFeedAPI implements FeedAPI {
@@ -19,7 +20,14 @@ export class PostListFeedAPI implements FeedAPI {
     feedParams: AppBskyFeedGetPosts.QueryParams
   }) {
     this.agent = agent
-    this.params = feedParams
+    if (feedParams.uris.length > 25) {
+      logger.warn(
+        `Too many URIs provided - expected 25, got ${feedParams.uris.length}`,
+      )
+    }
+    this.params = {
+      uris: feedParams.uris.slice(0, 25),
+    }
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {

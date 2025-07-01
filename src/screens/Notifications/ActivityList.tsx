@@ -33,10 +33,10 @@ export function NotificationsActivityListScreen({
       </Layout.Header.Outer>
       <PostFeed
         feed={`posts|${uris}`}
+        disablePoll
         renderEmptyState={() => (
           <EmptyState icon="growth" message={_(msg`No posts here`)} />
         )}
-        disablePoll
         renderEndOfFeed={() => <ListFooter />}
       />
     </Layout.Screen>
