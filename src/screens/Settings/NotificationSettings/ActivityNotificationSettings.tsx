@@ -11,6 +11,7 @@ import {
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActivitySubscriptionsQuery} from '#/state/queries/activity-subscriptions'
 import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
@@ -193,12 +194,13 @@ function keyExtractor(item: bsky.profile.AnyProfileView) {
 }
 
 function ActivitySubscriptionCard({
-  profile,
+  profile: profileUnshadowed,
   moderationOpts,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
+  const profile = useProfileShadow(profileUnshadowed)
   const control = useDialogControl()
   const {_} = useLingui()
   const t = useTheme()

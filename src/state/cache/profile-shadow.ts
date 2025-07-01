@@ -4,6 +4,7 @@ import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
+import {findAllProfilesInQueryData as findAllProfilesInActivitySubscriptionsQueryData} from '#/state/queries/activity-subscriptions'
 import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '#/state/queries/actor-search'
 import {findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
 import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '#/state/queries/known-followers'
@@ -115,8 +116,8 @@ export function updateProfileShadow(
   value: Partial<ProfileShadow>,
 ) {
   const cachedProfiles = findProfilesInCache(queryClient, did)
-  for (let post of cachedProfiles) {
-    shadows.set(post, {...shadows.get(post), ...value})
+  for (let profile of cachedProfiles) {
+    shadows.set(profile, {...shadows.get(profile), ...value})
   }
   batchedUpdates(() => {
     emitter.emit(did, value)
@@ -176,4 +177,5 @@ function* findProfilesInCache(
   yield* findAllProfilesInPostThreadV2QueryData(queryClient, did)
   yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
   yield* findAllProfilesInExploreFeedPreviewsQueryData(queryClient, did)
+  yield* findAllProfilesInActivitySubscriptionsQueryData(queryClient, did)
 }
