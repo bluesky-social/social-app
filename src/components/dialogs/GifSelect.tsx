@@ -1,4 +1,4 @@
-import React, {
+import {
   useCallback,
   useImperativeHandle,
   useMemo,
@@ -119,7 +119,7 @@ function GifList({
     [onSelectGif],
   )
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
