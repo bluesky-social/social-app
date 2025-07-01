@@ -165,7 +165,10 @@ let NotificationFeedItem = ({
         href: makeProfileLink(author),
         moderation: moderateProfile(author, moderationOpts),
       })) || []),
-    ]
+    ].filter(
+      (author, index, arr) =>
+        arr.findIndex(au => au.profile.did === author.profile.did) === index,
+    )
   }, [item, moderationOpts])
 
   const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
@@ -659,7 +662,8 @@ let NotificationFeedItem = ({
             {item.type === 'post-like' ||
             item.type === 'repost' ||
             item.type === 'like-via-repost' ||
-            item.type === 'repost-via-repost' ? (
+            item.type === 'repost-via-repost' ||
+            item.type === 'subscribed-post' ? (
               <View style={[a.pt_2xs]}>
                 <AdditionalPostText post={item.subject} />
               </View>

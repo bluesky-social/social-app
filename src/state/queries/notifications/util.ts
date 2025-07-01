@@ -145,7 +145,8 @@ export function groupNotifications(
           Math.abs(ts2 - ts) < MS_2DAY &&
           notif.reason === groupedNotif.notification.reason &&
           notif.reasonSubject === groupedNotif.notification.reasonSubject &&
-          notif.author.did !== groupedNotif.notification.author.did
+          (notif.author.did !== groupedNotif.notification.author.did ||
+            notif.reason === 'subscribed-post')
         ) {
           const nextIsFollowBack =
             notif.reason === 'follow' && notif.author.viewer?.following

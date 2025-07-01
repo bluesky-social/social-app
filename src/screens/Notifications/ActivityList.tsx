@@ -6,6 +6,7 @@ import {type AllNavigatorParams} from '#/lib/routes/types'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import * as Layout from '#/components/Layout'
+import {ListFooter} from '#/components/Lists'
 
 type Props = NativeStackScreenProps<
   AllNavigatorParams,
@@ -36,6 +37,7 @@ export function NotificationsActivityListScreen({
           <EmptyState icon="growth" message={_(msg`No posts here`)} />
         )}
         disablePoll
+        renderEndOfFeed={() => <ListFooter />}
       />
     </Layout.Screen>
   )
