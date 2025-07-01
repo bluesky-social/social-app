@@ -101,7 +101,7 @@ export function useComposeIntent() {
       closeAllActiveElements()
 
       // Replace newlines with <p> tags to preserve formatting in composer
-      const formattedText = text
+      const formattedText = isNative ? text : text
         ?.split('\n')
         .map(fragment => `<p>${fragment}</p>`)
         .join('')
