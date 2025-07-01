@@ -247,6 +247,7 @@ function InlineNameAndHandle({
         </View>
       )}
       <Text
+        emoji
         style={[
           a.leading_tight,
           t.atoms.text_contrast_medium,
@@ -298,6 +299,7 @@ export function Handle({profile}: {profile: bsky.profile.AnyProfileView}) {
 
   return (
     <Text
+      emoji
       style={[a.leading_snug, t.atoms.text_contrast_medium]}
       numberOfLines={1}>
       {handle}
