@@ -153,7 +153,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                       <Admonition.Text>
                         <Trans>
                           If you want to restrict who can receive notifications
-                          for your account's activity, this can be changed in{' '}
+                          for your account's activity, you can change this in{' '}
                           <InlineLinkText
                             label={_(msg`Privacy and Security settings`)}
                             to={{screen: 'ActivityPrivacySettings'}}
