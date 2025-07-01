@@ -5,7 +5,6 @@ export type Gate =
   | 'cta_above_post_replies'
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'
-  | 'disable_onboarding_policy_update_notice'
   | 'explore_show_suggested_feeds'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
