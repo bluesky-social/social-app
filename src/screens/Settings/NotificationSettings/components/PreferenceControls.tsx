@@ -74,9 +74,10 @@ export function Inner({
       push: change.includes('push'),
     } satisfies typeof preference
 
-    logger.metric('activityPreference:changeChannel', {
+    logger.metric('activityPreference:changeChannels', {
       name,
-      value: newPreference.push,
+      push: newPreference.push,
+      list: newPreference.list,
     })
 
     mutate({

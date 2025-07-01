@@ -447,9 +447,10 @@ export type MetricEvents = {
     setting: 'posts' | 'posts_and_replies'
   }
   'activitySubscription:disable': {}
-  'activityPreference:changeChannel': {
+  'activityPreference:changeChannels': {
     name: string
-    value: string | boolean
+    push: boolean
+    list: boolean
   }
   'activityPreference:changeFilter': {
     name: string
