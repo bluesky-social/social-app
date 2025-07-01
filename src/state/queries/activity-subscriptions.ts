@@ -1,6 +1,12 @@
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  type AppBskyNotificationDeclaration,
+  type AppBskyNotificationListActivitySubscriptions,
+} from '@atproto/api'
 import {t} from '@lingui/macro'
 import {
+  type InfiniteData,
+  type QueryClient,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -98,4 +104,27 @@ export function useNotificationDeclarationMutation() {
       })
     },
   })
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>
+  >({
+    queryKey: RQKEY_getActivitySubscriptions,
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData.pages) {
+      for (const subscription of page.subscriptions) {
+        if (subscription.did === did) {
+          yield subscription
+        }
+      }
+    }
+  }
 }

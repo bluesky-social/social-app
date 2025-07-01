@@ -11,6 +11,7 @@ import {
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActivitySubscriptionsQuery} from '#/state/queries/activity-subscriptions'
 import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
@@ -20,7 +21,7 @@ import {SubscribeProfileDialog} from '#/components/activity-notifications/Subscr
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {Bell_Filled_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
+import {BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon} from '#/components/icons/BellRinging'
 import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
@@ -142,7 +143,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                             style={[a.font_bold, t.atoms.text_contrast_high]}>
                             bell icon
                           </RNText>{' '}
-                          <BellIcon
+                          <BellRingingFilledIcon
                             size="xs"
                             style={t.atoms.text_contrast_high}
                           />
@@ -151,11 +152,11 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                       </Admonition.Text>
                       <Admonition.Text>
                         <Trans>
-                          By default, only accounts you follow can receive
-                          alerts from you – this can be changed in{' '}
+                          If you want to restrict who can receive notifications
+                          for your account's activity, this can be changed in{' '}
                           <InlineLinkText
                             label={_(msg`Privacy and Security settings`)}
-                            to={{screen: 'PrivacyAndSecuritySettings'}}
+                            to={{screen: 'ActivityPrivacySettings'}}
                             style={[a.font_bold]}>
                             Settings &rarr; Privacy and Security
                           </InlineLinkText>
@@ -193,12 +194,13 @@ function keyExtractor(item: bsky.profile.AnyProfileView) {
 }
 
 function ActivitySubscriptionCard({
-  profile,
+  profile: profileUnshadowed,
   moderationOpts,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
+  const profile = useProfileShadow(profileUnshadowed)
   const control = useDialogControl()
   const {_} = useLingui()
   const t = useTheme()

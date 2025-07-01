@@ -110,6 +110,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {NotificationsActivityListScreen} from './screens/Notifications/ActivityList'
 import {LegacyNotificationSettingsScreen} from './screens/Settings/LegacyNotificationSettings'
 import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
 import {ActivityNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ActivityNotificationSettings'
@@ -541,6 +542,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="MessagesInbox"
         getComponent={() => MessagesInboxScreen}
         options={{title: title(msg`Chat request inbox`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="NotificationsActivityList"
+        getComponent={() => NotificationsActivityListScreen}
+        options={{title: title(msg`Notifications`), requireAuth: true}}
       />
       <Stack.Screen
         name="LegacyNotificationSettings"
