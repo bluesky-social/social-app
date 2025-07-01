@@ -49,7 +49,7 @@ export function ActivityPrivacySettingsScreen({}: Props) {
             <ItemTextWithSubtitle
               bold
               titleText={
-                <Trans>Allow others to get notified of your posts</Trans>
+                <Trans>Allow others to be notified of your posts</Trans>
               }
               subtitleText={
                 <Trans>
