@@ -248,7 +248,6 @@ function ActivitySubscriptionCard({
             </ButtonText>
           </Button>
         </ProfileCard.Header>
-        {/* <ProfileCard.Labels profile={profile} moderationOpts={moderationOpts} /> */}
       </ProfileCard.Outer>
 
       <SubscribeProfileDialog
