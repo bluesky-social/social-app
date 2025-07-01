@@ -3,7 +3,7 @@ import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
-import {msg, t, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -16,7 +16,6 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -64,6 +63,7 @@ import {
   shouldShowVerificationCheckButton,
   VerificationCheckButton,
 } from '#/components/verification/VerificationCheckButton'
+import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
@@ -82,7 +82,6 @@ export function SettingsScreen({}: Props) {
   const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
   const [showAccounts, setShowAccounts] = useState(false)
   const [showDevOptions, setShowDevOptions] = useState(false)
-  const gate = useGate()
 
   return (
     <Layout.Screen>
@@ -183,16 +182,14 @@ export function SettingsScreen({}: Props) {
               <Trans>Moderation</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
-          {gate('reengagement_features') && (
-            <SettingsList.LinkItem
-              to="/settings/notifications"
-              label={_(msg`Notifications`)}>
-              <SettingsList.ItemIcon icon={NotificationIcon} />
-              <SettingsList.ItemText>
-                <Trans>Notifications</Trans>
-              </SettingsList.ItemText>
-            </SettingsList.LinkItem>
-          )}
+          <SettingsList.LinkItem
+            to="/settings/notifications"
+            label={_(msg`Notifications`)}>
+            <SettingsList.ItemIcon icon={NotificationIcon} />
+            <SettingsList.ItemText>
+              <Trans>Notifications</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/settings/content-and-media"
             label={_(msg`Content and media`)}>
@@ -364,6 +361,7 @@ function DevOptions() {
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
+  const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged()
 
   const resetOnboarding = async () => {
     navigation.navigate('Home')
@@ -384,7 +382,11 @@ function DevOptions() {
       ...persisted.get('reminders'),
       lastEmailConfirm: lastEmailConfirm.toISOString(),
     })
-    Toast.show(t`You probably want to restart the app now.`)
+    Toast.show(_(msg`You probably want to restart the app now.`))
+  }
+
+  const onPressActySubsUnNudge = () => {
+    setActyNotifNudged(false)
   }
 
   return (
@@ -431,6 +433,15 @@ function DevOptions() {
           <Trans>Unsnooze email reminder</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
+      {actyNotifNudged && (
+        <SettingsList.PressableItem
+          onPress={onPressActySubsUnNudge}
+          label={_(msg`Reset activity subscription nudge`)}>
+          <SettingsList.ItemText>
+            <Trans>Reset activity subscription nudge</Trans>
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      )}
       <SettingsList.PressableItem
         onPress={() => clearAllStorage()}
         label={_(msg`Clear all storage data`)}>

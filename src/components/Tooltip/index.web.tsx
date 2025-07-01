@@ -13,10 +13,12 @@ import {Text} from '#/components/Typography'
 
 type TooltipContextType = {
   position: 'top' | 'bottom'
+  onVisibleChange: (open: boolean) => void
 }
 
 const TooltipContext = createContext<TooltipContextType>({
   position: 'bottom',
+  onVisibleChange: () => {},
 })
 
 export function Outer({
@@ -30,7 +32,10 @@ export function Outer({
   visible: boolean
   onVisibleChange: (visible: boolean) => void
 }) {
-  const ctx = useMemo(() => ({position}), [position])
+  const ctx = useMemo(
+    () => ({position, onVisibleChange}),
+    [position, onVisibleChange],
+  )
   return (
     <Popover.Root open={visible} onOpenChange={onVisibleChange}>
       <TooltipContext.Provider value={ctx}>{children}</TooltipContext.Provider>
@@ -54,7 +59,7 @@ export function Content({
   label: string
 }) {
   const t = useTheme()
-  const {position} = useContext(TooltipContext)
+  const {position, onVisibleChange} = useContext(TooltipContext)
   return (
     <Popover.Portal>
       <Popover.Content
@@ -63,6 +68,7 @@ export function Content({
         side={position}
         sideOffset={4}
         collisionPadding={MIN_EDGE_SPACE}
+        onInteractOutside={() => onVisibleChange(false)}
         style={flatten([
           a.rounded_sm,
           select(t.name, {
