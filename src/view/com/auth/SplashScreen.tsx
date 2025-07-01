@@ -56,7 +56,10 @@ export const SplashScreen = ({
             style={[a.px_xl, a.gap_md, a.pb_2xl]}>
             <Button
               testID="createAccountButton"
-              onPress={onPressCreateAccount}
+              onPress={() => {
+                onPressCreateAccount()
+                playHaptic('Light')
+              }}
               label={_(msg`Create new account`)}
               accessibilityHint={_(
                 msg`Opens flow to create a new Bluesky account`,
@@ -70,7 +73,10 @@ export const SplashScreen = ({
             </Button>
             <Button
               testID="signInButton"
-              onPress={onPressSignin}
+              onPress={() => {
+                onPressSignin()
+                playHaptic('Light')
+              }}
               label={_(msg`Sign in`)}
               accessibilityHint={_(
                 msg`Opens flow to sign in to your existing Bluesky account`,
