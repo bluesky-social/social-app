@@ -123,6 +123,7 @@ import {QuoteNotificationSettingsScreen} from './screens/Settings/NotificationSe
 import {ReplyNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ReplyNotificationSettings'
 import {RepostNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostNotificationSettings'
 import {RepostsOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
+import {NavigationAvailable} from './state/shell/navigation-available'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -825,6 +826,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const {currentAccount} = useSession()
   const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
   const emailDialogControl = useEmailDialogControl()
+  const navigationAvailableRef = React.useRef<{onReady: () => void}>(null)
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()
@@ -837,7 +839,9 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   }
 
   return (
-    <>
+    <NavigationAvailable
+      ref={navigationAvailableRef}
+      navigationRef={navigationRef}>
       <NavigationContainer
         ref={navigationRef}
         linking={LINKING}
@@ -856,6 +860,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           attachRouteToLogEvents(getCurrentRouteName)
           logModuleInitTime()
           onReady()
+          navigationAvailableRef.current?.onReady()
           logger.metric('router:navigate', {}, {statsig: false})
         }}
         // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
@@ -867,7 +872,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         navigationInChildEnabled>
         {children}
       </NavigationContainer>
-    </>
+    </NavigationAvailable>
   )
 }
 
