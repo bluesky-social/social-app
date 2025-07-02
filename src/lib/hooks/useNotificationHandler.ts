@@ -16,6 +16,7 @@ import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useRunWhenNavigationAvailable} from '#/state/shell/navigation-available'
 import {useCloseAllActiveElements} from '#/state/util'
 import {resetToTab} from '#/Navigation'
 
@@ -74,6 +75,7 @@ export function useNotificationsHandler() {
   const {currentConvoId} = useCurrentConvoId()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const runWhenNavigationAvailable = useRunWhenNavigationAvailable()
   const {_} = useLingui()
 
   // On Android, we cannot control which sound is used for a notification on Android
@@ -228,10 +230,17 @@ export function useNotificationsHandler() {
         }
       } else {
         switch (payload.reason) {
+          case 'like':
+          case 'repost':
+          case 'reply':
+          case 'quote':
+          case 'mention':
+          case 'like-via-repost':
+          case 'repost-via-repost':
           case 'subscribed-post':
-            const urip = new AtUri(payload.uri)
-            if (urip.collection === 'app.bsky.feed.post') {
-              setTimeout(() => {
+            runWhenNavigationAvailable(() => {
+              const urip = new AtUri(payload.uri)
+              if (urip.collection === 'app.bsky.feed.post') {
                 // @ts-expect-error types are weird here
                 navigation.navigate('HomeTab', {
                   screen: 'PostThread',
@@ -240,51 +249,29 @@ export function useNotificationsHandler() {
                     rkey: urip.rkey,
                   },
                 })
-              }, 500)
-            } else {
-              resetToTab('NotificationsTab')
-            }
+              } else {
+                resetToTab('NotificationsTab')
+              }
+            })
             break
-          case 'like':
-          case 'repost':
           case 'follow':
-          case 'mention':
-          case 'quote':
-          case 'reply':
           case 'starterpack-joined':
-          case 'like-via-repost':
-          case 'repost-via-repost':
+            runWhenNavigationAvailable(() => {
+              const urip = new AtUri(payload.uri)
+              // @ts-expect-error types are weird here
+              navigation.navigate('HomeTab', {
+                screen: 'Profile',
+                params: {
+                  name: urip.host,
+                },
+              })
+            })
+            break
           case 'verified':
           case 'unverified':
           default:
             resetToTab('NotificationsTab')
             break
-          // TODO implement these after we have an idea of how to handle each individual case
-          // case 'follow':
-          //   const uri = new AtUri(payload.uri)
-          //   setTimeout(() => {
-          //     // @ts-expect-error types are weird here
-          //     navigation.navigate('HomeTab', {
-          //       screen: 'Profile',
-          //       params: {
-          //         name: uri.host,
-          //       },
-          //     })
-          //   }, 500)
-          //   break
-          // case 'mention':
-          // case 'reply':
-          //   const urip = new AtUri(payload.uri)
-          //   setTimeout(() => {
-          //     // @ts-expect-error types are weird here
-          //     navigation.navigate('HomeTab', {
-          //       screen: 'PostThread',
-          //       params: {
-          //         name: urip.host,
-          //         rkey: urip.rkey,
-          //       },
-          //     })
-          //   }, 500)
         }
       }
     }
@@ -416,5 +403,6 @@ export function useNotificationsHandler() {
     navigation,
     onPressSwitchAccount,
     setShowLoggedOut,
+    runWhenNavigationAvailable,
   ])
 }
