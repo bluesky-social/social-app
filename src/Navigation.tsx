@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {useCallback, useRef} from 'react'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
@@ -13,6 +13,7 @@ import {
   NavigationContainer,
   StackActions,
 } from '@react-navigation/native'
+import {createNativeStackNavigator} from '@react-navigation/native-stack'
 
 import {timeout} from '#/lib/async/timeout'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
@@ -21,6 +22,7 @@ import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
   type BottomTabNavigatorParams,
+  type CoreNavigatorParams,
   type FlatNavigatorParams,
   type HomeTabNavigatorParams,
   type MessagesTabNavigatorParams,
@@ -62,6 +64,16 @@ import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {ForgotPasswordScreen} from '#/screens/Authentication/ForgotPasswordScreen'
+import {LandingScreen} from '#/screens/Authentication/LandingScreen'
+import {PasswordUpdatedScreen} from '#/screens/Authentication/PasswordUpdatedScreen'
+import {SelectAccountScreen} from '#/screens/Authentication/SelectAccountScreen'
+import {SetNewPasswordScreen} from '#/screens/Authentication/SetNewPasswordScreen'
+import {SignInScreen} from '#/screens/Authentication/SignInScreen'
+import {SignUpCaptchaScreen} from '#/screens/Authentication/SignUpCaptchaScreen'
+import {SignUpHandleScreen} from '#/screens/Authentication/SignUpHandleScreen'
+import {SignUpInfoScreen} from '#/screens/Authentication/SignUpInfoScreen'
+import {StarterPackLandingScreen} from '#/screens/Authentication/StarterPackLandingScreen'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import HashtagScreen from '#/screens/Hashtag'
 import {MessagesScreen} from '#/screens/Messages/ChatList'
@@ -71,6 +83,7 @@ import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
+import {NotificationsActivityListScreen} from '#/screens/Notifications/ActivityList'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
 import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
@@ -93,6 +106,18 @@ import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPr
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
 import {InterestsSettingsScreen} from '#/screens/Settings/InterestsSettings'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
+import {LegacyNotificationSettingsScreen} from '#/screens/Settings/LegacyNotificationSettings'
+import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
+import {ActivityNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/ActivityNotificationSettings'
+import {LikeNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/LikeNotificationSettings'
+import {LikesOnRepostsNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
+import {MentionNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/MentionNotificationSettings'
+import {MiscellaneousNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
+import {NewFollowerNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
+import {QuoteNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/QuoteNotificationSettings'
+import {ReplyNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/ReplyNotificationSettings'
+import {RepostNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/RepostNotificationSettings'
+import {RepostsOnRepostsNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
 import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from '#/screens/Settings/Settings'
 import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
@@ -110,22 +135,11 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
-import {NotificationsActivityListScreen} from './screens/Notifications/ActivityList'
-import {LegacyNotificationSettingsScreen} from './screens/Settings/LegacyNotificationSettings'
-import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
-import {ActivityNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ActivityNotificationSettings'
-import {LikeNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikeNotificationSettings'
-import {LikesOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
-import {MentionNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MentionNotificationSettings'
-import {MiscellaneousNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
-import {NewFollowerNotificationSettingsScreen} from './screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
-import {QuoteNotificationSettingsScreen} from './screens/Settings/NotificationSettings/QuoteNotificationSettings'
-import {ReplyNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ReplyNotificationSettings'
-import {RepostNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostNotificationSettings'
-import {RepostsOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
+import {useLoggedOutView} from './state/shell/logged-out'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
+const Core = createNativeStackNavigator<CoreNavigatorParams>()
 const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
 const NotificationsTab =
@@ -595,7 +609,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
-  const tabBar = React.useCallback(
+  const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
     ),
@@ -756,6 +770,71 @@ const FlatNavigator = () => {
 }
 
 /**
+ * The core navigator on native handles authentication, switching between
+ * the main tab navigator when logged in and the auth screen when logged out.
+ */
+export const NativeNavigator = () => {
+  const t = useTheme()
+  const {hasSession} = useSession()
+  const {showLoggedOut} = useLoggedOutView()
+
+  return (
+    <Core.Navigator screenOptions={screenOptions(t)}>
+      {hasSession && !showLoggedOut ? (
+        <Core.Screen
+          name="App"
+          getComponent={() => TabsNavigator}
+          options={{animation: 'fade', animationDuration: 200}}
+        />
+      ) : (
+        <>
+          <Core.Screen
+            name="Landing"
+            getComponent={() => LandingScreen}
+            options={{animation: 'fade', animationDuration: 200}}
+          />
+          <Core.Screen
+            name="StarterPackLanding"
+            getComponent={() => StarterPackLandingScreen}
+          />
+          <Core.Group>
+            <Core.Screen
+              name="SelectAccount"
+              getComponent={() => SelectAccountScreen}
+            />
+            <Core.Screen name="SignIn" getComponent={() => SignInScreen} />
+            <Core.Screen
+              name="ForgotPassword"
+              getComponent={() => ForgotPasswordScreen}
+            />
+            <Core.Screen
+              name="SetNewPassword"
+              getComponent={() => SetNewPasswordScreen}
+            />
+            <Core.Screen
+              name="PasswordUpdated"
+              getComponent={() => PasswordUpdatedScreen}
+            />
+            <Core.Screen
+              name="SignUpInfo"
+              getComponent={() => SignUpInfoScreen}
+            />
+            <Core.Screen
+              name="SignUpHandle"
+              getComponent={() => SignUpHandleScreen}
+            />
+            <Core.Screen
+              name="SignUpCaptcha"
+              getComponent={() => SignUpCaptchaScreen}
+            />
+          </Core.Group>
+        </>
+      )}
+    </Core.Navigator>
+  )
+}
+
+/**
  * The RoutesContainer should wrap all components which need access
  * to the navigation context.
  */
@@ -823,7 +902,7 @@ const LINKING = {
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
-  const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
+  const prevLoggedRouteName = useRef<string | undefined>(undefined)
   const emailDialogControl = useEmailDialogControl()
 
   function onReady() {
