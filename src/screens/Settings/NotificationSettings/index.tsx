@@ -184,7 +184,7 @@ export function NotificationSettingsScreen({}: Props) {
               />
             </SettingsList.LinkItem>
             <SettingsList.LinkItem
-              label={_(msg`Settings for activity alerts`)}
+              label={_(msg`Settings for activity from others`)}
               to={{screen: 'ActivityNotificationSettings'}}
               contentContainerStyle={[a.align_start]}>
               <SettingsList.ItemIcon icon={BellRingingIcon} />
