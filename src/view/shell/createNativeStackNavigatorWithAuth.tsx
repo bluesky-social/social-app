@@ -27,7 +27,7 @@ import {
 
 import {PWI_ENABLED} from '#/lib/build-flags'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isNative, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {
@@ -112,7 +112,8 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || isNative)) {
+  // Temp: use old system for web. TODO: unify
+  if (isWeb && !hasSession && (!PWI_ENABLED || activeRouteRequiresAuth)) {
     return <LoggedOut />
   }
   if (hasSession && currentAccount?.signupQueued) {
@@ -121,7 +122,7 @@ function NativeStackNavigator({
   if (hasSession && currentAccount?.status === 'takendown') {
     return <Takendown />
   }
-  if (showLoggedOut) {
+  if (isWeb && showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
   }
   if (currentAccount?.status === 'deactivated') {

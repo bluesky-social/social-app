@@ -1,0 +1,78 @@
+import {useState} from 'react'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {
+  type AuthNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
+import {logger} from '#/logger'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, native} from '#/alf'
+import {AccountList} from '#/components/AccountList'
+import * as TextField from '#/components/forms/TextField'
+import * as Layout from '#/components/Layout'
+
+type Props = NativeStackScreenProps<AuthNavigatorParams, 'SelectAccount'>
+export function SelectAccountScreen({navigation}: Props) {
+  const [pendingDid, setPendingDid] = useState<string | null>(null)
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
+  const {resumeSession} = useSessionApi()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+
+  const onSelect = async (account: SessionAccount) => {
+    if (pendingDid) {
+      // The session API isn't resilient to race conditions so let's just ignore this.
+      return
+    }
+    if (!account.accessJwt) {
+      // Move to login form.
+      navigation.push('SignIn', {account})
+      return
+    }
+    if (account.did === currentAccount?.did) {
+      setShowLoggedOut(false)
+      return
+    }
+    try {
+      setPendingDid(account.did)
+      await resumeSession(account)
+      logger.metric('account:loggedIn', {
+        logContext: 'ChooseAccountForm',
+        withPassword: false,
+      })
+      Toast.show(_(msg`Signed in as @${account.handle}`))
+    } catch (e: any) {
+      logger.error('choose account: initSession failed', {
+        message: e.message,
+      })
+      // Move to login form.
+      navigation.push('SignIn', {account})
+    } finally {
+      setPendingDid(null)
+    }
+  }
+
+  return (
+    <Layout.Screen testID="SelectAccountScreen">
+      <Layout.Header.Outer noBottomBorder>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content />
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content contentContainerStyle={[a.py_xl, native(a.px_xl)]}>
+        <TextField.LabelText>
+          <Trans>Sign in as...</Trans>
+        </TextField.LabelText>
+        <AccountList
+          onSelectAccount={onSelect}
+          onSelectOther={() => navigation.push('SignIn')}
+          pendingDid={pendingDid}
+        />
+      </Layout.Content>
+    </Layout.Screen>
+  )
+}

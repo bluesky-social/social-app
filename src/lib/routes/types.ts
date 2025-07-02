@@ -1,6 +1,7 @@
 import {type NavigationState, type PartialState} from '@react-navigation/native'
 import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
 
+import {type SessionAccount} from '#/state/session'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 
 export type {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -132,6 +133,33 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   MessagesTab: undefined
   Messages: {animation?: 'push' | 'pop'}
 }
+
+/**
+ * Authentication screens are separate from the main navigator -sfn
+ */
+export type AuthNavigatorParams = {
+  Landing: undefined
+  StarterPackLanding: {uri: string}
+  SelectAccount: undefined
+  // TODO: Confirm this is not via query params on web
+  // Move to context instead if so
+  SignIn?: {account?: SessionAccount}
+  ForgotPassword: undefined
+  SetNewPassword: undefined
+  PasswordUpdated: undefined
+  SignUpInfo: undefined
+  SignUpHandle: undefined
+  SignUpCaptcha: undefined
+}
+
+/**
+ * On native, the root navigator is a stack navigator that switches between
+ * the tab navigator, in the `App` screen, and the auth screens.
+ * which screens are mounted depends on the auth state -sfn
+ */
+export type CoreNavigatorParams = {
+  App: undefined
+} & AuthNavigatorParams
 
 // NOTE
 // this isn't strictly correct but it should be close enough
