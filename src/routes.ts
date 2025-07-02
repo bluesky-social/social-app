@@ -3,7 +3,7 @@ import {type FlatNavigatorParams} from './lib/routes/types'
 
 type AllNavigatableRoutes = Omit<
   FlatNavigatorParams,
-  'NotFound' | 'SharedPreferencesTester'
+  'Auth' | 'NotFound' | 'SharedPreferencesTester'
 >
 
 export const router = new Router<AllNavigatableRoutes>({
