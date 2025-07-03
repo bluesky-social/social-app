@@ -9,6 +9,7 @@ import Animated, {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {BSKY_SERVICE_HANDLE_ENDSWITH} from '#/lib/constants'
 import {
   createFullHandle,
   isHandleReserved,
@@ -60,7 +61,10 @@ export function StepHandle() {
       return
     }
 
-    if (isHandleReserved(handle)) {
+    if (
+      state.userDomain === BSKY_SERVICE_HANDLE_ENDSWITH &&
+      isHandleReserved(handle)
+    ) {
       dispatch({
         type: 'setError',
         value: _(msg`That username is not available`),
@@ -147,7 +151,7 @@ export function StepHandle() {
                 // replace em dash with double hyphen to fix iOS behaviour
                 setDraftValue(val.replaceAll('—', '--'))
               }}
-              label="alice.bsky.social"
+              label={`alice${state.userDomain}`}
               defaultValue={draftValue}
               autoCapitalize="none"
               autoCorrect={false}
