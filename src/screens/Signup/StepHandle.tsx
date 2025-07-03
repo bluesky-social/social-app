@@ -21,7 +21,7 @@ import {useHandleAvailabilityQuery} from '#/state/queries/handle-availablility'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
-import {atoms as a, platform, tokens, useTheme} from '#/alf'
+import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
@@ -329,16 +329,19 @@ function GhostText({children, value}: {children: string; value: string}) {
               tokens.space.xs,
           }),
         },
-        a.pr_xs,
+        web(a.pr_md),
+        a.overflow_hidden,
+        a.max_w_full,
       ]}
       aria-hidden={true}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants">
       <Text
         style={[
+          {color: 'transparent'},
           a.text_md,
           {lineHeight: a.text_md.fontSize * 1.1875},
-          {color: 'transparent'},
+          a.w_full,
         ]}
         numberOfLines={1}>
         {children}
