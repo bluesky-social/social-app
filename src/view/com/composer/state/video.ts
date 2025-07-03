@@ -392,7 +392,9 @@ function getCompressErrorMessage(e: unknown, _: I18n['_']): string | null {
     return null
   }
   if (e instanceof VideoTooLargeError) {
-    return _(msg`The selected video is larger than 100 MB.`)
+    return _(
+      msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+    )
   }
   logger.error('Error compressing video', {safeMessage: e})
   return _(msg`An error occurred while compressing the video.`)
@@ -430,7 +432,7 @@ function getUploadErrorMessage(e: unknown, _: I18n['_']): string | null {
         )
       case 'file size (100000001 bytes) is larger than the maximum allowed size (100000000 bytes)':
         return _(
-          msg`The file size is too large. Please try again with a smaller file.`,
+          msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
         )
       default:
         return e.message
