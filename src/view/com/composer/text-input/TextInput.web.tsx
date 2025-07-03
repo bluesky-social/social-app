@@ -16,7 +16,6 @@ import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
 import Graphemer from 'graphemer'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {
@@ -27,7 +26,7 @@ import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEm
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
 import {Portal} from '#/components/Portal'
-import {Text} from '../../util/text/Text'
+import {Text} from '#/components/Typography'
 import {createSuggestion} from './web/Autocomplete'
 import {type Emoji} from './web/EmojiPicker'
 import {LinkDecorator} from './web/LinkDecorator'
@@ -72,7 +71,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
 ) {
   const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
-  const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
 
   const [isDropping, setIsDropping] = React.useState(false)
@@ -360,10 +358,20 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             style={styles.dropContainer}
             entering={FadeIn.duration(80)}
             exiting={FadeOut.duration(80)}>
-            <View style={[pal.view, pal.border, styles.dropModal]}>
+            <View
+              style={[
+                t.atoms.bg,
+                t.atoms.border_contrast_low,
+                styles.dropModal,
+              ]}>
               <Text
-                type="lg"
-                style={[pal.text, pal.borderDark, styles.dropText]}>
+                style={[
+                  a.text_lg,
+                  a.font_bold,
+                  t.atoms.text_contrast_medium,
+                  t.atoms.border_contrast_high,
+                  styles.dropText,
+                ]}>
                 <Trans>Drop to add images</Trans>
               </Text>
             </View>
