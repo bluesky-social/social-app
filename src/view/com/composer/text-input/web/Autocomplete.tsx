@@ -1,6 +1,10 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import {ReactRenderer} from '@tiptap/react'
 import {
@@ -10,16 +14,16 @@ import {
 } from '@tiptap/suggestion'
 import tippy, {type Instance as TippyInstance} from 'tippy.js'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {Text} from '#/view/com/util/text/Text'
+import {useGrapheme} from '#/view/com/composer/text-input/hooks/useGrapheme'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {useGrapheme} from '../hooks/useGrapheme'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -98,7 +102,8 @@ export function createSuggestion({
 const MentionList = forwardRef<MentionListRef, SuggestionProps>(
   function MentionListImpl(props: SuggestionProps, ref) {
     const [selectedIndex, setSelectedIndex] = useState(0)
-    const pal = usePalette('default')
+    const t = useTheme()
+    const moderationOpts = useModerationOpts()
 
     const selectItem = (index: number) => {
       const item = props.items[index]
@@ -147,9 +152,12 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
 
     const {items} = props
 
+    if (!moderationOpts) return null
+
     return (
       <div className="items">
-        <View style={[pal.borderDark, pal.view, styles.container]}>
+        <View
+          style={[t.atoms.border_contrast_low, t.atoms.bg, styles.container]}>
           {items.length > 0 ? (
             items.map((item, index) => {
               const isSelected = selectedIndex === index
@@ -159,16 +167,13 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
                   key={item.handle}
                   profile={item}
                   isSelected={isSelected}
-                  itemIndex={index}
-                  totalItems={items.length}
-                  onPress={() => {
-                    selectItem(index)
-                  }}
+                  onPress={() => selectItem(index)}
+                  moderationOpts={moderationOpts}
                 />
               )
             })
           ) : (
-            <Text type="sm" style={[pal.text, styles.noResult]}>
+            <Text style={[a.text_sm, a.px_md, a.py_md]}>
               <Trans>No result</Trans>
             </Text>
           )}
@@ -181,47 +186,46 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
 function AutocompleteProfileCard({
   profile,
   isSelected,
-  itemIndex,
-  totalItems,
   onPress,
+  moderationOpts,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   isSelected: boolean
-  itemIndex: number
-  totalItems: number
   onPress: () => void
+  moderationOpts?: ModerationOpts
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {getGraphemeString} = useGrapheme()
   const {name: displayName} = getGraphemeString(
     sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle)),
     30, // Heuristic value; can be modified
   )
-  const state = useSimpleVerificationState({
-    profile,
-  })
+  const state = useSimpleVerificationState({profile})
+  const moderation = moderateProfile(profile, moderationOpts)
   return (
     <Pressable
       style={[
-        isSelected ? pal.viewLight : undefined,
-        pal.borderDark,
-        styles.mentionContainer,
-        itemIndex === 0
-          ? styles.firstMention
-          : itemIndex === totalItems - 1
-            ? styles.lastMention
-            : undefined,
+        isSelected && t.atoms.bg_contrast_25,
+        a.align_center,
+        a.justify_between,
+        a.flex_row,
+        a.px_md,
+        a.py_sm,
+        a.gap_2xl,
+        a.rounded_xs,
+        a.transition_color,
       ]}
       onPress={onPress}
       accessibilityRole="button">
-      <View style={[styles.avatarAndDisplayName, a.flex_1]}>
+      <View style={[a.flex_1, a.align_center, a.gap_sm, a.flex_row]}>
         <UserAvatar
           avatar={profile.avatar ?? null}
           size={26}
           type={profile.associated?.labeler ? 'labeler' : 'user'}
+          moderation={moderation.ui('avatar')}
         />
         <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
-          <Text emoji style={[pal.text]} numberOfLines={1}>
+          <Text emoji style={[a.text_sm, a.leading_snug]} numberOfLines={1}>
             {displayName}
           </Text>
           {state.isVerified && (
@@ -234,8 +238,15 @@ function AutocompleteProfileCard({
           )}
         </View>
       </View>
-      <View>
-        <Text type="xs" style={pal.textLight} numberOfLines={1}>
+      <View style={[a.flex_1]}>
+        <Text
+          style={[
+            a.text_sm,
+            a.leading_snug,
+            t.atoms.text_contrast_medium,
+            a.text_right,
+          ]}
+          numberOfLines={1}>
           {sanitizeHandle(profile.handle, '@')}
         </Text>
       </View>
@@ -246,36 +257,9 @@ function AutocompleteProfileCard({
 const styles = StyleSheet.create({
   container: {
     width: 500,
-    borderRadius: 6,
+    borderRadius: 8,
     borderWidth: 1,
     borderStyle: 'solid',
     padding: 4,
-  },
-  mentionContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    gap: 16,
-  },
-  firstMention: {
-    borderTopLeftRadius: 2,
-    borderTopRightRadius: 2,
-  },
-  lastMention: {
-    borderBottomLeftRadius: 2,
-    borderBottomRightRadius: 2,
-  },
-  avatarAndDisplayName: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  noResult: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
   },
 })
