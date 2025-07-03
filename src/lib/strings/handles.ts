@@ -2,6 +2,8 @@
 // https://github.com/bluesky-social/indigo/blob/main/atproto/syntax/handle.go#L10
 import {forceLTR} from '#/lib/strings/bidi'
 
+export * from './reserved'
+
 const VALIDATE_REGEX =
   /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/
 
@@ -34,7 +36,8 @@ export function sanitizeHandle(handle: string, prefix = ''): string {
 export interface IsValidHandle {
   handleChars: boolean
   hyphenStartOrEnd: boolean
-  frontLength: boolean
+  frontLengthLongEnough: boolean
+  frontLengthNotTooLong: boolean
   totalLength: boolean
   overall: boolean
 }
@@ -50,7 +53,8 @@ export function validateServiceHandle(
     handleChars:
       !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
     hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
-    frontLength: str.length >= 3 && str.length <= MAX_SERVICE_HANDLE_LENGTH,
+    frontLengthLongEnough: str.length >= 3,
+    frontLengthNotTooLong: str.length <= MAX_SERVICE_HANDLE_LENGTH,
     totalLength: fullHandle.length <= 253,
   }
 

@@ -144,7 +144,7 @@ export function StepInfo({
 
   return (
     <ScreenTransition>
-      <View style={[a.gap_md]}>
+      <View style={[a.gap_md, a.pt_lg]}>
         <FormError error={state.error} />
         <HostingProvider
           minimal
