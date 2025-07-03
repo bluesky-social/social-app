@@ -200,7 +200,7 @@ export function StepHandle() {
               <RequirementIcon
                 state={
                   validCheck.handleChars && validCheck.hyphenStartOrEnd
-                    ? !validCheck.frontLengthLongEnough
+                    ? !validCheck.frontLengthNotTooShort
                       ? 'initial'
                       : 'valid'
                     : 'invalid'
@@ -220,7 +220,7 @@ export function StepHandle() {
             <Requirement>
               <RequirementIcon
                 state={
-                  !validCheck.frontLengthLongEnough
+                  !validCheck.frontLengthNotTooShort
                     ? 'initial'
                     : validCheck.frontLengthNotTooLong && validCheck.totalLength
                       ? 'valid'
