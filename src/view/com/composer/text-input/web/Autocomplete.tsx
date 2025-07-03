@@ -192,7 +192,7 @@ function AutocompleteProfileCard({
   profile: AppBskyActorDefs.ProfileViewBasic
   isSelected: boolean
   onPress: () => void
-  moderationOpts?: ModerationOpts
+  moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
   const {getGraphemeString} = useGrapheme()
