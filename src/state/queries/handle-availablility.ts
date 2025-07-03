@@ -1,5 +1,6 @@
 import {useQuery} from '@tanstack/react-query'
 
+import {BSKY_SERVICE_HANDLE_ENDSWITH} from '#/lib/constants'
 import {createFullHandle, isHandleReserved} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
@@ -26,7 +27,10 @@ export function useHandleAvailabilityQuery(
     queryKey: RQKEY_handleAvailability(debouncedHandle),
     queryFn: async () => {
       const frontSegment = debouncedHandle.split('.')[0]
-      if (isHandleReserved(frontSegment)) {
+      if (
+        domain === BSKY_SERVICE_HANDLE_ENDSWITH &&
+        isHandleReserved(frontSegment)
+      ) {
         logger.metric(
           'signup:handleReserved',
           {typeahead: true},
