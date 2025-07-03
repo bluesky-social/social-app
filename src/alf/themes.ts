@@ -59,9 +59,20 @@ export function createThemes({
   dark: Theme
   dim: Theme
 } {
+  const BRAND = {
+    black: '#000000',
+    white: '#FFFFFF',
+    primary: '#8B8BFF',
+    primaryTint: '#DCDCFF', // very-light lavender
+    secondary: '#d1fc51',
+    secondaryTint: '#F1FECB',
+    neutral: '#666666',
+    negative: '#FF0000', // may be used directly when needed
+  } as const
+
   const color = {
     like: '#ec4899',
-    trueBlack: '#000000',
+    trueBlack: BRAND.black,
 
     gray_0: `hsl(${hues.primary}, 20%, ${defaultScale[14]}%)`,
     gray_25: `hsl(${hues.primary}, 20%, ${defaultScale[13]}%)`,
@@ -71,7 +82,7 @@ export function createThemes({
     gray_300: `hsl(${hues.primary}, 20%, ${defaultScale[9]}%)`,
     gray_400: `hsl(${hues.primary}, 20%, ${defaultScale[8]}%)`,
     gray_500: `hsl(${hues.primary}, 20%, ${defaultScale[7]}%)`,
-    gray_600: `hsl(${hues.primary}, 24%, ${defaultScale[6]}%)`,
+    gray_600: BRAND.neutral,
     gray_700: `hsl(${hues.primary}, 24%, ${defaultScale[5]}%)`,
     gray_800: `hsl(${hues.primary}, 28%, ${defaultScale[4]}%)`,
     gray_900: `hsl(${hues.primary}, 28%, ${defaultScale[3]}%)`,
@@ -79,25 +90,25 @@ export function createThemes({
     gray_975: `hsl(${hues.primary}, 28%, ${defaultScale[1]}%)`,
     gray_1000: `hsl(${hues.primary}, 28%, ${defaultScale[0]}%)`,
 
-    primary_25: `hsl(240, 100%, 97%)`,
-    primary_50: `hsl(240, 100%, 95%)`,
-    primary_100: `hsl(240, 100%, 90%)`,
-    primary_200: `hsl(240, 100%, 80%)`,
-    primary_300: `hsl(240, 100%, 70%)`,
-    primary_400: `hsl(240, 100%, 58%)`,
-    primary_500: `hsl(240, 100%, 45%)`,
-    primary_600: `hsl(240, 100%, 38%)`,
-    primary_700: `hsl(240, 100%, 32%)`,
-    primary_800: `hsl(240, 100%, 25%)`,
-    primary_900: `hsl(240, 100%, 18%)`,
-    primary_950: `hsl(240, 100%, 10%)`,
-    primary_975: `hsl(240, 100%, 7%)`,
+    primary_25: BRAND.primaryTint,
+    primary_50: `hsl(${hues.primary}, 99%, 90%)`,
+    primary_100: `hsl(${hues.primary}, 99%, 84%)`,
+    primary_200: `hsl(${hues.primary}, 99%, 78%)`,
+    primary_300: `hsl(${hues.primary}, 99%, 77%)`,
+    primary_400: `hsl(${hues.primary}, 99%, 77%)`,
+    primary_500: BRAND.primary,
+    primary_600: `hsl(${hues.primary}, 99%, 60%)`,
+    primary_700: `hsl(${hues.primary}, 99%, 50%)`,
+    primary_800: `hsl(${hues.primary}, 99%, 40%)`,
+    primary_900: `hsl(${hues.primary}, 99%, 30%)`,
+    primary_950: `hsl(${hues.primary}, 99%, 22%)`,
+    primary_975: `hsl(${hues.primary}, 99%, 15%)`,
 
-    green_25: `hsl(${hues.positive}, 82%, 97%)`,
+    green_25: BRAND.secondaryTint,
     green_50: `hsl(${hues.positive}, 82%, 95%)`,
     green_100: `hsl(${hues.positive}, 82%, 90%)`,
     green_200: `hsl(${hues.positive}, 82%, 80%)`,
-    green_300: `hsl(${hues.positive}, 82%, 70%)`,
+    green_300: BRAND.secondary,
     green_400: `hsl(${hues.positive}, 82%, 60%)`,
     green_500: `hsl(${hues.positive}, 82%, 50%)`,
     green_600: `hsl(${hues.positive}, 82%, 42%)`,

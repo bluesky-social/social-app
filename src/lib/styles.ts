@@ -1,9 +1,4 @@
-import {
-  Dimensions,
-  type StyleProp,
-  StyleSheet,
-  type TextStyle,
-} from 'react-native'
+import {Dimensions, type StyleProp, StyleSheet, type TextStyle} from 'react-native'
 
 import {isWeb} from '#/platform/detection'
 import {type Theme, type TypographyVariant} from './ThemeContext'
@@ -25,14 +20,14 @@ export const colors = {
   gray7: '#26272D',
   gray8: '#141417',
 
-  blue0: '#E5E5FF',
-  blue1: '#B2B2FF',
-  blue2: '#7F7FFF',
-  blue3: '#4C4CFE',
-  blue4: '#1919FF',
-  blue5: '#0000E5',
-  blue6: '#0000B2',
-  blue7: '#00007F',
+  blue0: '#bfe1ff',
+  blue1: '#8bc7fd',
+  blue2: '#52acfe',
+  blue3: '#0085ff',
+  blue4: '#0062bd',
+  blue5: '#034581',
+  blue6: '#012561',
+  blue7: '#001040',
 
   red1: '#ffe6eb',
   red2: '#fba2b2',
@@ -66,23 +61,9 @@ export const colors = {
 }
 
 export const gradients = {
-  /* subtle button fills / backgrounds */
-  blueLight: {
-    start: '#E5E5FF', // very-light lavender
-    end: '#8B8BFF', // brand anchor
-  },
-
-  /* primary FAB / call-to-action */
-  blue: {
-    start: '#8B8BFF', // anchor
-    end: '#4C4CFE', // vivid mid-purple
-  },
-
-  /* banners, hero gradients, emphasis blocks */
-  blueDark: {
-    start: '#4C4CFE', // mid-purple
-    end: '#0000B2', // deep night-purple
-  },
+  blueLight: {start: '#5A71FA', end: colors.blue3}, // buttons
+  blue: {start: '#5E55FB', end: colors.blue3}, // fab
+  blueDark: {start: '#5F45E0', end: colors.blue3}, // avis, banner
 }
 
 /**

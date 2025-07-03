@@ -1,8 +1,7 @@
 /* eslint-disable bsky-internal/avoid-unwrapped-text */
-import React from 'react'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 
-import {Butterfly} from './Butterfly.js'
+import {Cluster} from './Cluster.js'
 import {Img} from './Img.js'
 
 export const STARTERPACK_HEIGHT = 630
@@ -144,7 +143,7 @@ export function StarterPack(props: {
             justifyContent: 'center',
             padding: '30px 30px 10px',
           }}>
-          on <Butterfly width="65" style={{margin: '-7px 10px 0'}} /> Bluesky
+          on <Cluster width="65" style={{margin: '-7px 10px 0'}} /> Blacksky
         </div>
       </div>
     </div>
