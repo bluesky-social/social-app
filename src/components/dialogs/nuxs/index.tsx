@@ -36,7 +36,7 @@ const queuedNuxs: {
     id: Nux.ActivitySubscriptions,
     enabled: ({currentProfile}) => {
       return isExistingUserAsOf(
-        '2025-07-03T00:00:00.000Z',
+        '2025-07-07T00:00:00.000Z',
         currentProfile.createdAt,
       )
     },
