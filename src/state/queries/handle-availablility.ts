@@ -1,6 +1,7 @@
 import {useQuery} from '@tanstack/react-query'
 
 import {createFullHandle, isHandleReserved} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
 import {useDebouncedValue} from '#/components/live/utils'
 
@@ -26,6 +27,11 @@ export function useHandleAvailabilityQuery(
     queryFn: async () => {
       const frontSegment = debouncedHandle.split('.')[0]
       if (isHandleReserved(frontSegment)) {
+        logger.metric(
+          'signup:handleReserved',
+          {typeahead: true},
+          {statsig: true},
+        )
         return {available: false, reason: 'reserved'} as const
       }
       try {
@@ -34,10 +40,19 @@ export function useHandleAvailabilityQuery(
         })
 
         if (res.data.did) {
+          logger.metric(
+            'signup:handleReserved',
+            {typeahead: true},
+            {statsig: true},
+          )
           return {available: false, reason: 'taken'} as const
         }
       } catch {}
-
+      logger.metric(
+        'signup:handleAvailable',
+        {typeahead: true},
+        {statsig: true},
+      )
       return {available: true} as const
     },
   })
