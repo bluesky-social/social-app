@@ -67,8 +67,9 @@ export type MetricEvents = {
     activeStep: number
     backgroundCount: number
   }
-  'signup:handleTaken': {}
-  'signup:handleReserved': {}
+  'signup:handleTaken': {typeahead?: boolean}
+  'signup:handleReserved': {typeahead?: boolean}
+  'signup:handleAvailable': {typeahead?: boolean}
   'signin:hostingProviderPressed': {
     hostingProviderDidChange: boolean
   }
