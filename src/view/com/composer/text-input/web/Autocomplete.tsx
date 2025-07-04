@@ -182,6 +182,7 @@ const MentionList = forwardRef<
                 profile={item}
                 isSelected={isSelected}
                 onPress={() => selectItem(index)}
+                onHover={() => setSelectedIndex(index)}
                 moderationOpts={moderationOpts}
               />
             )
@@ -200,11 +201,13 @@ function AutocompleteProfileCard({
   profile,
   isSelected,
   onPress,
+  onHover,
   moderationOpts,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   isSelected: boolean
   onPress: () => void
+  onHover: () => void
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
@@ -223,6 +226,7 @@ function AutocompleteProfileCard({
         a.transition_color,
       ]}
       onPress={onPress}
+      onPointerEnter={onHover}
       accessibilityRole="button">
       <View style={[a.flex_1]}>
         <ProfileCard.Header>
