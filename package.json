@@ -85,7 +85,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.2",
-    "@haileyok/bluesky-video": "0.3.1",
+    "@haileyok/bluesky-video": "0.3.2",
     "@ipld/dag-cbor": "^9.2.0",
     "@lingui/react": "^4.14.1",
     "@mattermost/react-native-paste-input": "mattermost/react-native-paste-input",
