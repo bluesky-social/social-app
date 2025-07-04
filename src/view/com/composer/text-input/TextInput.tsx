@@ -1,4 +1,10 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react'
+import {
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   type NativeSyntheticEvent,
   Text as RNText,
@@ -48,9 +54,9 @@ export function TextInput({
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
-  const prevLength = React.useRef(richtext.length)
+  const prevLength = useRef(richtext.length)
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
     blur: () => {
       textInput.current?.blur()
@@ -158,7 +164,7 @@ export function TextInput({
     [onChangeText, richtext, setAutocompletePrefix],
   )
 
-  const inputTextStyle = React.useMemo(() => {
+  const inputTextStyle = useMemo(() => {
     const style = normalizeTextStyles(
       [a.text_lg, a.leading_snug, t.atoms.text],
       {
