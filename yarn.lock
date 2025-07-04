@@ -4409,10 +4409,10 @@
     protobufjs "^7.2.5"
     yargs "^17.7.2"
 
-"@haileyok/bluesky-video@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.3.1.tgz#c996d8433e8f1988f2e9644adf39366fb4305d00"
-  integrity sha512-TU5c0RCV1yWF/HEZA22E0qXjxNzu0SOuMZpvdo+QVrO4tQcja9k8nHBbKRmyj60Odke4HQMoTOfNDNq/xo2Grw==
+"@haileyok/bluesky-video@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.3.2.tgz#44dc3974750a9619a4d72e97a0f1678f335028cd"
+  integrity sha512-CJIS/4HW+x6xqONDZaUljQgMqaaZQnlFjt0afdCSO6VtFk5Fd/ocW+Tc4UulQ6zcCNiL6Y8HJR8sl/EIWHgPDw==
 
 "@hapi/accept@^6.0.3":
   version "6.0.3"
