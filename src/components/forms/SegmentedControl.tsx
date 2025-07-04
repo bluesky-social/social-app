@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {Easing, LinearTransition} from 'react-native-reanimated'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, platform, useTheme} from '#/alf'
 import {
   Button,
   type ButtonProps,
@@ -82,6 +82,8 @@ export function Root<T extends string>({
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint ?? ''}
       style={[
+        a.w_full,
+        a.flex_1,
         a.relative,
         a.flex_row,
         t.atoms.bg_contrast_25,
@@ -152,11 +154,13 @@ export function Item({
         {...props}
         onPress={onPress}
         role={ctx.type === 'tabs' ? 'tab' : 'radio'}
+        accessibilityState={{selected: active}}
         style={[
           a.flex_1,
           a.bg_transparent,
           {borderRadius: 10},
           a.curve_continuous,
+          a.px_sm,
           style,
         ]}>
         {({pressed, hovered, focused}) => (
@@ -201,14 +205,16 @@ function Slider({x, width}: {x: number; width: number}) {
 
   return (
     <Animated.View
-      layout={LinearTransition.easing(Easing.out(Easing.exp))}
+      layout={native(LinearTransition.easing(Easing.out(Easing.exp)))}
       style={[
         a.absolute,
-        {top: 4, bottom: 4},
-        {borderRadius: 10},
         a.curve_continuous,
         t.atoms.bg,
-        {left: x, width},
+        {top: 4, bottom: 4, left: 0, width, borderRadius: 10},
+        platform({
+          native: [{left: x}],
+          web: [{transform: [{translateX: x}]}, a.transition_transform],
+        }),
       ]}
     />
   )
