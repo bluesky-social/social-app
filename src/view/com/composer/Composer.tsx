@@ -894,9 +894,9 @@ let ComposerPost = React.memo(function ComposerPost({
           // To avoid overlap with the close button:
           hasRightPadding={isPartOfThread}
           isActive={isActive}
-          setRichText={rt =>
+          setRichText={rt => {
             dispatchPost({type: 'update_richtext', richtext: rt})
-          }
+          }}
           onFocus={() => {
             dispatch({
               type: 'focus_post',
