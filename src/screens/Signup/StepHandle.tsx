@@ -10,7 +10,6 @@ import {
 } from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
@@ -107,7 +106,7 @@ export function StepHandle() {
 
   const validCheck = validateServiceHandle(draftValue, state.userDomain)
   return (
-    <ScreenTransition>
+    <>
       <View style={[a.gap_lg]}>
         <View>
           <TextField.Root>
@@ -204,7 +203,7 @@ export function StepHandle() {
         onBackPress={onBackPress}
         onNextPress={onNextPress}
       />
-    </ScreenTransition>
+    </>
   )
 }
 
