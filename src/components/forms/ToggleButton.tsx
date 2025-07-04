@@ -125,7 +125,7 @@ export function ButtonText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const state = Toggle.useItemContext()
 
-  const textStyles = React.useMemo(() => {
+  const textStyles = useMemo(() => {
     const text: TextStyle[] = []
     if (state.selected) {
       text.push(t.atoms.text_inverted)
