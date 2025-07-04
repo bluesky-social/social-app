@@ -108,10 +108,7 @@ import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
-import {
-  TextInput,
-  type TextInputRef,
-} from '#/view/com/composer/text-input/TextInput'
+import {TextInput} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
@@ -145,6 +142,7 @@ import {
   processVideo,
   type VideoState,
 } from './state/video'
+import {type TextInputRef} from './text-input/TextInput.types'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
@@ -295,7 +293,9 @@ export const ComposePost = ({
   )
 
   const onPressCancel = useCallback(() => {
-    if (
+    if (textInput.current?.maybeClosePopup()) {
+      return
+    } else if (
       thread.posts.some(
         post =>
           post.shortenedGraphemeLength > 0 ||
@@ -855,9 +855,9 @@ let ComposerPost = React.memo(function ComposerPost({
           // To avoid overlap with the close button:
           hasRightPadding={isPartOfThread}
           isActive={isActive}
-          setRichText={rt => {
+          setRichText={rt =>
             dispatchPost({type: 'update_richtext', richtext: rt})
-          }}
+          }
           onFocus={() => {
             dispatch({
               type: 'focus_post',

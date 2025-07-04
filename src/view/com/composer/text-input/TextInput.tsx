@@ -1,15 +1,7 @@
-import React, {
-  type ComponentProps,
-  forwardRef,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, {useCallback, useMemo, useRef, useState} from 'react'
 import {
   type NativeSyntheticEvent,
   Text as RNText,
-  type TextInput as RNTextInput,
   type TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
@@ -33,44 +25,24 @@ import {
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
 import {Autocomplete} from './mobile/Autocomplete'
-
-export interface TextInputRef {
-  focus: () => void
-  blur: () => void
-  getCursorPosition: () => DOMRect | undefined
-}
-
-interface TextInputProps extends ComponentProps<typeof RNTextInput> {
-  richtext: RichText
-  placeholder: string
-  webForceMinHeight: boolean
-  hasRightPadding: boolean
-  isActive: boolean
-  setRichText: (v: RichText) => void
-  onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => void
-  onNewLink: (uri: string) => void
-  onError: (err: string) => void
-}
+import {type TextInputProps} from './TextInput.types'
 
 interface Selection {
   start: number
   end: number
 }
 
-export const TextInput = forwardRef(function TextInputImpl(
-  {
-    richtext,
-    placeholder,
-    hasRightPadding,
-    setRichText,
-    onPhotoPasted,
-    onNewLink,
-    onError,
-    ...props
-  }: TextInputProps,
+export function TextInput({
   ref,
-) {
+  richtext,
+  placeholder,
+  hasRightPadding,
+  setRichText,
+  onPhotoPasted,
+  onNewLink,
+  onError,
+  ...props
+}: TextInputProps) {
   const {theme: t, fonts} = useAlf()
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
@@ -84,6 +56,7 @@ export const TextInput = forwardRef(function TextInputImpl(
       textInput.current?.blur()
     },
     getCursorPosition: () => undefined, // Not implemented on native
+    maybeClosePopup: () => false, // Not needed on native
   }))
 
   const pastSuggestedUris = useRef(new Set<string>())
@@ -277,4 +250,4 @@ export const TextInput = forwardRef(function TextInputImpl(
       />
     </View>
   )
-})
+}
