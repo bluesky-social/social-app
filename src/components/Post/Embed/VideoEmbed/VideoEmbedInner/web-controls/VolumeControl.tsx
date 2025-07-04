@@ -84,7 +84,7 @@ export function VolumeControl({
                 isSafari ? {height: 92, minHeight: '100%'} : {height: '100%'}
               }
               onChange={onVolumeChange}
-              // @ts-expect-error for old versions of firefox, and then re-using it for targeting the CSS -sfn
+              // @ts-expect-error for old versions of firefox, and then reusing it for targeting the CSS -sfn
               orient="vertical"
             />
           </View>
