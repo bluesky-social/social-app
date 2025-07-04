@@ -29,8 +29,8 @@ import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
-import * as ToggleButton from '#/components/forms/ToggleButton'
 import {
   ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon,
   ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon,
@@ -395,21 +395,22 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             />
           </TextField.Root>
         </View>
-        <ToggleButton.Group
+        <SegmentedControl.Root
           label={_(msg`Choose domain verification method`)}
-          values={[dnsPanel ? 'dns' : 'file']}
-          onChange={values => setDNSPanel(values[0] === 'dns')}>
-          <ToggleButton.Button name="dns" label={_(msg`DNS Panel`)}>
-            <ToggleButton.ButtonText>
+          type="tabs"
+          value={dnsPanel ? 'dns' : 'file'}
+          onChange={values => setDNSPanel(values === 'dns')}>
+          <SegmentedControl.Item value="dns" label={_(msg`DNS Panel`)}>
+            <SegmentedControl.ItemText>
               <Trans>DNS Panel</Trans>
-            </ToggleButton.ButtonText>
-          </ToggleButton.Button>
-          <ToggleButton.Button name="file" label={_(msg`No DNS Panel`)}>
-            <ToggleButton.ButtonText>
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+          <SegmentedControl.Item value="file" label={_(msg`No DNS Panel`)}>
+            <SegmentedControl.ItemText>
               <Trans>No DNS Panel</Trans>
-            </ToggleButton.ButtonText>
-          </ToggleButton.Button>
-        </ToggleButton.Group>
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+        </SegmentedControl.Root>
         {dnsPanel ? (
           <>
             <Text>
