@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {moderateUserList} from '@atproto/api'
 
@@ -29,7 +29,7 @@ export function ModeratedListEmbed({
   embed: EmbedType<'list'>
 }) {
   const moderationOpts = useModerationOpts()
-  const moderation = React.useMemo(() => {
+  const moderation = useMemo(() => {
     return moderationOpts
       ? moderateUserList(embed.view, moderationOpts)
       : undefined
