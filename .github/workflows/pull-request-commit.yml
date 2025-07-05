@@ -143,4 +143,3 @@ jobs:
         with:
           header: fingerprint-diff
           delete: true
-
