@@ -28,7 +28,7 @@ You may contribute PRs separately from Crowdin, however we strongly recommend us
 
 ### Code of conduct on Crowdin
 
-Please treat everyone with respect. Proof-readers are given final say on translations. Translators who frequently come into conflict with other translators, or who contribute noticably incorrect translations, will have their membership to the Crowdin project revoked.
+Please treat everyone with respect. Proof-readers are given final say on translations. Translators who frequently come into conflict with other translators, or who contribute noticeably incorrect translations, will have their membership to the Crowdin project revoked.
 
 ### Adding a new language
 
