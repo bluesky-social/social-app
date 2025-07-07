@@ -1,6 +1,6 @@
 import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetProfile,
+  type AppGndrActorDefs,
+  type AppGndrActorGetProfile,
   AtUri,
 } from '@atproto/api'
 import {useMutation} from '@tanstack/react-query'
@@ -9,7 +9,7 @@ import {until} from '#/lib/async/until'
 import {logger} from '#/logger'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import {useAgent, useSession} from '#/state/session'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function useVerificationsRemoveMutation() {
   const agent = useAgent()
@@ -21,8 +21,8 @@ export function useVerificationsRemoveMutation() {
       profile,
       verifications,
     }: {
-      profile: bsky.profile.AnyProfileView
-      verifications: AppBskyActorDefs.VerificationView[]
+      profile: gndr.profile.AnyProfileView
+      verifications: AppGndrActorDefs.VerificationView[]
     }) {
       if (!currentAccount) {
         throw new Error('User not logged in')
@@ -32,7 +32,7 @@ export function useVerificationsRemoveMutation() {
 
       await Promise.all(
         uris.map(uri => {
-          return agent.app.bsky.graph.verification.delete({
+          return agent.app.gndr.graph.verification.delete({
             repo: currentAccount.did,
             rkey: new AtUri(uri).rkey,
           })
@@ -42,7 +42,7 @@ export function useVerificationsRemoveMutation() {
       await until(
         5,
         1e3,
-        ({data: profile}: AppBskyActorGetProfile.Response) => {
+        ({data: profile}: AppGndrActorGetProfile.Response) => {
           if (
             !profile.verification?.verifications.some(v => uris.includes(v.uri))
           ) {

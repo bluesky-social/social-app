@@ -1,8 +1,8 @@
 import {memo, useMemo, useState} from 'react'
 import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
+  type AppGndrFeedDefs,
+  type AppGndrFeedPost,
+  type AppGndrFeedThreadgate,
   AtUri,
   type RichText as RichTextAPI,
 } from '@atproto/api'
@@ -36,12 +36,12 @@ let ShareMenuButton = ({
   onShare,
 }: {
   testID: string
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<AppGndrFeedDefs.PostView>
   big?: boolean
-  record: AppBskyFeedPost.Record
+  record: AppGndrFeedPost.Record
   richText: RichTextAPI
   timestamp: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: AppGndrFeedThreadgate.Record
   onShare: () => void
 }): React.ReactNode => {
   const {_} = useLingui()

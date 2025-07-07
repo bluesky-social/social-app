@@ -560,7 +560,7 @@ function DialogInner({
                 control={reportDialogControl}
                 subject={{
                   ...info.view,
-                  $type: 'app.bsky.feed.defs#generatorView',
+                  $type: 'app.gndr.feed.defs#generatorView',
                 }}
               />
             )}

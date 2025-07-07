@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatGndrActorDefs, ChatGndrConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -44,8 +44,8 @@ export function RejectMenu({
   ...props
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
   label?: string
-  convo: ChatBskyConvoDefs.ConvoView
-  profile: ChatBskyActorDefs.ProfileViewBasic
+  convo: ChatGndrConvoDefs.ConvoView
+  profile: ChatGndrActorDefs.ProfileViewBasic
   showDeleteConvo?: boolean
   currentScreen: 'list' | 'conversation'
 }) {
@@ -102,7 +102,7 @@ export function RejectMenu({
 
   const reportControl = useDialogControl()
 
-  const lastMessage = ChatBskyConvoDefs.isMessageView(convo.lastMessage)
+  const lastMessage = ChatGndrConvoDefs.isMessageView(convo.lastMessage)
     ? convo.lastMessage
     : null
 
@@ -189,7 +189,7 @@ export function AcceptChatButton({
   ...props
 }: Omit<ButtonProps, 'onPress' | 'children' | 'label'> & {
   label?: string
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ChatGndrConvoDefs.ConvoView
   onAcceptConvo?: () => void
   currentScreen: 'list' | 'conversation'
 }) {
@@ -273,7 +273,7 @@ export function DeleteChatButton({
   ...props
 }: Omit<ButtonProps, 'children' | 'label'> & {
   label?: string
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ChatGndrConvoDefs.ConvoView
   currentScreen: 'list' | 'conversation'
 }) {
   const {_} = useLingui()

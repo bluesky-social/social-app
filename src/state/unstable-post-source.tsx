@@ -1,5 +1,5 @@
 import {useEffect, useId, useState} from 'react'
-import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppGndrFeedDefs, AtUri} from '@atproto/api'
 
 import {Logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
@@ -10,7 +10,7 @@ import {type FeedDescriptor} from '#/state/queries/post-feed'
 const logger = Logger.create(Logger.Context.PostSource)
 
 export type PostSource = {
-  post: AppBskyFeedDefs.FeedViewPost
+  post: AppGndrFeedDefs.FeedViewPost
   feed?: FeedDescriptor
 }
 

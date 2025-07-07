@@ -1,8 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
-  AppBskyFeedGetAuthorFeed,
+  type AppGndrActorDefs,
+  AppGndrFeedGetAuthorFeed,
   AtUri,
 } from '@atproto/api'
 import {msg as msgLingui, Trans} from '@lingui/macro'
@@ -43,7 +43,7 @@ export function PostFeedErrorMessage({
   feedDesc: FeedDescriptor
   error?: Error
   onPressTryAgain: () => void
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: AppGndrActorDefs.SavedFeed
 }) {
   const {_: _l} = useLingui()
   const knownError = React.useMemo(
@@ -92,7 +92,7 @@ function FeedgenErrorMessage({
   feedDesc: FeedDescriptor
   knownError: KnownError
   rawError?: Error
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: AppGndrActorDefs.SavedFeed
 }) {
   const pal = usePalette('default')
   const {_: _l} = useLingui()
@@ -115,7 +115,7 @@ function FeedgenErrorMessage({
           msgLingui`Hmm, the feed server appears to be offline. Please let the feed owner know about this issue.`,
         ),
         [KnownError.FeedSignedInOnly]: _l(
-          msgLingui`This content is not viewable without a Bluesky account.`,
+          msgLingui`This content is not viewable without a Gander account.`,
         ),
         [KnownError.FeedgenUnknown]: _l(
           msgLingui`Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue.`,
@@ -238,8 +238,8 @@ function detectKnownError(
     return undefined
   }
   if (
-    error instanceof AppBskyFeedGetAuthorFeed.BlockedActorError ||
-    error instanceof AppBskyFeedGetAuthorFeed.BlockedByActorError
+    error instanceof AppGndrFeedGetAuthorFeed.BlockedActorError ||
+    error instanceof AppGndrFeedGetAuthorFeed.BlockedByActorError
   ) {
     return KnownError.Block
   }

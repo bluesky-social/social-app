@@ -1,7 +1,7 @@
 import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type AppBskyNotificationListNotifications,
+  type AppGndrFeedDefs,
+  type AppGndrGraphDefs,
+  type AppGndrNotificationListNotifications,
 } from '@atproto/api'
 
 export type NotificationType =
@@ -11,11 +11,11 @@ export type NotificationType =
 export type FeedNotification =
   | (FeedNotificationBase & {
       type: StarterPackNotificationType
-      subject?: AppBskyGraphDefs.StarterPackViewBasic
+      subject?: AppGndrGraphDefs.StarterPackViewBasic
     })
   | (FeedNotificationBase & {
       type: OtherNotificationType
-      subject?: AppBskyFeedDefs.PostView
+      subject?: AppGndrFeedDefs.PostView
     })
 
 export interface FeedPage {
@@ -53,8 +53,8 @@ type OtherNotificationType =
 
 type FeedNotificationBase = {
   _reactKey: string
-  notification: AppBskyNotificationListNotifications.Notification
-  additional?: AppBskyNotificationListNotifications.Notification[]
+  notification: AppGndrNotificationListNotifications.Notification
+  additional?: AppGndrNotificationListNotifications.Notification[]
   subjectUri?: string
-  subject?: AppBskyFeedDefs.PostView | AppBskyGraphDefs.StarterPackViewBasic
+  subject?: AppGndrFeedDefs.PostView | AppGndrGraphDefs.StarterPackViewBasic
 }

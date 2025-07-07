@@ -13,7 +13,7 @@ const withClipEntitlements = (config, {targetName}) => {
     )
 
     const appClipEntitlements = {
-      'com.apple.security.application-groups': [`group.app.bsky`],
+      'com.apple.security.application-groups': [`group.app.gndr`],
       'com.apple.developer.parent-application-identifiers': [
         `$(AppIdentifierPrefix)${config.ios.bundleIdentifier}`,
       ],

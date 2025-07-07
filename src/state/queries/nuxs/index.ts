@@ -23,7 +23,7 @@ export function useNuxs():
   const status = isSuccess ? 'ready' : isError ? 'error' : 'loading'
 
   if (status === 'ready') {
-    const nuxs = data?.bskyAppState?.nuxs
+    const nuxs = data?.gndrAppState?.nuxs
       ?.map(parseAppNux)
       ?.filter(Boolean) as AppNux[]
 
@@ -88,7 +88,7 @@ export function useSaveNux() {
   return useMutation({
     retry: 3,
     mutationFn: async (nux: AppNux) => {
-      await agent.bskyAppUpsertNux(serializeAppNux(nux))
+      await agent.gndrAppUpsertNux(serializeAppNux(nux))
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -104,7 +104,7 @@ export function useResetNuxs() {
   return useMutation({
     retry: 3,
     mutationFn: async (ids: string[]) => {
-      await agent.bskyAppRemoveNuxs(ids)
+      await agent.gndrAppRemoveNuxs(ids)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

@@ -7,9 +7,9 @@ import {
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
+  type AppGndrFeedThreadgate,
   AtUri,
   type RichText as RichTextAPI,
 } from '@atproto/api'
@@ -83,7 +83,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 let PostMenuItems = ({
   post,
@@ -95,17 +95,17 @@ let PostMenuItems = ({
   onShowLess,
 }: {
   testID: string
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<AppGndrFeedDefs.PostView>
   postFeedContext: string | undefined
   postReqId: string | undefined
-  record: AppBskyFeedPost.Record
+  record: AppGndrFeedPost.Record
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   hitSlop?: PressableProps['hitSlop']
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  threadgateRecord?: AppGndrFeedThreadgate.Record
+  onShowLess?: (interaction: AppGndrFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
@@ -238,9 +238,9 @@ let PostMenuItems = ({
     await openLink(translatorUrl, true)
 
     if (
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      gndr.dangerousIsType<AppGndrFeedPost.Record>(
         post.record,
-        AppBskyFeedPost.isRecord,
+        AppGndrFeedPost.isRecord,
       )
     ) {
       logger.metric(
@@ -265,7 +265,7 @@ let PostMenuItems = ({
 
   const onPressShowMore = () => {
     feedFeedback.sendInteraction({
-      event: 'app.bsky.feed.defs#requestMore',
+      event: 'app.gndr.feed.defs#requestMore',
       item: postUri,
       feedContext: postFeedContext,
       reqId: postReqId,
@@ -275,7 +275,7 @@ let PostMenuItems = ({
 
   const onPressShowLess = () => {
     feedFeedback.sendInteraction({
-      event: 'app.bsky.feed.defs#requestLess',
+      event: 'app.gndr.feed.defs#requestLess',
       item: postUri,
       feedContext: postFeedContext,
       reqId: postReqId,
@@ -716,7 +716,7 @@ let PostMenuItems = ({
         control={reportDialogControl}
         subject={{
           ...post,
-          $type: 'app.bsky.feed.defs#postView',
+          $type: 'app.gndr.feed.defs#postView',
         }}
       />
 

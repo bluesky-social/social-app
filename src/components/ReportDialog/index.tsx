@@ -8,7 +8,7 @@ import {ReportOption} from '#/lib/moderation/useReportOptions'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {AppGndrLabelerDefs} from '@atproto/api'
 
 import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -63,7 +63,7 @@ function ReportDialogInner(props: ReportDialogProps) {
 
 function ReportDialogLoaded(
   props: ReportDialogProps & {
-    labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
+    labelers: AppGndrLabelerDefs.LabelerViewDetailed[]
   },
 ) {
   const [selectedLabeler, setSelectedLabeler] = React.useState<

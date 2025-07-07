@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {AppGndrLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -29,7 +29,7 @@ export function SubmitView({
   goBack,
   onSubmitComplete,
 }: ReportDialogProps & {
-  labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
+  labelers: AppGndrLabelerDefs.LabelerViewDetailed[]
   selectedLabeler: string
   selectedReportOption: ReportOption
   goBack: () => void

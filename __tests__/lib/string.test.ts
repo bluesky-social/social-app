@@ -134,9 +134,9 @@ describe('detectLinkables', () => {
 
 describe('makeRecordUri', () => {
   const inputs: [string, string, string][] = [
-    ['alice.test', 'app.bsky.feed.post', '3jk7x4irgv52r'],
+    ['alice.test', 'app.gndr.feed.post', '3jk7x4irgv52r'],
   ]
-  const outputs = ['at://alice.test/app.bsky.feed.post/3jk7x4irgv52r']
+  const outputs = ['at://alice.test/app.gndr.feed.post/3jk7x4irgv52r']
 
   it('correctly builds a record URI', () => {
     for (let i = 0; i < inputs.length; i++) {
@@ -228,11 +228,11 @@ describe('cleanError', () => {
 describe('toNiceDomain', () => {
   const inputs = [
     'https://example.com/index.html',
-    'https://bsky.app',
-    'https://bsky.social',
+    'https://gndr.app',
+    'https://gndr.social',
     '#123123123',
   ]
-  const outputs = ['example.com', 'bsky.app', 'Bluesky Social', '#123123123']
+  const outputs = ['example.com', 'gndr.app', 'Gander Social', '#123123123']
 
   it("displays the url's host in a easily readable manner", () => {
     for (let i = 0; i < inputs.length; i++) {
@@ -244,16 +244,16 @@ describe('toNiceDomain', () => {
 
 describe('toShortUrl', () => {
   const inputs = [
-    'https://bsky.app',
-    'https://bsky.app/3jk7x4irgv52r',
-    'https://bsky.app/3jk7x4irgv52r2313y182h9',
+    'https://gndr.app',
+    'https://gndr.app/3jk7x4irgv52r',
+    'https://gndr.app/3jk7x4irgv52r2313y182h9',
     'https://very-long-domain-name.com/foo',
     'https://very-long-domain-name.com/foo?bar=baz#andsomemore',
   ]
   const outputs = [
-    'bsky.app',
-    'bsky.app/3jk7x4irgv52r',
-    'bsky.app/3jk7x4irgv52...',
+    'gndr.app',
+    'gndr.app/3jk7x4irgv52r',
+    'gndr.app/3jk7x4irgv52...',
     'very-long-domain-name.com/foo',
     'very-long-domain-name.com/foo?bar=baz#...',
   ]
@@ -267,11 +267,11 @@ describe('toShortUrl', () => {
 })
 
 describe('toShareUrl', () => {
-  const inputs = ['https://bsky.app', '/3jk7x4irgv52r', 'item/test/123']
+  const inputs = ['https://gndr.app', '/3jk7x4irgv52r', 'item/test/123']
   const outputs = [
-    'https://bsky.app',
-    'https://bsky.app/3jk7x4irgv52r',
-    'https://bsky.app/item/test/123',
+    'https://gndr.app',
+    'https://gndr.app/3jk7x4irgv52r',
+    'https://gndr.app/item/test/123',
   ]
 
   it('appends https, when not present', () => {
@@ -442,58 +442,58 @@ describe('parseEmbedPlayerFromUrl', () => {
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=1',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=1',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=1',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=1',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_short',
       source: 'youtubeShorts',
       hideDetails: true,
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
+      playerUri: 'https://gndr.app/iframe/youtube.html?videoId=videoId&start=0',
     },
 
     undefined,
@@ -739,7 +739,7 @@ describe('parseEmbedPlayerFromUrl', () => {
       source: 'tenor',
       isGif: true,
       hideDetails: true,
-      playerUri: 'https://t.gifs.bsky.app/someID_AAAAM/someName.gif',
+      playerUri: 'https://t.gifs.gndr.app/someID_AAAAM/someName.gif',
       dimensions: {
         width: 100,
         height: 100,
@@ -824,26 +824,26 @@ describe('parseEmbedPlayerFromUrl', () => {
 })
 
 describe('createStarterPackLinkFromAndroidReferrer', () => {
-  const validOutput = 'at://haileyok.com/app.bsky.graph.starterpack/rkey'
+  const validOutput = 'at://haileyok.com/app.gndr.graph.starterpack/rkey'
 
   it('returns a link when input contains utm_source and utm_content', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_content=starterpack_haileyok.com_rkey',
+        'utm_source=gander&utm_content=starterpack_haileyok.com_rkey',
       ),
     ).toEqual(validOutput)
 
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_content=starterpack_test-lover-9000.com_rkey',
+        'utm_source=gander&utm_content=starterpack_test-lover-9000.com_rkey',
       ),
-    ).toEqual('at://test-lover-9000.com/app.bsky.graph.starterpack/rkey')
+    ).toEqual('at://test-lover-9000.com/app.gndr.graph.starterpack/rkey')
   })
 
   it('returns a link when input contains utm_source and utm_content in different order', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_content=starterpack_haileyok.com_rkey&utm_source=bluesky',
+        'utm_content=starterpack_haileyok.com_rkey&utm_source=gander',
       ),
     ).toEqual(validOutput)
   })
@@ -851,7 +851,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   it('returns a link when input contains other parameters as well', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack_haileyok.com_rkey',
+        'utm_source=gander&utm_medium=starterpack&utm_content=starterpack_haileyok.com_rkey',
       ),
     ).toEqual(validOutput)
   })
@@ -866,7 +866,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
 
   it('returns null when utm_content is not present', () => {
     expect(
-      createStarterPackLinkFromAndroidReferrer('utm_source=bluesky'),
+      createStarterPackLinkFromAndroidReferrer('utm_source=gander'),
     ).toEqual(null)
   })
 
@@ -896,7 +896,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
 })
 
 describe('parseStarterPackHttpUri', () => {
-  const baseUri = 'https://bsky.app/start'
+  const baseUri = 'https://gndr.app/start'
 
   it('returns a valid at uri when http uri is valid', () => {
     const validHttpUri = `${baseUri}/haileyok.com/rkey`
@@ -934,24 +934,24 @@ describe('parseStarterPackHttpUri', () => {
   })
 
   it('returns null when the route is not /start or /starter-pack', () => {
-    const validHttpUri = 'https://bsky.app/start/haileyok.com/rkey'
+    const validHttpUri = 'https://gndr.app/start/haileyok.com/rkey'
     expect(parseStarterPackUri(validHttpUri)).toEqual({
       name: 'haileyok.com',
       rkey: 'rkey',
     })
 
-    const validHttpUri2 = 'https://bsky.app/starter-pack/haileyok.com/rkey'
+    const validHttpUri2 = 'https://gndr.app/starter-pack/haileyok.com/rkey'
     expect(parseStarterPackUri(validHttpUri2)).toEqual({
       name: 'haileyok.com',
       rkey: 'rkey',
     })
 
-    const invalidHttpUri = 'https://bsky.app/profile/haileyok.com/rkey'
+    const invalidHttpUri = 'https://gndr.app/profile/haileyok.com/rkey'
     expect(parseStarterPackUri(invalidHttpUri)).toEqual(null)
   })
 
   it('returns the at uri when the input is a valid starterpack at uri', () => {
-    const validAtUri = 'at://did:123/app.bsky.graph.starterpack/rkey'
+    const validAtUri = 'at://did:123/app.gndr.graph.starterpack/rkey'
     expect(parseStarterPackUri(validAtUri)).toEqual({
       name: 'did:123',
       rkey: 'rkey',
@@ -959,12 +959,12 @@ describe('parseStarterPackHttpUri', () => {
   })
 
   it('returns null when the at uri has no rkey', () => {
-    const validAtUri = 'at://did:123/app.bsky.graph.starterpack'
+    const validAtUri = 'at://did:123/app.gndr.graph.starterpack'
     expect(parseStarterPackUri(validAtUri)).toEqual(null)
   })
 
-  it('returns null when the collection is not app.bsky.graph.starterpack', () => {
-    const validAtUri = 'at://did:123/app.bsky.graph.list/rkey'
+  it('returns null when the collection is not app.gndr.graph.starterpack', () => {
+    const validAtUri = 'at://did:123/app.gndr.graph.list/rkey'
     expect(parseStarterPackUri(validAtUri)).toEqual(null)
   })
 
@@ -975,7 +975,7 @@ describe('parseStarterPackHttpUri', () => {
 
 describe('createStarterPackGooglePlayUri', () => {
   const base =
-    'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
+    'https://play.google.com/store/apps/details?id=xyz.ganderweb.app&referrer=utm_source%3Dgander%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
 
   it('returns valid google play uri when input is valid', () => {
     expect(createStarterPackGooglePlayUri('name', 'rkey')).toEqual(
@@ -1006,10 +1006,10 @@ describe('tenorUrlToBskyGifUrl', () => {
   ]
 
   it.each(inputs)(
-    'returns url with t.gifs.bsky.app as hostname for input url',
+    'returns url with t.gifs.gndr.app as hostname for input url',
     input => {
       const out = tenorUrlToBskyGifUrl(input)
-      expect(out.startsWith('https://t.gifs.bsky.app/')).toEqual(true)
+      expect(out.startsWith('https://t.gifs.gndr.app/')).toEqual(true)
     },
   )
 })

@@ -80,7 +80,7 @@ let DrawerProfileCard = ({
       <UserAvatar
         size={52}
         avatar={profile?.avatar}
-        // See https://github.com/bluesky-social/social-app/pull/1801:
+        // See https://github.com/gander-social/social-app/pull/1801:
         usePlainRNImage={true}
         type={profile?.associated?.labeler ? 'labeler' : 'user'}
         live={live}
@@ -658,12 +658,12 @@ function ExtraLinks() {
       <InlineLinkText
         style={[a.text_md]}
         label={_(msg`Terms of Service`)}
-        to="https://bsky.social/about/support/tos">
+        to="https://gndr.social/about/support/tos">
         <Trans>Terms of Service</Trans>
       </InlineLinkText>
       <InlineLinkText
         style={[a.text_md]}
-        to="https://bsky.social/about/support/privacy-policy"
+        to="https://gndr.social/about/support/privacy-policy"
         label={_(msg`Privacy Policy`)}>
         <Trans>Privacy Policy</Trans>
       </InlineLinkText>
@@ -673,7 +673,7 @@ function ExtraLinks() {
             Logo by{' '}
             <InlineLinkText
               style={[a.text_md]}
-              to="/profile/sawaratsuki.bsky.social"
+              to="/profile/sawaratsuki.gndr.social"
               label="@sawaratsuki.bsky.social">
               @sawaratsuki.bsky.social
             </InlineLinkText>

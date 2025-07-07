@@ -7,7 +7,7 @@ import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
-import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
+import {Referrer} from '../../../modules/expo-gander-swiss-army'
 
 type IntentType = 'compose' | 'verify-email'
 
@@ -24,7 +24,7 @@ export function useIntentHandler() {
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
       const referrerInfo = Referrer.getReferrerInfo()
-      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+      if (referrerInfo && referrerInfo.hostname !== 'gndr.app') {
         logEvent('deepLink:referrerReceived', {
           to: url,
           referrer: referrerInfo?.referrer,
@@ -32,18 +32,18 @@ export function useIntentHandler() {
         })
       }
 
-      // We want to be able to support bluesky:// deeplinks. It's unnatural for someone to use a deeplink with three
-      // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care
+      // We want to be able to support gander:// deeplinks. It's unnatural for someone to use a deeplink with three
+      // slashes, like gander:///intent/follow. However, supporting just two slashes causes us to have to take care
       // of two cases when parsing the url. If we ensure there is a third slash, we can always ensure the first
       // path parameter is in pathname rather than in hostname.
-      if (url.startsWith('bluesky://') && !url.startsWith('bluesky:///')) {
-        url = url.replace('bluesky://', 'bluesky:///')
+      if (url.startsWith('gander://') && !url.startsWith('gander:///')) {
+        url = url.replace('gander://', 'gander:///')
       }
 
       const urlp = new URL(url)
       const [_, intent, intentType] = urlp.pathname.split('/')
 
-      // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
+      // On native, our links look like gander://intent/SomeIntent, so we have to check the hostname for the
       // intent check. On web, we have to check the first part of the path since we have an actual hostname
       const isIntent = intent === 'intent'
       const params = urlp.searchParams
@@ -114,7 +114,7 @@ export function useComposeIntent() {
         ?.split(',')
         .filter(part => {
           // For some security, we're going to filter out any image uri that is external. We don't want someone to
-          // be able to provide some link like "bluesky://intent/compose?imageUris=https://IHaveYourIpNow.com/image.jpeg
+          // be able to provide some link like "gander://intent/compose?imageUris=https://IHaveYourIpNow.com/image.jpeg
           // and we load that image
           if (part.includes('https://') || part.includes('http://')) {
             return false

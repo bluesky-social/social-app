@@ -15,7 +15,7 @@ export default function (ctx: AppContext, app: Express) {
   app = siteAssociation(ctx, app) // GET /.well-known/apple-app-site-association
   app = redirect(ctx, app) // GET /redirect
   app = createShortLink(ctx, app) // POST /link
-  app = root(ctx, app) // GET / (redirect to bsky.app on root)
+  app = root(ctx, app) // GET / (redirect to gndr.app on root)
   app = shortLink(ctx, app) // GET /:linkId (should go last due to permissive matching)
   return app
 }

@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {
-  type AppBskyActorDefs,
+  type AppGndrActorDefs,
   type ModerationCause,
   type ModerationDecision,
 } from '@atproto/api'
@@ -34,7 +34,7 @@ export let MessagesListHeader = ({
   profile,
   moderation,
 }: {
-  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile?: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   moderation?: ModerationDecision
 }): React.ReactNode => {
   const t = useTheme()
@@ -141,7 +141,7 @@ function HeaderReady({
   moderation,
   blockInfo,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
   blockInfo: {
     listBlocks: ModerationCause[]

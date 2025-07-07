@@ -94,9 +94,9 @@
     multiformats "^9.9.0"
     uint8arrays "3.0.0"
 
-"@atproto/bsky@^0.0.167":
+"@atproto/gndr@^0.0.167":
   version "0.0.167"
-  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.167.tgz#583eb404ef4de409e34d7c2485bf325e5d1f3ff0"
+  resolved "https://registry.yarnpkg.com/@atproto/gndr/-/gndr-0.0.167.tgz#583eb404ef4de409e34d7c2485bf325e5d1f3ff0"
   integrity sha512-VLgaVsx0fYeoXcFHP1KM6joda9Ovhb7LsE3JdES6+hhsAF74DFwW57mVzRfYhy1bwWn/m9poUMs1RkCjOR9ZJA==
   dependencies:
     "@atproto-labs/fetch-node" "0.1.9"
@@ -224,7 +224,7 @@
   integrity sha512-LOujaEmOVBCxSnKQqpJb238fe5vYGIgmTA+OMEFH3kZb+6Y6UXfW2Vhs79tP0DiX0VyoXwib/7PH3Lp5cC/ZFQ==
   dependencies:
     "@atproto/api" "^0.15.21"
-    "@atproto/bsky" "^0.0.167"
+    "@atproto/gndr" "^0.0.167"
     "@atproto/bsync" "^0.0.20"
     "@atproto/common-web" "^0.4.2"
     "@atproto/crypto" "^0.4.4"
@@ -3573,9 +3573,9 @@
     pino "^8.11.0"
     pino-http "^8.3.3"
 
-"@discord/bottom-sheet@bluesky-social/react-native-bottom-sheet":
+"@discord/bottom-sheet@gander-social/react-native-bottom-sheet":
   version "4.6.1"
-  resolved "https://codeload.github.com/bluesky-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908"
+  resolved "https://codeload.github.com/gander-social/react-native-bottom-sheet/tar.gz/28a87d1bb55e10fc355fa1455545a30734995908"
   dependencies:
     "@gorhom/portal" "1.0.14"
     invariant "^2.2.4"
@@ -10827,7 +10827,7 @@ eslint-module-utils@^2.12.0:
   dependencies:
     debug "^3.2.7"
 
-"eslint-plugin-bsky-internal@link:./eslint":
+"eslint-plugin-gndr-internal@link:./eslint":
   version "0.0.0"
   uid ""
 
@@ -16860,9 +16860,9 @@ react-native-pager-view@6.8.0:
   resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-6.8.0.tgz#5bac05203d911bf9bf039d47db41b1313dbd1a7a"
   integrity sha512-/wgFV8nB4TLnQ6j9e3TvNrHbPF5TINMZHaXt86GOV0NSJNMVGkWguniJVKrYLm85LL8KVhRkgdh43Rdu7PvW1A==
 
-react-native-progress@bluesky-social/react-native-progress:
+react-native-progress@gander-social/react-native-progress:
   version "5.0.0"
-  resolved "https://codeload.github.com/bluesky-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4"
+  resolved "https://codeload.github.com/gander-social/react-native-progress/tar.gz/5a372f4f2ce5feb26f4f47b6a4d187ab9b923ab4"
   dependencies:
     prop-types "^15.7.2"
 

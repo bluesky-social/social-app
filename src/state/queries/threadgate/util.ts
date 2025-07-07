@@ -1,26 +1,26 @@
-import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
+import {AppGndrFeedDefs, AppGndrFeedThreadgate} from '@atproto/api'
 
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function threadgateViewToAllowUISetting(
-  threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,
+  threadgateView: AppGndrFeedDefs.ThreadgateView | undefined,
 ): ThreadgateAllowUISetting[] {
   // Validate the record for clarity, since backwards compat code is a little confusing
   const threadgate =
     threadgateView &&
-    bsky.validate(threadgateView.record, AppBskyFeedThreadgate.validateRecord)
+    gndr.validate(threadgateView.record, AppGndrFeedThreadgate.validateRecord)
       ? threadgateView.record
       : undefined
   return threadgateRecordToAllowUISetting(threadgate)
 }
 
 /**
- * Converts a full {@link AppBskyFeedThreadgate.Record} to a list of
+ * Converts a full {@link AppGndrFeedThreadgate.Record} to a list of
  * {@link ThreadgateAllowUISetting}, for use by app UI.
  */
 export function threadgateRecordToAllowUISetting(
-  threadgate: AppBskyFeedThreadgate.Record | undefined,
+  threadgate: AppGndrFeedThreadgate.Record | undefined,
 ): ThreadgateAllowUISetting[] {
   /*
    * If `threadgate` doesn't exist (default), or if `threadgate.allow === undefined`, it means
@@ -40,13 +40,13 @@ export function threadgateRecordToAllowUISetting(
   const settings: ThreadgateAllowUISetting[] = threadgate.allow
     .map(allow => {
       let setting: ThreadgateAllowUISetting | undefined
-      if (AppBskyFeedThreadgate.isMentionRule(allow)) {
+      if (AppGndrFeedThreadgate.isMentionRule(allow)) {
         setting = {type: 'mention'}
-      } else if (AppBskyFeedThreadgate.isFollowingRule(allow)) {
+      } else if (AppGndrFeedThreadgate.isFollowingRule(allow)) {
         setting = {type: 'following'}
-      } else if (AppBskyFeedThreadgate.isListRule(allow)) {
+      } else if (AppGndrFeedThreadgate.isListRule(allow)) {
         setting = {type: 'list', list: allow.list}
-      } else if (AppBskyFeedThreadgate.isFollowerRule(allow)) {
+      } else if (AppGndrFeedThreadgate.isFollowerRule(allow)) {
         setting = {type: 'followers'}
       }
       return setting
@@ -57,7 +57,7 @@ export function threadgateRecordToAllowUISetting(
 
 /**
  * Converts an array of {@link ThreadgateAllowUISetting} to the `allow` prop on
- * {@link AppBskyFeedThreadgate.Record}.
+ * {@link AppGndrFeedThreadgate.Record}.
  *
  * If the `allow` property on the record is undefined, we infer that to mean
  * that everyone can reply. If it's an empty array, we infer that to mean that
@@ -65,24 +65,24 @@ export function threadgateRecordToAllowUISetting(
  */
 export function threadgateAllowUISettingToAllowRecordValue(
   threadgate: ThreadgateAllowUISetting[],
-): AppBskyFeedThreadgate.Record['allow'] {
+): AppGndrFeedThreadgate.Record['allow'] {
   if (threadgate.find(v => v.type === 'everybody')) {
     return undefined
   }
 
-  let allow: Exclude<AppBskyFeedThreadgate.Record['allow'], undefined> = []
+  let allow: Exclude<AppGndrFeedThreadgate.Record['allow'], undefined> = []
 
   if (!threadgate.find(v => v.type === 'nobody')) {
     for (const rule of threadgate) {
       if (rule.type === 'mention') {
-        allow.push({$type: 'app.bsky.feed.threadgate#mentionRule'})
+        allow.push({$type: 'app.gndr.feed.threadgate#mentionRule'})
       } else if (rule.type === 'following') {
-        allow.push({$type: 'app.bsky.feed.threadgate#followingRule'})
+        allow.push({$type: 'app.gndr.feed.threadgate#followingRule'})
       } else if (rule.type === 'followers') {
-        allow.push({$type: 'app.bsky.feed.threadgate#followerRule'})
+        allow.push({$type: 'app.gndr.feed.threadgate#followerRule'})
       } else if (rule.type === 'list') {
         allow.push({
-          $type: 'app.bsky.feed.threadgate#listRule',
+          $type: 'app.gndr.feed.threadgate#listRule',
           list: rule.list,
         })
       }
@@ -93,18 +93,18 @@ export function threadgateAllowUISettingToAllowRecordValue(
 }
 
 /**
- * Merges two {@link AppBskyFeedThreadgate.Record} objects, combining their
+ * Merges two {@link AppGndrFeedThreadgate.Record} objects, combining their
  * `allow` and `hiddenReplies` arrays and de-deduplicating them.
  *
  * Note: `allow` can be undefined here, be sure you don't accidentally set it
  * to an empty array. See other comments in this file.
  */
 export function mergeThreadgateRecords(
-  prev: AppBskyFeedThreadgate.Record,
-  next: Partial<AppBskyFeedThreadgate.Record>,
-): AppBskyFeedThreadgate.Record {
+  prev: AppGndrFeedThreadgate.Record,
+  next: Partial<AppGndrFeedThreadgate.Record>,
+): AppGndrFeedThreadgate.Record {
   // can be undefined if everyone can reply!
-  const allow: AppBskyFeedThreadgate.Record['allow'] | undefined =
+  const allow: AppGndrFeedThreadgate.Record['allow'] | undefined =
     prev.allow || next.allow
       ? [...(prev.allow || []), ...(next.allow || [])].filter(
           (v, i, a) => a.findIndex(t => t.$type === v.$type) === i,
@@ -122,18 +122,18 @@ export function mergeThreadgateRecords(
 }
 
 /**
- * Create a new {@link AppBskyFeedThreadgate.Record} object with the given
+ * Create a new {@link AppGndrFeedThreadgate.Record} object with the given
  * properties.
  */
 export function createThreadgateRecord(
-  threadgate: Partial<AppBskyFeedThreadgate.Record>,
-): AppBskyFeedThreadgate.Record {
+  threadgate: Partial<AppGndrFeedThreadgate.Record>,
+): AppGndrFeedThreadgate.Record {
   if (!threadgate.post) {
     throw new Error('Cannot create a threadgate record without a post URI')
   }
 
   return {
-    $type: 'app.bsky.feed.threadgate',
+    $type: 'app.gndr.feed.threadgate',
     post: threadgate.post,
     createdAt: new Date().toISOString(),
     allow: threadgate.allow, // can be undefined!

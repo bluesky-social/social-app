@@ -12,14 +12,14 @@ import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/component
 import * as Tooltip from '#/components/Tooltip'
 import {Text} from '#/components/Typography'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 import {SubscribeProfileDialog} from './SubscribeProfileDialog'
 
 export function SubscribeProfileButton({
   profile,
   moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const {_} = useLingui()

@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {AppGndrActorDefs, ModerationDecision} from '@atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -11,7 +11,7 @@ export function ProfileHeaderDisplayName({
   profile,
   moderation,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
 }) {
   const t = useTheme()

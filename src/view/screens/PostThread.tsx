@@ -18,7 +18,7 @@ export function PostThreadScreen({route}: Props) {
   const gate = useGate()
 
   const {name, rkey} = route.params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+  const uri = makeRecordUri(name, 'app.gndr.feed.post', rkey)
 
   useFocusEffect(
     useCallback(() => {

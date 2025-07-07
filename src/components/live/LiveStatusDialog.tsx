@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
+import {type AppGndrActorDefs, type AppGndrEmbedExternal} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -19,7 +19,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 import {Globe_Stroke2_Corner0_Rounded} from '../icons/Globe'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRightIcon} from '../icons/SquareArrowTopRight'
 import {LiveIndicator} from './LiveIndicator'
@@ -30,9 +30,9 @@ export function LiveStatusDialog({
   embed,
 }: {
   control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
-  status: AppBskyActorDefs.StatusView
-  embed: AppBskyEmbedExternal.View
+  profile: gndr.profile.AnyProfileView
+  status: AppGndrActorDefs.StatusView
+  embed: AppGndrEmbedExternal.View
 }) {
   const navigation = useNavigation<NavigationProp>()
   return (
@@ -48,8 +48,8 @@ function DialogInner({
   embed,
   navigation,
 }: {
-  profile: bsky.profile.AnyProfileView
-  embed: AppBskyEmbedExternal.View
+  profile: gndr.profile.AnyProfileView
+  embed: AppGndrEmbedExternal.View
   navigation: NavigationProp
 }) {
   const {_} = useLingui()
@@ -84,8 +84,8 @@ export function LiveStatus({
   padding = 'xl',
   onPressOpenProfile,
 }: {
-  profile: bsky.profile.AnyProfileView
-  embed: AppBskyEmbedExternal.View
+  profile: gndr.profile.AnyProfileView
+  embed: AppGndrEmbedExternal.View
   padding?: 'lg' | 'xl'
   onPressOpenProfile: () => void
 }) {

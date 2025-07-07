@@ -2,7 +2,7 @@ import React from 'react'
 import {AccessibilityInfo} from 'react-native'
 
 import {isWeb} from '#/platform/detection'
-import {PlatformInfo} from '../../modules/expo-bluesky-swiss-army'
+import {PlatformInfo} from '../../modules/expo-gander-swiss-army'
 
 const Context = React.createContext({
   reduceMotionEnabled: false,

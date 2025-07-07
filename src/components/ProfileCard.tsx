@@ -35,7 +35,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function Default({
   profile,
@@ -43,7 +43,7 @@ export function Default({
   logContext = 'ProfileCard',
   testID,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
   testID?: string
@@ -64,7 +64,7 @@ export function Card({
   moderationOpts,
   logContext = 'ProfileCard',
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
@@ -109,7 +109,7 @@ export function Link({
   style,
   ...rest
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
 } & Omit<LinkProps, 'to' | 'label'>) {
   const {_} = useLingui()
   return (
@@ -137,7 +137,7 @@ export function Avatar({
   disabledPreview,
   liveOverride,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress?: () => void
   disabledPreview?: boolean
@@ -187,7 +187,7 @@ export function NameAndHandle({
   moderationOpts,
   inline = false,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   inline?: boolean
 }) {
@@ -209,7 +209,7 @@ function InlineNameAndHandle({
   profile,
   moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
@@ -264,7 +264,7 @@ export function Name({
   profile,
   moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
@@ -293,7 +293,7 @@ export function Name({
   )
 }
 
-export function Handle({profile}: {profile: bsky.profile.AnyProfileView}) {
+export function Handle({profile}: {profile: gndr.profile.AnyProfileView}) {
   const t = useTheme()
   const handle = sanitizeHandle(profile.handle, '@')
 
@@ -341,7 +341,7 @@ export function Description({
   profile: profileUnshadowed,
   numberOfLines = 3,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   numberOfLines?: number
 }) {
   const profile = useProfileShadow(profileUnshadowed)
@@ -397,7 +397,7 @@ export function DescriptionPlaceholder({
 }
 
 export type FollowButtonProps = {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext']
@@ -532,7 +532,7 @@ export function Labels({
   profile,
   moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const moderation = moderateProfile(profile, moderationOpts)

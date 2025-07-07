@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
 import {type AppBskyNotificationDefs} from '@atproto/api'
-import {type FilterablePreference} from '@atproto/api/dist/client/types/app/bsky/notification/defs'
+import {type FilterablePreference} from '@atproto/api/dist/client/types/app/gndr/notification/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

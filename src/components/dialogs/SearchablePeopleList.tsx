@@ -29,12 +29,12 @@ import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/i
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export type ProfileItem = {
   type: 'profile'
   key: string
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
 }
 
 type EmptyItem = {
@@ -358,7 +358,7 @@ function DefaultProfileCard({
   moderationOpts,
   onPress,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress: (did: string) => void
 }) {

@@ -1,22 +1,22 @@
 import {
   $Typed,
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  ChatBskyConvoDefs,
+  AppGndrActorDefs,
+  AppGndrFeedDefs,
+  AppGndrGraphDefs,
+  ChatGndrConvoDefs,
 } from '@atproto/api'
 
 import * as Dialog from '#/components/Dialog'
 
 export type ReportSubject =
-  | $Typed<AppBskyActorDefs.ProfileViewBasic>
-  | $Typed<AppBskyActorDefs.ProfileView>
-  | $Typed<AppBskyActorDefs.ProfileViewDetailed>
-  | $Typed<AppBskyGraphDefs.ListView>
-  | $Typed<AppBskyFeedDefs.GeneratorView>
-  | $Typed<AppBskyGraphDefs.StarterPackView>
-  | $Typed<AppBskyFeedDefs.PostView>
-  | {convoId: string; message: ChatBskyConvoDefs.MessageView}
+  | $Typed<AppGndrActorDefs.ProfileViewBasic>
+  | $Typed<AppGndrActorDefs.ProfileView>
+  | $Typed<AppGndrActorDefs.ProfileViewDetailed>
+  | $Typed<AppGndrGraphDefs.ListView>
+  | $Typed<AppGndrFeedDefs.GeneratorView>
+  | $Typed<AppGndrGraphDefs.StarterPackView>
+  | $Typed<AppGndrFeedDefs.PostView>
+  | {convoId: string; message: ChatGndrConvoDefs.MessageView}
 
 export type ParsedReportSubject =
   | {
@@ -58,7 +58,7 @@ export type ParsedReportSubject =
   | {
       type: 'chatMessage'
       convoId: string
-      message: ChatBskyConvoDefs.MessageView
+      message: ChatGndrConvoDefs.MessageView
     }
 
 export type ReportDialogProps = {

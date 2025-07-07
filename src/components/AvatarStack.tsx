@@ -6,7 +6,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function AvatarStack({
   profiles,
@@ -14,7 +14,7 @@ export function AvatarStack({
   numPending,
   backgroundColor,
 }: {
-  profiles: bsky.profile.AnyProfileView[]
+  profiles: gndr.profile.AnyProfileView[]
   size?: number
   numPending?: number
   backgroundColor?: string

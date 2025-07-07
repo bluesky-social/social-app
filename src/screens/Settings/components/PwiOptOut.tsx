@@ -12,7 +12,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function PwiOptOut() {
   const t = useTheme()
@@ -34,7 +34,7 @@ export function PwiOptOut() {
       profile,
       updates: existing => {
         // create labels attr if needed
-        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = bsky.validate(
+        const labels: $Typed<ComAtprotoLabelDefs.SelfLabels> = gndr.validate(
           existing.labels,
           ComAtprotoLabelDefs.validateSelfLabels,
         )
@@ -97,7 +97,7 @@ export function PwiOptOut() {
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_high]}>
         <Trans>
-          Bluesky will not show your profile and posts to logged-out users.
+          Gander will not show your profile and posts to logged-out users.
           Other apps may not honor this request. This does not make your account
           private.
         </Trans>

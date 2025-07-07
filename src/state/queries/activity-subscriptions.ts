@@ -26,7 +26,7 @@ export function useActivitySubscriptionsQuery() {
     queryKey: RQKEY_getActivitySubscriptions,
     queryFn: async ({pageParam}) => {
       const response =
-        await agent.app.bsky.notification.listActivitySubscriptions({
+        await agent.app.gndr.notification.listActivitySubscriptions({
           cursor: pageParam,
         })
       return response.data
@@ -43,7 +43,7 @@ export function useNotificationDeclarationQuery() {
     queryKey: RQKEY_getNotificationDeclaration,
     queryFn: async () => {
       try {
-        const response = await agent.app.bsky.notification.declaration.get({
+        const response = await agent.app.gndr.notification.declaration.get({
           repo: currentAccount!.did,
           rkey: 'self',
         })
@@ -55,7 +55,7 @@ export function useNotificationDeclarationQuery() {
         ) {
           return {
             value: {
-              $type: 'app.bsky.notification.declaration',
+              $type: 'app.gndr.notification.declaration',
               allowSubscriptions: 'followers',
             } satisfies AppBskyNotificationDeclaration.Record,
           }
@@ -73,7 +73,7 @@ export function useNotificationDeclarationMutation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (record: AppBskyNotificationDeclaration.Record) => {
-      const response = await agent.app.bsky.notification.declaration.put(
+      const response = await agent.app.gndr.notification.declaration.put(
         {
           repo: currentAccount!.did,
           rkey: 'self',

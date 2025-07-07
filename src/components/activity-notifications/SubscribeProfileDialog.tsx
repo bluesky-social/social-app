@@ -37,7 +37,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function SubscribeProfileDialog({
   control,
@@ -46,7 +46,7 @@ export function SubscribeProfileDialog({
   includeProfile,
 }: {
   control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   includeProfile?: boolean
 }) {
@@ -67,7 +67,7 @@ function DialogInner({
   moderationOpts,
   includeProfile,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   includeProfile?: boolean
 }) {
@@ -121,7 +121,7 @@ function DialogInner({
     mutationFn: async (
       activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>,
     ) => {
-      await agent.app.bsky.notification.putActivitySubscription({
+      await agent.app.gndr.notification.putActivitySubscription({
         subject: profile.did,
         activitySubscription,
       })

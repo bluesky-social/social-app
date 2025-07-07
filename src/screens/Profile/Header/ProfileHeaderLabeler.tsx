@@ -1,8 +1,8 @@
 import React, {memo, useMemo} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
-  type AppBskyLabelerDefs,
+  type AppGndrActorDefs,
+  type AppGndrLabelerDefs,
   moderateProfile,
   type ModerationOpts,
   type RichText as RichTextAPI,
@@ -42,8 +42,8 @@ import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
+  labeler: AppGndrLabelerDefs.LabelerViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -58,7 +58,7 @@ let ProfileHeaderLabeler = ({
   hideBackButton = false,
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
-  const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
+  const profile: Shadow<AppGndrActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
   const {_} = useLingui()

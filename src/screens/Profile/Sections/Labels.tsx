@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
 import {findNodeHandle, type ListRenderItemInfo, View} from 'react-native'
 import {
-  type AppBskyLabelerDefs,
+  type AppGndrLabelerDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinitions,
   type ModerationOpts,
@@ -25,7 +25,7 @@ import {type SectionRef} from './types'
 interface LabelsSectionProps {
   ref: React.Ref<SectionRef>
   isLabelerLoading: boolean
-  labelerInfo: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  labelerInfo: AppGndrLabelerDefs.LabelerViewDetailed | undefined
   labelerError: Error | null
   moderationOpts: ModerationOpts
   scrollElRef: ListRef

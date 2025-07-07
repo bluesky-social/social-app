@@ -20,7 +20,7 @@ export function useServiceConfigQuery() {
     queryKey: ['service-config'],
     queryFn: async () => {
       try {
-        const {data} = await agent.api.app.bsky.unspecced.getConfig()
+        const {data} = await agent.api.app.gndr.unspecced.getConfig()
         return {
           checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
           // @ts-expect-error not included in types atm

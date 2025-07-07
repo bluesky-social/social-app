@@ -55,7 +55,7 @@ let _imageCacheDirectory: string
 
 function getImageCacheDirectory(): string | null {
   if (isNative) {
-    return (_imageCacheDirectory ??= joinPath(cacheDirectory!, 'bsky-composer'))
+    return (_imageCacheDirectory ??= joinPath(cacheDirectory!, 'gndr-composer'))
   }
 
   return null

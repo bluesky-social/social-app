@@ -12,5 +12,5 @@
       "multiformats/hashes/hasher": ["node_modules/multiformats/types/src/hashes/hasher.d.ts"]
     }
   },
-  "exclude": ["bskyweb", "bskyembed", "web-build"]
+  "exclude": ["gndrweb", "gndrembed", "web-build"]
 }

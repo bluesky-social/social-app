@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {type ScrollView} from 'react-native-gesture-handler'
-import {type AppBskyLabelerDefs} from '@atproto/api'
+import {type AppGndrLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -125,7 +125,7 @@ function Inner(props: ReportDialogProps) {
       .filter(l => {
         const collections: string[] | undefined = l.subjectCollections
         if (collections === undefined) return true
-        // all chat collections accepted, since only Bluesky handles chats
+        // all chat collections accepted, since only Gander handles chats
         if (props.subject.type === 'chatMessage') return true
         return collections.includes(props.subject.nsid)
       })
@@ -628,8 +628,8 @@ function LabelerCard({
   labeler,
   onSelect,
 }: {
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
-  onSelect?: (option: AppBskyLabelerDefs.LabelerViewDetailed) => void
+  labeler: AppGndrLabelerDefs.LabelerViewDetailed
+  onSelect?: (option: AppGndrLabelerDefs.LabelerViewDetailed) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()

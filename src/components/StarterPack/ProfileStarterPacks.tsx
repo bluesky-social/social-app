@@ -11,7 +11,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppBskyGraphDefs} from '@atproto/api'
+import {type AppGndrGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -52,7 +52,7 @@ interface ProfileFeedgensProps {
   isMe: boolean
 }
 
-function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
+function keyExtractor(item: AppGndrGraphDefs.StarterPackView) {
   return item.uri
 }
 
@@ -118,7 +118,7 @@ export const ProfileStarterPacks = React.forwardRef<
   }, [enabled, scrollElRef, setScrollViewTag])
 
   const renderItem = useCallback(
-    ({item, index}: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
+    ({item, index}: ListRenderItemInfo<AppGndrGraphDefs.StarterPackView>) => {
       return (
         <View
           style={[
@@ -308,7 +308,7 @@ function Empty() {
         </Prompt.TitleText>
         <Prompt.DescriptionText>
           <Trans>
-            Bluesky will choose a set of recommended accounts from people in
+            Gander will choose a set of recommended accounts from people in
             your network.
           </Trans>
         </Prompt.DescriptionText>

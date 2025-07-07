@@ -1,5 +1,5 @@
 import {
-  AppBskyLabelerDefs,
+  AppGndrLabelerDefs,
   ComAtprotoLabelDefs,
   InterpretedLabelValueDefinition,
   interpretLabelValueDefinition,
@@ -18,7 +18,7 @@ export interface LabelInfo {
   label: ComAtprotoLabelDefs.Label
   def: InterpretedLabelValueDefinition
   strings: ComAtprotoLabelDefs.LabelValueDefinitionStrings
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  labeler: AppGndrLabelerDefs.LabelerViewDetailed | undefined
 }
 
 export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {

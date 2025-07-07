@@ -11,9 +11,9 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {
-  type AppBskyActorDefs,
-  AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
+  type AppGndrActorDefs,
+  AppGndrEmbedVideo,
+  type AppGndrFeedDefs,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -199,7 +199,7 @@ let PostFeed = ({
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: AppGndrActorDefs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
 }): React.ReactNode => {
@@ -219,7 +219,7 @@ let PostFeed = ({
     () => new Set<string>(),
   )
   const onPressShowLess = useCallback(
-    (interaction: AppBskyFeedDefs.Interaction) => {
+    (interaction: AppGndrFeedDefs.Interaction) => {
       if (interaction.item) {
         const uri = interaction.item
         setHasPressedShowLessUris(prev => new Set([...prev, uri]))
@@ -395,7 +395,7 @@ let PostFeed = ({
                 // eslint-disable-next-line @typescript-eslint/no-shadow
                 item => item.uri === slice.feedPostUri,
               )
-              if (item && AppBskyEmbedVideo.isView(item.post.embed)) {
+              if (item && AppGndrEmbedVideo.isView(item.post.embed)) {
                 videos.push({
                   item,
                   feedContext: slice.feedContext,

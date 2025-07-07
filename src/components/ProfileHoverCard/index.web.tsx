@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
+  type AppGndrActorDefs,
   moderateProfile,
   type ModerationOpts,
 } from '@atproto/api'
@@ -416,7 +416,7 @@ function Inner({
   moderationOpts,
   hide,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hide: () => void
 }) {

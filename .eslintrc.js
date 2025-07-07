@@ -13,7 +13,7 @@ module.exports = {
     'react',
     'lingui',
     'simple-import-sort',
-    'bsky-internal',
+    'gndr-internal',
     'eslint-plugin-react-compiler',
     'import',
   ],
@@ -21,7 +21,7 @@ module.exports = {
     'react/no-unescaped-entities': 0,
     'react/prop-types': 0,
     'react-native/no-inline-styles': 0,
-    'bsky-internal/avoid-unwrapped-text': [
+    'gndr-internal/avoid-unwrapped-text': [
       'error',
       {
         impliedTextComponents: [
@@ -43,9 +43,9 @@ module.exports = {
         },
       },
     ],
-    'bsky-internal/use-exact-imports': 'error',
-    'bsky-internal/use-typed-gates': 'error',
-    'bsky-internal/use-prefixed-imports': 'error',
+    'gndr-internal/use-exact-imports': 'error',
+    'gndr-internal/use-typed-gates': 'error',
+    'gndr-internal/use-prefixed-imports': 'error',
     'simple-import-sort/imports': [
       'error',
       {
@@ -105,8 +105,8 @@ module.exports = {
     '.husky',
     'patches',
     '*.html',
-    'bskyweb',
-    'bskyembed',
+    'gndrweb',
+    'gndrembed',
     'src/locale/locales/_build/',
     'src/locale/locales/**/*.js',
   ],

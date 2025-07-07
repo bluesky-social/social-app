@@ -4,10 +4,10 @@ import * as WebBrowser from 'expo-web-browser'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {
-  createBskyAppAbsoluteUrl,
+  createGndrAppAbsoluteUrl,
   createProxiedUrl,
-  isBskyAppUrl,
-  isBskyRSSUrl,
+  isGndrAppUrl,
+  isGndrRSSUrl,
   isRelativeUrl,
   toNiceDomain,
 } from '#/lib/strings/url-helpers'
@@ -28,11 +28,11 @@ export function useOpenLink() {
 
   const openLink = useCallback(
     async (url: string, override?: boolean, shouldProxy?: boolean) => {
-      if (isBskyRSSUrl(url) && isRelativeUrl(url)) {
-        url = createBskyAppAbsoluteUrl(url)
+      if (isGndrRSSUrl(url) && isRelativeUrl(url)) {
+        url = createGndrAppAbsoluteUrl(url)
       }
 
-      if (!isBskyAppUrl(url)) {
+      if (!isGndrAppUrl(url)) {
         logEvent('link:clicked', {
           domain: toNiceDomain(url),
           url,

@@ -1,5 +1,5 @@
-import {AtUri, BskyAgent} from '@atproto/api'
-import {TestBsky, TestNetwork} from '@atproto/dev-env'
+import {AtUri, GndrAgent} from '@atproto/api'
+import {TestGndr, TestNetwork} from '@atproto/dev-env'
 import fs from 'fs'
 import net from 'net'
 import path from 'path'
@@ -9,7 +9,7 @@ export interface TestUser {
   did: string
   handle: string
   password: string
-  agent: BskyAgent
+  agent: GndrAgent
 }
 
 export interface TestPDS {
@@ -71,8 +71,8 @@ export async function createServer(
       hostname: 'localhost',
       inviteRequired,
     },
-    bsky: {
-      dbPostgresSchema: `bsky_${id}`,
+    gndr: {
+      dbPostgresSchema: `gndr_${id}`,
       port: port3,
       publicUrl: 'http://localhost:2584',
     },
@@ -81,22 +81,22 @@ export async function createServer(
 
   // DISABLED - looks like dev-env added this and now it conflicts
   // add the test mod authority
-  // const agent = new BskyAgent({service: pdsUrl})
+  // const agent = new GndrAgent({service: pdsUrl})
   // const res = await agent.api.com.atproto.server.createAccount({
   //   email: 'mod-authority@test.com',
   //   handle: 'mod-authority.test',
   //   password: 'hunter2',
   // })
   // agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-  // await agent.api.app.bsky.actor.profile.create(
+  // await agent.api.app.gndr.actor.profile.create(
   //   {repo: res.data.did},
   //   {
   //     displayName: 'Dev-env Moderation',
-  //     description: `The pretend version of mod.bsky.app`,
+  //     description: `The pretend version of mod.gndr.app`,
   //   },
   // )
 
-  // await agent.api.app.bsky.labeler.service.create(
+  // await agent.api.app.gndr.labeler.service.create(
   //   {repo: res.data.did, rkey: 'self'},
   //   {
   //     policies: {
@@ -121,7 +121,7 @@ export async function createServer(
 }
 
 class Mocker {
-  agent: BskyAgent
+  agent: GndrAgent
   users: Record<string, TestUser> = {}
 
   constructor(
@@ -129,15 +129,15 @@ class Mocker {
     public service: string,
     public pic: Uint8Array,
   ) {
-    this.agent = new BskyAgent({service})
+    this.agent = new GndrAgent({service})
   }
 
   get pds() {
     return this.testNet.pds
   }
 
-  get bsky() {
-    return this.testNet.bsky
+  get gndr() {
+    return this.testNet.gndr
   }
 
   get plc() {
@@ -157,7 +157,7 @@ class Mocker {
   }
 
   async createUser(name: string) {
-    const agent = new BskyAgent({service: this.service})
+    const agent = new GndrAgent({service: this.service})
 
     const inviteRes = await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1},
@@ -248,7 +248,7 @@ class Mocker {
       text,
       langs: ['en'],
       embed: {
-        $type: 'app.bsky.embed.images',
+        $type: 'app.gndr.embed.images',
         images: [{image: blob.data.blob, alt: ''}],
       },
       createdAt: new Date().toISOString(),
@@ -266,7 +266,7 @@ class Mocker {
     }
     return await agent.post({
       text,
-      embed: {$type: 'app.bsky.embed.record', record: {uri, cid}},
+      embed: {$type: 'app.gndr.embed.record', record: {uri, cid}},
       langs: ['en'],
       createdAt: new Date().toISOString(),
     })
@@ -304,7 +304,7 @@ class Mocker {
     }
     const fgUri = AtUri.make(
       this.users[user].did,
-      'app.bsky.feed.generator',
+      'app.gndr.feed.generator',
       rkey,
     )
     const fg1 = await this.testNet.createFeedGen({
@@ -320,7 +320,7 @@ class Mocker {
     const avatarRes = await agent.api.com.atproto.repo.uploadBlob(this.pic, {
       encoding: 'image/png',
     })
-    return await agent.api.app.bsky.feed.generator.create(
+    return await agent.api.app.gndr.feed.generator.create(
       {repo: this.users[user].did, rkey},
       {
         did: fg1.did,
@@ -333,7 +333,7 @@ class Mocker {
   }
 
   async createInvite(forAccount: string) {
-    const agent = new BskyAgent({service: this.service})
+    const agent = new GndrAgent({service: this.service})
     await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1, forAccount},
       {
@@ -348,11 +348,11 @@ class Mocker {
     if (!did) {
       throw new Error(`Invalid user: ${user}`)
     }
-    const ctx = this.bsky.ctx
+    const ctx = this.gndr.ctx
     if (!ctx) {
       throw new Error('Invalid appview')
     }
-    await createLabel(this.bsky, {
+    await createLabel(this.gndr, {
       uri: did,
       cid: '',
       val: label,
@@ -366,16 +366,16 @@ class Mocker {
       throw new Error(`Invalid user: ${user}`)
     }
 
-    const profile = await agent.app.bsky.actor.profile.get({
+    const profile = await agent.app.gndr.actor.profile.get({
       repo: user + '.test',
       rkey: 'self',
     })
 
-    const ctx = this.bsky.ctx
+    const ctx = this.gndr.ctx
     if (!ctx) {
       throw new Error('Invalid appview')
     }
-    await createLabel(this.bsky, {
+    await createLabel(this.gndr, {
       uri: profile.uri,
       cid: profile.cid,
       val: label,
@@ -383,11 +383,11 @@ class Mocker {
   }
 
   async labelPost(label: string, {uri, cid}: {uri: string; cid: string}) {
-    const ctx = this.bsky.ctx
+    const ctx = this.gndr.ctx
     if (!ctx) {
       throw new Error('Invalid appview')
     }
-    await createLabel(this.bsky, {
+    await createLabel(this.gndr, {
       uri,
       cid,
       val: label,
@@ -395,22 +395,22 @@ class Mocker {
   }
 
   async createMuteList(user: string, name: string): Promise<string> {
-    const res = await this.users[user]?.agent.app.bsky.graph.list.create(
+    const res = await this.users[user]?.agent.app.gndr.graph.list.create(
       {repo: this.users[user]?.did},
       {
-        purpose: 'app.bsky.graph.defs#modlist',
+        purpose: 'app.gndr.graph.defs#modlist',
         name,
         createdAt: new Date().toISOString(),
       },
     )
-    await this.users[user]?.agent.app.bsky.graph.muteActorList({
+    await this.users[user]?.agent.app.gndr.graph.muteActorList({
       list: res.uri,
     })
     return res.uri
   }
 
   async addToMuteList(owner: string, list: string, subject: string) {
-    await this.users[owner]?.agent.app.bsky.graph.listitem.create(
+    await this.users[owner]?.agent.app.gndr.graph.listitem.create(
       {repo: this.users[owner]?.did},
       {
         list,
@@ -443,10 +443,10 @@ async function getPort(start = 3000) {
 }
 
 const createLabel = async (
-  bsky: TestBsky,
+  gndr: TestGndr,
   opts: {uri: string; cid: string; val: string},
 ) => {
-  await bsky.db.db
+  await gndr.db.db
     .insertInto('label')
     .values({
       uri: opts.uri,

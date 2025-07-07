@@ -1,6 +1,6 @@
 import {
   $Typed,
-  ChatBskyConvoDefs,
+  ChatGndrConvoDefs,
   ComAtprotoModerationCreateReport,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -34,7 +34,7 @@ export function useSubmitReportMutation() {
       let report:
         | ComAtprotoModerationCreateReport.InputSchema
         | (Omit<ComAtprotoModerationCreateReport.InputSchema, 'subject'> & {
-            subject: $Typed<ChatBskyConvoDefs.MessageRef>
+            subject: $Typed<ChatGndrConvoDefs.MessageRef>
           })
 
       switch (subject.type) {
@@ -69,7 +69,7 @@ export function useSubmitReportMutation() {
             reasonType: state.selectedOption.reason,
             reason: state.details,
             subject: {
-              $type: 'chat.bsky.convo.defs#messageRef',
+              $type: 'chat.gndr.convo.defs#messageRef',
               messageId: subject.message.id,
               convoId: subject.convoId,
               did: subject.message.sender.did,

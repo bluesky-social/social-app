@@ -1,4 +1,4 @@
-import {type BskyAgent, type ChatBskyConvoGetLog} from '@atproto/api'
+import {type GndrAgent, type ChatGndrConvoGetLog} from '@atproto/api'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -24,7 +24,7 @@ const logger = Logger.create(Logger.Context.DMsAgent)
 export class MessagesEventBus {
   private id: string
 
-  private agent: BskyAgent
+  private agent: GndrAgent
   private emitter = new EventEmitter<{event: [MessagesEventBusEvent]}>()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing
@@ -240,7 +240,7 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
+        return this.agent.chat.gndr.convo.getLog(
           {},
           {headers: DM_SERVICE_HEADERS},
         )
@@ -336,7 +336,7 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
+        return this.agent.chat.gndr.convo.getLog(
           {
             cursor: this.latestRev,
           },
@@ -349,7 +349,7 @@ export class MessagesEventBus {
       const {logs: events} = response.data
 
       let needsEmit = false
-      let batch: ChatBskyConvoGetLog.OutputSchema['logs'] = []
+      let batch: ChatGndrConvoGetLog.OutputSchema['logs'] = []
 
       for (const ev of events) {
         /*

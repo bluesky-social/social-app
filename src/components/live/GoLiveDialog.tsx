@@ -17,7 +17,7 @@ import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Select from '#/components/Select'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 import {LinkPreview} from './LinkPreview'
 import {useLiveLinkMetaQuery, useUpsertLiveStatusMutation} from './queries'
 import {displayDuration, useDebouncedValue} from './utils'
@@ -27,7 +27,7 @@ export function GoLiveDialog({
   profile,
 }: {
   control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -40,7 +40,7 @@ export function GoLiveDialog({
 // Possible durations: max 4 hours, 5 minute intervals
 const DURATIONS = Array.from({length: (4 * 60) / 5}).map((_, i) => (i + 1) * 5)
 
-function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
+function DialogInner({profile}: {profile: gndr.profile.AnyProfileView}) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()

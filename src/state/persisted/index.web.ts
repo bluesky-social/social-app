@@ -14,10 +14,10 @@ import {normalizeData} from './util'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
-const BSKY_STORAGE = 'BSKY_STORAGE'
+const GNDR_STORAGE = 'GNDR_STORAGE'
 
-const broadcast = new BroadcastChannel('BSKY_BROADCAST_CHANNEL')
-const UPDATE_EVENT = 'BSKY_UPDATE'
+const broadcast = new BroadcastChannel('GNDR_BROADCAST_CHANNEL')
+const UPDATE_EVENT = 'GNDR_UPDATE'
 
 let _state: Schema = defaults
 const _emitter = new EventEmitter()
@@ -84,7 +84,7 @@ onUpdate satisfies PersistedApi['onUpdate']
 
 export async function clearStorage() {
   try {
-    localStorage.removeItem(BSKY_STORAGE)
+    localStorage.removeItem(GNDR_STORAGE)
   } catch (e: any) {
     // Expected on the web in private mode.
   }
@@ -132,7 +132,7 @@ function writeToStorage(value: Schema) {
   const rawData = tryStringify(value)
   if (rawData) {
     try {
-      localStorage.setItem(BSKY_STORAGE, rawData)
+      localStorage.setItem(GNDR_STORAGE, rawData)
     } catch (e) {
       // Expected on the web in private mode.
     }
@@ -144,7 +144,7 @@ let lastResult: Schema | undefined
 function readFromStorage(): Schema | undefined {
   let rawData: string | null = null
   try {
-    rawData = localStorage.getItem(BSKY_STORAGE)
+    rawData = localStorage.getItem(GNDR_STORAGE)
   } catch (e) {
     // Expected on the web in private mode.
   }

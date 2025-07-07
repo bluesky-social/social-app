@@ -1,4 +1,4 @@
-import {BskyAgent} from '@atproto/api'
+import {GndrAgent} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {device} from '#/storage'
@@ -86,7 +86,7 @@ export function configureAdditionalModerationAuthorities() {
   }
 
   const appLabelers = Array.from(
-    new Set([...BskyAgent.appLabelers, ...additionalLabelers]),
+    new Set([...GndrAgent.appLabelers, ...additionalLabelers]),
   )
 
   logger.info(`applying mod authorities`, {
@@ -94,5 +94,5 @@ export function configureAdditionalModerationAuthorities() {
     appLabelers,
   })
 
-  BskyAgent.configure({appLabelers})
+  GndrAgent.configure({appLabelers})
 }

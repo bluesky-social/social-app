@@ -117,4 +117,6 @@ src/locale/locales/**/*.js
 *.ipa
 
 # ogcard assets
-bskyogcard/src/assets/fonts/noto-*
+gndrogcard/src/assets/fonts/noto-*
+
+.mise.toml

@@ -2,8 +2,8 @@ import React, {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   $Typed,
-  AppBskyActorDefs,
-  ChatBskyConvoDefs,
+  AppGndrActorDefs,
+  ChatGndrConvoDefs,
   ComAtprotoModerationCreateReport,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -40,7 +40,7 @@ import {MessageItemMetadata} from './MessageItem'
 type ReportDialogParams = {
   type: 'convoMessage'
   convoId: string
-  message: ChatBskyConvoDefs.MessageView
+  message: ChatGndrConvoDefs.MessageView
 }
 
 let ReportDialog = ({
@@ -155,8 +155,8 @@ function SubmitStep({
     mutationFn: async () => {
       if (params.type === 'convoMessage') {
         const {convoId, message} = params
-        const subject: $Typed<ChatBskyConvoDefs.MessageRef> = {
-          $type: 'chat.bsky.convo.defs#messageRef',
+        const subject: $Typed<ChatGndrConvoDefs.MessageRef> = {
+          $type: 'chat.gndr.convo.defs#messageRef',
           messageId: message.id,
           convoId,
           did: message.sender.did,
@@ -198,7 +198,7 @@ function SubmitStep({
         <Text style={[a.text_2xl, a.font_bold]}>{copy.title}</Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           <Trans>
-            Your report will be sent to the Bluesky Moderation Service
+            Your report will be sent to the Gander Moderation Service
           </Trans>
         </Text>
       </View>
@@ -287,7 +287,7 @@ function DoneStep({
 }: {
   convoId: string
   currentScreen: 'list' | 'conversation'
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
@@ -395,7 +395,7 @@ function DoneStep({
   )
 }
 
-function PreviewMessage({message}: {message: ChatBskyConvoDefs.MessageView}) {
+function PreviewMessage({message}: {message: ChatGndrConvoDefs.MessageView}) {
   const t = useTheme()
   const rt = useMemo(() => {
     return new RichTextAPI({text: message.text, facets: message.facets})

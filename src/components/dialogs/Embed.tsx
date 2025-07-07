@@ -1,6 +1,6 @@
 import {memo, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
+import {AppGndrActorDefs, AppGndrFeedPost, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -24,10 +24,10 @@ export type ColorModeValues = 'system' | 'light' | 'dark'
 
 type EmbedDialogProps = {
   control: Dialog.DialogControlProps
-  postAuthor: AppBskyActorDefs.ProfileViewBasic
+  postAuthor: AppGndrActorDefs.ProfileViewBasic
   postCid: string
   postUri: string
-  record: AppBskyFeedPost.Record
+  record: AppGndrFeedPost.Record
   timestamp: string
 }
 
@@ -79,13 +79,13 @@ function EmbedDialogInner({
 
     // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
     // DO NOT ADD ANY NEW INTERPOLATIONS BELOW WITHOUT ESCAPING THEM!
-    // Also, keep this code synced with the bskyembed code in landing.tsx.
+    // Also, keep this code synced with the gndrembed code in landing.tsx.
     // x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x
-    return `<blockquote class="bluesky-embed" data-bluesky-uri="${escapeHtml(
+    return `<blockquote class="gander-embed" data-gander-uri="${escapeHtml(
       postUri,
-    )}" data-bluesky-cid="${escapeHtml(
+    )}" data-gander-cid="${escapeHtml(
       postCid,
-    )}" data-bluesky-embed-color-mode="${escapeHtml(
+    )}" data-gander-embed-color-mode="${escapeHtml(
       colorMode,
     )}"><p lang="${escapeHtml(lang)}">${escapeHtml(record.text)}${
       record.embed

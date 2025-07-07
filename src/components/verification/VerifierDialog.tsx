@@ -14,7 +14,7 @@ import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export {useDialogControl} from '#/components/Dialog'
 
@@ -24,7 +24,7 @@ export function VerifierDialog({
   verificationState,
 }: {
   control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   verificationState: FullVerificationState
 }) {
   return (
@@ -45,7 +45,7 @@ function Inner({
   control,
 }: {
   control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   verificationState: FullVerificationState
 }) {
   const t = useTheme()
@@ -83,7 +83,7 @@ function Inner({
               },
             ]}
             alt={_(
-              msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
+              msg`An illustration showing that Gander selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
             )}
           />
         </View>
@@ -99,7 +99,7 @@ function Inner({
                 <VerifierCheck width={14} />
               </RNText>{' '}
               can verify others. These trusted verifiers are selected by
-              Bluesky.
+              Gander.
             </Trans>
           </Text>
         </View>
@@ -114,7 +114,7 @@ function Inner({
           <Link
             overridePresentation
             to={urls.website.blog.initialVerificationAnnouncement}
-            label={_(msg`Learn more about verification on Bluesky`)}
+            label={_(msg`Learn more about verification on Gander`)}
             size="small"
             variant="solid"
             color="primary"

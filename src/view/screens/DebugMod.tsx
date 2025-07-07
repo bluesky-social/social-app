@@ -1,9 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  type AppGndrFeedPost,
   type ComAtprotoLabelDefs,
   interpretLabelValueDefinition,
   type LabelPreference,
@@ -112,33 +112,33 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               }),
             ]
           : scenario[0] === 'label' && target[0] === 'profile'
-            ? [
-                mock.label({
-                  src: isSelfLabel ? did : undefined,
-                  val: label[0],
-                  uri: `at://${did}/app.bsky.actor.profile/self`,
-                }),
-              ]
-            : undefined,
+          ? [
+              mock.label({
+                src: isSelfLabel ? did : undefined,
+                val: label[0],
+                uri: `at://${did}/app.gndr.actor.profile/self`,
+              }),
+            ]
+          : undefined,
       viewer: mock.actorViewerState({
         following: isFollowing
-          ? `at://${currentAccount?.did || ''}/app.bsky.graph.follow/1234`
+          ? `at://${currentAccount?.did || ''}/app.gndr.graph.follow/1234`
           : undefined,
         muted: scenario[0] === 'mute',
         mutedByList: undefined,
         blockedBy: undefined,
         blocking:
           scenario[0] === 'block'
-            ? `at://did:web:alice.test/app.bsky.actor.block/fake`
+            ? `at://did:web:alice.test/app.gndr.actor.block/fake`
             : undefined,
         blockingByList: undefined,
       }),
     })
     mockedProfile.did = did
-    mockedProfile.avatar = 'https://bsky.social/about/images/favicon-32x32.png'
+    mockedProfile.avatar = 'https://gndr.social/about/images/favicon-32x32.png'
     // @ts-expect-error ProfileViewBasic is close enough -esb
     mockedProfile.banner =
-      'https://bsky.social/about/images/social-card-default-gradient.png'
+      'https://gndr.social/about/images/social-card-default-gradient.png'
     return mockedProfile
   }, [scenario, target, label, isSelfLabel, did, isFollowing, currentAccount])
 
@@ -154,7 +154,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               mock.label({
                 src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at://${did}/app.bsky.feed.post/fake`,
+                uri: `at://${did}/app.gndr.feed.post/fake`,
               }),
             ]
           : undefined,
@@ -170,20 +170,20 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                       mock.label({
                         src: isSelfLabel ? did : undefined,
                         val: label[0],
-                        uri: `at://${did}/app.bsky.feed.post/fake`,
+                        uri: `at://${did}/app.gndr.feed.post/fake`,
                       }),
                     ]
                   : undefined,
               author: profile,
             })
           : {
-              $type: 'app.bsky.embed.images#view',
+              $type: 'app.gndr.embed.images#view',
               images: [
                 {
                   thumb:
-                    'https://bsky.social/about/images/social-card-default-gradient.png',
+                    'https://gndr.social/about/images/social-card-default-gradient.png',
                   fullsize:
-                    'https://bsky.social/about/images/social-card-default-gradient.png',
+                    'https://gndr.social/about/images/social-card-default-gradient.png',
                   alt: '',
                 },
               ],
@@ -197,11 +197,11 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         text: "This is the body of the post. It's where the text goes. You get the idea.",
         reply: {
           parent: {
-            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
+            uri: `at://${did}/app.gndr.feed.post/fake-parent`,
             cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
           },
           root: {
-            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
+            uri: `at://${did}/app.gndr.feed.post/fake-parent`,
             cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
           },
         },
@@ -213,14 +213,14 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               mock.label({
                 src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at://${did}/app.bsky.feed.post/fake`,
+                uri: `at://${did}/app.gndr.feed.post/fake`,
               }),
             ]
           : undefined,
     })
     const [item] = groupNotifications([notif])
     item.subject = mock.postView({
-      record: notif.record as AppBskyFeedPost.Record,
+      record: notif.record as AppGndrFeedPost.Record,
       author: profile,
       labels: notif.labels,
     })
@@ -809,7 +809,7 @@ function MockPostFeedItem({
   post,
   moderation,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: AppGndrFeedDefs.PostView
   moderation: ModerationDecision
 }) {
   const t = useTheme()
@@ -823,7 +823,7 @@ function MockPostFeedItem({
   return (
     <PostFeedItem
       post={post}
-      record={post.record as AppBskyFeedPost.Record}
+      record={post.record as AppGndrFeedPost.Record}
       moderation={moderation}
       parentAuthor={undefined}
       showReplyTo={false}
@@ -840,7 +840,7 @@ function MockPostThreadItem({
   moderation,
   reply,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: AppGndrFeedDefs.PostView
   moderation: ModerationDecision
   reply?: boolean
 }) {
@@ -848,7 +848,7 @@ function MockPostThreadItem({
     <PostThreadItem
       // @ts-ignore
       post={post}
-      record={post.record as AppBskyFeedPost.Record}
+      record={post.record as AppGndrFeedPost.Record}
       moderation={moderation}
       depth={reply ? 1 : 0}
       isHighlightedPost={!reply}
@@ -890,7 +890,7 @@ function MockAccountCard({
   profile,
   moderation,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppGndrActorDefs.ProfileViewBasic
   moderation: ModerationDecision
 }) {
   const t = useTheme()
@@ -914,7 +914,7 @@ function MockAccountScreen({
   moderation,
   moderationOpts,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppGndrActorDefs.ProfileViewBasic
   moderation: ModerationDecision
   moderationOpts: ModerationOpts
 }) {

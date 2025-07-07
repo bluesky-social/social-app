@@ -97,7 +97,7 @@ export const ExternalEmbedLink = ({
             embed={{
               type: 'feed',
               view: {
-                $type: 'app.bsky.feed.defs#generatorView',
+                $type: 'app.gndr.feed.defs#generatorView',
                 ...data.view,
               },
             }}
@@ -109,7 +109,7 @@ export const ExternalEmbedLink = ({
             embed={{
               type: 'list',
               view: {
-                $type: 'app.bsky.graph.defs#listView',
+                $type: 'app.gndr.graph.defs#listView',
                 ...data.view,
               },
             }}

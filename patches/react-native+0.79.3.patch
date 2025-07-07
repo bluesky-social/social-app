@@ -81,7 +81,7 @@ index 53bfd04..ff1b1ed 100644
 +  }
 +}
 +
-+// This method is used by Bluesky's ExpoScrollForwarder. This allows other React Native
++// This method is used by Gander's ExpoScrollForwarder. This allows other React Native
 +// libraries to perform a refresh of a scrollview and access the refresh control's onRefresh
 +// function.
 +- (void)forwarderBeginRefreshing

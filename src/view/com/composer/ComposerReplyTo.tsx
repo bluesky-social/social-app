@@ -2,10 +2,10 @@ import {useCallback, useMemo, useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 import {
-  AppBskyEmbedImages,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyFeedPost,
+  AppGndrEmbedImages,
+  AppGndrEmbedRecord,
+  AppGndrEmbedRecordWithMedia,
+  AppGndrFeedPost,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -19,7 +19,7 @@ import {QuoteEmbed} from '#/components/Post/Embed'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {parseEmbed} from '#/types/bsky/post'
+import {parseEmbed} from '#/types/gndr/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
@@ -38,15 +38,15 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
 
   const quoteEmbed = useMemo(() => {
     if (
-      AppBskyEmbedRecord.isView(embed) &&
-      AppBskyEmbedRecord.isViewRecord(embed.record) &&
-      AppBskyFeedPost.isRecord(embed.record.value)
+      AppGndrEmbedRecord.isView(embed) &&
+      AppGndrEmbedRecord.isViewRecord(embed.record) &&
+      AppGndrFeedPost.isRecord(embed.record.value)
     ) {
       return embed
     } else if (
-      AppBskyEmbedRecordWithMedia.isView(embed) &&
-      AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-      AppBskyFeedPost.isRecord(embed.record.record.value)
+      AppGndrEmbedRecordWithMedia.isView(embed) &&
+      AppGndrEmbedRecord.isViewRecord(embed.record.record) &&
+      AppGndrFeedPost.isRecord(embed.record.record.value)
     ) {
       return embed.record
     }
@@ -54,17 +54,17 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   }, [embed])
   const parsedQuoteEmbed = quoteEmbed
     ? parseEmbed({
-        $type: 'app.bsky.embed.record#view',
+        $type: 'app.gndr.embed.record#view',
         ...quoteEmbed,
       })
     : null
 
   const images = useMemo(() => {
-    if (AppBskyEmbedImages.isView(embed)) {
+    if (AppGndrEmbedImages.isView(embed)) {
       return embed.images
     } else if (
-      AppBskyEmbedRecordWithMedia.isView(embed) &&
-      AppBskyEmbedImages.isView(embed.media)
+      AppGndrEmbedRecordWithMedia.isView(embed) &&
+      AppGndrEmbedImages.isView(embed.media)
     ) {
       return embed.media.images
     }
@@ -142,7 +142,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
 function ComposerReplyToImages({
   images,
 }: {
-  images: AppBskyEmbedImages.ViewImage[]
+  images: AppGndrEmbedImages.ViewImage[]
   showFull: boolean
 }) {
   return (

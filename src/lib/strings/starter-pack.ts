@@ -1,6 +1,6 @@
 import {AtUri} from '@atproto/api'
 
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function createStarterPackLinkFromAndroidReferrer(
   referrerQueryString: string,
@@ -12,7 +12,7 @@ export function createStarterPackLinkFromAndroidReferrer(
     const utmSource = url.searchParams.get('utm_source')
 
     if (!utmContent) return null
-    if (utmSource !== 'bluesky') return null
+    if (utmSource !== 'gander') return null
 
     // This should be a string like `starterpack_haileyok.com_rkey`
     const contentParts = utmContent.split('_')
@@ -20,7 +20,7 @@ export function createStarterPackLinkFromAndroidReferrer(
     if (contentParts[0] !== 'starterpack') return null
     if (contentParts.length !== 3) return null
 
-    return `at://${contentParts[1]}/app.bsky.graph.starterpack/${contentParts[2]}`
+    return `at://${contentParts[1]}/app.gndr.graph.starterpack/${contentParts[2]}`
   } catch (e) {
     return null
   }
@@ -35,7 +35,7 @@ export function parseStarterPackUri(uri?: string): {
   try {
     if (uri.startsWith('at://')) {
       const atUri = new AtUri(uri)
-      if (atUri.collection !== 'app.bsky.graph.starterpack') return null
+      if (atUri.collection !== 'app.gndr.graph.starterpack') return null
       if (atUri.rkey) {
         return {
           name: atUri.hostname,
@@ -66,7 +66,7 @@ export function createStarterPackGooglePlayUri(
   rkey: string,
 ): string | null {
   if (!name || !rkey) return null
-  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}`
+  return `https://play.google.com/store/apps/details?id=xyz.ganderweb.app&referrer=utm_source%3Dgander%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}`
 }
 
 export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
@@ -77,18 +77,18 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 
   if (httpUri.startsWith('at://')) return httpUri
 
-  return `at://${parsed.name}/app.bsky.graph.starterpack/${parsed.rkey}`
+  return `at://${parsed.name}/app.gndr.graph.starterpack/${parsed.rkey}`
 }
 
 export function getStarterPackOgCard(
-  didOrStarterPack: bsky.starterPack.AnyStarterPackView | string,
+  didOrStarterPack: gndr.starterPack.AnyStarterPackView | string,
   rkey?: string,
 ) {
   if (typeof didOrStarterPack === 'string') {
-    return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack}/${rkey}`
+    return `https://ogcard.cdn.gndr.app/start/${didOrStarterPack}/${rkey}`
   } else {
     const rkey = new AtUri(didOrStarterPack.uri).rkey
-    return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${rkey}`
+    return `https://ogcard.cdn.gndr.app/start/${didOrStarterPack.creator.did}/${rkey}`
   }
 }
 
@@ -99,7 +99,7 @@ export function createStarterPackUri({
   did: string
   rkey: string
 }): string {
-  return new AtUri(`at://${did}/app.bsky.graph.starterpack/${rkey}`).toString()
+  return new AtUri(`at://${did}/app.gndr.graph.starterpack/${rkey}`).toString()
 }
 
 export function startUriToStarterPackUri(uri: string) {

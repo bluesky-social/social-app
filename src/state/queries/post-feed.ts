@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
-  type AppBskyActorDefs,
-  AppBskyFeedDefs,
-  type AppBskyFeedPost,
+  type AppGndrActorDefs,
+  AppGndrFeedDefs,
+  type AppGndrFeedPost,
   AtUri,
-  type BskyAgent,
+  type GndrAgent,
   moderatePost,
   type ModerationDecision,
 } from '@atproto/api'
@@ -29,7 +29,7 @@ import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
-import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
+import {GNDR_FEED_OWNER_DIDS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -80,10 +80,10 @@ export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
 export interface FeedPostSliceItem {
   _reactKey: string
   uri: string
-  post: AppBskyFeedDefs.PostView
-  record: AppBskyFeedPost.Record
+  post: AppGndrFeedDefs.PostView
+  record: AppGndrFeedPost.Record
   moderation: ModerationDecision
-  parentAuthor?: AppBskyActorDefs.ProfileViewBasic
+  parentAuthor?: AppGndrActorDefs.ProfileViewBasic
   isParentBlocked?: boolean
   isParentNotFound?: boolean
 }
@@ -98,8 +98,8 @@ export interface FeedPostSlice {
   reqId: string | undefined
   feedPostUri: string
   reason?:
-    | AppBskyFeedDefs.ReasonRepost
-    | AppBskyFeedDefs.ReasonPin
+    | AppGndrFeedDefs.ReasonRepost
+    | AppGndrFeedDefs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
 }
@@ -107,7 +107,7 @@ export interface FeedPostSlice {
 export interface FeedPageUnselected {
   api: FeedAPI
   cursor: string | undefined
-  feed: AppBskyFeedDefs.FeedViewPost[]
+  feed: AppGndrFeedDefs.FeedViewPost[]
   fetchedAt: number
 }
 
@@ -221,9 +221,9 @@ export function usePostFeedQuery(
 
         if (
           feedDescParts[0] === 'feedgen' &&
-          BSKY_FEED_OWNER_DIDS.includes(feedOwnerDid)
+          GNDR_FEED_OWNER_DIDS.includes(feedOwnerDid)
         ) {
-          logger.error(`Bluesky feed may be offline: ${feedOwnerDid}`, {
+          logger.error(`Gander feed may be offline: ${feedOwnerDid}`, {
             feedDesc,
             jsError: e,
           })
@@ -457,7 +457,7 @@ function createApi({
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
-  agent: BskyAgent
+  agent: GndrAgent
   enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
@@ -505,7 +505,7 @@ function createApi({
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<AppGndrFeedDefs.PostView, undefined> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<
@@ -528,7 +528,7 @@ export function* findAllPostsInQueryData(
           yield embedViewRecordToPostView(quotedPost)
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+        if (AppGndrFeedDefs.isPostView(item.reply?.parent)) {
           if (didOrHandleUriMatches(atUri, item.reply.parent)) {
             yield item.reply.parent
           }
@@ -542,7 +542,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+        if (AppGndrFeedDefs.isPostView(item.reply?.root)) {
           if (didOrHandleUriMatches(atUri, item.reply.root)) {
             yield item.reply.root
           }
@@ -560,7 +560,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
+): Generator<AppGndrActorDefs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
@@ -580,13 +580,13 @@ export function* findAllProfilesInQueryData(
           yield quotedPost.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.parent) &&
+          AppGndrFeedDefs.isPostView(item.reply?.parent) &&
           item.reply?.parent?.author.did === did
         ) {
           yield item.reply.parent.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.root) &&
+          AppGndrFeedDefs.isPostView(item.reply?.root) &&
           item.reply?.root?.author.did === did
         ) {
           yield item.reply.root.author
@@ -596,7 +596,7 @@ export function* findAllProfilesInQueryData(
   }
 }
 
-function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
+function assertSomePostsPassModeration(feed: AppGndrFeedDefs.FeedViewPost[]) {
   // no posts in this feed
   if (feed.length === 0) return true
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AppGndrFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -92,7 +92,7 @@ type FlatlistSlice =
       type: 'popularFeed'
       key: string
       feedUri: string
-      feed: AppBskyFeedDefs.GeneratorView
+      feed: AppGndrFeedDefs.GeneratorView
     }
   | {
       type: 'popularFeedsLoadingMore'

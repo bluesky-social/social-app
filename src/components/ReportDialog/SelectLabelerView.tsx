@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {AppGndrLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -14,7 +14,7 @@ import {ReportDialogProps} from './types'
 export function SelectLabelerView({
   ...props
 }: ReportDialogProps & {
-  labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
+  labelers: AppGndrLabelerDefs.LabelerViewDetailed[]
   onSelectLabeler: (v: string) => void
 }) {
   const t = useTheme()
@@ -53,7 +53,7 @@ export function SelectLabelerView({
 function LabelerButton({
   labeler,
 }: {
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
+  labeler: AppGndrLabelerDefs.LabelerViewDetailed
 }) {
   const t = useTheme()
   const {hovered, pressed} = useButtonContext()

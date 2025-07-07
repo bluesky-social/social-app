@@ -1,5 +1,5 @@
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
+import {AppGndrFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -78,7 +78,7 @@ export function LabelsOnMyPost({
   post,
   style,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: AppGndrFeedDefs.PostView
   style?: StyleProp<ViewStyle>
 }) {
   const {currentAccount} = useSession()

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -102,7 +102,7 @@ function AccountItem({
   isCurrentAccount,
   isPendingAccount,
 }: {
-  profile?: AppBskyActorDefs.ProfileViewDetailed
+  profile?: AppGndrActorDefs.ProfileViewDetailed
   account: SessionAccount
   onSelect: (account: SessionAccount) => void
   isCurrentAccount: boolean

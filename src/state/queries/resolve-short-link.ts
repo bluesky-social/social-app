@@ -4,7 +4,7 @@ import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {STALE} from '#/state/queries/index'
 
-const ROOT_URI = 'https://go.bsky.app/'
+const ROOT_URI = 'https://go.gndr.app/'
 
 const RQKEY_ROOT = 'resolved-short-link'
 export const RQKEY = (code: string) => [RQKEY_ROOT, code]

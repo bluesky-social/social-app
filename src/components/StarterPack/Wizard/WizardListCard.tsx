@@ -1,13 +1,13 @@
 import {Keyboard, View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
+  AppGndrActorDefs,
+  AppGndrFeedDefs,
   moderateFeedGenerator,
   moderateProfile,
   ModerationOpts,
   ModerationUI,
 } from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {GeneratorView} from '@atproto/api/dist/client/types/app/gndr/feed/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -22,7 +22,7 @@ import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 function WizardListCard({
   type,
@@ -37,8 +37,8 @@ function WizardListCard({
 }: {
   type: 'user' | 'algo'
   btnType: 'checkbox' | 'remove'
-  profile?: AppBskyActorDefs.ProfileViewBasic
-  feed?: AppBskyFeedDefs.GeneratorView
+  profile?: AppGndrActorDefs.ProfileViewBasic
+  feed?: AppGndrFeedDefs.GeneratorView
   displayName: string
   subtitle: string
   onPress: () => void
@@ -124,7 +124,7 @@ export function WizardProfileCard({
   btnType: 'checkbox' | 'remove'
   state: WizardState
   dispatch: (action: WizardAction) => void
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const {currentAccount} = useSession()

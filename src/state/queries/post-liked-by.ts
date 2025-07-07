@@ -1,4 +1,4 @@
-import {AppBskyActorDefs, AppBskyFeedGetLikes} from '@atproto/api'
+import {AppGndrActorDefs, AppGndrFeedGetLikes} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -18,9 +18,9 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 export function useLikedByQuery(resolvedUri: string | undefined) {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyFeedGetLikes.OutputSchema,
+    AppGndrFeedGetLikes.OutputSchema,
     Error,
-    InfiniteData<AppBskyFeedGetLikes.OutputSchema>,
+    InfiniteData<AppGndrFeedGetLikes.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
@@ -42,9 +42,9 @@ export function useLikedByQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedGetLikes.OutputSchema>
+    InfiniteData<AppGndrFeedGetLikes.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })

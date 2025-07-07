@@ -13,7 +13,7 @@ import {
   type TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppGndrRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
   type PastedFile,
   type PasteInputRef, // @ts-expect-error no types when installing from github
@@ -110,7 +110,7 @@ export const TextInput = forwardRef(function TextInputImpl(
       if (newRt.facets) {
         for (const facet of newRt.facets) {
           for (const feature of facet.features) {
-            if (AppBskyRichtextFacet.isLink(feature)) {
+            if (AppGndrRichtextFacet.isLink(feature)) {
               if (isUriImage(feature.uri)) {
                 const res = await downloadAndResize({
                   uri: feature.uri,

@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
+import {AppGndrActorDefs as ActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

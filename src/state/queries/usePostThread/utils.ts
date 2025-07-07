@@ -13,12 +13,12 @@ import {
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
 import {isDevMode} from '#/storage/hooks/dev-mode'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function getThreadgateRecord(
   view: AppBskyUnspeccedGetPostThreadV2.OutputSchema['threadgate'],
 ) {
-  return bsky.dangerousIsType<AppBskyFeedThreadgate.Record>(
+  return gndr.dangerousIsType<AppBskyFeedThreadgate.Record>(
     view?.record,
     AppBskyFeedThreadgate.isRecord,
   )
@@ -28,7 +28,7 @@ export function getThreadgateRecord(
 
 export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
   if (
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    gndr.dangerousIsType<AppBskyFeedPost.Record>(
       post.record,
       AppBskyFeedPost.isRecord,
     )

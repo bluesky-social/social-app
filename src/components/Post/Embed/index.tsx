@@ -24,12 +24,12 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 import {
   type Embed as TEmbed,
   type EmbedType,
   parseEmbed,
-} from '#/types/bsky/post'
+} from '#/types/gndr/post'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
@@ -229,7 +229,7 @@ export function QuoteEmbed({
   const quote = React.useMemo<$Typed<AppBskyFeedDefs.PostView>>(
     () => ({
       ...embed.view,
-      $type: 'app.bsky.feed.defs#postView',
+      $type: 'app.gndr.feed.defs#postView',
       record: embed.view.value,
       embed: embed.view.embeds?.[0],
     }),
@@ -248,7 +248,7 @@ export function QuoteEmbed({
 
   const richText = React.useMemo(() => {
     if (
-      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      !gndr.dangerousIsType<AppBskyFeedPost.Record>(
         quote.record,
         AppBskyFeedPost.isRecord,
       )

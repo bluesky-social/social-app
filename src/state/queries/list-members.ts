@@ -1,8 +1,8 @@
 import {
-  type AppBskyActorDefs,
-  type AppBskyGraphDefs,
-  type AppBskyGraphGetList,
-  type BskyAgent,
+  type AppGndrActorDefs,
+  type AppGndrGraphDefs,
+  type AppGndrGraphGetList,
+  type GndrAgent,
 } from '@atproto/api'
 import {
   type InfiniteData,
@@ -26,16 +26,16 @@ export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri]
 export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyGraphGetList.OutputSchema,
+    AppGndrGraphGetList.OutputSchema,
     Error,
-    InfiniteData<AppBskyGraphGetList.OutputSchema>,
+    InfiniteData<AppGndrGraphGetList.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri ?? ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getList({
+      const res = await agent.app.gndr.graph.getList({
         list: uri!, // the enabled flag will prevent this from running until uri is set
         limit,
         cursor: pageParam,
@@ -60,14 +60,14 @@ export function useAllListMembersQuery(uri?: string) {
   })
 }
 
-export async function getAllListMembers(agent: BskyAgent, uri: string) {
+export async function getAllListMembers(agent: GndrAgent, uri: string) {
   let hasMore = true
   let cursor: string | undefined
-  const listItems: AppBskyGraphDefs.ListItemView[] = []
+  const listItems: AppGndrGraphDefs.ListItemView[] = []
   // We want to cap this at 6 pages, just for anything weird happening with the api
   let i = 0
   while (hasMore && i < 6) {
-    const res = await agent.app.bsky.graph.getList({
+    const res = await agent.app.gndr.graph.getList({
       list: uri,
       limit: 50,
       cursor,
@@ -93,9 +93,9 @@ export async function invalidateListMembersQuery({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyGraphGetList.OutputSchema>
+    InfiniteData<AppGndrGraphGetList.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })
@@ -116,7 +116,7 @@ export function* findAllProfilesInQueryData(
   }
 
   const allQueryData = queryClient.getQueriesData<
-    AppBskyGraphDefs.ListItemView[]
+    AppGndrGraphDefs.ListItemView[]
   >({
     queryKey: [RQKEY_ROOT_ALL],
   })

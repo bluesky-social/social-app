@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
-import {type AppBskyActorDefs, type AppBskyNotificationDefs} from '@atproto/api'
+import {type AppGndrActorDefs, type AppGndrNotificationDefs} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
@@ -23,7 +23,7 @@ import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} 
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '#/state/queries/suggested-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedUsersQueryData} from '#/state/queries/trending/useGetSuggestedUsersQuery'
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 import {castAsShadow, type Shadow} from './types'
 
 export type {Shadow} from './types'
@@ -32,19 +32,19 @@ export interface ProfileShadow {
   followingUri: string | undefined
   muted: boolean | undefined
   blockingUri: string | undefined
-  verification: AppBskyActorDefs.VerificationState
-  status: AppBskyActorDefs.StatusView | undefined
-  activitySubscription: AppBskyNotificationDefs.ActivitySubscription | undefined
+  verification: AppGndrActorDefs.VerificationState
+  status: AppGndrActorDefs.StatusView | undefined
+  activitySubscription: AppGndrNotificationDefs.ActivitySubscription | undefined
 }
 
 const shadows: WeakMap<
-  bsky.profile.AnyProfileView,
+  gndr.profile.AnyProfileView,
   Partial<ProfileShadow>
 > = new WeakMap()
 const emitter = new EventEmitter()
 
 export function useProfileShadow<
-  TProfileView extends bsky.profile.AnyProfileView,
+  TProfileView extends gndr.profile.AnyProfileView,
 >(profile: TProfileView): Shadow<TProfileView> {
   const [shadow, setShadow] = useState(() => shadows.get(profile))
   const [prevPost, setPrevPost] = useState(profile)
@@ -77,7 +77,7 @@ export function useProfileShadow<
  * This is useful for when the profile is not guaranteed to be loaded yet.
  */
 export function useMaybeProfileShadow<
-  TProfileView extends bsky.profile.AnyProfileView,
+  TProfileView extends gndr.profile.AnyProfileView,
 >(profile?: TProfileView): Shadow<TProfileView> | undefined {
   const [shadow, setShadow] = useState(() =>
     profile ? shadows.get(profile) : undefined,
@@ -124,7 +124,7 @@ export function updateProfileShadow(
   })
 }
 
-function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
+function mergeShadow<TProfileView extends gndr.profile.AnyProfileView>(
   profile: TProfileView,
   shadow: Partial<ProfileShadow>,
 ): Shadow<TProfileView> {
@@ -158,7 +158,7 @@ function mergeShadow<TProfileView extends bsky.profile.AnyProfileView>(
 function* findProfilesInCache(
   queryClient: QueryClient,
   did: string,
-): Generator<bsky.profile.AnyProfileView, void> {
+): Generator<gndr.profile.AnyProfileView, void> {
   yield* findAllProfilesInListMembersQueryData(queryClient, did)
   yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did)
   yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)

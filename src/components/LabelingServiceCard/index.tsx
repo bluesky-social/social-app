@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {AppGndrLabelerDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,7 +16,7 @@ import {Text} from '#/components/Typography'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '../icons/Chevron'
 
 type LabelingServiceProps = {
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
+  labeler: AppGndrLabelerDefs.LabelerViewDetailed
 }
 
 export function Outer({
@@ -187,7 +187,7 @@ export function Loader({
   loading?: React.ComponentType<{}>
   error?: React.ComponentType<{error: string}>
   component: React.ComponentType<{
-    labeler: AppBskyLabelerDefs.LabelerViewDetailed
+    labeler: AppGndrLabelerDefs.LabelerViewDetailed
   }>
 }) {
   const {isLoading, data, error} = useLabelerInfoQuery({did})

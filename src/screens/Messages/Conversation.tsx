@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
+  type AppGndrActorDefs,
   moderateProfile,
   type ModerationDecision,
 } from '@atproto/api'
@@ -182,7 +182,7 @@ function InnerReady({
   setHasScrolled,
 }: {
   moderation: ModerationDecision
-  recipient: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  recipient: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {

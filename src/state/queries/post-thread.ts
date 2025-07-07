@@ -1,9 +1,9 @@
 import {
-  type AppBskyActorDefs,
-  type AppBskyEmbedRecord,
-  AppBskyFeedDefs,
-  type AppBskyFeedGetPostThread,
-  AppBskyFeedPost,
+  type AppGndrActorDefs,
+  type AppGndrEmbedRecord,
+  AppGndrFeedDefs,
+  type AppGndrFeedGetPostThread,
+  AppGndrFeedPost,
   AtUri,
   moderatePost,
   type ModerationDecision,
@@ -22,7 +22,7 @@ import {
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
 } from '#/state/queries/search-posts'
 import {useAgent} from '#/state/session'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 import {
   findAllPostsInQueryData as findAllPostsInNotifsQueryData,
   findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
@@ -40,7 +40,7 @@ import {
 const REPLY_TREE_DEPTH = 10
 export const RQKEY_ROOT = 'post-thread'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
-type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
+type ThreadViewNode = AppGndrFeedGetPostThread.OutputSchema['thread']
 
 export interface ThreadCtx {
   depth: number
@@ -56,8 +56,8 @@ export type ThreadPost = {
   type: 'post'
   _reactKey: string
   uri: string
-  post: AppBskyFeedDefs.PostView
-  record: AppBskyFeedPost.Record
+  post: AppGndrFeedDefs.PostView
+  record: AppGndrFeedPost.Record
   parent: ThreadNode | undefined
   replies: ThreadNode[] | undefined
   hasOPLike: boolean | undefined
@@ -93,7 +93,7 @@ export type ThreadModerationCache = WeakMap<ThreadNode, ModerationDecision>
 
 export type PostThreadQueryData = {
   thread: ThreadNode
-  threadgate?: AppBskyFeedDefs.ThreadgateView
+  threadgate?: AppGndrFeedDefs.ThreadgateView
 }
 
 export function usePostThreadQuery(uri: string | undefined) {
@@ -113,7 +113,7 @@ export function usePostThreadQuery(uri: string | undefined) {
         return {
           thread,
           threadgate: res.data.threadgate as
-            | AppBskyFeedDefs.ThreadgateView
+            | AppGndrFeedDefs.ThreadgateView
             | undefined,
         }
       }
@@ -336,10 +336,10 @@ function responseToThreadNodes(
   direction: 'up' | 'down' | 'start' = 'start',
 ): ThreadNode {
   if (
-    AppBskyFeedDefs.isThreadViewPost(node) &&
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    AppGndrFeedDefs.isThreadViewPost(node) &&
+    gndr.dangerousIsType<AppGndrFeedPost.Record>(
       node.post.record,
-      AppBskyFeedPost.isRecord,
+      AppGndrFeedPost.isRecord,
     )
   ) {
     const post = node.post
@@ -376,9 +376,9 @@ function responseToThreadNodes(
         hasMoreSelfThread: false, // populated in `annotateSelfThread`
       },
     }
-  } else if (AppBskyFeedDefs.isBlockedPost(node)) {
+  } else if (AppGndrFeedDefs.isBlockedPost(node)) {
     return {type: 'blocked', _reactKey: node.uri, uri: node.uri, ctx: {depth}}
-  } else if (AppBskyFeedDefs.isNotFoundPost(node)) {
+  } else if (AppGndrFeedDefs.isNotFoundPost(node)) {
     return {type: 'not-found', _reactKey: node.uri, uri: node.uri, ctx: {depth}}
   } else {
     return {type: 'unknown', uri: ''}
@@ -510,7 +510,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
+): Generator<AppGndrActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<PostThreadQueryData>({
     queryKey: [RQKEY_ROOT],
   })
@@ -587,14 +587,14 @@ function threadNodeToPlaceholderThread(
 }
 
 function postViewToPlaceholderThread(
-  post: AppBskyFeedDefs.PostView,
+  post: AppGndrFeedDefs.PostView,
 ): ThreadNode {
   return {
     type: 'post',
     _reactKey: post.uri,
     uri: post.uri,
     post: post,
-    record: post.record as AppBskyFeedPost.Record, // validated in notifs
+    record: post.record as AppGndrFeedPost.Record, // validated in notifs
     parent: undefined,
     replies: undefined,
     hasOPLike: undefined,
@@ -602,21 +602,21 @@ function postViewToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      isParentLoading: !!(post.record as AppBskyFeedPost.Record).reply,
+      isParentLoading: !!(post.record as AppGndrFeedPost.Record).reply,
       isChildLoading: true, // assume yes (show the spinner) just in case
     },
   }
 }
 
 function embedViewRecordToPlaceholderThread(
-  record: AppBskyEmbedRecord.ViewRecord,
+  record: AppGndrEmbedRecord.ViewRecord,
 ): ThreadNode {
   return {
     type: 'post',
     _reactKey: record.uri,
     uri: record.uri,
     post: embedViewRecordToPostView(record),
-    record: record.value as AppBskyFeedPost.Record, // validated in getEmbeddedPost
+    record: record.value as AppGndrFeedPost.Record, // validated in getEmbeddedPost
     parent: undefined,
     replies: undefined,
     hasOPLike: undefined,
@@ -624,7 +624,7 @@ function embedViewRecordToPlaceholderThread(
       depth: 0,
       isHighlightedPost: true,
       hasMore: false,
-      isParentLoading: !!(record.value as AppBskyFeedPost.Record).reply,
+      isParentLoading: !!(record.value as AppGndrFeedPost.Record).reply,
       isChildLoading: true, // not available, so assume yes (to show the spinner)
     },
   }

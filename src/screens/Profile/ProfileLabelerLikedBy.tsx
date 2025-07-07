@@ -15,7 +15,7 @@ export function ProfileLabelerLikedByScreen({
 }: NativeStackScreenProps<CommonNavigatorParams, 'ProfileLabelerLikedBy'>) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {name: handleOrDid} = route.params
-  const uri = makeRecordUri(handleOrDid, 'app.bsky.labeler.service', 'self')
+  const uri = makeRecordUri(handleOrDid, 'app.gndr.labeler.service', 'self')
   const {_} = useLingui()
 
   useFocusEffect(

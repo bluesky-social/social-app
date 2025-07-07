@@ -1,4 +1,4 @@
-import {AppBskyActorDefs, AppBskyGraphGetFollowers} from '@atproto/api'
+import {AppGndrActorDefs, AppGndrGraphGetFollowers} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -17,15 +17,15 @@ export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 export function useProfileFollowersQuery(did: string | undefined) {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyGraphGetFollowers.OutputSchema,
+    AppGndrGraphGetFollowers.OutputSchema,
     Error,
-    InfiniteData<AppBskyGraphGetFollowers.OutputSchema>,
+    InfiniteData<AppGndrGraphGetFollowers.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getFollowers({
+      const res = await agent.app.gndr.graph.getFollowers({
         actor: did || '',
         limit: PAGE_SIZE,
         cursor: pageParam,
@@ -41,9 +41,9 @@ export function useProfileFollowersQuery(did: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyGraphGetFollowers.OutputSchema>
+    InfiniteData<AppGndrGraphGetFollowers.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })

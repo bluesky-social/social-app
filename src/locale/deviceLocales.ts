@@ -11,7 +11,7 @@ type LocalWithLanguageCode = Locale & {
  *
  * Handles legacy migration for Java devices.
  *
- * {@link https://github.com/bluesky-social/social-app/pull/4461}
+ * {@link https://github.com/gander-social/social-app/pull/4461}
  * {@link https://xml.coverpages.org/iso639a.html}
  *
  * Convert Chinese language tags for Native.

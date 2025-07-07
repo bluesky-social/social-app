@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {AppBskyEmbedVideo} from '@atproto/api'
+import {AppGndrEmbedVideo} from '@atproto/api'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {FeedPostSliceItem} from '#/state/queries/post-feed'
@@ -20,7 +20,7 @@ export function PostFeedVideoGridRow({
 }) {
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
-    .filter(slice => AppBskyEmbedVideo.isView(slice.post.embed))
+    .filter(slice => AppGndrEmbedVideo.isView(slice.post.embed))
     .map(slice => ({
       post: slice.post,
       moderation: slice.moderation,

@@ -13,7 +13,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostLikedBy'>
 export const PostLikedByScreen = ({route}: Props) => {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {name, rkey} = route.params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+  const uri = makeRecordUri(name, 'app.gndr.feed.post', rkey)
   const {data: post} = usePostThreadQuery(uri)
 
   let likeCount

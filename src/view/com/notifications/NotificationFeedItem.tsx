@@ -15,10 +15,10 @@ import {
   View,
 } from 'react-native'
 import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyGraphFollow,
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
+  AppGndrGraphFollow,
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
@@ -70,14 +70,14 @@ import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 const MAX_AUTHORS = 5
 
 const EXPANDED_AUTHOR_EL_HEIGHT = 35
 
 interface Author {
-  profile: AppBskyActorDefs.ProfileView
+  profile: AppGndrActorDefs.ProfileView
   href: string
   moderation: ModerationDecision
 }
@@ -309,9 +309,9 @@ let NotificationFeedItem = ({
 
     if (
       item.notification.author.viewer?.following &&
-      bsky.dangerousIsType<AppBskyGraphFollow.Record>(
+      gndr.dangerousIsType<AppGndrGraphFollow.Record>(
         item.notification.record,
-        AppBskyGraphFollow.isRecord,
+        AppGndrGraphFollow.isRecord,
       )
     ) {
       let followingTimestamp
@@ -726,7 +726,7 @@ function ExpandListPressable({
   }
 }
 
-function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
+function SayHelloBtn({profile}: {profile: AppGndrActorDefs.ProfileView}) {
   const {_} = useLingui()
   const agent = useAgent()
   const navigation = useNavigation<NavigationProp>()
@@ -751,7 +751,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
       onPress={async () => {
         try {
           setIsLoading(true)
-          const res = await agent.api.chat.bsky.convo.getConvoForMembers(
+          const res = await agent.api.chat.gndr.convo.getConvoForMembers(
             {
               members: [profile.did, agent.session!.did!],
             },
@@ -953,13 +953,13 @@ function ExpandedAuthorCard({author}: {author: Author}) {
   )
 }
 
-function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
+function AdditionalPostText({post}: {post?: AppGndrFeedDefs.PostView}) {
   const t = useTheme()
   if (
     post &&
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    gndr.dangerousIsType<AppGndrFeedPost.Record>(
       post?.record,
-      AppBskyFeedPost.isRecord,
+      AppGndrFeedPost.isRecord,
     )
   ) {
     const text = post.record.text

@@ -1,6 +1,6 @@
 import {
-  type AppBskyActorDefs,
-  type BskyFeedViewPreference,
+  type AppGndrActorDefs,
+  type GndrFeedViewPreference,
   type LabelPreference,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
@@ -77,7 +77,7 @@ export function useClearPreferencesMutation() {
 
   return useMutation({
     mutationFn: async () => {
-      await agent.app.bsky.actor.putPreferences({preferences: []})
+      await agent.app.gndr.actor.putPreferences({preferences: []})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -167,7 +167,7 @@ export function useSetFeedViewPreferencesMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, unknown, Partial<BskyFeedViewPreference>>({
+  return useMutation<void, unknown, Partial<GndrFeedViewPreference>>({
     mutationFn: async prefs => {
       /*
        * special handling here, merged into `feedViewPrefs` above, since
@@ -201,7 +201,7 @@ export function useOverwriteSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
+  return useMutation<void, unknown, AppGndrActorDefs.SavedFeed[]>({
     mutationFn: async savedFeeds => {
       await agent.overwriteSavedFeeds(savedFeeds)
       // triggers a refetch
@@ -219,7 +219,7 @@ export function useAddSavedFeedsMutation() {
   return useMutation<
     void,
     unknown,
-    Pick<AppBskyActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[]
+    Pick<AppGndrActorDefs.SavedFeed, 'type' | 'value' | 'pinned'>[]
   >({
     mutationFn: async savedFeeds => {
       await agent.addSavedFeeds(savedFeeds)
@@ -235,7 +235,7 @@ export function useRemoveFeedMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, unknown, Pick<AppBskyActorDefs.SavedFeed, 'id'>>({
+  return useMutation<void, unknown, Pick<AppGndrActorDefs.SavedFeed, 'id'>>({
     mutationFn: async savedFeed => {
       await agent.removeSavedFeeds([savedFeed.id])
       // triggers a refetch
@@ -255,8 +255,8 @@ export function useReplaceForYouWithDiscoverFeedMutation() {
       forYouFeedConfig,
       discoverFeedConfig,
     }: {
-      forYouFeedConfig: AppBskyActorDefs.SavedFeed | undefined
-      discoverFeedConfig: AppBskyActorDefs.SavedFeed | undefined
+      forYouFeedConfig: AppGndrActorDefs.SavedFeed | undefined
+      discoverFeedConfig: AppGndrActorDefs.SavedFeed | undefined
     }) => {
       if (forYouFeedConfig) {
         await agent.removeSavedFeeds([forYouFeedConfig.id])
@@ -289,7 +289,7 @@ export function useUpdateSavedFeedsMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, unknown, AppBskyActorDefs.SavedFeed[]>({
+  return useMutation<void, unknown, AppGndrActorDefs.SavedFeed[]>({
     mutationFn: async feeds => {
       await agent.updateSavedFeeds(feeds)
 
@@ -306,7 +306,7 @@ export function useUpsertMutedWordsMutation() {
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
+    mutationFn: async (mutedWords: AppGndrActorDefs.MutedWord[]) => {
       await agent.upsertMutedWords(mutedWords)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -321,7 +321,7 @@ export function useUpdateMutedWordMutation() {
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
+    mutationFn: async (mutedWord: AppGndrActorDefs.MutedWord) => {
       await agent.updateMutedWord(mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -336,7 +336,7 @@ export function useRemoveMutedWordMutation() {
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
+    mutationFn: async (mutedWord: AppGndrActorDefs.MutedWord) => {
       await agent.removeMutedWord(mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -351,7 +351,7 @@ export function useRemoveMutedWordsMutation() {
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
+    mutationFn: async (mutedWords: AppGndrActorDefs.MutedWord[]) => {
       await agent.removeMutedWords(mutedWords)
       // triggers a refetch
       await queryClient.invalidateQueries({
@@ -367,7 +367,7 @@ export function useQueueNudgesMutation() {
 
   return useMutation({
     mutationFn: async (nudges: string | string[]) => {
-      await agent.bskyAppQueueNudges(nudges)
+      await agent.gndrAppQueueNudges(nudges)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -382,7 +382,7 @@ export function useDismissNudgesMutation() {
 
   return useMutation({
     mutationFn: async (nudges: string | string[]) => {
-      await agent.bskyAppDismissNudges(nudges)
+      await agent.gndrAppDismissNudges(nudges)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -397,9 +397,9 @@ export function useSetActiveProgressGuideMutation() {
 
   return useMutation({
     mutationFn: async (
-      guide: AppBskyActorDefs.BskyAppProgressGuide | undefined,
+      guide: AppGndrActorDefs.GndrAppProgressGuide | undefined,
     ) => {
-      await agent.bskyAppSetActiveProgressGuide(guide)
+      await agent.gndrAppSetActiveProgressGuide(guide)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -412,7 +412,7 @@ export function useSetVerificationPrefsMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return useMutation<void, unknown, AppBskyActorDefs.VerificationPrefs>({
+  return useMutation<void, unknown, AppGndrActorDefs.VerificationPrefs>({
     mutationFn: async prefs => {
       await agent.setVerificationPrefs(prefs)
       if (prefs.hideBadges) {

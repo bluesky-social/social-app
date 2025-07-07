@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {AppGndrLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -27,7 +27,7 @@ import {ReportDialogProps} from './types'
 
 export function SelectReportOptionView(props: {
   params: ReportDialogProps['params']
-  labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
+  labelers: AppGndrLabelerDefs.LabelerViewDetailed[]
   onSelectReportOption: (reportOption: ReportOption) => void
   goBack: () => void
 }) {

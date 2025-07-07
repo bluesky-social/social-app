@@ -1,6 +1,6 @@
 import React from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import {type PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {type PostView} from '@atproto/api/dist/client/types/app/gndr/feed/defs'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -43,7 +43,7 @@ export default function TopicScreen({
   }, [topic])
 
   const onShare = React.useCallback(() => {
-    const url = new URL('https://bsky.app')
+    const url = new URL('https://gndr.app')
     url.pathname = `/topic/${topic}`
     shareUrl(url.toString())
   }, [topic])

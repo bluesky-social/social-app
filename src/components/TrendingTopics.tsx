@@ -205,7 +205,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
     } else {
       const urip = new AtUri(link)
       switch (urip.collection) {
-        case 'app.bsky.actor.profile': {
+        case 'app.gndr.actor.profile': {
           return {
             type: 'profile',
             label: _(msg`View ${displayName}'s profile`),
@@ -214,7 +214,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
             url: makeProfileLink({did: urip.host, handle: urip.host}),
           }
         }
-        case 'app.bsky.feed.generator': {
+        case 'app.gndr.feed.generator': {
           return {
             type: 'feed',
             label: _(msg`Browse the ${displayName} feed`),

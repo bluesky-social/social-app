@@ -1,9 +1,9 @@
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
-export function isBlockedOrBlocking(profile: bsky.profile.AnyProfileView) {
+export function isBlockedOrBlocking(profile: gndr.profile.AnyProfileView) {
   return profile.viewer?.blockedBy || profile.viewer?.blocking
 }
 
-export function isMuted(profile: bsky.profile.AnyProfileView) {
+export function isMuted(profile: gndr.profile.AnyProfileView) {
   return profile.viewer?.muted || profile.viewer?.mutedByList
 }

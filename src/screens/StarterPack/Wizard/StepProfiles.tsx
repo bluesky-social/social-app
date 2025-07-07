@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
+import {AppGndrActorDefs, ModerationOpts} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {isNative} from '#/platform/detection'
@@ -16,9 +16,9 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
+function keyExtractor(item: AppGndrActorDefs.ProfileViewBasic) {
   return item?.did ?? ''
 }
 
@@ -51,7 +51,7 @@ export function StepProfiles({
 
   const renderItem = ({
     item,
-  }: ListRenderItemInfo<bsky.profile.AnyProfileView>) => {
+  }: ListRenderItemInfo<gndr.profile.AnyProfileView>) => {
     return (
       <WizardProfileCard
         profile={item}

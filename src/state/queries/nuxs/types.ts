@@ -1,7 +1,7 @@
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppGndrActorDefs} from '@atproto/api'
 
 export type Data = Record<string, unknown> | undefined
 
 export type BaseNux<
-  T extends Pick<AppBskyActorDefs.Nux, 'id' | 'expiresAt'> & {data: Data},
-> = Pick<AppBskyActorDefs.Nux, 'id' | 'completed' | 'expiresAt'> & T
+  T extends Pick<AppGndrActorDefs.Nux, 'id' | 'expiresAt'> & {data: Data},
+> = Pick<AppGndrActorDefs.Nux, 'id' | 'completed' | 'expiresAt'> & T

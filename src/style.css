@@ -2,14 +2,14 @@
  * IMPORTANT
  *
  * Some of these styles are duplicated in the `web/index.html` and
- * `bskyweb/templates/base.html` files. Depending on what you're updating, you
+ * `gndrweb/templates/base.html` files. Depending on what you're updating, you
  * may need to touch all three. Ask Eric if you aren't sure.
  */
 
 /**
  * BEGIN STYLES
  *
- * HTML & BODY STYLES IN `web/index.html` and `bskyweb/templates/base.html`
+ * HTML & BODY STYLES IN `web/index.html` and `gndrweb/templates/base.html`
  */
 :root {
   --text: black;

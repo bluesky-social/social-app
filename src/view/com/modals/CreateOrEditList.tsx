@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
+import {type AppGndrGraphDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -45,7 +45,7 @@ export function Component({
 }: {
   purpose?: string
   onSave?: (uri: string) => void
-  list?: AppBskyGraphDefs.ListView
+  list?: AppGndrGraphDefs.ListView
 }) {
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
@@ -64,9 +64,9 @@ export function Component({
     if (purpose) {
       return purpose
     }
-    return 'app.bsky.graph.defs#curatelist'
+    return 'app.gndr.graph.defs#curatelist'
   }, [list, purpose])
-  const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
+  const isCurateList = activePurpose === 'app.gndr.graph.defs#curatelist'
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [name, setName] = useState<string>(list?.name || '')

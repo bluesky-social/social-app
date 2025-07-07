@@ -4,7 +4,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useAgent} from '#/state/session'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 /**
  * Fetches a fresh verification state from the app view and updates our profile
@@ -16,7 +16,7 @@ export function useUpdateProfileVerificationCache() {
   const agent = useAgent()
 
   return useCallback(
-    async ({profile}: {profile: bsky.profile.AnyProfileView}) => {
+    async ({profile}: {profile: gndr.profile.AnyProfileView}) => {
       try {
         const {data: updated} = await agent.getProfile({
           actor: profile.did ?? '',

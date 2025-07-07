@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name           = 'ExpoBackgroundNotificationHandler'
   s.version        = '1.0.0'
-  s.summary        = 'Interface for BlueskyNSE preferences'
-  s.description    = 'Interface for BlueskyNSE preferenes'
+  s.summary        = 'Interface for GanderNSE preferences'
+  s.description    = 'Interface for GanderNSE preferenes'
   s.author         = ''
-  s.homepage       = 'https://github.com/bluesky-social/social-app'
+  s.homepage       = 'https://github.com/gander-social/social-app'
   s.platforms      = { :ios => '13.4', :tvos => '13.4' }
   s.source         = { git: '' }
   s.static_framework = true

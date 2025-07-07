@@ -1,4 +1,4 @@
-appId: xyz.blueskyweb.app
+appId: xyz.ganderweb.app
 ---
 - runScript:
     file: ../setupServer.js
@@ -10,7 +10,7 @@ appId: xyz.blueskyweb.app
     id: "e2eOpenLoggedOutView"
 - tapOn:
     id: "createAccountButton"
-- tapOn: "Bluesky Social"
+- tapOn: "Gander Social"
 - tapOn:
     id: "customSelectBtn"
 - tapOn:

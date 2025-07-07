@@ -66,7 +66,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
           <Text type="lg" style={[pal.text, styles.emptyText]}>
             <Trans>
               You don't have any invite codes yet! We'll send you some when
-              you've been on Bluesky for a little longer.
+              you've been on Gander for a little longer.
             </Trans>
           </Text>
         </View>

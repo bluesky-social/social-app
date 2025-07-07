@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,7 +8,7 @@ import {useVerificationsRemoveMutation} from '#/state/queries/verification/useVe
 import * as Toast from '#/view/com/util/Toast'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'
 
@@ -19,8 +19,8 @@ export function VerificationRemovePrompt({
   onConfirm: onConfirmInner,
 }: {
   control: DialogControlProps
-  profile: bsky.profile.AnyProfileView
-  verifications: AppBskyActorDefs.VerificationView[]
+  profile: gndr.profile.AnyProfileView
+  verifications: AppGndrActorDefs.VerificationView[]
   onConfirm?: () => void
 }) {
   const {_} = useLingui()

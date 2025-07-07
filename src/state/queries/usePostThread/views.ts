@@ -167,11 +167,11 @@ export function postViewToThreadPlaceholder(
   }
 > {
   return {
-    $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
+    $type: 'app.gndr.unspecced.getPostThreadV2#threadItem',
     uri: post.uri,
     depth: 0, // reset to 0 for highlighted post
     value: {
-      $type: 'app.bsky.unspecced.defs#threadItemPost',
+      $type: 'app.gndr.unspecced.defs#threadItemPost',
       post,
       opThread: false,
       moreParents: false,
