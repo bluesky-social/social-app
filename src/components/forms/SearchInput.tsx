@@ -1,5 +1,10 @@
-import React from 'react'
-import {type TextInput, View} from 'react-native'
+import {forwardRef} from 'react'
+import {
+  type NativeSyntheticEvent,
+  type TextInput,
+  type TextInputKeyPressEventData,
+  View,
+} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -17,13 +22,25 @@ type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
    * Called when the user presses the (X) button
    */
   onClearText?: () => void
+  /**
+   * Called when the user presses the Escape key
+   */
+  onEscape?: () => void
 }
 
-export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
-  function SearchInput({value, label, onClearText, ...rest}, ref) {
+export const SearchInput = forwardRef<TextInput, SearchInputProps>(
+  function SearchInput({value, label, onClearText, onEscape, ...rest}, ref) {
     const t = useTheme()
     const {_} = useLingui()
     const showClear = value && value.length > 0
+
+    const onKeyPress = (
+      evt: NativeSyntheticEvent<TextInputKeyPressEventData>,
+    ) => {
+      if (evt.nativeEvent.key === 'Escape') {
+        onEscape?.()
+      }
+    }
 
     return (
       <View style={[a.w_full, a.relative]}>
@@ -42,6 +59,7 @@ export const SearchInput = React.forwardRef<TextInput, SearchInputProps>(
             autoCorrect={false}
             autoComplete="off"
             autoCapitalize="none"
+            onKeyPress={onKeyPress}
             style={[
               showClear
                 ? {
