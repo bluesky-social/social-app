@@ -99,7 +99,7 @@ export function VideoEmbed({
   )
 
   return (
-    <View style={[a.pt_xs]}>
+    <View style={[a.pt_sm]}>
       {cropDisabled ? (
         <View style={[a.w_full, a.overflow_hidden, {aspectRatio: max ?? 1}]}>
           {contents}

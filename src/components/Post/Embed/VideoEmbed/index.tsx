@@ -57,7 +57,7 @@ export function VideoEmbed({embed, crop}: Props) {
   )
 
   return (
-    <View style={[a.pt_xs]}>
+    <View style={[a.pt_sm]}>
       {cropDisabled ? (
         <View
           style={[
