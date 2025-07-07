@@ -1,6 +1,7 @@
 import {
   memo,
   useCallback,
+  useDeferredValue,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -17,8 +18,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_20} from '#/lib/constants'
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -75,9 +75,10 @@ export function SearchScreenShell({
   const queryClient = useQueryClient()
 
   // Query terms
-  const [searchText, setSearchText] = useState<string>(queryParam)
+  const [searchText, setSearchText] = useState(queryParam)
+  const deferredSearchText = useDeferredValue(searchText)
   const {data: autocompleteData, isFetching: isAutocompleteFetching} =
-    useActorAutocompleteQuery(searchText, true)
+    useActorAutocompleteQuery(deferredSearchText, true)
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)
 
@@ -207,8 +208,8 @@ export function SearchScreenShell({
   }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
 
   const onSubmit = useCallback(() => {
-    navigateToItem(searchText)
-  }, [navigateToItem, searchText])
+    navigateToItem(deferredSearchText)
+  }, [navigateToItem, deferredSearchText])
 
   const onAutocompleteResultPress = useCallback(() => {
     if (IS_WEB) {
@@ -397,11 +398,11 @@ export function SearchScreenShell({
           display: showAutocomplete && !fixedParams ? 'flex' : 'none',
           flex: 1,
         }}>
-        {searchText.length > 0 ? (
+        {deferredSearchText.length > 0 ? (
           <AutocompleteResults
             isAutocompleteFetching={isAutocompleteFetching}
             autocompleteData={autocompleteData}
-            searchText={searchText}
+            searchText={deferredSearchText}
             onSubmit={onSubmit}
             onResultPress={onAutocompleteResultPress}
             onProfileClick={handleProfileClick}
