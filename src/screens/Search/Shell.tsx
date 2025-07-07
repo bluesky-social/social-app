@@ -1,6 +1,7 @@
 import {
   memo,
   useCallback,
+  useDeferredValue,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -75,9 +76,10 @@ export function SearchScreenShell({
   const queryClient = useQueryClient()
 
   // Query terms
-  const [searchText, setSearchText] = useState<string>(queryParam)
+  const [searchText, setSearchText] = useState(queryParam)
+  const deferredSearchText = useDeferredValue(searchText)
   const {data: autocompleteData, isFetching: isAutocompleteFetching} =
-    useActorAutocompleteQuery(searchText, true)
+    useActorAutocompleteQuery(deferredSearchText, true)
 
   const [showAutocomplete, setShowAutocomplete] = useState(false)
 
@@ -203,8 +205,8 @@ export function SearchScreenShell({
   }, [setShowAutocomplete, setSearchText, navigation, route.params, route.name])
 
   const onSubmit = useCallback(() => {
-    navigateToItem(searchText)
-  }, [navigateToItem, searchText])
+    navigateToItem(deferredSearchText)
+  }, [navigateToItem, deferredSearchText])
 
   const onAutocompleteResultPress = useCallback(() => {
     if (isWeb) {
@@ -376,11 +378,11 @@ export function SearchScreenShell({
           display: showAutocomplete && !fixedParams ? 'flex' : 'none',
           flex: 1,
         }}>
-        {searchText.length > 0 ? (
+        {deferredSearchText.length > 0 ? (
           <AutocompleteResults
             isAutocompleteFetching={isAutocompleteFetching}
             autocompleteData={autocompleteData}
-            searchText={searchText}
+            searchText={deferredSearchText}
             onSubmit={onSubmit}
             onResultPress={onAutocompleteResultPress}
             onProfileClick={handleProfileClick}
@@ -428,7 +430,6 @@ let SearchScreenInner = ({
   const {hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
   const [activeTab, setActiveTab] = useState(0)
-  const {_} = useLingui()
 
   const onPageSelected = useCallback(
     (index: number) => {
