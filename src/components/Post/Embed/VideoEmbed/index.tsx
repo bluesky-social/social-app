@@ -1,15 +1,17 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isAndroid} from '#/platform/detection'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
@@ -81,26 +83,31 @@ export function VideoEmbed({embed, crop}: Props) {
 
 function InnerWrapper({embed}: Props) {
   const {_} = useLingui()
-  const ref = React.useRef<{togglePlayback: () => void}>(null)
+  const ref = useRef<{togglePlayback: () => void}>(null)
 
-  const [status, setStatus] = React.useState<'playing' | 'paused' | 'pending'>(
+  const [status, setStatus] = useState<'playing' | 'paused' | 'pending'>(
     'pending',
   )
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [isActive, setIsActive] = React.useState(false)
-  const showSpinner = useThrottledValue(isActive && isLoading, 100)
+  const [isLoading, setIsLoading] = useState(false)
+  const [activeState, setActiveState] = useState<
+    'active' | 'inactive' | 'staged'
+  >('inactive')
+  const showSpinner = useThrottledValue(
+    activeState === 'active' && isLoading,
+    100,
+  )
 
   const showOverlay =
-    !isActive ||
-    isLoading ||
-    (status === 'paused' && !isActive) ||
-    status === 'pending'
+    activeState === 'inactive' ||
+    (activeState === 'active' && (isLoading || status === 'pending'))
 
-  React.useEffect(() => {
-    if (!isActive && status !== 'pending') {
-      setStatus('pending')
+  useEffect(() => {
+    if (isAndroid) {
+      if (activeState === 'inactive' && status !== 'pending') {
+        setStatus('pending')
+      }
     }
-  }, [isActive, status])
+  }, [activeState, status])
 
   return (
     <>
@@ -108,7 +115,8 @@ function InnerWrapper({embed}: Props) {
         embed={embed}
         setStatus={setStatus}
         setIsLoading={setIsLoading}
-        setIsActive={setIsActive}
+        activeState={activeState}
+        setActiveState={setActiveState}
         ref={ref}
       />
       <ImageBackground
@@ -120,14 +128,26 @@ function InnerWrapper({embed}: Props) {
           {
             backgroundColor: 'transparent', // If you don't add `backgroundColor` to the styles here,
             // the play button won't show up on the first render on android 🥴😮‍💨
-            display: showOverlay ? 'flex' : 'none',
           },
+          // loading videos are black on android and transparent on ios
+          // therefore on ios we can just keep the thumbnail behind the video to reduce flicker
+          // but on android we need to overlay it and just turn it on and off
+          platform({
+            ios: {zIndex: showOverlay ? 1 : -1},
+            android: {display: showOverlay ? 'flex' : 'none'},
+          }),
         ]}
         cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
       >
         {showOverlay && (
           <Button
-            style={[a.flex_1, a.align_center, a.justify_center]}
+            style={[
+              a.flex_1,
+              a.align_center,
+              a.justify_center,
+              a.absolute,
+              a.inset_0,
+            ]}
             onPress={() => {
               ref.current?.togglePlayback()
             }}
@@ -143,12 +163,15 @@ function InnerWrapper({embed}: Props) {
                 ]}>
                 <ActivityIndicator size="large" color="white" />
               </View>
-            ) : (
+            ) : activeState === 'inactive' ? (
               <PlayButtonIcon />
+            ) : (
+              <View />
             )}
           </Button>
         )}
       </ImageBackground>
+      <MediaInsetBorder />
     </>
   )
 }
