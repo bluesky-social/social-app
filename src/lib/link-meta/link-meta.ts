@@ -1,4 +1,4 @@
-import {BskyAgent} from '@atproto/api'
+import {type BskyAgent} from '@atproto/api'
 
 import {LINK_META_PROXY} from '#/lib/constants'
 import {getGiphyMetaUri} from '#/lib/strings/embed-player'
@@ -37,6 +37,7 @@ export async function getLinkMeta(
   }
 
   let urlp
+  let shouldFollowRedirect = false
   try {
     urlp = new URL(url)
 
@@ -46,6 +47,9 @@ export async function getLinkMeta(
       url = giphyMetaUri
       urlp = new URL(url)
     }
+    // follow redirects for soundcloud shortlinks
+    // QUESTION - do we want to follow redirects in other cases? -sfn
+    shouldFollowRedirect = urlp.hostname === 'on.soundcloud.com'
   } catch (e) {
     return {
       error: 'Invalid URL',
@@ -76,15 +80,16 @@ export async function getLinkMeta(
     const body = await response.json()
     clearTimeout(to)
 
-    const {description, error, image, title} = body
-
-    if (error !== '') {
-      throw new Error(error)
+    if (body.error !== '') {
+      throw new Error(body.error)
     }
 
-    meta.description = description
-    meta.image = image
-    meta.title = title
+    meta.description = body.description
+    meta.image = body.image
+    meta.title = body.title
+    if (shouldFollowRedirect) {
+      meta.url = body.url
+    }
   } catch (e) {
     // failed
     console.error(e)

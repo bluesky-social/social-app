@@ -204,6 +204,7 @@ async function resolveExternal(
   uri: string,
 ): Promise<ResolvedExternalLink> {
   const result = await getLinkMeta(agent, uri)
+  console.log(result)
   return {
     type: 'external',
     uri: result.url,
