@@ -1,30 +1,32 @@
-import {useMutation} from '@tanstack/react-query'
+import {
+  type AppBskyUnspeccedDefs,
+  type AppBskyUnspeccedInitAgeAssurance,
+} from '@atproto/api'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
 import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
-// import {useAgent} from '#/state/session';
-
-type TempInputSchema = {
-  email: string
-  language: string
-}
+import {createAgeAssuranceQueryKey} from '#/state/age-assurance'
+import {useAgent} from '#/state/session'
 
 export function useInitAgeAssurance() {
-  // const agent = useAgent()
+  const qc = useQueryClient()
+  const agent = useAgent()
   return useMutation({
-    async mutationFn(_props: TempInputSchema) {
-      // 2s wait is good actually, email sending takes a hot sec
-      // const {data} = await wait(2e3, agent.app.bsky.unspecced.initAgeAssurance(props))
-      await wait(
+    async mutationFn(props: AppBskyUnspeccedInitAgeAssurance.InputSchema) {
+      /*
+       * 2s wait is good actually. Email sending takes a hot sec and this helps
+       * ensure the email is ready for the user once they open their inbox.
+       */
+      const {data} = await wait(
         2e3,
-        (() => ({
-          data: {
-            $type: 'app.bsky.unspecced.defs#ageAssuranceState',
-            lastInitiatedAt: new Date().toISOString(),
-            status: 'pending',
-          },
-        }))(),
+        agent.app.bsky.unspecced.initAgeAssurance(props),
+      )
+
+      qc.setQueryData<AppBskyUnspeccedDefs.AgeAssuranceState>(
+        createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
+        () => data,
       )
     },
     onError(e) {

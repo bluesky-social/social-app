@@ -14,7 +14,7 @@ import {preferencesQueryKey} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
-const createAgeAssuranceQueryKey = (did: string) =>
+export const createAgeAssuranceQueryKey = (did: string) =>
   ['ageAssurance', did] as const
 const DEFAULT_AGE_ASSURANCE_STATE: AppBskyUnspeccedDefs.AgeAssuranceState = {
   lastInitiatedAt: undefined,
@@ -44,12 +44,7 @@ export function Provider({children}: {children: React.ReactNode}) {
       try {
         const {data} = await wait(
           1e3,
-          (() => ({
-            data: {
-              lastInitiatedAt: undefined,
-              status: 'unknown',
-            } as AppBskyUnspeccedDefs.AgeAssuranceState,
-          }))(),
+          agent.app.bsky.unspecced.getAgeAssuranceState(),
         )
 
         logger.debug(`fetch`, {
