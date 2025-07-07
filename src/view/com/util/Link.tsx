@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from 'react'
+import React, {type ComponentProps, memo, useMemo} from 'react'
 import {
   type GestureResponderEvent,
   Platform,
@@ -11,7 +11,7 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
-import {StackActions} from '@react-navigation/native'
+import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {
   type DebouncedNavigationProp,
@@ -39,7 +39,7 @@ type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
   | GestureResponderEvent
 
-interface Props extends React.ComponentProps<typeof TouchableOpacity> {
+interface Props extends ComponentProps<typeof TouchableOpacity> {
   testID?: string
   style?: StyleProp<ViewStyle>
   href?: string
@@ -48,7 +48,7 @@ interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   hoverStyle?: StyleProp<ViewStyle>
   noFeedback?: boolean
   asAnchor?: boolean
-  dataSet?: any
+  dataSet?: Object | undefined
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   onPointerEnter?: () => void
@@ -70,7 +70,6 @@ export const Link = memo(function Link({
   onBeforePress,
   accessibilityActions,
   onAccessibilityAction,
-  dataSet: dataSetProp,
   ...props
 }: Props) {
   const t = useTheme()
@@ -79,7 +78,7 @@ export const Link = memo(function Link({
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
   const openLink = useOpenLink()
 
-  const onPress = useCallback(
+  const onPress = React.useCallback(
     (e?: Event) => {
       onBeforePress?.()
       if (typeof href === 'string') {
@@ -100,14 +99,6 @@ export const Link = memo(function Link({
     ...(accessibilityActions || []),
     {name: 'activate', label: title},
   ]
-
-  const dataSet = useMemo(() => {
-    const ds = {...dataSetProp}
-    if (anchorNoUnderline) {
-      ds.noUnderline = 1
-    }
-    return ds
-  }, [dataSetProp, anchorNoUnderline])
 
   if (noFeedback) {
     return (
@@ -139,6 +130,17 @@ export const Link = memo(function Link({
     )
   }
 
+  if (anchorNoUnderline) {
+    // @ts-ignore web only -prf
+    props.dataSet = props.dataSet || {}
+    // @ts-ignore web only -prf
+    props.dataSet.noUnderline = 1
+  }
+
+  if (title && !props.accessibilityLabel) {
+    props.accessibilityLabel = title
+  }
+
   const Com = props.hoverStyle ? PressableWithHover : Pressable
   return (
     <Com
@@ -147,11 +149,8 @@ export const Link = memo(function Link({
       onPress={onPress}
       accessible={accessible}
       accessibilityRole="link"
-      accessibilityLabel={props.accessibilityLabel ?? title}
-      accessibilityHint={props.accessibilityHint}
       // @ts-ignore web only -prf
       href={anchorHref}
-      dataSet={dataSet}
       {...props}>
       {children ? children : <Text>{title || 'link'}</Text>}
     </Com>
@@ -166,14 +165,14 @@ export const TextLink = memo(function TextLink({
   text,
   numberOfLines,
   lineHeight,
-  dataSet: dataSetProp,
+  dataSet,
   title,
-  onPress: onPressProp,
+  onPress,
   onBeforePress,
   disableMismatchWarning,
   navigationAction,
   anchorNoUnderline,
-  ...props
+  ...orgProps
 }: {
   testID?: string
   type?: TypographyVariant
@@ -189,6 +188,7 @@ export const TextLink = memo(function TextLink({
   anchorNoUnderline?: boolean
   onBeforePress?: () => void
 } & TextProps) {
+  const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const navigation = useNavigationDeduped()
   const {closeModal} = useModalControls()
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()
@@ -198,15 +198,12 @@ export const TextLink = memo(function TextLink({
     console.error('Unable to detect mismatching label')
   }
 
-  const dataSet = useMemo(() => {
-    const ds = {...dataSetProp}
-    if (anchorNoUnderline) {
-      ds.noUnderline = 1
-    }
-    return ds
-  }, [dataSetProp, anchorNoUnderline])
+  if (anchorNoUnderline) {
+    dataSet = dataSet ?? {}
+    dataSet.noUnderline = 1
+  }
 
-  const onPress = useCallback(
+  props.onPress = React.useCallback(
     (e?: Event) => {
       const requiresWarning =
         !disableMismatchWarning &&
@@ -228,10 +225,10 @@ export const TextLink = memo(function TextLink({
         return
       }
       onBeforePress?.()
-      if (onPressProp) {
+      if (onPress) {
         e?.preventDefault?.()
-        // @ts-expect-error function signature differs by platform -prf
-        return onPressProp()
+        // @ts-ignore function signature differs by platform -prf
+        return onPress()
       }
       return onPressInner(
         closeModal,
@@ -244,7 +241,7 @@ export const TextLink = memo(function TextLink({
     },
     [
       onBeforePress,
-      onPressProp,
+      onPress,
       closeModal,
       navigation,
       href,
@@ -277,10 +274,8 @@ export const TextLink = memo(function TextLink({
       title={title}
       // @ts-ignore web only -prf
       hrefAttrs={hrefAttrs} // hack to get open in new tab to work on safari. without this, safari will open in a new window
-      onPress={onPress}
-      accessibilityRole="link"
-      href={convertBskyAppUrlIfNeeded(sanitizeUrl(href))}
-      {...props}>
+      {...props}
+      {...orgProps}>
       {text}
     </Text>
   )

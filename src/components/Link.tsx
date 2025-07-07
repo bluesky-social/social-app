@@ -1,10 +1,7 @@
-import React, {useMemo} from 'react'
+import React from 'react'
 import {type GestureResponderEvent} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
-import {
-  type LinkProps as RNLinkProps,
-  StackActions,
-} from '@react-navigation/native'
+import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
@@ -32,10 +29,11 @@ import {useGlobalDialogsControlContext} from './dialogs/Context'
  */
 export {useButtonContext as useLinkContext} from '#/components/Button'
 
-type BaseLinkProps = {
+type BaseLinkProps = Pick<
+  Parameters<typeof useLinkProps<AllNavigatorParams>>[0],
+  'to'
+> & {
   testID?: string
-
-  to: RNLinkProps<AllNavigatorParams> | string
 
   /**
    * The React Navigation `StackAction` to perform when the link is pressed.
@@ -95,22 +93,10 @@ export function useLink({
   shouldProxy?: boolean
 }) {
   const navigation = useNavigationDeduped()
-  const href = useMemo(() => {
-    return typeof to === 'string'
-      ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
-      : to.screen
-        ? router.matchName(to.screen)?.build(to.params)
-        : to.href
-          ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
-          : undefined
-  }, [to])
-
-  if (!href) {
-    throw new Error(
-      'Could not resolve screen. Link `to` prop must be a string or an object with `screen` and `params` properties',
-    )
-  }
-
+  const {href} = useLinkProps<AllNavigatorParams>({
+    to:
+      typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
+  })
   const isExternal = isExternalUrl(href)
   const {closeModal} = useModalControls()
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()

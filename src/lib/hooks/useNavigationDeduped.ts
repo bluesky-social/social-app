@@ -1,8 +1,10 @@
-import {useMemo} from 'react'
+import React from 'react'
 import {useNavigation} from '@react-navigation/core'
+import {type NavigationState} from '@react-navigation/native'
+import {type NavigationAction} from '@react-navigation/routers'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
-import {type NavigationProp} from '#/lib/routes/types'
+import {type AllNavigatorParams, type NavigationProp} from '#/lib/routes/types'
 
 export type DebouncedNavigationProp = Pick<
   NavigationProp,
@@ -21,19 +23,46 @@ export function useNavigationDeduped() {
   const navigation = useNavigation<NavigationProp>()
   const dedupe = useDedupe()
 
-  return useMemo<DebouncedNavigationProp>(
-    () => ({
-      push: (...args: Parameters<typeof navigation.push>) => {
+  return React.useMemo(
+    (): DebouncedNavigationProp => ({
+      // Types from @react-navigation/routers/lib/typescript/src/StackRouter.ts
+      push: <RouteName extends keyof AllNavigatorParams>(
+        ...args: undefined extends AllNavigatorParams[RouteName]
+          ?
+              | [screen: RouteName]
+              | [screen: RouteName, params: AllNavigatorParams[RouteName]]
+          : [screen: RouteName, params: AllNavigatorParams[RouteName]]
+      ) => {
         dedupe(() => navigation.push(...args))
       },
-      navigate: (...args: Parameters<typeof navigation.navigate>) => {
+      // Types from @react-navigation/core/src/types.tsx
+      navigate: <RouteName extends keyof AllNavigatorParams>(
+        ...args: RouteName extends unknown
+          ? undefined extends AllNavigatorParams[RouteName]
+            ?
+                | [screen: RouteName]
+                | [screen: RouteName, params: AllNavigatorParams[RouteName]]
+            : [screen: RouteName, params: AllNavigatorParams[RouteName]]
+          : never
+      ) => {
         dedupe(() => navigation.navigate(...args))
       },
-      replace: (...args: Parameters<typeof navigation.replace>) => {
+      // Types from @react-navigation/routers/lib/typescript/src/StackRouter.ts
+      replace: <RouteName extends keyof AllNavigatorParams>(
+        ...args: undefined extends AllNavigatorParams[RouteName]
+          ?
+              | [screen: RouteName]
+              | [screen: RouteName, params: AllNavigatorParams[RouteName]]
+          : [screen: RouteName, params: AllNavigatorParams[RouteName]]
+      ) => {
         dedupe(() => navigation.replace(...args))
       },
-      dispatch: (...args: Parameters<typeof navigation.dispatch>) => {
-        dedupe(() => navigation.dispatch(...args))
+      dispatch: (
+        action:
+          | NavigationAction
+          | ((state: NavigationState) => NavigationAction),
+      ) => {
+        dedupe(() => navigation.dispatch(action))
       },
       popToTop: () => {
         dedupe(() => navigation.popToTop())

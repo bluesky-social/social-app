@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import React, {type ComponentProps} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -53,7 +53,13 @@ import {
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
-type TabOptions = 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile'
+type TabOptions =
+  | 'Home'
+  | 'Search'
+  | 'Notifications'
+  | 'MyProfile'
+  | 'Feeds'
+  | 'Messages'
 
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
@@ -77,62 +83,48 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const hideBorder = useHideBottomBarBorder()
   const iconWidth = 28
 
-  const showSignIn = useCallback(() => {
+  const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = useCallback(() => {
+  const showCreateAccount = React.useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const onPressTab = useCallback(
+  const onPressTab = React.useCallback(
     (tab: TabOptions) => {
       const state = navigation.getState()
       const tabState = getTabState(state, tab)
       if (tabState === TabState.InsideAtRoot) {
         emitSoftReset()
       } else if (tabState === TabState.Inside) {
-        // find the correct navigator in which to pop-to-top
-        const target = state.routes.find(route => route.name === `${tab}Tab`)
-          ?.state?.key
-        dedupe(() => {
-          if (target) {
-            // if we found it, trigger pop-to-top
-            navigation.dispatch({
-              ...StackActions.popToTop(),
-              target,
-            })
-          } else {
-            // fallback: reset navigation
-            navigation.reset({
-              index: 0,
-              routes: [{name: `${tab}Tab`}],
-            })
-          }
-        })
+        dedupe(() => navigation.dispatch(StackActions.popToTop()))
       } else {
         dedupe(() => navigation.navigate(`${tab}Tab`))
       }
     },
     [navigation, dedupe],
   )
-  const onPressHome = useCallback(() => onPressTab('Home'), [onPressTab])
-  const onPressSearch = useCallback(() => onPressTab('Search'), [onPressTab])
-  const onPressNotifications = useCallback(
+  const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
+  const onPressSearch = React.useCallback(
+    () => onPressTab('Search'),
+    [onPressTab],
+  )
+  const onPressNotifications = React.useCallback(
     () => onPressTab('Notifications'),
     [onPressTab],
   )
-  const onPressProfile = useCallback(() => {
+  const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
-  const onPressMessages = useCallback(() => {
+  const onPressMessages = React.useCallback(() => {
     onPressTab('Messages')
   }, [onPressTab])
 
-  const onLongPressProfile = useCallback(() => {
+  const onLongPressProfile = React.useCallback(() => {
     playHaptic()
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])
@@ -371,7 +363,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
 
 interface BtnProps
   extends Pick<
-    React.ComponentProps<typeof PressableScale>,
+    ComponentProps<typeof PressableScale>,
     | 'accessible'
     | 'accessibilityRole'
     | 'accessibilityHint'
