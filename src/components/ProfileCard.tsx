@@ -277,12 +277,18 @@ export function Name({
     <View style={[a.flex_row, a.align_center]}>
       <Text
         emoji
-        style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
+        style={[
+          a.text_md,
+          a.font_bold,
+          a.leading_snug,
+          a.self_start,
+          a.flex_shrink,
+        ]}
         numberOfLines={1}>
         {name}
       </Text>
       {verification.showBadge && (
-        <View style={[a.pl_xs]}>
+        <View style={[a.pl_xs, a.flex_grow_0]}>
           <VerificationCheck
             width={14}
             verifier={verification.role === 'verifier'}
