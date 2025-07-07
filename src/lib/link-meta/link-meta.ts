@@ -66,19 +66,18 @@ export async function getLinkMeta(
     return meta
   }
 
-  try {
-    const controller = new AbortController()
-    const to = setTimeout(() => controller.abort(), timeout || 5e3)
+  const controller = new AbortController()
+  const to = setTimeout(() => controller.abort(), timeout || 5e3)
 
+  try {
     const response = await fetch(
-      `${LINK_META_PROXY(agent.service.toString() || '')}${encodeURIComponent(
+      `${LINK_META_PROXY(agent.serviceUrl.toString() || '')}${encodeURIComponent(
         url,
       )}`,
       {signal: controller.signal},
     )
 
     const body = await response.json()
-    clearTimeout(to)
 
     if (body.error !== '') {
       throw new Error(body.error)
@@ -94,6 +93,8 @@ export async function getLinkMeta(
     // failed
     console.error(e)
     meta.error = e instanceof Error ? e.toString() : 'Failed to fetch link'
+  } finally {
+    clearTimeout(to)
   }
 
   return meta
