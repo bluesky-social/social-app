@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
   moderateProfile,
@@ -288,7 +288,7 @@ export function Name({
         {name}
       </Text>
       {verification.showBadge && (
-        <View style={[a.pl_xs, a.flex_grow_0]}>
+        <View style={[a.pl_xs]}>
           <VerificationCheck
             width={14}
             verifier={verification.role === 'verifier'}
@@ -351,7 +351,7 @@ export function Description({
   numberOfLines?: number
 }) {
   const profile = useProfileShadow(profileUnshadowed)
-  const rt = React.useMemo(() => {
+  const rt = useMemo(() => {
     if (!('description' in profile)) return
     const rt = new RichTextApi({text: profile.description || ''})
     rt.detectFacetsWithoutResolution()
