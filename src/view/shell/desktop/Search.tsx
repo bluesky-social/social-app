@@ -1,4 +1,4 @@
-import {memo, useDeferredValue, useRef, useState} from 'react'
+import {useDeferredValue, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   type StyleProp,
@@ -9,7 +9,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
-import type React from 'react'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -21,7 +20,7 @@ import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/componen
 import {Link, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-let SearchLinkCard = ({
+function SearchLinkCard({
   label,
   to,
   style,
@@ -29,7 +28,7 @@ let SearchLinkCard = ({
   label: string
   to: LinkProps['to']
   style?: StyleProp<ViewStyle>
-}): React.ReactNode => {
+}) {
   const t = useTheme()
 
   return (
@@ -50,8 +49,6 @@ let SearchLinkCard = ({
     </Link>
   )
 }
-SearchLinkCard = memo(SearchLinkCard)
-export {SearchLinkCard}
 
 export function DesktopSearch() {
   const {_} = useLingui()
