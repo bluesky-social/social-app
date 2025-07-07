@@ -125,7 +125,7 @@ function Inner(props: ReportDialogProps) {
       .filter(l => {
         const collections: string[] | undefined = l.subjectCollections
         if (collections === undefined) return true
-        // all chat collections accepted, since only Bluesky handles chats
+        // all chat collections accepted, since only Gander handles chats
         if (props.subject.type === 'chatMessage') return true
         return collections.includes(props.subject.nsid)
       })

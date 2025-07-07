@@ -19,7 +19,7 @@ import {QuoteEmbed} from '#/components/Post/Embed'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {parseEmbed} from '#/types/bsky/post'
+import {parseEmbed} from '#/types/gndr/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
@@ -54,7 +54,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   }, [embed])
   const parsedQuoteEmbed = quoteEmbed
     ? parseEmbed({
-        $type: 'app.bsky.embed.record#view',
+        $type: 'app.gndr.embed.record#view',
         ...quoteEmbed,
       })
     : null

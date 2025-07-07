@@ -109,12 +109,12 @@ export function NewskieDialog({
             <Text style={[a.text_md, a.text_center, a.leading_snug]}>
               {profile.joinedViaStarterPack ? (
                 <Trans>
-                  {profileName} joined Bluesky using a starter pack{' '}
+                  {profileName} joined Gander using a starter pack{' '}
                   {timeAgo(createdAt, now, {format: 'long'})} ago
                 </Trans>
               ) : (
                 <Trans>
-                  {profileName} joined Bluesky{' '}
+                  {profileName} joined Gander{' '}
                   {timeAgo(createdAt, now, {format: 'long'})} ago
                 </Trans>
               )}

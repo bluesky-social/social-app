@@ -56,7 +56,7 @@ export type Modal =
   | CreateOrEditListModal
   | UserAddRemoveListsModal
 
-  // Bluesky access
+  // Gander access
   | WaitlistModal
   | InviteCodesModal
 

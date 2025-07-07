@@ -202,5 +202,5 @@ export const urls = {
   },
 }
 
-export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
-export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
+export const PUBLIC_APPVIEW_DID = 'did:web:api.gndr.app'
+export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.gndr.dev'

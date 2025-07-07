@@ -306,7 +306,7 @@ export function PostThread({uri}: {uri: string}) {
         // When progressively revealing parents, rendering a placeholder
         // here will cause scrolling jumps. Don't add it unless you test it.
         // QT'ing this thread is a great way to test all the scrolling hacks:
-        // https://bsky.app/profile/samuel.bsky.team/post/3kjqhblh6qk2o
+        // https://gndr.app/profile/samuel.gndr.team/post/3kjqhblh6qk2o
 
         // Everything is loaded
         let startIndex = Math.max(0, parents.length - maxParents)
@@ -407,7 +407,7 @@ export function PostThread({uri}: {uri: string}) {
     if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: thread.post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
+        event: 'app.gndr.feed.defs#interactionReply',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })

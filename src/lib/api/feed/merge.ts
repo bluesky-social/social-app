@@ -9,7 +9,7 @@ import {FeedParams} from '#/state/queries/post-feed'
 import {FeedTuner} from '../feed-manip'
 import {FeedTunerFn} from '../feed-manip'
 import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
-import {createGndrTopicsHeader, isBlueskyOwnedFeed} from './utils'
+import {createGndrTopicsHeader, isGanderOwnedFeed} from './utils'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
@@ -282,7 +282,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
   ): Promise<AppGndrFeedGetTimeline.Response> {
     try {
       const contentLangs = getContentLanguages().join(',')
-      const isBlueskyOwned = isBlueskyOwnedFeed(this.feedUri)
+      const isGanderOwned = isGanderOwnedFeed(this.feedUri)
       const res = await this.agent.app.gndr.feed.getFeed(
         {
           cursor,
@@ -291,7 +291,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
         },
         {
           headers: {
-            ...(isBlueskyOwned
+            ...(isGanderOwned
               ? createGndrTopicsHeader(this.userInterests)
               : {}),
             'Accept-Language': contentLangs,

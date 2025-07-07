@@ -36,7 +36,7 @@ export class PostListFeedAPI implements FeedAPI {
   }
 
   async fetch({}: {}): Promise<FeedAPIResponse> {
-    const res = await this.agent.app.bsky.feed.getPosts({
+    const res = await this.agent.app.gndr.feed.getPosts({
       ...this.params,
     })
     if (res.success) {

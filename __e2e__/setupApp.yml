@@ -9,5 +9,5 @@ appId: xyz.ganderweb.app
 - extendedWaitUntil:
     visible: "Continue"
 - swipe:
-   from: "Bluesky"
+   from: "Gander"
    direction: DOWN

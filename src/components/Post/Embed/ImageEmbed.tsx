@@ -14,7 +14,7 @@ import {AutoSizedImage} from '#/view/com/util/images/AutoSizedImage'
 import {ImageLayoutGrid} from '#/view/com/util/images/ImageLayoutGrid'
 import {atoms as a} from '#/alf'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
-import {type EmbedType} from '#/types/bsky/post'
+import {type EmbedType} from '#/types/gndr/post'
 import {type CommonProps} from './types'
 
 export function ImageEmbed({

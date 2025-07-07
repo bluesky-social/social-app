@@ -187,7 +187,7 @@ export function NameAndHandle({
   moderationOpts,
   inline = false,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   inline?: boolean
 }) {

@@ -147,7 +147,7 @@ function Inner({
         <Link
           overridePresentation
           to={urls.website.blog.initialVerificationAnnouncement}
-          label={_(msg`Learn more about verification on Bluesky`)}
+          label={_(msg`Learn more about verification on Gander`)}
           size="small"
           variant="solid"
           color="secondary"

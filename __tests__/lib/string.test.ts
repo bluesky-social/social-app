@@ -1006,10 +1006,10 @@ describe('tenorUrlToBskyGifUrl', () => {
   ]
 
   it.each(inputs)(
-    'returns url with t.gifs.bsky.app as hostname for input url',
+    'returns url with t.gifs.gndr.app as hostname for input url',
     input => {
       const out = tenorUrlToBskyGifUrl(input)
-      expect(out.startsWith('https://t.gifs.bsky.app/')).toEqual(true)
+      expect(out.startsWith('https://t.gifs.gndr.app/')).toEqual(true)
     },
   )
 })

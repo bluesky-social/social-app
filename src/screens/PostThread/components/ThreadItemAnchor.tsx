@@ -59,7 +59,7 @@ import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function ThreadItemAnchor({
   item,
@@ -229,7 +229,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       : []
   }, [post, currentAccount?.did, threadgateHiddenReplies, threadRootUri])
   const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
-    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
+    rule => rule.$type === 'app.gndr.feed.threadgate#followerRule',
   )
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
@@ -261,7 +261,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
+        event: 'app.gndr.feed.defs#interactionReply',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })
@@ -280,7 +280,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughAuthor',
+        event: 'app.gndr.feed.defs#clickthroughAuthor',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })
@@ -291,7 +291,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughEmbed',
+        event: 'app.gndr.feed.defs#clickthroughEmbed',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })
@@ -531,7 +531,7 @@ function ExpandedPostDetails({
       openLink(translatorUrl, true)
 
       if (
-        bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        gndr.dangerousIsType<AppBskyFeedPost.Record>(
           post.record,
           AppBskyFeedPost.isRecord,
         )
@@ -582,7 +582,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
-  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+  const createdAt = gndr.dangerousIsType<AppBskyFeedPost.Record>(
     post.record,
     AppBskyFeedPost.isRecord,
   )
@@ -645,7 +645,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
           <Trans>
             This post claims to have been created on{' '}
             <RNText style={[a.font_bold]}>{niceDate(i18n, createdAt)}</RNText>,
-            but was first seen by Bluesky on{' '}
+            but was first seen by Gander on{' '}
             <RNText style={[a.font_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
           </Trans>
         </Prompt.DescriptionText>
@@ -657,7 +657,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
             a.pb_xl,
           ]}>
           <Trans>
-            Bluesky cannot confirm the authenticity of the claimed date.
+            Gander cannot confirm the authenticity of the claimed date.
           </Trans>
         </Text>
         <Prompt.Actions>

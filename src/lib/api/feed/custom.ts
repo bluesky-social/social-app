@@ -10,7 +10,7 @@ import {
   getContentLanguages,
 } from '#/state/preferences/languages'
 import {FeedAPI, FeedAPIResponse} from './types'
-import {createGndrTopicsHeader, isBlueskyOwnedFeed} from './utils'
+import {createGndrTopicsHeader, isGanderOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
   agent: GndrAgent
@@ -52,7 +52,7 @@ export class CustomFeedAPI implements FeedAPI {
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
     const agent = this.agent
-    const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
+    const isGanderOwned = isGanderOwnedFeed(this.params.feed)
 
     const res = agent.did
       ? await this.agent.app.gndr.feed.getFeed(
@@ -63,7 +63,7 @@ export class CustomFeedAPI implements FeedAPI {
           },
           {
             headers: {
-              ...(isBlueskyOwned
+              ...(isGanderOwned
                 ? createGndrTopicsHeader(this.userInterests)
                 : {}),
               'Accept-Language': contentLangs,

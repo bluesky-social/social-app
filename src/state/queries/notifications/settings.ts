@@ -22,7 +22,7 @@ export function useNotificationSettingsQuery({
   return useQuery({
     queryKey: RQKEY,
     queryFn: async () => {
-      const response = await agent.app.bsky.notification.getPreferences()
+      const response = await agent.app.gndr.notification.getPreferences()
       return response.data.preferences
     },
     enabled,

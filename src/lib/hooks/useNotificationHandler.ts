@@ -230,7 +230,7 @@ export function useNotificationsHandler() {
         switch (payload.reason) {
           case 'subscribed-post':
             const urip = new AtUri(payload.uri)
-            if (urip.collection === 'app.bsky.feed.post') {
+            if (urip.collection === 'app.gndr.feed.post') {
               setTimeout(() => {
                 // @ts-expect-error types are weird here
                 navigation.navigate('HomeTab', {

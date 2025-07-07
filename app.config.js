@@ -38,7 +38,7 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
+      name: 'Gander',
       slug: 'gander',
       scheme: 'gander',
       owner: 'gandersocial',
@@ -308,7 +308,7 @@ module.exports = function (_config) {
             },
 
             /**
-             * Bluesky+ core set
+             * Gander+ core set
              */
             core_aurora: {
               ios: './assets/app-icons/ios_icon_core_aurora.png',
@@ -366,8 +366,8 @@ module.exports = function (_config) {
               ios: {
                 appExtensions: [
                   {
-                    targetName: 'Share-with-Bluesky',
-                    bundleIdentifier: 'xyz.ganderweb.app.Share-with-Bluesky',
+                    targetName: 'Share-with-Gander',
+                    bundleIdentifier: 'xyz.ganderweb.app.Share-with-Gander',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.gndr',
@@ -375,8 +375,8 @@ module.exports = function (_config) {
                     },
                   },
                   {
-                    targetName: 'BlueskyNSE',
-                    bundleIdentifier: 'xyz.ganderweb.app.BlueskyNSE',
+                    targetName: 'GanderNSE',
+                    bundleIdentifier: 'xyz.ganderweb.app.GanderNSE',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.gndr',
@@ -384,7 +384,7 @@ module.exports = function (_config) {
                     },
                   },
                   {
-                    targetName: 'BlueskyClip',
+                    targetName: 'GanderClip',
                     bundleIdentifier: 'xyz.ganderweb.app.AppClip',
                   },
                 ],

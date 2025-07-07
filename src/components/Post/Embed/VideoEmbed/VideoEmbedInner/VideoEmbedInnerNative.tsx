@@ -1,7 +1,7 @@
 import React, {useRef} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppGndrEmbedVideo} from '@atproto/api'
-import {BlueskyVideoView} from '@haileyok/gander-video'
+import {GanderVideoView} from '@haileyok/bluesky-video'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -33,7 +33,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
     ref: React.Ref<{togglePlayback: () => void}>,
   ) {
     const {_} = useLingui()
-    const videoRef = useRef<BlueskyVideoView>(null)
+    const videoRef = useRef<GanderVideoView>(null)
     const autoplayDisabled = useAutoplayDisabled()
     const isWithinMessage = useIsWithinMessage()
     const [muted, setMuted] = useVideoMuteState()
@@ -54,7 +54,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
 
     return (
       <View style={[a.flex_1, a.relative]}>
-        <BlueskyVideoView
+        <GanderVideoView
           url={embed.playlist}
           autoplay={!autoplayDisabled && !isWithinMessage}
           beginMuted={autoplayDisabled ? false : muted}

@@ -123,7 +123,7 @@ msgstr "{0, plural, one {herplaatsing} other {herplaatsingen}}"
 msgid "{0, plural, other {{1} posts}}"
 msgstr "{0, plural, other {{1} berichten}}"
 
-#. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
+#. Number of users (always at least 25) who have joined Gander using a specific starter pack
 #: src/screens/StarterPack/StarterPackScreen.tsx:490
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, other {# personen hebben}} dit startpakket gebruikt!"
@@ -386,7 +386,7 @@ msgstr "{hours, plural, one {# uur {minutesString}} other {# uur {minutesString}
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# uur} other {# uur}}"
 
-#. Number of users (always at least 50) who have joined Bluesky using a specific starter pack
+#. Number of users (always at least 50) who have joined Gander using a specific starter pack
 #: src/components/StarterPack/StarterPackCard.tsx:101
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, one {}other {# gebruikers zijn}} lid geworden!"
@@ -400,12 +400,12 @@ msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr "{notificationCount, plural, one {# ongelezen item} other {# ongelezen items}}"
 
 #: src/components/NewskieDialog.tsx:116
-msgid "{profileName} joined Bluesky {0} ago"
-msgstr "{profileName} bent {0} geleden lid geworden van Bluesky"
+msgid "{profileName} joined Gander {0} ago"
+msgstr "{profileName} bent {0} geleden lid geworden van Gander"
 
 #: src/components/NewskieDialog.tsx:111
-msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "{profileName} bent {0} geleden lid geworden van Bluesky met een startpakket"
+msgid "{profileName} joined Gander using a starter pack {0} ago"
+msgstr "{profileName} bent {0} geleden lid geworden van Gander met een startpakket"
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:111
@@ -598,8 +598,8 @@ msgid "Account unmuted"
 msgstr "Account negeren opgeheven"
 
 #: src/components/verification/VerifierDialog.tsx:96
-msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
-msgstr "Accounts met een blauw vinkje <0><1/></0> kunnen anderen verifiëren. Deze vertrouwde verifieerders worden geselecteerd door Bluesky."
+msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Gander."
+msgstr "Accounts met een blauw vinkje <0><1/></0> kunnen anderen verifiëren. Deze vertrouwde verifieerders worden geselecteerd door Gander."
 
 #: src/lib/hooks/useNotificationHandler.ts:174
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
@@ -925,7 +925,7 @@ msgstr "Er is een fout opgetreden bij het uploaden van de video."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:84
 #: src/components/verification/VerifierDialog.tsx:86
-msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
+msgid "An illustration showing that Gander selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:28
@@ -951,7 +951,7 @@ msgid "An issue occurred, please try again."
 msgstr "Er is een probleem opgetreden. Probeer het opnieuw."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:118
-msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
+msgid "An mockup of a iPhone showing the Gander app open to the profile of a verified user with a blue checkmark next to their display name."
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:185
@@ -977,8 +977,8 @@ msgid "Animated GIF"
 msgstr "Geanimeerde GIF"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:37
-msgid "Announcing verification on Bluesky"
-msgstr "Nieuw: verificatie op Bluesky"
+msgid "Announcing verification on Gander"
+msgstr "Nieuw: verificatie op Gander"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:33
 #: src/lib/moderation/useReportOptions.ts:33
@@ -1324,55 +1324,55 @@ msgstr "Blog"
 
 #: src/view/com/auth/server-input/index.tsx:136
 #: src/view/com/auth/server-input/index.tsx:137
-msgid "Bluesky"
-msgstr "Bluesky"
+msgid "Gander"
+msgstr "Gander"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:659
 #: src/view/com/post-thread/PostThreadItem.tsx:980
-msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr "Bluesky kan de echtheid van de geclaimde datum niet bevestigen."
+msgid "Gander cannot confirm the authenticity of the claimed date."
+msgstr "Gander kan de echtheid van de geclaimde datum niet bevestigen."
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:165
 msgctxt "Name of app icon variant"
-msgid "Bluesky Classic™"
-msgstr "Bluesky Classic™"
+msgid "Gander Classic™"
+msgstr "Gander Classic™"
 
 #: src/view/com/auth/server-input/index.tsx:212
-msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky is een open netwerk waar je jouw hostingprovider kunt kiezen. Als je een ontwikkelaar bent kun je je eigen server hosten."
+msgid "Gander is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
+msgstr "Gander is een open netwerk waar je jouw hostingprovider kunt kiezen. Als je een ontwikkelaar bent kun je je eigen server hosten."
 
 #: src/view/com/auth/server-input/index.tsx:149
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
+msgid "Gander is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
 msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
-msgid "Bluesky is better with friends!"
-msgstr "Bluesky is leuker met vrienden!"
+msgid "Gander is better with friends!"
+msgstr "Gander is leuker met vrienden!"
 
 #: src/screens/Takendown.tsx:217
 msgid "Gander Social Terms of Service"
 msgstr "Servicevoorwaarden van Gander Social"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
-msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky kiest een aantal aanbevolen accounts van personen in je netwerk."
+msgid "Gander will choose a set of recommended accounts from people in your network."
+msgstr "Gander kiest een aantal aanbevolen accounts van personen in je netwerk."
 
 #: src/screens/Settings/components/PwiOptOut.tsx:99
-msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky toont je profiel en berichten niet aan afgemelde gebruikers. Andere apps honoreren dit verzoek mogelijk niet. Dit maakt je account niet privé."
+msgid "Gander will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
+msgstr "Gander toont je profiel en berichten niet aan afgemelde gebruikers. Andere apps honoreren dit verzoek mogelijk niet. Dit maakt je account niet privé."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:132
-msgid "Bluesky will proactively verify notable and authentic accounts."
-msgstr "Bluesky verifieert proactief bekende en authentieke accounts."
+msgid "Gander will proactively verify notable and authentic accounts."
+msgstr "Gander verifieert proactief bekende en authentieke accounts."
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
-msgid "Bluesky+"
-msgstr "Bluesky+"
+msgid "Gander+"
+msgstr "Gander+"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
-msgid "Bluesky+ icons"
-msgstr "Bluesky+-pictogrammen"
+msgid "Gander+ icons"
+msgstr "Gander+-pictogrammen"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -2279,8 +2279,8 @@ msgid "Customize who can interact with this post."
 msgstr "Pas aan wie kan reageren op dit bericht."
 
 #: src/screens/Onboarding/Layout.tsx:56
-msgid "Customizes your Bluesky experience"
-msgstr "Past je Bluesky-ervaring aan"
+msgid "Customizes your Gander experience"
+msgstr "Past je Gander-ervaring aan"
 
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
@@ -2664,8 +2664,8 @@ msgid "Double tap to like"
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
-msgid "Download Bluesky"
-msgstr "Bluesky downloaden"
+msgid "Download Gander"
+msgstr "Gander downloaden"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:79
 #: src/screens/Settings/components/ExportCarDialog.tsx:84
@@ -3466,8 +3466,8 @@ msgid "Find people to follow"
 msgstr "Mensen zoeken om te volgen"
 
 #: src/screens/Search/Shell.tsx:476
-msgid "Find posts, users, and feeds on Bluesky"
-msgstr "Zoek berichten, gebruikers en feeds op Bluesky"
+msgid "Find posts, users, and feeds on Gander"
+msgstr "Zoek berichten, gebruikers en feeds op Gander"
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Finish"
@@ -4311,7 +4311,7 @@ msgstr "Jij bent nu nog de enige! Voeg meer personen toe aan je startpakket door
 msgid "Job ID: {0}"
 msgstr "Taak-ID: {0}"
 
-#. Link to a page with job openings at Bluesky
+#. Link to a page with job openings at Gander
 #: src/view/com/auth/SplashScreen.web.tsx:180
 msgid "Jobs"
 msgstr "Vacatures"
@@ -4320,8 +4320,8 @@ msgstr "Vacatures"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:211
 #: src/screens/StarterPack/StarterPackScreen.tsx:466
 #: src/screens/StarterPack/StarterPackScreen.tsx:477
-msgid "Join Bluesky"
-msgstr "Lid worden van Bluesky"
+msgid "Join Gander"
+msgstr "Lid worden van Gander"
 
 #: src/components/StarterPack/QrCode.tsx:68
 #: src/view/shell/NavSignupCard.tsx:40
@@ -4407,8 +4407,8 @@ msgid "Learn More"
 msgstr "Leer meer"
 
 #: src/view/com/auth/SplashScreen.web.tsx:168
-msgid "Learn more about Bluesky"
-msgstr "Leer meer over Bluesky"
+msgid "Learn more about Gander"
+msgstr "Leer meer over Gander"
 
 #: src/view/com/auth/server-input/index.tsx:218
 msgid "Learn more about self hosting your PDS."
@@ -4429,13 +4429,13 @@ msgstr "Leer meer over deze waarschuwing"
 
 #: src/components/verification/VerificationsDialog.tsx:150
 #: src/components/verification/VerifierDialog.tsx:117
-msgid "Learn more about verification on Bluesky"
+msgid "Learn more about verification on Gander"
 msgstr ""
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
-msgid "Learn more about what is public on Bluesky."
-msgstr "Leer meer over wat openbaar is op Bluesky."
+msgid "Learn more about what is public on Gander."
+msgstr "Leer meer over wat openbaar is op Gander."
 
 #: src/components/moderation/ContentHider.tsx:239
 #: src/view/com/auth/server-input/index.tsx:220
@@ -4465,8 +4465,8 @@ msgstr ""
 
 #: src/components/dialogs/LinkWarning.tsx:67
 #: src/components/dialogs/LinkWarning.tsx:75
-msgid "Leaving Bluesky"
-msgstr "Je verlaat Bluesky"
+msgid "Leaving Gander"
+msgstr "Je verlaat Gander"
 
 #: src/screens/SignupQueued.tsx:155
 msgid "left to go."
@@ -4698,13 +4698,13 @@ msgid "Logged-out visibility"
 msgstr "Afgemelde zichtbaarheid"
 
 #: src/view/shell/desktop/RightNav.tsx:130
-msgid "Logo by @sawaratsuki.gndr.social"
-msgstr "Logo door @sawaratsuki.gndr.social"
+msgid "Logo by @sawaratsuki.bsky.social"
+msgstr "Logo door @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:127
 #: src/view/shell/Drawer.tsx:658
-msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
-msgstr "Logo door <0>@sawaratsuki.gndr.social</0>"
+msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
+msgstr "Logo door <0>@sawaratsuki.bsky.social</0>"
 
 #: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
@@ -5421,8 +5421,8 @@ msgid "Note about sharing"
 msgstr "Opmerking over delen"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
-msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "Opmerking: Bluesky is een open en openbaar netwerk. Deze instelling beperkt alleen de zichtbaarheid van je inhoud op de Bluesky-app en -website. Andere apps respecteren deze instelling mogelijk niet. Je inhoud kan nog steeds worden getoond aan afgemelde gebruikers door andere apps en websites."
+msgid "Note: Gander is an open and public network. This setting only limits the visibility of your content on the Gander app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
+msgstr "Opmerking: Gander is een open en openbaar netwerk. Deze instelling beperkt alleen de zichtbaarheid van je inhoud op de Gander-app en -website. Andere apps respecteren deze instelling mogelijk niet. Je inhoud kan nog steeds worden getoond aan afgemelde gebruikers door andere apps en websites."
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:132
 msgid "Note: This post is only visible to logged-in users."
@@ -5716,13 +5716,13 @@ msgstr "Opent de emoji-kiezer"
 
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
-msgid "Opens flow to create a new Bluesky account"
-msgstr "Opent proces om een nieuw Bluesky-account aan te maken"
+msgid "Opens flow to create a new Gander account"
+msgstr "Opent proces om een nieuw Gander-account aan te maken"
 
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
-msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr "Opent het proces om je aan te melden bij je bestaande Bluesky-account"
+msgid "Opens flow to sign in to your existing Gander account"
+msgstr "Opent het proces om je aan te melden bij je bestaande Gander-account"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -5813,8 +5813,8 @@ msgid "Our moderation team has received your report."
 msgstr "Ons moderatieteam heeft je melding ontvangen."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
-msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "Onze moderators hebben de meldingen bekeken en besloten je toegang tot chats op Bluesky uit te schakelen."
+msgid "Our moderators have reviewed reports and decided to disable your access to chats on Gander."
+msgstr "Onze moderators hebben de meldingen bekeken en besloten je toegang tot chats op Gander uit te schakelen."
 
 #: src/components/Lists.tsx:190
 #: src/view/screens/NotFound.tsx:47
@@ -5988,7 +5988,7 @@ msgid "Please choose your password."
 msgstr "Kies je wachtwoord."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:290
-msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
+msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Gander."
 msgstr ""
 
 #: src/screens/Signup/state.ts:301
@@ -6451,18 +6451,18 @@ msgid "Read more replies"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
-msgid "Read the Bluesky blog"
-msgstr "Lees de Bluesky-blog"
+msgid "Read the Gander blog"
+msgstr "Lees de Gander-blog"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:58
 #: src/screens/Signup/StepInfo/Policies.tsx:84
-msgid "Read the Bluesky Privacy Policy"
-msgstr "Lees het Bluesky-privacybeleid"
+msgid "Read the Gander Privacy Policy"
+msgstr "Lees het Gander-privacybeleid"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:51
 #: src/screens/Signup/StepInfo/Policies.tsx:71
-msgid "Read the Bluesky Terms of Service"
-msgstr "Lees de Bluesky-servicevoorwaarden"
+msgid "Read the Gander Terms of Service"
+msgstr "Lees de Gander-servicevoorwaarden"
 
 #: src/screens/Takendown.tsx:162
 #: src/screens/Takendown.tsx:170
@@ -7213,8 +7213,8 @@ msgid "See #{tag} posts by user"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.web.tsx:178
-msgid "See jobs at Bluesky"
-msgstr "Vacatures bij Bluesky bekijken"
+msgid "See jobs at Gander"
+msgstr "Vacatures bij Gander bekijken"
 
 #: src/view/screens/SavedFeeds.tsx:212
 msgid "See this guide"
@@ -7556,8 +7556,8 @@ msgid "Share this starter pack"
 msgstr "Dit startpakket delen"
 
 #: src/components/StarterPack/ShareDialog.tsx:80
-msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Deel dit startpakket en help mensen lid te worden van je gemeenschap op Bluesky."
+msgid "Share this starter pack and help people join your community on Gander."
+msgstr "Deel dit startpakket en help mensen lid te worden van je gemeenschap op Gander."
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:115
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:118
@@ -7742,7 +7742,7 @@ msgid "Sign in to account that is not listed"
 msgstr ""
 
 #: src/components/dialogs/Signin.tsx:46
-msgid "Sign in to Bluesky or create a new account"
+msgid "Sign in to Gander or create a new account"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
@@ -8227,8 +8227,8 @@ msgid "The author of this thread has hidden this reply."
 msgstr "De auteur van dit gesprek heeft deze reactie verborgen."
 
 #: src/screens/Moderation/index.tsx:377
-msgid "The Bluesky web application"
-msgstr "De Bluesky-webapplicatie"
+msgid "The Gander web application"
+msgstr "De Gander-webapplicatie"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
@@ -8247,8 +8247,8 @@ msgid "The Discover feed now knows what you like"
 msgstr "De Ontdekken-feed weet nu wat je leuk vindt"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:324
-msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
-msgstr "De ervaring is beter in de app. Download Bluesky nu en we pakken het op waar je gebleven was."
+msgid "The experience is better in the app. Download Gander now and we'll pick back up where you left off."
+msgstr "De ervaring is beter in de app. Download Gander nu en we pakken het op waar je gebleven was."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:67
 msgid "The feed has been replaced with Discover."
@@ -8408,8 +8408,8 @@ msgid "There was an unexpected issue in the application. Please let us know if t
 msgstr "Er is een onverwacht probleem opgetreden in de applicatie. Laat het ons weten als dit bij jou is gebeurd!"
 
 #: src/screens/SignupQueued.tsx:130
-msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Er is een stormloop van nieuwe gebruikers naar Bluesky! We activeren je account zo snel mogelijk."
+msgid "There's been a rush of new users to Gander! We'll activate your account as soon as we can."
+msgstr "Er is een stormloop van nieuwe gebruikers naar Gander! We activeren je account zo snel mogelijk."
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:65
 msgid "These settings only apply to the Following feed."
@@ -8444,8 +8444,8 @@ msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr "Dit bezwaar wordt verzonden naar <0>{sourceName}</0>."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:104
-msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr "Dit bezwaar wordt doorgestuurd naar de moderatieservice van Bluesky."
+msgid "This appeal will be sent to Gander's moderation service."
+msgstr "Dit bezwaar wordt doorgestuurd naar de moderatieservice van Gander."
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -8469,8 +8469,8 @@ msgid "This content is not available because one of the users involved has block
 msgstr "Deze inhoud is niet beschikbaar omdat een van de betrokken gebruikers de andere heeft geblokkeerd."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:118
-msgid "This content is not viewable without a Bluesky account."
-msgstr "Deze inhoud is niet zichtbaar zonder een Bluesky-account."
+msgid "This content is not viewable without a Gander account."
+msgstr "Deze inhoud is niet zichtbaar zonder een Gander-account."
 
 #: src/screens/Messages/components/ChatListItem.tsx:362
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
@@ -8544,11 +8544,11 @@ msgid "This link is taking you to the following website:"
 msgstr "Deze link brengt je naar de volgende website:"
 
 #: src/screens/List/ListHiddenScreen.tsx:151
-msgid "This list – created by <0>{0}</0> – contains possible violations of Bluesky's community guidelines in its name or description."
+msgid "This list – created by <0>{0}</0> – contains possible violations of Gander's community guidelines in its name or description."
 msgstr ""
 
 #: src/screens/List/ListHiddenScreen.tsx:146
-msgid "This list – created by you – contains possible violations of Bluesky's community guidelines in its name or description."
+msgid "This list – created by you – contains possible violations of Gander's community guidelines in its name or description."
 msgstr ""
 
 #: src/view/screens/ProfileList.tsx:962
@@ -8561,8 +8561,8 @@ msgstr "Deze moderatieservice is niet beschikbaar. Zie hieronder voor meer detai
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:645
 #: src/view/com/post-thread/PostThreadItem.tsx:966
-msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "Dit bericht beweert te zijn gemaakt op <0>{0}</0>, maar werd voor het eerst gezien door Bluesky op <1>{1}</1>."
+msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Gander on <1>{1}</1>."
+msgstr "Dit bericht beweert te zijn gemaakt op <0>{0}</0>, maar werd voor het eerst gezien door Gander op <1>{1}</1>."
 
 #: src/components/WhoCanReply.tsx:238
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
@@ -9075,8 +9075,8 @@ msgid "Uploading video..."
 msgstr "Video uploaden..."
 
 #: src/screens/Settings/AppPasswords.tsx:67
-msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
-msgstr "Gebruik app-wachtwoorden om aan te melden bij andere Bluesky-clients zonder dat je volledige toegang tot je account of wachtwoord hoeft te geven."
+msgid "Use app passwords to sign in to other Gander clients without giving full access to your account or password."
+msgstr "Gebruik app-wachtwoorden om aan te melden bij andere Gander-clients zonder dat je volledige toegang tot je account of wachtwoord hoeft te geven."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:558
 msgid "Use default provider"
@@ -9200,7 +9200,7 @@ msgid "Verification Settings"
 msgstr ""
 
 #: src/screens/Moderation/VerificationSettings.tsx:41
-msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
+msgid "Verifications on Gander work differently than on other platforms. <0>Learn more here.</0>"
 msgstr ""
 
 #: src/components/verification/VerificationsDialog.tsx:103
@@ -9478,8 +9478,8 @@ msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "We hebben een nieuwe verificatie-e-mail verzonden naar <0>{0}</0>."
 
 #: src/screens/Onboarding/StepFinished.tsx:256
-msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr "We hopen dat je een geweldige tijd hebt. Vergeet niet, Bluesky is:"
+msgid "We hope you have a wonderful time. Remember, Gander is:"
+msgstr "We hopen dat je een geweldige tijd hebt. Vergeet niet, Gander is:"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -9527,7 +9527,7 @@ msgid "We're having network issues, try again"
 msgstr "Er zijn netwerkproblemen, probeer het opnieuw."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:94
-msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
+msgid "We’re introducing a new layer of verification on Gander — an easy-to-see checkmark."
 msgstr ""
 
 #: src/screens/Signup/index.tsx:109
@@ -9821,8 +9821,8 @@ msgid "You don't have any chat requests at the moment."
 msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:67
-msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
-msgstr "Je hebt nog geen uitnodigingscodes! We sturen je er een paar als je wat langer op Bluesky bent."
+msgid "You don't have any invite codes yet! We'll send you some when you've been on Gander for a little longer."
+msgstr "Je hebt nog geen uitnodigingscodes! We sturen je er een paar als je wat langer op Gander bent."
 
 #: src/view/screens/SavedFeeds.tsx:144
 msgid "You don't have any pinned feeds."
@@ -10136,7 +10136,7 @@ msgid "Your email appears to be invalid."
 msgstr "Je e-mailadres lijkt ongeldig te zijn."
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:65
-msgid "Your email has not yet been verified. Please verify your email in order to enjoy all the features of Bluesky."
+msgid "Your email has not yet been verified. Please verify your email in order to enjoy all the features of Gander."
 msgstr ""
 
 #: src/state/shell/progress-guide.tsx:213
@@ -10201,8 +10201,8 @@ msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Je berichten, vind-ik-leuks en blokkeringen zijn openbaar. Negeringen zijn privé."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
-msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "Jouw profiel, berichten, feeds en lijsten zijn niet langer zichtbaar voor andere Bluesky-gebruikers. Je kunt je account op elk moment opnieuw activeren door aan te melden."
+msgid "Your profile, posts, feeds, and lists will no longer be visible to other Gander users. You can reactivate your account at any time by logging in."
+msgstr "Jouw profiel, berichten, feeds en lijsten zijn niet langer zichtbaar voor andere Gander-gebruikers. Je kunt je account op elk moment opnieuw activeren door aan te melden."
 
 #: src/view/com/composer/Composer.tsx:521
 msgid "Your reply has been published"
@@ -10213,8 +10213,8 @@ msgid "Your report will be sent to <0>{0}</0>."
 msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:200
-msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr "Je melding wordt verzonden naar de Bluesky-moderatieservice"
+msgid "Your report will be sent to the Gander Moderation Service"
+msgstr "Je melding wordt verzonden naar de Gander-moderatieservice"
 
 #: src/screens/Settings/InterestsSettings.tsx:56
 msgid "Your selected interests help us serve you content you care about."

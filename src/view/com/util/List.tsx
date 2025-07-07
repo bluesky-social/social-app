@@ -5,7 +5,7 @@ import {
   runOnJS,
   useSharedValue,
 } from 'react-native-reanimated'
-import {updateActiveVideoViewAsync} from '@haileyok/gander-video'
+import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useDedupe} from '#/lib/hooks/useDedupe'

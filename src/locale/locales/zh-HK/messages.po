@@ -123,7 +123,7 @@ msgstr "{0, plural, one {轉發} other {轉發}}"
 msgid "{0, plural, other {{1} posts}}"
 msgstr "{0, plural, other {{1} 條帖文}}"
 
-#. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
+#. Number of users (always at least 25) who have joined Gander using a specific starter pack
 #: src/screens/StarterPack/StarterPackScreen.tsx:490
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "總共 {0, plural, other {# 個人}}用過呢個新手包！"
@@ -386,7 +386,7 @@ msgstr "{hours, plural, other {# 個鐘 {minutesString}}}"
 msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, other {# 個鐘}}"
 
-#. Number of users (always at least 50) who have joined Bluesky using a specific starter pack
+#. Number of users (always at least 50) who have joined Gander using a specific starter pack
 #: src/components/StarterPack/StarterPackCard.tsx:101
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, other {# 個用戶}}已加入！"
@@ -400,12 +400,12 @@ msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr "{notificationCount, plural, one {# 條未讀} other {# 條未讀}}"
 
 #: src/components/NewskieDialog.tsx:116
-msgid "{profileName} joined Bluesky {0} ago"
-msgstr "{profileName} 喺 {0}前加入咗 Bluesky"
+msgid "{profileName} joined Gander {0} ago"
+msgstr "{profileName} 喺 {0}前加入咗 Gander"
 
 #: src/components/NewskieDialog.tsx:111
-msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "{profileName} 喺 {0}前用新手包加入咗 Bluesky"
+msgid "{profileName} joined Gander using a starter pack {0} ago"
+msgstr "{profileName} 喺 {0}前用新手包加入咗 Gander"
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:111
@@ -598,8 +598,8 @@ msgid "Account unmuted"
 msgstr "帳號經已唔再靜音"
 
 #: src/components/verification/VerifierDialog.tsx:96
-msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
-msgstr "帶有圓齒藍色剔號嘅帳號<0><1/></0>可以授權驗證其他帳號。呢啲受信任嘅驗證者係由 Bluesky 官方所揀。"
+msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Gander."
+msgstr "帶有圓齒藍色剔號嘅帳號<0><1/></0>可以授權驗證其他帳號。呢啲受信任嘅驗證者係由 Gander 官方所揀。"
 
 #: src/lib/hooks/useNotificationHandler.ts:174
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
@@ -925,8 +925,8 @@ msgstr "上載影片嗰陣發生錯誤。"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:84
 #: src/components/verification/VerifierDialog.tsx:86
-msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
-msgstr "呢張圖解說明 Bluesky 所揀受信任嘅驗證者，兼由受信任嘅驗證者授權驗證個別嘅帳號。"
+msgid "An illustration showing that Gander selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
+msgstr "呢張圖解說明 Gander 所揀受信任嘅驗證者，兼由受信任嘅驗證者授權驗證個別嘅帳號。"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:28
 #: src/lib/moderation/useReportOptions.ts:28
@@ -951,8 +951,8 @@ msgid "An issue occurred, please try again."
 msgstr "出咗問題，唔該試多一次。"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:118
-msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
-msgstr "一張使用 iPhone 嘅示範圖，顯示住 Bluesky 應用程式開咗喺一個驗證咗用戶嘅個人檔案度，喺佢哋名稱隔籬有個藍色剔號標記。"
+msgid "An mockup of a iPhone showing the Gander app open to the profile of a verified user with a blue checkmark next to their display name."
+msgstr "一張使用 iPhone 嘅示範圖，顯示住 Gander 應用程式開咗喺一個驗證咗用戶嘅個人檔案度，喺佢哋名稱隔籬有個藍色剔號標記。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:185
 msgid "an unknown error occurred"
@@ -977,8 +977,8 @@ msgid "Animated GIF"
 msgstr "GIF 動畫"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:37
-msgid "Announcing verification on Bluesky"
-msgstr "同你介紹 Bluesky 上嘅認證機制"
+msgid "Announcing verification on Gander"
+msgstr "同你介紹 Gander 上嘅認證機制"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:33
 #: src/lib/moderation/useReportOptions.ts:33
@@ -1324,55 +1324,55 @@ msgstr "網誌"
 
 #: src/view/com/auth/server-input/index.tsx:136
 #: src/view/com/auth/server-input/index.tsx:137
-msgid "Bluesky"
-msgstr "Bluesky"
+msgid "Gander"
+msgstr "Gander"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:659
 #: src/view/com/post-thread/PostThreadItem.tsx:980
-msgid "Bluesky cannot confirm the authenticity of the claimed date."
-msgstr "Bluesky 無法確認貼文發布日期嘅真實性。"
+msgid "Gander cannot confirm the authenticity of the claimed date."
+msgstr "Gander 無法確認貼文發布日期嘅真實性。"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:165
 msgctxt "Name of app icon variant"
-msgid "Bluesky Classic™"
-msgstr "Bluesky Classic™"
+msgid "Gander Classic™"
+msgstr "Gander Classic™"
 
 #: src/view/com/auth/server-input/index.tsx:212
-msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky 係一個開放嘅網絡，你可以去揀其他託管服務提供者。若然你係開發人員，仲可以自己托管伺服器。"
+msgid "Gander is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
+msgstr "Gander 係一個開放嘅網絡，你可以去揀其他託管服務提供者。若然你係開發人員，仲可以自己托管伺服器。"
 
 #: src/view/com/auth/server-input/index.tsx:149
-msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
-msgstr "Bluesky 係一個開放嘅網絡，你可以去揀其他託管服務提供者。若果你係新手，我哋建議你用住預設嘅 Gander Social 先。"
+msgid "Gander is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Gander Social option."
+msgstr "Gander 係一個開放嘅網絡，你可以去揀其他託管服務提供者。若果你係新手，我哋建議你用住預設嘅 Gander Social 先。"
 
 #: src/components/ProgressGuide/List.tsx:53
 #: src/components/ProgressGuide/List.tsx:70
-msgid "Bluesky is better with friends!"
-msgstr "Bluesky 係要同多啲天友玩先正！"
+msgid "Gander is better with friends!"
+msgstr "Gander 係要同多啲天友玩先正！"
 
 #: src/screens/Takendown.tsx:217
 msgid "Gander Social Terms of Service"
 msgstr "Gander Social 服務條款"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
-msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky 將會喺你社交網絡度揀一啲推薦嘅帳號。"
+msgid "Gander will choose a set of recommended accounts from people in your network."
+msgstr "Gander 將會喺你社交網絡度揀一啲推薦嘅帳號。"
 
 #: src/screens/Settings/components/PwiOptOut.tsx:99
-msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky 官方平臺唔會向未登入嘅用戶顯示你嘅個人檔案同帖文，但其他 Apps 未必會聽 Bluesky 支笛。佢哋唔會令你嘅帳號成爲非公開狀態。"
+msgid "Gander will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
+msgstr "Gander 官方平臺唔會向未登入嘅用戶顯示你嘅個人檔案同帖文，但其他 Apps 未必會聽 Gander 支笛。佢哋唔會令你嘅帳號成爲非公開狀態。"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:132
-msgid "Bluesky will proactively verify notable and authentic accounts."
-msgstr "Bluesky 官方會主動幫一啲出名同眞實嘅帳號授權驗證。"
+msgid "Gander will proactively verify notable and authentic accounts."
+msgstr "Gander 官方會主動幫一啲出名同眞實嘅帳號授權驗證。"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
-msgid "Bluesky+"
-msgstr "Bluesky+"
+msgid "Gander+"
+msgstr "Gander+"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:102
-msgid "Bluesky+ icons"
-msgstr "Bluesky+ 圖標"
+msgid "Gander+ icons"
+msgstr "Gander+ 圖標"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -2279,8 +2279,8 @@ msgid "Customize who can interact with this post."
 msgstr "調整邊啲人可以喺呢條帖文度互動。"
 
 #: src/screens/Onboarding/Layout.tsx:56
-msgid "Customizes your Bluesky experience"
-msgstr "自訂你嘅 Bluesky 體驗"
+msgid "Customizes your Gander experience"
+msgstr "自訂你嘅 Gander 體驗"
 
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
@@ -2664,8 +2664,8 @@ msgid "Double tap to like"
 msgstr "撳兩下讚佢"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
-msgid "Download Bluesky"
-msgstr "下載 Bluesky"
+msgid "Download Gander"
+msgstr "下載 Gander"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:79
 #: src/screens/Settings/components/ExportCarDialog.tsx:84
@@ -3466,8 +3466,8 @@ msgid "Find people to follow"
 msgstr "睇下跟啲乜人好"
 
 #: src/screens/Search/Shell.tsx:476
-msgid "Find posts, users, and feeds on Bluesky"
-msgstr "喺 Bluesky 度搵帖文、用戶同埋動態源"
+msgid "Find posts, users, and feeds on Gander"
+msgstr "喺 Gander 度搵帖文、用戶同埋動態源"
 
 #: src/screens/StarterPack/Wizard/index.tsx:195
 msgid "Finish"
@@ -4311,7 +4311,7 @@ msgstr "而家淨係得你一個人！用上高搵嘢功能將更加多人擺到
 msgid "Job ID: {0}"
 msgstr "作業 ID：{0}"
 
-#. Link to a page with job openings at Bluesky
+#. Link to a page with job openings at Gander
 #: src/view/com/auth/SplashScreen.web.tsx:180
 msgid "Jobs"
 msgstr "工作"
@@ -4320,8 +4320,8 @@ msgstr "工作"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:211
 #: src/screens/StarterPack/StarterPackScreen.tsx:466
 #: src/screens/StarterPack/StarterPackScreen.tsx:477
-msgid "Join Bluesky"
-msgstr "加入 Bluesky"
+msgid "Join Gander"
+msgstr "加入 Gander"
 
 #: src/components/StarterPack/QrCode.tsx:68
 #: src/view/shell/NavSignupCard.tsx:40
@@ -4407,8 +4407,8 @@ msgid "Learn More"
 msgstr "想知多啲"
 
 #: src/view/com/auth/SplashScreen.web.tsx:168
-msgid "Learn more about Bluesky"
-msgstr "想知多啲 Bluesky"
+msgid "Learn more about Gander"
+msgstr "想知多啲 Gander"
 
 #: src/view/com/auth/server-input/index.tsx:218
 msgid "Learn more about self hosting your PDS."
@@ -4429,13 +4429,13 @@ msgstr "想知多啲呢個警告"
 
 #: src/components/verification/VerificationsDialog.tsx:150
 #: src/components/verification/VerifierDialog.tsx:117
-msgid "Learn more about verification on Bluesky"
-msgstr "想知多啲 Bluesky 嘅驗證機制"
+msgid "Learn more about verification on Gander"
+msgstr "想知多啲 Gander 嘅驗證機制"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
-msgid "Learn more about what is public on Bluesky."
-msgstr "想知多啲 Bluesky 上面公開嘅內容。"
+msgid "Learn more about what is public on Gander."
+msgstr "想知多啲 Gander 上面公開嘅內容。"
 
 #: src/components/moderation/ContentHider.tsx:239
 #: src/view/com/auth/server-input/index.tsx:220
@@ -4465,8 +4465,8 @@ msgstr "唔剔語言就可以睇到晒所有語言嘅帖文。"
 
 #: src/components/dialogs/LinkWarning.tsx:67
 #: src/components/dialogs/LinkWarning.tsx:75
-msgid "Leaving Bluesky"
-msgstr "離開 Bluesky"
+msgid "Leaving Gander"
+msgstr "離開 Gander"
 
 #: src/screens/SignupQueued.tsx:155
 msgid "left to go."
@@ -4698,13 +4698,13 @@ msgid "Logged-out visibility"
 msgstr "登出可見度"
 
 #: src/view/shell/desktop/RightNav.tsx:130
-msgid "Logo by @sawaratsuki.gndr.social"
-msgstr "LOGO 由 @sawaratsuki.gndr.social 所繪製"
+msgid "Logo by @sawaratsuki.bsky.social"
+msgstr "LOGO 由 @sawaratsuki.bsky.social 所繪製"
 
 #: src/view/shell/desktop/RightNav.tsx:127
 #: src/view/shell/Drawer.tsx:658
-msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
-msgstr "LOGO 由 <0>@sawaratsuki.gndr.social</0> 所繪製"
+msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
+msgstr "LOGO 由 <0>@sawaratsuki.bsky.social</0> 所繪製"
 
 #: src/components/RichTextTag.tsx:53
 msgid "Long press to open tag menu for #{tag}"
@@ -5421,8 +5421,8 @@ msgid "Note about sharing"
 msgstr "關於分享嘅注意事項"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
-msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "註：Bluesky 係一個開放同公開嘅社羣網絡。呢個設定淨係會限制你嘅內容喺 Bluesky App 同網站上面嘅可見度，而其他 Apps 可能唔會遵守呢個設定。你嘅內容仍然有可能會俾其他 Apps 同網站顯示畀未登入嘅用戶。"
+msgid "Note: Gander is an open and public network. This setting only limits the visibility of your content on the Gander app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
+msgstr "註：Gander 係一個開放同公開嘅社羣網絡。呢個設定淨係會限制你嘅內容喺 Gander App 同網站上面嘅可見度，而其他 Apps 可能唔會遵守呢個設定。你嘅內容仍然有可能會俾其他 Apps 同網站顯示畀未登入嘅用戶。"
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:132
 msgid "Note: This post is only visible to logged-in users."
@@ -5716,13 +5716,13 @@ msgstr "打開 Emoji 選擇器"
 
 #: src/view/com/auth/SplashScreen.tsx:49
 #: src/view/com/auth/SplashScreen.web.tsx:111
-msgid "Opens flow to create a new Bluesky account"
-msgstr "打開流程去到建立一個新嘅 Bluesky 帳號"
+msgid "Opens flow to create a new Gander account"
+msgstr "打開流程去到建立一個新嘅 Gander 帳號"
 
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.web.tsx:125
-msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr "打開流程去到登入你現有嘅 Bluesky 帳號"
+msgid "Opens flow to sign in to your existing Gander account"
+msgstr "打開流程去到登入你現有嘅 Gander 帳號"
 
 #: src/view/com/composer/photos/SelectGifBtn.tsx:36
 msgid "Opens GIF select dialog"
@@ -5813,8 +5813,8 @@ msgid "Our moderation team has received your report."
 msgstr "我哋嘅內容審覈團隊經已收到你嘅擧報。"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:28
-msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "我哋嘅內容審覈服務提供者已經睇過你嘅擧報，決定停用你使用 Bluesky 嘅傾偈功能。"
+msgid "Our moderators have reviewed reports and decided to disable your access to chats on Gander."
+msgstr "我哋嘅內容審覈服務提供者已經睇過你嘅擧報，決定停用你使用 Gander 嘅傾偈功能。"
 
 #: src/components/Lists.tsx:190
 #: src/view/screens/NotFound.tsx:47
@@ -5988,8 +5988,8 @@ msgid "Please choose your password."
 msgstr "請設定你嘅密碼。"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:290
-msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
-msgstr "請打開我哋正話送咗去你新電郵入邊嗰條連結嚟驗證新電郵。呢個步驟好緊要，噉樣你先至可以繼續享用所有 Bluesky 嘅功能。"
+msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Gander."
+msgstr "請打開我哋正話送咗去你新電郵入邊嗰條連結嚟驗證新電郵。呢個步驟好緊要，噉樣你先至可以繼續享用所有 Gander 嘅功能。"
 
 #: src/screens/Signup/state.ts:301
 msgid "Please complete the verification captcha."
@@ -6451,18 +6451,18 @@ msgid "Read more replies"
 msgstr "閱讀更多回覆"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
-msgid "Read the Bluesky blog"
-msgstr "睇下 Bluesky 網誌"
+msgid "Read the Gander blog"
+msgstr "睇下 Gander 網誌"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:58
 #: src/screens/Signup/StepInfo/Policies.tsx:84
-msgid "Read the Bluesky Privacy Policy"
-msgstr "睇下 Bluesky 私隱政策"
+msgid "Read the Gander Privacy Policy"
+msgstr "睇下 Gander 私隱政策"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:51
 #: src/screens/Signup/StepInfo/Policies.tsx:71
-msgid "Read the Bluesky Terms of Service"
-msgstr "睇下 Bluesky 服務條款"
+msgid "Read the Gander Terms of Service"
+msgstr "睇下 Gander 服務條款"
 
 #: src/screens/Takendown.tsx:162
 #: src/screens/Takendown.tsx:170
@@ -7213,8 +7213,8 @@ msgid "See #{tag} posts by user"
 msgstr "睇下呢位用戶包含 #{tag} 嘅帖文"
 
 #: src/view/com/auth/SplashScreen.web.tsx:178
-msgid "See jobs at Bluesky"
-msgstr "喺 Bluesky 度搵工"
+msgid "See jobs at Gander"
+msgstr "喺 Gander 度搵工"
 
 #: src/view/screens/SavedFeeds.tsx:212
 msgid "See this guide"
@@ -7556,8 +7556,8 @@ msgid "Share this starter pack"
 msgstr "分享呢個新手包"
 
 #: src/components/StarterPack/ShareDialog.tsx:80
-msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "分享呢個新手包，等更多人加入你喺 Bluesky 度嘅社羣。"
+msgid "Share this starter pack and help people join your community on Gander."
+msgstr "分享呢個新手包，等更多人加入你喺 Gander 度嘅社羣。"
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:115
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:118
@@ -7742,8 +7742,8 @@ msgid "Sign in to account that is not listed"
 msgstr "登入未有列出嘅帳號"
 
 #: src/components/dialogs/Signin.tsx:46
-msgid "Sign in to Bluesky or create a new account"
-msgstr "登入 Bluesky 或整個新帳號"
+msgid "Sign in to Gander or create a new account"
+msgstr "登入 Gander 或整個新帳號"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:463
@@ -8227,8 +8227,8 @@ msgid "The author of this thread has hidden this reply."
 msgstr "呢個討論串嘅作者隱藏咗呢個回覆。"
 
 #: src/screens/Moderation/index.tsx:377
-msgid "The Bluesky web application"
-msgstr "Bluesky 網頁應用程式"
+msgid "The Gander web application"
+msgstr "Gander 網頁應用程式"
 
 #: src/view/screens/CommunityGuidelines.tsx:38
 msgid "The Community Guidelines have been moved to <0/>"
@@ -8247,8 +8247,8 @@ msgid "The Discover feed now knows what you like"
 msgstr "「Discover」動態源而家明你鍾意啲咩喇"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:324
-msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
-msgstr "用 App 嘅話體驗會更加好。即刻下載 Bluesky ，我哋會喺你離開嘅地方繼續。"
+msgid "The experience is better in the app. Download Gander now and we'll pick back up where you left off."
+msgstr "用 App 嘅話體驗會更加好。即刻下載 Gander ，我哋會喺你離開嘅地方繼續。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:67
 msgid "The feed has been replaced with Discover."
@@ -8408,8 +8408,8 @@ msgid "There was an unexpected issue in the application. Please let us know if t
 msgstr "應用程式出現咗一個估都估唔到嘅問題。若然你有呢種情況嘅話唔該話畀我哋知！"
 
 #: src/screens/SignupQueued.tsx:130
-msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Bluesky 家陣有一大班人加入！我哋會盡快啓用你嘅帳號。"
+msgid "There's been a rush of new users to Gander! We'll activate your account as soon as we can."
+msgstr "Gander 家陣有一大班人加入！我哋會盡快啓用你嘅帳號。"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:65
 msgid "These settings only apply to the Following feed."
@@ -8444,8 +8444,8 @@ msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr "呢份上訴會提交到 <0>{sourceName}</0> 度。"
 
 #: src/screens/Messages/components/ChatDisabled.tsx:104
-msgid "This appeal will be sent to Bluesky's moderation service."
-msgstr "呢份申訴會提交到 Bluesky 嘅內容審覈服務度。"
+msgid "This appeal will be sent to Gander's moderation service."
+msgstr "呢份申訴會提交到 Gander 嘅內容審覈服務度。"
 
 #: src/screens/Messages/components/MessageListError.tsx:18
 msgid "This chat was disconnected"
@@ -8469,8 +8469,8 @@ msgid "This content is not available because one of the users involved has block
 msgstr "由於佢哋其中一人封鎖咗對方，導致睇唔到呢個內容。"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:118
-msgid "This content is not viewable without a Bluesky account."
-msgstr "呢個內容要你有 Bluesky 帳號先至睇到。"
+msgid "This content is not viewable without a Gander account."
+msgstr "呢個內容要你有 Gander 帳號先至睇到。"
 
 #: src/screens/Messages/components/ChatListItem.tsx:362
 msgid "This conversation is with a deleted or a deactivated account. Press for options"
@@ -8544,12 +8544,12 @@ msgid "This link is taking you to the following website:"
 msgstr "呢個連結會帶你去到下低嘅網站："
 
 #: src/screens/List/ListHiddenScreen.tsx:151
-msgid "This list – created by <0>{0}</0> – contains possible violations of Bluesky's community guidelines in its name or description."
-msgstr "呢份清單係 <0>{0}</0> 所建立，佢嘅名或描述度可能違反咗 Bluesky 嘅社羣守則。"
+msgid "This list – created by <0>{0}</0> – contains possible violations of Gander's community guidelines in its name or description."
+msgstr "呢份清單係 <0>{0}</0> 所建立，佢嘅名或描述度可能違反咗 Gander 嘅社羣守則。"
 
 #: src/screens/List/ListHiddenScreen.tsx:146
-msgid "This list – created by you – contains possible violations of Bluesky's community guidelines in its name or description."
-msgstr "呢份清單係你所建立，佢嘅名或描述度可能違反咗 Bluesky 嘅社羣守則。"
+msgid "This list – created by you – contains possible violations of Gander's community guidelines in its name or description."
+msgstr "呢份清單係你所建立，佢嘅名或描述度可能違反咗 Gander 嘅社羣守則。"
 
 #: src/view/screens/ProfileList.tsx:962
 msgid "This list is empty."
@@ -8561,8 +8561,8 @@ msgstr "呢個內容審覈服務用唔到，留意下低詳情瞭解更多嘢。
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:645
 #: src/view/com/post-thread/PostThreadItem.tsx:966
-msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
-msgstr "呢條帖文話係話喺 <0>{0}</0> 發布嘅，但係最先出現喺 Bluesky 嘅時間係喺 <1>{1}</1>。"
+msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Gander on <1>{1}</1>."
+msgstr "呢條帖文話係話喺 <0>{0}</0> 發布嘅，但係最先出現喺 Gander 嘅時間係喺 <1>{1}</1>。"
 
 #: src/components/WhoCanReply.tsx:238
 msgid "This post has an unknown type of threadgate on it. Your app may be out of date."
@@ -9075,8 +9075,8 @@ msgid "Uploading video..."
 msgstr "上載緊條片……"
 
 #: src/screens/Settings/AppPasswords.tsx:67
-msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
-msgstr "使用 App 專用密碼登入其他 Bluesky 用戶端，就唔使提供完整嘅帳號權限或密碼。"
+msgid "Use app passwords to sign in to other Gander clients without giving full access to your account or password."
+msgstr "使用 App 專用密碼登入其他 Gander 用戶端，就唔使提供完整嘅帳號權限或密碼。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:558
 msgid "Use default provider"
@@ -9200,8 +9200,8 @@ msgid "Verification Settings"
 msgstr "驗證設定"
 
 #: src/screens/Moderation/VerificationSettings.tsx:41
-msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
-msgstr "Bluesky 嘅驗證機制同其他平臺唔同。 <0>想知多啲去呢度。</0>"
+msgid "Verifications on Gander work differently than on other platforms. <0>Learn more here.</0>"
+msgstr "Gander 嘅驗證機制同其他平臺唔同。 <0>想知多啲去呢度。</0>"
 
 #: src/components/verification/VerificationsDialog.tsx:103
 msgid "Verified by:"
@@ -9478,8 +9478,8 @@ msgid "We have sent another verification email to <0>{0}</0>."
 msgstr "我哋傳送咗另一封驗證電郵去到 <0>{0}</0> 度。"
 
 #: src/screens/Onboarding/StepFinished.tsx:256
-msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr "我哋希望你玩得開心。唔好忘記，Bluesky 係："
+msgid "We hope you have a wonderful time. Remember, Gander is:"
+msgstr "我哋希望你玩得開心。唔好忘記，Gander 係："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -9527,12 +9527,12 @@ msgid "We're having network issues, try again"
 msgstr "我哋遇到網絡問題，唔該試多一次"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:94
-msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
-msgstr "同你介紹 Bluesky 嘅全新驗證機制 —— 驗證標記。"
+msgid "We’re introducing a new layer of verification on Gander — an easy-to-see checkmark."
+msgstr "同你介紹 Gander 嘅全新驗證機制 —— 驗證標記。"
 
 #: src/screens/Signup/index.tsx:109
 msgid "We're so excited to have you join us!"
-msgstr "我哋好高興你可以加入 Bluesky！"
+msgstr "我哋好高興你可以加入 Gander！"
 
 #: src/view/screens/ProfileList.tsx:117
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
@@ -9821,8 +9821,8 @@ msgid "You don't have any chat requests at the moment."
 msgstr "你而家未有任何傾偈邀請。"
 
 #: src/view/com/modals/InviteCodes.tsx:67
-msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
-msgstr "你仲未有任何邀請碼！當你用開 Bluesky 一排，我哋就會送啲邀請碼畀你。"
+msgid "You don't have any invite codes yet! We'll send you some when you've been on Gander for a little longer."
+msgstr "你仲未有任何邀請碼！當你用開 Gander 一排，我哋就會送啲邀請碼畀你。"
 
 #: src/view/screens/SavedFeeds.tsx:144
 msgid "You don't have any pinned feeds."
@@ -10136,8 +10136,8 @@ msgid "Your email appears to be invalid."
 msgstr "你嘅電郵似乎無效。"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:65
-msgid "Your email has not yet been verified. Please verify your email in order to enjoy all the features of Bluesky."
-msgstr "你嘅電郵仲未驗證。請驗證你嘅電郵先至可以享用所有 Bluesky 嘅功能。"
+msgid "Your email has not yet been verified. Please verify your email in order to enjoy all the features of Gander."
+msgstr "你嘅電郵仲未驗證。請驗證你嘅電郵先至可以享用所有 Gander 嘅功能。"
 
 #: src/state/shell/progress-guide.tsx:213
 msgid "Your first like!"
@@ -10201,8 +10201,8 @@ msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "你嘅帖文、讚好同封鎖都係公開嘅。之但係靜音嗰度淨係得你至知。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
-msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "你嘅個人檔案、帖文、動態源同埋清單唔會再畀其他 Bluesky 用戶睇到。你幾時都可以登入重新啓用你嘅帳號。"
+msgid "Your profile, posts, feeds, and lists will no longer be visible to other Gander users. You can reactivate your account at any time by logging in."
+msgstr "你嘅個人檔案、帖文、動態源同埋清單唔會再畀其他 Gander 用戶睇到。你幾時都可以登入重新啓用你嘅帳號。"
 
 #: src/view/com/composer/Composer.tsx:521
 msgid "Your reply has been published"
@@ -10213,8 +10213,8 @@ msgid "Your report will be sent to <0>{0}</0>."
 msgstr "你嘅擧報會提交去 <0>{0}</0>。"
 
 #: src/components/dms/ReportDialog.tsx:200
-msgid "Your report will be sent to the Bluesky Moderation Service"
-msgstr "你嘅擧報會提交到 Bluesky 內容審覈服務度"
+msgid "Your report will be sent to the Gander Moderation Service"
+msgstr "你嘅擧報會提交到 Gander 內容審覈服務度"
 
 #: src/screens/Settings/InterestsSettings.tsx:56
 msgid "Your selected interests help us serve you content you care about."

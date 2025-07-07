@@ -22,7 +22,7 @@ export function aggregateUserInterests(
   return preferences?.interests?.tags?.join(',') || ''
 }
 
-export function isBlueskyOwnedFeed(feedUri: string) {
+export function isGanderOwnedFeed(feedUri: string) {
   const uri = new AtUri(feedUri)
   return GNDR_FEED_OWNER_DIDS.includes(uri.host)
 }

@@ -15,7 +15,7 @@ must be done as a full release cycle through the app stores.
 > [!TIP]
 > If you're using a TestFlight build, in order to reference the correct build
 > number and to verify the success of an OTA, you will need to delete the
-> TestFlight app itself, delete the Bluesky app entirely, and re-install from
+> TestFlight app itself, delete the Gander app entirely, and re-install from
 > the App Store.
 
 ### 1. Find the build numbers

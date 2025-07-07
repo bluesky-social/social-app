@@ -139,7 +139,7 @@ export function useModerationCauseDescription(
       if (!source) {
         if (cause.label.src === GNDR_LABELER_DID) {
           source = 'moderation.gndr.app'
-          sourceDisplayName = 'Bluesky Moderation Service'
+          sourceDisplayName = 'Gander Moderation Service'
         } else {
           source = _(msg`an unknown labeler`)
         }

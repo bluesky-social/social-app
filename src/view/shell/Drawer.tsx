@@ -674,8 +674,8 @@ function ExtraLinks() {
             <InlineLinkText
               style={[a.text_md]}
               to="/profile/sawaratsuki.gndr.social"
-              label="@sawaratsuki.gndr.social">
-              @sawaratsuki.gndr.social
+              label="@sawaratsuki.bsky.social">
+              @sawaratsuki.bsky.social
             </InlineLinkText>
           </Trans>
         </Text>

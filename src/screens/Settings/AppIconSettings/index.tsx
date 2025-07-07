@@ -96,10 +96,10 @@ export function AppIconSettingsScreen({}: Props) {
                 a.font_bold,
                 t.atoms.text_contrast_medium,
               ]}>
-              <Trans>Bluesky+</Trans>
+              <Trans>Gander+</Trans>
             </Text>
             <Group
-              label={_(msg`Bluesky+ icons`)}
+              label={_(msg`Gander+ icons`)}
               value={currentAppIcon}
               onChange={onSetAppIcon}>
               {sets.core.map((icon, i) => (
