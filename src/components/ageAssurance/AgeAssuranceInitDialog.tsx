@@ -5,6 +5,8 @@ import {useLingui} from '@lingui/react'
 import {validate as validateEmail} from 'email-validator'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
+import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -57,6 +59,12 @@ function Inner() {
   const langPrefs = useLanguagePrefs()
   const cleanError = useCleanError()
   const {close} = Dialog.useDialogContext()
+  const {lastInitiatedAt} = useAgeAssuranceContext()
+  const getTimeAgo = useGetTimeAgo()
+
+  const wasRecentlyInitiated =
+    lastInitiatedAt &&
+    new Date(lastInitiatedAt).getTime() > Date.now() - 5 * 60 * 1000 // 5 minutes
 
   const [success, setSuccess] = useState(false)
   const [email, setEmail] = useState(currentAccount?.email || '')
@@ -146,6 +154,17 @@ function Inner() {
             <Divider />
 
             <View style={[a.w_full, a.pt_xl, a.gap_md]}>
+              {wasRecentlyInitiated && (
+                <Admonition type="tip">
+                  <Trans>
+                    You initiated this flow already,{' '}
+                    {getTimeAgo(lastInitiatedAt, new Date(), {format: 'long'})}{' '}
+                    ago. It may take up to 5 minutes for emails to reach your
+                    inbox. Consider waiting a few minutes before trying again.
+                  </Trans>
+                </Admonition>
+              )}
+
               <View>
                 <TextField.LabelText>
                   <Trans>Your email</Trans>

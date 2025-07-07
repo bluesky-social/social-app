@@ -1,3 +1,4 @@
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -7,6 +8,7 @@ import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
+import {AgeAssuranceAccountCard} from '#/components/AgeAssurance/AgeAssuranceAccountCard'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {
@@ -113,7 +115,6 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
-          <SettingsList.Divider />
           <SettingsList.Item>
             <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
             <SettingsList.ItemText>
@@ -124,6 +125,12 @@ export function AccountSettingsScreen({}: Props) {
               onPress={() => birthdayControl.open()}
             />
           </SettingsList.Item>
+
+          <View style={[a.px_xl, a.pt_xs, a.pb_md]}>
+            <AgeAssuranceAccountCard />
+          </View>
+
+          <SettingsList.Divider />
           <SettingsList.PressableItem
             label={_(msg`Password`)}
             onPress={() => openModal({name: 'change-password'})}>

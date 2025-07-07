@@ -1,4 +1,5 @@
 import {createContext, useContext, useMemo} from 'react'
+import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
@@ -7,7 +8,6 @@ import {Logger} from '#/logger'
 import {
   type AgeAssuranceAPIContextType,
   type AgeAssuranceContextType,
-  type AppBskyUnspeccedDefs,
 } from '#/state/age-assurance/types'
 import {useGeolocation} from '#/state/geolocation'
 import {preferencesQueryKey} from '#/state/queries/preferences'
@@ -21,6 +21,7 @@ const DEFAULT_AGE_ASSURANCE_STATE: AppBskyUnspeccedDefs.AgeAssuranceState = {
   status: 'unknown',
 }
 const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
+  status: 'unknown',
   isLoaded: false,
   isAgeRestricted: false,
   isExempt: false,
@@ -67,6 +68,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     const isAgeRestrictedGeo = !!geolocation?.isAgeRestrictedGeo
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
+      status,
       isLoaded: isFetched,
       lastInitiatedAt,
       hasInitiated: !!lastInitiatedAt,

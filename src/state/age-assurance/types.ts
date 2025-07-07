@@ -1,14 +1,9 @@
+import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {type QueryObserverBaseResult} from '@tanstack/react-query'
-
-export namespace AppBskyUnspeccedDefs {
-  export type AgeAssuranceState = {
-    lastInitiatedAt?: string
-    status: 'unknown' | 'pending' | 'assured'
-  }
-}
 
 export type AgeAssuranceContextType = {
   isLoaded: boolean
+  status: AppBskyUnspeccedDefs.AgeAssuranceState['status']
   /**
    * Whether the current user is age-restricted based on their geolocation and
    * age assurance state retrieved from the server.
