@@ -108,11 +108,21 @@ function MediaEmbed({
       )
     }
     case 'video': {
+      let crop
+      switch (rest.viewContext) {
+        case PostEmbedViewContext.Feed:
+        case PostEmbedViewContext.FeedEmbedRecordWithMedia:
+          crop = 'constrained' as const
+          break
+        case PostEmbedViewContext.ThreadHighlighted:
+          crop = 'none' as const
+          break
+      }
       return (
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
           activeStyle={[a.mt_sm]}>
-          <VideoEmbed embed={embed.view} />
+          <VideoEmbed embed={embed.view} crop={crop} />
         </ContentHider>
       )
     }
