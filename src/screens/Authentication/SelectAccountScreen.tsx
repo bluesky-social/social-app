@@ -10,13 +10,25 @@ import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, native} from '#/alf'
+import {atoms as a} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import * as TextField from '#/components/forms/TextField'
-import * as Layout from '#/components/Layout'
+import * as Layout from './components/Layout'
 
 type Props = NativeStackScreenProps<AuthNavigatorParams, 'SelectAccount'>
 export function SelectAccountScreen({navigation}: Props) {
+  return (
+    <SelectAccountScreenInner
+      signIn={account => navigation.navigate('SignIn', {account})}
+    />
+  )
+}
+
+export function SelectAccountScreenInner({
+  signIn,
+}: {
+  signIn: (account?: SessionAccount) => void
+}) {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -30,7 +42,7 @@ export function SelectAccountScreen({navigation}: Props) {
     }
     if (!account.accessJwt) {
       // Move to login form.
-      navigation.push('SignIn', {account})
+      signIn(account)
       return
     }
     if (account.did === currentAccount?.did) {
@@ -50,7 +62,7 @@ export function SelectAccountScreen({navigation}: Props) {
         message: e.message,
       })
       // Move to login form.
-      navigation.push('SignIn', {account})
+      signIn(account)
     } finally {
       setPendingDid(null)
     }
@@ -63,13 +75,13 @@ export function SelectAccountScreen({navigation}: Props) {
         <Layout.Header.Content />
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <Layout.Content contentContainerStyle={[a.py_xl, native(a.px_xl)]}>
+      <Layout.Content contentContainerStyle={[a.p_xl]}>
         <TextField.LabelText>
           <Trans>Sign in as...</Trans>
         </TextField.LabelText>
         <AccountList
           onSelectAccount={onSelect}
-          onSelectOther={() => navigation.push('SignIn')}
+          onSelectOther={signIn}
           pendingDid={pendingDid}
         />
       </Layout.Content>

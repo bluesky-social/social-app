@@ -7,7 +7,8 @@ import {
   type AuthNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useSession} from '#/state/session'
+import {isNative} from '#/platform/detection'
+import {type SessionAccount, useSession} from '#/state/session'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
@@ -18,11 +19,29 @@ import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
-import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import * as Layout from './components/Layout'
 
 type Props = NativeStackScreenProps<AuthNavigatorParams, 'Landing'>
 export function LandingScreen({navigation}: Props) {
+  return (
+    <LandingScreenInner
+      signUp={() => navigation.navigate('SignUpInfo')}
+      selectAccount={() => navigation.navigate('SelectAccount')}
+      signIn={account => navigation.navigate('SignIn', {account})}
+    />
+  )
+}
+
+export function LandingScreenInner({
+  signUp,
+  selectAccount,
+  signIn,
+}: {
+  signUp: () => void
+  selectAccount: () => void
+  signIn: (account?: SessionAccount) => void
+}) {
   const {_} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
@@ -38,7 +57,7 @@ export function LandingScreen({navigation}: Props) {
     <Layout.Screen
       testID="LandingScreen"
       style={{paddingBottom: insets.bottom}}>
-      {showLoggedOut && (
+      {isNative && showLoggedOut && (
         <Layout.Header.Outer noBottomBorder>
           <Layout.Header.Slot />
           <Layout.Header.Content />
@@ -71,7 +90,7 @@ export function LandingScreen({navigation}: Props) {
         style={[a.px_xl, a.gap_md, a.pb_2xl]}>
         <Button
           testID="createAccountButton"
-          onPress={() => navigation.push('SignUpInfo')}
+          onPress={signUp}
           label={_(msg`Create new account`)}
           size="large"
           variant="solid"
@@ -84,9 +103,11 @@ export function LandingScreen({navigation}: Props) {
           testID="signInButton"
           onPress={() => {
             if (requestedAccount) {
-              navigation.push('SignIn', {account: requestedAccount})
+              signIn(requestedAccount)
+            } else if (accounts.length > 0) {
+              selectAccount()
             } else {
-              navigation.push(accounts.length > 0 ? 'SelectAccount' : 'SignIn')
+              signIn()
             }
           }}
           label={_(msg`Sign in`)}

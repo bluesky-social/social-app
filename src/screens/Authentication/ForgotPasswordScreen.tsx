@@ -2,11 +2,15 @@ import {
   type AuthNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import * as Layout from './components/Layout'
 
 type Props = NativeStackScreenProps<AuthNavigatorParams, 'ForgotPassword'>
 export function ForgotPasswordScreen({}: Props) {
+  return <ForgotPasswordScreenInner />
+}
+
+export function ForgotPasswordScreenInner() {
   return (
     <Layout.Screen testID="ForgotPasswordScreen">
       <Layout.Header.Outer noBottomBorder>

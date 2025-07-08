@@ -9,9 +9,10 @@ import {
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
+import {type SessionAccount} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import * as Layout from './components/Layout'
 import {SignInForm} from './components/SignInForm'
 
 type Props = NativeStackScreenProps<AuthNavigatorParams, 'SignIn'>
@@ -19,6 +20,24 @@ export function SignInScreen({
   navigation,
   route: {params: {account: requestedAccount} = {}},
 }: Props) {
+  return (
+    <SignInScreenInner
+      requestedAccount={requestedAccount}
+      forgotPassword={() => navigation.navigate('ForgotPassword')}
+      signUp={() => navigation.navigate('SignUpInfo')}
+    />
+  )
+}
+
+export function SignInScreenInner({
+  requestedAccount,
+  forgotPassword,
+  signUp,
+}: {
+  requestedAccount?: SessionAccount
+  forgotPassword: () => void
+  signUp: () => void
+}) {
   const t = useTheme()
   const {_} = useLingui()
   const failedAttemptCountRef = useRef(0)
@@ -51,7 +70,7 @@ export function SignInScreen({
   }, [serviceError, serviceUrl, _])
 
   const onPressForgotPassword = () => {
-    navigation.push('ForgotPassword')
+    forgotPassword()
     logger.metric('signin:forgotPasswordPressed', {})
   }
 
@@ -93,7 +112,7 @@ export function SignInScreen({
             New to Bluesky?{' '}
             <Text
               role="link"
-              onPress={() => navigation.push('SignUpInfo')}
+              onPress={signUp}
               style={[a.text_md, {color: t.palette.primary_500}]}>
               Create account
             </Text>

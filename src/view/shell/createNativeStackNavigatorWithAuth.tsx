@@ -34,7 +34,7 @@ import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
-import {LoggedOut} from '#/view/com/auth/LoggedOut'
+import {AuthenticationFlow} from '#/screens/Authentication/components/Flow'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
@@ -114,7 +114,7 @@ function NativeStackNavigator({
   const {leftNavMinimal} = useLayoutBreakpoints()
   // Temp: use old system for web. TODO: unify
   if (isWeb && !hasSession && (!PWI_ENABLED || activeRouteRequiresAuth)) {
-    return <LoggedOut />
+    return <AuthenticationFlow />
   }
   if (hasSession && currentAccount?.signupQueued) {
     return <SignupQueued />
@@ -123,7 +123,7 @@ function NativeStackNavigator({
     return <Takendown />
   }
   if (isWeb && showLoggedOut) {
-    return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+    return <AuthenticationFlow onDismiss={() => setShowLoggedOut(false)} />
   }
   if (currentAccount?.status === 'deactivated') {
     return <Deactivated />
