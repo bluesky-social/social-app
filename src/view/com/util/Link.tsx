@@ -11,7 +11,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
-import {StackActions} from '@react-navigation/native'
 
 import {
   type DebouncedNavigationProp,
@@ -411,20 +410,20 @@ function onPressInner(
       const [routeName, params] = router.matchPath(href)
       if (navigationAction === 'push') {
         // @ts-ignore we're not able to type check on this one -prf
-        navigation.dispatch(StackActions.push(routeName, params))
+        navigation.push(routeName, params)
       } else if (navigationAction === 'replace') {
         // @ts-ignore we're not able to type check on this one -prf
-        navigation.dispatch(StackActions.replace(routeName, params))
+        navigation.replace(routeName, params)
       } else if (navigationAction === 'navigate') {
         const state = navigation.getState()
         const tabState = getTabState(state, routeName)
         if (tabState === TabState.InsideAtRoot) {
           emitSoftReset()
         } else {
-          // note: 'navigate' actually acts more like 'push' nowadays
-          // we need to specify {pop: true} to get the desired behavior
+          // note: 'navigate' actually acts the same as 'push' nowadays
+          // therefore we need to use 'popTo' instead -sfn
           // @ts-ignore we're not able to type check on this one -prf
-          navigation.navigate(routeName, params, {pop: true})
+          navigation.popTo(routeName, params)
         }
       } else {
         throw Error('Unsupported navigator action.')
