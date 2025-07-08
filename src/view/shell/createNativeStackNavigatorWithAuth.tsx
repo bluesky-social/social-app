@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react'
+import * as React from 'react'
 import {View} from 'react-native'
 // Based on @react-navigation/native-stack/src/navigators/createNativeStackNavigator.ts
 // MIT License
@@ -6,7 +6,6 @@ import {View} from 'react-native'
 import {
   createNavigatorFactory,
   type EventArg,
-  type NavigationProp,
   type NavigatorTypeBagBase,
   type ParamListBase,
   type StackActionHelpers,
@@ -16,8 +15,6 @@ import {
   type StackRouterOptions,
   type StaticConfig,
   type TypedNavigator,
-  useFocusEffect,
-  useNavigation,
   useNavigationBuilder,
 } from '@react-navigation/native'
 import {NativeStackView} from '@react-navigation/native-stack'
@@ -30,11 +27,14 @@ import {
 
 import {PWI_ENABLED} from '#/lib/build-flags'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {type FlatNavigatorParams} from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
-import {useLoggedOutView} from '#/state/shell/logged-out'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
+import {LoggedOut} from '#/view/com/auth/LoggedOut'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
@@ -76,7 +76,7 @@ function NativeStackNavigator({
       screenLayout,
     })
 
-  useEffect(
+  React.useEffect(
     () =>
       // @ts-expect-error: there may not be a tab navigator in parent
       navigation?.addListener?.('tabPress', (e: any) => {
@@ -108,39 +108,22 @@ function NativeStackNavigator({
   const activeDescriptor = descriptors[activeRoute.key]
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
   const onboardingState = useOnboardingState()
+  const {showLoggedOut} = useLoggedOutView()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  const {showLoggedOut} = useLoggedOutView()
-
-  const shouldRedirectToAuth =
-    isWeb && activeRoute.name !== 'Auth' && (showLoggedOut || !PWI_ENABLED)
-  useEffect(() => {
-    if (shouldRedirectToAuth) {
-      navigation.navigate('Auth')
-    }
-  }, [navigation, shouldRedirectToAuth])
-
-  const shouldRedirectAwayFromAuth =
-    isWeb &&
-    activeRoute.name === 'Auth' &&
-    !showLoggedOut &&
-    PWI_ENABLED &&
-    !activeRouteRequiresAuth
-  useEffect(() => {
-    if (shouldRedirectAwayFromAuth) {
-      if (navigation.canGoBack()) {
-        navigation.goBack()
-      } else {
-        navigation.replace('Home')
-      }
-    }
-  }, [navigation, shouldRedirectAwayFromAuth])
-
+  // Temp: use old system for web. TODO: unify
+  if (isWeb && !hasSession && (!PWI_ENABLED || activeRouteRequiresAuth)) {
+    return <LoggedOut />
+  }
   if (hasSession && currentAccount?.signupQueued) {
     return <SignupQueued />
   }
   if (hasSession && currentAccount?.status === 'takendown') {
     return <Takendown />
+  }
+  if (isWeb && showLoggedOut) {
+    return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
   }
   if (currentAccount?.status === 'deactivated') {
     return <Deactivated />
@@ -156,7 +139,7 @@ function NativeStackNavigator({
       ...descriptor,
       render() {
         if (requireAuth && !hasSession) {
-          return <RedirectToAuth />
+          return <View />
         } else {
           return descriptor.render()
         }
@@ -175,7 +158,7 @@ function NativeStackNavigator({
           {...rest}
           state={state}
           navigation={navigation}
-          descriptors={newDescriptors}
+          descriptors={descriptors}
           describe={describe}
         />
       </View>
@@ -187,25 +170,6 @@ function NativeStackNavigator({
       )}
     </NavigationContent>
   )
-}
-
-/**
- * Redirects to the auth screen on web. On native, this is handled by swapping
- * out the screens instead - see `NativeNavigator`
- */
-function RedirectToAuth() {
-  const navigation = useNavigation<NavigationProp<FlatNavigatorParams>>()
-  useFocusEffect(
-    useCallback(() => {
-      if (isWeb) {
-        const timeout = setTimeout(() => {
-          navigation.navigate('Auth')
-        }, 500)
-        return () => clearTimeout(timeout)
-      }
-    }, [navigation]),
-  )
-  return <View />
 }
 
 export function createNativeStackNavigatorWithAuth<

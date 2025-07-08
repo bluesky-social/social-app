@@ -13,7 +13,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {isWeb} from '#/platform/detection'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useIsWithinAuthLayout} from '#/view/shell/desktop/AuthLayout'
 import {
   atoms as a,
   useBreakpoints,
@@ -39,24 +38,16 @@ export type ScreenProps = React.ComponentProps<typeof View> & {
 export const Screen = memo(function Screen({
   style,
   noInsetTop,
-  children,
   ...props
 }: ScreenProps) {
   const {top} = useSafeAreaInsets()
-  const withinAuthLayout = useIsWithinAuthLayout()
-
-  if (withinAuthLayout) {
-    return children
-  }
-
   return (
     <>
       {isWeb && <WebCenterBorders />}
       <View
         style={[a.util_screen_outer, {paddingTop: noInsetTop ? 0 : top}, style]}
-        {...props}>
-        {children}
-      </View>
+        {...props}
+      />
     </>
   )
 })

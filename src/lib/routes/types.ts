@@ -119,7 +119,6 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Feeds: undefined
   Notifications: undefined
   Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
-  Auth: undefined
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {

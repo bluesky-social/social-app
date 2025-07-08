@@ -30,7 +30,6 @@ import {logger as notyLogger} from '#/lib/notifications/util'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
-  type AuthNavigatorParams,
   type BottomTabNavigatorParams,
   type CoreNavigatorParams,
   type FlatNavigatorParams,
@@ -155,7 +154,6 @@ import {AuthModal} from './view/shell/desktop/AuthLayout'
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
 const Core = createNativeStackNavigator<CoreNavigatorParams>()
-const Auth = createNativeStackNavigator<AuthNavigatorParams>()
 const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
 const NotificationsTab =
@@ -781,71 +779,7 @@ const FlatNavigator = () => {
         options={{title: title(msg`Home`)}}
       />
       {commonScreens(Flat, numUnread)}
-      <Flat.Screen
-        name="Auth"
-        getComponent={() => AuthNavigator}
-        options={{
-          title: title(msg`Login or Sign Up`),
-          presentation: 'modal',
-        }}
-      />
     </Flat.Navigator>
-  )
-}
-
-function AuthNavigator() {
-  const t = useTheme()
-  return (
-    <Auth.Navigator screenOptions={screenOptions(t)} layout={AuthModal}>
-      {authScreens({navigator: Auth})}
-    </Auth.Navigator>
-  )
-}
-
-function authScreens({navigator: Navigator}: {navigator: typeof Auth}) {
-  return (
-    <>
-      <Navigator.Screen
-        name="Landing"
-        getComponent={() => LandingScreen}
-        options={{animation: 'fade', animationDuration: 200}}
-      />
-      <Navigator.Screen
-        name="StarterPackLanding"
-        getComponent={() => StarterPackLandingScreen}
-      />
-      <Navigator.Group>
-        <Navigator.Screen
-          name="SelectAccount"
-          getComponent={() => SelectAccountScreen}
-        />
-        <Navigator.Screen name="SignIn" getComponent={() => SignInScreen} />
-        <Navigator.Screen
-          name="ForgotPassword"
-          getComponent={() => ForgotPasswordScreen}
-        />
-        <Navigator.Screen
-          name="SetNewPassword"
-          getComponent={() => SetNewPasswordScreen}
-        />
-        <Navigator.Screen
-          name="PasswordUpdated"
-          getComponent={() => PasswordUpdatedScreen}
-        />
-        <Navigator.Screen
-          name="SignUpInfo"
-          getComponent={() => SignUpInfoScreen}
-        />
-        <Navigator.Screen
-          name="SignUpHandle"
-          getComponent={() => SignUpHandleScreen}
-        />
-        <Navigator.Screen
-          name="SignUpCaptcha"
-          getComponent={() => SignUpCaptchaScreen}
-        />
-      </Navigator.Group>
-    </>
   )
 }
 
@@ -867,7 +801,48 @@ export const NativeNavigator = () => {
           options={{animation: 'fade', animationDuration: 200}}
         />
       ) : (
-        authScreens({navigator: Core as typeof Auth})
+        <>
+          <Core.Screen
+            name="Landing"
+            getComponent={() => LandingScreen}
+            options={{animation: 'fade', animationDuration: 200}}
+          />
+          <Core.Screen
+            name="StarterPackLanding"
+            getComponent={() => StarterPackLandingScreen}
+          />
+          <Core.Group>
+            <Core.Screen
+              name="SelectAccount"
+              getComponent={() => SelectAccountScreen}
+            />
+            <Core.Screen name="SignIn" getComponent={() => SignInScreen} />
+            <Core.Screen
+              name="ForgotPassword"
+              getComponent={() => ForgotPasswordScreen}
+            />
+            <Core.Screen
+              name="SetNewPassword"
+              getComponent={() => SetNewPasswordScreen}
+            />
+            <Core.Screen
+              name="PasswordUpdated"
+              getComponent={() => PasswordUpdatedScreen}
+            />
+            <Core.Screen
+              name="SignUpInfo"
+              getComponent={() => SignUpInfoScreen}
+            />
+            <Core.Screen
+              name="SignUpHandle"
+              getComponent={() => SignUpHandleScreen}
+            />
+            <Core.Screen
+              name="SignUpCaptcha"
+              getComponent={() => SignUpCaptchaScreen}
+            />
+          </Core.Group>
+        </>
       )}
     </Core.Navigator>
   )
