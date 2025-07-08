@@ -1,5 +1,4 @@
 import React from 'react'
-import {View} from 'react-native'
 import {moderateUserList} from '@atproto/api'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -16,10 +15,10 @@ export function ListEmbed({
 }) {
   const t = useTheme()
   return (
-    <View
-      style={[a.border, t.atoms.border_contrast_medium, a.p_md, a.rounded_sm]}>
-      <ListCard.Default view={embed.view} />
-    </View>
+    <ListCard.Default
+      view={embed.view}
+      style={[a.border, t.atoms.border_contrast_medium, a.p_md, a.rounded_sm]}
+    />
   )
 }
 
@@ -35,7 +34,9 @@ export function ModeratedListEmbed({
       : undefined
   }, [embed.view, moderationOpts])
   return (
-    <ContentHider modui={moderation?.ui('contentList')}>
+    <ContentHider
+      modui={moderation?.ui('contentList')}
+      childContainerStyle={[a.pt_xs]}>
       <ListEmbed embed={embed} />
     </ContentHider>
   )
