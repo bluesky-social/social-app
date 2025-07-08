@@ -41,9 +41,11 @@ async function _registerPushToken({
       ageRestricted: extra.ageRestricted ?? false,
     }
 
+    notyLogger.debug(`registerPushToken: registering`, {...payload})
+
     await agent.app.bsky.notification.registerPush(payload)
 
-    notyLogger.debug(`registerPushToken: success`, {...payload})
+    notyLogger.debug(`registerPushToken: success`)
   } catch (error) {
     notyLogger.error(`registerPushToken: failed`, {safeMessage: error})
   }
@@ -65,15 +67,15 @@ const _registerPushTokenDebounced = debounce(_registerPushToken, 100)
 export function useRegisterPushToken() {
   const agent = useAgent()
   const {currentAccount} = useSession()
-  /**
-   * At the time of writing, this data is guaranteed to be available here,
-   * since we await both geolocation and age assurance requirements before
-   * rendering `shell/index.tsx`.
-   */
-  const {isAgeRestricted} = useAgeAssuranceContext()
 
   return useCallback(
-    ({token}: {token: Notifications.DevicePushToken}) => {
+    ({
+      token,
+      isAgeRestricted,
+    }: {
+      token: Notifications.DevicePushToken
+      isAgeRestricted: boolean
+    }) => {
       if (!currentAccount) return
       return _registerPushTokenDebounced({
         agent,
@@ -84,7 +86,7 @@ export function useRegisterPushToken() {
         },
       })
     },
-    [agent, currentAccount, isAgeRestricted],
+    [agent, currentAccount],
   )
 }
 
@@ -120,28 +122,39 @@ async function getPushToken() {
  * @see https://github.com/bluesky-social/social-app/pull/4467
  */
 export function useGetAndRegisterPushToken() {
+  const {isAgeRestricted} = useAgeAssuranceContext()
   const registerPushToken = useRegisterPushToken()
-  return useCallback(async () => {
-    /**
-     * This will also fire the listener added via `addPushTokenListener`. That
-     * listener also handles registration.
-     */
-    const token = await getPushToken()
-
-    notyLogger.debug(`useGetAndRegisterPushToken`, {
-      token: token ?? 'undefined',
-    })
-
-    if (token) {
+  return useCallback(
+    async ({
+      isAgeRestricted: isAgeRestrictedOverride,
+    }: {
+      isAgeRestricted?: boolean
+    } = {}) => {
       /**
-       * The listener should have registered the token already, but just in
-       * case, call the debounced function again.
+       * This will also fire the listener added via `addPushTokenListener`. That
+       * listener also handles registration.
        */
-      registerPushToken({token})
-    }
+      const token = await getPushToken()
 
-    return token
-  }, [registerPushToken])
+      notyLogger.debug(`useGetAndRegisterPushToken`, {
+        token: token ?? 'undefined',
+      })
+
+      if (token) {
+        /**
+         * The listener should have registered the token already, but just in
+         * case, call the debounced function again.
+         */
+        registerPushToken({
+          token,
+          isAgeRestricted: isAgeRestrictedOverride ?? isAgeRestricted,
+        })
+      }
+
+      return token
+    },
+    [registerPushToken, isAgeRestricted],
+  )
 }
 
 /**
@@ -155,7 +168,8 @@ export function useNotificationsRegistration() {
   const {currentAccount} = useSession()
   const registerPushToken = useRegisterPushToken()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
-  const {isLoaded: isAgeAssuranceLoaded} = useAgeAssuranceContext()
+  const {isLoaded: isAgeAssuranceLoaded, isAgeRestricted} =
+    useAgeAssuranceContext()
 
   useEffect(() => {
     /**
@@ -184,7 +198,7 @@ export function useNotificationsRegistration() {
      * @see https://docs.expo.dev/versions/latest/sdk/notifications/#addpushtokenlistenerlistener
      */
     const subscription = Notifications.addPushTokenListener(async token => {
-      registerPushToken({token})
+      registerPushToken({token, isAgeRestricted})
       notyLogger.debug(`addPushTokenListener callback`, {token})
     })
 
@@ -196,6 +210,7 @@ export function useNotificationsRegistration() {
     getAndRegisterPushToken,
     registerPushToken,
     isAgeAssuranceLoaded,
+    isAgeRestricted,
   ])
 }
 
