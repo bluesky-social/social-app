@@ -155,12 +155,14 @@ export function useNotificationsRegistration() {
   const {currentAccount} = useSession()
   const registerPushToken = useRegisterPushToken()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
+  const {isLoaded: isAgeAssuranceLoaded} = useAgeAssuranceContext()
 
   useEffect(() => {
     /**
-     * We want this to init right away _after_ we have a logged in user.
+     * We want this to init right away _after_ we have a logged in user, and
+     * _after_ we've loaded their age assurance state.
      */
-    if (!currentAccount) return
+    if (!currentAccount || !isAgeAssuranceLoaded) return
 
     notyLogger.debug(`useNotificationsRegistration`)
 
@@ -189,7 +191,12 @@ export function useNotificationsRegistration() {
     return () => {
       subscription.remove()
     }
-  }, [currentAccount, getAndRegisterPushToken, registerPushToken])
+  }, [
+    currentAccount,
+    getAndRegisterPushToken,
+    registerPushToken,
+    isAgeAssuranceLoaded,
+  ])
 }
 
 export function useRequestNotificationsPermission() {
