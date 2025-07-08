@@ -60,6 +60,8 @@ export function Provider({children}: {children: React.ReactNode}) {
         if (!isNetworkError(e)) {
           logger.error(`ageAssurance: failed to fetch`, {safeMessage: e})
         }
+
+        // don't re-throw error, we'll just fall back to defaults
       }
     },
   })
