@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-02 00:33\n"
+"PO-Revision-Date: 2025-07-08 15:14\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -140,7 +140,7 @@ msgstr "{0} <0>i <1>tekst og tags</1></0>"
 
 #: src/components/live/LiveStatusDialog.tsx:68
 msgid "{0} is live"
-msgstr ""
+msgstr "{0} er live"
 
 #: src/components/live/queries.ts:39
 msgid "{0} is not a valid URL"
@@ -231,7 +231,7 @@ msgstr "{firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formatted
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:480
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
-msgstr ""
+msgstr "{firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}}</0> likede din videredeling"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:453
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
@@ -243,7 +243,7 @@ msgstr "{firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formatted
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:504
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
-msgstr ""
+msgstr "{firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}}</0> videredelte din videredeling"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:399
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
@@ -271,7 +271,7 @@ msgstr "{firstAuthorLink} likede dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:492
 msgid "{firstAuthorLink} liked your repost"
-msgstr ""
+msgstr "{firstAuthorLink} likede din videredeling"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:465
 msgid "{firstAuthorLink} removed their verification from your account"
@@ -283,7 +283,7 @@ msgstr "{firstAuthorLink} videredelte dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:516
 msgid "{firstAuthorLink} reposted your repost"
-msgstr ""
+msgstr "{firstAuthorLink} videredelte din videredeling"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorLink} signed up with your starter pack"
@@ -307,7 +307,7 @@ msgstr "{firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAut
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:473
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
-msgstr ""
+msgstr "{firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}} likede din videredeling"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:446
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
@@ -319,7 +319,7 @@ msgstr "{firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAut
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:497
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
-msgstr ""
+msgstr "{firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}} videredelte din videredeling"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:392
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
@@ -347,7 +347,7 @@ msgstr "{firstAuthorName} likede dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:478
 msgid "{firstAuthorName} liked your repost"
-msgstr ""
+msgstr "{firstAuthorName} likede din videredeling"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:451
 msgid "{firstAuthorName} removed their verification from your account"
@@ -359,7 +359,7 @@ msgstr "{firstAuthorName} videredelte dit opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:502
 msgid "{firstAuthorName} reposted your repost"
-msgstr ""
+msgstr "{firstAuthorName} videredelte din videredeling"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:397
 msgid "{firstAuthorName} signed up with your starter pack"
@@ -504,7 +504,7 @@ msgstr "En ny form for verifikation"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
-msgstr ""
+msgstr "Et screenshot af en profilside med et klokkeikon ved siden af Følg-knappen, som illustrerer den nye notifikationsfunktion."
 
 #: src/Navigation.tsx:509
 #: src/screens/Settings/AboutSettings.tsx:75
@@ -605,11 +605,11 @@ msgstr "Konti med et amøbeformet blåt flueben <0><1/></0> kan verificere andre
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:192
 msgid "Activity from others"
-msgstr ""
+msgstr "Aktivitet fra andre"
 
 #: src/Navigation.tsx:477
 msgid "Activity notifications"
-msgstr ""
+msgstr "Aktivitetsnotifikationer"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
@@ -632,7 +632,7 @@ msgstr "Tilføj en indholdsadvarsel"
 
 #: src/components/live/GoLiveDialog.tsx:101
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
-msgstr ""
+msgstr "Tilføj en midlertidigt livetilstand til din profil. Når nogen klikker på dit profilbillede, vil de få informationer om dine livebegivenhed."
 
 #: src/view/screens/ProfileList.tsx:924
 #: src/view/screens/ProfileList.tsx:942
@@ -820,9 +820,9 @@ msgid "Allow new messages from"
 msgstr "Tillad nye beskeder fra"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:90
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Allow others to be notified of your posts"
-msgstr ""
+msgstr "Tillad andre at blive notificeret om dine opslag"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
 msgid "Allow quote posts"
@@ -991,9 +991,9 @@ msgstr "Alle kan interagere"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:161
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Anyone who follows me"
-msgstr ""
+msgstr "Alle, som følger mig"
 
 #: src/Navigation.tsx:517
 #: src/screens/Settings/AppIconSettings/index.tsx:67
@@ -1198,7 +1198,7 @@ msgstr "Før du opretter en liste, skal du bekræfte din e-mail."
 
 #: src/lib/hooks/useOpenComposer.tsx:14
 msgid "Before creating a post or replying, you must first verify your email."
-msgstr ""
+msgstr "Før du opretter eller besvarer et opslag, skal du bekræfte din e-mail."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 #: src/components/StarterPack/ProfileStarterPacks.tsx:245
@@ -1207,18 +1207,18 @@ msgstr "Før du opretter en startpakke, skal du bekræfte din e-mail."
 
 #: src/screens/Messages/components/RequestButtons.tsx:235
 msgid "Before you can accept this chat request, you must first verify your email."
-msgstr ""
+msgstr "Før du kan acceptere denne chatanmodning, skal du først bekræfte din e-mail."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:43
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
-msgstr ""
+msgstr "Før du kan modtage notifikationer om opslag fra {name}, skal du først bekræfte din e-mail."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
 #: src/screens/Messages/ChatList.tsx:332
 #: src/screens/Messages/Conversation.tsx:213
 msgid "Before you can message another user, you must first verify your email."
-msgstr ""
+msgstr "Før du kan sende beskeder til andre brugere, skal du bekræfte din e-mail."
 
 #: src/components/dialogs/BirthDateSettings.tsx:103
 #: src/screens/Settings/AccountSettings.tsx:120
@@ -1560,7 +1560,7 @@ msgstr "Skift appikon til \"{0}\""
 
 #: src/components/AppLanguageDropdown.tsx:40
 msgid "Change app language"
-msgstr ""
+msgstr "Vælg appsprog"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:94
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:98
@@ -1594,7 +1594,7 @@ msgstr "Skifter udbyder"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:174
 msgid "Changes saved"
-msgstr ""
+msgstr "Ændringer blev gemt"
 
 #: src/lib/hooks/useNotificationHandler.ts:91
 #: src/Navigation.tsx:534
@@ -1612,11 +1612,11 @@ msgstr "Chat slettet"
 
 #: src/lib/hooks/useNotificationHandler.ts:106
 msgid "Chat messages - silent"
-msgstr ""
+msgstr "Chatbeskeder – lydløs"
 
 #: src/lib/hooks/useNotificationHandler.ts:97
 msgid "Chat messages - sound"
-msgstr ""
+msgstr "Chatbeskeder – med lyd"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgctxt "toast"
@@ -1729,11 +1729,11 @@ msgstr "klik her"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:371
 msgid "Click here to restart the verification process."
-msgstr ""
+msgstr "Klik her for at starte bekræftelsesprocessen forfra."
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:273
 msgid "Click here to update your email"
-msgstr ""
+msgstr "Klik her for at opdatere din e-mail"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:341
 msgid "Click to disable quote posts of this post."
@@ -2018,7 +2018,7 @@ msgstr "Fortsæt som {0} (allerede logget ind)"
 
 #: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:27
 msgid "Continue thread"
-msgstr ""
+msgstr "Fortsæt tråd"
 
 #: src/screens/PostThread/components/ThreadItemReadMoreUp.tsx:63
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:60
@@ -2128,11 +2128,11 @@ msgstr "Kopier link til opslag"
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:254
 msgid "Copy link to profile"
-msgstr ""
+msgstr "Kopier link til profil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:610
 msgid "Copy link to starter pack"
-msgstr ""
+msgstr "Kopier link til startpakke"
 
 #: src/components/dms/MessageContextMenu.tsx:149
 #: src/components/dms/MessageContextMenu.tsx:152
@@ -2185,11 +2185,11 @@ msgstr "Kunne ikke behandle din video"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:288
 msgid "Could not save changes: {0}"
-msgstr ""
+msgstr "Kunne ikke gemme ændringer: {0}"
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
-msgstr ""
+msgstr "Kunne ikke opdatere notifikationsindstillinger"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
@@ -2486,11 +2486,11 @@ msgstr "Dæmpet"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:233
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:242
 msgid "Disable 2FA"
-msgstr ""
+msgstr "Deaktiver 2FA"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:157
 msgid "Disable email 2FA"
-msgstr ""
+msgstr "Deaktiver 2FA via e-mail"
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:89
 msgid "Disable Email 2FA"
@@ -2612,11 +2612,11 @@ msgstr "Domæne godkendt!"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:368
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
-msgstr ""
+msgstr "Har du ingen kode, eller har du brug for en ny? <0>Klik her.</0>"
 
 #: src/components/dialogs/EmailDialog/components/ResendEmailText.tsx:37
 msgid "Don't see an email? <0>Click here to resend.</0>"
-msgstr ""
+msgstr "Har du ikke modtaget nogen e-mail? <0>Klik her for at sende en ny.</0>"
 
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/components/dialogs/BirthDateSettings.tsx:121
@@ -2762,7 +2762,7 @@ msgstr "Rediger listeegenskaber"
 #: src/view/com/profile/ProfileMenu.tsx:317
 #: src/view/com/profile/ProfileMenu.tsx:323
 msgid "Edit live status"
-msgstr ""
+msgstr "Rediger livetilstand"
 
 #: src/view/com/modals/CreateOrEditList.tsx:228
 msgid "Edit Moderation List"
@@ -2775,7 +2775,7 @@ msgstr "Rediger mine feeds"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:240
 msgid "Edit notifications from {0}"
-msgstr ""
+msgstr "Rediger notifikationer fra {0}"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
@@ -2847,11 +2847,11 @@ msgstr "E-mail gensendt"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:208
 msgid "Email sent!"
-msgstr ""
+msgstr "E-mail afsendt!"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:182
 msgid "Email verification complete!"
-msgstr ""
+msgstr "E-mailbekræftelse er fuldført!"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Email Verified"
@@ -2892,7 +2892,7 @@ msgstr "Aktiver voksenindhold"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:92
 msgid "Enable email 2FA"
-msgstr ""
+msgstr "Aktiver 2FA via e-mail"
 
 #: src/components/dialogs/EmbedConsent.tsx:81
 #: src/components/dialogs/EmbedConsent.tsx:88
@@ -2905,12 +2905,12 @@ msgstr "Aktiver medieafspillere for"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
-msgstr ""
+msgstr "Aktiver notifikationer for en konto ved at besøge dens profil og trykke på <0>klokkeikonet</0> <1/>."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:106
 msgid "Enable push notifications"
-msgstr ""
+msgstr "Aktiver push-notifikationer"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:387
 msgid "Enable subtitles"
@@ -3013,11 +3013,11 @@ msgstr "Fejl"
 
 #: src/screens/PostThread/components/ThreadError.tsx:26
 msgid "Error loading post"
-msgstr ""
+msgstr "Fejl ved indlæsning af opslag"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:152
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
 msgid "Error loading preference"
-msgstr ""
+msgstr "Kunne ikke indlæse indstilling"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -3057,7 +3057,7 @@ msgstr "Alle"
 #: src/screens/Settings/NotificationSettings/index.tsx:235
 #: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:41
 msgid "Everything else"
-msgstr ""
+msgstr "Alt andet"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:73
 #: src/lib/moderation/useReportOptions.ts:73
@@ -3107,7 +3107,7 @@ msgstr "Udvid eller sammenklap det fulde opslag, du besvarer"
 
 #: src/components/Post/ShowMoreTextButton.tsx:32
 msgid "Expand post text"
-msgstr ""
+msgstr "Udvid opslagets tekst"
 
 #: src/screens/VideoFeed/index.tsx:965
 msgid "Expands or collapses post text"
@@ -3137,7 +3137,7 @@ msgstr "Udløber om {0}"
 
 #: src/components/live/EditLiveDialog.tsx:131
 msgid "Expires in {0} at {1}"
-msgstr ""
+msgstr "Udløber om {0} kl. {1}"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 #: src/lib/moderation/useGlobalLabelStrings.ts:51
@@ -3261,7 +3261,7 @@ msgstr "Indlæsning af GIF'er fejlde"
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:50
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:53
 msgid "Failed to load notification settings."
-msgstr ""
+msgstr "Kunne ikke indlæse notifikationsindstillinger."
 
 #: src/screens/Messages/components/MessageListError.tsx:23
 msgid "Failed to load past messages"
@@ -3269,7 +3269,7 @@ msgstr "Indlæst af tidligere beskeder fejlede"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:65
 msgid "Failed to load preference."
-msgstr ""
+msgstr "Kunne ikke indlæse indstilling."
 
 #: src/screens/Search/Explore.tsx:463
 #: src/screens/Search/Explore.tsx:515
@@ -3320,7 +3320,7 @@ msgstr "Kunne ikke sende"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:122
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:136
 msgid "Failed to send email, please try again."
-msgstr ""
+msgstr "Kunne ikke sende e-mail, prøv igen."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:254
 #: src/screens/Messages/components/ChatDisabled.tsx:87
@@ -3334,11 +3334,11 @@ msgstr "Kunne ikke ændre, om tråden skjules, prøv igen"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:149
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:83
 msgid "Failed to update email 2FA settings"
-msgstr ""
+msgstr "Kunne ikke opdaterere 2FA-indstillinger"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:195
 msgid "Failed to update email, please try again."
-msgstr ""
+msgstr "Kunne ikke opdatere e-mail, prøv igen."
 
 #: src/components/FeedCard.tsx:285
 msgid "Failed to update feeds"
@@ -3346,7 +3346,7 @@ msgstr "Opdatering af feeds fejlede"
 
 #: src/state/queries/activity-subscriptions.ts:101
 msgid "Failed to update notification declaration"
-msgstr ""
+msgstr "Kunne ikke opdatere notifikationsbeskrivelse"
 
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
@@ -3361,7 +3361,7 @@ msgstr "Upload af video fejlede"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:168
 msgid "Failed to verify email, please try again."
-msgstr ""
+msgstr "Kunne ikke bekræfte e-mail, prøv igen."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:360
 msgid "Failed to verify handle. Please try again."
@@ -3443,11 +3443,11 @@ msgstr "Filtrer efter sprog (pt. {currentLanguageLabel})"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:105
 msgid "Filter who can opt to receive notifications for your activity"
-msgstr ""
+msgstr "Begræns, hvem der kan modtage notifikationer om din aktivitet"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:158
 msgid "Filter who you receive notifications from"
-msgstr ""
+msgstr "Begræns, hvem du kan modtage notifikationer fra"
 
 #: src/screens/Onboarding/StepFinished.tsx:314
 msgid "Finalizing"
@@ -3666,7 +3666,7 @@ msgstr "Laver tit opslag med uønsket indhold"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:154
 msgid "From"
-msgstr ""
+msgstr "Fra"
 
 #: src/screens/Hashtag.tsx:120
 msgid "From @{sanitizedAuthor}"
@@ -3691,59 +3691,59 @@ msgstr "Få hjælp"
 
 #: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:43
 msgid "Get notifications when people follow you."
-msgstr ""
+msgstr "Få notifikationer, når nogen følger dig."
 
 #: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:43
 msgid "Get notifications when people like posts that you've reposted."
-msgstr ""
+msgstr "Få notifikationer, når nogen liker de opslag, du har videredelt."
 
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:43
 msgid "Get notifications when people like your posts."
-msgstr ""
+msgstr "Få notifikationer, når nogen liker dine opslag."
 
 #: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:43
 msgid "Get notifications when people mention you."
-msgstr ""
+msgstr "Få notifikationer, når nogen nævner dig."
 
 #: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:43
 msgid "Get notifications when people quote your posts."
-msgstr ""
+msgstr "Få notifikationer, når nogen citerer dine opslag."
 
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:43
 msgid "Get notifications when people reply to your posts."
-msgstr ""
+msgstr "Få notifikationer, når nogen besvarer dine opslag."
 
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:43
 msgid "Get notifications when people repost posts that you've reposted."
-msgstr ""
+msgstr "Få notifikationer, når nogen videredeler opslag, du har videredelt."
 
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:43
 msgid "Get notifications when people repost your posts."
-msgstr ""
+msgstr "Få notifikationer, når nogen videredeler dine opslag."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:77
 msgid "Get notified about new posts"
-msgstr ""
+msgstr "Bliv notificeret om nye opslag"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:104
 msgid "Get notified about posts and replies from accounts you choose."
-msgstr ""
+msgstr "Bliv notificeret om opslag og svar fra konti, du vælger."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 msgid "Get notified of new posts from {name}"
-msgstr ""
+msgstr "Bliv notificeret om nye opslag fra {name}"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of this account’s activity"
-msgstr ""
+msgstr "Bliv notificeret om denne kontos aktivitet"
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:70
 msgid "Get notified when {name} posts"
-msgstr ""
+msgstr "Bliv notificeret, når {name} laver opslag"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:137
 msgid "Get notified when someone posts"
-msgstr ""
+msgstr "Bliv notificeret, når nogen laver opslag"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
@@ -3814,18 +3814,18 @@ msgstr "Gå til forside"
 #: src/view/com/profile/ProfileMenu.tsx:318
 #: src/view/com/profile/ProfileMenu.tsx:325
 msgid "Go live"
-msgstr ""
+msgstr "Gå live"
 
 #: src/components/live/GoLiveDialog.tsx:93
 #: src/components/live/GoLiveDialog.tsx:98
 #: src/components/live/GoLiveDialog.tsx:232
 #: src/components/live/GoLiveDialog.tsx:241
 msgid "Go Live"
-msgstr ""
+msgstr "Gå live"
 
 #: src/components/live/GoLiveDialog.tsx:174
 msgid "Go live for"
-msgstr ""
+msgstr "Gå live i"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:218
 msgid "Go to {firstAuthorName}'s profile"
@@ -3898,7 +3898,7 @@ msgstr "Hashtag {tag}"
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:198
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:315
 msgid "Have a code? <0>Click here.</0>"
-msgstr ""
+msgstr "Har du en kode? <0>Klik her.</0>"
 
 #: src/screens/Signup/index.tsx:195
 msgid "Having trouble?"
@@ -4110,7 +4110,7 @@ msgstr "Hvis du har dit eget domæne, kan du bruge det som handle. Dette giver d
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:270
 msgid "If you need to update your email, <0>click here</0>."
-msgstr ""
+msgstr "Hvis du har brug for at opdatere din e-mail, <0>klik her</0>."
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:698
 msgid "If you remove this post, you won't be able to recover it."
@@ -4118,7 +4118,7 @@ msgstr "Hvis du sletter dette opslag, kan det ikke genskabes."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:208
 msgid "If you update your email address, email 2FA will be disabled."
-msgstr ""
+msgstr "Hvis du opdaterer din e-mailadresse, vil 2FA via e-mail blive deaktiveret."
 
 #: src/view/com/modals/ChangePassword.tsx:160
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -4126,7 +4126,7 @@ msgstr "Hvis du vil skifte din adgangskode, sender vi dig en kode til at bekræf
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:154
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
-msgstr ""
+msgstr "Hvis du vil begrænse, hvem der kan modtage notifikationer om din kontos aktivitet, kan du ændre dette under <0>Indstillinger → Privatliv og sikkerhed</0>."
 
 #: src/view/com/auth/server-input/index.tsx:208
 msgid "If you're a developer, you can host your own server."
@@ -4156,11 +4156,11 @@ msgstr "Billedcache tømt, frigjorde {0}"
 
 #: src/lib/media/save-image.ts:26
 msgid "Image saved"
-msgstr ""
+msgstr "Billede blev gemt"
 
 #: src/lib/media/save-image.ts:45
 msgid "Images cannot be saved unless permission is granted to access your photo library."
-msgstr ""
+msgstr "Billeder kan ikke gemmes, medmindre du giver adgang til dit fotobibliotek."
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:49
 #: src/lib/moderation/useReportOptions.ts:49
@@ -4174,31 +4174,31 @@ msgstr "Identitetstyveri, misinformation eller falske påstande"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:284
 msgid "In-app"
-msgstr ""
+msgstr "I appen"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:143
 msgid "In-app notifications"
-msgstr ""
+msgstr "Notifikationer i append"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:267
 msgid "In-app, Everyone"
-msgstr ""
+msgstr "I appen, Alle"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:275
 msgid "In-app, People you follow"
-msgstr ""
+msgstr "I appen, Personer, du følger"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:282
 msgid "In-app, Push"
-msgstr ""
+msgstr "I appen, Push"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:265
 msgid "In-app, Push, Everyone"
-msgstr ""
+msgstr "I appen, Push, Alle"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:273
 msgid "In-app, Push, People you follow"
-msgstr ""
+msgstr "I appen, Push, Personer, du følger"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:91
 #: src/lib/moderation/useReportOptions.ts:91
@@ -4244,7 +4244,7 @@ msgstr "Interaktionsindstillinger"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
-msgstr ""
+msgstr "Vi præsenterer: Aktivitetsnotifikationer"
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4335,7 +4335,7 @@ msgstr "Journalistik"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Keep me posted"
-msgstr ""
+msgstr "Hold mig opdateret"
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
@@ -4432,8 +4432,8 @@ msgstr "Læs mere om denne advarsel"
 msgid "Learn more about verification on Bluesky"
 msgstr "Læs mere om verificering på Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
 msgid "Learn more about what is public on Bluesky."
 msgstr "Læs mere om, hvad der er offentligt på Bluesky."
 
@@ -4461,7 +4461,7 @@ msgstr "Forlad samtale"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:84
 msgid "Leave them all unselected to see any language."
-msgstr ""
+msgstr "Lad alle være fravalgt for at se alle sprog."
 
 #: src/components/dialogs/LinkWarning.tsx:67
 #: src/components/dialogs/LinkWarning.tsx:75
@@ -4516,7 +4516,7 @@ msgstr "Like 10 opslag for at træne Discover-feedet"
 
 #: src/Navigation.tsx:437
 msgid "Like notifications"
-msgstr ""
+msgstr "Notifikationer ved likes"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:505
 msgid "Like this feed"
@@ -4560,11 +4560,11 @@ msgstr "Likes"
 #: src/screens/Settings/NotificationSettings/index.tsx:207
 #: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:41
 msgid "Likes of your reposts"
-msgstr ""
+msgstr "Likes af dine videredelinger"
 
 #: src/Navigation.tsx:461
 msgid "Likes of your reposts notifications"
-msgstr ""
+msgstr "Notifikationer ved videredeling af videredelinger"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:461
 #: src/view/com/post-thread/PostThreadItem.tsx:243
@@ -4652,18 +4652,18 @@ msgstr "Liste blokeret af denne bruger:"
 #. Live status indicator on avatar. Should be extremely short, not much space for more than 4 characters
 #: src/components/live/LiveIndicator.tsx:46
 msgid "LIVE"
-msgstr ""
+msgstr "LIVE"
 
 #: src/components/live/LiveStatusDialog.tsx:215
 msgid "Live feature is in beta testing"
-msgstr ""
+msgstr "Livefunktion er i betatest"
 
 #: src/components/live/EditLiveDialog.tsx:148
 #: src/components/live/EditLiveDialog.tsx:152
 #: src/components/live/GoLiveDialog.tsx:124
 #: src/components/live/GoLiveDialog.tsx:128
 msgid "Live link"
-msgstr ""
+msgstr "Livelink"
 
 #: src/screens/Search/Explore.tsx:86
 msgid "Load more"
@@ -4693,7 +4693,7 @@ msgstr "Indlæser..."
 msgid "Log"
 msgstr "Log"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:105
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
 msgid "Logged-out visibility"
 msgstr "Synlighed for udloggede brugere"
 
@@ -4728,7 +4728,7 @@ msgstr "Det ser ud til, at du mangler et følgerfeed <0>Klik her for at tilføje
 
 #: src/components/dialogs/EmailDialog/index.tsx:41
 msgid "Make adjustments to email settings for your account"
-msgstr ""
+msgstr "Tilpas e-mailindstillinger for din konto"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Make one for me"
@@ -4782,7 +4782,7 @@ msgstr "Medier, der kan virke stødende eller upassende for visse personer."
 
 #: src/Navigation.tsx:421
 msgid "Mention notifications"
-msgstr ""
+msgstr "Omtalenotifikationer"
 
 #: src/components/WhoCanReply.tsx:284
 msgid "mentioned users"
@@ -4848,7 +4848,7 @@ msgstr "Midnat"
 
 #: src/Navigation.tsx:485
 msgid "Miscellaneous notifications"
-msgstr ""
+msgstr "Diverse notifikationer"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:47
 #: src/lib/moderation/useReportOptions.ts:47
@@ -5129,11 +5129,11 @@ msgstr "Ny"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:549
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr ""
+msgstr "{postsCount, plural, one {Nyt} other {Nye}} opslag fra {firstAuthorLink}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:532
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr ""
+msgstr "{postsCount, plural, one {Nyt} other {Nye}} opslag fra {firstAuthorName}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
 #: src/screens/Messages/ChatList.tsx:364
@@ -5152,13 +5152,13 @@ msgstr "Ny feature"
 
 #: src/Navigation.tsx:453
 msgid "New follower notifications"
-msgstr ""
+msgstr "Notifikationer ved nye følgere"
 
 #: src/lib/hooks/useNotificationHandler.ts:153
 #: src/screens/Settings/NotificationSettings/index.tsx:137
 #: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:41
 msgid "New followers"
-msgstr ""
+msgstr "Nye følgere"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:221
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:229
@@ -5209,11 +5209,11 @@ msgstr "Nyt opslag"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:538
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0>"
-msgstr ""
+msgstr "Nye opslag fra {firstAuthorLink} og <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}}</0>"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:523
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr ""
+msgstr "Nye opslag fra {firstAuthorName} og {additionalAuthorsCount, plural, one {{formattedAuthorsCount} anden} other {{formattedAuthorsCount} andre}}"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -5273,7 +5273,7 @@ msgstr "Ingen DNS-adgang"
 
 #: src/components/live/EditLiveDialog.tsx:140
 msgid "No expiry set"
-msgstr ""
+msgstr "Intet udløbstidspunkt angivet"
 
 #: src/components/dialogs/GifSelect.tsx:232
 msgid "No featured GIFs found. There may be an issue with Tenor."
@@ -5285,7 +5285,7 @@ msgstr "Ingen feeds fundet. Prøv at søge efter noget andet."
 
 #: src/components/live/LinkPreview.tsx:63
 msgid "No image"
-msgstr ""
+msgstr "Intet billede"
 
 #: src/components/LikedByList.tsx:84
 #: src/view/com/post-thread/PostLikedBy.tsx:84
@@ -5313,7 +5313,7 @@ msgstr "Ingen notifikationer endnu!"
 #: src/screens/Messages/Settings.tsx:104
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "No one"
 msgstr "Ingen"
 
@@ -5323,7 +5323,7 @@ msgstr "Kun forfatteren selv kan citere dette opslag."
 
 #: src/screens/Notifications/ActivityList.tsx:38
 msgid "No posts here"
-msgstr ""
+msgstr "Ingen opslag her"
 
 #: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
@@ -5405,7 +5405,7 @@ msgstr "Ikkeseksuel nøgenhed"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:217
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #: src/components/KnownFollowers.tsx:255
 msgid "Not followed by anyone you're following"
@@ -5420,13 +5420,13 @@ msgstr "Ikke fundet"
 msgid "Note about sharing"
 msgstr "Note vedr. deling"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "OBS: Bluesky er et åbent og offentligt netværk. Denne indstilling begrænser kun synligheden af dit indhold her på Bluesky. Andre apps og websites respekterer ikke nødvendigvis denne indstilling. Dit indhold kan stadig blive vist i andre apps og på andre websites til udloggede brugere."
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:132
 msgid "Note: This post is only visible to logged-in users."
-msgstr ""
+msgstr "OBS: Dette opslag er kun synligt for indloggede brugere."
 
 #: src/screens/Messages/ChatList.tsx:265
 msgid "Nothing here"
@@ -5471,7 +5471,7 @@ msgstr "Notifikationer"
 
 #: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:43
 msgid "Notifications for everything else, such as when someone joins via one of your starter packs."
-msgstr ""
+msgstr "Notifikationer for alt andet, fx når nogen opretter sig via en af dine startpakker."
 
 #: src/lib/hooks/useTimeAgo.ts:135
 msgid "now"
@@ -5564,9 +5564,9 @@ msgstr "Indeholder kun bogstaver (a-z), tal og bindestreger"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
 msgid "Only followers who I follow"
-msgstr ""
+msgstr "Kun følgere, jeg følger"
 
 #: src/lib/media/picker.shared.ts:32
 msgid "Only image files are supported"
@@ -5655,7 +5655,7 @@ msgstr "Åbn profil"
 
 #: src/components/PostControls/ShareMenu/index.tsx:87
 msgid "Open share menu"
-msgstr ""
+msgstr "Åbn delemenu"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:566
 msgid "Open starter pack menu"
@@ -5734,7 +5734,7 @@ msgstr "Åbner hjælpeside i browser"
 
 #: src/components/dialogs/LinkWarning.tsx:97
 msgid "Opens link {0}"
-msgstr ""
+msgstr "Åbner linket {0}"
 
 #: src/view/com/modals/InviteCodes.tsx:173
 msgid "Opens list of invite codes"
@@ -5742,7 +5742,7 @@ msgstr "Åbner listen over invitationskoder"
 
 #: src/view/com/util/UserAvatar.tsx:574
 msgid "Opens live status dialog"
-msgstr ""
+msgstr "Åbner livetilstandsdialog"
 
 #: src/screens/Login/LoginForm.tsx:249
 msgid "Opens password reset form"
@@ -5877,11 +5877,11 @@ msgstr "Personer, som @{0} følger"
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:178
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:188
 msgid "People I follow"
-msgstr ""
+msgstr "Personer jeg følger"
 
 #: src/lib/media/save-image.ts:51
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
-msgstr ""
+msgstr "Adgang til dit fotobibliotek blev nægtet. Tillad adgang fra dine systemindstillinger."
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
@@ -5989,7 +5989,7 @@ msgstr "Vælg din adgangskode."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:290
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
-msgstr ""
+msgstr "Klik på linket i den e-mail, vi lige har sendt dig, for at bekræfte din nye e-mailadresse. Dette er nødvendigt for, at du fortsat kan have glæde af alle Blueskys funktioner."
 
 #: src/screens/Signup/state.ts:301
 msgid "Please complete the verification captcha."
@@ -6027,11 +6027,11 @@ msgstr "Indtast et gyldigt ord, tag eller en sætning, der skal skjules"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:257
 msgid "Please enter the code we sent to <0>{0}</0> below."
-msgstr ""
+msgstr "Indtast den kode, vi har sendt til <0>{0}</0>, nedenfor."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:247
 msgid "Please enter the security code we sent to your previous email address."
-msgstr ""
+msgstr "Indtast den sikkerhedskode, vi har sendt til din gamle e-mailadresse."
 
 #: src/screens/Signup/state.ts:262
 #: src/screens/Signup/StepInfo/index.tsx:91
@@ -6111,7 +6111,7 @@ msgstr "Slå alle op"
 
 #: src/screens/PostThread/components/ThreadItemPostTombstone.tsx:22
 msgid "Post blocked"
-msgstr ""
+msgstr "Opslag blokeret"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:235
 msgid "Post by {0}"
@@ -6207,15 +6207,15 @@ msgstr "Opslag er skjult"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:211
 msgid "Posts, Replies"
-msgstr ""
+msgstr "Opslag, svar"
 
 #: src/components/dialogs/LinkWarning.tsx:73
 msgid "Potentially misleading link"
-msgstr ""
+msgstr "Potentielt misvisende link"
 
 #: src/components/dialogs/LinkWarning.tsx:66
 msgid "Potentially misleading link warning"
-msgstr ""
+msgstr "Advarsel om potentielt misvisende link"
 
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -6266,7 +6266,7 @@ msgstr "Privatliv og sikkerhed"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:158
 msgid "Privacy and Security settings"
-msgstr ""
+msgstr "Privatlivs- og sikkerhedsindstillinger"
 
 #: src/Navigation.tsx:316
 #: src/screens/Settings/AboutSettings.tsx:92
@@ -6337,19 +6337,19 @@ msgstr "Udgiv svar"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:286
 msgid "Push"
-msgstr ""
+msgstr "Push"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:126
 msgid "Push notifications"
-msgstr ""
+msgstr "Push-notifikationer"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:269
 msgid "Push, Everyone"
-msgstr ""
+msgstr "Push, alle"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:277
 msgid "Push, People you follow"
-msgstr ""
+msgstr "Push, Personer du følger"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:134
 msgid "QR code copied to your clipboard!"
@@ -6365,7 +6365,7 @@ msgstr "QR-kode blev gemt til din kamerarulle!"
 
 #: src/Navigation.tsx:429
 msgid "Quote notifications"
-msgstr ""
+msgstr "Notifikationer ved citater"
 
 #: src/components/PostControls/RepostButton.tsx:174
 #: src/components/PostControls/RepostButton.tsx:197
@@ -6431,7 +6431,7 @@ msgstr "Genaktiv din konto"
 
 #: src/screens/PostThread/components/ThreadItemReadMore.tsx:92
 msgid "Read {0} more {1, plural, one {reply} other {replies}}"
-msgstr ""
+msgstr "Læs {0} {1, plural, one {svar} other {svar}} mere"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:173
@@ -6448,7 +6448,7 @@ msgstr "Læs mere"
 
 #: src/screens/PostThread/components/ThreadItemReadMore.tsx:71
 msgid "Read more replies"
-msgstr ""
+msgstr "Læs flere svar"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Read the Bluesky blog"
@@ -6475,11 +6475,11 @@ msgstr "Begrundelse:"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:132
 msgid "Receive in-app notifications"
-msgstr ""
+msgstr "Modtag notifikationer i appen"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:115
 msgid "Receive push notifications"
-msgstr ""
+msgstr "Modtag push-notifikationer"
 
 #: src/screens/Search/components/SearchHistory.tsx:49
 msgid "Recent Searches"
@@ -6590,7 +6590,7 @@ msgstr "Fjern billede"
 #: src/components/live/EditLiveDialog.tsx:240
 #: src/components/live/EditLiveDialog.tsx:247
 msgid "Remove live status"
-msgstr ""
+msgstr "Fjern livetilstand"
 
 #: src/components/dialogs/MutedWords.tsx:523
 msgid "Remove mute word from your list"
@@ -6704,7 +6704,7 @@ msgstr "Svar skjult af dig"
 
 #: src/Navigation.tsx:413
 msgid "Reply notifications"
-msgstr ""
+msgstr "Notifikationer ved svar"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:389
 msgid "Reply settings"
@@ -6856,7 +6856,7 @@ msgstr "Videredel ({0, plural, one {# deling} other {# delinger}})"
 
 #: src/Navigation.tsx:445
 msgid "Repost notifications"
-msgstr ""
+msgstr "Notifikationer ved videredeling"
 
 #: src/components/PostControls/RepostButton.tsx:144
 #: src/components/PostControls/RepostButton.web.tsx:43
@@ -6886,7 +6886,7 @@ msgstr "Videredelt af dig"
 #: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:41
 msgid "Reposts"
-msgstr ""
+msgstr "Videredelinger"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:427
 #: src/view/com/post-thread/PostThreadItem.tsx:248
@@ -6897,11 +6897,11 @@ msgstr "Videredelinger af dette opslag"
 #: src/screens/Settings/NotificationSettings/index.tsx:222
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:41
 msgid "Reposts of your reposts"
-msgstr ""
+msgstr "Videredeling af dine videredelinger"
 
 #: src/Navigation.tsx:469
 msgid "Reposts of your reposts notifications"
-msgstr ""
+msgstr "Notifikationer ved videredeling af videredelinger"
 
 #: src/view/com/modals/ChangePassword.tsx:253
 #: src/view/com/modals/ChangePassword.tsx:255
@@ -7194,7 +7194,7 @@ msgstr "Søg efter profiler"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:243
 msgid "Security step required"
-msgstr ""
+msgstr "Sikkerhedstjek krævet"
 
 #: src/components/RichTextTag.tsx:111
 msgid "See {tag} posts"
@@ -7234,7 +7234,7 @@ msgstr "Vælg konto"
 
 #: src/components/AppLanguageDropdown.tsx:60
 msgid "Select an app language"
-msgstr ""
+msgstr "Vælg et appsprog"
 
 #: src/screens/Onboarding/StepProfile/AvatarCircle.tsx:66
 msgid "Select an avatar"
@@ -7246,11 +7246,11 @@ msgstr "Vælg en emoji"
 
 #: src/components/Select/index.tsx:204
 msgid "Select an option"
-msgstr ""
+msgstr "Vælg en mulighed"
 
 #: src/screens/Settings/LanguageSettings.tsx:98
 msgid "Select app language"
-msgstr ""
+msgstr "Vælg appsprog"
 
 #: src/screens/Settings/LanguageSettings.tsx:164
 msgid "Select content languages"
@@ -7258,7 +7258,7 @@ msgstr "Vælg sprog"
 
 #: src/components/live/GoLiveDialog.tsx:179
 msgid "Select duration"
-msgstr ""
+msgstr "Vælg varighed"
 
 #: src/screens/Login/index.tsx:144
 msgid "Select from an existing account"
@@ -7294,7 +7294,7 @@ msgstr "Vælg moderator"
 
 #: src/screens/Settings/LanguageSettings.tsx:131
 msgid "Select primary language"
-msgstr ""
+msgstr "Vælg primært sprog"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:59
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
@@ -7340,7 +7340,7 @@ msgstr "Vælg dit foretrukne sprog for oversættelser i dit feed"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:110
 msgid "Select your preferred notification channels"
-msgstr ""
+msgstr "Vælg dine foretrukne notifikationskanaler"
 
 #: src/view/com/util/forms/DropdownButton.tsx:297
 msgid "Selects option {0} of {numItems}"
@@ -7373,7 +7373,7 @@ msgstr "Send besked"
 
 #: src/components/PostControls/ShareMenu/RecentChats.tsx:111
 msgid "Send post to {name}"
-msgstr ""
+msgstr "Send opslag til {name}"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:62
 msgid "Send post to..."
@@ -7443,45 +7443,48 @@ msgid "Settings"
 msgstr "Indstillinger"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:187
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:84
-msgid "Settings for activity alerts"
+msgid "Settings for activity from others"
+msgstr ""
+
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+msgid "Settings for allowing others to be notified of your posts"
 msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:121
 msgid "Settings for like notifications"
-msgstr ""
+msgstr "Notifikationsindstillinger for likes"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:154
 msgid "Settings for mention notifications"
-msgstr ""
+msgstr "Notifikationsindstillinger for omtaler"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:132
 msgid "Settings for new follower notifications"
-msgstr ""
+msgstr "Notifikationsindstillinger for nye følgere"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:230
 msgid "Settings for notifications for everything else"
-msgstr ""
+msgstr "Notifikationsindstillinger for alt andet"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:201
 msgid "Settings for notifications for likes of your reposts"
-msgstr ""
+msgstr "Notifikationsindstillinger for likes af dine videredelinger"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:216
 msgid "Settings for notifications for reposts of your reposts"
-msgstr ""
+msgstr "Notifikationsindstillinger for videredeling af dine videredelinger"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:165
 msgid "Settings for quote notifications"
-msgstr ""
+msgstr "Notifikationsindstillinger for citater"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:143
 msgid "Settings for reply notifications"
-msgstr ""
+msgstr "Notifikationsindstillinger for svar"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:176
 msgid "Settings for repost notifications"
-msgstr ""
+msgstr "Notifikationsindstillinger for videredelinger"
 
 #: src/screens/ModerationInteractionSettings/index.tsx:102
 msgctxt "toast"
@@ -7524,7 +7527,7 @@ msgstr "Del alligevel"
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:157
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:160
 msgid "Share author DID"
-msgstr ""
+msgstr "Del forfatter-DID"
 
 #: src/components/dialogs/LinkWarning.tsx:96
 #: src/components/dialogs/LinkWarning.tsx:104
@@ -7540,7 +7543,7 @@ msgstr "Del link-dialog"
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:148
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:151
 msgid "Share post at:// URI"
-msgstr ""
+msgstr "Del opslagets at://-URI"
 
 #: src/components/StarterPack/ShareDialog.tsx:115
 #: src/components/StarterPack/ShareDialog.tsx:126
@@ -7566,7 +7569,7 @@ msgstr "Del denne startpakke og hjælp andre med at blive en del af fællesskabe
 #: src/view/com/profile/ProfileMenu.tsx:243
 #: src/view/com/profile/ProfileMenu.tsx:256
 msgid "Share via..."
-msgstr ""
+msgstr "Del via..."
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -7631,7 +7634,7 @@ msgstr "Vis flere som dette"
 
 #: src/screens/PostThread/components/ThreadItemShowOtherReplies.tsx:14
 msgid "Show more replies"
-msgstr ""
+msgstr "Vis flere svar"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show muted replies"
@@ -7639,7 +7642,7 @@ msgstr "Vis skjulte svar"
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show post replies in a threaded tree view"
-msgstr ""
+msgstr "Vis svar til opslag i trådet trævisning"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:107
 #: src/screens/Settings/FollowingFeedPreferences.tsx:117
@@ -7748,7 +7751,7 @@ msgstr "Log på Bluesky eller opret en ny konto"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:463
 msgid "Sign in to view post"
-msgstr ""
+msgstr "Log ind for at se opslag"
 
 #: src/screens/Settings/Settings.tsx:245
 #: src/screens/Settings/Settings.tsx:247
@@ -7853,7 +7856,7 @@ msgstr "Noget gik galt!"
 
 #: src/screens/PostThread/components/ThreadError.tsx:27
 msgid "Something went wrong. Please try again in a moment."
-msgstr ""
+msgstr "Noget gik galt. Prøv igen om lidt."
 
 #: src/components/moderation/ReportDialog/index.tsx:178
 msgid "Something went wrong. Please try again."
@@ -7908,7 +7911,7 @@ msgstr "Sport"
 
 #: src/components/PostControls/ShareMenu/RecentChats.tsx:196
 msgid "Start a conversation, and it will appear here."
-msgstr ""
+msgstr "Start en samtale, og den vil blive vist her."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:74
 msgid "Start a new chat"
@@ -8009,7 +8012,7 @@ msgstr "Abonner på @{0} for at bruge disse labels:"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:245
 msgid "Subscribe to account activity"
-msgstr ""
+msgstr "Abonner på kontoaktivitet"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:235
 msgid "Subscribe to Labeler"
@@ -8176,7 +8179,7 @@ msgstr "Tekstfelt"
 
 #: src/view/com/posts/ShowLessFollowup.tsx:39
 msgid "Thank you for your feedback! It has been sent to the feed operator."
-msgstr ""
+msgstr "Tak for din feedback! Den er sendt videre til feedets ejer."
 
 #: src/components/ReportDialog/SubmitView.tsx:83
 msgid "Thank you. Your report has been sent."
@@ -8478,11 +8481,11 @@ msgstr "Denne samtale er med en slettet eller deaktiveret konto. Tryk for valgmu
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:156
 msgid "This email is already associated with your account."
-msgstr ""
+msgstr "Denne e-mail er allerede tilknyttet din konto."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:55
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
-msgstr ""
+msgstr "Denne funktion tillader brugere at modtage notifikationer om dine nye opslag og svar. Hvem skal have mulighed for det?"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -8490,7 +8493,7 @@ msgstr "Denne funktion er i beta. Du kan læse mere om dataeksport i <0>dette bl
 
 #: src/lib/hooks/useCleanError.ts:49
 msgid "This feature is not available while using an app password. Please sign in with your main password."
-msgstr ""
+msgstr "Denne funktion er ikke tilgængelig, når du bruger en appadgangskode. Log ind med din primære adgangskode."
 
 #: src/lib/strings/errors.ts:21
 msgid "This feature is not available while using an App Password. Please sign in with your main password."
@@ -8525,7 +8528,7 @@ msgstr "Denne oplysning vil ikke blive delt med andre brugere."
 #: src/components/live/EditLiveDialog.tsx:189
 #: src/components/live/GoLiveDialog.tsx:160
 msgid "This is not a valid link"
-msgstr ""
+msgstr "Dette er ikke et gyldigt link"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:168
 msgid "This label was applied by the author."
@@ -8574,7 +8577,7 @@ msgstr "Dette opslag er slettet."
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:138
 msgid "This post is only visible to logged-in users."
-msgstr ""
+msgstr "Dette opslag er kun synligt for indloggede brugere."
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:709
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
@@ -8692,7 +8695,7 @@ msgstr "For at deaktivere 2FA via e-mail, skal du bekræfte, at du har adgang ti
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:164
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:215
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
-msgstr ""
+msgstr "For at deaktivere 2FA via e-mail, skal du bekræfte din adgang til <0>{0}</0>"
 
 #: src/components/dms/ReportConversationPrompt.tsx:19
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
@@ -8729,7 +8732,7 @@ msgstr "Top"
 #: src/screens/Settings/ThreadPreferences.tsx:80
 #: src/screens/Settings/ThreadPreferences.tsx:83
 msgid "Top replies first"
-msgstr ""
+msgstr "Mest populære svar først"
 
 #: src/Navigation.tsx:529
 msgid "Topic"
@@ -8749,7 +8752,7 @@ msgstr "Oversæt"
 #: src/screens/Settings/ThreadPreferences.tsx:131
 #: src/screens/Settings/ThreadPreferences.tsx:136
 msgid "Tree view"
-msgstr ""
+msgstr "Trævisning"
 
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
@@ -9428,11 +9431,11 @@ msgstr "Viser videoen i fuldskærmstilstand"
 #: src/components/dialogs/LinkWarning.tsx:96
 #: src/components/dialogs/LinkWarning.tsx:106
 msgid "Visit site"
-msgstr ""
+msgstr "Besøg website"
 
 #: src/view/screens/Notifications.tsx:303
 msgid "Visit your notification settings"
-msgstr ""
+msgstr "Besøg dine notifikationsindstillinger"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:81
 msgid "Volume"
@@ -9680,7 +9683,7 @@ msgstr "Forkert DID returneret fra server. Modtog: {0}"
 #: src/components/live/EditLiveDialog.tsx:153
 #: src/components/live/GoLiveDialog.tsx:129
 msgid "www.mylivestream.tv"
-msgstr ""
+msgstr "www.minlivestream.tv"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:87
 msgid "Yes"
@@ -9779,7 +9782,7 @@ msgstr "Du kan også deaktivere din konto midlertidigt og genaktivere den når s
 
 #: src/lib/hooks/useNotificationHandler.ts:93
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
-msgstr ""
+msgstr "I appen kan du kan vælge, om chatnotifikationer skal være med lyd"
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
@@ -9787,7 +9790,7 @@ msgstr "Du kan fortsætte igangværende samtaler, uanset hvilken indstilling du 
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:148
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
-msgstr ""
+msgstr "Du kan nu vælge at blive notificeret om opslag fra udvalgte personer. Hvis du ønsker at modtage opdateringer fra en bruger, gå til deres profil og find det nye klokkeikon nær Følg-knappen."
 
 #: src/screens/Login/index.tsx:182
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
@@ -9848,7 +9851,7 @@ msgstr "Du har blokeret denne bruger. Du kan ikke se deres indhold."
 
 #: src/view/screens/Notifications.tsx:298
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
-msgstr ""
+msgstr "Du har deaktiveret alle notifikationer ved svar, citat og omtale, så denne fane vil ikke længere blive opdateret. For at ændre dette, gå til <0>notifikationsindstillingerne</0>."
 
 #: src/screens/Login/SetNewPasswordForm.tsx:49
 #: src/screens/Login/SetNewPasswordForm.tsx:95
@@ -9959,7 +9962,7 @@ msgstr "Du skal vælge mindst én mærkningstjeneste for at anmelde"
 #: src/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated.tsx:27
 #: src/screens/PostThread/components/ThreadItemPostNoUnauthenticated.tsx:47
 msgid "You must sign in to view this post."
-msgstr ""
+msgstr "Du skal logge ind for at se dette opslag."
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/index.tsx:23
 msgid "You need to verify your email address before you can enable email 2FA."
@@ -9988,7 +9991,7 @@ msgstr "Du vil blive logget ud af alle dine konti."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:139
 msgid "You will no longer receive notifications for {0}"
-msgstr ""
+msgstr "Du vil ikke længere modtage notifikationer om {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
 msgid "You will no longer receive notifications for this thread"
@@ -10032,7 +10035,7 @@ msgstr "Du kommer til at følge disse konti med det samme"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
 msgid "You'll start receiving notifications for {0}!"
-msgstr ""
+msgstr "Du vil nu modtager notifikationer om {0}!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:274
 msgid "You'll stay updated with these feeds"

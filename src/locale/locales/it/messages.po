@@ -8,7 +8,7 @@ msgstr ""
 "Language: it\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-02 00:33\n"
+"PO-Revision-Date: 2025-07-08 15:14\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -504,7 +504,7 @@ msgstr "Una nuova forma di verifica"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
-msgstr ""
+msgstr "Uno screenshot di una pagina del profilo con un'icona a forma di campanella accanto al pulsante Segui, che indica la nuova funzione di notifica delle attività."
 
 #: src/Navigation.tsx:509
 #: src/screens/Settings/AboutSettings.tsx:75
@@ -605,11 +605,11 @@ msgstr "Gli account con una spunta blu dentellata <0><1/></0> possono verificare
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:192
 msgid "Activity from others"
-msgstr ""
+msgstr "Attività da altri"
 
 #: src/Navigation.tsx:477
 msgid "Activity notifications"
-msgstr ""
+msgstr "Notifiche attività"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
@@ -820,9 +820,9 @@ msgid "Allow new messages from"
 msgstr "Consenti nuovi messaggi da"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:90
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Allow others to be notified of your posts"
-msgstr ""
+msgstr "Permetti ad altri di ricevere notifiche dei tuoi post"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
 msgid "Allow quote posts"
@@ -991,9 +991,9 @@ msgstr "Tutti possono interagire"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:161
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Anyone who follows me"
-msgstr ""
+msgstr "Chiunque mi segua"
 
 #: src/Navigation.tsx:517
 #: src/screens/Settings/AppIconSettings/index.tsx:67
@@ -1211,7 +1211,7 @@ msgstr "Devi verificare il tuo indirizzo email prima di poter accettare questa r
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:43
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
-msgstr ""
+msgstr "Devi verificare il tuo indirizzo email prima di poter ricevere notifiche relative ai post di {name}."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
@@ -1594,7 +1594,7 @@ msgstr "Cambia il fornitore di hosting"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:174
 msgid "Changes saved"
-msgstr ""
+msgstr "Modifiche salvate"
 
 #: src/lib/hooks/useNotificationHandler.ts:91
 #: src/Navigation.tsx:534
@@ -2185,7 +2185,7 @@ msgstr "Impossibile processare il tuo video"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:288
 msgid "Could not save changes: {0}"
-msgstr ""
+msgstr "Impossibile salvare le modifiche: {0}"
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
@@ -2775,7 +2775,7 @@ msgstr "Modifica i miei feed"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:240
 msgid "Edit notifications from {0}"
-msgstr ""
+msgstr "Modifica notifiche da {0}"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
@@ -2905,7 +2905,7 @@ msgstr "Attiva i lettori multimediali per"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
-msgstr ""
+msgstr "Abilita le notifiche per un account visitandone il profilo e premendo l'<0>icona a forma di campanella</0> <1/>."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:106
@@ -3015,9 +3015,9 @@ msgstr "Errore"
 msgid "Error loading post"
 msgstr "Errore durante il caricamento del post"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:152
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
 msgid "Error loading preference"
-msgstr ""
+msgstr "Errore durante il caricamento delle preferenze"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -3269,7 +3269,7 @@ msgstr "Impossibile caricare messaggi vecchi"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:65
 msgid "Failed to load preference."
-msgstr ""
+msgstr "Impossibile caricare le preferenze."
 
 #: src/screens/Search/Explore.tsx:463
 #: src/screens/Search/Explore.tsx:515
@@ -3346,7 +3346,7 @@ msgstr "Impossibile aggiornare i feed"
 
 #: src/state/queries/activity-subscriptions.ts:101
 msgid "Failed to update notification declaration"
-msgstr ""
+msgstr "Impossibile aggiornare la dichiarazione delle notifiche"
 
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
@@ -3443,7 +3443,7 @@ msgstr "Filtra la ricerca per lingua (attualmente: {currentLanguageLabel})"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:105
 msgid "Filter who can opt to receive notifications for your activity"
-msgstr ""
+msgstr "Filtra chi può scegliere di ricevere notifiche per le tue attività"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:158
 msgid "Filter who you receive notifications from"
@@ -3723,27 +3723,27 @@ msgstr "Ricevi notifiche quando le persone ripostano i tuoi post."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:77
 msgid "Get notified about new posts"
-msgstr ""
+msgstr "Ricevi notifiche di nuovi post"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:104
 msgid "Get notified about posts and replies from accounts you choose."
-msgstr ""
+msgstr "Ricevi notifiche dei post e delle risposte degli account che scegli."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 msgid "Get notified of new posts from {name}"
-msgstr ""
+msgstr "Ricevi notifiche di nuovi post di {name}"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of this account’s activity"
-msgstr ""
+msgstr "Ricevi notifiche sull'attività di questo account"
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:70
 msgid "Get notified when {name} posts"
-msgstr ""
+msgstr "Ricevi notifiche dei post di {name}"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:137
 msgid "Get notified when someone posts"
-msgstr ""
+msgstr "Ricevi notifiche quando qualcuno pubblica un post"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
@@ -4126,7 +4126,7 @@ msgstr "Se vuoi modificare la password, ti invieremo un codice per verificare ch
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:154
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
-msgstr ""
+msgstr "Per limitare chi può ricevere notifiche sull'attività del tuo account vai in <0>Impostazioni → Privacy e sicurezza</0>."
 
 #: src/view/com/auth/server-input/index.tsx:208
 msgid "If you're a developer, you can host your own server."
@@ -4244,7 +4244,7 @@ msgstr "Impostazioni per le interazioni"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
-msgstr ""
+msgstr "Introduzione sulle notifiche di attività"
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4335,7 +4335,7 @@ msgstr "Giornalismo"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Keep me posted"
-msgstr ""
+msgstr "Tienimi aggiornato"
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
@@ -4432,8 +4432,8 @@ msgstr "Ulteriori informazioni su questo avviso"
 msgid "Learn more about verification on Bluesky"
 msgstr "Scopri di più sulla verifica in Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
 msgid "Learn more about what is public on Bluesky."
 msgstr "Scopri cosa è pubblico su Bluesky."
 
@@ -4693,7 +4693,7 @@ msgstr "Caricamento..."
 msgid "Log"
 msgstr "Log"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:105
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
 msgid "Logged-out visibility"
 msgstr "Visibilità degli utenti disconnessi"
 
@@ -5129,11 +5129,11 @@ msgstr "Nuova"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:549
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr ""
+msgstr "{postsCount, plural, one {Nuovo} other {Nuovi}} post di {firstAuthorLink}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:532
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr ""
+msgstr "{postsCount, plural, one {Nuovo} other {nuovi}} post di {firstAuthorName}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
 #: src/screens/Messages/ChatList.tsx:364
@@ -5209,11 +5209,11 @@ msgstr "Nuovo post"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:538
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0>"
-msgstr ""
+msgstr "Nuovi post di {firstAuthorLink} e <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}}</0>"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:523
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr ""
+msgstr "Nuovi post di {firstAuthorName} e {additionalAuthorsCount, plural, one {{formattedAuthorsCount} altro} other {{formattedAuthorsCount} altri}}"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -5313,7 +5313,7 @@ msgstr "Ancora nessuna notifica!"
 #: src/screens/Messages/Settings.tsx:104
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "No one"
 msgstr "Nessuno"
 
@@ -5323,7 +5323,7 @@ msgstr "Solo l'autore può citare questo post."
 
 #: src/screens/Notifications/ActivityList.tsx:38
 msgid "No posts here"
-msgstr ""
+msgstr "Nessun post qui"
 
 #: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
@@ -5405,7 +5405,7 @@ msgstr "Nudità non sessuale"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:217
 msgid "None"
-msgstr ""
+msgstr "Nessuno"
 
 #: src/components/KnownFollowers.tsx:255
 msgid "Not followed by anyone you're following"
@@ -5420,7 +5420,7 @@ msgstr "Non trovato"
 msgid "Note about sharing"
 msgstr "Nota sulla condivisione"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Nota: Bluesky è una rete aperta e pubblica. Questa impostazione limita solo la visibilità dei tuoi contenuti sull'app e sul sito web di Bluesky e altre app potrebbero non rispettare questa impostazione. I tuoi contenuti potrebbero comunque essere mostrati agli utenti disconnessi da altre app e siti web."
 
@@ -5564,9 +5564,9 @@ msgstr "Contiene solo lettere, numeri e trattini"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
 msgid "Only followers who I follow"
-msgstr ""
+msgstr "Solo i follower che seguo"
 
 #: src/lib/media/picker.shared.ts:32
 msgid "Only image files are supported"
@@ -6207,7 +6207,7 @@ msgstr "Post nascosto"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:211
 msgid "Posts, Replies"
-msgstr ""
+msgstr "Post, risposte"
 
 #: src/components/dialogs/LinkWarning.tsx:73
 msgid "Potentially misleading link"
@@ -6266,7 +6266,7 @@ msgstr "Privacy e sicurezza"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:158
 msgid "Privacy and Security settings"
-msgstr ""
+msgstr "Impostazioni privacy e sicurezza"
 
 #: src/Navigation.tsx:316
 #: src/screens/Settings/AboutSettings.tsx:92
@@ -6945,7 +6945,7 @@ msgstr "Rinvia email di verifica"
 #: src/screens/Settings/Settings.tsx:439
 #: src/screens/Settings/Settings.tsx:441
 msgid "Reset activity subscription nudge"
-msgstr ""
+msgstr "Reimposta suggerimento di iscrizione ad attività"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 #: src/view/com/modals/ChangePassword.tsx:197
@@ -7443,9 +7443,12 @@ msgid "Settings"
 msgstr "Impostazioni"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:187
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:84
-msgid "Settings for activity alerts"
-msgstr ""
+msgid "Settings for activity from others"
+msgstr "Impostazioni per attività degli altri"
+
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+msgid "Settings for allowing others to be notified of your posts"
+msgstr "Impostazioni per consentire ad altri di essere avvisati dei tuoi post"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:121
 msgid "Settings for like notifications"
@@ -8009,7 +8012,7 @@ msgstr "Iscriviti a @{0} per usare queste etichette:"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:245
 msgid "Subscribe to account activity"
-msgstr ""
+msgstr "Iscriviti all'attività dell'account"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:235
 msgid "Subscribe to Labeler"
@@ -8482,7 +8485,7 @@ msgstr "Questa email è già associata al tuo account."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:55
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
-msgstr ""
+msgstr "Questa funzione consente agli utenti di ricevere notifiche per i tuoi nuovi post e risposte. Per chi vuoi abilitarla?"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -9787,7 +9790,7 @@ msgstr "Puoi proseguire le conversazioni in corso indipendentemente dall'imposta
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:148
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
-msgstr ""
+msgstr "Ora puoi scegliere di ricevere notifiche quando determinate persone pubblicano. Se desideri ricevere aggiornamenti tempestivi da qualcuno, vai al suo profilo e cerca la nuova icona a forma di campanella vicino al pulsante Segui."
 
 #: src/screens/Login/index.tsx:182
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
@@ -9988,7 +9991,7 @@ msgstr "Verrai disconnesso da tutti i tuoi account."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:139
 msgid "You will no longer receive notifications for {0}"
-msgstr ""
+msgstr "Non riceverai più notifiche per {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
 msgid "You will no longer receive notifications for this thread"
@@ -10032,7 +10035,7 @@ msgstr "Seguirai immediatamente queste persone"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
 msgid "You'll start receiving notifications for {0}!"
-msgstr ""
+msgstr "Inizierai a ricevere notifiche per {0}!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:274
 msgid "You'll stay updated with these feeds"

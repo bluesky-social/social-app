@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-02 00:33\n"
+"PO-Revision-Date: 2025-07-08 15:14\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -504,7 +504,7 @@ msgstr "Nova konfirmada metodo"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
-msgstr ""
+msgstr "Ekrankopio montranta paĝon kun sonorila piktogramo apud la sekvi-butono, kio estas la nova funkcio - agadaj sciigoj."
 
 #: src/Navigation.tsx:509
 #: src/screens/Settings/AboutSettings.tsx:75
@@ -605,11 +605,11 @@ msgstr "Kontoj kun gravurita blua kontrolmarko<0><1/></0>povas kontroli aliulojn
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:192
 msgid "Activity from others"
-msgstr ""
+msgstr "Agado de aliuloj"
 
 #: src/Navigation.tsx:477
 msgid "Activity notifications"
-msgstr ""
+msgstr "Agadaj sciigoj"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
@@ -820,9 +820,9 @@ msgid "Allow new messages from"
 msgstr "Permesi novajn mesaĝojn de"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:90
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Allow others to be notified of your posts"
-msgstr ""
+msgstr "Permesi aliulojn esti sciigota pri viaj afiŝoj"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
 msgid "Allow quote posts"
@@ -991,9 +991,9 @@ msgstr "Ĉiu povas interagi"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:161
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Anyone who follows me"
-msgstr ""
+msgstr "Ĉiu kiu sekvas min"
 
 #: src/Navigation.tsx:517
 #: src/screens/Settings/AppIconSettings/index.tsx:67
@@ -1211,7 +1211,7 @@ msgstr "Antaŭ ol vi povos mesaĝi, vi devas unue konfirmi vian retpoŝtadreson.
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:43
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
-msgstr ""
+msgstr "Antaŭ ol vi povos ricevi sciigojn pri afiŝoj de {name}, unue vi devas konfirmi vian retpoŝtadreson."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
@@ -1594,7 +1594,7 @@ msgstr "Ŝanĝas la provizanton de gastigo"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:174
 msgid "Changes saved"
-msgstr ""
+msgstr "Ŝanĝoj konservitaj"
 
 #: src/lib/hooks/useNotificationHandler.ts:91
 #: src/Navigation.tsx:534
@@ -2185,7 +2185,7 @@ msgstr "Ne eblis trakti vian videaĵon"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:288
 msgid "Could not save changes: {0}"
-msgstr ""
+msgstr "Ne eblis konservi ŝanĝojn: {0}"
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
@@ -2775,7 +2775,7 @@ msgstr "Redakti miajn fluojn"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:240
 msgid "Edit notifications from {0}"
-msgstr ""
+msgstr "Redakti sciigojn de {0}"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
@@ -2905,7 +2905,7 @@ msgstr "Ŝalti la aŭdvidaĵajn ludliojn por"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
-msgstr ""
+msgstr "Por ŝalti sciigojn pri konto, vizitu ties profilo kaj premu la <0>sonorilan piktogramon</0> <1/>."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:106
@@ -3015,9 +3015,9 @@ msgstr "Eraro"
 msgid "Error loading post"
 msgstr "Eraris ŝargante afiŝon"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:152
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
 msgid "Error loading preference"
-msgstr ""
+msgstr "Eraris ŝargante preferon"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -3269,7 +3269,7 @@ msgstr "Malsukcesis ŝargi antaŭajn mesaĝojn"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:65
 msgid "Failed to load preference."
-msgstr ""
+msgstr "Malsukcesis ŝargi preferon."
 
 #: src/screens/Search/Explore.tsx:463
 #: src/screens/Search/Explore.tsx:515
@@ -3346,7 +3346,7 @@ msgstr "Malsukcesis ĝisdatigi fluojn"
 
 #: src/state/queries/activity-subscriptions.ts:101
 msgid "Failed to update notification declaration"
-msgstr ""
+msgstr "Malsukcesis ĝisdatigi sciigan deklaron"
 
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
@@ -3443,7 +3443,7 @@ msgstr "Filtri serĉon laŭ lingvo (nune: {currentLanguageLabel})"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:105
 msgid "Filter who can opt to receive notifications for your activity"
-msgstr ""
+msgstr "Filtri kiu havos eblon ŝalti ricevadon de sciigoj pri via agado"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:158
 msgid "Filter who you receive notifications from"
@@ -3723,27 +3723,27 @@ msgstr "Ricevi sciigojn, kiam homoj reafiŝos viajn afiŝojn."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:77
 msgid "Get notified about new posts"
-msgstr ""
+msgstr "Esti sciigota pri novaj afiŝoj"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:104
 msgid "Get notified about posts and replies from accounts you choose."
-msgstr ""
+msgstr "Esti sciigota pri novaj afiŝoj kaj respondoj de kontoj kiujn vi elektis."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 msgid "Get notified of new posts from {name}"
-msgstr ""
+msgstr "Esti sciigota pri novaj afiŝoj de {name}"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of this account’s activity"
-msgstr ""
+msgstr "Esti sciigata pri agado de ĉi tiu konto"
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:70
 msgid "Get notified when {name} posts"
-msgstr ""
+msgstr "Esti sciigota kiam {name} afiŝos"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:137
 msgid "Get notified when someone posts"
-msgstr ""
+msgstr "Esti sciigota kiam iu afiŝos"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
@@ -4126,7 +4126,7 @@ msgstr "Se vi volas ŝanĝi vian pasvorton, ni sendos al vi kodon por konfirmi, 
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:154
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
-msgstr ""
+msgstr "Se vi volas limigi kiu povos ricevi sciigojn pri agado de via konto, vi povas ŝanĝi tion en <0>Agordoj → Privateco kaj sekureco</0>."
 
 #: src/view/com/auth/server-input/index.tsx:208
 msgid "If you're a developer, you can host your own server."
@@ -4244,7 +4244,7 @@ msgstr "Agordoj pri interagado"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
-msgstr ""
+msgstr "Ni prezentas agadaj sciigoj"
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4335,7 +4335,7 @@ msgstr "Ĵurnalismo"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Keep me posted"
-msgstr ""
+msgstr "Informadi min"
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
@@ -4432,8 +4432,8 @@ msgstr "Ekscii pli pri ĉi tiu averto"
 msgid "Learn more about verification on Bluesky"
 msgstr "Ekscii pli pri konfirmado ĉe Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
 msgid "Learn more about what is public on Bluesky."
 msgstr "Ekscii pli pri kio estas publika ĉe Bluesky."
 
@@ -4693,7 +4693,7 @@ msgstr "Ŝargado..."
 msgid "Log"
 msgstr "Protokolo"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:105
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
 msgid "Logged-out visibility"
 msgstr "Videbleco de elsalutintaj uzantoj"
 
@@ -5129,11 +5129,11 @@ msgstr "Nova"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:549
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr ""
+msgstr "{postsCount, plural, one {Nova afiŝo} other {Novaj afiŝoj}} de {firstAuthorLink}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:532
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr ""
+msgstr "{postsCount, plural, one {Nova afiŝo} other {Novaj afiŝoj}} de {firstAuthorName}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
 #: src/screens/Messages/ChatList.tsx:364
@@ -5209,11 +5209,11 @@ msgstr "Nova afiŝo"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:538
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0>"
-msgstr ""
+msgstr "Novaj afiŝoj de {firstAuthorLink} kaj <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}</0>"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:523
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr ""
+msgstr "Novaj afiŝoj de {firstAuthorName} kaj {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -5313,7 +5313,7 @@ msgstr "Ankoraŭ ne estas sciigoj!"
 #: src/screens/Messages/Settings.tsx:104
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "No one"
 msgstr "Neniu"
 
@@ -5323,7 +5323,7 @@ msgstr "Neniu krom la aŭtoro povas citi ĉi tiun afiŝon."
 
 #: src/screens/Notifications/ActivityList.tsx:38
 msgid "No posts here"
-msgstr ""
+msgstr "Neniuj afiŝoj ĉi tie"
 
 #: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
@@ -5405,7 +5405,7 @@ msgstr "Ne-seksuma nudeco"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:217
 msgid "None"
-msgstr ""
+msgstr "Neniu"
 
 #: src/components/KnownFollowers.tsx:255
 msgid "Not followed by anyone you're following"
@@ -5420,7 +5420,7 @@ msgstr "Netrovita"
 msgid "Note about sharing"
 msgstr "Noto pri kundivido"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Atentu: Bluesky estas malfermita kaj publika reto. Ĉi tiu agordo nur limigas la videblecon de via enhavo en la apo kaj retejo de Bluesky, eble aliaj apoj ne respektos ĉi tiun agordon. Aliaj apoj kaj retejoj povas daŭre montri vian enhavon al elsalutintaj uzantoj."
 
@@ -5564,9 +5564,9 @@ msgstr "Nur enhavas literojn, ciferojn kaj streketojn"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
 msgid "Only followers who I follow"
-msgstr ""
+msgstr "Nur sekvantoj kiujn mi sekvas"
 
 #: src/lib/media/picker.shared.ts:32
 msgid "Only image files are supported"
@@ -6207,7 +6207,7 @@ msgstr "Afiŝoj kaŝitaj"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:211
 msgid "Posts, Replies"
-msgstr ""
+msgstr "Afiŝoj, respondoj"
 
 #: src/components/dialogs/LinkWarning.tsx:73
 msgid "Potentially misleading link"
@@ -6266,7 +6266,7 @@ msgstr "Privateco kaj sekureco"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:158
 msgid "Privacy and Security settings"
-msgstr ""
+msgstr "Agordoj de privateco kaj sekureco"
 
 #: src/Navigation.tsx:316
 #: src/screens/Settings/AboutSettings.tsx:92
@@ -6945,7 +6945,7 @@ msgstr "Resendi konfirman retmesaĝon"
 #: src/screens/Settings/Settings.tsx:439
 #: src/screens/Settings/Settings.tsx:441
 msgid "Reset activity subscription nudge"
-msgstr ""
+msgstr "Restarigi kubutumon pri agada abono"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 #: src/view/com/modals/ChangePassword.tsx:197
@@ -7443,9 +7443,12 @@ msgid "Settings"
 msgstr "Agordoj"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:187
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:84
-msgid "Settings for activity alerts"
-msgstr ""
+msgid "Settings for activity from others"
+msgstr "Agordoj por agado de aliuloj"
+
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+msgid "Settings for allowing others to be notified of your posts"
+msgstr "Agordoj por permesi aliuloj esti sciigotaj pri viaj afiŝoj"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:121
 msgid "Settings for like notifications"
@@ -8009,7 +8012,7 @@ msgstr "Aboni al @{0} por uzi tiujn etikedojn:"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:245
 msgid "Subscribe to account activity"
-msgstr ""
+msgstr "Aboni al agado de la konto"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:235
 msgid "Subscribe to Labeler"
@@ -8482,7 +8485,7 @@ msgstr "Ĉi tiu retpoŝtadreso jam estas ligita al via konto."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:55
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
-msgstr ""
+msgstr "Ĉi tiu funkcio permesas al uzantoj ricevi sciigojn pri viaj novaj afiŝoj kaj respondoj. Por kiu vi volas ŝalti ĝin?"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -9787,7 +9790,7 @@ msgstr "Vi povas daŭrigi daŭrantajn konversaciojn sendepende de la agordo kiun
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:148
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
-msgstr ""
+msgstr "Vi nun povas elekti esti sciigota kiam specifaj homoj afiŝos. Se estas iu pri kiu vi volas akurataj ĝisdatigoj, iru al ties profilo kaj trovi la novan sonorilan piktogramon apud la sekvi-butonon."
 
 #: src/screens/Login/index.tsx:182
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
@@ -9988,7 +9991,7 @@ msgstr "Vi elsalutos el ĉiuj viaj kontoj."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:139
 msgid "You will no longer receive notifications for {0}"
-msgstr ""
+msgstr "Vi ne plu ricevos sciigojn pri {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
 msgid "You will no longer receive notifications for this thread"
@@ -10032,7 +10035,7 @@ msgstr "Vi sekvos ĉi tiujn homojn tuj"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
 msgid "You'll start receiving notifications for {0}!"
-msgstr ""
+msgstr "Vi ekricevos sciigojn pri {0}!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:274
 msgid "You'll stay updated with these feeds"

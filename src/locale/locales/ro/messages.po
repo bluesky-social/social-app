@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-02 00:33\n"
+"PO-Revision-Date: 2025-07-08 15:14\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -504,7 +504,7 @@ msgstr "O nouă formă de verificare"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
-msgstr ""
+msgstr "O captură de ecran a unei pagini de profil cu o pictogramă clopoțel, lângă butonul „Urmărire”, indicând noua caracteristică pentru notificările de activitate."
 
 #: src/Navigation.tsx:509
 #: src/screens/Settings/AboutSettings.tsx:75
@@ -605,11 +605,11 @@ msgstr "Conturile cu bifa albastră în formă de feston <0><1/></0> pot verific
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:192
 msgid "Activity from others"
-msgstr ""
+msgstr "Activitate de la alții"
 
 #: src/Navigation.tsx:477
 msgid "Activity notifications"
-msgstr ""
+msgstr "Notificări de activitate"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
@@ -820,9 +820,9 @@ msgid "Allow new messages from"
 msgstr "Permite mesaje noi de la"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:90
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Allow others to be notified of your posts"
-msgstr ""
+msgstr "Permiteți celorlalți să fie notificați despre postările dvs."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
 msgid "Allow quote posts"
@@ -991,9 +991,9 @@ msgstr "Oricine poate interacționa"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:161
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Anyone who follows me"
-msgstr ""
+msgstr "Oricine mă urmăreşte"
 
 #: src/Navigation.tsx:517
 #: src/screens/Settings/AppIconSettings/index.tsx:67
@@ -1211,7 +1211,7 @@ msgstr "Înainte de a putea accepta această solicitare de conversație, trebuie
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:43
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
-msgstr ""
+msgstr "Înainte de a primi notificări despre postările noi de la {name}, trebuie mai întâi să vă verificați e-mailul."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
@@ -1594,7 +1594,7 @@ msgstr "Schimbați furnizorul de găzduire"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:174
 msgid "Changes saved"
-msgstr ""
+msgstr "Modificări salvate"
 
 #: src/lib/hooks/useNotificationHandler.ts:91
 #: src/Navigation.tsx:534
@@ -2185,7 +2185,7 @@ msgstr "Nu s-a putut procesa videoclipul"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:288
 msgid "Could not save changes: {0}"
-msgstr ""
+msgstr "Nu s-au putut salva modificările: {0}"
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
@@ -2775,7 +2775,7 @@ msgstr "Editează fluxurile mele"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:240
 msgid "Edit notifications from {0}"
-msgstr ""
+msgstr "Editați notificările de la {0}"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
@@ -2905,7 +2905,7 @@ msgstr "Activează playerele media pentru"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
-msgstr ""
+msgstr "Activați notificările pentru un cont accesând profilul acestuia și apăsând pe <0>pictograma clopoțel</0> <1/>."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:106
@@ -3015,9 +3015,9 @@ msgstr "Eroare"
 msgid "Error loading post"
 msgstr "Eroare la încărcarea postării"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:152
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
 msgid "Error loading preference"
-msgstr ""
+msgstr "Eroare la încărcarea preferinței"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -3269,7 +3269,7 @@ msgstr "Încărcarea mesajelor anterioare a eșuat"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:65
 msgid "Failed to load preference."
-msgstr ""
+msgstr "Nu s-a putut încărca preferința."
 
 #: src/screens/Search/Explore.tsx:463
 #: src/screens/Search/Explore.tsx:515
@@ -3346,7 +3346,7 @@ msgstr "Nu s-au putut actualiza fluxurile."
 
 #: src/state/queries/activity-subscriptions.ts:101
 msgid "Failed to update notification declaration"
-msgstr ""
+msgstr "Nu s-a putut actualiza declarația de notificare"
 
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
@@ -3443,7 +3443,7 @@ msgstr "Filtrează căutarea după limbă (actuală: {currentLanguageLabel})"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:105
 msgid "Filter who can opt to receive notifications for your activity"
-msgstr ""
+msgstr "Filtrați cine poate opta să primească notificări pentru activitatea dvs."
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:158
 msgid "Filter who you receive notifications from"
@@ -3723,27 +3723,27 @@ msgstr "Primiți notificări când oamenii repostează postările dvs."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:77
 msgid "Get notified about new posts"
-msgstr ""
+msgstr "Primiți notificări despre postări noi"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:104
 msgid "Get notified about posts and replies from accounts you choose."
-msgstr ""
+msgstr "Primiți notificări despre postările și răspunsurile de la conturile pe care le alegeți."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 msgid "Get notified of new posts from {name}"
-msgstr ""
+msgstr "Primiți notificări despre postările noi de la {name}"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of this account’s activity"
-msgstr ""
+msgstr "Primiți notificări despre activitatea acestui cont"
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:70
 msgid "Get notified when {name} posts"
-msgstr ""
+msgstr "Primește notificări când {name} postează"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:137
 msgid "Get notified when someone posts"
-msgstr ""
+msgstr "Primiți notificări când cineva postează"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
@@ -4126,7 +4126,7 @@ msgstr "Dacă vrei să îți schimbi parola, îți vom trimite un cod pentru a v
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:154
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
-msgstr ""
+msgstr "Dacă doriți să restricționați cine poate primi notificări pentru activitatea contului dvs., puteți modifica acest lucru în <0>Setări → Confidențialitate și Securitate</0>."
 
 #: src/view/com/auth/server-input/index.tsx:208
 msgid "If you're a developer, you can host your own server."
@@ -4244,7 +4244,7 @@ msgstr "Setări de interacțiune"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
-msgstr ""
+msgstr "Vă prezentăm notificări de activitate"
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4335,7 +4335,7 @@ msgstr "Jurnalism"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Keep me posted"
-msgstr ""
+msgstr "Ține-mă la curent"
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
@@ -4432,8 +4432,8 @@ msgstr "Află mai multe despre acest avertisment"
 msgid "Learn more about verification on Bluesky"
 msgstr "Aflați mai multe despre verificarea pe Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
 msgid "Learn more about what is public on Bluesky."
 msgstr "Află mai multe despre ce este public pe Bluesky."
 
@@ -4693,7 +4693,7 @@ msgstr "Se încarcă..."
 msgid "Log"
 msgstr "Jurnal"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:105
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
 msgid "Logged-out visibility"
 msgstr "Vizibilitate pentru utilizatorii neautentificați"
 
@@ -5129,11 +5129,11 @@ msgstr "Nouă"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:549
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr ""
+msgstr "{postsCount, plural, one {Postare nouă} few {Postări noi} other {Postări noi}} de la {firstAuthorLink}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:532
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr ""
+msgstr "{postsCount, plural, one {Postare nouă} few {Postări noi} other {Postări noi}} de la postări{firstAuthorName}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
 #: src/screens/Messages/ChatList.tsx:364
@@ -5209,11 +5209,11 @@ msgstr "Postare nouă"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:538
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0>"
-msgstr ""
+msgstr "Postare nouă de la {firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} un alt utilizator} few {{formattedAuthorsCount} alți utilizatori} other {{formattedAuthorsCount} alți utilizatori}}</0>"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:523
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr ""
+msgstr "Postare nouă de la {firstAuthorName} și {additionalAuthorsCount, plural, one {{formattedAuthorsCount} un alt utilizator} few {{formattedAuthorsCount} alți utilizatori} other {{formattedAuthorsCount} alți utilizatori}}"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -5313,7 +5313,7 @@ msgstr "Încă nu există notificări!"
 #: src/screens/Messages/Settings.tsx:104
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "No one"
 msgstr "Nimeni"
 
@@ -5323,7 +5323,7 @@ msgstr "Nimeni altcineva decât autorul nu poate cita această postare."
 
 #: src/screens/Notifications/ActivityList.tsx:38
 msgid "No posts here"
-msgstr ""
+msgstr "Nici o postare aici"
 
 #: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
@@ -5405,7 +5405,7 @@ msgstr "Nuditate non-sexuală"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:217
 msgid "None"
-msgstr ""
+msgstr "Nimic"
 
 #: src/components/KnownFollowers.tsx:255
 msgid "Not followed by anyone you're following"
@@ -5420,7 +5420,7 @@ msgstr "Nu a fost găsit"
 msgid "Note about sharing"
 msgstr "Notă despre partajare"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Notă: Bluesky este o rețea deschisă și publică. Această setare limitează doar vizibilitatea conținutului pe aplicația și site-ul Bluesky, iar alte aplicații s-ar putea să nu respecte această setare. Conținutul tău poate fi afișat utilizatorilor neautentificați de alte aplicații și site-uri web."
 
@@ -5564,9 +5564,9 @@ msgstr "Conține doar litere, cifre și cratime"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
 msgid "Only followers who I follow"
-msgstr ""
+msgstr "Doar urmăritorii pe care îi urmăresc"
 
 #: src/lib/media/picker.shared.ts:32
 msgid "Only image files are supported"
@@ -6207,7 +6207,7 @@ msgstr "Postări ascunse"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:211
 msgid "Posts, Replies"
-msgstr ""
+msgstr "Postări, Răspunsuri"
 
 #: src/components/dialogs/LinkWarning.tsx:73
 msgid "Potentially misleading link"
@@ -6266,7 +6266,7 @@ msgstr "Confidențialitate și Securitate"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:158
 msgid "Privacy and Security settings"
-msgstr ""
+msgstr "Setări de Confidențialitate și Securitate"
 
 #: src/Navigation.tsx:316
 #: src/screens/Settings/AboutSettings.tsx:92
@@ -6945,7 +6945,7 @@ msgstr "Retrimite e-mailul de verificare"
 #: src/screens/Settings/Settings.tsx:439
 #: src/screens/Settings/Settings.tsx:441
 msgid "Reset activity subscription nudge"
-msgstr ""
+msgstr "Resetați abonamentul de activitate"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 #: src/view/com/modals/ChangePassword.tsx:197
@@ -7443,9 +7443,12 @@ msgid "Settings"
 msgstr "Setări"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:187
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:84
-msgid "Settings for activity alerts"
-msgstr ""
+msgid "Settings for activity from others"
+msgstr "Setări pentru activitate de la alții"
+
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+msgid "Settings for allowing others to be notified of your posts"
+msgstr "Setări pentru a permite celorlalți să fie notificați despre postările dvs."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:121
 msgid "Settings for like notifications"
@@ -8009,7 +8012,7 @@ msgstr "Abonează-te la @{0} pentru a folosi aceste etichete:"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:245
 msgid "Subscribe to account activity"
-msgstr ""
+msgstr "Abonați-vă la activitatea contului"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:235
 msgid "Subscribe to Labeler"
@@ -8482,7 +8485,7 @@ msgstr "Acest e-mail este deja asociat contului dvs."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:55
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
-msgstr ""
+msgstr "Această caracteristică permite utilizatorilor să primească notificări pentru noile dvs. postări și răspunsuri. Pentru cine doriți să activați această caracteristică?"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -9787,7 +9790,7 @@ msgstr "Poți continua conversațiile în curs, indiferent de setarea pe care o 
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:148
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
-msgstr ""
+msgstr "Acum puteți alege să fiți notificat când anumite persoane postează. Dacă există cineva de la care doriți actualizări la timp, accesați-le profilul și găsiși noua pictogramă clopoțel lângă butonul „Urmărire”."
 
 #: src/screens/Login/index.tsx:182
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
@@ -9988,7 +9991,7 @@ msgstr "Vei fi deconectat din toate conturile tale."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:139
 msgid "You will no longer receive notifications for {0}"
-msgstr ""
+msgstr "Nu veți mai primi notificări pentru {0}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
 msgid "You will no longer receive notifications for this thread"
@@ -10032,7 +10035,7 @@ msgstr "Vei urmări aceste persoane imediat."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
 msgid "You'll start receiving notifications for {0}!"
-msgstr ""
+msgstr "Veți începe să primiți notificări pentru {0}!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:274
 msgid "You'll stay updated with these feeds"

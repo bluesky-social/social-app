@@ -8,7 +8,7 @@ msgstr ""
 "Language: hu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-02 00:33\n"
+"PO-Revision-Date: 2025-07-08 15:14\n"
 "Last-Translator: \n"
 "Language-Team: Hungarian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -504,7 +504,7 @@ msgstr "A hitelesítés egy új formája"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
-msgstr ""
+msgstr "Képernyőkép egy felhasználói profilról, amelyen egy harang ikon látható a Követés-gomb mellett. Ez az új, tevékenységértesítési funkciót ábrázolja."
 
 #: src/Navigation.tsx:509
 #: src/screens/Settings/AboutSettings.tsx:75
@@ -605,11 +605,11 @@ msgstr "Másokat hitelesíteni csak a <0><1/></0> recés pipával rendelkező fi
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:192
 msgid "Activity from others"
-msgstr ""
+msgstr "Mások tevékenységei"
 
 #: src/Navigation.tsx:477
 msgid "Activity notifications"
-msgstr ""
+msgstr "Tevékenységértesítések"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
@@ -820,9 +820,9 @@ msgid "Allow new messages from"
 msgstr "Bejövő üzenetek fogadása"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:90
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Allow others to be notified of your posts"
-msgstr ""
+msgstr "Saját bejegyzésekről szóló értesítések"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
 msgid "Allow quote posts"
@@ -991,9 +991,9 @@ msgstr "Bárki kapcsolatba léphet"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:161
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Anyone who follows me"
-msgstr ""
+msgstr "Bármelyik követőtől"
 
 #: src/Navigation.tsx:517
 #: src/screens/Settings/AppIconSettings/index.tsx:67
@@ -1211,7 +1211,7 @@ msgstr "Az üzenetfogadás előtt ellenőriznünk kell az email-címedet."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:43
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
-msgstr ""
+msgstr "A feliratkozás előtt vissza kell igazolnod az email-címedet."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
@@ -1594,7 +1594,7 @@ msgstr "Tárhelyszolgáltató megváltoztatása"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:174
 msgid "Changes saved"
-msgstr ""
+msgstr "Változtatások elmentve"
 
 #: src/lib/hooks/useNotificationHandler.ts:91
 #: src/Navigation.tsx:534
@@ -2185,7 +2185,7 @@ msgstr "A videó feldolgozása meghiúsult."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:288
 msgid "Could not save changes: {0}"
-msgstr ""
+msgstr "A mentés meghiúsult. Indoklás: {0}"
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
@@ -2775,7 +2775,7 @@ msgstr "Hírfolyamgyűjtemény szerkesztése"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:240
 msgid "Edit notifications from {0}"
-msgstr ""
+msgstr "{0} értesítéseinek szerkesztése"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
@@ -2905,7 +2905,7 @@ msgstr "Az alábbi külső médialejátszók vannak engedélyezve:"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
-msgstr ""
+msgstr "Egy fiók értesítéseit a profilján, a <0>harang ikonon</0> <1/> keresztül elérhető menüben módosíthatod."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:106
@@ -3015,9 +3015,9 @@ msgstr "Hiba"
 msgid "Error loading post"
 msgstr "Hiba történt a bejegyzés betöltése közben"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:152
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
 msgid "Error loading preference"
-msgstr ""
+msgstr "A betöltés meghiúsult"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -3269,7 +3269,7 @@ msgstr "A korábbi üzenetek betöltése meghiúsult"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:65
 msgid "Failed to load preference."
-msgstr ""
+msgstr "A betöltés meghiúsult."
 
 #: src/screens/Search/Explore.tsx:463
 #: src/screens/Search/Explore.tsx:515
@@ -3346,7 +3346,7 @@ msgstr "A hírfolyamok frissítése meghiúsult"
 
 #: src/state/queries/activity-subscriptions.ts:101
 msgid "Failed to update notification declaration"
-msgstr ""
+msgstr "Az értesítési beállítások frissítése meghiúsult"
 
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
@@ -3443,7 +3443,7 @@ msgstr "Szűrés nyelv alapján (Jelenlegi: {currentLanguageLabel})"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:105
 msgid "Filter who can opt to receive notifications for your activity"
-msgstr ""
+msgstr "A saját tevékenységekről szóló értesítések engedélyeinek megszabása"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:158
 msgid "Filter who you receive notifications from"
@@ -3723,27 +3723,27 @@ msgstr "Értesítés, ha valaki megosztja az egyik bejegyzésedet."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:77
 msgid "Get notified about new posts"
-msgstr ""
+msgstr "Feliratkozás értesítésekre"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:104
 msgid "Get notified about posts and replies from accounts you choose."
-msgstr ""
+msgstr "Értesülhetsz kívánt fiókok új tevékenységeiről."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 msgid "Get notified of new posts from {name}"
-msgstr ""
+msgstr "Feliratkozás {name} új bejegyzéseire"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of this account’s activity"
-msgstr ""
+msgstr "Feliratkozás a fiók tevékenységeire"
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:70
 msgid "Get notified when {name} posts"
-msgstr ""
+msgstr "Feliratkozás {name} új bejegyzéseire"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:137
 msgid "Get notified when someone posts"
-msgstr ""
+msgstr "Feliratkozás egy fiók új bejegyzéseire"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
@@ -4126,7 +4126,7 @@ msgstr "A jelszó megváltoztatásához egy ellenőrzőkódot fogunk küldeni, h
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:154
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
-msgstr ""
+msgstr "A saját fiókodra vonatkozó értesítési beállításokat a <0>Beállítások → Adatvédelem és biztonság</0>-menüpontban szabhatod személyre."
 
 #: src/view/com/auth/server-input/index.tsx:208
 msgid "If you're a developer, you can host your own server."
@@ -4244,7 +4244,7 @@ msgstr "Kapcsolatbalépési beállítások"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
-msgstr ""
+msgstr "Tevékenységértesítések"
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4335,7 +4335,7 @@ msgstr "Sajtó"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Keep me posted"
-msgstr ""
+msgstr "Feliratkozás értesítésekre"
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
@@ -4432,8 +4432,8 @@ msgstr "További információ erről a figyelmeztetésről"
 msgid "Learn more about verification on Bluesky"
 msgstr "További információ a Blueskyos hitelesítésől"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
 msgid "Learn more about what is public on Bluesky."
 msgstr "További információ a Bluesky-tartalmak nyilvánosságáról."
 
@@ -4693,7 +4693,7 @@ msgstr "Betöltés…"
 msgid "Log"
 msgstr "Napló"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:105
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
 msgid "Logged-out visibility"
 msgstr "Láthatóság kijelentkezett felhasználók számára"
 
@@ -5129,11 +5129,11 @@ msgstr "Új"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:549
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr ""
+msgstr "{firstAuthorLink} új {postsCount, plural, one {bejegyzést} other {bejegyzéseket}} tett közzé"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:532
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr ""
+msgstr "{firstAuthorName} új {postsCount, plural, one {bejegyzést} other {bejegyzéseket}} tett közzé"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
 #: src/screens/Messages/ChatList.tsx:364
@@ -5209,11 +5209,11 @@ msgstr "Új bejegyzés"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:538
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0>"
-msgstr ""
+msgstr "{firstAuthorLink} és <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount}} other {{formattedAuthorsCount}}} további személy</0> új bejegyzéseket tett közzé"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:523
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr ""
+msgstr "{firstAuthorName} és {additionalAuthorsCount, plural, one {{formattedAuthorsCount}} other {{formattedAuthorsCount}}} további személy új bejegyzéseket tett közzé"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -5313,7 +5313,7 @@ msgstr "Még nincsenek értesítéseid!"
 #: src/screens/Messages/Settings.tsx:104
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "No one"
 msgstr "Senkitől"
 
@@ -5323,7 +5323,7 @@ msgstr "Ezt a bejegyzést csak a szerző idézheti."
 
 #: src/screens/Notifications/ActivityList.tsx:38
 msgid "No posts here"
-msgstr ""
+msgstr "Még nincsenek bejegyzések"
 
 #: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
@@ -5405,7 +5405,7 @@ msgstr "Nemszexuális meztelenség"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:217
 msgid "None"
-msgstr ""
+msgstr "Nincs"
 
 #: src/components/KnownFollowers.tsx:255
 msgid "Not followed by anyone you're following"
@@ -5420,7 +5420,7 @@ msgstr "Ez a tartalom nem található"
 msgid "Note about sharing"
 msgstr "Korlátozott láthatóság"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Megjegyzés: A Bluesky egy nyílt és nyilvános hálózat. Ez a beállítás csak a Bluesky alkalmazásban és -honlapon korlátozza a tartalmaid láthatóságát és nem biztos, hogy más alkalmazások is tiszteletben tartják. Lehetséges, hogy más alkalmazásokban és honlapokon ugyanúgy láthatóak maradnak a tartalmaid kijelentkezett felhasználók számára is."
 
@@ -5564,9 +5564,9 @@ msgstr "Csak az angol ábécé betűit, számokat és kötőjeleket tartalmazhat
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
 msgid "Only followers who I follow"
-msgstr ""
+msgstr "Csak a kölcsönös követőktől"
 
 #: src/lib/media/picker.shared.ts:32
 msgid "Only image files are supported"
@@ -6207,7 +6207,7 @@ msgstr "Elrejtetted a bejegyzéseket"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:211
 msgid "Posts, Replies"
-msgstr ""
+msgstr "Bejegyzések, válaszok"
 
 #: src/components/dialogs/LinkWarning.tsx:73
 msgid "Potentially misleading link"
@@ -6266,7 +6266,7 @@ msgstr "Adatvédelem és biztonság"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:158
 msgid "Privacy and Security settings"
-msgstr ""
+msgstr "Adatvédelmi- és biztonsági beállítások"
 
 #: src/Navigation.tsx:316
 #: src/screens/Settings/AboutSettings.tsx:92
@@ -6945,7 +6945,7 @@ msgstr "Visszaigazoló email újraküldése"
 #: src/screens/Settings/Settings.tsx:439
 #: src/screens/Settings/Settings.tsx:441
 msgid "Reset activity subscription nudge"
-msgstr ""
+msgstr "Tevékenységértesítés-feliratkozási jelző alaphelyzetbe állítása"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 #: src/view/com/modals/ChangePassword.tsx:197
@@ -7443,9 +7443,12 @@ msgid "Settings"
 msgstr "Beállítások"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:187
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:84
-msgid "Settings for activity alerts"
-msgstr ""
+msgid "Settings for activity from others"
+msgstr "Saját tevékenységértesítési beállítások"
+
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+msgid "Settings for allowing others to be notified of your posts"
+msgstr "Mások Tőled érkező értesítéseit érintő beállítások"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:121
 msgid "Settings for like notifications"
@@ -8009,7 +8012,7 @@ msgstr "Az alábbi feljegyzési kategóriák használatához iratkozz fel a(z) @
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:245
 msgid "Subscribe to account activity"
-msgstr ""
+msgstr "Feliratkozás fióktevékenységi értesítésekre"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:235
 msgid "Subscribe to Labeler"
@@ -8484,7 +8487,7 @@ msgstr "Ez az email-cím már jelenleg is hozzá van rendelve a fiókodhoz."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:55
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
-msgstr ""
+msgstr "Ez a funkció megengedi más felhasználók számára, hogy feliratkozzanak az új bejegyzéseidről és válaszaidról szóló értesítésekre. Mely felhasználóktól szeretnéd jóváhagyni ezeket a kéréseket?"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -9789,7 +9792,7 @@ msgstr "A már létező csevegéseket a fenti beállításoktól függetlenül f
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:148
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
-msgstr ""
+msgstr "Mostantól feliratkozhatsz egyes személyek tevékenységeire. Ha van olyasvalaki, akinek a bejegyzéseiről szeretnél értesítéseket kapni, akkor nyisd meg a profilját és kattints a Követés-gomb mellett található harang ikonra!"
 
 #: src/screens/Login/index.tsx:182
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
@@ -9990,7 +9993,7 @@ msgstr "Ezzel az összes fiókból ki fogsz jelentkezni."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:139
 msgid "You will no longer receive notifications for {0}"
-msgstr ""
+msgstr "Leiratkoztál {0} értesítéseiről"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
 msgid "You will no longer receive notifications for this thread"
@@ -10034,7 +10037,7 @@ msgstr "Ezeket a személyeket rögtön követni fogod"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
 msgid "You'll start receiving notifications for {0}!"
-msgstr ""
+msgstr "Feliratkoztál {0} értesítéseire!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:274
 msgid "You'll stay updated with these feeds"

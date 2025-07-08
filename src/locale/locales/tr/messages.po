@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-02 00:33\n"
+"PO-Revision-Date: 2025-07-08 15:14\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -170,7 +170,7 @@ msgstr "{0} şuna {1} tepkisi verdi: {2}"
 #: src/view/com/util/UserAvatar.tsx:570
 #: src/view/com/util/UserAvatar.tsx:588
 msgid "{0}'s avatar"
-msgstr "{0}'ın avatarı"
+msgstr "{0} kullanıcısının avatarı"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:74
 msgid "{0}'s favorite feeds and people - join me!"
@@ -504,7 +504,7 @@ msgstr "Yeni bir doğrulama biçimi"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
-msgstr ""
+msgstr "Takip et butonunun yanında bir zil simgesi bulunan bir profil sayfasının ekran görüntüsü; bu, yeni etkinlik bildirimleri özelliğini göstermektedir."
 
 #: src/Navigation.tsx:509
 #: src/screens/Settings/AboutSettings.tsx:75
@@ -605,11 +605,11 @@ msgstr "Çıkıntılı onay tikine sahip hesaplar <0><1/></0> başka hesapları 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:192
 msgid "Activity from others"
-msgstr ""
+msgstr "Başkalarının etkinlikleri"
 
 #: src/Navigation.tsx:477
 msgid "Activity notifications"
-msgstr ""
+msgstr "Etkinlik bildirimleri"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
@@ -822,9 +822,9 @@ msgid "Allow new messages from"
 msgstr "Yeni mesajlara izin ver"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:90
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Allow others to be notified of your posts"
-msgstr ""
+msgstr "Başkalarına gönderilerinizden bildirim alma izni verin"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
 msgid "Allow quote posts"
@@ -993,9 +993,9 @@ msgstr "Herkes etkileşime geçebilir"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:161
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Anyone who follows me"
-msgstr ""
+msgstr "Beni takip eden herkes"
 
 #: src/Navigation.tsx:517
 #: src/screens/Settings/AppIconSettings/index.tsx:67
@@ -1213,7 +1213,7 @@ msgstr "Bu sohbet isteğini kabul edebilmeniz için öncelikle e-postanızı do�
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:43
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
-msgstr ""
+msgstr "{name} kullanıcısının gönderilerinden bildirim alabilmeniz için öncelikle e-posta adresinizi doğrulamanız gerekiyor."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
@@ -1596,7 +1596,7 @@ msgstr "Yer sağlayıcıyı değiştirir"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:174
 msgid "Changes saved"
-msgstr ""
+msgstr "Değişiklikler kaydedildi"
 
 #: src/lib/hooks/useNotificationHandler.ts:91
 #: src/Navigation.tsx:534
@@ -2187,7 +2187,7 @@ msgstr "Videonuz işlenemedi"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:288
 msgid "Could not save changes: {0}"
-msgstr ""
+msgstr "Değişiklikler kaydedilemedi: {0}"
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
@@ -2777,7 +2777,7 @@ msgstr "Akışlarımı Düzenle"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:240
 msgid "Edit notifications from {0}"
-msgstr ""
+msgstr "{0} kullanıcısından gelen bildirimleri düzenle"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
@@ -2907,7 +2907,7 @@ msgstr "Medya oynatıcılarını etkinleştir"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
-msgstr ""
+msgstr "Bir hesabın bildirimlerini etkinleştirmek için profilini ziyaret edin ve <0>zil simgesine</0> <1/> basın."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:106
@@ -3017,9 +3017,9 @@ msgstr "Hata"
 msgid "Error loading post"
 msgstr "Gönderi yüklenirken bir hata oluştu"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:152
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
 msgid "Error loading preference"
-msgstr ""
+msgstr "Tercih yüklenirken hata oluştu"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -3271,7 +3271,7 @@ msgstr "Eski mesajlar yüklenemedi"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:65
 msgid "Failed to load preference."
-msgstr ""
+msgstr "Tercih yüklenemedi."
 
 #: src/screens/Search/Explore.tsx:463
 #: src/screens/Search/Explore.tsx:515
@@ -3348,7 +3348,7 @@ msgstr "Akışlar güncellenemedi"
 
 #: src/state/queries/activity-subscriptions.ts:101
 msgid "Failed to update notification declaration"
-msgstr ""
+msgstr "Bildirim beyanı güncellenemedi"
 
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
@@ -3445,7 +3445,7 @@ msgstr "Aramayı dile göre filtrele (şu anda:{currentLanguageLabel})"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:105
 msgid "Filter who can opt to receive notifications for your activity"
-msgstr ""
+msgstr "Etkinliğinizden kimlerin bildirim alabileceğini filtreleyin"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:158
 msgid "Filter who you receive notifications from"
@@ -3725,27 +3725,27 @@ msgstr "Gönderilerinizi yeniden gönderdiklerinde bildirim alın."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:77
 msgid "Get notified about new posts"
-msgstr ""
+msgstr "Yeni gönderilerden bildirim al"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:104
 msgid "Get notified about posts and replies from accounts you choose."
-msgstr ""
+msgstr "Seçtiğiniz hesapların gönderilerinden ve yanıtlarından bildirim alın."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 msgid "Get notified of new posts from {name}"
-msgstr ""
+msgstr "{name} kullanıcısının yeni gönderilerinden bildirim al"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of this account’s activity"
-msgstr ""
+msgstr "Bu hesabın etkinliklerinden bildirim al"
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:70
 msgid "Get notified when {name} posts"
-msgstr ""
+msgstr "{name} gönderi paylaştığında bildirim al"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:137
 msgid "Get notified when someone posts"
-msgstr ""
+msgstr "Birisi gönderi paylaştığında bildirim al"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
@@ -4128,7 +4128,7 @@ msgstr "Şifrenizi değiştirmek istiyorsanız, size hesabınızın sizin olduğ
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:154
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
-msgstr ""
+msgstr "Hesabınızın etkinlik bildirimlerini kimlerin alabileceğini sınırlamak istiyorsanız, bunu <0>Ayarlar → Gizlilik ve Güvenlik</0> bölümünden değiştirebilirsiniz."
 
 #: src/view/com/auth/server-input/index.tsx:208
 msgid "If you're a developer, you can host your own server."
@@ -4246,7 +4246,7 @@ msgstr "Etkileşim ayarları"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
-msgstr ""
+msgstr "Etkinlik bildirimleriyle tanış"
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4337,7 +4337,7 @@ msgstr "Gazetecilik"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Keep me posted"
-msgstr ""
+msgstr "Beni haberdar et"
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
@@ -4434,8 +4434,8 @@ msgstr "Bu uyarı hakkında daha fazla bilgi edinin"
 msgid "Learn more about verification on Bluesky"
 msgstr "Bluesky'da doğrulama ile ilgili daha fazla bilgi edinin"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
 msgid "Learn more about what is public on Bluesky."
 msgstr "Bluesky'da neyin herkese açık olduğu hakkında daha fazla bilgi edinin."
 
@@ -4463,7 +4463,7 @@ msgstr "Görüşmeden ayrıl"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:84
 msgid "Leave them all unselected to see any language."
-msgstr ""
+msgstr "Tüm dilleri görmek için burada hiçbirini seçmeyin."
 
 #: src/components/dialogs/LinkWarning.tsx:67
 #: src/components/dialogs/LinkWarning.tsx:75
@@ -4695,7 +4695,7 @@ msgstr "Yükleniyor..."
 msgid "Log"
 msgstr "Log"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:105
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
 msgid "Logged-out visibility"
 msgstr "Çıkış yapan görünürlüğü"
 
@@ -5131,11 +5131,11 @@ msgstr "Yeni"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:549
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr ""
+msgstr "{firstAuthorLink} kullanıcısından yeni {postsCount, plural, one {gönderi} other {gönderiler}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:532
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr ""
+msgstr "{firstAuthorName} kullanıcısından yeni {postsCount, plural, one {gönderi} other {gönderiler}}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
 #: src/screens/Messages/ChatList.tsx:364
@@ -5211,11 +5211,11 @@ msgstr "Yeni Gönderi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:538
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0>"
-msgstr ""
+msgstr "{firstAuthorLink} ve <0>{additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişiden daha}}</0> yeni gönderiler"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:523
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr ""
+msgstr "{firstAuthorName} ve {additionalAuthorsCount, plural, other {{formattedAuthorsCount} kişiden daha}} yeni gönderiler"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -5315,7 +5315,7 @@ msgstr "Henüz bildirim yok!"
 #: src/screens/Messages/Settings.tsx:104
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "No one"
 msgstr "Hiç kimse"
 
@@ -5325,7 +5325,7 @@ msgstr "Yazarı dışında hiçkimse bu gönderiyi alıntılayamaz."
 
 #: src/screens/Notifications/ActivityList.tsx:38
 msgid "No posts here"
-msgstr ""
+msgstr "Burada gönderi yok"
 
 #: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
@@ -5407,7 +5407,7 @@ msgstr "Cinsel olmayan çıplaklık"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:217
 msgid "None"
-msgstr ""
+msgstr "Hiçbiri"
 
 #: src/components/KnownFollowers.tsx:255
 msgid "Not followed by anyone you're following"
@@ -5422,7 +5422,7 @@ msgstr "Bulunamadı"
 msgid "Note about sharing"
 msgstr "Paylaşıma dair dikkatinize"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Not: Bluesky açık ve kamusal bir ağdır. Bu ayar yalnızca içeriğinizin Bluesky uygulaması ve web sitesindeki görünürlüğünü sınırlar, diğer uygulamalar bu ayarı dikkate almayabilir. İçeriğiniz hala diğer uygulamalar ve web siteleri tarafından çıkış yapan kullanıcılara gösterilebilir."
 
@@ -5566,9 +5566,9 @@ msgstr "Yalnızca harf, rakam ve tire içerir"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
 msgid "Only followers who I follow"
-msgstr ""
+msgstr "Sadece benim takip ettiğim takipçiler"
 
 #: src/lib/media/picker.shared.ts:32
 msgid "Only image files are supported"
@@ -6209,7 +6209,7 @@ msgstr "Gönderiler gizlendi"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:211
 msgid "Posts, Replies"
-msgstr ""
+msgstr "Gönderiler, Yanıtlar"
 
 #: src/components/dialogs/LinkWarning.tsx:73
 msgid "Potentially misleading link"
@@ -6268,7 +6268,7 @@ msgstr "Gizlilik ve Güvenlik"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:158
 msgid "Privacy and Security settings"
-msgstr ""
+msgstr "Gizlilik ve Güvenlik ayarları"
 
 #: src/Navigation.tsx:316
 #: src/screens/Settings/AboutSettings.tsx:92
@@ -6947,7 +6947,7 @@ msgstr "Onay E-postasını Tekrar Gönder"
 #: src/screens/Settings/Settings.tsx:439
 #: src/screens/Settings/Settings.tsx:441
 msgid "Reset activity subscription nudge"
-msgstr ""
+msgstr "Etkinlik aboneliği hatırlatıcısını sıfırla"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 #: src/view/com/modals/ChangePassword.tsx:197
@@ -7445,9 +7445,12 @@ msgid "Settings"
 msgstr "Ayarlar"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:187
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:84
-msgid "Settings for activity alerts"
-msgstr ""
+msgid "Settings for activity from others"
+msgstr "Başkalarının etkinliklerine dair ayarlar"
+
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+msgid "Settings for allowing others to be notified of your posts"
+msgstr "Gönderilerinizden başkalarının bildirim almasına izin verme ayarları"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:121
 msgid "Settings for like notifications"
@@ -8011,7 +8014,7 @@ msgstr "Bu etiketleri kullanmak için @{0} hesabına abone olun:"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:245
 msgid "Subscribe to account activity"
-msgstr ""
+msgstr "Hesap etkinliklerine abone ol"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:235
 msgid "Subscribe to Labeler"
@@ -8484,7 +8487,7 @@ msgstr "Bu e-posta zaten hesabınızla ilişkili."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:55
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
-msgstr ""
+msgstr "Bu özellik, kullanıcıların yeni gönderileriniz ve yanıtlarınızdan bildirim almasını sağlar. Bunu kimler için etkinleştirmek istersiniz?"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -9789,7 +9792,7 @@ msgstr "Hangi ayarı seçerseniz seçin devam eden yazışmaları sürdürebilir
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:148
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
-msgstr ""
+msgstr "Artık belirli kişiler gönderi paylaştığında bildirim almayı seçebilirsiniz. Güncellemelerini zamanlı almak istediğiniz biri varsa, profiline gidin ve takip et düğmesinin yanındaki yeni zil simgesini bulun."
 
 #: src/screens/Login/index.tsx:182
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
@@ -9990,7 +9993,7 @@ msgstr "Tüm hesaplarınızdan çıkış yapacaksınız."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:139
 msgid "You will no longer receive notifications for {0}"
-msgstr ""
+msgstr "Artık {0} için bildirim almayacaksınız"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
 msgid "You will no longer receive notifications for this thread"
@@ -10034,7 +10037,7 @@ msgstr "Bu kişileri hemen takip edeceksiniz"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
 msgid "You'll start receiving notifications for {0}!"
-msgstr ""
+msgstr "{0} için bildirim almaya başlayacaksınız!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:274
 msgid "You'll stay updated with these feeds"

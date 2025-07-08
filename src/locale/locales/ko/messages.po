@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-02 00:33\n"
+"PO-Revision-Date: 2025-07-08 15:14\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -174,7 +174,7 @@ msgstr "{0} 님의 아바타"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:74
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "{0} 님이 좋아하는 피드 및 사람들 - 함께하세요!"
+msgstr "{0} 님이 좋아하는 피드 및 사용자 - 함께하세요!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:46
 msgid "{0}'s starter pack"
@@ -504,7 +504,7 @@ msgstr "새로운 방식의 인증"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
-msgstr ""
+msgstr "팔로우 버튼 옆에 새 활동 알림 기능을 나타내는 종 모양 아이콘이 있는 프로필 페이지 스크린샷"
 
 #: src/Navigation.tsx:509
 #: src/screens/Settings/AboutSettings.tsx:75
@@ -605,11 +605,11 @@ msgstr "물결 모양의 파란색 체크 표시 <0><1/></0> 가 있는 계정�
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:192
 msgid "Activity from others"
-msgstr ""
+msgstr "다른 사용자의 활동"
 
 #: src/Navigation.tsx:477
 msgid "Activity notifications"
-msgstr ""
+msgstr "활동 알림"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
@@ -703,11 +703,11 @@ msgstr "새 게시물 추가"
 #: src/view/screens/ProfileList.tsx:932
 #: src/view/screens/ProfileList.tsx:950
 msgid "Add people"
-msgstr "사람 추가"
+msgstr "사용자 추가"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:79
 msgid "Add people to list"
-msgstr "리스트에 사람들 추가하기"
+msgstr "리스트에 사용자 추가하기"
 
 #: src/components/dms/EmojiPopup.android.tsx:55
 msgid "Add Reaction"
@@ -723,7 +723,7 @@ msgstr "스타터 팩에 피드를 추가해 보세요!"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
-msgstr "내가 팔로우하는 사람의 기본 피드만 추가하기"
+msgstr "내가 팔로우하는 사용자의 기본 피드만 추가하기"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:406
 msgid "Add the following DNS record to your domain:"
@@ -820,9 +820,9 @@ msgid "Allow new messages from"
 msgstr "새 메시지를 허용할 대상"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:90
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Allow others to be notified of your posts"
-msgstr ""
+msgstr "다른 사용자에게 내 게시물 알림 허용"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
 msgid "Allow quote posts"
@@ -991,9 +991,9 @@ msgstr "누구나 상호작용할 수 있음"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:161
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Anyone who follows me"
-msgstr ""
+msgstr "나를 팔로우하는 모든 사용자"
 
 #: src/Navigation.tsx:517
 #: src/screens/Settings/AppIconSettings/index.tsx:67
@@ -1211,7 +1211,7 @@ msgstr "이 대화 요청을 수락하려면 먼저 이메일을 인증해야 �
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:43
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
-msgstr ""
+msgstr "{name} 님의 게시물에 대한 알림을 받으려면 먼저 이메일을 인증해야 합니다."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
@@ -1356,7 +1356,7 @@ msgstr "Bluesky Social 서비스 이용약관"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:310
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky가 네트워크에 있는 사람들 중에서 임의로 추천 계정 세트를 선택합니다."
+msgstr "Bluesky가 네트워크에 있는 사용자 중에서 임의로 추천 계정 세트를 선택합니다."
 
 #: src/screens/Settings/components/PwiOptOut.tsx:99
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -1594,7 +1594,7 @@ msgstr "호스팅 제공자를 변경합니다"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:174
 msgid "Changes saved"
-msgstr ""
+msgstr "변경 사항을 저장했습니다"
 
 #: src/lib/hooks/useNotificationHandler.ts:91
 #: src/Navigation.tsx:534
@@ -1680,7 +1680,7 @@ msgstr "임의로 선택하기"
 
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose People"
-msgstr "사람들 선택"
+msgstr "사용자 선택"
 
 #: src/screens/Onboarding/StepFinished.tsx:298
 msgid "Choose the algorithms that power your custom feeds."
@@ -2185,7 +2185,7 @@ msgstr "동영상을 처리할 수 없습니다"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:288
 msgid "Could not save changes: {0}"
-msgstr ""
+msgstr "변경 사항을 저장할 수 없습니다: {0}"
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
@@ -2276,7 +2276,7 @@ msgstr "사용자 지정 옵션"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:107
 msgid "Customize who can interact with this post."
-msgstr "이 게시물과 상호작용할 수 있는 사람을 사용자 지정합니다."
+msgstr "이 게시물과 상호작용할 수 있는 사용자를 맞춤 설정합니다."
 
 #: src/screens/Onboarding/Layout.tsx:56
 msgid "Customizes your Bluesky experience"
@@ -2477,7 +2477,7 @@ msgstr "개발자 옵션"
 
 #: src/components/WhoCanReply.tsx:186
 msgid "Dialog: adjust who can interact with this post"
-msgstr "대화 상자: 이 게시물과 상호작용할 수 있는 사람 조정하기"
+msgstr "대화 상자: 이 게시물과 상호작용할 수 있는 사용자 조정하기"
 
 #: src/screens/Settings/AppearanceSettings.tsx:125
 msgid "Dim"
@@ -2775,11 +2775,11 @@ msgstr "내 피드 편집"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:240
 msgid "Edit notifications from {0}"
-msgstr ""
+msgstr "{0} 님의 알림 편집"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
 msgid "Edit People"
-msgstr "사람들 편집하기"
+msgstr "사용자 편집하기"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:73
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:243
@@ -2808,7 +2808,7 @@ msgstr "사용자 리스트 편집"
 
 #: src/components/WhoCanReply.tsx:97
 msgid "Edit who can reply"
-msgstr "답글을 달 수 있는 사람 편집"
+msgstr "답글을 달 수 있는 사용자 편집"
 
 #: src/Navigation.tsx:579
 msgid "Edit your starter pack"
@@ -2905,7 +2905,7 @@ msgstr "미디어 플레이어를 사용할 외부 사이트"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
-msgstr ""
+msgstr "계정의 프로필을 방문하여 <0>종 모양 아이콘</0> <1/> 을 눌러 계정에 대한 알림을 사용 설정하세요."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:106
@@ -3015,9 +3015,9 @@ msgstr "오류"
 msgid "Error loading post"
 msgstr "게시물 불러오기 오류"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:152
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
 msgid "Error loading preference"
-msgstr ""
+msgstr "환경설정 불러오기 오류"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
@@ -3269,7 +3269,7 @@ msgstr "지난 메시지를 불러오지 못했습니다"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:65
 msgid "Failed to load preference."
-msgstr ""
+msgstr "환경설정을 불러오지 못했습니다."
 
 #: src/screens/Search/Explore.tsx:463
 #: src/screens/Search/Explore.tsx:515
@@ -3346,7 +3346,7 @@ msgstr "피드를 업데이트하지 못했습니다"
 
 #: src/state/queries/activity-subscriptions.ts:101
 msgid "Failed to update notification declaration"
-msgstr ""
+msgstr "알림 선언을 업데이트하지 못했습니다"
 
 #: src/screens/Messages/Settings.tsx:34
 msgid "Failed to update settings"
@@ -3443,7 +3443,7 @@ msgstr "언어별 검색 필터링 (현재: {currentLanguageLabel})"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:105
 msgid "Filter who can opt to receive notifications for your activity"
-msgstr ""
+msgstr "내 활동 알림을 받을 수 있는 사용자 필터링"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:158
 msgid "Filter who you receive notifications from"
@@ -3463,7 +3463,7 @@ msgstr "팔로우할 계정 찾아보기"
 #: src/components/ProgressGuide/FollowDialog.tsx:87
 #: src/components/ProgressGuide/FollowDialog.tsx:374
 msgid "Find people to follow"
-msgstr "팔로우할 사람 찾아보기"
+msgstr "팔로우할 사용자 찾아보기"
 
 #: src/screens/Search/Shell.tsx:476
 msgid "Find posts, users, and feeds on Bluesky"
@@ -3723,27 +3723,27 @@ msgstr "사람들이 내 게시물을 재게시하면 알림을 받습니다."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:77
 msgid "Get notified about new posts"
-msgstr ""
+msgstr "새 게시물 알림 받기"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:104
 msgid "Get notified about posts and replies from accounts you choose."
-msgstr ""
+msgstr "내가 선택한 계정의 새 게시물과 답글에 대한 알림을 받습니다."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:219
 msgid "Get notified of new posts from {name}"
-msgstr ""
+msgstr "{name} 님의 새 게시물 알림 받기"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:226
 msgid "Get notified of this account’s activity"
-msgstr ""
+msgstr "이 계정의 활동 알림 받기"
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:70
 msgid "Get notified when {name} posts"
-msgstr ""
+msgstr "{name} 님이 게시물을 올리면 알림 받기"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:137
 msgid "Get notified when someone posts"
-msgstr ""
+msgstr "다른 사용자가 게시물을 올릴 때 알림 받기"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
@@ -4106,7 +4106,7 @@ msgstr "이 리스트를 삭제하면 다시 복구할 수 없습니다."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:267
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr "자체 도메인이 있는 경우 이를 핸들로 사용할 수 있으며, 이를 통해 본인임을 다른 사람들에게 알릴 수 있습니다. <0>더 알아보기</0>"
+msgstr "자체 도메인이 있는 경우 이를 핸들로 사용할 수 있으며, 이를 통해 본인임을 다른 사용자에게 알릴 수 있습니다. <0>더 알아보기</0>"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:270
 msgid "If you need to update your email, <0>click here</0>."
@@ -4126,7 +4126,7 @@ msgstr "비밀번호를 변경하고 싶다면 본인 계정임을 확인할 수
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:154
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
-msgstr ""
+msgstr "내 계정의 활동에 대한 알림을 받을 수 있는 사용자를 제한하려면 <0>설정 → 개인정보 및 보안</0>에서 변경할 수 있습니다."
 
 #: src/view/com/auth/server-input/index.tsx:208
 msgid "If you're a developer, you can host your own server."
@@ -4186,7 +4186,7 @@ msgstr "인앱, 모두"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:275
 msgid "In-app, People you follow"
-msgstr "인앱, 내가 팔로우하는 사람들"
+msgstr "인앱, 내가 팔로우하는 사용자"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:282
 msgid "In-app, Push"
@@ -4198,7 +4198,7 @@ msgstr "인앱, 푸시, 모두"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:273
 msgid "In-app, Push, People you follow"
-msgstr "인앱, 푸시, 내가 팔로우하는 사람들"
+msgstr "인앱, 푸시, 내가 팔로우하는 사용자"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:91
 #: src/lib/moderation/useReportOptions.ts:91
@@ -4244,7 +4244,7 @@ msgstr "상호작용 설정"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
-msgstr ""
+msgstr "활동 알림 소개"
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4293,7 +4293,7 @@ msgstr "이 스타터 팩을 사용할 사람들을 초대하세요!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:34
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "친구를 초대하여 좋아하는 피드와 사람들을 팔로우할 수 있도록 합니다"
+msgstr "친구를 초대하여 좋아하는 피드와 사용자를 팔로우할 수 있도록 합니다"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:31
 msgid "Invites, but personal"
@@ -4305,7 +4305,7 @@ msgstr "올바른 주소입니다"
 
 #: src/screens/StarterPack/Wizard/index.tsx:435
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "아직은 나밖에 없습니다. 위에서 검색하여 스타터 팩에 더 많은 사람을 추가하세요."
+msgstr "아직은 나밖에 없습니다. 위에서 검색하여 스타터 팩에 더 많은 사용자를 추가하세요."
 
 #: src/view/com/composer/Composer.tsx:1672
 msgid "Job ID: {0}"
@@ -4335,7 +4335,7 @@ msgstr "저널리즘"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Keep me posted"
-msgstr ""
+msgstr "최신 소식 받기"
 
 #: src/components/moderation/ContentHider.tsx:231
 msgid "Labeled by {0}."
@@ -4432,8 +4432,8 @@ msgstr "이 경고에 대해 더 알아보기"
 msgid "Learn more about verification on Bluesky"
 msgstr "Bluesky의 인증에 대해 더 알아보기"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
 msgid "Learn more about what is public on Bluesky."
 msgstr "Bluesky에서 공개되는 항목에 대해 자세히 알아보세요."
 
@@ -4693,7 +4693,7 @@ msgstr "불러오는 중…"
 msgid "Log"
 msgstr "로그"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:105
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
 msgid "Logged-out visibility"
 msgstr "로그아웃 표시"
 
@@ -5129,11 +5129,11 @@ msgstr "새로 만들기"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:549
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr ""
+msgstr "{firstAuthorLink} 님의 새 {postsCount, plural, other {게시물}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:532
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr ""
+msgstr "{firstAuthorName} 님의 새 {postsCount, plural, other {게시물}}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
 #: src/screens/Messages/ChatList.tsx:364
@@ -5209,11 +5209,11 @@ msgstr "새 게시물"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:538
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0>"
-msgstr ""
+msgstr "{firstAuthorLink} 님 <0>외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}</0>의 새 게시물"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:523
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr ""
+msgstr "{firstAuthorName} 님 외 {additionalAuthorsCount, plural, other {{formattedAuthorsCount}명}}의 새 게시물"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -5313,7 +5313,7 @@ msgstr "아직 알림이 없습니다"
 #: src/screens/Messages/Settings.tsx:104
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "No one"
 msgstr "없음"
 
@@ -5323,7 +5323,7 @@ msgstr "이 게시물은 작성자 외에는 누구도 인용할 수 없습니�
 
 #: src/screens/Notifications/ActivityList.tsx:38
 msgid "No posts here"
-msgstr ""
+msgstr "게시물이 없습니다"
 
 #: src/screens/Profile/Sections/Feed.tsx:66
 msgid "No posts yet."
@@ -5405,11 +5405,11 @@ msgstr "선정적이지 않은 나체"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:217
 msgid "None"
-msgstr ""
+msgstr "없음"
 
 #: src/components/KnownFollowers.tsx:255
 msgid "Not followed by anyone you're following"
-msgstr "내가 팔로우하는 사람이 팔로우하지 않음"
+msgstr "내가 팔로우하는 사용자가 팔로우하지 않음"
 
 #: src/Navigation.tsx:152
 #: src/view/screens/Profile.tsx:125
@@ -5420,7 +5420,7 @@ msgstr "찾을 수 없음"
 msgid "Note about sharing"
 msgstr "공유 관련 참고 사항"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은 Bluesky 앱과 웹사이트에서만 내 콘텐츠가 표시되는 것을 제한하며, 다른 앱에서는 이 설정을 준수하지 않을 수 있습니다. 다른 앱과 웹사이트에서는 로그아웃한 사용자에게 내 콘텐츠가 계속 표시될 수 있습니다."
 
@@ -5471,7 +5471,7 @@ msgstr "알림"
 
 #: src/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings.tsx:43
 msgid "Notifications for everything else, such as when someone joins via one of your starter packs."
-msgstr "다른 사람이 내 스타터 팩을 통해 가입하는 경우 등 기타 모든 알림을 받습니다."
+msgstr "다른 사용자가 내 스타터 팩을 통해 가입하는 경우 등 기타 모든 알림을 받습니다."
 
 #: src/lib/hooks/useTimeAgo.ts:135
 msgid "now"
@@ -5564,9 +5564,9 @@ msgstr "문자, 숫자, 하이픈만 포함"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
 msgid "Only followers who I follow"
-msgstr ""
+msgstr "내가 팔로우하는 팔로워만"
 
 #: src/lib/media/picker.shared.ts:32
 msgid "Only image files are supported"
@@ -5680,7 +5680,7 @@ msgstr "게시물에 콘텐츠 경고를 추가하는 대화 상자를 엽니다
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:61
 msgid "Opens a dialog to choose who can reply to this thread"
-msgstr "이 스레드에 답글을 달 수 있는 사람을 선택하는 대화 상자를 엽니다"
+msgstr "이 스레드에 답글을 달 수 있는 사용자를 선택하는 대화 상자를 엽니다"
 
 #: src/view/screens/Log.tsx:59
 msgid "Opens additional details for a debug entry"
@@ -5864,20 +5864,20 @@ msgstr "동영상 일시 정지"
 #: src/screens/StarterPack/StarterPackScreen.tsx:189
 #: src/view/screens/ProfileList.tsx:170
 msgid "People"
-msgstr "사람들"
+msgstr "사용자"
 
 #: src/Navigation.tsx:223
 msgid "People followed by @{0}"
-msgstr "@{0} 님이 팔로우하는 사람들"
+msgstr "@{0} 님이 팔로우하는 사용자"
 
 #: src/Navigation.tsx:216
 msgid "People following @{0}"
-msgstr "@{0} 님을 팔로우하는 사람들"
+msgstr "@{0} 님을 팔로우하는 사용자"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:178
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:188
 msgid "People I follow"
-msgstr "내가 팔로우하는 사람들"
+msgstr "내가 팔로우하는 사용자"
 
 #: src/lib/media/save-image.ts:51
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
@@ -5885,7 +5885,7 @@ msgstr "사진 보관함에 대한 접근 권한이 거부되었습니다. 시�
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
-msgstr "사람 켜기/끄기"
+msgstr "사용자 켜기/끄기"
 
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:109
@@ -6207,7 +6207,7 @@ msgstr "게시물 숨겨짐"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:211
 msgid "Posts, Replies"
-msgstr ""
+msgstr "게시물, 답글"
 
 #: src/components/dialogs/LinkWarning.tsx:73
 msgid "Potentially misleading link"
@@ -6266,7 +6266,7 @@ msgstr "개인정보 및 보안"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:158
 msgid "Privacy and Security settings"
-msgstr ""
+msgstr "개인정보 및 보안 설정"
 
 #: src/Navigation.tsx:316
 #: src/screens/Settings/AboutSettings.tsx:92
@@ -6349,7 +6349,7 @@ msgstr "푸시, 모두"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:277
 msgid "Push, People you follow"
-msgstr "푸시, 내가 팔로우하는 사람들"
+msgstr "푸시, 내가 팔로우하는 사용자"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:134
 msgid "QR code copied to your clipboard!"
@@ -6945,7 +6945,7 @@ msgstr "인증 이메일 다시 전송하기"
 #: src/screens/Settings/Settings.tsx:439
 #: src/screens/Settings/Settings.tsx:441
 msgid "Reset activity subscription nudge"
-msgstr ""
+msgstr "활동 구독 미세 조정 초기화"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:116
 #: src/view/com/modals/ChangePassword.tsx:197
@@ -7443,9 +7443,12 @@ msgid "Settings"
 msgstr "설정"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:187
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:84
-msgid "Settings for activity alerts"
-msgstr ""
+msgid "Settings for activity from others"
+msgstr "다른 사용자의 활동 알림 설정"
+
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+msgid "Settings for allowing others to be notified of your posts"
+msgstr "다른 사용자에게 내 게시물 알림을 허용할지에 대한 설정"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:121
 msgid "Settings for like notifications"
@@ -7663,7 +7666,7 @@ msgstr "스레드로 답글 표시"
 #: src/screens/Settings/ThreadPreferences.tsx:120
 #: src/screens/Settings/ThreadPreferences.tsx:260
 msgid "Show replies by people you follow before all other replies"
-msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다 먼저 표시하기"
+msgstr "내가 팔로우하는 사용자의 답글을 다른 모든 답글보다 먼저 표시하기"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:559
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:569
@@ -7817,7 +7820,7 @@ msgstr "좋아할 만한 다른 피드"
 
 #: src/components/WhoCanReply.tsx:80
 msgid "Some people can reply"
-msgstr "일부 사람들이 답글을 달 수 있음"
+msgstr "일부 사용자가 답글을 달 수 있음"
 
 #: src/components/dms/MessageItem.tsx:148
 msgid "Someone reacted {0}"
@@ -7917,12 +7920,12 @@ msgstr "새 대화 시작하기"
 #: src/view/screens/ProfileList.tsx:846
 #: src/view/screens/ProfileList.tsx:967
 msgid "Start adding people"
-msgstr "사람 추가하기"
+msgstr "사용자 추가하기"
 
 #: src/view/screens/ProfileList.tsx:853
 #: src/view/screens/ProfileList.tsx:974
 msgid "Start adding people!"
-msgstr "사람들을 추가해 보세요!"
+msgstr "사용자를 추가해 보세요!"
 
 #: src/components/dialogs/SearchablePeopleList.tsx:382
 msgid "Start chat with {displayName}"
@@ -7958,7 +7961,7 @@ msgstr "스타터 팩"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:266
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "스타터 팩을 사용하면 좋아하는 피드와 사람들을 친구들과 쉽게 공유할 수 있습니다."
+msgstr "스타터 팩을 사용하면 좋아하는 피드와 사용자를 친구들과 쉽게 공유할 수 있습니다."
 
 #: src/screens/Settings/AboutSettings.tsx:100
 #: src/screens/Settings/AboutSettings.tsx:103
@@ -8009,7 +8012,7 @@ msgstr "이 라벨을 사용하려면 @{0}을(를) 구독하세요."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:245
 msgid "Subscribe to account activity"
-msgstr ""
+msgstr "계정 활동 알림 받기"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:235
 msgid "Subscribe to Labeler"
@@ -8482,7 +8485,7 @@ msgstr "이 이메일은 이미 내 계정에 연결되어 있습니다."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:55
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
-msgstr ""
+msgstr "이 기능을 사용하면 다른 사용자가 내 새 게시물과 답글에 대한 알림을 받을 수 있습니다. 누구에게 이 기능을 사용 설정하시겠습니까?"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:96
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -9599,7 +9602,7 @@ msgstr "누가 이 게시물과 상호작용할 수 있나요?"
 
 #: src/components/WhoCanReply.tsx:97
 msgid "Who can reply"
-msgstr "답글을 달 수 있는 사람"
+msgstr "답글을 달 수 있는 사용자"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:127
 msgid "Who can verify?"
@@ -9787,7 +9790,7 @@ msgstr "어떤 설정을 선택하든 진행 중인 대화를 계속할 수 있�
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:148
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
-msgstr ""
+msgstr "이제 특정 사용자가 게시물을 올릴 때 알림을 받도록 선택할 수 있습니다. 실시간 업데이트를 받고 싶은 사용자가 있다면 해당 사용자의 프로필로 이동하여 팔로우 버튼 근처에 있는 새로운 종 모양 아이콘을 찾아보세요."
 
 #: src/screens/Login/index.tsx:182
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
@@ -9946,7 +9949,7 @@ msgstr "계정을 만들려면 만 13세 이상이어야 합니다."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "스타터 팩을 만들려면 다른 사람을 최소 7명 이상 팔로우해야 합니다."
+msgstr "스타터 팩을 만들려면 다른 사용자를 최소 7명 이상 팔로우해야 합니다."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:61
 msgid "You must grant access to your photo library to save a QR code"
@@ -9988,7 +9991,7 @@ msgstr "모든 계정에서 로그아웃됩니다."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:139
 msgid "You will no longer receive notifications for {0}"
-msgstr ""
+msgstr "{0}에 대한 알림을 더 이상 받지 않습니다"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
 msgid "You will no longer receive notifications for this thread"
@@ -10024,15 +10027,15 @@ msgstr "계정 생성을 완료하면 추천 사용자를 팔로우하게 됩니
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:236
 msgid "You'll follow these people and {0} others"
-msgstr "다음 사람들 외 {0}명을 팔로우하게 됩니다"
+msgstr "다음 사용자 외 {0}명을 팔로우하게 됩니다"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:234
 msgid "You'll follow these people right away"
-msgstr "다음 사람들을 바로 팔로우하게 됩니다"
+msgstr "다음 사용자를 바로 팔로우하게 됩니다"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:169
 msgid "You'll start receiving notifications for {0}!"
-msgstr ""
+msgstr "이제 {0}에 대한 알림을 받습니다!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:274
 msgid "You'll stay updated with these feeds"
@@ -10058,7 +10061,7 @@ msgstr "이 글에서 단어 또는 태그를 숨기도록 설정했습니다."
 
 #: src/state/shell/progress-guide.tsx:234
 msgid "You've found some people to follow"
-msgstr "팔로우할 사람들을 찾은 것 같군요"
+msgstr "팔로우할 사용자를 찾은 것 같군요"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -10202,7 +10205,7 @@ msgstr "게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "내 프로필, 글, 피드 및 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
+msgstr "내 프로필, 게시물, 피드, 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
 
 #: src/view/com/composer/Composer.tsx:521
 msgid "Your reply has been published"
