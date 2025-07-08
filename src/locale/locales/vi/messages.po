@@ -79,9 +79,9 @@ msgstr "{0, plural, other {# lượt đăng lại}}"
 msgid "{0, plural, one {# second} other {# seconds}}"
 msgstr "{0, plural, other {# giây}}"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:225
-#: src/view/shell/bottom-bar/BottomBar.tsx:257
-#: src/view/shell/Drawer.tsx:487
+#: src/view/shell/bottom-bar/BottomBar.tsx:217
+#: src/view/shell/bottom-bar/BottomBar.tsx:249
+#: src/view/shell/Drawer.tsx:473
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr "{0, plural, other {# mục chưa đọc}}"
 
@@ -1598,9 +1598,9 @@ msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:91
 #: src/Navigation.tsx:534
-#: src/view/shell/bottom-bar/BottomBar.tsx:221
+#: src/view/shell/bottom-bar/BottomBar.tsx:213
 #: src/view/shell/desktop/LeftNav.tsx:553
-#: src/view/shell/Drawer.tsx:455
+#: src/view/shell/Drawer.tsx:441
 msgid "Chat"
 msgstr "Chat"
 
@@ -2211,8 +2211,8 @@ msgstr "Tạo gói khởi đầu cho tôi"
 
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
-#: src/view/shell/bottom-bar/BottomBar.tsx:345
-#: src/view/shell/bottom-bar/BottomBar.tsx:350
+#: src/view/shell/bottom-bar/BottomBar.tsx:337
+#: src/view/shell/bottom-bar/BottomBar.tsx:342
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:206
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:211
 #: src/view/shell/NavSignupCard.tsx:47
@@ -3148,10 +3148,10 @@ msgstr "Phương tiện phản cảm hoặc có khả năng phản cảm."
 msgid "Explicit sexual images."
 msgstr "Hình ảnh khiêu dâm."
 
-#: src/Navigation.tsx:736
+#: src/Navigation.tsx:763
 #: src/screens/Search/Shell.tsx:307
 #: src/view/shell/desktop/LeftNav.tsx:635
-#: src/view/shell/Drawer.tsx:403
+#: src/view/shell/Drawer.tsx:389
 msgid "Explore"
 msgstr "Khám phá"
 
@@ -3386,7 +3386,7 @@ msgstr "Bật/tắt bảng tin"
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/desktop/RightNav.tsx:103
-#: src/view/shell/Drawer.tsx:357
+#: src/view/shell/Drawer.tsx:343
 msgid "Feedback"
 msgstr "Phản hồi"
 
@@ -3403,7 +3403,7 @@ msgstr "Đã gởi phản hồi!"
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:103
 #: src/view/shell/desktop/LeftNav.tsx:673
-#: src/view/shell/Drawer.tsx:519
+#: src/view/shell/Drawer.tsx:505
 msgid "Feeds"
 msgstr "Bảng tin"
 
@@ -3685,7 +3685,7 @@ msgstr "Thư viện ảnh"
 msgid "Generate a starter pack"
 msgstr "Tạo gói khởi đầu"
 
-#: src/view/shell/Drawer.tsx:361
+#: src/view/shell/Drawer.tsx:347
 msgid "Get help"
 msgstr "Trợ giúp"
 
@@ -3908,7 +3908,7 @@ msgstr "Gặp trục trặc?"
 #: src/screens/Settings/Settings.tsx:231
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
-#: src/view/shell/Drawer.tsx:370
+#: src/view/shell/Drawer.tsx:356
 msgid "Help"
 msgstr "Giúp đỡ"
 
@@ -4044,11 +4044,11 @@ msgstr "Hmmmm, không thể tải dịch vụ kiểm duyệt đó."
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Chờ nhé! Chúng tôi đang dần dần cấp quyền truy cập video, và bạn vẫn đang trong hàng chờ. Hãy kiểm tra lại sau!"
 
-#: src/Navigation.tsx:731
-#: src/Navigation.tsx:751
-#: src/view/shell/bottom-bar/BottomBar.tsx:178
+#: src/Navigation.tsx:758
+#: src/Navigation.tsx:778
+#: src/view/shell/bottom-bar/BottomBar.tsx:170
 #: src/view/shell/desktop/LeftNav.tsx:617
-#: src/view/shell/Drawer.tsx:429
+#: src/view/shell/Drawer.tsx:415
 msgid "Home"
 msgstr "Trang chủ"
 
@@ -4641,7 +4641,7 @@ msgstr "Đã đã bỏ ẩn toàn danh sách"
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
 #: src/view/shell/desktop/LeftNav.tsx:691
-#: src/view/shell/Drawer.tsx:534
+#: src/view/shell/Drawer.tsx:520
 msgid "Lists"
 msgstr "Danh sách"
 
@@ -4702,7 +4702,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr "Logo bởi @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
+#: src/view/shell/Drawer.tsx:658
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "Logo bởi <0>@sawaratsuki.bsky.social</0>"
 
@@ -4837,7 +4837,7 @@ msgstr "Tin nhắn quá dài"
 msgid "Message options"
 msgstr "Tuỳ chọn tin nhắn"
 
-#: src/Navigation.tsx:746
+#: src/Navigation.tsx:773
 msgid "Messages"
 msgstr "Tin nhắn"
 
@@ -5447,7 +5447,7 @@ msgid "Notification Sounds"
 msgstr "Âm thanh thông báo"
 
 #: src/Navigation.tsx:549
-#: src/Navigation.tsx:741
+#: src/Navigation.tsx:768
 #: src/screens/Notifications/ActivityList.tsx:29
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:90
 #: src/screens/Settings/NotificationSettings/index.tsx:92
@@ -5463,9 +5463,9 @@ msgstr "Âm thanh thông báo"
 #: src/screens/Settings/Settings.tsx:187
 #: src/screens/Settings/Settings.tsx:190
 #: src/view/screens/Notifications.tsx:130
-#: src/view/shell/bottom-bar/BottomBar.tsx:252
+#: src/view/shell/bottom-bar/BottomBar.tsx:244
 #: src/view/shell/desktop/LeftNav.tsx:654
-#: src/view/shell/Drawer.tsx:482
+#: src/view/shell/Drawer.tsx:468
 msgid "Notifications"
 msgstr "Thông báo"
 
@@ -6272,8 +6272,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:92
 #: src/screens/Settings/AboutSettings.tsx:95
 #: src/view/screens/PrivacyPolicy.tsx:31
-#: src/view/shell/Drawer.tsx:667
-#: src/view/shell/Drawer.tsx:668
+#: src/view/shell/Drawer.tsx:653
+#: src/view/shell/Drawer.tsx:654
 msgid "Privacy Policy"
 msgstr "Chính sách bảo mật"
 
@@ -6291,10 +6291,10 @@ msgstr "Đang xử lý..."
 msgid "profile"
 msgstr "hồ sơ"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:316
+#: src/view/shell/bottom-bar/BottomBar.tsx:308
 #: src/view/shell/desktop/LeftNav.tsx:709
 #: src/view/shell/Drawer.tsx:76
-#: src/view/shell/Drawer.tsx:559
+#: src/view/shell/Drawer.tsx:545
 msgid "Profile"
 msgstr "Hồ sơ"
 
@@ -7115,7 +7115,7 @@ msgstr "Cuộn đến đầu trang"
 #: src/components/forms/SearchInput.tsx:36
 #: src/screens/Search/Shell.tsx:307
 #: src/screens/Search/Shell.tsx:464
-#: src/view/shell/bottom-bar/BottomBar.tsx:198
+#: src/view/shell/bottom-bar/BottomBar.tsx:190
 msgid "Search"
 msgstr "Tìm kiếm"
 
@@ -7362,7 +7362,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "Gửi email"
 
-#: src/view/shell/Drawer.tsx:350
+#: src/view/shell/Drawer.tsx:336
 msgid "Send feedback"
 msgstr "Gửi phản hồi"
 
@@ -7438,7 +7438,7 @@ msgstr "Đặt email để đặt lại mật khẩu"
 #: src/Navigation.tsx:198
 #: src/screens/Settings/Settings.tsx:92
 #: src/view/shell/desktop/LeftNav.tsx:727
-#: src/view/shell/Drawer.tsx:572
+#: src/view/shell/Drawer.tsx:558
 msgid "Settings"
 msgstr "Cài đặt"
 
@@ -7714,8 +7714,8 @@ msgstr "Hiển thị nội dung"
 #: src/view/com/auth/SplashScreen.tsx:69
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
-#: src/view/shell/bottom-bar/BottomBar.tsx:355
-#: src/view/shell/bottom-bar/BottomBar.tsx:360
+#: src/view/shell/bottom-bar/BottomBar.tsx:347
+#: src/view/shell/bottom-bar/BottomBar.tsx:352
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:216
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:221
 #: src/view/shell/NavSignupCard.tsx:57
@@ -8148,8 +8148,8 @@ msgstr "Điều khoản"
 #: src/screens/Settings/AboutSettings.tsx:84
 #: src/screens/Settings/AboutSettings.tsx:87
 #: src/view/screens/TermsOfService.tsx:31
-#: src/view/shell/Drawer.tsx:660
-#: src/view/shell/Drawer.tsx:662
+#: src/view/shell/Drawer.tsx:646
+#: src/view/shell/Drawer.tsx:648
 msgid "Terms of Service"
 msgstr "Điều khoản dịch vụ"
 

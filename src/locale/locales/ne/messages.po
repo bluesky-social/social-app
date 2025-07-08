@@ -79,9 +79,9 @@ msgstr "{0, plural, one {# पुन: पोष्ट} other {# पुन: प�
 msgid "{0, plural, one {# second} other {# seconds}}"
 msgstr "{0, plural, one {# सेकेन्ड} other {# सेकेन्डहरू}}"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:225
-#: src/view/shell/bottom-bar/BottomBar.tsx:257
-#: src/view/shell/Drawer.tsx:487
+#: src/view/shell/bottom-bar/BottomBar.tsx:217
+#: src/view/shell/bottom-bar/BottomBar.tsx:249
+#: src/view/shell/Drawer.tsx:473
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -1598,9 +1598,9 @@ msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:91
 #: src/Navigation.tsx:534
-#: src/view/shell/bottom-bar/BottomBar.tsx:221
+#: src/view/shell/bottom-bar/BottomBar.tsx:213
 #: src/view/shell/desktop/LeftNav.tsx:553
-#: src/view/shell/Drawer.tsx:455
+#: src/view/shell/Drawer.tsx:441
 msgid "Chat"
 msgstr "कुराकानी"
 
@@ -2211,8 +2211,8 @@ msgstr "मेरो लागि स्टार्टर प्याक स�
 
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
-#: src/view/shell/bottom-bar/BottomBar.tsx:345
-#: src/view/shell/bottom-bar/BottomBar.tsx:350
+#: src/view/shell/bottom-bar/BottomBar.tsx:337
+#: src/view/shell/bottom-bar/BottomBar.tsx:342
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:206
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:211
 #: src/view/shell/NavSignupCard.tsx:47
@@ -3148,10 +3148,10 @@ msgstr "स्पष्ट वा सम्भावित रूपमा ब�
 msgid "Explicit sexual images."
 msgstr "स्पष्ट यौन चित्रहरू।"
 
-#: src/Navigation.tsx:736
+#: src/Navigation.tsx:763
 #: src/screens/Search/Shell.tsx:307
 #: src/view/shell/desktop/LeftNav.tsx:635
-#: src/view/shell/Drawer.tsx:403
+#: src/view/shell/Drawer.tsx:389
 msgid "Explore"
 msgstr ""
 
@@ -3386,7 +3386,7 @@ msgstr "फिड टगल"
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/desktop/RightNav.tsx:103
-#: src/view/shell/Drawer.tsx:357
+#: src/view/shell/Drawer.tsx:343
 msgid "Feedback"
 msgstr "प्रतिक्रिया"
 
@@ -3403,7 +3403,7 @@ msgstr "प्रतिक्रिया पठाइयो!"
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:103
 #: src/view/shell/desktop/LeftNav.tsx:673
-#: src/view/shell/Drawer.tsx:519
+#: src/view/shell/Drawer.tsx:505
 msgid "Feeds"
 msgstr "फिड्स"
 
@@ -3685,7 +3685,7 @@ msgstr "ग्यालेरी"
 msgid "Generate a starter pack"
 msgstr "स्टार्टर प्याक उत्पन्न गर्नुहोस्"
 
-#: src/view/shell/Drawer.tsx:361
+#: src/view/shell/Drawer.tsx:347
 msgid "Get help"
 msgstr "मद्दत प्राप्त गर्नुहोस्"
 
@@ -3908,7 +3908,7 @@ msgstr "समस्या भइरहेको छ?"
 #: src/screens/Settings/Settings.tsx:231
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
-#: src/view/shell/Drawer.tsx:370
+#: src/view/shell/Drawer.tsx:356
 msgid "Help"
 msgstr "सहयोग"
 
@@ -4044,11 +4044,11 @@ msgstr "हाम्रोमा समस्या छ, हामीले त�
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "पर्खनुहोस्! हामी बिस्तारै भिडियो पहुँच उपलब्ध गराउँदैछौं, र तपाईं अझै प्रतीक्षामा हुनुहुन्छ। छिट्टै पुनः प्रयास गर्नुहोस्।"
 
-#: src/Navigation.tsx:731
-#: src/Navigation.tsx:751
-#: src/view/shell/bottom-bar/BottomBar.tsx:178
+#: src/Navigation.tsx:758
+#: src/Navigation.tsx:778
+#: src/view/shell/bottom-bar/BottomBar.tsx:170
 #: src/view/shell/desktop/LeftNav.tsx:617
-#: src/view/shell/Drawer.tsx:429
+#: src/view/shell/Drawer.tsx:415
 msgid "Home"
 msgstr "गृहपृष्ठ"
 
@@ -4641,7 +4641,7 @@ msgstr "सूची अनम्यूट गरियो"
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
 #: src/view/shell/desktop/LeftNav.tsx:691
-#: src/view/shell/Drawer.tsx:534
+#: src/view/shell/Drawer.tsx:520
 msgid "Lists"
 msgstr "सूचीहरू"
 
@@ -4702,7 +4702,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
+#: src/view/shell/Drawer.tsx:658
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "लोगो द्वारा <0>@sawaratsuki.bsky.social</0>"
 
@@ -4837,7 +4837,7 @@ msgstr "सन्देश धेरै लामो छ।"
 msgid "Message options"
 msgstr ""
 
-#: src/Navigation.tsx:746
+#: src/Navigation.tsx:773
 msgid "Messages"
 msgstr "सन्देशहरू"
 
@@ -5447,7 +5447,7 @@ msgid "Notification Sounds"
 msgstr "सूचना ध्वनीहरू"
 
 #: src/Navigation.tsx:549
-#: src/Navigation.tsx:741
+#: src/Navigation.tsx:768
 #: src/screens/Notifications/ActivityList.tsx:29
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:90
 #: src/screens/Settings/NotificationSettings/index.tsx:92
@@ -5463,9 +5463,9 @@ msgstr "सूचना ध्वनीहरू"
 #: src/screens/Settings/Settings.tsx:187
 #: src/screens/Settings/Settings.tsx:190
 #: src/view/screens/Notifications.tsx:130
-#: src/view/shell/bottom-bar/BottomBar.tsx:252
+#: src/view/shell/bottom-bar/BottomBar.tsx:244
 #: src/view/shell/desktop/LeftNav.tsx:654
-#: src/view/shell/Drawer.tsx:482
+#: src/view/shell/Drawer.tsx:468
 msgid "Notifications"
 msgstr "सूचनाहरू"
 
@@ -6272,8 +6272,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:92
 #: src/screens/Settings/AboutSettings.tsx:95
 #: src/view/screens/PrivacyPolicy.tsx:31
-#: src/view/shell/Drawer.tsx:667
-#: src/view/shell/Drawer.tsx:668
+#: src/view/shell/Drawer.tsx:653
+#: src/view/shell/Drawer.tsx:654
 msgid "Privacy Policy"
 msgstr "गोपनीयता नीति"
 
@@ -6291,10 +6291,10 @@ msgstr "प्रशोधन हुँदैछ।"
 msgid "profile"
 msgstr "प्रोफाइल"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:316
+#: src/view/shell/bottom-bar/BottomBar.tsx:308
 #: src/view/shell/desktop/LeftNav.tsx:709
 #: src/view/shell/Drawer.tsx:76
-#: src/view/shell/Drawer.tsx:559
+#: src/view/shell/Drawer.tsx:545
 msgid "Profile"
 msgstr "प्रोफाइल"
 
@@ -7115,7 +7115,7 @@ msgstr "माथि स्क्रोल गर्नुहोस्"
 #: src/components/forms/SearchInput.tsx:36
 #: src/screens/Search/Shell.tsx:307
 #: src/screens/Search/Shell.tsx:464
-#: src/view/shell/bottom-bar/BottomBar.tsx:198
+#: src/view/shell/bottom-bar/BottomBar.tsx:190
 msgid "Search"
 msgstr "खोज्नुहोस्"
 
@@ -7362,7 +7362,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "इमेल पठाउनुहोस्"
 
-#: src/view/shell/Drawer.tsx:350
+#: src/view/shell/Drawer.tsx:336
 msgid "Send feedback"
 msgstr "प्रतिक्रिया पठाउनुहोस्"
 
@@ -7438,7 +7438,7 @@ msgstr "पासवर्ड रीसेटको लागि इमेल �
 #: src/Navigation.tsx:198
 #: src/screens/Settings/Settings.tsx:92
 #: src/view/shell/desktop/LeftNav.tsx:727
-#: src/view/shell/Drawer.tsx:572
+#: src/view/shell/Drawer.tsx:558
 msgid "Settings"
 msgstr "सेटिङ्स"
 
@@ -7714,8 +7714,8 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:69
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
-#: src/view/shell/bottom-bar/BottomBar.tsx:355
-#: src/view/shell/bottom-bar/BottomBar.tsx:360
+#: src/view/shell/bottom-bar/BottomBar.tsx:347
+#: src/view/shell/bottom-bar/BottomBar.tsx:352
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:216
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:221
 #: src/view/shell/NavSignupCard.tsx:57
@@ -8148,8 +8148,8 @@ msgstr "नियमहरू"
 #: src/screens/Settings/AboutSettings.tsx:84
 #: src/screens/Settings/AboutSettings.tsx:87
 #: src/view/screens/TermsOfService.tsx:31
-#: src/view/shell/Drawer.tsx:660
-#: src/view/shell/Drawer.tsx:662
+#: src/view/shell/Drawer.tsx:646
+#: src/view/shell/Drawer.tsx:648
 msgid "Terms of Service"
 msgstr "सेवाका नियमहरू"
 
