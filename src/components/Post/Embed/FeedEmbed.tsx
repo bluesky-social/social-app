@@ -44,7 +44,9 @@ export function ModeratedFeedEmbed({
       : undefined
   }, [embed.view, moderationOpts])
   return (
-    <ContentHider modui={moderation?.ui('contentList')}>
+    <ContentHider
+      modui={moderation?.ui('contentList')}
+      childContainerStyle={[a.pt_xs]}>
       <FeedEmbed embed={embed} />
     </ContentHider>
   )
