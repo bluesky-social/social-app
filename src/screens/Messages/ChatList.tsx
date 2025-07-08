@@ -67,8 +67,9 @@ function keyExtractor(item: ListItem) {
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
 export function MessagesScreen(props: Props) {
+  const {_} = useLingui()
   return (
-    <AgeRestrictedScreen>
+    <AgeRestrictedScreen screenTitle={_(msg`Chats`)}>
       <MessagesScreenInner {...props} />
     </AgeRestrictedScreen>
   )

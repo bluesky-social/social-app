@@ -55,9 +55,11 @@ function Inner({style}: ViewStyleProp & {}) {
             <AgeAssuranceBadge />
           </View>
           <Text style={[a.text_md, a.leading_snug]}>
-            You're currently accessing Bluesky from a location that by law
-            requires you to verify your age prior to accessing certain content
-            and features.
+            <Trans>
+              You're currently accessing Bluesky from a location that by law
+              requires you to verify your age prior to accessing certain content
+              and features.
+            </Trans>
           </Text>
 
           <Divider

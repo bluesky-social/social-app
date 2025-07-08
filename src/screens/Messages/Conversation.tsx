@@ -49,8 +49,9 @@ type Props = NativeStackScreenProps<
 >
 
 export function MessagesConversationScreen(props: Props) {
+  const {_} = useLingui()
   return (
-    <AgeRestrictedScreen>
+    <AgeRestrictedScreen screenTitle={_(msg`Conversation`)}>
       <MessagesConversationScreenInner {...props} />
     </AgeRestrictedScreen>
   )

@@ -24,8 +24,9 @@ type AllowIncoming = 'all' | 'none' | 'following'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>
 
 export function MessagesSettingsScreen(props: Props) {
+  const {_} = useLingui()
   return (
-    <AgeRestrictedScreen>
+    <AgeRestrictedScreen screenTitle={_(msg`Chat Settings`)}>
       <MessagesSettingsScreenInner {...props} />
     </AgeRestrictedScreen>
   )

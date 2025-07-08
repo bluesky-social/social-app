@@ -48,8 +48,9 @@ import {RequestListItem} from './components/RequestListItem'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 
 export function MessagesInboxScreen(props: Props) {
+  const {_} = useLingui()
   return (
-    <AgeRestrictedScreen>
+    <AgeRestrictedScreen screenTitle={_(msg`Chat requests`)}>
       <MessagesInboxScreenInner {...props} />
     </AgeRestrictedScreen>
   )
