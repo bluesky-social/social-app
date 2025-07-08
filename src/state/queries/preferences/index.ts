@@ -1,3 +1,4 @@
+import {useCallback} from 'react'
 import {
   type AppBskyActorDefs,
   type BskyFeedViewPreference,
@@ -9,6 +10,7 @@ import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
+import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {useMaybeApplyAgeRestrictedModerationPrefs} from '#/state/age-assurance/useMaybeApplyAgeRestrictedModerationPrefs'
 import {STALE} from '#/state/queries'
 import {
@@ -32,16 +34,23 @@ export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
   const agent = useAgent()
-  const overrideModPrefs = useMaybeApplyAgeRestrictedModerationPrefs()
-  const query = useQuery({
+  const {isLoaded: isAAStateLoaded} = useAgeAssuranceContext()
+  const maybeOverrideModPrefs = useMaybeApplyAgeRestrictedModerationPrefs()
+
+  return useQuery({
+    /*
+     * We must await AA state, otherwise users may see a FOUC - esb
+     */
+    enabled: isAAStateLoaded,
     staleTime: STALE.SECONDS.FIFTEEN,
     structuralSharing: replaceEqualDeep,
     refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
-      if (!agent.did) {
-        return DEFAULT_LOGGED_OUT_PREFERENCES
-      } else {
+      let preferences: UsePreferencesQueryResponse =
+        DEFAULT_LOGGED_OUT_PREFERENCES
+
+      if (agent.did) {
         const res = await agent.getPreferences()
 
         // save to local storage to ensure there are labels on initial requests
@@ -50,7 +59,7 @@ export function usePreferencesQuery() {
           res.moderationPrefs.labelers.map(l => l.did),
         )
 
-        const preferences: UsePreferencesQueryResponse = {
+        preferences = {
           ...res,
           savedFeeds: res.savedFeeds.filter(f => f.type !== 'unknown'),
           /**
@@ -67,16 +76,18 @@ export function usePreferencesQuery() {
           },
           userAge: res.birthDate ? getAge(res.birthDate) : undefined,
         }
-        return preferences
       }
+
+      return preferences
     },
+    select: useCallback(
+      (data: UsePreferencesQueryResponse) => {
+        data.moderationPrefs = maybeOverrideModPrefs(data.moderationPrefs)
+        return data
+      },
+      [maybeOverrideModPrefs],
+    ),
   })
-
-  if (query.data) {
-    query.data.moderationPrefs = overrideModPrefs(query.data.moderationPrefs)
-  }
-
-  return query
 }
 
 export function useClearPreferencesMutation() {

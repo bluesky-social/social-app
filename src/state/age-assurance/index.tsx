@@ -2,7 +2,7 @@ import {createContext, useContext, useMemo} from 'react'
 import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {wait} from '#/lib/async/wait'
+// import {wait} from '#/lib/async/wait'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
 import {
@@ -39,14 +39,27 @@ export function Provider({children}: {children: React.ReactNode}) {
   const {geolocation} = useGeolocation()
 
   const {data, isFetched, refetch} = useQuery({
-    enabled: !!agent.session,
+    /**
+     * This is load bearing. We always want this query to run and end in a
+     * "fetched" state, even if we fall back to defaults. This lets the rest of
+     * the app know that we've at least attempted to load the AA state.
+     */
+    enabled: true,
     queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
     async queryFn() {
+      if (!agent.session) return null
+
       try {
-        const {data} = await wait(
-          1e3,
-          agent.app.bsky.unspecced.getAgeAssuranceState(),
-        )
+        const {data} = await agent.app.bsky.unspecced.getAgeAssuranceState()
+        // const {data} = await wait(
+        //   1e3,
+        //   (() => ({
+        //     data: {
+        //       lastInitiatedAt: new Date().toISOString(),
+        //       status: 'assured',
+        //     } as AppBskyUnspeccedDefs.AgeAssuranceState,
+        //   }))(),
+        // )
 
         logger.debug(`fetch`, {
           data,

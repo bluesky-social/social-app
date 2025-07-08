@@ -1,18 +1,18 @@
 import React from 'react'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {
+  type AppBskyActorDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@atproto/api'
 import {keepPreviousData, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
 import {logger} from '#/logger'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
-import {useModerationOpts} from '../preferences/moderation-opts'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from './preferences'
-
-const DEFAULT_MOD_OPTS = {
-  userDid: undefined,
-  prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
-}
 
 const RQKEY_ROOT = 'actor-autocomplete'
 export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
@@ -24,6 +24,7 @@ export function useActorAutocompleteQuery(
 ) {
   const moderationOpts = useModerationOpts()
   const agent = useAgent()
+  const {data: preferences} = usePreferencesQuery()
 
   prefix = prefix.toLowerCase().trim()
   if (prefix.endsWith('.')) {
@@ -48,10 +49,15 @@ export function useActorAutocompleteQuery(
         return computeSuggestions({
           q: prefix,
           searched: data,
-          moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+          moderationOpts: moderationOpts || {
+            userDid: undefined,
+            prefs:
+              preferences?.moderationPrefs ||
+              DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+          },
         })
       },
-      [prefix, moderationOpts],
+      [prefix, moderationOpts, preferences],
     ),
     placeholderData: maintainData ? keepPreviousData : undefined,
   })
@@ -62,6 +68,7 @@ export function useActorAutocompleteFn() {
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const agent = useAgent()
+  const {data: preferences} = usePreferencesQuery()
 
   return React.useCallback(
     async ({query, limit = 8}: {query: string; limit?: number}) => {
@@ -88,10 +95,15 @@ export function useActorAutocompleteFn() {
       return computeSuggestions({
         q: query,
         searched: res?.data.actors,
-        moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+        moderationOpts: moderationOpts || {
+          userDid: undefined,
+          prefs:
+            preferences?.moderationPrefs ||
+            DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+        },
       })
     },
-    [queryClient, moderationOpts, agent],
+    [queryClient, moderationOpts, agent, preferences],
   )
 }
 

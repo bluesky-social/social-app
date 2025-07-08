@@ -8,6 +8,7 @@ import {
   type BskyAgent,
   moderatePost,
   type ModerationDecision,
+  type ModerationPrefs,
 } from '@atproto/api'
 import {
   type InfiniteData,
@@ -206,7 +207,11 @@ export function usePostFeedQuery(
          * some not.
          */
         if (!agent.session) {
-          assertSomePostsPassModeration(res.feed)
+          assertSomePostsPassModeration(
+            res.feed,
+            preferences?.moderationPrefs ||
+              DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+          )
         }
 
         return {
@@ -596,7 +601,10 @@ export function* findAllProfilesInQueryData(
   }
 }
 
-function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
+function assertSomePostsPassModeration(
+  feed: AppBskyFeedDefs.FeedViewPost[],
+  moderationPrefs: ModerationPrefs,
+) {
   // no posts in this feed
   if (feed.length === 0) return true
 
@@ -606,7 +614,7 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   for (const item of feed) {
     const moderation = moderatePost(item.post, {
       userDid: undefined,
-      prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+      prefs: moderationPrefs,
     })
 
     if (!moderation.ui('contentList').filter) {
