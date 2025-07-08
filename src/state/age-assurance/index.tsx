@@ -1,7 +1,8 @@
 import {createContext, useContext, useMemo} from 'react'
 import {type AppBskyUnspeccedDefs} from '@atproto/api'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import {useQuery} from '@tanstack/react-query'
 
+import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 // import {wait} from '#/lib/async/wait'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
@@ -10,7 +11,6 @@ import {
   type AgeAssuranceContextType,
 } from '#/state/age-assurance/types'
 import {useGeolocation} from '#/state/geolocation'
-import {preferencesQueryKey} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
@@ -34,9 +34,10 @@ const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
 })
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const qc = useQueryClient()
   const agent = useAgent()
   const {geolocation} = useGeolocation()
+  const getAndRegisterPushToken = useGetAndRegisterPushToken()
+  const isAgeRestrictedGeo = !!geolocation?.isAgeRestrictedGeo
 
   const {data, isFetched, refetch} = useQuery({
     /**
@@ -66,7 +67,14 @@ export function Provider({children}: {children: React.ReactNode}) {
           account: agent.session?.did,
         })
 
-        qc.invalidateQueries({queryKey: preferencesQueryKey})
+        // TODO pretty sure we don't need this
+        // qc.invalidateQueries({queryKey: preferencesQueryKey})
+
+        await getAndRegisterPushToken({
+          isAgeRestricted: Boolean(
+            isAgeRestrictedGeo && data.status !== 'assured',
+          ),
+        })
 
         return data
       } catch (e) {
@@ -80,7 +88,6 @@ export function Provider({children}: {children: React.ReactNode}) {
   })
 
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
-    const isAgeRestrictedGeo = !!geolocation?.isAgeRestrictedGeo
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
       status,
@@ -94,7 +101,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     logger.debug(`context`, ctx)
 
     return ctx
-  }, [geolocation, isFetched, data])
+  }, [isAgeRestrictedGeo, isFetched, data])
 
   const ageAssuranceAPIContext = useMemo<AgeAssuranceAPIContextType>(
     () => ({
