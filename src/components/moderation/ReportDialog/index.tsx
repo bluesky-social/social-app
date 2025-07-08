@@ -515,13 +515,13 @@ function StepTitle({
             backgroundColor: active
               ? t.palette.primary_500
               : completed
-              ? t.palette.primary_100
-              : t.atoms.bg_contrast_25.backgroundColor,
+                ? t.palette.primary_100
+                : t.atoms.bg_contrast_25.backgroundColor,
             borderColor: active
               ? t.palette.primary_500
               : completed
-              ? t.palette.primary_400
-              : t.atoms.border_contrast_low.borderColor,
+                ? t.palette.primary_400
+                : t.atoms.border_contrast_low.borderColor,
           },
         ]}>
         {completed ? (
@@ -536,8 +536,8 @@ function StepTitle({
                 color: active
                   ? 'white'
                   : completed
-                  ? t.palette.primary_700
-                  : t.atoms.text_contrast_medium.color,
+                    ? t.palette.primary_700
+                    : t.atoms.text_contrast_medium.color,
                 fontVariant: ['tabular-nums'],
                 width: 24,
                 height: 24,
