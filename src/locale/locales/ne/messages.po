@@ -8,7 +8,7 @@ msgstr ""
 "Language: ne\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-02 00:33\n"
+"PO-Revision-Date: 2025-07-08 15:14\n"
 "Last-Translator: \n"
 "Language-Team: Nepali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -820,7 +820,7 @@ msgid "Allow new messages from"
 msgstr "नयाँ सन्देशहरूबाट अनुमति दिनुहोस्"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:90
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Allow others to be notified of your posts"
 msgstr ""
 
@@ -991,7 +991,7 @@ msgstr "कुनै पनि व्यक्ति अन्तरक्रि
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:161
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Anyone who follows me"
 msgstr ""
 
@@ -3015,7 +3015,7 @@ msgstr "त्रुटि"
 msgid "Error loading post"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:152
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
 msgid "Error loading preference"
 msgstr ""
 
@@ -4432,8 +4432,8 @@ msgstr "यस चेतावनीबारे थप जान्नुहो
 msgid "Learn more about verification on Bluesky"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:129
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
 msgid "Learn more about what is public on Bluesky."
 msgstr "ब्लूस्काईमा सार्वजनिक हुने विषयबारे थप जान्नुहोस्।"
 
@@ -4693,7 +4693,7 @@ msgstr "लोड हुँदैछ..."
 msgid "Log"
 msgstr "लग"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:105
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
 msgid "Logged-out visibility"
 msgstr "लग आउट गरिएको दृश्यता"
 
@@ -5313,7 +5313,7 @@ msgstr "अहिले सम्म कुनै सूचना छैन!"
 #: src/screens/Messages/Settings.tsx:104
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "No one"
 msgstr "कसैलाई पनि होइन"
 
@@ -5420,7 +5420,7 @@ msgstr "फेला परेन"
 msgid "Note about sharing"
 msgstr "साझेदारीको बारेमा नोट"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:115
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "नोट: Bluesky एक खुला र सार्वजनिक नेटवर्क हो। यो सेटिङले तपाईंको सामग्रीको दृश्यता केवल Bluesky एप र वेबसाइटमा सीमित गर्दछ, र अन्य एपहरूले यो सेटिङलाई सम्मान नगर्न सक्छन्। तपाईंको सामग्री अन्य एपहरू र वेबसाइटहरूले लग आउट प्रयोगकर्ताहरूलाई देखाउन सक्छ।"
 
@@ -5564,7 +5564,7 @@ msgstr "केवल अक्षर, संख्या, र हाइफनह
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
 msgid "Only followers who I follow"
 msgstr ""
 
@@ -7443,8 +7443,11 @@ msgid "Settings"
 msgstr "सेटिङ्स"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:187
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:84
-msgid "Settings for activity alerts"
+msgid "Settings for activity from others"
+msgstr ""
+
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+msgid "Settings for allowing others to be notified of your posts"
 msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:121
