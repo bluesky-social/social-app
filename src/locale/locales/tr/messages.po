@@ -632,7 +632,8 @@ msgstr "Bir içerik uyarısı ekleyin"
 
 #: src/components/live/GoLiveDialog.tsx:101
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
-msgstr "Profilinize geçici bir canlı yayın durumu ekleyin.\n"
+msgstr ""
+"Profilinize geçici bir canlı yayın durumu ekleyin.\n"
 "Biri profil fotoğrafınıza tıkladığında canlı yayın etkinliğinizle ilgili bilgileri görecektir."
 
 #: src/view/screens/ProfileList.tsx:924
@@ -10227,4 +10228,3 @@ msgstr "Seçtiğiniz ilgi alanları, önemsediğiniz içerikleri size sunmamıza
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Doğrulamalarınız"
-
