@@ -729,26 +729,31 @@ const FlatNavigator = () => {
         name="Home"
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`)}}
+        getId={() => 'home'}
       />
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
         options={{title: title(msg`Explore`)}}
+        getId={() => 'search'}
       />
       <Flat.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
         options={{title: title(msg`Notifications`), requireAuth: true}}
+        getId={() => 'notifications'}
       />
       <Flat.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
         options={{title: title(msg`Messages`), requireAuth: true}}
+        getId={() => 'messages'}
       />
       <Flat.Screen
         name="Start"
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`)}}
+        getId={() => 'start'}
       />
       {commonScreens(Flat, numUnread)}
     </Flat.Navigator>
