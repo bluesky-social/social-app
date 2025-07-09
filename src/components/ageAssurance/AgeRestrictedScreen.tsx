@@ -66,9 +66,9 @@ export function AgeRestrictedScreen({
 
               <Text style={[a.text_md, a.leading_snug, a.pb_sm]}>
                 <Trans>
-                  You're currently accessing Bluesky from a location that by law
-                  requires you to verify your age prior to accessing certain
-                  content and features.
+                  You're using Bluesky from a location that legally requires you
+                  to verify your age prior to accessing certain content and
+                  features.
                 </Trans>
               </Text>
 

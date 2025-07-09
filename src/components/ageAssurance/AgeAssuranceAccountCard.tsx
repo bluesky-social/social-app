@@ -75,8 +75,9 @@ function Inner({style}: ViewStyleProp & {}) {
             style={[a.flex_row, a.justify_between, a.align_start, a.gap_xl]}>
             <Text style={[a.text_sm, a.leading_snug]}>
               <Trans>
-                You're accessing Bluesky from a region that requires you to
-                verify your age prior to accessing certain content and features.
+                You're using Bluesky from a location that legally requires you
+                to verify your age prior to accessing certain content and
+                features.
               </Trans>
             </Text>
 
