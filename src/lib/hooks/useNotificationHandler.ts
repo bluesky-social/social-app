@@ -18,6 +18,7 @@ import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {resetToTab} from '#/Navigation'
+import {router} from '#/routes'
 
 export type NotificationReason =
   | 'like'
@@ -45,6 +46,7 @@ type NotificationPayload =
       reason: Exclude<NotificationReason, 'chat-message'>
       uri: string
       subject: string
+      recipientDid: string
     }
   | {
       reason: 'chat-message'
@@ -227,86 +229,26 @@ export function useNotificationsHandler() {
           })
         }
       } else {
-        switch (payload.reason) {
-          case 'subscribed-post':
-            const urip = new AtUri(payload.uri)
-            if (urip.collection === 'app.bsky.feed.post') {
-              setTimeout(() => {
-                // @ts-expect-error types are weird here
-                navigation.navigate('HomeTab', {
-                  screen: 'PostThread',
-                  params: {
-                    name: urip.host,
-                    rkey: urip.rkey,
-                  },
-                })
-              }, 500)
-            } else {
-              resetToTab('NotificationsTab')
-            }
-            break
-          case 'like':
-          case 'repost':
-          case 'follow':
-          case 'mention':
-          case 'quote':
-          case 'reply':
-          case 'starterpack-joined':
-          case 'like-via-repost':
-          case 'repost-via-repost':
-          case 'verified':
-          case 'unverified':
-          default:
-            resetToTab('NotificationsTab')
-            break
-          // TODO implement these after we have an idea of how to handle each individual case
-          // case 'follow':
-          //   const uri = new AtUri(payload.uri)
-          //   setTimeout(() => {
-          //     // @ts-expect-error types are weird here
-          //     navigation.navigate('HomeTab', {
-          //       screen: 'Profile',
-          //       params: {
-          //         name: uri.host,
-          //       },
-          //     })
-          //   }, 500)
-          //   break
-          // case 'mention':
-          // case 'reply':
-          //   const urip = new AtUri(payload.uri)
-          //   setTimeout(() => {
-          //     // @ts-expect-error types are weird here
-          //     navigation.navigate('HomeTab', {
-          //       screen: 'PostThread',
-          //       params: {
-          //         name: urip.host,
-          //         rkey: urip.rkey,
-          //       },
-          //     })
-          //   }, 500)
+        const url = notificationToURL(payload)
+
+        if (url === '/notifications') {
+          resetToTab('NotificationsTab')
+        } else if (url) {
+          const [screen, params] = router.matchPath(url)
+          // @ts-expect-error router is not typed :/ -sfn
+          navigation.navigate('HomeTab', {screen, params})
         }
       }
     }
 
     Notifications.setNotificationHandler({
       handleNotification: async e => {
-        if (
-          e.request.trigger == null ||
-          typeof e.request.trigger !== 'object' ||
-          !('type' in e.request.trigger) ||
-          e.request.trigger.type !== 'push'
-        ) {
+        const payload = getNotificationPayload(e)
+        if (!payload) {
           return DEFAULT_HANDLER_OPTIONS
         }
 
         logger.debug('Notifications: received', {e})
-
-        const payload = e.request.trigger.payload as NotificationPayload
-
-        if (!payload) {
-          return DEFAULT_HANDLER_OPTIONS
-        }
 
         if (
           payload.reason === 'chat-message' &&
@@ -417,4 +359,65 @@ export function useNotificationsHandler() {
     onPressSwitchAccount,
     setShowLoggedOut,
   ])
+}
+
+export function getNotificationPayload(
+  e: Notifications.Notification,
+): NotificationPayload | null {
+  if (
+    e.request.trigger == null ||
+    typeof e.request.trigger !== 'object' ||
+    !('type' in e.request.trigger) ||
+    e.request.trigger.type !== 'push'
+  ) {
+    return null
+  }
+
+  const payload = e.request.trigger.payload as NotificationPayload
+
+  if (payload) {
+    return payload
+  } else {
+    return null
+  }
+}
+
+export function notificationToURL(
+  payload: NotificationPayload,
+): string | undefined {
+  switch (payload?.reason) {
+    case 'like':
+    case 'repost':
+    case 'like-via-repost':
+    case 'repost-via-repost': {
+      const urip = new AtUri(payload.subject)
+      if (urip.collection === 'app.bsky.feed.post') {
+        return `/profile/${urip.host}/post/${urip.rkey}`
+      } else {
+        return '/notifications'
+      }
+    }
+    case 'reply':
+    case 'quote':
+    case 'mention':
+    case 'subscribed-post': {
+      const urip = new AtUri(payload.uri)
+      if (urip.collection === 'app.bsky.feed.post') {
+        return `/profile/${urip.host}/post/${urip.rkey}`
+      } else {
+        return '/notifications'
+      }
+    }
+    case 'follow':
+    case 'starterpack-joined': {
+      const urip = new AtUri(payload.uri)
+      return `/profile/${urip.host}`
+    }
+    case 'chat-message':
+      return '/messages'
+    case 'verified':
+    case 'unverified':
+    default:
+      return '/notifications'
+  }
 }

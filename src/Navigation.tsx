@@ -1,4 +1,6 @@
 import * as React from 'react'
+import {Linking} from 'react-native'
+import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
@@ -10,12 +12,17 @@ import {
   createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,
+  type LinkingOptions,
   NavigationContainer,
   StackActions,
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {
+  getNotificationPayload,
+  notificationToURL,
+} from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
@@ -71,6 +78,7 @@ import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
+import {NotificationsActivityListScreen} from '#/screens/Notifications/ActivityList'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
 import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
@@ -93,6 +101,18 @@ import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPr
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
 import {InterestsSettingsScreen} from '#/screens/Settings/InterestsSettings'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
+import {LegacyNotificationSettingsScreen} from '#/screens/Settings/LegacyNotificationSettings'
+import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
+import {ActivityNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/ActivityNotificationSettings'
+import {LikeNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/LikeNotificationSettings'
+import {LikesOnRepostsNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
+import {MentionNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/MentionNotificationSettings'
+import {MiscellaneousNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
+import {NewFollowerNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
+import {QuoteNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/QuoteNotificationSettings'
+import {ReplyNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/ReplyNotificationSettings'
+import {RepostNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/RepostNotificationSettings'
+import {RepostsOnRepostsNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
 import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from '#/screens/Settings/Settings'
 import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
@@ -110,19 +130,6 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
-import {NotificationsActivityListScreen} from './screens/Notifications/ActivityList'
-import {LegacyNotificationSettingsScreen} from './screens/Settings/LegacyNotificationSettings'
-import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
-import {ActivityNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ActivityNotificationSettings'
-import {LikeNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikeNotificationSettings'
-import {LikesOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
-import {MentionNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MentionNotificationSettings'
-import {MiscellaneousNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
-import {NewFollowerNotificationSettingsScreen} from './screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
-import {QuoteNotificationSettingsScreen} from './screens/Settings/NotificationSettings/QuoteNotificationSettings'
-import {ReplyNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ReplyNotificationSettings'
-import {RepostNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostNotificationSettings'
-import {RepostsOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -780,6 +787,7 @@ const LINKING = {
   },
 
   getStateFromPath(path: string) {
+    console.log('getting state from path', path)
     const [name, params] = router.matchPath(path)
 
     // Any time we receive a url that starts with `intent/` we want to ignore it here. It will be handled in the
@@ -794,6 +802,8 @@ const LINKING = {
     }
 
     if (isNative) {
+      console.log(name, params)
+
       if (name === 'Search') {
         return buildStateObject('SearchTab', 'Search', params)
       }
@@ -818,7 +828,29 @@ const LINKING = {
       return res
     }
   },
-}
+
+  async getInitialURL() {
+    const url = await Linking.getInitialURL()
+
+    if (!isNative || url != null) {
+      return url
+    }
+
+    // Handle URL from expo push notifications
+    const response = await Notifications.getLastNotificationResponseAsync()
+
+    if (response) {
+      const payload = getNotificationPayload(response.notification)
+
+      if (payload) {
+        console.log('initial url', notificationToURL(payload))
+        return notificationToURL(payload)
+      }
+    }
+
+    return url
+  },
+} satisfies LinkingOptions<AllNavigatorParams>
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
