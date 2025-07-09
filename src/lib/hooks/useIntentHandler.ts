@@ -6,20 +6,27 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
+import {
+  parseAgeAssuranceRedirectDialogState,
+  useAgeAssuranceRedirectDialogControl,
+} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 
-type IntentType = 'compose' | 'verify-email'
+type IntentType = 'compose' | 'verify-email' | 'age-assurance'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
 // This needs to stay outside of react to persist between account switches
 let previousIntentUrl = ''
 
+// TODO we handle intents for logged out users?
 export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
+  const ageAssuranceRedirectDialogControl =
+    useAgeAssuranceRedirectDialogControl()
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
@@ -65,6 +72,19 @@ export function useIntentHandler() {
           verifyEmailIntent(code)
           return
         }
+        case 'age-assurance': {
+          const state = parseAgeAssuranceRedirectDialogState({
+            status: params.get('status') ?? undefined,
+            did: params.get('did') ?? undefined,
+          })
+
+          // TODO maybe handle invalid DID here
+
+          if (state) {
+            ageAssuranceRedirectDialogControl.open(state)
+          }
+          return
+        }
         default: {
           return
         }
@@ -78,7 +98,12 @@ export function useIntentHandler() {
       handleIncomingURL(incomingUrl)
       previousIntentUrl = incomingUrl
     }
-  }, [incomingUrl, composeIntent, verifyEmailIntent])
+  }, [
+    incomingUrl,
+    composeIntent,
+    verifyEmailIntent,
+    ageAssuranceRedirectDialogControl,
+  ])
 }
 
 export function useComposeIntent() {
