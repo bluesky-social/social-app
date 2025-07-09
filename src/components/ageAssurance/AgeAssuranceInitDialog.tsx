@@ -20,7 +20,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import * as TextField from '#/components/forms/TextField'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
+import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {LanguageSelect} from '#/components/LanguageSelect'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
@@ -131,7 +131,10 @@ function Inner() {
         <View style={[a.pb_xl, a.gap_sm]}>
           {success ? (
             <Text style={[a.text_sm, a.leading_snug]}>
-              <Trans>Please check your email to contine the process.</Trans>
+              <Trans>
+                Please check your email inbox for further instructions. It may
+                take a minute or two to arrive.
+              </Trans>
             </Text>
           ) : (
             <>
@@ -144,15 +147,16 @@ function Inner() {
                     style={[a.text_sm, a.leading_snug]}>
                     KWS
                   </InlineLinkText>{' '}
-                  to verify that you’re an adult. When you click "Get an email"
-                  below, Bluesky will share your email address with KWS.
+                  to verify that you’re an adult. When you click "Begin" below,
+                  Bluesky will securely store and share your email address with
+                  KWS.
                 </Trans>
               </Text>
               <Text style={[a.text_sm, a.leading_snug]}>
                 <Trans>
-                  If KWS cannot use your email address to confirm that you
-                  previously verified your age, you’ll be taken to the KWS
-                  website to provide more details.
+                  KWS will then email you instructions for verifying your age.
+                  When you’re done, you'll be brought back to continue using
+                  Bluesky.
                 </Trans>
               </Text>
               <Text style={[a.text_sm, a.leading_snug]}>
@@ -237,10 +241,10 @@ function Inner() {
                 color="primary"
                 onPress={onSubmit}>
                 <ButtonText>
-                  <Trans>Get an email</Trans>
+                  <Trans>Begin</Trans>
                 </ButtonText>
                 <ButtonIcon
-                  icon={isPending ? Loader : Envelope}
+                  icon={isPending ? Loader : Shield}
                   position="right"
                 />
               </Button>
