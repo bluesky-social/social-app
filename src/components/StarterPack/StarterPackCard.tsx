@@ -156,7 +156,6 @@ export function Link({
 
   return (
     <BaseLink
-      action="push"
       to={`/starter-pack/${handleOrDid}/${rkey}`}
       label={_(msg`Navigate to ${record.name}`)}
       onPress={() => {

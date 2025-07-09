@@ -410,10 +410,10 @@ function onPressInner(
       const [routeName, params] = router.matchPath(href)
       if (navigationAction === 'push') {
         // @ts-ignore we're not able to type check on this one -prf
-        navigation.push(routeName, params)
+        navigation.dispatch(StackActions.push(routeName, params))
       } else if (navigationAction === 'replace') {
         // @ts-ignore we're not able to type check on this one -prf
-        navigation.replace(routeName, params)
+        navigation.dispatch(StackActions.replace(routeName, params))
       } else if (navigationAction === 'navigate') {
         const state = navigation.getState()
         const tabState = getTabState(state, routeName)
@@ -421,9 +421,9 @@ function onPressInner(
           emitSoftReset()
         } else {
           // note: 'navigate' actually acts the same as 'push' nowadays
-          // therefore we need to use 'popTo' instead -sfn
+          // therefore we need to add 'pop' -sfn
           // @ts-ignore we're not able to type check on this one -prf
-          navigation.popTo(routeName, params)
+          navigation.navigate(routeName, params, {pop: true})
         }
       } else {
         throw Error('Unsupported navigator action.')
