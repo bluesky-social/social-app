@@ -6,6 +6,8 @@ import {validate as validateEmail} from 'email-validator'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {useTLDs} from '#/lib/hooks/useTLDs'
+import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
@@ -61,6 +63,7 @@ function Inner() {
   const {close} = Dialog.useDialogContext()
   const {lastInitiatedAt} = useAgeAssuranceContext()
   const getTimeAgo = useGetTimeAgo()
+  const tlds = useTLDs()
 
   const wasRecentlyInitiated =
     lastInitiatedAt &&
@@ -68,18 +71,41 @@ function Inner() {
 
   const [success, setSuccess] = useState(false)
   const [email, setEmail] = useState(currentAccount?.email || '')
-  const [emailValid, setEmailValid] = useState(validateEmail(email))
+  const [emailError, setEmailError] = useState<string>('')
+  const [disabled, setDisabled] = useState(false)
   const [language, setLanguage] = useState(langPrefs.appLanguage)
   const [error, setError] = useState<string>('')
 
   const {mutateAsync: init, isPending} = useInitAgeAssurance()
 
+  const runEmailValidation = () => {
+    if (validateEmail(email)) {
+      setEmailError('')
+      setDisabled(false)
+
+      if (tlds && isEmailMaybeInvalid(email, tlds)) {
+        setEmailError(
+          _(
+            msg`Please double-check that you have entered your email address correctly.`,
+          ),
+        )
+        return {status: 'maybe'}
+      }
+
+      return {status: 'valid'}
+    }
+
+    setEmailError(_(msg`Please enter a valid email.`))
+    setDisabled(true)
+
+    return {status: 'invalid'}
+  }
+
   const onSubmit = async () => {
     try {
-      if (!validateEmail(email)) {
-        setEmailValid(false)
-        return
-      }
+      const {status} = runEmailValidation()
+
+      if (status === 'invalid') return
 
       await init({
         email,
@@ -169,15 +195,15 @@ function Inner() {
                 <TextField.LabelText>
                   <Trans>Your email</Trans>
                 </TextField.LabelText>
-                <TextField.Root isInvalid={!emailValid}>
+                <TextField.Root isInvalid={!!emailError}>
                   <TextField.Input
                     label={_(msg`Your email`)}
                     placeholder={_(msg`Your email`)}
                     value={email}
                     onChangeText={setEmail}
-                    onFocus={() => setEmailValid(true)}
+                    onFocus={() => setEmailError('')}
                     onBlur={() => {
-                      setEmailValid(validateEmail(email))
+                      runEmailValidation()
                     }}
                     returnKeyType="done"
                     autoCapitalize="none"
@@ -186,6 +212,12 @@ function Inner() {
                     onSubmitEditing={onSubmit}
                   />
                 </TextField.Root>
+
+                {emailError && (
+                  <Admonition type="error" style={[a.mt_sm]}>
+                    {emailError}
+                  </Admonition>
+                )}
               </View>
 
               <View>
@@ -198,6 +230,7 @@ function Inner() {
               {error && <Admonition type="error">{error}</Admonition>}
 
               <Button
+                disabled={disabled}
                 label={_(msg`Get an email`)}
                 size="large"
                 variant="solid"
