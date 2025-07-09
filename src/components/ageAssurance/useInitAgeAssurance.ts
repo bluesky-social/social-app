@@ -35,6 +35,7 @@ export function useInitAgeAssurance() {
       const appView = new AtpAgent({service: APPVIEW})
       appView.sessionManager.session = agent.session!
       appView.sessionManager.session.accessJwt = token
+      appView.sessionManager.session.refreshJwt = ''
 
       /*
        * 2s wait is good actually. Email sending takes a hot sec and this helps
