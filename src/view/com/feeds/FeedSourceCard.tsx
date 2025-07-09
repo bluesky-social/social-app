@@ -21,6 +21,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {MissingFeed} from './MissingFeed'
 
 type FeedSourceCardProps = {
   feedUri: string
@@ -49,7 +50,7 @@ export function FeedSourceCard({
     } else {
       feed = hydrateList(feedData)
     }
-    return <FeedSourceCardLoaded feed={feed} {...props} />
+    return <FeedSourceCardLoaded feedUri={feedUri} feed={feed} {...props} />
   } else {
     return <FeedSourceCardWithoutData feedUri={feedUri} {...props} />
   }
@@ -59,14 +60,22 @@ export function FeedSourceCardWithoutData({
   feedUri,
   ...props
 }: Omit<FeedSourceCardProps, 'feedData'>) {
-  const {data: feed} = useFeedSourceInfoQuery({
+  const {data: feed, error} = useFeedSourceInfoQuery({
     uri: feedUri,
   })
 
-  return <FeedSourceCardLoaded feed={feed} {...props} />
+  return (
+    <FeedSourceCardLoaded
+      feedUri={feedUri}
+      feed={feed}
+      error={error}
+      {...props}
+    />
+  )
 }
 
 export function FeedSourceCardLoaded({
+  feedUri,
   feed,
   style,
   showDescription = false,
@@ -74,7 +83,9 @@ export function FeedSourceCardLoaded({
   showMinimalPlaceholder,
   hideTopBorder,
   link = true,
+  error,
 }: {
+  feedUri: string
   feed?: FeedSourceInfo
   style?: StyleProp<ViewStyle>
   showDescription?: boolean
@@ -82,6 +93,7 @@ export function FeedSourceCardLoaded({
   showMinimalPlaceholder?: boolean
   hideTopBorder?: boolean
   link?: boolean
+  error?: unknown
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -92,7 +104,18 @@ export function FeedSourceCardLoaded({
    * This state also captures the scenario where a feed can't load for whatever
    * reason.
    */
-  if (!feed)
+  if (!feed) {
+    if (error) {
+      return (
+        <MissingFeed
+          uri={feedUri}
+          style={style}
+          hideTopBorder={hideTopBorder}
+          error={error}
+        />
+      )
+    }
+
     return (
       <FeedLoadingPlaceholder
         style={[
@@ -105,6 +128,7 @@ export function FeedSourceCardLoaded({
         showLowerPlaceholder={!showMinimalPlaceholder}
       />
     )
+  }
 
   const inner = (
     <>
