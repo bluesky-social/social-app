@@ -160,7 +160,9 @@ function Icon({
   width?: number
   settings: ThreadgateAllowUISetting[]
 }) {
-  const isEverybody = settings.length === 0
+  const isEverybody =
+    settings.length === 0 ||
+    settings.every(setting => setting.type === 'everybody')
   const isNobody = !!settings.find(gate => gate.type === 'nobody')
   const IconComponent = isEverybody ? Earth : isNobody ? CircleBanSign : Group
   return <IconComponent fill={color} width={width} />
