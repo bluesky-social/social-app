@@ -879,6 +879,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       const payload = getNotificationPayload(response.notification)
 
       if (payload) {
+        logger.metric(
+          'notifications:openApp',
+          {reason: payload.reason, causedBoot: true},
+          {statsig: false},
+        )
         if (payload.reason === 'chat-message') {
           handleMessage(payload)
         } else {

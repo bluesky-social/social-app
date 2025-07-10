@@ -310,7 +310,7 @@ export function useNotificationsHandler() {
           )
           logger.metric(
             'notifications:openApp',
-            {reason: payload.reason},
+            {reason: payload.reason, causedBoot: false},
             {statsig: false},
           )
 
