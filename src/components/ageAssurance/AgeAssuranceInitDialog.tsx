@@ -142,6 +142,8 @@ function Inner() {
                 <Trans>
                   We use{' '}
                   <InlineLinkText
+                    overridePresentation
+                    disableMismatchWarning
                     label={urls.kwsHome}
                     to={urls.kwsHome}
                     style={[a.text_sm, a.leading_snug]}>
@@ -183,7 +185,7 @@ function Inner() {
           <>
             <Divider />
 
-            <View style={[a.w_full, a.pt_xl, a.gap_md]}>
+            <View style={[a.w_full, a.pt_xl, a.gap_md, a.pb_lg]}>
               {wasRecentlyInitiated && (
                 <Admonition type="tip">
                   <Trans>
@@ -251,15 +253,12 @@ function Inner() {
             </View>
 
             <Text
-              style={[
-                a.text_xs,
-                a.leading_snug,
-                a.pt_lg,
-                t.atoms.text_contrast_medium,
-              ]}>
+              style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>
                 By continuing, you agree to the{' '}
                 <InlineLinkText
+                  overridePresentation
+                  disableMismatchWarning
                   label={urls.kwsTermsOfUse}
                   to={urls.kwsTermsOfUse}
                   style={[a.text_xs, a.leading_snug]}>
@@ -268,6 +267,8 @@ function Inner() {
                 and acknowledge that KWS will store your verified status
                 alongside your hashed email address in accordance with the{' '}
                 <InlineLinkText
+                  overridePresentation
+                  disableMismatchWarning
                   label={urls.kwsPrivacyPolicy}
                   to={urls.kwsPrivacyPolicy}
                   style={[a.text_xs, a.leading_snug]}>
