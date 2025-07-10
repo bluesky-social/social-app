@@ -1,4 +1,5 @@
-import * as React from 'react'
+import {useCallback, useRef} from 'react'
+import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {
@@ -10,13 +11,21 @@ import {
   createNavigationContainerRef,
   DarkTheme,
   DefaultTheme,
+  type LinkingOptions,
   NavigationContainer,
   StackActions,
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {
+  getNotificationPayload,
+  type NotificationPayload,
+  notificationToURL,
+  storePayloadForAccountSwitch,
+} from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
+import {logger as notyLogger} from '#/lib/notifications/util'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
@@ -71,6 +80,7 @@ import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
+import {NotificationsActivityListScreen} from '#/screens/Notifications/ActivityList'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
 import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
@@ -93,6 +103,18 @@ import {ExternalMediaPreferencesScreen} from '#/screens/Settings/ExternalMediaPr
 import {FollowingFeedPreferencesScreen} from '#/screens/Settings/FollowingFeedPreferences'
 import {InterestsSettingsScreen} from '#/screens/Settings/InterestsSettings'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
+import {LegacyNotificationSettingsScreen} from '#/screens/Settings/LegacyNotificationSettings'
+import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
+import {ActivityNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/ActivityNotificationSettings'
+import {LikeNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/LikeNotificationSettings'
+import {LikesOnRepostsNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
+import {MentionNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/MentionNotificationSettings'
+import {MiscellaneousNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
+import {NewFollowerNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
+import {QuoteNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/QuoteNotificationSettings'
+import {ReplyNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/ReplyNotificationSettings'
+import {RepostNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/RepostNotificationSettings'
+import {RepostsOnRepostsNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
 import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from '#/screens/Settings/Settings'
 import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
@@ -110,19 +132,10 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
-import {NotificationsActivityListScreen} from './screens/Notifications/ActivityList'
-import {LegacyNotificationSettingsScreen} from './screens/Settings/LegacyNotificationSettings'
-import {NotificationSettingsScreen} from './screens/Settings/NotificationSettings'
-import {ActivityNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ActivityNotificationSettings'
-import {LikeNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikeNotificationSettings'
-import {LikesOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings'
-import {MentionNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MentionNotificationSettings'
-import {MiscellaneousNotificationSettingsScreen} from './screens/Settings/NotificationSettings/MiscellaneousNotificationSettings'
-import {NewFollowerNotificationSettingsScreen} from './screens/Settings/NotificationSettings/NewFollowerNotificationSettings'
-import {QuoteNotificationSettingsScreen} from './screens/Settings/NotificationSettings/QuoteNotificationSettings'
-import {ReplyNotificationSettingsScreen} from './screens/Settings/NotificationSettings/ReplyNotificationSettings'
-import {RepostNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostNotificationSettings'
-import {RepostsOnRepostsNotificationSettingsScreen} from './screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings'
+import {useAccountSwitcher} from './lib/hooks/useAccountSwitcher'
+import {useNonReactiveCallback} from './lib/hooks/useNonReactiveCallback'
+import {useLoggedOutViewControls} from './state/shell/logged-out'
+import {useCloseAllActiveElements} from './state/util'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -595,7 +608,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
-  const tabBar = React.useCallback(
+  const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
     ),
@@ -762,6 +775,7 @@ const FlatNavigator = () => {
 
 const LINKING = {
   // TODO figure out what we are going to use
+  // note: `bluesky://` is what is used in app.config.js
   prefixes: ['bsky://', 'bluesky://', 'https://bsky.app'],
 
   getPathFromState(state: State) {
@@ -818,13 +832,100 @@ const LINKING = {
       return res
     }
   },
-}
+} satisfies LinkingOptions<AllNavigatorParams>
+
+/**
+ * Used to ensure we don't handle the same notification twice
+ */
+let lastHandledNotificationDateDedupe: number | undefined
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
-  const {currentAccount} = useSession()
-  const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
+  const {currentAccount, accounts} = useSession()
+  const {onPressSwitchAccount} = useAccountSwitcher()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const prevLoggedRouteName = useRef<string | undefined>(undefined)
   const emailDialogControl = useEmailDialogControl()
+  const closeAllActiveElements = useCloseAllActiveElements()
+
+  /**
+   * Handle navigation to a conversation, or prepares for account switch.
+   *
+   * Non-reactive because we need the latest data from some hooks
+   * after an async call - sfn
+   */
+  const handleChatMessage = useNonReactiveCallback(
+    (payload: Extract<NotificationPayload, {reason: 'chat-message'}>) => {
+      notyLogger.debug(`handleChatMessage`, {payload})
+
+      if (payload.recipientDid !== currentAccount?.did) {
+        // handled in useNotificationHandler after account switch finishes
+        storePayloadForAccountSwitch(payload)
+        closeAllActiveElements()
+
+        const account = accounts.find(a => a.did === payload.recipientDid)
+        if (account) {
+          onPressSwitchAccount(account, 'Notification')
+        } else {
+          setShowLoggedOut(true)
+        }
+      } else {
+        // @ts-expect-error nested navigators aren't typed -sfn
+        navigate('MessagesTab', {
+          screen: 'MessagesConversation',
+          params: {
+            conversation: payload.convoId,
+          },
+        })
+      }
+    },
+  )
+
+  async function handlePushNotificationEntry() {
+    if (!isNative) return
+
+    /**
+     * The notification that caused the app to open, if applicable
+     */
+    const response = await Notifications.getLastNotificationResponseAsync()
+
+    if (response) {
+      notyLogger.debug(`handlePushNotificationEntry: response`, {response})
+
+      if (response.notification.date === lastHandledNotificationDateDedupe)
+        return
+      lastHandledNotificationDateDedupe = response.notification.date
+
+      const payload = getNotificationPayload(response.notification)
+
+      if (payload) {
+        notyLogger.metric(
+          'notifications:openApp',
+          {reason: payload.reason, causedBoot: true},
+          {statsig: false},
+        )
+
+        if (payload.reason === 'chat-message') {
+          handleChatMessage(payload)
+        } else {
+          const path = notificationToURL(payload)
+
+          if (path === '/notifications') {
+            resetToTab('NotificationsTab')
+            notyLogger.debug(`handlePushNotificationEntry: default navigate`)
+          } else if (path) {
+            const [screen, params] = router.matchPath(path)
+            // @ts-expect-error nested navigators aren't typed -sfn
+            navigate('HomeTab', {screen, params})
+            notyLogger.debug(`handlePushNotificationEntry: navigate`, {
+              screen,
+              params,
+            })
+          }
+        }
+      }
+    }
+  }
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()
@@ -845,9 +946,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         onStateChange={() => {
           logger.metric(
             'router:navigate',
-            {
-              from: prevLoggedRouteName.current,
-            },
+            {from: prevLoggedRouteName.current},
             {statsig: false},
           )
           prevLoggedRouteName.current = getCurrentRouteName()
@@ -857,6 +956,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           logModuleInitTime()
           onReady()
           logger.metric('router:navigate', {}, {statsig: false})
+          handlePushNotificationEntry()
         }}
         // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
         // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
@@ -906,7 +1006,9 @@ function navigate<K extends keyof AllNavigatorParams>(
   return Promise.resolve()
 }
 
-function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
+function resetToTab(
+  tabName: 'HomeTab' | 'SearchTab' | 'MessagesTab' | 'NotificationsTab',
+) {
   if (navigationRef.isReady()) {
     navigate(tabName)
     if (navigationRef.canGoBack()) {

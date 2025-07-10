@@ -6,12 +6,10 @@ import {type AtpAgent} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
-import {Logger} from '#/logger'
+import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNative} from '#/platform/detection'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
-
-const logger = Logger.create(Logger.Context.Notifications)
 
 /**
  * @private
@@ -36,12 +34,12 @@ async function _registerPushToken({
       appId: 'xyz.blueskyweb.app',
     })
 
-    logger.debug(`registerPushToken: success`, {
+    notyLogger.debug(`registerPushToken: success`, {
       tokenType: token.type,
       token: token.data,
     })
   } catch (error) {
-    logger.error(`registerPushToken: failed`, {safeMessage: error})
+    notyLogger.error(`registerPushToken: failed`, {safeMessage: error})
   }
 }
 
@@ -80,7 +78,7 @@ export function useRegisterPushToken() {
  */
 async function getPushToken() {
   const granted = (await Notifications.getPermissionsAsync()).granted
-  logger.debug(`getPushToken`, {granted})
+  notyLogger.debug(`getPushToken`, {granted})
   if (granted) {
     return Notifications.getDevicePushTokenAsync()
   }
@@ -115,7 +113,9 @@ export function useGetAndRegisterPushToken() {
      */
     const token = await getPushToken()
 
-    logger.debug(`useGetAndRegisterPushToken`, {token: token ?? 'undefined'})
+    notyLogger.debug(`useGetAndRegisterPushToken`, {
+      token: token ?? 'undefined',
+    })
 
     if (token) {
       /**
@@ -147,7 +147,7 @@ export function useNotificationsRegistration() {
      */
     if (!currentAccount) return
 
-    logger.debug(`useNotificationsRegistration`)
+    notyLogger.debug(`useNotificationsRegistration`)
 
     /**
      * Init push token, if permissions are granted already. If they weren't,
@@ -168,7 +168,7 @@ export function useNotificationsRegistration() {
      */
     const subscription = Notifications.addPushTokenListener(async token => {
       registerPushToken({token})
-      logger.debug(`addPushTokenListener callback`, {token})
+      notyLogger.debug(`addPushTokenListener callback`, {token})
     })
 
     return () => {
@@ -202,7 +202,7 @@ export function useRequestNotificationsPermission() {
 
     const res = await Notifications.requestPermissionsAsync()
 
-    logger.metric(`notifications:request`, {
+    notyLogger.metric(`notifications:request`, {
       context: context,
       status: res.status,
     })

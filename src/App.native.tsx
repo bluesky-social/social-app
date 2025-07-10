@@ -17,6 +17,7 @@ import {useLingui} from '@lingui/react'
 import * as Sentry from '@sentry/react-native'
 
 import {KeyboardControllerProvider} from '#/lib/hooks/useEnableKeyboardController'
+import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
 import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider, tryFetchGates} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
@@ -73,7 +74,6 @@ import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbe
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
 SplashScreen.preventAutoHideAsync()
 if (isIOS) {
