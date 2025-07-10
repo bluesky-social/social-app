@@ -105,7 +105,7 @@ export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
-  MyProfile: {name: 'me'; hideBackButton: true}
+  MyProfile: undefined
 }
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {

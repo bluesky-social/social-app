@@ -1,10 +1,10 @@
-import {useCallback, useMemo, useState} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
-  useLinkTo,
+  useLinkProps,
   useNavigation,
   useNavigationState,
 } from '@react-navigation/native'
@@ -326,7 +326,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  const [pathName] = useMemo(() => router.matchPath(href), [href])
+  const [pathName] = React.useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
     if (!state) {
       return {name: 'Home'}
@@ -339,8 +339,8 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
           currentAccount?.handle
       : isTab(currentRouteInfo.name, pathName)
-  const linkTo = useLinkTo()
-  const onPressWrapped = useCallback(
+  const {onPress} = useLinkProps({to: href})
+  const onPressWrapped = React.useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       if (e.ctrlKey || e.metaKey || e.altKey) {
         return
@@ -349,10 +349,10 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
       if (isCurrent) {
         emitSoftReset()
       } else {
-        linkTo(href)
+        onPress()
       }
     },
-    [linkTo, href, isCurrent],
+    [onPress, isCurrent],
   )
 
   return (
@@ -468,7 +468,7 @@ function ComposeBtn() {
   const {openComposer} = useOpenComposer()
   const {_} = useLingui()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  const [isFetchingHandle, setIsFetchingHandle] = useState(false)
+  const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
   const fetchHandle = useFetchHandle()
 
   const getProfileHandle = async () => {
