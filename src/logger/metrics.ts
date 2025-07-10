@@ -26,6 +26,7 @@ export type MetricEvents = {
   }
   'notifications:openApp': {
     reason: NotificationReason
+    causedBoot: boolean
   }
   'notifications:request': {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'

@@ -7,9 +7,9 @@ import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {logger as notyLogger} from '#/lib/notifications/util'
 import {type NavigationProp} from '#/lib/routes/types'
-import {Logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
@@ -18,6 +18,7 @@ import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {resetToTab} from '#/Navigation'
+import {router} from '#/routes'
 
 export type NotificationReason =
   | 'like'
@@ -39,12 +40,13 @@ export type NotificationReason =
  * `notification.request.trigger.payload` being `undefined`, as specified in
  * the source types.
  */
-type NotificationPayload =
+export type NotificationPayload =
   | undefined
   | {
       reason: Exclude<NotificationReason, 'chat-message'>
       uri: string
       subject: string
+      recipientDid: string
     }
   | {
       reason: 'chat-message'
@@ -60,11 +62,17 @@ const DEFAULT_HANDLER_OPTIONS = {
   shouldSetBadge: true,
 } satisfies Notifications.NotificationBehavior
 
-// These need to stay outside the hook to persist between account switches
-let storedPayload: NotificationPayload
-let prevDate = 0
+/**
+ * Cached notification payload if we handled a notification while the user was
+ * using a different account. This is consumed after we finish switching
+ * accounts.
+ */
+let storedAccountSwitchPayload: NotificationPayload
 
-const logger = Logger.create(Logger.Context.Notifications)
+/**
+ * Used to ensure we don't handle the same notification twice
+ */
+let lastHandledNotificationDateDedupe = 0
 
 export function useNotificationsHandler() {
   const queryClient = useQueryClient()
@@ -182,8 +190,15 @@ export function useNotificationsHandler() {
       if (!payload) return
 
       if (payload.reason === 'chat-message') {
-        if (payload.recipientDid !== currentAccount?.did && !storedPayload) {
-          storedPayload = payload
+        notyLogger.debug(`useNotificationsHandler: handling chat message`, {
+          payload,
+        })
+
+        if (
+          payload.recipientDid !== currentAccount?.did &&
+          !storedAccountSwitchPayload
+        ) {
+          storePayloadForAccountSwitch(payload)
           closeAllActiveElements()
 
           const account = accounts.find(a => a.did === payload.recipientDid)
@@ -227,86 +242,29 @@ export function useNotificationsHandler() {
           })
         }
       } else {
-        switch (payload.reason) {
-          case 'subscribed-post':
-            const urip = new AtUri(payload.uri)
-            if (urip.collection === 'app.bsky.feed.post') {
-              setTimeout(() => {
-                // @ts-expect-error types are weird here
-                navigation.navigate('HomeTab', {
-                  screen: 'PostThread',
-                  params: {
-                    name: urip.host,
-                    rkey: urip.rkey,
-                  },
-                })
-              }, 500)
-            } else {
-              resetToTab('NotificationsTab')
-            }
-            break
-          case 'like':
-          case 'repost':
-          case 'follow':
-          case 'mention':
-          case 'quote':
-          case 'reply':
-          case 'starterpack-joined':
-          case 'like-via-repost':
-          case 'repost-via-repost':
-          case 'verified':
-          case 'unverified':
-          default:
-            resetToTab('NotificationsTab')
-            break
-          // TODO implement these after we have an idea of how to handle each individual case
-          // case 'follow':
-          //   const uri = new AtUri(payload.uri)
-          //   setTimeout(() => {
-          //     // @ts-expect-error types are weird here
-          //     navigation.navigate('HomeTab', {
-          //       screen: 'Profile',
-          //       params: {
-          //         name: uri.host,
-          //       },
-          //     })
-          //   }, 500)
-          //   break
-          // case 'mention':
-          // case 'reply':
-          //   const urip = new AtUri(payload.uri)
-          //   setTimeout(() => {
-          //     // @ts-expect-error types are weird here
-          //     navigation.navigate('HomeTab', {
-          //       screen: 'PostThread',
-          //       params: {
-          //         name: urip.host,
-          //         rkey: urip.rkey,
-          //       },
-          //     })
-          //   }, 500)
+        const url = notificationToURL(payload)
+
+        if (url === '/notifications') {
+          resetToTab('NotificationsTab')
+        } else if (url) {
+          const [screen, params] = router.matchPath(url)
+          // @ts-expect-error router is not typed :/ -sfn
+          navigation.navigate('HomeTab', {screen, params})
+          notyLogger.debug(`useNotificationsHandler: navigate`, {
+            screen,
+            params,
+          })
         }
       }
     }
 
     Notifications.setNotificationHandler({
       handleNotification: async e => {
-        if (
-          e.request.trigger == null ||
-          typeof e.request.trigger !== 'object' ||
-          !('type' in e.request.trigger) ||
-          e.request.trigger.type !== 'push'
-        ) {
-          return DEFAULT_HANDLER_OPTIONS
-        }
+        const payload = getNotificationPayload(e)
 
-        logger.debug('Notifications: received', {e})
+        if (!payload) return DEFAULT_HANDLER_OPTIONS
 
-        const payload = e.request.trigger.payload as NotificationPayload
-
-        if (!payload) {
-          return DEFAULT_HANDLER_OPTIONS
-        }
+        notyLogger.debug('useNotificationsHandler: incoming', {e, payload})
 
         if (
           payload.reason === 'chat-message' &&
@@ -329,46 +287,38 @@ export function useNotificationsHandler() {
 
     const responseReceivedListener =
       Notifications.addNotificationResponseReceivedListener(e => {
-        if (e.notification.date === prevDate) {
-          return
-        }
-        prevDate = e.notification.date
+        if (e.notification.date === lastHandledNotificationDateDedupe) return
+        lastHandledNotificationDateDedupe = e.notification.date
 
-        logger.debug('Notifications: response received', {
+        notyLogger.debug('useNotificationsHandler: response received', {
           actionIdentifier: e.actionIdentifier,
         })
 
-        if (
-          e.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER &&
-          e.notification.request.trigger != null &&
-          typeof e.notification.request.trigger === 'object' &&
-          'type' in e.notification.request.trigger &&
-          e.notification.request.trigger.type === 'push'
-        ) {
-          const payload = e.notification.request.trigger
-            .payload as NotificationPayload
+        if (e.actionIdentifier !== Notifications.DEFAULT_ACTION_IDENTIFIER) {
+          return
+        }
 
-          if (!payload) {
-            logger.error('useNotificationsHandler: received no payload', {
-              identifier: e.notification.request.identifier,
-            })
-            return
-          }
+        const payload = getNotificationPayload(e.notification)
+
+        if (payload) {
           if (!payload.reason) {
-            logger.error('useNotificationsHandler: received unknown payload', {
-              payload,
-              identifier: e.notification.request.identifier,
-            })
+            notyLogger.error(
+              'useNotificationsHandler: received unknown payload',
+              {
+                payload,
+                identifier: e.notification.request.identifier,
+              },
+            )
             return
           }
 
-          logger.debug(
+          notyLogger.debug(
             'User pressed a notification, opening notifications tab',
             {},
           )
-          logger.metric(
+          notyLogger.metric(
             'notifications:openApp',
-            {reason: payload.reason},
+            {reason: payload.reason, causedBoot: false},
             {statsig: false},
           )
 
@@ -383,24 +333,28 @@ export function useNotificationsHandler() {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
           }
 
-          logger.debug('Notifications: handleNotification', {
+          notyLogger.debug('Notifications: handleNotification', {
             content: e.notification.request.content,
-            payload: e.notification.request.trigger.payload,
+            payload: payload,
           })
 
           handleNotification(payload)
           Notifications.dismissAllNotificationsAsync()
+        } else {
+          notyLogger.error('useNotificationsHandler: received no payload', {
+            identifier: e.notification.request.identifier,
+          })
         }
       })
 
     // Whenever there's a stored payload, that means we had to switch accounts before handling the notification.
     // Whenever currentAccount changes, we should try to handle it again.
     if (
-      storedPayload?.reason === 'chat-message' &&
-      currentAccount?.did === storedPayload.recipientDid
+      storedAccountSwitchPayload?.reason === 'chat-message' &&
+      currentAccount?.did === storedAccountSwitchPayload.recipientDid
     ) {
-      handleNotification(storedPayload)
-      storedPayload = undefined
+      handleNotification(storedAccountSwitchPayload)
+      storedAccountSwitchPayload = undefined
     }
 
     return () => {
@@ -417,4 +371,72 @@ export function useNotificationsHandler() {
     onPressSwitchAccount,
     setShowLoggedOut,
   ])
+}
+
+export function storePayloadForAccountSwitch(payload: NotificationPayload) {
+  storedAccountSwitchPayload = payload
+}
+
+export function getNotificationPayload(
+  e: Notifications.Notification,
+): NotificationPayload | null {
+  if (
+    e.request.trigger == null ||
+    typeof e.request.trigger !== 'object' ||
+    !('type' in e.request.trigger) ||
+    e.request.trigger.type !== 'push'
+  ) {
+    return null
+  }
+
+  const payload = (
+    isIOS ? e.request.trigger.payload : e.request.content.data
+  ) as NotificationPayload
+
+  if (payload) {
+    return payload
+  } else {
+    return null
+  }
+}
+
+export function notificationToURL(
+  payload: NotificationPayload,
+): string | undefined {
+  switch (payload?.reason) {
+    case 'like':
+    case 'repost':
+    case 'like-via-repost':
+    case 'repost-via-repost': {
+      const urip = new AtUri(payload.subject)
+      if (urip.collection === 'app.bsky.feed.post') {
+        return `/profile/${urip.host}/post/${urip.rkey}`
+      } else {
+        return '/notifications'
+      }
+    }
+    case 'reply':
+    case 'quote':
+    case 'mention':
+    case 'subscribed-post': {
+      const urip = new AtUri(payload.uri)
+      if (urip.collection === 'app.bsky.feed.post') {
+        return `/profile/${urip.host}/post/${urip.rkey}`
+      } else {
+        return '/notifications'
+      }
+    }
+    case 'follow':
+    case 'starterpack-joined': {
+      const urip = new AtUri(payload.uri)
+      return `/profile/${urip.host}`
+    }
+    case 'chat-message':
+      // should be handled separately
+      return undefined
+    case 'verified':
+    case 'unverified':
+    default:
+      return '/notifications'
+  }
 }
