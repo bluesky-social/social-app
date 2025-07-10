@@ -123,7 +123,9 @@ function Inner() {
 
         if (raw) {
           if (raw.startsWith('This email address is not supported')) {
-            message = _(msg`Please enter a valid, non-temporary email address.`)
+            message = _(
+              msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
+            )
           }
         }
 
@@ -198,7 +200,7 @@ function Inner() {
           <>
             <Divider />
 
-            <View style={[a.w_full, a.pt_xl, a.gap_md, a.pb_lg]}>
+            <View style={[a.w_full, a.pt_xl, a.gap_lg, a.pb_lg]}>
               {wasRecentlyInitiated && (
                 <Admonition type="tip">
                   <Trans>
@@ -232,9 +234,16 @@ function Inner() {
                   />
                 </TextField.Root>
 
-                {emailError && (
+                {emailError ? (
                   <Admonition type="error" style={[a.mt_sm]}>
                     {emailError}
+                  </Admonition>
+                ) : (
+                  <Admonition type="tip" style={[a.mt_sm]}>
+                    <Trans>
+                      Use your account email, or a real email you control, in
+                      case KWS or Bluesky needs to contact you.
+                    </Trans>
                   </Admonition>
                 )}
               </View>
