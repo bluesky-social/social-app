@@ -202,7 +202,7 @@ function Inner() {
 
             <View style={[a.w_full, a.pt_xl, a.gap_lg, a.pb_lg]}>
               {wasRecentlyInitiated && (
-                <Admonition type="tip">
+                <Admonition type="warning">
                   <Trans>
                     You initiated this flow already,{' '}
                     {getTimeAgo(lastInitiatedAt, new Date(), {format: 'long'})}{' '}
