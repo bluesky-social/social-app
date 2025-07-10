@@ -11,27 +11,32 @@ import {
 } from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import {IsAgeRestricted} from '#/components/ageAssurance/IsAgeRestricted'
 import {Button, ButtonText} from '#/components/Button'
+import type * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {Text} from '#/components/Typography'
 
 export function AgeAssurancePrompt({style}: ViewStyleProp & {}) {
+  const control = useDialogControl()
+  const {hasInitiated} = useAgeAssuranceContext()
   return (
-    <IsAgeRestricted.True>
-      <Inner style={style} />
-    </IsAgeRestricted.True>
+    <>
+      <IsAgeRestricted.True>
+        {!hasInitiated && <Inner style={style} control={control} />}
+        <AgeAssuranceInitDialog control={control} />
+      </IsAgeRestricted.True>
+    </>
   )
 }
 
-function Inner({style}: ViewStyleProp & {}) {
+function Inner({
+  style,
+  control,
+}: ViewStyleProp & {control: Dialog.DialogControlProps}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {hasInitiated} = useAgeAssuranceContext()
-  const control = useDialogControl()
 
-  return hasInitiated ? null : (
+  return (
     <>
-      <AgeAssuranceInitDialog control={control} />
-
       <View style={style}>
         <View
           style={[
