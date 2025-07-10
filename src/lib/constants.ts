@@ -207,4 +207,4 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
-export const DEV_ENV_APPVIEW_DID = `did:plc:cs5onzby6e5yv25qfhtiatsa` // get this from `localhost:2581`
+export const DEV_ENV_APPVIEW_DID = `did:plc:lmynpbfp7bbyc4pz2xjdtzsh` // get this from `localhost:2581`
