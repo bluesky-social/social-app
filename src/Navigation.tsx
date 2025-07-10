@@ -871,7 +871,8 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
   async function handlePushNotificationEntry() {
     if (!isNative) return
-    // Handle URL from expo push notifications
+
+    // gets the notification that caused the app to open, if applicable
     const response = await Notifications.getLastNotificationResponseAsync()
 
     if (response) {
