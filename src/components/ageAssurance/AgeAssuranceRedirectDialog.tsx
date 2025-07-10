@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {retry} from '#/lib/async/retry'
+import {wait} from '#/lib/async/wait'
 import {isNative} from '#/platform/detection'
 import {createAgeAssuranceQueryKey} from '#/state/age-assurance'
 import {useAgent} from '#/state/session'
@@ -18,8 +19,8 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export type AgeAssuranceRedirectDialogState = {
-  status: 'success' | 'unknown'
-  did: string
+  result: 'success' | 'unknown'
+  actorDid: string
 }
 
 /**
@@ -28,27 +29,27 @@ export type AgeAssuranceRedirectDialogState = {
  */
 export function parseAgeAssuranceRedirectDialogState(
   state: {
-    status?: string
-    did?: string
+    result?: string
+    actorDid?: string
   } = {},
 ): AgeAssuranceRedirectDialogState | undefined {
-  let status: AgeAssuranceRedirectDialogState['status'] = 'unknown'
-  const did = state.did
+  let result: AgeAssuranceRedirectDialogState['result'] = 'unknown'
+  const actorDid = state.actorDid
 
-  switch (state.status) {
+  switch (state.result) {
     case 'success':
-      status = 'success'
+      result = 'success'
       break
     case 'unknown':
     default:
-      status = 'unknown'
+      result = 'unknown'
       break
   }
 
-  if (status && did) {
+  if (result && actorDid) {
     return {
-      status,
-      did,
+      result,
+      actorDid,
     }
   }
 }
@@ -93,24 +94,27 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
 
     polling.current = true
 
-    retry(
-      5,
-      () => true,
-      async () => {
-        if (!agent.session) return
-        if (unmounted.current) return
+    wait(
+      3e3,
+      retry(
+        5,
+        () => true,
+        async () => {
+          if (!agent.session) return
+          if (unmounted.current) return
 
-        const {data} = await agent.app.bsky.unspecced.getAgeAssuranceState()
+          const {data} = await agent.app.bsky.unspecced.getAgeAssuranceState()
 
-        if (data.status !== 'assured') {
-          throw new Error(
-            `Polling for age assurance state did not receive assured status`,
-          )
-        }
+          if (data.status !== 'assured') {
+            throw new Error(
+              `Polling for age assurance state did not receive assured status`,
+            )
+          }
 
-        return data
-      },
-      1e3,
+          return data
+        },
+        1e3,
+      ),
     )
       .then(data => {
         if (!data) return

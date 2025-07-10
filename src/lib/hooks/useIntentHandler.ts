@@ -74,8 +74,8 @@ export function useIntentHandler() {
         }
         case 'age-assurance': {
           const state = parseAgeAssuranceRedirectDialogState({
-            status: params.get('status') ?? undefined,
-            did: params.get('did') ?? undefined,
+            result: params.get('result') ?? undefined,
+            actorDid: params.get('actorDid') ?? undefined,
           })
 
           // TODO maybe handle invalid DID here
