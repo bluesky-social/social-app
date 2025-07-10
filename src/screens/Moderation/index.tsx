@@ -373,7 +373,7 @@ export function ModerationScreenInner({
                   </View>
                 </Toggle.Item>
               </View>
-              {disabledOnIOS && (
+              {disabledOnIOS && !isAgeRestricted && (
                 <View style={[a.pb_lg, a.px_lg]}>
                   <Text>
                     <Trans>

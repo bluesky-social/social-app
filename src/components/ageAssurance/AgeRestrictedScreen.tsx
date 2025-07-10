@@ -74,7 +74,7 @@ export function AgeRestrictedScreen({
 
               <Text style={[a.text_md, a.leading_snug]}>
                 <Trans>
-                  👉 You must complete age verification to access this screen.
+                  You must complete age verification to access this screen.
                 </Trans>
               </Text>
 
