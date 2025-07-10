@@ -1,5 +1,4 @@
-import * as React from 'react'
-import {Linking} from 'react-native'
+import {useCallback, useRef} from 'react'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
@@ -602,7 +601,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
-  const tabBar = React.useCallback(
+  const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
     ),
@@ -826,33 +825,34 @@ const LINKING = {
       return res
     }
   },
+} satisfies LinkingOptions<AllNavigatorParams>
 
-  async getInitialURL() {
-    const url = await Linking.getInitialURL()
+async function handlePushNotificationEntry() {
+  // Handle URL from expo push notifications
+  const response = await Notifications.getLastNotificationResponseAsync()
 
-    if (!isNative || url != null) {
-      return url
-    }
+  if (response) {
+    const payload = getNotificationPayload(response.notification)
 
-    // Handle URL from expo push notifications
-    const response = await Notifications.getLastNotificationResponseAsync()
-
-    if (response) {
-      const payload = getNotificationPayload(response.notification)
-
-      if (payload) {
-        return `bluesky://${notificationToURL(payload)}`
+    if (payload) {
+      const path = notificationToURL(payload)
+      if (path === '/notifications') {
+        resetToTab('NotificationsTab')
+      } else if (path === '/messages') {
+        resetToTab('MessagesTab')
+      } else if (path) {
+        const [screen, params] = router.matchPath(path)
+        // @ts-expect-error nested navigators aren't typed -sfn
+        navigate('HomeTab', {screen, params})
       }
     }
-
-    return url
-  },
-} satisfies LinkingOptions<AllNavigatorParams>
+  }
+}
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
-  const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
+  const prevLoggedRouteName = useRef<string | undefined>(undefined)
   const emailDialogControl = useEmailDialogControl()
 
   function onReady() {
@@ -884,6 +884,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           logModuleInitTime()
           onReady()
           logger.metric('router:navigate', {}, {statsig: false})
+          handlePushNotificationEntry()
         }}
         // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
         // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
@@ -933,7 +934,9 @@ function navigate<K extends keyof AllNavigatorParams>(
   return Promise.resolve()
 }
 
-function resetToTab(tabName: 'HomeTab' | 'SearchTab' | 'NotificationsTab') {
+function resetToTab(
+  tabName: 'HomeTab' | 'SearchTab' | 'MessagesTab' | 'NotificationsTab',
+) {
   if (navigationRef.isReady()) {
     navigate(tabName)
     if (navigationRef.canGoBack()) {
