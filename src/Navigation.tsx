@@ -870,6 +870,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   )
 
   async function handlePushNotificationEntry() {
+    if (!isNative) return
     // Handle URL from expo push notifications
     const response = await Notifications.getLastNotificationResponseAsync()
 
@@ -886,7 +887,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           } else if (path) {
             const [screen, params] = router.matchPath(path)
             // @ts-expect-error nested navigators aren't typed -sfn
-            navigate('HomeTab', {screen, params})
+            navigate('NotificationsTab', {screen, params})
           }
         }
       }
