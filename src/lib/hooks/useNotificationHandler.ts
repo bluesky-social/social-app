@@ -40,7 +40,7 @@ export type NotificationReason =
  * `notification.request.trigger.payload` being `undefined`, as specified in
  * the source types.
  */
-type NotificationPayload =
+export type NotificationPayload =
   | undefined
   | {
       reason: Exclude<NotificationReason, 'chat-message'>
@@ -185,7 +185,7 @@ export function useNotificationsHandler() {
 
       if (payload.reason === 'chat-message') {
         if (payload.recipientDid !== currentAccount?.did && !storedPayload) {
-          storedPayload = payload
+          storePayload(payload)
           closeAllActiveElements()
 
           const account = accounts.find(a => a.did === payload.recipientDid)
@@ -359,6 +359,10 @@ export function useNotificationsHandler() {
     onPressSwitchAccount,
     setShowLoggedOut,
   ])
+}
+
+export function storePayload(payload: NotificationPayload) {
+  storedPayload = payload
 }
 
 export function getNotificationPayload(

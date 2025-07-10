@@ -20,7 +20,9 @@ import {timeout} from '#/lib/async/timeout'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {
   getNotificationPayload,
+  type NotificationPayload,
   notificationToURL,
+  storePayload,
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {buildStateObject} from '#/lib/routes/helpers'
@@ -129,6 +131,10 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {useAccountSwitcher} from './lib/hooks/useAccountSwitcher'
+import {useNonReactiveCallback} from './lib/hooks/useNonReactiveCallback'
+import {useLoggedOutViewControls} from './state/shell/logged-out'
+import {useCloseAllActiveElements} from './state/util'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -827,33 +833,65 @@ const LINKING = {
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
-async function handlePushNotificationEntry() {
-  // Handle URL from expo push notifications
-  const response = await Notifications.getLastNotificationResponseAsync()
+function RoutesContainer({children}: React.PropsWithChildren<{}>) {
+  const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
+  const {currentAccount, accounts} = useSession()
+  const {onPressSwitchAccount} = useAccountSwitcher()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const prevLoggedRouteName = useRef<string | undefined>(undefined)
+  const emailDialogControl = useEmailDialogControl()
+  const closeAllActiveElements = useCloseAllActiveElements()
 
-  if (response) {
-    const payload = getNotificationPayload(response.notification)
+  // needs to be non-reactive because we need the latest
+  // data from some hooks after an async call
+  const handleMessage = useNonReactiveCallback(
+    (payload: Extract<NotificationPayload, {reason: 'chat-message'}>) => {
+      if (payload.recipientDid !== currentAccount?.did) {
+        // handled in useNotificationHandler after account switch finishes
+        storePayload(payload)
+        closeAllActiveElements()
 
-    if (payload) {
-      const path = notificationToURL(payload)
-      if (path === '/notifications') {
-        resetToTab('NotificationsTab')
-      } else if (path === '/messages') {
-        resetToTab('MessagesTab')
-      } else if (path) {
-        const [screen, params] = router.matchPath(path)
+        const account = accounts.find(a => a.did === payload.recipientDid)
+        if (account) {
+          onPressSwitchAccount(account, 'Notification')
+        } else {
+          setShowLoggedOut(true)
+        }
+      } else {
         // @ts-expect-error nested navigators aren't typed -sfn
-        navigate('HomeTab', {screen, params})
+        navigate('MessagesTab', {
+          screen: 'MessagesConversation',
+          params: {
+            conversation: payload.convoId,
+          },
+        })
+      }
+    },
+  )
+
+  async function handlePushNotificationEntry() {
+    // Handle URL from expo push notifications
+    const response = await Notifications.getLastNotificationResponseAsync()
+
+    if (response) {
+      const payload = getNotificationPayload(response.notification)
+
+      if (payload) {
+        if (payload.reason === 'chat-message') {
+          handleMessage(payload)
+        } else {
+          const path = notificationToURL(payload)
+          if (path === '/notifications') {
+            resetToTab('NotificationsTab')
+          } else if (path) {
+            const [screen, params] = router.matchPath(path)
+            // @ts-expect-error nested navigators aren't typed -sfn
+            navigate('HomeTab', {screen, params})
+          }
+        }
       }
     }
   }
-}
-
-function RoutesContainer({children}: React.PropsWithChildren<{}>) {
-  const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
-  const {currentAccount} = useSession()
-  const prevLoggedRouteName = useRef<string | undefined>(undefined)
-  const emailDialogControl = useEmailDialogControl()
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()
