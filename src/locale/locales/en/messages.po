@@ -162,6 +162,14 @@ msgstr ""
 msgid "{0} reacted {1} to {2}"
 msgstr ""
 
+#: src/view/com/feeds/FeedSourceCard.tsx:187
+msgid "{0}, a feed by {1}, liked by {2}"
+msgstr ""
+
+#: src/view/com/feeds/FeedSourceCard.tsx:188
+msgid "{0}, a list by {1}"
+msgstr ""
+
 #: src/view/com/util/UserAvatar.tsx:570
 #: src/view/com/util/UserAvatar.tsx:588
 msgid "{0}'s avatar"
@@ -733,10 +741,6 @@ msgstr ""
 msgid "Add to lists"
 msgstr ""
 
-#: src/view/com/feeds/FeedSourceCard.tsx:269
-msgid "Add to my feeds"
-msgstr ""
-
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:156
 msgid "Add user to list"
 msgstr ""
@@ -744,10 +748,6 @@ msgstr ""
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:109
 #: src/view/com/modals/UserAddRemoveLists.tsx:162
 msgid "Added to list"
-msgstr ""
-
-#: src/view/com/feeds/FeedSourceCard.tsx:125
-msgid "Added to my feeds"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:418
@@ -758,7 +758,7 @@ msgstr ""
 msgid "Adult"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:113
+#: src/components/moderation/ContentHider.tsx:116
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:148
 #: src/view/com/composer/labels/LabelsBtn.tsx:127
@@ -1109,10 +1109,6 @@ msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:45
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
-msgstr ""
-
-#: src/view/com/feeds/FeedSourceCard.tsx:319
-msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr ""
 
 #: src/components/FeedCard.tsx:340
@@ -1718,6 +1714,10 @@ msgstr ""
 msgid "Clear search query"
 msgstr ""
 
+#: src/view/com/feeds/MissingFeed.tsx:87
+msgid "Click for information"
+msgstr ""
+
 #: src/view/screens/Support.tsx:41
 msgid "click here"
 msgstr ""
@@ -1775,6 +1775,8 @@ msgstr ""
 #: src/components/verification/VerifierDialog.tsx:144
 #: src/components/WhoCanReply.tsx:200
 #: src/components/WhoCanReply.tsx:207
+#: src/view/com/feeds/MissingFeed.tsx:208
+#: src/view/com/feeds/MissingFeed.tsx:215
 #: src/view/com/modals/ChangePassword.tsx:279
 #: src/view/com/modals/ChangePassword.tsx:282
 msgid "Close"
@@ -1851,7 +1853,7 @@ msgstr ""
 msgid "Collapse list of users"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:799
+#: src/view/com/notifications/NotificationFeedItem.tsx:801
 msgid "Collapses list of users for a given notification"
 msgstr ""
 
@@ -2157,6 +2159,18 @@ msgstr ""
 msgid "Copyright Policy"
 msgstr ""
 
+#: src/view/com/feeds/MissingFeed.tsx:41
+msgid "Could not connect to custom feed"
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:133
+msgid "Could not connect to feed service"
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:182
+msgid "Could not find profile"
+msgstr ""
+
 #: src/components/dms/LeaveConvoPrompt.tsx:35
 #: src/components/dms/ReportDialog.tsx:310
 msgid "Could not leave chat"
@@ -2421,6 +2435,13 @@ msgstr ""
 #: src/components/dms/MessagesListHeader.tsx:160
 #: src/screens/Messages/components/ChatListItem.tsx:128
 msgid "Deleted Account"
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:42
+#: src/view/com/feeds/MissingFeed.tsx:75
+#: src/view/com/feeds/MissingFeed.tsx:127
+#: src/view/com/feeds/MissingFeed.tsx:135
+msgid "Deleted list"
 msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:474
@@ -3014,6 +3035,10 @@ msgstr ""
 msgid "Error loading preference"
 msgstr ""
 
+#: src/view/com/feeds/MissingFeed.tsx:198
+msgid "Error message"
+msgstr ""
+
 #: src/screens/Settings/components/ExportCarDialog.tsx:47
 msgid "Error occurred while saving file"
 msgstr ""
@@ -3367,8 +3392,16 @@ msgid "Feed"
 msgstr ""
 
 #: src/components/FeedCard.tsx:139
-#: src/view/com/feeds/FeedSourceCard.tsx:253
+#: src/view/com/feeds/FeedSourceCard.tsx:150
 msgid "Feed by {0}"
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:152
+msgid "Feed creator"
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:188
+msgid "Feed identifier"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:354
@@ -3377,6 +3410,10 @@ msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Feed toggle"
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:73
+msgid "Feed unavailable"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:102
@@ -3396,18 +3433,18 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:190
 #: src/view/screens/Feeds.tsx:511
 #: src/view/screens/Profile.tsx:230
-#: src/view/screens/SavedFeeds.tsx:103
+#: src/view/screens/SavedFeeds.tsx:104
 #: src/view/shell/desktop/LeftNav.tsx:673
 #: src/view/shell/Drawer.tsx:519
 msgid "Feeds"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:205
+#: src/view/screens/SavedFeeds.tsx:206
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr ""
 
 #: src/components/FeedCard.tsx:282
-#: src/view/screens/SavedFeeds.tsx:85
+#: src/view/screens/SavedFeeds.tsx:86
 msgctxt "toast"
 msgid "Feeds updated!"
 msgstr ""
@@ -3577,7 +3614,7 @@ msgstr ""
 #: src/screens/VideoFeed/index.tsx:848
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:134
 #: src/view/screens/Feeds.tsx:602
-#: src/view/screens/SavedFeeds.tsx:429
+#: src/view/screens/SavedFeeds.tsx:420
 msgid "Following"
 msgstr ""
 
@@ -3924,13 +3961,13 @@ msgstr ""
 msgid "Hidden by your moderation settings."
 msgstr ""
 
-#: src/components/ListCard.tsx:130
+#: src/components/ListCard.tsx:132
 msgid "Hidden list"
 msgstr ""
 
 #: src/components/interstitials/Trending.tsx:131
 #: src/components/interstitials/TrendingVideos.tsx:140
-#: src/components/moderation/ContentHider.tsx:200
+#: src/components/moderation/ContentHider.tsx:203
 #: src/components/moderation/LabelPreference.tsx:135
 #: src/components/moderation/PostHider.tsx:134
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:712
@@ -3942,7 +3979,7 @@ msgstr ""
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:806
+#: src/view/com/notifications/NotificationFeedItem.tsx:808
 msgctxt "action"
 msgid "Hide"
 msgstr ""
@@ -3993,7 +4030,7 @@ msgstr ""
 msgid "Hide trending videos?"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:797
+#: src/view/com/notifications/NotificationFeedItem.tsx:799
 msgid "Hide user list"
 msgstr ""
 
@@ -4002,7 +4039,7 @@ msgstr ""
 msgid "Hide verification badges"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:151
+#: src/components/moderation/ContentHider.tsx:154
 #: src/components/moderation/PostHider.tsx:89
 msgid "Hides the content"
 msgstr ""
@@ -4332,11 +4369,11 @@ msgstr ""
 msgid "Keep me posted"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:231
+#: src/components/moderation/ContentHider.tsx:234
 msgid "Labeled by {0}."
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:229
+#: src/components/moderation/ContentHider.tsx:232
 msgid "Labeled by the author."
 msgstr ""
 
@@ -4409,11 +4446,11 @@ msgstr ""
 msgid "Learn more about self hosting your PDS."
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:149
+#: src/components/moderation/ContentHider.tsx:152
 msgid "Learn more about the moderation applied to this content"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:215
+#: src/components/moderation/ContentHider.tsx:218
 msgid "Learn more about the moderation applied to this content."
 msgstr ""
 
@@ -4432,7 +4469,7 @@ msgstr ""
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:239
+#: src/components/moderation/ContentHider.tsx:242
 #: src/view/com/auth/server-input/index.tsx:220
 msgid "Learn more."
 msgstr ""
@@ -4533,7 +4570,7 @@ msgid "Liked By"
 msgstr ""
 
 #: src/components/FeedCard.tsx:218
-#: src/view/com/feeds/FeedSourceCard.tsx:303
+#: src/view/com/feeds/FeedSourceCard.tsx:172
 msgid "Liked by {0, plural, one {# user} other {# users}}"
 msgstr ""
 
@@ -4586,8 +4623,8 @@ msgctxt "toast"
 msgid "List blocked"
 msgstr ""
 
-#: src/components/ListCard.tsx:150
-#: src/view/com/feeds/FeedSourceCard.tsx:255
+#: src/components/ListCard.tsx:152
+#: src/view/com/feeds/FeedSourceCard.tsx:152
 msgid "List by {0}"
 msgstr ""
 
@@ -4597,6 +4634,10 @@ msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:158
 msgid "List by you"
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:154
+msgid "List creator"
 msgstr ""
 
 #: src/view/screens/ProfileList.tsx:485
@@ -4866,7 +4907,7 @@ msgstr ""
 msgid "Moderation details"
 msgstr ""
 
-#: src/components/ListCard.tsx:149
+#: src/components/ListCard.tsx:151
 #: src/view/com/modals/UserAddRemoveLists.tsx:222
 msgid "Moderation list by {0}"
 msgstr ""
@@ -5743,7 +5784,7 @@ msgstr ""
 msgid "Opens password reset form"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:900
+#: src/view/com/notifications/NotificationFeedItem.tsx:902
 #: src/view/com/util/UserAvatar.tsx:592
 msgid "Opens this profile"
 msgstr ""
@@ -5926,7 +5967,7 @@ msgstr ""
 msgid "Pinned {0} to Home"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:130
+#: src/view/screens/SavedFeeds.tsx:131
 msgid "Pinned Feeds"
 msgstr ""
 
@@ -6508,7 +6549,6 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
 #: src/screens/Settings/Settings.tsx:567
-#: src/view/com/feeds/FeedSourceCard.tsx:322
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:217
 msgid "Remove"
@@ -6557,10 +6597,8 @@ msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:319
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:325
-#: src/view/com/feeds/FeedSourceCard.tsx:190
-#: src/view/com/feeds/FeedSourceCard.tsx:268
 #: src/view/screens/ProfileList.tsx:528
-#: src/view/screens/SavedFeeds.tsx:349
+#: src/view/screens/SavedFeeds.tsx:350
 msgid "Remove from my feeds"
 msgstr ""
 
@@ -6574,7 +6612,6 @@ msgid "Remove from saved feeds"
 msgstr ""
 
 #: src/components/FeedCard.tsx:338
-#: src/view/com/feeds/FeedSourceCard.tsx:317
 msgid "Remove from your feeds?"
 msgstr ""
 
@@ -6634,10 +6671,6 @@ msgstr ""
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:117
 #: src/view/com/modals/UserAddRemoveLists.tsx:170
 msgid "Removed from list"
-msgstr ""
-
-#: src/view/com/feeds/FeedSourceCard.tsx:138
-msgid "Removed from my feeds"
 msgstr ""
 
 #: src/screens/List/ListHiddenScreen.tsx:94
@@ -7033,7 +7066,7 @@ msgstr ""
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:153
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:163
 #: src/view/com/modals/CreateOrEditList.tsx:315
-#: src/view/screens/SavedFeeds.tsx:116
+#: src/view/screens/SavedFeeds.tsx:117
 msgid "Save"
 msgstr ""
 
@@ -7049,8 +7082,8 @@ msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:191
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:200
-#: src/view/screens/SavedFeeds.tsx:112
-#: src/view/screens/SavedFeeds.tsx:116
+#: src/view/screens/SavedFeeds.tsx:113
+#: src/view/screens/SavedFeeds.tsx:117
 msgid "Save changes"
 msgstr ""
 
@@ -7076,7 +7109,7 @@ msgstr ""
 msgid "Save to my feeds"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:171
+#: src/view/screens/SavedFeeds.tsx:172
 msgid "Saved Feeds"
 msgstr ""
 
@@ -7091,8 +7124,8 @@ msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/NotificationFeedItem.tsx:745
-#: src/view/com/notifications/NotificationFeedItem.tsx:770
+#: src/view/com/notifications/NotificationFeedItem.tsx:747
+#: src/view/com/notifications/NotificationFeedItem.tsx:772
 msgid "Say hello!"
 msgstr ""
 
@@ -7211,7 +7244,7 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:212
+#: src/view/screens/SavedFeeds.tsx:213
 msgid "See this guide"
 msgstr ""
 
@@ -7574,7 +7607,7 @@ msgstr ""
 msgid "Shared Preferences Tester"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:200
+#: src/components/moderation/ContentHider.tsx:203
 #: src/components/moderation/LabelPreference.tsx:137
 #: src/components/moderation/PostHider.tsx:134
 msgid "Show"
@@ -7695,7 +7728,7 @@ msgstr ""
 msgid "Shows other accounts you can switch to"
 msgstr ""
 
-#: src/components/moderation/ContentHider.tsx:152
+#: src/components/moderation/ContentHider.tsx:155
 #: src/components/moderation/PostHider.tsx:89
 msgid "Shows the content"
 msgstr ""
@@ -8095,6 +8128,14 @@ msgstr ""
 msgid "Tags only"
 msgstr ""
 
+#: src/view/com/feeds/MissingFeed.tsx:89
+msgid "Tap for information"
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:44
+msgid "Tap for more information"
+msgstr ""
+
 #: src/components/ContextMenu/Backdrop.ios.tsx:54
 #: src/components/ContextMenu/Backdrop.ios.tsx:80
 #: src/components/ContextMenu/Backdrop.tsx:46
@@ -8317,18 +8358,13 @@ msgstr ""
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:178
 #: src/view/screens/ProfileList.tsx:375
 #: src/view/screens/ProfileList.tsx:394
-#: src/view/screens/SavedFeeds.tsx:92
+#: src/view/screens/SavedFeeds.tsx:93
 msgid "There was an issue contacting the server"
 msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:418
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:111
 msgid "There was an issue contacting the server, please check your internet connection and try again."
-msgstr ""
-
-#: src/view/com/feeds/FeedSourceCard.tsx:127
-#: src/view/com/feeds/FeedSourceCard.tsx:140
-msgid "There was an issue contacting your server"
 msgstr ""
 
 #: src/view/com/notifications/NotificationFeed.tsx:124
@@ -8803,6 +8839,10 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:673
 msgid "Unable to delete"
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:126
+msgid "Unavailable feed information"
 msgstr ""
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:97
@@ -9455,6 +9495,14 @@ msgstr ""
 msgid "Watch now"
 msgstr ""
 
+#: src/view/com/feeds/MissingFeed.tsx:140
+msgid "We could not connect to the service that provides this custom feed. It may be temporarily unavailable and experiencing issues, or permanently unavailable."
+msgstr ""
+
+#: src/view/com/feeds/MissingFeed.tsx:146
+msgid "We could not find this list. It was probably deleted."
+msgstr ""
+
 #: src/screens/Hashtag.tsx:205
 msgid "We couldn't find any results for that hashtag."
 msgstr ""
@@ -9822,11 +9870,11 @@ msgstr ""
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:144
+#: src/view/screens/SavedFeeds.tsx:145
 msgid "You don't have any pinned feeds."
 msgstr ""
 
-#: src/view/screens/SavedFeeds.tsx:184
+#: src/view/screens/SavedFeeds.tsx:185
 msgid "You don't have any saved feeds."
 msgstr ""
 
