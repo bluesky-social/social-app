@@ -7,8 +7,8 @@ import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {logger as notyLogger} from '#/lib/notifications/util'
 import {type NavigationProp} from '#/lib/routes/types'
-import {Logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
@@ -62,11 +62,17 @@ const DEFAULT_HANDLER_OPTIONS = {
   shouldSetBadge: true,
 } satisfies Notifications.NotificationBehavior
 
-// These need to stay outside the hook to persist between account switches
-let storedPayload: NotificationPayload
-let prevDate = 0
+/**
+ * Cached notification payload if we handled a notification while the user was
+ * using a different account. This is consumed after we finish switching
+ * accounts.
+ */
+let storedAccountSwitchPayload: NotificationPayload
 
-const logger = Logger.create(Logger.Context.Notifications)
+/**
+ * Used to ensure we don't handle the same notification twice
+ */
+let lastHandledNotificationDateDedupe = 0
 
 export function useNotificationsHandler() {
   const queryClient = useQueryClient()
@@ -184,8 +190,15 @@ export function useNotificationsHandler() {
       if (!payload) return
 
       if (payload.reason === 'chat-message') {
-        if (payload.recipientDid !== currentAccount?.did && !storedPayload) {
-          storePayload(payload)
+        notyLogger.debug(`useNotificationsHandler: handling chat message`, {
+          payload,
+        })
+
+        if (
+          payload.recipientDid !== currentAccount?.did &&
+          !storedAccountSwitchPayload
+        ) {
+          storePayloadForAccountSwitch(payload)
           closeAllActiveElements()
 
           const account = accounts.find(a => a.did === payload.recipientDid)
@@ -237,6 +250,10 @@ export function useNotificationsHandler() {
           const [screen, params] = router.matchPath(url)
           // @ts-expect-error router is not typed :/ -sfn
           navigation.navigate('HomeTab', {screen, params})
+          notyLogger.debug(`useNotificationsHandler: navigate`, {
+            screen,
+            params,
+          })
         }
       }
     }
@@ -244,11 +261,10 @@ export function useNotificationsHandler() {
     Notifications.setNotificationHandler({
       handleNotification: async e => {
         const payload = getNotificationPayload(e)
-        if (!payload) {
-          return DEFAULT_HANDLER_OPTIONS
-        }
 
-        logger.debug('Notifications: received', {e})
+        if (!payload) return DEFAULT_HANDLER_OPTIONS
+
+        notyLogger.debug('useNotificationsHandler: incoming', {e, payload})
 
         if (
           payload.reason === 'chat-message' &&
@@ -271,12 +287,10 @@ export function useNotificationsHandler() {
 
     const responseReceivedListener =
       Notifications.addNotificationResponseReceivedListener(e => {
-        if (e.notification.date === prevDate) {
-          return
-        }
-        prevDate = e.notification.date
+        if (e.notification.date === lastHandledNotificationDateDedupe) return
+        lastHandledNotificationDateDedupe = e.notification.date
 
-        logger.debug('Notifications: response received', {
+        notyLogger.debug('useNotificationsHandler: response received', {
           actionIdentifier: e.actionIdentifier,
         })
 
@@ -288,18 +302,21 @@ export function useNotificationsHandler() {
 
         if (payload) {
           if (!payload.reason) {
-            logger.error('useNotificationsHandler: received unknown payload', {
-              payload,
-              identifier: e.notification.request.identifier,
-            })
+            notyLogger.error(
+              'useNotificationsHandler: received unknown payload',
+              {
+                payload,
+                identifier: e.notification.request.identifier,
+              },
+            )
             return
           }
 
-          logger.debug(
+          notyLogger.debug(
             'User pressed a notification, opening notifications tab',
             {},
           )
-          logger.metric(
+          notyLogger.metric(
             'notifications:openApp',
             {reason: payload.reason, causedBoot: false},
             {statsig: false},
@@ -316,7 +333,7 @@ export function useNotificationsHandler() {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
           }
 
-          logger.debug('Notifications: handleNotification', {
+          notyLogger.debug('Notifications: handleNotification', {
             content: e.notification.request.content,
             payload: payload,
           })
@@ -324,7 +341,7 @@ export function useNotificationsHandler() {
           handleNotification(payload)
           Notifications.dismissAllNotificationsAsync()
         } else {
-          logger.error('useNotificationsHandler: received no payload', {
+          notyLogger.error('useNotificationsHandler: received no payload', {
             identifier: e.notification.request.identifier,
           })
         }
@@ -333,11 +350,11 @@ export function useNotificationsHandler() {
     // Whenever there's a stored payload, that means we had to switch accounts before handling the notification.
     // Whenever currentAccount changes, we should try to handle it again.
     if (
-      storedPayload?.reason === 'chat-message' &&
-      currentAccount?.did === storedPayload.recipientDid
+      storedAccountSwitchPayload?.reason === 'chat-message' &&
+      currentAccount?.did === storedAccountSwitchPayload.recipientDid
     ) {
-      handleNotification(storedPayload)
-      storedPayload = undefined
+      handleNotification(storedAccountSwitchPayload)
+      storedAccountSwitchPayload = undefined
     }
 
     return () => {
@@ -356,8 +373,8 @@ export function useNotificationsHandler() {
   ])
 }
 
-export function storePayload(payload: NotificationPayload) {
-  storedPayload = payload
+export function storePayloadForAccountSwitch(payload: NotificationPayload) {
+  storedAccountSwitchPayload = payload
 }
 
 export function getNotificationPayload(

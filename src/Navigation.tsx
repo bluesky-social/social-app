@@ -22,9 +22,10 @@ import {
   getNotificationPayload,
   type NotificationPayload,
   notificationToURL,
-  storePayload,
+  storePayloadForAccountSwitch,
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
+import {logger as notyLogger} from '#/lib/notifications/util'
 import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
@@ -833,7 +834,10 @@ const LINKING = {
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
-let previousNotificationDate: number | undefined
+/**
+ * Used to ensure we don't handle the same notification twice
+ */
+let lastHandledNotificationDateDedupe: number | undefined
 
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
@@ -844,13 +848,19 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const emailDialogControl = useEmailDialogControl()
   const closeAllActiveElements = useCloseAllActiveElements()
 
-  // needs to be non-reactive because we need the latest
-  // data from some hooks after an async call
-  const handleMessage = useNonReactiveCallback(
+  /**
+   * Handle navigation to a conversation, or prepares for account switch.
+   *
+   * Non-reactive because we need the latest data from some hooks
+   * after an async call - sfn
+   */
+  const handleChatMessage = useNonReactiveCallback(
     (payload: Extract<NotificationPayload, {reason: 'chat-message'}>) => {
+      notyLogger.debug(`handleChatMessage`, {payload})
+
       if (payload.recipientDid !== currentAccount?.did) {
         // handled in useNotificationHandler after account switch finishes
-        storePayload(payload)
+        storePayloadForAccountSwitch(payload)
         closeAllActiveElements()
 
         const account = accounts.find(a => a.did === payload.recipientDid)
@@ -874,33 +884,43 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   async function handlePushNotificationEntry() {
     if (!isNative) return
 
-    // gets the notification that caused the app to open, if applicable
+    /**
+     * The notification that caused the app to open, if applicable
+     */
     const response = await Notifications.getLastNotificationResponseAsync()
 
     if (response) {
-      if (response.notification.date === previousNotificationDate) {
+      notyLogger.debug(`handlePushNotificationEntry: response`, {response})
+
+      if (response.notification.date === lastHandledNotificationDateDedupe)
         return
-      }
-      previousNotificationDate = response.notification.date
+      lastHandledNotificationDateDedupe = response.notification.date
 
       const payload = getNotificationPayload(response.notification)
 
       if (payload) {
-        logger.metric(
+        notyLogger.metric(
           'notifications:openApp',
           {reason: payload.reason, causedBoot: true},
           {statsig: false},
         )
+
         if (payload.reason === 'chat-message') {
-          handleMessage(payload)
+          handleChatMessage(payload)
         } else {
           const path = notificationToURL(payload)
+
           if (path === '/notifications') {
             resetToTab('NotificationsTab')
+            notyLogger.debug(`handlePushNotificationEntry: default navigate`)
           } else if (path) {
             const [screen, params] = router.matchPath(path)
             // @ts-expect-error nested navigators aren't typed -sfn
             navigate('HomeTab', {screen, params})
+            notyLogger.debug(`handlePushNotificationEntry: navigate`, {
+              screen,
+              params,
+            })
           }
         }
       }
