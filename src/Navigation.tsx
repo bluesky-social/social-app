@@ -769,6 +769,7 @@ const FlatNavigator = () => {
 
 const LINKING = {
   // TODO figure out what we are going to use
+  // note: `bluesky://` is what is used in app.config.js
   prefixes: ['bsky://', 'bluesky://', 'https://bsky.app'],
 
   getPathFromState(state: State) {
@@ -787,7 +788,6 @@ const LINKING = {
   },
 
   getStateFromPath(path: string) {
-    console.log('getting state from path', path)
     const [name, params] = router.matchPath(path)
 
     // Any time we receive a url that starts with `intent/` we want to ignore it here. It will be handled in the
@@ -802,8 +802,6 @@ const LINKING = {
     }
 
     if (isNative) {
-      console.log(name, params)
-
       if (name === 'Search') {
         return buildStateObject('SearchTab', 'Search', params)
       }
@@ -843,8 +841,7 @@ const LINKING = {
       const payload = getNotificationPayload(response.notification)
 
       if (payload) {
-        console.log('initial url', notificationToURL(payload))
-        return notificationToURL(payload)
+        return `bluesky://${notificationToURL(payload)}`
       }
     }
 
@@ -877,9 +874,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         onStateChange={() => {
           logger.metric(
             'router:navigate',
-            {
-              from: prevLoggedRouteName.current,
-            },
+            {from: prevLoggedRouteName.current},
             {statsig: false},
           )
           prevLoggedRouteName.current = getCurrentRouteName()
