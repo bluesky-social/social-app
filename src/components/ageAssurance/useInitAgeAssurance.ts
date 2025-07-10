@@ -33,7 +33,7 @@ export function useInitAgeAssurance() {
       })
 
       const appView = new AtpAgent({service: APPVIEW})
-      appView.sessionManager.session = agent.session!
+      appView.sessionManager.session = {...agent.session!}
       appView.sessionManager.session.accessJwt = token
       appView.sessionManager.session.refreshJwt = ''
 
