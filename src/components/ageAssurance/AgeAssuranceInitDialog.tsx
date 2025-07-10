@@ -114,8 +114,21 @@ function Inner() {
 
       setSuccess(true)
     } catch (e) {
-      const {clean} = cleanError(e)
-      setError(clean || _(msg`Something went wrong, please try again`))
+      const {clean, raw} = cleanError(e)
+
+      if (clean) {
+        setError(clean || _(msg`Something went wrong, please try again`))
+      } else {
+        let message = _(msg`Something went wrong, please try again`)
+
+        if (raw) {
+          if (raw.startsWith('This email address is not supported')) {
+            message = _(msg`Please enter a valid, non-temporary email address.`)
+          }
+        }
+
+        setError(message)
+      }
     }
   }
 
