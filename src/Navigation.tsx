@@ -833,6 +833,8 @@ const LINKING = {
   },
 } satisfies LinkingOptions<AllNavigatorParams>
 
+let previousNotificationDate: number | undefined
+
 function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount, accounts} = useSession()
@@ -876,6 +878,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
     const response = await Notifications.getLastNotificationResponseAsync()
 
     if (response) {
+      if (response.notification.date === previousNotificationDate) {
+        return
+      }
+      previousNotificationDate = response.notification.date
+
       const payload = getNotificationPayload(response.notification)
 
       if (payload) {
@@ -893,7 +900,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           } else if (path) {
             const [screen, params] = router.matchPath(path)
             // @ts-expect-error nested navigators aren't typed -sfn
-            navigate('NotificationsTab', {screen, params})
+            navigate('HomeTab', {screen, params})
           }
         }
       }
