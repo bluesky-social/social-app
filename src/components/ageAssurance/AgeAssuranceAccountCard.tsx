@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useAgeAssuranceContext} from '#/state/age-assurance'
-import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {
   AgeAssuranceInitDialog,
@@ -32,6 +32,7 @@ function Inner({style}: ViewStyleProp & {}) {
   const timeAgo = lastInitiatedAt
     ? getTimeAgo(lastInitiatedAt, new Date())
     : null
+  const {gtPhone} = useBreakpoints()
 
   if (!isAgeRestricted) return null
 
@@ -72,7 +73,11 @@ function Inner({style}: ViewStyleProp & {}) {
           </View>
 
           <View
-            style={[a.flex_row, a.justify_between, a.align_start, a.gap_xl]}>
+            style={[
+              a.justify_between,
+              a.align_start,
+              gtPhone ? [a.flex_row, a.gap_xl] : [a.gap_md],
+            ]}>
             <Text style={[a.text_sm, a.leading_snug]}>
               <Trans>
                 You're using Bluesky from a location that legally requires you

@@ -83,13 +83,17 @@ function Inner({style}: ViewStyleProp & {}) {
               a.gap_lg,
             ]}>
             <Text
-              style={{
-                color: select(t.name, {
-                  light: t.palette.primary_800,
-                  dark: t.palette.primary_800,
-                  dim: t.palette.primary_800,
-                }),
-              }}>
+              style={[
+                a.leading_snug,
+                a.flex_1,
+                {
+                  color: select(t.name, {
+                    light: t.palette.primary_800,
+                    dark: t.palette.primary_800,
+                    dim: t.palette.primary_800,
+                  }),
+                },
+              ]}>
               <Trans>Verification takes only a few minutes</Trans>
             </Text>
 

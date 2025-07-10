@@ -1,4 +1,3 @@
-import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -115,21 +114,6 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
-          <SettingsList.Item>
-            <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
-            <SettingsList.ItemText>
-              <Trans>Birthday</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.BadgeButton
-              label={_(msg`Edit`)}
-              onPress={() => birthdayControl.open()}
-            />
-          </SettingsList.Item>
-
-          <View style={[a.px_xl, a.pt_xs, a.pb_md]}>
-            <AgeAssuranceAccountCard />
-          </View>
-
           <SettingsList.Divider />
           <SettingsList.PressableItem
             label={_(msg`Password`)}
@@ -150,6 +134,17 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
+          <SettingsList.Item>
+            <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
+            <SettingsList.ItemText>
+              <Trans>Birthday</Trans>
+            </SettingsList.ItemText>
+            <SettingsList.BadgeButton
+              label={_(msg`Edit`)}
+              onPress={() => birthdayControl.open()}
+            />
+          </SettingsList.Item>
+          <AgeAssuranceAccountCard style={[a.px_xl, a.pt_xs, a.pb_md]} />
           <SettingsList.Divider />
           <SettingsList.PressableItem
             label={_(msg`Export my data`)}
