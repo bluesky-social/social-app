@@ -9,7 +9,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {type NavigationProp} from '#/lib/routes/types'
 import {Logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
+import {isAndroid, isIOS} from '#/platform/detection'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
@@ -280,22 +280,13 @@ export function useNotificationsHandler() {
           actionIdentifier: e.actionIdentifier,
         })
 
-        if (
-          e.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER &&
-          e.notification.request.trigger != null &&
-          typeof e.notification.request.trigger === 'object' &&
-          'type' in e.notification.request.trigger &&
-          e.notification.request.trigger.type === 'push'
-        ) {
-          const payload = e.notification.request.trigger
-            .payload as NotificationPayload
+        if (e.actionIdentifier !== Notifications.DEFAULT_ACTION_IDENTIFIER) {
+          return
+        }
 
-          if (!payload) {
-            logger.error('useNotificationsHandler: received no payload', {
-              identifier: e.notification.request.identifier,
-            })
-            return
-          }
+        const payload = getNotificationPayload(e.notification)
+
+        if (payload) {
           if (!payload.reason) {
             logger.error('useNotificationsHandler: received unknown payload', {
               payload,
@@ -327,11 +318,15 @@ export function useNotificationsHandler() {
 
           logger.debug('Notifications: handleNotification', {
             content: e.notification.request.content,
-            payload: e.notification.request.trigger.payload,
+            payload: payload,
           })
 
           handleNotification(payload)
           Notifications.dismissAllNotificationsAsync()
+        } else {
+          logger.error('useNotificationsHandler: received no payload', {
+            identifier: e.notification.request.identifier,
+          })
         }
       })
 
@@ -377,7 +372,9 @@ export function getNotificationPayload(
     return null
   }
 
-  const payload = e.request.trigger.payload as NotificationPayload
+  const payload = (
+    isIOS ? e.request.trigger.payload : e.request.content.data
+  ) as NotificationPayload
 
   if (payload) {
     return payload
