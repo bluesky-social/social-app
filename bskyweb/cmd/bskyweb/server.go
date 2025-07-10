@@ -603,7 +603,8 @@ type IPCCRequest struct {
 	IP string `json:"ip"`
 }
 type IPCCResponse struct {
-	CC string `json:"countryCode"`
+	CC               string `json:"countryCode"`
+	AgeRestrictedGeo string `json:"isAgeRestrictedGeo"`
 }
 
 func (srv *Server) WebIpCC(c echo.Context) error {
