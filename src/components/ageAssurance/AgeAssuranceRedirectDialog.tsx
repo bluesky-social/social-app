@@ -5,15 +5,17 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {retry} from '#/lib/async/retry'
+import {isNative} from '#/platform/detection'
 import {createAgeAssuranceQueryKey} from '#/state/age-assurance'
 import {useAgent} from '#/state/session'
-import {atoms as a, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {Admonition} from '../Admonition'
 
 export type AgeAssuranceRedirectDialogState = {
   status: 'success' | 'unknown'
@@ -59,6 +61,8 @@ export function AgeAssuranceRedirectDialog() {
   const {_} = useLingui()
   const control = useAgeAssuranceRedirectDialogControl()
 
+  // Dialog.useAutoOpen(control.control, 1e3)
+
   // TODO maybe handle invalid DID here
 
   return (
@@ -75,13 +79,14 @@ export function AgeAssuranceRedirectDialog() {
 }
 
 export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
+  const t = useTheme()
   const {_} = useLingui()
   const qc = useQueryClient()
   const agent = useAgent()
   const polling = useRef(false)
   const unmounted = useRef(false)
   const control = useAgeAssuranceRedirectDialogControl()
-  const [error, setError] = useState<string>('')
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     if (polling.current) return
@@ -119,21 +124,17 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
       })
       .catch(() => {
         if (unmounted.current) return
-        setError(
-          _(
-            msg`We were unable to verify your age assurance status. But don't worry! Your account should be updated soon.`,
-          ),
-        )
+        setError(true)
       })
 
     return () => {
       unmounted.current = true
     }
-  }, [_, agent, qc, control])
+  }, [agent, qc, control])
 
   return (
     <>
-      <View style={[a.align_start]}>
+      <View style={[a.align_start, a.w_full]}>
         <AgeAssuranceBadge />
 
         <View
@@ -141,27 +142,44 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
             a.flex_row,
             a.justify_between,
             a.align_center,
-            a.gap_md,
+            a.gap_sm,
             a.pt_lg,
             a.pb_md,
           ]}>
+          {error && <ErrorIcon size="md" fill={t.palette.negative_500} />}
+
           <Text style={[a.text_xl, a.font_heavy]}>
-            <Trans>Verifying</Trans>
+            {error ? <Trans>Unknown status</Trans> : <Trans>Verifying</Trans>}
           </Text>
 
           {!error && <Loader size="md" />}
         </View>
 
         <Text style={[a.text_md, a.leading_snug]}>
-          <Trans>
-            We're confirming your status with our servers. This dialog should
-            close in a few seconds.
-          </Trans>
+          {error ? (
+            <Trans>
+              We were unable to verify your age assurance status. But don't
+              worry! Your account should be updated soon.
+            </Trans>
+          ) : (
+            <Trans>
+              We're confirming your status with our servers. This dialog should
+              close in a few seconds.
+            </Trans>
+          )}
         </Text>
 
-        {error && (
-          <View style={[a.pt_md]}>
-            <Admonition type="error">{error}</Admonition>
+        {error && isNative && (
+          <View style={[a.w_full, a.pt_lg]}>
+            <Button
+              label={_(msg`Close`)}
+              size="large"
+              variant="solid"
+              color="secondary">
+              <ButtonText>
+                <Trans>Close</Trans>
+              </ButtonText>
+            </Button>
           </View>
         )}
       </View>
