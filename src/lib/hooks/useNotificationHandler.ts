@@ -418,7 +418,8 @@ export function notificationToURL(
       return `/profile/${urip.host}`
     }
     case 'chat-message':
-      return '/messages'
+      // should be handled separately
+      return undefined
     case 'verified':
     case 'unverified':
     default:
