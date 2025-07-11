@@ -27,6 +27,7 @@ export function useIntentHandler() {
   const verifyEmailIntent = useVerifyEmailIntent()
   const ageAssuranceRedirectDialogControl =
     useAgeAssuranceRedirectDialogControl()
+  const {currentAccount} = useSession()
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
@@ -78,9 +79,11 @@ export function useIntentHandler() {
             actorDid: params.get('actorDid') ?? undefined,
           })
 
-          // TODO maybe handle invalid DID here
-
-          if (state) {
+          if (
+            state &&
+            currentAccount &&
+            state.actorDid === currentAccount.did
+          ) {
             ageAssuranceRedirectDialogControl.open(state)
           }
           return
@@ -103,6 +106,7 @@ export function useIntentHandler() {
     composeIntent,
     verifyEmailIntent,
     ageAssuranceRedirectDialogControl,
+    currentAccount,
   ])
 }
 
@@ -122,7 +126,6 @@ export function useComposeIntent() {
       videoUri: string | null
     }) => {
       if (!hasSession) return
-
       closeAllActiveElements()
 
       // Whenever a video URI is present, we don't support adding images right now.
