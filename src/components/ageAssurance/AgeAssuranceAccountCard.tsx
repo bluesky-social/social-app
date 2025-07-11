@@ -6,6 +6,7 @@ import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {
   AgeAssuranceInitDialog,
@@ -13,6 +14,8 @@ import {
 } from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import {IsAgeRestricted} from '#/components/ageAssurance/IsAgeRestricted'
 import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
@@ -29,6 +32,7 @@ function Inner({style}: ViewStyleProp & {}) {
   const {status, isAgeRestricted, hasInitiated, lastInitiatedAt} =
     useAgeAssuranceContext()
   const control = useDialogControl()
+  const appealControl = Dialog.useDialogControl()
   const getTimeAgo = useGetTimeAgo()
   const {gtPhone} = useBreakpoints()
 
@@ -42,6 +46,7 @@ function Inner({style}: ViewStyleProp & {}) {
   return (
     <>
       <AgeAssuranceInitDialog control={control} />
+      <AgeAssuranceAppealDialog control={appealControl} />
 
       <View style={style}>
         <View
@@ -80,8 +85,15 @@ function Inner({style}: ViewStyleProp & {}) {
               <Admonition type="warning">
                 <Trans>
                   You are currently unable to access Bluesky's Age Assurance
-                  flow. Please contact our moderation team if you believe this
-                  is an error.
+                  flow. Please{' '}
+                  <InlineLinkText
+                    label={_(msg`Contact our moderation team`)}
+                    {...createStaticClick(() => {
+                      appealControl.open()
+                    })}>
+                    contact our moderation team
+                  </InlineLinkText>{' '}
+                  if you believe this is an error.
                 </Trans>
               </Admonition>
             </View>

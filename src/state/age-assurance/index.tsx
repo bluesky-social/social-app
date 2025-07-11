@@ -65,7 +65,7 @@ export function Provider({children}: {children: React.ReactNode}) {
         //   (() => ({
         //     data: {
         //       lastInitiatedAt: new Date().toISOString(),
-        //       status: 'assured',
+        //       status: 'blocked',
         //     } as AppBskyUnspeccedDefs.AgeAssuranceState,
         //   }))(),
         // )
