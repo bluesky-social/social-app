@@ -7,6 +7,7 @@ import {
   AppBskyGraphStarterpack,
   type AppBskyNotificationListNotifications,
   type BskyAgent,
+  hasMutedWord,
   moderateNotification,
   type ModerationOpts,
 } from '@atproto/api'
@@ -124,6 +125,23 @@ export function shouldFilterNotif(
   }
   if (!moderationOpts) {
     return false
+  }
+  if (
+    notif.reason === 'subscribed-post' &&
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      notif.record,
+      AppBskyFeedPost.isRecord,
+    ) &&
+    hasMutedWord({
+      mutedWords: moderationOpts.prefs.mutedWords,
+      text: notif.record.text,
+      facets: notif.record.facets,
+      outlineTags: notif.record.tags,
+      languages: notif.record.langs,
+      actor: notif.author,
+    })
+  ) {
+    return true
   }
   if (notif.author.viewer?.following) {
     return false
