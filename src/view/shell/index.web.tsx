@@ -65,7 +65,7 @@ function ShellInner() {
       <ErrorBoundary>
         <FlatNavigator />
       </ErrorBoundary>
-      <Composer winHeight={0} />
+      <Composer />
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
