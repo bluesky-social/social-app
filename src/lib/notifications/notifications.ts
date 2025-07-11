@@ -130,6 +130,8 @@ export function useGetAndRegisterPushToken() {
     }: {
       isAgeRestricted?: boolean
     } = {}) => {
+      if (!isNative) return
+
       /**
        * This will also fire the listener added via `addPushTokenListener`. That
        * listener also handles registration.

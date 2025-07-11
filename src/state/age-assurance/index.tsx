@@ -13,6 +13,7 @@ import {
   type AgeAssuranceContextType,
 } from '#/state/age-assurance/types'
 import {useGeolocation} from '#/state/geolocation'
+import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
@@ -50,6 +51,8 @@ export function Provider({children}: {children: React.ReactNode}) {
      */
     enabled: true,
     queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
+    staleTime: STALE.MINUTES.ONE,
+    refetchOnWindowFocus: true,
     async queryFn() {
       if (!agent.session) return null
 
