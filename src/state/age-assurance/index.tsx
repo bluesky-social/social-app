@@ -75,9 +75,6 @@ export function Provider({children}: {children: React.ReactNode}) {
           account: agent.session?.did,
         })
 
-        // TODO pretty sure we don't need this
-        // qc.invalidateQueries({queryKey: preferencesQueryKey})
-
         await getAndRegisterPushToken({
           isAgeRestricted: Boolean(
             isAgeRestrictedGeo && data.status !== 'assured',
