@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
@@ -40,6 +40,7 @@ import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
+import {ProfileHeaderSuggestedFollows} from './SuggestedFollows'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -73,6 +74,7 @@ let ProfileHeaderStandard = ({
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
+  const [showSuggestedFollows, _setShowSuggestedFollows] = useState(true)
   const isBlockedUser =
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
@@ -122,7 +124,7 @@ let ProfileHeaderStandard = ({
     })
   }
 
-  const unblockAccount = React.useCallback(async () => {
+  const unblockAccount = useCallback(async () => {
     try {
       await queueUnblock()
       Toast.show(_(msg({message: 'Account unblocked', context: 'toast'})))
@@ -308,6 +310,9 @@ let ProfileHeaderStandard = ({
           </View>
         )}
       </View>
+      {showSuggestedFollows && (
+        <ProfileHeaderSuggestedFollows actorDid={profile.did} />
+      )}
       <Prompt.Basic
         control={unblockPromptControl}
         title={_(msg`Unblock Account?`)}

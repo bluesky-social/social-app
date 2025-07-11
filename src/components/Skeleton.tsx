@@ -1,4 +1,3 @@
-import {type ReactNode} from 'react'
 import {View} from 'react-native'
 
 import {
@@ -15,7 +14,7 @@ type SkeletonProps = {
   blend?: boolean
 }
 
-export function Text({blend, style}: TextStyleProp & SkeletonProps) {
+export function Text({blend, style}: Required<TextStyleProp> & SkeletonProps) {
   const {fonts, flags, theme: t} = useAlf()
   const {width, ...flattened} = flatten(style)
   const {lineHeight = 14, ...rest} = normalizeTextStyles(
@@ -28,7 +27,11 @@ export function Text({blend, style}: TextStyleProp & SkeletonProps) {
   )
   return (
     <View
-      style={[a.flex_1, {maxWidth: width, paddingVertical: lineHeight * 0.15}]}>
+      style={[
+        a.flex_1,
+        a.w_full,
+        {maxWidth: width, paddingVertical: lineHeight * 0.15},
+      ]}>
       <View
         style={[
           a.rounded_md,

@@ -1,5 +1,10 @@
-import React from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
+import {useMemo} from 'react'
+import {
+  type GestureResponderEvent,
+  type StyleProp,
+  type TextStyle,
+  View,
+} from 'react-native'
 import {
   moderateProfile,
   type ModerationOpts,
@@ -136,12 +141,14 @@ export function Avatar({
   onPress,
   disabledPreview,
   liveOverride,
+  size = 40,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress?: () => void
   disabledPreview?: boolean
   liveOverride?: boolean
+  size?: number
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
 
@@ -149,7 +156,7 @@ export function Avatar({
 
   return disabledPreview ? (
     <UserAvatar
-      size={40}
+      size={size}
       avatar={profile.avatar}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       moderation={moderation.ui('avatar')}
@@ -157,7 +164,7 @@ export function Avatar({
     />
   ) : (
     <PreviewableUserAvatar
-      size={40}
+      size={size}
       profile={profile}
       moderation={moderation.ui('avatar')}
       onBeforePress={onPress}
@@ -166,7 +173,7 @@ export function Avatar({
   )
 }
 
-export function AvatarPlaceholder() {
+export function AvatarPlaceholder({size = 40}: {size?: number}) {
   const t = useTheme()
   return (
     <View
@@ -174,8 +181,8 @@ export function AvatarPlaceholder() {
         a.rounded_full,
         t.atoms.bg_contrast_25,
         {
-          width: 40,
-          height: 40,
+          width: size,
+          height: size,
         },
       ]}
     />
@@ -340,12 +347,14 @@ export function NameAndHandlePlaceholder() {
 export function Description({
   profile: profileUnshadowed,
   numberOfLines = 3,
+  style,
 }: {
   profile: bsky.profile.AnyProfileView
   numberOfLines?: number
+  style?: StyleProp<TextStyle>
 }) {
   const profile = useProfileShadow(profileUnshadowed)
-  const rt = React.useMemo(() => {
+  const rt = useMemo(() => {
     if (!('description' in profile)) return
     const rt = new RichTextApi({text: profile.description || ''})
     rt.detectFacetsWithoutResolution()
@@ -363,7 +372,7 @@ export function Description({
     <View style={[a.pt_xs]}>
       <RichText
         value={rt}
-        style={[a.leading_snug]}
+        style={[a.leading_snug, style]}
         numberOfLines={numberOfLines}
         disableLinks
       />
