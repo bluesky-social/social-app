@@ -1,7 +1,7 @@
-import {ImagePickerAsset} from 'expo-image-picker'
-import {AppBskyVideoDefs, BlobRef, BskyAgent} from '@atproto/api'
-import {JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
-import {I18n} from '@lingui/core'
+import {type ImagePickerAsset} from 'expo-image-picker'
+import {type AppBskyVideoDefs, type BlobRef, type BskyAgent} from '@atproto/api'
+import {type JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
+import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
 import {AbortError} from '#/lib/async/cancelable'
@@ -11,7 +11,7 @@ import {
   UploadLimitError,
   VideoTooLargeError,
 } from '#/lib/media/video/errors'
-import {CompressedVideo} from '#/lib/media/video/types'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createVideoAgent} from '#/lib/media/video/util'
 import {logger} from '#/logger'
@@ -392,7 +392,9 @@ function getCompressErrorMessage(e: unknown, _: I18n['_']): string | null {
     return null
   }
   if (e instanceof VideoTooLargeError) {
-    return _(msg`The selected video is larger than 100 MB.`)
+    return _(
+      msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
+    )
   }
   logger.error('Error compressing video', {safeMessage: e})
   return _(msg`An error occurred while compressing the video.`)
@@ -427,6 +429,10 @@ function getUploadErrorMessage(e: unknown, _: I18n['_']): string | null {
       case 'Account is not old enough to upload videos':
         return _(
           msg`Your account is not yet old enough to upload videos. Please try again later.`,
+        )
+      case 'file size (100000001 bytes) is larger than the maximum allowed size (100000000 bytes)':
+        return _(
+          msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
         )
       default:
         return e.message
