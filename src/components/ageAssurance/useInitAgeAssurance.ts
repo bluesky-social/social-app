@@ -15,6 +15,7 @@ import {
 import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
 import {createAgeAssuranceQueryKey} from '#/state/age-assurance'
+import {useGeolocation} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 
 const APPVIEW = __DEV__ ? DEV_ENV_APPVIEW : PUBLIC_APPVIEW
@@ -23,8 +24,15 @@ const APPVIEW_DID = __DEV__ ? DEV_ENV_APPVIEW_DID : PUBLIC_APPVIEW_DID
 export function useInitAgeAssurance() {
   const qc = useQueryClient()
   const agent = useAgent()
+  const {geolocation} = useGeolocation()
   return useMutation({
-    async mutationFn(props: AppBskyUnspeccedInitAgeAssurance.InputSchema) {
+    async mutationFn(
+      props: Omit<AppBskyUnspeccedInitAgeAssurance.InputSchema, 'countryCode'>,
+    ) {
+      if (!geolocation?.countryCode) {
+        throw new Error(`Geolocation not available, cannot init age assurance.`)
+      }
+
       const {
         data: {token},
       } = await agent.com.atproto.server.getServiceAuth({
@@ -43,7 +51,11 @@ export function useInitAgeAssurance() {
        */
       const {data} = await wait(
         2e3,
-        appView.app.bsky.unspecced.initAgeAssurance(props),
+        appView.app.bsky.unspecced.initAgeAssurance({
+          ...props,
+          // @ts-expect-error
+          countryCode: geolocation?.countryCode,
+        }),
       )
 
       qc.setQueryData<AppBskyUnspeccedDefs.AgeAssuranceState>(
