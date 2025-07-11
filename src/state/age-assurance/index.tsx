@@ -4,6 +4,7 @@ import {useQuery} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
+import {useGate} from '#/lib/statsig/statsig'
 // import {wait} from '#/lib/async/wait'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
@@ -39,6 +40,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const {geolocation} = useGeolocation()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
   const isAgeRestrictedGeo = !!geolocation?.isAgeRestrictedGeo
+  const gate = useGate()
 
   const {data, isFetched, refetch} = useQuery({
     /**
@@ -90,21 +92,25 @@ export function Provider({children}: {children: React.ReactNode}) {
     },
   })
 
+  /**
+   * Derive state, or fall back to defaults
+   */
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
+    const enabled = gate('age_assurance')
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
       status,
       isLoaded: isFetched,
       lastInitiatedAt,
       hasInitiated: !!lastInitiatedAt,
-      isExempt: !isAgeRestrictedGeo,
+      isExempt: !isAgeRestrictedGeo || !enabled,
       isAgeRestricted: Boolean(isAgeRestrictedGeo && status !== 'assured'),
     }
 
     logger.debug(`context`, ctx)
 
     return ctx
-  }, [isAgeRestrictedGeo, isFetched, data])
+  }, [gate, isAgeRestrictedGeo, isFetched, data])
 
   const ageAssuranceAPIContext = useMemo<AgeAssuranceAPIContextType>(
     () => ({

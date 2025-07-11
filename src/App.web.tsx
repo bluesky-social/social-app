@@ -117,9 +117,9 @@ function InnerApp() {
                   // Resets the entire tree below when it changes:
                   key={currentAccount?.did}>
                   <QueryProvider currentDid={currentAccount?.did}>
-                    <AgeAssuranceProvider>
-                      <ComposerProvider>
-                        <StatsigProvider>
+                    <StatsigProvider>
+                      <AgeAssuranceProvider>
+                        <ComposerProvider>
                           <MessagesProvider>
                             {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
                             <LabelDefsProvider>
@@ -153,9 +153,9 @@ function InnerApp() {
                               </ModerationOptsProvider>
                             </LabelDefsProvider>
                           </MessagesProvider>
-                        </StatsigProvider>
-                      </ComposerProvider>
-                    </AgeAssuranceProvider>
+                        </ComposerProvider>
+                      </AgeAssuranceProvider>
+                    </StatsigProvider>
                   </QueryProvider>
                   <ToastContainer />
                 </React.Fragment>
