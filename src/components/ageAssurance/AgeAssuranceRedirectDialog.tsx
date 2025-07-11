@@ -2,12 +2,11 @@ import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
 import {isNative} from '#/platform/detection'
-import {createAgeAssuranceQueryKey} from '#/state/age-assurance'
+import {useAgeAssuranceAPIContext} from '#/state/age-assurance'
 import {useAgent} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -82,12 +81,12 @@ export function AgeAssuranceRedirectDialog() {
 export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
   const t = useTheme()
   const {_} = useLingui()
-  const qc = useQueryClient()
   const agent = useAgent()
   const polling = useRef(false)
   const unmounted = useRef(false)
   const control = useAgeAssuranceRedirectDialogControl()
   const [error, setError] = useState(false)
+  const {refetch: refreshAgeAssuranceState} = useAgeAssuranceAPIContext()
 
   useEffect(() => {
     if (polling.current) return
@@ -116,12 +115,12 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
         1e3,
       ),
     )
-      .then(data => {
+      .then(async data => {
         if (!data) return
         if (!agent.session) return
         if (unmounted.current) return
 
-        qc.setQueryData(createAgeAssuranceQueryKey(agent.session.did), data)
+        await refreshAgeAssuranceState()
 
         control.clear()
         control.control.close()
@@ -134,7 +133,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
     return () => {
       unmounted.current = true
     }
-  }, [agent, qc, control])
+  }, [agent, control, refreshAgeAssuranceState])
 
   return (
     <>
