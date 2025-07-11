@@ -96,7 +96,7 @@ export function Provider({children}: {children: React.ReactNode}) {
    * Derive state, or fall back to defaults
    */
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
-    const enabled = gate('age_assurance')
+    const enabled = __DEV__ || gate('age_assurance')
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
       status,
