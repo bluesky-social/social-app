@@ -19,8 +19,8 @@ import {useLingui} from '@lingui/react'
 import {useActorStatus} from '#/lib/actor-status'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useTranslate} from '#/lib/hooks/useTranslate'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -273,10 +273,6 @@ let PostThreadItemLoaded = ({
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
 
-  const translatorUrl = getTranslatorLink(
-    record?.text || '',
-    langPrefs.primaryLanguage,
-  )
   const needsTranslation = useMemo(
     () =>
       Boolean(
@@ -477,8 +473,8 @@ let PostThreadItemLoaded = ({
             </ContentHider>
             <ExpandedPostDetails
               post={post}
+              record={record}
               isThreadAuthor={isThreadAuthor}
-              translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
             {post.repostCount !== 0 ||
@@ -824,26 +820,26 @@ function PostOuterWrapper({
 
 function ExpandedPostDetails({
   post,
+  record,
   isThreadAuthor,
   needsTranslation,
-  translatorUrl,
 }: {
   post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Record
   isThreadAuthor: boolean
   needsTranslation: boolean
-  translatorUrl: string
 }) {
   const t = useTheme()
   const pal = usePalette('default')
   const {_, i18n} = useLingui()
-  const openLink = useOpenLink()
+  const translate = useTranslate()
   const isRootPost = !('reply' in post.record)
   const langPrefs = useLanguagePrefs()
 
   const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
-      openLink(translatorUrl, true)
+      translate(record.text || '', langPrefs.primaryLanguage)
 
       if (
         bsky.dangerousIsType<AppBskyFeedPost.Record>(
@@ -864,7 +860,7 @@ function ExpandedPostDetails({
 
       return false
     },
-    [openLink, translatorUrl, langPrefs, post],
+    [translate, record.text, langPrefs, post],
   )
 
   return (
@@ -884,7 +880,9 @@ function ExpandedPostDetails({
             </Text>
 
             <InlineLinkText
-              to={translatorUrl}
+              // overridden to open an intent on android, but keep
+              // as anchor tag for accessibility
+              to={getTranslatorLink(record.text, langPrefs.primaryLanguage)}
               label={_(msg`Translate`)}
               style={[a.text_sm, pal.link]}
               onPress={onTranslatePress}>
