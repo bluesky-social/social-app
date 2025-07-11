@@ -40,6 +40,7 @@ module.exports = {
         suggestedTextWrappers: {
           Button: 'ButtonText',
           'ToggleButton.Button': 'ToggleButton.ButtonText',
+          'SegmentedControl.Item': 'SegmentedControl.ItemText',
         },
       },
     ],
