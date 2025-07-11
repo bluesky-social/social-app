@@ -8,7 +8,6 @@ export enum Nux {
   InitialVerificationAnnouncement = 'InitialVerificationAnnouncement',
   ActivitySubscriptions = 'ActivitySubscriptions',
 }
-
 export const nuxNames = new Set(Object.values(Nux))
 
 export type AppNux = BaseNux<
