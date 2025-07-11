@@ -64,4 +64,10 @@ cfg.transformer.getTransformOptions = async () => ({
   },
 })
 
+// po support
+cfg.transformer.babelTransformerPath = require.resolve(
+  '@lingui/metro-transformer/expo',
+)
+cfg.resolver.sourceExts = [...cfg.resolver.sourceExts, 'po', 'pot']
+
 module.exports = cfg
