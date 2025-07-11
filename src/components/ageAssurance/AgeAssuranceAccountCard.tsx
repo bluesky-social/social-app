@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {
   AgeAssuranceInitDialog,
@@ -25,14 +26,16 @@ export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
 function Inner({style}: ViewStyleProp & {}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const {isAgeRestricted, hasInitiated, lastInitiatedAt} =
+  const {status, isAgeRestricted, hasInitiated, lastInitiatedAt} =
     useAgeAssuranceContext()
   const control = useDialogControl()
   const getTimeAgo = useGetTimeAgo()
+  const {gtPhone} = useBreakpoints()
+
+  const isBlocked = status === 'blocked'
   const timeAgo = lastInitiatedAt
     ? getTimeAgo(lastInitiatedAt, new Date())
     : null
-  const {gtPhone} = useBreakpoints()
 
   if (!isAgeRestricted) return null
 
@@ -72,6 +75,18 @@ function Inner({style}: ViewStyleProp & {}) {
             )}
           </View>
 
+          {isBlocked && (
+            <View style={[a.pb_sm]}>
+              <Admonition type="warning">
+                <Trans>
+                  You are currently unable to access Bluesky's Age Assurance
+                  flow. Please contact our moderation team if you believe this
+                  is an error.
+                </Trans>
+              </Admonition>
+            </View>
+          )}
+
           <View
             style={[
               a.justify_between,
@@ -86,20 +101,22 @@ function Inner({style}: ViewStyleProp & {}) {
               </Trans>
             </Text>
 
-            <Button
-              label={_(msg`Verify now`)}
-              size="small"
-              variant="solid"
-              color={hasInitiated ? 'secondary' : 'primary'}
-              onPress={() => control.open()}>
-              <ButtonText>
-                {hasInitiated ? (
-                  <Trans>Verify again</Trans>
-                ) : (
-                  <Trans>Verify now</Trans>
-                )}
-              </ButtonText>
-            </Button>
+            {!isBlocked && (
+              <Button
+                label={_(msg`Verify now`)}
+                size="small"
+                variant="solid"
+                color={hasInitiated ? 'secondary' : 'primary'}
+                onPress={() => control.open()}>
+                <ButtonText>
+                  {hasInitiated ? (
+                    <Trans>Verify again</Trans>
+                  ) : (
+                    <Trans>Verify now</Trans>
+                  )}
+                </ButtonText>
+              </Button>
+            )}
           </View>
         </View>
       </View>
