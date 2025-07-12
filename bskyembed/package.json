@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "build-snippet": "tsc --project tsconfig.snippet.json",
-    "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx src"
+    "lint": "eslint src"
   },
   "dependencies": {
     "@atproto/api": "0.13.6",
@@ -18,7 +18,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.19",
     "eslint": "^8.19.0",
-    "eslint-config-preact": "preactjs/eslint-config-preact",
+    "eslint-config-preact": "^2.0.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3",

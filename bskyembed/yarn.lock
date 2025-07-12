@@ -2498,9 +2498,10 @@ escape-string-regexp@^4.0.0:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
 
-eslint-config-preact@preactjs/eslint-config-preact:
-  version "1.5.0"
-  resolved "https://codeload.github.com/preactjs/eslint-config-preact/tar.gz/6564f41647a98d3e09d669fa9670ae8660ca5911"
+eslint-config-preact@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-preact/-/eslint-config-preact-2.0.0.tgz#851fae01f790671d32b74c6576defa8f3f83bcaf"
+  integrity sha512-TFj70lEE7y3R9DQAFJ/clRfVmyaXdwE3q56gA9zm+iTmlpYjtZKtV1jv/jtgdF2LqgvJjlGlGE1rHVwE9yNdkg==
   dependencies:
     "@babel/core" "^7.13.16"
     "@babel/eslint-parser" "^7.27.5"
