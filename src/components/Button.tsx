@@ -240,7 +240,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (variant === 'ghost') {
           if (!disabled) {
-            baseStyles.push(t.atoms.bg)
+            baseStyles.push(a.bg_transparent)
             hoverStyles.push({
               backgroundColor: t.palette.primary_100,
             })
@@ -271,7 +271,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (variant === 'ghost') {
           if (!disabled) {
-            baseStyles.push(t.atoms.bg)
+            baseStyles.push(a.bg_transparent)
             hoverStyles.push({
               backgroundColor: t.palette.contrast_25,
             })
@@ -308,7 +308,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (variant === 'ghost') {
           if (!disabled) {
-            baseStyles.push(t.atoms.bg)
+            baseStyles.push(a.bg_transparent)
             hoverStyles.push({
               backgroundColor: t.palette.contrast_25,
             })
@@ -351,7 +351,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (variant === 'ghost') {
           if (!disabled) {
-            baseStyles.push(t.atoms.bg)
+            baseStyles.push(a.bg_transparent)
             hoverStyles.push({
               backgroundColor: t.palette.negative_100,
             })
