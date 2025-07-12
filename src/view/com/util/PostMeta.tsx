@@ -122,6 +122,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               </View>
             )}
             <WebOnlyInlineLinkText
+              emoji
               numberOfLines={1}
               to={profileLink}
               label={_(msg`View profile`)}
