@@ -3,6 +3,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAgeAssuranceContext} from '#/state/age-assurance'
+import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, select, useTheme, type ViewStyleProp} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {
@@ -10,14 +11,19 @@ import {
   useDialogControl,
 } from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import {IsAgeRestricted} from '#/components/ageAssurance/IsAgeRestricted'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import type * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 
 export function AgeAssurancePrompt({style}: ViewStyleProp & {}) {
   const control = useDialogControl()
   const {hasInitiated} = useAgeAssuranceContext()
+  const {nux} = useNux(Nux.AgeAssurancePrompt)
+
+  if (nux && nux.completed) return null
+
   return (
     <>
       <IsAgeRestricted.True>
@@ -34,6 +40,7 @@ function Inner({
 }: ViewStyleProp & {control: Dialog.DialogControlProps}) {
   const t = useTheme()
   const {_} = useLingui()
+  const {mutate: save} = useSaveNux()
 
   return (
     <>
@@ -114,6 +121,29 @@ function Inner({
               </ButtonText>
             </Button>
           </View>
+
+          <Button
+            label={_(msg`Don't show again`)}
+            size="tiny"
+            variant="solid"
+            color="secondary_inverted"
+            shape="round"
+            onPress={() =>
+              save({
+                id: Nux.AgeAssurancePrompt,
+                completed: true,
+                data: undefined,
+              })
+            }
+            style={[
+              a.absolute,
+              {
+                top: 12,
+                right: 12,
+              },
+            ]}>
+            <ButtonIcon icon={X} />
+          </Button>
         </View>
       </View>
     </>
