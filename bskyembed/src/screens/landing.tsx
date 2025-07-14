@@ -18,9 +18,9 @@ import * as bsky from '../types/bsky'
 import {niceDate} from '../util/nice-date'
 
 const DEFAULT_POST =
-  'https://bsky.app/profile/samuel.bsky.team/post/3ltkadsogo22b'
+  'https://bsky.app/profile/did:plc:vjug55kidv6sye7ykr5faxxn/post/3jzn6g7ixgq2y'
 const DEFAULT_URI =
-  'at://did:plc:p2cp5gopk7mgjegy6wadk3ep/app.bsky.feed.post/3ltkadsogo22b'
+  'at://did:plc:vjug55kidv6sye7ykr5faxxn/app.bsky.feed.post/3jzn6g7ixgq2y'
 
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
