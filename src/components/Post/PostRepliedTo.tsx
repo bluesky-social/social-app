@@ -52,7 +52,7 @@ export function PostRepliedTo({
   }
 
   return (
-    <View style={[a.flex_row, a.align_center, a.pb_2xs, a.gap_xs]}>
+    <View style={[a.flex_row, a.align_center, a.pb_xs, a.gap_xs]}>
       <ArrowCornerDownRightIcon
         size="xs"
         style={[t.atoms.text_contrast_medium, {top: -1}]}
