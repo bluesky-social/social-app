@@ -108,8 +108,8 @@ function Inner({style}: ViewStyleProp & {}) {
             <Text style={[a.text_sm, a.leading_snug]}>
               <Trans>
                 You're using Bluesky from a location that legally requires you
-                to verify your age prior to accessing certain content and
-                features.
+                to verify your age prior to accessing certain features, like
+                adult content and direct messaging.
               </Trans>
             </Text>
 

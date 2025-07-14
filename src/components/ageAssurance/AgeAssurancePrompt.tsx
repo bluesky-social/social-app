@@ -62,7 +62,8 @@ function Inner({
           <Text style={[a.text_md, a.leading_snug]}>
             <Trans>
               You're using Bluesky from a location that legally requires you to
-              verify your age prior to accessing certain content and features.
+              verify your age prior to accessing certain features, like adult
+              content and direct messaging.
             </Trans>
           </Text>
 
@@ -99,7 +100,7 @@ function Inner({
                   }),
                 },
               ]}>
-              <Trans>Verification takes only a few minutes</Trans>
+              <Trans>Age verification takes only a few minutes</Trans>
             </Text>
 
             <Button

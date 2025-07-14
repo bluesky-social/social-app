@@ -298,7 +298,7 @@ function Inner() {
                 </InlineLinkText>
                 . This means you won’t need to verify again the next time you
                 use this email for other apps, games, and services powered by
-                KWS technology.
+                KWS technology, including Bluesky.
               </Trans>
             </Text>
           </>

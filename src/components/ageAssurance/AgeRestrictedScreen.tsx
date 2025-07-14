@@ -67,8 +67,8 @@ export function AgeRestrictedScreen({
               <Text style={[a.text_md, a.leading_snug, a.pb_sm]}>
                 <Trans>
                   You're using Bluesky from a location that legally requires you
-                  to verify your age prior to accessing certain content and
-                  features.
+                  to verify your age prior to accessing certain features, like
+                  adult content and direct messaging.
                 </Trans>
               </Text>
 
@@ -89,7 +89,7 @@ export function AgeRestrictedScreen({
                   a.gap_lg,
                 ]}>
                 <Text style={[t.atoms.text_contrast_medium]}>
-                  <Trans>Verification takes only a few minutes</Trans>
+                  <Trans>Age verification takes only a few minutes</Trans>
                 </Text>
 
                 <Button
