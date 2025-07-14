@@ -604,7 +604,7 @@ type IPCCRequest struct {
 }
 type IPCCResponse struct {
 	CC               string `json:"countryCode"`
-	AgeRestrictedGeo bool   `json:"isAgeRestrictedGeo"`
+	AgeRestrictedGeo bool   `json:"isAgeRestrictedGeo,omitempty"`
 }
 
 func (srv *Server) WebIpCC(c echo.Context) error {
