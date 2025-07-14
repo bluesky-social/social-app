@@ -165,15 +165,8 @@ function Inner() {
                     KWS
                   </InlineLinkText>{' '}
                   to verify that you’re an adult. When you click "Begin" below,
-                  Bluesky will securely store and share your email address with
-                  KWS.
-                </Trans>
-              </Text>
-              <Text style={[a.text_sm, a.leading_snug]}>
-                <Trans>
-                  KWS will then email you instructions for verifying your age.
-                  When you’re done, you'll be brought back to continue using
-                  Bluesky.
+                  KWS will email you instructions for verifying your age. When
+                  you’re done, you'll be brought back to continue using Bluesky.
                 </Trans>
               </Text>
               <Text style={[a.text_sm, a.leading_snug]}>
