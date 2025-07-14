@@ -148,7 +148,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           {error && <ErrorIcon size="md" fill={t.palette.negative_500} />}
 
           <Text style={[a.text_xl, a.font_heavy]}>
-            {error ? <Trans>Unknown status</Trans> : <Trans>Verifying</Trans>}
+            {error ? <Trans>Connection issue</Trans> : <Trans>Verifying</Trans>}
           </Text>
 
           {!error && <Loader size="md" />}
@@ -157,8 +157,9 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
         <Text style={[a.text_md, a.leading_snug]}>
           {error ? (
             <Trans>
-              We were unable to verify your age assurance status. But don't
-              worry! Your account should be updated soon.
+              We were unable to receive the verification due to a connection
+              issue. It may arrive later. If it does, your account will update
+              automatically.
             </Trans>
           ) : (
             <Trans>

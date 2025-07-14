@@ -68,9 +68,9 @@ function Inner({
           </View>
           <Text style={[a.text_md, a.leading_snug]}>
             <Trans>
-              You're using Bluesky from a location that legally requires you to
-              verify your age prior to accessing certain features, like adult
-              content and direct messaging.
+              The laws in your location require that you verify your age before
+              accessing certain features on Bluesky like adult content and
+              direct messaging.
             </Trans>
           </Text>
 

@@ -286,8 +286,8 @@ function Inner() {
                   style={[a.text_xs, a.leading_snug]}>
                   KWS Terms of Use
                 </InlineLinkText>{' '}
-                and acknowledge that KWS will store your verified status
-                alongside your hashed email address in accordance with the{' '}
+                and acknowledge that KWS will store your verified status with
+                your hashed email address in accordance with the{' '}
                 <InlineLinkText
                   overridePresentation
                   disableMismatchWarning
