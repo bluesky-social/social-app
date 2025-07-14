@@ -116,6 +116,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
         if (!agent.session) return
         if (unmounted.current) return
 
+        // success! update state
         await refreshAgeAssuranceState()
 
         control.clear()
@@ -124,6 +125,8 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
       .catch(() => {
         if (unmounted.current) return
         setError(true)
+        // try a refetch anyway
+        refreshAgeAssuranceState()
       })
 
     return () => {
