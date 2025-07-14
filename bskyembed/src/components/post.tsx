@@ -11,7 +11,10 @@ import likeIcon from '../../assets/heart2_filled_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
 import repostIcon from '../../assets/repost_stroke2_corner2_rounded.svg'
 import {CONTENT_LABELS} from '../labels'
-import {getRkey, niceDate, prettyNumber} from '../utils'
+import * as bsky from '../types/bsky'
+import {niceDate} from '../util/nice-date'
+import {prettyNumber} from '../util/pretty-number'
+import {getRkey} from '../util/rkey'
 import {Container} from './container'
 import {Embed} from './embed'
 import {Link} from './link'
@@ -28,7 +31,12 @@ export function Post({thread}: Props) {
   )
 
   let record: AppBskyFeedPost.Record | null = null
-  if (AppBskyFeedPost.isRecord(post.record)) {
+  if (
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post.record,
+      AppBskyFeedPost.isRecord,
+    )
+  ) {
     record = post.record
   }
 

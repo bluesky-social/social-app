@@ -17,7 +17,8 @@ import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import playIcon from '../../assets/play_filled_corner2_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
 import {CONTENT_LABELS, labelsToInfo} from '../labels'
-import {getRkey} from '../utils'
+import * as bsky from '../types/bsky'
+import {getRkey} from '../util/rkey'
 import {Link} from './link'
 
 export function Embed({
@@ -404,7 +405,12 @@ function StarterPackEmbed({
 }: {
   content: AppBskyGraphDefs.StarterPackViewBasic
 }) {
-  if (!AppBskyGraphStarterpack.isRecord(content.record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      content.record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 
@@ -443,7 +449,9 @@ function StarterPackEmbed({
 }
 
 // from #/lib/strings/starter-pack.ts
-function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
+function getStarterPackImage(
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+) {
   const rkey = getRkey({uri: starterPack.uri})
   return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }

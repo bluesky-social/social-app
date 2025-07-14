@@ -20,51 +20,52 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
-"@atproto/api@0.13.6":
-  version "0.13.6"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.6.tgz#2500e9d7143e6718089632300c42ce50149f8cd5"
-  integrity sha512-58emFFZhqY8nVWD3xFWK0yYqAmJ2un+NaTtZxBbRo00mGq1rz9VXTpVmfoHFcuXL1hoDQN3WyJfsub8r6xGOgg==
+"@atproto/api@^0.15.25":
+  version "0.15.25"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.15.25.tgz#6ed0115a53b9890cd0067d6b0839f5223f18d2a2"
+  integrity sha512-dUqe920qyXd596AI5iJyBlSv0vK5fh1a8PC0zPoeM+FzGDiebnbxuJdPIZ3HeBT/xQ2ce9HwYk1Ih2G7a+JkzQ==
   dependencies:
-    "@atproto/common-web" "^0.3.0"
-    "@atproto/lexicon" "^0.4.1"
-    "@atproto/syntax" "^0.3.0"
-    "@atproto/xrpc" "^0.6.1"
+    "@atproto/common-web" "^0.4.2"
+    "@atproto/lexicon" "^0.4.12"
+    "@atproto/syntax" "^0.4.0"
+    "@atproto/xrpc" "^0.7.1"
     await-lock "^2.2.2"
     multiformats "^9.9.0"
     tlds "^1.234.0"
+    zod "^3.23.8"
 
-"@atproto/common-web@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.3.0.tgz#36da8c2c31d8cf8a140c3c8f03223319bf4430bb"
-  integrity sha512-67VnV6JJyX+ZWyjV7xFQMypAgDmjVaR9ZCuU/QW+mqlqI7fex2uL4Fv+7/jHadgzhuJHVd6OHOvNn0wR5WZYtA==
+"@atproto/common-web@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@atproto/common-web/-/common-web-0.4.2.tgz#6e3add6939da93d3dfbc8f87e26dc4f57fad7259"
+  integrity sha512-vrXwGNoFGogodjQvJDxAeP3QbGtawgZute2ed1XdRO0wMixLk3qewtikZm06H259QDJVu6voKC5mubml+WgQUw==
   dependencies:
     graphemer "^1.4.0"
     multiformats "^9.9.0"
     uint8arrays "3.0.0"
-    zod "^3.21.4"
+    zod "^3.23.8"
 
-"@atproto/lexicon@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.1.tgz#19155210570a2fafbcc7d4f655d9b813948e72a0"
-  integrity sha512-bzyr+/VHXLQWbumViX5L7h1NKQObfs8Z+XZJl43OUK8nYFUI4e/sW1IZKRNfw7Wvi5YVNK+J+yP3DWIBZhkCYA==
+"@atproto/lexicon@^0.4.12":
+  version "0.4.12"
+  resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.12.tgz#89a704789d983f8405a52095769b5b58d87f5af7"
+  integrity sha512-fcEvEQ1GpQYF5igZ4IZjPWEoWVpsEF22L9RexxLS3ptfySXLflEyH384e7HITzO/73McDeaJx3lqHIuqn9ulnw==
   dependencies:
-    "@atproto/common-web" "^0.3.0"
-    "@atproto/syntax" "^0.3.0"
+    "@atproto/common-web" "^0.4.2"
+    "@atproto/syntax" "^0.4.0"
     iso-datestring-validator "^2.2.2"
     multiformats "^9.9.0"
     zod "^3.23.8"
 
-"@atproto/syntax@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.3.0.tgz#fafa2dbea9add37253005cb663e7373e05e618b3"
-  integrity sha512-Weq0ZBxffGHDXHl9U7BQc2BFJi/e23AL+k+i5+D9hUq/bzT4yjGsrCejkjq0xt82xXDjmhhvQSZ0LqxyZ5woxA==
+"@atproto/syntax@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.4.0.tgz#bec71552087bb24c208a06ef418c0040b65542f2"
+  integrity sha512-b9y5ceHS8YKOfP3mdKmwAx5yVj9294UN7FG2XzP6V5aKUdFazEYRnR9m5n5ZQFKa3GNvz7de9guZCJ/sUTcOAA==
 
-"@atproto/xrpc@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.1.tgz#dcd1315c8c60eef5af2db7fa4e35a38ebc6d79d5"
-  integrity sha512-Zy5ydXEdk6sY7FDUZcEVfCL1jvbL4tXu5CcdPqbEaW6LQtk9GLds/DK1bCX9kswTGaBC88EMuqQMfkxOhp2t4A==
+"@atproto/xrpc@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.7.1.tgz#51a8fc131eb21bd1229129d0a46384accc50ad65"
+  integrity sha512-ANHEzlskYlMEdH18m+Itp3a8d0pEJao2qoDybDoMupTnoeNkya4VKIaOgAi6ERQnqatBBZyn9asW+7rJmSt/8g==
   dependencies:
-    "@atproto/lexicon" "^0.4.1"
+    "@atproto/lexicon" "^0.4.12"
     zod "^3.23.8"
 
 "@babel/code-frame@^7.24.2", "@babel/code-frame@^7.27.1":
@@ -4180,7 +4181,7 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zod@^3.21.4, zod@^3.23.8:
+zod@^3.23.8:
   version "3.23.8"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.8.tgz#e37b957b5d52079769fb8097099b592f0ef4067d"
   integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==
