@@ -61,6 +61,9 @@ export function AgeAssuranceRedirectDialog() {
   const {_} = useLingui()
   const control = useAgeAssuranceRedirectDialogControl()
 
+  // TODO for testing
+  // Dialog.useAutoOpen(control.control, 3e3)
+
   return (
     <Dialog.Outer control={control.control}>
       <Dialog.Handle />
