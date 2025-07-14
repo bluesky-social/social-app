@@ -49,7 +49,7 @@ export const borderRadius = {
 } as const
 
 /**
- * These correspond to Inter font files we actually load.
+ * These correspond to Inter/Rubik/AzeretMono font files we actually load.
  */
 export const fontWeight = {
   normal: '400',

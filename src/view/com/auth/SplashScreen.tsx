@@ -27,15 +27,16 @@ export const SplashScreen = ({
   return (
     <CenteredView style={[a.h_full, a.flex_1]}>
       <ErrorBoundary>
-        <View style={[{flex: 1}, a.justify_center, a.align_center]}>
-          <Logo width={92} fill="sky" />
+        <View
+          style={[{flex: 1}, a.justify_center, a.align_center, a.pb_0, a.mb_0]}>
+          <Logo width={120} fill={t.atoms.text.color} />
 
-          <View style={[a.pb_sm, a.pt_5xl]}>
-            <Logotype width={161} fill={t.atoms.text.color} />
+          <View style={[a.pb_sm, a.pt_5xl, a.mt_lg, a.mb_lg]}>
+            <Logotype width={280} fill={t.atoms.text.color} />
           </View>
 
           <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-            <Trans>What's up?</Trans>
+            <Trans>What's poppin'?</Trans>
           </Text>
         </View>
         <View

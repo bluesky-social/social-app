@@ -3,15 +3,13 @@ import {StyleSheet, type TextProps} from 'react-native'
 import Svg, {
   Defs,
   G,
-  LinearGradient,
   Path,
   type PathProps,
   Rect,
-  Stop,
   type SvgProps,
 } from 'react-native-svg'
 
-import {colors} from '#/lib/styles'
+import {useTheme} from '#/alf'
 
 const ratio = 243 / 285
 
@@ -22,9 +20,9 @@ type Props = {
 
 export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
   const {fill, ...rest} = props
-  const gradient = fill === 'sky'
   const styles = StyleSheet.flatten(props.style)
-  const _fill = gradient ? 'url(#sky)' : fill || styles?.color || colors.blue3
+  const t = useTheme()
+  const _fill = fill || styles?.color || t.atoms.text.color
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 32)
 
@@ -36,15 +34,6 @@ export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
       viewBox="0 0 285 243"
       {...rest}
       style={[{width: size, height: size * ratio}, styles]}>
-      {gradient && (
-        <Defs>
-          <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#8B8BFF" stopOpacity="1" />
-            <Stop offset="1" stopColor="#DCDCFF" stopOpacity="1" />
-          </LinearGradient>
-        </Defs>
-      )}
-
       <G clipPath="url(#clip0_1011_989)">
         <Path
           d="M148.846 144.562C148.846 159.75 161.158 172.062 176.346 172.062H207.012V185.865H176.346C161.158 185.865 148.846 198.177 148.846 213.365V243.045H136.029V213.365C136.029 198.177 123.717 185.865 108.529 185.865H77.8633V172.062H108.529C123.717 172.062 136.029 159.75 136.029 144.562V113.896H148.846V144.562Z"

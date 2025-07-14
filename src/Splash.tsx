@@ -15,7 +15,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import Svg, {Path, SvgProps} from 'react-native-svg'
+import Svg, {Path, type SvgProps} from 'react-native-svg'
 import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
@@ -183,8 +183,6 @@ export function Splash(props: React.PropsWithChildren<Props>) {
 
   const logoAnimations =
     reduceMotion === true ? reducedLogoAnimation : logoAnimation
-  // special off-spec color for dark mode
-  const logoBg = isDarkMode ? '#0F1824' : '#fff'
 
   return (
     <View style={{flex: 1}} onLayout={onLayout}>
@@ -210,7 +208,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 opacity: 0,
               },
             ]}>
-            <Logotype fill="#fff" width={90} />
+            <Logotype fill={isDarkMode ? '#fff' : '#000'} width={90} />
           </Animated.View>
         </View>
       )}
@@ -234,7 +232,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 },
               ]}>
               <Animated.View style={[logoAnimations]}>
-                <Logo fill={logoBg} />
+                <Logo fill={isDarkMode ? '#fff' : '#000'} />
               </Animated.View>
             </Animated.View>
           )}
