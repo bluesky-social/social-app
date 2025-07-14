@@ -33,6 +33,7 @@ import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useRefreshOnFocus} from '#/components/hooks/useRefreshOnFocus'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -49,8 +50,11 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 
 export function MessagesInboxScreen(props: Props) {
   const {_} = useLingui()
+  const aaCopy = useAgeAssuranceCopy()
   return (
-    <AgeRestrictedScreen screenTitle={_(msg`Chat requests`)}>
+    <AgeRestrictedScreen
+      screenTitle={_(msg`Chat requests`)}
+      infoText={aaCopy.chatsInfoText}>
       <MessagesInboxScreenInner {...props} />
     </AgeRestrictedScreen>
   )

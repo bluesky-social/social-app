@@ -4,12 +4,14 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, select, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {
   AgeAssuranceInitDialog,
   useDialogControl,
 } from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import {IsAgeRestricted} from '#/components/ageAssurance/IsAgeRestricted'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as Layout from '#/components/Layout'
@@ -19,13 +21,16 @@ export function AgeRestrictedScreen({
   children,
   fallback,
   screenTitle,
+  infoText,
 }: {
   children: React.ReactNode
   fallback?: React.ReactNode
   screenTitle?: string
+  infoText?: string
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const copy = useAgeAssuranceCopy()
   const control = useDialogControl()
   const screenFallback = useMemo(() => {
     return (
@@ -57,7 +62,7 @@ export function AgeRestrictedScreen({
             <Layout.Header.Slot />
           </Layout.Header.Outer>
           <Layout.Content>
-            <View style={[a.p_lg]}>
+            <View style={[a.p_lg, a.gap_lg]}>
               <View
                 style={[
                   a.p_lg,
@@ -83,11 +88,7 @@ export function AgeRestrictedScreen({
                 </View>
 
                 <Text style={[a.text_md, a.leading_snug, a.pb_sm]}>
-                  <Trans>
-                    The laws in your location require that you verify your age
-                    before accessing certain features on Bluesky like adult
-                    content and direct messaging.
-                  </Trans>
+                  <Trans>{copy.notice}</Trans>
                 </Text>
 
                 <Text style={[a.text_md, a.leading_snug]}>
@@ -116,7 +117,7 @@ export function AgeRestrictedScreen({
                         }),
                       },
                     ]}>
-                    <Trans>Age verification takes only a few minutes</Trans>
+                    {copy.noticeSub}
                   </Text>
 
                   <Button
@@ -131,6 +132,8 @@ export function AgeRestrictedScreen({
                   </Button>
                 </View>
               </View>
+
+              {infoText && <Admonition type="info">{infoText}</Admonition>}
             </View>
           </Layout.Content>
         </Layout.Screen>

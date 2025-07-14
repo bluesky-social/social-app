@@ -11,6 +11,7 @@ import {
   useDialogControl,
 } from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import {IsAgeRestricted} from '#/components/ageAssurance/IsAgeRestricted'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import type * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -40,6 +41,7 @@ function Inner({
 }: ViewStyleProp & {control: Dialog.DialogControlProps}) {
   const t = useTheme()
   const {_} = useLingui()
+  const copy = useAgeAssuranceCopy()
   const {mutate: save} = useSaveNux()
 
   return (
@@ -66,13 +68,7 @@ function Inner({
           <View style={[a.align_start, a.pb_md]}>
             <AgeAssuranceBadge />
           </View>
-          <Text style={[a.text_md, a.leading_snug]}>
-            <Trans>
-              The laws in your location require that you verify your age before
-              accessing certain features on Bluesky like adult content and
-              direct messaging.
-            </Trans>
-          </Text>
+          <Text style={[a.text_md, a.leading_snug]}>{copy.notice}</Text>
 
           <Divider
             style={[
@@ -107,7 +103,7 @@ function Inner({
                   }),
                 },
               ]}>
-              <Trans>Age verification takes only a few minutes</Trans>
+              {copy.noticeSub}
             </Text>
 
             <Button

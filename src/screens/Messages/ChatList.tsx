@@ -24,6 +24,7 @@ import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
@@ -68,8 +69,12 @@ type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
 export function MessagesScreen(props: Props) {
   const {_} = useLingui()
+  const aaCopy = useAgeAssuranceCopy()
+
   return (
-    <AgeRestrictedScreen screenTitle={_(msg`Chats`)}>
+    <AgeRestrictedScreen
+      screenTitle={_(msg`Chats`)}
+      infoText={aaCopy.chatsInfoText}>
       <MessagesScreenInner {...props} />
     </AgeRestrictedScreen>
   )

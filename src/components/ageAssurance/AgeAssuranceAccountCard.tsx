@@ -13,6 +13,7 @@ import {
   useDialogControl,
 } from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import {IsAgeRestricted} from '#/components/ageAssurance/IsAgeRestricted'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
@@ -35,6 +36,7 @@ function Inner({style}: ViewStyleProp & {}) {
   const appealControl = Dialog.useDialogControl()
   const getTimeAgo = useGetTimeAgo()
   const {gtPhone} = useBreakpoints()
+  const copy = useAgeAssuranceCopy()
 
   const isBlocked = status === 'blocked'
   const timeAgo = lastInitiatedAt
@@ -105,13 +107,7 @@ function Inner({style}: ViewStyleProp & {}) {
               a.align_start,
               gtPhone ? [a.flex_row, a.gap_xl] : [a.gap_md],
             ]}>
-            <Text style={[a.text_sm, a.leading_snug]}>
-              <Trans>
-                The laws in your location require that you verify your age
-                before accessing certain features on Bluesky like adult content
-                and direct messaging.
-              </Trans>
-            </Text>
+            <Text style={[a.text_sm, a.leading_snug]}>{copy.notice}</Text>
 
             {!isBlocked && (
               <Button
