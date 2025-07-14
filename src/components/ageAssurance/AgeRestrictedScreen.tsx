@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, select, useTheme} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {
   AgeAssuranceInitDialog,
@@ -58,50 +58,78 @@ export function AgeRestrictedScreen({
           </Layout.Header.Outer>
           <Layout.Content>
             <View style={[a.p_lg]}>
-              <AgeAssuranceInitDialog control={control} />
-
-              <View style={[a.align_start, a.pb_md]}>
-                <AgeAssuranceBadge />
-              </View>
-
-              <Text style={[a.text_md, a.leading_snug, a.pb_sm]}>
-                <Trans>
-                  You're using Bluesky from a location that legally requires you
-                  to verify your age prior to accessing certain features, like
-                  adult content and direct messaging.
-                </Trans>
-              </Text>
-
-              <Text style={[a.text_md, a.leading_snug]}>
-                <Trans>
-                  You must complete age verification to access this screen.
-                </Trans>
-              </Text>
-
-              <Divider style={[a.mt_lg]} />
-
               <View
                 style={[
-                  a.flex_row,
-                  a.justify_between,
-                  a.align_center,
-                  a.pt_md,
-                  a.gap_lg,
+                  a.p_lg,
+                  a.rounded_md,
+                  a.border,
+                  {
+                    backgroundColor: select(t.name, {
+                      light: t.palette.primary_25,
+                      dark: t.palette.primary_25,
+                      dim: t.palette.primary_25,
+                    }),
+                    borderColor: select(t.name, {
+                      light: t.palette.primary_100,
+                      dark: t.palette.primary_100,
+                      dim: t.palette.primary_100,
+                    }),
+                  },
                 ]}>
-                <Text style={[t.atoms.text_contrast_medium]}>
-                  <Trans>Age verification takes only a few minutes</Trans>
+                <AgeAssuranceInitDialog control={control} />
+
+                <View style={[a.align_start, a.pb_md]}>
+                  <AgeAssuranceBadge />
+                </View>
+
+                <Text style={[a.text_md, a.leading_snug, a.pb_sm]}>
+                  <Trans>
+                    You're using Bluesky from a location that legally requires
+                    you to verify your age prior to accessing certain features,
+                    like adult content and direct messaging.
+                  </Trans>
                 </Text>
 
-                <Button
-                  label={_(msg`Verify now`)}
-                  size="small"
-                  variant="solid"
-                  color="primary"
-                  onPress={() => control.open()}>
-                  <ButtonText>
-                    <Trans>Verify now</Trans>
-                  </ButtonText>
-                </Button>
+                <Text style={[a.text_md, a.leading_snug]}>
+                  <Trans>
+                    You must complete age verification to access this screen.
+                  </Trans>
+                </Text>
+
+                <Divider style={[a.mt_lg]} />
+
+                <View
+                  style={[
+                    a.flex_row,
+                    a.justify_between,
+                    a.align_center,
+                    a.pt_md,
+                    a.gap_lg,
+                  ]}>
+                  <Text
+                    style={[
+                      {
+                        color: select(t.name, {
+                          light: t.palette.primary_800,
+                          dark: t.palette.primary_800,
+                          dim: t.palette.primary_800,
+                        }),
+                      },
+                    ]}>
+                    <Trans>Age verification takes only a few minutes</Trans>
+                  </Text>
+
+                  <Button
+                    label={_(msg`Verify now`)}
+                    size="small"
+                    variant="solid"
+                    color="primary"
+                    onPress={() => control.open()}>
+                    <ButtonText>
+                      <Trans>Verify now</Trans>
+                    </ButtonText>
+                  </Button>
+                </View>
               </View>
             </View>
           </Layout.Content>
