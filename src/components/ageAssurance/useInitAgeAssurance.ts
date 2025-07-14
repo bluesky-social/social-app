@@ -53,8 +53,7 @@ export function useInitAgeAssurance() {
         2e3,
         appView.app.bsky.unspecced.initAgeAssurance({
           ...props,
-          // @ts-expect-error
-          countryCode: geolocation?.countryCode,
+          countryCode: geolocation?.countryCode?.toUpperCase(),
         }),
       )
 
