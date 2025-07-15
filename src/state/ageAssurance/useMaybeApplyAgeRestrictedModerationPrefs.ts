@@ -1,8 +1,8 @@
 import {useCallback} from 'react'
 import {type ModerationPrefs} from '@atproto/api'
 
-import {useAgeAssuranceContext} from '#/state/age-assurance'
-import {AGE_RESTRICTED_MODERATION_PREFS} from '#/state/age-assurance/const'
+import {useAgeAssuranceContext} from '#/state/ageAssurance'
+import {AGE_RESTRICTED_MODERATION_PREFS} from '#/state/ageAssurance/const'
 
 /**
  * Hook to conditionally apply age-restricted moderation preferences, if

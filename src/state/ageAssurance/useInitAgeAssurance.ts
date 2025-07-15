@@ -14,7 +14,7 @@ import {
 } from '#/lib/constants'
 import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
-import {createAgeAssuranceQueryKey} from '#/state/age-assurance'
+import {createAgeAssuranceQueryKey} from '#/state/ageAssurance'
 import {useGeolocation} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 

@@ -11,7 +11,7 @@ import {Logger} from '#/logger'
 import {
   type AgeAssuranceAPIContextType,
   type AgeAssuranceContextType,
-} from '#/state/age-assurance/types'
+} from '#/state/ageAssurance/types'
 import {useGeolocation} from '#/state/geolocation'
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'

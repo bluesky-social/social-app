@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgeInfo} from '#/state/age-assurance/useAgeInfo'
+import {useAgeInfo} from '#/state/ageAssurance/useAgeInfo'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, type ViewStyleProp} from '#/alf'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'

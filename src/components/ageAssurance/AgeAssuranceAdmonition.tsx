@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgeInfo} from '#/state/age-assurance/useAgeInfo'
+import {useAgeInfo} from '#/state/ageAssurance/useAgeInfo'
 import {atoms as a, select, useTheme, type ViewStyleProp} from '#/alf'
 import {useDialogControl} from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import type * as Dialog from '#/components/Dialog'

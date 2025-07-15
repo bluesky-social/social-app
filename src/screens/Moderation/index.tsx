@@ -12,8 +12,8 @@ import {
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
-import {useAgeAssuranceContext} from '#/state/age-assurance'
-import {useAgeInfo} from '#/state/age-assurance/useAgeInfo'
+import {useAgeAssuranceContext} from '#/state/ageAssurance'
+import {useAgeInfo} from '#/state/ageAssurance/useAgeInfo'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,

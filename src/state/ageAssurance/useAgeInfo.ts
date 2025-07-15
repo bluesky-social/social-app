@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 
-import {useAgeAssuranceContext} from '#/state/age-assurance'
+import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 
 /**
