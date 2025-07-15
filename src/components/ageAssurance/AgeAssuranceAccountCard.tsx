@@ -112,7 +112,7 @@ function Inner({style}: ViewStyleProp & {}) {
                 ) : (
                   <Text
                     style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-                    {copy.noticeSub}
+                    <Trans>Age verification takes only a few minutes</Trans>
                   </Text>
                 )}
                 <Button
