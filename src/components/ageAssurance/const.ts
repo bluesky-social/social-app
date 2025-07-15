@@ -1,5 +1,5 @@
 export const urls = {
-  kwsHome: 'https://dev.epicgames.com/docs/kids-web-services',
+  kwsHome: 'https://www.kidswebservices.com/en-US',
   kwsTermsOfUse: 'https://www.kidswebservices.com/en-US/terms-of-use',
   kwsPrivacyPolicy: 'https://www.kidswebservices.com/en-US/privacy-policy',
 }
