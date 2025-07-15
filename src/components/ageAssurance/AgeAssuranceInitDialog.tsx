@@ -40,7 +40,7 @@ export function AgeAssuranceInitDialog({
 
       <Dialog.ScrollableInner
         label={_(
-          'Begin the age assurance process by completing the fields below.',
+          msg`Begin the age assurance process by completing the fields below.`,
         )}
         style={[
           web({
