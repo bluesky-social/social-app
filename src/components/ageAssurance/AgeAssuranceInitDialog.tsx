@@ -200,7 +200,8 @@ function Inner() {
                     You initiated this flow already,{' '}
                     {getTimeAgo(lastInitiatedAt, new Date(), {format: 'long'})}{' '}
                     ago. It may take up to 5 minutes for emails to reach your
-                    inbox. Consider waiting a few minutes before trying again.
+                    inbox. Please consider waiting a few minutes before trying
+                    again.
                   </Trans>
                 </Admonition>
               )}
