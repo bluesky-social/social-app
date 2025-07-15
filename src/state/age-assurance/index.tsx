@@ -34,6 +34,11 @@ const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
   refetch: () => Promise.resolve(),
 })
 
+/**
+ * Low-level provider for fetching age assurance state on app load. Do not add
+ * any other data fetching in here to avoid complications and reduced
+ * performance.
+ */
 export function Provider({children}: {children: React.ReactNode}) {
   const agent = useAgent()
   const {geolocation} = useGeolocation()
@@ -124,6 +129,10 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
+/**
+ * Access to low-level AA state. Prefer using {@link useAgeInfo} for a
+ * more user-friendly interface.
+ */
 export function useAgeAssuranceContext() {
   return useContext(AgeAssuranceContext)
 }
