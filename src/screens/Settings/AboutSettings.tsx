@@ -185,7 +185,7 @@ export function AboutSettingsScreen({}: Props) {
               <SettingsList.PressableItem
                 onPress={() => {
                   device.set(['geolocation'], {
-                    countryCode: undefined,
+                    countryCode: 'GB',
                     isAgeRestrictedGeo: true,
                   })
                 }}
