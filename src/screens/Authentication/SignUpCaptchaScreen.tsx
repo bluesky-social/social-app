@@ -2,6 +2,7 @@ import {
   type AuthNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {Logo} from '#/view/icons/Logo'
 import {Text} from '#/components/Typography'
 import * as Layout from './components/Layout'
 
@@ -15,7 +16,9 @@ export function SignUpCaptchaScreenInner() {
     <Layout.Screen testID="SignUpCaptchaScreen">
       <Layout.Header.Outer noBottomBorder>
         <Layout.Header.BackButton />
-        <Layout.Header.Content />
+        <Layout.Header.Content>
+          <Logo />
+        </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <Layout.Content>

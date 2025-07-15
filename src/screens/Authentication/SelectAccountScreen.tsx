@@ -10,6 +10,7 @@ import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
+import {Logo} from '#/view/icons/Logo'
 import {atoms as a} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import * as TextField from '#/components/forms/TextField'
@@ -72,7 +73,9 @@ export function SelectAccountScreenInner({
     <Layout.Screen testID="SelectAccountScreen">
       <Layout.Header.Outer noBottomBorder>
         <Layout.Header.BackButton />
-        <Layout.Header.Content />
+        <Layout.Header.Content>
+          <Logo />
+        </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <Layout.Content contentContainerStyle={[a.p_xl]}>

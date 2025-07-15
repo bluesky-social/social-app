@@ -10,6 +10,7 @@ import {
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {type SessionAccount} from '#/state/session'
+import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Layout from './components/Layout'
@@ -90,10 +91,12 @@ export function SignInScreenInner({
     <Layout.Screen testID="SignInScreen">
       <Layout.Header.Outer noBottomBorder>
         <Layout.Header.BackButton />
-        <Layout.Header.Content />
+        <Layout.Header.Content>
+          <Logo />
+        </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <Layout.Content contentContainerStyle={[a.px_xl]}>
+      <Layout.Content contentContainerStyle={[a.p_xl]}>
         <Text style={[a.font_heavy, a.text_3xl]}>Log in</Text>
         <SignInForm
           error={error}

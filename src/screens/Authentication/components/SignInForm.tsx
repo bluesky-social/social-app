@@ -172,80 +172,87 @@ export function SignInForm({
   }
 
   return (
-    <View style={[a.pt_5xl, a.gap_md]}>
+    <View style={[a.pt_2xl, a.gap_md]}>
       <View>
         <TextField.LabelText>
-          <Trans>Account</Trans>
+          <Trans>Username or email address</Trans>
         </TextField.LabelText>
-        <View style={[a.gap_sm]}>
-          <TextField.Root>
-            <TextField.Icon icon={At} />
-            <TextField.Input
-              testID="loginUsernameInput"
-              label={_(msg`Username or email address`)}
-              autoCapitalize="none"
-              autoFocus
-              autoCorrect={false}
-              autoComplete="username"
-              returnKeyType="next"
-              textContentType="username"
-              defaultValue={initialHandle || ''}
-              onChangeText={v => {
-                identifierValueRef.current = v
-              }}
-              onSubmitEditing={() => {
-                passwordRef.current?.focus()
-              }}
-              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-              editable={!isProcessing}
-              accessibilityHint={_(
-                msg`Enter the username or email address you used when you created your account`,
-              )}
-            />
-          </TextField.Root>
-
-          <TextField.Root>
-            <TextField.Icon icon={Lock} />
-            <TextField.Input
-              testID="loginPasswordInput"
-              inputRef={passwordRef}
-              label={_(msg`Password`)}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="password"
-              returnKeyType="done"
-              enablesReturnKeyAutomatically={true}
-              secureTextEntry={true}
-              textContentType="password"
-              clearButtonMode="while-editing"
-              onChangeText={v => {
-                passwordValueRef.current = v
-              }}
-              onSubmitEditing={onPressNext}
-              blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
-              editable={!isProcessing}
-              accessibilityHint={_(msg`Enter your password`)}
-            />
-            <Button
-              testID="forgotPasswordButton"
-              onPress={onPressForgotPassword}
-              label={_(msg`Forgot password?`)}
-              accessibilityHint={_(msg`Opens password reset form`)}
-              variant="solid"
-              color="secondary"
-              style={[
-                a.rounded_sm,
-                // t.atoms.bg_contrast_100,
-                {marginLeft: 'auto', left: 6, padding: 6},
-                a.z_10,
-              ]}>
-              <ButtonText>
-                <Trans>Forgot?</Trans>
-              </ButtonText>
-            </Button>
-          </TextField.Root>
-        </View>
+        <TextField.Root>
+          <TextField.Icon icon={At} />
+          <TextField.Input
+            testID="loginUsernameInput"
+            label={_(msg`Username or email address`)}
+            placeholder=""
+            autoCapitalize="none"
+            autoFocus
+            autoCorrect={false}
+            autoComplete="username"
+            returnKeyType="next"
+            textContentType="username"
+            keyboardType="ascii-capable"
+            defaultValue={initialHandle || ''}
+            onChangeText={v => {
+              identifierValueRef.current = v
+            }}
+            onSubmitEditing={() => {
+              passwordRef.current?.focus()
+            }}
+            blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+            editable={!isProcessing}
+            accessibilityHint={_(
+              msg`Enter the username or email address you used when you created your account`,
+            )}
+          />
+        </TextField.Root>
       </View>
+
+      <View>
+        <TextField.LabelText>
+          <Trans>Password</Trans>
+        </TextField.LabelText>
+        <TextField.Root>
+          <TextField.Icon icon={Lock} />
+          <TextField.Input
+            testID="loginPasswordInput"
+            inputRef={passwordRef}
+            label={_(msg`Password`)}
+            placeholder=""
+            autoCapitalize="none"
+            autoCorrect={false}
+            autoComplete="password"
+            returnKeyType="done"
+            enablesReturnKeyAutomatically={true}
+            secureTextEntry={true}
+            textContentType="password"
+            clearButtonMode="while-editing"
+            onChangeText={v => {
+              passwordValueRef.current = v
+            }}
+            onSubmitEditing={onPressNext}
+            blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
+            editable={!isProcessing}
+            accessibilityHint={_(msg`Enter your password`)}
+          />
+          <Button
+            testID="forgotPasswordButton"
+            onPress={onPressForgotPassword}
+            label={_(msg`Forgot password?`)}
+            accessibilityHint={_(msg`Opens password reset form`)}
+            variant="solid"
+            color="secondary"
+            style={[
+              a.rounded_sm,
+              // t.atoms.bg_contrast_100,
+              {marginLeft: 'auto', left: 6, padding: 6},
+              a.z_10,
+            ]}>
+            <ButtonText>
+              <Trans>Forgot?</Trans>
+            </ButtonText>
+          </Button>
+        </TextField.Root>
+      </View>
+
       {isAuthFactorTokenNeeded && (
         <View>
           <TextField.LabelText>
