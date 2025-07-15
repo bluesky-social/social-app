@@ -3,7 +3,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -12,38 +11,38 @@ import {
   AgeAssuranceInitDialog,
   useDialogControl,
 } from '#/components/ageAssurance/AgeAssuranceInitDialog'
-import {IsAgeRestricted} from '#/components/ageAssurance/IsAgeRestricted'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
+import {useAgeInfo} from '#/components/ageAssurance/useAgeInfo'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {Divider} from '#/components/Divider'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
-  return (
-    <IsAgeRestricted.True>
-      <Inner style={style} />
-    </IsAgeRestricted.True>
-  )
+  const {isLoaded, assurance, declaredAge} = useAgeInfo()
+
+  if (!isLoaded) return null
+  if (declaredAge < 18) return null
+  if (!assurance.isAgeRestricted) return null
+
+  return <Inner style={style} />
 }
 
 function Inner({style}: ViewStyleProp & {}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const {status, isAgeRestricted, hasInitiated, lastInitiatedAt} =
-    useAgeAssuranceContext()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
   const getTimeAgo = useGetTimeAgo()
   const {gtPhone} = useBreakpoints()
+
   const copy = useAgeAssuranceCopy()
-
-  const isBlocked = status === 'blocked'
-  const timeAgo = lastInitiatedAt
-    ? getTimeAgo(lastInitiatedAt, new Date())
+  const {assurance} = useAgeInfo()
+  const isBlocked = assurance.status === 'blocked'
+  const timeAgo = assurance.lastInitiatedAt
+    ? getTimeAgo(assurance.lastInitiatedAt, new Date())
     : null
-
-  if (!isAgeRestricted) return null
 
   return (
     <>
@@ -65,67 +64,73 @@ function Inner({style}: ViewStyleProp & {}) {
             <View style={[a.align_start]}>
               <AgeAssuranceBadge />
             </View>
-
-            {lastInitiatedAt && (
-              <Text
-                style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
-                title={i18n.date(lastInitiatedAt, {
-                  dateStyle: 'medium',
-                  timeStyle: 'medium',
-                })}>
-                {timeAgo === 'now' ? (
-                  <Trans>Last initiated just {timeAgo}</Trans>
-                ) : (
-                  <Trans>Last initiated {timeAgo} ago</Trans>
-                )}
-              </Text>
-            )}
           </View>
 
-          {isBlocked && (
-            <View style={[a.pb_sm]}>
-              <Admonition type="warning">
-                <Trans>
-                  You are currently unable to access Bluesky's Age Assurance
-                  flow. Please{' '}
-                  <InlineLinkText
-                    label={_(msg`Contact our moderation team`)}
-                    {...createStaticClick(() => {
-                      appealControl.open()
-                    })}>
-                    contact our moderation team
-                  </InlineLinkText>{' '}
-                  if you believe this is an error.
-                </Trans>
-              </Admonition>
-            </View>
-          )}
-
-          <View
-            style={[
-              a.justify_between,
-              a.align_start,
-              gtPhone ? [a.flex_row, a.gap_xl] : [a.gap_md],
-            ]}>
+          <View style={[a.pb_md]}>
             <Text style={[a.text_sm, a.leading_snug]}>{copy.notice}</Text>
-
-            {!isBlocked && (
-              <Button
-                label={_(msg`Verify now`)}
-                size="small"
-                variant="solid"
-                color={hasInitiated ? 'secondary' : 'primary'}
-                onPress={() => control.open()}>
-                <ButtonText>
-                  {hasInitiated ? (
-                    <Trans>Verify again</Trans>
-                  ) : (
-                    <Trans>Verify now</Trans>
-                  )}
-                </ButtonText>
-              </Button>
-            )}
           </View>
+
+          {isBlocked ? (
+            <Admonition type="warning">
+              <Trans>
+                You are currently unable to access Bluesky's Age Assurance flow.
+                Please{' '}
+                <InlineLinkText
+                  label={_(msg`Contact our moderation team`)}
+                  {...createStaticClick(() => {
+                    appealControl.open()
+                  })}>
+                  contact our moderation team
+                </InlineLinkText>{' '}
+                if you believe this is an error.
+              </Trans>
+            </Admonition>
+          ) : (
+            <>
+              <Divider />
+              <View
+                style={[
+                  a.pt_md,
+                  a.justify_between,
+                  a.align_center,
+                  gtPhone ? [a.flex_row, a.gap_xl] : [a.gap_md],
+                ]}>
+                {assurance.lastInitiatedAt ? (
+                  <Text
+                    style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
+                    title={i18n.date(assurance.lastInitiatedAt, {
+                      dateStyle: 'medium',
+                      timeStyle: 'medium',
+                    })}>
+                    {timeAgo === 'now' ? (
+                      <Trans>Last initiated just {timeAgo}</Trans>
+                    ) : (
+                      <Trans>Last initiated {timeAgo} ago</Trans>
+                    )}
+                  </Text>
+                ) : (
+                  <Text
+                    style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
+                    {copy.noticeSub}
+                  </Text>
+                )}
+                <Button
+                  label={_(msg`Verify now`)}
+                  size="small"
+                  variant="solid"
+                  color={assurance.hasInitiated ? 'secondary' : 'primary'}
+                  onPress={() => control.open()}>
+                  <ButtonText>
+                    {assurance.hasInitiated ? (
+                      <Trans>Verify again</Trans>
+                    ) : (
+                      <Trans>Verify now</Trans>
+                    )}
+                  </ButtonText>
+                </Button>
+              </View>
+            </>
+          )}
         </View>
       </View>
     </>
