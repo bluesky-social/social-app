@@ -95,7 +95,7 @@ function Inner() {
       return {status: 'valid'}
     }
 
-    setEmailError(_(msg`Please enter a valid email.`))
+    setEmailError(_(msg`Please enter a valid email address.`))
     setDisabled(true)
 
     return {status: 'invalid'}
