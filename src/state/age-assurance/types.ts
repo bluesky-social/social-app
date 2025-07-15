@@ -3,25 +3,19 @@ import {type QueryObserverBaseResult} from '@tanstack/react-query'
 
 export type AgeAssuranceContextType = {
   isLoaded: boolean
+  /**
+   * The server-reported status of the user's age verification process.
+   */
   status: AppBskyUnspeccedDefs.AgeAssuranceState['status']
-  /**
-   * Whether the current user is age-restricted based on their geolocation and
-   * age assurance state retrieved from the server.
-   */
-  isAgeRestricted: boolean
-  /**
-   * Whether the user is exempt from age assurance checks, e.g., due to
-   * them not being in a region that requires age assurance.
-   */
-  isExempt: boolean
   /**
    * The last time the age assurance state was attempted by the user.
    */
   lastInitiatedAt: string | undefined
   /**
-   * Whether the user has initiated an age assurance check.
+   * Whether the current user is age-restricted based on their geolocation and
+   * age assurance state retrieved from the server.
    */
-  hasInitiated: boolean
+  isAgeRestricted: boolean
 }
 
 export type AgeAssuranceAPIContextType = {

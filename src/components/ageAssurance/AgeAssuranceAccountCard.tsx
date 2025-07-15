@@ -40,6 +40,7 @@ function Inner({style}: ViewStyleProp & {}) {
   const copy = useAgeAssuranceCopy()
   const {assurance} = useAgeInfo()
   const isBlocked = assurance.status === 'blocked'
+  const hasInitiated = !!assurance.lastInitiatedAt
   const timeAgo = assurance.lastInitiatedAt
     ? getTimeAgo(assurance.lastInitiatedAt, new Date())
     : null
@@ -118,10 +119,10 @@ function Inner({style}: ViewStyleProp & {}) {
                   label={_(msg`Verify now`)}
                   size="small"
                   variant="solid"
-                  color={assurance.hasInitiated ? 'secondary' : 'primary'}
+                  color={hasInitiated ? 'secondary' : 'primary'}
                   onPress={() => control.open()}>
                   <ButtonText>
-                    {assurance.hasInitiated ? (
+                    {hasInitiated ? (
                       <Trans>Verify again</Trans>
                     ) : (
                       <Trans>Verify now</Trans>

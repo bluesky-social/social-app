@@ -27,9 +27,7 @@ const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   status: 'unknown',
   isLoaded: false,
   isAgeRestricted: false,
-  isExempt: false,
   lastInitiatedAt: undefined,
-  hasInitiated: false,
 })
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
   // @ts-ignore
@@ -99,12 +97,10 @@ export function Provider({children}: {children: React.ReactNode}) {
     const enabled = __DEV__ || gate('age_assurance')
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
-      status,
       isLoaded: isFetched,
+      status,
       lastInitiatedAt,
-      hasInitiated: !!lastInitiatedAt,
-      isExempt: !isAgeRestrictedGeo || !enabled,
-      isAgeRestricted: Boolean(isAgeRestrictedGeo && status !== 'assured'),
+      isAgeRestricted: isAgeRestrictedGeo && status !== 'assured' && enabled,
     }
 
     logger.debug(`context`, ctx)

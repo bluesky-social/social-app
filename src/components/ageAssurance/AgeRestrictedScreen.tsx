@@ -26,7 +26,6 @@ export function AgeRestrictedScreen({
   const copy = useAgeAssuranceCopy()
   const {isLoaded, assurance} = useAgeInfo()
 
-  if (assurance.isExempt) return children
   if (!isLoaded) {
     return (
       <Layout.Screen>
