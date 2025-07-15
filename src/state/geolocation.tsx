@@ -68,6 +68,13 @@ export function beginResolveGeolocation() {
    */
   if (__DEV__) {
     geolocationResolution = new Promise(y => y({success: true}))
+
+    // use for debugging
+    // device.set(['geolocation'], {
+    //   countryCode: "GB",
+    //   isAgeRestrictedGeo: true,
+    // })
+
     if (!device.get(['geolocation'])) {
       device.set(['geolocation'], DEFAULT_GEOLOCATION)
     }
