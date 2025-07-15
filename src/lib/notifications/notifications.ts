@@ -37,7 +37,6 @@ async function _registerPushToken({
       platform: Platform.OS,
       token: token.data,
       appId: 'xyz.blueskyweb.app',
-      // @ts-ignore
       ageRestricted: extra.ageRestricted ?? false,
     }
 
