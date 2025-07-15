@@ -34,8 +34,7 @@ export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
   const agent = useAgent()
-  const {isReady: isAgeRestrictionReady, isAgeRestricted} =
-    useAgeAssuranceContext()
+  const {isAgeRestricted} = useAgeAssuranceContext()
 
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
@@ -77,12 +76,12 @@ export function usePreferencesQuery() {
     select: useCallback(
       (data: UsePreferencesQueryResponse) => {
         const isUnderage = (data.userAge || 0) < 18
-        if (isUnderage || (isAgeRestrictionReady && isAgeRestricted)) {
+        if (isUnderage || isAgeRestricted) {
           data.moderationPrefs = AGE_RESTRICTED_MODERATION_PREFS
         }
         return data
       },
-      [isAgeRestrictionReady, isAgeRestricted],
+      [isAgeRestricted],
     ),
   })
 }
