@@ -3,6 +3,7 @@ import EventEmitter from 'eventemitter3'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {type Device, device} from '#/storage'
 
 const events = new EventEmitter()
@@ -187,7 +188,7 @@ export function useGeolocation() {
   return React.useContext(context)
 }
 
-if (__DEV__) {
+if (__DEV__ && isWeb) {
   // @ts-ignore
   window.setGeolocation = (geo: Device['geolocation']) => {
     if (!geo?.countryCode || typeof geo?.isAgeRestrictedGeo !== 'boolean') {
