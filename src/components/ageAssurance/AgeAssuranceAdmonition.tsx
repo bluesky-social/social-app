@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgeInfo} from '#/state/ageAssurance/useAgeInfo'
+import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {atoms as a, select, useTheme, type ViewStyleProp} from '#/alf'
 import {useDialogControl} from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import type * as Dialog from '#/components/Dialog'
@@ -15,7 +15,7 @@ export function AgeAssuranceAdmonition({
   style,
 }: ViewStyleProp & {children: React.ReactNode}) {
   const control = useDialogControl()
-  const {isReady, isUnderage, isAgeRestricted} = useAgeInfo()
+  const {isReady, isUnderage, isAgeRestricted} = useAgeAssurance()
 
   if (!isReady) return null
   if (isUnderage) return null

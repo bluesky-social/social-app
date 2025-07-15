@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgeInfo} from '#/state/ageAssurance/useAgeInfo'
+import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, type ViewStyleProp} from '#/alf'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
@@ -12,7 +12,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 export function AgeAssuranceDismissableNotice({style}: ViewStyleProp & {}) {
   const {_} = useLingui()
-  const {isReady, isUnderage, isAgeRestricted, assurance} = useAgeInfo()
+  const {isReady, isUnderage, isAgeRestricted, assurance} = useAgeAssurance()
   const {nux} = useNux(Nux.AgeAssuranceDismissableNotice)
   const copy = useAgeAssuranceCopy()
   const {mutate: save, variables} = useSaveNux()

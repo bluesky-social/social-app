@@ -7,7 +7,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
 
-type AgeInfo = {
+type AgeAssurance = {
   isReady: boolean
   declaredAge: number | undefined
   isUnderage: boolean
@@ -20,7 +20,7 @@ type AgeInfo = {
  * declared age. Use this instead of {@link useAgeAssuranceContext} to get a
  * more user-friendly interface.
  */
-export function useAgeInfo(): AgeInfo {
+export function useAgeAssurance(): AgeAssurance {
   const ctx = useAgeAssuranceContext()
   const {isAgeRestricted} = useIsAgeRestricted()
   const {isFetched: preferencesLoaded, data: preferences} =
@@ -30,7 +30,7 @@ export function useAgeInfo(): AgeInfo {
   return useMemo(() => {
     const isReady = ctx.isReady && preferencesLoaded
     const isUnderage = (declaredAge || 0) < 18
-    const info: AgeInfo = {
+    const state: AgeAssurance = {
       isReady,
       declaredAge,
       isUnderage,
@@ -38,7 +38,7 @@ export function useAgeInfo(): AgeInfo {
 
       assurance: ctx,
     }
-    logger.debug(`useAgeInfo`, info)
-    return info
+    logger.debug(`state`, state)
+    return state
   }, [ctx, preferencesLoaded, declaredAge, isAgeRestricted])
 }

@@ -3,7 +3,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {useAgeInfo} from '#/state/ageAssurance/useAgeInfo'
+import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -20,7 +20,7 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
-  const {isReady, isAgeRestricted, isUnderage} = useAgeInfo()
+  const {isReady, isAgeRestricted, isUnderage} = useAgeAssurance()
 
   if (!isReady) return null
   if (isUnderage) return null
@@ -38,7 +38,7 @@ function Inner({style}: ViewStyleProp & {}) {
   const {gtPhone} = useBreakpoints()
 
   const copy = useAgeAssuranceCopy()
-  const {assurance} = useAgeInfo()
+  const {assurance} = useAgeAssurance()
   const isBlocked = assurance.status === 'blocked'
   const hasInitiated = !!assurance.lastInitiatedAt
   const timeAgo = assurance.lastInitiatedAt

@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgeInfo} from '#/state/ageAssurance/useAgeInfo'
+import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -24,7 +24,7 @@ export function AgeRestrictedScreen({
 }) {
   const {_} = useLingui()
   const copy = useAgeAssuranceCopy()
-  const {isReady, isAgeRestricted} = useAgeInfo()
+  const {isReady, isAgeRestricted} = useAgeAssurance()
 
   if (!isReady) {
     return (

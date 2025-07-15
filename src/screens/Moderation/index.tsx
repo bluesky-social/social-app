@@ -12,7 +12,7 @@ import {
 } from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
-import {useAgeInfo} from '#/state/ageAssurance/useAgeInfo'
+import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
@@ -86,7 +86,7 @@ export function ModerationScreen(
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
-  const {isReady: isAgeInfoReady} = useAgeInfo()
+  const {isReady: isAgeInfoReady} = useAgeAssurance()
 
   const isLoading = isPreferencesLoading || !isAgeInfoReady
   const error = preferencesError
@@ -160,7 +160,7 @@ export function ModerationScreenInner({
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
-  const {declaredAge, isUnderage, isAgeRestricted} = useAgeInfo()
+  const {declaredAge, isUnderage, isAgeRestricted} = useAgeAssurance()
 
   useFocusEffect(
     useCallback(() => {
