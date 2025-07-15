@@ -13,7 +13,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 export function AgeAssuranceDismissableNotice({style}: ViewStyleProp & {}) {
   const {_} = useLingui()
   const {isLoaded, isUnderage, assurance} = useAgeInfo()
-  const {nux} = useNux(Nux.AgeAssurancePrompt)
+  const {nux} = useNux(Nux.AgeAssuranceDismissableNotice)
   const copy = useAgeAssuranceCopy()
   const {mutate: save, variables} = useSaveNux()
   const hidden = !!variables
@@ -38,7 +38,7 @@ export function AgeAssuranceDismissableNotice({style}: ViewStyleProp & {}) {
           shape="round"
           onPress={() =>
             save({
-              id: Nux.AgeAssurancePrompt,
+              id: Nux.AgeAssuranceDismissableNotice,
               completed: true,
               data: undefined,
             })
