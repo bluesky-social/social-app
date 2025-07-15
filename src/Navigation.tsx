@@ -40,7 +40,7 @@ import {
   type SearchTabNavigatorParams,
 } from '#/lib/routes/types'
 import {type RouteParams, type State} from '#/lib/routes/types'
-import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
+import {attachRouteToLogEvents, logEvent, useGate} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
@@ -149,7 +149,6 @@ import {useNonReactiveCallback} from './lib/hooks/useNonReactiveCallback'
 import {useLoggedOutViewControls} from './state/shell/logged-out'
 import {useLoggedOutView} from './state/shell/logged-out'
 import {useCloseAllActiveElements} from './state/util'
-import {AuthModal} from './view/shell/desktop/AuthLayout'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -789,63 +788,68 @@ const FlatNavigator = () => {
  */
 export const NativeNavigator = () => {
   const t = useTheme()
+  const gate = useGate()
   const {hasSession} = useSession()
   const {showLoggedOut} = useLoggedOutView()
 
-  return (
-    <Core.Navigator screenOptions={screenOptions(t)}>
-      {hasSession && !showLoggedOut ? (
-        <Core.Screen
-          name="App"
-          getComponent={() => TabsNavigator}
-          options={{animation: 'fade', animationDuration: 200}}
-        />
-      ) : (
-        <>
+  if (gate('new_auth_flow')) {
+    return (
+      <Core.Navigator screenOptions={screenOptions(t)}>
+        {hasSession && !showLoggedOut ? (
           <Core.Screen
-            name="Landing"
-            getComponent={() => LandingScreen}
+            name="App"
+            getComponent={() => TabsNavigator}
             options={{animation: 'fade', animationDuration: 200}}
           />
-          <Core.Screen
-            name="StarterPackLanding"
-            getComponent={() => StarterPackLandingScreen}
-          />
-          <Core.Group>
+        ) : (
+          <>
             <Core.Screen
-              name="SelectAccount"
-              getComponent={() => SelectAccountScreen}
-            />
-            <Core.Screen name="SignIn" getComponent={() => SignInScreen} />
-            <Core.Screen
-              name="ForgotPassword"
-              getComponent={() => ForgotPasswordScreen}
+              name="Landing"
+              getComponent={() => LandingScreen}
+              options={{animation: 'fade', animationDuration: 200}}
             />
             <Core.Screen
-              name="SetNewPassword"
-              getComponent={() => SetNewPasswordScreen}
+              name="StarterPackLanding"
+              getComponent={() => StarterPackLandingScreen}
             />
-            <Core.Screen
-              name="PasswordUpdated"
-              getComponent={() => PasswordUpdatedScreen}
-            />
-            <Core.Screen
-              name="SignUpInfo"
-              getComponent={() => SignUpInfoScreen}
-            />
-            <Core.Screen
-              name="SignUpHandle"
-              getComponent={() => SignUpHandleScreen}
-            />
-            <Core.Screen
-              name="SignUpCaptcha"
-              getComponent={() => SignUpCaptchaScreen}
-            />
-          </Core.Group>
-        </>
-      )}
-    </Core.Navigator>
-  )
+            <Core.Group>
+              <Core.Screen
+                name="SelectAccount"
+                getComponent={() => SelectAccountScreen}
+              />
+              <Core.Screen name="SignIn" getComponent={() => SignInScreen} />
+              <Core.Screen
+                name="ForgotPassword"
+                getComponent={() => ForgotPasswordScreen}
+              />
+              <Core.Screen
+                name="SetNewPassword"
+                getComponent={() => SetNewPasswordScreen}
+              />
+              <Core.Screen
+                name="PasswordUpdated"
+                getComponent={() => PasswordUpdatedScreen}
+              />
+              <Core.Screen
+                name="SignUpInfo"
+                getComponent={() => SignUpInfoScreen}
+              />
+              <Core.Screen
+                name="SignUpHandle"
+                getComponent={() => SignUpHandleScreen}
+              />
+              <Core.Screen
+                name="SignUpCaptcha"
+                getComponent={() => SignUpCaptchaScreen}
+              />
+            </Core.Group>
+          </>
+        )}
+      </Core.Navigator>
+    )
+  } else {
+    return <TabsNavigator />
+  }
 }
 
 /**
