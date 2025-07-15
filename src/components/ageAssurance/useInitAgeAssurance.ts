@@ -7,8 +7,8 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
 import {
-  DEV_ENV_APPVIEW,
-  DEV_ENV_APPVIEW_DID,
+  // DEV_ENV_APPVIEW,
+  // DEV_ENV_APPVIEW_DID,
   PUBLIC_APPVIEW,
   PUBLIC_APPVIEW_DID,
 } from '#/lib/constants'
@@ -18,8 +18,13 @@ import {createAgeAssuranceQueryKey} from '#/state/age-assurance'
 import {useGeolocation} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 
-const APPVIEW = __DEV__ ? DEV_ENV_APPVIEW : PUBLIC_APPVIEW
-const APPVIEW_DID = __DEV__ ? DEV_ENV_APPVIEW_DID : PUBLIC_APPVIEW_DID
+let APPVIEW = PUBLIC_APPVIEW
+let APPVIEW_DID = PUBLIC_APPVIEW_DID
+
+// if (__DEV__) {
+//   APPVIEW = DEV_ENV_APPVIEW
+//   APPVIEW_DID = DEV_ENV_APPVIEW_DID
+// }
 
 export function useInitAgeAssurance() {
   const qc = useQueryClient()
