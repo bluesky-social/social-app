@@ -5,7 +5,6 @@ import {useQuery} from '@tanstack/react-query'
 import {networkRetry} from '#/lib/async/retry'
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 import {useGate} from '#/lib/statsig/statsig'
-// import {wait} from '#/lib/async/wait'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
 import {
@@ -61,15 +60,12 @@ export function Provider({children}: {children: React.ReactNode}) {
         const {data} = await networkRetry(3, () =>
           agent.app.bsky.unspecced.getAgeAssuranceState(),
         )
-        // const {data} = await wait(
-        //   1e3,
-        //   (() => ({
-        //     data: {
-        //       lastInitiatedAt: undefined,//new Date().toISOString(),
-        //       status: 'pending',
-        //     } as AppBskyUnspeccedDefs.AgeAssuranceState,
-        //   }))(),
-        // )
+        // const {data} = {
+        //   data: {
+        //     lastInitiatedAt: new Date().toISOString(),
+        //     status: 'pending',
+        //   } as AppBskyUnspeccedDefs.AgeAssuranceState,
+        // }
 
         logger.debug(`fetch`, {
           data,
