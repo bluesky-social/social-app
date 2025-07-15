@@ -12,6 +12,7 @@ import {
   type AgeAssuranceAPIContextType,
   type AgeAssuranceContextType,
 } from '#/state/ageAssurance/types'
+import {useIsAgeAssuranceEnabled} from '#/state/ageAssurance/useIsAgeAssuranceEnabled'
 import {useGeolocation} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 
@@ -26,6 +27,7 @@ const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   status: 'unknown',
   isReady: false,
   lastInitiatedAt: undefined,
+  isAgeRestricted: false,
 })
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
   // @ts-ignore
@@ -38,11 +40,11 @@ const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
  * performance.
  */
 export function Provider({children}: {children: React.ReactNode}) {
+  const gate = useGate()
   const agent = useAgent()
   const {geolocation} = useGeolocation()
+  const isAgeAssuranceEnabled = useIsAgeAssuranceEnabled()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
-  const isAgeRestrictedGeo = !!geolocation?.isAgeRestrictedGeo
-  const gate = useGate()
 
   const {data, isFetched, refetch} = useQuery({
     /**
@@ -50,7 +52,7 @@ export function Provider({children}: {children: React.ReactNode}) {
      * "fetched" state, even if we fall back to defaults. This lets the rest of
      * the app know that we've at least attempted to load the AA state.
      */
-    enabled: true,
+    enabled: isAgeAssuranceEnabled,
     queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
     async queryFn() {
       if (!agent.session) return null
@@ -76,9 +78,8 @@ export function Provider({children}: {children: React.ReactNode}) {
 
         if (gate('age_assurance')) {
           await getAndRegisterPushToken({
-            isAgeRestricted: Boolean(
-              isAgeRestrictedGeo && data.status !== 'assured',
-            ),
+            isAgeRestricted:
+              !!geolocation?.isAgeRestrictedGeo && data.status !== 'assured',
           })
         }
 
@@ -99,13 +100,14 @@ export function Provider({children}: {children: React.ReactNode}) {
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
-      isReady: isFetched,
+      isReady: isFetched || !isAgeAssuranceEnabled,
       status,
       lastInitiatedAt,
+      isAgeRestricted: isAgeAssuranceEnabled ? status !== 'assured' : false,
     }
     logger.debug(`context`, ctx)
     return ctx
-  }, [isFetched, data])
+  }, [isFetched, data, isAgeAssuranceEnabled])
 
   const ageAssuranceAPIContext = useMemo<AgeAssuranceAPIContextType>(
     () => ({

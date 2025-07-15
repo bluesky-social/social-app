@@ -2,18 +2,11 @@ import {useMemo} from 'react'
 
 import {Logger} from '#/logger'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
-import {useIsAgeRestricted} from '#/state/ageAssurance/useIsAgeRestricted'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
 
 type AgeAssurance = ReturnType<typeof useAgeAssuranceContext> & {
-  /**
-   * Indicates the user is age restricted based on the requirements of their
-   * region, and their server-provided age assurance status. Does not factor in
-   * the user's declared age.
-   */
-  isAgeRestricted: boolean
   /**
    * The age the user has declared in their preferences, if any.
    */
@@ -30,24 +23,23 @@ type AgeAssurance = ReturnType<typeof useAgeAssuranceContext> & {
  * more user-friendly interface.
  */
 export function useAgeAssurance(): AgeAssurance {
-  const ctx = useAgeAssuranceContext()
-  const {isAgeRestricted} = useIsAgeRestricted()
+  const aa = useAgeAssuranceContext()
   const {isFetched: preferencesLoaded, data: preferences} =
     usePreferencesQuery()
   const declaredAge = preferences?.userAge
 
   return useMemo(() => {
-    const isReady = ctx.isReady && preferencesLoaded
+    const isReady = aa.isReady && preferencesLoaded
     const isDeclaredUnderage = (declaredAge || 0) < 18
     const state: AgeAssurance = {
       isReady,
-      status: ctx.status,
-      lastInitiatedAt: ctx.lastInitiatedAt,
-      isAgeRestricted,
+      status: aa.status,
+      lastInitiatedAt: aa.lastInitiatedAt,
+      isAgeRestricted: aa.isAgeRestricted,
       declaredAge,
       isDeclaredUnderage,
     }
     logger.debug(`state`, state)
     return state
-  }, [ctx, preferencesLoaded, declaredAge, isAgeRestricted])
+  }, [aa, preferencesLoaded, declaredAge])
 }

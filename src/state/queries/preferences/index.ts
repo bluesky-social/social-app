@@ -10,8 +10,8 @@ import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
+import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {AGE_RESTRICTED_MODERATION_PREFS} from '#/state/ageAssurance/const'
-import {useIsAgeRestricted} from '#/state/ageAssurance/useIsAgeRestricted'
 import {STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
@@ -34,7 +34,8 @@ export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
   const agent = useAgent()
-  const {isReady: isAgeRestrictionReady, isAgeRestricted} = useIsAgeRestricted()
+  const {isReady: isAgeRestrictionReady, isAgeRestricted} =
+    useAgeAssuranceContext()
 
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
