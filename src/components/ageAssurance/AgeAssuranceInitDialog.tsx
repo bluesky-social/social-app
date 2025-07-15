@@ -254,7 +254,7 @@ function Inner() {
 
               <Button
                 disabled={disabled}
-                label={_(msg`Get an email`)}
+                label={_(msg`Begin age assurance process`)}
                 size="large"
                 variant="solid"
                 color="primary"
