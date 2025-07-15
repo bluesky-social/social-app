@@ -233,24 +233,21 @@ export function SignInForm({
             editable={!isProcessing}
             accessibilityHint={_(msg`Enter your password`)}
           />
-          <Button
-            testID="forgotPasswordButton"
-            onPress={onPressForgotPassword}
-            label={_(msg`Forgot password?`)}
-            accessibilityHint={_(msg`Opens password reset form`)}
-            variant="solid"
-            color="secondary"
-            style={[
-              a.rounded_sm,
-              // t.atoms.bg_contrast_100,
-              {marginLeft: 'auto', left: 6, padding: 6},
-              a.z_10,
-            ]}>
-            <ButtonText>
-              <Trans>Forgot?</Trans>
-            </ButtonText>
-          </Button>
         </TextField.Root>
+      </View>
+
+      <View style={[a.flex_row]}>
+        <Button
+          testID="forgotPasswordButton"
+          onPress={onPressForgotPassword}
+          label={_(msg`Forgot password?`)}
+          accessibilityHint={_(msg`Opens password reset form`)}
+          variant="ghost"
+          color="secondary">
+          <ButtonText>
+            <Trans>Forgot password?</Trans>
+          </ButtonText>
+        </Button>
       </View>
 
       {isAuthFactorTokenNeeded && (
