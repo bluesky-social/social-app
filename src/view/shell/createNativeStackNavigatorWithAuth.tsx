@@ -28,7 +28,7 @@ import {
 import {PWI_ENABLED} from '#/lib/build-flags'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useGate} from '#/lib/statsig/statsig'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {
@@ -116,7 +116,7 @@ function NativeStackNavigator({
   const {leftNavMinimal} = useLayoutBreakpoints()
   const gate = useGate()
 
-  if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth)) {
+  if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || isNative)) {
     if (gate('new_auth_flow')) {
       // I don't like how we have to split it like this, would prefer something neater
       if (isWeb) {
