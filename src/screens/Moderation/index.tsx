@@ -23,7 +23,8 @@ import {isNonConfigurableModerationAuthority} from '#/state/session/additional-m
 import {useSetMinimalShellMode} from '#/state/shell'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
-import {AgeAssurancePrompt} from '#/components/ageAssurance/AgeAssurancePrompt'
+import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
+import {useAgeInfo} from '#/components/ageAssurance/useAgeInfo'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
@@ -86,8 +87,9 @@ export function ModerationScreen(
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
+  const {isLoaded: isAgeInfoLoaded} = useAgeInfo()
 
-  const isLoading = isPreferencesLoading
+  const isLoading = isPreferencesLoading || !isAgeInfoLoaded
   const error = preferencesError
 
   return (
@@ -160,6 +162,7 @@ export function ModerationScreenInner({
     error: labelersError,
   } = useMyLabelersQuery()
   const {isAgeRestricted} = useAgeAssuranceContext()
+  const {declaredAge, isUnderage, assurance: ageAssurance} = useAgeInfo()
 
   useFocusEffect(
     useCallback(() => {
@@ -173,8 +176,6 @@ export function ModerationScreenInner({
     (optimisticAdultContent && optimisticAdultContent.enabled) ||
     (!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled)
   )
-  const ageNotSet = !preferences.userAge
-  const isUnderage = (preferences.userAge || 0) < 18
 
   const onToggleAdultContentEnabled = useCallback(
     async (selected: boolean) => {
@@ -309,10 +310,15 @@ export function ModerationScreenInner({
         <Trans>Content filters</Trans>
       </Text>
 
-      <AgeAssurancePrompt style={[a.pb_md]} />
+      <AgeAssuranceAdmonition style={[a.pb_md]}>
+        <Trans>
+          You must complete age verification in order to access the settings
+          below.
+        </Trans>
+      </AgeAssuranceAdmonition>
 
       <View style={[a.gap_md]}>
-        {ageNotSet && (
+        {declaredAge === undefined && ageAssurance.isAgeRestricted && (
           <>
             <Button
               label={_(msg`Confirm your birthdate`)}
@@ -341,7 +347,7 @@ export function ModerationScreenInner({
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
           ]}>
-          {!ageNotSet && !isUnderage && (
+          {!isUnderage && (
             <>
               <View
                 style={[
@@ -394,18 +400,19 @@ export function ModerationScreenInner({
                 </View>
               )}
               <Divider />
-            </>
-          )}
-          {!isUnderage && adultContentEnabled && (
-            <>
-              <GlobalLabelPreference labelDefinition={LABELS.porn} />
-              <Divider />
-              <GlobalLabelPreference labelDefinition={LABELS.sexual} />
-              <Divider />
-              <GlobalLabelPreference
-                labelDefinition={LABELS['graphic-media']}
-              />
-              <Divider />
+
+              {adultContentEnabled && (
+                <>
+                  <GlobalLabelPreference labelDefinition={LABELS.porn} />
+                  <Divider />
+                  <GlobalLabelPreference labelDefinition={LABELS.sexual} />
+                  <Divider />
+                  <GlobalLabelPreference
+                    labelDefinition={LABELS['graphic-media']}
+                  />
+                  <Divider />
+                </>
+              )}
             </>
           )}
           <GlobalLabelPreference

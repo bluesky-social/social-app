@@ -1,147 +1,94 @@
-import {useMemo} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
-import {
-  AgeAssuranceInitDialog,
-  useDialogControl,
-} from '#/components/ageAssurance/AgeAssuranceInitDialog'
-import {IsAgeRestricted} from '#/components/ageAssurance/IsAgeRestricted'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
-import {Button, ButtonText} from '#/components/Button'
-import {Divider} from '#/components/Divider'
+import {useAgeInfo} from '#/components/ageAssurance/useAgeInfo'
+import {ButtonIcon, ButtonText} from '#/components/Button'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import * as Layout from '#/components/Layout'
+import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function AgeRestrictedScreen({
   children,
-  fallback,
   screenTitle,
   infoText,
 }: {
   children: React.ReactNode
-  fallback?: React.ReactNode
   screenTitle?: string
   infoText?: string
 }) {
-  const t = useTheme()
   const {_} = useLingui()
   const copy = useAgeAssuranceCopy()
-  const control = useDialogControl()
-  const screenFallback = useMemo(() => {
+  const {isLoaded, assurance} = useAgeInfo()
+
+  if (assurance.isExempt) return children
+  if (!isLoaded) {
     return (
-      fallback || (
-        <Layout.Screen>
-          <Layout.Header.Outer>
-            <Layout.Header.Content>
-              <Layout.Header.TitleText> </Layout.Header.TitleText>
-            </Layout.Header.Content>
-            <Layout.Header.Slot />
-          </Layout.Header.Outer>
-          <Layout.Content />
-        </Layout.Screen>
-      )
+      <Layout.Screen>
+        <Layout.Header.Outer>
+          <Layout.Header.Content>
+            <Layout.Header.TitleText> </Layout.Header.TitleText>
+          </Layout.Header.Content>
+          <Layout.Header.Slot />
+        </Layout.Header.Outer>
+        <Layout.Content />
+      </Layout.Screen>
     )
-  }, [fallback])
+  }
+  if (!assurance.isAgeRestricted) return children
 
   return (
-    <>
-      <IsAgeRestricted.True fallback={screenFallback}>
-        <Layout.Screen>
-          <Layout.Header.Outer>
-            <Layout.Header.BackButton />
-            <Layout.Header.Content>
-              <Layout.Header.TitleText>
-                {screenTitle ?? <Trans>Unavailable</Trans>}
-              </Layout.Header.TitleText>
-            </Layout.Header.Content>
-            <Layout.Header.Slot />
-          </Layout.Header.Outer>
-          <Layout.Content>
-            <View style={[a.p_lg, a.gap_lg]}>
-              <View
-                style={[
-                  a.p_lg,
-                  a.rounded_md,
-                  a.border,
-                  {
-                    backgroundColor: select(t.name, {
-                      light: t.palette.primary_25,
-                      dark: t.palette.primary_25,
-                      dim: t.palette.primary_25,
-                    }),
-                    borderColor: select(t.name, {
-                      light: t.palette.primary_100,
-                      dark: t.palette.primary_100,
-                      dim: t.palette.primary_100,
-                    }),
-                  },
-                ]}>
-                <AgeAssuranceInitDialog control={control} />
+    <Layout.Screen>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            {screenTitle ?? <Trans>Unavailable</Trans>}
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content>
+        <View style={[a.p_lg]}>
+          <View style={[a.align_start, a.pb_lg]}>
+            <AgeAssuranceBadge />
+          </View>
 
-                <View style={[a.align_start, a.pb_md]}>
-                  <AgeAssuranceBadge />
-                </View>
+          <View style={[a.gap_sm, a.pb_lg]}>
+            <Text style={[a.text_xl, a.leading_snug, a.font_heavy]}>
+              <Trans>
+                You must verify your age in order to access this screen.
+              </Trans>
+            </Text>
 
-                <Text style={[a.text_md, a.leading_snug, a.pb_sm]}>
-                  <Trans>{copy.notice}</Trans>
-                </Text>
+            <Text style={[a.text_md, a.leading_snug]}>
+              <Trans>{copy.notice}</Trans>
+            </Text>
+          </View>
 
-                <Text style={[a.text_md, a.leading_snug]}>
-                  <Trans>
-                    You must complete age verification to access this screen.
-                  </Trans>
-                </Text>
+          <View
+            style={[a.flex_row, a.justify_between, a.align_center, a.pb_xl]}>
+            <Link
+              label={_(msg`Go to account settings`)}
+              to="/settings/account"
+              size="small"
+              variant="solid"
+              color="primary">
+              <ButtonText>
+                <Trans>Go to account settings</Trans>
+              </ButtonText>
+              <ButtonIcon icon={ChevronRight} position="right" />
+            </Link>
+          </View>
 
-                <Divider style={[a.mt_lg]} />
-
-                <View
-                  style={[
-                    a.flex_row,
-                    a.justify_between,
-                    a.align_center,
-                    a.pt_md,
-                    a.gap_lg,
-                  ]}>
-                  <Text
-                    style={[
-                      {
-                        color: select(t.name, {
-                          light: t.palette.primary_800,
-                          dark: t.palette.primary_800,
-                          dim: t.palette.primary_800,
-                        }),
-                      },
-                    ]}>
-                    {copy.noticeSub}
-                  </Text>
-
-                  <Button
-                    label={_(msg`Verify now`)}
-                    size="small"
-                    variant="solid"
-                    color="primary"
-                    onPress={() => control.open()}>
-                    <ButtonText>
-                      <Trans>Verify now</Trans>
-                    </ButtonText>
-                  </Button>
-                </View>
-              </View>
-
-              {infoText && <Admonition type="info">{infoText}</Admonition>}
-            </View>
-          </Layout.Content>
-        </Layout.Screen>
-      </IsAgeRestricted.True>
-
-      <IsAgeRestricted.False fallback={screenFallback}>
-        {children}
-      </IsAgeRestricted.False>
-    </>
+          {infoText && <Admonition type="tip">{infoText}</Admonition>}
+        </View>
+      </Layout.Content>
+    </Layout.Screen>
   )
 }

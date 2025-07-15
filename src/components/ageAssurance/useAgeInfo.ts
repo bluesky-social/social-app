@@ -7,12 +7,13 @@ export function useAgeInfo() {
   const ctx = useAgeAssuranceContext()
   const {isFetched: preferencesLoaded, data: preferences} =
     usePreferencesQuery()
-  const declaredAge = useMemo(() => preferences?.userAge || -1, [preferences])
+  const declaredAge = useMemo(() => preferences?.userAge, [preferences])
 
   return useMemo(() => {
     return {
       isLoaded: ctx.isLoaded && preferencesLoaded,
       declaredAge,
+      isUnderage: ctx.isAgeRestricted && (declaredAge || 0) < 18,
       assurance: ctx,
     }
   }, [ctx, preferencesLoaded, declaredAge])

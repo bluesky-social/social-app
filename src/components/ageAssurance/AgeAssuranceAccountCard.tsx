@@ -23,7 +23,7 @@ export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
   const {isLoaded, assurance, declaredAge} = useAgeInfo()
 
   if (!isLoaded) return null
-  if (declaredAge < 18) return null
+  if (declaredAge && declaredAge < 18) return null
   if (!assurance.isAgeRestricted) return null
 
   return <Inner style={style} />
