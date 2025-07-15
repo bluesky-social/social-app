@@ -10,7 +10,7 @@ const logger = Logger.create(Logger.Context.AgeAssurance)
 type AgeAssurance = {
   isReady: boolean
   declaredAge: number | undefined
-  isUnderage: boolean
+  isDeclaredUnderage: boolean
   isAgeRestricted: boolean
   assurance: ReturnType<typeof useAgeAssuranceContext>
 }
@@ -29,11 +29,11 @@ export function useAgeAssurance(): AgeAssurance {
 
   return useMemo(() => {
     const isReady = ctx.isReady && preferencesLoaded
-    const isUnderage = (declaredAge || 0) < 18
+    const isDeclaredUnderage = (declaredAge || 0) < 18
     const state: AgeAssurance = {
       isReady,
       declaredAge,
-      isUnderage,
+      isDeclaredUnderage,
       isAgeRestricted,
 
       assurance: ctx,

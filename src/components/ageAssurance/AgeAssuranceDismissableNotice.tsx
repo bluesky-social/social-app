@@ -12,14 +12,15 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 export function AgeAssuranceDismissableNotice({style}: ViewStyleProp & {}) {
   const {_} = useLingui()
-  const {isReady, isUnderage, isAgeRestricted, assurance} = useAgeAssurance()
+  const {isReady, isDeclaredUnderage, isAgeRestricted, assurance} =
+    useAgeAssurance()
   const {nux} = useNux(Nux.AgeAssuranceDismissableNotice)
   const copy = useAgeAssuranceCopy()
   const {mutate: save, variables} = useSaveNux()
   const hidden = !!variables
 
   if (!isReady) return null
-  if (isUnderage) return null
+  if (isDeclaredUnderage) return null
   if (!isAgeRestricted) return null
   if (assurance.lastInitiatedAt) return null
   if (hidden) return null

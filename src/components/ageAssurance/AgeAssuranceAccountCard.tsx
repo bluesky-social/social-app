@@ -20,10 +20,10 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
-  const {isReady, isAgeRestricted, isUnderage} = useAgeAssurance()
+  const {isReady, isAgeRestricted, isDeclaredUnderage} = useAgeAssurance()
 
   if (!isReady) return null
-  if (isUnderage) return null
+  if (isDeclaredUnderage) return null
   if (!isAgeRestricted) return null
 
   return <Inner style={style} />
