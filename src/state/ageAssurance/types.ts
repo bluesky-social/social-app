@@ -10,12 +10,7 @@ export type AgeAssuranceContextType = {
   /**
    * The last time the age assurance state was attempted by the user.
    */
-  lastInitiatedAt: string | undefined
-  /**
-   * Whether the current user is age-restricted based on their geolocation and
-   * age assurance state retrieved from the server.
-   */
-  isAgeRestricted: boolean
+  lastInitiatedAt: AppBskyUnspeccedDefs.AgeAssuranceState['lastInitiatedAt']
 }
 
 export type AgeAssuranceAPIContextType = {

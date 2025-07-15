@@ -2,7 +2,7 @@ import {useMemo} from 'react'
 
 import {Logger} from '#/logger'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
-import {useMustCompleteAgeAssurance} from '#/state/ageAssurance/useMustCompleteAgeAssurance'
+import {useIsAgeRestricted} from '#/state/ageAssurance/useIsAgeRestricted'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
@@ -11,7 +11,7 @@ type AgeInfo = {
   isLoaded: boolean
   declaredAge: number | undefined
   isUnderage: boolean
-  mustCompleteAgeAssurance: boolean
+  isAgeRestricted: boolean
   assurance: ReturnType<typeof useAgeAssuranceContext>
 }
 
@@ -21,8 +21,8 @@ type AgeInfo = {
  * more user-friendly interface.
  */
 export function useAgeInfo(): AgeInfo {
-  const mustCompleteAgeAssurance = useMustCompleteAgeAssurance()
   const ctx = useAgeAssuranceContext()
+  const {isAgeRestricted} = useIsAgeRestricted()
   const {isFetched: preferencesLoaded, data: preferences} =
     usePreferencesQuery()
   const declaredAge = preferences?.userAge
@@ -34,11 +34,11 @@ export function useAgeInfo(): AgeInfo {
       isLoaded,
       declaredAge,
       isUnderage,
-      mustCompleteAgeAssurance,
+      isAgeRestricted,
 
       assurance: ctx,
     }
     logger.debug(`useAgeInfo`, info)
     return info
-  }, [ctx, preferencesLoaded, declaredAge, mustCompleteAgeAssurance])
+  }, [ctx, preferencesLoaded, declaredAge, isAgeRestricted])
 }

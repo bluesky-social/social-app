@@ -13,7 +13,6 @@ import {
   type AgeAssuranceContextType,
 } from '#/state/ageAssurance/types'
 import {useGeolocation} from '#/state/geolocation'
-import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
@@ -26,7 +25,6 @@ const DEFAULT_AGE_ASSURANCE_STATE: AppBskyUnspeccedDefs.AgeAssuranceState = {
 const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   status: 'unknown',
   isLoaded: false,
-  isAgeRestricted: false,
   lastInitiatedAt: undefined,
 })
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
@@ -54,8 +52,6 @@ export function Provider({children}: {children: React.ReactNode}) {
      */
     enabled: true,
     queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
-    staleTime: STALE.MINUTES.ONE,
-    refetchOnWindowFocus: geolocation?.isAgeRestrictedGeo === true,
     async queryFn() {
       if (!agent.session) return null
 
@@ -78,11 +74,13 @@ export function Provider({children}: {children: React.ReactNode}) {
           account: agent.session?.did,
         })
 
-        await getAndRegisterPushToken({
-          isAgeRestricted: Boolean(
-            isAgeRestrictedGeo && data.status !== 'assured',
-          ),
-        })
+        if (gate('age_assurance')) {
+          await getAndRegisterPushToken({
+            isAgeRestricted: Boolean(
+              isAgeRestrictedGeo && data.status !== 'assured',
+            ),
+          })
+        }
 
         return data
       } catch (e) {
@@ -99,19 +97,15 @@ export function Provider({children}: {children: React.ReactNode}) {
    * Derive state, or fall back to defaults
    */
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
-    const enabled = __DEV__ || gate('age_assurance')
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
       isLoaded: isFetched,
       status,
       lastInitiatedAt,
-      isAgeRestricted: isAgeRestrictedGeo && status !== 'assured' && enabled,
     }
-
     logger.debug(`context`, ctx)
-
     return ctx
-  }, [gate, isAgeRestrictedGeo, isFetched, data])
+  }, [isFetched, data])
 
   const ageAssuranceAPIContext = useMemo<AgeAssuranceAPIContextType>(
     () => ({

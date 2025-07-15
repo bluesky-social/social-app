@@ -160,7 +160,7 @@ export function ModerationScreenInner({
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
-  const {declaredAge, isUnderage, mustCompleteAgeAssurance} = useAgeInfo()
+  const {declaredAge, isUnderage, isAgeRestricted} = useAgeInfo()
 
   useFocusEffect(
     useCallback(() => {
@@ -345,7 +345,7 @@ export function ModerationScreenInner({
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
           ]}>
-          {!isUnderage && !mustCompleteAgeAssurance && (
+          {!isUnderage && !isAgeRestricted && (
             <>
               <View
                 style={[
@@ -414,7 +414,7 @@ export function ModerationScreenInner({
             </>
           )}
           <GlobalLabelPreference
-            disabled={isUnderage || mustCompleteAgeAssurance}
+            disabled={isUnderage || isAgeRestricted}
             labelDefinition={LABELS.nudity}
           />
         </View>
