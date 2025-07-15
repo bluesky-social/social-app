@@ -40,11 +40,7 @@ export function useMinimalShellFooterTransform() {
       opacity: Math.pow(1 - footerModeValue, 2),
       transform: [
         {
-          translateY: interpolate(
-            footerModeValue,
-            [0, 1],
-            [0, footerHeight.get()],
-          ),
+          translateY: interpolate(footerModeValue, [0, 1], [0, footerHeight]),
         },
       ],
     }
