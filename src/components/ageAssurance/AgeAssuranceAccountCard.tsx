@@ -38,11 +38,11 @@ function Inner({style}: ViewStyleProp & {}) {
   const {gtPhone} = useBreakpoints()
 
   const copy = useAgeAssuranceCopy()
-  const {assurance} = useAgeAssurance()
-  const isBlocked = assurance.status === 'blocked'
-  const hasInitiated = !!assurance.lastInitiatedAt
-  const timeAgo = assurance.lastInitiatedAt
-    ? getTimeAgo(assurance.lastInitiatedAt, new Date())
+  const {status, lastInitiatedAt} = useAgeAssurance()
+  const isBlocked = status === 'blocked'
+  const hasInitiated = !!lastInitiatedAt
+  const timeAgo = lastInitiatedAt
+    ? getTimeAgo(lastInitiatedAt, new Date())
     : null
 
   return (
@@ -96,10 +96,10 @@ function Inner({style}: ViewStyleProp & {}) {
                   a.align_center,
                   gtPhone ? [a.flex_row, a.gap_xl] : [a.gap_md],
                 ]}>
-                {assurance.lastInitiatedAt ? (
+                {hasInitiated ? (
                   <Text
                     style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
-                    title={i18n.date(assurance.lastInitiatedAt, {
+                    title={i18n.date(lastInitiatedAt, {
                       dateStyle: 'medium',
                       timeStyle: 'medium',
                     })}>
