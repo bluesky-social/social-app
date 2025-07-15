@@ -20,7 +20,6 @@ const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 // This needs to stay outside of react to persist between account switches
 let previousIntentUrl = ''
 
-// TODO we handle intents for logged out users?
 export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
   const composeIntent = useComposeIntent()
