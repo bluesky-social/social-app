@@ -24,7 +24,7 @@ export function AgeRestrictedScreen({
 }) {
   const {_} = useLingui()
   const copy = useAgeAssuranceCopy()
-  const {isLoaded, assurance} = useAgeInfo()
+  const {isLoaded, mustCompleteAgeAssurance} = useAgeInfo()
 
   if (!isLoaded) {
     return (
@@ -39,7 +39,7 @@ export function AgeRestrictedScreen({
       </Layout.Screen>
     )
   }
-  if (!assurance.isAgeRestricted) return children
+  if (!mustCompleteAgeAssurance) return children
 
   return (
     <Layout.Screen>

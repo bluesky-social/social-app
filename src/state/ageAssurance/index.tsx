@@ -55,7 +55,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     enabled: true,
     queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
     staleTime: STALE.MINUTES.ONE,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: geolocation?.isAgeRestrictedGeo === true,
     async queryFn() {
       if (!agent.session) return null
 
@@ -68,7 +68,7 @@ export function Provider({children}: {children: React.ReactNode}) {
         //   (() => ({
         //     data: {
         //       lastInitiatedAt: undefined,//new Date().toISOString(),
-        //       status: 'unknown',
+        //       status: 'pending',
         //     } as AppBskyUnspeccedDefs.AgeAssuranceState,
         //   }))(),
         // )

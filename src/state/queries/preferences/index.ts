@@ -10,7 +10,8 @@ import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {useMaybeApplyAgeRestrictedModerationPrefs} from '#/state/ageAssurance/useMaybeApplyAgeRestrictedModerationPrefs'
+import {AGE_RESTRICTED_MODERATION_PREFS} from '#/state/ageAssurance/const'
+import {useMustCompleteAgeAssurance} from '#/state/ageAssurance/useMustCompleteAgeAssurance'
 import {STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
@@ -33,7 +34,7 @@ export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
   const agent = useAgent()
-  const maybeOverrideModPrefs = useMaybeApplyAgeRestrictedModerationPrefs()
+  const mustCompleteAgeAssurance = useMustCompleteAgeAssurance()
 
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
@@ -74,10 +75,13 @@ export function usePreferencesQuery() {
     },
     select: useCallback(
       (data: UsePreferencesQueryResponse) => {
-        data.moderationPrefs = maybeOverrideModPrefs(data.moderationPrefs)
+        const isUnderage = (data.userAge || 0) < 18
+        if (isUnderage || mustCompleteAgeAssurance) {
+          data.moderationPrefs = AGE_RESTRICTED_MODERATION_PREFS
+        }
         return data
       },
-      [maybeOverrideModPrefs],
+      [mustCompleteAgeAssurance],
     ),
   })
 }

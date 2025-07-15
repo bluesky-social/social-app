@@ -9,6 +9,7 @@ import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNative} from '#/platform/detection'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
+import {useMustCompleteAgeAssurance} from '#/state/ageAssurance/useMustCompleteAgeAssurance'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
 
@@ -122,7 +123,7 @@ async function getPushToken() {
  * @see https://github.com/bluesky-social/social-app/pull/4467
  */
 export function useGetAndRegisterPushToken() {
-  const {isAgeRestricted} = useAgeAssuranceContext()
+  const mustCompleteAgeAssurance = useMustCompleteAgeAssurance()
   const registerPushToken = useRegisterPushToken()
   return useCallback(
     async ({
@@ -149,13 +150,13 @@ export function useGetAndRegisterPushToken() {
          */
         registerPushToken({
           token,
-          isAgeRestricted: isAgeRestrictedOverride ?? isAgeRestricted,
+          isAgeRestricted: isAgeRestrictedOverride ?? mustCompleteAgeAssurance,
         })
       }
 
       return token
     },
-    [registerPushToken, isAgeRestricted],
+    [registerPushToken, mustCompleteAgeAssurance],
   )
 }
 
@@ -170,8 +171,8 @@ export function useNotificationsRegistration() {
   const {currentAccount} = useSession()
   const registerPushToken = useRegisterPushToken()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
-  const {isLoaded: isAgeAssuranceLoaded, isAgeRestricted} =
-    useAgeAssuranceContext()
+  const {isLoaded: isAgeAssuranceLoaded} = useAgeAssuranceContext()
+  const mustCompleteAgeAssurance = useMustCompleteAgeAssurance()
 
   useEffect(() => {
     /**
@@ -200,7 +201,7 @@ export function useNotificationsRegistration() {
      * @see https://docs.expo.dev/versions/latest/sdk/notifications/#addpushtokenlistenerlistener
      */
     const subscription = Notifications.addPushTokenListener(async token => {
-      registerPushToken({token, isAgeRestricted})
+      registerPushToken({token, isAgeRestricted: mustCompleteAgeAssurance})
       notyLogger.debug(`addPushTokenListener callback`, {token})
     })
 
@@ -212,7 +213,7 @@ export function useNotificationsRegistration() {
     getAndRegisterPushToken,
     registerPushToken,
     isAgeAssuranceLoaded,
-    isAgeRestricted,
+    mustCompleteAgeAssurance,
   ])
 }
 

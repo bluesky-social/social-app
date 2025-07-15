@@ -15,11 +15,11 @@ export function AgeAssuranceAdmonition({
   style,
 }: ViewStyleProp & {children: React.ReactNode}) {
   const control = useDialogControl()
-  const {isLoaded, isUnderage, assurance} = useAgeInfo()
+  const {isLoaded, isUnderage, mustCompleteAgeAssurance} = useAgeInfo()
 
   if (!isLoaded) return null
   if (isUnderage) return null
-  if (!assurance.isAgeRestricted) return null
+  if (!mustCompleteAgeAssurance) return null
 
   return (
     <Inner style={style} control={control}>

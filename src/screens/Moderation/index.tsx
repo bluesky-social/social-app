@@ -160,7 +160,7 @@ export function ModerationScreenInner({
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
-  const {declaredAge, isUnderage, assurance: ageAssurance} = useAgeInfo()
+  const {declaredAge, isUnderage, mustCompleteAgeAssurance} = useAgeInfo()
 
   useFocusEffect(
     useCallback(() => {
@@ -316,7 +316,7 @@ export function ModerationScreenInner({
       </AgeAssuranceAdmonition>
 
       <View style={[a.gap_md]}>
-        {declaredAge === undefined && ageAssurance.isAgeRestricted && (
+        {declaredAge === undefined && (
           <>
             <Button
               label={_(msg`Confirm your birthdate`)}
@@ -345,7 +345,7 @@ export function ModerationScreenInner({
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
           ]}>
-          {!isUnderage && (
+          {!isUnderage && !mustCompleteAgeAssurance && (
             <>
               <View
                 style={[
@@ -361,7 +361,7 @@ export function ModerationScreenInner({
                 </Text>
                 <Toggle.Item
                   label={_(msg`Toggle to enable or disable adult content`)}
-                  disabled={disabledOnIOS || ageAssurance.isAgeRestricted}
+                  disabled={disabledOnIOS}
                   name="adultContent"
                   value={adultContentEnabled}
                   onChange={onToggleAdultContentEnabled}>
@@ -377,7 +377,7 @@ export function ModerationScreenInner({
                   </View>
                 </Toggle.Item>
               </View>
-              {disabledOnIOS && !ageAssurance.isAgeRestricted && (
+              {disabledOnIOS && (
                 <View style={[a.pb_lg, a.px_lg]}>
                   <Text>
                     <Trans>
@@ -414,7 +414,7 @@ export function ModerationScreenInner({
             </>
           )}
           <GlobalLabelPreference
-            disabled={ageAssurance.isAgeRestricted}
+            disabled={isUnderage || mustCompleteAgeAssurance}
             labelDefinition={LABELS.nudity}
           />
         </View>
