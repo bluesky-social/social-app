@@ -350,7 +350,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
       } else {
         const [screen, params] = router.matchPath(href)
         // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
-        navigation.popTo(screen, params)
+        navigation.navigate(screen, params, {pop: true})
       }
     },
     [navigation, href, isCurrent],
