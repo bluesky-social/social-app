@@ -235,8 +235,9 @@ function Inner() {
                 ) : (
                   <Admonition type="tip" style={[a.mt_sm]}>
                     <Trans>
-                      Use your account email, or a real email you control, in
-                      case KWS or Bluesky needs to contact you.
+                      Use your account email address, or another real email
+                      address you control, in case KWS or Bluesky needs to
+                      contact you.
                     </Trans>
                   </Admonition>
                 )}
