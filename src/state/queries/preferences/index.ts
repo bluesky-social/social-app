@@ -10,7 +10,6 @@ import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {useMaybeApplyAgeRestrictedModerationPrefs} from '#/state/age-assurance/useMaybeApplyAgeRestrictedModerationPrefs'
 import {STALE} from '#/state/queries'
 import {
@@ -34,14 +33,9 @@ export const preferencesQueryKey = [preferencesQueryKeyRoot]
 
 export function usePreferencesQuery() {
   const agent = useAgent()
-  const {isLoaded: isAAStateLoaded} = useAgeAssuranceContext()
   const maybeOverrideModPrefs = useMaybeApplyAgeRestrictedModerationPrefs()
 
   return useQuery({
-    /*
-     * We must await AA state, otherwise users may see a FOUC - esb
-     */
-    enabled: isAAStateLoaded,
     staleTime: STALE.SECONDS.FIFTEEN,
     structuralSharing: replaceEqualDeep,
     refetchOnWindowFocus: true,

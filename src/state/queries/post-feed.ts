@@ -32,6 +32,7 @@ import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {logger} from '#/logger'
+import {useAgeAssuranceContext} from '#/state/age-assurance'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
@@ -135,8 +136,15 @@ export function usePostFeedQuery(
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
+  /**
+   * Load bearing: we need to await AA state or risk FOUC.
+   */
+  const {isLoaded: isAALoaded} = useAgeAssuranceContext()
   const enabled =
-    opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
+    opts?.enabled !== false &&
+    Boolean(moderationOpts) &&
+    Boolean(preferences) &&
+    isAALoaded
   const userInterests = aggregateUserInterests(preferences)
   const followingPinnedIndex =
     preferences?.savedFeeds?.findIndex(

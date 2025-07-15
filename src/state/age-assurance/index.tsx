@@ -64,8 +64,8 @@ export function Provider({children}: {children: React.ReactNode}) {
         //   1e3,
         //   (() => ({
         //     data: {
-        //       lastInitiatedAt: new Date().toISOString(),
-        //       status: 'pending',
+        //       lastInitiatedAt: undefined,//new Date().toISOString(),
+        //       status: 'unknown',
         //     } as AppBskyUnspeccedDefs.AgeAssuranceState,
         //   }))(),
         // )
