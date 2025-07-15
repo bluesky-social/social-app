@@ -8,7 +8,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 const logger = Logger.create(Logger.Context.AgeAssurance)
 
 type AgeInfo = {
-  isLoaded: boolean
+  isReady: boolean
   declaredAge: number | undefined
   isUnderage: boolean
   isAgeRestricted: boolean
@@ -28,10 +28,10 @@ export function useAgeInfo(): AgeInfo {
   const declaredAge = preferences?.userAge
 
   return useMemo(() => {
-    const isLoaded = ctx.isLoaded && preferencesLoaded
+    const isReady = ctx.isReady && preferencesLoaded
     const isUnderage = (declaredAge || 0) < 18
     const info: AgeInfo = {
-      isLoaded,
+      isReady,
       declaredAge,
       isUnderage,
       isAgeRestricted,

@@ -139,12 +139,12 @@ export function usePostFeedQuery(
   /**
    * Load bearing: we need to await AA state or risk FOUC.
    */
-  const {isLoaded: isAALoaded} = useAgeAssuranceContext()
+  const {isReady: isAgeAssuranceReady} = useAgeAssuranceContext()
   const enabled =
     opts?.enabled !== false &&
     Boolean(moderationOpts) &&
     Boolean(preferences) &&
-    isAALoaded
+    isAgeAssuranceReady
   const userInterests = aggregateUserInterests(preferences)
   const followingPinnedIndex =
     preferences?.savedFeeds?.findIndex(

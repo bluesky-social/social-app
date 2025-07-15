@@ -86,9 +86,9 @@ export function ModerationScreen(
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
-  const {isLoaded: isAgeInfoLoaded} = useAgeInfo()
+  const {isReady: isAgeInfoReady} = useAgeInfo()
 
-  const isLoading = isPreferencesLoading || !isAgeInfoLoaded
+  const isLoading = isPreferencesLoading || !isAgeInfoReady
   const error = preferencesError
 
   return (

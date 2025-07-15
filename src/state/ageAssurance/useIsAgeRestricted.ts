@@ -5,7 +5,7 @@ import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {useGeolocation} from '#/state/geolocation'
 
 export function useIsAgeRestricted() {
-  const {isLoaded, status} = useAgeAssuranceContext()
+  const {isReady, status} = useAgeAssuranceContext()
   const {geolocation} = useGeolocation()
   const gate = useGate()
 
@@ -17,8 +17,8 @@ export function useIsAgeRestricted() {
       }
     }
     return {
-      isReady: isLoaded,
+      isReady,
       isAgeRestricted: status !== 'assured',
     }
-  }, [isLoaded, status, geolocation, gate])
+  }, [isReady, status, geolocation, gate])
 }

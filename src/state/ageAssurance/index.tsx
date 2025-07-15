@@ -24,7 +24,7 @@ const DEFAULT_AGE_ASSURANCE_STATE: AppBskyUnspeccedDefs.AgeAssuranceState = {
 }
 const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   status: 'unknown',
-  isLoaded: false,
+  isReady: false,
   lastInitiatedAt: undefined,
 })
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
@@ -99,7 +99,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const ageAssuranceContext = useMemo<AgeAssuranceContextType>(() => {
     const {status, lastInitiatedAt} = data || DEFAULT_AGE_ASSURANCE_STATE
     const ctx: AgeAssuranceContextType = {
-      isLoaded: isFetched,
+      isReady: isFetched,
       status,
       lastInitiatedAt,
     }

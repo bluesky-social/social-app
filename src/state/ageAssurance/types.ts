@@ -2,7 +2,10 @@ import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {type QueryObserverBaseResult} from '@tanstack/react-query'
 
 export type AgeAssuranceContextType = {
-  isLoaded: boolean
+  /**
+   * Whether the age assurance state has been fetched from the server.
+   */
+  isReady: boolean
   /**
    * The server-reported status of the user's age verification process.
    */
