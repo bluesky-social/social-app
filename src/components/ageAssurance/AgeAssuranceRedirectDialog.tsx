@@ -69,7 +69,7 @@ export function AgeAssuranceRedirectDialog() {
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
-        label={_(msg`Verifying your age verification status`)}
+        label={_(msg`Verifying your age assurance status`)}
         style={[web({maxWidth: 400})]}>
         <Inner optimisticState={control.value} />
       </Dialog.ScrollableInner>
