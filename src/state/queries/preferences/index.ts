@@ -41,10 +41,9 @@ export function usePreferencesQuery() {
     refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
-      let preferences: UsePreferencesQueryResponse =
-        DEFAULT_LOGGED_OUT_PREFERENCES
-
-      if (agent.did) {
+      if (!agent.did) {
+        return DEFAULT_LOGGED_OUT_PREFERENCES
+      } else {
         const res = await agent.getPreferences()
 
         // save to local storage to ensure there are labels on initial requests
@@ -53,7 +52,7 @@ export function usePreferencesQuery() {
           res.moderationPrefs.labelers.map(l => l.did),
         )
 
-        preferences = {
+        const preferences: UsePreferencesQueryResponse = {
           ...res,
           savedFeeds: res.savedFeeds.filter(f => f.type !== 'unknown'),
           /**
@@ -70,9 +69,8 @@ export function usePreferencesQuery() {
           },
           userAge: res.birthDate ? getAge(res.birthDate) : undefined,
         }
+        return preferences
       }
-
-      return preferences
     },
     select: useCallback(
       (data: UsePreferencesQueryResponse) => {
