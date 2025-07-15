@@ -13,7 +13,9 @@ import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
+import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
@@ -33,12 +35,13 @@ let SearchResults = ({
   headerHeight: number
 }): React.ReactNode => {
   const {_} = useLingui()
+  const {hasSession} = useSession()
 
   const sections = useMemo(() => {
     if (!queryWithParams) return []
     const noParams = queryWithParams === query
     return [
-      {
+      hasSession && {
         title: _(msg`Top`),
         component: (
           <SearchScreenPostResults
@@ -48,7 +51,7 @@ let SearchResults = ({
           />
         ),
       },
-      {
+      hasSession && {
         title: _(msg`Latest`),
         component: (
           <SearchScreenPostResults
@@ -58,23 +61,33 @@ let SearchResults = ({
           />
         ),
       },
-      noParams && {
+      (noParams || !hasSession) && {
         title: _(msg`People`),
         component: (
-          <SearchScreenUserResults query={query} active={activeTab === 2} />
+          <SearchScreenUserResults
+            query={query}
+            active={activeTab === (hasSession ? 2 : 0)}
+          />
         ),
       },
-      noParams && {
+      (noParams || !hasSession) && {
         title: _(msg`Feeds`),
         component: (
-          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
+          <SearchScreenFeedsResults
+            query={query}
+            active={activeTab === (hasSession ? 3 : 1)}
+          />
         ),
+      },
+      !hasSession && {
+        title: _(msg`Posts`),
+        component: <SearchScreenFakePosts />,
       },
     ].filter(Boolean) as {
       title: string
       component: React.ReactNode
     }[]
-  }, [_, query, queryWithParams, activeTab])
+  }, [_, query, queryWithParams, activeTab, hasSession])
 
   return (
     <Pager
@@ -104,7 +117,7 @@ function Loader() {
   )
 }
 
-function EmptyState({message, error}: {message: string; error?: string}) {
+function NoResults({message, error}: {message: string; error?: string}) {
   const t = useTheme()
 
   return (
@@ -217,7 +230,7 @@ let SearchScreenPostResults = ({
   }, [posts, isFetchingNextPage])
 
   return error ? (
-    <EmptyState
+    <NoResults
       message={_(
         msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
       )}
@@ -245,7 +258,7 @@ let SearchScreenPostResults = ({
               contentContainerStyle={{paddingBottom: 100}}
             />
           ) : (
-            <EmptyState message={_(msg`No results found for ${query}`)} />
+            <NoResults message={_(msg`No results found for ${query}`)} />
           )}
         </>
       ) : (
@@ -281,7 +294,7 @@ let SearchScreenUserResults = ({
           contentContainerStyle={{paddingBottom: 100}}
         />
       ) : (
-        <EmptyState message={_(msg`No results found for ${query}`)} />
+        <NoResults message={_(msg`No results found for ${query}`)} />
       )}
     </>
   ) : (
@@ -326,7 +339,7 @@ let SearchScreenFeedsResults = ({
           contentContainerStyle={{paddingBottom: 100}}
         />
       ) : (
-        <EmptyState message={_(msg`No results found for ${query}`)} />
+        <NoResults message={_(msg`No results found for ${query}`)} />
       )}
     </>
   ) : (
@@ -334,3 +347,19 @@ let SearchScreenFeedsResults = ({
   )
 }
 SearchScreenFeedsResults = memo(SearchScreenFeedsResults)
+
+function SearchScreenFakePosts() {
+  const {_} = useLingui()
+  const t = useTheme()
+
+  const icon = () => <Logo width={42} style={t.atoms.text_contrast_low} />
+
+  return (
+    <Layout.Content>
+      <EmptyState
+        icon={icon}
+        message={_(msg`Sign in or create an account to search for posts.`)}
+      />
+    </Layout.Content>
+  )
+}

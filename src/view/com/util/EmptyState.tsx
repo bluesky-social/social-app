@@ -1,8 +1,8 @@
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
+import {type IconProp} from '@fortawesome/fontawesome-svg-core'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -18,7 +18,7 @@ export function EmptyState({
   style,
 }: {
   testID?: string
-  icon: IconProp | 'user-group' | 'growth'
+  icon: IconProp | 'user-group' | 'growth' | (() => React.ReactNode)
   message: string
   style?: StyleProp<ViewStyle>
 }) {
@@ -37,12 +37,14 @@ export function EmptyState({
           <UserGroupIcon size={iconSize} />
         ) : icon === 'growth' ? (
           <Growth width={iconSize} fill={pal.colors.emptyStateIcon} />
-        ) : (
+        ) : typeof icon !== 'function' ? (
           <FontAwesomeIcon
             icon={icon}
             size={iconSize}
             style={[{color: pal.colors.emptyStateIcon} as FontAwesomeIconStyle]}
           />
+        ) : (
+          icon()
         )}
       </View>
       <Text type="xl" style={[{color: pal.colors.textLight}, styles.text]}>
