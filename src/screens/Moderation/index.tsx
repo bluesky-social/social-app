@@ -13,6 +13,7 @@ import {
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useAgeAssuranceContext} from '#/state/age-assurance'
+import {useAgeInfo} from '#/state/age-assurance/useAgeInfo'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
@@ -24,7 +25,6 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
-import {useAgeInfo} from '#/components/ageAssurance/useAgeInfo'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
