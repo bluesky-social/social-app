@@ -28,30 +28,32 @@ export function AgeAssuranceDismissibleNotice({style}: ViewStyleProp & {}) {
 
   return (
     <View style={style}>
-      <AgeAssuranceAdmonition>{copy.notice}</AgeAssuranceAdmonition>
+      <View>
+        <AgeAssuranceAdmonition>{copy.notice}</AgeAssuranceAdmonition>
 
-      <Button
-        label={_(msg`Don't show again`)}
-        size="tiny"
-        variant="solid"
-        color="secondary_inverted"
-        shape="round"
-        onPress={() =>
-          save({
-            id: Nux.AgeAssuranceDismissibleNotice,
-            completed: true,
-            data: undefined,
-          })
-        }
-        style={[
-          a.absolute,
-          {
-            top: 12,
-            right: 12,
-          },
-        ]}>
-        <ButtonIcon icon={X} />
-      </Button>
+        <Button
+          label={_(msg`Don't show again`)}
+          size="tiny"
+          variant="solid"
+          color="secondary_inverted"
+          shape="round"
+          onPress={() =>
+            save({
+              id: Nux.AgeAssuranceDismissibleNotice,
+              completed: true,
+              data: undefined,
+            })
+          }
+          style={[
+            a.absolute,
+            {
+              top: 12,
+              right: 12,
+            },
+          ]}>
+          <ButtonIcon icon={X} />
+        </Button>
+      </View>
     </View>
   )
 }
