@@ -54,6 +54,8 @@ export function Provider({children}: {children: React.ReactNode}) {
      * This is load bearing. We always want this query to run and end in a
      * "fetched" state, even if we fall back to defaults. This lets the rest of
      * the app know that we've at least attempted to load the AA state.
+     *
+     * However, it only needs to run if AA is enabled.
      */
     enabled: isAgeAssuranceEnabled,
     queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
