@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -43,6 +43,9 @@ function Inner({style}: ViewStyleProp & {}) {
   const hasInitiated = !!lastInitiatedAt
   const timeAgo = lastInitiatedAt
     ? getTimeAgo(lastInitiatedAt, new Date())
+    : null
+  const diff = lastInitiatedAt
+    ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
 
   return (
@@ -96,14 +99,14 @@ function Inner({style}: ViewStyleProp & {}) {
                   a.align_center,
                   gtPhone ? [a.flex_row, a.gap_xl] : [a.gap_md],
                 ]}>
-                {hasInitiated ? (
+                {lastInitiatedAt && timeAgo && diff ? (
                   <Text
                     style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
                     title={i18n.date(lastInitiatedAt, {
                       dateStyle: 'medium',
                       timeStyle: 'medium',
                     })}>
-                    {timeAgo === 'now' ? (
+                    {diff.value === 0 ? (
                       <Trans>Last initiated just now</Trans>
                     ) : (
                       <Trans>Last initiated {timeAgo} ago</Trans>
