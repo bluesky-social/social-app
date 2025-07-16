@@ -96,7 +96,12 @@ function Inner({style}: ViewStyleProp & {}) {
                 style={[
                   a.pt_md,
                   gtPhone
-                    ? [a.flex_row, a.gap_xl, a.justify_between, a.align_center]
+                    ? [
+                        a.flex_row_reverse,
+                        a.gap_xl,
+                        a.justify_between,
+                        a.align_center,
+                      ]
                     : [a.gap_md],
                 ]}>
                 <Button
