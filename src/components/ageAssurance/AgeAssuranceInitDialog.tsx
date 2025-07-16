@@ -76,7 +76,7 @@ function Inner() {
   const [languageError, setLanguageError] = useState(false)
   const [disabled, setDisabled] = useState(false)
   const [language, setLanguage] = useState<string | undefined>(
-    KWS_SUPPORTED_LANGS.find(v => v.value === langPrefs.appLanguage)?.value,
+    convertToKWSSupportedLanguage(langPrefs.appLanguage),
   )
   const [error, setError] = useState<string>('')
 
@@ -324,4 +324,26 @@ function Inner() {
       </View>
     </View>
   )
+}
+
+// best-effort mapping of our languages to KWS supported languages
+function convertToKWSSupportedLanguage(
+  appLanguage: string,
+): string | undefined {
+  switch (appLanguage) {
+    // only en is supported
+    case 'en-GB':
+      return 'en'
+    // pt-PT is pt (pt-BR is supported independently)
+    case 'pt-PT':
+      return 'pt'
+    // only chinese (simplified) is supported, map all chinese variants
+    case 'zh-Hans-CN':
+    case 'zh-Hant-HK':
+    case 'zh-Hant-TW':
+      return 'zh-Hans'
+    default:
+      // try and map directly - if undefined, they will have to pick from the dropdown
+      return KWS_SUPPORTED_LANGS.find(v => v.value === appLanguage)?.value
+  }
 }
