@@ -7,6 +7,7 @@ export type Device = {
   lastNuxDialog: string | undefined
   geolocation?: {
     countryCode: string | undefined
+    isAgeRestrictedGeo: boolean | undefined
   }
   trendingBetaEnabled: boolean
   devMode: boolean
