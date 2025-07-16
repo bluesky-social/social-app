@@ -159,7 +159,7 @@ function Inner() {
                   <InlineLinkText
                     overridePresentation
                     disableMismatchWarning
-                    label={urls.kwsHome}
+                    label={_(msg`KWS website`)}
                     to={urls.kwsHome}
                     style={[a.text_sm, a.leading_snug]}>
                     KWS
@@ -276,7 +276,7 @@ function Inner() {
                 <InlineLinkText
                   overridePresentation
                   disableMismatchWarning
-                  label={urls.kwsTermsOfUse}
+                  label={_(msg`KWS Terms of Use`)}
                   to={urls.kwsTermsOfUse}
                   style={[a.text_xs, a.leading_snug]}>
                   KWS Terms of Use
@@ -286,7 +286,7 @@ function Inner() {
                 <InlineLinkText
                   overridePresentation
                   disableMismatchWarning
-                  label={urls.kwsPrivacyPolicy}
+                  label={_(msg`KWS Privacy Policy`)}
                   to={urls.kwsPrivacyPolicy}
                   style={[a.text_xs, a.leading_snug]}>
                   KWS Privacy Policy
