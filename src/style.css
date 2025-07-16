@@ -12,38 +12,38 @@
  * HTML & BODY STYLES IN `web/index.html` and `bskyweb/templates/base.html`
  */
 :root {
-  --text: black;
-  --background: white;
-  --backgroundLight: hsl(211, 20%, 95%);
+  --text: #070c0c;
+  --background: #f8faf9;
+  --backgroundLight: hsl(240, 20%, 95%);
 }
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --text: white;
-    --background: black;
-    --backgroundLight: hsl(211, 20%, 20%);
+    --text: #f8faf9;
+    --background: #070c0c;
+    --backgroundLight: hsl(240, 20%, 20%);
   }
 }
 
 html.theme--light {
-  --text: black;
-  --background: white;
-  --backgroundLight: hsl(211, 20%, 95%);
-  background-color: white;
+  --text: #070c0c;
+  --background: #f8faf9;
+  --backgroundLight: hsl(240, 20%, 95%);
+  background-color: #f8faf9;
 }
 html.theme--dark {
   color-scheme: dark;
-  background-color: black;
-  --text: white;
-  --background: black;
-  --backgroundLight: hsl(211, 20%, 20%);
+  background-color: #070c0c;
+  --text: #f8faf9;
+  --background: #070c0c;
+  --backgroundLight: hsl(240, 20%, 20%);
 }
 html.theme--dim {
   color-scheme: dark;
-  background-color: hsl(211, 28%, 12%);
-  --text: white;
-  --background: hsl(211, 20%, 4%);
-  --backgroundLight: hsl(211, 20%, 10%);
+  background-color: #161e27;
+  --text: #f8faf9;
+  --background: #161e27;
+  --backgroundLight: hsl(240, 20%, 10%);
 }
 
 /* Buttons and inputs have a font set by UA, so we'll have to reset that */

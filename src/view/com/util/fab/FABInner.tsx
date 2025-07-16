@@ -1,5 +1,5 @@
-import {ComponentProps} from 'react'
-import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import {type ComponentProps} from 'react'
+import {StyleSheet, type TouchableWithoutFeedback} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -53,7 +53,7 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
         targetScale={0.9}
         {...props}>
         <LinearGradient
-          colors={[gradients.blueLight.start, gradients.blueLight.end]}
+          colors={[gradients.blue.start, gradients.blue.end]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[styles.inner, size]}>

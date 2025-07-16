@@ -8,9 +8,9 @@ export const STARTERPACK_HEIGHT = 630
 export const STARTERPACK_WIDTH = 1200
 export const TILE_SIZE = STARTERPACK_HEIGHT / 3
 
-const GRADIENT_TOP = '#0A7AFF'
-const GRADIENT_BOTTOM = '#59B9FF'
-const IMAGE_STROKE = '#359CFF'
+const GRADIENT_TOP = '#464985'
+const GRADIENT_BOTTOM = '#8686FF'
+const IMAGE_STROKE = '#6060E9'
 
 export function StarterPack(props: {
   starterPack: AppBskyGraphDefs.StarterPackView
@@ -52,7 +52,7 @@ export function StarterPack(props: {
         height: STARTERPACK_HEIGHT,
         backgroundColor: 'black',
         color: 'white',
-        fontFamily: 'Inter',
+        fontFamily: 'Rubik',
       }}>
       {/* image tiles */}
       <div

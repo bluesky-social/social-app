@@ -73,7 +73,7 @@ export function Card({
   return (
     <View style={[a.w_full, a.gap_md]}>
       <View style={[a.flex_row, a.gap_sm, a.w_full]}>
-        {!noIcon ? <StarterPackIcon width={40} gradient="sky" /> : null}
+        {!noIcon ? <StarterPackIcon width={40} gradient="primary" /> : null}
         <View style={[a.flex_1]}>
           <Text
             emoji
@@ -98,7 +98,7 @@ export function Card({
       ) : null}
       {!!joinedAllTimeCount && joinedAllTimeCount >= 50 && (
         <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-          <Trans comment="Number of users (always at least 50) who have joined Bluesky using a specific starter pack">
+          <Trans comment="Number of users (always at least 50) who have joined Blacksky using a specific starter pack">
             <Plural value={joinedAllTimeCount} other="# users have" /> joined!
           </Trans>
         </Text>

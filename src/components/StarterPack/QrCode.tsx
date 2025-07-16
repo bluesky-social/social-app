@@ -3,7 +3,7 @@ import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
 import type ViewShot from 'react-native-view-shot'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {isWeb} from '#/platform/detection'
@@ -65,7 +65,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
               a.text_center,
               {color: 'white', fontSize: 18},
             ]}>
-            <Trans>Join the conversation</Trans>
+            <Trans>Join the cookout</Trans>
           </Text>
           <View style={[a.rounded_sm, a.overflow_hidden]}>
             <QrCodeInner link={link} />

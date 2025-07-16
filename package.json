@@ -177,6 +177,7 @@
     "normalize-url": "^8.0.0",
     "patch-package": "^6.5.1",
     "postinstall-postinstall": "^2.1.0",
+    "preact": "^10.26.9",
     "psl": "^1.9.0",
     "radix-ui": "^1.2.0",
     "react": "19.0.0",

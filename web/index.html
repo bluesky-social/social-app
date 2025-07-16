@@ -43,11 +43,11 @@
         font-display: swap;
       }
       html {
-        background-color: white;
+        background-color: #F8FAF9;
       }
       @media (prefers-color-scheme: dark) {
         html {
-          background-color: black;
+          background-color: #070C0C;
         }
       }
       html,
@@ -74,7 +74,7 @@
       }
       #splash {
         position: fixed;
-        width: 125px;
+        width: 100px;
         left: 50%;
         top: 50%;
         transform: translateX(-50%) translateY(-50%) translateY(-50px);
@@ -105,13 +105,19 @@
    ">
     <h1 lang="en">JavaScript Required</h1>
     <p lang="en">This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
-    <p lang="en">Learn more about Bluesky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>, or this fork at <a href="https://github.com/blacksky-algorithms/blacksky.community">github.com/blacksky-algorithms/blacksky.community</a>.</p>
+    <p lang="en">Learn more about Blacksky at <a href="https://blackskyweb.xyz">blackskyweb.xyz</a> and <a href="https://atproto.com">atproto.com</a>, or this fork at <a href="https://github.com/blacksky-algorithms/blacksky.community">github.com/blacksky-algorithms/blacksky.community</a>.</p>
   </noscript>
 
     <!-- The root element for your Expo app. -->
   <div id="root">
     <div id="splash">
-      <svg width="285" height="243" viewBox="0 0 285 243" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Blacksky SVG scaled by parent width (100 px) -->
+      <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 285 243"
+              preserveAspectRatio="xMidYMid meet"
+              style="width:100%;height:auto;display:block"
+      >
         <g clip-path="url(#clip0_1011_989)">
           <path d="M148.846 144.562C148.846 159.75 161.158 172.062 176.346 172.062H207.012V185.865H176.346C161.158 185.865 148.846 198.177 148.846 213.365V243.045H136.029V213.365C136.029 198.177 123.717 185.865 108.529 185.865H77.8633V172.062H108.529C123.717 172.062 136.029 159.75 136.029 144.562V113.896H148.846V144.562Z" fill="black"/>
           <path d="M170.946 31.8766C160.207 42.616 160.207 60.0281 170.946 70.7675L192.631 92.4516L182.871 102.212L161.186 80.5275C150.447 69.7881 133.035 69.7881 122.296 80.5275L101.309 101.514L92.2456 92.4509L113.232 71.4642C123.972 60.7248 123.972 43.3128 113.232 32.5733L91.5488 10.8899L101.309 1.12988L122.993 22.814C133.732 33.5533 151.144 33.5534 161.884 22.814L183.568 1.12988L192.631 10.1925L170.946 31.8766Z" fill="black"/>

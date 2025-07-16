@@ -7,9 +7,9 @@
   <!--
     Preconnect to essential domains
   -->
-  <link rel="preconnect" href="https://bsky.social">
-  <link rel="preconnect" href="https://go.bsky.app">
-  <title>{%- block head_title -%}Bluesky{%- endblock -%}</title>
+  <link rel="preconnect" href="https://blacksky.community">
+    <link rel="preconnect" href="https://go.blacksky.community">
+    <title>{%- block head_title -%}Blacksky{%- endblock -%}</title>
 
   <!-- Hello Humans! API docs at https://atproto.com -->
 
@@ -38,11 +38,11 @@
       font-display: swap;
     }
     html {
-      background-color: white;
+      background-color: #F8FAF9;
     }
     @media (prefers-color-scheme: dark) {
       html {
-        background-color: black;
+        background-color: #070C0C;
       }
     }
     html,
@@ -92,10 +92,9 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{{ staticCDNHost }}/static/favicon-16x16.png">
   <link rel="mask-icon" href="{{ staticCDNHost }}/static/safari-pinned-tab.svg" color="#1185fe">
   <meta name="theme-color">
-  <meta name="application-name" content="Bluesky">
+  <meta name="application-name" content="Blacksky">
   <meta name="generator" content="bskyweb">
-  <meta property="og:site_name" content="Bluesky Social" />
-  <meta name="twitter:site" content="@bluesky" />
+  <meta property="og:site_name" content="Blacksky Community" />
   <link type="application/activity+json" href="" />
 
   {% block html_head_extra -%}{%- endblock %}
@@ -104,15 +103,27 @@
 {%- block body_all %}
   <div id="root">
     <div id="splash">
-      <!-- Bluesky SVG -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 320"><path fill="#0085ff" d="M180 142c-16.3-31.7-60.7-90.8-102-120C38.5-5.9 23.4-1 13.5 3.4 2.1 8.6 0 26.2 0 36.5c0 10.4 5.7 84.8 9.4 97.2 12.2 41 55.7 55 95.7 50.5-58.7 8.6-110.8 30-42.4 106.1 75.1 77.9 103-16.7 117.3-64.6 14.3 48 30.8 139 116 64.6 64-64.6 17.6-97.5-41.1-106.1 40 4.4 83.5-9.5 95.7-50.5 3.7-12.4 9.4-86.8 9.4-97.2 0-10.3-2-27.9-13.5-33C336.5-1 321.5-6 282 22c-41.3 29.2-85.7 88.3-102 120Z"/></svg>
+      <!-- Blacksky SVG -->
+      <svg width="360" height="320" viewBox="0 0 91 79" fill="#8686FF" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0_21_406)">
+          <path d="M47.5266 46.9287C47.5268 51.7779 51.4576 55.7089 56.3069 55.709H66.0989V60.1143H56.3069C51.4575 60.1143 47.5266 64.0461 47.5266 68.8955V78.3721H66.0989V78.374H24.8616V78.3721H43.4338V68.8955C43.4338 64.0462 39.5028 60.1145 34.6536 60.1143H24.8616V55.709H34.6536C39.5027 55.7088 43.4336 51.7779 43.4338 46.9287V37.1367H47.5266V46.9287Z" fill="#8686FF"/>
+          <path d="M54.583 10.9463C51.1539 14.3754 51.1539 19.935 54.583 23.3641L61.5067 30.2878L58.3903 33.4041L51.4666 26.4804C48.0375 23.0513 42.4779 23.0513 39.0488 26.4804L32.3478 33.1814L29.4539 30.2876L36.1549 23.5865C39.584 20.1575 39.584 14.5978 36.1549 11.1687L29.2314 4.24526L32.3478 1.12891L39.2715 8.05262C42.7006 11.4817 48.2602 11.4817 51.6893 8.05262L58.613 1.12891L61.5067 4.02257L54.583 10.9463Z" fill="#8686FF"/>
+          <path d="M25.2414 24.8199C23.9862 29.5041 26.766 34.3188 31.4502 35.574L40.9082 38.1082L39.7676 42.3649L30.31 39.8308C25.6258 38.5756 20.811 41.3555 19.5558 46.0397L17.103 55.1937L13.1499 54.1345L15.6026 44.9807C16.8578 40.2965 14.078 35.4817 9.39375 34.2266L-0.064209 31.6924L1.07646 27.4353L10.5344 29.9696C15.2186 31.2247 20.0334 28.4449 21.2885 23.7607L23.8228 14.3027L27.7756 15.3619L25.2414 24.8199Z" fill="#8686FF"/>
+          <path d="M69.7388 23.5742C70.994 28.2583 75.8088 31.0382 80.4929 29.7831L89.9509 27.2488L91.0915 31.5055L81.6335 34.0398C76.9493 35.2949 74.1696 40.1097 75.4246 44.7939L77.8774 53.948L73.9246 55.0071L71.4719 45.8534C70.2168 41.1692 65.402 38.3893 60.7178 39.6445L51.2598 42.1787L50.1191 37.9217L59.5771 35.3874C64.2613 34.1323 67.0411 29.3175 65.786 24.6333L63.2517 15.1754L67.2046 14.1162L69.7388 23.5742Z" fill="#8686FF"/>
+        </g>
+        <defs>
+          <clipPath id="clip0_21_406">
+            <rect width="91" height="77.5895" fill="none" transform="translate(0 0.768555)"/>
+          </clipPath>
+        </defs>
+      </svg>
     </div>
   </div>
 
   <noscript>
     <h1 lang="en">JavaScript Required</h1>
     <p lang="en">This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
-    <p lang="en">Learn more about Bluesky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>.
+    <p lang="en">Learn more about Blacksky at <a href="https://blackskyweb.xyz">blackskyweb.xyz</a> and <a href="https://atproto.com">atproto.com</a>.
     {% block noscript_extra %}{% endblock %}
   </noscript>
 {% endblock -%}

@@ -8,6 +8,34 @@ import {
   RED_HUE,
 } from '#/alf/util/colorGeneration'
 
+/** ----------------------------------------------------------------
+ *  Core brand swatches lifted 1‑for‑1 from the guideline pages.
+ *  (Add or rename here – _never_ inside a palette – to keep ALF’s
+ *  public API unchanged.)
+ * ----------------------------------------------------------------*/
+export const BRAND = {
+  /* Neutrals */
+  black: '#070C0C',
+  white: '#F8FAF9',
+  twilight: '#161E27',
+  gray300: '#C8CAC9',
+  gray400: '#9C9E9E',
+  gray600: '#6A6A6A',
+
+  /* Primary / “Indigo‑violet” */
+  primaryLight: '#6060E9',
+  primaryLightTint: '#EAEBFC',
+  primaryDark: '#8686FF',
+  primaryDarkTint: '#464985',
+
+  /* Accent / Lime‑green (“success”) */
+  secondary: '#D2FC51',
+  secondaryTint: '#F1FECB',
+
+  /* Negative / Brand red */
+  negative: '#F40B42',
+} as const
+
 const themes = createThemes({
   hues: {
     primary: BLUE_HUE,
@@ -59,34 +87,6 @@ export function createThemes({
   dark: Theme
   dim: Theme
 } {
-  /** ----------------------------------------------------------------
-   *  Core brand swatches lifted 1‑for‑1 from the guideline pages.
-   *  (Add or rename here – _never_ inside a palette – to keep ALF’s
-   *  public API unchanged.)
-   * ----------------------------------------------------------------*/
-  const BRAND = {
-    /* Neutrals */
-    black: '#070C0C',
-    white: '#F8FAF9',
-    twilight: '#161E27',
-    gray300: '#C8CAC9',
-    gray400: '#9C9E9E',
-    gray600: '#6A6A6A',
-
-    /* Primary / “Indigo‑violet” */
-    primaryLight: '#6060E9',
-    primaryLightTint: '#EAEBFC',
-    primaryDark: '#8686FF',
-    primaryDarkTint: '#464985',
-
-    /* Accent / Lime‑green (“success”) */
-    secondary: '#D2FC51',
-    secondaryTint: '#F1FECB',
-
-    /* Negative / Brand red */
-    negative: '#F40B42',
-  } as const
-
   /**
    * ----------------------------------------------------------------
    *  _All_ runtime‑visible tokens are hard‑coded to match the guide.

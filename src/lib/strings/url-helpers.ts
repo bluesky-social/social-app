@@ -107,7 +107,9 @@ export function isRelativeUrl(url: string): boolean {
 
 export function isBskyRSSUrl(url: string): boolean {
   return (
-    (url.startsWith('https://bsky.app/') || isRelativeUrl(url)) &&
+    (url.startsWith('https://bsky.app/') ||
+      url.startsWith('https://blacksky.community/') ||
+      isRelativeUrl(url)) &&
     /\/rss\/?$/.test(url)
   )
 }
