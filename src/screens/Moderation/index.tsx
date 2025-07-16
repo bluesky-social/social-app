@@ -310,8 +310,7 @@ export function ModerationScreenInner({
 
       <AgeAssuranceAdmonition style={[a.pb_md]}>
         <Trans>
-          You must complete age assurance in order to access the settings
-          below.
+          You must complete age assurance in order to access the settings below.
         </Trans>
       </AgeAssuranceAdmonition>
 
