@@ -78,7 +78,7 @@ export function SelectAccountScreenInner({
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <Layout.Content contentContainerStyle={[a.p_xl]}>
+      <Layout.Content contentContainerStyle={[a.px_2xl, a.py_lg]}>
         <Layout.TitleText>
           <Trans>Select account</Trans>
         </Layout.TitleText>
