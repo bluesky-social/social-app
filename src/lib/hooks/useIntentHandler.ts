@@ -78,6 +78,11 @@ export function useIntentHandler() {
             actorDid: params.get('actorDid') ?? undefined,
           })
 
+          /*
+           * If we don't have an account or the account doesn't match, do
+           * nothing. By the time the user switches to their other account, AA
+           * state should be ready for them.
+           */
           if (
             state &&
             currentAccount &&
