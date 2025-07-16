@@ -16,7 +16,7 @@ import {Text} from '#/components/Typography'
 export function useInternalState() {
   const {isReady, isDeclaredUnderage, isAgeRestricted, lastInitiatedAt} =
     useAgeAssurance()
-  const {nux} = useNux(Nux.AgeAssuranceDismissibleHeaderButton)
+  const {nux} = useNux(Nux.AgeAssuranceDismissibleFeedBanner)
   const {mutate: save, variables} = useSaveNux()
   const hidden = !!variables
 
@@ -39,7 +39,7 @@ export function useInternalState() {
 
   const close = () => {
     save({
-      id: Nux.AgeAssuranceDismissibleHeaderButton,
+      id: Nux.AgeAssuranceDismissibleFeedBanner,
       completed: true,
       data: undefined,
     })
