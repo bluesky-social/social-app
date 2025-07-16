@@ -104,7 +104,7 @@ function Inner({style}: ViewStyleProp & {}) {
                       timeStyle: 'medium',
                     })}>
                     {timeAgo === 'now' ? (
-                      <Trans>Last initiated just {timeAgo}</Trans>
+                      <Trans>Last initiated just now</Trans>
                     ) : (
                       <Trans>Last initiated {timeAgo} ago</Trans>
                     )}
