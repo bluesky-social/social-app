@@ -8,6 +8,7 @@ import {useCleanError} from '#/lib/hooks/useCleanError'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useTLDs} from '#/lib/hooks/useTLDs'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
+import {type AppLanguage} from '#/locale/languages'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {useInitAgeAssurance} from '#/state/ageAssurance/useInitAgeAssurance'
 import {useLanguagePrefs} from '#/state/preferences'
@@ -330,7 +331,8 @@ function Inner() {
 function convertToKWSSupportedLanguage(
   appLanguage: string,
 ): string | undefined {
-  switch (appLanguage) {
+  // `${Enum}` is how you get a type of string union of the enum values (???) -sfn
+  switch (appLanguage as `${AppLanguage}`) {
     // only en is supported
     case 'en-GB':
       return 'en'
