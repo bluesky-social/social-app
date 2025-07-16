@@ -203,7 +203,7 @@ msgstr ""
 msgid "{0}s"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:401
+#: src/view/shell/desktop/LeftNav.tsx:402
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -663,8 +663,8 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:469
 #: src/screens/Settings/Settings.tsx:472
-#: src/view/shell/desktop/LeftNav.tsx:260
-#: src/view/shell/desktop/LeftNav.tsx:264
+#: src/view/shell/desktop/LeftNav.tsx:259
+#: src/view/shell/desktop/LeftNav.tsx:263
 msgid "Add another account"
 msgstr ""
 
@@ -1488,7 +1488,7 @@ msgstr ""
 #: src/view/com/modals/ChangePassword.tsx:282
 #: src/view/com/modals/CreateOrEditList.tsx:333
 #: src/view/com/modals/CropImage.web.tsx:97
-#: src/view/shell/desktop/LeftNav.tsx:213
+#: src/view/shell/desktop/LeftNav.tsx:212
 msgid "Cancel"
 msgstr ""
 
@@ -1590,7 +1590,7 @@ msgstr ""
 #: src/lib/hooks/useNotificationHandler.ts:99
 #: src/Navigation.tsx:547
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
-#: src/view/shell/desktop/LeftNav.tsx:553
+#: src/view/shell/desktop/LeftNav.tsx:554
 #: src/view/shell/Drawer.tsx:455
 msgid "Chat"
 msgstr ""
@@ -1889,7 +1889,7 @@ msgstr ""
 msgid "Complete the challenge"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:518
+#: src/view/shell/desktop/LeftNav.tsx:519
 msgid "Compose new post"
 msgstr ""
 
@@ -3170,7 +3170,7 @@ msgstr ""
 
 #: src/Navigation.tsx:749
 #: src/screens/Search/Shell.tsx:307
-#: src/view/shell/desktop/LeftNav.tsx:635
+#: src/view/shell/desktop/LeftNav.tsx:636
 #: src/view/shell/Drawer.tsx:403
 msgid "Explore"
 msgstr ""
@@ -3434,7 +3434,7 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:511
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:104
-#: src/view/shell/desktop/LeftNav.tsx:673
+#: src/view/shell/desktop/LeftNav.tsx:674
 #: src/view/shell/Drawer.tsx:519
 msgid "Feeds"
 msgstr ""
@@ -4079,7 +4079,7 @@ msgstr ""
 #: src/Navigation.tsx:744
 #: src/Navigation.tsx:764
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
-#: src/view/shell/desktop/LeftNav.tsx:617
+#: src/view/shell/desktop/LeftNav.tsx:618
 #: src/view/shell/Drawer.tsx:429
 msgid "Home"
 msgstr ""
@@ -4676,7 +4676,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:65
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
-#: src/view/shell/desktop/LeftNav.tsx:691
+#: src/view/shell/desktop/LeftNav.tsx:692
 #: src/view/shell/Drawer.tsx:534
 msgid "Lists"
 msgstr ""
@@ -5122,7 +5122,7 @@ msgid "Nature"
 msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:130
-#: src/components/StarterPack/StarterPackCard.tsx:161
+#: src/components/StarterPack/StarterPackCard.tsx:160
 msgid "Navigate to {0}"
 msgstr ""
 
@@ -5238,7 +5238,7 @@ msgctxt "action"
 msgid "New post"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:526
+#: src/view/shell/desktop/LeftNav.tsx:527
 msgctxt "action"
 msgid "New Post"
 msgstr ""
@@ -5500,7 +5500,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:190
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
-#: src/view/shell/desktop/LeftNav.tsx:654
+#: src/view/shell/desktop/LeftNav.tsx:655
 #: src/view/shell/Drawer.tsx:482
 msgid "Notifications"
 msgstr ""
@@ -6328,7 +6328,7 @@ msgid "profile"
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:316
-#: src/view/shell/desktop/LeftNav.tsx:709
+#: src/view/shell/desktop/LeftNav.tsx:710
 #: src/view/shell/Drawer.tsx:76
 #: src/view/shell/Drawer.tsx:559
 msgid "Profile"
@@ -7465,7 +7465,7 @@ msgstr ""
 
 #: src/Navigation.tsx:211
 #: src/screens/Settings/Settings.tsx:92
-#: src/view/shell/desktop/LeftNav.tsx:727
+#: src/view/shell/desktop/LeftNav.tsx:728
 #: src/view/shell/Drawer.tsx:572
 msgid "Settings"
 msgstr ""
@@ -7787,9 +7787,9 @@ msgstr ""
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:85
-#: src/view/shell/desktop/LeftNav.tsx:212
-#: src/view/shell/desktop/LeftNav.tsx:267
-#: src/view/shell/desktop/LeftNav.tsx:270
+#: src/view/shell/desktop/LeftNav.tsx:211
+#: src/view/shell/desktop/LeftNav.tsx:266
+#: src/view/shell/desktop/LeftNav.tsx:269
 msgid "Sign out"
 msgstr ""
 
@@ -7798,7 +7798,7 @@ msgid "Sign Out"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:276
-#: src/view/shell/desktop/LeftNav.tsx:209
+#: src/view/shell/desktop/LeftNav.tsx:208
 msgid "Sign out?"
 msgstr ""
 
@@ -8094,7 +8094,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:114
 #: src/screens/Settings/Settings.tsx:128
 #: src/screens/Settings/Settings.tsx:509
-#: src/view/shell/desktop/LeftNav.tsx:246
+#: src/view/shell/desktop/LeftNav.tsx:245
 msgid "Switch account"
 msgstr ""
 
@@ -8103,11 +8103,11 @@ msgstr ""
 msgid "Switch Account"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:110
+#: src/view/shell/desktop/LeftNav.tsx:109
 msgid "Switch accounts"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:294
+#: src/view/shell/desktop/LeftNav.tsx:293
 msgid "Switch to {0}"
 msgstr ""
 
@@ -10028,7 +10028,7 @@ msgid "You reacted {0} to {1}"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:277
-#: src/view/shell/desktop/LeftNav.tsx:210
+#: src/view/shell/desktop/LeftNav.tsx:209
 msgid "You will be signed out of all your accounts."
 msgstr ""
 
