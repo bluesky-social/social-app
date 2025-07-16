@@ -1,4 +1,5 @@
 import {useState} from 'react'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,7 +14,6 @@ import * as Toast from '#/view/com/util/Toast'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a} from '#/alf'
 import {AccountList} from '#/components/AccountList'
-import * as TextField from '#/components/forms/TextField'
 import * as Layout from './components/Layout'
 
 type Props = NativeStackScreenProps<AuthNavigatorParams, 'SelectAccount'>
@@ -79,14 +79,17 @@ export function SelectAccountScreenInner({
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <Layout.Content contentContainerStyle={[a.p_xl]}>
-        <TextField.LabelText>
-          <Trans>Sign in as...</Trans>
-        </TextField.LabelText>
-        <AccountList
-          onSelectAccount={onSelect}
-          onSelectOther={signIn}
-          pendingDid={pendingDid}
-        />
+        <Layout.TitleText>
+          <Trans>Select account</Trans>
+        </Layout.TitleText>
+        <View style={[a.mt_lg]}>
+          <AccountList
+            onSelectAccount={onSelect}
+            onSelectOther={signIn}
+            pendingDid={pendingDid}
+            otherLabel={_(msg`Add account`)}
+          />
+        </View>
       </Layout.Content>
     </Layout.Screen>
   )

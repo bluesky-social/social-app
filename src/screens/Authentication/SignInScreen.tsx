@@ -97,7 +97,9 @@ export function SignInScreenInner({
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <Layout.Content contentContainerStyle={[a.p_xl]}>
-        <Text style={[a.font_heavy, a.text_3xl]}>Log in</Text>
+        <Layout.TitleText>
+          <Trans>Log in</Trans>
+        </Layout.TitleText>
         <SignInForm
           error={error}
           serviceUrl={serviceUrl}

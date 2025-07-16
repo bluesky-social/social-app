@@ -184,7 +184,7 @@ export function SignInForm({
             label={_(msg`Username or email address`)}
             placeholder=""
             autoCapitalize="none"
-            autoFocus
+            autoFocus={!initialHandle}
             autoCorrect={false}
             autoComplete="username"
             returnKeyType="next"
@@ -218,6 +218,7 @@ export function SignInForm({
             label={_(msg`Password`)}
             placeholder=""
             autoCapitalize="none"
+            autoFocus={!!initialHandle}
             autoCorrect={false}
             autoComplete="password"
             returnKeyType="done"
