@@ -9,9 +9,14 @@ import * as Select from '#/components/Select'
 export function LanguageSelect({
   value,
   onChange,
+  items = APP_LANGUAGES.map(l => ({
+    label: l.name,
+    value: l.code2,
+  })),
 }: {
-  value: string
+  value?: string
   onChange: (value: string) => void
+  items?: {label: string; value: string}[]
 }) {
   const {_} = useLingui()
 
@@ -25,10 +30,10 @@ export function LanguageSelect({
 
   return (
     <Select.Root
-      value={sanitizeAppLanguageSetting(value)}
+      value={value ? sanitizeAppLanguageSetting(value) : undefined}
       onValueChange={handleOnChange}>
       <Select.Trigger label={_(msg`Select language`)}>
-        <Select.ValueText />
+        <Select.ValueText placeholder={_(msg`Select language`)} />
         <Select.Icon />
       </Select.Trigger>
       <Select.Content
@@ -38,10 +43,7 @@ export function LanguageSelect({
             <Select.ItemText>{label}</Select.ItemText>
           </Select.Item>
         )}
-        items={APP_LANGUAGES.map(l => ({
-          label: l.name,
-          value: l.code2,
-        }))}
+        items={items}
       />
     </Select.Root>
   )

@@ -16,6 +16,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {urls} from '#/components/ageAssurance/const'
+import {KWS_SUPPORTED_LANGS} from '#/components/ageAssurance/const'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -72,8 +73,11 @@ function Inner() {
   const [success, setSuccess] = useState(false)
   const [email, setEmail] = useState(currentAccount?.email || '')
   const [emailError, setEmailError] = useState<string>('')
+  const [languageError, setLanguageError] = useState(false)
   const [disabled, setDisabled] = useState(false)
-  const [language, setLanguage] = useState(langPrefs.appLanguage)
+  const [language, setLanguage] = useState<string | undefined>(
+    KWS_SUPPORTED_LANGS.find(v => v.value === langPrefs.appLanguage)?.value,
+  )
   const [error, setError] = useState<string>('')
 
   const {mutateAsync: init, isPending} = useInitAgeAssurance()
@@ -102,10 +106,16 @@ function Inner() {
   }
 
   const onSubmit = async () => {
+    setLanguageError(false)
+
     try {
       const {status} = runEmailValidation()
 
       if (status === 'invalid') return
+      if (!language) {
+        setLanguageError(true)
+        return
+      }
 
       await init({
         email,
@@ -247,7 +257,20 @@ function Inner() {
                 <TextField.LabelText>
                   <Trans>Your preferred language</Trans>
                 </TextField.LabelText>
-                <LanguageSelect value={language} onChange={setLanguage} />
+                <LanguageSelect
+                  value={language}
+                  onChange={value => {
+                    setLanguage(value)
+                    setLanguageError(false)
+                  }}
+                  items={KWS_SUPPORTED_LANGS}
+                />
+
+                {languageError && (
+                  <Admonition type="error" style={[a.mt_sm]}>
+                    <Trans>Please select a language</Trans>
+                  </Admonition>
+                )}
               </View>
 
               {error && <Admonition type="error">{error}</Admonition>}
