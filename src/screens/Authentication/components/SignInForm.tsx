@@ -172,7 +172,7 @@ export function SignInForm({
   }
 
   return (
-    <View style={[a.pt_2xl, a.gap_md]}>
+    <View style={[a.pt_2xl, a.gap_lg]}>
       <View>
         <TextField.LabelText>
           <Trans>Username or email address</Trans>
@@ -245,7 +245,7 @@ export function SignInForm({
           accessibilityHint={_(msg`Opens password reset form`)}
           variant="ghost"
           color="secondary">
-          <ButtonText>
+          <ButtonText style={[a.font_normal]}>
             <Trans>Forgot password?</Trans>
           </ButtonText>
         </Button>

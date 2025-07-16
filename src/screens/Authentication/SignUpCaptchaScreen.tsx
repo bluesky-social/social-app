@@ -3,6 +3,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {Logo} from '#/view/icons/Logo'
+import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Layout from './components/Layout'
 
@@ -21,7 +22,7 @@ export function SignUpCaptchaScreenInner() {
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <Layout.Content>
+      <Layout.Content contentContainerStyle={[a.px_2xl, a.py_lg]}>
         <Text>TODO</Text>
       </Layout.Content>
     </Layout.Screen>

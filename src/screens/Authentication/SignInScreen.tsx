@@ -1,8 +1,10 @@
 import {useEffect, useRef, useState} from 'react'
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
+import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {
   type AuthNavigatorParams,
   type NativeStackScreenProps,
@@ -87,6 +89,8 @@ export function SignInScreenInner({
     failedAttemptCountRef.current += 1
   }
 
+  useEnableKeyboardControllerScreen(true)
+
   return (
     <Layout.Screen testID="SignInScreen">
       <Layout.Header.Outer noBottomBorder>
@@ -96,34 +100,38 @@ export function SignInScreenInner({
         </Layout.Header.Content>
         <Layout.Header.Slot />
       </Layout.Header.Outer>
-      <Layout.Content contentContainerStyle={[a.p_xl]}>
-        <Layout.TitleText>
-          <Trans>Log in</Trans>
-        </Layout.TitleText>
-        <SignInForm
-          error={error}
-          serviceUrl={serviceUrl}
-          serviceDescription={serviceDescription}
-          initialHandle={requestedAccount?.handle}
-          setError={setError}
-          onAttemptFailed={onAttemptFailed}
-          onAttemptSuccess={onAttemptSuccess}
-          setServiceUrl={setServiceUrl}
-          onPressForgotPassword={onPressForgotPassword}
-          onPressRetryConnect={refetchService}
-        />
-        <Text style={[a.text_md, a.text_center, a.w_full, a.mt_2xl]}>
-          <Trans>
-            New to Bluesky?{' '}
-            <Text
-              role="link"
-              onPress={signUp}
-              style={[a.text_md, {color: t.palette.primary_500}]}>
-              Create account
-            </Text>
-          </Trans>
-        </Text>
-      </Layout.Content>
+      <KeyboardAvoidingView style={[a.flex_1]} behavior="padding">
+        <Layout.Content
+          style={[a.flex_1]}
+          contentContainerStyle={[a.px_2xl, a.py_lg]}>
+          <Layout.TitleText>
+            <Trans>Log in</Trans>
+          </Layout.TitleText>
+          <SignInForm
+            error={error}
+            serviceUrl={serviceUrl}
+            serviceDescription={serviceDescription}
+            initialHandle={requestedAccount?.handle}
+            setError={setError}
+            onAttemptFailed={onAttemptFailed}
+            onAttemptSuccess={onAttemptSuccess}
+            setServiceUrl={setServiceUrl}
+            onPressForgotPassword={onPressForgotPassword}
+            onPressRetryConnect={refetchService}
+          />
+          <Text style={[a.text_md, a.text_center, a.w_full, a.mt_2xl]}>
+            <Trans>
+              New to Bluesky?{' '}
+              <Text
+                role="link"
+                onPress={signUp}
+                style={[a.text_md, {color: t.palette.primary_500}]}>
+                Create account
+              </Text>
+            </Trans>
+          </Text>
+        </Layout.Content>
+      </KeyboardAvoidingView>
     </Layout.Screen>
   )
 }

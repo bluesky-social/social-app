@@ -182,7 +182,11 @@ function AccountItem({
           {isCurrentAccount ? (
             <View
               style={[
-                {width: 20, height: 20, backgroundColor: t.palette.primary_500},
+                {
+                  width: 20,
+                  height: 20,
+                  backgroundColor: t.palette.positive_600,
+                },
                 a.rounded_full,
                 a.justify_center,
                 a.align_center,
