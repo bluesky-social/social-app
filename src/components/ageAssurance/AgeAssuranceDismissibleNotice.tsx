@@ -10,11 +10,11 @@ import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
-export function AgeAssuranceDismissableNotice({style}: ViewStyleProp & {}) {
+export function AgeAssuranceDismissibleNotice({style}: ViewStyleProp & {}) {
   const {_} = useLingui()
   const {isReady, isDeclaredUnderage, isAgeRestricted, lastInitiatedAt} =
     useAgeAssurance()
-  const {nux} = useNux(Nux.AgeAssuranceDismissableNotice)
+  const {nux} = useNux(Nux.AgeAssuranceDismissibleNotice)
   const copy = useAgeAssuranceCopy()
   const {mutate: save, variables} = useSaveNux()
   const hidden = !!variables
@@ -28,32 +28,30 @@ export function AgeAssuranceDismissableNotice({style}: ViewStyleProp & {}) {
 
   return (
     <View style={style}>
-      <View style={[a.relative]}>
-        <AgeAssuranceAdmonition>{copy.notice}</AgeAssuranceAdmonition>
+      <AgeAssuranceAdmonition>{copy.notice}</AgeAssuranceAdmonition>
 
-        <Button
-          label={_(msg`Don't show again`)}
-          size="tiny"
-          variant="solid"
-          color="secondary_inverted"
-          shape="round"
-          onPress={() =>
-            save({
-              id: Nux.AgeAssuranceDismissableNotice,
-              completed: true,
-              data: undefined,
-            })
-          }
-          style={[
-            a.absolute,
-            {
-              top: 12,
-              right: 12,
-            },
-          ]}>
-          <ButtonIcon icon={X} />
-        </Button>
-      </View>
+      <Button
+        label={_(msg`Don't show again`)}
+        size="tiny"
+        variant="solid"
+        color="secondary_inverted"
+        shape="round"
+        onPress={() =>
+          save({
+            id: Nux.AgeAssuranceDismissibleNotice,
+            completed: true,
+            data: undefined,
+          })
+        }
+        style={[
+          a.absolute,
+          {
+            top: 12,
+            right: 12,
+          },
+        ]}>
+        <ButtonIcon icon={X} />
+      </Button>
     </View>
   )
 }
