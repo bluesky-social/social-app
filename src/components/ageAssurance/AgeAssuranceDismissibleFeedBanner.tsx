@@ -4,6 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, select, useTheme} from '#/alf'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
@@ -72,7 +73,10 @@ export function AgeAssuranceDismissibleFeedBanner() {
       <Link
         label={_(msg`Learn more about age assurance`)}
         to="/settings/account"
-        onPress={close}
+        onPress={() => {
+          close()
+          logger.metric('ageAssurance:navigateToSettings', {})
+        }}
         style={[a.w_full, a.justify_between, a.align_center, a.gap_md]}>
         <View
           style={[
@@ -106,7 +110,10 @@ export function AgeAssuranceDismissibleFeedBanner() {
       <Button
         label={_(msg`Don't show again`)}
         size="small"
-        onPress={close}
+        onPress={() => {
+          close()
+          logger.metric('ageAssurance:dismissFeedBanner', {})
+        }}
         style={[
           a.absolute,
           a.justify_center,

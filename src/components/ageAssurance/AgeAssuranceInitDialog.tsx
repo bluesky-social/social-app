@@ -16,6 +16,7 @@ import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {type AppLanguage} from '#/locale/languages'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {useInitAgeAssurance} from '#/state/ageAssurance/useInitAgeAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -115,6 +116,8 @@ function Inner() {
   const onSubmit = async () => {
     setLanguageError(false)
 
+    logger.metric('ageAssurance:initDialogSubmit', {})
+
     try {
       const {status} = runEmailValidation()
 
@@ -138,6 +141,7 @@ function Inner() {
               msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
             ),
           )
+          logger.metric('ageAssurance:initDialogError', {code: 'InvalidEmail'})
         } else if (e.error === 'DidTooLong') {
           setError(
             <>
@@ -153,10 +157,12 @@ function Inner() {
               </Trans>
             </>,
           )
+          logger.metric('ageAssurance:initDialogError', {code: 'DidTooLong'})
         }
       } else {
         const {clean, raw} = cleanError(e)
         setError(clean || raw || _(msg`Something went wrong, please try again`))
+        logger.metric('ageAssurance:initDialogError', {code: 'other'})
       }
     }
   }

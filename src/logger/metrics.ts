@@ -457,4 +457,20 @@ export type MetricEvents = {
     name: string
     value: string
   }
+
+  'ageAssurance:navigateToSettings': {}
+  'ageAssurance:dismissFeedBanner': {}
+  'ageAssurance:dismissSettingsNotice': {}
+  'ageAssurance:initDialogOpen': {
+    hasInitiatedPreviously: boolean
+  }
+  'ageAssurance:initDialogSubmit': {}
+  'ageAssurance:initDialogError': {
+    code: string
+  }
+  'ageAssurance:redirectDialogOpen': {}
+  'ageAssurance:redirectDialogSuccess': {}
+  'ageAssurance:redirectDialogFail': {}
+  'ageAssurance:appealDialogOpen': {}
+  'ageAssurance:appealDialogSubmit': {}
 }

@@ -4,6 +4,7 @@ import {useLingui} from '@lingui/react'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -83,6 +84,7 @@ function Inner({style}: ViewStyleProp & {}) {
                   label={_(msg`Contact our moderation team`)}
                   {...createStaticClick(() => {
                     appealControl.open()
+                    logger.metric('ageAssurance:appealDialogOpen', {})
                   })}>
                   contact our moderation team
                 </InlineLinkText>{' '}
@@ -109,7 +111,12 @@ function Inner({style}: ViewStyleProp & {}) {
                   size="small"
                   variant="solid"
                   color={hasInitiated ? 'secondary' : 'primary'}
-                  onPress={() => control.open()}>
+                  onPress={() => {
+                    control.open()
+                    logger.metric('ageAssurance:initDialogOpen', {
+                      hasInitiatedPreviously: hasInitiated,
+                    })
+                  }}>
                   <ButtonText>
                     {hasInitiated ? (
                       <Trans>Verify again</Trans>

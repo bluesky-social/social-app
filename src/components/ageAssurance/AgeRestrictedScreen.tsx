@@ -3,6 +3,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -77,7 +78,10 @@ export function AgeRestrictedScreen({
               to="/settings/account"
               size="small"
               variant="solid"
-              color="primary">
+              color="primary"
+              onPress={() => {
+                logger.metric('ageAssurance:navigateToSettings', {})
+              }}>
               <ButtonText>
                 <Trans>Go to account settings</Trans>
               </ButtonText>
