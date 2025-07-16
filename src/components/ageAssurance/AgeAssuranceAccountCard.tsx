@@ -95,10 +95,25 @@ function Inner({style}: ViewStyleProp & {}) {
               <View
                 style={[
                   a.pt_md,
-                  a.justify_between,
-                  a.align_center,
-                  gtPhone ? [a.flex_row, a.gap_xl] : [a.gap_md],
+                  gtPhone
+                    ? [a.flex_row, a.gap_xl, a.justify_between, a.align_center]
+                    : [a.gap_md],
                 ]}>
+                <Button
+                  label={_(msg`Verify now`)}
+                  size="small"
+                  variant="solid"
+                  color={hasInitiated ? 'secondary' : 'primary'}
+                  onPress={() => control.open()}>
+                  <ButtonText>
+                    {hasInitiated ? (
+                      <Trans>Verify again</Trans>
+                    ) : (
+                      <Trans>Verify now</Trans>
+                    )}
+                  </ButtonText>
+                </Button>
+
                 {lastInitiatedAt && timeAgo && diff ? (
                   <Text
                     style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
@@ -118,20 +133,6 @@ function Inner({style}: ViewStyleProp & {}) {
                     <Trans>Age assurance only takes a few minutes</Trans>
                   </Text>
                 )}
-                <Button
-                  label={_(msg`Verify now`)}
-                  size="small"
-                  variant="solid"
-                  color={hasInitiated ? 'secondary' : 'primary'}
-                  onPress={() => control.open()}>
-                  <ButtonText>
-                    {hasInitiated ? (
-                      <Trans>Verify again</Trans>
-                    ) : (
-                      <Trans>Verify now</Trans>
-                    )}
-                  </ButtonText>
-                </Button>
               </View>
             </>
           )}

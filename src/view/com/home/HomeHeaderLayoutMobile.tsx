@@ -12,6 +12,10 @@ import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
+import {
+  AgeAssuranceDismissibleHeaderButton,
+  useInternalState,
+} from '#/components/ageAssurance/AgeAssuranceDismissibleHeaderButton'
 import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
@@ -29,6 +33,7 @@ export function HomeHeaderLayoutMobile({
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
+  const {visible: aaButtonVisible} = useInternalState()
 
   return (
     <Animated.View
@@ -51,36 +56,45 @@ export function HomeHeaderLayoutMobile({
           <Layout.Header.MenuButton />
         </Layout.Header.Slot>
 
-        <View style={[a.flex_1, a.align_center]}>
+        <View style={[a.flex_1]} />
+
+        <View style={[a.absolute, a.inset_0, a.align_center, a.justify_center]}>
           <PressableScale
             targetScale={0.9}
             onPress={() => {
               playHaptic('Light')
               emitSoftReset()
-            }}>
+            }}
+            style={{top: -2}}>
             <Logo width={30} />
           </PressableScale>
         </View>
 
-        <Layout.Header.Slot>
-          {hasSession && (
-            <Link
-              testID="viewHeaderHomeFeedPrefsBtn"
-              to={{screen: 'Feeds'}}
-              hitSlop={HITSLOP_10}
-              label={_(msg`View your feeds and explore more`)}
-              size="small"
-              variant="ghost"
-              color="secondary"
-              shape="square"
-              style={[
-                a.justify_center,
-                {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
-              ]}>
-              <ButtonIcon icon={FeedsIcon} size="lg" />
-            </Link>
-          )}
-        </Layout.Header.Slot>
+        {aaButtonVisible ? (
+          <View style={{right: -4}}>
+            <AgeAssuranceDismissibleHeaderButton />
+          </View>
+        ) : (
+          <Layout.Header.Slot>
+            {hasSession && (
+              <Link
+                testID="viewHeaderHomeFeedPrefsBtn"
+                to={{screen: 'Feeds'}}
+                hitSlop={HITSLOP_10}
+                label={_(msg`View your feeds and explore more`)}
+                size="small"
+                variant="ghost"
+                color="secondary"
+                shape="square"
+                style={[
+                  a.justify_center,
+                  {marginRight: -Layout.BUTTON_VISUAL_ALIGNMENT_OFFSET},
+                ]}>
+                <ButtonIcon icon={FeedsIcon} size="lg" />
+              </Link>
+            )}
+          </Layout.Header.Slot>
+        )}
       </Layout.Header.Outer>
       {children}
     </Animated.View>
