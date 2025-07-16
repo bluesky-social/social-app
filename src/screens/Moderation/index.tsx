@@ -21,7 +21,6 @@ import {
 } from '#/state/queries/preferences'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
 import {Button, ButtonText} from '#/components/Button'
@@ -93,7 +92,15 @@ export function ModerationScreen(
 
   return (
     <Layout.Screen testID="moderationScreen">
-      <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Moderation</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         {isLoading ? (
           <ListMaybePlaceholder isLoading={true} sideBorders={false} />
