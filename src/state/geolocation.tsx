@@ -3,7 +3,6 @@ import EventEmitter from 'eventemitter3'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {type Device, device} from '#/storage'
 
 const events = new EventEmitter()
@@ -69,13 +68,6 @@ export function beginResolveGeolocation() {
    */
   if (__DEV__) {
     geolocationResolution = new Promise(y => y({success: true}))
-
-    // use for debugging
-    // device.set(['geolocation'], {
-    //   countryCode: "GB",
-    //   isAgeRestrictedGeo: true,
-    // })
-
     if (!device.get(['geolocation'])) {
       device.set(['geolocation'], DEFAULT_GEOLOCATION)
     }
@@ -186,18 +178,4 @@ export function Provider({children}: {children: React.ReactNode}) {
 
 export function useGeolocation() {
   return React.useContext(context)
-}
-
-if (__DEV__ && isWeb) {
-  // @ts-ignore
-  window.setGeolocation = (geo: Device['geolocation']) => {
-    if (!geo?.countryCode || typeof geo?.isAgeRestrictedGeo !== 'boolean') {
-      throw new Error(
-        `Expected {countryCode: string, isAgeRestrictedGeo: boolean}`,
-      )
-    }
-
-    device.set(['geolocation'], geo)
-    emitGeolocationUpdate(geo)
-  }
 }

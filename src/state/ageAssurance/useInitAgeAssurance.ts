@@ -8,7 +8,6 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {wait} from '#/lib/async/wait'
 import {
   // DEV_ENV_APPVIEW,
-  // DEV_ENV_APPVIEW_DID,
   PUBLIC_APPVIEW,
   PUBLIC_APPVIEW_DID,
 } from '#/lib/constants'
@@ -21,9 +20,17 @@ import {useAgent} from '#/state/session'
 let APPVIEW = PUBLIC_APPVIEW
 let APPVIEW_DID = PUBLIC_APPVIEW_DID
 
+/*
+ * Uncomment if using the local dev-env
+ */
 // if (__DEV__) {
 //   APPVIEW = DEV_ENV_APPVIEW
-//   APPVIEW_DID = DEV_ENV_APPVIEW_DID
+//   /*
+//    * IMPORTANT: you need to get this value from `http://localhost:2581`
+//    * introspection endpoint and updated in `constants`, since it changes
+//    * every time you run the dev-env.
+//    */
+//   APPVIEW_DID = ``
 // }
 
 export function useInitAgeAssurance() {

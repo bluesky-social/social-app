@@ -137,7 +137,10 @@ export function usePostFeedQuery(
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
   /**
-   * Load bearing: we need to await AA state or risk FOUC.
+   * Load bearing: we need to await AA state or risk FOUC. This marginally
+   * delays feeds, but AA state is fetched immediately on load and is then
+   * available for the remainder of the session, so this delay only affects cold
+   * loads. -esb
    */
   const {isReady: isAgeAssuranceReady} = useAgeAssuranceContext()
   const enabled =

@@ -16,20 +16,24 @@ import {useGeolocation} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 
 const logger = Logger.create(Logger.Context.AgeAssurance)
+
 export const createAgeAssuranceQueryKey = (did: string) =>
   ['ageAssurance', did] as const
+
 const DEFAULT_AGE_ASSURANCE_STATE: AppBskyUnspeccedDefs.AgeAssuranceState = {
   lastInitiatedAt: undefined,
   status: 'unknown',
 }
+
 const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   status: 'unknown',
   isReady: false,
   lastInitiatedAt: undefined,
   isAgeRestricted: false,
 })
+
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
-  // @ts-ignore
+  // @ts-ignore can't be bothered to type this
   refetch: () => Promise.resolve(),
 })
 
