@@ -82,8 +82,6 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
     },
   })
 
-  const onSubmit = React.useCallback(() => mutate(), [mutate])
-
   return (
     <View>
       <View style={[a.align_start]}>
@@ -111,7 +109,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
           }}
           label={_(msg`Additional details (limit 1000 characters)`)}
           numberOfLines={4}
-          onSubmitEditing={onSubmit}
+          onSubmitEditing={() => mutate()}
         />
         <View style={[a.pt_md, a.gap_sm, gtPhone && [a.flex_row_reverse]]}>
           <Button
@@ -119,7 +117,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
             size="small"
             variant="solid"
             color="primary"
-            onPress={onSubmit}>
+            onPress={() => mutate()}>
             <ButtonText>
               <Trans>Submit</Trans>
             </ButtonText>
