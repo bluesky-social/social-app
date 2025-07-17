@@ -134,16 +134,18 @@ function Inner() {
 
       setSuccess(true)
     } catch (e) {
+      let error: React.ReactNode = _(
+        msg`Something went wrong, please try again`,
+      )
+
       if (e instanceof XRPCError) {
         if (e.error === 'InvalidEmail') {
-          setError(
-            _(
-              msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
-            ),
+          error = _(
+            msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
           )
           logger.metric('ageAssurance:initDialogError', {code: 'InvalidEmail'})
         } else if (e.error === 'DidTooLong') {
-          setError(
+          error = (
             <>
               <Trans>
                 We're having issues initializing the age assurance process for
@@ -155,15 +157,19 @@ function Inner() {
                 </InlineLinkText>{' '}
                 for assistance.
               </Trans>
-            </>,
+            </>
           )
           logger.metric('ageAssurance:initDialogError', {code: 'DidTooLong'})
+        } else {
+          logger.metric('ageAssurance:initDialogError', {code: 'other'})
         }
       } else {
         const {clean, raw} = cleanError(e)
-        setError(clean || raw || _(msg`Something went wrong, please try again`))
+        error = clean || raw || error
         logger.metric('ageAssurance:initDialogError', {code: 'other'})
       }
+
+      setError(error)
     }
   }
 
