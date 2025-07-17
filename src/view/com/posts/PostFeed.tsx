@@ -350,7 +350,7 @@ let PostFeed = ({
    * Cached value of whether the current feed was selected at startup. We don't
    * want this to update when user swipes.
    */
-  const isCurrentFeedAtStartupSelected = useRef(selectedFeed === feed)
+  const [isCurrentFeedAtStartupSelected] = useState(selectedFeed === feed)
 
   const feedItems: FeedRow[] = useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
@@ -474,7 +474,7 @@ let PostFeed = ({
                        * banner is eligible to be shown.
                        */
                       if (
-                        isCurrentFeedAtStartupSelected.current &&
+                        isCurrentFeedAtStartupSelected &&
                         ageAssuranceBannerState.visible
                       ) {
                         arr.push({
@@ -515,7 +515,7 @@ let PostFeed = ({
                    * Only insert if this feed was the last selected feed at
                    * startup and the banner is eligible to be shown.
                    */
-                  if (isCurrentFeedAtStartupSelected.current) {
+                  if (isCurrentFeedAtStartupSelected) {
                     arr.push({
                       type: 'ageAssuranceBanner',
                       key: 'ageAssuranceBanner-' + sliceIndex,
@@ -624,6 +624,7 @@ let PostFeed = ({
     areVideoFeedsEnabled,
     hasPressedShowLessUris,
     ageAssuranceBannerState,
+    isCurrentFeedAtStartupSelected,
   ])
 
   // events
