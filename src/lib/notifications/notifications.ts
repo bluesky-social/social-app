@@ -2,7 +2,9 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
+import type AtpAgent from '@atproto/api'
+import {type Agent} from '@atproto/api'
+import {type AppBskyNotificationRegisterPush} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
@@ -24,7 +26,7 @@ async function _registerPushToken({
   token,
   extra = {},
 }: {
-  agent: AtpAgent
+  agent: Agent
   currentAccount: SessionAccount
   token: Notifications.DevicePushToken
   extra?: {
@@ -288,4 +290,27 @@ export async function decrementBadgeCount(by: number) {
 export async function resetBadgeCount() {
   await BackgroundNotificationHandler.setBadgeCountAsync(0)
   await setBadgeCountAsync(0)
+}
+
+export async function unregisterPushToken(agents: AtpAgent[], staging = false) {
+  if (!isNative) return
+
+  try {
+    const token = await getPushToken()
+    if (token) {
+      for (const agent of agents) {
+        await agent.app.bsky.notification.unregisterPush({
+          serviceDid: staging ? PUBLIC_STAGING_APPVIEW_DID : PUBLIC_APPVIEW_DID,
+          platform: Platform.OS,
+          token: token.data,
+          appId: 'xyz.blueskyweb.app',
+        })
+        notyLogger.debug(`Push token unregistered for ${agent.session?.handle}`)
+      }
+    } else {
+      notyLogger.debug('Tried to unregister push token, but could not find one')
+    }
+  } catch (error) {
+    notyLogger.debug('Failed to unregister push token', {message: error})
+  }
 }
