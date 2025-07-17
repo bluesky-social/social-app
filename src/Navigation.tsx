@@ -873,9 +873,9 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       } else {
         // @ts-expect-error nested navigators aren't typed -sfn
         navigate('MessagesTab', {
-          screen: 'MessagesConversation',
+          screen: 'Messages',
           params: {
-            conversation: payload.convoId,
+            pushToConversation: payload.convoId,
           },
         })
       }
