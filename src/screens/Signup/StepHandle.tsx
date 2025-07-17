@@ -17,19 +17,14 @@ import {
   validateServiceHandle,
 } from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useHandleAvailabilityQuery} from '#/state/queries/handle-availablility'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
-import {Circle_Stroke2_Corner0_Rounded as CircleIcon} from '#/components/icons/Circle'
-import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
-import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
-import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {BackNextButtons} from './BackNextButtons'
 
@@ -130,11 +125,18 @@ export function StepHandle() {
     )
   }
 
+  const textFieldInvalid =
+    (!isLoading && isHandleAvailable && !isHandleAvailable.available) ||
+    !validCheck.frontLengthNotTooLong ||
+    !validCheck.handleChars ||
+    !validCheck.hyphenStartOrEnd ||
+    !validCheck.totalLength
+
   return (
     <ScreenTransition>
-      <View style={[a.gap_lg, a.pt_lg]}>
+      <View style={[a.gap_sm, a.pt_lg]}>
         <View>
-          <TextField.Root>
+          <TextField.Root isInvalid={textFieldInvalid}>
             <TextField.Icon icon={AtIcon} />
             <TextField.Input
               testID="handleInput"
@@ -160,69 +162,47 @@ export function StepHandle() {
           </TextField.Root>
         </View>
         <LayoutAnimationConfig skipEntering skipExiting>
-          <View style={[a.gap_sm]}>
+          <View style={[a.gap_xs]}>
             {state.error && (
-              <Requirement fade>
-                <RequirementIcon state="invalid" />
+              <Requirement>
                 <RequirementText>{state.error}</RequirementText>
               </Requirement>
             )}
-            {(isHandleAvailable || isLoading) && validCheck.overall && (
-              <Requirement fade>
-                <RequirementIcon
-                  state={
-                    isLoading
-                      ? 'loading'
-                      : isHandleAvailable?.available
-                        ? 'valid'
-                        : 'invalid'
-                  }
-                />
-                <RequirementText>
-                  {isLoading ? (
-                    <Trans>Checking...</Trans>
-                  ) : isHandleAvailable?.available ? (
-                    <Trans>Available!</Trans>
-                  ) : isHandleAvailable?.reason === 'taken' ? (
-                    <Trans>Taken</Trans>
-                  ) : (
-                    <Trans>Invalid</Trans>
-                  )}
-                </RequirementText>
+            {isHandleAvailable &&
+              !isHandleAvailable.available &&
+              validCheck.overall && (
+                <Requirement>
+                  <RequirementText>
+                    {isHandleAvailable?.reason === 'taken' ? (
+                      <Trans>
+                        {createFullHandle(draftValue, state.userDomain)} is
+                        taken
+                      </Trans>
+                    ) : (
+                      <Trans>
+                        {createFullHandle(draftValue, state.userDomain)} is
+                        invalid
+                      </Trans>
+                    )}
+                  </RequirementText>
+                </Requirement>
+              )}
+            {(!validCheck.handleChars || !validCheck.hyphenStartOrEnd) && (
+              <Requirement>
+                {!validCheck.hyphenStartOrEnd ? (
+                  <RequirementText>
+                    <Trans>Doesn't begin or end with a hyphen</Trans>
+                  </RequirementText>
+                ) : (
+                  <RequirementText>
+                    <Trans>Only contains letters, numbers, and hyphens</Trans>
+                  </RequirementText>
+                )}
               </Requirement>
             )}
             <Requirement>
-              <RequirementIcon
-                state={
-                  validCheck.handleChars && validCheck.hyphenStartOrEnd
-                    ? !validCheck.frontLengthNotTooShort
-                      ? 'initial'
-                      : 'valid'
-                    : 'invalid'
-                }
-              />
-
-              {!validCheck.hyphenStartOrEnd ? (
-                <RequirementText>
-                  <Trans>Doesn't begin or end with a hyphen</Trans>
-                </RequirementText>
-              ) : (
-                <RequirementText>
-                  <Trans>Only contains letters, numbers, and hyphens</Trans>
-                </RequirementText>
-              )}
-            </Requirement>
-            <Requirement>
-              <RequirementIcon
-                state={
-                  !validCheck.frontLengthNotTooShort
-                    ? 'initial'
-                    : validCheck.frontLengthNotTooLong && validCheck.totalLength
-                      ? 'valid'
-                      : 'invalid'
-                }
-              />
-              {!validCheck.frontLengthNotTooLong || !validCheck.totalLength ? (
+              {(!validCheck.frontLengthNotTooLong ||
+                !validCheck.totalLength) && (
                 <RequirementText>
                   <Trans>
                     No longer than{' '}
@@ -231,10 +211,6 @@ export function StepHandle() {
                       other="# characters"
                     />
                   </Trans>
-                </RequirementText>
-              ) : (
-                <RequirementText>
-                  <Trans>At least 3 characters</Trans>
                 </RequirementText>
               )}
             </Requirement>
@@ -251,19 +227,13 @@ export function StepHandle() {
   )
 }
 
-function Requirement({
-  children,
-  fade,
-}: {
-  children: React.ReactNode
-  fade?: boolean
-}) {
+function Requirement({children}: {children: React.ReactNode}) {
   return (
     <Animated.View
-      style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}
-      layout={isNative ? LinearTransition : undefined}
-      entering={fade && isNative ? FadeIn : undefined}
-      exiting={fade && isNative ? FadeOut : undefined}>
+      style={[a.w_full]}
+      layout={native(LinearTransition)}
+      entering={native(FadeIn)}
+      exiting={native(FadeOut)}>
       {children}
     </Animated.View>
   )
@@ -272,29 +242,8 @@ function Requirement({
 function RequirementText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
-    <Text style={[a.text_sm, a.flex_1, t.atoms.text_contrast_medium]}>
+    <Text style={[a.text_sm, a.flex_1, {color: t.palette.negative_500}]}>
       <Trans>{children}</Trans>
     </Text>
   )
-}
-
-function RequirementIcon({
-  state,
-}: {
-  state: 'initial' | 'valid' | 'invalid' | 'loading'
-}) {
-  const t = useTheme()
-
-  switch (state) {
-    case 'initial':
-      return <CircleIcon size="sm" style={t.atoms.text_contrast_low} />
-    case 'valid':
-      return (
-        <CircleCheckIcon size="sm" style={{color: t.palette.positive_700}} />
-      )
-    case 'invalid':
-      return <CircleXIcon size="sm" style={{color: t.palette.negative_500}} />
-    case 'loading':
-      return <Loader size="sm" style={t.atoms.text_contrast_low} />
-  }
 }
