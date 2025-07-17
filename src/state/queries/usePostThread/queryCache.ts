@@ -93,6 +93,7 @@ export function createCacheMutator({
           const opDid = getRootPostAtUri(existingParent.value.post)?.host
           const nextItem = thread.at(i + 1)
           const isReplyToRoot = existingParent.depth === 0
+          const isReplyBelowRoot = existingParent.depth > 0
           const isEndOfReplyChain =
             !nextItem || nextItem.depth <= existingParent.depth
           const firstReply = replies.at(0)
@@ -103,17 +104,19 @@ export function createCacheMutator({
             : false
 
           /*
-           * Always insert replies if the following conditions are met.
+           * Always insert replies if the following conditions are met. Max
+           * depth checks are handled below.
            */
           const shouldAlwaysInsertReplies =
             isReplyToRoot ||
-            params.view === 'tree' ||
+            (params.view === 'tree' && isReplyBelowRoot) ||
             (params.view === 'linear' && isEndOfReplyChain)
           /*
-           * Maybe insert replies if the replier is the OP and certain conditions are met
+           * Maybe insert replies if the replier is the OP and certain
+           * conditions are met
            */
           const shouldReplaceWithOPReplies =
-            !isReplyToRoot && params.view === 'linear' && opIsReplier
+            params.view === 'linear' && opIsReplier && isReplyBelowRoot
 
           if (shouldAlwaysInsertReplies || shouldReplaceWithOPReplies) {
             const branch = getBranch(thread, i, existingParent.depth)
