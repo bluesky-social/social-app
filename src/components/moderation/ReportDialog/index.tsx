@@ -30,7 +30,7 @@ import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
-import {COMPLIANCE_OVERVIEW} from './const'
+import {SUPPORT_PAGE} from './const'
 import {useCopyForSubject} from './copy'
 import {initialState, reducer} from './state'
 import {type ReportDialogProps, type ReportSubject} from './types'
@@ -266,7 +266,7 @@ function Inner(props: ReportDialogProps) {
 
                   {['post', 'account'].includes(props.subject.type) && (
                     <Link
-                      to={COMPLIANCE_OVERVIEW}
+                      to={SUPPORT_PAGE}
                       label={_(
                         msg`Need to report a copyright violation, legal request, or regulatory compliance issue?`,
                       )}>
