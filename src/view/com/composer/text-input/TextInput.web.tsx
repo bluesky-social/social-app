@@ -28,6 +28,7 @@ import {normalizeTextStyles} from '#/alf/typography'
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
+import {CharacterLimitDecorator} from './web/CharacterLimitDecorator'
 import {type Emoji} from './web/EmojiPicker'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
@@ -94,6 +95,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       TiptapText,
       History,
       Hardbreak,
+      CharacterLimitDecorator,
     ],
     [autocomplete, placeholder],
   )
