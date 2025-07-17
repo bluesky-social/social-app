@@ -25,7 +25,7 @@ import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {Circle_Stroke2_Corner0_Rounded as CircleIcon} from '#/components/icons/Circle'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
@@ -132,27 +132,21 @@ export function StepHandle() {
 
   return (
     <ScreenTransition>
-      <View style={[a.gap_lg]}>
-        <Text style={[a.text_sm]}>
-          <Trans>This can be changed at any time.</Trans>
-        </Text>
+      <View style={[a.gap_lg, a.pt_lg]}>
         <View>
-          <TextField.LabelText>
-            <Trans>Username</Trans>
-          </TextField.LabelText>
           <TextField.Root>
-            <TextField.Icon icon={At} />
+            <TextField.Icon icon={AtIcon} />
             <TextField.Input
               testID="handleInput"
               onChangeText={val => {
                 if (state.error) {
                   dispatch({type: 'setError', value: ''})
                 }
-                // replace em dash with double hyphen to fix iOS behaviour
-                setDraftValue(val.replaceAll('—', '--'))
+                setDraftValue(val)
               }}
-              label={`alice${state.userDomain}`}
+              label={state.userDomain}
               defaultValue={draftValue}
+              keyboardType="ascii-capable" // fix for iOS replacing -- with —
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus
