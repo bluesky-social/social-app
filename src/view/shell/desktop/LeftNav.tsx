@@ -521,7 +521,7 @@ function ComposeBtn() {
         size="large"
         variant="solid"
         color="primary"
-        style={[a.rounded_full]}>
+        style={[a.rounded_full, a.flex_shrink]}>
         <ButtonIcon icon={EditBig} position="left" />
         <ButtonText>
           <Trans context="action">New Post</Trans>
