@@ -3,6 +3,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -61,13 +62,11 @@ export function AgeRestrictedScreen({
           <View style={[a.gap_sm, a.pb_lg]}>
             <Text style={[a.text_xl, a.leading_snug, a.font_heavy]}>
               <Trans>
-                You must verify your age in order to access this screen.
+                You must complete age assurance in order to access this screen.
               </Trans>
             </Text>
 
-            <Text style={[a.text_md, a.leading_snug]}>
-              <Trans>{copy.notice}</Trans>
-            </Text>
+            <Text style={[a.text_md, a.leading_snug]}>{copy.notice}</Text>
           </View>
 
           <View
@@ -77,7 +76,10 @@ export function AgeRestrictedScreen({
               to="/settings/account"
               size="small"
               variant="solid"
-              color="primary">
+              color="primary"
+              onPress={() => {
+                logger.metric('ageAssurance:navigateToSettings', {})
+              }}>
               <ButtonText>
                 <Trans>Go to account settings</Trans>
               </ButtonText>

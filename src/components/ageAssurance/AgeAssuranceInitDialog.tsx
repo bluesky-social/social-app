@@ -1,16 +1,22 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {XRPCError} from '@atproto/xrpc'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {validate as validateEmail} from 'email-validator'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
+import {
+  SupportCode,
+  useCreateSupportLink,
+} from '#/lib/hooks/useCreateSupportLink'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useTLDs} from '#/lib/hooks/useTLDs'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {type AppLanguage} from '#/locale/languages'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {useInitAgeAssurance} from '#/state/ageAssurance/useInitAgeAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
@@ -66,6 +72,7 @@ function Inner() {
   const {lastInitiatedAt} = useAgeAssuranceContext()
   const getTimeAgo = useGetTimeAgo()
   const tlds = useTLDs()
+  const createSupportLink = useCreateSupportLink()
 
   const wasRecentlyInitiated =
     lastInitiatedAt &&
@@ -79,7 +86,7 @@ function Inner() {
   const [language, setLanguage] = useState<string | undefined>(
     convertToKWSSupportedLanguage(langPrefs.appLanguage),
   )
-  const [error, setError] = useState<string>('')
+  const [error, setError] = useState<React.ReactNode>(null)
 
   const {mutateAsync: init, isPending} = useInitAgeAssurance()
 
@@ -109,6 +116,8 @@ function Inner() {
   const onSubmit = async () => {
     setLanguageError(false)
 
+    logger.metric('ageAssurance:initDialogSubmit', {})
+
     try {
       const {status} = runEmailValidation()
 
@@ -125,22 +134,35 @@ function Inner() {
 
       setSuccess(true)
     } catch (e) {
-      const {clean, raw} = cleanError(e)
-
-      if (clean) {
-        setError(clean || _(msg`Something went wrong, please try again`))
-      } else {
-        let message = _(msg`Something went wrong, please try again`)
-
-        if (raw) {
-          if (raw.startsWith('This email address is not supported')) {
-            message = _(
+      if (e instanceof XRPCError) {
+        if (e.error === 'InvalidEmail') {
+          setError(
+            _(
               msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
-            )
-          }
+            ),
+          )
+          logger.metric('ageAssurance:initDialogError', {code: 'InvalidEmail'})
+        } else if (e.error === 'DidTooLong') {
+          setError(
+            <>
+              <Trans>
+                We're having issues initializing the age assurance process for
+                your account. Please{' '}
+                <InlineLinkText
+                  to={createSupportLink({code: SupportCode.AA_DID, email})}
+                  label={_(msg`Contact support`)}>
+                  contact support
+                </InlineLinkText>{' '}
+                for assistance.
+              </Trans>
+            </>,
+          )
+          logger.metric('ageAssurance:initDialogError', {code: 'DidTooLong'})
         }
-
-        setError(message)
+      } else {
+        const {clean, raw} = cleanError(e)
+        setError(clean || raw || _(msg`Something went wrong, please try again`))
+        logger.metric('ageAssurance:initDialogError', {code: 'other'})
       }
     }
   }

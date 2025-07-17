@@ -7,6 +7,7 @@ import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
 import {isNative} from '#/platform/detection'
 import {useAgeAssuranceAPIContext} from '#/state/ageAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {useAgent} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
@@ -92,6 +93,8 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
 
     polling.current = true
 
+    logger.metric('ageAssurance:redirectDialogOpen', {})
+
     wait(
       3e3,
       retry(
@@ -124,12 +127,15 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
 
         control.clear()
         control.control.close()
+
+        logger.metric('ageAssurance:redirectDialogSuccess', {})
       })
       .catch(() => {
         if (unmounted.current) return
         setError(true)
         // try a refetch anyway
         refreshAgeAssuranceState()
+        logger.metric('ageAssurance:redirectDialogFail', {})
       })
 
     return () => {

@@ -6,16 +6,14 @@ import {networkRetry} from '#/lib/async/retry'
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
 import {useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
-import {Logger} from '#/logger'
 import {
   type AgeAssuranceAPIContextType,
   type AgeAssuranceContextType,
 } from '#/state/ageAssurance/types'
 import {useIsAgeAssuranceEnabled} from '#/state/ageAssurance/useIsAgeAssuranceEnabled'
+import {logger} from '#/state/ageAssurance/util'
 import {useGeolocation} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
-
-const logger = Logger.create(Logger.Context.AgeAssurance)
 
 export const createAgeAssuranceQueryKey = (did: string) =>
   ['ageAssurance', did] as const

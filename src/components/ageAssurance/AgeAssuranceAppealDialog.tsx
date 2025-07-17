@@ -5,7 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
+import {logger} from '#/state/ageAssurance/util'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, web} from '#/alf'
@@ -45,6 +45,8 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
+      logger.metric('ageAssurance:appealDialogSubmit', {})
+
       await agent.createModerationReport(
         {
           reasonType: ComAtprotoModerationDefs.REASONAPPEAL,

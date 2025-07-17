@@ -8,6 +8,7 @@ export function useIsAgeAssuranceEnabled() {
   const {geolocation} = useGeolocation()
 
   return useMemo(() => {
-    return gate('age_assurance') && !!geolocation?.isAgeRestrictedGeo
+    const enabled = gate('age_assurance')
+    return enabled && !!geolocation?.isAgeRestrictedGeo
   }, [geolocation, gate])
 }

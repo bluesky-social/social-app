@@ -192,6 +192,9 @@ export function useNotificationsRegistration() {
      * Register the push token with the Bluesky server, whenever it changes.
      * This is also fired any time `getDevicePushTokenAsync` is called.
      *
+     * Since this is registered immediately after `getAndRegisterPushToken`, it
+     * should also detect that getter and be fired almost immediately after this.
+     *
      * According to the Expo docs, there is a chance that the token will change
      * while the app is open in some rare cases. This will fire
      * `registerPushToken` whenever that happens.

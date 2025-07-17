@@ -8,10 +8,13 @@ export function useAgeAssuranceCopy() {
   return useMemo(() => {
     return {
       notice: _(
-        msg`The laws in your location require that you verify your age before accessing certain features on Bluesky like adult content and direct messaging.`,
+        msg`The laws in your location require you to verify you're an adult before accessing certain features on Bluesky, like adult content and direct messaging.`,
+      ),
+      banner: _(
+        msg`The laws in your location require you to verify you're an adult. Tap to learn more.`,
       ),
       chatsInfoText: _(
-        msg`Don't worry! All existing messages and settings are saved and will be available after you've been verified to be 18 or older.`,
+        msg`Don't worry! All existing messages and settings are saved and will be available after you verify you're an adult.`,
       ),
     }
   }, [_])
