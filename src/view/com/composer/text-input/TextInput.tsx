@@ -30,7 +30,7 @@ import {
   type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
-import {atoms as a, useAlf} from '#/alf'
+import {atoms as a, platform, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
 import {Autocomplete} from './mobile/Autocomplete'
 
@@ -229,7 +229,18 @@ export const TextInput = forwardRef(function TextInputImpl(
           style={[
             t.atoms.text,
             inputTextStyle,
-            {backgroundColor: t.palette.negative_50, marginTop: -1},
+            {marginTop: -1},
+            a.underline,
+            platform({
+              ios: {
+                backgroundColor: t.palette.negative_50,
+                textDecorationColor: t.palette.negative_500,
+              },
+              // android both doesn't support textDecorationColor,
+              // and setting a background color renders the cursor invisible.
+              // next best thing is to just set the text color to red -sfn
+              android: {color: t.palette.negative_500},
+            }),
           ]}>
           {excessText}
         </RNText>
