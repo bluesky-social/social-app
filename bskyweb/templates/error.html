@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block head_title %}Error {{ statusCode }} - Bluesky{% endblock %}
+{% block head_title %}Error {{ statusCode }} - Blacksky{% endblock %}
 
 {% block noscript_extra %}
   {%- if statusCode == 404 %}
@@ -22,6 +22,6 @@
     {{ block.Super }}
   {% else %}
     <h1>{{ statusCode }}: Server Error</h1>
-    <p>Sorry about that! Our <a href="https://bluesky.statuspage.io/">Status Page</a> might have more context.
+    <p>Sorry about that! Our <a href="https://blacksky.statuspage.io/">Status Page</a> might have more context.
   {% endif %}
 {% endblock -%}

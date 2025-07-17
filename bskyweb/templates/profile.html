@@ -2,15 +2,15 @@
 
 {% block head_title %}
 {%- if profileView -%}
-  @{{ profileView.Handle }} on Bluesky
+  @{{ profileView.Handle }} on Blacksky
 {%- else -%}
-  Bluesky
+Blacksky
 {%- endif -%}
 {% endblock %}
 
 {% block html_head_extra -%}
 {%- if profileView -%}
-  <meta property="og:site_name" content="Bluesky Social">
+  <meta property="og:site_name" content="Blacksky Community">
   <meta property="og:type" content="profile">
   <meta property="profile:username" content="{{ profileView.Handle }}">
   {%- if requestURI %}

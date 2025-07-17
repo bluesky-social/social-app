@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block html_head_extra -%}
-  <meta name="apple-itunes-app" content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card">
+  <meta name="apple-itunes-app" content="app-id=community.blacksky, app-clip-bundle-id=community.blacksky.AppClip, app-clip-display=card">
   {%- if requestURI %}
   <meta property="og:url" content="{{ requestURI }}">
   {% endif -%}
@@ -9,8 +9,8 @@
   <meta property="og:image" content="{{ imgThumbUrl }}">
   <meta property="twitter:image" content="{{ imgThumbUrl }}">
   {%- else -%}
-  <meta property="og:image" content="https://bsky.app/static/social-card-default-gradient.png" />
-  <meta property="twitter:image" content="https://bsky.app/static/social-card-default-gradient.png"  />
+  <meta property="og:image" content="https://blacksky.community/static/social-card-default-gradient.png" />
+  <meta property="twitter:image" content="https://blacksky.community/static/social-card-default-gradient.png"  />
   {% endif -%}
   <meta name="twitter:card" content="summary_large_image" />
   {%- if title %}
@@ -20,7 +20,7 @@
   <meta property="og:title" content="Bluesky" />
   <meta name="twitter:title" content="Bluesky" />
   {% endif -%}
-  <meta name="description" content="Join the conversation" />
-  <meta name="og:description" content="Join the conversation" />
-  <meta name="twitter:description" content="Join the conversation" />
+  <meta name="description" content="Join the cookout" />
+  <meta name="og:description" content="Join the cookout" />
+  <meta name="twitter:description" content="Join the cookout" />
 {%- endblock %}

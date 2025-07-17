@@ -1,4 +1,4 @@
-Contact: mailto:security@bsky.app
+Contact: mailto:rudy@blacksky.app
 Preferred-Languages: en
-Canonical: https://bsky.app/.well-known/security.txt
-Acknowledgements: https://github.com/bluesky-social/atproto/blob/main/CONTRIBUTORS.md
+Canonical: https://blacksky.community/.well-known/security.txt
+Acknowledgements: https://github.com/blacksky-algorithms/rsky

@@ -2,7 +2,7 @@
   "applinks": {
     "details": [
       {
-        "appID": "B3LX46C5HS.xyz.blueskyweb.app",
+        "appID": "B3LX46C5HS.community.blacksky",
         "paths": [
           "*"
         ]
@@ -10,6 +10,6 @@
     ]
   },
   "appclips": {
-    "apps": ["B3LX46C5HS.xyz.blueskyweb.app.AppClip"]
+    "apps": ["B3LX46C5HS.community.blacksky.AppClip"]
   }
 }
