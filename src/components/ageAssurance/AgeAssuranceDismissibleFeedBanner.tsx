@@ -103,7 +103,9 @@ export function AgeAssuranceDismissibleFeedBanner() {
               paddingRight: 40,
             },
           ]}>
-          <Text style={[a.leading_snug]}>{copy.banner}</Text>
+          <View style={{maxWidth: 400}}>
+            <Text style={[a.leading_snug]}>{copy.banner}</Text>
+          </View>
         </View>
       </Link>
 

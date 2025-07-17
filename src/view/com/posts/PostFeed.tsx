@@ -515,7 +515,7 @@ let PostFeed = ({
                    * Only insert if this feed was the last selected feed at
                    * startup and the banner is eligible to be shown.
                    */
-                  if (isCurrentFeedAtStartupSelected) {
+                  if (sliceIndex === 0 && isCurrentFeedAtStartupSelected) {
                     arr.push({
                       type: 'ageAssuranceBanner',
                       key: 'ageAssuranceBanner-' + sliceIndex,
