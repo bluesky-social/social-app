@@ -22,7 +22,7 @@ import {useHandleAvailabilityQuery} from '#/state/queries/handle-availablility'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
-import {atoms as a, platform, tokens, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
@@ -152,9 +152,10 @@ export function StepHandle() {
               autoFocus
               autoComplete="off"
             />
-
             {draftValue.length > 0 && (
-              <GhostText value={state.userDomain}>{draftValue}</GhostText>
+              <TextField.GhostText value={state.userDomain}>
+                {draftValue}
+              </TextField.GhostText>
             )}
           </TextField.Root>
         </View>
@@ -296,62 +297,4 @@ function RequirementIcon({
     case 'loading':
       return <Loader size="sm" style={t.atoms.text_contrast_low} />
   }
-}
-
-function GhostText({children, value}: {children: string; value: string}) {
-  const t = useTheme()
-  // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
-  return (
-    <View
-      style={[
-        a.pointer_events_none,
-        a.absolute,
-        a.z_10,
-        {
-          paddingLeft: platform({
-            native:
-              // input padding
-              tokens.space.md +
-              // icon
-              tokens.space.xl +
-              // icon padding
-              tokens.space.xs +
-              // text input padding
-              tokens.space.xs,
-            web:
-              // icon
-              tokens.space.xl +
-              // icon padding
-              tokens.space.xs +
-              // text input padding
-              tokens.space.xs,
-          }),
-        },
-        web(a.pr_md),
-        a.overflow_hidden,
-        a.max_w_full,
-      ]}
-      aria-hidden={true}
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants">
-      <Text
-        style={[
-          {color: 'transparent'},
-          a.text_md,
-          {lineHeight: a.text_md.fontSize * 1.1875},
-          a.w_full,
-        ]}
-        numberOfLines={1}>
-        {children}
-        <Text
-          style={[
-            t.atoms.text_contrast_low,
-            a.text_md,
-            {lineHeight: a.text_md.fontSize * 1.1875},
-          ]}>
-          {value}
-        </Text>
-      </Text>
-    </View>
-  )
 }
