@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
   moderateProfile,
@@ -277,7 +277,13 @@ export function Name({
     <View style={[a.flex_row, a.align_center]}>
       <Text
         emoji
-        style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
+        style={[
+          a.text_md,
+          a.font_bold,
+          a.leading_snug,
+          a.self_start,
+          a.flex_shrink,
+        ]}
         numberOfLines={1}>
         {name}
       </Text>
@@ -345,7 +351,7 @@ export function Description({
   numberOfLines?: number
 }) {
   const profile = useProfileShadow(profileUnshadowed)
-  const rt = React.useMemo(() => {
+  const rt = useMemo(() => {
     if (!('description' in profile)) return
     const rt = new RichTextApi({text: profile.description || ''})
     rt.detectFacetsWithoutResolution()
