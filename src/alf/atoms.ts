@@ -976,6 +976,12 @@ export const atoms = {
   hidden: {
     display: 'none',
   },
+  inline: web({
+    display: 'inline',
+  }),
+  block: web({
+    display: 'block',
+  }),
 
   /*
    * Transition
