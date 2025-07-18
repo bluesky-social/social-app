@@ -1,4 +1,4 @@
-import {createContext, useContext, useMemo} from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
@@ -46,6 +46,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const {geolocation} = useGeolocation()
   const isAgeAssuranceEnabled = useIsAgeAssuranceEnabled()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
+  const [refetchWhilePending, setRefetchWhilePending] = useState(false)
 
   const {data, isFetched, refetch} = useQuery({
     /**
@@ -56,6 +57,7 @@ export function Provider({children}: {children: React.ReactNode}) {
      * However, it only needs to run if AA is enabled.
      */
     enabled: isAgeAssuranceEnabled,
+    refetchOnWindowFocus: refetchWhilePending,
     queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
     async queryFn() {
       if (!agent.session) return null
@@ -108,6 +110,24 @@ export function Provider({children}: {children: React.ReactNode}) {
     logger.debug(`context`, ctx)
     return ctx
   }, [isFetched, data, isAgeAssuranceEnabled])
+
+  if (
+    !!ageAssuranceContext.lastInitiatedAt &&
+    ageAssuranceContext.status === 'pending' &&
+    !refetchWhilePending
+  ) {
+    /*
+     * If we have a pending state, we want to refetch on window focus to ensure
+     * that we get the latest state when the user returns to the app.
+     */
+    setRefetchWhilePending(true)
+  } else if (
+    !!ageAssuranceContext.lastInitiatedAt &&
+    ageAssuranceContext.status !== 'pending' &&
+    refetchWhilePending
+  ) {
+    setRefetchWhilePending(false)
+  }
 
   const ageAssuranceAPIContext = useMemo<AgeAssuranceAPIContextType>(
     () => ({
