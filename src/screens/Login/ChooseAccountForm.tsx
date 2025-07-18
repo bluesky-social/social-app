@@ -33,7 +33,8 @@ export const ChooseAccountForm = ({
         // The session API isn't resilient to race conditions so let's just ignore this.
         return
       }
-      if (!account.accessJwt) {
+      // TODO: this should be checking if it is an oauth session
+      if (!true || !account.accessJwt) {
         // Move to login form.
         onSelectAccount(account)
         return
@@ -46,7 +47,7 @@ export const ChooseAccountForm = ({
       try {
         setPendingDid(account.did)
         if (true) {
-          resumeSessionOauth(account)
+          await resumeSessionOauth(account)
         } else {
           await resumeSession(account)
         }

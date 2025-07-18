@@ -270,7 +270,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const syncedAccount = synced.accounts.find(
         a => a.did === synced.currentAccount?.did,
       )
-      if (syncedAccount && syncedAccount.refreshJwt) {
+      // TODO: this should be checking if it is an oauth session
+      if (syncedAccount && (true || syncedAccount?.refreshJwt)) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           if (true) {
             resumeSessionOauth(syncedAccount)
