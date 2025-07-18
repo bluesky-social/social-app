@@ -1,7 +1,7 @@
 import {View} from 'react-native'
 
 import {isAndroidWeb} from '#/lib/browser'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 
 /**
  * GlassyBackdrop component
@@ -31,7 +31,7 @@ export function GlassyBackdrop() {
           a.absolute,
           a.inset_0,
           a.pointer_events_none,
-          {backdropFilter: 'blur(16px)'},
+          web({backdropFilter: 'blur(16px)'}),
         ]}
       />
     </>
