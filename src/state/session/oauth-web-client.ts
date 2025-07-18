@@ -14,7 +14,7 @@ export function createWebOAuthClient() {
       client_name: 'Bluesky (Hailey Demo)',
       client_uri: 'https://bsky.hailey.at',
       redirect_uris: ['https://bsky.hailey.at/auth/web/callback'],
-      scope: 'atproto transition:generic',
+      scope: 'atproto transition:generic transition:email',
       token_endpoint_auth_method: 'none',
       response_types: ['code'],
       grant_types: ['authorization_code', 'refresh_token'],

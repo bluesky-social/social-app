@@ -5,7 +5,7 @@
 	"redirect_uris": [
 		"https://bsky.hailey.at/auth/web/callback"
 	],
-	"scope": "atproto transition:generic",
+	"scope": "atproto transition:generic transition:email",
 	"token_endpoint_auth_method": "none",
 	"response_types": [
 		"code"
