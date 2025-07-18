@@ -17,7 +17,12 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
+import {hasProp} from '#/lib/type-guards'
+import {
+  getPostLanguage,
+  getTranslatorLink,
+  isPostInLanguage,
+} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {
   POST_TOMBSTONE,
@@ -511,6 +516,7 @@ function ExpandedPostDetails({
   const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const langPrefs = useLanguagePrefs()
+  const supportsTranslatorAPI = 'Translator' in self
 
   const translatorUrl = getTranslatorLink(
     post.record?.text || '',
@@ -528,24 +534,52 @@ function ExpandedPostDetails({
   const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
-      openLink(translatorUrl, true)
 
-      if (
-        bsky.dangerousIsType<AppBskyFeedPost.Record>(
-          post.record,
-          AppBskyFeedPost.isRecord,
-        )
-      ) {
-        logger.metric('translate', {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
-        })
+      const run = async () => {
+        if (!supportsTranslatorAPI) {
+          openLink(translatorUrl, true)
+
+          if (
+            bsky.dangerousIsType<AppBskyFeedPost.Record>(
+              post.record,
+              AppBskyFeedPost.isRecord,
+            )
+          ) {
+            logger.metric('translate', {
+              sourceLanguages: post.record.langs ?? [],
+              targetLanguage: langPrefs.primaryLanguage,
+              textLength: post.record.text.length,
+            })
+          }
+
+          return false
+        }
+
+        try {
+          const translator = await self.Translator.create({
+            sourceLanguage: getPostLanguage(post),
+            targetLanguage: langPrefs.primaryLanguage,
+          })
+
+          let postText = ''
+          if (
+            hasProp(post.record, 'text') &&
+            typeof post.record.text === 'string'
+          ) {
+            postText = post.record.text
+          }
+
+          const translation = await translator.translate(postText)
+          alert(translation)
+        } catch (err) {
+          console.error(err)
+        }
       }
 
+      void run()
       return false
     },
-    [openLink, translatorUrl, langPrefs, post],
+    [supportsTranslatorAPI, openLink, translatorUrl, langPrefs, post],
   )
 
   return (
