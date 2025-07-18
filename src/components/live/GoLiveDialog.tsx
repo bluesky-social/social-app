@@ -56,10 +56,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
 
       const date = new Date()
       date.setMinutes(date.getMinutes() + offset)
-      return i18n
-        .date(date, {hour: 'numeric', minute: '2-digit', hour12: true})
-        .toLocaleUpperCase()
-        .replace(' ', '')
+      return i18n.date(date, {hour: 'numeric', minute: '2-digit', hour12: true})
     },
     [tick, i18n],
   )
