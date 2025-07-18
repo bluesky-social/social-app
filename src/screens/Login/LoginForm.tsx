@@ -13,8 +13,8 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {USE_OAUTH} from '#/lib/app-info'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
@@ -53,8 +53,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm(props: LoginFormProps) {
-  const gate = useGate()
-  if (gate('oauth')) {
+  if (USE_OAUTH) {
     return <OAuthLoginForm {...props} />
   } else {
     return <LoginFormInner {...props} />
