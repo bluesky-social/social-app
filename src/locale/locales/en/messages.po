@@ -123,10 +123,6 @@ msgstr ""
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr ""
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:69
-msgid "{0}"
-msgstr ""
-
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
@@ -513,8 +509,8 @@ msgstr ""
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr ""
 
-#: src/Navigation.tsx:522
-#: src/screens/Settings/AboutSettings.tsx:77
+#: src/Navigation.tsx:523
+#: src/screens/Settings/AboutSettings.tsx:75
 #: src/screens/Settings/Settings.tsx:238
 #: src/screens/Settings/Settings.tsx:241
 msgid "About"
@@ -540,11 +536,11 @@ msgstr ""
 msgid "Accessibility"
 msgstr ""
 
-#: src/Navigation.tsx:381
+#: src/Navigation.tsx:382
 msgid "Accessibility Settings"
 msgstr ""
 
-#: src/Navigation.tsx:397
+#: src/Navigation.tsx:398
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:49
 #: src/screens/Settings/Settings.tsx:168
@@ -614,7 +610,7 @@ msgstr ""
 msgid "Activity from others"
 msgstr ""
 
-#: src/Navigation.tsx:490
+#: src/Navigation.tsx:491
 msgid "Activity notifications"
 msgstr ""
 
@@ -690,8 +686,8 @@ msgstr ""
 msgid "Add emoji reaction"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:400
-#: src/components/moderation/ReportDialog/index.tsx:404
+#: src/components/moderation/ReportDialog/index.tsx:403
+#: src/components/moderation/ReportDialog/index.tsx:407
 msgid "Add more details (optional)"
 msgstr ""
 
@@ -754,11 +750,11 @@ msgstr ""
 msgid "Added to list"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:110
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:112
 msgid "Additional details (limit 1000 characters)"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:418
+#: src/components/moderation/ReportDialog/index.tsx:421
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
@@ -773,7 +769,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:389
+#: src/screens/Moderation/index.tsx:404
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr ""
 
@@ -786,25 +782,24 @@ msgstr ""
 msgid "Adult Content labels"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:437
+#: src/screens/Moderation/index.tsx:454
 msgid "Advanced"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceBadge.tsx:42
-#: src/components/ageAssurance/AgeAssuranceDismissibleHeaderButton.tsx:90
 msgid "Age Assurance"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:68
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:70
 msgid "Age assurance inquiry failed to send, please try again."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:76
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:78
 msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:138
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:145
 msgid "Age assurance only takes a few minutes"
 msgstr ""
 
@@ -964,8 +959,8 @@ msgstr ""
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:451
-#: src/components/ProfileCard.tsx:472
+#: src/components/ProfileCard.tsx:457
+#: src/components/ProfileCard.tsx:478
 #: src/view/com/profile/FollowButton.tsx:38
 #: src/view/com/profile/FollowButton.tsx:48
 msgid "An issue occurred, please try again."
@@ -1016,7 +1011,7 @@ msgstr ""
 msgid "Anyone who follows me"
 msgstr ""
 
-#: src/Navigation.tsx:530
+#: src/Navigation.tsx:531
 #: src/screens/Settings/AppIconSettings/index.tsx:67
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
@@ -1053,7 +1048,7 @@ msgstr ""
 msgid "App passwords"
 msgstr ""
 
-#: src/Navigation.tsx:349
+#: src/Navigation.tsx:350
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr ""
@@ -1089,7 +1084,7 @@ msgstr ""
 msgid "Appeal this decision"
 msgstr ""
 
-#: src/Navigation.tsx:389
+#: src/Navigation.tsx:390
 #: src/screens/Settings/AppearanceSettings.tsx:88
 #: src/screens/Settings/Settings.tsx:206
 #: src/screens/Settings/Settings.tsx:209
@@ -1237,15 +1232,15 @@ msgstr ""
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:287
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:309
 msgid "Begin"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:281
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:303
 msgid "Begin age assurance process"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:45
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:51
 msgid "Begin the age assurance process by completing the fields below."
 msgstr ""
 
@@ -1317,7 +1312,7 @@ msgstr ""
 msgid "Blocked accounts"
 msgstr ""
 
-#: src/Navigation.tsx:190
+#: src/Navigation.tsx:191
 #: src/view/screens/ModerationBlockedAccounts.tsx:104
 msgid "Blocked Accounts"
 msgstr ""
@@ -1466,7 +1461,7 @@ msgid "Business"
 msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:62
-#: src/components/moderation/ReportDialog/index.tsx:680
+#: src/components/moderation/ReportDialog/index.tsx:683
 #: src/screens/Search/components/StarterPackCard.tsx:106
 #: src/screens/Search/Explore.tsx:934
 msgid "By {0}"
@@ -1476,7 +1471,7 @@ msgstr ""
 msgid "By <0>{0}</0>"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:298
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:320
 msgid "By continuing, you agree to the <0>KWS Terms of Use</0> and acknowledge that KWS will store your verified status with your hashed email address in accordance with the <1>KWS Privacy Policy</1>. This means you won’t need to verify again the next time you use this email for other apps, games, and services powered by KWS technology."
 msgstr ""
 
@@ -1501,8 +1496,8 @@ msgid "Camera"
 msgstr ""
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:206
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:127
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:133
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:129
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:135
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:125
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:131
 #: src/components/dialogs/InAppBrowserConsent.tsx:98
@@ -1602,7 +1597,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:322
+#: src/components/moderation/ReportDialog/index.tsx:325
 msgid "Change moderation service"
 msgstr ""
 
@@ -1632,7 +1627,7 @@ msgid "Changes saved"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:99
-#: src/Navigation.tsx:547
+#: src/Navigation.tsx:548
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
 #: src/view/shell/desktop/LeftNav.tsx:554
 #: src/view/shell/Drawer.tsx:455
@@ -1658,7 +1653,7 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr ""
 
-#: src/Navigation.tsx:557
+#: src/Navigation.tsx:558
 #: src/screens/Messages/components/InboxPreview.tsx:24
 msgid "Chat request inbox"
 msgstr ""
@@ -1670,7 +1665,7 @@ msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:75
-#: src/Navigation.tsx:552
+#: src/Navigation.tsx:553
 #: src/screens/Messages/ChatList.tsx:357
 msgid "Chat settings"
 msgstr ""
@@ -1752,8 +1747,8 @@ msgstr ""
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:118
-#: src/screens/Settings/AboutSettings.tsx:122
+#: src/screens/Settings/AboutSettings.tsx:116
+#: src/screens/Settings/AboutSettings.tsx:120
 msgid "Clear image cache"
 msgstr ""
 
@@ -1801,8 +1796,8 @@ msgstr ""
 msgid "Clip 🐴 clop 🐴"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:181
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:186
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:187
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:192
 #: src/components/dialogs/GifSelect.tsx:282
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:158
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
@@ -1844,8 +1839,8 @@ msgstr ""
 msgid "Close bottom drawer"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:193
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:199
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:215
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:221
 #: src/components/dialogs/GifSelect.tsx:276
 #: src/components/verification/VerificationsDialog.tsx:136
 #: src/components/verification/VerifierDialog.tsx:136
@@ -1927,7 +1922,7 @@ msgstr ""
 msgid "Comics"
 msgstr ""
 
-#: src/Navigation.tsx:339
+#: src/Navigation.tsx:340
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
 msgstr ""
@@ -1979,11 +1974,11 @@ msgstr ""
 msgid "Confirm delete account"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:337
+#: src/screens/Moderation/index.tsx:330
 msgid "Confirm your age:"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:328
+#: src/screens/Moderation/index.tsx:321
 msgid "Confirm your birthdate"
 msgstr ""
 
@@ -2000,21 +1995,22 @@ msgstr ""
 msgid "Connecting..."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:157
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:163
 msgid "Connection issue"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:83
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:28
 msgid "Contact our moderation team"
 msgstr ""
 
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:153
 #: src/screens/Signup/index.tsx:197
 #: src/screens/Signup/index.tsx:200
 msgid "Contact support"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:92
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:94
 msgid "Contact us"
 msgstr ""
 
@@ -2027,7 +2023,7 @@ msgstr ""
 msgid "Content and media"
 msgstr ""
 
-#: src/Navigation.tsx:506
+#: src/Navigation.tsx:507
 msgid "Content and Media"
 msgstr ""
 
@@ -2035,7 +2031,8 @@ msgstr ""
 msgid "Content Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:315
+#: src/screens/Moderation/index.tsx:317
+#: src/screens/Moderation/index.tsx:351
 msgid "Content filters"
 msgstr ""
 
@@ -2114,7 +2111,7 @@ msgstr ""
 msgid "Copied"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:153
+#: src/screens/Settings/AboutSettings.tsx:151
 msgid "Copied build version to clipboard"
 msgstr ""
 
@@ -2133,7 +2130,7 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:129
+#: src/screens/Settings/AboutSettings.tsx:127
 msgid "Copies build version to clipboard"
 msgstr ""
 
@@ -2222,7 +2219,7 @@ msgstr ""
 msgid "Copy TXT record value"
 msgstr ""
 
-#: src/Navigation.tsx:344
+#: src/Navigation.tsx:345
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
 msgstr ""
@@ -2278,7 +2275,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:178
 #: src/components/StarterPack/ProfileStarterPacks.tsx:287
-#: src/Navigation.tsx:587
+#: src/Navigation.tsx:588
 msgid "Create a starter pack"
 msgstr ""
 
@@ -2324,7 +2321,7 @@ msgstr ""
 msgid "Create new account"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:582
+#: src/components/moderation/ReportDialog/index.tsx:585
 #: src/components/ReportDialog/SelectReportOptionView.tsx:99
 msgid "Create report for {0}"
 msgstr ""
@@ -2544,12 +2541,12 @@ msgstr ""
 msgid "Detach quote post?"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:142
+#: src/screens/Settings/AboutSettings.tsx:140
 msgctxt "toast"
 msgid "Developer mode disabled"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:136
+#: src/screens/Settings/AboutSettings.tsx:134
 msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr ""
@@ -2594,7 +2591,7 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
 #: src/screens/Messages/Settings.tsx:155
 #: src/screens/Messages/Settings.tsx:158
-#: src/screens/Moderation/index.tsx:379
+#: src/screens/Moderation/index.tsx:394
 msgid "Disabled"
 msgstr ""
 
@@ -2702,12 +2699,13 @@ msgstr ""
 msgid "Don't see an email? <0>Click here to resend.</0>"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceDismissibleNotice.tsx:35
+#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:113
+#: src/components/ageAssurance/AgeAssuranceDismissibleNotice.tsx:36
 msgid "Don't show again"
 msgstr ""
 
-#: src/components/ageAssurance/useAgeAssuranceCopy.ts:14
-msgid "Don't worry! All existing messages and settings are saved and will be available after you've been verified to be 18 or older."
+#: src/components/ageAssurance/useAgeAssuranceCopy.ts:17
+msgid "Don't worry! All existing messages and settings are saved and will be available after you verify you're an adult."
 msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:115
@@ -2764,7 +2762,7 @@ msgstr ""
 msgid "Download CAR file"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:342
+#: src/view/com/composer/text-input/TextInput.web.tsx:344
 msgid "Drop to add images"
 msgstr ""
 
@@ -2860,7 +2858,7 @@ msgstr ""
 msgid "Edit Moderation List"
 msgstr ""
 
-#: src/Navigation.tsx:354
+#: src/Navigation.tsx:355
 #: src/view/screens/Feeds.tsx:518
 msgid "Edit My Feeds"
 msgstr ""
@@ -2902,7 +2900,7 @@ msgstr ""
 msgid "Edit who can reply"
 msgstr ""
 
-#: src/Navigation.tsx:592
+#: src/Navigation.tsx:593
 msgid "Edit your starter pack"
 msgstr ""
 
@@ -2978,7 +2976,7 @@ msgstr ""
 msgid "Enable {0} only"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:366
+#: src/screens/Moderation/index.tsx:381
 msgid "Enable adult content"
 msgstr ""
 
@@ -3027,7 +3025,7 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:146
 #: src/screens/Messages/Settings.tsx:149
-#: src/screens/Moderation/index.tsx:377
+#: src/screens/Moderation/index.tsx:392
 msgid "Enabled"
 msgstr ""
 
@@ -3244,7 +3242,7 @@ msgstr ""
 msgid "Explicit sexual images."
 msgstr ""
 
-#: src/Navigation.tsx:749
+#: src/Navigation.tsx:750
 #: src/screens/Search/Shell.tsx:307
 #: src/view/shell/desktop/LeftNav.tsx:636
 #: src/view/shell/Drawer.tsx:403
@@ -3275,7 +3273,7 @@ msgstr ""
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr ""
 
-#: src/Navigation.tsx:373
+#: src/Navigation.tsx:374
 #: src/screens/Settings/ExternalMediaPreferences.tsx:34
 msgid "External Media Preferences"
 msgstr ""
@@ -3463,7 +3461,7 @@ msgstr ""
 msgid "Failed to verify handle. Please try again."
 msgstr ""
 
-#: src/Navigation.tsx:289
+#: src/Navigation.tsx:290
 msgid "Feed"
 msgstr ""
 
@@ -3504,7 +3502,7 @@ msgctxt "toast"
 msgid "Feedback sent!"
 msgstr ""
 
-#: src/Navigation.tsx:572
+#: src/Navigation.tsx:573
 #: src/screens/Search/SearchResults.tsx:68
 #: src/screens/StarterPack/StarterPackScreen.tsx:190
 #: src/view/screens/Feeds.tsx:511
@@ -3605,7 +3603,7 @@ msgid "Flexible"
 msgstr ""
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:484
+#: src/components/ProfileCard.tsx:490
 #: src/components/ProfileHoverCard/index.web.tsx:494
 #: src/components/ProfileHoverCard/index.web.tsx:505
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:245
@@ -3673,7 +3671,7 @@ msgstr ""
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr ""
 
-#: src/Navigation.tsx:243
+#: src/Navigation.tsx:244
 msgid "Followers of @{0} that you know"
 msgstr ""
 
@@ -3683,7 +3681,7 @@ msgid "Followers you know"
 msgstr ""
 
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:478
+#: src/components/ProfileCard.tsx:484
 #: src/components/ProfileHoverCard/index.web.tsx:493
 #: src/components/ProfileHoverCard/index.web.tsx:504
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:241
@@ -3694,7 +3692,7 @@ msgstr ""
 msgid "Following"
 msgstr ""
 
-#: src/components/ProfileCard.tsx:441
+#: src/components/ProfileCard.tsx:447
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:89
 msgid "Following {0}"
 msgstr ""
@@ -3708,7 +3706,7 @@ msgstr ""
 msgid "Following feed preferences"
 msgstr ""
 
-#: src/Navigation.tsx:360
+#: src/Navigation.tsx:361
 #: src/screens/Settings/FollowingFeedPreferences.tsx:56
 msgid "Following Feed Preferences"
 msgstr ""
@@ -3939,9 +3937,9 @@ msgstr ""
 msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:88
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:76
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:82
+#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:89
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:75
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:84
 msgid "Go to account settings"
 msgstr ""
 
@@ -4001,7 +3999,7 @@ msgstr ""
 msgid "Harassment, trolling, or intolerance"
 msgstr ""
 
-#: src/Navigation.tsx:537
+#: src/Navigation.tsx:538
 msgid "Hashtag"
 msgstr ""
 
@@ -4158,8 +4156,8 @@ msgstr ""
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
-#: src/Navigation.tsx:744
-#: src/Navigation.tsx:764
+#: src/Navigation.tsx:745
+#: src/Navigation.tsx:765
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
 #: src/view/shell/desktop/LeftNav.tsx:618
 #: src/view/shell/Drawer.tsx:429
@@ -4259,12 +4257,12 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:66
+#: src/screens/Settings/AboutSettings.tsx:64
 msgid "Image cache cleared"
 msgstr ""
 
 #. Android-only toast message which includes amount of space freed using localized number formatting
-#: src/screens/Settings/AboutSettings.tsx:52
+#: src/screens/Settings/AboutSettings.tsx:50
 msgid "Image cache cleared, freed {0}"
 msgstr ""
 
@@ -4451,15 +4449,15 @@ msgstr ""
 msgid "Keep me posted"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:313
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:335
 msgid "KWS Privacy Policy"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:303
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:325
 msgid "KWS Terms of Use"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:173
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:195
 msgid "KWS website"
 msgstr ""
 
@@ -4496,7 +4494,7 @@ msgstr ""
 msgid "Language selection"
 msgstr ""
 
-#: src/Navigation.tsx:216
+#: src/Navigation.tsx:217
 msgid "Language Settings"
 msgstr ""
 
@@ -4510,11 +4508,11 @@ msgstr ""
 msgid "Larger"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:132
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:139
 msgid "Last initiated {timeAgo} ago"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:130
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:137
 msgid "Last initiated just now"
 msgstr ""
 
@@ -4540,7 +4538,7 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceDismissibleHeaderButton.tsx:57
+#: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:74
 msgid "Learn more about age assurance"
 msgstr ""
 
@@ -4575,7 +4573,7 @@ msgstr ""
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:85
+#: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:86
 msgid "Learn more in your <0>account settings.</0>"
 msgstr ""
 
@@ -4656,7 +4654,7 @@ msgstr ""
 msgid "Like 10 posts to train the Discover feed"
 msgstr ""
 
-#: src/Navigation.tsx:450
+#: src/Navigation.tsx:451
 msgid "Like notifications"
 msgstr ""
 
@@ -4668,8 +4666,8 @@ msgstr ""
 msgid "Like this labeler"
 msgstr ""
 
-#: src/Navigation.tsx:294
-#: src/Navigation.tsx:299
+#: src/Navigation.tsx:295
+#: src/Navigation.tsx:300
 msgid "Liked by"
 msgstr ""
 
@@ -4704,7 +4702,7 @@ msgstr ""
 msgid "Likes of your reposts"
 msgstr ""
 
-#: src/Navigation.tsx:474
+#: src/Navigation.tsx:475
 msgid "Likes of your reposts notifications"
 msgstr ""
 
@@ -4720,7 +4718,7 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/Navigation.tsx:249
+#: src/Navigation.tsx:250
 msgid "List"
 msgstr ""
 
@@ -4782,7 +4780,7 @@ msgctxt "toast"
 msgid "List unmuted"
 msgstr ""
 
-#: src/Navigation.tsx:170
+#: src/Navigation.tsx:171
 #: src/view/screens/Lists.tsx:65
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
@@ -4835,7 +4833,7 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: src/Navigation.tsx:319
+#: src/Navigation.tsx:320
 msgid "Log"
 msgstr ""
 
@@ -4926,7 +4924,7 @@ msgstr ""
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr ""
 
-#: src/Navigation.tsx:434
+#: src/Navigation.tsx:435
 msgid "Mention notifications"
 msgstr ""
 
@@ -4983,7 +4981,7 @@ msgstr ""
 msgid "Message options"
 msgstr ""
 
-#: src/Navigation.tsx:759
+#: src/Navigation.tsx:760
 msgid "Messages"
 msgstr ""
 
@@ -4992,7 +4990,7 @@ msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr ""
 
-#: src/Navigation.tsx:498
+#: src/Navigation.tsx:499
 msgid "Miscellaneous notifications"
 msgstr ""
 
@@ -5006,7 +5004,7 @@ msgstr ""
 msgid "Misleading Post"
 msgstr ""
 
-#: src/Navigation.tsx:175
+#: src/Navigation.tsx:176
 #: src/screens/Moderation/index.tsx:99
 #: src/screens/Settings/Settings.tsx:182
 #: src/screens/Settings/Settings.tsx:185
@@ -5045,7 +5043,7 @@ msgstr ""
 msgid "Moderation lists"
 msgstr ""
 
-#: src/Navigation.tsx:180
+#: src/Navigation.tsx:181
 #: src/view/screens/ModerationModlists.tsx:65
 msgid "Moderation Lists"
 msgstr ""
@@ -5054,7 +5052,7 @@ msgstr ""
 msgid "moderation settings"
 msgstr ""
 
-#: src/Navigation.tsx:309
+#: src/Navigation.tsx:310
 msgid "Moderation states"
 msgstr ""
 
@@ -5177,7 +5175,7 @@ msgstr ""
 msgid "Muted accounts"
 msgstr ""
 
-#: src/Navigation.tsx:185
+#: src/Navigation.tsx:186
 #: src/view/screens/ModerationMutedAccounts.tsx:118
 msgid "Muted Accounts"
 msgstr ""
@@ -5250,7 +5248,11 @@ msgstr ""
 msgid "Navigates to your profile"
 msgstr ""
 
+#: src/components/moderation/ReportDialog/index.tsx:271
 #: src/components/moderation/ReportDialog/index.tsx:288
+msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
+msgstr ""
+
 #: src/components/ReportDialog/SelectReportOptionView.tsx:128
 msgid "Need to report a copyright violation?"
 msgstr ""
@@ -5296,7 +5298,7 @@ msgstr ""
 msgid "New Feature"
 msgstr ""
 
-#: src/Navigation.tsx:466
+#: src/Navigation.tsx:467
 msgid "New follower notifications"
 msgstr ""
 
@@ -5438,7 +5440,7 @@ msgstr ""
 msgid "No likes yet"
 msgstr ""
 
-#: src/components/ProfileCard.tsx:463
+#: src/components/ProfileCard.tsx:469
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:110
 msgid "No longer following {0}"
 msgstr ""
@@ -5557,7 +5559,7 @@ msgstr ""
 msgid "Not followed by anyone you're following"
 msgstr ""
 
-#: src/Navigation.tsx:165
+#: src/Navigation.tsx:166
 #: src/view/screens/Profile.tsx:125
 msgid "Not Found"
 msgstr ""
@@ -5578,8 +5580,8 @@ msgstr ""
 msgid "Nothing here"
 msgstr ""
 
-#: src/Navigation.tsx:420
-#: src/Navigation.tsx:567
+#: src/Navigation.tsx:421
+#: src/Navigation.tsx:568
 #: src/view/screens/Notifications.tsx:136
 msgid "Notification settings"
 msgstr ""
@@ -5592,8 +5594,8 @@ msgstr ""
 msgid "Notification Sounds"
 msgstr ""
 
-#: src/Navigation.tsx:562
-#: src/Navigation.tsx:754
+#: src/Navigation.tsx:563
+#: src/Navigation.tsx:755
 #: src/screens/Notifications/ActivityList.tsx:29
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:90
 #: src/screens/Settings/NotificationSettings/index.tsx:92
@@ -6012,11 +6014,11 @@ msgstr ""
 msgid "People"
 msgstr ""
 
-#: src/Navigation.tsx:236
+#: src/Navigation.tsx:237
 msgid "People followed by @{0}"
 msgstr ""
 
-#: src/Navigation.tsx:229
+#: src/Navigation.tsx:230
 msgid "People following @{0}"
 msgstr ""
 
@@ -6124,7 +6126,7 @@ msgstr ""
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:160
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:182
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr ""
 
@@ -6145,7 +6147,7 @@ msgstr ""
 msgid "Please complete the verification captcha."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:94
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:101
 #: src/screens/Signup/StepInfo/index.tsx:109
 msgid "Please double-check that you have entered your email address correctly."
 msgstr ""
@@ -6168,7 +6170,7 @@ msgstr ""
 msgid "Please enter a valid code."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:103
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:110
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:148
 msgid "Please enter a valid email address."
 msgstr ""
@@ -6177,7 +6179,7 @@ msgstr ""
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:138
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:141
 msgid "Please enter a valid, non-temporary email address. You may need to access this email in the future."
 msgstr ""
 
@@ -6222,11 +6224,11 @@ msgstr ""
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:96
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:98
 msgid "Please provide any additional details you feel moderators may need in order to properly assess your Age Assurance status."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:272
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:294
 msgid "Please select a language"
 msgstr ""
 
@@ -6245,6 +6247,10 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:62
 msgid "Please verify your email"
+msgstr ""
+
+#: src/lib/hooks/useCreateSupportLink.ts:28
+msgid "Please write your message below:"
 msgstr ""
 
 #: src/screens/Onboarding/index.tsx:34
@@ -6281,10 +6287,10 @@ msgstr ""
 msgid "Post by {0}"
 msgstr ""
 
-#: src/Navigation.tsx:262
-#: src/Navigation.tsx:269
-#: src/Navigation.tsx:276
-#: src/Navigation.tsx:283
+#: src/Navigation.tsx:263
+#: src/Navigation.tsx:270
+#: src/Navigation.tsx:277
+#: src/Navigation.tsx:284
 msgid "Post by @{0}"
 msgstr ""
 
@@ -6322,7 +6328,7 @@ msgstr ""
 msgid "Post interaction settings"
 msgstr ""
 
-#: src/Navigation.tsx:196
+#: src/Navigation.tsx:197
 #: src/screens/ModerationInteractionSettings/index.tsx:34
 msgid "Post Interaction Settings"
 msgstr ""
@@ -6421,8 +6427,8 @@ msgstr ""
 msgid "Privacy and security"
 msgstr ""
 
-#: src/Navigation.tsx:405
-#: src/Navigation.tsx:413
+#: src/Navigation.tsx:406
+#: src/Navigation.tsx:414
 #: src/screens/Settings/ActivityPrivacySettings.tsx:40
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:45
 msgid "Privacy and Security"
@@ -6432,9 +6438,9 @@ msgstr ""
 msgid "Privacy and Security settings"
 msgstr ""
 
-#: src/Navigation.tsx:329
-#: src/screens/Settings/AboutSettings.tsx:94
-#: src/screens/Settings/AboutSettings.tsx:97
+#: src/Navigation.tsx:330
+#: src/screens/Settings/AboutSettings.tsx:92
+#: src/screens/Settings/AboutSettings.tsx:95
 #: src/view/screens/PrivacyPolicy.tsx:31
 #: src/view/shell/Drawer.tsx:667
 #: src/view/shell/Drawer.tsx:668
@@ -6527,7 +6533,7 @@ msgstr ""
 msgid "QR code saved to your camera roll!"
 msgstr ""
 
-#: src/Navigation.tsx:442
+#: src/Navigation.tsx:443
 msgid "Quote notifications"
 msgstr ""
 
@@ -6858,7 +6864,7 @@ msgstr ""
 msgid "Reply Hidden by You"
 msgstr ""
 
-#: src/Navigation.tsx:426
+#: src/Navigation.tsx:427
 msgid "Reply notifications"
 msgstr ""
 
@@ -7010,7 +7016,7 @@ msgstr ""
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr ""
 
-#: src/Navigation.tsx:458
+#: src/Navigation.tsx:459
 msgid "Repost notifications"
 msgstr ""
 
@@ -7055,7 +7061,7 @@ msgstr ""
 msgid "Reposts of your reposts"
 msgstr ""
 
-#: src/Navigation.tsx:482
+#: src/Navigation.tsx:483
 msgid "Reposts of your reposts notifications"
 msgstr ""
 
@@ -7275,7 +7281,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: src/Navigation.tsx:255
+#: src/Navigation.tsx:256
 #: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search @{0}'s posts"
 msgstr ""
@@ -7445,7 +7451,7 @@ msgstr ""
 msgid "Select languages"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:307
+#: src/components/moderation/ReportDialog/index.tsx:310
 msgid "Select moderation service"
 msgstr ""
 
@@ -7551,7 +7557,7 @@ msgstr ""
 msgid "Send report to {0}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:646
+#: src/components/moderation/ReportDialog/index.tsx:649
 msgid "Send report to {title}"
 msgstr ""
 
@@ -7580,7 +7586,7 @@ msgstr ""
 msgid "Set app icon to {0}"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:340
+#: src/screens/Moderation/index.tsx:333
 msgid "Set birthdate"
 msgstr ""
 
@@ -7596,7 +7602,7 @@ msgstr ""
 msgid "Sets email for password reset"
 msgstr ""
 
-#: src/Navigation.tsx:211
+#: src/Navigation.tsx:212
 #: src/screens/Settings/Settings.tsx:93
 #: src/view/shell/desktop/LeftNav.tsx:728
 #: src/view/shell/Drawer.tsx:572
@@ -7736,7 +7742,7 @@ msgstr ""
 msgid "Share your favorite feed!"
 msgstr ""
 
-#: src/Navigation.tsx:314
+#: src/Navigation.tsx:315
 msgid "Shared Preferences Tester"
 msgstr ""
 
@@ -7999,8 +8005,7 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:131
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:133
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:164
 #: src/components/moderation/ReportDialog/index.tsx:223
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
@@ -8094,8 +8099,8 @@ msgstr ""
 msgid "Start chat with {displayName}"
 msgstr ""
 
-#: src/Navigation.tsx:577
-#: src/Navigation.tsx:582
+#: src/Navigation.tsx:578
+#: src/Navigation.tsx:583
 #: src/screens/StarterPack/Wizard/index.tsx:186
 msgid "Starter Pack"
 msgstr ""
@@ -8126,8 +8131,8 @@ msgstr ""
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:102
-#: src/screens/Settings/AboutSettings.tsx:105
+#: src/screens/Settings/AboutSettings.tsx:100
+#: src/screens/Settings/AboutSettings.tsx:103
 msgid "Status Page"
 msgstr ""
 
@@ -8139,13 +8144,13 @@ msgstr ""
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
-#: src/Navigation.tsx:304
+#: src/Navigation.tsx:305
 #: src/screens/Settings/Settings.tsx:408
 msgid "Storybook"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:116
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:122
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:118
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:124
 #: src/components/moderation/LabelsOnMeDialog.tsx:324
 #: src/components/moderation/LabelsOnMeDialog.tsx:325
 #: src/screens/Messages/components/ChatDisabled.tsx:142
@@ -8161,9 +8166,9 @@ msgstr ""
 msgid "Submit Appeal"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:384
-#: src/components/moderation/ReportDialog/index.tsx:441
-#: src/components/moderation/ReportDialog/index.tsx:448
+#: src/components/moderation/ReportDialog/index.tsx:387
+#: src/components/moderation/ReportDialog/index.tsx:444
+#: src/components/moderation/ReportDialog/index.tsx:451
 msgid "Submit report"
 msgstr ""
 
@@ -8191,7 +8196,7 @@ msgstr ""
 msgid "Subscribe to this list"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:154
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:176
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:286
 msgid "Success!"
 msgstr ""
@@ -8223,7 +8228,7 @@ msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr ""
 
-#: src/Navigation.tsx:324
+#: src/Navigation.tsx:325
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/Support.tsx:34
 msgid "Support"
@@ -8256,8 +8261,8 @@ msgstr ""
 msgid "System"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:109
-#: src/screens/Settings/AboutSettings.tsx:112
+#: src/screens/Settings/AboutSettings.tsx:107
+#: src/screens/Settings/AboutSettings.tsx:110
 #: src/screens/Settings/Settings.tsx:401
 msgid "System log"
 msgstr ""
@@ -8318,9 +8323,9 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
-#: src/Navigation.tsx:334
-#: src/screens/Settings/AboutSettings.tsx:86
-#: src/screens/Settings/AboutSettings.tsx:89
+#: src/Navigation.tsx:335
+#: src/screens/Settings/AboutSettings.tsx:84
+#: src/screens/Settings/AboutSettings.tsx:87
 #: src/view/screens/TermsOfService.tsx:31
 #: src/view/shell/Drawer.tsx:660
 #: src/view/shell/Drawer.tsx:662
@@ -8403,7 +8408,7 @@ msgstr ""
 msgid "The author of this thread has hidden this reply."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:392
+#: src/screens/Moderation/index.tsx:407
 msgid "The Bluesky web application"
 msgstr ""
 
@@ -8444,7 +8449,11 @@ msgid "The following settings will be used as your defaults when creating new po
 msgstr ""
 
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:11
-msgid "The laws in your location require that you verify your age before accessing certain features on Bluesky like adult content and direct messaging."
+msgid "The laws in your location require you to verify you're an adult before accessing certain features on Bluesky, like adult content and direct messaging."
+msgstr ""
+
+#: src/components/ageAssurance/useAgeAssuranceCopy.ts:14
+msgid "The laws in your location require you to verify you're an adult. Tap to learn more."
 msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:267
@@ -8514,7 +8523,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:990
-#: src/view/com/posts/PostFeed.tsx:656
+#: src/view/com/posts/PostFeed.tsx:701
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -8776,7 +8785,7 @@ msgstr ""
 msgid "This should create a domain record at:"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:184
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:206
 msgid "This should only take a few minutes."
 msgstr ""
 
@@ -8857,7 +8866,7 @@ msgstr ""
 msgid "Threaded mode"
 msgstr ""
 
-#: src/Navigation.tsx:367
+#: src/Navigation.tsx:368
 msgid "Threads Preferences"
 msgstr ""
 
@@ -8890,7 +8899,7 @@ msgstr ""
 msgid "Toggle dropdown"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:369
+#: src/screens/Moderation/index.tsx:384
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
@@ -8911,7 +8920,7 @@ msgstr ""
 msgid "Top replies first"
 msgstr ""
 
-#: src/Navigation.tsx:542
+#: src/Navigation.tsx:543
 msgid "Topic"
 msgstr ""
 
@@ -8987,7 +8996,7 @@ msgstr ""
 msgid "Unable to delete"
 msgstr ""
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:50
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:51
 msgid "Unavailable"
 msgstr ""
 
@@ -9055,7 +9064,7 @@ msgstr ""
 msgid "Unfollows the user"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:369
+#: src/components/moderation/ReportDialog/index.tsx:372
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
@@ -9293,7 +9302,7 @@ msgstr ""
 msgid "Use this to sign in to the other app along with your handle."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:248
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:270
 msgid "Use your account email address, or another real email address you control, in case KWS or Bluesky needs to contact you."
 msgstr ""
 
@@ -9386,7 +9395,7 @@ msgstr ""
 msgid "Verification settings"
 msgstr ""
 
-#: src/Navigation.tsx:204
+#: src/Navigation.tsx:205
 #: src/screens/Moderation/VerificationSettings.tsx:32
 msgid "Verification Settings"
 msgstr ""
@@ -9406,7 +9415,7 @@ msgstr ""
 msgid "Verify account"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:115
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:122
 msgid "Verify again"
 msgstr ""
 
@@ -9428,8 +9437,8 @@ msgstr ""
 msgid "Verify email dialog"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:108
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:117
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:110
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:124
 msgid "Verify now"
 msgstr ""
 
@@ -9442,7 +9451,7 @@ msgstr ""
 msgid "Verify this account?"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:154
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:176
 msgid "Verify your age"
 msgstr ""
 
@@ -9452,16 +9461,16 @@ msgstr ""
 msgid "Verify your email"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:157
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:163
 msgid "Verifying"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:72
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:73
 msgid "Verifying your age assurance status"
 msgstr ""
 
-#: src/screens/Settings/AboutSettings.tsx:128
-#: src/screens/Settings/AboutSettings.tsx:157
+#: src/screens/Settings/AboutSettings.tsx:126
+#: src/screens/Settings/AboutSettings.tsx:155
 msgid "Version {appVersion}"
 msgstr ""
 
@@ -9474,7 +9483,7 @@ msgstr ""
 msgid "Video failed to process"
 msgstr ""
 
-#: src/Navigation.tsx:598
+#: src/Navigation.tsx:599
 msgid "Video Feed"
 msgstr ""
 
@@ -9555,7 +9564,6 @@ msgstr ""
 msgid "View details"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:271
 #: src/components/ReportDialog/SelectReportOptionView.tsx:132
 msgid "View details for reporting a copyright violation"
 msgstr ""
@@ -9714,7 +9722,7 @@ msgstr ""
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:168
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:190
 msgid "We use <0>KWS</0> to verify that you’re an adult. When you click \"Begin\" below, KWS will email you instructions for verifying your age. When you’re done, you'll be brought back to continue using Bluesky."
 msgstr ""
 
@@ -9726,11 +9734,11 @@ msgstr ""
 msgid "We were unable to load your birth date preferences. Please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:447
+#: src/screens/Moderation/index.tsx:464
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:165
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:171
 msgid "We were unable to receive the verification due to a connection issue. It may arrive later. If it does, your account will update automatically."
 msgstr ""
 
@@ -9750,8 +9758,12 @@ msgstr ""
 msgid "We'll use this to help customize your experience."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:171
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:177
 msgid "We're confirming your status with our servers. This dialog should close in a few seconds."
+msgstr ""
+
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:148
+msgid "We're having issues initializing the age assurance process for your account. Please <0>contact support</0> for assistance."
 msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:107
@@ -9956,7 +9968,7 @@ msgstr ""
 msgid "You are creating an account on"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:79
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:80
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr ""
 
@@ -10157,7 +10169,7 @@ msgstr ""
 msgid "You hid this reply."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:210
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:232
 msgid "You initiated this flow already, {0} ago. It may take up to 5 minutes for emails to reach your inbox. Please consider waiting a few minutes before trying again."
 msgstr ""
 
@@ -10189,8 +10201,12 @@ msgstr ""
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:319
+#: src/screens/Moderation/index.tsx:355
 msgid "You must complete age assurance in order to access the settings below."
+msgstr ""
+
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:64
+msgid "You must complete age assurance in order to access this screen."
 msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:61
@@ -10204,10 +10220,6 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated.tsx:27
 #: src/screens/PostThread/components/ThreadItemPostNoUnauthenticated.tsx:47
 msgid "You must sign in to view this post."
-msgstr ""
-
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:63
-msgid "You must verify your age in order to access this screen."
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/index.tsx:23
@@ -10377,9 +10389,9 @@ msgstr ""
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:222
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:226
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:227
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:244
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:248
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:249
 msgid "Your email"
 msgstr ""
 
@@ -10414,7 +10426,7 @@ msgstr ""
 msgid "Your full username will be <0>@{0}</0>"
 msgstr ""
 
-#: src/Navigation.tsx:514
+#: src/Navigation.tsx:515
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
 #: src/screens/Settings/ContentAndMediaSettings.tsx:92
 #: src/screens/Settings/ContentAndMediaSettings.tsx:95
@@ -10455,7 +10467,7 @@ msgstr ""
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:259
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:281
 msgid "Your preferred language"
 msgstr ""
 
@@ -10467,7 +10479,7 @@ msgstr ""
 msgid "Your reply has been published"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:391
+#: src/components/moderation/ReportDialog/index.tsx:394
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr ""
 
