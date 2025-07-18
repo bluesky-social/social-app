@@ -13,7 +13,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {USE_OAUTH} from '#/lib/app-info'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
@@ -54,7 +53,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm(props: LoginFormProps) {
-  if (USE_OAUTH) {
+  if (true) {
     return <OAuthLoginForm {...props} />
   } else {
     return <LoginFormInner {...props} />
@@ -76,8 +75,13 @@ function OAuthLoginForm({
   const onPressNext = async () => {
     setIsProcessing(true)
     if (isWeb) {
-      const client = getWebOAuthClient()
-      await client.signIn(identifierValueRef.current)
+      try {
+        const client = getWebOAuthClient()
+        await client.signIn(identifierValueRef.current)
+      } catch (e: any) {
+        logger.error(e)
+        setError(_(msg`An error occurred during authentication.`))
+      }
     } else {
       const client = getNativeOAuthClient()
       const res = await client.signIn(identifierValueRef.current)
