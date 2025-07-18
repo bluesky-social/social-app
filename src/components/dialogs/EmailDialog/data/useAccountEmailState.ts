@@ -47,7 +47,7 @@ export function useAccountEmailState() {
     email2FAEnabled: !!agent.session?.emailAuthFactor,
   }
   const query = useQuery<AccountEmailState>({
-    enabled: !!agent.session,
+    enabled: !!agent.session && agent.session.status !== 'takendown',
     refetchOnWindowFocus: true,
     queryKey: accountEmailStateQueryKey,
     queryFn: async () => {
