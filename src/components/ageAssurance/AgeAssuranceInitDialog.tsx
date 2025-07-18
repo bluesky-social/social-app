@@ -188,7 +188,7 @@ function Inner() {
             <>
               <Text style={[a.text_sm, a.leading_snug]}>
                 <Trans>
-                  We use{' '}
+                  We have partnered with{' '}
                   <InlineLinkText
                     overridePresentation
                     disableMismatchWarning
@@ -198,8 +198,11 @@ function Inner() {
                     KWS
                   </InlineLinkText>{' '}
                   to verify that you’re an adult. When you click "Begin" below,
-                  KWS will email you instructions for verifying your age. When
-                  you’re done, you'll be brought back to continue using Bluesky.
+                  KWS will check if you have previously verified your age using
+                  this email address for other games/services powered by KWS
+                  technology. If not, KWS will email you instructions for
+                  verifying your age. When you’re done, you'll be brought back
+                  to continue using Bluesky.
                 </Trans>
               </Text>
               <Text style={[a.text_sm, a.leading_snug]}>
