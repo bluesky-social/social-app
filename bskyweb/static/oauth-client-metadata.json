@@ -3,7 +3,7 @@
 	"client_name": "Bluesky (Hailey Demo)",
 	"client_uri": "https://bsky.hailey.at",
 	"redirect_uris": [
-		"https://bsky.hailey.at/auth/callback"
+		"https://bsky.hailey.at/auth/web/callback"
 	],
 	"scope": "atproto transition:generic",
 	"token_endpoint_auth_method": "none",

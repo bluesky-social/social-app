@@ -331,6 +331,9 @@ func serve(cctx *cli.Context) error {
 	e.GET("/starter-pack-short/:code", server.WebGeneric)
 	e.GET("/start/:handleOrDID/:rkey", server.WebStarterPack)
 
+	// auth callback
+	e.GET("/auth/web/callback", server.WebGeneric)
+
 	// ipcc
 	e.GET("/ipcc", server.WebIpCC)
 
