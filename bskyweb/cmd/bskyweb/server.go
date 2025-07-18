@@ -214,6 +214,8 @@ func serve(cctx *cli.Context) error {
 			return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
 		})
 		e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
+		e.GET("/oauth-client-metadata.json", echo.WrapHandler(staticHandler))
+		e.GET("/oauth-client-metadata.native.json", echo.WrapHandler(staticHandler))
 	}
 
 	// default to permissive, but Disallow all if flag set
