@@ -1,7 +1,7 @@
-import {ExpoOAuthClient} from 'expo-atproto-auth'
-import {BrowserOAuthClient} from '@atproto/oauth-client-browser'
-import {OAuthClient} from '@atproto/oauth-client'
 import {Platform} from 'react-native'
+import {ExpoOAuthClient} from 'expo-atproto-auth'
+import {type OAuthClient} from '@atproto/oauth-client'
+import {BrowserOAuthClient} from '@atproto/oauth-client-browser'
 
 export const BSKY_OAUTH_CLIENT: OAuthClient =
   Platform.OS === 'web' ? createWebOAuthClient() : createNativeOAuthClient()
@@ -29,8 +29,8 @@ export function createNativeOAuthClient() {
     clientMetadata: {
       client_id: 'https://bsky.hailey.at/oauth-client-metadata.native.json',
       client_name: 'Bluesky Native App (Hailey Demo)',
-      client_uri: 'https://hailey.at',
-      redirect_uris: ['at.hailey:/auth/callback'],
+      client_uri: 'https://bsky.hailey.at',
+      redirect_uris: ['at.hailey.bsky:/auth/callback'],
       scope: 'atproto transition:generic',
       token_endpoint_auth_method: 'none',
       response_types: ['code'],
