@@ -21,6 +21,8 @@ import {
 } from './moderation'
 import {SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
+import {BSKY_OAUTH_CLIENT} from './oauth'
+import {ExpoOAuthClient} from 'expo-atproto-auth'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
