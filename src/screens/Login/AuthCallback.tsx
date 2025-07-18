@@ -6,7 +6,7 @@ import {useSessionApi} from '#/state/session'
 import {getWebOAuthClient} from '#/state/session/oauth-web-client'
 
 export function AuthCallback() {
-  const {loginOauth} = useSessionApi()
+  const {login} = useSessionApi()
   const navigation = useNavigation<NavigationProp>()
 
   // TODO: handle errors, loading state, etc...
@@ -18,10 +18,13 @@ export function AuthCallback() {
     ;(async () => {
       const client = getWebOAuthClient()
       const res = await client.callback(params)
-      await loginOauth(res.session, 'LoginForm') // TODO: right context?
-      navigation.navigate('Home')
+      await login(
+        {service: '', identifier: '', password: '', oauthSession: res.session},
+        'LoginForm',
+      )
+      navigation.replace('Home')
     })()
-  }, [loginOauth, navigation])
+  }, [login, navigation])
 
   return null
 }

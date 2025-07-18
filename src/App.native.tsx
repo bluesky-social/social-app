@@ -93,7 +93,7 @@ beginResolveGeolocation()
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
-  const {resumeSession, resumeSessionOauth} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
@@ -103,11 +103,7 @@ function InnerApp() {
     async function onLaunch(account?: SessionAccount) {
       try {
         if (account) {
-          if (true) {
-            await resumeSessionOauth(account)
-          } else {
-            await resumeSession(account)
-          }
+          await resumeSession(account)
         } else {
           await tryFetchGates(undefined, 'prefer-fresh-gates')
         }
@@ -119,7 +115,7 @@ function InnerApp() {
     }
     const account = readLastActiveAccount()
     onLaunch(account)
-  }, [resumeSession, resumeSessionOauth])
+  }, [resumeSession])
 
   useEffect(() => {
     return listenSessionDropped(() => {

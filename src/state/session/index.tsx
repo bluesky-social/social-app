@@ -12,8 +12,6 @@ import {
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
-  createAgentOauth,
-  resumeAgentOauth,
   sessionAccountToSession,
 } from './agent'
 import {getInitialState, reducer} from './reducer'
@@ -21,11 +19,18 @@ import {getInitialState, reducer} from './reducer'
 export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
+import {USE_OAUTH} from '#/lib/app-info'
 import {logger} from '#/logger'
 import {
+  type SessionAccount,
   type SessionApiContext,
   type SessionStateContext,
 } from '#/state/session/types'
+import {
+  type OauthBskyAppAgent,
+  oauthCreateAgent,
+  oauthResumeSession,
+} from './oauth-agent'
 
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],
@@ -38,11 +43,9 @@ const AgentContext = React.createContext<BskyAgent | null>(null)
 const ApiContext = React.createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
-  loginOauth: async () => {},
   logoutCurrentAccount: async () => {},
   logoutEveryAccount: async () => {},
   resumeSession: async () => {},
-  resumeSessionOauth: async () => {},
   removeAccount: () => {},
 })
 
@@ -98,15 +101,25 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const login = React.useCallback<SessionApiContext['login']>(
     async (params, logContext) => {
       addSessionDebugLog({type: 'method:start', method: 'login'})
+      let agentAccount: {
+        agent: OauthBskyAppAgent | BskyAppAgent
+        account: SessionAccount
+      }
+
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndLogin(
-        params,
-        onAgentSessionChange,
-      )
+
+      if (params.oauthSession) {
+        agentAccount = await oauthCreateAgent(params.oauthSession)
+      } else {
+        agentAccount = await createAgentAndLogin(params, onAgentSessionChange)
+      }
 
       if (signal.aborted) {
         return
       }
+
+      const {agent, account} = agentAccount
+
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,
@@ -120,28 +133,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
     [onAgentSessionChange, cancelPendingTask],
-  )
-
-  const loginOauth = React.useCallback<SessionApiContext['loginOauth']>(
-    async (session, logContext) => {
-      const signal = cancelPendingTask()
-      const {agent, account} = await createAgentOauth(session)
-      if (signal.aborted) {
-        return
-      }
-      dispatch({
-        type: 'switched-to-account',
-        newAgent: agent,
-        newAccount: account,
-      })
-      logger.metric(
-        'account:loggedIn',
-        {logContext, withPassword: true},
-        {statsig: true},
-      )
-      addSessionDebugLog({type: 'method:end', method: 'login', account})
-    },
-    [cancelPendingTask],
   )
 
   const logoutCurrentAccount = React.useCallback<
@@ -190,14 +181,27 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: storedAccount,
       })
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndResume(
-        storedAccount,
-        onAgentSessionChange,
-      )
+
+      let agentAccount: {
+        agent: OauthBskyAppAgent | BskyAppAgent
+        account: SessionAccount
+      }
+
+      if (USE_OAUTH) {
+        agentAccount = await oauthResumeSession(storedAccount)
+      } else {
+        agentAccount = await createAgentAndResume(
+          storedAccount,
+          onAgentSessionChange,
+        )
+      }
+
+      const {agent, account} = agentAccount
 
       if (signal.aborted) {
         return
       }
+
       dispatch({
         type: 'switched-to-account',
         newAgent: agent,
@@ -206,25 +210,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
     },
     [onAgentSessionChange, cancelPendingTask],
-  )
-
-  const resumeSessionOauth = React.useCallback<
-    SessionApiContext['resumeSessionOauth']
-  >(
-    async storedAccount => {
-      const signal = cancelPendingTask()
-      const {agent, account} = await resumeAgentOauth(storedAccount)
-      if (signal.aborted) {
-        return
-      }
-      dispatch({
-        type: 'switched-to-account',
-        newAgent: agent,
-        newAccount: account,
-      })
-      addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
-    },
-    [cancelPendingTask],
   )
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
@@ -271,13 +256,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         a => a.did === synced.currentAccount?.did,
       )
       // TODO: this should be checking if it is an oauth session
-      if (syncedAccount && (true || syncedAccount?.refreshJwt)) {
+      if (syncedAccount && (USE_OAUTH || syncedAccount?.refreshJwt)) {
         if (syncedAccount.did !== state.currentAgentState.did) {
-          if (true) {
-            resumeSessionOauth(syncedAccount)
-          } else {
-            resumeSession(syncedAccount)
-          }
+          resumeSession(syncedAccount)
         } else {
           const agent = state.currentAgentState.agent as BskyAgent
           const prevSession = agent.session
@@ -291,7 +272,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     })
-  }, [state, resumeSession, resumeSessionOauth])
+  }, [state, resumeSession])
 
   const stateContext = React.useMemo(
     () => ({
@@ -308,21 +289,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       createAccount,
       login,
-      loginOauth,
       logoutCurrentAccount,
       logoutEveryAccount,
       resumeSession,
-      resumeSessionOauth,
       removeAccount,
     }),
     [
       createAccount,
       login,
-      loginOauth,
       logoutCurrentAccount,
       logoutEveryAccount,
       resumeSession,
-      resumeSessionOauth,
       removeAccount,
     ],
   )

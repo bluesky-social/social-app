@@ -31,11 +31,8 @@ export type SessionApiContext = {
       identifier: string
       password: string
       authFactorToken?: string | undefined
+      oauthSession?: OAuthSession
     },
-    logContext: LogEvents['account:loggedIn']['logContext'],
-  ) => Promise<void>
-  loginOauth: (
-    session: OAuthSession,
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>
   logoutCurrentAccount: (
@@ -45,6 +42,5 @@ export type SessionApiContext = {
     logContext: LogEvents['account:loggedOut']['logContext'],
   ) => void
   resumeSession: (account: SessionAccount) => Promise<void>
-  resumeSessionOauth: (account: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
 }

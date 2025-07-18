@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {USE_OAUTH} from '#/lib/app-info'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
@@ -24,7 +25,7 @@ export const ChooseAccountForm = ({
   const [pendingDid, setPendingDid] = React.useState<string | null>(null)
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {resumeSession, resumeSessionOauth} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
   const onSelect = React.useCallback(
@@ -34,7 +35,7 @@ export const ChooseAccountForm = ({
         return
       }
       // TODO: this should be checking if it is an oauth session
-      if (!true || !account.accessJwt) {
+      if (!USE_OAUTH && !account.accessJwt) {
         // Move to login form.
         onSelectAccount(account)
         return
@@ -46,11 +47,7 @@ export const ChooseAccountForm = ({
       }
       try {
         setPendingDid(account.did)
-        if (true) {
-          await resumeSessionOauth(account)
-        } else {
-          await resumeSession(account)
-        }
+        await resumeSession(account)
         logEvent('account:loggedIn', {
           logContext: 'ChooseAccountForm',
           withPassword: false,
@@ -69,7 +66,6 @@ export const ChooseAccountForm = ({
     [
       currentAccount,
       resumeSession,
-      resumeSessionOauth,
       pendingDid,
       onSelectAccount,
       setShowLoggedOut,

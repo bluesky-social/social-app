@@ -7,13 +7,14 @@ import {isWeb} from '#/platform/detection'
 import {type SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
+import {USE_OAUTH} from '../app-info'
 import {logEvent} from '../statsig/statsig'
 import {type LogEvents} from '../statsig/statsig'
 
 export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {_} = useLingui()
-  const {resumeSession, resumeSessionOauth} = useSessionApi()
+  const {resumeSession} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
@@ -28,7 +29,7 @@ export function useAccountSwitcher() {
       try {
         setPendingDid(account.did)
         // TODO: this should be checking if it is an oauth session
-        if (true || account.accessJwt) {
+        if (USE_OAUTH || account.accessJwt) {
           if (isWeb) {
             // We're switching accounts, which remounts the entire app.
             // On mobile, this gets us Home, but on the web we also need reset the URL.
@@ -37,11 +38,7 @@ export function useAccountSwitcher() {
             // So we change the URL ourselves. The navigator will pick it up on remount.
             history.pushState(null, '', '/')
           }
-          if (true) {
-            await resumeSessionOauth(account)
-          } else {
-            await resumeSession(account)
-          }
+          await resumeSession(account)
           logEvent('account:loggedIn', {logContext, withPassword: false})
           Toast.show(_(msg`Signed in as @${account.handle}`))
         } else {
@@ -64,7 +61,7 @@ export function useAccountSwitcher() {
         setPendingDid(null)
       }
     },
-    [_, resumeSession, resumeSessionOauth, requestSwitchToAccount, pendingDid],
+    [_, resumeSession, requestSwitchToAccount, pendingDid],
   )
 
   return {onPressSwitchAccount, pendingDid}

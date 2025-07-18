@@ -13,6 +13,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {USE_OAUTH} from '#/lib/app-info'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
@@ -53,14 +54,14 @@ interface LoginFormProps {
 }
 
 export function LoginForm(props: LoginFormProps) {
-  if (true) {
-    return <OAuthLoginForm {...props} />
+  if (USE_OAUTH) {
+    return <OAuthLoginFormInner {...props} />
   } else {
     return <LoginFormInner {...props} />
   }
 }
 
-function OAuthLoginForm({
+function OAuthLoginFormInner({
   error,
   initialHandle,
   onPressBack,
@@ -70,7 +71,7 @@ function OAuthLoginForm({
   const [isProcessing, setIsProcessing] = React.useState(false)
   const identifierValueRef = useRef<string>(initialHandle || '')
 
-  const {loginOauth} = useSessionApi()
+  const {login} = useSessionApi()
 
   const onPressNext = async () => {
     setIsProcessing(true)
@@ -86,7 +87,15 @@ function OAuthLoginForm({
       const client = getNativeOAuthClient()
       const res = await client.signIn(identifierValueRef.current)
       if (res.status === 'success') {
-        await loginOauth(res.session, 'LoginForm')
+        await login(
+          {
+            service: '',
+            identifier: '',
+            password: '',
+            oauthSession: res.session,
+          },
+          'LoginForm',
+        )
       } else {
         logger.error(`Invalid OAuth status: ${res.status}`)
         setError(_(msg`An error occurred during authentication.`))

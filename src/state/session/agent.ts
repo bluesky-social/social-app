@@ -1,12 +1,9 @@
 import {
-  Agent,
   type AtpSessionData,
   type AtpSessionEvent,
   BskyAgent,
 } from '@atproto/api'
-import {type OutputSchema} from '@atproto/api/dist/client/types/com/atproto/server/getSession'
 import {TID} from '@atproto/common-web'
-import {type OAuthSession} from '@atproto/oauth-client-browser'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
@@ -26,7 +23,6 @@ import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
-import {BSKY_OAUTH_CLIENT} from './oauth-web-client'
 import {type SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
 
@@ -70,22 +66,6 @@ export async function createAgentAndResume(
   }
 
   return agent.prepare(gates, moderation, onSessionChange)
-}
-
-export async function createAgentOauth(session: OAuthSession) {
-  const agent = new Agent(session)
-  const account = await oauthAgentAndSessionToSessionAccountOrThrow(
-    agent,
-    session,
-  )
-  tryFetchGates(account.did, 'prefer-fresh-gates')
-  configureModerationForAccount(agent, account)
-  return {agent, account}
-}
-
-export async function resumeAgentOauth(account: SessionAccount) {
-  const session = await BSKY_OAUTH_CLIENT.restore(account.did)
-  return await createAgentOauth(session)
 }
 
 export async function createAgentAndLogin(
@@ -207,49 +187,12 @@ export async function createAgentAndCreateAccount(
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
-export async function oauthAgentAndSessionToSessionAccountOrThrow(
-  agent: Agent,
-  session: OAuthSession,
-): Promise<SessionAccount> {
-  const account = await oauthAgentAndSessionToSessionAccount(agent, session)
-  if (!account) {
-    throw Error('Expected an active session')
-  }
-  return account
-}
-
 export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
   const account = agentToSessionAccount(agent)
   if (!account) {
     throw Error('Expected an active session')
   }
   return account
-}
-
-export async function oauthAgentAndSessionToSessionAccount(
-  agent: Agent,
-  session: OAuthSession,
-): Promise<SessionAccount | undefined> {
-  let data: OutputSchema
-  try {
-    const res = await agent.com.atproto.server.getSession()
-    data = res.data
-  } catch (e: any) {
-    logger.error(e)
-    return undefined
-  }
-  return {
-    service: session.serverMetadata.issuer,
-    did: session.did,
-    handle: data.handle,
-    email: data.email,
-    emailConfirmed: data.emailConfirmed,
-    emailAuthFactor: data.emailAuthFactor,
-    active: data.active,
-    status: data.status,
-    pdsUrl: session.serverMetadata.issuer,
-    isSelfHosted: !session.server.issuer.startsWith(BSKY_SERVICE), // TODO: is this entryway?
-  }
 }
 
 export function agentToSessionAccount(

@@ -9,7 +9,7 @@ export function createNativeOAuthClient() {
       client_name: 'Bluesky Native App (Hailey Demo)',
       client_uri: 'https://bsky.hailey.at',
       redirect_uris: ['at.hailey.bsky:/auth/native/callback'],
-      scope: 'atproto transition:generic transition:email',
+      scope: 'atproto transition:generic transition:email transition:chat.bsky',
       token_endpoint_auth_method: 'none',
       response_types: ['code'],
       grant_types: ['authorization_code', 'refresh_token'],
