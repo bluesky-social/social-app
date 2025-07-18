@@ -72,7 +72,7 @@ beginResolveGeolocation()
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
-  const {resumeSession} = useSessionApi()
+  const {resumeSession, resumeSessionOauth} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
   const hasCheckedReferrer = useStarterPackEntry()
@@ -82,7 +82,11 @@ function InnerApp() {
     async function onLaunch(account?: SessionAccount) {
       try {
         if (account) {
-          await resumeSession(account)
+          if (true) {
+            await resumeSessionOauth(account)
+          } else {
+            await resumeSession(account)
+          }
         }
       } catch (e) {
         logger.error(`session: resumeSession failed`, {message: e})
@@ -92,7 +96,7 @@ function InnerApp() {
     }
     const account = readLastActiveAccount()
     onLaunch(account)
-  }, [resumeSession])
+  }, [resumeSession, resumeSessionOauth])
 
   useEffect(() => {
     return listenSessionDropped(() => {

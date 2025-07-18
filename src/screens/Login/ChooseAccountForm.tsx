@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
@@ -24,7 +24,7 @@ export const ChooseAccountForm = ({
   const [pendingDid, setPendingDid] = React.useState<string | null>(null)
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {resumeSession} = useSessionApi()
+  const {resumeSession, resumeSessionOauth} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
   const onSelect = React.useCallback(
@@ -45,7 +45,11 @@ export const ChooseAccountForm = ({
       }
       try {
         setPendingDid(account.did)
-        await resumeSession(account)
+        if (true) {
+          resumeSessionOauth(account)
+        } else {
+          await resumeSession(account)
+        }
         logEvent('account:loggedIn', {
           logContext: 'ChooseAccountForm',
           withPassword: false,
@@ -64,6 +68,7 @@ export const ChooseAccountForm = ({
     [
       currentAccount,
       resumeSession,
+      resumeSessionOauth,
       pendingDid,
       onSelectAccount,
       setShowLoggedOut,

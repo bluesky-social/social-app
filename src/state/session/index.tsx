@@ -272,7 +272,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentAgentState.did) {
-          resumeSession(syncedAccount)
+          if (true) {
+            resumeSessionOauth(syncedAccount)
+          } else {
+            resumeSession(syncedAccount)
+          }
         } else {
           const agent = state.currentAgentState.agent as BskyAgent
           const prevSession = agent.session
@@ -286,7 +290,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     })
-  }, [state, resumeSession])
+  }, [state, resumeSession, resumeSessionOauth])
 
   const stateContext = React.useMemo(
     () => ({
@@ -335,7 +339,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
-      prevAgent.dispose()
+      // TODO: this is a hack!
+      prevAgent.dispose?.()
     }
   }, [agent])
 
