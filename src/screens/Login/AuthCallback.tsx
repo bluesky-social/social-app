@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSessionApi} from '#/state/session'
-import {getWebOAuthClient} from '#/state/session/oauth'
+import {getWebOAuthClient} from '#/state/session/oauth-web-client'
 
 export function AuthCallback() {
   const {loginOauth} = useSessionApi()

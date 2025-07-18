@@ -26,7 +26,7 @@ import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
-import {BSKY_OAUTH_CLIENT} from './oauth'
+import {BSKY_OAUTH_CLIENT} from './oauth-web-client'
 import {type SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
 
