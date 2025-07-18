@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -203,6 +203,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const authorHref = makeProfileLink(post.author)
   const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
 
+  const [translatedText, setTranslatedText] = useState<string | null>(null)
   const likesHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
@@ -392,7 +393,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               <RichText
                 enableTags
                 selectable
-                value={richText}
+                value={!translatedText ? richText : translatedText}
                 style={[a.flex_1, a.text_xl]}
                 authorHandle={post.author.handle}
                 shouldProxyLinks={true}
@@ -412,6 +413,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           <ExpandedPostDetails
             post={item.value.post}
             isThreadAuthor={isThreadAuthor}
+            translatedText={translatedText}
+            setTranslatedText={setTranslatedText}
           />
           {post.repostCount !== 0 ||
           post.likeCount !== 0 ||
@@ -508,9 +511,13 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 function ExpandedPostDetails({
   post,
   isThreadAuthor,
+  translatedText,
+  setTranslatedText,
 }: {
   post: Extract<ThreadItem, {type: 'threadPost'}>['value']['post']
   isThreadAuthor: boolean
+  translatedText: string | null
+  setTranslatedText: (text: string) => void
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -534,6 +541,11 @@ function ExpandedPostDetails({
   const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
+
+      if (translatedText) {
+        setTranslatedText(null)
+        return false
+      }
 
       const run = async () => {
         if (!supportsTranslatorAPI) {
@@ -568,9 +580,12 @@ function ExpandedPostDetails({
           ) {
             postText = post.record.text
           }
-
-          const translation = await translator.translate(postText)
-          alert(translation)
+          const translations = []
+          const postParagraphs = postText.split(/\n/)
+          for (const postParagraph of postParagraphs) {
+            translations.push(await translator.translate(postParagraph))
+          }
+          setTranslatedText(translations.join('\n'))
         } catch (err) {
           console.error(err)
         }
@@ -579,7 +594,15 @@ function ExpandedPostDetails({
       void run()
       return false
     },
-    [supportsTranslatorAPI, openLink, translatorUrl, langPrefs, post],
+    [
+      translatedText,
+      setTranslatedText,
+      supportsTranslatorAPI,
+      openLink,
+      translatorUrl,
+      langPrefs,
+      post,
+    ],
   )
 
   return (
@@ -601,7 +624,7 @@ function ExpandedPostDetails({
               label={_(msg`Translate`)}
               style={[a.text_sm]}
               onPress={onTranslatePress}>
-              <Trans>Translate</Trans>
+              <Trans>{translatedText ? 'Show original' : 'Translate'}</Trans>
             </InlineLinkText>
           </>
         )}
