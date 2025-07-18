@@ -121,6 +121,12 @@ export function Provider({children}: {children: React.ReactNode}) {
      * that we get the latest state when the user returns to the app.
      */
     setRefetchWhilePending(true)
+  } else if (
+    !!ageAssuranceContext.lastInitiatedAt &&
+    ageAssuranceContext.status !== 'pending' &&
+    refetchWhilePending
+  ) {
+    setRefetchWhilePending(false)
   }
 
   const ageAssuranceAPIContext = useMemo<AgeAssuranceAPIContextType>(
