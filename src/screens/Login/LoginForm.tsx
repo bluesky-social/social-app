@@ -14,12 +14,15 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
+import {useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
+import {getNativeOAuthClient, getWebOAuthClient} from '#/state/session/oauth'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -32,9 +35,6 @@ import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticke
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
-import {useGate} from '#/lib/statsig/statsig'
-import {isWeb} from '#/platform/detection'
-import {getNativeOAuthClient, getWebOAuthClient} from '#/state/session/oauth'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -61,10 +61,17 @@ export function LoginForm(props: LoginFormProps) {
   }
 }
 
-function OAuthLoginForm({error, initialHandle, onPressBack}: LoginFormProps) {
+function OAuthLoginForm({
+  error,
+  initialHandle,
+  onPressBack,
+  setError,
+}: LoginFormProps) {
   const {_} = useLingui()
   const [isProcessing, setIsProcessing] = React.useState(false)
   const identifierValueRef = useRef<string>(initialHandle || '')
+
+  const {loginOauth} = useSessionApi()
 
   const onPressNext = async () => {
     setIsProcessing(true)
@@ -74,8 +81,14 @@ function OAuthLoginForm({error, initialHandle, onPressBack}: LoginFormProps) {
     } else {
       const client = getNativeOAuthClient()
       const res = await client.signIn(identifierValueRef.current)
-      // redirect after result
+      if (res.status === 'success') {
+        await loginOauth(res.session, 'LoginForm')
+      } else {
+        logger.error(`Invalid OAuth status: ${res.status}`)
+        setError(_(msg`An error occurred during authentication.`))
+      }
     }
+    setIsProcessing(false)
   }
 
   return (

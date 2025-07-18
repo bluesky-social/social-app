@@ -12,6 +12,8 @@ import {
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
+  createAgentOauth,
+  resumeAgentOauth,
   sessionAccountToSession,
 } from './agent'
 import {getInitialState, reducer} from './reducer'
@@ -36,9 +38,11 @@ const AgentContext = React.createContext<BskyAgent | null>(null)
 const ApiContext = React.createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
+  loginOauth: async () => {},
   logoutCurrentAccount: async () => {},
   logoutEveryAccount: async () => {},
   resumeSession: async () => {},
+  resumeSessionOauth: async () => {},
   removeAccount: () => {},
 })
 
@@ -118,6 +122,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [onAgentSessionChange, cancelPendingTask],
   )
 
+  const loginOauth = React.useCallback<SessionApiContext['loginOauth']>(
+    async (session, logContext) => {
+      const signal = cancelPendingTask()
+      const {agent, account} = await createAgentOauth(session)
+      if (signal.aborted) {
+        return
+      }
+      dispatch({
+        type: 'switched-to-account',
+        newAgent: agent,
+        newAccount: account,
+      })
+      logger.metric(
+        'account:loggedIn',
+        {logContext, withPassword: true},
+        {statsig: true},
+      )
+      addSessionDebugLog({type: 'method:end', method: 'login', account})
+    },
+    [cancelPendingTask],
+  )
+
   const logoutCurrentAccount = React.useCallback<
     SessionApiContext['logoutEveryAccount']
   >(
@@ -180,6 +206,25 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
     },
     [onAgentSessionChange, cancelPendingTask],
+  )
+
+  const resumeSessionOauth = React.useCallback<
+    SessionApiContext['resumeSessionOauth']
+  >(
+    async storedAccount => {
+      const signal = cancelPendingTask()
+      const {agent, account} = await resumeAgentOauth(storedAccount)
+      if (signal.aborted) {
+        return
+      }
+      dispatch({
+        type: 'switched-to-account',
+        newAgent: agent,
+        newAccount: account,
+      })
+      addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
+    },
+    [cancelPendingTask],
   )
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
@@ -258,17 +303,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       createAccount,
       login,
+      loginOauth,
       logoutCurrentAccount,
       logoutEveryAccount,
       resumeSession,
+      resumeSessionOauth,
       removeAccount,
     }),
     [
       createAccount,
       login,
+      loginOauth,
       logoutCurrentAccount,
       logoutEveryAccount,
       resumeSession,
+      resumeSessionOauth,
       removeAccount,
     ],
   )

@@ -1,13 +1,13 @@
-import {AtpSessionEvent} from '@atproto/api'
+import {type AtpSessionEvent} from '@atproto/api'
 
 import {createPublicAgent} from './agent'
 import {wrapSessionReducerForLogging} from './logging'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 
 // A hack so that the reducer can't read anything from the agent.
 // From the reducer's point of view, it should be a completely opaque object.
 type OpaqueBskyAgent = {
-  readonly service: URL
+  readonly service?: URL | undefined // TODO: do we need service at all? what are implications if we rm?
   readonly api: unknown
   readonly app: unknown
   readonly com: unknown

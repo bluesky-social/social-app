@@ -1,9 +1,9 @@
-import {BSKY_LABELER_DID, BskyAgent} from '@atproto/api'
+import {type Agent, BSKY_LABELER_DID, BskyAgent} from '@atproto/api'
 
 import {IS_TEST_USER} from '#/lib/constants'
 import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
 import {readLabelers} from './agent-config'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 
 export function configureModerationForGuest() {
   // This global mutation is *only* OK because this code is only relevant for testing.
@@ -13,7 +13,7 @@ export function configureModerationForGuest() {
 }
 
 export async function configureModerationForAccount(
-  agent: BskyAgent,
+  agent: Agent | BskyAgent,
   account: SessionAccount,
 ) {
   // This global mutation is *only* OK because this code is only relevant for testing.
@@ -41,7 +41,7 @@ function switchToBskyAppLabeler() {
   BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
 }
 
-async function trySwitchToTestAppLabeler(agent: BskyAgent) {
+async function trySwitchToTestAppLabeler(agent: Agent | BskyAgent) {
   const did = (
     await agent
       .resolveHandle({handle: 'mod-authority.test'})

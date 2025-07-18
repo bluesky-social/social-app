@@ -1,3 +1,5 @@
+import {type OAuthSession} from '@atproto/oauth-client-browser'
+
 import {type LogEvents} from '#/lib/statsig/statsig'
 import {type PersistedAccount} from '#/state/persisted'
 
@@ -32,6 +34,10 @@ export type SessionApiContext = {
     },
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>
+  loginOauth: (
+    session: OAuthSession,
+    logContext: LogEvents['account:loggedIn']['logContext'],
+  ) => Promise<void>
   logoutCurrentAccount: (
     logContext: LogEvents['account:loggedOut']['logContext'],
   ) => void
@@ -39,5 +45,6 @@ export type SessionApiContext = {
     logContext: LogEvents['account:loggedOut']['logContext'],
   ) => void
   resumeSession: (account: SessionAccount) => Promise<void>
+  resumeSessionOauth: (account: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
 }
