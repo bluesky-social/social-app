@@ -48,6 +48,7 @@ export type FeedSourceFeedInfo = {
   creatorDid: string
   creatorHandle: string
   likeCount: number | undefined
+  acceptsInteractions: boolean | undefined
   likeUri: string | undefined
   contentMode: AppBskyFeedDefs.GeneratorView['contentMode']
 }
@@ -115,6 +116,7 @@ export function hydrateFeedGenerator(
     creatorDid: view.creator.did,
     creatorHandle: view.creator.handle,
     likeCount: view.likeCount,
+    acceptsInteractions: view.acceptsInteractions,
     likeUri: view.viewer?.like,
     contentMode: view.contentMode,
   }

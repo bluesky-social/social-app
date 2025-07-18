@@ -105,8 +105,10 @@ export function PostThread({uri}: {uri: string}) {
   )
   const headerRef = React.useRef<View | null>(null)
   const anchorPostSource = useUnstablePostSource(uri)
-  const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
-
+  const feedFeedback = useFeedFeedback(
+    anchorPostSource?.feedSourceInfo,
+    hasSession,
+  )
   const {data: preferences} = usePreferencesQuery()
   const {
     isFetching,
