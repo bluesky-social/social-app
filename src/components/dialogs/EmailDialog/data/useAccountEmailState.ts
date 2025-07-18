@@ -51,8 +51,7 @@ export function useAccountEmailState() {
     refetchOnWindowFocus: true,
     queryKey: accountEmailStateQueryKey,
     queryFn: async () => {
-      // will also trigger updates to `#/state/session` data
-      const {data} = await agent.resumeSession(agent.session!)
+      const {data} = await agent.com.atproto.server.getSession()
       return {
         isEmailVerified: !!data.emailConfirmed,
         email2FAEnabled: !!data.emailAuthFactor,
