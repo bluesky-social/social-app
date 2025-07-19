@@ -10,7 +10,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -19,5 +19,5 @@
     "jsxFragmentFactory": "Fragment",
     "downlevelIteration": true
   },
-  "include": ["src", "snippet", "vite.config.ts"]
+  "include": ["src", "snippet", "vite.config.ts", "*.config.cjs", ".eslintrc.cjs"]
 }
