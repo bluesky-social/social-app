@@ -12,7 +12,8 @@
         "buildFromSource": [
           "expo-notifications",
           "expo-haptics",
-          "expo-media-library"
+          "expo-media-library",
+          "expo-image-picker"
         ]
       }
     }
