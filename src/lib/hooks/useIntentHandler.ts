@@ -1,5 +1,6 @@
 import React from 'react'
 import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -29,7 +30,12 @@ export function useIntentHandler() {
   const {currentAccount} = useSession()
 
   React.useEffect(() => {
-    const handleIncomingURL = (url: string) => {
+    const handleIncomingURL = async (url: string) => {
+      if (isNative) {
+        // Close in-app browser if it's open
+        WebBrowser.dismissBrowser().catch(() => {})
+      }
+
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
         logEvent('deepLink:referrerReceived', {
