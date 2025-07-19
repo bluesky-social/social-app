@@ -614,9 +614,9 @@ func (srv *Server) WebProfile(c echo.Context) error {
 			log.Infof("found syntheticContentGeneration user intent from %s: %v", synthIntent["updatedAt"], synthIntent["allow"])
 			switch synthIntent["allow"] {
 			case true:
-				c.Response().Header().Set("Content-Usage", "genai=y")
+				c.Response().Header().Set("Content-Usage", "train-genai=y,ai-use=y")
 			case false:
-				c.Response().Header().Set("Content-Usage", "genai=n")
+				c.Response().Header().Set("Content-Usage", "train-genai=n,ai-use=n")
 			}
 		}
 	}
