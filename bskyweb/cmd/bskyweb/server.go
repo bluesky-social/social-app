@@ -20,6 +20,8 @@ import (
 	"time"
 
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
+	"github.com/bluesky-social/indigo/atproto/client"
+	"github.com/bluesky-social/indigo/atproto/identity"
 	"github.com/bluesky-social/indigo/atproto/syntax"
 	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
@@ -38,6 +40,7 @@ type Server struct {
 	httpd *http.Server
 	xrpcc *xrpc.Client
 	cfg   *Config
+	dir   identity.Directory
 
 	ipccClient http.Client
 }
@@ -109,6 +112,7 @@ func serve(cctx *cli.Context) error {
 			ipccHost:      ipccHost,
 			staticCDNHost: staticCDNHost,
 		},
+		dir: identity.DefaultDirectory(),
 		ipccClient: http.Client{
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{
@@ -593,6 +597,30 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	if !unauthedViewingOkay {
 		return c.Render(http.StatusOK, "profile.html", data)
 	}
+
+	// resolve intents declaration
+	ident, err := srv.dir.Lookup(ctx, *handleOrDID)
+	if err != nil {
+		log.Warnf("failed to resolve identity: %s\t%v", handleOrDID, err)
+		return c.Render(http.StatusOK, "profile.html", data)
+	}
+	clnt := client.NewAPIClient(ident.PDSEndpoint())
+	resp := make(map[string]any)
+	err = clnt.Get(ctx, "com.atproto.repo.getRecord", map[string]any{"repo": ident.DID.String(), "collection": "org.user-intents.demo.declaration", "rkey": "self"}, &resp)
+	if nil == err {
+		// if we *did* get a declaration...
+		synthIntent, ok := resp["value"].(map[string]any)["syntheticContentGeneration"].(map[string]any)
+		if ok && synthIntent != nil {
+			log.Infof("found syntheticContentGeneration user intent from %s: %v", synthIntent["updatedAt"], synthIntent["allow"])
+			switch synthIntent["allow"] {
+			case true:
+				c.Response().Header().Set("Content-Usage", "genai=y")
+			case false:
+				c.Response().Header().Set("Content-Usage", "genai=n")
+			}
+		}
+	}
+
 	req := c.Request()
 	data["profileView"] = pv
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
