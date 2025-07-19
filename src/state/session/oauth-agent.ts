@@ -79,6 +79,7 @@ export class OauthBskyAppAgent extends Agent {
       this,
       this.#oauthSession,
     )
+    account.isOauthSession = true
     this.#account = account
     this.session = sessionAccountToSession(account)
 

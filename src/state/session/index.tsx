@@ -190,7 +190,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: SessionAccount
       }
 
-      if (shouldUseOauth) {
+      if (storedAccount.isOauthSession || shouldUseOauth) {
         agentAccount = await oauthResumeSession(storedAccount)
       } else {
         agentAccount = await createAgentAndResume(
@@ -259,7 +259,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         a => a.did === synced.currentAccount?.did,
       )
       // TODO: this should be checking if it is an oauth session
-      if (syncedAccount && (shouldUseOauth || syncedAccount?.refreshJwt)) {
+      if (
+        syncedAccount &&
+        (syncedAccount.isOauthSession ||
+          shouldUseOauth ||
+          syncedAccount?.refreshJwt)
+      ) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           resumeSession(syncedAccount)
         } else {

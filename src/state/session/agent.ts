@@ -287,6 +287,7 @@ class BskyAppAgent extends BskyAgent {
 
     // Now the agent is ready.
     const account = agentToSessionAccountOrThrow(this)
+    account.isOauthSession = false
     let lastSession = this.sessionManager.session
     this.persistSessionHandler = event => {
       if (this.sessionManager.session) {
