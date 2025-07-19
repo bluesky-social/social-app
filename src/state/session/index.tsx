@@ -119,7 +119,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const logoutCurrentAccount = React.useCallback<
-    SessionApiContext['logoutEveryAccount']
+    SessionApiContext['logoutCurrentAccount']
   >(
     logContext => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
