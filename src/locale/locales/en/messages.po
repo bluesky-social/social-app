@@ -133,6 +133,10 @@ msgstr ""
 msgid "{0} <0>in <1>text & tags</1></0>"
 msgstr ""
 
+#: src/screens/Profile/Header/Metrics.tsx:49
+msgid "{0} following"
+msgstr ""
+
 #: src/components/live/LiveStatusDialog.tsx:68
 msgid "{0} is live"
 msgstr ""
@@ -373,7 +377,6 @@ msgid "{firstAuthorName} verified you"
 msgstr ""
 
 #: src/components/ProfileHoverCard/index.web.tsx:570
-#: src/screens/Profile/Header/Metrics.tsx:49
 msgid "{following} following"
 msgstr ""
 
@@ -1232,11 +1235,11 @@ msgstr ""
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:309
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:318
 msgid "Begin"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:303
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:312
 msgid "Begin age assurance process"
 msgstr ""
 
@@ -1471,7 +1474,7 @@ msgstr ""
 msgid "By <0>{0}</0>"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:320
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:329
 msgid "By continuing, you agree to the <0>KWS Terms of Use</0> and acknowledge that KWS will store your verified status with your hashed email address in accordance with the <1>KWS Privacy Policy</1>. This means you won’t need to verify again the next time you use this email for other apps, games, and services powered by KWS technology."
 msgstr ""
 
@@ -1796,8 +1799,10 @@ msgstr ""
 msgid "Clip 🐴 clop 🐴"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:187
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:192
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:178
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:184
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:237
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:243
 #: src/components/dialogs/GifSelect.tsx:282
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:158
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
@@ -1839,8 +1844,8 @@ msgstr ""
 msgid "Close bottom drawer"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:215
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:221
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:224
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:230
 #: src/components/dialogs/GifSelect.tsx:276
 #: src/components/verification/VerificationsDialog.tsx:136
 #: src/components/verification/VerifierDialog.tsx:136
@@ -1995,7 +2000,7 @@ msgstr ""
 msgid "Connecting..."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:163
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:213
 msgid "Connection issue"
 msgstr ""
 
@@ -2004,7 +2009,7 @@ msgstr ""
 msgid "Contact our moderation team"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:153
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:155
 #: src/screens/Signup/index.tsx:197
 #: src/screens/Signup/index.tsx:200
 msgid "Contact support"
@@ -4449,15 +4454,15 @@ msgstr ""
 msgid "Keep me posted"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:335
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:344
 msgid "KWS Privacy Policy"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:325
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:334
 msgid "KWS Terms of Use"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:195
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:201
 msgid "KWS website"
 msgstr ""
 
@@ -6126,7 +6131,7 @@ msgstr ""
 msgid "Please add any content warning labels that are applicable for the media you are posting."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:182
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:188
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr ""
 
@@ -6179,7 +6184,7 @@ msgstr ""
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:141
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:144
 msgid "Please enter a valid, non-temporary email address. You may need to access this email in the future."
 msgstr ""
 
@@ -6228,7 +6233,7 @@ msgstr ""
 msgid "Please provide any additional details you feel moderators may need in order to properly assess your Age Assurance status."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:294
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:303
 msgid "Please select a language"
 msgstr ""
 
@@ -8005,7 +8010,7 @@ msgstr ""
 msgid "Something went wrong"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:164
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:138
 #: src/components/moderation/ReportDialog/index.tsx:223
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
@@ -8196,7 +8201,11 @@ msgstr ""
 msgid "Subscribe to this list"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:176
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:164
+msgid "Success"
+msgstr ""
+
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:182
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:286
 msgid "Success!"
 msgstr ""
@@ -8453,7 +8462,7 @@ msgid "The laws in your location require you to verify you're an adult before ac
 msgstr ""
 
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:14
-msgid "The laws in your location require you to verify you're an adult. Tap to learn more."
+msgid "The laws in your location require you to verify you're an adult to access certain features. Tap to learn more."
 msgstr ""
 
 #: src/view/com/post-thread/PostThread.tsx:267
@@ -8785,7 +8794,7 @@ msgstr ""
 msgid "This should create a domain record at:"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:206
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:215
 msgid "This should only take a few minutes."
 msgstr ""
 
@@ -9302,7 +9311,7 @@ msgstr ""
 msgid "Use this to sign in to the other app along with your handle."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:270
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:279
 msgid "Use your account email address, or another real email address you control, in case KWS or Bluesky needs to contact you."
 msgstr ""
 
@@ -9451,7 +9460,7 @@ msgstr ""
 msgid "Verify this account?"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:176
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:182
 msgid "Verify your age"
 msgstr ""
 
@@ -9461,11 +9470,11 @@ msgstr ""
 msgid "Verify your email"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:163
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:213
 msgid "Verifying"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:73
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:74
 msgid "Verifying your age assurance status"
 msgstr ""
 
@@ -9702,6 +9711,10 @@ msgstr ""
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr ""
 
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:196
+msgid "We have partnered with <0>KWS</0> to verify that you’re an adult. When you click \"Begin\" below, KWS will check if you have previously verified your age using this email address for other games/services powered by KWS technology. If not, KWS will email you instructions for verifying your age. When you’re done, you'll be brought back to continue using Bluesky."
+msgstr ""
+
 #: src/components/intents/VerifyEmailIntentDialog.tsx:107
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr ""
@@ -9722,10 +9735,6 @@ msgstr ""
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:190
-msgid "We use <0>KWS</0> to verify that you’re an adult. When you click \"Begin\" below, KWS will email you instructions for verifying your age. When you’re done, you'll be brought back to continue using Bluesky."
-msgstr ""
-
 #: src/view/com/composer/state/video.ts:417
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
@@ -9738,7 +9747,7 @@ msgstr ""
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:171
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:221
 msgid "We were unable to receive the verification due to a connection issue. It may arrive later. If it does, your account will update automatically."
 msgstr ""
 
@@ -9758,11 +9767,11 @@ msgstr ""
 msgid "We'll use this to help customize your experience."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:177
-msgid "We're confirming your status with our servers. This dialog should close in a few seconds."
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
+msgid "We're confirming your age assurance status with our servers. This should only take a few seconds."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:148
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:150
 msgid "We're having issues initializing the age assurance process for your account. Please <0>contact support</0> for assistance."
 msgstr ""
 
@@ -9802,6 +9811,10 @@ msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:343
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
+msgstr ""
+
+#: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
+msgid "We've confirmed your age assurance status. You can now close this dialog."
 msgstr ""
 
 #: src/screens/Deactivated.tsx:125
@@ -10169,7 +10182,7 @@ msgstr ""
 msgid "You hid this reply."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:232
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:241
 msgid "You initiated this flow already, {0} ago. It may take up to 5 minutes for emails to reach your inbox. Please consider waiting a few minutes before trying again."
 msgstr ""
 
@@ -10389,9 +10402,9 @@ msgstr ""
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:244
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:248
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:249
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:253
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:257
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:258
 msgid "Your email"
 msgstr ""
 
@@ -10467,7 +10480,7 @@ msgstr ""
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:281
+#: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:290
 msgid "Your preferred language"
 msgstr ""
 
