@@ -10,9 +10,15 @@ import {AppState, type AppStateStatus} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
-import {FEEDBACK_FEEDS, STAGING_FEEDS} from '#/lib/constants'
+import {
+  ALL_INTERACTIONS,
+  DIRECT_INTERACTIONS,
+  FEEDBACK_FEEDS,
+  STAGING_FEEDS,
+} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {Logger} from '#/logger'
+import {type FeedSourceInfo} from '#/state/queries/feed'
 import {
   type FeedDescriptor,
   type FeedPostSliceItem,
@@ -27,6 +33,7 @@ export type StateContext = {
   onItemSeen: (item: any) => void
   sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
   feedDescriptor: FeedDescriptor | undefined
+  feedSourceInfo: FeedSourceInfo | undefined
 }
 
 const stateContext = createContext<StateContext>({
@@ -34,14 +41,32 @@ const stateContext = createContext<StateContext>({
   onItemSeen: (_item: any) => {},
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
   feedDescriptor: undefined,
+  feedSourceInfo: undefined,
 })
 
+// All info needed to send feedback to a feed
+type FeedInfo = {
+  feedDescriptor: FeedDescriptor
+  acceptsInteractions: boolean
+  isDiscover: boolean
+  proxyDid: string
+}
+
 export function useFeedFeedback(
-  feed: FeedDescriptor | undefined,
+  feed: FeedSourceInfo | FeedDescriptor | undefined,
   hasSession: boolean,
 ) {
   const agent = useAgent()
-  const enabled = isDiscoverFeed(feed) && hasSession
+
+  const feedInfo = feed ? buildFeedInfo(feed) : null
+  const enabled = feedInfo && feedInfo.acceptsInteractions && hasSession
+
+  const enabledInteractions = useMemo(() => {
+    if (!enabled) {
+      return []
+    }
+    return feedInfo.isDiscover ? ALL_INTERACTIONS : DIRECT_INTERACTIONS
+  }, [enabled, feedInfo])
 
   const queue = useRef<Set<string>>(new Set())
   const history = useRef<
@@ -64,20 +89,22 @@ export function useFeedFeedback(
     const interactions = Array.from(queue.current).map(toInteraction)
     queue.current.clear()
 
-    let proxyDid = 'did:web:discover.bsky.app'
-    if (STAGING_FEEDS.includes(feed ?? '')) {
-      proxyDid = 'did:web:algo.pop2.bsky.app'
+    const interactionsToSend = interactions.filter(interaction =>
+      enabledInteractions.includes(interaction.event ?? ''),
+    )
+
+    if (interactionsToSend.length === 0) {
+      return
     }
 
     // Send to the feed
     agent.app.bsky.feed
       .sendInteractions(
-        {interactions},
+        {interactions: interactionsToSend},
         {
           encoding: 'application/json',
           headers: {
-            // TODO when we start sending to other feeds, we need to grab their DID -prf
-            'atproto-proxy': `${proxyDid}#bsky_fg`,
+            'atproto-proxy': `${feedInfo?.proxyDid}#bsky_fg`,
           },
         },
       )
@@ -89,10 +116,13 @@ export function useFeedFeedback(
     if (aggregatedStats.current === null) {
       aggregatedStats.current = createAggregatedStats()
     }
-    sendOrAggregateInteractionsForStats(aggregatedStats.current, interactions)
+    sendOrAggregateInteractionsForStats(
+      aggregatedStats.current,
+      interactionsToSend,
+    )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, feed])
+  }, [agent, throttledFlushAggregatedStats, feedInfo, enabledInteractions])
 
   const sendToFeed = useMemo(
     () =>
@@ -164,9 +194,10 @@ export function useFeedFeedback(
       // call on various events
       // queues the event to be sent with the throttled sendToFeed call
       sendInteraction,
-      feedDescriptor: feed,
+      feedDescriptor: feedInfo?.feedDescriptor,
+      feedSourceInfo: typeof feed === 'object' ? feed : undefined,
     }
-  }, [enabled, onItemSeen, sendInteraction, feed])
+  }, [enabled, onItemSeen, sendInteraction, feedInfo, feed])
 }
 
 export const FeedFeedbackProvider = stateContext.Provider
@@ -182,6 +213,50 @@ export function useFeedFeedbackContext() {
 // -prf
 function isDiscoverFeed(feed?: FeedDescriptor) {
   return !!feed && FEEDBACK_FEEDS.includes(feed)
+}
+
+function buildFeedInfo(feed: FeedSourceInfo | FeedDescriptor): FeedInfo | null {
+  // Build FeedInfo object from either a feed source info object or a feed descriptor string
+  // Only discover feeds are supported for feed descriptor strings
+  if (typeof feed === 'object') {
+    if (feed.type !== 'feed') {
+      // Don't send feedback to non-feed sources
+      return null
+    }
+    const feedDescriptor = feed.feedDescriptor
+    const isDiscover = isDiscoverFeed(feed.feedDescriptor)
+    const proxyDid = feed.view?.did
+    if (!proxyDid) {
+      logger.warn(`No proxy did found for feed: ${feedDescriptor}.`)
+      return null
+    }
+    let acceptsInteractions = feed.acceptsInteractions ?? false
+    if (isDiscover) {
+      // Discover feed doesn't have acceptsInteractions: true, so hardcode this for now
+      acceptsInteractions = true
+    }
+    return {
+      feedDescriptor,
+      isDiscover,
+      proxyDid,
+      acceptsInteractions,
+    }
+  } else {
+    const feedDescriptor = feed
+    const isDiscover = isDiscoverFeed(feedDescriptor)
+    if (!isDiscover) {
+      return null
+    }
+    const proxyDid = STAGING_FEEDS.includes(feedDescriptor)
+      ? 'did:web:algo.pop2.bsky.app'
+      : 'did:web:discover.bsky.app'
+    return {
+      feedDescriptor,
+      isDiscover,
+      proxyDid,
+      acceptsInteractions: true,
+    }
+  }
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {

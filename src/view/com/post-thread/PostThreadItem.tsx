@@ -216,7 +216,7 @@ let PostThreadItemLoaded = ({
   anchorPostSource?: PostSource
 }): React.ReactNode => {
   const {currentAccount, hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
+  const feedFeedback = useFeedFeedback(anchorPostSource?.feedInfo, hasSession)
 
   const t = useTheme()
   const pal = usePalette('default')

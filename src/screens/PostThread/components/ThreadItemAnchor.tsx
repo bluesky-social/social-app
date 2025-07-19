@@ -178,7 +178,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const {_, i18n} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(postSource?.feed, hasSession)
+  const feedFeedback = useFeedFeedback(postSource?.feedInfo, hasSession)
 
   const post = postShadow
   const record = item.value.post.record

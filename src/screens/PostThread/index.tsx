@@ -48,7 +48,10 @@ export function PostThread({uri}: {uri: string}) {
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const anchorPostSource = useUnstablePostSource(uri)
-  const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
+  const feedFeedback = useFeedFeedback(
+    anchorPostSource?.feedSourceInfo,
+    hasSession,
+  )
 
   /*
    * One query to rule them all

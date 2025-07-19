@@ -91,6 +91,26 @@ export const STAGING_FEEDS = [
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
+export const PASSIVE_INTERACTIONS = [
+  'app.bsky.feed.defs#requestLess',
+  'app.bsky.feed.defs#requestMore',
+  'app.bsky.feed.defs#clickthroughItem',
+  'app.bsky.feed.defs#clickthroughAuthor',
+  'app.bsky.feed.defs#clickthroughReposter',
+  'app.bsky.feed.defs#clickthroughEmbed',
+  'app.bsky.feed.defs#interactionSeen',
+]
+
+export const DIRECT_INTERACTIONS = [
+  'app.bsky.feed.defs#requestLess',
+  'app.bsky.feed.defs#requestMore',
+]
+
+export const ALL_INTERACTIONS = [
+  ...PASSIVE_INTERACTIONS,
+  ...DIRECT_INTERACTIONS,
+]
+
 export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,
