@@ -1,10 +1,11 @@
-import {Agent} from '@atproto/api'
+import {Agent, type AtpSessionData} from '@atproto/api'
 import {type OutputSchema} from '@atproto/api/dist/client/types/com/atproto/server/getSession'
 import {type OAuthSession} from '@atproto/oauth-client-browser'
 
 import {BSKY_SERVICE} from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {sessionAccountToSession} from './agent'
 import {configureModerationForAccount} from './moderation'
 import {BSKY_OAUTH_CLIENT} from './oauth-web-client'
 import {type SessionAccount} from './types'
@@ -59,13 +60,16 @@ export async function oauthAgentAndSessionToSessionAccount(
 }
 
 export class OauthBskyAppAgent extends Agent {
-  #session: OAuthSession
+  // this is a field available in AtpAgent, so we'll add it here
+  session?: AtpSessionData
+
+  #oauthSession: OAuthSession
   #account?: SessionAccount
 
   constructor(session: OAuthSession) {
     super(session)
 
-    this.#session = session
+    this.#oauthSession = session
   }
 
   async prepare(gates: Promise<void>, moderation: Promise<void>) {
@@ -73,9 +77,10 @@ export class OauthBskyAppAgent extends Agent {
     // OAuthSession itself, unlike the old agent
     const account = await oauthAgentAndSessionToSessionAccountOrThrow(
       this,
-      this.#session,
+      this.#oauthSession,
     )
     this.#account = account
+    this.session = sessionAccountToSession(account)
 
     await Promise.all([gates, moderation])
 
