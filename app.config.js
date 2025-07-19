@@ -40,7 +40,7 @@ module.exports = function (_config) {
       version: VERSION,
       name: 'Bluesky',
       slug: 'bluesky',
-      scheme: 'bluesky',
+      scheme: 'at.hailey.bsky', // TODO: this will need to be app.bsky
       owner: 'blueskysocial',
       runtimeVersion: {
         policy: 'appVersion',

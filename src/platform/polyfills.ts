@@ -1,5 +1,7 @@
 import 'react-native-url-polyfill/auto'
 import 'fast-text-encoding'
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
+import 'event-target-polyfill'
 export {}
 
 /**
