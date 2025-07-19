@@ -20,6 +20,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {useExperimentalOauthEnabled} from '#/state/preferences/experimental-oauth'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
 import {getNativeOAuthClient} from '#/state/session/oauth-native-client'
@@ -54,7 +55,9 @@ interface LoginFormProps {
 }
 
 export function LoginForm(props: LoginFormProps) {
-  if (USE_OAUTH) {
+  const shouldUseOauth = useExperimentalOauthEnabled() || USE_OAUTH
+
+  if (shouldUseOauth) {
     return <OAuthLoginFormInner {...props} />
   } else {
     return <LoginFormInner {...props} />

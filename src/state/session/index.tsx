@@ -26,6 +26,7 @@ import {
   type SessionApiContext,
   type SessionStateContext,
 } from '#/state/session/types'
+import {useExperimentalOauthEnabled} from '../preferences/experimental-oauth'
 import {
   type OauthBskyAppAgent,
   oauthCreateAgent,
@@ -56,6 +57,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     addSessionDebugLog({type: 'reducer:init', state: initialState})
     return initialState
   })
+
+  const shouldUseOauth = useExperimentalOauthEnabled() || USE_OAUTH
 
   const onAgentSessionChange = React.useCallback(
     (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
@@ -187,7 +190,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: SessionAccount
       }
 
-      if (USE_OAUTH) {
+      if (shouldUseOauth) {
         agentAccount = await oauthResumeSession(storedAccount)
       } else {
         agentAccount = await createAgentAndResume(
@@ -209,7 +212,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [onAgentSessionChange, cancelPendingTask, shouldUseOauth],
   )
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
@@ -256,7 +259,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         a => a.did === synced.currentAccount?.did,
       )
       // TODO: this should be checking if it is an oauth session
-      if (syncedAccount && (USE_OAUTH || syncedAccount?.refreshJwt)) {
+      if (syncedAccount && (shouldUseOauth || syncedAccount?.refreshJwt)) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           resumeSession(syncedAccount)
         } else {
@@ -272,7 +275,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     })
-  }, [state, resumeSession])
+  }, [state, resumeSession, shouldUseOauth])
 
   const stateContext = React.useMemo(
     () => ({

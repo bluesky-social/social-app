@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 import {USE_OAUTH} from '#/lib/app-info'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {useExperimentalOauthEnabled} from '#/state/preferences/experimental-oauth'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
@@ -28,6 +29,8 @@ export const ChooseAccountForm = ({
   const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
+  const shouldUseOauth = useExperimentalOauthEnabled() || USE_OAUTH
+
   const onSelect = React.useCallback(
     async (account: SessionAccount) => {
       if (pendingDid) {
@@ -35,7 +38,7 @@ export const ChooseAccountForm = ({
         return
       }
       // TODO: this should be checking if it is an oauth session
-      if (!USE_OAUTH && !account.accessJwt) {
+      if (!shouldUseOauth && !account.accessJwt) {
         // Move to login form.
         onSelectAccount(account)
         return
@@ -69,6 +72,7 @@ export const ChooseAccountForm = ({
       pendingDid,
       onSelectAccount,
       setShowLoggedOut,
+      shouldUseOauth,
       _,
     ],
   )

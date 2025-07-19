@@ -4,6 +4,7 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {useExperimentalOauthEnabled} from '#/state/preferences/experimental-oauth'
 import {type SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
@@ -17,6 +18,8 @@ export function useAccountSwitcher() {
   const {resumeSession} = useSessionApi()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
+  const shouldUseOauth = useExperimentalOauthEnabled() || USE_OAUTH
+
   const onPressSwitchAccount = useCallback(
     async (
       account: SessionAccount,
@@ -29,7 +32,7 @@ export function useAccountSwitcher() {
       try {
         setPendingDid(account.did)
         // TODO: this should be checking if it is an oauth session
-        if (USE_OAUTH || account.accessJwt) {
+        if (shouldUseOauth || account.accessJwt) {
           if (isWeb) {
             // We're switching accounts, which remounts the entire app.
             // On mobile, this gets us Home, but on the web we also need reset the URL.
@@ -61,7 +64,7 @@ export function useAccountSwitcher() {
         setPendingDid(null)
       }
     },
-    [_, resumeSession, requestSwitchToAccount, pendingDid],
+    [_, resumeSession, requestSwitchToAccount, pendingDid, shouldUseOauth],
   )
 
   return {onPressSwitchAccount, pendingDid}
