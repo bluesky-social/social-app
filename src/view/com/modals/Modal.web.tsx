@@ -12,7 +12,6 @@ import * as DeleteAccountModal from './DeleteAccount'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
-import * as UserAddRemoveLists from './UserAddRemoveLists'
 
 export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
@@ -52,8 +51,6 @@ function Modal({modal}: {modal: ModalIface}) {
   let element
   if (modal.name === 'create-or-edit-list') {
     element = <CreateOrEditListModal.Component {...modal} />
-  } else if (modal.name === 'user-add-remove-lists') {
-    element = <UserAddRemoveLists.Component {...modal} />
   } else if (modal.name === 'delete-account') {
     element = <DeleteAccountModal.Component />
   } else if (modal.name === 'invite-codes') {
