@@ -283,13 +283,35 @@ class BskyAppAgent extends BskyAgent {
 
     // Now the agent is ready.
     const account = agentToSessionAccountOrThrow(this)
-    let lastSession = this.sessionManager.session
+
+    // HACK (part 1/2): Hijack all assignments of `session`.
+    let _session = this.sessionManager.session
+    let _lastNonEmptySession = this.sessionManager.session
+    Object.defineProperty(this.sessionManager, 'session', {
+      get() { return _session; },
+      set(val) {
+        _session = val;
+        if (val) {
+          _lastNonEmptySession = val
+        }
+      },
+      configurable: true,  
+    })
+
     this.persistSessionHandler = event => {
-      if (this.sessionManager.session) {
-        lastSession = this.sessionManager.session
-      } else if (event === 'network-error') {
-        // Put it back, we'll try again later.
-        this.sessionManager.session = lastSession
+      if (
+        !this.sessionManager.session &&
+        _lastNonEmptySession
+      ) {
+        // HACK (part 2/2): Patch the last known one onto the object.
+        // We think this is OK to do because it was *just* set to undefined up the callstack.
+        // This is a fragile assumption though and should really be fixed upstream.
+        if (event === 'network-error') {
+          this.sessionManager.session = _lastNonEmptySession
+        } else if (event === 'expired') {
+          // In any case, we shouldn't reuse expired ones.
+          _lastNonEmptySession = undefined;
+        }
       }
 
       onSessionChange(this, account.did, event)
