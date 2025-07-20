@@ -295,7 +295,8 @@ class BskyAppAgent extends BskyAgent {
           _lastNonEmptySession = val
         }
       },
-      configurable: true,  
+      configurable: true,
+      enumerable: true
     })
 
     this.persistSessionHandler = event => {
