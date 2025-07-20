@@ -288,9 +288,9 @@ class BskyAppAgent extends BskyAgent {
     let _session = this.sessionManager.session
     let _lastNonEmptySession = this.sessionManager.session
     Object.defineProperty(this.sessionManager, 'session', {
-      get() { return _session; },
+      get() { return _session },
       set(val) {
-        _session = val;
+        _session = val
         if (val) {
           _lastNonEmptySession = val
         }
@@ -311,7 +311,7 @@ class BskyAppAgent extends BskyAgent {
           this.sessionManager.session = _lastNonEmptySession
         } else if (event === 'expired') {
           // In any case, we shouldn't reuse expired ones.
-          _lastNonEmptySession = undefined;
+          _lastNonEmptySession = undefined
         }
       }
 
