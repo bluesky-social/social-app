@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.104.0",
+  "version": "1.105.0",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -12,7 +12,8 @@
         "buildFromSource": [
           "expo-notifications",
           "expo-haptics",
-          "expo-media-library"
+          "expo-media-library",
+          "expo-image-picker"
         ]
       }
     }
@@ -69,7 +70,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.15.16",
+    "@atproto/api": "^0.15.26",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -85,7 +86,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.2",
-    "@haileyok/bluesky-video": "0.3.1",
+    "@haileyok/bluesky-video": "0.3.2",
     "@ipld/dag-cbor": "^9.2.0",
     "@lingui/react": "^4.14.1",
     "@mattermost/react-native-paste-input": "mattermost/react-native-paste-input",
@@ -192,7 +193,7 @@
     "react-native-ios-context-menu": "^1.15.3",
     "react-native-keyboard-controller": "^1.17.5",
     "react-native-mmkv": "^2.12.2",
-    "react-native-pager-view": "^6.7.1",
+    "react-native-pager-view": "6.8.0",
     "react-native-progress": "bluesky-social/react-native-progress",
     "react-native-qrcode-styled": "^0.3.3",
     "react-native-reanimated": "~3.17.5",
@@ -218,7 +219,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.3.144",
+    "@atproto/dev-env": "^0.3.155",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/runtime": "^7.26.0",

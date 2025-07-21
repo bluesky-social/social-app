@@ -983,6 +983,10 @@ export const atoms = {
   transition_none: web({
     transitionProperty: 'none',
   }),
+  transition_timing_default: web({
+    transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',
+    transitionDuration: '100ms',
+  }),
   transition_all: web({
     transitionProperty: 'all',
     transitionTimingFunction: 'cubic-bezier(0.17, 0.73, 0.14, 1)',

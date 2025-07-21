@@ -32,6 +32,8 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -46,7 +48,20 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'MessagesConversation'
 >
-export function MessagesConversationScreen({route}: Props) {
+
+export function MessagesConversationScreen(props: Props) {
+  const {_} = useLingui()
+  const aaCopy = useAgeAssuranceCopy()
+  return (
+    <AgeRestrictedScreen
+      screenTitle={_(msg`Conversation`)}
+      infoText={aaCopy.chatsInfoText}>
+      <MessagesConversationScreenInner {...props} />
+    </AgeRestrictedScreen>
+  )
+}
+
+export function MessagesConversationScreenInner({route}: Props) {
   const {gtMobile} = useBreakpoints()
   const setMinimalShellMode = useSetMinimalShellMode()
 

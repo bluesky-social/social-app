@@ -34,6 +34,7 @@ module.exports = {
           'P',
           'Admonition',
           'Admonition.Admonition',
+          'AgeAssuranceAdmonition',
           'Span',
         ],
         impliedTextProps: [],
