@@ -68,7 +68,7 @@ export function TrendingVideos() {
   return (
     <View
       style={[
-        a.pt_lg,
+        a.pt_sm,
         a.pb_lg,
         a.border_t,
         a.overflow_hidden,
@@ -105,12 +105,12 @@ export function TrendingVideos() {
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
-          snapToInterval={CARD_WIDTH + a.gap_sm.gap}
+          snapToInterval={CARD_WIDTH + a.gap_md.gap}
           style={[a.overflow_visible]}>
           <View
             style={[
               a.flex_row,
-              a.gap_sm,
+              a.gap_md,
               {
                 paddingLeft: gutters.paddingLeft,
                 paddingRight: gutters.paddingRight,
