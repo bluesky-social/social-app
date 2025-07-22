@@ -197,6 +197,7 @@ function VideoCards({
             a.flex_1,
             a.rounded_lg,
             t.atoms.bg,
+            t.atoms.shadow_sm,
           ]}>
           {({pressed}) => (
             <View

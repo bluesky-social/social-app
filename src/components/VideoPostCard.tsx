@@ -411,6 +411,7 @@ export function CompactVideoPostCard({
       onPressOut={onPressOut}
       style={[
         a.flex_col,
+        t.atoms.shadow_sm,
         {
           alignItems: undefined,
           justifyContent: undefined,
@@ -534,7 +535,7 @@ export function CompactVideoPostCardPlaceholder() {
   const black = getBlackColor(t)
 
   return (
-    <View style={[a.flex_1]}>
+    <View style={[a.flex_1, t.atoms.shadow_sm]}>
       <View
         style={[
           a.rounded_lg,
