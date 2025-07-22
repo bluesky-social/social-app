@@ -71,7 +71,7 @@ jobs:
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
-        run: SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
+        run: SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} EXPO_PUBLIC_SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
 
       - name: ✍️ Rename Testflight bundle
         if: ${{ inputs.profile != 'production' }}
@@ -133,7 +133,7 @@ jobs:
 
       - name: 🏗️ Build Production APK
         if: ${{ inputs.profile == 'production' }}
-        run: SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
+        run: SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} EXPO_PUBLIC_SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
 
       - name: 🚀 Upload Production APK Artifact
         id: upload-artifact-production-apk
