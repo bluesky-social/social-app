@@ -9,12 +9,15 @@ import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme, web} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
@@ -104,7 +107,15 @@ function Loader() {
   )
 }
 
-function EmptyState({message, error}: {message: string; error?: string}) {
+function EmptyState({
+  message,
+  error,
+  children,
+}: {
+  message: string
+  error?: string
+  children?: React.ReactNode
+}) {
   const t = useTheme()
 
   return (
@@ -132,6 +143,8 @@ function EmptyState({message, error}: {message: string; error?: string}) {
               </Text>
             </>
           )}
+
+          {children}
         </View>
       </View>
     </Layout.Content>
@@ -161,6 +174,7 @@ let SearchScreenPostResults = ({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = useState(false)
+  const isLoggedin = currentAccount && currentAccount.did
 
   const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -215,6 +229,51 @@ let SearchScreenPostResults = ({
 
     return temp
   }, [posts, isFetchingNextPage])
+
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+
+  const showSignIn = useCallback(() => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'none'})
+  }, [requestSwitchToAccount, closeAllActiveElements])
+
+  const showCreateAccount = useCallback(() => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'new'})
+  }, [requestSwitchToAccount, closeAllActiveElements])
+
+  if (!isLoggedin) {
+    return (
+      <EmptyState
+        message={_(
+          msg`Please sign in or create an account to see search results.`,
+        )}>
+        <View style={[a.flex_row, a.gap_xs, a.mt_lg]}>
+          <Button
+            onPress={showCreateAccount}
+            label={_(msg`Create account`)}
+            size="small"
+            variant="solid"
+            color="primary">
+            <ButtonText>
+              <Trans>Create account</Trans>
+            </ButtonText>
+          </Button>
+          <Button
+            onPress={showSignIn}
+            label={_(msg`Sign in`)}
+            size="small"
+            variant="solid"
+            color="secondary">
+            <ButtonText>
+              <Trans>Sign in</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+      </EmptyState>
+    )
+  }
 
   return error ? (
     <EmptyState
