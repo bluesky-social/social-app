@@ -193,7 +193,7 @@ function VideoCards({
             a.justify_center,
             a.align_center,
             a.flex_1,
-            a.rounded_md,
+            a.rounded_lg,
             t.atoms.bg,
           ]}>
           {({pressed}) => (

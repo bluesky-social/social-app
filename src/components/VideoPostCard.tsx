@@ -421,7 +421,7 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_md,
+              a.rounded_lg,
               a.overflow_hidden,
               {
                 backgroundColor: black,
@@ -462,7 +462,7 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_md,
+              a.rounded_lg,
               a.overflow_hidden,
               {
                 backgroundColor: black,
@@ -537,7 +537,7 @@ export function CompactVideoPostCardPlaceholder() {
     <View style={[a.flex_1]}>
       <View
         style={[
-          a.rounded_md,
+          a.rounded_lg,
           a.overflow_hidden,
           {
             backgroundColor: black,
