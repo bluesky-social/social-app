@@ -3,7 +3,7 @@ import {type Did} from '@atproto/api'
 /**
  * The env the app is running in e.g. development, testflight, production
  */
-export const ENV = process.env.EXPO_PUBLIC_ENV
+export const ENV: string = process.env.EXPO_PUBLIC_ENV
 
 /**
  * Indicates whether the app is running in TestFlight
