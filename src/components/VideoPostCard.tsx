@@ -390,6 +390,7 @@ export function CompactVideoPostCard({
   if (!AppBskyEmbedVideo.isView(embed)) return null
 
   const likeCount = post?.likeCount ?? 0
+  const showLikeCount = false
   const {thumbnail} = embed
   const black = getBlackColor(t)
 
@@ -506,7 +507,7 @@ export function CompactVideoPostCard({
 
                 <View
                   style={[a.relative, a.z_10, a.p_sm, a.flex_row, a.gap_md]}>
-                  {likeCount > 0 && (
+                  {likeCount > 0 && showLikeCount && (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                       <Heart size="sm" fill="white" />
                       <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
