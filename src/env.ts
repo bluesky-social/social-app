@@ -78,4 +78,5 @@ export const SENTRY_DIST: string = process.env.SENTRY_DIST || 'dev'
 /**
  * Bitdrift API key. If undefined, Bitdrift should be disabled.
  */
-export const BITDRIFT_API_KEY: string | undefined = process.env.BITDRIFT_API_KEY
+export const BITDRIFT_API_KEY: string | undefined =
+  process.env.EXPO_PUBLIC_BITDRIFT_API_KEY
