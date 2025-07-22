@@ -2,8 +2,7 @@ import {init, SessionStrategy} from '@bitdrift/react-native'
 import {Statsig} from 'statsig-react-native-expo'
 
 import {initPromise} from '#/lib/statsig/statsig'
-
-const BITDRIFT_API_KEY = process.env.BITDRIFT_API_KEY
+import {BITDRIFT_API_KEY} from '#/env'
 
 initPromise.then(() => {
   let isEnabled = false
