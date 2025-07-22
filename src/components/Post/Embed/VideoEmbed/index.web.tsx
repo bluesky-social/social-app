@@ -36,20 +36,22 @@ export function VideoEmbed({
   useEffect(() => {
     if (!ref.current) return
     if (isFullscreen && !isFirefox) return
+
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
         if (!entry) return
         setOnScreen(entry.isIntersecting)
-        sendPosition(
-          entry.boundingClientRect.y + entry.boundingClientRect.height / 2,
-        )
       },
-      {threshold: 0.5},
+      {threshold: 0},
     )
+
     observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [sendPosition, isFullscreen])
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [isFullscreen])
 
   const [key, setKey] = useState(0)
   const renderError = useCallback(
@@ -133,24 +135,37 @@ function ViewportObserver({
   const [isFullscreen] = useFullscreen()
   const isWithinMessage = useIsWithinMessage()
 
-  // Send position when scrolling. This is done with an IntersectionObserver
-  // observing a div of 100vh height
   useEffect(() => {
     if (!ref.current) return
     if (isFullscreen && !isFirefox) return
-    const observer = new IntersectionObserver(
-      entries => {
-        const entry = entries[0]
-        if (!entry) return
-        const position =
-          entry.boundingClientRect.y + entry.boundingClientRect.height / 2
-        sendPosition(position)
-        setNearScreen(entry.isIntersecting)
-      },
-      {threshold: Array.from({length: 101}, (_, i) => i / 100)},
-    )
+
+    const updatePosition = () => {
+      if (!ref.current) return
+      const viewportObserverBounds = ref.current.getBoundingClientRect()
+      const position =
+        viewportObserverBounds.y + viewportObserverBounds.height / 2
+      sendPosition(position)
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      const entry = entries[0]
+      if (!entry) return
+      setNearScreen(entry.isIntersecting)
+      updatePosition()
+    })
+
     observer.observe(ref.current)
-    return () => observer.disconnect()
+
+    // Update position on scroll for real-time tracking
+    window.addEventListener('scroll', updatePosition, {passive: true})
+
+    // Initial position update
+    updatePosition()
+
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', updatePosition)
+    }
   }, [sendPosition, isFullscreen])
 
   // In case scrolling hasn't started yet, send up the position
