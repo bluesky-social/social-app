@@ -26,6 +26,8 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "followBtn"
 - tapOn:
+    point: 65%,35% # dismiss the subscribe prompt
+- tapOn:
     id: "unfollowBtn"
 
 # Can mute/unmute another user

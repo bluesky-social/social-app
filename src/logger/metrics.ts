@@ -26,6 +26,7 @@ export type MetricEvents = {
   }
   'notifications:openApp': {
     reason: NotificationReason
+    causedBoot: boolean
   }
   'notifications:request': {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
@@ -443,4 +444,33 @@ export type MetricEvents = {
     [key: string]: any
   }
   'thread:click:headerMenuOpen': {}
+  'activitySubscription:enable': {
+    setting: 'posts' | 'posts_and_replies'
+  }
+  'activitySubscription:disable': {}
+  'activityPreference:changeChannels': {
+    name: string
+    push: boolean
+    list: boolean
+  }
+  'activityPreference:changeFilter': {
+    name: string
+    value: string
+  }
+
+  'ageAssurance:navigateToSettings': {}
+  'ageAssurance:dismissFeedBanner': {}
+  'ageAssurance:dismissSettingsNotice': {}
+  'ageAssurance:initDialogOpen': {
+    hasInitiatedPreviously: boolean
+  }
+  'ageAssurance:initDialogSubmit': {}
+  'ageAssurance:initDialogError': {
+    code: string
+  }
+  'ageAssurance:redirectDialogOpen': {}
+  'ageAssurance:redirectDialogSuccess': {}
+  'ageAssurance:redirectDialogFail': {}
+  'ageAssurance:appealDialogOpen': {}
+  'ageAssurance:appealDialogSubmit': {}
 }

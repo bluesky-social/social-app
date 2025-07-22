@@ -1,10 +1,10 @@
 import {useMemo} from 'react'
 import {
-  DimensionValue,
-  StyleProp,
+  type DimensionValue,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -233,8 +233,7 @@ export function FeedLoadingPlaceholder({
     <View
       style={[
         {
-          paddingHorizontal: 12,
-          paddingVertical: 18,
+          padding: 16,
           borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
         },
         pal.border,
@@ -244,7 +243,7 @@ export function FeedLoadingPlaceholder({
         <LoadingPlaceholder
           width={36}
           height={36}
-          style={[styles.avatar, {borderRadius: 6}]}
+          style={[styles.avatar, {borderRadius: 8}]}
         />
         <View style={[s.flex1]}>
           <LoadingPlaceholder width={100} height={8} style={[s.mt5, s.mb10]} />
@@ -252,12 +251,7 @@ export function FeedLoadingPlaceholder({
         </View>
       </View>
       {showLowerPlaceholder && (
-        <View style={{paddingHorizontal: 5, marginTop: 10}}>
-          <LoadingPlaceholder
-            width={260}
-            height={8}
-            style={{marginVertical: 12}}
-          />
+        <View style={{marginTop: 12}}>
           <LoadingPlaceholder width={120} height={8} />
         </View>
       )}
@@ -352,8 +346,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     borderRadius: 999,
-    marginRight: 10,
-    marginLeft: 8,
+    marginRight: 12,
   },
   notification: {
     flexDirection: 'row',

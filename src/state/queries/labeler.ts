@@ -1,4 +1,4 @@
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
@@ -41,7 +41,7 @@ export function useLabelerInfoQuery({
     queryKey: labelerInfoQueryKey(did as string),
     queryFn: async () => {
       const res = await agent.app.bsky.labeler.getServices({
-        dids: [did as string],
+        dids: [did!],
         detailed: true,
       })
       return res.data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed

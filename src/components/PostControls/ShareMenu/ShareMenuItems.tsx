@@ -11,6 +11,7 @@ import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
+import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -36,6 +37,7 @@ let ShareMenuItems = ({
   const navigation = useNavigation<NavigationProp>()
   const sendViaChatControl = useDialogControl()
   const [devModeEnabled] = useDevMode()
+  const {isAgeRestricted} = useAgeAssurance()
 
   const postUri = post.uri
   const postAuthor = useProfileShadow(post.author)
@@ -89,7 +91,7 @@ let ShareMenuItems = ({
   return (
     <>
       <Menu.Outer>
-        {hasSession && (
+        {hasSession && !isAgeRestricted && (
           <Menu.Group>
             <Menu.ContainerItem>
               <RecentChats postUri={postUri} />

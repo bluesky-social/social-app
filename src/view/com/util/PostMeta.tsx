@@ -96,7 +96,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 a.font_bold,
                 t.atoms.text,
                 a.leading_tight,
-                {maxWidth: '70%', flexShrink: 0},
+                a.flex_shrink_0,
+                {maxWidth: '70%'},
               ]}>
               {forceLTR(
                 sanitizeDisplayName(
@@ -121,6 +122,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               </View>
             )}
             <WebOnlyInlineLinkText
+              emoji
               numberOfLines={1}
               to={profileLink}
               label={_(msg`View profile`)}

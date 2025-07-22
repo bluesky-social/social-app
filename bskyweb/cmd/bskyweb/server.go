@@ -258,6 +258,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/feeds", server.WebGeneric)
 	e.GET("/notifications", server.WebGeneric)
 	e.GET("/notifications/settings", server.WebGeneric)
+	e.GET("/notifications/activity", server.WebGeneric)
 	e.GET("/lists", server.WebGeneric)
 	e.GET("/moderation", server.WebGeneric)
 	e.GET("/moderation/modlists", server.WebGeneric)
@@ -275,6 +276,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/appearance", server.WebGeneric)
 	e.GET("/settings/account", server.WebGeneric)
 	e.GET("/settings/privacy-and-security", server.WebGeneric)
+	e.GET("/settings/privacy-and-security/activity", server.WebGeneric)
 	e.GET("/settings/content-and-media", server.WebGeneric)
 	e.GET("/settings/interests", server.WebGeneric)
 	e.GET("/settings/about", server.WebGeneric)
@@ -300,6 +302,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/support/copyright", server.WebGeneric)
 	e.GET("/intent/compose", server.WebGeneric)
 	e.GET("/intent/verify-email", server.WebGeneric)
+	e.GET("/intent/age-assurance", server.WebGeneric)
 	e.GET("/messages", server.WebGeneric)
 	e.GET("/messages/:conversation", server.WebGeneric)
 
@@ -601,7 +604,8 @@ type IPCCRequest struct {
 	IP string `json:"ip"`
 }
 type IPCCResponse struct {
-	CC string `json:"countryCode"`
+	CC               string `json:"countryCode"`
+	AgeRestrictedGeo bool   `json:"isAgeRestrictedGeo,omitempty"`
 }
 
 func (srv *Server) WebIpCC(c echo.Context) error {

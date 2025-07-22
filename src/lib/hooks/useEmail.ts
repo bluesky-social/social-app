@@ -1,3 +1,4 @@
+import {STALE} from '#/state/queries'
 import {useServiceConfigQuery} from '#/state/queries/email-verification-required'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -8,7 +9,10 @@ export function useEmail() {
   const {currentAccount} = useSession()
 
   const {data: serviceConfig} = useServiceConfigQuery()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const {data: profile} = useProfileQuery({
+    did: currentAccount?.did,
+    staleTime: STALE.INFINITY,
+  })
 
   const checkEmailConfirmed = !!serviceConfig?.checkEmailConfirmed
 

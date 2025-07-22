@@ -192,7 +192,7 @@ export function useLink({
               navigation.dispatch(StackActions.replace(screen, params))
             } else if (action === 'navigate') {
               // @ts-expect-error not typed
-              navigation.navigate(screen, params)
+              navigation.navigate(screen, params, {pop: true})
             } else {
               throw Error('Unsupported navigator action.')
             }

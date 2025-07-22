@@ -186,7 +186,7 @@ export const TextInput = forwardRef(function TextInputImpl(
 
   const inputTextStyle = React.useMemo(() => {
     const style = normalizeTextStyles(
-      [a.text_xl, a.leading_snug, t.atoms.text],
+      [a.text_lg, a.leading_snug, t.atoms.text],
       {
         fontScale: fonts.scaleMultiplier,
         fontFamily: fonts.family,
@@ -249,6 +249,9 @@ export const TextInput = forwardRef(function TextInputImpl(
         multiline
         scrollEnabled={false}
         numberOfLines={2}
+        // Note: should be the default value, but as of v1.104
+        // it switched to "none" on Android
+        autoCapitalize="sentences"
         {...props}
         style={[
           inputTextStyle,

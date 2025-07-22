@@ -23,20 +23,23 @@ export function ContentHider({
   modui,
   ignoreMute,
   style,
+  activeStyle,
   childContainerStyle,
   children,
-}: React.PropsWithChildren<{
+}: {
   testID?: string
   modui: ModerationUI | undefined
   ignoreMute?: boolean
   style?: StyleProp<ViewStyle>
+  activeStyle?: StyleProp<ViewStyle>
   childContainerStyle?: StyleProp<ViewStyle>
-}>) {
+  children?: React.ReactNode | ((props: {active: boolean}) => React.ReactNode)
+}) {
   const blur = modui?.blurs[0]
   if (!blur || (ignoreMute && isJustAMute(modui))) {
     return (
       <View testID={testID} style={style}>
-        {children}
+        {typeof children === 'function' ? children({active: false}) : children}
       </View>
     )
   }
@@ -44,9 +47,9 @@ export function ContentHider({
     <ContentHiderActive
       testID={testID}
       modui={modui}
-      style={style}
+      style={[style, activeStyle]}
       childContainerStyle={childContainerStyle}>
-      {children}
+      {typeof children === 'function' ? children({active: true}) : children}
     </ContentHiderActive>
   )
 }

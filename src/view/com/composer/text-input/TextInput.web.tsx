@@ -221,7 +221,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           }
         },
       },
-      content: generateJSON(richtext.text.toString(), extensions),
+      content: generateJSON(richtext.text.toString(), extensions, {
+        preserveWhitespace: 'full',
+      }),
       autofocus: 'end',
       editable: true,
       injectCSS: true,

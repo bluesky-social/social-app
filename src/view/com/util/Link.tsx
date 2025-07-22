@@ -421,8 +421,10 @@ function onPressInner(
         if (tabState === TabState.InsideAtRoot) {
           emitSoftReset()
         } else {
+          // note: 'navigate' actually acts the same as 'push' nowadays
+          // therefore we need to add 'pop' -sfn
           // @ts-ignore we're not able to type check on this one -prf
-          navigation.navigate(routeName, params)
+          navigation.navigate(routeName, params, {pop: true})
         }
       } else {
         throw Error('Unsupported navigator action.')

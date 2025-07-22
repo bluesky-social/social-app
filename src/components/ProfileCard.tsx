@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
   moderateProfile,
@@ -11,6 +11,8 @@ import {useLingui} from '@lingui/react'
 import {useActorStatus} from '#/lib/actor-status'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {type LogEvents} from '#/lib/statsig/statsig'
+import {forceLTR} from '#/lib/strings/bidi'
+import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -18,7 +20,7 @@ import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {
   Button,
   ButtonIcon,
@@ -183,14 +185,77 @@ export function AvatarPlaceholder() {
 export function NameAndHandle({
   profile,
   moderationOpts,
+  inline = false,
+}: {
+  profile: bsky.profile.AnyProfileView
+  moderationOpts: ModerationOpts
+  inline?: boolean
+}) {
+  if (inline) {
+    return (
+      <InlineNameAndHandle profile={profile} moderationOpts={moderationOpts} />
+    )
+  } else {
+    return (
+      <View style={[a.flex_1]}>
+        <Name profile={profile} moderationOpts={moderationOpts} />
+        <Handle profile={profile} />
+      </View>
+    )
+  }
+}
+
+function InlineNameAndHandle({
+  profile,
+  moderationOpts,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
+  const t = useTheme()
+  const verification = useSimpleVerificationState({profile})
+  const moderation = moderateProfile(profile, moderationOpts)
+  const name = sanitizeDisplayName(
+    profile.displayName || sanitizeHandle(profile.handle),
+    moderation.ui('displayName'),
+  )
+  const handle = sanitizeHandle(profile.handle, '@')
   return (
-    <View style={[a.flex_1]}>
-      <Name profile={profile} moderationOpts={moderationOpts} />
-      <Handle profile={profile} />
+    <View style={[a.flex_row, a.align_end, a.flex_shrink]}>
+      <Text
+        emoji
+        style={[
+          a.font_bold,
+          a.leading_tight,
+          a.flex_shrink_0,
+          {maxWidth: '70%'},
+        ]}
+        numberOfLines={1}>
+        {forceLTR(name)}
+      </Text>
+      {verification.showBadge && (
+        <View
+          style={[
+            a.pl_2xs,
+            a.self_center,
+            {marginTop: platform({default: 0, android: -1})},
+          ]}>
+          <VerificationCheck
+            width={platform({android: 13, default: 12})}
+            verifier={verification.role === 'verifier'}
+          />
+        </View>
+      )}
+      <Text
+        emoji
+        style={[
+          a.leading_tight,
+          t.atoms.text_contrast_medium,
+          {flexShrink: 10},
+        ]}
+        numberOfLines={1}>
+        {NON_BREAKING_SPACE + handle}
+      </Text>
     </View>
   )
 }
@@ -212,7 +277,13 @@ export function Name({
     <View style={[a.flex_row, a.align_center]}>
       <Text
         emoji
-        style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
+        style={[
+          a.text_md,
+          a.font_bold,
+          a.leading_snug,
+          a.self_start,
+          a.flex_shrink,
+        ]}
         numberOfLines={1}>
         {name}
       </Text>
@@ -280,7 +351,7 @@ export function Description({
   numberOfLines?: number
 }) {
   const profile = useProfileShadow(profileUnshadowed)
-  const rt = React.useMemo(() => {
+  const rt = useMemo(() => {
     if (!('description' in profile)) return
     const rt = new RichTextApi({text: profile.description || ''})
     rt.detectFacetsWithoutResolution()

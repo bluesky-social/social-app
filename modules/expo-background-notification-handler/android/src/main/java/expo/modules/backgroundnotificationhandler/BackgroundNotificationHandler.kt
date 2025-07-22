@@ -45,10 +45,10 @@ class BackgroundNotificationHandler(
   private fun mutateWithOtherReason(remoteMessage: RemoteMessage) {
     // If oreo or higher
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-      // If one of "like", "repost", "follow", "mention", "reply", "quote", "like-via-repost", "repost-via-repost"
+      // If one of "like", "repost", "follow", "mention", "reply", "quote", "like-via-repost", "repost-via-repost", "subscribed-post"
       // assign to it's eponymous channel. otherwise do nothing, let expo handle it
       when (remoteMessage.data["reason"]) {
-        "like", "repost", "follow", "mention", "reply", "quote", "like-via-repost", "repost-via-repost" -> {
+        "like", "repost", "follow", "mention", "reply", "quote", "like-via-repost", "repost-via-repost", "subscribed-post" -> {
           remoteMessage.data["channelId"] = remoteMessage.data["reason"]
         }
       }

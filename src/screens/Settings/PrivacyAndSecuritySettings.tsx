@@ -1,14 +1,17 @@
 import {View} from 'react-native'
+import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {useNotificationDeclarationQuery} from '#/state/queries/activity-subscriptions'
 import {useAppPasswordsQuery} from '#/state/queries/app-passwords'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
+import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlashIcon} from '#/components/icons/EyeSlash'
 import {Key_Stroke2_Corner2_Rounded as KeyIcon} from '#/components/icons/Key'
 import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
@@ -16,6 +19,7 @@ import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {Email2FAToggle} from './components/Email2FAToggle'
 import {PwiOptOut} from './components/PwiOptOut'
+import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -26,6 +30,11 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
   const t = useTheme()
   const {data: appPasswords} = useAppPasswordsQuery()
   const {currentAccount} = useSession()
+  const {
+    data: notificationDeclaration,
+    isPending,
+    isError,
+  } = useNotificationDeclarationQuery()
 
   return (
     <Layout.Screen>
@@ -71,6 +80,26 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
               </SettingsList.BadgeText>
             )}
           </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            label={_(
+              msg`Settings for allowing others to be notified of your posts`,
+            )}
+            to={{screen: 'ActivityPrivacySettings'}}
+            contentContainerStyle={[a.align_start]}>
+            <SettingsList.ItemIcon icon={BellRingingIcon} />
+            <ItemTextWithSubtitle
+              titleText={
+                <Trans>Allow others to be notified of your posts</Trans>
+              }
+              subtitleText={
+                <NotificationDeclaration
+                  data={notificationDeclaration}
+                  isError={isError}
+                />
+              }
+              showSkeleton={isPending}
+            />
+          </SettingsList.LinkItem>
           <SettingsList.Divider />
           <SettingsList.Group>
             <SettingsList.ItemIcon icon={EyeSlashIcon} />
@@ -110,4 +139,27 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
       </Layout.Content>
     </Layout.Screen>
   )
+}
+
+function NotificationDeclaration({
+  data,
+  isError,
+}: {
+  data?: {
+    value: AppBskyNotificationDeclaration.Record
+  }
+  isError?: boolean
+}) {
+  if (isError) {
+    return <Trans>Error loading preference</Trans>
+  }
+  switch (data?.value?.allowSubscriptions) {
+    case 'mutuals':
+      return <Trans>Only followers who I follow</Trans>
+    case 'none':
+      return <Trans>No one</Trans>
+    case 'followers':
+    default:
+      return <Trans>Anyone who follows me</Trans>
+  }
 }

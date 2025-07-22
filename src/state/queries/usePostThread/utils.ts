@@ -33,6 +33,12 @@ export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
       AppBskyFeedPost.isRecord,
     )
   ) {
+    /**
+     * If the record has no `reply` field, it is a root post.
+     */
+    if (!post.record.reply) {
+      return new AtUri(post.uri)
+    }
     if (post.record.reply?.root?.uri) {
       return new AtUri(post.record.reply.root.uri)
     }

@@ -599,7 +599,9 @@ function FollowingFeed() {
             fill={t.palette.white}
           />
         </View>
-        <FeedCard.TitleAndByline title={_(msg`Following`)} />
+        <FeedCard.TitleAndByline
+          title={_(msg({message: 'Following', context: 'feed-name'}))}
+        />
       </FeedCard.Header>
     </View>
   )

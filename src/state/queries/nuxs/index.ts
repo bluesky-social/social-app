@@ -1,6 +1,6 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {AppNux, Nux} from '#/state/queries/nuxs/definitions'
+import {type AppNux, type Nux} from '#/state/queries/nuxs/definitions'
 import {parseAppNux, serializeAppNux} from '#/state/queries/nuxs/util'
 import {
   preferencesQueryKey,
@@ -39,6 +39,20 @@ export function useNuxs():
       }
     }
   }
+
+  // if (__DEV__) {
+  //   const queryClient = useQueryClient()
+  //   const agent = useAgent()
+
+  //   // @ts-ignore
+  //   window.clearNux = async (ids: string[]) => {
+  //     await agent.bskyAppRemoveNuxs(ids)
+  //     // triggers a refetch
+  //     await queryClient.invalidateQueries({
+  //       queryKey: preferencesQueryKey,
+  //     })
+  //   }
+  // }
 
   return {
     nuxs: undefined,

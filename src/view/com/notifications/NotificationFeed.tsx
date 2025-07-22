@@ -59,7 +59,13 @@ export function NotificationFeed({
     enabled: enabled && !!moderationOpts,
     filter,
   })
-  const isEmpty = !isFetching && !data?.pages[0]?.items.length
+  // previously, this was `!isFetching && !data?.pages[0]?.items.length`
+  // however, if the first page had no items (can happen in the mentions tab!)
+  // it would flicker the empty state whenever it was loading.
+  // therefore, we need to find if *any* page has items. in 99.9% of cases,
+  // the `.find()` won't need to go any further than the first page -sfn
+  const isEmpty =
+    !isFetching && !data?.pages.find(page => page.items.length > 0)
 
   const items = React.useMemo(() => {
     let arr: any[] = []

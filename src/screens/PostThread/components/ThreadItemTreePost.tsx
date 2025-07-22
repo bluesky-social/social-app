@@ -218,17 +218,13 @@ const ThreadItemTreeReplyChildReplyLine = memo(
   }) {
     const t = useTheme()
     return (
-      <View style={[a.relative, {width: TREE_AVI_PLUS_SPACE}]}>
+      <View style={[a.relative, a.pt_2xs, {width: TREE_AVI_PLUS_SPACE}]}>
         {item.ui.showChildReplyLine && (
           <View
             style={[
               a.flex_1,
               t.atoms.border_contrast_low,
-              {
-                borderRightWidth: 2,
-                width: '50%',
-                left: -1,
-              },
+              {borderRightWidth: 2, width: '50%', left: -1},
             ]}
           />
         )}
@@ -331,12 +327,12 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                 timestamp={post.indexedAt}
                 postHref={postHref}
                 avatarSize={TREE_AVI_WIDTH}
-                style={[a.pb_2xs]}
+                style={[a.pb_0]}
                 showAvatar
               />
               <View style={[a.flex_row]}>
                 <ThreadItemTreeReplyChildReplyLine item={item} />
-                <View style={[a.flex_1]}>
+                <View style={[a.flex_1, a.pl_2xs]}>
                   <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
                   <PostAlerts
                     modui={moderation.ui('contentList')}
@@ -360,7 +356,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         />
                       )}
                     </>
-                  ) : undefined}
+                  ) : null}
                   {post.embed && (
                     <View style={[a.pb_xs]}>
                       <Embed
