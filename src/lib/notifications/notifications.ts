@@ -2,11 +2,16 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
+import {Agent, type AppBskyNotificationRegisterPush} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
-import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
+import {
+  PUBLIC_APPVIEW,
+  PUBLIC_APPVIEW_DID,
+  PUBLIC_STAGING_APPVIEW_DID,
+} from '#/lib/constants'
 import {logger as notyLogger} from '#/lib/notifications/util'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
@@ -22,7 +27,7 @@ async function _registerPushToken({
   token,
   extra = {},
 }: {
-  agent: AtpAgent
+  agent: Agent
   currentAccount: SessionAccount
   token: Notifications.DevicePushToken
   extra?: {
@@ -284,4 +289,28 @@ export async function decrementBadgeCount(by: number) {
 export async function resetBadgeCount() {
   await BackgroundNotificationHandler.setBadgeCountAsync(0)
   await setBadgeCountAsync(0)
+}
+
+export async function unregisterPushToken(did: string, staging = false) {
+  if (!isNative) return
+
+  const agent = new Agent({service: PUBLIC_APPVIEW})
+
+  try {
+    const token = await getPushToken()
+    if (token) {
+      await agent.app.bsky.notification.unregisterPush({
+        // did,
+        serviceDid: staging ? PUBLIC_STAGING_APPVIEW_DID : PUBLIC_APPVIEW_DID,
+        platform: Platform.OS,
+        token: token.data,
+        appId: 'xyz.blueskyweb.app',
+      })
+      logger.debug('Push token unregistered')
+    } else {
+      logger.debug('Tried to unregister push token, but could not find one')
+    }
+  } catch (error) {
+    logger.debug('Failed to unregister push token', {message: error})
+  }
 }

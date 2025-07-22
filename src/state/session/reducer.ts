@@ -1,8 +1,10 @@
-import {AtpSessionEvent} from '@atproto/api'
+import {type AtpSessionEvent} from '@atproto/api'
 
+import {unregisterPushToken} from '#/lib/notifications/notifications'
+import {logger} from '#/lib/notifications/util'
 import {createPublicAgent} from './agent'
 import {wrapSessionReducerForLogging} from './logging'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 
 // A hack so that the reducer can't read anything from the agent.
 // From the reducer's point of view, it should be a completely opaque object.
@@ -132,6 +134,22 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'removed-account': {
       const {accountDid} = action
+
+      // side effect
+      const account = state.accounts.find(a => a.did === accountDid)
+      if (account) {
+        unregisterPushToken(accountDid, account.service?.includes('staging'))
+          .then(() =>
+            logger.debug('Push token unregistered', {did: accountDid}),
+          )
+          .catch(err => {
+            logger.error('Failed to unregister push token', {
+              did: accountDid,
+              error: err,
+            })
+          })
+      }
+
       return {
         accounts: state.accounts.filter(a => a.did !== accountDid),
         currentAgentState:
@@ -143,9 +161,25 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'logged-out-current-account': {
       const {currentAgentState} = state
+      const accountDid = currentAgentState.did
+      // side effect
+      const account = state.accounts.find(a => a.did === accountDid)
+      if (account && accountDid) {
+        unregisterPushToken(accountDid, account.service?.includes('staging'))
+          .then(() =>
+            logger.debug('Push token unregistered', {did: accountDid}),
+          )
+          .catch(err => {
+            logger.error('Failed to unregister push token', {
+              did: accountDid,
+              error: err,
+            })
+          })
+      }
+
       return {
         accounts: state.accounts.map(a =>
-          a.did === currentAgentState.did
+          a.did === accountDid
             ? {
                 ...a,
                 refreshJwt: undefined,
@@ -158,6 +192,20 @@ let reducer = (state: State, action: Action): State => {
       }
     }
     case 'logged-out-every-account': {
+      for (const account of state.accounts) {
+        const accountDid = account.did
+        unregisterPushToken(accountDid, account.service?.includes('staging'))
+          .then(() =>
+            logger.debug('Push token unregistered', {did: accountDid}),
+          )
+          .catch(err => {
+            logger.error('Failed to unregister push token', {
+              did: accountDid,
+              error: err,
+            })
+          })
+      }
+
       return {
         accounts: state.accounts.map(a => ({
           ...a,
