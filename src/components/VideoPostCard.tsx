@@ -488,35 +488,39 @@ export function CompactVideoPostCard({
                   <MediaInsetBorder />
                 </View>
               </View>
-              <View
-                style={[
-                  a.absolute,
-                  a.inset_0,
-                  a.pt_2xl,
-                  {
-                    top: 'auto',
-                  },
-                ]}>
-                <LinearGradient
-                  colors={[black, 'rgba(0, 0, 0, 0)']}
-                  locations={[0.02, 1]}
-                  start={{x: 0, y: 1}}
-                  end={{x: 0, y: 0}}
-                  style={[a.absolute, a.inset_0, {opacity: 0.9}]}
-                />
 
+              {showLikeCount && (
                 <View
-                  style={[a.relative, a.z_10, a.p_sm, a.flex_row, a.gap_md]}>
-                  {likeCount > 0 && showLikeCount && (
-                    <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-                      <Heart size="sm" fill="white" />
-                      <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
-                        {formatCount(i18n, likeCount)}
-                      </Text>
-                    </View>
-                  )}
+                  style={[
+                    a.absolute,
+                    a.inset_0,
+                    a.pt_2xl,
+                    {
+                      top: 'auto',
+                    },
+                  ]}>
+                  <LinearGradient
+                    colors={[black, 'rgba(0, 0, 0, 0)']}
+                    locations={[0.02, 1]}
+                    start={{x: 0, y: 1}}
+                    end={{x: 0, y: 0}}
+                    style={[a.absolute, a.inset_0, {opacity: 0.9}]}
+                  />
+
+                  <View
+                    style={[a.relative, a.z_10, a.p_sm, a.flex_row, a.gap_md]}>
+                    {likeCount > 0 && (
+                      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                        <Heart size="sm" fill="white" />
+                        <Text
+                          style={[a.text_sm, a.font_bold, {color: 'white'}]}>
+                          {formatCount(i18n, likeCount)}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
           </View>
         </Hider.Content>
