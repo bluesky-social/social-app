@@ -43,7 +43,7 @@ export function VideoEmbed({
         if (!entry) return
         setOnScreen(entry.isIntersecting)
       },
-      {threshold: 0},
+      {threshold: 0.5},
     )
 
     observer.observe(ref.current)
@@ -156,10 +156,8 @@ function ViewportObserver({
 
     observer.observe(ref.current)
 
-    // Update position on scroll for real-time tracking
     window.addEventListener('scroll', updatePosition, {passive: true})
 
-    // Initial position update
     updatePosition()
 
     return () => {
