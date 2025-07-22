@@ -476,7 +476,7 @@ export function CompactVideoPostCard({
             />
             <MediaInsetBorder />
 
-            <View style={[a.absolute, a.inset_0]}>
+            <View style={[a.absolute, a.inset_0, a.shadow_sm]}>
               <View style={[a.absolute, a.inset_0, a.p_sm, {bottom: 'auto'}]}>
                 <View
                   style={[a.relative, a.rounded_full, {width: 24, height: 24}]}>
