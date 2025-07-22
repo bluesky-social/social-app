@@ -83,12 +83,9 @@ export function TrendingVideos() {
           a.align_center,
           a.justify_between,
         ]}>
-        <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_xs]}>
-          <Graph />
-          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
-            <Trans>Trending Videos</Trans>
-          </Text>
-        </View>
+        <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
+          <Trans>Trending Videos</Trans>
+        </Text>
         <Button
           label={_(msg`Dismiss this section`)}
           size="tiny"
