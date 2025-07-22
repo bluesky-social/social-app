@@ -424,6 +424,8 @@ export function CompactVideoPostCard({
               a.justify_center,
               a.rounded_lg,
               a.overflow_hidden,
+              a.border,
+              t.atoms.border_contrast_low,
               {
                 backgroundColor: black,
                 aspectRatio: 9 / 16,
@@ -444,6 +446,8 @@ export function CompactVideoPostCard({
                   a.inset_0,
                   a.justify_center,
                   a.align_center,
+                  a.border,
+                  t.atoms.border_contrast_low,
                   {
                     backgroundColor: 'black',
                     opacity: 0.2,
@@ -465,6 +469,8 @@ export function CompactVideoPostCard({
               a.justify_center,
               a.rounded_lg,
               a.overflow_hidden,
+              a.border,
+              t.atoms.border_contrast_low,
               {
                 backgroundColor: black,
                 aspectRatio: 9 / 16,
@@ -540,6 +546,8 @@ export function CompactVideoPostCardPlaceholder() {
         style={[
           a.rounded_lg,
           a.overflow_hidden,
+          a.border,
+          t.atoms.border_contrast_low,
           {
             backgroundColor: black,
             aspectRatio: 9 / 16,

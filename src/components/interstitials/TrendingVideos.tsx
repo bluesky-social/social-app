@@ -196,6 +196,8 @@ function VideoCards({
             a.align_center,
             a.flex_1,
             a.rounded_lg,
+            a.border,
+            t.atoms.border_contrast_low,
             t.atoms.bg,
             t.atoms.shadow_sm,
           ]}>
