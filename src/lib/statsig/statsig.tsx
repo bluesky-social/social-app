@@ -8,6 +8,7 @@ import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
+import {ENV} from '#/env'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
@@ -48,7 +49,7 @@ function createStatsigOptions(prefetchUsers: StatsigUser[]) {
   return {
     environment: {
       tier:
-        process.env.NODE_ENV === 'development'
+        ENV === 'development'
           ? 'development'
           : IS_TESTFLIGHT
             ? 'staging'
