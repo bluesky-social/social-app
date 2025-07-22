@@ -25,7 +25,7 @@ import {
   CompactVideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
 
-const CARD_WIDTH = 100
+const CARD_WIDTH = 108
 
 const FEED_DESC = `feedgen|${VIDEO_FEED_URI}`
 const FEED_PARAMS: {
