@@ -63,9 +63,8 @@ export async function oauthAgentAndSessionToSessionAccount(
 }
 
 export class OauthBskyAppAgent extends Agent {
-  // this is a field available in AtpAgent, so we'll add it here
+  // these are fields available in AtpAgent, so we'll add them here for backwards compat
   session?: AtpSessionData
-  // this exists on the old agent, so we will add it here for backwards compat
   dispatchUrl?: string
 
   #oauthSession: OAuthSession
