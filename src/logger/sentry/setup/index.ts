@@ -13,7 +13,7 @@ import * as env from '#/env'
  * - `dev`
  * - `1.99.0`
  */
-const release = env.SENTRY_RELEASE || pkgJson.version
+const release = pkgJson.version
 
 /**
  * The latest deployed commit hash

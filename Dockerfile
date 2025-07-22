@@ -33,9 +33,6 @@ ARG RENDER_GIT_COMMIT
 #
 ARG SENTRY_AUTH_TOKEN
 ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN:-unknown}
-# Will fall back to package.json#version, but this is handled elsewhere
-ARG SENTRY_RELEASE
-ENV SENTRY_RELEASE=$SENTRY_RELEASE
 ARG SENTRY_DIST
 # Default to RENDER_GIT_COMMIT if not set by GitHub workflows
 ENV SENTRY_DIST=${SENTRY_DIST:-$RENDER_GIT_COMMIT}
@@ -66,7 +63,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   yarn && \
   yarn intl:build 2>&1 | tee i18n.log && \
   if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi && \
-  EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$() SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_RELEASE=$SENTRY_RELEASE SENTRY_DIST=$SENTRY_DIST SENTRY_DSN=$SENTRY_DSN yarn build-web
+  EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$() SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_DIST=$SENTRY_DIST SENTRY_DSN=$SENTRY_DSN yarn build-web
 
 # DEBUG
 RUN find ./bskyweb/static && find ./web-build/static

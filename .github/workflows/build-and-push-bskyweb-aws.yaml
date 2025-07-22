@@ -48,7 +48,6 @@ jobs:
         run: |
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           echo "SENTRY_DIST=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
 
       - name: Build and push Docker image
         id: build-and-push
@@ -64,6 +63,5 @@ jobs:
           build-args: |
             EXPO_PUBLIC_BUNDLE_IDENTIFIER=${{ steps.vars.outputs.sha_short }}
             SENTRY_DIST=${{ steps.vars.outputs.SENTRY_DIST }}
-            SENTRY_RELEASE=${{ steps.vars.outputs.SENTRY_RELEASE }}
             SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             SENTRY_DSN=${{ secrets.SENTRY_DSN }}

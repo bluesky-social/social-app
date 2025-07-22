@@ -74,10 +74,9 @@ jobs:
         id: sentry
         run: |
           echo "SENTRY_DIST=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
 
       - name: 🏗️ EAS Build
-        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
 
       - name: ✍️ Rename Testflight bundle
         if: ${{ inputs.profile != 'production' }}
@@ -139,7 +138,7 @@ jobs:
 
       - name: 🏗️ Build Production APK
         if: ${{ inputs.profile == 'production' }}
-        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
 
       - name: 🚀 Upload Production APK Artifact
         id: upload-artifact-production-apk
