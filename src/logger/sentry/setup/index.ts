@@ -16,9 +16,9 @@ import * as env from '#/env'
 const release = pkgJson.version
 
 /**
- * The latest deployed commit hash
+ * The latest deployed short commit hash
  */
-const dist = env.SENTRY_DIST || 'dev'
+const dist = env.BUNDLE_IDENTIFIER || 'dev'
 
 init({
   enabled: !env.IS_DEV && !!env.SENTRY_DSN,
