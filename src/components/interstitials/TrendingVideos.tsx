@@ -89,11 +89,11 @@ export function TrendingVideos() {
         <Button
           label={_(msg`Dismiss this section`)}
           size="tiny"
-          variant="ghost"
+          variant="solid"
           color="secondary"
-          shape="round"
+          shape="square"
           onPress={() => trendingPrompt.open()}>
-          <ButtonIcon icon={X} />
+          <ButtonIcon icon={X} size="sm" />
         </Button>
       </View>
 
