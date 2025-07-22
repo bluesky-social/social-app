@@ -64,12 +64,6 @@ export const CHAT_PROXY_DID: Did =
 export const SENTRY_DSN: string | undefined = process.env.SENTRY_DSN
 
 /**
- * Populates the `dist` value on Sentry events. We use the full commit hash the
- * current bundle was made from.
- */
-export const SENTRY_DIST: string = process.env.SENTRY_DIST || 'dev'
-
-/**
  * Bitdrift API key. If undefined, Bitdrift should be disabled.
  */
 export const BITDRIFT_API_KEY: string | undefined =
