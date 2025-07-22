@@ -45,6 +45,8 @@ export async function oauthAgentAndSessionToSessionAccount(
     logger.error(e)
     return undefined
   }
+  // This is the PDS url that we want to store in the session
+  const {aud} = await session.getTokenInfo(false)
   return {
     service: session.serverMetadata.issuer,
     did: session.did,
@@ -54,14 +56,17 @@ export async function oauthAgentAndSessionToSessionAccount(
     emailAuthFactor: data.emailAuthFactor,
     active: data.active,
     status: data.status,
-    pdsUrl: session.serverMetadata.issuer,
+    pdsUrl: aud,
     isSelfHosted: !session.server.issuer.startsWith(BSKY_SERVICE), // TODO: is this entryway?
+    isOauthSession: true,
   }
 }
 
 export class OauthBskyAppAgent extends Agent {
   // this is a field available in AtpAgent, so we'll add it here
   session?: AtpSessionData
+  // this exists on the old agent, so we will add it here for backwards compat
+  dispatchUrl?: string
 
   #oauthSession: OAuthSession
   #account?: SessionAccount
@@ -79,9 +84,9 @@ export class OauthBskyAppAgent extends Agent {
       this,
       this.#oauthSession,
     )
-    account.isOauthSession = true
     this.#account = account
     this.session = sessionAccountToSession(account)
+    this.dispatchUrl = account.pdsUrl
 
     await Promise.all([gates, moderation])
 
