@@ -64,12 +64,6 @@ export const CHAT_PROXY_DID: Did =
 export const SENTRY_DSN: string | undefined = process.env.SENTRY_DSN
 
 /**
- * Populates the `release` value on Sentry events. This is the version of the
- * app specified in the package.json.
- */
-export const SENTRY_RELEASE: string = process.env.SENTRY_RELEASE || 'dev'
-
-/**
  * Populates the `dist` value on Sentry events. We use the full commit hash the
  * current bundle was made from.
  */
