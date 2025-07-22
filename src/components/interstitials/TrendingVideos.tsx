@@ -71,6 +71,7 @@ export function TrendingVideos() {
         a.pt_lg,
         a.pb_lg,
         a.border_t,
+        a.overflow_hidden,
         t.atoms.border_contrast_low,
         t.atoms.bg_contrast_25,
       ]}>
@@ -104,7 +105,8 @@ export function TrendingVideos() {
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
-          snapToInterval={CARD_WIDTH + a.gap_sm.gap}>
+          snapToInterval={CARD_WIDTH + a.gap_sm.gap}
+          style={[a.overflow_visible]}>
           <View
             style={[
               a.flex_row,
