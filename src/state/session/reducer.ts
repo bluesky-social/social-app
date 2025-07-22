@@ -53,17 +53,9 @@ export type Action =
       syncedCurrentDid: string | undefined
     }
   | {
-      type: 'synced-accounts'
-      syncedAccounts: SessionAccount[]
-      syncedCurrentDid: string | undefined
-    }
-  | {
       type: 'partial-refresh-session'
       accountDid: string
-      patch: Pick<
-        SessionAccount,
-        'emailConfirmed' | 'emailAuthFactor' | 'email'
-      >
+      patch: Pick<SessionAccount, 'emailConfirmed' | 'emailAuthFactor'>
     }
 
 function createPublicAgentState(): AgentState {

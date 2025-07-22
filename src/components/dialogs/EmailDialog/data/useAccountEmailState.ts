@@ -30,6 +30,9 @@ export function useAccountEmailState() {
    */
   useQuery({
     enabled: !!agent.session,
+    /**
+     * Only refetch if the email verification s incomplete.
+     */
     refetchOnWindowFocus: !prevIsEmailVerified,
     queryKey: accountEmailStateQueryKey,
     queryFn: async () => {
