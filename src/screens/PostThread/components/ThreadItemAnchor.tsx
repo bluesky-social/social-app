@@ -510,6 +510,7 @@ function ExpandedPostDetails({
   const t = useTheme()
   const {_, i18n} = useLingui()
   const openLink = useOpenLink()
+  const isRootPost = !('reply' in post.record)
   const langPrefs = useLanguagePrefs()
 
   const translatorUrl = getTranslatorLink(
@@ -555,7 +556,9 @@ function ExpandedPostDetails({
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
           {niceDate(i18n, post.indexedAt)}
         </Text>
-        <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+        {isRootPost && (
+          <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+        )}
         {needsTranslation && (
           <>
             <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>

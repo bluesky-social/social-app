@@ -135,7 +135,7 @@ appId: xyz.blueskyweb.app
     id: "e2eGotoLists"
 - tapOn: "Good Ppl"
 
-# - tapOn: "People"
+- tapOn: "People"
 - assertVisible: "View Bob's profile"
 - tapOn:
     point: "90%,43%"

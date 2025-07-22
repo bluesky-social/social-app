@@ -92,7 +92,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       )}
       accessibilityHint="">
       <PreviewableUserAvatar
-        size={50}
+        size={42}
         profile={replyTo.author}
         moderation={replyTo.moderation?.ui('avatar')}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}

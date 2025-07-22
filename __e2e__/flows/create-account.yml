@@ -28,7 +28,6 @@ appId: xyz.blueskyweb.app
 - hideKeyboard
 - tapOn:
     id: "nextBtn"
-- tapOn: "Not now"
 - inputText: "e2e-test"
 - tapOn:
     id: "nextBtn"

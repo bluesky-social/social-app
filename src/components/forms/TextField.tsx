@@ -196,7 +196,8 @@ export function createInput(Component: typeof TextInput) {
         minWidth: 0,
       },
       ios({paddingTop: 12, paddingBottom: 13}),
-      android(a.py_md),
+      // Needs to be sm on Paper, md on Fabric for some godforsaken reason -sfn
+      android(a.py_sm),
       // fix for autofill styles covering border
       web({
         paddingTop: 10,
