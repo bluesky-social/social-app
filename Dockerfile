@@ -23,7 +23,8 @@ ENV GOEXPERIMENT="loopvar"
 # Expo
 #
 ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
-ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-dev}
+# If not set by GitHub workflows, we're probably in Render, so use built-in $RENDER_GIT_COMMIT
+ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-$RENDER_GIT_COMMIT}
 
 # The latest git hash of the preview branch on render.com
 ARG RENDER_GIT_COMMIT
