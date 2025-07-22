@@ -333,15 +333,27 @@ async function resolveMedia(
           return {lang: caption.lang, file: data.blob}
         }),
     )
+
+    // lexicon numbers must be floats
+    const width = Math.round(videoDraft.asset.width)
+    const height = Math.round(videoDraft.asset.height)
+
+    // aspect ratio values must be >0 - better to leave as unset otherwise
+    // posting will fail if aspect ratio is set to 0
+    const aspectRatio = width > 0 && height > 0 ? {width, height} : undefined
+
+    if (!aspectRatio) {
+      logger.error(
+        `Invalid aspect ratio - got { width: ${videoDraft.asset.width}, height: ${videoDraft.asset.height} }`,
+      )
+    }
+
     return {
       $type: 'app.bsky.embed.video',
       video: videoDraft.pendingPublish.blobRef,
       alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
-      aspectRatio: {
-        width: videoDraft.asset.width,
-        height: videoDraft.asset.height,
-      },
+      aspectRatio,
     }
   }
   if (embedDraft.media?.type === 'gif') {

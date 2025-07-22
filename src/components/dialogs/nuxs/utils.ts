@@ -16,3 +16,18 @@ export function isDaysOld(days: number, createdAt?: string) {
   if (isOldEnough) return true
   return false
 }
+
+export function isExistingUserAsOf(date: string, createdAt?: string) {
+  /*
+   * Should never happen because we gate NUXs to only accounts with a valid
+   * profile and a `createdAt` (see `nuxs/index.tsx`). But if it ever did, the
+   * account is either old enough to be pre-onboarding, or some failure happened
+   * during account creation. Fail closed. - esb
+   */
+  if (!createdAt) return false
+
+  const threshold = Date.parse(date)
+  const then = new Date(createdAt).getTime()
+
+  return then < threshold
+}

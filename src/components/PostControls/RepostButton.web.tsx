@@ -62,11 +62,17 @@ export const RepostButton = ({
         </Menu.Trigger>
         <Menu.Outer style={{minWidth: 170}}>
           <Menu.Item
-            label={isReposted ? _(msg`Undo repost`) : _(msg`Repost`)}
+            label={
+              isReposted
+                ? _(msg`Undo repost`)
+                : _(msg({message: `Repost`, context: `action`}))
+            }
             testID="repostDropdownRepostBtn"
             onPress={onRepost}>
             <Menu.ItemText>
-              {isReposted ? _(msg`Undo repost`) : _(msg`Repost`)}
+              {isReposted
+                ? _(msg`Undo repost`)
+                : _(msg({message: `Repost`, context: `action`}))}
             </Menu.ItemText>
             <Menu.ItemIcon icon={Repost} position="right" />
           </Menu.Item>

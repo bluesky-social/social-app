@@ -78,10 +78,12 @@ function MenuInner({
       <DropdownMenu.Content
         sideOffset={5}
         collisionPadding={{left: 5, right: 5, bottom: 5}}>
-        <EmojiPicker
-          onEmojiSelect={handleEmojiPickerResponse}
-          autoFocus={true}
-        />
+        <div onWheel={evt => evt.stopPropagation()}>
+          <EmojiPicker
+            onEmojiSelect={handleEmojiPickerResponse}
+            autoFocus={true}
+          />
+        </div>
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
   ) : (

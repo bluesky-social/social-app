@@ -81,7 +81,7 @@ export function Component({}: {}) {
         </Trans>
       </Text>
       <Text style={[pal.textLight, styles.description]}>
-        <Trans>Leave them all unchecked to see any language.</Trans>
+        <Trans>Leave them all unselected to see any language.</Trans>
       </Text>
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => (
