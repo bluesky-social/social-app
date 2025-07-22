@@ -61,7 +61,7 @@ export const CHAT_PROXY_DID: Did =
 /**
  * Sentry DSN for telemetry
  */
-export const SENTRY_DSN: string | undefined = process.env.SENTRY_DSN
+export const SENTRY_DSN: string | undefined = process.env.EXPO_PUBLIC_SENTRY_DSN
 
 /**
  * Bitdrift API key. If undefined, Bitdrift should be disabled.
