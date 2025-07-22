@@ -479,10 +479,10 @@ export function CompactVideoPostCard({
             <View style={[a.absolute, a.inset_0]}>
               <View style={[a.absolute, a.inset_0, a.p_sm, {bottom: 'auto'}]}>
                 <View
-                  style={[a.relative, a.rounded_full, {width: 20, height: 20}]}>
+                  style={[a.relative, a.rounded_full, {width: 24, height: 24}]}>
                   <UserAvatar
                     type="user"
-                    size={20}
+                    size={24}
                     avatar={post.author.avatar}
                   />
                   <MediaInsetBorder />
