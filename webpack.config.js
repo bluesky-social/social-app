@@ -53,9 +53,8 @@ module.exports = async function (env, argv) {
         project: 'app',
         authToken: process.env.SENTRY_AUTH_TOKEN,
         release: {
-          // env is undefined for Render.com builds, fall back
           name: version,
-          dist: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER || 'dev',
+          dist: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
         },
       }),
     )

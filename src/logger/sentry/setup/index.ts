@@ -1,24 +1,7 @@
-/**
- * Importing these separately from `platform/detection` and `lib/app-info` to
- * avoid future conflicts and/or circular deps
- */
-
 import {init} from '@sentry/react-native'
 
 import pkgJson from '#/../package.json'
 import * as env from '#/env'
-
-/**
- * Examples:
- * - `dev`
- * - `1.99.0`
- */
-const release = pkgJson.version
-
-/**
- * The latest deployed short commit hash
- */
-const dist = env.BUNDLE_IDENTIFIER || 'dev'
 
 init({
   enabled: !env.IS_DEV && !!env.SENTRY_DSN,
@@ -26,8 +9,8 @@ init({
   dsn: env.SENTRY_DSN,
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: env.ENV,
-  dist,
-  release,
+  dist: env.BUNDLE_IDENTIFIER,
+  release: pkgJson.version,
   ignoreErrors: [
     /*
      * Unknown internals errors
