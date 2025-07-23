@@ -7,9 +7,7 @@ import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import packageDotJson from '../../../package.json'
-import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/env'
-import {ENV} from '#/env'
+import * as env from '#/env'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
@@ -50,12 +48,11 @@ export type {MetricEvents as LogEvents}
 function createStatsigOptions(prefetchUsers: StatsigUser[]) {
   return {
     environment: {
-      tier:
-        ENV === 'development'
-          ? 'development'
-          : IS_TESTFLIGHT
-            ? 'staging'
-            : 'production',
+      tier: env.IS_DEV
+        ? 'development'
+        : env.IS_TESTFLIGHT
+          ? 'staging'
+          : 'production',
     },
     // Don't block on waiting for network. The fetched config will kick in on next load.
     // This ensures the UI is always consistent and doesn't update mid-session.
@@ -213,9 +210,9 @@ function toStatsigUser(did: string | undefined): StatsigUser {
       refSrc,
       refUrl,
       platform: Platform.OS as 'ios' | 'android' | 'web',
-      appVersion: packageDotJson.version,
-      bundleIdentifier: BUNDLE_IDENTIFIER,
-      bundleDate: BUNDLE_DATE,
+      appVersion: env.PACKAGE_VERSION,
+      bundleIdentifier: env.BUNDLE_IDENTIFIER,
+      bundleDate: env.BUNDLE_DATE,
       appLanguage: languagePrefs.appLanguage,
       contentLanguages: languagePrefs.contentLanguages,
     },
