@@ -22,12 +22,12 @@ export const IS_DEV = __DEV__
 export const IS_INTERNAL = IS_DEV || IS_TESTFLIGHT
 
 /**
- * The commit hash that the current bundle was made from. The user can see the
- * commit hash in the app's settings along with the other version info. Useful
- * for debugging/reporting.
+ * The _short_ commit hash that the current bundle was made from. The user can
+ * see the commit hash in the app's settings along with the other version info.
+ * Useful for debugging/reporting.
  */
 export const BUNDLE_IDENTIFIER: string =
-  process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER || 'dev'
+  process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER?.slice(0, 7) || 'dev'
 
 /**
  * This will always be in the format of YYMMDD, so that it always increases for
