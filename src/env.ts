@@ -26,7 +26,7 @@ export const IS_INTERNAL = IS_DEV || IS_TESTFLIGHT
  * for debugging/reporting.
  */
 export const BUNDLE_IDENTIFIER: string =
-  process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER ?? ''
+  process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER || 'dev'
 
 /**
  * This will always be in the format of YYMMDD, so that it always increases for
@@ -48,7 +48,7 @@ export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
   | 'error'
 
 /**
- * Currently unused. Enable debug for a subset of the debug logs.
+ * Enable debug logs for specific logger instances
  */
 export const LOG_DEBUG: string = process.env.EXPO_PUBLIC_LOG_DEBUG || ''
 
