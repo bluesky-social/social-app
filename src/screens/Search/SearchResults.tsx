@@ -4,6 +4,7 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
@@ -15,11 +16,12 @@ import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {TextLink} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
+import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 
 let SearchResults = ({
@@ -174,7 +176,7 @@ let SearchScreenPostResults = ({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = useState(false)
-  const isLoggedin = currentAccount && currentAccount.did
+  const isLoggedin = Boolean(currentAccount?.did)
 
   const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -233,45 +235,48 @@ let SearchScreenPostResults = ({
   const closeAllActiveElements = useCloseAllActiveElements()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
 
-  const showSignIn = useCallback(() => {
+  const showSignIn = () => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
-  }, [requestSwitchToAccount, closeAllActiveElements])
+  }
 
-  const showCreateAccount = useCallback(() => {
+  const showCreateAccount = () => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
-  }, [requestSwitchToAccount, closeAllActiveElements])
+  }
+
+  const pal = usePalette('default')
+  const t = useTheme()
 
   if (!isLoggedin) {
     return (
-      <EmptyState
-        message={_(
-          msg`Please sign in or create an account to see search results.`,
-        )}>
-        <View style={[a.flex_row, a.gap_xs, a.mt_lg]}>
-          <Button
-            onPress={showCreateAccount}
-            label={_(msg`Create account`)}
-            size="small"
-            variant="solid"
-            color="primary">
-            <ButtonText>
-              <Trans>Create account</Trans>
-            </ButtonText>
-          </Button>
-          <Button
+      <SearchError
+        title={_(msg`Search is currently unavailable when logged out`)}>
+        <Text
+          style={[
+            a.text_md,
+            a.text_center,
+            t.atoms.text_contrast_medium,
+            {lineHeight: 1.3},
+          ]}>
+          <TextLink
+            href={''}
+            style={[pal.link]}
+            text={_(msg`Sign in`)}
             onPress={showSignIn}
-            label={_(msg`Sign in`)}
-            size="small"
-            variant="solid"
-            color="secondary">
-            <ButtonText>
-              <Trans>Sign in</Trans>
-            </ButtonText>
-          </Button>
-        </View>
-      </EmptyState>
+          />
+          {' or '}
+          <TextLink
+            href={''}
+            style={[pal.link]}
+            text={_(msg`create an account`)}
+            onPress={showCreateAccount}
+          />{' '}
+          {_(
+            msg`to search for news, sports, politics, and everything else happening on Bluesky.`,
+          )}
+        </Text>
+      </SearchError>
     )
   }
 
