@@ -22,6 +22,7 @@ ENV GOEXPERIMENT="loopvar"
 # The latest git hash of the preview branch on render.com
 # https://render.com/docs/docker-secrets#environment-variables-in-docker-builds
 ARG RENDER_GIT_COMMIT
+ENV RENDER_GIT_COMMIT=${RENDER_GIT_COMMIT:0:7}
 
 #
 # Expo
@@ -30,7 +31,7 @@ ARG EXPO_PUBLIC_ENV
 ENV EXPO_PUBLIC_ENV=${EXPO_PUBLIC_ENV:-development}
 ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
 # If not set by GitHub workflows, we're probably in Render
-ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-${RENDER_GIT_COMMIT:0:7}}
+ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-$RENDER_GIT_COMMIT}
 
 #
 # Sentry
