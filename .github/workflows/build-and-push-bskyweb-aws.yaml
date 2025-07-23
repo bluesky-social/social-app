@@ -60,6 +60,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
+            EXPO_PUBLIC_ENV=production
             EXPO_PUBLIC_BUNDLE_IDENTIFIER=${{ steps.vars.outputs.sha_short }}
             SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
             EXPO_PUBLIC_SENTRY_DSN=${{ secrets.SENTRY_DSN }}
