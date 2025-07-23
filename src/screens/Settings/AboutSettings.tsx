@@ -9,7 +9,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useMutation} from '@tanstack/react-query'
 import {Statsig} from 'statsig-react-native-expo'
 
-import {appVersion, BUNDLE_DATE, bundleInfo} from '#/lib/app-info'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid, isIOS, isNative} from '#/platform/detection'
@@ -23,6 +22,11 @@ import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/i
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {
+  APP_METADATA as bundleInfo,
+  APP_VERSION as appVersion,
+  BUNDLE_DATE,
+} from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {OTAInfo} from './components/OTAInfo'
