@@ -62,17 +62,25 @@ jobs:
       - name: Check for i18n compilation errors
         run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi
 
+      # EXPO_PUBLIC_ENV is handled in eas.json
       - name: ✏️ Write environment variables
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
           echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
+          echo "EXPO_PUBLIC_SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
           echo "EXPO_PUBLIC_BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
-        run: SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} EXPO_PUBLIC_SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile ${{ inputs.profile || 'testflight-android' }} --local --output build.aab --non-interactive
+        run: >
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DIST=$(git rev-parse --short HEAD)
+          yarn use-build-number-with-bump
+          eas build -p android
+          --profile ${{ inputs.profile || 'testflight-android' }}
+          --local --output build.aab --non-interactive
 
       - name: ✍️ Rename Testflight bundle
         if: ${{ inputs.profile != 'production' }}
@@ -134,7 +142,13 @@ jobs:
 
       - name: 🏗️ Build Production APK
         if: ${{ inputs.profile == 'production' }}
-        run: SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} EXPO_PUBLIC_SENTRY_DSN=${{ secrets.SENTRY_DSN }} yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
+        run: >
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DIST=$(git rev-parse --short HEAD)
+          yarn use-build-number-with-bump
+          eas build -p android
+          --profile production-apk
+          --local --output build.apk --non-interactive
 
       - name: 🚀 Upload Production APK Artifact
         id: upload-artifact-production-apk
