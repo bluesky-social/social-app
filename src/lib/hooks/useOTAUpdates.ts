@@ -1,5 +1,5 @@
 import React from 'react'
-import {Alert, AppState, AppStateStatus} from 'react-native'
+import {Alert, AppState, type AppStateStatus} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
   checkForUpdateAsync,
@@ -10,9 +10,9 @@ import {
   useUpdates,
 } from 'expo-updates'
 
-import {IS_TESTFLIGHT} from '#/lib/app-info'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
+import {IS_TESTFLIGHT} from '#/env'
 
 const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 
