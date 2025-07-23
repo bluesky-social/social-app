@@ -19,15 +19,18 @@ ENV GOARCH="amd64"
 ENV CGO_ENABLED=1
 ENV GOEXPERIMENT="loopvar"
 
+# The latest git hash of the preview branch on render.com
+# https://render.com/docs/docker-secrets#environment-variables-in-docker-builds
+ARG RENDER_GIT_COMMIT
+
 #
 # Expo
 #
+ARG EXPO_PUBLIC_ENV
+ENV EXPO_PUBLIC_ENV=${EXPO_PUBLIC_ENV:-development}
 ARG EXPO_PUBLIC_BUNDLE_IDENTIFIER
-# If not set by GitHub workflows, we're probably in Render, so use built-in $RENDER_GIT_COMMIT
+# If not set by GitHub workflows, we're probably in Render
 ENV EXPO_PUBLIC_BUNDLE_IDENTIFIER=${EXPO_PUBLIC_BUNDLE_IDENTIFIER:-$RENDER_GIT_COMMIT}
-
-# The latest git hash of the preview branch on render.com
-ARG RENDER_GIT_COMMIT
 
 #
 # Sentry
@@ -55,13 +58,16 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   nvm install $NODE_VERSION && \
   nvm use $NODE_VERSION && \
   echo "Using bundle identifier: $EXPO_PUBLIC_BUNDLE_IDENTIFIER" && \
+  echo "EXPO_PUBLIC_ENV=$EXPO_PUBLIC_ENV" >> .env && \
   echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER" >> .env && \
   echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env && \
+  echo "EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN" >> .env && \
+  echo "SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN" >> .env && \
   npm install --global yarn && \
   yarn && \
   yarn intl:build 2>&1 | tee i18n.log && \
   if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation errors!\n\n" && exit 1; else echo "\n\nNo compile errors!\n\n"; fi && \
-  EXPO_PUBLIC_BUNDLE_IDENTIFIER=$EXPO_PUBLIC_BUNDLE_IDENTIFIER EXPO_PUBLIC_BUNDLE_DATE=$() SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN EXPO_PUBLIC_SENTRY_DSN=$EXPO_PUBLIC_SENTRY_DSN yarn build-web
+  yarn build-web
 
 # DEBUG
 RUN find ./bskyweb/static && find ./web-build/static
