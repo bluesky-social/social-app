@@ -23,9 +23,9 @@ import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/W
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {
+  APP_METADATA as bundleInfo,
   APP_VERSION as appVersion,
   BUNDLE_DATE,
-  BUNDLE_METADATA as bundleInfo,
 } from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
