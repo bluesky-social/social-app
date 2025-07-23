@@ -36,22 +36,20 @@ export function VideoEmbed({
   useEffect(() => {
     if (!ref.current) return
     if (isFullscreen && !isFirefox) return
-
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
         if (!entry) return
         setOnScreen(entry.isIntersecting)
+        sendPosition(
+          entry.boundingClientRect.y + entry.boundingClientRect.height / 2,
+        )
       },
       {threshold: 0.5},
     )
-
     observer.observe(ref.current)
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [isFullscreen])
+    return () => observer.disconnect()
+  }, [sendPosition, isFullscreen])
 
   const [key, setKey] = useState(0)
   const renderError = useCallback(
@@ -135,38 +133,58 @@ function ViewportObserver({
   const [isFullscreen] = useFullscreen()
   const isWithinMessage = useIsWithinMessage()
 
+  // Send position when scrolling. This is done with an IntersectionObserver
+  // observing a div of 100vh height
   useEffect(() => {
     if (!ref.current) return
     if (isFullscreen && !isFirefox) return
 
-    const updatePosition = () => {
-      if (!ref.current) return
-      const viewportObserverBounds = ref.current.getBoundingClientRect()
-      const position =
-        viewportObserverBounds.y + viewportObserverBounds.height / 2
+    let scrollTimeout: NodeJS.Timeout | null = null
+    let lastObserverEntry: IntersectionObserverEntry | null = null
+
+    const updatePositionFromEntry = () => {
+      if (!lastObserverEntry) return
+      const rect = lastObserverEntry.boundingClientRect
+      const position = rect.y + rect.height / 2
       sendPosition(position)
     }
 
-    const observer = new IntersectionObserver(entries => {
-      const entry = entries[0]
-      if (!entry) return
-      setNearScreen(entry.isIntersecting)
-      updatePosition()
-    })
+    const handleScroll = () => {
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
+      }
+      scrollTimeout = setTimeout(updatePositionFromEntry, 4) // ~240fps
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0]
+        if (!entry) return
+        lastObserverEntry = entry
+        setNearScreen(entry.isIntersecting)
+        const rect = entry.boundingClientRect
+        const position = rect.y + rect.height / 2
+        sendPosition(position)
+      },
+      {threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0]},
+    )
 
     observer.observe(ref.current)
 
-    window.addEventListener('scroll', updatePosition, {passive: true})
-
-    updatePosition()
+    if (nearScreen) {
+      window.addEventListener('scroll', handleScroll, {passive: true})
+    }
 
     return () => {
       observer.disconnect()
-      window.removeEventListener('scroll', updatePosition)
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
+      }
+      window.removeEventListener('scroll', handleScroll)
     }
-  }, [sendPosition, isFullscreen])
+  }, [sendPosition, isFullscreen, nearScreen])
 
-  // In case scrolling hasn't started yet, send up the position
+  // In case scrolling hasn't started yet, send the original position
   useEffect(() => {
     if (ref.current && !isAnyViewActive) {
       const rect = ref.current.getBoundingClientRect()
