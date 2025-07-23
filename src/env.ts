@@ -8,7 +8,8 @@ export const ENV: string = process.env.EXPO_PUBLIC_ENV
 /**
  * Indicates whether the app is running in TestFlight
  */
-export const IS_TESTFLIGHT = ENV === 'testflight'
+export const IS_TESTFLIGHT =
+  ENV === 'testflight' || ENV.startsWith('testflight')
 
 /**
  * Indicates whether the app is __DEV__
