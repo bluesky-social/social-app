@@ -114,6 +114,7 @@ export function GestureActionView({
     },
   )
 
+  // NOTE(haileyok):
   // Absurdly high value so it doesn't interfere with the pan gestures above (i.e., scroll)
   // reanimated doesn't offer great support for disabling y/x axes :/
   const effectivelyDisabledOffset = 200
