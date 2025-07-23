@@ -1,5 +1,12 @@
 import {type Did} from '@atproto/api'
 
+import packageJson from '#/../package.json'
+
+/**
+ * The semver version of the app, as defined in `package.json.`
+ */
+export const PACKAGE_VERSION: string = packageJson.version
+
 /**
  * The env the app is running in e.g. development, testflight, production
  */
