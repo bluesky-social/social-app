@@ -54,7 +54,7 @@ module.exports = async function (env, argv) {
         authToken: process.env.SENTRY_AUTH_TOKEN,
         release: {
           name: version,
-          dist: process.env.EXPO_PUBLIC_BUNDLE_IDENTIFIER,
+          dist: process.env.SENTRY_DIST,
         },
       }),
     )
