@@ -16,11 +16,11 @@ import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
-import {TextLink} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
+import {InlineLinkText} from '#/components/Link'
 import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 
@@ -252,29 +252,29 @@ let SearchScreenPostResults = ({
     return (
       <SearchError
         title={_(msg`Search is currently unavailable when logged out`)}>
-        <Text
-          style={[
-            a.text_md,
-            a.text_center,
-            t.atoms.text_contrast_medium,
-            {lineHeight: 1.3},
-          ]}>
-          <TextLink
-            href={''}
-            style={[pal.link]}
-            text={_(msg`Sign in`)}
-            onPress={showSignIn}
-          />
-          {' or '}
-          <TextLink
-            href={''}
-            style={[pal.link]}
-            text={_(msg`create an account`)}
-            onPress={showCreateAccount}
-          />{' '}
-          {_(
-            msg`to search for news, sports, politics, and everything else happening on Bluesky.`,
-          )}
+        <Text style={[a.text_md, a.text_center, a.leading_snug]}>
+          <Trans>
+            <InlineLinkText
+              style={[pal.link]}
+              label={_(msg`sign in`)}
+              to={'#'}
+              onPress={showSignIn}>
+              Sign in
+            </InlineLinkText>
+            <Text style={t.atoms.text_contrast_medium}> or </Text>
+            <InlineLinkText
+              style={[pal.link]}
+              label={_(msg`create an account`)}
+              to={'#'}
+              onPress={showCreateAccount}>
+              create an account
+            </InlineLinkText>
+            <Text> </Text>
+            <Text style={t.atoms.text_contrast_medium}>
+              to search for news, sports, politics, and everything else
+              happening on Bluesky.
+            </Text>
+          </Trans>
         </Text>
       </SearchError>
     )

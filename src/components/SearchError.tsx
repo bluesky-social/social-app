@@ -23,22 +23,19 @@ export function SearchError({
         style={[
           a.align_center,
           a.gap_4xl,
+          a.px_xl,
           {
-            paddingHorizontal: 10,
             paddingVertical: 150,
           },
         ]}>
         <TimesLarge_Stroke2_Corner0_Rounded width={32} fill={pal.colors.icon} />
         <View
           style={[
-            a.flex,
-            a.flex_col,
             a.align_center,
             {maxWidth: gtMobile ? 394 : 294},
             gtMobile ? a.gap_md : a.gap_sm,
           ]}>
-          <Text
-            style={[a.font_bold, a.text_lg, a.text_center, {lineHeight: 1.3}]}>
+          <Text style={[a.font_bold, a.text_lg, a.text_center, a.leading_snug]}>
             {title}
           </Text>
           {children}
