@@ -164,12 +164,18 @@ export function MessagesScreenInner({navigation, route}: Props) {
         // filter out convos that are actively being left
         .filter(convo => !leftConvos.includes(convo.id))
 
+      const hasInboxRequests = inboxPreviewConvos?.length > 0
+
       return [
-        {
-          type: 'INBOX',
-          count: inboxPreviewConvos.length,
-          profiles: inboxPreviewConvos.slice(0, 3),
-        },
+        ...(hasInboxRequests
+          ? [
+              {
+                type: 'INBOX' as const,
+                count: inboxPreviewConvos.length,
+                profiles: inboxPreviewConvos.slice(0, 3),
+              },
+            ]
+          : []),
         ...conversations.map(
           convo => ({type: 'CONVERSATION', conversation: convo}) as const,
         ),
@@ -223,16 +229,24 @@ export function MessagesScreenInner({navigation, route}: Props) {
     return listenSoftReset(onSoftReset)
   }, [onSoftReset, isScreenFocused])
 
-  // Will always have 1 item - the inbox button
-  if (conversations.length < 2) {
+  // NOTE(APiligrim)
+  // Show empty state only if there are no conversations at all
+  const actualConversations = conversations.filter(
+    item => item.type === 'CONVERSATION',
+  )
+  const hasInboxRequests = inboxPreviewConvos?.length > 0
+
+  if (actualConversations.length === 0) {
     return (
       <Layout.Screen>
         <Header newChatControl={newChatControl} />
         <Layout.Center>
-          <InboxPreview
-            count={inboxPreviewConvos.length}
-            profiles={inboxPreviewConvos}
-          />
+          {hasInboxRequests && (
+            <InboxPreview
+              count={inboxPreviewConvos.length}
+              profiles={inboxPreviewConvos}
+            />
+          )}
           {isLoading ? (
             <ChatListLoadingPlaceholder />
           ) : (
