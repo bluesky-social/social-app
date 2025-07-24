@@ -18,6 +18,20 @@ jobs:
       run: |
         if [[ "${{ github.event.comment.body }}" == *"@github-actions"* ]] || \
            [[ "${{ github.event.comment.body }}" == *"github-actions[bot]"* ]]; then
+          bot_mentioned=true
+        else
+          bot_mentioned=false
+        fi
+
+
+        if [[ "${{ github.event.comment.body }}" == *"ota"* ]]; then
+          has_ota=true
+        else
+          has_ota=false
+        fi
+
+
+        if [[ "$bot_mentioned" == "true" ]] && [[ "$has_ota" == "true" ]]; then
           echo "mentioned=true" >> $GITHUB_OUTPUT
         else
           echo "mentioned=false" >> $GITHUB_OUTPUT
