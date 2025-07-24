@@ -193,6 +193,8 @@ let SearchScreenPostResults = ({
     hasNextPage,
   } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
 
+  const pal = usePalette('default')
+  const t = useTheme()
   const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
     await refetch()
@@ -244,9 +246,6 @@ let SearchScreenPostResults = ({
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
   }
-
-  const pal = usePalette('default')
-  const t = useTheme()
 
   if (!isLoggedin) {
     return (
