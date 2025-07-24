@@ -22,11 +22,7 @@ import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/i
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
-import {
-  APP_METADATA as bundleInfo,
-  APP_VERSION as appVersion,
-  BUNDLE_DATE,
-} from '#/env'
+import * as env from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {OTAInfo} from './components/OTAInfo'
@@ -127,7 +123,7 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.PressableItem>
           )}
           <SettingsList.PressableItem
-            label={_(msg`Version ${appVersion}`)}
+            label={_(msg`Version ${env.APP_VERSION}`)}
             accessibilityHint={_(msg`Copies build version to clipboard`)}
             onLongPress={() => {
               const newDevModeEnabled = !devModeEnabled
@@ -150,15 +146,15 @@ export function AboutSettingsScreen({}: Props) {
             }}
             onPress={() => {
               setStringAsync(
-                `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Anonymous ID: ${stableID}`,
+                `Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Anonymous ID: ${stableID}`,
               )
               Toast.show(_(msg`Copied build version to clipboard`))
             }}>
             <SettingsList.ItemIcon icon={WrenchIcon} />
             <SettingsList.ItemText>
-              <Trans>Version {appVersion}</Trans>
+              <Trans>Version {env.APP_VERSION}</Trans>
             </SettingsList.ItemText>
-            <SettingsList.BadgeText>{bundleInfo}</SettingsList.BadgeText>
+            <SettingsList.BadgeText>{env.APP_METADATA}</SettingsList.BadgeText>
           </SettingsList.PressableItem>
           {devModeEnabled && (
             <>
