@@ -333,7 +333,7 @@ export function ProfileGrid({
       <View
         style={[
           a.p_lg,
-          a.pb_xs,
+          a.py_md,
           a.flex_row,
           a.align_center,
           a.justify_between,
@@ -349,7 +349,7 @@ export function ProfileGrid({
       </View>
 
       {gtMobile ? (
-        <View style={[a.flex_1, a.px_lg, a.pt_sm, a.pb_lg, a.gap_md]}>
+        <View style={[a.flex_1, a.px_lg, a.pb_lg, a.gap_md]}>
           <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_sm]}>
             {content}
           </View>
@@ -372,7 +372,7 @@ export function ProfileGrid({
               showsHorizontalScrollIndicator={false}
               snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
               decelerationRate="fast">
-              <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
+              <View style={[a.px_lg, a.pb_lg, a.flex_row, a.gap_md]}>
                 {content}
 
                 <Button
