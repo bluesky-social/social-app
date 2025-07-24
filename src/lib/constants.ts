@@ -92,8 +92,6 @@ export const STAGING_FEEDS = [
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
 export const PASSIVE_INTERACTIONS = [
-  'app.bsky.feed.defs#requestLess',
-  'app.bsky.feed.defs#requestMore',
   'app.bsky.feed.defs#clickthroughItem',
   'app.bsky.feed.defs#clickthroughAuthor',
   'app.bsky.feed.defs#clickthroughReposter',
