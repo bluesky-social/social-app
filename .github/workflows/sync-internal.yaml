@@ -1,0 +1,31 @@
+name: Sync to internal repo
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: github.repository == 'bluesky-social/social-app'
+    steps:
+      - name: Checkout public repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
+          private-key: ${{ secrets.SYNC_INTERNAL_PK }}
+          repositories: social-app-internal
+      - name: Push to internal repo
+        env:
+          TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          git config user.name "github-actions"
+          git config user.email "test@users.noreply.github.com"
+          git config --unset-all http.https://github.com/.extraheader
+          git remote add internal https://x-access-token:${TOKEN}@github.com/bluesky-social/social-app-internal.git
+          git push internal main --force
