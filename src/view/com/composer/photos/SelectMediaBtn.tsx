@@ -9,8 +9,12 @@ import {
   type SupportedMimeTypes,
   VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
-import {usePhotoLibraryPermission, useVideoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {
+  usePhotoLibraryPermission,
+  useVideoLibraryPermission,
+} from '#/lib/hooks/usePermissions'
 import {getDataUriSize} from '#/lib/media/util'
+import {openPicker} from '#/lib/media/picker'
 import {isNative, isWeb} from '#/platform/detection'
 import {ComposerImage, createComposerImage} from '#/state/gallery'
 import * as Toast from '#/view/com/util/Toast'
@@ -23,11 +27,17 @@ type Props = {
   size: number
   disabled?: boolean
   onAdd: (next: ComposerImage[]) => void
-  onSelectVideo?: (asset: ImagePickerAsset) => void
-  setError?: (error: string) => void
+  onSelectVideo: (asset: ImagePickerAsset) => void
+  setError: (error: string) => void
 }
 
-export function SelectPhotoBtn({size, disabled, onAdd, onSelectVideo, setError}: Props) {
+export function SelectMediaBtn({
+  size,
+  disabled,
+  onAdd,
+  onSelectVideo,
+  setError,
+}: Props) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
@@ -41,7 +51,7 @@ export function SelectPhotoBtn({size, disabled, onAdd, onSelectVideo, setError}:
         requestPhotoAccessIfNeeded(),
         requestVideoAccessIfNeeded(),
       ])
-      
+
       if (!photoAccess && !videoAccess) {
         return
       }
@@ -53,7 +63,7 @@ export function SelectPhotoBtn({size, disabled, onAdd, onSelectVideo, setError}:
         mediaTypes: ['images', 'videos'],
         quality: 1,
         allowsMultipleSelection: true,
-        selectionLimit: 0, // No built-in limit, we'll handle it ourselves
+        selectionLimit: 0,
         legacy: true,
       }),
     )
@@ -66,7 +76,6 @@ export function SelectPhotoBtn({size, disabled, onAdd, onSelectVideo, setError}:
     const images: ImagePickerAsset[] = []
     const videos: ImagePickerAsset[] = []
 
-    // Separate images and videos
     for (const asset of assets) {
       if (asset.type === 'video') {
         videos.push(asset)
@@ -75,42 +84,35 @@ export function SelectPhotoBtn({size, disabled, onAdd, onSelectVideo, setError}:
       }
     }
 
-    // Validate video selection
     if (videos.length > 1) {
       Toast.show(_(msg`You can only upload one video at a time`), 'xmark')
       return
     }
 
-    // Validate image selection
     if (images.length > 4) {
       Toast.show(_(msg`You can only upload 4 images at a time`), 'xmark')
       return
     }
 
-    // If user selected both images and videos, show error
     if (videos.length > 0 && images.length > 0) {
-      Toast.show(_(msg`You can select either images or a video, but not both`), 'xmark')
+      Toast.show(
+        _(msg`You can select either images or a video, but not both`),
+        'xmark',
+      )
       return
     }
 
-    // Handle video selection
     if (videos.length === 1) {
       const video = videos[0]
-      
-      if (!onSelectVideo || !setError) {
-        Toast.show(_(msg`Video selection is not supported in this context`), 'xmark')
-        return
-      }
 
       try {
         if (isWeb) {
-          // asset.duration is null for gifs (see the TODO in pickVideo.web.ts)
           if (video.duration && video.duration > VIDEO_MAX_DURATION_MS) {
             throw Error(_(msg`Videos must be less than 3 minutes long`))
           }
           // compression step on native converts to mp4, so no need to check there
           if (
-            video.mimeType && 
+            video.mimeType &&
             !SUPPORTED_MIME_TYPES.includes(video.mimeType as SupportedMimeTypes)
           ) {
             throw Error(_(msg`Unsupported video type: ${video.mimeType}`))
@@ -134,7 +136,6 @@ export function SelectPhotoBtn({size, disabled, onAdd, onSelectVideo, setError}:
       return
     }
 
-    // Handle image selection
     if (images.length > 0) {
       // Check if adding these images would exceed the total limit
       if (size + images.length > 4) {
@@ -142,35 +143,46 @@ export function SelectPhotoBtn({size, disabled, onAdd, onSelectVideo, setError}:
         return
       }
 
-      const filteredImages = images.filter(asset => {
-        if (asset.mimeType?.startsWith('image/')) return true
-        Toast.show(_(msg`Only image files are supported`), 'xmark')
-        return false
-      })
-
-      // Convert ImagePickerAsset to ImageMeta format
-      const imageMetas = filteredImages.map(image => ({
-        mime: image.mimeType || 'image/jpeg',
-        height: image.height,
-        width: image.width,
-        path: image.uri,
-        size: getDataUriSize(image.uri),
-      }))
+      // Use the same logic as openPicker for processing images
+      const processedImages = images
+        .filter(asset => {
+          if (asset.mimeType?.startsWith('image/')) return true
+          Toast.show(_(msg`Only image files are supported`), 'xmark')
+          return false
+        })
+        .map(image => ({
+          mime: image.mimeType || 'image/jpeg',
+          height: image.height,
+          width: image.width,
+          path: image.uri,
+          size: getDataUriSize(image.uri),
+        }))
 
       const results = await Promise.all(
-        imageMetas.map(img => createComposerImage(img)),
+        processedImages.map(img => createComposerImage(img)),
       )
 
       onAdd(results)
     }
-  }, [requestPhotoAccessIfNeeded, requestVideoAccessIfNeeded, size, onAdd, onSelectVideo, setError, sheetWrapper, _, t])
+  }, [
+    requestPhotoAccessIfNeeded,
+    requestVideoAccessIfNeeded,
+    size,
+    onAdd,
+    onSelectVideo,
+    setError,
+    sheetWrapper,
+    _,
+  ])
 
   return (
     <Button
-      testID="openGalleryBtn"
+      testID="openMediaBtn"
       onPress={onPressSelectMedia}
-      label={_(msg`Gallery`)}
-      accessibilityHint={_(msg`Opens device gallery to select images or videos`)}
+      label={_(msg`Media`)}
+      accessibilityHint={_(
+        msg`Opens device gallery to select images or videos`,
+      )}
       style={a.p_sm}
       variant="ghost"
       shape="round"
