@@ -97,7 +97,7 @@ export function useIntentHandler() {
           return
         }
         case 'apply-ota': {
-          if (!IS_TESTFLIGHT) {
+          if (!isNative || !IS_TESTFLIGHT) {
             return
           }
 
