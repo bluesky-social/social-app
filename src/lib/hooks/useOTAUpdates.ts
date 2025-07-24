@@ -81,7 +81,7 @@ export function useApplyPullRequestOTAUpdate() {
         logger.debug('Attempting to fetch update...')
         await fetchUpdateAsync()
         Alert.alert(
-          'Deployment Availalbe',
+          'Deployment Available',
           `A new deployment of ${channel} is availalble. Relaunch now?`,
           [
             {
@@ -190,7 +190,7 @@ export function useOTAUpdates() {
   }, [])
 
   React.useEffect(() => {
-    // We don't need to check anything if the curernt update is a PR update
+    // We don't need to check anything if the current update is a PR update
     if (currentChannel?.startsWith('pull-request')) {
       return
     }
