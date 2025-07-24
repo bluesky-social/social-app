@@ -59,7 +59,7 @@ export function useFeedFeedback(
   const agent = useAgent()
 
   const feedInfo = feed ? buildFeedInfo(feed) : null
-  const enabled = feedInfo && feedInfo.acceptsInteractions && hasSession
+  const enabled = !!feedInfo && feedInfo.acceptsInteractions && hasSession
 
   const enabledInteractions = useMemo(() => {
     if (!enabled) {

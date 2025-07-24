@@ -48,7 +48,7 @@ export type FeedSourceFeedInfo = {
   creatorDid: string
   creatorHandle: string
   likeCount: number | undefined
-  acceptsInteractions: boolean | undefined
+  acceptsInteractions?: boolean
   likeUri: string | undefined
   contentMode: AppBskyFeedDefs.GeneratorView['contentMode']
 }
