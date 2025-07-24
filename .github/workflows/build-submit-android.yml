@@ -67,7 +67,7 @@ jobs:
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
-          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> .env
           echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "EXPO_PUBLIC_SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
           echo "EXPO_PUBLIC_BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
@@ -76,7 +76,7 @@ jobs:
       - name: 🏗️ EAS Build
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DIST=$(git rev-parse --short HEAD)
+          SENTRY_DIST=$(git rev-parse HEAD)
           yarn use-build-number-with-bump
           eas build -p android
           --profile ${{ inputs.profile || 'testflight-android' }}
@@ -144,7 +144,7 @@ jobs:
         if: ${{ inputs.profile == 'production' }}
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DIST=$(git rev-parse --short HEAD)
+          SENTRY_DIST=$(git rev-parse HEAD)
           yarn use-build-number-with-bump
           eas build -p android
           --profile production-apk

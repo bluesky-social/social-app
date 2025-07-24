@@ -28,7 +28,7 @@ export const IS_DEV = __DEV__
 export const IS_INTERNAL = IS_DEV || IS_TESTFLIGHT
 
 /**
- * The _short_ commit hash that the current bundle was made from. The user can
+ * The commit hash that the current bundle was made from. The user can
  * see the commit hash in the app's settings along with the other version info.
  * Useful for debugging/reporting.
  */
