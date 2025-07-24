@@ -90,7 +90,7 @@ jobs:
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DIST=$(git rev-parse HEAD)
           yarn use-build-number-with-bump
-          eas build-p ios
+          eas build -p ios
           --profile ${{ inputs.profile || 'testflight' }}
           --local --output build.ipa --non-interactive
 
