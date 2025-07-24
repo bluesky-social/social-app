@@ -671,7 +671,7 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:773
+#: src/view/com/composer/Composer.tsx:776
 msgid "Add another post"
 msgstr ""
 
@@ -702,7 +702,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1335
+#: src/view/com/composer/Composer.tsx:1340
 msgid "Add new post"
 msgstr ""
 
@@ -1139,11 +1139,11 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:724
+#: src/view/com/composer/Composer.tsx:725
 msgid "Are you sure you'd like to discard this draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:905
+#: src/view/com/composer/Composer.tsx:910
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1522,8 +1522,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:283
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:960
-#: src/view/com/composer/Composer.tsx:971
+#: src/view/com/composer/Composer.tsx:965
+#: src/view/com/composer/Composer.tsx:976
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:52
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1887,7 +1887,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:968
+#: src/view/com/composer/Composer.tsx:973
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -1944,7 +1944,7 @@ msgstr ""
 msgid "Compose new post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:869
+#: src/view/com/composer/Composer.tsx:874
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -1952,7 +1952,7 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1729
+#: src/view/com/composer/Composer.tsx:1734
 msgid "Compressing video..."
 msgstr ""
 
@@ -2477,7 +2477,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:682
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:684
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:884
 msgid "Delete post"
 msgstr ""
 
@@ -2601,8 +2601,8 @@ msgid "Disabled"
 msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:88
-#: src/view/com/composer/Composer.tsx:726
-#: src/view/com/composer/Composer.tsx:912
+#: src/view/com/composer/Composer.tsx:727
+#: src/view/com/composer/Composer.tsx:917
 msgid "Discard"
 msgstr ""
 
@@ -2610,11 +2610,11 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:723
+#: src/view/com/composer/Composer.tsx:724
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:904
+#: src/view/com/composer/Composer.tsx:909
 msgid "Discard post?"
 msgstr ""
 
@@ -2640,7 +2640,7 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Dismiss error"
 msgstr ""
 
@@ -3098,7 +3098,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1738
+#: src/view/com/composer/Composer.tsx:1743
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr ""
@@ -3682,12 +3682,6 @@ msgstr ""
 msgid "Followers you know"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:603
-#: src/view/screens/SavedFeeds.tsx:420
-msgctxt "feed-name"
-msgid "Following"
-msgstr ""
-
 #. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:484
 #: src/components/ProfileHoverCard/index.web.tsx:493
@@ -3695,6 +3689,12 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:241
 #: src/screens/VideoFeed/index.tsx:848
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:134
+msgid "Following"
+msgstr ""
+
+#: src/view/screens/Feeds.tsx:603
+#: src/view/screens/SavedFeeds.tsx:420
+msgctxt "feed-name"
 msgid "Following"
 msgstr ""
 
@@ -4039,7 +4039,7 @@ msgid "Here is your app password!"
 msgstr ""
 
 #: src/components/VideoPostCard.tsx:178
-#: src/components/VideoPostCard.tsx:454
+#: src/components/VideoPostCard.tsx:455
 msgid "Hidden"
 msgstr ""
 
@@ -4425,7 +4425,7 @@ msgstr ""
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1672
+#: src/view/com/composer/Composer.tsx:1677
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -5761,7 +5761,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1320
+#: src/view/com/composer/Composer.tsx:1325
 msgid "Open emoji picker"
 msgstr ""
 
@@ -5864,7 +5864,7 @@ msgstr ""
 msgid "Opens device photo gallery"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1321
+#: src/view/com/composer/Composer.tsx:1326
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -6275,12 +6275,12 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1031
+#: src/view/com/composer/Composer.tsx:1036
 msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1029
+#: src/view/com/composer/Composer.tsx:1034
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -6453,7 +6453,7 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1735
+#: src/view/com/composer/Composer.tsx:1740
 msgid "Processing video..."
 msgstr ""
 
@@ -6492,22 +6492,22 @@ msgid "Public, sharable lists which can be used to drive feeds."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1011
+#: src/view/com/composer/Composer.tsx:1016
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1004
+#: src/view/com/composer/Composer.tsx:1009
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:989
+#: src/view/com/composer/Composer.tsx:994
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:996
+#: src/view/com/composer/Composer.tsx:1001
 msgid "Publish reply"
 msgstr ""
 
@@ -6850,7 +6850,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1027
+#: src/view/com/composer/Composer.tsx:1032
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -9185,7 +9185,7 @@ msgstr ""
 msgid "Unsubscribed from list"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:811
+#: src/view/com/composer/Composer.tsx:814
 msgid "Unsupported video type"
 msgstr ""
 
@@ -9275,7 +9275,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1732
+#: src/view/com/composer/Composer.tsx:1737
 msgid "Uploading video..."
 msgstr ""
 
@@ -9521,7 +9521,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1742
+#: src/view/com/composer/Composer.tsx:1747
 msgid "Video uploaded"
 msgstr ""
 
@@ -9616,7 +9616,7 @@ msgstr ""
 msgid "View users who like this feed"
 msgstr ""
 
-#: src/components/VideoPostCard.tsx:398
+#: src/components/VideoPostCard.tsx:399
 msgid "View video"
 msgstr ""
 
@@ -9834,7 +9834,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:774
+#: src/view/com/composer/Composer.tsx:777
 msgid "What's up?"
 msgstr ""
 
@@ -9916,11 +9916,11 @@ msgstr ""
 msgid "Write a message"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:867
+#: src/view/com/composer/Composer.tsx:872
 msgid "Write post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:772
+#: src/view/com/composer/Composer.tsx:775
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:90
 msgid "Write your reply"
 msgstr ""
