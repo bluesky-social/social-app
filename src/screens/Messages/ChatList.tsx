@@ -229,6 +229,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
     return listenSoftReset(onSoftReset)
   }, [onSoftReset, isScreenFocused])
 
+  // NOTE(APiligrim)
   // Show empty state only if there are no conversations at all
   const actualConversations = conversations.filter(
     item => item.type === 'CONVERSATION',
