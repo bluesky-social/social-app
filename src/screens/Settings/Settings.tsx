@@ -2,7 +2,10 @@ import {useState} from 'react'
 import {Alert, LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {type AppGndrActorDefs, moderateProfile} from '@gander-social-atproto/api'
+import {
+  type AppGndrActorDefs,
+  moderateProfile,
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'

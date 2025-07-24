@@ -1,17 +1,19 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Text, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
+import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
+import {Logo} from '#/view/icons/Logo'
 import {atoms as a} from '#/alf'
 import {AccountList} from '#/components/AccountList'
 import {Button, ButtonText} from '#/components/Button'
-import * as TextField from '#/components/forms/TextField'
+// import * as TextField from '#/components/forms/TextField'
 import {FormContainer} from './FormContainer'
 
 export const ChooseAccountForm = ({
@@ -22,6 +24,7 @@ export const ChooseAccountForm = ({
   onPressBack: () => void
 }) => {
   const [pendingDid, setPendingDid] = React.useState<string | null>(null)
+
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
@@ -72,29 +75,44 @@ export const ChooseAccountForm = ({
   )
 
   return (
-    <FormContainer
-      testID="chooseAccountForm"
-      titleText={<Trans>Select account</Trans>}>
+    <FormContainer style={[a.px_lg]} testID="chooseAccountForm">
+      <Button
+        style={a.self_start}
+        label={_(msg`Cancel`)}
+        variant="solid"
+        color="soft_neutral"
+        size="small"
+        onPress={onPressBack}>
+        <ButtonText>
+          <Trans>Cancel</Trans>
+        </ButtonText>
+      </Button>
+      <View
+        style={[
+          a.self_center,
+          a.pb_5xl_8,
+          a.pt_s50,
+          a.px_md,
+          a.mb_md,
+          a.mt_lg,
+          a.border_0,
+          a.rounded_full,
+          a.mx_2xl,
+          {
+            backgroundColor: colors.black,
+          },
+        ]}>
+        <Logo width={104} fill={colors.white} />
+      </View>
       <View>
-        <TextField.LabelText>
-          <Trans>Sign in as...</Trans>
-        </TextField.LabelText>
+        <Text style={[a.self_center, a.text_4xl, a.font_bold, a.mx_2xl]}>
+          <Trans>Sign in to Gander.</Trans>
+        </Text>
         <AccountList
           onSelectAccount={onSelect}
           onSelectOther={() => onSelectAccount()}
           pendingDid={pendingDid}
         />
-      </View>
-      <View style={[a.flex_row]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>{_(msg`Back`)}</ButtonText>
-        </Button>
-        <View style={[a.flex_1]} />
       </View>
     </FormContainer>
   )

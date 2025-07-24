@@ -1,6 +1,9 @@
 import {memo, useCallback} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppGndrActorDefs, type ModerationDecision} from '@gander-social-atproto/api'
+import {
+  type AppGndrActorDefs,
+  type ModerationDecision,
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'

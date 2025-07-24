@@ -1,6 +1,9 @@
 import {memo, useEffect} from 'react'
 import {View} from 'react-native'
-import {type AppGndrActorSearchActors, type ModerationOpts} from '@gander-social-atproto/api'
+import {
+  type AppGndrActorSearchActors,
+  type ModerationOpts,
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type InfiniteData} from '@tanstack/react-query'

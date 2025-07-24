@@ -177,9 +177,7 @@ function Footer() {
       <InlineLinkText
         label={_(msg`See jobs at Gander`)}
         to="https://gndr.social/about/join">
-        <Trans comment="Link to a page with job openings at Gander">
-          Jobs
-        </Trans>
+        <Trans comment="Link to a page with job openings at Gander">Jobs</Trans>
       </InlineLinkText>
 
       <View style={a.flex_1} />

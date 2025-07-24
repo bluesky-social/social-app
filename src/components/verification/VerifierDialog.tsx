@@ -98,8 +98,7 @@ function Inner({
               <RNText>
                 <VerifierCheck width={14} />
               </RNText>{' '}
-              can verify others. These trusted verifiers are selected by
-              Gander.
+              can verify others. These trusted verifiers are selected by Gander.
             </Trans>
           </Text>
         </View>

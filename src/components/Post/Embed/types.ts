@@ -1,5 +1,8 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
-import {type AppGndrFeedDefs, type ModerationDecision} from '@gander-social-atproto/api'
+import {
+  type AppGndrFeedDefs,
+  type ModerationDecision,
+} from '@gander-social-atproto/api'
 
 export enum PostEmbedViewContext {
   ThreadHighlighted = 'ThreadHighlighted',

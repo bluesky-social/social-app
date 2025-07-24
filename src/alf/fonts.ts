@@ -42,17 +42,20 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
     if (isAndroid) {
       style.fontFamily =
         {
-          400: 'Inter-Regular',
-          500: 'Inter-Regular',
-          600: 'Inter-SemiBold',
-          700: 'Inter-SemiBold',
-          800: 'Inter-ExtraBold',
-          900: 'Inter-ExtraBold',
-        }[String(style.fontWeight || '400')] || 'Inter-Regular'
+          100: 'HankenGrotesk-Thin',
+          200: 'HankenGrotesk-ExtraLight',
+          300: 'HankenGrotesk-Light',
+          400: 'HankenGrotesk-Regular',
+          500: 'HankenGrotesk-Medium',
+          600: 'HankenGrotesk-SemiBold',
+          700: 'HankenGrotesk-Bold',
+          800: 'HankenGrotesk-ExtraBold',
+          900: 'HankenGrotesk-Black',
+        }[String(style.fontWeight || '400')] || 'HankenGrotesk-Regular'
 
       if (style.fontStyle === 'italic') {
-        if (style.fontFamily === 'Inter-Regular') {
-          style.fontFamily = 'Inter-Italic'
+        if (style.fontFamily === 'HankenGrotesk-Regular') {
+          style.fontFamily = 'HankenGrotesk-Italic'
         } else {
           style.fontFamily += 'Italic'
         }
@@ -64,10 +67,10 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
       delete style.fontWeight
       delete style.fontStyle
     } else {
-      style.fontFamily = 'InterVariable'
+      style.fontFamily = 'HankenGrotesk-Regular'
 
       if (style.fontStyle === 'italic') {
-        style.fontFamily += 'Italic'
+        style.fontFamily = 'HankenGrotesk-Italic'
       }
     }
 

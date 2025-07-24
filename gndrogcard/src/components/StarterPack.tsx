@@ -1,6 +1,8 @@
 /* eslint-disable gndr-internal/avoid-unwrapped-text */
-import React from 'react'
-import {AppGndrGraphDefs, AppGndrGraphStarterpack} from '@gander-social-atproto/api'
+import {
+  type AppGndrGraphDefs,
+  AppGndrGraphStarterpack,
+} from '@gander-social-atproto/api'
 
 import {Butterfly} from './Butterfly.js'
 import {Img} from './Img.js'

@@ -1,5 +1,8 @@
 import React from 'react'
-import {type AppGndrGraphDefs, AppGndrGraphStarterpack} from '@gander-social-atproto/api'
+import {
+  type AppGndrGraphDefs,
+  AppGndrGraphStarterpack,
+} from '@gander-social-atproto/api'
 import {type GeneratorView} from '@gander-social-atproto/api/dist/client/types/app/gndr/feed/defs'
 import {msg, plural} from '@lingui/macro'
 

@@ -15,6 +15,7 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
 import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
+import {Welcome} from '#/screens/Welcome'
 import {atoms as a, native, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
@@ -25,6 +26,7 @@ enum ScreenState {
   S_Login,
   S_CreateAccount,
   S_StarterPack,
+  S_Welcome,
 }
 export {ScreenState as LoggedOutScreenState}
 
@@ -58,13 +60,17 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     clearRequestedAccount()
   }, [clearRequestedAccount, onDismiss])
 
+  const isWelcomeScreen = screenState === ScreenState.S_Welcome
+
   return (
     <View
       testID="noSessionView"
       style={[
         a.util_screen_outer,
         t.atoms.bg,
-        {paddingTop: insets.top, paddingBottom: insets.bottom},
+        isWelcomeScreen
+          ? {}
+          : {paddingTop: insets.top, paddingBottom: insets.bottom},
       ]}>
       <ErrorBoundary>
         {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
@@ -108,6 +114,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
               setScreenState(ScreenState.S_LoginOrCreateAccount)
               clearRequestedAccount()
             }}
+            showWelcomeScreen={function (): void {
+              setScreenState(ScreenState.S_Welcome)
+            }}
           />
         ) : undefined}
         {screenState === ScreenState.S_CreateAccount ? (
@@ -115,6 +124,13 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
             onPressBack={() =>
               setScreenState(ScreenState.S_LoginOrCreateAccount)
             }
+          />
+        ) : undefined}
+        {isWelcomeScreen ? (
+          <Welcome
+            onGetStartedPress={() => {
+              setScreenState(ScreenState.S_Login)
+            }}
           />
         ) : undefined}
       </ErrorBoundary>

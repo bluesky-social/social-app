@@ -332,8 +332,14 @@ export const atoms = {
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
   },
+  font_medium: {
+    fontWeight: tokens.fontWeight.medium,
+  },
   font_bold: {
     fontWeight: tokens.fontWeight.bold,
+  },
+  font_extra_bold: {
+    fontWeight: tokens.fontWeight.font_extra_bold,
   },
   font_heavy: {
     fontWeight: tokens.fontWeight.heavy,
@@ -537,6 +543,9 @@ export const atoms = {
   pt_xs: {
     paddingTop: tokens.space.xs,
   },
+  pt_s6: {
+    paddingTop: tokens.space.s6,
+  },
   pt_sm: {
     paddingTop: tokens.space.sm,
   },
@@ -561,6 +570,9 @@ export const atoms = {
   pt_5xl: {
     paddingTop: tokens.space._5xl,
   },
+  pt_s50: {
+    paddingTop: tokens.space.s50,
+  },
   pb_0: {
     paddingBottom: 0,
   },
@@ -575,6 +587,9 @@ export const atoms = {
   },
   pb_md: {
     paddingBottom: tokens.space.md,
+  },
+  pb_s10: {
+    paddingBottom: tokens.space.s10,
   },
   pb_lg: {
     paddingBottom: tokens.space.lg,
@@ -593,6 +608,9 @@ export const atoms = {
   },
   pb_5xl: {
     paddingBottom: tokens.space._5xl,
+  },
+  pb_5xl_8: {
+    paddingBottom: tokens.space._5xl + 8,
   },
   pl_0: {
     paddingLeft: 0,
@@ -804,6 +822,9 @@ export const atoms = {
   },
   mt_xs: {
     marginTop: tokens.space.xs,
+  },
+  mt_xs_6: {
+    marginTop: tokens.space.s6,
   },
   mt_sm: {
     marginTop: tokens.space.sm,

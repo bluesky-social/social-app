@@ -128,6 +128,11 @@ msgstr "{0, plural, zero {} one {{1} postiad} two {{1} bostiad} few {{1} postiad
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, other {# person wedi}} defnyddio'r tecyn cychwyn hwn!"
 
+#: src/screens/Welcome/index.tsx:74
+#: src/screens/Welcome/index.tsx:83
+msgid "{0}"
+msgstr ""
+
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
@@ -402,6 +407,10 @@ msgstr "{hours, plural, zero {}one {# awr} two {# awr} few {# awr} many {# hours
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, other {Mae # eraill}} wedi ymuno!"
 
+#: src/components/forms/TextField.tsx:231
+msgid "{label}"
+msgstr ""
+
 #: src/components/live/utils.ts:10
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, zero {}one {# munud} two {# funud} few {# munud} many {# munud} other {# munud}}"
@@ -496,7 +505,7 @@ msgstr "⚠Enw Dangos Annilys"
 msgid "24 hours"
 msgstr "24 awr"
 
-#: src/screens/Login/LoginForm.tsx:268
+#: src/screens/Login/LoginForm.tsx:335
 msgid "2FA Confirmation"
 msgstr "Cadarnhad 2FA"
 
@@ -553,7 +562,6 @@ msgid "Accessibility Settings"
 msgstr "Gosodiadau Hygyrchedd"
 
 #: src/Navigation.tsx:398
-#: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:49
 #: src/screens/Settings/Settings.tsx:174
 #: src/screens/Settings/Settings.tsx:177
@@ -590,6 +598,10 @@ msgstr "Cyfrif wedi'i Dewi gan y Rhestr"
 #: src/screens/Settings/Settings.tsx:624
 msgid "Account options"
 msgstr "Dewisiadau cyfrif"
+
+#: src/components/forms/HostingProvider.tsx:75
+msgid "Account Provider"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:660
 msgid "Account removed from quick access"
@@ -815,6 +827,10 @@ msgstr "Wedi cyflwyno ymholiad sicrwydd oed"
 msgid "Age assurance only takes a few minutes"
 msgstr "Dim ond ychydig funudau fydd yr ymholiad Sicrwydd Oed yn ei gymryd"
 
+#: src/screens/Login/LoginForm.tsx:428
+msgid "Agree and continue"
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:223
 msgid "alice@example.com"
 msgstr "alice@example.com"
@@ -864,12 +880,11 @@ msgstr "Caniatáu atebion gan:"
 msgid "Allows access to direct messages"
 msgstr "Yn caniatáu mynediad i negeseuon uniongyrchol"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:182
 msgid "Already have a code?"
 msgstr "Oes gennych chi god yn barod?"
 
-#: src/screens/Login/ChooseAccountForm.tsx:43
+#: src/screens/Login/ChooseAccountForm.tsx:46
 msgid "Already signed in as @{0}"
 msgstr "Eisoes wedi mewngofnodi fel @{0}"
 
@@ -1204,12 +1219,11 @@ msgstr "Awtochwarae fideos a GIFs"
 #: src/components/dms/MessagesListHeader.tsx:84
 #: src/components/moderation/LabelsOnMeDialog.tsx:315
 #: src/components/moderation/LabelsOnMeDialog.tsx:316
-#: src/screens/Login/ChooseAccountForm.tsx:90
-#: src/screens/Login/ChooseAccountForm.tsx:95
-#: src/screens/Login/ForgotPasswordForm.tsx:123
-#: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:310
-#: src/screens/Login/LoginForm.tsx:316
+#: src/screens/Login/ForgotPasswordForm.tsx:172
+#: src/screens/Login/ForgotPasswordForm.tsx:178
+#: src/screens/Login/LoginForm.tsx:388
+#: src/screens/Login/ResetpasswordDialog.tsx:234
+#: src/screens/Login/ResetpasswordDialog.tsx:240
 #: src/screens/Login/SetNewPasswordForm.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Messages/components/ChatDisabled.tsx:133
@@ -1479,6 +1493,11 @@ msgstr "Camera"
 #: src/components/Prompt.tsx:143
 #: src/components/Prompt.tsx:145
 #: src/screens/Deactivated.tsx:158
+#: src/screens/Login/ChooseAccountForm.tsx:81
+#: src/screens/Login/ChooseAccountForm.tsx:87
+#: src/screens/Login/LoginForm.tsx:204
+#: src/screens/Login/LoginForm.tsx:210
+#: src/screens/Login/LoginForm.tsx:394
 #: src/screens/Profile/Header/EditProfileDialog.tsx:225
 #: src/screens/Profile/Header/EditProfileDialog.tsx:233
 #: src/screens/Search/Shell.tsx:349
@@ -1661,7 +1680,7 @@ msgstr "Sgyrsiau"
 msgid "Check my status"
 msgstr "Gwirio fy statws"
 
-#: src/screens/Login/LoginForm.tsx:301
+#: src/screens/Login/LoginForm.tsx:368
 msgid "Check your email for a sign in code and enter it here."
 msgstr "Gwiriwch eich e-bost am god mewngofnodi a rhowch ef yma."
 
@@ -1956,7 +1975,7 @@ msgid "Confirm your birthdate"
 msgstr "Cadarnhewch eich dyddiad geni"
 
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
-#: src/screens/Login/LoginForm.tsx:274
+#: src/screens/Login/LoginForm.tsx:341
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
 #: src/view/com/modals/DeleteAccount.tsx:220
@@ -1964,7 +1983,7 @@ msgstr "Cadarnhewch eich dyddiad geni"
 msgid "Confirmation code"
 msgstr "Cod cadarnhau"
 
-#: src/screens/Login/LoginForm.tsx:337
+#: src/screens/Login/LoginForm.tsx:415
 msgid "Connecting..."
 msgstr "Yn cysylltu..."
 
@@ -2045,7 +2064,7 @@ msgstr "Cefndir ddewislen cyd-destun, cliciwch i gau'r ddewislen."
 msgid "Continue"
 msgstr "Parhau"
 
-#: src/components/AccountList.tsx:128
+#: src/components/AccountList.tsx:135
 msgid "Continue as {0} (currently signed in)"
 msgstr "Parhau fel {0} (wedi mewngofnodi ar hyn o bryd)"
 
@@ -2260,7 +2279,7 @@ msgstr "Creu pecyn cychwyn"
 msgid "Create a starter pack for me"
 msgstr "Creu pecyn cychwyn i mi"
 
-#: src/view/com/auth/SplashScreen.tsx:55
+#: src/view/com/auth/SplashScreen.tsx:53
 #: src/view/com/auth/SplashScreen.web.tsx:117
 #: src/view/shell/bottom-bar/BottomBar.tsx:345
 #: src/view/shell/bottom-bar/BottomBar.tsx:350
@@ -2294,7 +2313,7 @@ msgstr "Creu afatar yn lle hynny"
 msgid "Create another"
 msgstr "Creu un arall"
 
-#: src/view/com/auth/SplashScreen.tsx:47
+#: src/view/com/auth/SplashScreen.tsx:45
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
 msgstr "Creu cyfrif newydd"
@@ -2618,6 +2637,7 @@ msgid "Dismiss error"
 msgstr "Cau'r gwall"
 
 #: src/components/ProgressGuide/List.tsx:42
+#: src/screens/Login/ResetpasswordDialog.tsx:145
 msgid "Dismiss getting started guide"
 msgstr "Cau'r canllaw cychwyn arni"
 
@@ -2789,6 +2809,9 @@ msgstr "e.e. Defnyddwyr sy'n ateb dro ar ôl tro gyda hysbysebion."
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Mae pob cod yn gweithio unwaith. Byddwch yn derbyn mwy o godau gwahoddiad o bryd i'w gilydd."
 
+#: src/components/forms/HostingProvider.tsx:85
+#: src/components/forms/HostingProvider.tsx:87
+#: src/components/forms/HostingProvider.tsx:91
 #: src/screens/Settings/AccountSettings.tsx:143
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:249
 #: src/screens/StarterPack/StarterPackScreen.tsx:588
@@ -2909,10 +2932,6 @@ msgstr "E-bost 2FA wedi'i analluogi"
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
 msgid "Email 2FA enabled"
 msgstr "E-bost 2FA wedi'i alluogi"
-
-#: src/screens/Login/ForgotPasswordForm.tsx:93
-msgid "Email address"
-msgstr "Cyfeiriad e-bost"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:104
 msgid "Email Resent"
@@ -3035,6 +3054,10 @@ msgstr "Rhowch y cod"
 msgid "Enter fullscreen"
 msgstr "Mynd i'r sgrin lawn"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:159
+msgid "Enter the code we sent to {0}"
+msgstr ""
+
 #: src/view/com/modals/ChangePassword.tsx:165
 msgid "Enter the code you received to change your password."
 msgstr "Rhowch y cod a gawsoch i newid eich cyfrinair."
@@ -3043,28 +3066,24 @@ msgstr "Rhowch y cod a gawsoch i newid eich cyfrinair."
 msgid "Enter the domain you want to use"
 msgstr "Rhowch y parth rydych chi am ei ddefnyddio"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:113
-msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Rhowch yr e-bost a ddefnyddiwyd gennych i greu eich cyfrif. Byddwn yn anfon \"cod ailosod\" atoch er mwyn i chi allu gosod cyfrinair newydd."
-
-#: src/screens/Login/LoginForm.tsx:218
+#: src/screens/Login/LoginForm.tsx:290
 msgid "Enter the username or email address you used when you created your account"
-msgstr "Rhowch yr enw defnyddiwr neu'r cyfeiriad e-bost ddefnyddiwyd gennych pan wnaethoch chi greu eich cyfrif"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:104
 msgid "Enter your birth date"
 msgstr "Nodwch eich dyddiad geni"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:99
+#: src/screens/Login/ForgotPasswordForm.tsx:122
 #: src/screens/Signup/StepInfo/index.tsx:213
 msgid "Enter your email address"
 msgstr "Rhowch eich cyfeiriad e-bost"
 
-#: src/screens/Login/LoginForm.tsx:243
+#: src/screens/Login/LoginForm.tsx:316
 msgid "Enter your password"
 msgstr "Rhowch eich cyfrinair"
 
-#: src/screens/Login/index.tsx:123
+#: src/screens/Login/index.tsx:141
 msgid "Enter your username and password"
 msgstr "Rhowch eich enw defnyddiwr a chyfrinair"
 
@@ -3736,16 +3755,17 @@ msgstr "I Chi"
 msgid "Forever"
 msgstr "Am Byth"
 
-#: src/screens/Login/index.tsx:153
-#: src/screens/Login/index.tsx:168
+#: src/screens/Login/ForgotPasswordForm.tsx:100
+#: src/screens/Login/index.tsx:173
+#: src/screens/Login/index.tsx:188
 msgid "Forgot Password"
 msgstr "Wedi anghofio'ch cyfrinair"
 
-#: src/screens/Login/LoginForm.tsx:248
+#: src/screens/Login/LoginForm.tsx:321
 msgid "Forgot password?"
 msgstr "Wedi anghofio'ch cyfrinair?"
 
-#: src/screens/Login/LoginForm.tsx:259
+#: src/screens/Login/LoginForm.tsx:326
 msgid "Forgot?"
 msgstr "Wedi anghofio?"
 
@@ -3897,8 +3917,13 @@ msgstr "Cael gwybod pan fydd rhywun yn postio"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
+#: src/screens/Welcome/index.tsx:108
 msgid "Get started"
 msgstr "Cychwyn arni"
+
+#: src/screens/Welcome/index.tsx:102
+msgid "GetStarted"
+msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:35
 msgid "Getting started"
@@ -3927,7 +3952,7 @@ msgstr "Torri cyfraith neu delerau gwasanaeth amlwg"
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1141
 #: src/screens/VideoFeed/index.tsx:1145
-#: src/view/com/auth/LoggedOut.tsx:72
+#: src/view/com/auth/LoggedOut.tsx:78
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1038
 msgid "Go back"
@@ -3991,7 +4016,7 @@ msgstr "Ewch i'r gosodiadau cyfrif"
 msgid "Go to conversation with {0}"
 msgstr "Ewch i sgwrs gyda {0}"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:165
+#: src/screens/Login/ForgotPasswordForm.tsx:142
 #: src/view/com/modals/ChangePassword.tsx:179
 msgid "Go to next"
 msgstr "Ewch i'r nesaf"
@@ -4104,6 +4129,7 @@ msgstr "Rhestr gudd"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
+#: src/screens/Login/ResetpasswordDialog.tsx:209
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "Cuddio"
@@ -4217,11 +4243,6 @@ msgstr "Cartref"
 msgid "Host:"
 msgstr "Gwesteiwr:"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:83
-#: src/screens/Login/LoginForm.tsx:184
-msgid "Hosting provider"
-msgstr "Darparwr gwesteio"
-
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
 msgid "Hot"
 msgstr "Difyr"
@@ -4237,6 +4258,10 @@ msgstr "Atebion difyrraf gyntaf"
 #: src/components/dialogs/InAppBrowserConsent.tsx:66
 msgid "How should we open this link?"
 msgstr "Sut dylen ni agor y ddolen hon?"
+
+#: src/screens/Login/ForgotPasswordForm.tsx:149
+msgid "I already have a reset code?"
+msgstr ""
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:133
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
@@ -4371,10 +4396,11 @@ msgstr "Negeseuon amhriodol neu ddolenni penodol"
 msgid "Inbox zero!"
 msgstr "Dim yn y blwch derbyn!"
 
-#: src/screens/Login/LoginForm.tsx:164
+#: src/screens/Login/LoginForm.tsx:181
 msgid "Incorrect username or password"
 msgstr "Enw defnyddiwr neu gyfrinair anghywir"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:179
 #: src/screens/Login/SetNewPasswordForm.tsx:133
 msgid "Input code sent to your email for password reset"
 msgstr "Anfonwyd cod mewnbwn i'ch e-bost ar gyfer ailosod cyfrinair"
@@ -4383,6 +4409,7 @@ msgstr "Anfonwyd cod mewnbwn i'ch e-bost ar gyfer ailosod cyfrinair"
 msgid "Input confirmation code for account deletion"
 msgstr "Cod mewnbynnu cadarnhad ar gyfer dileu cyfrif"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:199
 #: src/screens/Login/SetNewPasswordForm.tsx:159
 msgid "Input new password"
 msgstr "Mewnbynnu cyfrinair newydd"
@@ -4391,7 +4418,7 @@ msgstr "Mewnbynnu cyfrinair newydd"
 msgid "Input password for account deletion"
 msgstr "Mewnbynnu cyfrinair ar gyfer dileu cyfrif"
 
-#: src/screens/Login/LoginForm.tsx:289
+#: src/screens/Login/LoginForm.tsx:356
 msgid "Input the code which has been emailed to you"
 msgstr "Mewnbynnwch y cod sydd wedi'i e-bostio atoch"
 
@@ -4407,7 +4434,7 @@ msgstr "Gosodiadau rhyngweithio"
 msgid "Introducing activity notifications"
 msgstr "Yn cyflwyno hysbysiadau gweithgaredd"
 
-#: src/screens/Login/LoginForm.tsx:156
+#: src/screens/Login/LoginForm.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "Cod cadarnhau 2FA annilys."
@@ -4580,6 +4607,7 @@ msgstr "dysgu rhagor"
 #: src/screens/Moderation/VerificationSettings.tsx:47
 #: src/screens/Profile/Header/EditProfileDialog.tsx:359
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:212
+#: src/screens/Welcome/index.tsx:96
 msgid "Learn more"
 msgstr "Dysgu rhagor"
 
@@ -4639,6 +4667,10 @@ msgstr "Mae rhagor o wybodaeth yn eich <0>gosodiadau cyfrif</0>"
 msgid "Learn more."
 msgstr "Dysgu rhagor."
 
+#: src/screens/Welcome/index.tsx:89
+msgid "Learnmore"
+msgstr ""
+
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Leave"
 msgstr "Gadael"
@@ -4673,8 +4705,8 @@ msgstr "chwith i fynd."
 msgid "Let me choose"
 msgstr "Gadewch i mi ddewis"
 
-#: src/screens/Login/index.tsx:154
-#: src/screens/Login/index.tsx:169
+#: src/screens/Login/index.tsx:174
+#: src/screens/Login/index.tsx:189
 msgid "Let's get your password reset!"
 msgstr "Gadewch i ni gael ailosod eich cyfrinair!"
 
@@ -4911,6 +4943,7 @@ msgstr "Logo gan <0>@sawaratsuki.gndr.social</0>"
 msgid "Long press to open tag menu for #{tag}"
 msgstr "Pwyswch yn hir i agor dewislen tag #{tag}"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
 msgstr "Yn edrych fel XXXXX-XXXX"
@@ -5295,8 +5328,8 @@ msgstr "Llywiwch i {0}"
 msgid "Navigate to starter pack"
 msgstr "Ewch i'r pecyn cychwyn"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:344
+#: src/screens/Login/ForgotPasswordForm.tsx:143
+#: src/screens/Login/LoginForm.tsx:422
 #: src/view/com/modals/ChangePassword.tsx:180
 msgid "Navigates to the next screen"
 msgstr "Yn llywio i'r sgrin nesaf"
@@ -5389,6 +5422,7 @@ msgstr "Rhestr Cymedroli Newydd"
 msgid "New password"
 msgstr "Cyfrinair newydd"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:188
 #: src/view/com/modals/ChangePassword.tsx:229
 msgid "New Password"
 msgstr "Cyfrinair newydd"
@@ -5445,10 +5479,8 @@ msgstr "Atebion diweddaraf yn gyntaf"
 msgid "News"
 msgstr "Newyddion"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:137
-#: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:343
-#: src/screens/Login/LoginForm.tsx:350
+#: src/screens/Login/ForgotPasswordForm.tsx:186
+#: src/screens/Login/LoginForm.tsx:421
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
@@ -5466,6 +5498,10 @@ msgstr "Nesaf"
 #: src/view/com/lightbox/Lightbox.web.tsx:169
 msgid "Next image"
 msgstr "Delwedd nesaf"
+
+#: src/screens/Welcome/index.tsx:64
+msgid "Nicely done.Welcome to Gander."
+msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
@@ -5919,12 +5955,12 @@ msgstr "Yn agor oriel luniau dyfais"
 msgid "Opens emoji picker"
 msgstr "Yn agor y dewisydd emojis"
 
-#: src/view/com/auth/SplashScreen.tsx:49
+#: src/view/com/auth/SplashScreen.tsx:47
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Gander account"
 msgstr "Yn agor llif i greu cyfrif Gander newydd"
 
-#: src/view/com/auth/SplashScreen.tsx:63
+#: src/view/com/auth/SplashScreen.tsx:61
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Gander account"
 msgstr "Yn agor llif i fewngofnodi i'ch cyfrif Gander presennol"
@@ -5949,7 +5985,7 @@ msgstr "Yn agor rhestr o godau gwahoddiad"
 msgid "Opens live status dialog"
 msgstr "Yn agor deialog statws byw"
 
-#: src/screens/Login/LoginForm.tsx:249
+#: src/screens/Login/LoginForm.tsx:322
 msgid "Opens password reset form"
 msgstr "Yn agor ffurflen ailosod cyfrinair"
 
@@ -6005,9 +6041,9 @@ msgstr "Statws OTA: Dim ar gael"
 msgid "Other"
 msgstr "Arall"
 
-#: src/components/AccountList.tsx:88
-msgid "Other account"
-msgstr "Cyfrif arall"
+#: src/components/AccountList.tsx:92
+msgid "Other Account"
+msgstr ""
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
@@ -6034,7 +6070,7 @@ msgstr "Heb ganfod y dudalen"
 msgid "Page Not Found"
 msgstr "Tudalen Heb ei Chanfod"
 
-#: src/screens/Login/LoginForm.tsx:228
+#: src/screens/Login/LoginForm.tsx:301
 #: src/screens/Settings/AccountSettings.tsx:119
 #: src/screens/Settings/AccountSettings.tsx:123
 #: src/screens/Signup/StepInfo/index.tsx:228
@@ -6051,7 +6087,7 @@ msgstr "Cyfrinair wedi'i Newid"
 msgid "Password must be at least 8 characters long."
 msgstr "Rhaid i'r cyfrinair fod o leiaf 8 nod."
 
-#: src/screens/Login/index.tsx:181
+#: src/screens/Login/index.tsx:201
 msgid "Password updated"
 msgstr "Cyfrinair wedi'i ddiweddaru"
 
@@ -6213,6 +6249,7 @@ msgstr "Cwblhewch y captcha dilysu."
 msgid "Please double-check that you have entered your email address correctly."
 msgstr "Gwiriwch ddwywaith eich bod wedi rhoi eich cyfeiriad e-bost yn gywir."
 
+#: src/screens/Login/ResetpasswordDialog.tsx:71
 #: src/screens/Login/SetNewPasswordForm.tsx:58
 msgid "Please enter a password."
 msgstr "Rhowch gyfrinair."
@@ -6252,6 +6289,10 @@ msgstr "Rhowch y cod a anfonwyd gennym at <0>{0}</0> isod."
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "Rhowch y cod diogelwch a anfonwyd gennym at eich cyfeiriad e-bost blaenorol."
 
+#: src/screens/Login/LoginForm.tsx:107
+msgid "Please enter your email address"
+msgstr ""
+
 #: src/screens/Signup/state.ts:265
 #: src/screens/Signup/StepInfo/index.tsx:91
 msgid "Please enter your email."
@@ -6265,17 +6306,13 @@ msgstr "Rhowch eich cod gwahodd."
 msgid "Please enter your new email address."
 msgstr "Rhowch eich cyfeiriad e-bost newydd."
 
-#: src/screens/Login/LoginForm.tsx:99
+#: src/screens/Login/LoginForm.tsx:112
 msgid "Please enter your password"
 msgstr "Rhowch eich cyfrinair"
 
 #: src/view/com/modals/DeleteAccount.tsx:235
 msgid "Please enter your password as well:"
 msgstr "Rhowch eich cyfrinair hefyd:"
-
-#: src/screens/Login/LoginForm.tsx:94
-msgid "Please enter your username"
-msgstr "Rhowch eich enw defnyddiwr"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -6520,7 +6557,7 @@ msgid "Processing video..."
 msgstr "Yn prosesu fideo..."
 
 #: src/lib/api/index.ts:60
-#: src/screens/Login/ForgotPasswordForm.tsx:149
+#: src/screens/Login/ForgotPasswordForm.tsx:198
 msgid "Processing..."
 msgstr "Wrthi’n prosesu..."
 
@@ -7192,11 +7229,11 @@ msgstr "Cod Ailosod"
 msgid "Reset onboarding state"
 msgstr "Ailosod cyflwr cyflwyno"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:80
+#: src/screens/Login/ResetpasswordDialog.tsx:137
 msgid "Reset password"
 msgstr "Ailosod cyfrinair"
 
-#: src/screens/Login/LoginForm.tsx:324
+#: src/screens/Login/LoginForm.tsx:402
 msgid "Retries signing in"
 msgstr "Yn ceisio mewngofnodi eto"
 
@@ -7212,8 +7249,8 @@ msgstr "Yn ceisio'r weithred olaf eto, oedd yn wallus"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:57
 #: src/components/StarterPack/ProfileStarterPacks.tsx:346
-#: src/screens/Login/LoginForm.tsx:323
-#: src/screens/Login/LoginForm.tsx:330
+#: src/screens/Login/LoginForm.tsx:401
+#: src/screens/Login/LoginForm.tsx:408
 #: src/screens/Messages/ChatList.tsx:280
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:218
@@ -7475,10 +7512,6 @@ msgstr "Llithrydd chwilio. Defnyddiwch y bysellau saeth i chwilio ymlaen ac yn �
 msgid "Select a color"
 msgstr "Dewiswch liw"
 
-#: src/screens/Login/ChooseAccountForm.tsx:77
-msgid "Select account"
-msgstr "Dewiswch gyfrif"
-
 #: src/components/AppLanguageDropdown.tsx:60
 msgid "Select an app language"
 msgstr "Dewiswch iaith ap"
@@ -7507,7 +7540,7 @@ msgstr "Dewiswch ieithoedd cynnwys"
 msgid "Select duration"
 msgstr "Dewis hyd"
 
-#: src/screens/Login/index.tsx:144
+#: src/screens/Login/index.tsx:164
 msgid "Select from an existing account"
 msgstr "Dewiswch o gyfrif sy'n bodoli"
 
@@ -7581,6 +7614,10 @@ msgstr "Dewiswch pa ieithoedd rydych chi am i'ch ffrydiau tanysgrifio eu cynnwys
 msgid "Select your date of birth"
 msgstr "Dewiswch eich dyddiad geni"
 
+#: src/screens/Login/ForgotPasswordForm.tsx:105
+msgid "Select your hosting provider and enter the email you used to create your account. We’ll send you a “reset code” so you can set a new password."
+msgstr ""
+
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 #: src/screens/Settings/InterestsSettings.tsx:161
 msgid "Select your interests from the options below"
@@ -7601,6 +7638,14 @@ msgstr "Yn dewis dewis {0} o {numItems}"
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
 msgstr "Anfonwch wefan dda!"
+
+#: src/screens/Login/ResetpasswordDialog.tsx:224
+msgid "Send a new code"
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:192
+msgid "Send Code"
+msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:181
@@ -7683,7 +7728,7 @@ msgstr "Gosod cyfrinair newydd"
 msgid "Set up your account"
 msgstr "Gosodwch eich cyfrif"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:107
+#: src/screens/Login/ForgotPasswordForm.tsx:130
 msgid "Sets email for password reset"
 msgstr "Yn gosod e-bost ar gyfer ailosod cyfrinair"
 
@@ -7834,6 +7879,7 @@ msgstr "Profwr Dewisiadau Rhannu"
 #: src/components/moderation/ContentHider.tsx:203
 #: src/components/moderation/LabelPreference.tsx:143
 #: src/components/moderation/PostHider.tsx:134
+#: src/screens/Login/ResetpasswordDialog.tsx:209
 msgid "Show"
 msgstr "Dangos"
 
@@ -7891,6 +7937,11 @@ msgstr "Dangos rhagor o atebion"
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show muted replies"
 msgstr "Dangos atebion wedi'u tewi"
+
+#: src/screens/Login/ResetpasswordDialog.tsx:204
+#: src/screens/Login/ResetpasswordDialog.tsx:205
+msgid "Show password"
+msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show post replies in a threaded tree view"
@@ -7959,12 +8010,11 @@ msgstr "Yn dangos y cynnwys"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
-#: src/screens/Login/index.tsx:122
-#: src/screens/Login/index.tsx:143
-#: src/screens/Login/LoginForm.tsx:181
+#: src/screens/Login/index.tsx:133
+#: src/screens/Login/index.tsx:156
 #: src/screens/Search/SearchResults.tsx:258
-#: src/view/com/auth/SplashScreen.tsx:61
-#: src/view/com/auth/SplashScreen.tsx:69
+#: src/view/com/auth/SplashScreen.tsx:59
+#: src/view/com/auth/SplashScreen.tsx:67
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
 #: src/view/shell/bottom-bar/BottomBar.tsx:355
@@ -7976,13 +8026,9 @@ msgstr "Yn dangos y cynnwys"
 msgid "Sign in"
 msgstr "Mewngofnodi"
 
-#: src/components/AccountList.tsx:129
+#: src/components/AccountList.tsx:136
 msgid "Sign in as {0}"
 msgstr "Mewngofnodi fel {0}"
-
-#: src/screens/Login/ChooseAccountForm.tsx:80
-msgid "Sign in as..."
-msgstr "Mewngofnodi fel..."
 
 #: src/screens/Deactivated.tsx:203
 #: src/screens/Deactivated.tsx:209
@@ -7993,13 +8039,19 @@ msgstr "Mewngofnodi neu greu cyfrif"
 msgid "Sign in or create your account to join the conversation!"
 msgstr "Mewngofnodwch neu crëwch eich cyfrif i ymuno â'r sgwrs!"
 
-#: src/components/AccountList.tsx:68
+#: src/components/AccountList.tsx:71
+#: src/screens/Login/ResetpasswordDialog.tsx:221
 msgid "Sign in to account that is not listed"
 msgstr "Mewngofnodwch i gyfrif nad yw wedi'i restru"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Gander or create a new account"
 msgstr "Mewngofnodwch i Gander neu crëwch gyfrif newydd"
+
+#: src/screens/Login/ChooseAccountForm.tsx:109
+#: src/screens/Login/LoginForm.tsx:238
+msgid "Sign in to Gander."
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:463
@@ -8033,7 +8085,7 @@ msgid "Sign-in Required"
 msgstr "Mae Angen Mewngofnodi"
 
 #: src/lib/hooks/useAccountSwitcher.ts:41
-#: src/screens/Login/ChooseAccountForm.tsx:53
+#: src/screens/Login/ChooseAccountForm.tsx:56
 msgid "Signed in as @{0}"
 msgstr "Wedi mewngofnodi fel @{0}"
 
@@ -8239,6 +8291,8 @@ msgstr "Llyfr stori"
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:124
 #: src/components/moderation/LabelsOnMeDialog.tsx:324
 #: src/components/moderation/LabelsOnMeDialog.tsx:325
+#: src/screens/Login/ResetpasswordDialog.tsx:248
+#: src/screens/Login/ResetpasswordDialog.tsx:254
 #: src/screens/Messages/components/ChatDisabled.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
@@ -8809,6 +8863,10 @@ msgstr "Nid yw'r wybodaeth hon yn cael ei rhannu â defnyddwyr eraill."
 msgid "This is not a valid link"
 msgstr "Dyw hon ddim yn ddolen ddilys"
 
+#: src/screens/Welcome/index.tsx:67
+msgid "This is where social media gets sane again."
+msgstr ""
+
 #: src/components/moderation/ModerationDetailsDialog.tsx:168
 msgid "This label was applied by the author."
 msgstr "Gosodwyd y label hwn gan yr awdur."
@@ -9079,9 +9137,11 @@ msgstr "Math:"
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "Methu cysylltu. Gwiriwch eich cysylltiad rhyngrwyd a rhowch gynnig arall arni."
 
-#: src/screens/Login/ForgotPasswordForm.tsx:68
-#: src/screens/Login/index.tsx:79
-#: src/screens/Login/LoginForm.tsx:169
+#: src/screens/Login/ForgotPasswordForm.tsx:75
+#: src/screens/Login/index.tsx:93
+#: src/screens/Login/LoginForm.tsx:186
+#: src/screens/Login/ResetpasswordDialog.tsx:96
+#: src/screens/Login/ResetpasswordDialog.tsx:121
 #: src/screens/Login/SetNewPasswordForm.tsx:81
 #: src/screens/Signup/index.tsx:72
 #: src/view/com/modals/ChangePassword.tsx:71
@@ -9332,6 +9392,7 @@ msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "Wedi methu diweddaru gwelededd ateb"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:260
 #: src/screens/Login/SetNewPasswordForm.tsx:194
 msgid "Updating..."
 msgstr "Yn diweddaru..."
@@ -9463,9 +9524,9 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "Rhestr defnyddwyr wedi'i diweddaru"
 
-#: src/screens/Login/LoginForm.tsx:201
-msgid "Username or email address"
-msgstr "Enw defnyddiwr neu gyfeiriad e-bost"
+#: src/screens/Login/LoginForm.tsx:273
+msgid "Username or Email Address"
+msgstr ""
 
 #: src/components/WhoCanReply.tsx:303
 msgid "users followed by <0>@{0}</0>"
@@ -9953,7 +10014,7 @@ msgstr "Beth yw eich diddordebau?"
 msgid "What do you want to call your starter pack?"
 msgstr "Beth ydych chi am ei alw'ch pecyn cychwyn?"
 
-#: src/view/com/auth/SplashScreen.tsx:38
+#: src/view/com/auth/SplashScreen.tsx:36
 #: src/view/com/auth/SplashScreen.web.tsx:99
 #: src/view/com/composer/Composer.tsx:777
 msgid "What's up?"
@@ -10175,7 +10236,7 @@ msgstr "Gallwch barhau â sgyrsiau parhaus beth bynnag yw'r gosodiad rydych chi'
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
 msgstr "Gallwch nawr ddewis i gael gwybod pan fydd pobl benodol yn postio. Os oes 'na bobl rydych eisiau chi derbyn diweddariadau amser ganddyn nhw, ewch i'w proffil a chwilio am yr eicon cloch wrth eu botwm dilyn."
 
-#: src/screens/Login/index.tsx:182
+#: src/screens/Login/index.tsx:202
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
 msgid "You can now sign in with your new password."
 msgstr "Gallwch nawr fewngofnodi gyda'ch cyfrinair newydd."
@@ -10236,6 +10297,7 @@ msgstr "Rydych wedi rhwystro'r defnyddiwr hwn. Allwch chi ddim gweld eu cynnwys.
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr "Rydych wedi analluogi hysbysiadau ateb, dyfynnu, a chrybwyll, felly ni fydd y tab hwn yn diweddaru. I newid hyn, ewch i'ch <0>gosodiadau hysbysu</0>."
 
+#: src/screens/Login/ResetpasswordDialog.tsx:62
 #: src/screens/Login/SetNewPasswordForm.tsx:49
 #: src/screens/Login/SetNewPasswordForm.tsx:95
 #: src/view/com/modals/ChangePassword.tsx:87
@@ -10540,7 +10602,7 @@ msgstr "Bydd eich enw dangos presennol <0>{0}</0> yn cael ei gadw'n awtomatig i 
 msgid "Your email"
 msgstr "Eich e-bost"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:51
+#: src/screens/Login/ForgotPasswordForm.tsx:56
 #: src/screens/Signup/state.ts:273
 #: src/screens/Signup/StepInfo/index.tsx:98
 #: src/view/com/modals/ChangePassword.tsx:55
@@ -10596,6 +10658,7 @@ msgstr "Eich geiriau wedi'u tewi"
 msgid "Your password has been changed successfully!"
 msgstr "Mae eich cyfrinair wedi ei newid yn llwyddiannus!"
 
+#: src/screens/Login/LoginForm.tsx:117
 #: src/screens/Signup/StepInfo/index.tsx:127
 msgid "Your password must be at least 8 characters long."
 msgstr "Rhaid i'ch cyfrinair fod o leiaf 8 nod."

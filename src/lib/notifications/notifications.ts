@@ -2,7 +2,10 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type AppGndrNotificationRegisterPush, type AtpAgent} from '@gander-social-atproto/api'
+import {
+  type AppGndrNotificationRegisterPush,
+  type AtpAgent,
+} from '@gander-social-atproto/api'
 import debounce from 'lodash.debounce'
 
 import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'

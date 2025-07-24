@@ -20,7 +20,7 @@ export function FormContainer({
   return (
     <View
       testID={testID}
-      style={[a.gap_md, a.flex_1, !gtMobile && [a.px_lg, a.py_md], style]}>
+      style={[a.gap_md, a.flex_1, !gtMobile && [a.px_2xl, a.py_md], style]}>
       {titleText && !gtMobile && (
         <Text style={[a.text_xl, a.font_bold, t.atoms.text_contrast_high]}>
           {titleText}
