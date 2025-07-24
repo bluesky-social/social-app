@@ -338,7 +338,7 @@ export function ProfileGrid({
           a.align_center,
           a.justify_between,
         ]}>
-        <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
+        <Text style={[a.text_sm, a.font_bold, t.atoms.text]}>
           {viewContext === 'profile' ? (
             <Trans>Similar accounts</Trans>
           ) : (
