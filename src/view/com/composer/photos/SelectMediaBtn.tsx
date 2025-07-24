@@ -14,7 +14,6 @@ import {
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import {getDataUriSize} from '#/lib/media/util'
-import {openPicker} from '#/lib/media/picker'
 import {isNative, isWeb} from '#/platform/detection'
 import {ComposerImage, createComposerImage} from '#/state/gallery'
 import * as Toast from '#/view/com/util/Toast'
@@ -46,7 +45,6 @@ export function SelectMediaBtn({
 
   const onPressSelectMedia = useCallback(async () => {
     if (isNative) {
-      // Request both photo and video permissions
       const [photoAccess, videoAccess] = await Promise.all([
         requestPhotoAccessIfNeeded(),
         requestVideoAccessIfNeeded(),
@@ -89,11 +87,6 @@ export function SelectMediaBtn({
       return
     }
 
-    if (images.length > 4) {
-      Toast.show(_(msg`You can only upload 4 images at a time`), 'xmark')
-      return
-    }
-
     if (videos.length > 0 && images.length > 0) {
       Toast.show(
         _(msg`You can select either images or a video, but not both`),
@@ -110,7 +103,6 @@ export function SelectMediaBtn({
           if (video.duration && video.duration > VIDEO_MAX_DURATION_MS) {
             throw Error(_(msg`Videos must be less than 3 minutes long`))
           }
-          // compression step on native converts to mp4, so no need to check there
           if (
             video.mimeType &&
             !SUPPORTED_MIME_TYPES.includes(video.mimeType as SupportedMimeTypes)
@@ -137,29 +129,22 @@ export function SelectMediaBtn({
     }
 
     if (images.length > 0) {
-      // Check if adding these images would exceed the total limit
       if (size + images.length > 4) {
         Toast.show(_(msg`You can only upload 4 images at a time`), 'xmark')
         return
       }
 
-      // Use the same logic as openPicker for processing images
-      const processedImages = images
-        .filter(asset => {
-          if (asset.mimeType?.startsWith('image/')) return true
-          Toast.show(_(msg`Only image files are supported`), 'xmark')
-          return false
-        })
-        .map(image => ({
-          mime: image.mimeType || 'image/jpeg',
-          height: image.height,
-          width: image.width,
-          path: image.uri,
-          size: getDataUriSize(image.uri),
-        }))
+      // Transform ImagePickerAsset to ImageMeta format (like openPicker does)
+      const imageMetas = images.map(image => ({
+        mime: image.mimeType || 'image/jpeg',
+        height: image.height,
+        width: image.width,
+        path: image.uri,
+        size: getDataUriSize(image.uri),
+      }))
 
       const results = await Promise.all(
-        processedImages.map(img => createComposerImage(img)),
+        imageMetas.map(img => createComposerImage(img)),
       )
 
       onAdd(results)

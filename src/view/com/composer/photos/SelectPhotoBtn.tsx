@@ -1,19 +1,12 @@
 /* eslint-disable react-native-a11y/has-valid-accessibility-ignores-invert-colors */
 import {useCallback} from 'react'
-import {type ImagePickerAsset, launchImageLibraryAsync} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {
-  SUPPORTED_MIME_TYPES,
-  type SupportedMimeTypes,
-  VIDEO_MAX_DURATION_MS,
-} from '#/lib/constants'
-import {usePhotoLibraryPermission, useVideoLibraryPermission} from '#/lib/hooks/usePermissions'
-import {getDataUriSize} from '#/lib/media/util'
-import {isNative, isWeb} from '#/platform/detection'
+import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {openPicker} from '#/lib/media/picker'
+import {isNative} from '#/platform/detection'
 import {ComposerImage, createComposerImage} from '#/state/gallery'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
@@ -23,154 +16,39 @@ type Props = {
   size: number
   disabled?: boolean
   onAdd: (next: ComposerImage[]) => void
-  onSelectVideo?: (asset: ImagePickerAsset) => void
-  setError?: (error: string) => void
 }
 
-export function SelectPhotoBtn({size, disabled, onAdd, onSelectVideo, setError}: Props) {
+export function SelectPhotoBtn({size, disabled, onAdd}: Props) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
-  const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
   const t = useTheme()
   const sheetWrapper = useSheetWrapper()
 
-  const onPressSelectMedia = useCallback(async () => {
-    if (isNative) {
-      // Request both photo and video permissions
-      const [photoAccess, videoAccess] = await Promise.all([
-        requestPhotoAccessIfNeeded(),
-        requestVideoAccessIfNeeded(),
-      ])
-      
-      if (!photoAccess && !videoAccess) {
-        return
-      }
+  const onPressSelectPhotos = useCallback(async () => {
+    if (isNative && !(await requestPhotoAccessIfNeeded())) {
+      return
     }
 
-    const response = await sheetWrapper(
-      launchImageLibraryAsync({
-        exif: false,
-        mediaTypes: ['images', 'videos'],
-        quality: 1,
+    const images = await sheetWrapper(
+      openPicker({
+        selectionLimit: 4 - size,
         allowsMultipleSelection: true,
-        selectionLimit: 0, // No built-in limit, we'll handle it ourselves
-        legacy: true,
       }),
     )
 
-    if (!response.assets || response.assets.length === 0) {
-      return
-    }
+    const results = await Promise.all(
+      images.map(img => createComposerImage(img)),
+    )
 
-    const assets = response.assets
-    const images: ImagePickerAsset[] = []
-    const videos: ImagePickerAsset[] = []
-
-    // Separate images and videos
-    for (const asset of assets) {
-      if (asset.type === 'video') {
-        videos.push(asset)
-      } else {
-        images.push(asset)
-      }
-    }
-
-    // Validate video selection
-    if (videos.length > 1) {
-      Toast.show(_(msg`You can only upload one video at a time`), 'xmark')
-      return
-    }
-
-    // Validate image selection
-    if (images.length > 4) {
-      Toast.show(_(msg`You can only upload 4 images at a time`), 'xmark')
-      return
-    }
-
-    // If user selected both images and videos, show error
-    if (videos.length > 0 && images.length > 0) {
-      Toast.show(_(msg`You can select either images or a video, but not both`), 'xmark')
-      return
-    }
-
-    // Handle video selection
-    if (videos.length === 1) {
-      const video = videos[0]
-      
-      if (!onSelectVideo || !setError) {
-        Toast.show(_(msg`Video selection is not supported in this context`), 'xmark')
-        return
-      }
-
-      try {
-        if (isWeb) {
-          // asset.duration is null for gifs (see the TODO in pickVideo.web.ts)
-          if (video.duration && video.duration > VIDEO_MAX_DURATION_MS) {
-            throw Error(_(msg`Videos must be less than 3 minutes long`))
-          }
-          // compression step on native converts to mp4, so no need to check there
-          if (
-            video.mimeType && 
-            !SUPPORTED_MIME_TYPES.includes(video.mimeType as SupportedMimeTypes)
-          ) {
-            throw Error(_(msg`Unsupported video type: ${video.mimeType}`))
-          }
-        } else {
-          if (typeof video.duration !== 'number') {
-            throw Error('Asset is not a video')
-          }
-          if (video.duration > VIDEO_MAX_DURATION_MS) {
-            throw Error(_(msg`Videos must be less than 3 minutes long`))
-          }
-        }
-        onSelectVideo(video)
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError(_(msg`An error occurred while selecting the video`))
-        }
-      }
-      return
-    }
-
-    // Handle image selection
-    if (images.length > 0) {
-      // Check if adding these images would exceed the total limit
-      if (size + images.length > 4) {
-        Toast.show(_(msg`You can only upload 4 images at a time`), 'xmark')
-        return
-      }
-
-      const filteredImages = images.filter(asset => {
-        if (asset.mimeType?.startsWith('image/')) return true
-        Toast.show(_(msg`Only image files are supported`), 'xmark')
-        return false
-      })
-
-      // Convert ImagePickerAsset to ImageMeta format
-      const imageMetas = filteredImages.map(image => ({
-        mime: image.mimeType || 'image/jpeg',
-        height: image.height,
-        width: image.width,
-        path: image.uri,
-        size: getDataUriSize(image.uri),
-      }))
-
-      const results = await Promise.all(
-        imageMetas.map(img => createComposerImage(img)),
-      )
-
-      onAdd(results)
-    }
-  }, [requestPhotoAccessIfNeeded, requestVideoAccessIfNeeded, size, onAdd, onSelectVideo, setError, sheetWrapper, _, t])
+    onAdd(results)
+  }, [requestPhotoAccessIfNeeded, size, onAdd, sheetWrapper])
 
   return (
     <Button
       testID="openGalleryBtn"
-      onPress={onPressSelectMedia}
+      onPress={onPressSelectPhotos}
       label={_(msg`Gallery`)}
-      accessibilityHint={_(msg`Opens device gallery to select images or videos`)}
+      accessibilityHint={_(msg`Opens device photo gallery`)}
       style={a.p_sm}
       variant="ghost"
       shape="round"
