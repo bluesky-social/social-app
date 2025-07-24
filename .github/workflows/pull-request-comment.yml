@@ -12,52 +12,54 @@ jobs:
     outputs:
       should-deploy: ${{ steps.check-org.outputs.result }}
 
-  steps:
-    - name: Check if bot is mentioned
-      id: check-mention
-      run: |
-        if [[ "${{ github.event.comment.body }}" == *"@github-actions"* ]] || \
-           [[ "${{ github.event.comment.body }}" == *"github-actions[bot]"* ]]; then
-          bot_mentioned=true
-        else
-          bot_mentioned=false
-        fi
+    steps:
+      - name: Check if bot is mentioned
+        id: check-mention
+        env:
+          COMMENT: ${{ github.event.comment.body }}
+        run: |
+          if [[ "$TITLE" == *"@github-actions"* ]] || \
+             [[ "$TITLE" == *"github-actions[bot]"* ]]; then
+            bot_mentioned=true
+          else
+            bot_mentioned=false
+          fi
 
 
-        if [[ "${{ github.event.comment.body }}" == *"ota"* ]]; then
-          has_ota=true
-        else
-          has_ota=false
-        fi
+          if [[ "${{ github.event.comment.body }}" == *"ota"* ]]; then
+            has_ota=true
+          else
+            has_ota=false
+          fi
 
 
-        if [[ "$bot_mentioned" == "true" ]] && [[ "$has_ota" == "true" ]]; then
-          echo "mentioned=true" >> $GITHUB_OUTPUT
-        else
-          echo "mentioned=false" >> $GITHUB_OUTPUT
-        fi
+          if [[ "$bot_mentioned" == "true" ]] && [[ "$has_ota" == "true" ]]; then
+            echo "mentioned=true" >> $GITHUB_OUTPUT
+          else
+            echo "mentioned=false" >> $GITHUB_OUTPUT
+          fi
 
-    - name: Check organization membership
-      if: steps.check-mention.outputs.mentioned == 'true'
-      id: check-org
-      uses: actions/github-script@v7
-      with:
-        script: |
-          try {
-            const { data: perm } = await github.rest.repos.getCollaboratorPermissionLevel({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              username: context.payload.comment.user.login
-            });
+      - name: Check organization membership
+        if: steps.check-mention.outputs.mentioned == 'true'
+        id: check-org
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              const { data: perm } = await github.rest.repos.getCollaboratorPermissionLevel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                username: context.payload.comment.user.login
+              });
 
-            const hasAccess = ['admin', 'write'].includes(perm.permission);
-            console.log(`User has ${perm.permission} access`);
+              const hasAccess = ['admin', 'write'].includes(perm.permission);
+              console.log(`User has ${perm.permission} access`);
 
-            return hasAccess;
-          } catch(error) {
-            console.log('User has no repository access');
-            return false;
-          }
+              return hasAccess;
+            } catch(error) {
+              console.log('User has no repository access');
+              return false;
+            }
 
   bundle-deploy:
     name: Bundle and Deploy EAS Update
