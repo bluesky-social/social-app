@@ -99,7 +99,7 @@ export function useApplyPullRequestOTAUpdate() {
         )
       } else {
         Alert.alert(
-          'No Deployment Availalbe',
+          'No Deployment Available',
           `No new deployments of ${channel} are currently available for your current native build.`,
         )
       }
@@ -108,7 +108,7 @@ export function useApplyPullRequestOTAUpdate() {
       const res = await checkForUpdateAsync()
       if (res.isAvailable) {
         Alert.alert(
-          'Deployment Availalbe',
+          'Deployment Available',
           `A deployment of ${channel} is availalble. Applying this deployment may result in a bricked installation, in which case you will need to reinstall the app and may lose local data. Are you sure you want to proceed?`,
           [
             {
@@ -126,7 +126,7 @@ export function useApplyPullRequestOTAUpdate() {
         )
       } else {
         Alert.alert(
-          'No Deployment Availalbe',
+          'No Deployment Available',
           `No new deployments of ${channel} are currently available for your current native build.`,
         )
       }
