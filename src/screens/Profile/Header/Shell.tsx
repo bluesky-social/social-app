@@ -229,6 +229,7 @@ let ProfileHeaderShell = ({
                 size={live.isActive ? 88 : 90}
                 avatar={profile.avatar}
                 moderation={moderation.ui('avatar')}
+                noBorder
               />
               {live.isActive && <LiveIndicator size="large" />}
             </Animated.View>
@@ -260,7 +261,7 @@ export {ProfileHeaderShell}
 const styles = StyleSheet.create({
   backBtnWrapper: {
     position: 'absolute',
-    left: 10,
+    left: 12,
     width: 30,
     height: 30,
     overflow: 'hidden',
@@ -279,8 +280,8 @@ const styles = StyleSheet.create({
   },
   aviPosition: {
     position: 'absolute',
-    top: 110,
-    left: 10,
+    top: 104,
+    left: 16,
   },
   avi: {
     width: 94,
