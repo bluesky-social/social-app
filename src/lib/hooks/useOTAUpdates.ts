@@ -1,5 +1,5 @@
 import React from 'react'
-import {Alert, AppState, AppStateStatus} from 'react-native'
+import {Alert, AppState, type AppStateStatus} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
   checkForUpdateAsync,
@@ -29,6 +29,128 @@ async function setExtraParams() {
   )
 }
 
+async function setExtraParamsPullRequest(channel: string) {
+  await setExtraParamAsync(
+    isIOS ? 'ios-build-number' : 'android-build-number',
+    // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
+    // This just ensures it gets passed as a string
+    `${nativeBuildVersion}`,
+  )
+  await setExtraParamAsync('channel', channel)
+}
+
+async function updateTestflight() {
+  await setExtraParams()
+
+  const res = await checkForUpdateAsync()
+  if (res.isAvailable) {
+    await fetchUpdateAsync()
+
+    Alert.alert(
+      'Update Available',
+      'A new version of the app is available. Relaunch now?',
+      [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {
+          text: 'Relaunch',
+          style: 'default',
+          onPress: async () => {
+            await reloadAsync()
+          },
+        },
+      ],
+    )
+  }
+}
+
+export function useApplyPullRequestOTAUpdate() {
+  const {currentlyRunning} = useUpdates()
+  const [pending, setPending] = React.useState(false)
+  const currentChannel = currentlyRunning?.channel
+  const isCurrentlyRunningPullRequestDeployment =
+    currentChannel?.startsWith('pull-request')
+
+  const tryApplyUpdate = async (channel: string) => {
+    setPending(true)
+    if (currentChannel === channel) {
+      const res = await checkForUpdateAsync()
+      if (res.isAvailable) {
+        logger.debug('Attempting to fetch update...')
+        await fetchUpdateAsync()
+        Alert.alert(
+          'Deployment Available',
+          `A new deployment of ${channel} is availalble. Relaunch now?`,
+          [
+            {
+              text: 'No',
+              style: 'cancel',
+            },
+            {
+              text: 'Relaunch',
+              style: 'default',
+              onPress: async () => {
+                await reloadAsync()
+              },
+            },
+          ],
+        )
+      } else {
+        Alert.alert(
+          'No Deployment Available',
+          `No new deployments of ${channel} are currently available for your current native build.`,
+        )
+      }
+    } else {
+      setExtraParamsPullRequest(channel)
+      const res = await checkForUpdateAsync()
+      if (res.isAvailable) {
+        Alert.alert(
+          'Deployment Available',
+          `A deployment of ${channel} is availalble. Applying this deployment may result in a bricked installation, in which case you will need to reinstall the app and may lose local data. Are you sure you want to proceed?`,
+          [
+            {
+              text: 'No',
+              style: 'cancel',
+            },
+            {
+              text: 'Relaunch',
+              style: 'default',
+              onPress: async () => {
+                await reloadAsync()
+              },
+            },
+          ],
+        )
+      } else {
+        Alert.alert(
+          'No Deployment Available',
+          `No new deployments of ${channel} are currently available for your current native build.`,
+        )
+      }
+    }
+    setPending(false)
+  }
+
+  const revertToEmbedded = async () => {
+    try {
+      await updateTestflight()
+    } catch (e: any) {
+      logger.error('Internal OTA Update Error', {error: `${e}`})
+    }
+  }
+
+  return {
+    tryApplyUpdate,
+    revertToEmbedded,
+    currentChannel,
+    isCurrentlyRunningPullRequestDeployment,
+    pending,
+  }
+}
+
 export function useOTAUpdates() {
   const shouldReceiveUpdates = isEnabled && !__DEV__
 
@@ -36,7 +158,8 @@ export function useOTAUpdates() {
   const lastMinimize = React.useRef(0)
   const ranInitialCheck = React.useRef(false)
   const timeout = React.useRef<NodeJS.Timeout>()
-  const {isUpdatePending} = useUpdates()
+  const {currentlyRunning, isUpdatePending} = useUpdates()
+  const currentChannel = currentlyRunning?.channel
 
   const setCheckTimeout = React.useCallback(() => {
     timeout.current = setTimeout(async () => {
@@ -60,36 +183,18 @@ export function useOTAUpdates() {
 
   const onIsTestFlight = React.useCallback(async () => {
     try {
-      await setExtraParams()
-
-      const res = await checkForUpdateAsync()
-      if (res.isAvailable) {
-        await fetchUpdateAsync()
-
-        Alert.alert(
-          'Update Available',
-          'A new version of the app is available. Relaunch now?',
-          [
-            {
-              text: 'No',
-              style: 'cancel',
-            },
-            {
-              text: 'Relaunch',
-              style: 'default',
-              onPress: async () => {
-                await reloadAsync()
-              },
-            },
-          ],
-        )
-      }
+      await updateTestflight()
     } catch (e: any) {
       logger.error('Internal OTA Update Error', {error: `${e}`})
     }
   }, [])
 
   React.useEffect(() => {
+    // We don't need to check anything if the current update is a PR update
+    if (currentChannel?.startsWith('pull-request')) {
+      return
+    }
+
     // We use this setTimeout to allow Statsig to initialize before we check for an update
     // For Testflight users, we can prompt the user to update immediately whenever there's an available update. This
     // is suspect however with the Apple App Store guidelines, so we don't want to prompt production users to update
@@ -103,12 +208,15 @@ export function useOTAUpdates() {
 
     setCheckTimeout()
     ranInitialCheck.current = true
-  }, [onIsTestFlight, setCheckTimeout, shouldReceiveUpdates])
+  }, [onIsTestFlight, currentChannel, setCheckTimeout, shouldReceiveUpdates])
 
   // After the app has been minimized for 15 minutes, we want to either A. install an update if one has become available
   // or B check for an update again.
   React.useEffect(() => {
-    if (!isEnabled) return
+    // We also don't start this timeout if the user is on a pull request update
+    if (!isEnabled || currentChannel?.startsWith('pull-request')) {
+      return
+    }
 
     const subscription = AppState.addEventListener(
       'change',
@@ -138,5 +246,5 @@ export function useOTAUpdates() {
       clearTimeout(timeout.current)
       subscription.remove()
     }
-  }, [isUpdatePending, setCheckTimeout])
+  }, [isUpdatePending, currentChannel, setCheckTimeout])
 }

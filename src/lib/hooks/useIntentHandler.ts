@@ -1,8 +1,9 @@
 import React from 'react'
+import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -12,8 +13,10 @@ import {
 } from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
+import {IS_TESTFLIGHT} from '../app-info.web'
+import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
-type IntentType = 'compose' | 'verify-email' | 'age-assurance'
+type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
@@ -27,12 +30,13 @@ export function useIntentHandler() {
   const ageAssuranceRedirectDialogControl =
     useAgeAssuranceRedirectDialogControl()
   const {currentAccount} = useSession()
+  const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        logEvent('deepLink:referrerReceived', {
+        logger.metric('deepLink:referrerReceived', {
           to: url,
           referrer: referrerInfo?.referrer,
           hostname: referrerInfo?.hostname,
@@ -92,6 +96,18 @@ export function useIntentHandler() {
           }
           return
         }
+        case 'apply-ota': {
+          if (!isNative || !IS_TESTFLIGHT) {
+            return
+          }
+
+          const channel = params.get('channel')
+          if (!channel) {
+            Alert.alert('Error', 'No channel provided to look for.')
+          } else {
+            tryApplyUpdate(channel)
+          }
+        }
         default: {
           return
         }
@@ -111,6 +127,7 @@ export function useIntentHandler() {
     verifyEmailIntent,
     ageAssuranceRedirectDialogControl,
     currentAccount,
+    tryApplyUpdate,
   ])
 }
 

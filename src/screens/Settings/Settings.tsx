@@ -12,12 +12,14 @@ import {useActorStatus} from '#/lib/actor-status'
 import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
@@ -364,6 +366,11 @@ function DevOptions() {
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
+  const {
+    revertToEmbedded,
+    isCurrentlyRunningPullRequestDeployment,
+    currentChannel,
+  } = useApplyPullRequestOTAUpdate()
   const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged()
 
   const resetOnboarding = async () => {
@@ -452,6 +459,15 @@ function DevOptions() {
           <Trans>Clear all storage data (restart after this)</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
+      {isNative && isCurrentlyRunningPullRequestDeployment ? (
+        <SettingsList.PressableItem
+          onPress={revertToEmbedded}
+          label={_(msg`Unapply Pull Request`)}>
+          <SettingsList.ItemText>
+            <Trans>Unapply Pull Request {currentChannel}</Trans>
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      ) : null}
     </>
   )
 }
