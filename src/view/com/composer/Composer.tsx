@@ -103,7 +103,7 @@ import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
-import {SelectPhotoBtn} from '#/view/com/composer/photos/SelectPhotoBtn'
+import {SelectMediaBtn} from '#/view/com/composer/photos/SelectMediaBtn'
 import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
@@ -113,7 +113,6 @@ import {
   type TextInputRef,
 } from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
-import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
@@ -1267,6 +1266,14 @@ function ComposerFooter({
   const images = media?.type === 'images' ? media.images : []
   const video = media?.type === 'video' ? media.video : null
   const isMaxImages = images.length >= MAX_IMAGES
+  const isMaxVideos = !!video
+
+  const isMediaSelectionDisabled =
+    media?.type === 'images'
+      ? isMaxImages
+      : media?.type === 'video'
+        ? isMaxVideos
+        : !!media
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
@@ -1303,14 +1310,11 @@ function ComposerFooter({
             <VideoUploadToolbar state={video} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <SelectPhotoBtn
+              <SelectMediaBtn
                 size={images.length}
-                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                disabled={isMediaSelectionDisabled}
                 onAdd={onImageAdd}
-              />
-              <SelectVideoBtn
                 onSelectVideo={asset => onSelectVideo(post.id, asset)}
-                disabled={!!media}
                 setError={onError}
               />
               <OpenCameraBtn
