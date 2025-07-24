@@ -159,7 +159,7 @@ jobs:
           message: |
             Your requested OTA deployment was successful! You may now apply it by pressing the link below.
 
-            [Apply OTA update](bluesky://ota-apply/pull-request-${{ github.event.issue.number }})
+            [Apply OTA update](bluesky://ota-apply?channel=pull-request-${{ github.event.issue.number }})
 
             [Here is some music to listen to while you wait...](https://www.youtube.com/watch?v=VBlFHuCzPgY)
             ---
