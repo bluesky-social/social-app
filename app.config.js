@@ -190,7 +190,6 @@ module.exports = function (_config) {
             }
           : undefined,
         checkAutomatically: 'NEVER',
-        channel: UPDATES_CHANNEL,
       },
       plugins: [
         'expo-video',

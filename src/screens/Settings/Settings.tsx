@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {LayoutAnimation, Pressable, View} from 'react-native'
+import {Alert, LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
@@ -12,12 +12,14 @@ import {useActorStatus} from '#/lib/actor-status'
 import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
@@ -392,6 +394,41 @@ function DevOptions() {
     setActyNotifNudged(false)
   }
 
+  const {
+    onTryApplyUpdate,
+    onRevertToEmbedded,
+    isCurrentlyRunningPullRequestDeployment,
+    currentChannel,
+  } = useApplyPullRequestOTAUpdate()
+
+  const onPressApplyPullRequest = async () => {
+    Alert.prompt(
+      'Apply Pull Request',
+      "Enter a channel name below to apply a pull request. Channel names usually look like 'pull-request-<PULL REQUEST ID>'",
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Apply',
+          style: 'default',
+          onPress: async channel => {
+            if (!channel) {
+              Alert.alert('Error', 'No channel provided to look for.')
+              return
+            }
+            await onTryApplyUpdate(channel ?? '')
+          },
+        },
+      ],
+      'plain-text',
+      isCurrentlyRunningPullRequestDeployment
+        ? currentChannel
+        : 'pull-request-',
+    )
+  }
+
   return (
     <>
       <SettingsList.PressableItem
@@ -452,6 +489,24 @@ function DevOptions() {
           <Trans>Clear all storage data (restart after this)</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
+      {isNative ? (
+        <SettingsList.PressableItem
+          onPress={onPressApplyPullRequest}
+          label={_(msg`Apply Pull Request`)}>
+          <SettingsList.ItemText>
+            <Trans>Apply Pull Request</Trans>
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      ) : null}
+      {isNative && isCurrentlyRunningPullRequestDeployment ? (
+        <SettingsList.PressableItem
+          onPress={onRevertToEmbedded}
+          label={_(msg`Unapply Pull Request`)}>
+          <SettingsList.ItemText>
+            <Trans>Unapply Pull Request {currentChannel}</Trans>
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      ) : null}
     </>
   )
 }
