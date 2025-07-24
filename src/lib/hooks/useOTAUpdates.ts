@@ -73,7 +73,7 @@ export function useApplyPullRequestOTAUpdate() {
   const isCurrentlyRunningPullRequestDeployment =
     currentChannel?.startsWith('pull-request')
 
-  const onTryApplyUpdate = async (channel: string) => {
+  const tryApplyUpdate = async (channel: string) => {
     setPending(true)
     if (currentChannel === channel) {
       const res = await checkForUpdateAsync()
@@ -134,7 +134,7 @@ export function useApplyPullRequestOTAUpdate() {
     setPending(false)
   }
 
-  const onRevertToEmbedded = async () => {
+  const revertToEmbedded = async () => {
     try {
       await updateTestflight()
     } catch (e: any) {
@@ -143,8 +143,8 @@ export function useApplyPullRequestOTAUpdate() {
   }
 
   return {
-    onTryApplyUpdate,
-    onRevertToEmbedded,
+    tryApplyUpdate,
+    revertToEmbedded,
     currentChannel,
     isCurrentlyRunningPullRequestDeployment,
     pending,

@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {Alert, LayoutAnimation, Pressable, View} from 'react-native'
+import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
@@ -366,6 +366,11 @@ function DevOptions() {
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
+  const {
+    revertToEmbedded,
+    isCurrentlyRunningPullRequestDeployment,
+    currentChannel,
+  } = useApplyPullRequestOTAUpdate()
   const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged()
 
   const resetOnboarding = async () => {
@@ -392,41 +397,6 @@ function DevOptions() {
 
   const onPressActySubsUnNudge = () => {
     setActyNotifNudged(false)
-  }
-
-  const {
-    onTryApplyUpdate,
-    onRevertToEmbedded,
-    isCurrentlyRunningPullRequestDeployment,
-    currentChannel,
-  } = useApplyPullRequestOTAUpdate()
-
-  const onPressApplyPullRequest = async () => {
-    Alert.prompt(
-      'Apply Pull Request',
-      "Enter a channel name below to apply a pull request. Channel names usually look like 'pull-request-<PULL REQUEST ID>'",
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Apply',
-          style: 'default',
-          onPress: async channel => {
-            if (!channel) {
-              Alert.alert('Error', 'No channel provided to look for.')
-              return
-            }
-            await onTryApplyUpdate(channel ?? '')
-          },
-        },
-      ],
-      'plain-text',
-      isCurrentlyRunningPullRequestDeployment
-        ? currentChannel
-        : 'pull-request-',
-    )
   }
 
   return (
@@ -489,18 +459,9 @@ function DevOptions() {
           <Trans>Clear all storage data (restart after this)</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
-      {isNative ? (
-        <SettingsList.PressableItem
-          onPress={onPressApplyPullRequest}
-          label={_(msg`Apply Pull Request`)}>
-          <SettingsList.ItemText>
-            <Trans>Apply Pull Request</Trans>
-          </SettingsList.ItemText>
-        </SettingsList.PressableItem>
-      ) : null}
       {isNative && isCurrentlyRunningPullRequestDeployment ? (
         <SettingsList.PressableItem
-          onPress={onRevertToEmbedded}
+          onPress={revertToEmbedded}
           label={_(msg`Unapply Pull Request`)}>
           <SettingsList.ItemText>
             <Trans>Unapply Pull Request {currentChannel}</Trans>
