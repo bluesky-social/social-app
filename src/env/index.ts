@@ -15,6 +15,6 @@ export const APP_VERSION = `${packageJson.version}.${nativeBuildVersion}`
 /**
  * The short commit hash and environment of the current bundle.
  */
-export const APP_METADATA = `${BUNDLE_IDENTIFIER} (${
+export const APP_METADATA = `${BUNDLE_IDENTIFIER.slice(0, 7)} (${
   __DEV__ ? 'dev' : IS_TESTFLIGHT ? 'tf' : 'prod'
 })`
