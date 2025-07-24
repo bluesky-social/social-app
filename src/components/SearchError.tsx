@@ -16,7 +16,6 @@ export function SearchError({
   const {gtMobile} = useBreakpoints()
   const pal = usePalette('default')
 
-  // NOTE (chenyu): asking Hannah about the new fill color for the SVG
   return (
     <Layout.Content>
       <View
