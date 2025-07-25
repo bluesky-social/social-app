@@ -75,7 +75,6 @@ export function useApplyPullRequestOTAUpdate() {
     await setExtraParamsPullRequest(channel)
     const res = await checkForUpdateAsync()
     if (res.isAvailable) {
-      await fetchUpdateAsync()
       Alert.alert(
         'Deployment Available',
         `A deployment of ${channel} is availalble. Applying this deployment may result in a bricked installation, in which case you will need to reinstall the app and may lose local data. Are you sure you want to proceed?`,
@@ -88,6 +87,7 @@ export function useApplyPullRequestOTAUpdate() {
             text: 'Relaunch',
             style: 'default',
             onPress: async () => {
+              await fetchUpdateAsync()
               await reloadAsync()
             },
           },
