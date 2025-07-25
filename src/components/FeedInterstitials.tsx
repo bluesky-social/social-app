@@ -294,30 +294,41 @@ export function ProfileGrid({
                     moderationOpts={moderationOpts}
                     size={88}
                   />
-                  <ProfileCard.Name
-                    profile={profile}
-                    moderationOpts={moderationOpts}
-                  />
-                  <ProfileCard.FollowButton
-                    profile={profile}
-                    moderationOpts={moderationOpts}
-                    logContext="FeedInterstitial"
-                    shape="round"
-                    colorInverted
-                    onFollow={() => {
-                      logEvent('suggestedUser:follow', {
-                        logContext:
-                          viewContext === 'feed'
-                            ? 'InterstitialDiscover'
-                            : 'InterstitialProfile',
-                        location: 'Card',
-                        recId,
-                        position: index,
-                      })
-                    }}
-                  />
-                <ProfileCard.Description profile={profile} numberOfLines={2} />
+                  <View style={[a.flex_col, a.align_center]}>
+                    <ProfileCard.Name
+                      profile={profile}
+                      moderationOpts={moderationOpts}
+                    />
+                    <ProfileCard.Description
+                      profile={profile}
+                      numberOfLines={2}
+                      style={[
+                        t.atoms.text_contrast_medium,
+                        a.text_center,
+                        a.text_xs,
+                      ]}
+                    />
+                  </View>
                 </View>
+
+                <ProfileCard.FollowButton
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  logContext="FeedInterstitial"
+                  withIcon={false}
+                  style={[a.rounded_sm]}
+                  onFollow={() => {
+                    logEvent('suggestedUser:follow', {
+                      logContext:
+                        viewContext === 'feed'
+                          ? 'InterstitialDiscover'
+                          : 'InterstitialProfile',
+                      location: 'Card',
+                      recId,
+                      position: index,
+                    })
+                  }}
+                />
               </ProfileCard.Outer>
             </CardOuter>
           )}
