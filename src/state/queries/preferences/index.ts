@@ -11,7 +11,7 @@ import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
-import {AGE_RESTRICTED_MODERATION_PREFS} from '#/state/ageAssurance/const'
+import {makeAgeRestrictedModerationPrefs} from '#/state/ageAssurance/const'
 import {STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
@@ -77,7 +77,9 @@ export function usePreferencesQuery() {
       (data: UsePreferencesQueryResponse) => {
         const isUnderage = (data.userAge || 0) < 18
         if (isUnderage || isAgeRestricted) {
-          data.moderationPrefs = AGE_RESTRICTED_MODERATION_PREFS
+          data.moderationPrefs = makeAgeRestrictedModerationPrefs(
+            data.moderationPrefs,
+          )
         }
         return data
       },

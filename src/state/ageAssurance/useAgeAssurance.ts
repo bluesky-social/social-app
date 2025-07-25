@@ -28,7 +28,8 @@ export function useAgeAssurance(): AgeAssurance {
 
   return useMemo(() => {
     const isReady = aa.isReady && preferencesLoaded
-    const isDeclaredUnderage = (declaredAge || 0) < 18
+    const isDeclaredUnderage =
+      declaredAge !== undefined ? declaredAge < 18 : false
     const state: AgeAssurance = {
       isReady,
       status: aa.status,

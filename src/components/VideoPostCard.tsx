@@ -411,6 +411,7 @@ export function CompactVideoPostCard({
       onPressOut={onPressOut}
       style={[
         a.flex_col,
+        t.atoms.shadow_sm,
         {
           alignItems: undefined,
           justifyContent: undefined,
@@ -421,8 +422,10 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_md,
+              a.rounded_lg,
               a.overflow_hidden,
+              a.border,
+              t.atoms.border_contrast_low,
               {
                 backgroundColor: black,
                 aspectRatio: 9 / 16,
@@ -443,6 +446,8 @@ export function CompactVideoPostCard({
                   a.inset_0,
                   a.justify_center,
                   a.align_center,
+                  a.border,
+                  t.atoms.border_contrast_low,
                   {
                     backgroundColor: 'black',
                     opacity: 0.2,
@@ -462,8 +467,10 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_md,
+              a.rounded_lg,
               a.overflow_hidden,
+              a.border,
+              t.atoms.border_contrast_low,
               {
                 backgroundColor: black,
                 aspectRatio: 9 / 16,
@@ -534,11 +541,13 @@ export function CompactVideoPostCardPlaceholder() {
   const black = getBlackColor(t)
 
   return (
-    <View style={[a.flex_1]}>
+    <View style={[a.flex_1, t.atoms.shadow_sm]}>
       <View
         style={[
-          a.rounded_md,
+          a.rounded_lg,
           a.overflow_hidden,
+          a.border,
+          t.atoms.border_contrast_low,
           {
             backgroundColor: black,
             aspectRatio: 9 / 16,
