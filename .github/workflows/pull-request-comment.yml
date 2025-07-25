@@ -81,6 +81,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: pull-request-eas-build-${{ github.sha }}
+          number: ${{ github.event.issue.number }}
           message: |
             An OTA deployment has been requested and is now running...
 
@@ -154,7 +155,7 @@ jobs:
         run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="pull-request" yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
-        run: yarn use-build-number bash scripts/bundleUpdate.sh
+        run: yarn use-bui-number bash scripts/bundleUpdate.sh
         env:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
           CHANNEL_NAME: pull-request-${{ github.event.issue.number }}
@@ -165,6 +166,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: pull-request-eas-build-${{ github.sha }}
+          number: ${{ github.event.issue.number }}
           message: |
             Your requested OTA deployment was successful! You may now apply it by pressing the link below.
 
@@ -180,6 +182,7 @@ jobs:
         if: failure()
         with:
           header: pull-request-eas-build-${{ github.sha }}
+          number: ${{ github.event.issue.number }}
           message: |
             Your requested OTA deployment was unsuccessful. See action logs for more details.
             ---
