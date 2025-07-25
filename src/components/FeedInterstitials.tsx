@@ -292,6 +292,7 @@ export function ProfileGrid({
                   <ProfileCard.Avatar
                     profile={profile}
                     moderationOpts={moderationOpts}
+                    size={88}
                   />
                   <ProfileCard.NameAndHandle
                     profile={profile}
