@@ -5,6 +5,12 @@ on:
   issue_comment:
     types: [created]
 
+# Permissiosn to make comments in the pull request
+permissions:
+  pull-requests: write
+  actions: write
+  contents: read
+
 jobs:
   handle-comment:
     if: github.event.issue.pull_request
