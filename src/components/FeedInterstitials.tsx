@@ -47,8 +47,8 @@ function CardOuter({
     <View
       style={[
         a.w_full,
-        a.p_lg,
-        a.rounded_md,
+        a.p_md,
+        a.rounded_lg,
         a.border,
         t.atoms.bg,
         t.atoms.border_contrast_low,
@@ -281,6 +281,8 @@ export function ProfileGrid({
             <CardOuter
               style={[
                 a.flex_1,
+                a.border,
+                t.atoms.border_contrast_low,
                 (hovered || pressed) && t.atoms.border_contrast_high,
                 t.atoms.shadow_sm,
               ]}>
