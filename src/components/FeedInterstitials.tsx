@@ -285,6 +285,7 @@ export function ProfileGrid({
                 t.atoms.border_contrast_low,
                 (hovered || pressed) && t.atoms.border_contrast_high,
                 t.atoms.shadow_sm,
+                {width: 165},
               ]}>
               <ProfileCard.Outer>
                 <ProfileCard.Header>
