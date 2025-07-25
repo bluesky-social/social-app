@@ -3,6 +3,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {atoms as a, select, useTheme, type ViewStyleProp} from '#/alf'
 import {useDialogControl} from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import type * as Dialog from '#/components/Dialog'
@@ -87,7 +88,10 @@ function Inner({
                 <InlineLinkText
                   label={_(msg`Go to account settings`)}
                   to={'/settings/account'}
-                  style={[a.text_sm, a.leading_snug, a.font_bold]}>
+                  style={[a.text_sm, a.leading_snug, a.font_bold]}
+                  onPress={() => {
+                    logger.metric('ageAssurance:navigateToSettings', {})
+                  }}>
                   account settings.
                 </InlineLinkText>
               </Trans>

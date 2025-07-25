@@ -4,11 +4,14 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -17,6 +20,8 @@ import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme, web} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
+import {InlineLinkText} from '#/components/Link'
+import {SearchError} from '#/components/SearchError'
 import {Text} from '#/components/Typography'
 
 let SearchResults = ({
@@ -104,7 +109,15 @@ function Loader() {
   )
 }
 
-function EmptyState({message, error}: {message: string; error?: string}) {
+function EmptyState({
+  message,
+  error,
+  children,
+}: {
+  message: string
+  error?: string
+  children?: React.ReactNode
+}) {
   const t = useTheme()
 
   return (
@@ -132,6 +145,8 @@ function EmptyState({message, error}: {message: string; error?: string}) {
               </Text>
             </>
           )}
+
+          {children}
         </View>
       </View>
     </Layout.Content>
@@ -161,6 +176,7 @@ let SearchScreenPostResults = ({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = useState(false)
+  const isLoggedin = Boolean(currentAccount?.did)
 
   const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -177,6 +193,8 @@ let SearchScreenPostResults = ({
     hasNextPage,
   } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
 
+  const pal = usePalette('default')
+  const t = useTheme()
   const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
     await refetch()
@@ -215,6 +233,51 @@ let SearchScreenPostResults = ({
 
     return temp
   }, [posts, isFetchingNextPage])
+
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+
+  const showSignIn = () => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'none'})
+  }
+
+  const showCreateAccount = () => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'new'})
+  }
+
+  if (!isLoggedin) {
+    return (
+      <SearchError
+        title={_(msg`Search is currently unavailable when logged out`)}>
+        <Text style={[a.text_md, a.text_center, a.leading_snug]}>
+          <Trans>
+            <InlineLinkText
+              style={[pal.link]}
+              label={_(msg`sign in`)}
+              to={'#'}
+              onPress={showSignIn}>
+              Sign in
+            </InlineLinkText>
+            <Text style={t.atoms.text_contrast_medium}> or </Text>
+            <InlineLinkText
+              style={[pal.link]}
+              label={_(msg`create an account`)}
+              to={'#'}
+              onPress={showCreateAccount}>
+              create an account
+            </InlineLinkText>
+            <Text> </Text>
+            <Text style={t.atoms.text_contrast_medium}>
+              to search for news, sports, politics, and everything else
+              happening on Bluesky.
+            </Text>
+          </Trans>
+        </Text>
+      </SearchError>
+    )
+  }
 
   return error ? (
     <EmptyState

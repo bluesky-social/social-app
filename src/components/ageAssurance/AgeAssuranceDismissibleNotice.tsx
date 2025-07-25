@@ -3,6 +3,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
 import {atoms as a, type ViewStyleProp} from '#/alf'
 import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
@@ -37,13 +38,14 @@ export function AgeAssuranceDismissibleNotice({style}: ViewStyleProp & {}) {
           variant="solid"
           color="secondary_inverted"
           shape="round"
-          onPress={() =>
+          onPress={() => {
             save({
               id: Nux.AgeAssuranceDismissibleNotice,
               completed: true,
               data: undefined,
             })
-          }
+            logger.metric('ageAssurance:dismissSettingsNotice', {})
+          }}
           style={[
             a.absolute,
             {

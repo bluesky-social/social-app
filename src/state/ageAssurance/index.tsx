@@ -1,21 +1,18 @@
-import {createContext, useContext, useMemo} from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 import {type AppBskyUnspeccedDefs} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
-import {useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
-import {Logger} from '#/logger'
 import {
   type AgeAssuranceAPIContextType,
   type AgeAssuranceContextType,
 } from '#/state/ageAssurance/types'
 import {useIsAgeAssuranceEnabled} from '#/state/ageAssurance/useIsAgeAssuranceEnabled'
+import {logger} from '#/state/ageAssurance/util'
 import {useGeolocation} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
-
-const logger = Logger.create(Logger.Context.AgeAssurance)
 
 export const createAgeAssuranceQueryKey = (did: string) =>
   ['ageAssurance', did] as const
@@ -43,11 +40,11 @@ const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
  * performance.
  */
 export function Provider({children}: {children: React.ReactNode}) {
-  const gate = useGate()
   const agent = useAgent()
   const {geolocation} = useGeolocation()
   const isAgeAssuranceEnabled = useIsAgeAssuranceEnabled()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
+  const [refetchWhilePending, setRefetchWhilePending] = useState(false)
 
   const {data, isFetched, refetch} = useQuery({
     /**
@@ -58,6 +55,7 @@ export function Provider({children}: {children: React.ReactNode}) {
      * However, it only needs to run if AA is enabled.
      */
     enabled: isAgeAssuranceEnabled,
+    refetchOnWindowFocus: refetchWhilePending,
     queryKey: createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
     async queryFn() {
       if (!agent.session) return null
@@ -78,12 +76,10 @@ export function Provider({children}: {children: React.ReactNode}) {
           account: agent.session?.did,
         })
 
-        if (gate('age_assurance')) {
-          await getAndRegisterPushToken({
-            isAgeRestricted:
-              !!geolocation?.isAgeRestrictedGeo && data.status !== 'assured',
-          })
-        }
+        await getAndRegisterPushToken({
+          isAgeRestricted:
+            !!geolocation?.isAgeRestrictedGeo && data.status !== 'assured',
+        })
 
         return data
       } catch (e) {
@@ -110,6 +106,24 @@ export function Provider({children}: {children: React.ReactNode}) {
     logger.debug(`context`, ctx)
     return ctx
   }, [isFetched, data, isAgeAssuranceEnabled])
+
+  if (
+    !!ageAssuranceContext.lastInitiatedAt &&
+    ageAssuranceContext.status === 'pending' &&
+    !refetchWhilePending
+  ) {
+    /*
+     * If we have a pending state, we want to refetch on window focus to ensure
+     * that we get the latest state when the user returns to the app.
+     */
+    setRefetchWhilePending(true)
+  } else if (
+    !!ageAssuranceContext.lastInitiatedAt &&
+    ageAssuranceContext.status !== 'pending' &&
+    refetchWhilePending
+  ) {
+    setRefetchWhilePending(false)
+  }
 
   const ageAssuranceAPIContext = useMemo<AgeAssuranceAPIContextType>(
     () => ({

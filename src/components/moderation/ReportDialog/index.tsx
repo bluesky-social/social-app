@@ -30,7 +30,7 @@ import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
-import {DMCA_LINK} from './const'
+import {SUPPORT_PAGE} from './const'
 import {useCopyForSubject} from './copy'
 import {initialState, reducer} from './state'
 import {type ReportDialogProps, type ReportSubject} from './types'
@@ -266,9 +266,9 @@ function Inner(props: ReportDialogProps) {
 
                   {['post', 'account'].includes(props.subject.type) && (
                     <Link
-                      to={DMCA_LINK}
+                      to={SUPPORT_PAGE}
                       label={_(
-                        msg`View details for reporting a copyright violation`,
+                        msg`Need to report a copyright violation, legal request, or regulatory compliance issue?`,
                       )}>
                       {({hovered, pressed}) => (
                         <View
@@ -285,7 +285,10 @@ function Inner(props: ReportDialogProps) {
                               : [t.atoms.border_contrast_low],
                           ]}>
                           <Text style={[a.flex_1, a.italic, a.leading_snug]}>
-                            <Trans>Need to report a copyright violation?</Trans>
+                            <Trans>
+                              Need to report a copyright violation, legal
+                              request, or regulatory compliance issue?
+                            </Trans>
                           </Text>
                           <SquareArrowTopRight
                             size="sm"

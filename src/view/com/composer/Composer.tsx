@@ -699,6 +699,7 @@ export const ComposePost = ({
                   dispatch={composerDispatch}
                   textInput={post.id === activePost.id ? textInput : null}
                   isFirstPost={index === 0}
+                  isLastPost={index === thread.posts.length - 1}
                   isPartOfThread={thread.posts.length > 1}
                   isReply={index > 0 || !!replyTo}
                   isActive={post.id === activePost.id}
@@ -738,6 +739,7 @@ let ComposerPost = React.memo(function ComposerPost({
   isActive,
   isReply,
   isFirstPost,
+  isLastPost,
   isPartOfThread,
   canRemovePost,
   canRemoveQuote,
@@ -752,6 +754,7 @@ let ComposerPost = React.memo(function ComposerPost({
   isActive: boolean
   isReply: boolean
   isFirstPost: boolean
+  isLastPost: boolean
   isPartOfThread: boolean
   canRemovePost: boolean
   canRemoveQuote: boolean
@@ -830,6 +833,8 @@ let ComposerPost = React.memo(function ComposerPost({
     <View
       style={[
         a.mx_lg,
+        a.mb_sm,
+        !isActive && isLastPost && a.mb_lg,
         !isActive && styles.inactivePost,
         isTextOnly && isNative && a.flex_grow,
       ]}>

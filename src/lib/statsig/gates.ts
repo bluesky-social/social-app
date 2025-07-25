@@ -1,6 +1,5 @@
 export type Gate =
   // Keep this alphabetic please.
-  | 'age_assurance'
   | 'alt_share_icon'
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'

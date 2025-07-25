@@ -1,4 +1,5 @@
 import {useCallback, useRef} from 'react'
+import {Linking} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
@@ -872,9 +873,9 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       } else {
         // @ts-expect-error nested navigators aren't typed -sfn
         navigate('MessagesTab', {
-          screen: 'MessagesConversation',
+          screen: 'Messages',
           params: {
-            conversation: payload.convoId,
+            pushToConversation: payload.convoId,
           },
         })
       }
@@ -883,6 +884,13 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
   async function handlePushNotificationEntry() {
     if (!isNative) return
+
+    // deep links take precedence - on android,
+    // getLastNotificationResponseAsync returns a "notification"
+    // that is actually a deep link. avoid handling it twice -sfn
+    if (await Linking.getInitialURL()) {
+      return
+    }
 
     /**
      * The notification that caused the app to open, if applicable
@@ -1041,39 +1049,6 @@ function reset(): Promise<void> {
   }
 }
 
-function handleLink(url: string) {
-  let path
-  if (url.startsWith('/')) {
-    path = url
-  } else if (url.startsWith('http')) {
-    try {
-      path = new URL(url).pathname
-    } catch (e) {
-      console.error('Invalid url', url, e)
-      return
-    }
-  } else {
-    console.error('Invalid url', url)
-    return
-  }
-
-  const [name, params] = router.matchPath(path)
-  if (isNative) {
-    if (name === 'Search') {
-      resetToTab('SearchTab')
-    } else if (name === 'Notifications') {
-      resetToTab('NotificationsTab')
-    } else {
-      resetToTab('HomeTab')
-      // @ts-ignore matchPath doesnt give us type-checked output -prf
-      navigate(name, params)
-    }
-  } else {
-    // @ts-ignore matchPath doesnt give us type-checked output -prf
-    navigate(name, params)
-  }
-}
-
 let didInit = false
 function logModuleInitTime() {
   if (didInit) {
@@ -1114,7 +1089,6 @@ function logModuleInitTime() {
 
 export {
   FlatNavigator,
-  handleLink,
   navigate,
   reset,
   resetToTab,

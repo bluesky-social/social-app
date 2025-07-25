@@ -20,11 +20,9 @@ import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/compon
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/icons/Newspaper'
-import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
-import {device} from '#/storage'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {OTAInfo} from './components/OTAInfo'
@@ -181,20 +179,6 @@ export function AboutSettingsScreen({}: Props) {
                   </SettingsList.ItemText>
                 </SettingsList.PressableItem>
               )}
-
-              <SettingsList.PressableItem
-                onPress={() => {
-                  device.set(['geolocation'], {
-                    countryCode: 'GB',
-                    isAgeRestrictedGeo: true,
-                  })
-                }}
-                label="Simulate age restriction">
-                <SettingsList.ItemIcon icon={Shield} />
-                <SettingsList.ItemText>
-                  Simulate age restriction
-                </SettingsList.ItemText>
-              </SettingsList.PressableItem>
             </>
           )}
         </SettingsList.Container>
