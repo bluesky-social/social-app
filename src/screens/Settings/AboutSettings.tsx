@@ -158,7 +158,7 @@ export function AboutSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.BadgeText>{env.APP_METADATA}</SettingsList.BadgeText>
           </SettingsList.PressableItem>
-          {devModeEnabled && (
+          {devModeEnabled || env.IS_TESTFLIGHT ? (
             <>
               <OTAInfo />
               {isIOS && (
@@ -196,7 +196,7 @@ export function AboutSettingsScreen({}: Props) {
                 <Text>APP_METADATA: {env.APP_METADATA}</Text>
               </View>
             </>
-          )}
+          ) : null}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
