@@ -287,7 +287,14 @@ export function ProfileGrid({
                 t.atoms.shadow_sm,
               ]}>
               <ProfileCard.Outer>
-                <View style={[a.flex_col, a.align_center, a.gap_sm, a.pb_sm]}>
+                <View
+                  style={[
+                    a.flex_col,
+                    a.align_center,
+                    a.gap_sm,
+                    a.pb_sm,
+                    a.mb_auto,
+                  ]}>
                   <ProfileCard.Avatar
                     profile={profile}
                     moderationOpts={moderationOpts}
