@@ -35,7 +35,7 @@ import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import {ProgressGuideList} from './ProgressGuide/List'
 
-const MOBILE_CARD_WIDTH = 300
+const MOBILE_CARD_WIDTH = 165
 
 function CardOuter({
   children,
@@ -285,7 +285,6 @@ export function ProfileGrid({
                 t.atoms.border_contrast_low,
                 (hovered || pressed) && t.atoms.border_contrast_high,
                 t.atoms.shadow_sm,
-                {width: 165},
               ]}>
               <ProfileCard.Outer>
                 <View style={[a.flex_col, a.align_center, a.gap_sm, a.pb_sm]}>
