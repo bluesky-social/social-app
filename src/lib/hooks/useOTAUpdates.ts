@@ -45,7 +45,6 @@ async function updateTestflight() {
   const res = await checkForUpdateAsync()
   if (res.isAvailable) {
     await fetchUpdateAsync()
-
     Alert.alert(
       'Update Available',
       'A new version of the app is available. Relaunch now?',
@@ -70,66 +69,35 @@ export function useApplyPullRequestOTAUpdate() {
   const {currentlyRunning} = useUpdates()
   const [pending, setPending] = React.useState(false)
   const currentChannel = currentlyRunning?.channel
-  const isCurrentlyRunningPullRequestDeployment =
-    currentChannel?.startsWith('pull-request')
 
   const tryApplyUpdate = async (channel: string) => {
     setPending(true)
-    if (currentChannel === channel) {
-      const res = await checkForUpdateAsync()
-      if (res.isAvailable) {
-        logger.debug('Attempting to fetch update...')
-        await fetchUpdateAsync()
-        Alert.alert(
-          'Deployment Available',
-          `A new deployment of ${channel} is availalble. Relaunch now?`,
-          [
-            {
-              text: 'No',
-              style: 'cancel',
+    await setExtraParamsPullRequest(channel)
+    const res = await checkForUpdateAsync()
+    if (res.isAvailable) {
+      Alert.alert(
+        'Deployment Available',
+        `A deployment of ${channel} is availalble. Applying this deployment may result in a bricked installation, in which case you will need to reinstall the app and may lose local data. Are you sure you want to proceed?`,
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Relaunch',
+            style: 'default',
+            onPress: async () => {
+              await fetchUpdateAsync()
+              await reloadAsync()
             },
-            {
-              text: 'Relaunch',
-              style: 'default',
-              onPress: async () => {
-                await reloadAsync()
-              },
-            },
-          ],
-        )
-      } else {
-        Alert.alert(
-          'No Deployment Available',
-          `No new deployments of ${channel} are currently available for your current native build.`,
-        )
-      }
+          },
+        ],
+      )
     } else {
-      setExtraParamsPullRequest(channel)
-      const res = await checkForUpdateAsync()
-      if (res.isAvailable) {
-        Alert.alert(
-          'Deployment Available',
-          `A deployment of ${channel} is availalble. Applying this deployment may result in a bricked installation, in which case you will need to reinstall the app and may lose local data. Are you sure you want to proceed?`,
-          [
-            {
-              text: 'No',
-              style: 'cancel',
-            },
-            {
-              text: 'Relaunch',
-              style: 'default',
-              onPress: async () => {
-                await reloadAsync()
-              },
-            },
-          ],
-        )
-      } else {
-        Alert.alert(
-          'No Deployment Available',
-          `No new deployments of ${channel} are currently available for your current native build.`,
-        )
-      }
+      Alert.alert(
+        'No Deployment Available',
+        `No new deployments of ${channel} are currently available for your current native build.`,
+      )
     }
     setPending(false)
   }
@@ -146,7 +114,6 @@ export function useApplyPullRequestOTAUpdate() {
     tryApplyUpdate,
     revertToEmbedded,
     currentChannel,
-    isCurrentlyRunningPullRequestDeployment,
     pending,
   }
 }
