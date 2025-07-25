@@ -103,7 +103,7 @@ import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
-import {SelectMediaBtn} from '#/view/com/composer/photos/SelectMediaBtn'
+import {SelectPhotoBtn} from '#/view/com/composer/photos/SelectPhotoBtn'
 import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
@@ -113,6 +113,7 @@ import {
   type TextInputRef,
 } from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
+import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
@@ -146,6 +147,7 @@ import {
 } from './state/video'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
+import {SelectMediaBtn} from './SelectMediaBtn'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -1113,11 +1115,45 @@ function ComposerEmbeds({
             exiting={native(ZoomOut)}>
             {video.asset &&
               (video.status === 'compressing' ? (
-                <VideoTranscodeProgress
-                  asset={video.asset}
-                  progress={video.progress}
-                  clear={clearVideo}
-                />
+                isWeb ? (
+                  <VideoPreview
+                    asset={video.asset}
+                    video={{
+                      uri: (() => {
+                        // Convert data URI to blob URL for better browser compatibility
+                        if (video.asset.uri.startsWith('data:')) {
+                          try {
+                            const [header, data] = video.asset.uri.split(',')
+                            const mimeType =
+                              header.match(/:(.*?);/)?.[1] || 'video/mp4'
+                            const byteCharacters = atob(data)
+                            const byteNumbers = new Array(byteCharacters.length)
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                              byteNumbers[i] = byteCharacters.charCodeAt(i)
+                            }
+                            const byteArray = new Uint8Array(byteNumbers)
+                            const blob = new Blob([byteArray], {type: mimeType})
+                            return URL.createObjectURL(blob)
+                          } catch (e) {
+                            console.error('Failed to create blob URL:', e)
+                            return video.asset.uri
+                          }
+                        }
+                        return video.asset.uri
+                      })(),
+                      mimeType: video.asset.mimeType || 'video/mp4',
+                      size: video.asset.fileSize || 0,
+                    }}
+                    isActivePost={isActivePost}
+                    clear={clearVideo}
+                  />
+                ) : (
+                  <VideoTranscodeProgress
+                    asset={video.asset}
+                    progress={video.progress}
+                    clear={clearVideo}
+                  />
+                )
               ) : video.video ? (
                 <VideoPreview
                   asset={video.asset}
@@ -1310,6 +1346,16 @@ function ComposerFooter({
             <VideoUploadToolbar state={video} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
+              {/* <SelectPhotoBtn
+                size={images.length}
+                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                onAdd={onImageAdd}
+              /> */}
+              {/* <SelectVideoBtn
+                onSelectVideo={asset => onSelectVideo(post.id, asset)}
+                disabled={!!media}
+                setError={onError}
+              /> */}
               <SelectMediaBtn
                 size={images.length}
                 disabled={isMediaSelectionDisabled}
