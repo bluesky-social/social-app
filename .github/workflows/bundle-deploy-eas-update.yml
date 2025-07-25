@@ -218,6 +218,7 @@ jobs:
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DIST=$(git rev-parse HEAD)
+          SENTRY_ALLOW_FAILURE=true
           yarn use-build-number-with-bump
           eas build -p ios
           --profile testflight
@@ -303,6 +304,7 @@ jobs:
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_DIST=$(git rev-parse HEAD)
+          SENTRY_ALLOW_FAILURE=true
           yarn use-build-number-with-bump
           eas build -p android
           --profile testflight-android

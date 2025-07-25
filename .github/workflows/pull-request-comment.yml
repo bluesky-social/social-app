@@ -166,6 +166,7 @@ jobs:
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ALLOW_FAILURE=true
           SENTRY_DIST=$(git rev-parse HEAD)
           EXPO_PUBLIC_ENV="testflight"
           yarn export
