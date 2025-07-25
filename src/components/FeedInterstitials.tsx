@@ -282,6 +282,7 @@ export function ProfileGrid({
               style={[
                 a.flex_1,
                 (hovered || pressed) && t.atoms.border_contrast_high,
+                t.atoms.shadow_sm,
               ]}>
               <ProfileCard.Outer>
                 <ProfileCard.Header>
@@ -372,7 +373,8 @@ export function ProfileGrid({
               horizontal
               showsHorizontalScrollIndicator={false}
               snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-              decelerationRate="fast">
+              decelerationRate="fast"
+              style={[a.overflow_visible]}>
               <View style={[a.px_lg, a.pb_lg, a.flex_row, a.gap_md]}>
                 {content}
 
