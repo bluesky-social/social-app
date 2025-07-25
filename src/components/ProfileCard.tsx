@@ -354,10 +354,11 @@ export function NameAndHandlePlaceholder() {
 export function Description({
   profile: profileUnshadowed,
   numberOfLines = 3,
+  style,
 }: {
   profile: bsky.profile.AnyProfileView
   numberOfLines?: number
-}) {
+} & TextStyleProp) {
   const profile = useProfileShadow(profileUnshadowed)
   const rt = useMemo(() => {
     if (!('description' in profile)) return
@@ -377,7 +378,7 @@ export function Description({
     <View style={[a.pt_xs]}>
       <RichText
         value={rt}
-        style={[a.leading_snug]}
+        style={[a.leading_snug, style]}
         numberOfLines={numberOfLines}
         disableLinks
       />
