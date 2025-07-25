@@ -158,6 +158,7 @@ jobs:
         env:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
           CHANNEL_NAME: pull-request-${{ github.event.issue.number }}
+          BUNDLE_VERSION:
 
 
       - name: 💬 Drop a comment
