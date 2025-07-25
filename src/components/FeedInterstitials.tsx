@@ -29,7 +29,6 @@ import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
@@ -345,7 +344,9 @@ export function ProfileGrid({
             <Trans>Suggested for you</Trans>
           )}
         </Text>
-        <Person fill={t.atoms.text_contrast_low.color} size="sm" />
+        <InlineLinkText label={_(msg`See all suggested profiles`)} to="/search">
+          <Trans>See all</Trans>
+        </InlineLinkText>
       </View>
 
       {gtMobile ? (
