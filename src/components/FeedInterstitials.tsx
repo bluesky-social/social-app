@@ -253,7 +253,10 @@ export function ProfileGrid({
       .map((_, i) => (
         <View
           key={i}
-          style={[gtMobile && web([a.flex_0, {width: 'calc(50% - 6px)'}])]}>
+          style={[
+            gtMobile &&
+              web([a.flex_0, {width: `calc(50% - ${a.gap_md.gap / 2}px)`}]),
+          ]}>
           <SuggestedFollowPlaceholder />
         </View>
       ))
@@ -275,7 +278,8 @@ export function ProfileGrid({
           }}
           style={[
             a.flex_1,
-            gtMobile && web([a.flex_0, {width: 'calc(50% - 6px)'}]),
+            gtMobile &&
+              web([a.flex_0, {width: `calc(50% - ${a.gap_md.gap / 2}px)`}]),
           ]}>
           {({hovered, pressed}) => (
             <CardOuter
