@@ -13,7 +13,6 @@ import {
 } from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
-import {IS_TESTFLIGHT} from '../app-info.web'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
 type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
@@ -97,10 +96,6 @@ export function useIntentHandler() {
           return
         }
         case 'apply-ota': {
-          if (!isNative || !IS_TESTFLIGHT) {
-            return
-          }
-
           const channel = params.get('channel')
           if (!channel) {
             Alert.alert('Error', 'No channel provided to look for.')
