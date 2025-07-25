@@ -5,5 +5,6 @@ export function useApplyPullRequestOTAUpdate() {
     revertToEmbedded: () => {},
     isCurrentlyRunningPullRequestDeployment: false,
     currentChannel: 'web-build',
+    pending: false,
   }
 }
