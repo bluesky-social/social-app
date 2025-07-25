@@ -373,7 +373,7 @@ export function ProfileGrid({
 
       {gtMobile ? (
         <View style={[a.flex_1, a.px_lg, a.pb_lg, a.gap_md]}>
-          <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_sm]}>
+          <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>
             {content}
           </View>
 
