@@ -20,7 +20,13 @@ import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {
+  atoms as a,
+  platform,
+  TextStyleProp,
+  useTheme,
+  ViewStyleProp,
+} from '#/alf'
 import {
   Button,
   ButtonIcon,
@@ -136,12 +142,14 @@ export function Avatar({
   onPress,
   disabledPreview,
   liveOverride,
+  size = 40,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress?: () => void
   disabledPreview?: boolean
   liveOverride?: boolean
+  size?: number
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
 
@@ -149,7 +157,7 @@ export function Avatar({
 
   return disabledPreview ? (
     <UserAvatar
-      size={40}
+      size={size}
       avatar={profile.avatar}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       moderation={moderation.ui('avatar')}
@@ -157,7 +165,7 @@ export function Avatar({
     />
   ) : (
     <PreviewableUserAvatar
-      size={40}
+      size={size}
       profile={profile}
       moderation={moderation.ui('avatar')}
       onBeforePress={onPress}
