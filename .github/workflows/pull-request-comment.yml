@@ -18,8 +18,8 @@ jobs:
         env:
           COMMENT: ${{ github.event.comment.body }}
         run: |
-          if [[ "$TITLE" == *"@github-actions"* ]] || \
-             [[ "$TITLE" == *"github-actions[bot]"* ]]; then
+          if [[ "$COMMENT" == *"@github-actions"* ]] || \
+             [[ "$COMMENT" == *"github-actions[bot]"* ]]; then
             bot_mentioned=true
           else
             bot_mentioned=false
