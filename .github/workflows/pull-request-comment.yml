@@ -72,18 +72,32 @@ jobs:
     runs-on: ubuntu-latest
     needs: [handle-comment]
     if: needs.handle-comment.outputs.should-deploy == 'true'
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-deploy
-      cancel-in-progress: true
 
     steps:
+      - name: Get PR HEAD SHA
+        id: pr-info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: ${{ github.event.issue.number }}
+            });
+            
+            console.log(`PR HEAD SHA: ${pr.data.head.sha}`);
+            console.log(`PR HEAD REF: ${pr.data.head.ref}`);
+            
+            core.setOutput('head-sha', pr.data.head.sha);
+            core.setOutput('head-ref', pr.data.head.ref);
+
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: pull-request-eas-build-${{ github.sha }}
+          header: pull-request-eas-build-${{ steps.pr-info.outputs.head-sha }}
           number: ${{ github.event.issue.number }}
           message: |
-            An OTA deployment has been requested and is now running...
+            An OTA deployment has been requested and is now running for `${{ steps.pr-info.outputs.head-sha }}`.
 
             [Here is some music to listen to while you wait...](https://www.youtube.com/watch?v=VBlFHuCzPgY)
             ---
@@ -98,6 +112,8 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr-info.outputs.head-sha }}
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
@@ -152,7 +168,7 @@ jobs:
           echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
 
       - name: 🏗️ Create Bundle
-        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="pull-request" yarn export
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="testflight" yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
         run: yarn use-build-number bash scripts/bundleUpdate.sh
@@ -161,11 +177,10 @@ jobs:
           CHANNEL_NAME: pull-request-${{ github.event.issue.number }}
           RUNTIME_VERSION:
 
-
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@v2
         with:
-          header: pull-request-eas-build-${{ github.sha }}
+          header: pull-request-eas-build-${{ steps.pr-info.outputs.head-sha }}
           number: ${{ github.event.issue.number }}
           message: |
             Your requested OTA deployment was successful! You may now apply it by opening the deep link below in your browser:
@@ -179,7 +194,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         if: failure()
         with:
-          header: pull-request-eas-build-${{ github.sha }}
+          header: pull-request-eas-build-${{ steps.pr-info.outputs.head-sha }}
           number: ${{ github.event.issue.number }}
           message: |
             Your requested OTA deployment was unsuccessful. See action logs for more details.
