@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {LayoutAnimation, Pressable, View} from 'react-native'
+import {Alert, LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
@@ -19,7 +19,7 @@ import {
 } from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
@@ -367,6 +367,7 @@ function DevOptions() {
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
   const {
+    tryApplyUpdate,
     revertToEmbedded,
     isCurrentlyRunningPullRequestDeployment,
     currentChannel,
@@ -397,6 +398,30 @@ function DevOptions() {
 
   const onPressActySubsUnNudge = () => {
     setActyNotifNudged(false)
+  }
+
+  const onPressApplyOta = () => {
+    Alert.prompt(
+      'Apply OTA',
+      'Enter the channel for the OTA you wish to apply.',
+      [
+        {
+          style: 'cancel',
+          text: 'Cancel',
+        },
+        {
+          style: 'default',
+          text: 'Apply',
+          onPress: channel => {
+            tryApplyUpdate(channel ?? '')
+          },
+        },
+      ],
+      'plain-text',
+      isCurrentlyRunningPullRequestDeployment
+        ? currentChannel
+        : 'pull-request-',
+    )
   }
 
   return (
@@ -459,6 +484,15 @@ function DevOptions() {
           <Trans>Clear all storage data (restart after this)</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
+      {isIOS ? (
+        <SettingsList.PressableItem
+          onPress={onPressApplyOta}
+          label={_(msg`Apply Pull Request`)}>
+          <SettingsList.ItemText>
+            <Trans>Apply Pull Request</Trans>
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      ) : null}
       {isNative && isCurrentlyRunningPullRequestDeployment ? (
         <SettingsList.PressableItem
           onPress={revertToEmbedded}
