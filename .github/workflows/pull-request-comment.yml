@@ -152,7 +152,7 @@ jobs:
           echo "SENTRY_RELEASE=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
 
       - name: 🏗️ Create Bundle
-        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="pull-request" yarn export
+        run: SENTRY_DIST=${{ steps.sentry.outputs.SENTRY_DIST }} SENTRY_RELEASE=${{ steps.sentry.outputs.SENTRY_RELEASE }} SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} SENTRY_DSN=${{ secrets.SENTRY_DSN }} EXPO_PUBLIC_ENV="testflight" yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
         run: yarn use-build-number bash scripts/bundleUpdate.sh
