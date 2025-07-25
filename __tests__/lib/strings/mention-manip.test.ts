@@ -32,6 +32,7 @@ describe('getMentionAt', () => {
     ['@alice hello', 7, undefined],
     ['alice@alice', 0, undefined],
     ['alice@alice', 6, undefined],
+    ['hello @alice-com goodbye', 8, 'alice-com'],
   ]
 
   it.each(cases)(
@@ -72,6 +73,7 @@ describe('insertMentionAt', () => {
     ['@alice hello', 7, '@alice hello'],
     ['alice@alice', 0, 'alice@alice'],
     ['alice@alice', 6, 'alice@alice'],
+    ['hello @alice-com goodbye', 10, 'hello @alice.com  goodbye'],
   ]
 
   it.each(cases)(
