@@ -288,7 +288,7 @@ export function ProfileGrid({
                 {width: 165},
               ]}>
               <ProfileCard.Outer>
-                <ProfileCard.Header>
+                <View style={[a.flex_col, a.align_center, a.gap_sm, a.pb_sm]}>
                   <ProfileCard.Avatar
                     profile={profile}
                     moderationOpts={moderationOpts}
@@ -315,8 +315,8 @@ export function ProfileGrid({
                       })
                     }}
                   />
-                </ProfileCard.Header>
                 <ProfileCard.Description profile={profile} numberOfLines={2} />
+                </View>
               </ProfileCard.Outer>
             </CardOuter>
           )}
