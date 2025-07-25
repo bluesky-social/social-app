@@ -294,7 +294,7 @@ export function ProfileGrid({
                     moderationOpts={moderationOpts}
                     size={88}
                   />
-                  <ProfileCard.NameAndHandle
+                  <ProfileCard.Name
                     profile={profile}
                     moderationOpts={moderationOpts}
                   />
