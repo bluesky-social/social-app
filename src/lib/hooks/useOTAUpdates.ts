@@ -69,6 +69,8 @@ export function useApplyPullRequestOTAUpdate() {
   const {currentlyRunning} = useUpdates()
   const [pending, setPending] = React.useState(false)
   const currentChannel = currentlyRunning?.channel
+  const isCurrentlyRunningPullRequestDeployment =
+    currentChannel?.startsWith('pull-request')
 
   const tryApplyUpdate = async (channel: string) => {
     setPending(true)
@@ -113,6 +115,7 @@ export function useApplyPullRequestOTAUpdate() {
   return {
     tryApplyUpdate,
     revertToEmbedded,
+    isCurrentlyRunningPullRequestDeployment,
     currentChannel,
     pending,
   }
