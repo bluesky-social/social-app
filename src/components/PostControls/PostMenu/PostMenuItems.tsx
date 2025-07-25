@@ -17,7 +17,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {IS_INTERNAL} from '#/lib/app-info'
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
@@ -83,6 +82,7 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {IS_INTERNAL} from '#/env'
 import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({

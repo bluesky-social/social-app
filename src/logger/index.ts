@@ -14,9 +14,10 @@ import {
 } from '#/logger/types'
 import {enabledLogLevels} from '#/logger/util'
 import {isNative} from '#/platform/detection'
+import {ENV} from '#/env'
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
-  switch (process.env.NODE_ENV) {
+  switch (ENV) {
     case 'production': {
       return [sentryTransport, isNative && bitdriftTransport].filter(
         Boolean,
