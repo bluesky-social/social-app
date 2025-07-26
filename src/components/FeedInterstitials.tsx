@@ -247,7 +247,7 @@ export function ProfileGrid({
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
   const isLoading = isSuggestionsLoading || !moderationOpts
-  const maxLength = gtMobile ? 4 : 6
+  const maxLength = gtMobile ? 3 : 6
 
   const content = isLoading ? (
     Array(maxLength)
@@ -281,7 +281,11 @@ export function ProfileGrid({
           style={[
             a.flex_1,
             gtMobile &&
-              web([a.flex_0, {width: `calc(50% - ${a.gap_md.gap / 2}px)`}]),
+              web([
+                a.flex_0,
+                a.flex_grow,
+                {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
+              ]),
           ]}>
           {({hovered, pressed}) => (
             <CardOuter
