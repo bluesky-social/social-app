@@ -22,6 +22,43 @@ type Props = {
   setError: (error: string) => void
 }
 
+export function validateAndSelectVideo(
+  asset: ImagePickerAsset,
+  onSelectVideo: (asset: ImagePickerAsset) => void,
+  setError: (error: string) => void,
+  _: any,
+) {
+  try {
+    if (isWeb) {
+      // asset.duration is null for gifs (see the TODO in pickVideo.web.ts)
+      if (asset.duration && asset.duration > VIDEO_MAX_DURATION_MS) {
+        throw Error(_(msg`Videos must be less than 3 minutes long`))
+      }
+      // compression step on native converts to mp4, so no need to check there
+      if (
+        asset.mimeType &&
+        !SUPPORTED_MIME_TYPES.includes(asset.mimeType as SupportedMimeTypes)
+      ) {
+        throw Error(_(msg`Unsupported video type: ${asset.mimeType}`))
+      }
+    } else {
+      if (typeof asset.duration !== 'number') {
+        throw Error('Asset is not a video')
+      }
+      if (asset.duration > VIDEO_MAX_DURATION_MS) {
+        throw Error(_(msg`Videos must be less than 3 minutes long`))
+      }
+    }
+    onSelectVideo(asset)
+  } catch (err) {
+    if (err instanceof Error) {
+      setError(err.message)
+    } else {
+      setError(_(msg`An error occurred while selecting the video`))
+    }
+  }
+}
+
 export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
   const {_} = useLingui()
   const t = useTheme()
@@ -35,34 +72,7 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
     const response = await pickVideo()
     if (response.assets && response.assets.length > 0) {
       const asset = response.assets[0]
-      try {
-        if (isWeb) {
-          // asset.duration is null for gifs (see the TODO in pickVideo.web.ts)
-          if (asset.duration && asset.duration > VIDEO_MAX_DURATION_MS) {
-            throw Error(_(msg`Videos must be less than 3 minutes long`))
-          }
-          // compression step on native converts to mp4, so no need to check there
-          if (
-            !SUPPORTED_MIME_TYPES.includes(asset.mimeType as SupportedMimeTypes)
-          ) {
-            throw Error(_(msg`Unsupported video type: ${asset.mimeType}`))
-          }
-        } else {
-          if (typeof asset.duration !== 'number') {
-            throw Error('Asset is not a video')
-          }
-          if (asset.duration > VIDEO_MAX_DURATION_MS) {
-            throw Error(_(msg`Videos must be less than 3 minutes long`))
-          }
-        }
-        onSelectVideo(asset)
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message)
-        } else {
-          setError(_(msg`An error occurred while selecting the video`))
-        }
-      }
+      validateAndSelectVideo(asset, onSelectVideo, setError, _)
     }
   }, [requestVideoAccessIfNeeded, setError, _, onSelectVideo])
 
