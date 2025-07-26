@@ -4,7 +4,7 @@ import {ComposerImage, createComposerImage} from '#/state/gallery'
 import {getDataUriSize} from '#/lib/media/util'
 import {getVideoMetadata} from '#/view/com/composer/videos/pickVideo'
 import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
-import {isNative, isWeb} from '#/platform/detection'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {msg} from '@lingui/macro'
 import {type ImagePickerAsset, launchImageLibraryAsync} from 'expo-image-picker'
 import {useCallback} from 'react'
@@ -16,6 +16,16 @@ import {
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import * as Toast from '#/view/com/util/Toast'
+
+// Helper function to show toast with iOS modal delay
+const showToastSafe = (message: string, icon?: any) => {
+  if (isIOS) {
+    // Small delay on iOS to ensure toast shows properly in modal context
+    setTimeout(() => Toast.show(message, icon), 100)
+  } else {
+    Toast.show(message, icon)
+  }
+}
 
 type Props = {
   size: number
@@ -51,13 +61,14 @@ export function SelectMediaBtn({
     }
 
     // Use expo-image-picker for both native and web to ensure consistent behavior
+    // Note: selectionLimit can cause issues on iOS, so we handle limiting ourselves
     const response = await sheetWrapper(
       launchImageLibraryAsync({
         exif: false,
         mediaTypes: ['images', 'videos'],
         quality: 1,
         allowsMultipleSelection: true,
-        selectionLimit: 0, // No platform limit - we'll handle validation ourselves
+        selectionLimit: 4,
         legacy: true,
       }),
     )
