@@ -9,7 +9,6 @@ import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useActorStatus} from '#/lib/actor-status'
-import {IS_INTERNAL} from '#/lib/app-info'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'
@@ -66,6 +65,7 @@ import {
   shouldShowVerificationCheckButton,
   VerificationCheckButton,
 } from '#/components/verification/VerificationCheckButton'
+import {IS_INTERNAL} from '#/env'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
