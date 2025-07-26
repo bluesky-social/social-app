@@ -59,7 +59,7 @@ Please be sure to:
 
 ## Security disclosures
 
-If you discover any security issues, please send an email to security@bsky.app. The email is automatically CCed to the entire team and we'll respond promptly.
+If you discover any security issues, please send an email to security@bsky.app. The email is automatically CCed to the entire team, and we'll respond promptly. See [SECURITY.md](https://github.com/social-app/atproto/blob/main/SECURITY.md) for more info.
 
 ## Are you a developer interested in building on atproto?
 
