@@ -378,19 +378,9 @@ export function ProfileGrid({
       </View>
 
       {gtMobile ? (
-        <View style={[a.flex_1, a.px_lg, a.pb_lg, a.gap_md]}>
+        <View style={[a.px_lg, a.pb_lg]}>
           <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>
             {content}
-          </View>
-
-          <View style={[a.flex_row, a.justify_end, a.align_center, a.gap_md]}>
-            <InlineLinkText
-              label={_(msg`Browse more suggestions`)}
-              to="/search"
-              style={[t.atoms.text_contrast_medium]}>
-              <Trans>Browse more suggestions</Trans>
-            </InlineLinkText>
-            <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />
           </View>
         </View>
       ) : (
