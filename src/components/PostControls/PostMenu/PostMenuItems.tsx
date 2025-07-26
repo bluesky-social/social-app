@@ -470,6 +470,7 @@ let PostMenuItems = ({
           <>
             <Menu.Divider />
             <Menu.Group>
+              <Menu.LabelText>{_(msg`Tell feed provider:`)}</Menu.LabelText>
               <Menu.Item
                 testID="postDropdownShowMoreBtn"
                 label={_(msg`Show more like this`)}
@@ -490,13 +491,16 @@ let PostMenuItems = ({
         )}
 
         {isDiscoverDebugUser && (
-          <Menu.Item
-            testID="postDropdownReportMisclassificationBtn"
-            label={_(msg`Assign topic for algo`)}
-            onPress={onReportMisclassification}>
-            <Menu.ItemText>{_(msg`Assign topic for algo`)}</Menu.ItemText>
-            <Menu.ItemIcon icon={AtomIcon} position="right" />
-          </Menu.Item>
+          <>
+            <Menu.Divider />
+            <Menu.Item
+              testID="postDropdownReportMisclassificationBtn"
+              label={_(msg`Assign topic for algo`)}
+              onPress={onReportMisclassification}>
+              <Menu.ItemText>{_(msg`Assign topic for algo`)}</Menu.ItemText>
+              <Menu.ItemIcon icon={AtomIcon} position="right" />
+            </Menu.Item>
+          </>
         )}
 
         {hasSession && (
