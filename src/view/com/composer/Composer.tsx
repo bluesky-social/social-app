@@ -98,12 +98,11 @@ import {
   ExternalEmbedLink,
 } from '#/view/com/composer/ExternalEmbed'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
+import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
-import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
-import {SelectPhotoBtn} from '#/view/com/composer/photos/SelectPhotoBtn'
 import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
@@ -112,23 +111,23 @@ import {
   TextInput,
   type TextInputRef,
 } from '#/view/com/composer/text-input/TextInput'
-import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
-import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
-import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
-import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
-import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
-import {Text} from '#/view/com/util/text/Text'
-import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
+import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
-import * as Prompt from '#/components/Prompt'
+import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
+import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {Text as NewText} from '#/components/Typography'
-import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {Text} from '#/view/com/util/text/Text'
+import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
+import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
+import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/view/com/util/Toast'
 import {
   type ComposerAction,
   composerReducer,
@@ -1115,45 +1114,11 @@ function ComposerEmbeds({
             exiting={native(ZoomOut)}>
             {video.asset &&
               (video.status === 'compressing' ? (
-                isWeb ? (
-                  <VideoPreview
-                    asset={video.asset}
-                    video={{
-                      uri: (() => {
-                        // Convert data URI to blob URL for better browser compatibility
-                        if (video.asset.uri.startsWith('data:')) {
-                          try {
-                            const [header, data] = video.asset.uri.split(',')
-                            const mimeType =
-                              header.match(/:(.*?);/)?.[1] || 'video/mp4'
-                            const byteCharacters = atob(data)
-                            const byteNumbers = new Array(byteCharacters.length)
-                            for (let i = 0; i < byteCharacters.length; i++) {
-                              byteNumbers[i] = byteCharacters.charCodeAt(i)
-                            }
-                            const byteArray = new Uint8Array(byteNumbers)
-                            const blob = new Blob([byteArray], {type: mimeType})
-                            return URL.createObjectURL(blob)
-                          } catch (e) {
-                            console.error('Failed to create blob URL:', e)
-                            return video.asset.uri
-                          }
-                        }
-                        return video.asset.uri
-                      })(),
-                      mimeType: video.asset.mimeType || 'video/mp4',
-                      size: video.asset.fileSize || 0,
-                    }}
-                    isActivePost={isActivePost}
-                    clear={clearVideo}
-                  />
-                ) : (
-                  <VideoTranscodeProgress
-                    asset={video.asset}
-                    progress={video.progress}
-                    clear={clearVideo}
-                  />
-                )
+                <VideoTranscodeProgress
+                  asset={video.asset}
+                  progress={video.progress}
+                  clear={clearVideo}
+                />
               ) : video.video ? (
                 <VideoPreview
                   asset={video.asset}
@@ -1304,12 +1269,15 @@ function ComposerFooter({
   const isMaxImages = images.length >= MAX_IMAGES
   const isMaxVideos = !!video
 
-  const isMediaSelectionDisabled =
-    media?.type === 'images'
-      ? isMaxImages
-      : media?.type === 'video'
-        ? isMaxVideos
-        : !!media
+  let isMediaSelectionDisabled = false
+
+  if (media?.type === 'images') {
+    isMediaSelectionDisabled = isMaxImages
+  } else if (media?.type === 'video') {
+    isMediaSelectionDisabled = isMaxVideos
+  } else {
+    isMediaSelectionDisabled = !!media
+  }
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
@@ -1346,16 +1314,6 @@ function ComposerFooter({
             <VideoUploadToolbar state={video} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-              {/* <SelectPhotoBtn
-                size={images.length}
-                disabled={media?.type === 'images' ? isMaxImages : !!media}
-                onAdd={onImageAdd}
-              /> */}
-              {/* <SelectVideoBtn
-                onSelectVideo={asset => onSelectVideo(post.id, asset)}
-                disabled={!!media}
-                setError={onError}
-              /> */}
               <SelectMediaBtn
                 size={images.length}
                 disabled={isMediaSelectionDisabled}
