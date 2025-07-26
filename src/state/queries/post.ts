@@ -7,6 +7,7 @@ import {type LogEvents, toClout} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {type Shadow} from '#/state/cache/types'
+import {applyPostCacheMutations} from '#/state/queries/cache'
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
@@ -135,7 +136,7 @@ export function usePostLikeMutationQueue(
     },
     onSuccess(finalLikeUri) {
       // finalize
-      updatePostShadow(queryClient, postUri, {
+      applyPostCacheMutations(queryClient, postUri, {
         likeUri: finalLikeUri,
       })
     },
@@ -143,7 +144,7 @@ export function usePostLikeMutationQueue(
 
   const queueLike = useCallback(() => {
     // optimistically update
-    updatePostShadow(queryClient, postUri, {
+    applyPostCacheMutations(queryClient, postUri, {
       likeUri: 'pending',
     })
     return queueToggle(true)
@@ -151,7 +152,7 @@ export function usePostLikeMutationQueue(
 
   const queueUnlike = useCallback(() => {
     // optimistically update
-    updatePostShadow(queryClient, postUri, {
+    applyPostCacheMutations(queryClient, postUri, {
       likeUri: undefined,
     })
     return queueToggle(false)
