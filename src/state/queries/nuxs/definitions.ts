@@ -10,7 +10,6 @@ export enum Nux {
   AgeAssuranceDismissibleNotice = 'AgeAssuranceDismissibleNotice',
   AgeAssuranceDismissibleFeedBanner = 'AgeAssuranceDismissibleFeedBanner',
 }
-
 export const nuxNames = new Set(Object.values(Nux))
 
 export type AppNux = BaseNux<
