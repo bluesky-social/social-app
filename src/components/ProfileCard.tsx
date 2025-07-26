@@ -174,7 +174,7 @@ export function Avatar({
   )
 }
 
-export function AvatarPlaceholder() {
+export function AvatarPlaceholder({size = 40}: {size?: number}) {
   const t = useTheme()
   return (
     <View
@@ -182,8 +182,8 @@ export function AvatarPlaceholder() {
         a.rounded_full,
         t.atoms.bg_contrast_25,
         {
-          width: 40,
-          height: 40,
+          width: size,
+          height: size,
         },
       ]}
     />
