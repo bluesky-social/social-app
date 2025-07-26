@@ -17,16 +17,6 @@ import {
 } from '#/lib/hooks/usePermissions'
 import * as Toast from '#/view/com/util/Toast'
 
-// Helper function to show toast with iOS modal delay
-const showToastSafe = (message: string, icon?: any) => {
-  if (isIOS) {
-    // Small delay on iOS to ensure toast shows properly in modal context
-    setTimeout(() => Toast.show(message, icon), 100)
-  } else {
-    Toast.show(message, icon)
-  }
-}
-
 type Props = {
   size: number
   disabled?: boolean
@@ -61,7 +51,6 @@ export function SelectMediaBtn({
     }
 
     // Use expo-image-picker for both native and web to ensure consistent behavior
-    // Note: selectionLimit can cause issues on iOS, so we handle limiting ourselves
     const response = await sheetWrapper(
       launchImageLibraryAsync({
         exif: false,
