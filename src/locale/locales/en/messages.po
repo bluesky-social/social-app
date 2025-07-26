@@ -582,11 +582,11 @@ msgstr ""
 msgid "Account Muted by List"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:548
+#: src/screens/Settings/Settings.tsx:582
 msgid "Account options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:584
+#: src/screens/Settings/Settings.tsx:618
 msgid "Account removed from quick access"
 msgstr ""
 
@@ -668,8 +668,8 @@ msgstr ""
 msgid "Add alt text (optional)"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:488
-#: src/screens/Settings/Settings.tsx:491
+#: src/screens/Settings/Settings.tsx:522
+#: src/screens/Settings/Settings.tsx:525
 #: src/view/shell/desktop/LeftNav.tsx:259
 #: src/view/shell/desktop/LeftNav.tsx:263
 msgid "Add another account"
@@ -1101,6 +1101,11 @@ msgstr ""
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
+msgstr ""
+
+#: src/screens/Settings/Settings.tsx:490
+#: src/screens/Settings/Settings.tsx:492
+msgid "Apply Pull Request"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:637
@@ -1746,11 +1751,11 @@ msgstr ""
 msgid "Choose your username"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:457
+#: src/screens/Settings/Settings.tsx:482
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:459
+#: src/screens/Settings/Settings.tsx:484
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -2399,7 +2404,7 @@ msgstr ""
 msgid "Deactivate account"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:422
+#: src/screens/Settings/Settings.tsx:447
 msgid "Debug Moderation"
 msgstr ""
 
@@ -2448,7 +2453,7 @@ msgstr ""
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:429
+#: src/screens/Settings/Settings.tsx:454
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -5696,7 +5701,7 @@ msgstr ""
 msgid "on<0><1/><2><3/></2></0>"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:379
+#: src/screens/Settings/Settings.tsx:380
 msgid "Onboarding reset"
 msgstr ""
 
@@ -5794,7 +5799,7 @@ msgstr ""
 msgid "Open message options"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:420
+#: src/screens/Settings/Settings.tsx:445
 msgid "Open moderation debug page"
 msgstr ""
 
@@ -5823,12 +5828,12 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:413
-#: src/screens/Settings/Settings.tsx:427
+#: src/screens/Settings/Settings.tsx:438
+#: src/screens/Settings/Settings.tsx:452
 msgid "Open storybook page"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:406
+#: src/screens/Settings/Settings.tsx:431
 msgid "Open system log"
 msgstr ""
 
@@ -6696,7 +6701,7 @@ msgstr ""
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
-#: src/screens/Settings/Settings.tsx:586
+#: src/screens/Settings/Settings.tsx:620
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:217
 msgid "Remove"
@@ -6710,8 +6715,8 @@ msgstr ""
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:565
-#: src/screens/Settings/Settings.tsx:568
+#: src/screens/Settings/Settings.tsx:599
+#: src/screens/Settings/Settings.tsx:602
 msgid "Remove account"
 msgstr ""
 
@@ -6750,7 +6755,7 @@ msgstr ""
 msgid "Remove from my feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:578
+#: src/screens/Settings/Settings.tsx:612
 msgid "Remove from quick access?"
 msgstr ""
 
@@ -7115,8 +7120,8 @@ msgstr ""
 msgid "Resend Verification Email"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:449
-#: src/screens/Settings/Settings.tsx:451
+#: src/screens/Settings/Settings.tsx:474
+#: src/screens/Settings/Settings.tsx:476
 msgid "Reset activity subscription nudge"
 msgstr ""
 
@@ -7129,8 +7134,8 @@ msgstr ""
 msgid "Reset Code"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:434
-#: src/screens/Settings/Settings.tsx:436
+#: src/screens/Settings/Settings.tsx:459
+#: src/screens/Settings/Settings.tsx:461
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -8159,12 +8164,12 @@ msgstr ""
 msgid "Step {0} of {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:384
+#: src/screens/Settings/Settings.tsx:385
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
 
 #: src/Navigation.tsx:305
-#: src/screens/Settings/Settings.tsx:415
+#: src/screens/Settings/Settings.tsx:440
 msgid "Storybook"
 msgstr ""
 
@@ -8259,7 +8264,7 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:119
 #: src/screens/Settings/Settings.tsx:133
-#: src/screens/Settings/Settings.tsx:528
+#: src/screens/Settings/Settings.tsx:562
 #: src/view/shell/desktop/LeftNav.tsx:245
 msgid "Switch account"
 msgstr ""
@@ -8286,7 +8291,7 @@ msgstr ""
 
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:408
+#: src/screens/Settings/Settings.tsx:433
 msgid "System log"
 msgstr ""
 
@@ -8854,7 +8859,7 @@ msgstr ""
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:580
+#: src/screens/Settings/Settings.tsx:614
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
@@ -9020,11 +9025,11 @@ msgstr ""
 msgid "Unable to delete"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:465
+#: src/screens/Settings/Settings.tsx:499
 msgid "Unapply Pull Request"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:467
+#: src/screens/Settings/Settings.tsx:501
 msgid "Unapply Pull Request {currentChannel}"
 msgstr ""
 
@@ -9187,8 +9192,8 @@ msgstr ""
 msgid "Unpinned from your feeds"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:441
-#: src/screens/Settings/Settings.tsx:443
+#: src/screens/Settings/Settings.tsx:466
+#: src/screens/Settings/Settings.tsx:468
 msgid "Unsnooze email reminder"
 msgstr ""
 
@@ -10266,7 +10271,7 @@ msgstr ""
 msgid "You previously deactivated @{0}."
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:395
+#: src/screens/Settings/Settings.tsx:396
 msgid "You probably want to restart the app now."
 msgstr ""
 
