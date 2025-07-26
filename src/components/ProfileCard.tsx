@@ -23,9 +23,9 @@ import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   atoms as a,
   platform,
-  TextStyleProp,
+  type TextStyleProp,
   useTheme,
-  ViewStyleProp,
+  type ViewStyleProp,
 } from '#/alf'
 import {
   Button,
@@ -348,6 +348,24 @@ export function NameAndHandlePlaceholder() {
         ]}
       />
     </View>
+  )
+}
+
+export function NamePlaceholder({style}: ViewStyleProp) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.rounded_xs,
+        t.atoms.bg_contrast_25,
+        {
+          width: '60%',
+          height: 14,
+        },
+        style,
+      ]}
+    />
   )
 }
 
