@@ -16,3 +16,5 @@ export const appVersion = `${nativeApplicationVersion}.${nativeBuildVersion}`
 export const bundleInfo = `${BUNDLE_IDENTIFIER} (${
   __DEV__ ? 'dev' : IS_TESTFLIGHT ? 'tf' : 'prod'
 })`
+
+export const USE_OAUTH = process.env.EXPO_PUBLIC_USE_OAUTH === 'true'

@@ -16,3 +16,5 @@ export const BUNDLE_DATE = __DEV__
 
 export const appVersion = packageDotJson.version
 export const bundleInfo = `${BUNDLE_IDENTIFIER} (${__DEV__ ? 'dev' : 'prod'})`
+
+export const USE_OAUTH = process.env.EXPO_PUBLIC_USE_OAUTH === 'true'

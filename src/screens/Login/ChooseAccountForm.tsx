@@ -3,9 +3,11 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {USE_OAUTH} from '#/lib/app-info'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {useExperimentalOauthEnabled} from '#/state/preferences/experimental-oauth'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
@@ -27,13 +29,16 @@ export const ChooseAccountForm = ({
   const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
+  const shouldUseOauth = useExperimentalOauthEnabled() || USE_OAUTH
+
   const onSelect = React.useCallback(
     async (account: SessionAccount) => {
       if (pendingDid) {
         // The session API isn't resilient to race conditions so let's just ignore this.
         return
       }
-      if (!account.accessJwt) {
+      // TODO: this should be checking if it is an oauth session
+      if (!shouldUseOauth && !account.accessJwt) {
         // Move to login form.
         onSelectAccount(account)
         return
@@ -67,6 +72,7 @@ export const ChooseAccountForm = ({
       pendingDid,
       onSelectAccount,
       setShowLoggedOut,
+      shouldUseOauth,
       _,
     ],
   )

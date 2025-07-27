@@ -20,6 +20,18 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
+"@atproto-labs/did-resolver@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/did-resolver/-/did-resolver-0.2.0.tgz#85762cd6992555e78bde9e202dea803a23e7d896"
+  integrity sha512-y9GOx2gUETynDKmANnBrU5DTf+u0AwKBJpGns1vDDOYMdLdRCFIeYy3UH+TI8YOkcEazjgF5Q3m+LjwriE1KqQ==
+  dependencies:
+    "@atproto-labs/fetch" "0.2.3"
+    "@atproto-labs/pipe" "0.1.1"
+    "@atproto-labs/simple-store" "0.2.0"
+    "@atproto-labs/simple-store-memory" "0.1.3"
+    "@atproto/did" "0.1.5"
+    zod "^3.23.8"
+
 "@atproto-labs/fetch-node@0.1.9":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@atproto-labs/fetch-node/-/fetch-node-0.1.9.tgz#5df902413cc2ebfff914999ad3fbbc13b20e1dd0"
@@ -36,6 +48,24 @@
   integrity sha512-NZtbJOCbxKUFRFKMpamT38PUQMY0hX0p7TG5AEYOPhZKZEP7dHZ1K2s1aB8MdVH0qxmqX7nQleNrrvLf09Zfdw==
   dependencies:
     "@atproto-labs/pipe" "0.1.1"
+
+"@atproto-labs/handle-resolver@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/handle-resolver/-/handle-resolver-0.3.0.tgz#b7928358e59cbacd4f0337a807222798fe133f60"
+  integrity sha512-TREelvXB6P2eHxx6QjINRkBzUZu/aXWrdY9iN57shQe3C8rzsHNEHHuTVvRa33Hc7vFdQbZN0TnCgKveoyiL/A==
+  dependencies:
+    "@atproto-labs/simple-store" "0.2.0"
+    "@atproto-labs/simple-store-memory" "0.1.3"
+    "@atproto/did" "0.1.5"
+    zod "^3.23.8"
+
+"@atproto-labs/identity-resolver@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/identity-resolver/-/identity-resolver-0.3.0.tgz#8988fc2e91c2060614e0f7698f5561e5c84904fc"
+  integrity sha512-ZmmRV6m17kIaX4WllYrFIa7d23lNng0fIk6pLyepRGZobQhM5d4wDezICTESAG+RoD0e5fisWs+Tamdvx3mx/Q==
+  dependencies:
+    "@atproto-labs/did-resolver" "0.2.0"
+    "@atproto-labs/handle-resolver" "0.3.0"
 
 "@atproto-labs/pipe@0.1.1":
   version "0.1.1"
@@ -270,6 +300,15 @@
     "@atproto/jwk" "0.4.0"
     jose "^5.2.0"
 
+"@atproto/jwk-webcrypto@0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@atproto/jwk-webcrypto/-/jwk-webcrypto-0.1.9.tgz#b58abc4a77a3352abd6f6d33825916325d82496a"
+  integrity sha512-ecciePHT0JEDZNAbMKSkdqoBYsjvhwuVno0jsS600SZmuvi2fAMhGraDZ5ZOO5M0hHHBiDbN7Ar/qcnIwyoxsA==
+  dependencies:
+    "@atproto/jwk" "0.4.0"
+    "@atproto/jwk-jose" "0.1.9"
+    zod "^3.23.8"
+
 "@atproto/jwk@0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@atproto/jwk/-/jwk-0.4.0.tgz#f32265be172492c38434c556a124b954f249cee8"
@@ -286,6 +325,38 @@
     "@atproto/common-web" "^0.4.2"
     "@atproto/syntax" "^0.4.0"
     iso-datestring-validator "^2.2.2"
+    multiformats "^9.9.0"
+    zod "^3.23.8"
+
+"@atproto/oauth-client-browser@^0.3.27":
+  version "0.3.27"
+  resolved "https://registry.yarnpkg.com/@atproto/oauth-client-browser/-/oauth-client-browser-0.3.27.tgz#929045d9dc834339b8c76c372d44e6444f34cfb2"
+  integrity sha512-sUZP27KjlS3qJVPMC+RgWNARQZo7n6CWCXN55+QqLnHTfh+dLCXDS9jMUreXUGMQkVETEogDZ/v0Pb0xHQwBsg==
+  dependencies:
+    "@atproto-labs/did-resolver" "0.2.0"
+    "@atproto-labs/handle-resolver" "0.3.0"
+    "@atproto-labs/simple-store" "0.2.0"
+    "@atproto/did" "0.1.5"
+    "@atproto/jwk" "0.4.0"
+    "@atproto/jwk-webcrypto" "0.1.9"
+    "@atproto/oauth-client" "0.5.1"
+    "@atproto/oauth-types" "0.4.0"
+
+"@atproto/oauth-client@0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@atproto/oauth-client/-/oauth-client-0.5.1.tgz#e0b7995f395a898e1faa736f177f242e5b92f0fa"
+  integrity sha512-wNC9RdfH1LGyZKF+UOmY+z4TFNx1gBur3fx91MCCrNaU0aTHBzgEH9UquL2031J7VNXhBsKJnHfEB5ZYy0AEHQ==
+  dependencies:
+    "@atproto-labs/did-resolver" "0.2.0"
+    "@atproto-labs/fetch" "0.2.3"
+    "@atproto-labs/handle-resolver" "0.3.0"
+    "@atproto-labs/identity-resolver" "0.3.0"
+    "@atproto-labs/simple-store" "0.2.0"
+    "@atproto-labs/simple-store-memory" "0.1.3"
+    "@atproto/did" "0.1.5"
+    "@atproto/jwk" "0.4.0"
+    "@atproto/oauth-types" "0.4.0"
+    "@atproto/xrpc" "0.7.1"
     multiformats "^9.9.0"
     zod "^3.23.8"
 
@@ -480,7 +551,7 @@
     ws "^8.12.0"
     zod "^3.23.8"
 
-"@atproto/xrpc@^0.7.1":
+"@atproto/xrpc@0.7.1", "@atproto/xrpc@^0.7.1":
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.7.1.tgz#51a8fc131eb21bd1229129d0a46384accc50ad65"
   integrity sha512-ANHEzlskYlMEdH18m+Itp3a8d0pEJao2qoDybDoMupTnoeNkya4VKIaOgAi6ERQnqatBBZyn9asW+7rJmSt/8g==
@@ -7999,6 +8070,11 @@ abort-controller@^3.0.0:
   dependencies:
     event-target-shim "^5.0.0"
 
+abortcontroller-polyfill@^1.7.8:
+  version "1.7.8"
+  resolved "https://registry.yarnpkg.com/abortcontroller-polyfill/-/abortcontroller-polyfill-1.7.8.tgz#fe8d4370403f02e2aa37e3d2b0b178bae9d83f49"
+  integrity sha512-9f1iZ2uWh92VcrU9Y8x+LdM4DLj75VE0MJB8zuF1iUnroEptStw+DQ8EQPMUdfe5k+PkB1uUfDQfWbhstH8LrQ==
+
 accepts@^1.3.7, accepts@^1.3.8, accepts@~1.3.4, accepts@~1.3.5, accepts@~1.3.8:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.8.tgz#0bf0be125b67014adcb0b0921e62db7bffe16b2e"
@@ -11082,6 +11158,11 @@ etcd3@^1.1.2:
     bignumber.js "^9.1.1"
     cockatiel "^3.1.1"
 
+event-target-polyfill@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/event-target-polyfill/-/event-target-polyfill-0.0.4.tgz#060ee66e85aaedc76b6fa66079782dcc11cba496"
+  integrity sha512-Gs6RLjzlLRdT8X9ZipJdIZI/Y6/HhRLyq9RdDlCsnpxr/+Nn6bU2EFGuC94GjxqhM+Nmij2Vcq98yoHrU8uNFQ==
+
 event-target-shim@^5.0.0, event-target-shim@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
@@ -11181,6 +11262,11 @@ expo-asset@~11.1.5:
   dependencies:
     "@expo/image-utils" "^0.7.4"
     expo-constants "~17.1.5"
+
+expo-atproto-auth@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/expo-atproto-auth/-/expo-atproto-auth-0.1.1.tgz#250798e87c22e963a3c3edb9914c13f46ca88de4"
+  integrity sha512-tJ9y3uJiTFXMaviKOWfbSKYcWaWdvEByMJGXB4h8RxEhmnD7C7CTdVRR4ZLfcUucaDQLRczMFWUwBdZKbS1slA==
 
 expo-blur@~14.1.5:
   version "14.1.5"

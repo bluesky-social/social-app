@@ -13,13 +13,18 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {USE_OAUTH} from '#/lib/app-info'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {useExperimentalOauthEnabled} from '#/state/preferences/experimental-oauth'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {useSessionApi} from '#/state/session'
+import {getNativeOAuthClient} from '#/state/session/oauth-native-client'
+import {getWebOAuthClient} from '#/state/session/oauth-web-client'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -35,19 +40,7 @@ import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
-export const LoginForm = ({
-  error,
-  serviceUrl,
-  serviceDescription,
-  initialHandle,
-  setError,
-  setServiceUrl,
-  onPressRetryConnect,
-  onPressBack,
-  onPressForgotPassword,
-  onAttemptSuccess,
-  onAttemptFailed,
-}: {
+interface LoginFormProps {
   error: string
   serviceUrl: string
   serviceDescription: ServiceDescription | undefined
@@ -59,7 +52,137 @@ export const LoginForm = ({
   onPressForgotPassword: () => void
   onAttemptSuccess: () => void
   onAttemptFailed: () => void
-}) => {
+}
+
+export function LoginForm(props: LoginFormProps) {
+  const shouldUseOauth = useExperimentalOauthEnabled() || USE_OAUTH
+
+  if (shouldUseOauth) {
+    return <OAuthLoginFormInner {...props} />
+  } else {
+    return <LoginFormInner {...props} />
+  }
+}
+
+function OAuthLoginFormInner({
+  error,
+  initialHandle,
+  onPressBack,
+  setError,
+}: LoginFormProps) {
+  const {_} = useLingui()
+  const [isProcessing, setIsProcessing] = React.useState(false)
+  const identifierValueRef = useRef<string>(initialHandle || '')
+
+  const {login} = useSessionApi()
+
+  const onPressNext = async () => {
+    setIsProcessing(true)
+    if (isWeb) {
+      try {
+        const client = getWebOAuthClient()
+        await client.signIn(identifierValueRef.current)
+      } catch (e: any) {
+        logger.error(e)
+        setError(_(msg`An error occurred during authentication.`))
+      }
+    } else {
+      const client = getNativeOAuthClient()
+      const res = await client.signIn(identifierValueRef.current)
+      if (res.status === 'success') {
+        await login(
+          {
+            service: '',
+            identifier: '',
+            password: '',
+            oauthSession: res.session,
+          },
+          'LoginForm',
+        )
+      } else {
+        logger.error(`Invalid OAuth status: ${res.status}`)
+        setError(_(msg`An error occurred during authentication.`))
+      }
+    }
+    setIsProcessing(false)
+  }
+
+  return (
+    <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
+      <View>
+        <TextField.LabelText>
+          <Trans>Account</Trans>
+        </TextField.LabelText>
+        <View style={[a.gap_sm]}>
+          <TextField.Root>
+            <TextField.Icon icon={At} />
+            <TextField.Input
+              testID="loginUsernameInput"
+              label={_(msg`Username or email address`)}
+              autoCapitalize="none"
+              autoFocus
+              autoCorrect={false}
+              autoComplete="username"
+              returnKeyType="next"
+              textContentType="username"
+              defaultValue={initialHandle || ''}
+              onChangeText={v => {
+                identifierValueRef.current = v
+              }}
+              onSubmitEditing={() => {}}
+              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+              editable={!isProcessing}
+              accessibilityHint={_(
+                msg`Enter the username or email address you used when you created your account`,
+              )}
+            />
+          </TextField.Root>
+        </View>
+      </View>
+      <FormError error={error} />
+      <View style={[a.flex_row, a.align_center, a.pt_md]}>
+        <Button
+          label={_(msg`Back`)}
+          variant="solid"
+          color="secondary"
+          size="large"
+          onPress={onPressBack}>
+          <ButtonText>
+            <Trans>Back</Trans>
+          </ButtonText>
+        </Button>
+        <View style={a.flex_1} />
+        <Button
+          testID="loginNextButton"
+          label={_(msg`Login`)}
+          accessibilityHint={_(msg`Navigates to the login screen`)}
+          variant="solid"
+          color="primary"
+          size="large"
+          onPress={onPressNext}>
+          <ButtonText>
+            <Trans>Login</Trans>
+          </ButtonText>
+          {isProcessing && <ButtonIcon icon={Loader} />}
+        </Button>
+      </View>
+    </FormContainer>
+  )
+}
+
+const LoginFormInner = ({
+  error,
+  serviceUrl,
+  serviceDescription,
+  initialHandle,
+  setError,
+  setServiceUrl,
+  onPressRetryConnect,
+  onPressBack,
+  onPressForgotPassword,
+  onAttemptSuccess,
+  onAttemptFailed,
+}: LoginFormProps) => {
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
