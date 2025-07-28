@@ -101,8 +101,7 @@ export function Provider({children}: {children: React.ReactNode}) {
       isReady: isFetched || !isAgeAssuranceEnabled,
       status,
       lastInitiatedAt,
-      isAgeRestricted:
-        isFetched && isAgeAssuranceEnabled ? status !== 'assured' : false,
+      isAgeRestricted: isAgeAssuranceEnabled ? status !== 'assured' : false,
     }
     logger.debug(`context`, ctx)
     return ctx
