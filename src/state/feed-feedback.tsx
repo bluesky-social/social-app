@@ -11,9 +11,11 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
 import {
-  ALL_INTERACTIONS,
-  DIRECT_INTERACTIONS,
+  ALL_FEEDBACK_INTERACTIONS,
+  DIRECT_FEEDBACK_INTERACTIONS,
   FEEDBACK_FEEDS,
+  type FeedbackInteraction,
+  isFeedbackInteraction,
   STAGING_FEEDS,
 } from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -61,12 +63,7 @@ export function useFeedFeedback(
   const feedInfo = feed ? buildFeedInfo(feed) : null
   const enabled = !!feedInfo && feedInfo.acceptsInteractions && hasSession
 
-  const enabledInteractions = useMemo(() => {
-    if (!enabled) {
-      return []
-    }
-    return feedInfo.isDiscover ? ALL_INTERACTIONS : DIRECT_INTERACTIONS
-  }, [enabled, feedInfo])
+  const enabledInteractions = getEnabledInteractions(enabled, feedInfo)
 
   const queue = useRef<Set<string>>(new Set())
   const history = useRef<
@@ -89,8 +86,11 @@ export function useFeedFeedback(
     const interactions = Array.from(queue.current).map(toInteraction)
     queue.current.clear()
 
-    const interactionsToSend = interactions.filter(interaction =>
-      enabledInteractions.includes(interaction.event ?? ''),
+    const interactionsToSend = interactions.filter(
+      interaction =>
+        interaction.event &&
+        isFeedbackInteraction(interaction.event) &&
+        enabledInteractions.includes(interaction.event),
     )
 
     if (interactionsToSend.length === 0) {
@@ -257,6 +257,18 @@ function buildFeedInfo(feed: FeedSourceInfo | FeedDescriptor): FeedInfo | null {
       acceptsInteractions: true,
     }
   }
+}
+
+function getEnabledInteractions(
+  enabled: boolean,
+  feedInfo: FeedInfo | null,
+): readonly FeedbackInteraction[] {
+  if (!enabled || !feedInfo) {
+    return []
+  }
+  return feedInfo.isDiscover
+    ? ALL_FEEDBACK_INTERACTIONS
+    : DIRECT_FEEDBACK_INTERACTIONS
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {

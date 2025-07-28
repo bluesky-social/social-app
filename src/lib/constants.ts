@@ -91,23 +91,39 @@ export const STAGING_FEEDS = [
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
-export const PASSIVE_INTERACTIONS = [
+export const PASSIVE_FEEDBACK_INTERACTIONS = [
   'app.bsky.feed.defs#clickthroughItem',
   'app.bsky.feed.defs#clickthroughAuthor',
   'app.bsky.feed.defs#clickthroughReposter',
   'app.bsky.feed.defs#clickthroughEmbed',
   'app.bsky.feed.defs#interactionSeen',
-]
+] as const
 
-export const DIRECT_INTERACTIONS = [
+export type PassiveFeedbackInteraction =
+  (typeof PASSIVE_FEEDBACK_INTERACTIONS)[number]
+
+export const DIRECT_FEEDBACK_INTERACTIONS = [
   'app.bsky.feed.defs#requestLess',
   'app.bsky.feed.defs#requestMore',
-]
+] as const
 
-export const ALL_INTERACTIONS = [
-  ...PASSIVE_INTERACTIONS,
-  ...DIRECT_INTERACTIONS,
-]
+export type DirectFeedbackInteraction =
+  (typeof DIRECT_FEEDBACK_INTERACTIONS)[number]
+
+export const ALL_FEEDBACK_INTERACTIONS = [
+  ...PASSIVE_FEEDBACK_INTERACTIONS,
+  ...DIRECT_FEEDBACK_INTERACTIONS,
+] as const
+
+export type FeedbackInteraction = (typeof ALL_FEEDBACK_INTERACTIONS)[number]
+
+export function isFeedbackInteraction(
+  interactionEvent: string,
+): interactionEvent is FeedbackInteraction {
+  return ALL_FEEDBACK_INTERACTIONS.includes(
+    interactionEvent as FeedbackInteraction,
+  )
+}
 
 export const POST_IMG_MAX = {
   width: 2000,
