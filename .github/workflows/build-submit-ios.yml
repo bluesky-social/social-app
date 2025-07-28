@@ -77,9 +77,13 @@ jobs:
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: ✏️ Write environment variables
+        id: env
         run: |
           echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> .env
+          echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "EXPO_PUBLIC_SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
           echo "EXPO_PUBLIC_BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
@@ -88,7 +92,8 @@ jobs:
       - name: 🏗️ EAS Build
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_DIST=$(git rev-parse HEAD)
+          SENTRY_RELEASE=${{ steps.env.outputs.EXPO_PUBLIC_RELEASE_VERSION }}
+          SENTRY_DIST=${{ steps.env.outputs.EXPO_PUBLIC_BUNDLE_IDENTIFIER }}
           yarn use-build-number-with-bump
           eas build -p ios
           --profile ${{ inputs.profile || 'testflight' }}

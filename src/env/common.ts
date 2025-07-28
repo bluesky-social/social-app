@@ -5,6 +5,8 @@ import packageJson from '#/../package.json'
 /**
  * The semver version of the app, as defined in `package.json.`
  */
+export const RELEASE_VERSION: string =
+  process.env.EXPO_PUBLIC_RELEASE_VERSION || packageJson.version
 export const PACKAGE_VERSION: string = packageJson.version
 
 /**
