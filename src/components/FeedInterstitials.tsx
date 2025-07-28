@@ -376,8 +376,10 @@ export function ProfileGrid({
             <Trans>Suggested for you</Trans>
           )}
         </Text>
-        <InlineLinkText label={_(msg`See all suggested profiles`)} to="/search">
-          <Trans>See all</Trans>
+        <InlineLinkText
+          label={_(msg`See more suggested profiles on the Explore page`)}
+          to="/search">
+          <Trans>See more</Trans>
         </InlineLinkText>
       </View>
 
