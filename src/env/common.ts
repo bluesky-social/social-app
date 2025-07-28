@@ -4,6 +4,8 @@ import packageJson from '#/../package.json'
 
 /**
  * The semver version of the app, as defined in `package.json.`
+ *
+ * N.B. The fallback is needed for Render.com deployments
  */
 export const RELEASE_VERSION: string =
   process.env.EXPO_PUBLIC_RELEASE_VERSION || packageJson.version
