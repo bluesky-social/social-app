@@ -7,7 +7,6 @@ import packageJson from '#/../package.json'
  */
 export const RELEASE_VERSION: string =
   process.env.EXPO_PUBLIC_RELEASE_VERSION || packageJson.version
-export const PACKAGE_VERSION: string = packageJson.version
 
 /**
  * The env the app is running in e.g. development, testflight, production

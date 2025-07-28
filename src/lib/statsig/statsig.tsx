@@ -210,7 +210,7 @@ function toStatsigUser(did: string | undefined): StatsigUser {
       refSrc,
       refUrl,
       platform: Platform.OS as 'ios' | 'android' | 'web',
-      appVersion: env.PACKAGE_VERSION,
+      appVersion: env.RELEASE_VERSION,
       bundleIdentifier: env.BUNDLE_IDENTIFIER,
       bundleDate: env.BUNDLE_DATE,
       appLanguage: languagePrefs.appLanguage,

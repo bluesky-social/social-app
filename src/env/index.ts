@@ -1,7 +1,6 @@
 import {nativeBuildVersion} from 'expo-application'
 
-import packageJson from '#/../package.json'
-import {BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/env/common'
+import {BUNDLE_IDENTIFIER, IS_TESTFLIGHT, RELEASE_VERSION} from '#/env/common'
 
 export * from '#/env/common'
 
@@ -10,7 +9,7 @@ export * from '#/env/common'
  * iOs/Android, the native build version is appended to the semver version, so
  * that it can be used to identify a specific build.
  */
-export const APP_VERSION = `${packageJson.version}.${nativeBuildVersion}`
+export const APP_VERSION = `${RELEASE_VERSION}.${nativeBuildVersion}`
 
 /**
  * The short commit hash and environment of the current bundle.
