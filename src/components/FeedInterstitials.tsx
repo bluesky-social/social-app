@@ -256,7 +256,11 @@ export function ProfileGrid({
           key={i}
           style={[
             gtMobile &&
-              web([a.flex_0, {width: `calc(50% - ${a.gap_md.gap / 2}px)`}]),
+              web([
+                a.flex_0,
+                a.flex_grow,
+                {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
+              ]),
           ]}>
           <SuggestedFollowPlaceholder />
         </View>
