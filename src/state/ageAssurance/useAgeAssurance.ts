@@ -1,10 +1,8 @@
 import {useMemo} from 'react'
 
-import {Logger} from '#/logger'
 import {useAgeAssuranceContext} from '#/state/ageAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-
-const logger = Logger.create(Logger.Context.AgeAssurance)
 
 type AgeAssurance = ReturnType<typeof useAgeAssuranceContext> & {
   /**
@@ -30,7 +28,8 @@ export function useAgeAssurance(): AgeAssurance {
 
   return useMemo(() => {
     const isReady = aa.isReady && preferencesLoaded
-    const isDeclaredUnderage = (declaredAge || 0) < 18
+    const isDeclaredUnderage =
+      declaredAge !== undefined ? declaredAge < 18 : false
     const state: AgeAssurance = {
       isReady,
       status: aa.status,

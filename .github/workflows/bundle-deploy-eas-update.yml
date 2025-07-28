@@ -20,6 +20,7 @@ on:
 
 jobs:
   bundleDeploy:
+    if: github.repository == 'bluesky-social/social-app'
     name: Bundle and Deploy EAS Update
     runs-on: ubuntu-latest
     concurrency:
@@ -150,7 +151,7 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected }}
+    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app' }}
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -239,7 +240,7 @@ jobs:
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected }}
+    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected && github.repository == 'bluesky-social/social-app'}}
 
     steps:
       - name: Check for EXPO_TOKEN

@@ -160,7 +160,7 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
       richText.push(
         <Link
           key={counter}
-          href={`/tag/${segment.tag.tag}`}
+          href={`/hashtag/${segment.tag.tag}`}
           className="text-blue-500 hover:underline">
           {segment.text}
         </Link>,

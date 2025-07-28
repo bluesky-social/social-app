@@ -8,7 +8,7 @@ export enum Nux {
   InitialVerificationAnnouncement = 'InitialVerificationAnnouncement',
   ActivitySubscriptions = 'ActivitySubscriptions',
   AgeAssuranceDismissibleNotice = 'AgeAssuranceDismissibleNotice',
-  AgeAssuranceDismissibleHeaderButton = 'AgeAssuranceDismissibleHeaderButton',
+  AgeAssuranceDismissibleFeedBanner = 'AgeAssuranceDismissibleFeedBanner',
 }
 
 export const nuxNames = new Set(Object.values(Nux))
@@ -35,7 +35,7 @@ export type AppNux = BaseNux<
       data: undefined
     }
   | {
-      id: Nux.AgeAssuranceDismissibleHeaderButton
+      id: Nux.AgeAssuranceDismissibleFeedBanner
       data: undefined
     }
 >
@@ -46,5 +46,5 @@ export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.InitialVerificationAnnouncement]: undefined,
   [Nux.ActivitySubscriptions]: undefined,
   [Nux.AgeAssuranceDismissibleNotice]: undefined,
-  [Nux.AgeAssuranceDismissibleHeaderButton]: undefined,
+  [Nux.AgeAssuranceDismissibleFeedBanner]: undefined,
 }

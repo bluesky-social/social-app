@@ -7,12 +7,14 @@ import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
 import {isNative} from '#/platform/detection'
 import {useAgeAssuranceAPIContext} from '#/state/ageAssurance'
+import {logger} from '#/state/ageAssurance/util'
 import {useAgent} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {CheckThick_Stroke2_Corner0_Rounded as SuccessIcon} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -65,7 +67,7 @@ export function AgeAssuranceRedirectDialog() {
   // Dialog.useAutoOpen(control.control, 3e3)
 
   return (
-    <Dialog.Outer control={control.control}>
+    <Dialog.Outer control={control.control} onClose={() => control.clear()}>
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
@@ -85,12 +87,15 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
   const unmounted = useRef(false)
   const control = useAgeAssuranceRedirectDialogControl()
   const [error, setError] = useState(false)
+  const [success, setSuccess] = useState(false)
   const {refetch: refreshAgeAssuranceState} = useAgeAssuranceAPIContext()
 
   useEffect(() => {
     if (polling.current) return
 
     polling.current = true
+
+    logger.metric('ageAssurance:redirectDialogOpen', {})
 
     wait(
       3e3,
@@ -122,20 +127,71 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
         // success! update state
         await refreshAgeAssuranceState()
 
-        control.clear()
-        control.control.close()
+        setSuccess(true)
+
+        logger.metric('ageAssurance:redirectDialogSuccess', {})
       })
       .catch(() => {
         if (unmounted.current) return
         setError(true)
         // try a refetch anyway
         refreshAgeAssuranceState()
+        logger.metric('ageAssurance:redirectDialogFail', {})
       })
 
     return () => {
       unmounted.current = true
     }
   }, [agent, control, refreshAgeAssuranceState])
+
+  if (success) {
+    return (
+      <>
+        <View style={[a.align_start, a.w_full]}>
+          <AgeAssuranceBadge />
+
+          <View
+            style={[
+              a.flex_row,
+              a.justify_between,
+              a.align_center,
+              a.gap_sm,
+              a.pt_lg,
+              a.pb_md,
+            ]}>
+            <SuccessIcon size="sm" fill={t.palette.positive_600} />
+            <Text style={[a.text_xl, a.font_heavy]}>
+              <Trans>Success</Trans>
+            </Text>
+          </View>
+
+          <Text style={[a.text_md, a.leading_snug]}>
+            <Trans>
+              We've confirmed your age assurance status. You can now close this
+              dialog.
+            </Trans>
+          </Text>
+
+          {isNative && (
+            <View style={[a.w_full, a.pt_lg]}>
+              <Button
+                label={_(msg`Close`)}
+                size="large"
+                variant="solid"
+                color="secondary"
+                onPress={() => control.control.close()}>
+                <ButtonText>
+                  <Trans>Close</Trans>
+                </ButtonText>
+              </Button>
+            </View>
+          )}
+        </View>
+
+        <Dialog.Close />
+      </>
+    )
+  }
 
   return (
     <>
@@ -169,8 +225,8 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
             </Trans>
           ) : (
             <Trans>
-              We're confirming your status with our servers. This dialog should
-              close in a few seconds.
+              We're confirming your age assurance status with our servers. This
+              should only take a few seconds.
             </Trans>
           )}
         </Text>
@@ -181,7 +237,8 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
               label={_(msg`Close`)}
               size="large"
               variant="solid"
-              color="secondary">
+              color="secondary"
+              onPress={() => control.control.close()}>
               <ButtonText>
                 <Trans>Close</Trans>
               </ButtonText>
