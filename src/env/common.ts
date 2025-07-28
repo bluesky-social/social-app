@@ -43,10 +43,9 @@ export const BUNDLE_IDENTIFIER: string =
  * for each build. This should only be used for StatSig reporting and shouldn't
  * be used to identify a specific bundle.
  */
-export const BUNDLE_DATE: number =
-  IS_INTERNAL || !process.env.EXPO_PUBLIC_BUNDLE_DATE
-    ? 0
-    : Number(process.env.EXPO_PUBLIC_BUNDLE_DATE)
+export const BUNDLE_DATE: number = !process.env.EXPO_PUBLIC_BUNDLE_DATE
+  ? 0
+  : Number(process.env.EXPO_PUBLIC_BUNDLE_DATE)
 
 /**
  * The log level for the app.
