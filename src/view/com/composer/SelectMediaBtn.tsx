@@ -4,18 +4,22 @@ import {ComposerImage, createComposerImage} from '#/state/gallery'
 import {getDataUriSize} from '#/lib/media/util'
 import {getVideoMetadata} from '#/view/com/composer/videos/pickVideo'
 import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {msg} from '@lingui/macro'
 import {type ImagePickerAsset, launchImageLibraryAsync} from 'expo-image-picker'
 import {useCallback} from 'react'
 import {useLingui} from '@lingui/react'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {validateAndSelectVideo} from '#/view/com/composer/videos/SelectVideoBtn'
 import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import * as Toast from '#/view/com/util/Toast'
+import {
+  SUPPORTED_MIME_TYPES,
+  SupportedMimeTypes,
+  VIDEO_MAX_DURATION_MS,
+} from '#/lib/constants'
 
 type Props = {
   size: number
@@ -23,6 +27,43 @@ type Props = {
   onAdd: (next: ComposerImage[]) => void
   onSelectVideo: (asset: ImagePickerAsset) => void
   setError: (error: string) => void
+}
+
+export function validateAndSelectVideo(
+  asset: ImagePickerAsset,
+  onSelectVideo: (asset: ImagePickerAsset) => void,
+  setError: (error: string) => void,
+  _: any,
+) {
+  try {
+    if (isWeb) {
+      // asset.duration is null for gifs (see the TODO in pickVideo.web.ts)
+      if (asset.duration && asset.duration > VIDEO_MAX_DURATION_MS) {
+        throw Error(_(msg`Videos must be less than 3 minutes long`))
+      }
+      // compression step on native converts to mp4, so no need to check there
+      if (
+        asset.mimeType &&
+        !SUPPORTED_MIME_TYPES.includes(asset.mimeType as SupportedMimeTypes)
+      ) {
+        throw Error(_(msg`Unsupported video type: ${asset.mimeType}`))
+      }
+    } else {
+      if (typeof asset.duration !== 'number') {
+        throw Error('Asset is not a video')
+      }
+      if (asset.duration > VIDEO_MAX_DURATION_MS) {
+        throw Error(_(msg`Videos must be less than 3 minutes long`))
+      }
+    }
+    onSelectVideo(asset)
+  } catch (err) {
+    if (err instanceof Error) {
+      setError(err.message)
+    } else {
+      setError(_(msg`An error occurred while selecting the video`))
+    }
+  }
 }
 
 export function SelectMediaBtn({
@@ -50,14 +91,14 @@ export function SelectMediaBtn({
       }
     }
 
-    // Use expo-image-picker for both native and web to ensure consistent behavior
+    //APiligrim
+    //Note: selectionLimit doesn't work reliably on Android, so we handle limiting in code
     const response = await sheetWrapper(
       launchImageLibraryAsync({
         exif: false,
         mediaTypes: ['images', 'videos'],
         quality: 1,
         allowsMultipleSelection: true,
-        selectionLimit: 4,
         legacy: true,
       }),
     )
@@ -80,14 +121,22 @@ export function SelectMediaBtn({
 
   const processSelectedAssets = useCallback(
     async (assets: ImagePickerAsset[]) => {
+      const limitedAssets = assets.slice(0, 4)
+
+      if (assets.length > 4) {
+        Toast.show(
+          _(
+            msg`You can only select up to 4 items at a time. Using the first 4 selected.`,
+          ),
+          'info',
+        )
+      }
+
       const images: ImagePickerAsset[] = []
       const videos: ImagePickerAsset[] = []
       let firstMediaType: 'image' | 'video' | null = null
 
-      // Separate images and videos with comprehensive detection
-      for (const asset of assets) {
-        // On web, expo-image-picker might not set metadata properly
-        // If we have a data URI but no metadata, we need to extract it manually
+      for (const asset of limitedAssets) {
         if (
           isWeb &&
           asset.uri &&
@@ -96,15 +145,12 @@ export function SelectMediaBtn({
           !asset.duration
         ) {
           try {
-            // Convert data URI back to File to get metadata
             const response = await fetch(asset.uri)
             const blob = await response.blob()
             const file = new File([blob], 'video', {type: blob.type})
 
-            // Use the same metadata extraction as the working SelectVideoBtn
             const videoAsset = await getVideoMetadata(file)
 
-            // Replace the asset with properly extracted metadata
             Object.assign(asset, {
               mimeType: videoAsset.mimeType,
               duration: videoAsset.duration,
@@ -148,7 +194,6 @@ export function SelectMediaBtn({
           )
           const video = videos[0]
 
-          // Ensure video has proper metadata
           if (!video.mimeType && video.uri) {
             const extension = video.uri.split('.').pop()?.toLowerCase()
             if (extension === 'mp4') video.mimeType = 'video/mp4'
@@ -196,7 +241,6 @@ export function SelectMediaBtn({
       if (videos.length === 1) {
         const video = videos[0]
 
-        // Ensure video has proper metadata
         if (!video.mimeType && video.uri) {
           const extension = video.uri.split('.').pop()?.toLowerCase()
           if (extension === 'mp4') video.mimeType = 'video/mp4'
@@ -269,7 +313,6 @@ async function handleImageSelection(
   onAdd: (next: ComposerImage[]) => void,
   _: any,
 ) {
-  // Transform ImagePickerAsset to ImageMeta format (like openPicker does)
   const imageMetas = images.map(image => ({
     mime: image.mimeType || 'image/jpeg',
     height: image.height,
