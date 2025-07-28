@@ -69,10 +69,9 @@ export function SuggestedFollowPlaceholder() {
       <View style={[a.flex_col, a.align_center, a.gap_sm]}>
         <ProfileCard.AvatarPlaceholder size={88} />
         <ProfileCard.NamePlaceholder />
-        <ProfileCard.DescriptionPlaceholder
-          numberOfLines={2}
-          style={[a.align_center, a.flex, a.self_stretch]}
-        />
+        <View style={[a.w_full]}>
+          <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
+        </View>
       </View>
     </CardOuter>
   )
