@@ -1,4 +1,10 @@
-import { type AppGndrActorDefs, AppGndrEmbedRecord, AppGndrEmbedRecordWithMedia, AppGndrFeedDefs, AppGndrFeedPost,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrActorDefs,
+  AppGndrEmbedRecord,
+  AppGndrEmbedRecordWithMedia,
+  AppGndrFeedDefs,
+  AppGndrFeedPost,
+} from '@gander-social-atproto/api'
 
 import * as gndr from '#/types/gndr'
 import { isPostInLanguage } from '../../locale/helpers'
@@ -40,7 +46,7 @@ export class FeedViewPostsSlice {
   feedPostUri: string
 
   constructor(feedPost: FeedViewPost) {
-    const {post, reply, reason} = feedPost
+    const { post, reply, reason } = feedPost
     this.items = []
     this.isIncompleteThread = false
     this.isFallbackMarker = false
@@ -235,7 +241,7 @@ export class FeedTuner {
 
   tune(
     feed: FeedViewPost[],
-    {dryRun}: {dryRun: boolean} = {
+    { dryRun }: { dryRun: boolean } = {
       dryRun: false,
     },
   ): FeedViewPostsSlice[] {
@@ -390,7 +396,7 @@ export class FeedTuner {
     return slices
   }
 
-  static followedRepliesOnly({userDid}: {userDid: string}) {
+  static followedRepliesOnly({ userDid }: { userDid: string }) {
     return (
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
@@ -451,7 +457,7 @@ export class FeedTuner {
 }
 
 function areSameAuthor(authors: AuthorContext): boolean {
-  const {author, parentAuthor, grandparentAuthor, rootAuthor} = authors
+  const { author, parentAuthor, grandparentAuthor, rootAuthor } = authors
   const authorDid = author.did
   if (parentAuthor && parentAuthor.did !== authorDid) {
     return false
@@ -469,7 +475,7 @@ function shouldDisplayReplyInFollowing(
   authors: AuthorContext,
   userDid: string,
 ): boolean {
-  const {author, parentAuthor, grandparentAuthor, rootAuthor} = authors
+  const { author, parentAuthor, grandparentAuthor, rootAuthor } = authors
   if (!isSelfOrFollowing(author, userDid)) {
     // Only show replies from self or people you follow.
     return false

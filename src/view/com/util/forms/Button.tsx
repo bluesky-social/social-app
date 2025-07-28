@@ -1,5 +1,17 @@
 import React from 'react'
-import { ActivityIndicator, type GestureResponderEvent, type NativeSyntheticEvent, type NativeTouchEvent, Pressable, type PressableStateCallbackType, type StyleProp, StyleSheet, type TextStyle, View, type ViewStyle,  } from 'react-native'
+import {
+  ActivityIndicator,
+  type GestureResponderEvent,
+  type NativeSyntheticEvent,
+  type NativeTouchEvent,
+  Pressable,
+  type PressableStateCallbackType,
+  type StyleProp,
+  StyleSheet,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
 import { choose } from '#/lib/functions'
 import { useTheme } from '#/lib/ThemeContext'
@@ -152,9 +164,9 @@ export function Button({
     (state: PressableStateCallbackType) => {
       const arr = [typeOuterStyle, styles.outer, style]
       if (state.pressed) {
-        arr.push({opacity: 0.6})
+        arr.push({ opacity: 0.6 })
       } else if (state.hovered) {
-        arr.push({opacity: 0.8})
+        arr.push({ opacity: 0.8 })
       }
       return arr
     },

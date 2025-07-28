@@ -1,23 +1,23 @@
-import React, {useCallback} from 'react'
+import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { type AppGndrActorDefs } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-// import {sanitizeHandle} from '#/lib/strings/handles'
-import {useProfilesQuery} from '#/state/queries/profile'
-import {type SessionAccount, useSession} from '#/state/session'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {Button} from './Button'
-import {Text} from './Typography'
+import { useActorStatus } from '#/lib/actor-status'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+// import { sanitizeHandle } from '#/lib/strings/handles'
+import { useProfilesQuery } from '#/state/queries/profile'
+import { type SessionAccount, useSession } from '#/state/session'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, useTheme } from '#/alf'
+import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check'
+import { ChevronRight_Stroke2_Corner0_Rounded as Chevron } from '#/components/icons/Chevron'
+import { useSimpleVerificationState } from '#/components/verification'
+import { VerificationCheck } from '#/components/verification/VerificationCheck'
+import { Button } from './Button'
+import { Text } from './Typography'
 
 export function AccountList({
   onSelectAccount,
@@ -30,10 +30,10 @@ export function AccountList({
   otherLabel?: string
   pendingDid: string | null
 }) {
-  const {currentAccount, accounts} = useSession()
+  const { currentAccount, accounts } = useSession()
   const t = useTheme()
-  const {_} = useLingui()
-  const {data: profiles} = useProfilesQuery({
+  const { _ } = useLingui()
+  const { data: profiles } = useProfilesQuery({
     handles: accounts.map(acc => acc.did),
   })
 
@@ -49,7 +49,7 @@ export function AccountList({
         t.atoms.border_contrast_low,
         a.mt_md,
 
-        {borderRadius: 8},
+        { borderRadius: 8 },
       ]}>
       {accounts.map(account => (
         <React.Fragment key={account.did}>
@@ -60,7 +60,7 @@ export function AccountList({
             isCurrentAccount={account.did === currentAccount?.did}
             isPendingAccount={account.did === pendingDid}
           />
-          <View style={[{borderBottomWidth: 1, borderColor: '#D8D8D8'}]} />
+          <View style={[{ borderBottomWidth: 1, borderColor: '#D8D8D8' }]} />
         </React.Fragment>
       ))}
       <Button
@@ -69,7 +69,7 @@ export function AccountList({
         style={[a.flex_1]}
         onPress={pendingDid ? undefined : onPressAddAccount}
         label={_(msg`Sign in to account that is not listed`)}>
-        {({hovered, pressed}) => (
+        {({ hovered, pressed }) => (
           <View
             style={[
               a.flex_1,
@@ -77,7 +77,7 @@ export function AccountList({
               a.align_center,
               a.py_lg,
               a.px_sm,
-              {borderBottomStartRadius: 8, borderBottomEndRadius: 8},
+              { borderBottomStartRadius: 8, borderBottomEndRadius: 8 },
               (hovered || pressed) && t.atoms.bg_contrast_25,
             ]}>
             <Text
@@ -115,9 +115,9 @@ export function AccountItem({
   hideEndIcon?: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
-  const verification = useSimpleVerificationState({profile})
-  const {isActive: live} = useActorStatus(profile)
+  const { _ } = useLingui()
+  const verification = useSimpleVerificationState({ profile })
+  const { isActive: live } = useActorStatus(profile)
 
   const onPress = useCallback(() => {
     onSelect(account)
@@ -135,7 +135,7 @@ export function AccountItem({
           ? _(msg`Continue as ${account.handle} (currently signed in)`)
           : _(msg`Sign in as ${account.handle}`)
       }>
-      {({hovered, pressed}) => (
+      {({ hovered, pressed }) => (
         <View
           style={[
             a.flex_1,
@@ -179,7 +179,7 @@ export function AccountItem({
           </View>
 
           {hideEndIcon ? null : isCurrentAccount ? (
-            <Check size="sm" style={[{color: t.palette.positive_600}]} />
+            <Check size="sm" style={[{ color: t.palette.positive_600 }]} />
           ) : (
             <Chevron size="sm" style={[t.atoms.text]} />
           )}

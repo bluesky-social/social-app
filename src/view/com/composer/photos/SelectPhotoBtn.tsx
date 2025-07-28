@@ -17,9 +17,9 @@ type Props = {
   onAdd: (next: ComposerImage[]) => void
 }
 
-export function SelectPhotoBtn({size, disabled, onAdd}: Props) {
-  const {_} = useLingui()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+export function SelectPhotoBtn({ size, disabled, onAdd }: Props) {
+  const { _ } = useLingui()
+  const { requestPhotoAccessIfNeeded } = usePhotoLibraryPermission()
   const t = useTheme()
   const sheetWrapper = useSheetWrapper()
 

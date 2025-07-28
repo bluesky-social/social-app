@@ -1,4 +1,9 @@
-import { type $Typed, type AppBskyActorStatus as AppGndrActorStatus, type AppGndrEmbedExternal, ComAtprotoRepoPutRecord,  } from '@gander-social-atproto/api'
+import {
+  type $Typed,
+  type AppGndrActorStatus,
+  type AppGndrEmbedExternal,
+  ComAtprotoRepoPutRecord,
+} from '@gander-social-atproto/api'
 import { retry } from '@gander-social-atproto/common-web'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -16,8 +21,8 @@ import { useDialogContext } from '#/components/Dialog'
 
 export function useLiveLinkMetaQuery(url: string | null) {
   const liveNowConfig = useLiveNowConfig()
-  const {currentAccount} = useSession()
-  const {_} = useLingui()
+  const { currentAccount } = useSession()
+  const { _ } = useLingui()
 
   const agent = useAgent()
   return useQuery({
@@ -44,11 +49,11 @@ export function useUpsertLiveStatusMutation(
   linkMeta: LinkMeta | null | undefined,
   createdAt?: string,
 ) {
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
   const control = useDialogContext()
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   return useMutation({
     mutationFn: async () => {
@@ -104,7 +109,7 @@ export function useUpsertLiveStatusMutation(
         const collection = 'app.gndr.actor.status'
 
         const existing = await agent.com.atproto.repo
-          .getRecord({repo, collection, rkey: 'self'})
+          .getRecord({ repo, collection, rkey: 'self' })
           .catch(_e => undefined)
 
         await agent.com.atproto.repo.putRecord({
@@ -133,18 +138,18 @@ export function useUpsertLiveStatusMutation(
         safeMessage: e,
       })
     },
-    onSuccess: ({record, image}) => {
+    onSuccess: ({ record, image }) => {
       if (createdAt) {
         logger.metric(
           'live:edit',
-          {duration: record.durationMinutes},
-          {statsig: true},
+          { duration: record.durationMinutes },
+          { statsig: true },
         )
       } else {
         logger.metric(
           'live:create',
-          {duration: record.durationMinutes},
-          {statsig: true},
+          { duration: record.durationMinutes },
+          { statsig: true },
         )
       }
 
@@ -181,11 +186,11 @@ export function useUpsertLiveStatusMutation(
 }
 
 export function useRemoveLiveStatusMutation() {
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
   const control = useDialogContext()
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   return useMutation({
     mutationFn: async () => {
@@ -202,7 +207,7 @@ export function useRemoveLiveStatusMutation() {
       })
     },
     onSuccess: () => {
-      logger.metric('live:remove', {}, {statsig: true})
+      logger.metric('live:remove', {}, { statsig: true })
       Toast.show(_(msg`You are no longer live`))
       control.close(() => {
         if (!currentAccount) return

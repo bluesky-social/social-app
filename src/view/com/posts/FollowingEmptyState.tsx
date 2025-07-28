@@ -1,6 +1,9 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  type FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import { Trans } from '@lingui/macro'
 import { useNavigation } from '@react-navigation/native'
 

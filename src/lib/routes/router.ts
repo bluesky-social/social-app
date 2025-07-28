@@ -46,12 +46,12 @@ function createRoute(pattern: string): Route {
   const matcherRe = new RegExp(`^${matcherReInternal}([?]|$)`, 'i')
   return {
     match(path) {
-      const {pathname, searchParams} = new URL(path, 'http://throwaway.com')
+      const { pathname, searchParams } = new URL(path, 'http://throwaway.com')
       const addedParams = Object.fromEntries(searchParams.entries())
 
       const res = matcherRe.exec(pathname)
       if (res) {
-        return {params: Object.assign(addedParams, res.groups || {})}
+        return { params: Object.assign(addedParams, res.groups || {}) }
       }
       return undefined
     },

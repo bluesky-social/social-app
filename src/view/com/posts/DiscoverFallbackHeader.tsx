@@ -21,10 +21,10 @@ export function DiscoverFallbackHeader() {
         pal.border,
         pal.viewLight,
       ]}>
-      <View style={{width: 68, paddingLeft: 12}}>
+      <View style={{ width: 68, paddingLeft: 12 }}>
         <InfoCircleIcon size={36} style={pal.textLight} strokeWidth={1.5} />
       </View>
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Text type="md" style={pal.text}>
           <Trans>
             We ran out of posts from your follows. Here's the latest from{' '}

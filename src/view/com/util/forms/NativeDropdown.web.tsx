@@ -1,5 +1,11 @@
 import React from 'react'
-import { Pressable, StyleSheet, Text, type View, type ViewStyle,  } from 'react-native'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  type View,
+  type ViewStyle,
+} from 'react-native'
 import { type IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { DropdownMenu } from 'radix-ui'
@@ -15,7 +21,7 @@ export const DropdownMenuRoot = DropdownMenu.Root
 export const DropdownMenuContent = DropdownMenu.Content
 
 type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
-export const DropdownMenuItem = (props: ItemProps & {testID?: string}) => {
+export const DropdownMenuItem = (props: ItemProps & { testID?: string }) => {
   const theme = useTheme()
   const [focused, setFocused] = React.useState(false)
   const backgroundColor = theme.colorScheme === 'dark' ? '#fff1' : '#0001'
@@ -26,7 +32,7 @@ export const DropdownMenuItem = (props: ItemProps & {testID?: string}) => {
       {...props}
       style={StyleSheet.flatten([
         styles.item,
-        focused && {backgroundColor: backgroundColor},
+        focused && { backgroundColor: backgroundColor },
       ])}
       onFocus={() => {
         setFocused(true)
@@ -161,7 +167,7 @@ function DropdownContent({
   const theme = useTheme()
   const dropDownBackgroundColor =
     theme.colorScheme === 'dark' ? pal.btn : pal.view
-  const {borderColor: separatorColor} =
+  const { borderColor: separatorColor } =
     theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
   return (
@@ -182,7 +188,7 @@ function DropdownContent({
               style={
                 StyleSheet.flatten([
                   styles.separator,
-                  {backgroundColor: separatorColor},
+                  { backgroundColor: separatorColor },
                 ]) as React.CSSProperties
               }
             />

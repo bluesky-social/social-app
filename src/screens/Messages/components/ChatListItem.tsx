@@ -1,6 +1,11 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { type GestureResponderEvent, View } from 'react-native'
-import { AppGndrEmbedRecord, ChatBskyConvoDefs as ChatGndrConvoDefs, moderateProfile, type ModerationOpts,  } from '@gander-social-atproto/api'
+import {
+  AppGndrEmbedRecord,
+  ChatGndrConvoDefs,
+  moderateProfile,
+  type ModerationOpts,
+} from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -10,11 +15,18 @@ import { useHaptics } from '#/lib/haptics'
 import { decrementBadgeCount } from '#/lib/notifications/notifications'
 import { logEvent } from '#/lib/statsig/statsig'
 import { sanitizeDisplayName } from '#/lib/strings/display-names'
-import { postUriToRelativePath, toGndrAppUrl, toShortUrl,  } from '#/lib/strings/url-helpers'
+import {
+  postUriToRelativePath,
+  toGndrAppUrl,
+  toShortUrl,
+} from '#/lib/strings/url-helpers'
 import { isNative } from '#/platform/detection'
 import { useProfileShadow } from '#/state/cache/profile-shadow'
 import { useModerationOpts } from '#/state/preferences/moderation-opts'
-import { precacheConvoQuery, useMarkAsReadMutation,  } from '#/state/queries/messages/conversation'
+import {
+  precacheConvoQuery,
+  useMarkAsReadMutation,
+} from '#/state/queries/messages/conversation'
 import { precacheProfile } from '#/state/queries/profile'
 import { useSession } from '#/state/session'
 import { TimeElapsed } from '#/view/com/util/TimeElapsed'
@@ -44,7 +56,7 @@ export let ChatListItem = ({
   showMenu?: boolean
   children?: React.ReactNode
 }): React.ReactNode => {
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const moderationOpts = useModerationOpts()
 
   const otherUser = convo.members.find(
@@ -82,13 +94,13 @@ function ChatListItemReady({
   children?: React.ReactNode
 }) {
   const t = useTheme()
-  const {_} = useLingui()
-  const {currentAccount} = useSession()
+  const { _ } = useLingui()
+  const { currentAccount } = useSession()
   const menuControl = useMenuControl()
   const leaveConvoControl = useDialogControl()
-  const {gtMobile} = useBreakpoints()
+  const { gtMobile } = useBreakpoints()
   const profile = useProfileShadow(profileUnshadowed)
-  const {mutate: markAsRead} = useMarkAsReadMutation()
+  const { mutate: markAsRead } = useMarkAsReadMutation()
   const moderation = React.useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -121,7 +133,7 @@ function ChatListItemReady({
 
   const isDimStyle = convo.muted || moderation.blocked || isDeletedAccount
 
-  const {lastMessage, lastMessageSentAt, latestReportableMessage} =
+  const { lastMessage, lastMessageSentAt, latestReportableMessage } =
     useMemo(() => {
       // eslint-disable-next-line @typescript-eslint/no-shadow
       let lastMessage = _(msg`No messages yet`)
@@ -276,7 +288,7 @@ function ChatListItemReady({
         menuControl.open()
         return false
       } else {
-        logEvent('chat:open', {logContext: 'ChatsList'})
+        logEvent('chat:open', { logContext: 'ChatsList' })
       }
     },
     [isDeletedAccount, menuControl, queryClient, profile, convo],
@@ -331,7 +343,7 @@ function ChatListItemReady({
           style={[
             a.z_10,
             a.absolute,
-            {top: tokens.space.md, left: tokens.space.lg},
+            { top: tokens.space.md, left: tokens.space.lg },
           ]}>
           <PreviewableUserAvatar
             profile={profile}
@@ -353,15 +365,21 @@ function ChatListItemReady({
           accessibilityActions={
             isNative
               ? [
-                  {name: 'magicTap', label: _(msg`Open conversation options`)},
-                  {name: 'longpress', label: _(msg`Open conversation options`)},
+                  {
+                    name: 'magicTap',
+                    label: _(msg`Open conversation options`),
+                  },
+                  {
+                    name: 'longpress',
+                    label: _(msg`Open conversation options`),
+                  },
                 ]
               : undefined
           }
           onPress={onPress}
           onLongPress={isNative ? onLongPress : undefined}
           onAccessibilityAction={onLongPress}>
-          {({hovered, pressed, focused}) => (
+          {({ hovered, pressed, focused }) => (
             <View
               style={[
                 a.flex_row,
@@ -373,10 +391,10 @@ function ChatListItemReady({
                 (hovered || pressed || focused) && t.atoms.bg_contrast_25,
               ]}>
               {/* Avatar goes here */}
-              <View style={{width: 52, height: 52}} />
+              <View style={{ width: 52, height: 52 }} />
 
               <View
-                style={[a.flex_1, a.justify_center, web({paddingRight: 45})]}>
+                style={[a.flex_1, a.justify_center, web({ paddingRight: 45 })]}>
                 <View style={[a.w_full, a.flex_row, a.align_end, a.pb_2xs]}>
                   <View style={[a.flex_shrink]}>
                     <Text
@@ -386,7 +404,7 @@ function ChatListItemReady({
                         a.text_md,
                         t.atoms.text,
                         a.font_bold,
-                        {lineHeight: 21},
+                        { lineHeight: 21 },
                         isDimStyle && t.atoms.text_contrast_medium,
                       ]}>
                       {displayName}
@@ -403,13 +421,13 @@ function ChatListItemReady({
                   {lastMessageSentAt && (
                     <View style={[a.pl_xs]}>
                       <TimeElapsed timestamp={lastMessageSentAt}>
-                        {({timeElapsed}) => (
+                        {({ timeElapsed }) => (
                           <Text
                             style={[
                               a.text_sm,
-                              {lineHeight: 21},
+                              { lineHeight: 21 },
                               t.atoms.text_contrast_medium,
-                              web({whiteSpace: 'preserve nowrap'}),
+                              web({ whiteSpace: 'preserve nowrap' }),
                             ]}>
                             &middot; {timeElapsed}
                           </Text>
@@ -421,9 +439,9 @@ function ChatListItemReady({
                     <Text
                       style={[
                         a.text_sm,
-                        {lineHeight: 21},
+                        { lineHeight: 21 },
                         t.atoms.text_contrast_medium,
-                        web({whiteSpace: 'preserve nowrap'}),
+                        web({ whiteSpace: 'preserve nowrap' }),
                       ]}>
                       {' '}
                       &middot;{' '}

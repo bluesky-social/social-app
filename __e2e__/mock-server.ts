@@ -1,7 +1,7 @@
-import {createServer as createHTTPServer} from 'node:http'
-import {parse} from 'node:url'
+import { createServer as createHTTPServer } from 'node:http'
+import { parse } from 'node:url'
 
-import {createServer, type TestPDS} from '../jest/test-pds'
+import { createServer, type TestPDS } from '../jest/test-pds'
 
 async function main() {
   let server: TestPDS
@@ -15,7 +15,7 @@ async function main() {
       await server?.close()
       console.log('Starting new server')
       const inviteRequired = url?.query && 'invite' in url.query
-      server = await createServer({inviteRequired})
+      server = await createServer({ inviteRequired })
       console.log('Listening at', server.pdsUrl)
       if (url?.query) {
         if ('users' in url.query) {
@@ -51,7 +51,7 @@ async function main() {
         if ('posts' in url.query) {
           console.log('Generating mock posts')
           for (let user in server.mocker.users) {
-            await server.mocker.users[user].agent.post({text: 'Post'})
+            await server.mocker.users[user].agent.post({ text: 'Post' })
           }
         }
         if ('feeds' in url.query) {
@@ -66,8 +66,8 @@ async function main() {
           await server.mocker.users.carla.agent.post({
             text: 'Thread reply',
             reply: {
-              parent: {cid: res.cid, uri: res.uri},
-              root: {cid: res.cid, uri: res.uri},
+              parent: { cid: res.cid, uri: res.uri },
+              root: { cid: res.cid, uri: res.uri },
             },
           })
         }
@@ -132,7 +132,7 @@ async function main() {
                   uri: posts.dan[i].uri,
                 })
               }
-              await server.mocker.users[user].agent.post({text: `Post ${i}`})
+              await server.mocker.users[user].agent.post({ text: `Post ${i}` })
             }
           }
           console.log('Generating mock feeds')
@@ -436,7 +436,7 @@ async function main() {
             'blocking reply',
             anchorPost,
           )
-          await server.mocker.users.alice.agent.app.bsky.graph.block.create(
+          await server.mocker.users.alice.agent.app.gndr.graph.block.create(
             {
               repo: server.mocker.users.alice.did,
             },
@@ -459,7 +459,7 @@ async function main() {
           )
           await server.mocker.users[
             'blockedby-account'
-          ].agent.app.bsky.graph.block.create(
+          ].agent.app.gndr.graph.block.create(
             {
               repo: server.mocker.users['blockedby-account'].did,
             },
@@ -483,7 +483,7 @@ async function main() {
             'mutual-block reply',
             anchorPost,
           )
-          await server.mocker.users.alice.agent.app.bsky.graph.block.create(
+          await server.mocker.users.alice.agent.app.gndr.graph.block.create(
             {
               repo: server.mocker.users.alice.did,
             },
@@ -494,7 +494,7 @@ async function main() {
           )
           await server.mocker.users[
             'mutual-block-account'
-          ].agent.app.bsky.graph.block.create(
+          ].agent.app.gndr.graph.block.create(
             {
               repo: server.mocker.users['mutual-block-account'].did,
             },

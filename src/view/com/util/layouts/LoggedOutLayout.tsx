@@ -21,7 +21,7 @@ export const LoggedOutLayout = ({
   description: string
   scrollable?: boolean
 }>) => {
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const { isMobile, isTabletOrMobile } = useWebMediaQueries()
   const pal = usePalette('default')
   const sideBg = useColorSchemeStyle(pal.viewLight, pal.view)
   const contentBg = useColorSchemeStyle(pal.view, {

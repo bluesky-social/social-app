@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {logger} from '#/logger'
+import { logger } from '#/logger'
 import {
   type AvatarColor,
   type Emoji,
@@ -105,7 +105,7 @@ export const Context = React.createContext<{
   state: Onboarding2State
   dispatch: React.Dispatch<Onboarding2Action>
 }>({
-  state: {...initialState},
+  state: { ...initialState },
   dispatch: () => {},
 })
 
@@ -113,7 +113,7 @@ export function reducer(
   s: Onboarding2State,
   a: Onboarding2Action,
 ): Onboarding2State {
-  let next = {...s}
+  let next = { ...s }
 
   switch (a.type) {
     case 'next': {
@@ -179,7 +179,7 @@ export function reducer(
   })
 
   if (s.activeStep !== state.activeStep) {
-    logger.debug(`onboarding2: step changed`, {activeStep: state.activeStep})
+    logger.debug(`onboarding2: step changed`, { activeStep: state.activeStep })
   }
 
   return state

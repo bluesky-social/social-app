@@ -6,9 +6,9 @@ import { useLingui } from '@lingui/react'
 
 import { type ReportOption } from '#/lib/moderation/useReportOptions'
 import { useMyLabelersQuery } from '#/state/queries/preferences'
-export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
+export { useDialogControl as useReportDialogControl } from '#/components/Dialog'
 
-import { type AppBskyLaberDefs as AppGndrLabelerDefs } from '@gander-social-atproto/api'
+import { type AppGndrLabelerDefs } from '@gander-social-atproto/api'
 
 import { atoms as a } from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -30,12 +30,12 @@ export function ReportDialog(props: ReportDialogProps) {
 }
 
 function ReportDialogInner(props: ReportDialogProps) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const {
     isLoading: isLabelerLoading,
     data: labelers,
     error,
-  } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
+  } = useMyLabelersQuery({ excludeNonConfigurableLabelers: true })
   const isLoading = useDelayedLoading(500, isLabelerLoading)
 
   const ref = React.useRef<ScrollView>(null)
@@ -43,7 +43,7 @@ function ReportDialogInner(props: ReportDialogProps) {
   return (
     <Dialog.ScrollableInner label={_(msg`Report dialog`)} ref={ref}>
       {isLoading ? (
-        <View style={[a.align_center, {height: 100}]}>
+        <View style={[a.align_center, { height: 100 }]}>
           <Loader size="xl" />
           {/* Here to capture focus for a hot sec to prevent flash */}
           <Pressable accessible={false} />

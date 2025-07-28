@@ -1,4 +1,8 @@
-import { type AppGndrFeedDefs, type AppGndrFeedGetTimeline, type GndrAgent,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrFeedDefs,
+  type AppGndrFeedGetTimeline,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 import shuffle from 'lodash.shuffle'
 
 import { bundleAsync } from '#/lib/async/bundle'
@@ -6,9 +10,12 @@ import { timeout } from '#/lib/async/timeout'
 import { feedUriToHref } from '#/lib/strings/url-helpers'
 import { getContentLanguages } from '#/state/preferences/languages'
 import { type FeedParams } from '#/state/queries/post-feed'
-import { FeedTuner } from '../feed-manip'
-import { type FeedTunerFn } from '../feed-manip'
-import { type FeedAPI, type FeedAPIResponse, type ReasonFeedSource,  } from './types'
+import { FeedTuner, type FeedTunerFn } from '../feed-manip'
+import {
+  type FeedAPI,
+  type FeedAPIResponse,
+  type ReasonFeedSource,
+} from './types'
 import { createGndrTopicsHeader, isGanderOwnedFeed } from './utils'
 
 const REQUEST_WAIT_MS = 500 // 500ms
@@ -234,7 +241,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
     cursor: string | undefined,
     limit: number,
   ): Promise<AppGndrFeedGetTimeline.Response> {
-    const res = await this.agent.getTimeline({cursor, limit})
+    const res = await this.agent.getTimeline({ cursor, limit })
     // run the tuner pre-emptively to ensure better mixing
     const slices = this.tuner.tune(res.data.feed, {
       dryRun: false,
@@ -317,7 +324,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
       return res
     } catch {
       // dont bubble custom-feed errors
-      return {success: false, headers: {}, data: {feed: []}}
+      return { success: false, headers: {}, data: { feed: [] } }
     }
   }
 }

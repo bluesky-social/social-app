@@ -310,8 +310,7 @@
       "<rootDir>/src/platform",
       "<rootDir>/src/third-party",
       "<rootDir>/src/view/com/util",
-      "<rootDir>/src/state/lib",
-      "<rootDir>/__tests__/test-utils.js"
+      "<rootDir>/src/state/lib"
     ],
     "reporters": [
       "default",

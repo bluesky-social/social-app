@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import { type ChatBskyConvoDefs as ChatGndrConvoDefs } from '@gander-social-atproto/api'
+import { type ChatGndrConvoDefs } from '@gander-social-atproto/api'
 import { Trans } from '@lingui/macro'
 
 import { useModerationOpts } from '#/state/preferences/moderation-opts'
@@ -8,10 +8,18 @@ import { atoms as a, tokens } from '#/alf'
 import { KnownFollowers } from '#/components/KnownFollowers'
 import { Text } from '#/components/Typography'
 import { ChatListItem } from './ChatListItem'
-import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons'
+import {
+  AcceptChatButton,
+  DeleteChatButton,
+  RejectMenu,
+} from './RequestButtons'
 
-export function RequestListItem({convo}: {convo: ChatGndrConvoDefs.ConvoView}) {
-  const {currentAccount} = useSession()
+export function RequestListItem({
+  convo,
+}: {
+  convo: ChatGndrConvoDefs.ConvoView
+}) {
+  const { currentAccount } = useSession()
   const moderationOpts = useModerationOpts()
 
   const otherUser = convo.members.find(
@@ -36,7 +44,7 @@ export function RequestListItem({convo}: {convo: ChatGndrConvoDefs.ConvoView}) {
           />
         </View>
         {/* spacer, since you can't nest pressables */}
-        <View style={[a.pt_md, a.pb_xs, a.w_full, {opacity: 0}]} aria-hidden>
+        <View style={[a.pt_md, a.pb_xs, a.w_full, { opacity: 0 }]} aria-hidden>
           {/* Placeholder text so that it responds to the font height */}
           <Text style={[a.text_xs, a.leading_tight, a.font_bold]}>
             <Trans comment="Accept a chat request">Accept Request</Trans>

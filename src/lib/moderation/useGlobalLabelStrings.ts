@@ -11,7 +11,7 @@ export type GlobalLabelStrings = Record<
 >
 
 export function useGlobalLabelStrings(): GlobalLabelStrings {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   return useMemo(
     () => ({
       '!hide': {

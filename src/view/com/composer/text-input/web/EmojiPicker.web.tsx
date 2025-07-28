@@ -1,13 +1,13 @@
 import React from 'react'
-import {Pressable, useWindowDimensions, View} from 'react-native'
+import { Pressable, useWindowDimensions, View } from 'react-native'
 import Picker from '@emoji-mart/react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {DismissableLayer, FocusScope} from 'radix-ui/internal'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { DismissableLayer, FocusScope } from 'radix-ui/internal'
 
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
-import {atoms as a, flatten} from '#/alf'
-import {Portal} from '#/components/Portal'
+import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWebEmitter'
+import { atoms as a, flatten } from '#/alf'
+import { Portal } from '#/components/Portal'
 
 const HEIGHT_OFFSET = 40
 const WIDTH_OFFSET = 100
@@ -48,9 +48,9 @@ interface IProps {
   pinToTop?: boolean
 }
 
-export function EmojiPicker({state, close, pinToTop}: IProps) {
-  const {_} = useLingui()
-  const {height, width} = useWindowDimensions()
+export function EmojiPicker({ state, close, pinToTop }: IProps) {
+  const { _ } = useLingui()
+  const { height, width } = useWindowDimensions()
 
   const isShiftDown = React.useRef(false)
 
@@ -152,7 +152,7 @@ export function EmojiPicker({state, close, pinToTop}: IProps) {
               right: 0,
             },
           ])}>
-          <View style={[{position: 'absolute'}, position]}>
+          <View style={[{ position: 'absolute' }, position]}>
             <DismissableLayer.DismissableLayer
               onFocusOutside={evt => evt.preventDefault()}
               onDismiss={close}>

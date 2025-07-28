@@ -1,18 +1,17 @@
-import {View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-// import {LinearGradient} from 'expo-linear-gradient'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+// import { LinearGradient } from 'expo-linear-gradient'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {Logo} from '#/view/icons/Logo'
-// import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a} from '#/alf'
-import {atoms as a} from '#/alf'
-import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
-import {Button, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
-import {CenteredView} from '../util/Views'
+import { ErrorBoundary } from '#/view/com/util/ErrorBoundary'
+import { Logo } from '#/view/icons/Logo'
+// import { Logotype } from '#/view/icons/Logotype'
+import { atoms as a } from '#/alf'
+import { AppLanguageDropdown } from '#/components/AppLanguageDropdown'
+import { Button, ButtonText } from '#/components/Button'
+import { Text } from '#/components/Typography'
+import { CenteredView } from '../util/Views'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -21,7 +20,7 @@ export const SplashScreen = ({
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const insets = useSafeAreaInsets()
 
   return (
@@ -80,7 +79,7 @@ export const SplashScreen = ({
             <AppLanguageDropdown />
           </View>
         </View>
-        <View style={{height: insets.bottom}} />
+        <View style={{ height: insets.bottom }} />
       </ErrorBoundary>
     </CenteredView>
   )

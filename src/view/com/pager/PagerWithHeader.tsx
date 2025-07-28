@@ -1,5 +1,11 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
-import { type LayoutChangeEvent, type NativeScrollEvent, type ScrollView, StyleSheet, View,  } from 'react-native'
+import {
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import Animated, {
   type AnimatedRef,
   runOnUI,
@@ -13,7 +19,11 @@ import Animated, {
 import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
 import { ScrollProvider } from '#/lib/ScrollContext'
 import { isIOS } from '#/platform/detection'
-import { Pager, type PagerRef, type RenderTabBarFnProps,  } from '#/view/com/pager/Pager'
+import {
+  Pager,
+  type PagerRef,
+  type RenderTabBarFnProps,
+} from '#/view/com/pager/Pager'
 import { useTheme } from '#/alf'
 import { type ListMethods } from '../util/List'
 import { PagerHeaderProvider } from './PagerHeaderContext'
@@ -269,7 +279,7 @@ let PagerTabBar = ({
         ref={headerRef}
         pointerEvents={isIOS ? 'auto' : 'box-none'}
         collapsable={false}>
-        {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
+        {renderHeader?.({ setMinimumHeight: setMinimumHeaderHeight })}
         {
           // It wouldn't be enough to place `onLayout` on the parent node because
           // this would risk measuring before `isHeaderReady` has turned `true`.

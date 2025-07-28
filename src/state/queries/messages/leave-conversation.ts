@@ -1,6 +1,13 @@
 import { useMemo } from 'react'
-import { type ChatBskyConvoLeaveConvo as ChatGndrConvoLeaveConvo, type ChatBskyConvoListConvos as ChatGndrConvoListConvos,  } from '@gander-social-atproto/api'
-import { useMutation, useMutationState, useQueryClient,  } from '@tanstack/react-query'
+import {
+  type ChatGndrConvoLeaveConvo,
+  type ChatGndrConvoListConvos,
+} from '@gander-social-atproto/api'
+import {
+  useMutation,
+  useMutationState,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import { logger } from '#/logger'
 import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
@@ -32,9 +39,9 @@ export function useLeaveConvo(
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
 
-      const {data} = await agent.chat.gndr.convo.leaveConvo(
-        {convoId},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
+      const { data } = await agent.chat.gndr.convo.leaveConvo(
+        { convoId },
+        { headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
       )
 
       return data
@@ -61,10 +68,10 @@ export function useLeaveConvo(
         },
       )
       onMutate?.()
-      return {prevPages}
+      return { prevPages }
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] })
       onSuccess?.(data)
     },
     onError: (error, _, context) => {
@@ -82,7 +89,7 @@ export function useLeaveConvo(
           }
         },
       )
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] })
       onError?.(error)
     },
   })
@@ -95,11 +102,11 @@ export function useLeaveConvo(
  */
 export function useLeftConvos() {
   const pending = useMutationState({
-    filters: {mutationKey: [RQKEY_ROOT], status: 'pending'},
+    filters: { mutationKey: [RQKEY_ROOT], status: 'pending' },
     select: mutation => mutation.options.mutationKey?.[1] as string | undefined,
   })
   const success = useMutationState({
-    filters: {mutationKey: [RQKEY_ROOT], status: 'success'},
+    filters: { mutationKey: [RQKEY_ROOT], status: 'success' },
     select: mutation => mutation.options.mutationKey?.[1] as string | undefined,
   })
   return useMemo(

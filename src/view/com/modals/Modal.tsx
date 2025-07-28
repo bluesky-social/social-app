@@ -19,8 +19,8 @@ const DEFAULT_SNAPPOINTS = ['90%']
 const HANDLE_HEIGHT = 24
 
 export function ModalsContainer() {
-  const {isModalActive, activeModals} = useModals()
-  const {closeModal} = useModalControls()
+  const { isModalActive, activeModals } = useModals()
+  const { closeModal } = useModalControls()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const pal = usePalette('default')
   const activeModal = activeModals[activeModals.length - 1]
@@ -94,7 +94,7 @@ export function ModalsContainer() {
         backdropComponent={
           isModalActive ? createCustomBackdrop(onClose) : undefined
         }
-        handleIndicatorStyle={{backgroundColor: pal.text.color}}
+        handleIndicatorStyle={{ backgroundColor: pal.text.color }}
         handleStyle={[styles.handle, pal.view]}
         backgroundStyle={pal.view}
         onChange={onBottomSheetChange}>

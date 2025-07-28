@@ -15,8 +15,8 @@ export const ConfirmLanguagesButton = ({
   extraText?: string
 }) => {
   const pal = usePalette('default')
-  const {_} = useLingui()
-  const {isMobile} = useWebMediaQueries()
+  const { _ } = useLingui()
+  const { isMobile } = useWebMediaQueries()
   return (
     <View
       style={[
@@ -35,8 +35,8 @@ export const ConfirmLanguagesButton = ({
         accessibilityHint="">
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
           style={[styles.btn]}>
           <Text style={[s.white, s.bold, s.f18]}>
             <Trans>Done{extraText}</Trans>

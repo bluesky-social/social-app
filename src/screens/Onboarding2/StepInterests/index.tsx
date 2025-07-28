@@ -1,16 +1,16 @@
 import React from 'react'
-import {Image, View} from 'react-native'
-import Svg, {Path} from 'react-native-svg'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Image, View } from 'react-native'
+import Svg, { Path } from 'react-native-svg'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logger} from '#/logger'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {Context} from '#/screens/Onboarding2/state'
-import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
+import { logger } from '#/logger'
+import { ScreenTransition } from '#/screens/Login/ScreenTransition'
+import { Context } from '#/screens/Onboarding2/state'
+import { atoms as a } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
 
 const interests = [
   {
@@ -61,8 +61,8 @@ const interests = [
 ]
 
 export function StepInterests() {
-  const {_} = useLingui()
-  const {state, dispatch} = React.useContext(Context)
+  const { _ } = useLingui()
+  const { state, dispatch } = React.useContext(Context)
   const [selectedInterests, setSelectedInterests] = React.useState<string[]>([])
 
   const onNextPress = React.useCallback(() => {
@@ -71,13 +71,13 @@ export function StepInterests() {
       {
         activeStep: Number(state.activeStep),
       },
-      {statsig: true},
+      { statsig: true },
     )
-    dispatch({type: 'next'})
+    dispatch({ type: 'next' })
   }, [dispatch, state.activeStep])
 
   const onBackPress = React.useCallback(() => {
-    dispatch({type: 'prev'})
+    dispatch({ type: 'prev' })
   }, [dispatch])
 
   const toggleInterest = React.useCallback((interestId: string) => {
@@ -101,12 +101,12 @@ export function StepInterests() {
         </View>
 
         <View style={[a.align_start]}>
-          <Text style={[{fontSize: 32, fontWeight: '600', marginBottom: 8}]}>
+          <Text style={[{ fontSize: 32, fontWeight: '600', marginBottom: 8 }]}>
             <Trans>What floats your boat?</Trans>
           </Text>
           <Text
             style={[
-              {fontSize: 17, fontWeight: 400, lineHeight: 21, color: '#666'},
+              { fontSize: 17, fontWeight: 400, lineHeight: 21, color: '#666' },
             ]}>
             <Trans>
               Let us know your interests. We'll use this to help customize your
@@ -115,7 +115,7 @@ export function StepInterests() {
           </Text>
         </View>
 
-        <View style={[a.flex_row, a.flex_wrap, a.gap_md, {marginTop: 24}]}>
+        <View style={[a.flex_row, a.flex_wrap, a.gap_md, { marginTop: 24 }]}>
           {interests.map(interest => {
             const isSelected = selectedInterests.includes(interest.id)
             return (
@@ -186,7 +186,11 @@ export function StepInterests() {
       </View>
 
       <View
-        style={[a.border_t, a.mt_lg, {borderColor: '#D8D8D8', borderWidth: 1}]}
+        style={[
+          a.border_t,
+          a.mt_lg,
+          { borderColor: '#D8D8D8', borderWidth: 1 },
+        ]}
       />
       <View style={[a.flex_row, a.align_center, a.pt_lg]}>
         <Button

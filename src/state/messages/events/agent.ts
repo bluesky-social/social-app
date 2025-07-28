@@ -1,12 +1,25 @@
-import { type ChatBskyConvoGetLog as ChatGndrConvoGetLog, type GndrAgent,  } from '@gander-social-atproto/api'
+import {
+  type ChatGndrConvoGetLog,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 import EventEmitter from 'eventemitter3'
 import { nanoid } from 'nanoid/non-secure'
 
 import { networkRetry } from '#/lib/async/retry'
 import { isNetworkError } from '#/lib/strings/errors'
 import { Logger } from '#/logger'
-import { BACKGROUND_POLL_INTERVAL, DEFAULT_POLL_INTERVAL,  } from '#/state/messages/events/const'
-import { type MessagesEventBusDispatch, MessagesEventBusDispatchEvent, MessagesEventBusErrorCode, type MessagesEventBusEvent, type MessagesEventBusParams, MessagesEventBusStatus,  } from '#/state/messages/events/types'
+import {
+  BACKGROUND_POLL_INTERVAL,
+  DEFAULT_POLL_INTERVAL,
+} from '#/state/messages/events/const'
+import {
+  type MessagesEventBusDispatch,
+  MessagesEventBusDispatchEvent,
+  MessagesEventBusErrorCode,
+  type MessagesEventBusEvent,
+  type MessagesEventBusParams,
+  MessagesEventBusStatus,
+} from '#/state/messages/events/types'
 import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
 
 const logger = Logger.create(Logger.Context.DMsAgent)
@@ -15,7 +28,7 @@ export class MessagesEventBus {
   private id: string
 
   private agent: GndrAgent
-  private emitter = new EventEmitter<{event: [MessagesEventBusEvent]}>()
+  private emitter = new EventEmitter<{ event: [MessagesEventBusEvent] }>()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing
   private latestRev: string | undefined = undefined
@@ -82,17 +95,17 @@ export class MessagesEventBus {
 
   background() {
     logger.debug(`background`, {})
-    this.dispatch({event: MessagesEventBusDispatchEvent.Background})
+    this.dispatch({ event: MessagesEventBusDispatchEvent.Background })
   }
 
   suspend() {
     logger.debug(`suspend`, {})
-    this.dispatch({event: MessagesEventBusDispatchEvent.Suspend})
+    this.dispatch({ event: MessagesEventBusDispatchEvent.Suspend })
   }
 
   resume() {
     logger.debug(`resume`, {})
-    this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
+    this.dispatch({ event: MessagesEventBusDispatchEvent.Resume })
   }
 
   private dispatch(action: MessagesEventBusDispatch) {
@@ -104,13 +117,13 @@ export class MessagesEventBus {
           case MessagesEventBusDispatchEvent.Ready: {
             this.status = MessagesEventBusStatus.Ready
             this.resetPoll()
-            this.emitter.emit('event', {type: 'connect'})
+            this.emitter.emit('event', { type: 'connect' })
             break
           }
           case MessagesEventBusDispatchEvent.Background: {
             this.status = MessagesEventBusStatus.Backgrounded
             this.resetPoll()
-            this.emitter.emit('event', {type: 'connect'})
+            this.emitter.emit('event', { type: 'connect' })
             break
           }
           case MessagesEventBusDispatchEvent.Suspend: {
@@ -119,7 +132,7 @@ export class MessagesEventBus {
           }
           case MessagesEventBusDispatchEvent.Error: {
             this.status = MessagesEventBusStatus.Error
-            this.emitter.emit('event', {type: 'error', error: action.payload})
+            this.emitter.emit('event', { type: 'error', error: action.payload })
             break
           }
         }
@@ -140,7 +153,7 @@ export class MessagesEventBus {
           case MessagesEventBusDispatchEvent.Error: {
             this.status = MessagesEventBusStatus.Error
             this.stopPoll()
-            this.emitter.emit('event', {type: 'error', error: action.payload})
+            this.emitter.emit('event', { type: 'error', error: action.payload })
             break
           }
           case MessagesEventBusDispatchEvent.UpdatePoll: {
@@ -165,7 +178,7 @@ export class MessagesEventBus {
           case MessagesEventBusDispatchEvent.Error: {
             this.status = MessagesEventBusStatus.Error
             this.stopPoll()
-            this.emitter.emit('event', {type: 'error', error: action.payload})
+            this.emitter.emit('event', { type: 'error', error: action.payload })
             break
           }
           case MessagesEventBusDispatchEvent.UpdatePoll: {
@@ -190,7 +203,7 @@ export class MessagesEventBus {
           case MessagesEventBusDispatchEvent.Error: {
             this.status = MessagesEventBusStatus.Error
             this.stopPoll()
-            this.emitter.emit('event', {type: 'error', error: action.payload})
+            this.emitter.emit('event', { type: 'error', error: action.payload })
             break
           }
         }
@@ -208,7 +221,7 @@ export class MessagesEventBus {
           case MessagesEventBusDispatchEvent.Resume: {
             this.status = MessagesEventBusStatus.Ready
             this.resetPoll()
-            this.emitter.emit('event', {type: 'connect'})
+            this.emitter.emit('event', { type: 'connect' })
             break
           }
         }
@@ -230,14 +243,14 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
+        return this.agent.chat.gndr.convo.getLog(
           {},
-          {headers: DM_SERVICE_HEADERS},
+          { headers: DM_SERVICE_HEADERS },
         )
       })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
-      const {cursor} = response.data
+      const { cursor } = response.data
 
       // should always be defined
       if (cursor) {
@@ -248,7 +261,7 @@ export class MessagesEventBus {
         }
       }
 
-      this.dispatch({event: MessagesEventBusDispatchEvent.Ready})
+      this.dispatch({ event: MessagesEventBusDispatchEvent.Ready })
     } catch (e: any) {
       if (!isNetworkError(e)) {
         logger.error(`init failed`, {
@@ -262,7 +275,7 @@ export class MessagesEventBus {
           exception: e,
           code: MessagesEventBusErrorCode.InitFailed,
           retry: () => {
-            this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
+            this.dispatch({ event: MessagesEventBusDispatchEvent.Resume })
           },
         },
       })
@@ -326,17 +339,17 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.bsky.convo.getLog(
+        return this.agent.chat.gndr.convo.getLog(
           {
             cursor: this.latestRev,
           },
-          {headers: DM_SERVICE_HEADERS},
+          { headers: DM_SERVICE_HEADERS },
         )
       })
 
       // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
 
-      const {logs: events} = response.data
+      const { logs: events } = response.data
 
       let needsEmit = false
       let batch: ChatGndrConvoGetLog.OutputSchema['logs'] = []
@@ -362,7 +375,7 @@ export class MessagesEventBus {
       }
 
       if (needsEmit) {
-        this.emitter.emit('event', {type: 'logs', logs: batch})
+        this.emitter.emit('event', { type: 'logs', logs: batch })
       }
     } catch (e: any) {
       if (!isNetworkError(e)) {
@@ -377,7 +390,7 @@ export class MessagesEventBus {
           exception: e,
           code: MessagesEventBusErrorCode.PollFailed,
           retry: () => {
-            this.dispatch({event: MessagesEventBusDispatchEvent.Resume})
+            this.dispatch({ event: MessagesEventBusDispatchEvent.Resume })
           },
         },
       })

@@ -1,6 +1,9 @@
 import React from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
-import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  type FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import { Trans } from '@lingui/macro'
 import { useNavigation } from '@react-navigation/native'
 
@@ -34,7 +37,7 @@ export function FollowingEndOfFeed() {
       style={[
         styles.container,
         pal.border,
-        {minHeight: Dimensions.get('window').height * 0.75},
+        { minHeight: Dimensions.get('window').height * 0.75 },
       ]}>
       <View style={styles.inner}>
         <Text type="xl-medium" style={[s.textCenter, pal.text]}>

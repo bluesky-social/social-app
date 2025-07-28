@@ -5,19 +5,29 @@ import { type ModerationUI } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
-import { useCameraPermission, usePhotoLibraryPermission,  } from '#/lib/hooks/usePermissions'
+import {
+  useCameraPermission,
+  usePhotoLibraryPermission,
+} from '#/lib/hooks/usePermissions'
 import { compressIfNeeded } from '#/lib/media/manip'
 import { openCamera, openCropper, openPicker } from '#/lib/media/picker'
 import { type PickerImage } from '#/lib/media/picker.shared'
 import { logger } from '#/logger'
 import { isAndroid, isNative } from '#/platform/detection'
-import { type ComposerImage, compressImage, createComposerImage,  } from '#/state/gallery'
+import {
+  type ComposerImage,
+  compressImage,
+  createComposerImage,
+} from '#/state/gallery'
 import { EditImageDialog } from '#/view/com/composer/photos/EditImageDialog'
 import { EventStopper } from '#/view/com/util/EventStopper'
 import { atoms as a, tokens, useTheme } from '#/alf'
 import { useDialogControl } from '#/components/Dialog'
 import { useSheetWrapper } from '#/components/Dialog/sheet-wrapper'
-import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon, Camera_Stroke2_Corner0_Rounded as CameraIcon,  } from '#/components/icons/Camera'
+import {
+  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon,
+  Camera_Stroke2_Corner0_Rounded as CameraIcon,
+} from '#/components/icons/Camera'
 import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive'
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
@@ -34,9 +44,9 @@ export function UserBanner({
   onSelectNewBanner?: (img: PickerImage | null) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
-  const {requestCameraAccessIfNeeded} = useCameraPermission()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const { _ } = useLingui()
+  const { requestCameraAccessIfNeeded } = useCameraPermission()
+  const { requestPhotoAccessIfNeeded } = usePhotoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
   const [rawImage, setRawImage] = useState<ComposerImage | undefined>()
   const editImageDialogControl = useDialogControl()
@@ -79,7 +89,7 @@ export function UserBanner({
       }
     } catch (e: any) {
       if (!String(e).includes('Canceled')) {
-        logger.error('Failed to crop banner', {error: e})
+        logger.error('Failed to crop banner', { error: e })
       }
     }
   }, [
@@ -107,13 +117,13 @@ export function UserBanner({
       <EventStopper onKeyDown={true}>
         <Menu.Root>
           <Menu.Trigger label={_(msg`Edit avatar`)}>
-            {({props}) => (
+            {({ props }) => (
               <Pressable {...props} testID="changeBannerBtn">
                 {banner ? (
                   <Image
                     testID="userBannerImage"
                     style={styles.bannerImage}
-                    source={{uri: banner}}
+                    source={{ uri: banner }}
                     accessible={true}
                     accessibilityIgnoresInvertColors
                   />
@@ -200,7 +210,7 @@ export function UserBanner({
       testID="userBannerImage"
       style={[styles.bannerImage, t.atoms.bg_contrast_25]}
       contentFit="cover"
-      source={{uri: banner}}
+      source={{ uri: banner }}
       blurRadius={moderation?.blur ? 100 : 0}
       accessible={true}
       accessibilityIgnoresInvertColors

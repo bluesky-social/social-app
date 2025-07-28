@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, { useCallback } from 'react'
 import { Dimensions, type StyleProp, View, type ViewStyle } from 'react-native'
 import { type AppGndrGraphDefs } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
@@ -20,10 +20,10 @@ import { ListFooter } from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import type * as gndr from '#/types/gndr'
 
-const LOADING_ITEM = {_reactKey: '__loading__'}
-const EMPTY_ITEM = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const LOADING_ITEM = { _reactKey: '__loading__' }
+const EMPTY_ITEM = { _reactKey: '__empty__' }
+const ERROR_ITEM = { _reactKey: '__error__' }
+const LOAD_MORE_ERROR_ITEM = { _reactKey: '__load_more_error__' }
 
 export function ListMembers({
   list,
@@ -49,10 +49,10 @@ export function ListMembers({
   desktopFixedHeightOffset?: number
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
-  const {openModal} = useModalControls()
-  const {currentAccount} = useSession()
+  const { openModal } = useModalControls()
+  const { currentAccount } = useSession()
   const moderationOpts = useModerationOpts()
 
   const {
@@ -100,7 +100,7 @@ export function ListMembers({
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh lists', {message: err})
+      logger.error('Failed to refresh lists', { message: err })
     }
     setIsRefreshing(false)
   }, [refetch, setIsRefreshing])
@@ -110,7 +110,7 @@ export function ListMembers({
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more lists', {message: err})
+      logger.error('Failed to load more lists', { message: err })
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
@@ -134,7 +134,7 @@ export function ListMembers({
   // =
 
   const renderItem = React.useCallback(
-    ({item}: {item: any}) => {
+    ({ item }: { item: any }) => {
       if (item === EMPTY_ITEM) {
         return renderEmptyState()
       } else if (item === ERROR_ITEM) {
@@ -177,7 +177,7 @@ export function ListMembers({
                 {isOwner && (
                   <Button
                     testID={`user-${profile.handle}-editBtn`}
-                    label={_(msg({message: 'Edit', context: 'action'}))}
+                    label={_(msg({ message: 'Edit', context: 'action' }))}
                     onPress={() => onPressEditMembership(profile)}
                     size="small"
                     variant="solid"

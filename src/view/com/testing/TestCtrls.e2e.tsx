@@ -15,14 +15,14 @@ LogBox.ignoreAllLogs()
  * of the tests dramatically.
  */
 
-const BTN = {height: 1, width: 1, backgroundColor: 'red'}
+const BTN = { height: 1, width: 1, backgroundColor: 'red' }
 
 export function TestCtrls() {
   const queryClient = useQueryClient()
-  const {logoutEveryAccount, login} = useSessionApi()
-  const {openModal} = useModalControls()
+  const { logoutEveryAccount, login } = useSessionApi()
+  const { openModal } = useModalControls()
   const onboardingDispatch = useOnboardingDispatch()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const { setShowLoggedOut } = useLoggedOutViewControls()
   const onPressSignInAlice = async () => {
     await login(
       {
@@ -46,7 +46,7 @@ export function TestCtrls() {
     setShowLoggedOut(false)
   }
   return (
-    <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
+    <View style={{ position: 'absolute', top: 100, right: 0, zIndex: 100 }}>
       <Pressable
         testID="e2eSignInAlice"
         onPress={onPressSignInAlice}
@@ -97,13 +97,15 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eRefreshHome"
-        onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
+        onPress={() =>
+          queryClient.invalidateQueries({ queryKey: ['post-feed'] })
+        }
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
         testID="e2eOpenInviteCodesModal"
-        onPress={() => openModal({name: 'invite-codes'})}
+        onPress={() => openModal({ name: 'invite-codes' })}
         accessibilityRole="button"
         style={BTN}
       />
@@ -116,7 +118,7 @@ export function TestCtrls() {
       <Pressable
         testID="e2eStartOnboarding"
         onPress={() => {
-          onboardingDispatch({type: 'start', handle: undefined})
+          onboardingDispatch({ type: 'start', handle: undefined })
         }}
         accessibilityRole="button"
         style={BTN}
@@ -125,7 +127,7 @@ export function TestCtrls() {
       <Pressable
         testID="e2eStartLongboarding"
         onPress={() => {
-          onboardingDispatch({type: 'start', handle: undefined})
+          onboardingDispatch({ type: 'start', handle: undefined })
         }}
         accessibilityRole="button"
         style={BTN}

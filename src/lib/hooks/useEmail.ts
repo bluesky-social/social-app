@@ -6,10 +6,10 @@ import { GNDR_SERVICE } from '../constants'
 import { getHostnameFromUrl } from '../strings/url-helpers'
 
 export function useEmail() {
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
 
-  const {data: serviceConfig} = useServiceConfigQuery()
-  const {data: profile} = useProfileQuery({
+  const { data: serviceConfig } = useServiceConfigQuery()
+  const { data: profile } = useProfileQuery({
     did: currentAccount?.did,
     staleTime: STALE.INFINITY,
   })
@@ -32,5 +32,5 @@ export function useEmail() {
     !currentAccount?.emailConfirmed &&
     isNewEnough
 
-  return {needsEmailVerification}
+  return { needsEmailVerification }
 }

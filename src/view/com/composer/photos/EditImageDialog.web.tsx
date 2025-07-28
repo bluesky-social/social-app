@@ -4,9 +4,13 @@ import { useCallback, useImperativeHandle, useRef, useState } from 'react'
 import { View } from 'react-native'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import ReactCrop, {type PercentCrop} from 'react-image-crop'
+import ReactCrop, { type PercentCrop } from 'react-image-crop'
 
-import { type ImageSource, type ImageTransformation, manipulateImage,  } from '#/state/gallery'
+import {
+  type ImageSource,
+  type ImageTransformation,
+  manipulateImage,
+} from '#/state/gallery'
 import { atoms as a, useTheme } from '#/alf'
 import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -29,9 +33,9 @@ function DialogInner({
   circularCrop,
   aspectRatio,
 }: EditImageDialogProps) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const [pending, setPending] = useState(false)
-  const ref = useRef<{save: () => Promise<void>}>(null)
+  const ref = useRef<{ save: () => Promise<void> }>(null)
 
   const cancelButton = useCallback(
     () => (
@@ -108,11 +112,11 @@ function EditImageInner({
   aspectRatio,
 }: Required<Pick<EditImageDialogProps, 'image'>> &
   Omit<EditImageDialogProps, 'control' | 'image'> & {
-    saveRef: React.RefObject<{save: () => Promise<void>}>
+    saveRef: React.RefObject<{ save: () => Promise<void> }>
   }) {
   const t = useTheme()
   const [isDragging, setIsDragging] = useState(false)
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const control = Dialog.useDialogContext()
 
   const source = image.source
@@ -164,7 +168,7 @@ function EditImageInner({
         className="ReactCrop--no-animate"
         onDragStart={() => setIsDragging(true)}
         onDragEnd={() => setIsDragging(false)}>
-        <img src={source.path} style={{maxHeight: `50vh`}} />
+        <img src={source.path} style={{ maxHeight: `50vh` }} />
       </ReactCrop>
       {/* Eat clicks when dragging, otherwise mousing up over the backdrop
         causes the dialog to close */}

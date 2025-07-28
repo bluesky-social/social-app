@@ -1,12 +1,29 @@
 import { memo, useCallback, useMemo } from 'react'
-import { type GestureResponderEvent, Platform, Pressable, type StyleProp, type TextProps, type TextStyle, type TouchableOpacity, View, type ViewStyle,  } from 'react-native'
+import {
+  type GestureResponderEvent,
+  Platform,
+  Pressable,
+  type StyleProp,
+  type TextProps,
+  type TextStyle,
+  type TouchableOpacity,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import { sanitizeUrl } from '@braintree/sanitize-url'
 import { StackActions } from '@react-navigation/native'
 
-import { type DebouncedNavigationProp, useNavigationDeduped,  } from '#/lib/hooks/useNavigationDeduped'
+import {
+  type DebouncedNavigationProp,
+  useNavigationDeduped,
+} from '#/lib/hooks/useNavigationDeduped'
 import { useOpenLink } from '#/lib/hooks/useOpenLink'
 import { getTabState, TabState } from '#/lib/routes/helpers'
-import { convertGndrAppUrlIfNeeded, isExternalUrl, linkRequiresWarning,  } from '#/lib/strings/url-helpers'
+import {
+  convertGndrAppUrlIfNeeded,
+  isExternalUrl,
+  linkRequiresWarning,
+} from '#/lib/strings/url-helpers'
 import { type TypographyVariant } from '#/lib/ThemeContext'
 import { isAndroid, isWeb } from '#/platform/detection'
 import { emitSoftReset } from '#/state/events'
@@ -60,7 +77,7 @@ export const Link = memo(function Link({
   ...props
 }: Props) {
   const t = useTheme()
-  const {closeModal} = useModalControls()
+  const { closeModal } = useModalControls()
   const navigation = useNavigationDeduped()
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
   const openLink = useOpenLink()
@@ -84,11 +101,11 @@ export const Link = memo(function Link({
 
   const accessibilityActionsWithActivate = [
     ...(accessibilityActions || []),
-    {name: 'activate', label: title},
+    { name: 'activate', label: title },
   ]
 
   const dataSet = anchorNoUnderline
-    ? {...dataSetProp, noUnderline: 1}
+    ? { ...dataSetProp, noUnderline: 1 }
     : dataSetProp
 
   if (noFeedback) {
@@ -177,8 +194,8 @@ export const TextLink = memo(function TextLink({
   onBeforePress?: () => void
 } & TextProps) {
   const navigation = useNavigationDeduped()
-  const {closeModal} = useModalControls()
-  const {linkWarningDialogControl} = useGlobalDialogsControlContext()
+  const { closeModal } = useModalControls()
+  const { linkWarningDialogControl } = useGlobalDialogsControlContext()
   const openLink = useOpenLink()
 
   if (!disableMismatchWarning && typeof text !== 'string') {
@@ -186,7 +203,7 @@ export const TextLink = memo(function TextLink({
   }
 
   const dataSet = anchorNoUnderline
-    ? {...dataSetProp, noUnderline: 1}
+    ? { ...dataSetProp, noUnderline: 1 }
     : dataSetProp
 
   const onPress = useCallback(
@@ -410,7 +427,7 @@ function onPressInner(
           // note: 'navigate' actually acts the same as 'push' nowadays
           // therefore we need to add 'pop' -sfn
           // @ts-ignore we're not able to type check on this one -prf
-          navigation.navigate(routeName, params, {pop: true})
+          navigation.navigate(routeName, params, { pop: true })
         }
       } else {
         throw Error('Unsupported navigator action.')

@@ -1,6 +1,9 @@
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native'
 import { type IconProp } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  type FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 
 import { usePalette } from '#/lib/hooks/usePalette'
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
@@ -20,7 +23,7 @@ export function EmptyState({
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const { isTabletOrDesktop } = useWebMediaQueries()
   const iconSize = isTabletOrDesktop ? 64 : 48
   return (
     <View testID={testID} style={style}>
@@ -38,11 +41,13 @@ export function EmptyState({
           <FontAwesomeIcon
             icon={icon}
             size={iconSize}
-            style={[{color: pal.colors.emptyStateIcon} as FontAwesomeIconStyle]}
+            style={[
+              { color: pal.colors.emptyStateIcon } as FontAwesomeIconStyle,
+            ]}
           />
         )}
       </View>
-      <Text type="xl" style={[{color: pal.colors.textLight}, styles.text]}>
+      <Text type="xl" style={[{ color: pal.colors.textLight }, styles.text]}>
         {message}
       </Text>
     </View>

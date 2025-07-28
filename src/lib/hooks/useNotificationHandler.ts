@@ -76,13 +76,13 @@ let lastHandledNotificationDateDedupe = 0
 
 export function useNotificationsHandler() {
   const queryClient = useQueryClient()
-  const {currentAccount, accounts} = useSession()
-  const {onPressSwitchAccount} = useAccountSwitcher()
+  const { currentAccount, accounts } = useSession()
+  const { onPressSwitchAccount } = useAccountSwitcher()
   const navigation = useNavigation<NavigationProp>()
-  const {currentConvoId} = useCurrentConvoId()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const { currentConvoId } = useCurrentConvoId()
+  const { setShowLoggedOut } = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   // On Android, we cannot control which sound is used for a notification on Android
   // 28 or higher. Instead, we have to configure a notification channel ahead of time
@@ -249,7 +249,7 @@ export function useNotificationsHandler() {
         } else if (url) {
           const [screen, params] = router.matchPath(url)
           // @ts-expect-error router is not typed :/ -sfn
-          navigation.navigate('HomeTab', {screen, params})
+          navigation.navigate('HomeTab', { screen, params })
           notyLogger.debug(`useNotificationsHandler: navigate`, {
             screen,
             params,
@@ -264,7 +264,7 @@ export function useNotificationsHandler() {
 
         if (!payload) return DEFAULT_HANDLER_OPTIONS
 
-        notyLogger.debug('useNotificationsHandler: incoming', {e, payload})
+        notyLogger.debug('useNotificationsHandler: incoming', { e, payload })
 
         if (
           payload.reason === 'chat-message' &&
@@ -318,8 +318,8 @@ export function useNotificationsHandler() {
           )
           notyLogger.metric(
             'notifications:openApp',
-            {reason: payload.reason, causedBoot: false},
-            {statsig: false},
+            { reason: payload.reason, causedBoot: false },
+            { statsig: false },
           )
 
           invalidateCachedUnreadPage()

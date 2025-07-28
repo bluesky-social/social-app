@@ -1,4 +1,11 @@
-import { type $Typed, type AppGndrActorDefs, type AppGndrGraphGetStarterPack, type ComAtprotoRepoApplyWrites, type Facet, type GndrAgent,  } from '@gander-social-atproto/api'
+import {
+  type $Typed,
+  type AppGndrActorDefs,
+  type AppGndrGraphGetStarterPack,
+  type ComAtprotoRepoApplyWrites,
+  type Facet,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useMutation } from '@tanstack/react-query'
@@ -24,9 +31,9 @@ export const createStarterPackList = async ({
   descriptionFacets?: Facet[]
   profiles: gndr.profile.AnyProfileView[]
   agent: GndrAgent
-}): Promise<{uri: string; cid: string}> => {
+}): Promise<{ uri: string; cid: string }> => {
   const list = await getAppNS(agent).graph.list.create(
-    {repo: agent.session!.did},
+    { repo: agent.session!.did },
     {
       name,
       description,
@@ -40,12 +47,12 @@ export const createStarterPackList = async ({
   await agent.com.atproto.repo.applyWrites({
     repo: agent.session!.did,
     writes: [
-      createListItem({did: agent.session!.did, listUri: list.uri}),
+      createListItem({ did: agent.session!.did, listUri: list.uri }),
     ].concat(
       profiles
         // Ensure we don't have ourselves in this list twice
         .filter(p => p.did !== agent.session!.did)
-        .map(p => createListItem({did: p.did, listUri: list.uri})),
+        .map(p => createListItem({ did: p.did, listUri: list.uri })),
     ),
   })
 
@@ -56,13 +63,13 @@ export function useGenerateStarterPackMutation({
   onSuccess,
   onError,
 }: {
-  onSuccess: ({uri, cid}: {uri: string; cid: string}) => void
+  onSuccess: ({ uri, cid }: { uri: string; cid: string }) => void
   onError: (e: Error) => void
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const agent = useAgent()
 
-  return useMutation<{uri: string; cid: string}, Error, void>({
+  return useMutation<{ uri: string; cid: string }, Error, void>({
     mutationFn: async () => {
       let profile: AppGndrActorDefs.ProfileViewDetailed | undefined
       let profiles: AppGndrActorDefs.ProfileView[] | undefined
@@ -141,9 +148,13 @@ function createListItem({
 }): $Typed<ComAtprotoRepoApplyWrites.Create> {
   return {
     $type: 'com.atproto.repo.applyWrites#create',
-    collection: getAppType('graph.listitem') as 'app.gndr.graph.listitem' | 'app.bksy.graph.listitem',
+    collection: getAppType('graph.listitem') as
+      | 'app.gndr.graph.listitem'
+      | 'app.bksy.graph.listitem',
     value: {
-      $type: getAppType('graph.listitem') as 'app.gndr.graph.listitem' | 'app.bksy.graph.listitem',
+      $type: getAppType('graph.listitem') as
+        | 'app.gndr.graph.listitem'
+        | 'app.bksy.graph.listitem',
       subject: did,
       list: listUri,
       createdAt: new Date().toISOString(),
@@ -160,6 +171,6 @@ async function whenAppViewReady(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => getAppNS(agent).graph.getStarterPack({starterPack: uri}),
+    () => getAppNS(agent).graph.getStarterPack({ starterPack: uri }),
   )
 }

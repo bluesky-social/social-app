@@ -28,14 +28,14 @@ enum ScreenState {
   S_StarterPack,
   S_Welcome,
 }
-export {ScreenState as LoggedOutScreenState}
+export { ScreenState as LoggedOutScreenState }
 
-export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
-  const {_} = useLingui()
+export function LoggedOut({ onDismiss }: { onDismiss?: () => void }) {
+  const { _ } = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {requestedAccountSwitchTo} = useLoggedOutView()
+  const { requestedAccountSwitchTo } = useLoggedOutView()
   const [screenState, setScreenState] = React.useState<ScreenState>(() => {
     if (requestedAccountSwitchTo === 'new') {
       return ScreenState.S_CreateAccount
@@ -47,7 +47,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       return ScreenState.S_LoginOrCreateAccount
     }
   })
-  const {clearRequestedAccount} = useLoggedOutViewControls()
+  const { clearRequestedAccount } = useLoggedOutViewControls()
 
   React.useEffect(() => {
     setMinimalShellMode(true)
@@ -70,7 +70,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         t.atoms.bg,
         isWelcomeScreen
           ? {}
-          : {paddingTop: insets.top, paddingBottom: insets.bottom},
+          : { paddingTop: insets.top, paddingBottom: insets.bottom },
       ]}>
       <ErrorBoundary>
         {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
@@ -124,6 +124,13 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
             onPressBack={() =>
               setScreenState(ScreenState.S_LoginOrCreateAccount)
             }
+          />
+        ) : undefined}
+        {isWelcomeScreen ? (
+          <Welcome
+            onGetStartedPress={() => {
+              setScreenState(ScreenState.S_Login)
+            }}
           />
         ) : undefined}
         {isWelcomeScreen ? (

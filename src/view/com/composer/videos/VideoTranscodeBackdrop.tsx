@@ -1,5 +1,5 @@
 import { clearCache, createVideoThumbnail } from 'react-native-compressor'
-import Animated, {FadeIn} from 'react-native-reanimated'
+import Animated, { FadeIn } from 'react-native-reanimated'
 import { Image } from 'expo-image'
 import { type QueryClient, useQuery } from '@tanstack/react-query'
 
@@ -9,11 +9,11 @@ export const RQKEY = 'video-thumbnail'
 
 export function clearThumbnailCache(queryClient: QueryClient) {
   clearCache().catch(() => {})
-  queryClient.resetQueries({queryKey: [RQKEY]})
+  queryClient.resetQueries({ queryKey: [RQKEY] })
 }
 
-export function VideoTranscodeBackdrop({uri}: {uri: string}) {
-  const {data: thumbnail} = useQuery({
+export function VideoTranscodeBackdrop({ uri }: { uri: string }) {
+  const { data: thumbnail } = useQuery({
     queryKey: [RQKEY, uri],
     queryFn: async () => {
       return await createVideoThumbnail(uri)

@@ -18,11 +18,11 @@ type Props = {
   onAdd: (next: ComposerImage[]) => void
 }
 
-export function OpenCameraBtn({disabled, onAdd}: Props) {
-  const {_} = useLingui()
-  const {requestCameraAccessIfNeeded} = useCameraPermission()
+export function OpenCameraBtn({ disabled, onAdd }: Props) {
+  const { _ } = useLingui()
+  const { requestCameraAccessIfNeeded } = useCameraPermission()
   const [mediaPermissionRes, requestMediaPermission] =
-    MediaLibrary.usePermissions({granularPermissions: ['photo']})
+    MediaLibrary.usePermissions({ granularPermissions: ['photo'] })
   const t = useTheme()
 
   const onPressTakePicture = useCallback(async () => {
@@ -49,7 +49,7 @@ export function OpenCameraBtn({disabled, onAdd}: Props) {
       onAdd([res])
     } catch (err: any) {
       // ignore
-      logger.warn('Error using camera', {error: err})
+      logger.warn('Error using camera', { error: err })
     }
   }, [
     onAdd,

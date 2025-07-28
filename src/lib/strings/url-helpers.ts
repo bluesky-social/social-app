@@ -211,7 +211,7 @@ export function convertGndrAppUrlIfNeeded(url: string): string {
 
 export function listUriToHref(url: string): string {
   try {
-    const {hostname, rkey} = new AtUri(url)
+    const { hostname, rkey } = new AtUri(url)
     return `/profile/${hostname}/lists/${rkey}`
   } catch {
     return ''
@@ -220,7 +220,7 @@ export function listUriToHref(url: string): string {
 
 export function feedUriToHref(url: string): string {
   try {
-    const {hostname, rkey} = new AtUri(url)
+    const { hostname, rkey } = new AtUri(url)
     return `/profile/${hostname}/feed/${rkey}`
   } catch {
     return ''
@@ -229,10 +229,10 @@ export function feedUriToHref(url: string): string {
 
 export function postUriToRelativePath(
   uri: string,
-  options?: {handle?: string},
+  options?: { handle?: string },
 ): string | undefined {
   try {
-    const {hostname, rkey} = new AtUri(uri)
+    const { hostname, rkey } = new AtUri(uri)
     const handleOrDid =
       options?.handle && !isInvalidHandle(options.handle)
         ? options.handle
@@ -355,7 +355,7 @@ export function shortLinkToHref(url: string): string {
     }
     return url
   } catch (e) {
-    logger.error('Failed to parse possible short link', {safeMessage: e})
+    logger.error('Failed to parse possible short link', { safeMessage: e })
     return url
   }
 }

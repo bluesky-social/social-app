@@ -32,7 +32,7 @@ export function useHideBottomBarBorder() {
   return useContext(HideBottomBarBorderContext)
 }
 
-export function Provider({children}: {children: React.ReactNode}) {
+export function Provider({ children }: { children: React.ReactNode }) {
   const [refCount, setRefCount] = useState(0)
 
   const setter = useCallback(() => {

@@ -1,6 +1,13 @@
-import React, {memo, useCallback, useMemo, useState} from 'react'
-import { Image, Pressable, type StyleProp, StyleSheet, View, type ViewStyle,  } from 'react-native'
-import Svg, {Circle, Path, Rect} from 'react-native-svg'
+import React, { memo, useCallback, useMemo, useState } from 'react'
+import {
+  Image,
+  Pressable,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import Svg, { Circle, Path, Rect } from 'react-native-svg'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { type ModerationUI } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
@@ -10,7 +17,10 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useActorStatus } from '#/lib/actor-status'
 import { isTouchDevice } from '#/lib/browser'
 import { useHaptics } from '#/lib/haptics'
-import { useCameraPermission, usePhotoLibraryPermission,  } from '#/lib/hooks/usePermissions'
+import {
+  useCameraPermission,
+  usePhotoLibraryPermission,
+} from '#/lib/hooks/usePermissions'
 import { compressIfNeeded } from '#/lib/media/manip'
 import { openCamera, openCropper, openPicker } from '#/lib/media/picker'
 import { type PickerImage } from '#/lib/media/picker.shared'
@@ -19,7 +29,11 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names'
 import { sanitizeHandle } from '#/lib/strings/handles'
 import { logger } from '#/logger'
 import { isAndroid, isNative, isWeb } from '#/platform/detection'
-import { type ComposerImage, compressImage, createComposerImage,  } from '#/state/gallery'
+import {
+  type ComposerImage,
+  compressImage,
+  createComposerImage,
+} from '#/state/gallery'
 import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache'
 import { EditImageDialog } from '#/view/com/composer/photos/EditImageDialog'
 import { HighPriorityImage } from '#/view/com/util/images/Image'
@@ -27,7 +41,10 @@ import { atoms as a, tokens, useTheme } from '#/alf'
 import { Button } from '#/components/Button'
 import { useDialogControl } from '#/components/Dialog'
 import { useSheetWrapper } from '#/components/Dialog/sheet-wrapper'
-import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon, Camera_Stroke2_Corner0_Rounded as CameraIcon,  } from '#/components/icons/Camera'
+import {
+  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon,
+  Camera_Stroke2_Corner0_Rounded as CameraIcon,
+} from '#/components/icons/Camera'
 import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive'
 import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash'
 import { Link } from '#/components/Link'
@@ -85,7 +102,7 @@ let DefaultAvatar = ({
 
   const aviStyle = useMemo(() => {
     if (finalShape === 'square') {
-      return {borderRadius: size > 32 ? 8 : 3, overflow: 'hidden'} as const
+      return { borderRadius: size > 32 ? 8 : 3, overflow: 'hidden' } as const
     }
   }, [finalShape, size])
 
@@ -190,7 +207,7 @@ let DefaultAvatar = ({
   )
 }
 DefaultAvatar = memo(DefaultAvatar)
-export {DefaultAvatar}
+export { DefaultAvatar }
 
 let UserAvatar = ({
   type = 'user',
@@ -226,7 +243,7 @@ let UserAvatar = ({
 
   const borderStyle = useMemo(() => {
     return [
-      {borderRadius: aviStyle.borderRadius},
+      { borderRadius: aviStyle.borderRadius },
       live && {
         borderColor: t.palette.negative_500,
         borderWidth: size > 16 ? 2 : 1,
@@ -246,11 +263,11 @@ let UserAvatar = ({
           a.right_0,
           a.bottom_0,
           a.rounded_full,
-          {backgroundColor: t.palette.white},
+          { backgroundColor: t.palette.white },
         ]}>
         <FontAwesomeIcon
           icon="exclamation-circle"
-          style={{color: t.palette.negative_400}}
+          style={{ color: t.palette.negative_400 }}
           size={Math.floor(size / 3)}
         />
       </View>
@@ -312,7 +329,7 @@ let UserAvatar = ({
   )
 }
 UserAvatar = memo(UserAvatar)
-export {UserAvatar}
+export { UserAvatar }
 
 let EditableUserAvatar = ({
   type = 'user',
@@ -321,9 +338,9 @@ let EditableUserAvatar = ({
   onSelectNewAvatar,
 }: EditableUserAvatarProps): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
-  const {requestCameraAccessIfNeeded} = useCameraPermission()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const { _ } = useLingui()
+  const { requestCameraAccessIfNeeded } = useCameraPermission()
+  const { requestPhotoAccessIfNeeded } = usePhotoLibraryPermission()
   const [rawImage, setRawImage] = useState<ComposerImage | undefined>()
   const editImageDialogControl = useDialogControl()
 
@@ -393,7 +410,7 @@ let EditableUserAvatar = ({
     } catch (e: any) {
       // Don't log errors for cancelling selection to sentry on ios or android
       if (!String(e).toLowerCase().includes('cancel')) {
-        logger.error('Failed to crop banner', {error: e})
+        logger.error('Failed to crop banner', { error: e })
       }
     }
   }, [
@@ -420,13 +437,13 @@ let EditableUserAvatar = ({
     <>
       <Menu.Root>
         <Menu.Trigger label={_(msg`Edit avatar`)}>
-          {({props}) => (
+          {({ props }) => (
             <Pressable {...props} testID="changeAvatarBtn">
               {avatar ? (
                 <HighPriorityImage
                   testID="userAvatarImage"
                   style={aviStyle}
-                  source={{uri: avatar}}
+                  source={{ uri: avatar }}
                   accessibilityRole="image"
                 />
               ) : (
@@ -502,7 +519,7 @@ let EditableUserAvatar = ({
   )
 }
 EditableUserAvatar = memo(EditableUserAvatar)
-export {EditableUserAvatar}
+export { EditableUserAvatar }
 
 let PreviewableUserAvatar = ({
   moderation,
@@ -513,7 +530,7 @@ let PreviewableUserAvatar = ({
   live,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const queryClient = useQueryClient()
   const status = useActorStatus(profile)
   const liveControl = useDialogControl()
@@ -528,8 +545,8 @@ let PreviewableUserAvatar = ({
     playHaptic('Light')
     logger.metric(
       'live:card:open',
-      {subject: profile.did, from: 'post'},
-      {statsig: true},
+      { subject: profile.did, from: 'post' },
+      { statsig: true },
     )
     liveControl.open()
   }, [liveControl, playHaptic, profile.did])
@@ -587,7 +604,7 @@ let PreviewableUserAvatar = ({
   )
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)
-export {PreviewableUserAvatar}
+export { PreviewableUserAvatar }
 
 // HACK
 // We have started serving smaller avis but haven't updated lexicons to give the data properly

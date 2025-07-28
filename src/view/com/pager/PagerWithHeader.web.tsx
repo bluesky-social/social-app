@@ -2,7 +2,11 @@ import * as React from 'react'
 import { type ScrollView, View } from 'react-native'
 import { useAnimatedRef } from 'react-native-reanimated'
 
-import { Pager, type PagerRef, type RenderTabBarFnProps,  } from '#/view/com/pager/Pager'
+import {
+  Pager,
+  type PagerRef,
+  type RenderTabBarFnProps,
+} from '#/view/com/pager/Pager'
 import { atoms as a, web } from '#/alf'
 import * as Layout from '#/components/Layout'
 import { type ListMethods } from '../util/List'
@@ -131,7 +135,9 @@ let PagerTabBar = ({
 }): React.ReactNode => {
   return (
     <>
-      <Layout.Center>{renderHeader?.({setMinimumHeight: noop})}</Layout.Center>
+      <Layout.Center>
+        {renderHeader?.({ setMinimumHeight: noop })}
+      </Layout.Center>
       {tabBarAnchor}
       <Layout.Center
         style={[

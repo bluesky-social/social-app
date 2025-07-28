@@ -22,7 +22,7 @@ export function VideoPreview({
 
   clear: () => void
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   // TODO: figure out how to pause a GIF for reduced motion
   // it's not possible using an img tag -sfn
   const autoplayDisabled = useAutoplayDisabled()
@@ -40,23 +40,23 @@ export function VideoPreview({
       style={[
         a.w_full,
         a.rounded_sm,
-        {aspectRatio},
+        { aspectRatio },
         a.overflow_hidden,
-        {backgroundColor: 'black'},
+        { backgroundColor: 'black' },
         a.relative,
       ]}>
       <ExternalEmbedRemoveBtn onRemove={clear} />
       {video.mimeType === 'image/gif' ? (
         <img
           src={video.uri}
-          style={{width: '100%', height: '100%', objectFit: 'cover'}}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           alt="GIF"
         />
       ) : (
         <>
           <video
             src={video.uri}
-            style={{width: '100%', height: '100%', objectFit: 'cover'}}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             autoPlay={!autoplayDisabled}
             loop
             muted

@@ -20,7 +20,7 @@ interface ReportOptions {
 }
 
 export function useReportOptions(): ReportOptions {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   return useMemo(() => {
     const other = {
       reason: ComAtprotoModerationDefs.REASONOTHER,

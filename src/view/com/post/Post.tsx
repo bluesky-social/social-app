@@ -1,7 +1,14 @@
 import { useCallback, useMemo, useState } from 'react'
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { type AppGndrFeedDefs, AppGndrFeedPost, AtUri, moderatePost, type ModerationDecision, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
+  AtUri,
+  moderatePost,
+  type ModerationDecision,
+  RichText as RichTextAPI,
+} from '@gander-social-atproto/api'
 import { Trans } from '@lingui/macro'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -11,7 +18,11 @@ import { usePalette } from '#/lib/hooks/usePalette'
 import { makeProfileLink } from '#/lib/routes/links'
 import { countLines } from '#/lib/strings/helpers'
 import { colors, s } from '#/lib/styles'
-import { POST_TOMBSTONE, type Shadow, usePostShadow,  } from '#/state/cache/post-shadow'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import { useModerationOpts } from '#/state/preferences/moderation-opts'
 import { precacheProfile } from '#/state/queries/profile'
 import { useSession } from '#/state/session'
@@ -104,7 +115,7 @@ function PostInner({
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {openComposer} = useOpenComposer()
+  const { openComposer } = useOpenComposer()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -137,7 +148,7 @@ function PostInner({
     precacheProfile(queryClient, post.author)
   }, [queryClient, post.author])
 
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const isMe = replyAuthorDid === currentAccount?.did
 
   const [hover, setHover] = useState(false)
@@ -147,7 +158,7 @@ function PostInner({
       style={[
         styles.outer,
         pal.border,
-        !hideTopBorder && {borderTopWidth: StyleSheet.hairlineWidth},
+        !hideTopBorder && { borderTopWidth: StyleSheet.hairlineWidth },
         style,
       ]}
       onBeforePress={onBeforePress}

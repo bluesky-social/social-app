@@ -1,15 +1,15 @@
 import React from 'react'
-import {View} from 'react-native'
-import Svg, {Path} from 'react-native-svg'
-import {Image as ExpoImage} from 'expo-image'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import Svg, { Path } from 'react-native-svg'
+import { Image as ExpoImage } from 'expo-image'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {AvatarCreatorCircle} from '#/screens/Onboarding2/StepProfile/AvatarCreatorCircle'
-import {useAvatar} from '#/screens/Onboarding2/StepProfile/index'
-import {atoms as a} from '#/alf'
-import {Button} from '#/components/Button'
-import {Text} from '#/components/Typography'
+import { AvatarCreatorCircle } from '#/screens/Onboarding2/StepProfile/AvatarCreatorCircle'
+import { useAvatar } from '#/screens/Onboarding2/StepProfile/index'
+import { atoms as a } from '#/alf'
+import { Button } from '#/components/Button'
+import { Text } from '#/components/Typography'
 
 export function AvatarCircle({
   openLibrary,
@@ -19,8 +19,8 @@ export function AvatarCircle({
   openCreator: () => unknown
   handle?: string
 }) {
-  const {_} = useLingui()
-  const {avatar} = useAvatar()
+  const { _ } = useLingui()
+  const { avatar } = useAvatar()
 
   const styles = React.useMemo(
     () => ({
@@ -86,7 +86,7 @@ export function AvatarCircle({
               source={avatar.image.path}
               style={styles.imageContainer}
               accessibilityIgnoresInvertColors
-              transition={{duration: 300, effect: 'cross-dissolve'}}
+              transition={{ duration: 300, effect: 'cross-dissolve' }}
             />
           </Button>
         ) : (
@@ -105,7 +105,7 @@ export function AvatarCircle({
             </View>
           </Button>
         )}
-        <View style={[a.absolute, a.align_center, {bottom: -10}]}>
+        <View style={[a.absolute, a.align_center, { bottom: -10 }]}>
           <Svg width={29} height={30} viewBox="0 0 29 30" fill="none">
             <Path
               fillRule="evenodd"
@@ -121,11 +121,11 @@ export function AvatarCircle({
         </View>
       </View>
       <View style={[a.mt_xl, a.align_center]}>
-        <Text style={[{fontSize: 18, fontWeight: '600', color: '#000000'}]}>
+        <Text style={[{ fontSize: 18, fontWeight: '600', color: '#000000' }]}>
           {handle
             ? // TODO: Remove this hardcoded domain replacement when we have proper domain handling
-              // This is a temporary fix to ensure handles show .gander.social instead of .bsky.social
-              `@${handle.replace('.bsky.social', '.gander.social')}`
+              // This is a temporary fix to ensure handles show .gander.social instead of .gndr.social
+              `@${handle.replace('.gndr.social', '.gander.social')}`
             : '@maggie.gander.social'}
         </Text>
       </View>

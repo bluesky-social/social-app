@@ -1,11 +1,20 @@
-import { type ChatBskyConvoDefs as ChatGndrConvoDefs } from '@gander-social-atproto/api'
-import { type QueryClient, useMutation, useQuery, useQueryClient,  } from '@tanstack/react-query'
+import { type ChatGndrConvoDefs } from '@gander-social-atproto/api'
+import {
+  type QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import { STALE } from '#/state/queries'
 import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
 import { useOnMarkAsRead } from '#/state/queries/messages/list-conversations'
 import { useAgent } from '#/state/session'
-import { type ConvoListQueryData, getConvoFromQueryData, RQKEY_ROOT as LIST_CONVOS_KEY,  } from './list-conversations'
+import {
+  type ConvoListQueryData,
+  getConvoFromQueryData,
+  RQKEY_ROOT as LIST_CONVOS_KEY,
+} from './list-conversations'
 
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
@@ -16,9 +25,9 @@ export function useConvoQuery(convo: ChatGndrConvoDefs.ConvoView) {
   return useQuery({
     queryKey: RQKEY(convo.id),
     queryFn: async () => {
-      const {data} = await agent.chat.gndr.convo.getConvo(
-        {convoId: convo.id},
-        {headers: DM_SERVICE_HEADERS},
+      const { data } = await agent.chat.gndr.convo.getConvo(
+        { convoId: convo.id },
+        { headers: DM_SERVICE_HEADERS },
       )
       return data.convo
     },
@@ -60,15 +69,15 @@ export function useMarkAsReadMutation() {
         },
       )
     },
-    onMutate({convoId}) {
+    onMutate({ convoId }) {
       if (!convoId) throw new Error('No convoId provided')
       optimisticUpdate(convoId)
     },
-    onSuccess(_, {convoId}) {
+    onSuccess(_, { convoId }) {
       if (!convoId) return
 
       queryClient.setQueriesData(
-        {queryKey: [LIST_CONVOS_KEY]},
+        { queryKey: [LIST_CONVOS_KEY] },
         (old?: ConvoListQueryData) => {
           if (!old) return old
 

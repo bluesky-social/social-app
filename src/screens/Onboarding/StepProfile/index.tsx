@@ -1,7 +1,11 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Image as ExpoImage } from 'expo-image'
-import { type ImagePickerOptions, launchImageLibraryAsync, MediaTypeOptions,  } from 'expo-image-picker'
+import {
+  type ImagePickerOptions,
+  launchImageLibraryAsync,
+  MediaTypeOptions,
+} from 'expo-image-picker'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -12,20 +16,27 @@ import { getDataUriSize } from '#/lib/media/util'
 import { useRequestNotificationsPermission } from '#/lib/notifications/notifications'
 import { logEvent, useGate } from '#/lib/statsig/statsig'
 import { isNative, isWeb } from '#/platform/detection'
-import { DescriptionText, OnboardingControls, TitleText,  } from '#/screens/Onboarding/Layout'
+import {
+  DescriptionText,
+  OnboardingControls,
+  TitleText,
+} from '#/screens/Onboarding/Layout'
 import { Context } from '#/screens/Onboarding/state'
 import { AvatarCircle } from '#/screens/Onboarding/StepProfile/AvatarCircle'
-import { AvatarCreatorCircle } from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
-import { AvatarCreatorItems } from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
-import { PlaceholderCanvas, type PlaceholderCanvasRef,  } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
+import {
+  PlaceholderCanvas,
+  type PlaceholderCanvasRef,
+} from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
 import { atoms as a, useBreakpoints, useTheme } from '#/alf'
 import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import { useSheetWrapper } from '#/components/Dialog/sheet-wrapper'
+import { AvatarSelectDialog } from '#/components/dialogs/AvatarSelect'
 import { IconCircle } from '#/components/IconCircle'
 import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron'
 import { CircleInfo_Stroke2_Corner0_Rounded } from '#/components/icons/CircleInfo'
 import { StreamingLive_Stroke2_Corner0_Rounded as StreamingLive } from '#/components/icons/StreamingLive'
+import { Text } from '#/components/Typography'
 import { Text } from '#/components/Typography'
 import { type AvatarColor, avatarColors, type Emoji, emojiItems } from './types'
 
@@ -54,17 +65,17 @@ const randomColor =
   avatarColors[Math.floor(Math.random() * avatarColors.length)]
 
 export function StepProfile() {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const { gtMobile } = useBreakpoints()
+  const { requestPhotoAccessIfNeeded } = usePhotoLibraryPermission()
   const gate = useGate()
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const creatorControl = Dialog.useDialogControl()
   const [error, setError] = React.useState('')
 
-  const {state, dispatch} = React.useContext(Context)
+  const { state, dispatch } = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
     image: state.profileStepResults?.image,
     placeholder: state.profileStepResults.creatorState?.emoji || emojiItems.at,
@@ -74,6 +85,7 @@ export function StepProfile() {
   })
 
   const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
+  const avatarSelectRef = React.useRef<{ open: () => void }>(null)
 
   React.useEffect(() => {
     requestNotificationsPermission('StartOnboarding')
@@ -141,18 +153,9 @@ export function StepProfile() {
       })
     }
 
-    dispatch({type: 'next'})
+    dispatch({ type: 'next' })
     logEvent('onboarding:profile:nextPressed', {})
   }, [avatar, dispatch])
-
-  const onDoneCreating = React.useCallback(() => {
-    setAvatar(prev => ({
-      ...prev,
-      image: undefined,
-      useCreatedAvatar: true,
-    }))
-    creatorControl.close()
-  }, [creatorControl])
 
   const openLibrary = React.useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {
@@ -201,9 +204,9 @@ export function StepProfile() {
     if (avatar.useCreatedAvatar) {
       openLibrary()
     } else {
-      creatorControl.open()
+      avatarSelectRef.current?.open()
     }
-  }, [avatar.useCreatedAvatar, creatorControl, openLibrary])
+  }, [avatar.useCreatedAvatar, openLibrary])
 
   const value = React.useMemo(
     () => ({
@@ -227,7 +230,11 @@ export function StepProfile() {
           </Trans>
         </DescriptionText>
         <View
-          style={[a.w_full, a.align_center, {paddingTop: gtMobile ? 80 : 40}]}>
+          style={[
+            a.w_full,
+            a.align_center,
+            { paddingTop: gtMobile ? 80 : 40 },
+          ]}>
           <AvatarCircle
             openLibrary={openLibrary}
             openCreator={creatorControl.open}
@@ -254,7 +261,8 @@ export function StepProfile() {
         </View>
 
         <OnboardingControls.Portal>
-          <View style={[a.gap_md, gtMobile && {flexDirection: 'row-reverse'}]}>
+          <View
+            style={[a.gap_md, gtMobile && { flexDirection: 'row-reverse' }]}>
             <Button
               variant="solid"
               color="primary"
@@ -283,46 +291,21 @@ export function StepProfile() {
           </View>
         </OnboardingControls.Portal>
       </View>
-
-      <Dialog.Outer control={creatorControl}>
-        <Dialog.Inner
-          label="Avatar creator"
-          style={[
-            {
-              width: 'auto',
-              maxWidth: 410,
+      <AvatarSelectDialog
+        controlRef={avatarSelectRef}
+        onSelectAvatar={url => {
+          setAvatar(prev => ({
+            ...prev,
+            image: {
+              path: url,
+              height: 0,
+              width: 0,
+              mime: '',
+              size: 0,
             },
-          ]}>
-          <View style={[a.align_center, {paddingTop: 20}]}>
-            <AvatarCreatorCircle avatar={avatar} />
-          </View>
-
-          <View style={[a.pt_3xl, a.gap_lg]}>
-            <AvatarCreatorItems
-              type="emojis"
-              avatar={avatar}
-              setAvatar={setAvatar}
-            />
-            <AvatarCreatorItems
-              type="colors"
-              avatar={avatar}
-              setAvatar={setAvatar}
-            />
-          </View>
-          <View style={[a.pt_4xl]}>
-            <Button
-              variant="solid"
-              color="primary"
-              size="large"
-              label={_(msg`Done`)}
-              onPress={onDoneCreating}>
-              <ButtonText>
-                <Trans>Done</Trans>
-              </ButtonText>
-            </Button>
-          </View>
-        </Dialog.Inner>
-      </Dialog.Outer>
+          }))
+        }}
+      />
 
       <PlaceholderCanvas ref={canvasRef} />
     </AvatarContext.Provider>

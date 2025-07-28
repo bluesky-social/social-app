@@ -1,5 +1,8 @@
 import { useCallback } from 'react'
-import { type ChatBskyActorDefs as ChatGndrActorDefs, ChatBskyConvoDefs as ChatGndrConvoDefs,  } from '@gander-social-atproto/api'
+import {
+  type ChatGndrActorDefs,
+  ChatGndrConvoDefs,
+} from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { StackActions, useNavigation } from '@react-navigation/native'
@@ -14,9 +17,17 @@ import { useLeaveConvo } from '#/state/queries/messages/leave-conversation'
 import { useProfileBlockMutationQueue } from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
 import { atoms as a } from '#/alf'
-import { Button, ButtonIcon, type ButtonProps, ButtonText,  } from '#/components/Button'
+import {
+  Button,
+  ButtonIcon,
+  type ButtonProps,
+  ButtonText,
+} from '#/components/Button'
 import { useDialogControl } from '#/components/Dialog'
-import { EmailDialogScreenID, useEmailDialogControl,  } from '#/components/dialogs/EmailDialog'
+import {
+  EmailDialogScreenID,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
 import { ReportDialog } from '#/components/dms/ReportDialog'
 import { CircleX_Stroke2_Corner0_Rounded } from '#/components/icons/CircleX'
 import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag'
@@ -41,10 +52,10 @@ export function RejectMenu({
   showDeleteConvo?: boolean
   currentScreen: 'list' | 'conversation'
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const shadowedProfile = useProfileShadow(profile)
   const navigation = useNavigation<NavigationProp>()
-  const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+  const { mutate: leaveConvo } = useLeaveConvo(convo.id, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(StackActions.pop())
@@ -102,7 +113,7 @@ export function RejectMenu({
     <>
       <Menu.Root>
         <Menu.Trigger label={_(msg`Reject chat request`)}>
-          {({props: triggerProps}) => (
+          {({ props: triggerProps }) => (
             <Button
               {...triggerProps}
               {...props}
@@ -185,17 +196,17 @@ export function AcceptChatButton({
   onAcceptConvo?: () => void
   currentScreen: 'list' | 'conversation'
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const queryClient = useQueryClient()
   const navigation = useNavigation<NavigationProp>()
-  const {needsEmailVerification} = useEmail()
+  const { needsEmailVerification } = useEmail()
   const emailDialogControl = useEmailDialogControl()
 
-  const {mutate: acceptConvo, isPending} = useAcceptConversation(convo.id, {
+  const { mutate: acceptConvo, isPending } = useAcceptConversation(convo.id, {
     onMutate: () => {
       onAcceptConvo?.()
       if (currentScreen === 'list') {
-        precacheConvoQuery(queryClient, {...convo, status: 'accepted'})
+        precacheConvoQuery(queryClient, { ...convo, status: 'accepted' })
         navigation.navigate('MessagesConversation', {
           conversation: convo.id,
           accept: true,
@@ -268,10 +279,10 @@ export function DeleteChatButton({
   convo: ChatGndrConvoDefs.ConvoView
   currentScreen: 'list' | 'conversation'
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
-  const {mutate: leaveConvo} = useLeaveConvo(convo.id, {
+  const { mutate: leaveConvo } = useLeaveConvo(convo.id, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(StackActions.pop())

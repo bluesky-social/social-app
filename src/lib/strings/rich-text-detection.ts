@@ -38,7 +38,7 @@ export function detectLinkables(text: string): DetectedLinkable[] {
     if (start !== matchIndex) {
       segments.push(text.slice(start, matchIndex))
     }
-    segments.push({link: matchValue})
+    segments.push({ link: matchValue })
     start = matchIndex + matchValue.length
   }
   if (start < text.length) {

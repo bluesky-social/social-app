@@ -1,9 +1,9 @@
-import { AppGndrRichtextFacet, type RichText,  } from '@gander-social-atproto/api'
+import { AppGndrRichtextFacet, type RichText } from '@gander-social-atproto/api'
 
 import { linkRequiresWarning } from './url-helpers'
 
 export function richTextToString(rt: RichText, loose: boolean): string {
-  const {text, facets} = rt
+  const { text, facets } = rt
 
   if (!facets?.length) {
     return text

@@ -492,7 +492,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 	data["did"] = did
 
 	// then fetch the post thread (with extra context)
-	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+	uri := fmt.Sprintf("at://%s/app.gndr.feed.post/%s", did, rkey)
 	tpv, err := appgndr.FeedGetPostThread(ctx, srv.xrpcc, 1, 0, uri)
 	if err != nil {
 		log.Warnf("failed to fetch post: %s\t%v", uri, err)
@@ -547,7 +547,7 @@ func (srv *Server) WebStarterPack(c echo.Context) error {
 		return c.Render(http.StatusOK, "starterpack.html", data)
 	}
 	identifier := handleOrDID.Normalize().String()
-	starterPackURI := fmt.Sprintf("at://%s/app.bsky.graph.starterpack/%s", identifier, rkey)
+	starterPackURI := fmt.Sprintf("at://%s/app.gndr.graph.starterpack/%s", identifier, rkey)
 	spv, err := appgndr.GraphGetStarterPack(ctx, srv.xrpcc, starterPackURI)
 	if err != nil {
 		log.Errorf("failed to fetch starter pack view for: %s\t%v", starterPackURI, err)

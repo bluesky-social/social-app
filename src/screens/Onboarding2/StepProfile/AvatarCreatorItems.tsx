@@ -1,9 +1,9 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {type Avatar} from '#/screens/Onboarding2/StepProfile/index'
+import { type Avatar } from '#/screens/Onboarding2/StepProfile/index'
 import {
   type AvatarColor,
   avatarColors,
@@ -11,9 +11,9 @@ import {
   type EmojiName,
   emojiNames,
 } from '#/screens/Onboarding2/StepProfile/types'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {Text} from '#/components/Typography'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
+import { Text } from '#/components/Typography'
 
 const ACTIVE_BORDER_WIDTH = 3
 const ACTIVE_BORDER_STYLES = {
@@ -34,7 +34,7 @@ export function AvatarCreatorItems({
   avatar: Avatar
   setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
   const isEmojis = type === 'emojis'
 

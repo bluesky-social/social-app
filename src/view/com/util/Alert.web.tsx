@@ -12,12 +12,12 @@ class WebAlert implements Pick<AlertStatic, 'alert'> {
     const result = window.confirm([title, message].filter(Boolean).join('\n'))
 
     if (result === true) {
-      const confirm = buttons.find(({style}) => style !== 'cancel')
+      const confirm = buttons.find(({ style }) => style !== 'cancel')
       confirm?.onPress?.()
       return
     }
 
-    const cancel = buttons.find(({style}) => style === 'cancel')
+    const cancel = buttons.find(({ style }) => style === 'cancel')
     cancel?.onPress?.()
   }
 }

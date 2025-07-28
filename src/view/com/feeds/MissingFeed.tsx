@@ -28,7 +28,7 @@ export function MissingFeed({
   error?: unknown
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const control = Dialog.useDialogControl()
 
   const type = getFeedTypeFromUri(uri)
@@ -55,7 +55,7 @@ export function MissingFeed({
         <View style={[a.flex_row, a.align_center]}>
           <View
             style={[
-              {width: 36, height: 36},
+              { width: 36, height: 36 },
               t.atoms.bg_contrast_25,
               a.rounded_sm,
               a.mr_md,
@@ -93,7 +93,9 @@ export function MissingFeed({
         </View>
       </Button>
 
-      <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+      <Dialog.Outer
+        control={control}
+        nativeOptions={{ preventExpansion: true }}>
         <Dialog.Handle />
         <DialogInner uri={uri} type={type} error={error} />
       </Dialog.Outer>
@@ -112,9 +114,9 @@ function DialogInner({
 }) {
   const control = Dialog.useDialogContext()
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const atUri = new AtUri(uri)
-  const {data: profile, isError: isProfileError} = useProfileQuery({
+  const { data: profile, isError: isProfileError } = useProfileQuery({
     did: atUri.host,
   })
   const moderationOpts = useModerationOpts()
@@ -126,7 +128,7 @@ function DialogInner({
           ? _(msg`Unavailable feed information`)
           : _(msg`Deleted list`)
       }
-      style={web({maxWidth: 500})}>
+      style={web({ maxWidth: 500 })}>
       <View style={[a.gap_sm]}>
         <Text style={[a.font_heavy, a.text_2xl]}>
           {type === 'feed' ? (

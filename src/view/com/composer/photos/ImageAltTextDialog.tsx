@@ -61,7 +61,7 @@ const ImageAltTextInner = ({
   control: DialogControlProps
   image: Props['image']
 }): React.ReactNode => {
-  const {_, i18n} = useLingui()
+  const { _, i18n } = useLingui()
   const t = useTheme()
   const windim = useWindowDimensions()
 
@@ -109,7 +109,7 @@ const ImageAltTextInner = ({
 
       <View style={[a.mt_md, a.gap_md]}>
         <View style={[a.gap_sm]}>
-          <View style={[a.relative, {width: '100%'}]}>
+          <View style={[a.relative, { width: '100%' }]}>
             <TextField.LabelText>
               <Trans>Descriptive alt text</Trans>
             </TextField.LabelText>
@@ -166,7 +166,7 @@ const ImageAltTextInner = ({
         </AltTextCounterWrapper>
       </View>
       {/* Maybe fix this later -h */}
-      {isAndroid ? <View style={{height: 300}} /> : null}
+      {isAndroid ? <View style={{ height: 300 }} /> : null}
     </Dialog.ScrollableInner>
   )
 }

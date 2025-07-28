@@ -34,25 +34,25 @@ EXPO_PUBLIC_BITDRIFT_API_KEY=
 # Environment dependent URLs
 ATPROTO_PDS_URL=http://localhost:2583
 ATPROTO_APPVIEW_URL=http://localhost:2584
-API_URL=https://public.api.bsky.app
-APP_URL=https://bsky.app
-APPVIEW_URL=https://api.bsky.app
+API_URL=https://public.api.gndr.app
+APP_URL=https://gndr.app
+APPVIEW_URL=https://api.gndr.app
 EMBED_SERVICE_URL=https://embed.gndr.app
 OGCARD_SERVICE_URL=https://ogcard.cdn.gndr.app
 GO_SERVICE_URL=https://go.gndr.app
 PROFILE_URL=https://gndr.app/profile
-DEEP_LINK_PREFIX=https://bsky.app
+DEEP_LINK_PREFIX=https://gndr.app
 SOCIAL_URL=https://gndr.social
 VIDEO_SERVICE_URL=https://video.gndr.app
 GIF_SERVICE_URL=https://gifs.gndr.app
-PUBLIC_APPVIEW_URL=https://api.bsky.app
-PUBLIC_APPVIEW_DID=did:web:api.bsky.app
-PUBLIC_STAGING_APPVIEW_DID=did:web:api.bsky.app
+PUBLIC_APPVIEW_URL=https://api.gndr.app
+PUBLIC_APPVIEW_DID=did:web:api.gndr.app
+PUBLIC_STAGING_APPVIEW_DID=did:web:api.gndr.app
 DEV_ENV_APPVIEW_URL=http://localhost:2584
-WEBLINK_TOS_URL=https://bsky.social/about/support/tos
+WEBLINK_TOS_URL=https://gndr.social/about/support/tos
 WEBLINK_PRIVACY_URL=https://bksy.social/about/support/privacy-policy
-WEBLINK_COMMUNITY_URL=https://bsky.social/about/support/community-guidelines
-WEBLINK_COMMUNITY_DEPRECATED_URL=https://bsky.social/about/support/community-guidelines-deprecated
+WEBLINK_COMMUNITY_URL=https://gndr.social/about/support/community-guidelines
+WEBLINK_COMMUNITY_DEPRECATED_URL=https://gndr.social/about/support/community-guidelines-deprecated
 
 
 sudo chown -R www-data:www-data /var/www/html

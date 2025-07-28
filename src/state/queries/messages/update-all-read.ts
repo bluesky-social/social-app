@@ -1,4 +1,4 @@
-import { type ChatBskyConvoListConvos as ChatGndrConvoListConvos } from '@gander-social-atproto/api'
+import { type ChatGndrConvoListConvos } from '@gander-social-atproto/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { logger } from '#/logger'
@@ -23,9 +23,9 @@ export function useUpdateAllRead(
 
   return useMutation({
     mutationFn: async () => {
-      const {data} = await agent.chat.gndr.convo.updateAllRead(
-        {status},
-        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
+      const { data } = await agent.chat.gndr.convo.updateAllRead(
+        { status },
+        { headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
       )
 
       return data
@@ -76,10 +76,10 @@ export function useUpdateAllRead(
         },
       )
       onMutate?.()
-      return {prevPages}
+      return { prevPages }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
+      queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY(status) })
       onSuccess?.()
     },
     onError: (error, _, context) => {
@@ -97,8 +97,10 @@ export function useUpdateAllRead(
           }
         },
       )
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY(status)})
-      queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY('all', 'unread')})
+      queryClient.invalidateQueries({ queryKey: CONVO_LIST_KEY(status) })
+      queryClient.invalidateQueries({
+        queryKey: CONVO_LIST_KEY('all', 'unread'),
+      })
       onError?.(error)
     },
   })

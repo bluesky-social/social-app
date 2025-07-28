@@ -1,20 +1,20 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logger} from '#/logger'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {useSignupContext} from '#/screens/Signup/state'
-import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {InterestsCard} from '#/components/InterestsCard'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
+import { logger } from '#/logger'
+import { ScreenTransition } from '#/screens/Login/ScreenTransition'
+import { useSignupContext } from '#/screens/Signup/state'
+import { atoms as a } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { InterestsCard } from '#/components/InterestsCard'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
 
 export function StepInterests() {
-  const {_} = useLingui()
-  const {state, dispatch} = useSignupContext()
+  const { _ } = useLingui()
+  const { state, dispatch } = useSignupContext()
 
   const onNextPress = React.useCallback(() => {
     logger.metric(
@@ -22,20 +22,20 @@ export function StepInterests() {
       {
         activeStep: state.activeStep,
       },
-      {statsig: true},
+      { statsig: true },
     )
-    dispatch({type: 'next'})
+    dispatch({ type: 'next' })
   }, [dispatch, state.activeStep])
 
   const onBackPress = React.useCallback(() => {
-    dispatch({type: 'prev'})
+    dispatch({ type: 'prev' })
   }, [dispatch])
 
   return (
     <ScreenTransition>
       <View style={[a.gap_md]}>
         <View style={[a.align_start]}>
-          <Text style={[{fontSize: 17, fontWeight: 400, lineHeight: 21}]}>
+          <Text style={[{ fontSize: 17, fontWeight: 400, lineHeight: 21 }]}>
             <Trans>
               Let us know your interests. We’ll use this to help customize your
               feeds.
@@ -47,7 +47,11 @@ export function StepInterests() {
         />
       </View>
       <View
-        style={[a.border_t, a.mt_lg, {borderColor: '#D8D8D8', borderWidth: 1}]}
+        style={[
+          a.border_t,
+          a.mt_lg,
+          { borderColor: '#D8D8D8', borderWidth: 1 },
+        ]}
       />
       <View style={[a.flex_row, a.align_center, a.pt_lg]}>
         <Button

@@ -23,7 +23,7 @@ The Authenticated Transfer Protocol ("AT Protocol" or "gander-social-atproto") i
 - [Protocol Specifications](https://atproto.com/specs/atp)
 - [Blogpost on self-authenticating data structures](https://gndr.social/about/blog/3-6-2022-a-self-authenticating-social-protocol)
 
-The Gander Social application encompasses a set of schemas and APIs built in the overall AT Protocol framework. The namespace for these "Lexicons" is `app.bsky.*`.
+The Gander Social application encompasses a set of schemas and APIs built in the overall AT Protocol framework. The namespace for these "Lexicons" is `app.gndr.*`.
 
 ## Contributions
 

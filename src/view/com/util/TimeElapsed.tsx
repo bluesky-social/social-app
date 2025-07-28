@@ -11,10 +11,10 @@ export function TimeElapsed({
   timeToString,
 }: {
   timestamp: string
-  children: ({timeElapsed}: {timeElapsed: string}) => JSX.Element
+  children: ({ timeElapsed }: { timeElapsed: string }) => JSX.Element
   timeToString?: (i18n: I18n, timeElapsed: string) => string
 }) {
-  const {i18n} = useLingui()
+  const { i18n } = useLingui()
   const ago = useGetTimeAgo()
   const tick = useTickEveryMinute()
   const [timeElapsed, setTimeAgo] = React.useState(() =>
@@ -29,5 +29,5 @@ export function TimeElapsed({
     )
   }
 
-  return children({timeElapsed})
+  return children({ timeElapsed })
 }

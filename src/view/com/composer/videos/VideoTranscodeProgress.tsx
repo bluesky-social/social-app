@@ -37,7 +37,7 @@ export function VideoTranscodeProgress({
         t.atoms.bg_contrast_50,
         a.rounded_md,
         a.overflow_hidden,
-        {aspectRatio},
+        { aspectRatio },
       ]}>
       <VideoTranscodeBackdrop uri={asset.uri} />
       <View

@@ -77,8 +77,8 @@ export function GestureActionView({
 
     iconScale.set(() =>
       withSequence(
-        withTiming(1.2, {duration: 175}),
-        withTiming(1, {duration: 100}),
+        withTiming(1.2, { duration: 175 }),
+        withTiming(1, { duration: 100 }),
       ),
     )
   }
@@ -217,7 +217,7 @@ export function GestureActionView({
           runOnJS(actions.rightFirst.action)()
         }
       }
-      transX.set(() => withTiming(0, {duration: 200}))
+      transX.set(() => withTiming(0, { duration: 200 }))
       hitFirst.set(false)
       hitSecond.set(false)
       isActive.set(false)
@@ -227,7 +227,7 @@ export function GestureActionView({
 
   const animatedSliderStyle = useAnimatedStyle(() => {
     return {
-      transform: [{translateX: clampedTransX.get()}],
+      transform: [{ translateX: clampedTransX.get() }],
     }
   })
 
@@ -293,7 +293,7 @@ export function GestureActionView({
     const absTransX = Math.abs(clampedTransX.get())
     return {
       opacity: interpolate(absTransX, [0, 75], [0.15, 1]),
-      transform: [{scale: iconScale.get()}],
+      transform: [{ scale: iconScale.get() }],
     }
   })
 
@@ -325,20 +325,20 @@ export function GestureActionView({
                 <actions.leftSecond.icon
                   height={ICON_SIZE}
                   width={ICON_SIZE}
-                  style={{color: 'white'}}
+                  style={{ color: 'white' }}
                 />
               ) : activeAction === 'rightFirst' && actions.rightFirst?.icon ? (
                 <actions.rightFirst.icon
                   height={ICON_SIZE}
                   width={ICON_SIZE}
-                  style={{color: 'white'}}
+                  style={{ color: 'white' }}
                 />
               ) : activeAction === 'rightSecond' &&
                 actions.rightSecond?.icon ? (
                 <actions.rightSecond.icon
                   height={ICON_SIZE}
                   width={ICON_SIZE}
-                  style={{color: 'white'}}
+                  style={{ color: 'white' }}
                 />
               ) : null}
             </Animated.View>

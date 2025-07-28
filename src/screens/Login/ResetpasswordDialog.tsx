@@ -42,7 +42,7 @@ export function ResetPasswordDialog({
   const [password, setPassword] = useState<string>('')
   const [passwordVisible, setPasswordVisible] = useState(false)
 
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
 
   const onClose = useCallback(() => {
@@ -77,7 +77,7 @@ export function ResetPasswordDialog({
     setIsProcessing(true)
 
     try {
-      const agent = new GndrAgent({service: serviceUrl})
+      const agent = new GndrAgent({ service: serviceUrl })
       await agent.com.atproto.server.resetPassword({
         token: formattedCode,
         password,
@@ -88,7 +88,7 @@ export function ResetPasswordDialog({
       logEvent('signin:passwordResetSuccess', {})
     } catch (e: any) {
       const errMsg = e.toString()
-      logger.warn('Failed to set new password', {error: e})
+      logger.warn('Failed to set new password', { error: e })
       logEvent('signin:passwordResetFailure', {})
       setIsProcessing(false)
       if (isNetworkError(e)) {
@@ -108,13 +108,13 @@ export function ResetPasswordDialog({
     setResending(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
-      await agent.com.atproto.server.requestPasswordReset({email})
+      const agent = new GndrAgent({ service: serviceUrl })
+      await agent.com.atproto.server.requestPasswordReset({ email })
       setResending(false)
       Keyboard.dismiss()
     } catch (e: any) {
       const errMsg = e.toString()
-      logger.warn('Failed to request password reset', {error: e})
+      logger.warn('Failed to request password reset', { error: e })
       setResending(false)
       if (isNetworkError(e)) {
         setError(

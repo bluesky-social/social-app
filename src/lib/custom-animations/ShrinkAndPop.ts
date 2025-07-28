@@ -4,12 +4,12 @@ export function ShrinkAndPop() {
   'worklet'
 
   const animations = {
-    opacity: withDelay(125, withTiming(0, {duration: 125})),
+    opacity: withDelay(125, withTiming(0, { duration: 125 })),
     transform: [
       {
         scale: withSequence(
-          withTiming(0.7, {duration: 75}),
-          withTiming(1.1, {duration: 150}),
+          withTiming(0.7, { duration: 75 }),
+          withTiming(1.1, { duration: 150 }),
         ),
       },
     ],
@@ -17,7 +17,7 @@ export function ShrinkAndPop() {
 
   const initialValues = {
     opacity: 1,
-    transform: [{scale: 1}],
+    transform: [{ scale: 1 }],
   }
 
   return {

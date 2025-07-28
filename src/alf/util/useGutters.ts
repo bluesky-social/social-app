@@ -45,7 +45,7 @@ export function useGutters([top, right, bottom, left]: [
   Gutter,
 ]): Gutters
 export function useGutters([top, right, bottom, left]: Gutter[]) {
-  const {activeBreakpoint} = useBreakpoints()
+  const { activeBreakpoint } = useBreakpoints()
   if (right === undefined) {
     right = bottom = left = top
   } else if (bottom === undefined) {

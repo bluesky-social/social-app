@@ -14,7 +14,7 @@ const openPermissionAlert = (perm: string) => {
         text: 'Cancel',
         style: 'cancel',
       },
-      {text: 'Open Settings', onPress: () => Linking.openSettings()},
+      { text: 'Open Settings', onPress: () => Linking.openSettings() },
     ],
   )
 }
@@ -33,7 +33,7 @@ export function usePhotoLibraryPermission() {
     if (res?.granted) {
       return true
     } else if (!res || res.status === 'undetermined' || res?.canAskAgain) {
-      const {canAskAgain, granted, status} = await requestPermission()
+      const { canAskAgain, granted, status } = await requestPermission()
 
       if (!canAskAgain && status === 'undetermined') {
         openPermissionAlert('photo library')
@@ -45,7 +45,7 @@ export function usePhotoLibraryPermission() {
       return false
     }
   }
-  return {requestPhotoAccessIfNeeded}
+  return { requestPhotoAccessIfNeeded }
 }
 
 export function useVideoLibraryPermission() {
@@ -62,7 +62,7 @@ export function useVideoLibraryPermission() {
     if (res?.granted) {
       return true
     } else if (!res || res.status === 'undetermined' || res?.canAskAgain) {
-      const {canAskAgain, granted, status} = await requestPermission()
+      const { canAskAgain, granted, status } = await requestPermission()
 
       if (!canAskAgain && status === 'undetermined') {
         openPermissionAlert('video library')
@@ -74,7 +74,7 @@ export function useVideoLibraryPermission() {
       return false
     }
   }
-  return {requestVideoAccessIfNeeded}
+  return { requestVideoAccessIfNeeded }
 }
 
 export function useCameraPermission() {
@@ -92,5 +92,5 @@ export function useCameraPermission() {
     }
   }
 
-  return {requestCameraAccessIfNeeded}
+  return { requestCameraAccessIfNeeded }
 }

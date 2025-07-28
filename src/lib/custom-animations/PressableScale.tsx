@@ -1,4 +1,9 @@
-import { Pressable, type PressableProps, type StyleProp, type ViewStyle,  } from 'react-native'
+import {
+  Pressable,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native'
 import Animated, {
   cancelAnimation,
   useAnimatedStyle,
@@ -30,7 +35,7 @@ export function PressableScale({
   const scale = useSharedValue(1)
 
   const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{scale: scale.get()}],
+    transform: [{ scale: scale.get() }],
   }))
 
   return (
@@ -41,14 +46,14 @@ export function PressableScale({
           onPressIn(e)
         }
         cancelAnimation(scale)
-        scale.set(() => withTiming(targetScale, {duration: 100}))
+        scale.set(() => withTiming(targetScale, { duration: 100 }))
       }}
       onPressOut={e => {
         if (onPressOut) {
           onPressOut(e)
         }
         cancelAnimation(scale)
-        scale.set(() => withTiming(1, {duration: 100}))
+        scale.set(() => withTiming(1, { duration: 100 }))
       }}
       style={[!reducedMotion && animatedStyle, style]}
       {...rest}>

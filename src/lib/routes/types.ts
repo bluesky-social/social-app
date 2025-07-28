@@ -1,9 +1,12 @@
-import { type NavigationState, type PartialState } from '@react-navigation/native'
+import {
+  type NavigationState,
+  type PartialState,
+} from '@react-navigation/native'
 import { type NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 import { type VideoFeedSourceContext } from '#/screens/VideoFeed/types'
 
-export type {NativeStackScreenProps} from '@react-navigation/native-stack'
+export type { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 export type CommonNavigatorParams = {
   NotFound: undefined
@@ -15,23 +18,23 @@ export type CommonNavigatorParams = {
   ModerationInteractionSettings: undefined
   ModerationVerificationSettings: undefined
   Settings: undefined
-  Profile: {name: string; hideBackButton?: boolean}
-  ProfileFollowers: {name: string}
-  ProfileFollows: {name: string}
-  ProfileKnownFollowers: {name: string}
-  ProfileSearch: {name: string; q?: string}
-  ProfileList: {name: string; rkey: string}
-  PostThread: {name: string; rkey: string}
-  PostLikedBy: {name: string; rkey: string}
-  PostRepostedBy: {name: string; rkey: string}
-  PostQuotes: {name: string; rkey: string}
+  Profile: { name: string; hideBackButton?: boolean }
+  ProfileFollowers: { name: string }
+  ProfileFollows: { name: string }
+  ProfileKnownFollowers: { name: string }
+  ProfileSearch: { name: string; q?: string }
+  ProfileList: { name: string; rkey: string }
+  PostThread: { name: string; rkey: string }
+  PostLikedBy: { name: string; rkey: string }
+  PostRepostedBy: { name: string; rkey: string }
+  PostQuotes: { name: string; rkey: string }
   ProfileFeed: {
     name: string
     rkey: string
     feedCacheKey?: 'discover' | 'explore' | undefined
   }
-  ProfileFeedLikedBy: {name: string; rkey: string}
-  ProfileLabelerLikedBy: {name: string}
+  ProfileFeedLikedBy: { name: string; rkey: string }
+  ProfileLabelerLikedBy: { name: string }
   Debug: undefined
   DebugMod: undefined
   SharedPreferencesTester: undefined
@@ -67,20 +70,20 @@ export type CommonNavigatorParams = {
   InterestsSettings: undefined
   AboutSettings: undefined
   AppIconSettings: undefined
-  Search: {q?: string}
-  Hashtag: {tag: string; author?: string}
-  Topic: {topic: string}
-  MessagesConversation: {conversation: string; embed?: string; accept?: true}
+  Search: { q?: string }
+  Hashtag: { tag: string; author?: string }
+  Topic: { topic: string }
+  MessagesConversation: { conversation: string; embed?: string; accept?: true }
   MessagesSettings: undefined
   MessagesInbox: undefined
-  NotificationsActivityList: {posts: string}
+  NotificationsActivityList: { posts: string }
   LegacyNotificationSettings: undefined
   Feeds: undefined
-  Start: {name: string; rkey: string}
-  StarterPack: {name: string; rkey: string; new?: boolean}
-  StarterPackShort: {code: string}
+  Start: { name: string; rkey: string }
+  StarterPack: { name: string; rkey: string; new?: boolean }
+  StarterPackShort: { code: string }
   StarterPackWizard: undefined
-  StarterPackEdit: {rkey?: string}
+  StarterPackEdit: { rkey?: string }
   VideoFeed: VideoFeedSourceContext
 }
 
@@ -97,7 +100,7 @@ export type HomeTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
-  Search: {q?: string}
+  Search: { q?: string }
 }
 
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
@@ -105,32 +108,32 @@ export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
-  MyProfile: {name: 'me'; hideBackButton: true}
+  MyProfile: { name: 'me'; hideBackButton: true }
 }
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {
-  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
+  Messages: { pushToConversation?: string; animation?: 'push' | 'pop' }
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
-  Search: {q?: string}
+  Search: { q?: string }
   Feeds: undefined
   Notifications: undefined
-  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
+  Messages: { pushToConversation?: string; animation?: 'push' | 'pop' }
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
   HomeTab: undefined
   Home: undefined
   SearchTab: undefined
-  Search: {q?: string}
+  Search: { q?: string }
   Feeds: undefined
   NotificationsTab: undefined
   Notifications: undefined
   MyProfileTab: undefined
   MessagesTab: undefined
-  Messages: {animation?: 'push' | 'pop'}
+  Messages: { animation?: 'push' | 'pop' }
 }
 
 // NOTE
@@ -144,7 +147,7 @@ export type State =
   | Omit<PartialState<NavigationState>, 'stale'>
 
 export type RouteParams = Record<string, string>
-export type MatchResult = {params: RouteParams}
+export type MatchResult = { params: RouteParams }
 export type Route = {
   match: (path: string) => MatchResult | undefined
   build: (params?: Record<string, any>) => string

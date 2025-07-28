@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React, { useCallback, useEffect } from 'react'
 import {
   AccessibilityInfo,
   Image as RNImage,
@@ -14,7 +14,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, {
   ClipPath,
   Defs,
@@ -23,7 +23,7 @@ import Svg, {
   Rect,
   type SvgProps,
 } from 'react-native-svg'
-import {Image} from 'expo-image'
+import { Image } from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 // @ts-ignore
@@ -109,7 +109,7 @@ export const Logo = React.forwardRef<Svg, SvgProps>(
         ref={ref}
         viewBox="0 0 256 257"
         fill="none"
-        style={[{width, height}, props.style]}>
+        style={[{ width, height }, props.style]}>
         <G clipPath="url(#clip0_688_52455)">
           <Rect y={0.5} width={width} height={height} fill="white" />
           <Path
@@ -251,13 +251,13 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           intro.set(() =>
             withTiming(
               1,
-              {duration: 600, easing: Easing.out(Easing.cubic)},
+              { duration: 600, easing: Easing.out(Easing.cubic) },
               async () => {
                 // set these values to check animation at specific point
                 outroLogo.set(() =>
                   withTiming(
                     1,
-                    {duration: 1800, easing: Easing.in(Easing.cubic)},
+                    { duration: 1800, easing: Easing.in(Easing.cubic) },
                     () => {
                       // After logo fades out, show dark splash
                       darkImageOpacity.set(() =>
@@ -320,13 +320,13 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const logoBg = isDarkMode ? '#0F1824' : '#fff'
 
   return (
-    <View style={{flex: 1}} onLayout={onLayout}>
+    <View style={{ flex: 1 }} onLayout={onLayout}>
       {!isAnimationComplete && (
         <View style={StyleSheet.absoluteFillObject}>
           <Image
             accessibilityIgnoresInvertColors
             onLoadEnd={onLoadEnd}
-            source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
+            source={{ uri: isDarkMode ? darkSplashImageUri : splashImageUri }}
             style={StyleSheet.absoluteFillObject}
           />
 
@@ -350,7 +350,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
 
       {isReady && (
         <>
-          <Animated.View style={[{flex: 1}, appAnimation]}>
+          <Animated.View style={[{ flex: 1 }, appAnimation]}>
             {props.children}
           </Animated.View>
 
@@ -360,7 +360,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 style={[StyleSheet.absoluteFillObject, darkImageAnimation]}>
                 <Image
                   accessibilityIgnoresInvertColors
-                  source={{uri: darkSplashImageUri}}
+                  source={{ uri: darkSplashImageUri }}
                   style={StyleSheet.absoluteFillObject}
                 />
               </Animated.View>
@@ -372,7 +372,10 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                     flex: 1,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
+                    transform: [
+                      { translateY: -(insets.top / 2) },
+                      { scale: 0.1 },
+                    ], // scale from 1000px to 100px
                   },
                 ]}>
                 <Animated.View style={[logoAnimations]}>

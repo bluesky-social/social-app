@@ -4,11 +4,15 @@ import { Keyboard } from 'react-native'
 import { useEmail } from '#/lib/hooks/useEmail'
 import { useRequireAuth, useSession } from '#/state/session'
 import { useCloseAllActiveElements } from '#/state/util'
-import { EmailDialogScreenID, type Screen, useEmailDialogControl,  } from '#/components/dialogs/EmailDialog'
+import {
+  EmailDialogScreenID,
+  type Screen,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
 
 export function useRequireEmailVerification() {
-  const {currentAccount} = useSession()
-  const {needsEmailVerification} = useEmail()
+  const { currentAccount } = useSession()
+  const { needsEmailVerification } = useEmail()
   const requireAuth = useRequireAuth()
   const emailDialogControl = useEmailDialogControl()
   const closeAll = useCloseAllActiveElements()
@@ -17,7 +21,7 @@ export function useRequireEmailVerification() {
     <T extends (...args: any[]) => any>(
       cb: T,
       config: Omit<
-        Extract<Screen, {id: EmailDialogScreenID.Verify}>,
+        Extract<Screen, { id: EmailDialogScreenID.Verify }>,
         'id'
       > = {},
     ): ((...args: Parameters<T>) => ReturnType<T>) => {

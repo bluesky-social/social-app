@@ -1,6 +1,10 @@
-import React, {memo} from 'react'
+import React, { memo } from 'react'
 import { RefreshControl, type ViewToken } from 'react-native'
-import { type FlatListPropsWithLayout, runOnJS, useSharedValue,  } from 'react-native-reanimated'
+import {
+  type FlatListPropsWithLayout,
+  runOnJS,
+  useSharedValue,
+} from 'react-native-reanimated'
 import { updateActiveVideoViewAsync } from '@haileyok/bluesky-video'
 
 import { useAnimatedScrollHandler } from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
@@ -57,7 +61,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
     const dedupe = useDedupe(400)
-    const {activeLightbox} = useLightbox()
+    const { activeLightbox } = useLightbox()
 
     function handleScrolledDownChange(didScrollDown: boolean) {
       onScrolledDownChange?.(didScrollDown)
@@ -143,7 +147,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
       style = addStyle(style, {
         paddingTop: headerOffset,
       })
-      contentOffset = {x: 0, y: headerOffset * -1}
+      contentOffset = { x: 0, y: headerOffset * -1 }
     }
 
     return (
@@ -176,4 +180,4 @@ let List = React.forwardRef<ListMethods, ListProps>(
 List.displayName = 'List'
 
 List = memo(List)
-export {List}
+export { List }

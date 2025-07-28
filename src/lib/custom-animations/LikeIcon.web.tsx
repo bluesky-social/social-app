@@ -4,7 +4,10 @@ import { useReducedMotion } from 'react-native-reanimated'
 
 import { s } from '#/lib/styles'
 import { useTheme } from '#/alf'
-import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled, Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,  } from '#/components/icons/Heart2'
+import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
+  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
+} from '#/components/icons/Heart2'
 
 const animationConfig = {
   duration: 600,
@@ -13,26 +16,26 @@ const animationConfig = {
 }
 
 const keyframe = [
-  {transform: 'scale(1)'},
-  {transform: 'scale(0.7)'},
-  {transform: 'scale(1.2)'},
-  {transform: 'scale(1)'},
+  { transform: 'scale(1)' },
+  { transform: 'scale(0.7)' },
+  { transform: 'scale(1.2)' },
+  { transform: 'scale(1)' },
 ]
 
 const circle1Keyframe = [
-  {opacity: 0, transform: 'scale(0)'},
-  {opacity: 0.4},
-  {transform: 'scale(1.5)'},
-  {opacity: 0.4},
-  {opacity: 0, transform: 'scale(1.5)'},
+  { opacity: 0, transform: 'scale(0)' },
+  { opacity: 0.4 },
+  { transform: 'scale(1.5)' },
+  { opacity: 0.4 },
+  { opacity: 0, transform: 'scale(1.5)' },
 ]
 
 const circle2Keyframe = [
-  {opacity: 0, transform: 'scale(0)'},
-  {opacity: 1},
-  {transform: 'scale(0)'},
-  {opacity: 1},
-  {opacity: 0, transform: 'scale(1.5)'},
+  { opacity: 0, transform: 'scale(0)' },
+  { opacity: 1 },
+  { transform: 'scale(0)' },
+  { opacity: 1 },
+  { opacity: 0, transform: 'scale(1.5)' },
 ]
 
 export function AnimatedLikeIcon({
@@ -75,7 +78,7 @@ export function AnimatedLikeIcon({
         </View>
       ) : (
         <HeartIconOutline
-          style={[{color: t.palette.contrast_500}, {pointerEvents: 'none'}]}
+          style={[{ color: t.palette.contrast_500 }, { pointerEvents: 'none' }]}
           width={size}
         />
       )}

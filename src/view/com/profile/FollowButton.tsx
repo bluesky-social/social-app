@@ -27,7 +27,7 @@ export function FollowButton({
     profile,
     logContext,
   )
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   const onPressFollow = async () => {
     try {
@@ -60,7 +60,7 @@ export function FollowButton({
         type={followedType}
         labelStyle={labelStyle}
         onPress={onPressUnfollow}
-        label={_(msg({message: 'Unfollow', context: 'action'}))}
+        label={_(msg({ message: 'Unfollow', context: 'action' }))}
       />
     )
   } else if (!profile.viewer.followedBy) {
@@ -69,7 +69,7 @@ export function FollowButton({
         type={unfollowedType}
         labelStyle={labelStyle}
         onPress={onPressFollow}
-        label={_(msg({message: 'Follow', context: 'action'}))}
+        label={_(msg({ message: 'Follow', context: 'action' }))}
       />
     )
   } else {
@@ -78,7 +78,7 @@ export function FollowButton({
         type={unfollowedType}
         labelStyle={labelStyle}
         onPress={onPressFollow}
-        label={_(msg({message: 'Follow Back', context: 'action'}))}
+        label={_(msg({ message: 'Follow Back', context: 'action' }))}
       />
     )
   }

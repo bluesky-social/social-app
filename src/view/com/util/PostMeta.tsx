@@ -1,6 +1,9 @@
 import { memo, useCallback } from 'react'
 import { type StyleProp, View, type ViewStyle } from 'react-native'
-import { type AppGndrActorDefs, type ModerationDecision,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrActorDefs,
+  type ModerationDecision,
+} from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -38,7 +41,7 @@ interface PostMetaOpts {
 
 let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const t = useTheme()
-  const {i18n, _} = useLingui()
+  const { i18n, _ } = useLingui()
 
   const author = useProfileShadow(opts.author)
   const displayName = author.displayName || author.handle
@@ -55,8 +58,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   }, [queryClient, author])
 
   const timestampLabel = niceDate(i18n, opts.timestamp)
-  const verification = useSimpleVerificationState({profile: author})
-  const {isActive: live} = useActorStatus(author)
+  const verification = useSimpleVerificationState({ profile: author })
+  const { isActive: live } = useActorStatus(author)
 
   return (
     <View
@@ -97,7 +100,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 t.atoms.text,
                 a.leading_tight,
                 a.flex_shrink_0,
-                {maxWidth: '70%'},
+                { maxWidth: '70%' },
               ]}>
               {forceLTR(
                 sanitizeDisplayName(
@@ -112,11 +115,11 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                   a.pl_2xs,
                   a.self_center,
                   {
-                    marginTop: platform({web: 0, ios: 0, android: -1}),
+                    marginTop: platform({ web: 0, ios: 0, android: -1 }),
                   },
                 ]}>
                 <VerificationCheck
-                  width={platform({android: 13, default: 12})}
+                  width={platform({ android: 13, default: 12 })}
                   verifier={verification.role === 'verifier'}
                 />
               </View>
@@ -133,7 +136,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                 a.text_md,
                 t.atoms.text_contrast_medium,
                 a.leading_tight,
-                {flexShrink: 10},
+                { flexShrink: 10 },
               ]}>
               {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
             </WebOnlyInlineLinkText>
@@ -141,7 +144,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </ProfileHoverCard>
 
         <TimeElapsed timestamp={opts.timestamp}>
-          {({timeElapsed}) => (
+          {({ timeElapsed }) => (
             <WebOnlyInlineLinkText
               to={opts.postHref}
               label={timestampLabel}
@@ -180,4 +183,4 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   )
 }
 PostMeta = memo(PostMeta)
-export {PostMeta}
+export { PostMeta }

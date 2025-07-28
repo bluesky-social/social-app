@@ -1,4 +1,7 @@
-import { type ImagePickerAsset, type ImagePickerResult } from 'expo-image-picker'
+import {
+  type ImagePickerAsset,
+  type ImagePickerResult,
+} from 'expo-image-picker'
 
 import { SUPPORTED_MIME_TYPES } from '#/lib/constants'
 
@@ -24,7 +27,7 @@ export async function pickVideo(): Promise<ImagePickerResult> {
           assets: [await getVideoMetadata(file)],
         })
       } else {
-        resolve({canceled: true, assets: null})
+        resolve({ canceled: true, assets: null })
       }
       document.body.removeChild(input)
     })

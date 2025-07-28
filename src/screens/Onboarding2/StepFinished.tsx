@@ -1,56 +1,56 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 import {
-  type AppBskyActorProfile,
-  type AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
+  type AppGndrActorProfile,
+  type AppGndrGraphDefs,
+  AppGndrGraphStarterpack,
   type Un$Typed,
-} from '@atproto/api'
-import {type SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
-import {TID} from '@atproto/common-web'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+} from '@gander-social-atproto/api'
+import { type SavedFeed } from '@gander-social-atproto/api/dist/client/types/app/gndr/actor/defs'
+import { TID } from '@gander-social-atproto/common-web'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {uploadBlob} from '#/lib/api'
+import { uploadBlob } from '#/lib/api'
 import {
-  BSKY_APP_ACCOUNT_DID,
   DISCOVER_SAVED_FEED,
+  GNDR_APP_ACCOUNT_DID,
   TIMELINE_SAVED_FEED,
   VIDEO_SAVED_FEED,
 } from '#/lib/constants'
-import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
-import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
-import {getAllListMembers} from '#/state/queries/list-members'
-import {preferencesQueryKey} from '#/state/queries/preferences'
-import {RQKEY as profileRQKey} from '#/state/queries/profile'
-import {useAgent} from '#/state/session'
-import {useOnboardingDispatch} from '#/state/shell'
-import {useProgressGuideControls} from '#/state/shell/progress-guide'
+import { useRequestNotificationsPermission } from '#/lib/notifications/notifications'
+import { logEvent, useGate } from '#/lib/statsig/statsig'
+import { logger } from '#/logger'
+import { useSetHasCheckedForStarterPack } from '#/state/preferences/used-starter-packs'
+import { getAllListMembers } from '#/state/queries/list-members'
+import { preferencesQueryKey } from '#/state/queries/preferences'
+import { RQKEY as profileRQKey } from '#/state/queries/profile'
+import { useAgent } from '#/state/session'
+import { useOnboardingDispatch } from '#/state/shell'
+import { useProgressGuideControls } from '#/state/shell/progress-guide'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
 } from '#/state/shell/starter-pack'
-import {DescriptionText, TitleText} from '#/screens/Onboarding2/Layout'
-import {Context} from '#/screens/Onboarding2/state'
-import {bulkWriteFollows} from '#/screens/Onboarding2/util'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {IconCircle} from '#/components/IconCircle'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
-import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
-import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import { DescriptionText, TitleText } from '#/screens/Onboarding2/Layout'
+import { Context } from '#/screens/Onboarding2/state'
+import { bulkWriteFollows } from '#/screens/Onboarding2/util'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { IconCircle } from '#/components/IconCircle'
+import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check'
+import { Growth_Stroke2_Corner0_Rounded as Growth } from '#/components/icons/Growth'
+import { News2_Stroke2_Corner0_Rounded as News } from '#/components/icons/News2'
+import { Trending2_Stroke2_Corner2_Rounded as Trending } from '#/components/icons/Trending'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
+import * as gndr from '#/types/gndr'
 
 export function StepFinished() {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
-  const {state, dispatch} = React.useContext(Context)
+  const { state, dispatch } = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
   const queryClient = useQueryClient()
@@ -59,23 +59,23 @@ export function StepFinished() {
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
-  const {startProgressGuide} = useProgressGuideControls()
+  const { startProgressGuide } = useProgressGuideControls()
   const gate = useGate()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
-    let starterPack: AppBskyGraphDefs.StarterPackView | undefined
-    let listItems: AppBskyGraphDefs.ListItemView[] | undefined
+    let starterPack: AppGndrGraphDefs.StarterPackView | undefined
+    let listItems: AppGndrGraphDefs.ListItemView[] | undefined
 
     if (activeStarterPack?.uri) {
       try {
-        const spRes = await agent.app.bsky.graph.getStarterPack({
+        const spRes = await agent.app.gndr.graph.getStarterPack({
           starterPack: activeStarterPack.uri,
         })
         starterPack = spRes.data.starterPack
       } catch (e) {
-        logger.error('Failed to fetch starter pack', {safeMessage: e})
+        logger.error('Failed to fetch starter pack', { safeMessage: e })
         // don't tell the user, just get them through onboarding.
       }
       try {
@@ -91,17 +91,17 @@ export function StepFinished() {
     }
 
     try {
-      const {interestsStepResults, profileStepResults} = state
-      const {selectedInterests} = interestsStepResults
+      const { interestsStepResults, profileStepResults } = state
+      const { selectedInterests } = interestsStepResults
 
       await Promise.all([
         bulkWriteFollows(agent, [
-          BSKY_APP_ACCOUNT_DID,
+          GNDR_APP_ACCOUNT_DID,
           ...(listItems?.map(i => i.subject.did) ?? []),
         ]),
         (async () => {
           // Interests need to get saved first, then we can write the feeds to prefs
-          await agent.setInterestsPref({tags: selectedInterests})
+          await agent.setInterestsPref({ tags: selectedInterests })
 
           // Default feeds that every user should have pinned when landing in the app
           const feedsToSave: SavedFeed[] = [
@@ -136,14 +136,14 @@ export function StepFinished() {
           await agent.overwriteSavedFeeds(feedsToSave)
         })(),
         (async () => {
-          const {imageUri, imageMime} = profileStepResults
+          const { imageUri, imageMime } = profileStepResults
           const blobPromise =
             imageUri && imageMime
               ? uploadBlob(agent, imageUri, imageMime)
               : undefined
 
           await agent.upsertProfile(async existing => {
-            let next: Un$Typed<AppBskyActorProfile.Record> = existing ?? {}
+            let next: Un$Typed<AppGndrActorProfile.Record> = existing ?? {}
 
             if (blobPromise) {
               const res = await blobPromise
@@ -203,15 +203,15 @@ export function StepFinished() {
     startProgressGuide(
       gate('old_postonboarding') ? 'like-10-and-follow-7' : 'follow-10',
     )
-    dispatch({type: 'finish'})
-    onboardDispatch({type: 'finish'})
+    dispatch({ type: 'finish' })
+    onboardDispatch({ type: 'finish' })
     logEvent('onboarding:finished:nextPressed', {
       usedStarterPack: Boolean(starterPack),
       starterPackName:
         starterPack &&
-        bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+        gndr.dangerousIsType<AppGndrGraphStarterpack.Record>(
           starterPack.record,
-          AppBskyGraphStarterpack.isRecord,
+          AppGndrGraphStarterpack.isRecord,
         )
           ? starterPack.record.name
           : undefined,
@@ -254,7 +254,11 @@ export function StepFinished() {
 
       <View style={[a.pt_5xl, a.gap_3xl]}>
         <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          <IconCircle icon={Growth} size="lg" style={{width: 48, height: 48}} />
+          <IconCircle
+            icon={Growth}
+            size="lg"
+            style={{ width: 48, height: 48 }}
+          />
           <View style={[a.flex_1, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_lg]}>
               <Trans>Public</Trans>
@@ -268,7 +272,7 @@ export function StepFinished() {
           </View>
         </View>
         <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          <IconCircle icon={News} size="lg" style={{width: 48, height: 48}} />
+          <IconCircle icon={News} size="lg" style={{ width: 48, height: 48 }} />
           <View style={[a.flex_1, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_lg]}>
               <Trans>Open</Trans>
@@ -283,7 +287,7 @@ export function StepFinished() {
           <IconCircle
             icon={Trending}
             size="lg"
-            style={{width: 48, height: 48}}
+            style={{ width: 48, height: 48 }}
           />
           <View style={[a.flex_1, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_lg]}>

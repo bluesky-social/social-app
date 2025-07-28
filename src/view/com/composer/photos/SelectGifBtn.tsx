@@ -16,9 +16,9 @@ type Props = {
   disabled?: boolean
 }
 
-export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
-  const {_} = useLingui()
-  const ref = useRef<{open: () => void}>(null)
+export function SelectGifBtn({ onClose, onSelectGif, disabled }: Props) {
+  const { _ } = useLingui()
+  const ref = useRef<{ open: () => void }>(null)
   const t = useTheme()
 
   const onPressSelectGif = useCallback(async () => {

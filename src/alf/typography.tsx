@@ -1,12 +1,14 @@
 import { Children } from 'react'
-import { type TextProps as RNTextProps } from 'react-native'
-import { type StyleProp, type TextStyle } from 'react-native'
+import {
+  type StyleProp,
+  type TextProps as RNTextProps,
+  type TextStyle,
+} from 'react-native'
 import { UITextView } from 'react-native-uitextview'
 import createEmojiRegex from 'emoji-regex'
 import type React from 'react'
 
-import { isNative } from '#/platform/detection'
-import { isIOS } from '#/platform/detection'
+import { isIOS, isNative } from '#/platform/detection'
 import { type Alf, applyFonts, atoms, flatten } from '#/alf'
 
 /**
@@ -16,8 +18,8 @@ import { type Alf, applyFonts, atoms, flatten } from '#/alf'
  *   `leading(atoms.text_md, atoms.leading_normal)` // => 24
  */
 export function leading<
-  Size extends {fontSize?: number},
-  Leading extends {lineHeight?: number},
+  Size extends { fontSize?: number },
+  Leading extends { lineHeight?: number },
 >(textSize: Size, leading: Leading) {
   const size = textSize?.fontSize || atoms.text_md.fontSize
   const lineHeight = leading?.lineHeight || atoms.leading_normal.lineHeight
@@ -113,7 +115,7 @@ export function renderChildrenWithEmoji(
       emojis[index] ? (
         <UITextView
           {...props}
-          style={[props?.style, {fontFamily: 'System'}]}
+          style={[props?.style, { fontFamily: 'System' }]}
           key={index}>
           {emojis[index]}
         </UITextView>

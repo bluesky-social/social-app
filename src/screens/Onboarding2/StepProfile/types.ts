@@ -1,21 +1,21 @@
-import {Alien_Stroke2_Corner0_Rounded as Alien} from '#/components/icons/Alien'
-import {Apple_Stroke2_Corner0_Rounded as Apple} from '#/components/icons/Apple'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import {Atom_Stroke2_Corner0_Rounded as Atom} from '#/components/icons/Atom'
-import {Celebrate_Stroke2_Corner0_Rounded as Celebrate} from '#/components/icons/Celebrate'
+import { Alien_Stroke2_Corner0_Rounded as Alien } from '#/components/icons/Alien'
+import { Apple_Stroke2_Corner0_Rounded as Apple } from '#/components/icons/Apple'
+import { At_Stroke2_Corner0_Rounded as At } from '#/components/icons/At'
+import { Atom_Stroke2_Corner0_Rounded as Atom } from '#/components/icons/Atom'
+import { Celebrate_Stroke2_Corner0_Rounded as Celebrate } from '#/components/icons/Celebrate'
 import {
   EmojiArc_Stroke2_Corner0_Rounded as EmojiArc,
   EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyes,
 } from '#/components/icons/Emoji'
-import {Explosion_Stroke2_Corner0_Rounded as Explosion} from '#/components/icons/Explosion'
-import {GameController_Stroke2_Corner0_Rounded as GameController} from '#/components/icons/GameController'
-import {Lab_Stroke2_Corner0_Rounded as Lab} from '#/components/icons/Lab'
-import {Leaf_Stroke2_Corner0_Rounded as Leaf} from '#/components/icons/Leaf'
-import {MusicNote_Stroke2_Corner0_Rounded as MusicNote} from '#/components/icons/MusicNote'
-import {Rose_Stroke2_Corner0_Rounded as Rose} from '#/components/icons/Rose'
-import {Shaka_Stroke2_Corner0_Rounded as Shaka} from '#/components/icons/Shaka'
-import {UFO_Stroke2_Corner0_Rounded as UFO} from '#/components/icons/UFO'
-import {Zap_Stroke2_Corner0_Rounded as Zap} from '#/components/icons/Zap'
+import { Explosion_Stroke2_Corner0_Rounded as Explosion } from '#/components/icons/Explosion'
+import { GameController_Stroke2_Corner0_Rounded as GameController } from '#/components/icons/GameController'
+import { Lab_Stroke2_Corner0_Rounded as Lab } from '#/components/icons/Lab'
+import { Leaf_Stroke2_Corner0_Rounded as Leaf } from '#/components/icons/Leaf'
+import { MusicNote_Stroke2_Corner0_Rounded as MusicNote } from '#/components/icons/MusicNote'
+import { Rose_Stroke2_Corner0_Rounded as Rose } from '#/components/icons/Rose'
+import { Shaka_Stroke2_Corner0_Rounded as Shaka } from '#/components/icons/Shaka'
+import { UFO_Stroke2_Corner0_Rounded as UFO } from '#/components/icons/UFO'
+import { Zap_Stroke2_Corner0_Rounded as Zap } from '#/components/icons/Zap'
 
 /**
  * If you want to add or remove icons from the selection, just add the name to the `emojiNames` array and

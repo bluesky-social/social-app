@@ -21,7 +21,7 @@ export function FeedNameText({
   numberOfLines?: number
   style?: StyleProp<TextStyle>
 }) {
-  const {data, isError} = useFeedSourceInfoQuery({uri})
+  const { data, isError } = useFeedSourceInfoQuery({ uri })
 
   let inner
   if (data?.displayName || isError) {
@@ -50,5 +50,5 @@ export function FeedNameText({
 }
 
 const styles = StyleSheet.create({
-  loadingPlaceholder: {position: 'relative', top: 1, left: 2},
+  loadingPlaceholder: { position: 'relative', top: 1, left: 2 },
 })

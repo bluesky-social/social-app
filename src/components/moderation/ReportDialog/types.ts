@@ -1,4 +1,10 @@
-import { type $Typed, type AppGndrActorDefs, type AppGndrFeedDefs, type AppGndrGraphDefs, type ChatBskyConvoDefs as ChatGndrConvoDefs,  } from '@gander-social-atproto/api'
+import {
+  type $Typed,
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  type AppGndrGraphDefs,
+  type ChatGndrConvoDefs,
+} from '@gander-social-atproto/api'
 
 import type * as Dialog from '#/components/Dialog'
 
@@ -10,7 +16,7 @@ export type ReportSubject =
   | $Typed<AppGndrFeedDefs.GeneratorView>
   | $Typed<AppGndrGraphDefs.StarterPackView>
   | $Typed<AppGndrFeedDefs.PostView>
-  | {convoId: string; message: ChatGndrConvoDefs.MessageView}
+  | { convoId: string; message: ChatGndrConvoDefs.MessageView }
 
 export type ParsedReportSubject =
   | {

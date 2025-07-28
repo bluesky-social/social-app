@@ -33,10 +33,10 @@ function keyExtractor(item: ActorDefs.ProfileViewBasic) {
   return item.did
 }
 
-export function ProfileFollowers({name}: {name: string}) {
-  const {_} = useLingui()
+export function ProfileFollowers({ name }: { name: string }) {
+  const { _ } = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
@@ -69,7 +69,7 @@ export function ProfileFollowers({name}: {name: string}) {
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh followers', {message: err})
+      logger.error('Failed to refresh followers', { message: err })
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -79,7 +79,7 @@ export function ProfileFollowers({name}: {name: string}) {
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more followers', {message: err})
+      logger.error('Failed to load more followers', { message: err })
     }
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 

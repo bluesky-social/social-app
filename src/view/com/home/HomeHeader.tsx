@@ -15,8 +15,8 @@ export function HomeHeader(
     feeds: FeedSourceInfo[]
   },
 ) {
-  const {feeds} = props
-  const {hasSession} = useSession()
+  const { feeds } = props
+  const { hasSession } = useSession()
   const navigation = useNavigation<NavigationProp>()
 
   const hasPinnedCustom = React.useMemo<boolean>(() => {

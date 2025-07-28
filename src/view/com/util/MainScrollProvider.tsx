@@ -1,6 +1,10 @@
-import React, {useCallback, useEffect} from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { type NativeScrollEvent } from 'react-native'
-import { interpolate, useSharedValue, withSpring } from 'react-native-reanimated'
+import {
+  interpolate,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
 
 import { ScrollProvider } from '#/lib/ScrollContext'
@@ -15,9 +19,13 @@ function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-export function MainScrollProvider({children}: {children: React.ReactNode}) {
-  const {headerHeight} = useShellLayout()
-  const {headerMode} = useMinimalShellMode()
+export function MainScrollProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const { headerHeight } = useShellLayout()
+  const { headerMode } = useMinimalShellMode()
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)

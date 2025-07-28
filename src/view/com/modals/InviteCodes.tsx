@@ -1,7 +1,15 @@
 import React from 'react'
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View,  } from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { setStringAsync } from 'expo-clipboard'
-import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  type FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import { type ComAtprotoServerDefs } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -13,7 +21,10 @@ import { cleanError } from '#/lib/strings/errors'
 import { isWeb } from '#/platform/detection'
 import { useInvitesAPI, useInvitesState } from '#/state/invites'
 import { useModalControls } from '#/state/modals'
-import { type InviteCodesQueryResponse, useInviteCodesQuery,  } from '#/state/queries/invites'
+import {
+  type InviteCodesQueryResponse,
+  useInviteCodesQuery,
+} from '#/state/queries/invites'
 import { ErrorMessage } from '../util/error/ErrorMessage'
 import { Button } from '../util/forms/Button'
 import { Link } from '../util/Link'
@@ -25,12 +36,12 @@ import { ScrollView } from './util'
 export const snapPoints = ['70%']
 
 export function Component() {
-  const {isLoading, data: invites, error} = useInviteCodesQuery()
+  const { isLoading, data: invites, error } = useInviteCodesQuery()
 
   return error ? (
     <ErrorMessage message={cleanError(error)} />
   ) : isLoading || !invites ? (
-    <View style={{padding: 18}}>
+    <View style={{ padding: 18 }}>
       <ActivityIndicator />
     </View>
   ) : (
@@ -38,11 +49,11 @@ export function Component() {
   )
 }
 
-export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
+export function Inner({ invites }: { invites: InviteCodesQueryResponse }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
-  const {closeModal} = useModalControls()
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const { _ } = useLingui()
+  const { closeModal } = useModalControls()
+  const { isTabletOrDesktop } = useWebMediaQueries()
 
   const onClose = React.useCallback(() => {
     closeModal()
@@ -132,9 +143,9 @@ function InviteCode({
   invites: InviteCodesQueryResponse
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const invitesState = useInvitesState()
-  const {setInviteCopied} = useInvitesAPI()
+  const { setInviteCopied } = useInvitesAPI()
   const uses = invite.uses
 
   const onPress = React.useCallback(() => {
@@ -147,7 +158,7 @@ function InviteCode({
     <View
       style={[
         pal.border,
-        {borderBottomWidth: 1, paddingHorizontal: 20, paddingVertical: 14},
+        { borderBottomWidth: 1, paddingHorizontal: 20, paddingVertical: 14 },
       ]}>
       <TouchableOpacity
         testID={testID}
@@ -191,7 +202,7 @@ function InviteCode({
             {uses.map((use, i) => (
               <Link
                 key={use.usedBy}
-                href={makeProfileLink({handle: use.usedBy, did: ''})}
+                href={makeProfileLink({ handle: use.usedBy, did: '' })}
                 style={{
                   flexDirection: 'row',
                 }}>

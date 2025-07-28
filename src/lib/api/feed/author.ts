@@ -1,4 +1,8 @@
-import { AppGndrFeedDefs, type AppGndrFeedGetAuthorFeed as GetAuthorFeed, type GndrAgent,  } from '@gander-social-atproto/api'
+import {
+  AppGndrFeedDefs,
+  type AppGndrFeedGetAuthorFeed as GetAuthorFeed,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 
 import { type FeedAPI, type FeedAPIResponse } from './types'
 
@@ -18,7 +22,7 @@ export class AuthorFeedAPI implements FeedAPI {
   }
 
   get params() {
-    const params = {...this._params}
+    const params = { ...this._params }
     params.includePins =
       params.filter === 'posts_with_replies' ||
       params.filter === 'posts_and_author_threads'

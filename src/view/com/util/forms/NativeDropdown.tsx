@@ -1,5 +1,11 @@
 import React from 'react'
-import { Platform, Pressable, StyleSheet, View, type ViewStyle,  } from 'react-native'
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import { type IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
@@ -47,7 +53,7 @@ export const DropdownMenuTrigger = DropdownMenu.create(
         accessibilityRole="button"
         accessibilityLabel={props.accessibilityLabel}
         accessibilityHint={props.accessibilityHint}
-        style={({pressed}) => [{opacity: pressed ? 0.8 : 1}]}>
+        style={({ pressed }) => [{ opacity: pressed ? 0.8 : 1 }]}>
         <DropdownMenu.Trigger action="press">
           <View>
             {props.children ? (
@@ -72,7 +78,7 @@ type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
  * @deprecated use Menu from `#/components/Menu.tsx` instead
  */
 export const DropdownMenuItem = DropdownMenu.create(
-  (props: ItemProps & {testID?: string}) => {
+  (props: ItemProps & { testID?: string }) => {
     const theme = useTheme()
     const [focused, setFocused] = React.useState(false)
     const backgroundColor = theme.colorScheme === 'dark' ? '#fff1' : '#0001'
@@ -80,7 +86,7 @@ export const DropdownMenuItem = DropdownMenu.create(
     return (
       <DropdownMenu.Item
         {...props}
-        style={[styles.item, focused && {backgroundColor: backgroundColor}]}
+        style={[styles.item, focused && { backgroundColor: backgroundColor }]}
         onFocus={() => {
           setFocused(true)
           props.onFocus && props.onFocus()
@@ -128,7 +134,7 @@ export const DropdownMenuSeparator = DropdownMenu.create(
   (props: SeparatorProps) => {
     const pal = usePalette('default')
     const theme = useTheme()
-    const {borderColor: separatorColor} =
+    const { borderColor: separatorColor } =
       theme.colorScheme === 'dark' ? pal.borderDark : pal.border
     return (
       <DropdownMenu.Separator
@@ -136,7 +142,7 @@ export const DropdownMenuSeparator = DropdownMenu.create(
         style={[
           props.style,
           styles.separator,
-          {backgroundColor: separatorColor},
+          { backgroundColor: separatorColor },
         ]}
       />
     )
@@ -308,8 +314,8 @@ const styles = StyleSheet.create({
         animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
         willChange: 'transform, opacity',
         animationKeyframes: {
-          '0%': {opacity: 0, transform: [{scale: 0.5}]},
-          '100%': {opacity: 1, transform: [{scale: 1}]},
+          '0%': { opacity: 0, transform: [{ scale: 0.5 }] },
+          '100%': { opacity: 1, transform: [{ scale: 1 }] },
         },
         boxShadow:
           '0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2)',

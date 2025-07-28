@@ -1,5 +1,5 @@
-import {createDownloadResumable, deleteAsync} from 'expo-file-system'
-import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+import { createDownloadResumable, deleteAsync } from 'expo-file-system'
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
 
 import {
   downloadAndResize,
@@ -36,7 +36,7 @@ describe('downloadAndResize', () => {
       cancelAsync: jest.fn(),
       downloadAsync: jest
         .fn()
-        .mockResolvedValue({uri: 'file://resized-image.jpg'}),
+        .mockResolvedValue({ uri: 'file://resized-image.jpg' }),
     })
 
     const opts: DownloadAndResizeOpts = {
@@ -62,8 +62,8 @@ describe('downloadAndResize', () => {
     expect(manipulateAsync).toHaveBeenCalledWith(expect.any(String), [], {})
     expect(manipulateAsync).toHaveBeenCalledWith(
       expect.any(String),
-      [{resize: {height: opts.height, width: opts.width}}],
-      {format: SaveFormat.JPEG, compress: 1.0},
+      [{ resize: { height: opts.height, width: opts.width } }],
+      { format: SaveFormat.JPEG, compress: 1.0 },
     )
     expect(deleteAsync).toHaveBeenCalledWith(expect.any(String), {
       idempotent: true,

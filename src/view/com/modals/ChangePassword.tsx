@@ -1,5 +1,11 @@
 import { useState } from 'react'
-import { ActivityIndicator, SafeAreaView, StyleSheet, TouchableOpacity, View,  } from 'react-native'
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -17,8 +23,7 @@ import { useAgent, useSession } from '#/state/session'
 import { ErrorMessage } from '../util/error/ErrorMessage'
 import { Button } from '../util/forms/Button'
 import { Text } from '../util/text/Text'
-import { ScrollView } from './util'
-import { TextInput } from './util'
+import { ScrollView, TextInput } from './util'
 
 enum Stages {
   RequestCode,
@@ -30,16 +35,16 @@ export const snapPoints = isAndroid ? ['90%'] : ['45%']
 
 export function Component() {
   const pal = usePalette('default')
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const agent = useAgent()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.RequestCode)
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
   const [newPassword, setNewPassword] = useState<string>('')
   const [error, setError] = useState<string>('')
-  const {isMobile} = useWebMediaQueries()
-  const {closeModal} = useModalControls()
+  const { isMobile } = useWebMediaQueries()
+  const { closeModal } = useModalControls()
 
   const onRequestCode = async () => {
     if (
@@ -58,7 +63,7 @@ export function Component() {
       setStage(Stages.ChangePassword)
     } catch (e: any) {
       const errMsg = e.toString()
-      logger.warn('Failed to request password reset', {error: e})
+      logger.warn('Failed to request password reset', { error: e })
       if (isNetworkError(e)) {
         setError(
           _(
@@ -104,7 +109,7 @@ export function Component() {
       setStage(Stages.Done)
     } catch (e: any) {
       const errMsg = e.toString()
-      logger.warn('Failed to set new password', {error: e})
+      logger.warn('Failed to set new password', { error: e })
       if (isNetworkError(e)) {
         setError(
           _(
@@ -149,7 +154,7 @@ export function Component() {
             </Text>
           </View>
 
-          <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
+          <Text type="lg" style={[pal.textLight, { marginBottom: 10 }]}>
             {stage === Stages.RequestCode ? (
               <Trans>
                 If you want to change your password, we will send you a code to
@@ -238,7 +243,7 @@ export function Component() {
               <ActivityIndicator color="#fff" />
             </View>
           ) : (
-            <View style={{gap: 6}}>
+            <View style={{ gap: 6 }}>
               {stage === Stages.RequestCode && (
                 <Button
                   testID="requestChangeBtn"
@@ -247,7 +252,7 @@ export function Component() {
                   accessibilityLabel={_(msg`Request Code`)}
                   accessibilityHint=""
                   label={_(msg`Request Code`)}
-                  labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                  labelContainerStyle={{ justifyContent: 'center', padding: 4 }}
                   labelStyle={[s.f18]}
                 />
               )}
@@ -259,7 +264,7 @@ export function Component() {
                   accessibilityLabel={_(msg`Next`)}
                   accessibilityHint=""
                   label={_(msg`Next`)}
-                  labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                  labelContainerStyle={{ justifyContent: 'center', padding: 4 }}
                   labelStyle={[s.f18]}
                 />
               )}
@@ -274,7 +279,7 @@ export function Component() {
                 }
                 accessibilityHint=""
                 label={stage !== Stages.Done ? _(msg`Cancel`) : _(msg`Close`)}
-                labelContainerStyle={{justifyContent: 'center', padding: 4}}
+                labelContainerStyle={{ justifyContent: 'center', padding: 4 }}
                 labelStyle={[s.f18]}
               />
             </View>

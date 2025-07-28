@@ -1,6 +1,5 @@
 import React from 'react'
-import { Platform } from 'react-native'
-import { AppState, type AppStateStatus } from 'react-native'
+import { AppState, type AppStateStatus, Platform } from 'react-native'
 import { Statsig, StatsigProvider } from 'statsig-react-native-expo'
 
 import { logger } from '#/logger'
@@ -43,7 +42,7 @@ if (isWeb && typeof window !== 'undefined') {
   refUrl = decodeURIComponent(params.get('ref_url') ?? '')
 }
 
-export type {MetricEvents as LogEvents}
+export type { MetricEvents as LogEvents }
 
 function createStatsigOptions(prefetchUsers: StatsigUser[]) {
   return {
@@ -60,7 +59,7 @@ function createStatsigOptions(prefetchUsers: StatsigUser[]) {
     initTimeoutMs: 1,
     // Get fresh flags for other accounts as well, if any.
     prefetchUsers,
-    api: 'https://events.bsky.app/v2',
+    api: 'https://events.gndr.app/v2',
   }
 }
 
@@ -102,7 +101,7 @@ export function logEvent<E extends keyof MetricEvents>(
      * Send to our data lake only, not to StatSig
      */
     lake?: boolean
-  } = {lake: false},
+  } = { lake: false },
 ) {
   try {
     const fullMetadata = toStringRecord(rawMetadata)
@@ -123,7 +122,7 @@ export function logEvent<E extends keyof MetricEvents>(
     }
   } catch (e) {
     // A log should never interrupt the calling code, whatever happens.
-    logger.error('Failed to log an event', {message: e})
+    logger.error('Failed to log an event', { message: e })
   }
 }
 
@@ -267,8 +266,8 @@ export function initialize() {
   return Statsig.initialize(SDK_KEY, null, createStatsigOptions([]))
 }
 
-export function Provider({children}: {children: React.ReactNode}) {
-  const {currentAccount, accounts} = useSession()
+export function Provider({ children }: { children: React.ReactNode }) {
+  const { currentAccount, accounts } = useSession()
   const did = currentAccount?.did
   const currentStatsigUser = React.useMemo(() => toStatsigUser(did), [did])
 

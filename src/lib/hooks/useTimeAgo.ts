@@ -19,16 +19,16 @@ const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 const MONTH_30 = DAY * 30
 
-export function useGetTimeAgo({future = false}: {future?: boolean} = {}) {
-  const {i18n} = useLingui()
+export function useGetTimeAgo({ future = false }: { future?: boolean } = {}) {
+  const { i18n } = useLingui()
   return useCallback(
     (
       earlier: number | string | Date,
       later: number | string | Date,
-      options?: {format: DateDiffFormat},
+      options?: { format: DateDiffFormat },
     ) => {
       const diff = dateDiff(earlier, later, future ? 'up' : 'down')
-      return formatDateDiff({diff, i18n, format: options?.format})
+      return formatDateDiff({ diff, i18n, format: options?.format })
     },
     [i18n, future],
   )
@@ -136,7 +136,7 @@ export function formatDateDiff({
     }
     case 'second': {
       return long
-        ? i18n._(plural(diff.value, {one: '# second', other: '# seconds'}))
+        ? i18n._(plural(diff.value, { one: '# second', other: '# seconds' }))
         : i18n._(
             defineMessage({
               message: `${diff.value}s`,
@@ -146,7 +146,7 @@ export function formatDateDiff({
     }
     case 'minute': {
       return long
-        ? i18n._(plural(diff.value, {one: '# minute', other: '# minutes'}))
+        ? i18n._(plural(diff.value, { one: '# minute', other: '# minutes' }))
         : i18n._(
             defineMessage({
               message: `${diff.value}m`,
@@ -156,7 +156,7 @@ export function formatDateDiff({
     }
     case 'hour': {
       return long
-        ? i18n._(plural(diff.value, {one: '# hour', other: '# hours'}))
+        ? i18n._(plural(diff.value, { one: '# hour', other: '# hours' }))
         : i18n._(
             defineMessage({
               message: `${diff.value}h`,
@@ -166,7 +166,7 @@ export function formatDateDiff({
     }
     case 'day': {
       return long
-        ? i18n._(plural(diff.value, {one: '# day', other: '# days'}))
+        ? i18n._(plural(diff.value, { one: '# day', other: '# days' }))
         : i18n._(
             defineMessage({
               message: `${diff.value}d`,
@@ -177,10 +177,10 @@ export function formatDateDiff({
     case 'month': {
       if (diff.value < 12) {
         return long
-          ? i18n._(plural(diff.value, {one: '# month', other: '# months'}))
+          ? i18n._(plural(diff.value, { one: '# month', other: '# months' }))
           : i18n._(
               defineMessage({
-                message: plural(diff.value, {one: '#mo', other: '#mo'}),
+                message: plural(diff.value, { one: '#mo', other: '#mo' }),
                 comment: `How many months have passed, displayed in a narrow form`,
               }),
             )

@@ -21,8 +21,8 @@ interface ImageLayoutGridProps {
   viewContext?: PostEmbedViewContext
 }
 
-export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
-  const {gtMobile} = useBreakpoints()
+export function ImageLayoutGrid({ style, ...props }: ImageLayoutGridProps) {
+  const { gtMobile } = useBreakpoints()
   const gap =
     props.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
       ? gtMobile
@@ -49,7 +49,7 @@ interface ImageLayoutGridInnerProps {
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext
-  gap: {gap: number}
+  gap: { gap: number }
 }
 
 function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
@@ -67,7 +67,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       const containerRefs = [containerRef1, containerRef2]
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
-          <View style={[a.flex_1, {aspectRatio: 1}]}>
+          <View style={[a.flex_1, { aspectRatio: 1 }]}>
             <GalleryItem
               {...props}
               index={0}
@@ -76,7 +76,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               thumbDimsRef={thumbDimsRef}
             />
           </View>
-          <View style={[a.flex_1, {aspectRatio: 1}]}>
+          <View style={[a.flex_1, { aspectRatio: 1 }]}>
             <GalleryItem
               {...props}
               index={1}
@@ -93,7 +93,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       const containerRefs = [containerRef1, containerRef2, containerRef3]
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
-          <View style={[a.flex_1, {aspectRatio: 1}]}>
+          <View style={[a.flex_1, { aspectRatio: 1 }]}>
             <GalleryItem
               {...props}
               index={0}
@@ -102,7 +102,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               thumbDimsRef={thumbDimsRef}
             />
           </View>
-          <View style={[a.flex_1, {aspectRatio: 1}, gap]}>
+          <View style={[a.flex_1, { aspectRatio: 1 }, gap]}>
             <View style={[a.flex_1]}>
               <GalleryItem
                 {...props}
@@ -144,7 +144,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       return (
         <>
           <View style={[a.flex_row, gap]}>
-            <View style={[a.flex_1, {aspectRatio: 1.5}]}>
+            <View style={[a.flex_1, { aspectRatio: 1.5 }]}>
               <GalleryItem
                 {...props}
                 index={0}
@@ -157,7 +157,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                 thumbDimsRef={thumbDimsRef}
               />
             </View>
-            <View style={[a.flex_1, {aspectRatio: 1.5}]}>
+            <View style={[a.flex_1, { aspectRatio: 1.5 }]}>
               <GalleryItem
                 {...props}
                 index={1}
@@ -172,7 +172,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
             </View>
           </View>
           <View style={[a.flex_row, gap]}>
-            <View style={[a.flex_1, {aspectRatio: 1.5}]}>
+            <View style={[a.flex_1, { aspectRatio: 1.5 }]}>
               <GalleryItem
                 {...props}
                 index={2}
@@ -185,7 +185,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
                 thumbDimsRef={thumbDimsRef}
               />
             </View>
-            <View style={[a.flex_1, {aspectRatio: 1.5}]}>
+            <View style={[a.flex_1, { aspectRatio: 1.5 }]}>
               <GalleryItem
                 {...props}
                 index={3}
@@ -213,16 +213,16 @@ function noCorners(
 ) {
   const styles: StyleProp<ViewStyle>[] = []
   if (corners.includes('topLeft')) {
-    styles.push({borderTopLeftRadius: 0})
+    styles.push({ borderTopLeftRadius: 0 })
   }
   if (corners.includes('topRight')) {
-    styles.push({borderTopRightRadius: 0})
+    styles.push({ borderTopRightRadius: 0 })
   }
   if (corners.includes('bottomLeft')) {
-    styles.push({borderBottomLeftRadius: 0})
+    styles.push({ borderBottomLeftRadius: 0 })
   }
   if (corners.includes('bottomRight')) {
-    styles.push({borderBottomRightRadius: 0})
+    styles.push({ borderBottomRightRadius: 0 })
   }
   return StyleSheet.flatten(styles)
 }

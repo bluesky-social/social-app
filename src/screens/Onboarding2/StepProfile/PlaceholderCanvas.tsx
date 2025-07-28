@@ -1,9 +1,9 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 
-import {useAvatar} from '#/screens/Onboarding2/StepProfile/index'
-import {atoms as a} from '#/alf'
+import { useAvatar } from '#/screens/Onboarding2/StepProfile/index'
+import { atoms as a } from '#/alf'
 
 const LazyViewShot = React.lazy(
   // @ts-expect-error dynamic import
@@ -20,17 +20,17 @@ export interface PlaceholderCanvasRef {
 // "screenshot".
 export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
   function PlaceholderCanvas({}, ref) {
-    const {avatar} = useAvatar()
+    const { avatar } = useAvatar()
     const viewshotRef = React.useRef<ViewShot>(null)
     const Icon = avatar.placeholder.component
 
     const styles = React.useMemo(
       () => ({
-        container: [a.absolute, {top: -2000}],
+        container: [a.absolute, { top: -2000 }],
         imageContainer: [
           a.align_center,
           a.justify_center,
-          {height: 150 * SIZE_MULTIPLIER, width: 150 * SIZE_MULTIPLIER},
+          { height: 150 * SIZE_MULTIPLIER, width: 150 * SIZE_MULTIPLIER },
         ],
       }),
       [],
@@ -60,13 +60,13 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
             <View
               style={[
                 styles.imageContainer,
-                {backgroundColor: avatar.backgroundColor},
+                { backgroundColor: avatar.backgroundColor },
               ]}
               collapsable={false}>
               <Icon
                 height={85 * SIZE_MULTIPLIER}
                 width={85 * SIZE_MULTIPLIER}
-                style={{color: 'white'}}
+                style={{ color: 'white' }}
               />
             </View>
           </LazyViewShot>

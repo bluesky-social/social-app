@@ -1,5 +1,9 @@
 import React from 'react'
-import { GNDR_LABELER_DID, type ModerationCause, type ModerationCauseSource,  } from '@gander-social-atproto/api'
+import {
+  GNDR_LABELER_DID,
+  type ModerationCause,
+  type ModerationCauseSource,
+} from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -29,9 +33,9 @@ export interface ModerationCauseDescription {
 export function useModerationCauseDescription(
   cause: ModerationCause | AppModerationCause | undefined,
 ): ModerationCauseDescription {
-  const {currentAccount} = useSession()
-  const {_, i18n} = useLingui()
-  const {labelDefs, labelers} = useLabelDefinitions()
+  const { currentAccount } = useSession()
+  const { _, i18n } = useLingui()
+  const { labelDefs, labelers } = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()
 
   return React.useMemo(() => {

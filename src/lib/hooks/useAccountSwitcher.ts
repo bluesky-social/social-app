@@ -7,14 +7,13 @@ import { isWeb } from '#/platform/detection'
 import { type SessionAccount, useSessionApi } from '#/state/session'
 import { useLoggedOutViewControls } from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
-import { logEvent } from '../statsig/statsig'
-import { type LogEvents } from '../statsig/statsig'
+import { logEvent, type LogEvents } from '../statsig/statsig'
 
 export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)
-  const {_} = useLingui()
-  const {resumeSession} = useSessionApi()
-  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const { _ } = useLingui()
+  const { resumeSession } = useSessionApi()
+  const { requestSwitchToAccount } = useLoggedOutViewControls()
 
   const onPressSwitchAccount = useCallback(
     async (
@@ -37,10 +36,10 @@ export function useAccountSwitcher() {
             history.pushState(null, '', '/')
           }
           await resumeSession(account)
-          logEvent('account:loggedIn', {logContext, withPassword: false})
+          logEvent('account:loggedIn', { logContext, withPassword: false })
           Toast.show(_(msg`Signed in as @${account.handle}`))
         } else {
-          requestSwitchToAccount({requestedAccount: account.did})
+          requestSwitchToAccount({ requestedAccount: account.did })
           Toast.show(
             _(msg`Please sign in as @${account.handle}`),
             'circle-exclamation',
@@ -50,7 +49,7 @@ export function useAccountSwitcher() {
         logger.error(`switch account: selectAccount failed`, {
           message: e.message,
         })
-        requestSwitchToAccount({requestedAccount: account.did})
+        requestSwitchToAccount({ requestedAccount: account.did })
         Toast.show(
           _(msg`Please sign in as @${account.handle}`),
           'circle-exclamation',
@@ -62,5 +61,5 @@ export function useAccountSwitcher() {
     [_, resumeSession, requestSwitchToAccount, pendingDid],
   )
 
-  return {onPressSwitchAccount, pendingDid}
+  return { onPressSwitchAccount, pendingDid }
 }

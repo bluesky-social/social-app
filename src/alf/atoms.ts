@@ -1,4 +1,9 @@
-import { Platform, type StyleProp, StyleSheet, type ViewStyle,  } from 'react-native'
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import { ios, native, platform, web } from '#/alf/util/platform'
@@ -14,7 +19,10 @@ export const atoms = {
    * Positioning
    */
   fixed: {
-    position: Platform.select({web: 'fixed', native: 'absolute'}) as 'absolute',
+    position: Platform.select({
+      web: 'fixed',
+      native: 'absolute',
+    }) as 'absolute',
   },
   absolute: {
     position: 'absolute',
@@ -1073,7 +1081,7 @@ export const atoms = {
     native: {
       transform: [],
     },
-  }) as {transform: Exclude<ViewStyle['transform'], string | undefined>},
+  }) as { transform: Exclude<ViewStyle['transform'], string | undefined> },
 
   pointer: web({
     cursor: 'pointer',

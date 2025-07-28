@@ -3,7 +3,14 @@ import { Linking } from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
 import { logEvent } from '#/lib/statsig/statsig'
-import { createGndrAppAbsoluteUrl, createProxiedUrl, isGndrAppUrl, isGndrRSSUrl, isRelativeUrl, toNiceDomain,  } from '#/lib/strings/url-helpers'
+import {
+  createGndrAppAbsoluteUrl,
+  createProxiedUrl,
+  isGndrAppUrl,
+  isGndrRSSUrl,
+  isRelativeUrl,
+  toNiceDomain,
+} from '#/lib/strings/url-helpers'
 import { logger } from '#/logger'
 import { isNative } from '#/platform/detection'
 import { useInAppBrowser } from '#/state/preferences/in-app-browser'
@@ -17,7 +24,7 @@ export function useOpenLink() {
   const t = useTheme()
   const sheetWrapper = useSheetWrapper()
   const dialogContext = useDialogContext()
-  const {inAppBrowserConsentControl} = useGlobalDialogsControlContext()
+  const { inAppBrowserConsentControl } = useGlobalDialogsControlContext()
 
   const openLink = useCallback(
     async (url: string, override?: boolean, shouldProxy?: boolean) => {
@@ -60,7 +67,7 @@ export function useOpenLink() {
               createTask: false,
             }).catch(err => {
               if (__DEV__)
-                logger.error('Could not open web browser', {message: err})
+                logger.error('Could not open web browser', { message: err })
               Linking.openURL(url)
             }),
           )

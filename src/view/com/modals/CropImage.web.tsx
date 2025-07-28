@@ -4,7 +4,7 @@ import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
 import { LinearGradient } from 'expo-linear-gradient'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
-import ReactCrop, {type PercentCrop} from 'react-image-crop'
+import ReactCrop, { type PercentCrop } from 'react-image-crop'
 
 import { usePalette } from '#/lib/hooks/usePalette'
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
@@ -28,10 +28,10 @@ export function Component({
   onSelect: (img?: PickerImage) => void
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
-  const {closeModal} = useModalControls()
-  const {isMobile} = useWebMediaQueries()
+  const { closeModal } = useModalControls()
+  const { isMobile } = useWebMediaQueries()
 
   const imageRef = React.useRef<HTMLImageElement>(null)
   const [crop, setCrop] = React.useState<PercentCrop>()
@@ -84,10 +84,10 @@ export function Component({
           crop={crop}
           onChange={(_pixelCrop, percentCrop) => setCrop(percentCrop)}
           circularCrop={circular}>
-          <img ref={imageRef} src={uri} style={{maxHeight: '75vh'}} />
+          <img ref={imageRef} src={uri} style={{ maxHeight: '75vh' }} />
         </ReactCrop>
       </View>
-      <View style={[styles.btns, isMobile && {paddingHorizontal: 16}]}>
+      <View style={[styles.btns, isMobile && { paddingHorizontal: 16 }]}>
         <TouchableOpacity
           onPress={onPressCancel}
           accessibilityRole="button"
@@ -105,8 +105,8 @@ export function Component({
           accessibilityHint={_(msg`Saves image crop settings`)}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 1}}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
             style={[styles.btn]}>
             <Text type="xl-medium" style={s.white}>
               <Trans>Done</Trans>

@@ -23,11 +23,11 @@ function EnteringUp() {
   'worklet'
   const animations = {
     opacity: withTiming(1, animationConfig),
-    transform: [{translateY: withTiming(0, animationConfig)}],
+    transform: [{ translateY: withTiming(0, animationConfig) }],
   }
   const initialValues = {
     opacity: 0,
-    transform: [{translateY: 18}],
+    transform: [{ translateY: 18 }],
   }
   return {
     animations,
@@ -39,11 +39,11 @@ function EnteringDown() {
   'worklet'
   const animations = {
     opacity: withTiming(1, animationConfig),
-    transform: [{translateY: withTiming(0, animationConfig)}],
+    transform: [{ translateY: withTiming(0, animationConfig) }],
   }
   const initialValues = {
     opacity: 0,
-    transform: [{translateY: -18}],
+    transform: [{ translateY: -18 }],
   }
   return {
     animations,
@@ -63,7 +63,7 @@ function ExitingUp() {
   }
   const initialValues = {
     opacity: 1,
-    transform: [{translateY: 0}],
+    transform: [{ translateY: 0 }],
   }
   return {
     animations,
@@ -75,11 +75,11 @@ function ExitingDown() {
   'worklet'
   const animations = {
     opacity: withTiming(0, animationConfig),
-    transform: [{translateY: withTiming(18, animationConfig)}],
+    transform: [{ translateY: withTiming(18, animationConfig) }],
   }
   const initialValues = {
     opacity: 1,
-    transform: [{translateY: 0}],
+    transform: [{ translateY: 0 }],
   }
   return {
     animations,
@@ -148,7 +148,7 @@ export function CountWheel({
                 a.user_select_none,
                 isLiked
                   ? [a.font_bold, s.likeColor]
-                  : {color: t.palette.contrast_500},
+                  : { color: t.palette.contrast_500 },
               ]}>
               {formattedCount}
             </Text>
@@ -158,7 +158,7 @@ export function CountWheel({
               entering={exitingAnimation}
               // Add 2 to the key so there are never duplicates
               key={key + 2}
-              style={[a.absolute, {width: 50, opacity: 0}]}
+              style={[a.absolute, { width: 50, opacity: 0 }]}
               aria-disabled={true}>
               <Text
                 style={[
@@ -166,7 +166,7 @@ export function CountWheel({
                   a.user_select_none,
                   isLiked
                     ? [a.font_bold, s.likeColor]
-                    : {color: t.palette.contrast_500},
+                    : { color: t.palette.contrast_500 },
                 ]}>
                 {formattedPrevCount}
               </Text>

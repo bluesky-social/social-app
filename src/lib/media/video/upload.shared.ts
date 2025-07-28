@@ -22,7 +22,7 @@ export async function getServiceAuthToken({
   if (!pdsAud) {
     throw new Error('Agent does not have a PDS URL')
   }
-  const {data: serviceAuth} = await agent.com.atproto.server.getServiceAuth({
+  const { data: serviceAuth } = await agent.com.atproto.server.getServiceAuth({
     aud: aud ?? pdsAud,
     lxm,
     exp,
@@ -37,8 +37,8 @@ export async function getVideoUploadLimits(agent: GndrAgent, _: I18n['_']) {
     aud: VIDEO_SERVICE_DID,
   })
   const videoAgent = createVideoAgent()
-  const {data: limits} = await videoAgent.app.gndr.video
-    .getUploadLimits({}, {headers: {Authorization: `Bearer ${token}`}})
+  const { data: limits } = await videoAgent.app.gndr.video
+    .getUploadLimits({}, { headers: { Authorization: `Bearer ${token}` } })
     .catch(err => {
       if (err instanceof Error) {
         throw new UploadLimitError(err.message)

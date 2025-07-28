@@ -2,7 +2,13 @@ import { Keyboard, View } from 'react-native'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
-import { ADULT_CONTENT_LABELS, type AdultSelfLabel, OTHER_SELF_LABELS, type OtherSelfLabel, type SelfLabel,  } from '#/lib/moderation'
+import {
+  ADULT_CONTENT_LABELS,
+  type AdultSelfLabel,
+  OTHER_SELF_LABELS,
+  type OtherSelfLabel,
+  type SelfLabel,
+} from '#/lib/moderation'
 import { isWeb } from '#/platform/detection'
 import { atoms as a, native, useTheme, web } from '#/alf'
 import { Button, ButtonIcon, ButtonText } from '#/components/Button'
@@ -20,7 +26,7 @@ export function LabelsBtn({
   onChange: (v: SelfLabel[]) => void
 }) {
   const control = Dialog.useDialogControl()
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   const hasLabel = labels.length > 0
 
@@ -71,7 +77,9 @@ export function LabelsBtn({
         </ButtonText>
       </Button>
 
-      <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+      <Dialog.Outer
+        control={control}
+        nativeOptions={{ preventExpansion: true }}>
         <Dialog.Handle />
         <DialogInner
           labels={labels}
@@ -92,14 +100,14 @@ function DialogInner({
   updateAdultLabels: (labels: AdultSelfLabel[]) => void
   updateOtherLabels: (labels: OtherSelfLabel[]) => void
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const control = Dialog.useDialogContext()
   const t = useTheme()
 
   return (
     <Dialog.ScrollableInner
       label={_(msg`Add a content warning`)}
-      style={[{maxWidth: 500}, a.w_full]}>
+      style={[{ maxWidth: 500 }, a.w_full]}>
       <View style={[a.flex_1]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.text_2xl, a.font_bold]}>

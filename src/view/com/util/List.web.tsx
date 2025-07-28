@@ -1,5 +1,10 @@
-import React, {isValidElement, memo, startTransition, useRef} from 'react'
-import { type FlatListProps, StyleSheet, View, type ViewProps,  } from 'react-native'
+import React, { isValidElement, memo, startTransition, useRef } from 'react'
+import {
+  type FlatListProps,
+  StyleSheet,
+  View,
+  type ViewProps,
+} from 'react-native'
 import { type ReanimatedScrollEvent } from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 
 import { batchedUpdates } from '#/lib/batchedUpdates'
@@ -181,7 +186,7 @@ function ListImpl<ItemT>(
     () =>
       ({
         scrollToTop() {
-          getScrollableNode()?.scrollTo({top: 0})
+          getScrollableNode()?.scrollTo({ top: 0 })
         },
 
         scrollToOffset({
@@ -197,7 +202,7 @@ function ListImpl<ItemT>(
             behavior: animated ? 'smooth' : 'instant',
           })
         },
-        scrollToEnd({animated = true}: {animated?: boolean}) {
+        scrollToEnd({ animated = true }: { animated?: boolean }) {
           const element = getScrollableNode()
           element?.scrollTo({
             left: 0,
@@ -329,7 +334,7 @@ function ListImpl<ItemT>(
           <Visibility
             root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={handleAboveTheFoldVisibleChange}
-            style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
+            style={[styles.aboveTheFoldDetector, { height: headerOffset }]}
           />
           {onStartReached && !isEmpty && (
             <EdgeVisibility
@@ -436,7 +441,7 @@ let Row = function RowImpl<ItemT>({
   renderItem:
     | null
     | undefined
-    | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
+    | ((data: { index: number; item: any; separators: any }) => React.ReactNode)
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
 }): React.ReactNode {
@@ -491,7 +496,7 @@ let Row = function RowImpl<ItemT>({
 
   return (
     <View ref={rowRef}>
-      {renderItem({item, index, separators: null as any})}
+      {renderItem({ item, index, separators: null as any })}
     </View>
   )
 }
@@ -545,7 +550,7 @@ let Visibility = ({
 Visibility = React.memo(Visibility)
 
 export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
-  props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
+  props: ListProps<ItemT> & { ref?: React.Ref<ListMethods> },
 ) => React.ReactElement
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser

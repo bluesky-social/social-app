@@ -1,5 +1,11 @@
 import React from 'react'
-import { ActivityIndicator, SafeAreaView, StyleSheet, TouchableOpacity, View,  } from 'react-native'
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -28,12 +34,12 @@ export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
   const t = useNewTheme()
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const agent = useAgent()
-  const {removeAccount} = useSessionApi()
-  const {_} = useLingui()
-  const {closeModal} = useModalControls()
-  const {isMobile} = useWebMediaQueries()
+  const { removeAccount } = useSessionApi()
+  const { _ } = useLingui()
+  const { closeModal } = useModalControls()
+  const { isMobile } = useWebMediaQueries()
   const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
   const [confirmCode, setConfirmCode] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
@@ -61,7 +67,7 @@ export function Component({}: {}) {
 
     try {
       // inform chat service of intent to delete account
-      const {success} = await agent.api.chat.gndr.actor.deleteAccount(
+      const { success } = await agent.api.chat.gndr.actor.deleteAccount(
         undefined,
         {
           headers: DM_SERVICE_HEADERS,
@@ -145,8 +151,8 @@ export function Component({}: {}) {
                       gradients.blueLight.start,
                       gradients.blueLight.end,
                     ]}
-                    start={{x: 0, y: 0}}
-                    end={{x: 1, y: 1}}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
                     style={[styles.btn]}>
                     <Text type="button-lg" style={[s.white, s.bold]}>
                       <Trans context="action">Send Email</Trans>

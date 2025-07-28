@@ -1,38 +1,38 @@
 import React from 'react'
-import {View} from 'react-native'
-import Svg, {Path} from 'react-native-svg'
-import {Image as ExpoImage} from 'expo-image'
+import { View } from 'react-native'
+import Svg, { Path } from 'react-native-svg'
+import { Image as ExpoImage } from 'expo-image'
 import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
   MediaTypeOptions,
 } from 'expo-image-picker'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
-import {compressIfNeeded} from '#/lib/media/manip'
-import {openCropper} from '#/lib/media/picker'
-import {getDataUriSize} from '#/lib/media/util'
-import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
-import {isNative, isWeb} from '#/platform/detection'
-import {DescriptionText, TitleText} from '#/screens/Onboarding2/Layout'
-import {Context} from '#/screens/Onboarding2/state'
-import {AvatarCircle} from '#/screens/Onboarding2/StepProfile/AvatarCircle'
-import {AvatarCreatorCircle} from '#/screens/Onboarding2/StepProfile/AvatarCreatorCircle'
-import {AvatarCreatorItems} from '#/screens/Onboarding2/StepProfile/AvatarCreatorItems'
+import { usePhotoLibraryPermission } from '#/lib/hooks/usePermissions'
+import { compressIfNeeded } from '#/lib/media/manip'
+import { openCropper } from '#/lib/media/picker'
+import { getDataUriSize } from '#/lib/media/util'
+import { useRequestNotificationsPermission } from '#/lib/notifications/notifications'
+import { logEvent, useGate } from '#/lib/statsig/statsig'
+import { isNative, isWeb } from '#/platform/detection'
+import { DescriptionText, TitleText } from '#/screens/Onboarding2/Layout'
+import { Context } from '#/screens/Onboarding2/state'
+import { AvatarCircle } from '#/screens/Onboarding2/StepProfile/AvatarCircle'
+import { AvatarCreatorCircle } from '#/screens/Onboarding2/StepProfile/AvatarCreatorCircle'
+import { AvatarCreatorItems } from '#/screens/Onboarding2/StepProfile/AvatarCreatorItems'
 import {
   PlaceholderCanvas,
   type PlaceholderCanvasRef,
 } from '#/screens/Onboarding2/StepProfile/PlaceholderCanvas'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
-import {Text} from '#/components/Typography'
-import {type AvatarColor, avatarColors, type Emoji, emojiItems} from './types'
+import { useSheetWrapper } from '#/components/Dialog/sheet-wrapper'
+import { CircleInfo_Stroke2_Corner0_Rounded } from '#/components/icons/CircleInfo'
+import { Text } from '#/components/Typography'
+import { type AvatarColor, avatarColors, type Emoji, emojiItems } from './types'
 
 export interface Avatar {
   image?: {
@@ -65,17 +65,17 @@ export function StepProfile({
   onGoBack?: () => void
   handle?: string
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const { gtMobile } = useBreakpoints()
+  const { requestPhotoAccessIfNeeded } = usePhotoLibraryPermission()
   const gate = useGate()
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const creatorControl = Dialog.useDialogControl()
   const [error, setError] = React.useState('')
 
-  const {state, dispatch} = React.useContext(Context)
+  const { state, dispatch } = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
     image: state.profileStepResults?.image,
     placeholder: state.profileStepResults.creatorState?.emoji || emojiItems.at,
@@ -152,7 +152,7 @@ export function StepProfile({
       })
     }
 
-    dispatch({type: 'next'})
+    dispatch({ type: 'next' })
     logEvent('onboarding:profile:nextPressed', {})
   }, [avatar, dispatch])
 
@@ -262,7 +262,11 @@ export function StepProfile({
           </Trans>
         </DescriptionText>
         <View
-          style={[a.w_full, a.align_center, {paddingTop: gtMobile ? 80 : 40}]}>
+          style={[
+            a.w_full,
+            a.align_center,
+            { paddingTop: gtMobile ? 80 : 40 },
+          ]}>
           <AvatarCircle
             openLibrary={openLibrary}
             openCreator={creatorControl.open}
@@ -315,7 +319,7 @@ export function StepProfile({
             a.border_t,
             a.mt_lg,
             a.w_full,
-            {borderColor: '#D8D8D8', borderWidth: 1},
+            { borderColor: '#D8D8D8', borderWidth: 1 },
           ]}
         />
         <View style={[a.flex_row, a.align_center, a.mt_lg]}>
@@ -324,7 +328,7 @@ export function StepProfile({
             variant="solid"
             color="secondary"
             size="large"
-            onPress={onGoBack || (() => dispatch({type: 'prev'}))}>
+            onPress={onGoBack || (() => dispatch({ type: 'prev' }))}>
             <ButtonText>
               <Trans>Back</Trans>
             </ButtonText>
@@ -354,7 +358,7 @@ export function StepProfile({
               maxWidth: 410,
             },
           ]}>
-          <View style={[a.align_center, {paddingTop: 20}]}>
+          <View style={[a.align_center, { paddingTop: 20 }]}>
             <AvatarCreatorCircle avatar={avatar} />
           </View>
 

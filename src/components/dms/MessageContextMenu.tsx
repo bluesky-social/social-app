@@ -1,7 +1,7 @@
 import { memo, useCallback } from 'react'
 import { LayoutAnimation } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import { type ChatBskyConvoDefs as ChatGndrConvoDefs, RichText } from '@gander-social-atproto/api'
+import { type ChatGndrConvoDefs, RichText } from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -33,8 +33,8 @@ export let MessageContextMenu = ({
   message: ChatGndrConvoDefs.MessageView
   children: TriggerProps['children']
 }): React.ReactNode => {
-  const {_} = useLingui()
-  const {currentAccount} = useSession()
+  const { _ } = useLingui()
+  const { currentAccount } = useSession()
   const convo = useConvoActive()
   const deleteControl = usePromptControl()
   const reportControl = usePromptControl()
@@ -70,7 +70,7 @@ export let MessageContextMenu = ({
         targetLanguage: langPrefs.primaryLanguage,
         textLength: message.text.length,
       },
-      {statsig: false},
+      { statsig: false },
     )
   }, [langPrefs.primaryLanguage, message.text, openLink])
 
@@ -79,7 +79,7 @@ export let MessageContextMenu = ({
     convo
       .deleteMessage(message.id)
       .then(() =>
-        Toast.show(_(msg({message: 'Message deleted', context: 'toast'}))),
+        Toast.show(_(msg({ message: 'Message deleted', context: 'toast' }))),
       )
       .catch(() => Toast.show(_(msg`Failed to delete message`)))
   }, [_, convo, message.id])
@@ -177,7 +177,7 @@ export let MessageContextMenu = ({
 
       <ReportDialog
         currentScreen="conversation"
-        params={{type: 'convoMessage', convoId: convo.convo.id, message}}
+        params={{ type: 'convoMessage', convoId: convo.convo.id, message }}
         control={reportControl}
       />
 

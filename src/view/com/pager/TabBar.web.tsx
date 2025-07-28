@@ -31,7 +31,7 @@ export function TabBar({
   const t = useTheme()
   const scrollElRef = useRef<ScrollView>(null)
   const itemRefs = useRef<Array<Element>>([])
-  const {gtMobile} = useBreakpoints()
+  const { gtMobile } = useBreakpoints()
   const styles = gtMobile ? desktopStyles : mobileStyles
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export function TabBar({
     if (!childRect) {
       return
     }
-    const {left: childLeft, right: childRight, width: childWidth} = childRect
+    const { left: childLeft, right: childRight, width: childWidth } = childRect
     let dx = 0
     if (childRight >= parentRight) {
       dx += childRight - parentRight
@@ -120,7 +120,7 @@ export function TabBar({
                     selected ? t.atoms.text : t.atoms.text_contrast_medium,
                     a.text_md,
                     a.font_bold,
-                    {lineHeight: 20},
+                    { lineHeight: 20 },
                   ]}>
                   {item}
                   <View
@@ -161,7 +161,7 @@ const desktopStyles = StyleSheet.create({
   },
   itemInner: {
     alignItems: 'center',
-    ...web({overflowX: 'hidden'}),
+    ...web({ overflowX: 'hidden' }),
   },
   itemText: {
     textAlign: 'center',
@@ -204,7 +204,7 @@ const mobileStyles = StyleSheet.create({
   itemInner: {
     flexGrow: 1,
     alignItems: 'center',
-    ...web({overflowX: 'hidden'}),
+    ...web({ overflowX: 'hidden' }),
   },
   itemText: {
     textAlign: 'center',

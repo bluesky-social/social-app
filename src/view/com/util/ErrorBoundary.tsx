@@ -25,11 +25,11 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public static getDerivedStateFromError(error: Error): State {
-    return {hasError: true, error}
+    return { hasError: true, error }
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    logger.error(error, {errorInfo})
+    logger.error(error, { errorInfo })
   }
 
   public render() {
@@ -39,7 +39,7 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <CenteredView style={[{height: '100%', flex: 1}, this.props.style]}>
+        <CenteredView style={[{ height: '100%', flex: 1 }, this.props.style]}>
           <TranslatedErrorScreen details={this.state.error.toString()} />
         </CenteredView>
       )
@@ -49,8 +49,8 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-function TranslatedErrorScreen({details}: {details?: string}) {
-  const {_} = useLingui()
+function TranslatedErrorScreen({ details }: { details?: string }) {
+  const { _ } = useLingui()
 
   return (
     <ErrorScreen

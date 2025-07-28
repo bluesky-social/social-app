@@ -1,4 +1,8 @@
-import { type ImagePickerAsset, launchImageLibraryAsync, UIImagePickerPreferredAssetRepresentationMode,  } from 'expo-image-picker'
+import {
+  type ImagePickerAsset,
+  launchImageLibraryAsync,
+  UIImagePickerPreferredAssetRepresentationMode,
+} from 'expo-image-picker'
 
 import { VIDEO_MAX_DURATION_MS } from '#/lib/constants'
 

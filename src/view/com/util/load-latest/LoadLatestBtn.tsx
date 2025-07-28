@@ -25,9 +25,10 @@ export function LoadLatestBtn({
   label: string
   showIndicator: boolean
 }) {
-  const {hasSession} = useSession()
-  const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
-  const {centerColumnOffset} = useLayoutBreakpoints()
+  const { hasSession } = useSession()
+  const { isDesktop, isTablet, isMobile, isTabletOrMobile } =
+    useWebMediaQueries()
+  const { centerColumnOffset } = useLayoutBreakpoints()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
   const t = useTheme()
@@ -38,7 +39,7 @@ export function LoadLatestBtn({
   } = useInteractionState()
 
   // move button inline if it starts overlapping the left nav
-  const isTallViewport = useMediaQuery({minHeight: 700})
+  const isTallViewport = useMediaQuery({ minHeight: 700 })
 
   const gate = useGate()
   if (gate('remove_show_latest_button')) {
@@ -50,8 +51,8 @@ export function LoadLatestBtn({
   const showBottomBar = hasSession ? isMobile : isTabletOrMobile
 
   const bottomPosition = isTablet
-    ? {bottom: 50}
-    : {bottom: clamp(insets.bottom, 15, 60) + 15}
+    ? { bottom: 50 }
+    : { bottom: clamp(insets.bottom, 15, 60) + 15 }
 
   return (
     <Animated.View
@@ -59,7 +60,7 @@ export function LoadLatestBtn({
       style={[
         a.fixed,
         a.z_20,
-        {left: 18},
+        { left: 18 },
         isDesktop &&
           (isTallViewport
             ? styles.loadLatestOutOfLine
@@ -82,7 +83,9 @@ export function LoadLatestBtn({
           a.justify_center,
           a.border,
           t.atoms.border_contrast_low,
-          showIndicator ? {backgroundColor: t.palette.primary_50} : t.atoms.bg,
+          showIndicator
+            ? { backgroundColor: t.palette.primary_50 }
+            : t.atoms.bg,
         ]}
         onPress={onPress}
         hitSlop={HITSLOP_20}
@@ -97,7 +100,7 @@ export function LoadLatestBtn({
           style={[
             a.z_10,
             showIndicator
-              ? {color: t.palette.primary_500}
+              ? { color: t.palette.primary_500 }
               : t.atoms.text_contrast_medium,
           ]}
         />

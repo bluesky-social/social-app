@@ -1,5 +1,10 @@
 import { useCallback } from 'react'
-import { type LayoutChangeEvent, ScrollView, StyleSheet, View,  } from 'react-native'
+import {
+  type LayoutChangeEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import Animated, {
   interpolate,
   runOnJS,
@@ -51,8 +56,8 @@ export function TabBar({
   const contentSize = useSharedValue(0)
   const containerSize = useSharedValue(0)
   const scrollX = useSharedValue(0)
-  const layouts = useSharedValue<{x: number; width: number}[]>([])
-  const textLayouts = useSharedValue<{width: number}[]>([])
+  const layouts = useSharedValue<{ x: number; width: number }[]>([])
+  const textLayouts = useSharedValue<{ width: number }[]>([])
   const itemsLength = items.length
 
   const scrollToOffsetJS = useCallback(
@@ -203,7 +208,7 @@ export function TabBar({
   )
 
   const onItemLayout = useCallback(
-    (i: number, layout: {x: number; width: number}) => {
+    (i: number, layout: { x: number; width: number }) => {
       'worklet'
       layouts.modify(ls => {
         ls[i] = layout
@@ -214,7 +219,7 @@ export function TabBar({
   )
 
   const onTextLayout = useCallback(
-    (i: number, layout: {width: number}) => {
+    (i: number, layout: { width: number }) => {
       'worklet'
       textLayouts.modify(ls => {
         ls[i] = layout
@@ -226,7 +231,7 @@ export function TabBar({
 
   const indicatorStyle = useAnimatedStyle(() => {
     if (!_WORKLET) {
-      return {opacity: 0}
+      return { opacity: 0 }
     }
     const layoutsValue = layouts.get()
     const textLayoutsValue = textLayouts.get()
@@ -332,7 +337,7 @@ export function TabBar({
             onLayout={e => {
               contentSize.set(e.nativeEvent.layout.width)
             }}
-            style={{flexDirection: 'row', flexGrow: 1}}>
+            style={{ flexDirection: 'row', flexGrow: 1 }}>
             {items.map((item, i) => {
               return (
                 <TabBarItem
@@ -382,13 +387,13 @@ function TabBarItem({
   dragProgress: SharedValue<number>
   item: string
   onPressItem: (index: number) => void
-  onItemLayout: (index: number, layout: {x: number; width: number}) => void
-  onTextLayout: (index: number, layout: {width: number}) => void
+  onItemLayout: (index: number, layout: { x: number; width: number }) => void
+  onTextLayout: (index: number, layout: { width: number }) => void
 }) {
   const t = useTheme()
   const style = useAnimatedStyle(() => {
     if (!_WORKLET) {
-      return {opacity: 0.7}
+      return { opacity: 0.7 }
     }
     return {
       opacity: interpolate(
@@ -415,7 +420,7 @@ function TabBarItem({
   )
 
   return (
-    <View onLayout={handleLayout} style={{flexGrow: 1}}>
+    <View onLayout={handleLayout} style={{ flexGrow: 1 }}>
       <PressableWithHover
         testID={`${testID}-selector-${index}`}
         style={styles.item}

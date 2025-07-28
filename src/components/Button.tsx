@@ -14,11 +14,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
+import { LinearGradient } from 'expo-linear-gradient'
 
-import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Text} from '#/components/Typography'
+import { atoms as a, flatten, select, tokens, useTheme } from '#/alf'
+import { type Props as SVGIconProps } from '#/components/icons/common'
+import { Text } from '#/components/Typography'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor =
@@ -99,7 +99,7 @@ export type ButtonProps = Pick<
     PressableComponent?: React.ComponentType<PressableProps>
   }
 
-export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
+export type ButtonTextProps = TextProps & VariantProps & { disabled?: boolean }
 
 const Context = React.createContext<VariantProps & ButtonState>({
   hovered: false,
@@ -203,7 +203,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       [setState, onBlurOuter],
     )
 
-    const {baseStyles, hoverStyles} = React.useMemo(() => {
+    const { baseStyles, hoverStyles } = React.useMemo(() => {
       const baseStyles: ViewStyle[] = []
       const hoverStyles: ViewStyle[] = []
 
@@ -253,7 +253,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       } else if (color === 'secondary') {
         if (variant === 'solid') {
           if (!disabled) {
-            baseStyles.push({backgroundColor: '#AAAAAA'})
+            baseStyles.push({ backgroundColor: '#AAAAAA' })
             hoverStyles.push(t.atoms.bg_contrast_50)
           } else {
             baseStyles.push(t.atoms.bg_contrast_100)
@@ -467,21 +467,21 @@ export const Button = React.forwardRef<View, ButtonProps>(
       } else if (shape === 'round' || shape === 'square') {
         if (size === 'large') {
           if (shape === 'round') {
-            baseStyles.push({height: 46, width: 46})
+            baseStyles.push({ height: 46, width: 46 })
           } else {
-            baseStyles.push({height: 44, width: 44})
+            baseStyles.push({ height: 44, width: 44 })
           }
         } else if (size === 'small') {
           if (shape === 'round') {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({ height: 34, width: 34 })
           } else {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({ height: 34, width: 34 })
           }
         } else if (size === 'tiny') {
           if (shape === 'round') {
-            baseStyles.push({height: 22, width: 22})
+            baseStyles.push({ height: 22, width: 22 })
           } else {
-            baseStyles.push({height: 21, width: 21})
+            baseStyles.push({ height: 21, width: 21 })
           }
         }
 
@@ -596,7 +596,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
               a.absolute,
               a.inset_0,
               a.overflow_hidden,
-              {borderRadius: flattenedBaseStyles.borderRadius},
+              { borderRadius: flattenedBaseStyles.borderRadius },
             ]}>
             <LinearGradient
               colors={
@@ -605,8 +605,8 @@ export const Button = React.forwardRef<View, ButtonProps>(
                   : gradientValues.colors
               }
               locations={gradientValues.locations}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
               style={[a.absolute, a.inset_0]}
             />
           </View>
@@ -622,16 +622,16 @@ Button.displayName = 'Button'
 
 export function useSharedButtonTextStyles() {
   const t = useTheme()
-  const {color, variant, disabled, size} = useButtonContext()
+  const { color, variant, disabled, size } = useButtonContext()
   return React.useMemo(() => {
     const baseStyles: TextStyle[] = []
 
     if (color === 'primary') {
       if (variant === 'solid') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.white})
+          baseStyles.push({ color: t.palette.white })
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          baseStyles.push({ color: t.palette.white, opacity: 0.5 })
         }
       } else if (variant === 'outline') {
         if (!disabled) {
@@ -639,13 +639,13 @@ export function useSharedButtonTextStyles() {
             color: t.palette.primary_600,
           })
         } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          baseStyles.push({ color: t.palette.primary_600, opacity: 0.5 })
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.primary_600})
+          baseStyles.push({ color: t.palette.primary_600 })
         } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          baseStyles.push({ color: t.palette.primary_600, opacity: 0.5 })
         }
       }
     } else if (color === 'secondary') {
@@ -715,21 +715,21 @@ export function useSharedButtonTextStyles() {
     } else if (color === 'negative') {
       if (variant === 'solid' || variant === 'gradient') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.white})
+          baseStyles.push({ color: t.palette.white })
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          baseStyles.push({ color: t.palette.white, opacity: 0.5 })
         }
       } else if (variant === 'outline') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
+          baseStyles.push({ color: t.palette.negative_400 })
         } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 })
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
+          baseStyles.push({ color: t.palette.negative_400 })
         } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 })
         }
       }
     } else if (color === 'negative_secondary') {
@@ -754,15 +754,15 @@ export function useSharedButtonTextStyles() {
         }
       } else if (variant === 'outline') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
+          baseStyles.push({ color: t.palette.negative_400 })
         } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 })
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
+          baseStyles.push({ color: t.palette.negative_400 })
         } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          baseStyles.push({ color: t.palette.negative_400, opacity: 0.5 })
         }
       }
     } else if (color === 'cta_red') {
@@ -794,9 +794,9 @@ export function useSharedButtonTextStyles() {
       }
     } else {
       if (!disabled) {
-        baseStyles.push({color: t.palette.white})
+        baseStyles.push({ color: t.palette.white })
       } else {
-        baseStyles.push({color: t.palette.white, opacity: 0.5})
+        baseStyles.push({ color: t.palette.white, opacity: 0.5 })
       }
     }
 
@@ -812,7 +812,7 @@ export function useSharedButtonTextStyles() {
   }, [t, variant, color, size, disabled])
 }
 
-export function ButtonText({children, style, ...rest}: ButtonTextProps) {
+export function ButtonText({ children, style, ...rest }: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
@@ -831,9 +831,9 @@ export function ButtonIcon({
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size: buttonSize, disabled} = useButtonContext()
+  const { size: buttonSize, disabled } = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
-  const {iconSize, iconContainerSize} = React.useMemo(() => {
+  const { iconSize, iconContainerSize } = React.useMemo(() => {
     /**
      * Pre-set icon sizes for different button sizes
      */

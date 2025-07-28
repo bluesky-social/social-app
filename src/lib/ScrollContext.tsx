@@ -13,7 +13,7 @@ export function useScrollHandlers(): ScrollHandlers<any> {
   return useContext(ScrollContext)
 }
 
-type ProviderProps = {children: React.ReactNode} & ScrollHandlers<any>
+type ProviderProps = { children: React.ReactNode } & ScrollHandlers<any>
 
 // Note: this completely *overrides* the parent handlers.
 // It's up to you to compose them with the parent ones via useScrollHandlers() if needed.

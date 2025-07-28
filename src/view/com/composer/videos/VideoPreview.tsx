@@ -38,11 +38,11 @@ export function VideoPreview({
       style={[
         a.w_full,
         a.rounded_sm,
-        {aspectRatio},
+        { aspectRatio },
         a.overflow_hidden,
         a.border,
         t.atoms.border_contrast_low,
-        {backgroundColor: 'black'},
+        { backgroundColor: 'black' },
       ]}>
       <View style={[a.absolute, a.inset_0]}>
         <VideoTranscodeBackdrop uri={asset.uri} />

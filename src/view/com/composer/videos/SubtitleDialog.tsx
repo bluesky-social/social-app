@@ -21,7 +21,7 @@ import { SubtitleFilePicker } from './SubtitleFilePicker'
 
 const MAX_NUM_CAPTIONS = 1
 
-type CaptionsTrack = {lang: string; file: File}
+type CaptionsTrack = { lang: string; file: File }
 
 interface Props {
   defaultAltText: string
@@ -32,7 +32,7 @@ interface Props {
 
 export function SubtitleDialogBtn(props: Props) {
   const control = Dialog.useDialogControl()
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   return (
     <View style={[a.flex_row, a.my_xs]}>
@@ -70,10 +70,10 @@ function SubtitleDialogInner({
   setCaptions,
 }: Props) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
   const enforceLen = useEnforceMaxGraphemeCount()
-  const {primaryLanguage} = useLanguagePrefs()
+  const { primaryLanguage } = useLanguagePrefs()
 
   const [altText, setAltText] = useState(defaultAltText)
 
@@ -108,9 +108,9 @@ function SubtitleDialogInner({
             onChangeText={evt => setAltText(enforceLen(evt, MAX_ALT_TEXT))}
             maxLength={MAX_ALT_TEXT * 10}
             multiline
-            style={{maxHeight: 300}}
+            style={{ maxHeight: 300 }}
             numberOfLines={3}
-            onKeyPress={({nativeEvent}) => {
+            onKeyPress={({ nativeEvent }) => {
               if (nativeEvent.key === 'Escape') {
                 control.close()
               }
@@ -194,18 +194,18 @@ function SubtitleFileRow({
 }: {
   language: string
   file: File
-  otherLanguages: {code2: string; code3: string; name: string}[]
+  otherLanguages: { code2: string; code3: string; name: string }[]
   setCaptions: (updater: (prev: CaptionsTrack[]) => CaptionsTrack[]) => void
   style: StyleProp<ViewStyle>
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
 
   const handleValueChange = useCallback(
     (lang: string) => {
       if (lang) {
         setCaptions(subs =>
-          subs.map(s => (s.lang === language ? {lang, file: s.file} : s)),
+          subs.map(s => (s.lang === language ? { lang, file: s.file } : s)),
         )
       }
     },
@@ -242,7 +242,7 @@ function SubtitleFileRow({
           <select
             value={language}
             onChange={evt => handleValueChange(evt.target.value)}
-            style={{maxWidth: 200, flex: 1}}>
+            style={{ maxWidth: 200, flex: 1 }}>
             <option value="" disabled selected hidden>
               {/* eslint-disable-next-line gndr-internal/avoid-unwrapped-text */}
               <Trans>Select language...</Trans>
@@ -273,6 +273,6 @@ function SubtitleFileRow({
   )
 }
 
-function langCode(lang: {code2: string; code3: string}) {
+function langCode(lang: { code2: string; code3: string }) {
   return lang.code2 || lang.code3
 }

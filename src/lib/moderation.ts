@@ -1,5 +1,14 @@
 import React from 'react'
-import { type AppGndrLabelerDefs, type ComAtprotoLabelDefs, GndrAgent, type InterpretedLabelValueDefinition, LABELS, type ModerationCause, type ModerationOpts, type ModerationUI,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrLabelerDefs,
+  type ComAtprotoLabelDefs,
+  GndrAgent,
+  type InterpretedLabelValueDefinition,
+  LABELS,
+  type ModerationCause,
+  type ModerationOpts,
+  type ModerationUI,
+} from '@gander-social-atproto/api'
 
 import { sanitizeDisplayName } from '#/lib/strings/display-names'
 import { sanitizeHandle } from '#/lib/strings/handles'
@@ -107,11 +116,15 @@ export type Subject =
       did: string
     }
 
-export function useLabelSubject({label}: {label: ComAtprotoLabelDefs.Label}): {
+export function useLabelSubject({
+  label,
+}: {
+  label: ComAtprotoLabelDefs.Label
+}): {
   subject: Subject
 } {
   return React.useMemo(() => {
-    const {cid, uri} = label
+    const { cid, uri } = label
     if (cid) {
       return {
         subject: {

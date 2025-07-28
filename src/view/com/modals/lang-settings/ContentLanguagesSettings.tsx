@@ -7,7 +7,10 @@ import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
 import { deviceLanguageCodes } from '#/locale/deviceLocales'
 import { languageName } from '#/locale/helpers'
 import { useModalControls } from '#/state/modals'
-import { useLanguagePrefs, useLanguagePrefsApi,  } from '#/state/preferences/languages'
+import {
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+} from '#/state/preferences/languages'
 import { LANGUAGES, LANGUAGES_MAP_CODE2 } from '../../../../locale/languages'
 import { Text } from '../../util/text/Text'
 import { ScrollView } from '../util'
@@ -17,11 +20,11 @@ import { LanguageToggle } from './LanguageToggle'
 export const snapPoints = ['100%']
 
 export function Component({}: {}) {
-  const {closeModal} = useModalControls()
+  const { closeModal } = useModalControls()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
+  const { isMobile } = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {
     closeModal()
   }, [closeModal])

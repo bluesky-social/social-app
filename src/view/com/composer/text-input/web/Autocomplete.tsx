@@ -1,25 +1,25 @@
-import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
-import {type AppBskyActorDefs as AppGndrActorDefs} from '@gander-social-atproto/api'
-import {Trans} from '@lingui/macro'
-import {ReactRenderer} from '@tiptap/react'
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { type AppGndrActorDefs } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
+import { ReactRenderer } from '@tiptap/react'
 import {
   type SuggestionKeyDownProps,
   type SuggestionOptions,
   type SuggestionProps,
 } from '@tiptap/suggestion'
-import tippy, {type Instance as TippyInstance} from 'tippy.js'
+import tippy, { type Instance as TippyInstance } from 'tippy.js'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {type ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {Text} from '#/view/com/util/text/Text'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a} from '#/alf'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {useGrapheme} from '../hooks/useGrapheme'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { type ActorAutocompleteFn } from '#/state/queries/actor-autocomplete'
+import { Text } from '#/view/com/util/text/Text'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a } from '#/alf'
+import { useSimpleVerificationState } from '#/components/verification'
+import { VerificationCheck } from '#/components/verification/VerificationCheck'
+import { useGrapheme } from '../hooks/useGrapheme'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -31,8 +31,8 @@ export function createSuggestion({
   autocomplete: ActorAutocompleteFn
 }): Omit<SuggestionOptions, 'editor'> {
   return {
-    async items({query}) {
-      const suggestions = await autocomplete({query})
+    async items({ query }) {
+      const suggestions = await autocomplete({ query })
       return suggestions.slice(0, 8)
     },
 
@@ -104,7 +104,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
       const item = props.items[index]
 
       if (item) {
-        props.command({id: item.handle})
+        props.command({ id: item.handle })
       }
     }
 
@@ -125,7 +125,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
     useEffect(() => setSelectedIndex(0), [props.items])
 
     useImperativeHandle(ref, () => ({
-      onKeyDown: ({event}) => {
+      onKeyDown: ({ event }) => {
         if (event.key === 'ArrowUp') {
           upHandler()
           return true
@@ -145,7 +145,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
       },
     }))
 
-    const {items} = props
+    const { items } = props
 
     return (
       <div className="items">
@@ -192,8 +192,8 @@ function AutocompleteProfileCard({
   onPress: () => void
 }) {
   const pal = usePalette('default')
-  const {getGraphemeString} = useGrapheme()
-  const {name: displayName} = getGraphemeString(
+  const { getGraphemeString } = useGrapheme()
+  const { name: displayName } = getGraphemeString(
     sanitizeDisplayName(profile.displayName || sanitizeHandle(profile.handle)),
     30, // Heuristic value; can be modified
   )

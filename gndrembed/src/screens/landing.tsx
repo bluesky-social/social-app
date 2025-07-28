@@ -1,12 +1,21 @@
 import '../index.css'
 
-import { AppGndrFeedDefs, AppGndrFeedPost, AtpAgent, AtUri,  } from '@gander-social-atproto/api'
+import {
+  AppGndrFeedDefs,
+  AppGndrFeedPost,
+  AtpAgent,
+  AtUri,
+} from '@gander-social-atproto/api'
 import { h, render } from 'preact'
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
-import { assertColorModeValues, ColorModeValues, initSystemColorMode,  } from '../color-mode'
+import {
+  assertColorModeValues,
+  ColorModeValues,
+  initSystemColorMode,
+} from '../color-mode'
 import { Container } from '../components/container'
 import { Link } from '../components/link'
 import { Post } from '../components/post'
@@ -25,7 +34,7 @@ if (!root) throw new Error('No root element')
 initSystemColorMode()
 
 const agent = new AtpAgent({
-  service: 'https://public.api.bsky.app',
+  service: 'https://public.api.gndr.app',
 })
 
 render(<LandingPage />, root)
@@ -84,7 +93,7 @@ function LandingPage() {
           }
         }
 
-        const {data} = await agent.getPostThread({
+        const { data } = await agent.getPostThread({
           uri: atUri,
           depth: 0,
           parentHeight: 0,
@@ -223,9 +232,9 @@ function Snippet({
     }
 
     const lang =
-      Array.isArray((record as {langs?: string[]}).langs) &&
-      (record as {langs?: string[]}).langs!.length > 0
-        ? (record as {langs?: string[]}).langs![0]
+      Array.isArray((record as { langs?: string[] }).langs) &&
+      (record as { langs?: string[] }).langs!.length > 0
+        ? (record as { langs?: string[] }).langs![0]
         : ''
     const profileHref = toShareUrl(
       ['/profile', thread.post.author.did].join('/'),

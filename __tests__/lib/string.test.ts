@@ -1,17 +1,20 @@
-import {RichText} from '@atproto/api'
+import { RichText } from '@gander-social-atproto/api'
 
-import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
+import { parseEmbedPlayerFromUrl } from '#/lib/strings/embed-player'
 import {
   createStarterPackGooglePlayUri,
   createStarterPackLinkFromAndroidReferrer,
   parseStarterPackUri,
 } from '#/lib/strings/starter-pack'
-import {tenorUrlToGndrGifUrl} from '#/state/queries/tenor'
-import {cleanError} from '../../src/lib/strings/errors'
-import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
-import {enforceLen} from '../../src/lib/strings/helpers'
-import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
-import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
+import { tenorUrlToGndrGifUrl } from '#/state/queries/tenor'
+import { cleanError } from '../../src/lib/strings/errors'
+import {
+  createFullHandle,
+  makeValidHandle,
+} from '../../src/lib/strings/handles'
+import { enforceLen } from '../../src/lib/strings/helpers'
+import { detectLinkables } from '../../src/lib/strings/rich-text-detection'
+import { shortenLinks } from '../../src/lib/strings/rich-text-manip'
 import {
   makeRecordUri,
   toNiceDomain,
@@ -61,32 +64,32 @@ describe('detectLinkables', () => {
   ]
   const outputs = [
     ['no linkable'],
-    [{link: '@start'}, ' middle end'],
-    ['start ', {link: '@middle'}, ' end'],
-    ['start middle ', {link: '@end'}],
-    [{link: '@start'}, ' ', {link: '@middle'}, ' ', {link: '@end'}],
-    [{link: '@full123.test-of-chars'}],
+    [{ link: '@start' }, ' middle end'],
+    ['start ', { link: '@middle' }, ' end'],
+    ['start middle ', { link: '@end' }],
+    [{ link: '@start' }, ' ', { link: '@middle' }, ' ', { link: '@end' }],
+    [{ link: '@full123.test-of-chars' }],
     ['not@right'],
-    [{link: '@bad'}, '!@#$chars'],
-    [{link: '@newline1'}, '\n', {link: '@newline2'}],
-    ['parenthetical (', {link: '@handle'}, ')'],
-    ['start ', {link: 'https://middle.com'}, ' end'],
-    ['start ', {link: 'https://middle.com/foo/bar'}, ' end'],
-    ['start ', {link: 'https://middle.com/foo/bar?baz=bux'}, ' end'],
-    ['start ', {link: 'https://middle.com/foo/bar?baz=bux#hash'}, ' end'],
-    [{link: 'https://start.com/foo/bar?baz=bux#hash'}, ' middle end'],
-    ['start middle ', {link: 'https://end.com/foo/bar?baz=bux#hash'}],
-    [{link: 'https://newline1.com'}, '\n', {link: 'https://newline2.com'}],
-    ['start ', {link: 'middle.com'}, ' end'],
-    ['start ', {link: 'middle.com/foo/bar'}, ' end'],
-    ['start ', {link: 'middle.com/foo/bar?baz=bux'}, ' end'],
-    ['start ', {link: 'middle.com/foo/bar?baz=bux#hash'}, ' end'],
-    [{link: 'start.com/foo/bar?baz=bux#hash'}, ' middle end'],
-    ['start middle ', {link: 'end.com/foo/bar?baz=bux#hash'}],
-    [{link: 'newline1.com'}, '\n', {link: 'newline2.com'}],
+    [{ link: '@bad' }, '!@#$chars'],
+    [{ link: '@newline1' }, '\n', { link: '@newline2' }],
+    ['parenthetical (', { link: '@handle' }, ')'],
+    ['start ', { link: 'https://middle.com' }, ' end'],
+    ['start ', { link: 'https://middle.com/foo/bar' }, ' end'],
+    ['start ', { link: 'https://middle.com/foo/bar?baz=bux' }, ' end'],
+    ['start ', { link: 'https://middle.com/foo/bar?baz=bux#hash' }, ' end'],
+    [{ link: 'https://start.com/foo/bar?baz=bux#hash' }, ' middle end'],
+    ['start middle ', { link: 'https://end.com/foo/bar?baz=bux#hash' }],
+    [{ link: 'https://newline1.com' }, '\n', { link: 'https://newline2.com' }],
+    ['start ', { link: 'middle.com' }, ' end'],
+    ['start ', { link: 'middle.com/foo/bar' }, ' end'],
+    ['start ', { link: 'middle.com/foo/bar?baz=bux' }, ' end'],
+    ['start ', { link: 'middle.com/foo/bar?baz=bux#hash' }, ' end'],
+    [{ link: 'start.com/foo/bar?baz=bux#hash' }, ' middle end'],
+    ['start middle ', { link: 'end.com/foo/bar?baz=bux#hash' }],
+    [{ link: 'newline1.com' }, '\n', { link: 'newline2.com' }],
     ['not.. a..url ..here'],
     ['e.g.'],
-    ['e.g. ', {link: 'real.com'}, ' fake.notreal'],
+    ['e.g. ', { link: 'real.com' }, ' fake.notreal'],
     ['something-cool.jpg'],
     ['website.com.jpg'],
     ['e.g./foo'],
@@ -105,23 +108,23 @@ describe('detectLinkables', () => {
       ' ',
     ],
     [
-      {link: 'https://foo.com'},
+      { link: 'https://foo.com' },
       ' ',
-      {link: 'https://bar.com/whatever'},
+      { link: 'https://bar.com/whatever' },
       ' ',
-      {link: 'https://baz.com'},
+      { link: 'https://baz.com' },
     ],
     [
       'punctuation ',
-      {link: 'https://foo.com'},
+      { link: 'https://foo.com' },
       ', ',
-      {link: 'https://bar.com/whatever'},
+      { link: 'https://bar.com/whatever' },
       '; ',
-      {link: 'https://baz.com'},
+      { link: 'https://baz.com' },
       '.',
     ],
-    ['parenthetical (', {link: 'https://foo.com'}, ')'],
-    ['except for ', {link: 'https://foo.com/thing_(cool)'}],
+    ['parenthetical (', { link: 'https://foo.com' }, ')'],
+    ['except for ', { link: 'https://foo.com/thing_(cool)' }],
   ]
   it('correctly handles a set of text inputs', () => {
     for (let i = 0; i < inputs.length; i++) {
@@ -321,7 +324,7 @@ describe('shortenLinks', () => {
   it('correctly shortens rich text while preserving facet URIs', () => {
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i]
-      const inputRT = new RichText({text: input})
+      const inputRT = new RichText({ text: input })
       inputRT.detectFacetsWithoutResolution()
       const outputRT = shortenLinks(inputRT)
       expect(outputRT.text).toEqual(outputs[i][0])

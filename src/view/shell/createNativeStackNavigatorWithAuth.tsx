@@ -3,14 +3,27 @@ import { View } from 'react-native'
 // Based on @react-navigation/native-stack/src/navigators/createNativeStackNavigator.ts
 // MIT License
 // Copyright (c) 2017 React Navigation Contributors
-import { createNavigatorFactory, type EventArg, type NavigatorTypeBagBase, type ParamListBase, type StackActionHelpers, StackActions, type StackNavigationState, StackRouter, type StackRouterOptions, type StaticConfig, type TypedNavigator, useNavigationBuilder,  } from '@react-navigation/native'
+import {
+  createNavigatorFactory,
+  type EventArg,
+  type NavigatorTypeBagBase,
+  type ParamListBase,
+  type StackActionHelpers,
+  StackActions,
+  type StackNavigationState,
+  StackRouter,
+  type StackRouterOptions,
+  type StaticConfig,
+  type TypedNavigator,
+  useNavigationBuilder,
+} from '@react-navigation/native'
 import { NativeStackView } from '@react-navigation/native-stack'
 import {
-    type NativeStackNavigationEventMap,
-    type NativeStackNavigationOptions,
-    type NativeStackNavigationProp,
-    type NativeStackNavigatorProps,
-}  from '@react-navigation/native-stack'
+  type NativeStackNavigationEventMap,
+  type NativeStackNavigationOptions,
+  type NativeStackNavigationProp,
+  type NativeStackNavigatorProps,
+} from '@react-navigation/native-stack'
 
 import { PWI_ENABLED } from '#/lib/build-flags'
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
@@ -18,8 +31,8 @@ import { isNative, isWeb } from '#/platform/detection'
 import { useSession } from '#/state/session'
 import { useOnboardingState } from '#/state/shell'
 import {
-    useLoggedOutView,
-    useLoggedOutViewControls,
+  useLoggedOutView,
+  useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import { LoggedOut } from '#/view/com/auth/LoggedOut'
 import { Deactivated } from '#/screens/Deactivated'
@@ -47,7 +60,7 @@ function NativeStackNavigator({
   ...rest
 }: NativeStackNavigatorProps) {
   // --- this is copy and pasted from the original native stack navigator ---
-  const {state, describe, descriptors, navigation, NavigationContent} =
+  const { state, describe, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -91,15 +104,15 @@ function NativeStackNavigator({
   )
 
   // --- our custom logic starts here ---
-  const {hasSession, currentAccount} = useSession()
+  const { hasSession, currentAccount } = useSession()
   const activeRoute = state.routes[state.index]
   const activeDescriptor = descriptors[activeRoute.key]
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
   const onboardingState = useOnboardingState()
-  const {showLoggedOut} = useLoggedOutView()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
-  const {isMobile} = useWebMediaQueries()
-  const {leftNavMinimal} = useLayoutBreakpoints()
+  const { showLoggedOut } = useLoggedOutView()
+  const { setShowLoggedOut } = useLoggedOutViewControls()
+  const { isMobile } = useWebMediaQueries()
+  const { leftNavMinimal } = useLayoutBreakpoints()
   if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || isNative)) {
     return <LoggedOut />
   }

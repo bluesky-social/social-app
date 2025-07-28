@@ -1,4 +1,10 @@
-import { Children, useCallback, useImperativeHandle, useRef, useState,  } from 'react'
+import {
+  Children,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import { View } from 'react-native'
 import { flushSync } from 'react-dom'
 

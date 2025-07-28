@@ -1,14 +1,24 @@
 import { useCallback, useMemo, useState } from 'react'
 import { View } from 'react-native'
-import { type ChatBskyConvoDefs as ChatGndrConvoDefs, type ChatBskyConvoListConvos as ChatGndrConvoListConvos,  } from '@gander-social-atproto/api'
+import {
+  type ChatGndrConvoDefs,
+  type ChatGndrConvoListConvos,
+} from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import { type InfiniteData, type UseInfiniteQueryResult,  } from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  type UseInfiniteQueryResult,
+} from '@tanstack/react-query'
 
 import { useAppState } from '#/lib/hooks/useAppState'
 import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender'
-import { type CommonNavigatorParams, type NativeStackScreenProps, type NavigationProp,  } from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import { cleanError } from '#/lib/strings/errors'
 import { logger } from '#/logger'
 import { isNative } from '#/platform/detection'
@@ -39,7 +49,7 @@ import { RequestListItem } from './components/RequestListItem'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesInbox'>
 
 export function MessagesInboxScreen(props: Props) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const aaCopy = useAgeAssuranceCopy()
   return (
     <AgeRestrictedScreen
@@ -51,10 +61,10 @@ export function MessagesInboxScreen(props: Props) {
 }
 
 export function MessagesInboxScreenInner({}: Props) {
-  const {gtTablet} = useBreakpoints()
+  const { gtTablet } = useBreakpoints()
 
-  const listConvosQuery = useListConvosQuery({status: 'request'})
-  const {data} = listConvosQuery
+  const listConvosQuery = useListConvosQuery({ status: 'request' })
+  const { data } = listConvosQuery
 
   const leftConvos = useLeftConvos()
 
@@ -115,7 +125,7 @@ function RequestList({
   conversations: ChatGndrConvoDefs.ConvoView[]
   hasUnreadConvos: boolean
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
 
@@ -135,7 +145,7 @@ function RequestList({
     }, [messagesBus, isActive]),
   )
 
-  const initialNumToRender = useInitialNumToRender({minItemHeight: 130})
+  const initialNumToRender = useInitialNumToRender({ minItemHeight: 130 })
   const [isPTRing, setIsPTRing] = useState(false)
 
   const {
@@ -155,7 +165,7 @@ function RequestList({
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh conversations', {message: err})
+      logger.error('Failed to refresh conversations', { message: err })
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -165,7 +175,7 @@ function RequestList({
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more conversations', {message: err})
+      logger.error('Failed to load more conversations', { message: err })
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
@@ -193,7 +203,7 @@ function RequestList({
                       a.text_center,
                       a.leading_snug,
                       t.atoms.text_contrast_medium,
-                      {maxWidth: 360},
+                      { maxWidth: 360 },
                     ]}>
                     {cleanError(error) || _(msg`Failed to load conversations`)}
                   </Text>
@@ -241,7 +251,7 @@ function RequestList({
                       if (navigation.canGoBack()) {
                         navigation.goBack()
                       } else {
-                        navigation.navigate('Messages', {animation: 'pop'})
+                        navigation.navigate('Messages', { animation: 'pop' })
                       }
                     }}>
                     <ButtonIcon icon={ArrowLeftIcon} />
@@ -272,7 +282,7 @@ function RequestList({
             isFetchingNextPage={isFetchingNextPage}
             error={cleanError(error)}
             onRetry={fetchNextPage}
-            style={{borderColor: 'transparent'}}
+            style={{ borderColor: 'transparent' }}
             hasNextPage={hasNextPage}
           />
         }
@@ -291,14 +301,14 @@ function keyExtractor(item: ChatGndrConvoDefs.ConvoView) {
   return item.id
 }
 
-function renderItem({item}: {item: ChatGndrConvoDefs.ConvoView}) {
+function renderItem({ item }: { item: ChatGndrConvoDefs.ConvoView }) {
   return <RequestListItem convo={item} />
 }
 
 function MarkAllReadFAB() {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
-  const {mutate: markAllRead} = useUpdateAllRead('request', {
+  const { mutate: markAllRead } = useUpdateAllRead('request', {
     onMutate: () => {
       Toast.show(_(msg`Marked all as read`), 'check')
     },
@@ -320,8 +330,8 @@ function MarkAllReadFAB() {
 }
 
 function MarkAsReadHeaderButton() {
-  const {_} = useLingui()
-  const {mutate: markAllRead} = useUpdateAllRead('request', {
+  const { _ } = useLingui()
+  const { mutate: markAllRead } = useUpdateAllRead('request', {
     onMutate: () => {
       Toast.show(_(msg`Marked all as read`), 'check')
     },

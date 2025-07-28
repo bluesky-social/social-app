@@ -9,7 +9,10 @@ import { useKawaiiMode } from '#/state/preferences/kawaii'
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary'
 import { Logo } from '#/view/icons/Logo'
 import { Logotype } from '#/view/icons/Logotype'
-import { AppClipOverlay, postAppClipMessage,  } from '#/screens/StarterPack/StarterPackLandingScreen'
+import {
+  AppClipOverlay,
+  postAppClipMessage,
+} from '#/screens/StarterPack/StarterPackLandingScreen'
 import { atoms as a, useTheme } from '#/alf'
 import { AppLanguageDropdown } from '#/components/AppLanguageDropdown'
 import { Button, ButtonText } from '#/components/Button'
@@ -26,9 +29,9 @@ export const SplashScreen = ({
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
-  const {isTabletOrMobile: isMobileWeb} = useWebMediaQueries()
+  const { isTabletOrMobile: isMobileWeb } = useWebMediaQueries()
   const [showClipOverlay, setShowClipOverlay] = React.useState(false)
 
   React.useEffect(() => {
@@ -74,7 +77,7 @@ export const SplashScreen = ({
             a.h_full,
             a.justify_center,
             // @ts-expect-error web only
-            {paddingBottom: '20vh'},
+            { paddingBottom: '20vh' },
             isMobileWeb && a.pb_5xl,
             t.atoms.border_contrast_medium,
             a.align_center,
@@ -99,7 +102,13 @@ export const SplashScreen = ({
 
             <View
               testID="signinOrCreateAccount"
-              style={[a.w_full, a.px_xl, a.gap_md, a.pb_2xl, {maxWidth: 320}]}>
+              style={[
+                a.w_full,
+                a.px_xl,
+                a.gap_md,
+                a.pb_2xl,
+                { maxWidth: 320 },
+              ]}>
               <Button
                 testID="createAccountButton"
                 onPress={onPressCreateAccount}
@@ -143,14 +152,14 @@ export const SplashScreen = ({
 
 function Footer() {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   return (
     <View
       style={[
         a.absolute,
         a.inset_0,
-        {top: 'auto'},
+        { top: 'auto' },
         a.px_xl,
         a.py_lg,
         a.border_t,

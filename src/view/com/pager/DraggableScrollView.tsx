@@ -9,7 +9,7 @@ export function DraggableScrollView({
   style,
   ...props
 }: ComponentPropsWithRef<typeof ScrollView>) {
-  const {refs} = useDraggableScroll<ScrollView>({
+  const { refs } = useDraggableScroll<ScrollView>({
     outerRef: ref,
     cursor: 'grab', // optional, default
   })

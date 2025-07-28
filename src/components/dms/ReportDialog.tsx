@@ -1,6 +1,12 @@
 import { memo, useMemo, useState } from 'react'
 import { View } from 'react-native'
-import { type $Typed, type AppGndrActorDefs, type ChatBskyConvoDefs as ChatGndrConvoDefs, type ComAtprotoModerationCreateReport, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import {
+  type $Typed,
+  type AppGndrActorDefs,
+  type ChatGndrConvoDefs,
+  type ComAtprotoModerationCreateReport,
+  RichText as RichTextAPI,
+} from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { StackActions, useNavigation } from '@react-navigation/native'
@@ -12,7 +18,10 @@ import { type NavigationProp } from '#/lib/routes/types'
 import { isNative } from '#/platform/detection'
 import { useProfileShadow } from '#/state/cache/profile-shadow'
 import { useLeaveConvo } from '#/state/queries/messages/leave-conversation'
-import { useProfileBlockMutationQueue, useProfileQuery,  } from '#/state/queries/profile'
+import {
+  useProfileBlockMutationQueue,
+  useProfileQuery,
+} from '#/state/queries/profile'
 import { useAgent } from '#/state/session'
 import { CharProgress } from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
@@ -44,7 +53,7 @@ let ReportDialog = ({
   params: ReportDialogParams
   currentScreen: 'list' | 'conversation'
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
@@ -56,7 +65,7 @@ let ReportDialog = ({
   )
 }
 ReportDialog = memo(ReportDialog)
-export {ReportDialog}
+export { ReportDialog }
 
 function DialogInner({
   params,
@@ -65,7 +74,7 @@ function DialogInner({
   params: ReportDialogParams
   currentScreen: 'list' | 'conversation'
 }) {
-  const {data: profile, isError} = useProfileQuery({
+  const { data: profile, isError } = useProfileQuery({
     did: params.message.sender.did,
   })
   const [reportOption, setReportOption] = useState<ReportOption | null>(null)
@@ -133,8 +142,8 @@ function SubmitStep({
   goBack: () => void
   onComplete: () => void
 }) {
-  const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
+  const { _ } = useLingui()
+  const { gtMobile } = useBreakpoints()
   const t = useTheme()
   const [details, setDetails] = useState('')
   const agent = useAgent()
@@ -146,9 +155,9 @@ function SubmitStep({
   } = useMutation({
     mutationFn: async () => {
       if (params.type === 'convoMessage') {
-        const {convoId, message} = params
+        const { convoId, message } = params
         const subject: $Typed<ChatGndrConvoDefs.MessageRef> = {
-          $type: 'chat.bsky.convo.defs#messageRef',
+          $type: 'chat.gndr.convo.defs#messageRef',
           messageId: message.id,
           convoId,
           did: message.sender.did,
@@ -219,7 +228,7 @@ function SubmitStep({
             defaultValue={details}
             onChangeText={setDetails}
             label={_(msg`Text field`)}
-            style={{paddingRight: 60}}
+            style={{ paddingRight: 60 }}
             numberOfLines={5}
           />
           <View
@@ -281,20 +290,23 @@ function DoneStep({
   currentScreen: 'list' | 'conversation'
   profile: AppGndrActorDefs.ProfileViewDetailed
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const control = Dialog.useDialogContext()
-  const {gtMobile} = useBreakpoints()
+  const { gtMobile } = useBreakpoints()
   const t = useTheme()
   const [actions, setActions] = useState<string[]>(['block', 'leave'])
   const shadow = useProfileShadow(profile)
   const [queueBlock] = useProfileBlockMutationQueue(shadow)
 
-  const {mutate: leaveConvo} = useLeaveConvo(convoId, {
+  const { mutate: leaveConvo } = useLeaveConvo(convoId, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(
-          StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
+          StackActions.replace(
+            'Messages',
+            isNative ? { animation: 'pop' } : {},
+          ),
         )
       }
     },
@@ -307,13 +319,13 @@ function DoneStep({
   let toastMsg: string | undefined
   if (actions.includes('leave') && actions.includes('block')) {
     btnText = _(msg`Block and Delete`)
-    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
+    toastMsg = _(msg({ message: 'Conversation deleted', context: 'toast' }))
   } else if (actions.includes('leave')) {
     btnText = _(msg`Delete Conversation`)
-    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
+    toastMsg = _(msg({ message: 'Conversation deleted', context: 'toast' }))
   } else if (actions.includes('block')) {
     btnText = _(msg`Block User`)
-    toastMsg = _(msg({message: 'User blocked', context: 'toast'}))
+    toastMsg = _(msg({ message: 'User blocked', context: 'toast' }))
   }
 
   const onPressPrimaryAction = () => {
@@ -372,7 +384,7 @@ function DoneStep({
         <Button
           label={_(msg`Close`)}
           onPress={() => control.close()}
-          size={platform({native: 'small', web: 'large'})}
+          size={platform({ native: 'small', web: 'large' })}
           variant={platform({
             native: 'ghost',
             web: 'solid',
@@ -387,10 +399,14 @@ function DoneStep({
   )
 }
 
-function PreviewMessage({message}: {message: ChatGndrConvoDefs.MessageView}) {
+function PreviewMessage({
+  message,
+}: {
+  message: ChatGndrConvoDefs.MessageView
+}) {
   const t = useTheme()
   const rt = useMemo(() => {
-    return new RichTextAPI({text: message.text, facets: message.facets})
+    return new RichTextAPI({ text: message.text, facets: message.facets })
   }, [message.text, message.facets])
 
   return (
@@ -406,7 +422,7 @@ function PreviewMessage({message}: {message: ChatGndrConvoDefs.MessageView}) {
             backgroundColor: t.palette.contrast_50,
             borderRadius: 17,
           },
-          {borderBottomLeftRadius: 2},
+          { borderBottomLeftRadius: 2 },
         ]}>
         <RichText
           value={rt}

@@ -1,4 +1,10 @@
-import { useCallback, useContext, useImperativeHandle, useRef, useState,  } from 'react'
+import {
+  useCallback,
+  useContext,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import { View } from 'react-native'
 import { DrawerGestureContext } from 'react-native-drawer-layout'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
@@ -166,7 +172,7 @@ function usePagerHandlers(
   },
   dependencies: unknown[],
 ) {
-  const {doDependenciesDiffer} = useHandler(handlers as any, dependencies)
+  const { doDependenciesDiffer } = useHandler(handlers as any, dependencies)
   const subscribeForEvents = [
     'onPageScroll',
     'onPageScrollStateChanged',
@@ -175,7 +181,8 @@ function usePagerHandlers(
   return useEvent(
     event => {
       'worklet'
-      const {onPageScroll, onPageScrollStateChanged, onPageSelected} = handlers
+      const { onPageScroll, onPageScrollStateChanged, onPageSelected } =
+        handlers
       if (event.eventName.endsWith('onPageScroll')) {
         onPageScroll(event as any as PagerViewOnPageScrollEventData)
       } else if (event.eventName.endsWith('onPageScrollStateChanged')) {

@@ -1,5 +1,5 @@
-import {AtUri, GndrAgent} from '@gander-social-atproto/api'
-import {type TestGndr, TestNetwork} from '@atproto/dev-env'
+import { AtUri, GndrAgent } from '@gander-social-atproto/api'
+import { type TestGndr, TestNetwork } from '@gander-social-atproto/dev-env'
 import fs from 'fs'
 import net from 'net'
 import path from 'path'
@@ -55,7 +55,7 @@ class StringIdGenerator {
 const ids = new StringIdGenerator()
 
 export async function createServer(
-  {inviteRequired}: {inviteRequired: boolean} = {
+  { inviteRequired }: { inviteRequired: boolean } = {
     inviteRequired: false,
   },
 ): Promise<TestPDS> {
@@ -76,7 +76,7 @@ export async function createServer(
       port: port3,
       publicUrl: 'http://localhost:2584',
     },
-    plc: {port: port2},
+    plc: { port: port2 },
   })
 
   // DISABLED - looks like dev-env added this and now it conflicts
@@ -88,7 +88,7 @@ export async function createServer(
   //   password: 'hunter2',
   // })
   // agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-  // await agent.api.app.bsky.actor.profile.create(
+  // await agent.api.app.gndr.actor.profile.create(
   //   {repo: res.data.did},
   //   {
   //     displayName: 'Dev-env Moderation',
@@ -96,7 +96,7 @@ export async function createServer(
   //   },
   // )
 
-  // await agent.api.app.bsky.labeler.service.create(
+  // await agent.api.app.gndr.labeler.service.create(
   //   {repo: res.data.did, rkey: 'self'},
   //   {
   //     policies: {
@@ -129,7 +129,7 @@ class Mocker {
     public service: string,
     public pic: Uint8Array,
   ) {
-    this.agent = new GndrAgent({service})
+    this.agent = new GndrAgent({ service })
   }
 
   get pds() {
@@ -157,10 +157,10 @@ class Mocker {
   }
 
   async createUser(name: string) {
-    const agent = new GndrAgent({service: this.service})
+    const agent = new GndrAgent({ service: this.service })
 
     const inviteRes = await agent.api.com.atproto.server.createInviteCode(
-      {useCount: 1},
+      { useCount: 1 },
       {
         headers: this.pds.adminAuthHeaders(),
         encoding: 'application/json',
@@ -248,8 +248,8 @@ class Mocker {
       text,
       langs: ['en'],
       embed: {
-        $type: 'app.bsky.embedimages',
-        images: [{image: blob.data.blob, alt: ''}],
+        $type: 'app.gndr.embedimages',
+        images: [{ image: blob.data.blob, alt: '' }],
       },
       createdAt: new Date().toISOString(),
     })
@@ -258,7 +258,7 @@ class Mocker {
   async createQuotePost(
     user: string,
     text: string,
-    {uri, cid}: {uri: string; cid: string},
+    { uri, cid }: { uri: string; cid: string },
   ) {
     const agent = this.users[user]?.agent
     if (!agent) {
@@ -266,7 +266,7 @@ class Mocker {
     }
     return await agent.post({
       text,
-      embed: {$type: 'app.bsky.embed.record', record: {uri, cid}},
+      embed: { $type: 'app.gndr.embed.record', record: { uri, cid } },
       langs: ['en'],
       createdAt: new Date().toISOString(),
     })
@@ -275,7 +275,7 @@ class Mocker {
   async createReply(
     user: string,
     text: string,
-    {uri, cid}: {uri: string; cid: string},
+    { uri, cid }: { uri: string; cid: string },
   ) {
     const agent = this.users[user]?.agent
     if (!agent) {
@@ -283,13 +283,13 @@ class Mocker {
     }
     return await agent.post({
       text,
-      reply: {root: {uri, cid}, parent: {uri, cid}},
+      reply: { root: { uri, cid }, parent: { uri, cid } },
       langs: ['en'],
       createdAt: new Date().toISOString(),
     })
   }
 
-  async like(user: string, {uri, cid}: {uri: string; cid: string}) {
+  async like(user: string, { uri, cid }: { uri: string; cid: string }) {
     const agent = this.users[user]?.agent
     if (!agent) {
       throw new Error(`Not a user: ${user}`)
@@ -304,7 +304,7 @@ class Mocker {
     }
     const fgUri = AtUri.make(
       this.users[user].did,
-      'app.bsky.feed.generator',
+      'app.gndr.feed.generator',
       rkey,
     )
     const fg1 = await this.testNet.createFeedGen({
@@ -312,7 +312,7 @@ class Mocker {
         return {
           encoding: 'application/json',
           body: {
-            feed: posts.slice(0, 30).map(uri => ({post: uri})),
+            feed: posts.slice(0, 30).map(uri => ({ post: uri })),
           },
         }
       },
@@ -320,8 +320,8 @@ class Mocker {
     const avatarRes = await agent.api.com.atproto.repo.uploadBlob(this.pic, {
       encoding: 'image/png',
     })
-    return await agent.api.app.bsky.feed.generator.create(
-      {repo: this.users[user].did, rkey},
+    return await agent.api.app.gndr.feed.generator.create(
+      { repo: this.users[user].did, rkey },
       {
         did: fg1.did,
         displayName: rkey,
@@ -333,9 +333,9 @@ class Mocker {
   }
 
   async createInvite(forAccount: string) {
-    const agent = new GndrAgent({service: this.service})
+    const agent = new GndrAgent({ service: this.service })
     await agent.api.com.atproto.server.createInviteCode(
-      {useCount: 1, forAccount},
+      { useCount: 1, forAccount },
       {
         headers: this.pds.adminAuthHeaders(),
         encoding: 'application/json',
@@ -366,7 +366,7 @@ class Mocker {
       throw new Error(`Invalid user: ${user}`)
     }
 
-    const profile = await agent.app.bsky.actor.profile.get({
+    const profile = await agent.app.gndr.actor.profile.get({
       repo: user + '.test',
       rkey: 'self',
     })
@@ -382,7 +382,7 @@ class Mocker {
     })
   }
 
-  async labelPost(label: string, {uri, cid}: {uri: string; cid: string}) {
+  async labelPost(label: string, { uri, cid }: { uri: string; cid: string }) {
     const ctx = this.gndr.ctx
     if (!ctx) {
       throw new Error('Invalid appview')
@@ -395,23 +395,23 @@ class Mocker {
   }
 
   async createMuteList(user: string, name: string): Promise<string> {
-    const res = await this.users[user]?.agent.app.bsky.graph.list.create(
-      {repo: this.users[user]?.did},
+    const res = await this.users[user]?.agent.app.gndr.graph.list.create(
+      { repo: this.users[user]?.did },
       {
-        purpose: 'app.bsky.graph.defs#modlist',
+        purpose: 'app.gndr.graph.defs#modlist',
         name,
         createdAt: new Date().toISOString(),
       },
     )
-    await this.users[user]?.agent.app.bsky.graph.muteActorList({
+    await this.users[user]?.agent.app.gndr.graph.muteActorList({
       list: res.uri,
     })
     return res.uri
   }
 
   async addToMuteList(owner: string, list: string, subject: string) {
-    await this.users[owner]?.agent.app.bsky.graph.listitem.create(
-      {repo: this.users[owner]?.did},
+    await this.users[owner]?.agent.app.gndr.graph.listitem.create(
+      { repo: this.users[owner]?.did },
       {
         list,
         subject,
@@ -426,7 +426,7 @@ const checkAvailablePort = (port: number) =>
     const server = net.createServer()
     server.unref()
     server.on('error', () => resolve(false))
-    server.listen({port}, () => {
+    server.listen({ port }, () => {
       server.close(() => {
         resolve(true)
       })
@@ -444,7 +444,7 @@ async function getPort(start = 3000) {
 
 const createLabel = async (
   gndr: TestGndr,
-  opts: {uri: string; cid: string; val: string},
+  opts: { uri: string; cid: string; val: string },
 ) => {
   await gndr.db.db
     .insertInto('label')

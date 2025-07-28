@@ -8,7 +8,7 @@ type CleanedError = {
 }
 
 export function useCleanError() {
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   return useCallback<(error?: any) => CleanedError>(
     error => {

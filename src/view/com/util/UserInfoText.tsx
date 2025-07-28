@@ -30,7 +30,7 @@ export function UserInfoText({
   attr = attr || 'handle'
   failed = failed || 'user'
 
-  const {data: profile, isError} = useProfileQuery({
+  const { data: profile, isError } = useProfileQuery({
     did,
     staleTime: STALE.INFINITY,
   })
@@ -75,5 +75,5 @@ export function UserInfoText({
 }
 
 const styles = StyleSheet.create({
-  loadingPlaceholder: {position: 'relative', top: 1, left: 2},
+  loadingPlaceholder: { position: 'relative', top: 1, left: 2 },
 })

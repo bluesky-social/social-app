@@ -1,7 +1,14 @@
 import React from 'react'
 import { Alert, AppState, type AppStateStatus } from 'react-native'
 import { nativeBuildVersion } from 'expo-application'
-import { checkForUpdateAsync, fetchUpdateAsync, isEnabled, reloadAsync, setExtraParamAsync, useUpdates,  } from 'expo-updates'
+import {
+  checkForUpdateAsync,
+  fetchUpdateAsync,
+  isEnabled,
+  reloadAsync,
+  setExtraParamAsync,
+  useUpdates,
+} from 'expo-updates'
 
 import { logger } from '#/logger'
 import { isIOS } from '#/platform/detection'
@@ -59,7 +66,7 @@ async function updateTestflight() {
 }
 
 export function useApplyPullRequestOTAUpdate() {
-  const {currentlyRunning} = useUpdates()
+  const { currentlyRunning } = useUpdates()
   const [pending, setPending] = React.useState(false)
   const currentChannel = currentlyRunning?.channel
   const isCurrentlyRunningPullRequestDeployment =
@@ -101,7 +108,7 @@ export function useApplyPullRequestOTAUpdate() {
     try {
       await updateTestflight()
     } catch (e: any) {
-      logger.error('Internal OTA Update Error', {error: `${e}`})
+      logger.error('Internal OTA Update Error', { error: `${e}` })
     }
   }
 
@@ -121,7 +128,7 @@ export function useOTAUpdates() {
   const lastMinimize = React.useRef(0)
   const ranInitialCheck = React.useRef(false)
   const timeout = React.useRef<NodeJS.Timeout>()
-  const {currentlyRunning, isUpdatePending} = useUpdates()
+  const { currentlyRunning, isUpdatePending } = useUpdates()
   const currentChannel = currentlyRunning?.channel
 
   const setCheckTimeout = React.useCallback(() => {
@@ -139,7 +146,7 @@ export function useOTAUpdates() {
           logger.debug('No update available.')
         }
       } catch (e) {
-        logger.error('OTA Update Error', {error: `${e}`})
+        logger.error('OTA Update Error', { error: `${e}` })
       }
     }, 10e3)
   }, [])
@@ -148,7 +155,7 @@ export function useOTAUpdates() {
     try {
       await updateTestflight()
     } catch (e: any) {
-      logger.error('Internal OTA Update Error', {error: `${e}`})
+      logger.error('Internal OTA Update Error', { error: `${e}` })
     }
   }, [])
 

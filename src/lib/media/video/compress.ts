@@ -14,7 +14,7 @@ export async function compressVideo(
     onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  const {onProgress, signal} = opts || {}
+  const { onProgress, signal } = opts || {}
 
   const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
     file.mimeType as SupportedMimeTypes,
@@ -45,5 +45,9 @@ export async function compressVideo(
 
   const info = await getVideoMetaData(compressed)
 
-  return {uri: compressed, size: info.size, mimeType: extToMime(info.extension)}
+  return {
+    uri: compressed,
+    size: info.size,
+    mimeType: extToMime(info.extension),
+  }
 }

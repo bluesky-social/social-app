@@ -45,7 +45,7 @@ export function GalleryItem({
   thumbDimsRef,
 }: Props) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const largeAltBadge = useLargeAltBadgeEnabled()
   const image = images[index]
   const hasAlt = !!image.alt
@@ -71,7 +71,7 @@ export function GalleryItem({
         accessibilityLabel={image.alt || _(msg`Image`)}
         accessibilityHint="">
         <Image
-          source={{uri: image.thumb}}
+          source={{ uri: image.thumb }}
           style={[a.flex_1]}
           accessible={true}
           accessibilityLabel={image.alt}
@@ -110,7 +110,7 @@ export function GalleryItem({
             ],
           ]}>
           <Text
-            style={[a.font_heavy, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
+            style={[a.font_heavy, largeAltBadge ? a.text_xs : { fontSize: 8 }]}>
             ALT
           </Text>
         </View>

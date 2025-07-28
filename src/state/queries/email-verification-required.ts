@@ -9,7 +9,7 @@ export function useServiceConfigQuery() {
     queryKey: ['service-config'],
     queryFn: async () => {
       const res = await fetch(
-        'https://api.bsky.app/xrpc/app.gndr.unspecced.getConfig',
+        'https://api.gndr.app/xrpc/app.gndr.unspecced.getConfig',
       )
       if (!res.ok) {
         return {

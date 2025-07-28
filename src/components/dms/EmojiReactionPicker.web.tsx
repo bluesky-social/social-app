@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Pressable, View } from 'react-native'
 import EmojiPicker from '@emoji-mart/react'
-import { type ChatBskyConvoDefs as ChatGndrConvoDefs } from '@gander-social-atproto/api'
+import { type ChatGndrConvoDefs } from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { DropdownMenu } from 'radix-ui'
@@ -28,7 +28,7 @@ export function EmojiReactionPicker({
   if (!children)
     throw new Error('EmojiReactionPicker requires the children prop on web')
 
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   return (
     <Menu.Root>
@@ -46,10 +46,10 @@ function MenuInner({
   onEmojiSelect: (emoji: string) => void
 }) {
   const t = useTheme()
-  const {control} = Menu.useMenuContext()
-  const {currentAccount} = useSession()
+  const { control } = Menu.useMenuContext()
+  const { currentAccount } = useSession()
 
-  useWebPreloadEmoji({immediate: true})
+  useWebPreloadEmoji({ immediate: true })
 
   const [expanded, setExpanded] = useState(false)
 
@@ -77,7 +77,7 @@ function MenuInner({
     <DropdownMenu.Portal>
       <DropdownMenu.Content
         sideOffset={5}
-        collisionPadding={{left: 5, right: 5, bottom: 5}}>
+        collisionPadding={{ left: 5, right: 5, bottom: 5 }}>
         <div onWheel={evt => evt.stopPropagation()}>
           <EmojiPicker
             onEmojiSelect={handleEmojiPickerResponse}
@@ -121,7 +121,7 @@ function MenuInner({
                   backgroundColor: t.atoms.bg_contrast_100.backgroundColor,
                 },
               ])}>
-              <Text style={[a.text_center, {fontSize: 28}]} emoji>
+              <Text style={[a.text_center, { fontSize: 28 }]} emoji>
                 {emoji}
               </Text>
             </DropdownMenu.Item>
@@ -136,7 +136,7 @@ function MenuInner({
             onPress={() => setExpanded(true)}
             style={flatten([
               a.rounded_full,
-              {height: 34, width: 34},
+              { height: 34, width: 34 },
               a.justify_center,
               a.align_center,
             ])}>

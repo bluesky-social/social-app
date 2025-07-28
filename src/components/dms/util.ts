@@ -1,4 +1,4 @@
-import { type ChatBskyConvoDefs as ChatGndrConvoDefs } from '@gander-social-atproto/api'
+import { type ChatGndrConvoDefs } from '@gander-social-atproto/api'
 
 import { EMOJI_REACTION_LIMIT } from '#/lib/constants'
 import type * as gndr from '#/types/gndr'

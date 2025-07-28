@@ -5,7 +5,7 @@ import { useRequireEmailVerification } from '#/lib/hooks/useRequireEmailVerifica
 import { useOpenComposer as rootUseOpenComposer } from '#/state/shell/composer'
 
 export function useOpenComposer() {
-  const {openComposer} = rootUseOpenComposer()
+  const { openComposer } = rootUseOpenComposer()
   const requireEmailVerification = useRequireEmailVerification()
   return useMemo(() => {
     return {

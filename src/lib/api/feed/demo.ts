@@ -1,4 +1,7 @@
-import { type AppGndrFeedDefs, type GndrAgent } from '@gander-social-atproto/api'
+import {
+  type AppGndrFeedDefs,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 
 import { DEMO_FEED } from '#/lib/demo'
 import { type FeedAPI, type FeedAPIResponse } from './types'
@@ -6,7 +9,7 @@ import { type FeedAPI, type FeedAPIResponse } from './types'
 export class DemoFeedAPI implements FeedAPI {
   agent: GndrAgent
 
-  constructor({agent}: {agent: GndrAgent}) {
+  constructor({ agent }: { agent: GndrAgent }) {
     this.agent = agent
   }
 

@@ -5,7 +5,7 @@ export const NON_BREAKING_SPACE = '\u00A0'
 
 export const LOCAL_API_URL = 'http://localhost:2583'
 export const PUBLIC_API_URL =
-  process.env.PUBLIC_API_URL || 'https://public.api.bsky.app'
+  process.env.PUBLIC_API_URL || 'https://public.api.gndr.app'
 
 export function getApiUrl() {
   if (typeof process !== 'undefined' && process.env && process.env.API_URL) {
@@ -24,7 +24,7 @@ export function getApiUrl() {
 
 export const API_URL = process.env.API_URL || getApiUrl()
 export const APP_URL = process.env.APP_URL || 'https://gndr.app'
-export const APPVIEW_URL = process.env.APPVIEW_URL || 'https://api.bsky.app'
+export const APPVIEW_URL = process.env.APPVIEW_URL || 'https://api.gndr.app'
 export const EMBED_SERVICE_URL =
   process.env.EMBED_SERVICE_URL || 'https://embed.gndr.app'
 export const OGCARD_SERVICE_URL =
@@ -33,7 +33,7 @@ export const GO_SERVICE_URL =
   process.env.GO_SERVICE_URL || 'https://go.gndr.app'
 export const PROFILE_URL = process.env.PROFILE_URL || 'https://gndr.app/profile'
 export const DEEP_LINK_PREFIX =
-  process.env.DEEP_LINK_PREFIX || 'https://bsky.app'
+  process.env.DEEP_LINK_PREFIX || 'https://gndr.app'
 export const SOCIAL_URL = process.env.SOCIAL_URL || 'https://gndr.social'
 export const VIDEO_SERVICE_URL =
   process.env.VIDEO_SERVICE_URL || 'https://video.gndr.app'
@@ -44,16 +44,16 @@ export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 // TODO: Update these to the correct links when they are ready
 export const STAGING_SERVICE = ''
-export const GNDR_SERVICE = process.env.GNDR_SERVICE || 'https://bsky.social'
+export const GNDR_SERVICE = process.env.GNDR_SERVICE || 'https://gndr.social'
 export const PUBLIC_GNDR_SERVICE = API_URL
 export const DEFAULT_SERVICE = PUBLIC_GNDR_SERVICE
 // const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = ``
 export const EMBED_SERVICE =
-  process.env.EMBED_SERVICE || 'https://embed.bsky.app'
+  process.env.EMBED_SERVICE || 'https://embed.gndr.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const GNDR_DOWNLOAD_URL =
-  process.env.GNDR_DOWNLOAD_URL || 'https://bsky.app/download'
+  process.env.GNDR_DOWNLOAD_URL || 'https://gndr.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
 
 // HACK
@@ -170,8 +170,8 @@ export const createHitslop = (size: number): Insets => ({
 export const HITSLOP_10 = createHitslop(10)
 export const HITSLOP_20 = createHitslop(20)
 export const HITSLOP_30 = createHitslop(30)
-export const POST_CTRL_HITSLOP = {top: 5, bottom: 10, left: 10, right: 10}
-export const LANG_DROPDOWN_HITSLOP = {top: 10, bottom: 10, left: 4, right: 4}
+export const POST_CTRL_HITSLOP = { top: 5, bottom: 10, left: 10, right: 10 }
+export const LANG_DROPDOWN_HITSLOP = { top: 10, bottom: 10, left: 4, right: 4 }
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
 
@@ -247,31 +247,31 @@ export const EMOJI_REACTION_LIMIT = 5
 export const urls = {
   website: {
     blog: {
-      initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
+      initialVerificationAnnouncement: `https://gndr.social/about/blog/04-21-2025-verification`,
     },
   },
 }
 
 export const PUBLIC_APPVIEW =
-  process.env.PUBLIC_APPVIEW_URL || 'https://api.bsky.app'
+  process.env.PUBLIC_APPVIEW_URL || 'https://api.gndr.app'
 export const PUBLIC_APPVIEW_DID =
-  process.env.PUBLIC_APPVIEW_DID || 'did:web:api.bsky.app'
+  process.env.PUBLIC_APPVIEW_DID || 'did:web:api.gndr.app'
 export const PUBLIC_STAGING_APPVIEW_DID =
-  process.env.PUBLIC_STAGING_APPVIEW_DID || 'did:web:api.bsky.app'
+  process.env.PUBLIC_STAGING_APPVIEW_DID || 'did:web:api.gndr.app'
 export const DEV_ENV_APPVIEW =
   process.env.DEV_ENV_APPVIEW_URL || 'http://localhost:2584'
 
 export const webLinks = {
-  tos: process.env.WEBLINK_TOS_URL || 'https://bsky.social/about/support/tos',
+  tos: process.env.WEBLINK_TOS_URL || 'https://gndr.social/about/support/tos',
   privacy:
     process.env.WEBLINK_PRIVACY_URL ||
     'https://bksy.social/about/support/privacy-policy',
   community:
     process.env.WEBLINK_COMMUNITY_URL ||
-    'https://bsky.social/about/support/community-guidelines',
+    'https://gndr.social/about/support/community-guidelines',
   communityDeprecated:
     process.env.WEBLINK_COMMUNITY_DEPRECATED_URL ||
-    'https://bsky.social/about/support/community-guidelines-deprecated',
+    'https://gndr.social/about/support/community-guidelines-deprecated',
 }
 
 export const BUILD_UPSTREAM_SOURCE =

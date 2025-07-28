@@ -52,9 +52,9 @@ export function ProfileSubpageHeader({
   avatarType: UserAvatarType | 'starter-pack'
 }>) {
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
-  const {isMobile} = useWebMediaQueries()
-  const {openLightbox} = useLightboxControls()
+  const { _ } = useLingui()
+  const { isMobile } = useWebMediaQueries()
+  const { openLightbox } = useLightboxControls()
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
   const aviRef = useAnimatedRef()
@@ -122,7 +122,7 @@ export function ProfileSubpageHeader({
             accessibilityRole="image"
             accessibilityLabel={_(msg`View the avatar`)}
             accessibilityHint=""
-            style={{width: 58}}>
+            style={{ width: 58 }}>
             {avatarType === 'starter-pack' ? (
               <StarterPack width={58} gradient="sky" />
             ) : (
@@ -130,19 +130,19 @@ export function ProfileSubpageHeader({
             )}
           </Pressable>
         </Animated.View>
-        <View style={{flex: 1, gap: 4}}>
+        <View style={{ flex: 1, gap: 4 }}>
           {isLoading ? (
             <LoadingPlaceholder
               width={200}
               height={32}
-              style={{marginVertical: 6}}
+              style={{ marginVertical: 6 }}
             />
           ) : (
             <TextLink
               testID="headerTitle"
               type="title-xl"
               href={href}
-              style={[pal.text, {fontWeight: '600'}]}
+              style={[pal.text, { fontWeight: '600' }]}
               text={title || ''}
               onPress={emitSoftReset}
               numberOfLines={4}

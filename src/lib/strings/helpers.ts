@@ -78,7 +78,7 @@ export function countLines(str: string | undefined): number {
 }
 
 // Augments search query with additional syntax like `from:me`
-export function augmentSearchQuery(query: string, {did}: {did?: string}) {
+export function augmentSearchQuery(query: string, { did }: { did?: string }) {
   // Don't do anything if there's no DID
   if (!did) {
     return query

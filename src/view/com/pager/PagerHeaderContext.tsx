@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, { useContext } from 'react'
 import { type SharedValue } from 'react-native-reanimated'
 
 import { isNative } from '#/platform/detection'
@@ -24,7 +24,7 @@ export function PagerHeaderProvider({
   children: React.ReactNode
 }) {
   const value = React.useMemo(
-    () => ({scrollY, headerHeight}),
+    () => ({ scrollY, headerHeight }),
     [scrollY, headerHeight],
   )
   return (

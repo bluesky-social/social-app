@@ -1,12 +1,21 @@
-import React, {useCallback, useMemo} from 'react'
-import { type GestureResponderEvent, type StyleProp, type TextStyle, View,  } from 'react-native'
+import React, { useCallback, useMemo } from 'react'
+import {
+  type GestureResponderEvent,
+  type StyleProp,
+  type TextStyle,
+  View,
+} from 'react-native'
 import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
-import { AppGndrEmbedRecord, ChatBskyConvoDefs as ChatGndrConvoDefs, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import {
+  AppGndrEmbedRecord,
+  ChatGndrConvoDefs as ChatGndrConvoDefs,
+  RichText as RichTextAPI,
+} from '@gander-social-atproto/api'
 import { type I18n } from '@lingui/core'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -30,14 +39,14 @@ import { localDateString } from './util'
 let MessageItem = ({
   item,
 }: {
-  item: ConvoItem & {type: 'message' | 'pending-message'}
+  item: ConvoItem & { type: 'message' | 'pending-message' }
 }): React.ReactNode => {
   const t = useTheme()
-  const {currentAccount} = useSession()
-  const {_} = useLingui()
-  const {convo} = useConvoActive()
+  const { currentAccount } = useSession()
+  const { _ } = useLingui()
+  const { convo } = useConvoActive()
 
-  const {message, nextMessage, prevMessage} = item
+  const { message, nextMessage, prevMessage } = item
   const isPending = item.type === 'pending-message'
 
   const isFromSelf = message.sender?.did === currentAccount?.did
@@ -92,7 +101,7 @@ let MessageItem = ({
   const pendingColor = t.palette.primary_200
 
   const rt = useMemo(() => {
-    return new RichTextAPI({text: message.text, facets: message.facets})
+    return new RichTextAPI({ text: message.text, facets: message.facets })
   }, [message.text, message.facets])
 
   const appliedReactions = (
@@ -117,7 +126,7 @@ let MessageItem = ({
               t.atoms.shadow_sm,
               {
                 // vibe coded number
-                transform: [{translateY: -11}],
+                transform: [{ translateY: -11 }],
               },
             ]}>
             {message.reactions.map((reaction, _i, reactions) => {
@@ -194,13 +203,13 @@ let MessageItem = ({
                   },
                   isFromSelf ? a.self_end : a.self_start,
                   isFromSelf
-                    ? {borderBottomRightRadius: needsTail ? 2 : 17}
-                    : {borderBottomLeftRadius: needsTail ? 2 : 17},
+                    ? { borderBottomRightRadius: needsTail ? 2 : 17 }
+                    : { borderBottomLeftRadius: needsTail ? 2 : 17 },
                 ]
               }>
               <RichText
                 value={rt}
-                style={[a.text_md, isFromSelf && {color: t.palette.white}]}
+                style={[a.text_md, isFromSelf && { color: t.palette.white }]}
                 interactiveStyle={a.underline}
                 enableTags
                 emojiMultiplier={3}
@@ -224,18 +233,18 @@ let MessageItem = ({
   )
 }
 MessageItem = React.memo(MessageItem)
-export {MessageItem}
+export { MessageItem }
 
 let MessageItemMetadata = ({
   item,
   style,
 }: {
-  item: ConvoItem & {type: 'message' | 'pending-message'}
+  item: ConvoItem & { type: 'message' | 'pending-message' }
   style: StyleProp<TextStyle>
 }): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
-  const {message} = item
+  const { _ } = useLingui()
+  const { message } = item
 
   const handleRetry = useCallback(
     (e: GestureResponderEvent) => {
@@ -280,7 +289,7 @@ let MessageItemMetadata = ({
         style,
       ]}>
       <TimeElapsed timestamp={message.sentAt} timeToString={relativeTimestamp}>
-        {({timeElapsed}) => (
+        {({ timeElapsed }) => (
           <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
             {timeElapsed}
           </Text>
@@ -319,4 +328,4 @@ let MessageItemMetadata = ({
   )
 }
 MessageItemMetadata = React.memo(MessageItemMetadata)
-export {MessageItemMetadata}
+export { MessageItemMetadata }

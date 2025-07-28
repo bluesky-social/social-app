@@ -1,4 +1,8 @@
-import { type $Typed, type ChatBskyConvoDefs as ChatGndrConvoDefs, type ComAtprotoModerationCreateReport,  } from '@gander-social-atproto/api'
+import {
+  type $Typed,
+  type ChatGndrConvoDefs,
+  type ComAtprotoModerationCreateReport,
+} from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useMutation } from '@tanstack/react-query'
@@ -9,7 +13,7 @@ import { type ReportState } from './state'
 import { type ParsedReportSubject } from './types'
 
 export function useSubmitReportMutation() {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const agent = useAgent()
 
   return useMutation({

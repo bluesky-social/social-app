@@ -3,7 +3,7 @@ import { Dimensions } from 'react-native'
 import { isSafari } from '#/lib/browser'
 import { isWeb } from '#/platform/detection'
 
-const {height: SCREEN_HEIGHT} = Dimensions.get('window')
+const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const IFRAME_HOST = isWeb
   ? // @ts-ignore only for web
@@ -367,7 +367,7 @@ export function parseEmbedPlayerFromUrl(
 
   const tenorGif = parseTenorGif(urlp)
   if (tenorGif.success) {
-    const {playerUri, dimensions} = tenorGif
+    const { playerUri, dimensions } = tenorGif
 
     return {
       type: 'tenor_gif',
@@ -461,37 +461,37 @@ export function getPlayerAspect({
   type: EmbedPlayerParams['type']
   hasThumb: boolean
   width: number
-}): {aspectRatio?: number; height?: number} {
-  if (!hasThumb) return {aspectRatio: 16 / 9}
+}): { aspectRatio?: number; height?: number } {
+  if (!hasThumb) return { aspectRatio: 16 / 9 }
 
   switch (type) {
     case 'youtube_video':
     case 'twitch_video':
     case 'vimeo_video':
-      return {aspectRatio: 16 / 9}
+      return { aspectRatio: 16 / 9 }
     case 'youtube_short':
       if (SCREEN_HEIGHT < 600) {
-        return {aspectRatio: (9 / 16) * 1.75}
+        return { aspectRatio: (9 / 16) * 1.75 }
       } else {
-        return {aspectRatio: (9 / 16) * 1.5}
+        return { aspectRatio: (9 / 16) * 1.5 }
       }
     case 'spotify_album':
     case 'apple_music_album':
     case 'apple_music_playlist':
     case 'spotify_playlist':
     case 'soundcloud_set':
-      return {height: 380}
+      return { height: 380 }
     case 'spotify_song':
       if (width <= 300) {
-        return {height: 155}
+        return { height: 155 }
       }
-      return {height: 232}
+      return { height: 232 }
     case 'soundcloud_track':
-      return {height: 165}
+      return { height: 165 }
     case 'apple_music_song':
-      return {height: 150}
+      return { height: 150 }
     default:
-      return {aspectRatio: 16 / 9}
+      return { aspectRatio: 16 / 9 }
   }
 }
 
@@ -518,31 +518,31 @@ export function getGiphyMetaUri(url: URL) {
 }
 
 export function parseTenorGif(urlp: URL):
-  | {success: false}
+  | { success: false }
   | {
       success: true
       playerUri: string
-      dimensions: {height: number; width: number}
+      dimensions: { height: number; width: number }
     } {
   if (urlp.hostname !== 'media.tenor.com') {
-    return {success: false}
+    return { success: false }
   }
 
   let [_, id, filename] = urlp.pathname.split('/')
 
   if (!id || !filename) {
-    return {success: false}
+    return { success: false }
   }
 
   if (!id.includes('AAAAC')) {
-    return {success: false}
+    return { success: false }
   }
 
   const h = urlp.searchParams.get('hh')
   const w = urlp.searchParams.get('ww')
 
   if (!h || !w) {
-    return {success: false}
+    return { success: false }
   }
 
   const dimensions = {

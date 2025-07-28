@@ -1,10 +1,16 @@
-import { type ChatBskyConvoAcceptConvo as ChatGndrConvoAcceptConvo, type ChatBskyConvoListConvos as ChatGndrConvoListConvos,  } from '@gander-social-atproto/api'
+import {
+  type ChatGndrConvoAcceptConvo,
+  type ChatGndrConvoListConvos,
+} from '@gander-social-atproto/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { logger } from '#/logger'
 import { useAgent } from '#/state/session'
 import { DM_SERVICE_HEADERS } from './const'
-import { RQKEY as CONVO_LIST_KEY, RQKEY_ROOT as CONVO_LIST_ROOT_KEY,  } from './list-conversations'
+import {
+  RQKEY as CONVO_LIST_KEY,
+  RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
+} from './list-conversations'
 
 export function useAcceptConversation(
   convoId: string,
@@ -23,9 +29,9 @@ export function useAcceptConversation(
 
   return useMutation({
     mutationFn: async () => {
-      const {data} = await agent.chat.gndr.convo.acceptConvo(
-        {convoId},
-        {headers: DM_SERVICE_HEADERS},
+      const { data } = await agent.chat.gndr.convo.acceptConvo(
+        { convoId },
+        { headers: DM_SERVICE_HEADERS },
       )
 
       return data
@@ -91,10 +97,10 @@ export function useAcceptConversation(
         },
       )
       onMutate?.()
-      return {prevAcceptedPages, prevInboxPages}
+      return { prevAcceptedPages, prevInboxPages }
     },
     onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_KEY]})
+      queryClient.invalidateQueries({ queryKey: [CONVO_LIST_KEY] })
       onSuccess?.(data)
     },
     onError: (error, _, context) => {
@@ -125,7 +131,7 @@ export function useAcceptConversation(
           }
         },
       )
-      queryClient.invalidateQueries({queryKey: [CONVO_LIST_ROOT_KEY]})
+      queryClient.invalidateQueries({ queryKey: [CONVO_LIST_ROOT_KEY] })
       onError?.(error)
     },
   })

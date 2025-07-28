@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, { useRef, useState } from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -9,34 +9,31 @@ import {
 import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+} from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {isNetworkError} from '#/lib/strings/errors'
-import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle} from '#/lib/strings/handles'
-import {colors} from '#/lib/styles'
-import {logger} from '#/logger'
-import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
-import {useProfilesQuery} from '#/state/queries/profile'
-import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useTheme} from '#/alf'
-import {AccountItem} from '#/components/AccountList'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {FormError} from '#/components/forms/FormError'
-import {HostingProvider} from '#/components/forms/HostingProvider'
-// import {HostingProvider} from '#/components/forms/HostingProvider'
+import { useRequestNotificationsPermission } from '#/lib/notifications/notifications'
+import { isNetworkError } from '#/lib/strings/errors'
+import { cleanError } from '#/lib/strings/errors'
+import { createFullHandle } from '#/lib/strings/handles'
+import { colors } from '#/lib/styles'
+import { logger } from '#/logger'
+import { useSetHasCheckedForStarterPack } from '#/state/preferences/used-starter-packs'
+import { useProfilesQuery } from '#/state/queries/profile'
+import { type SessionAccount, useSession, useSessionApi } from '#/state/session'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { Logo } from '#/view/icons/Logo'
+import { atoms as a, useTheme } from '#/alf'
+import { AccountItem } from '#/components/AccountList'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { FormError } from '#/components/forms/FormError'
+import { HostingProvider } from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
-// import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-// import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
-import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
-import {FormContainer} from './FormContainer'
+import { Ticket_Stroke2_Corner0_Rounded as Ticket } from '#/components/icons/Ticket'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
+import { FormContainer } from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -46,7 +43,6 @@ export const LoginForm = ({
   serviceDescription,
   initialHandle,
   setError,
-  // setServiceUrl,
   onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
@@ -80,13 +76,13 @@ export const LoginForm = ({
   const passwordValueRef = useRef<string>('')
   const authFactorTokenValueRef = useRef<string>('')
   const passwordRef = useRef<TextInput>(null)
-  const {_} = useLingui()
-  const {login} = useSessionApi()
+  const { _ } = useLingui()
+  const { login } = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const { setShowLoggedOut } = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
-  const {currentAccount, accounts} = useSession()
-  const {data: profiles} = useProfilesQuery({
+  const { currentAccount, accounts } = useSession()
+  const { data: profiles } = useProfilesQuery({
     handles: accounts.map(acc => acc.did),
   })
   // const onPressSelectService = React.useCallback(() => {
@@ -180,14 +176,14 @@ export const LoginForm = ({
           })
           setError(_(msg`Incorrect username or password`))
         } else if (isNetworkError(e)) {
-          logger.warn('Failed to login due to network error', {error: errMsg})
+          logger.warn('Failed to login due to network error', { error: errMsg })
           setError(
             _(
               msg`Unable to contact your service. Please check your Internet connection.`,
             ),
           )
         } else {
-          logger.warn('Failed to login', {error: errMsg})
+          logger.warn('Failed to login', { error: errMsg })
           setError(cleanError(errMsg))
         }
       }
@@ -382,7 +378,7 @@ export const LoginForm = ({
           a.pt_lg,
           a.border_t,
           a.px_2xl,
-          {borderColor: '#D8D8D8'},
+          { borderColor: '#D8D8D8' },
         ]}>
         <Button
           label={_(msg`Back`)}

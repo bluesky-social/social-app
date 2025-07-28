@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
+import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { type AppGndrActorDefs } from '@gander-social-atproto/api'
 import { Trans } from '@lingui/macro'
 
@@ -23,7 +23,7 @@ export function Autocomplete({
   const t = useTheme()
 
   const isActive = !!prefix
-  const {data: suggestions, isFetching} = useActorAutocompleteQuery(
+  const { data: suggestions, isFetching } = useActorAutocompleteQuery(
     prefix,
     true,
   )
@@ -40,7 +40,7 @@ export function Autocomplete({
         a.border,
         a.rounded_sm,
         t.atoms.border_contrast_high,
-        {marginLeft: -62},
+        { marginLeft: -62 },
       ]}>
       {suggestions?.length ? (
         suggestions.slice(0, 5).map((item, index, arr) => {
@@ -77,7 +77,7 @@ function AutocompleteProfileCard({
   onPress: () => void
 }) {
   const t = useTheme()
-  const state = useSimpleVerificationState({profile})
+  const state = useSimpleVerificationState({ profile })
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
   )
@@ -107,7 +107,7 @@ function AutocompleteProfileCard({
               a.flex_row,
               a.align_center,
               a.gap_xs,
-              platform({ios: a.flex_1}),
+              platform({ ios: a.flex_1 }),
             ]}>
             <Text
               style={[a.text_md, a.font_bold, a.leading_snug]}
@@ -119,7 +119,7 @@ function AutocompleteProfileCard({
               <View
                 style={[
                   {
-                    marginTop: platform({android: -2}),
+                    marginTop: platform({ android: -2 }),
                   },
                 ]}>
                 <VerificationCheck

@@ -1,14 +1,24 @@
-import React, {useContext, useState, useSyncExternalStore} from 'react'
-import { type ChatBskyConvoDefs as ChatGndrConvoDefs } from '@gander-social-atproto/api'
+import React, { useContext, useState, useSyncExternalStore } from 'react'
+import { type ChatGndrConvoDefs } from '@gander-social-atproto/api'
 import { useFocusEffect } from '@react-navigation/native'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { useAppState } from '#/lib/hooks/useAppState'
 import { Convo } from '#/state/messages/convo/agent'
-import { type ConvoParams, type ConvoState, type ConvoStateBackgrounded, type ConvoStateDisabled, type ConvoStateReady, type ConvoStateSuspended,  } from '#/state/messages/convo/types'
+import {
+  type ConvoParams,
+  type ConvoState,
+  type ConvoStateBackgrounded,
+  type ConvoStateDisabled,
+  type ConvoStateReady,
+  type ConvoStateSuspended,
+} from '#/state/messages/convo/types'
 import { isConvoActive } from '#/state/messages/convo/util'
 import { useMessagesEventBus } from '#/state/messages/events'
-import { RQKEY as getConvoKey, useMarkAsReadMutation,  } from '#/state/queries/messages/conversation'
+import {
+  RQKEY as getConvoKey,
+  useMarkAsReadMutation,
+} from '#/state/queries/messages/conversation'
 import { RQKEY_ROOT as ListConvosQueryKeyRoot } from '#/state/queries/messages/list-conversations'
 import { RQKEY as createProfileQueryKey } from '#/state/queries/profile'
 import { useAgent } from '#/state/session'
@@ -50,7 +60,7 @@ export function useConvoActive() {
 export function ConvoProvider({
   children,
   convoId,
-}: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
+}: Pick<ConvoParams, 'convoId'> & { children: React.ReactNode }) {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const events = useMessagesEventBus()
@@ -62,11 +72,11 @@ export function ConvoProvider({
       convoId,
       agent,
       events,
-      placeholderData: placeholder ? {convo: placeholder} : undefined,
+      placeholderData: placeholder ? { convo: placeholder } : undefined,
     })
   })
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
-  const {mutate: markAsRead} = useMarkAsReadMutation()
+  const { mutate: markAsRead } = useMarkAsReadMutation()
 
   const appState = useAppState()
   const isActive = appState === 'active'
@@ -74,11 +84,11 @@ export function ConvoProvider({
     React.useCallback(() => {
       if (isActive) {
         convo.resume()
-        markAsRead({convoId})
+        markAsRead({ convoId })
 
         return () => {
           convo.background()
-          markAsRead({convoId})
+          markAsRead({ convoId })
         }
       }
     }, [isActive, convo, convoId, markAsRead]),

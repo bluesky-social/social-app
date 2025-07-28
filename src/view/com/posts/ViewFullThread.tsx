@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
-import Svg, {Circle, Line} from 'react-native-svg'
+import Svg, { Circle, Line } from 'react-native-svg'
 import { AtUri } from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -12,7 +12,7 @@ import { SubtleWebHover } from '#/components/SubtleWebHover'
 import { Link } from '../util/Link'
 import { Text } from '../util/text/Text'
 
-export function ViewFullThread({uri}: {uri: string}) {
+export function ViewFullThread({ uri }: { uri: string }) {
   const {
     state: hover,
     onIn: onHoverIn,
@@ -21,9 +21,13 @@ export function ViewFullThread({uri}: {uri: string}) {
   const pal = usePalette('default')
   const itemHref = React.useMemo(() => {
     const urip = new AtUri(uri)
-    return makeProfileLink({did: urip.hostname, handle: ''}, 'post', urip.rkey)
+    return makeProfileLink(
+      { did: urip.hostname, handle: '' },
+      'post',
+      urip.rkey,
+    )
   }, [uri])
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   return (
     <Link
@@ -36,7 +40,7 @@ export function ViewFullThread({uri}: {uri: string}) {
       <SubtleWebHover
         hover={hover}
         // adjust position for visual alignment - the actual box has lots of top padding and not much bottom padding -sfn
-        style={{top: 8, bottom: -5}}
+        style={{ top: 8, bottom: -5 }}
       />
       <View style={styles.viewFullThreadDots}>
         <Svg width="4" height="40">
@@ -54,7 +58,7 @@ export function ViewFullThread({uri}: {uri: string}) {
         </Svg>
       </View>
 
-      <Text type="md" style={[pal.link, {paddingTop: 18, paddingBottom: 4}]}>
+      <Text type="md" style={[pal.link, { paddingTop: 18, paddingBottom: 4 }]}>
         {/* HACKFIX: Trans isn't working after SDK 53 upgrade -sfn */}
         {_(msg`View full thread`)}
       </Text>

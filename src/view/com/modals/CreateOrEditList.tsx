@@ -1,7 +1,18 @@
 import { useCallback, useMemo, useState } from 'react'
-import { ActivityIndicator, KeyboardAvoidingView, ScrollView, StyleSheet, TextInput, TouchableOpacity, View,  } from 'react-native'
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-import { type AppGndrGraphDefs, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrGraphDefs,
+  RichText as RichTextAPI,
+} from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -10,12 +21,18 @@ import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
 import { cleanError, isNetworkError } from '#/lib/strings/errors'
 import { enforceLen } from '#/lib/strings/helpers'
 import { richTextToString } from '#/lib/strings/rich-text-helpers'
-import { shortenLinks, stripInvalidMentions } from '#/lib/strings/rich-text-manip'
+import {
+  shortenLinks,
+  stripInvalidMentions,
+} from '#/lib/strings/rich-text-manip'
 import { colors, gradients, s } from '#/lib/styles'
 import { useTheme } from '#/lib/ThemeContext'
 import { type ImageMeta } from '#/state/gallery'
 import { useModalControls } from '#/state/modals'
-import { useListCreateMutation, useListMetadataMutation,  } from '#/state/queries/list'
+import {
+  useListCreateMutation,
+  useListMetadataMutation,
+} from '#/state/queries/list'
 import { useAgent } from '#/state/session'
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage'
 import { Text } from '#/view/com/util/text/Text'
@@ -36,12 +53,12 @@ export function Component({
   onSave?: (uri: string) => void
   list?: AppGndrGraphDefs.ListView
 }) {
-  const {closeModal} = useModalControls()
-  const {isMobile} = useWebMediaQueries()
+  const { closeModal } = useModalControls()
+  const { isMobile } = useWebMediaQueries()
   const [error, setError] = useState<string>('')
   const pal = usePalette('default')
   const theme = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const listCreateMutation = useListCreateMutation()
   const listMetadataMutation = useListMetadataMutation()
   const agent = useAgent()
@@ -65,14 +82,17 @@ export function Component({
     const facets = list?.descriptionFacets
 
     if (!text || !facets) {
-      return new RichTextAPI({text: text || ''})
+      return new RichTextAPI({ text: text || '' })
     }
 
     // We want to be working with a blank state here, so let's get the
     // serialized version and turn it back into a RichText
-    const serialized = richTextToString(new RichTextAPI({text, facets}), false)
+    const serialized = richTextToString(
+      new RichTextAPI({ text, facets }),
+      false,
+    )
 
-    const richText = new RichTextAPI({text: serialized})
+    const richText = new RichTextAPI({ text: serialized })
     richText.detectFacetsWithoutResolution()
 
     return richText
@@ -87,7 +107,7 @@ export function Component({
 
   const onDescriptionChange = useCallback(
     (newText: string) => {
-      const richText = new RichTextAPI({text: newText})
+      const richText = new RichTextAPI({ text: newText })
       richText.detectFacetsWithoutResolution()
 
       setDescriptionRt(richText)
@@ -128,8 +148,8 @@ export function Component({
     }
     try {
       let richText = new RichTextAPI(
-        {text: descriptionRt.text.trimEnd()},
-        {cleanNewlines: true},
+        { text: descriptionRt.text.trimEnd() },
+        { cleanNewlines: true },
       )
 
       await richText.detectFacets(agent)
@@ -146,8 +166,8 @@ export function Component({
         })
         Toast.show(
           isCurateList
-            ? _(msg({message: 'User list updated', context: 'toast'}))
-            : _(msg({message: 'Moderation list updated', context: 'toast'})),
+            ? _(msg({ message: 'User list updated', context: 'toast' }))
+            : _(msg({ message: 'Moderation list updated', context: 'toast' })),
         )
         onSave?.(list.uri)
       } else {
@@ -160,8 +180,8 @@ export function Component({
         })
         Toast.show(
           isCurateList
-            ? _(msg({message: 'User list created', context: 'toast'}))
-            : _(msg({message: 'Moderation list created', context: 'toast'})),
+            ? _(msg({ message: 'User list created', context: 'toast' }))
+            : _(msg({ message: 'Moderation list created', context: 'toast' })),
         )
         onSave?.(res.uri)
       }
@@ -227,7 +247,7 @@ export function Component({
         <Text style={[styles.label, pal.text]}>
           <Trans>List Avatar</Trans>
         </Text>
-        <View style={[styles.avi, {borderColor: pal.colors.background}]}>
+        <View style={[styles.avi, { borderColor: pal.colors.background }]}>
           <EditableUserAvatar
             type="list"
             size={80}
@@ -291,7 +311,8 @@ export function Component({
             />
           </View>
           {isProcessing ? (
-            <View style={[styles.btn, s.mt10, {backgroundColor: colors.gray2}]}>
+            <View
+              style={[styles.btn, s.mt10, { backgroundColor: colors.gray2 }]}>
               <ActivityIndicator />
             </View>
           ) : (
@@ -305,8 +326,8 @@ export function Component({
               accessibilityHint="">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
-                start={{x: 0, y: 0}}
-                end={{x: 1, y: 1}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
                 style={styles.btn}>
                 <Text style={[s.white, s.bold]}>
                   <Trans context="action">Save</Trans>
@@ -388,5 +409,5 @@ const styles = StyleSheet.create({
     borderRadius: 42,
     marginTop: 4,
   },
-  errorContainer: {marginTop: 20},
+  errorContainer: { marginTop: 20 },
 })

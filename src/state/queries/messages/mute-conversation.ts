@@ -1,5 +1,13 @@
-import { type ChatBskyConvoDefs as ChatGndrConvoDefs, type ChatBskyConvoListConvos as ChatGndrConvoListConvos, type ChatConvoMuteConvo as ChatGndrConvoMuteConvo,  } from '@gander-social-atproto/api'
-import { type InfiniteData, useMutation, useQueryClient,  } from '@tanstack/react-query'
+import {
+  type ChatGndrConvoDefs,
+  type ChatGndrConvoListConvos,
+  type ChatGndrConvoMuteConvo,
+} from '@gander-social-atproto/api'
+import {
+  type InfiniteData,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
 import { useAgent } from '#/state/session'
@@ -20,18 +28,18 @@ export function useMuteConvo(
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async ({mute}: {mute: boolean}) => {
+    mutationFn: async ({ mute }: { mute: boolean }) => {
       if (!convoId) throw new Error('No convoId provided')
       if (mute) {
-        const {data} = await agent.api.chat.gndr.convo.muteConvo(
-          {convoId},
-          {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
+        const { data } = await agent.api.chat.gndr.convo.muteConvo(
+          { convoId },
+          { headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
         )
         return data
       } else {
-        const {data} = await agent.api.chat.gndr.convo.unmuteConvo(
-          {convoId},
-          {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
+        const { data } = await agent.api.chat.gndr.convo.unmuteConvo(
+          { convoId },
+          { headers: DM_SERVICE_HEADERS, encoding: 'application/json' },
         )
         return data
       }

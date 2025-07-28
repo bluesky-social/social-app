@@ -1,9 +1,14 @@
-import { type StyleProp, StyleSheet, type TextStyle, View, type ViewStyle,  } from 'react-native'
+import {
+  type StyleProp,
+  StyleSheet,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
 import { choose } from '#/lib/functions'
 import { colors } from '#/lib/styles'
-import { useTheme } from '#/lib/ThemeContext'
-import { type TypographyVariant } from '#/lib/ThemeContext'
+import { type TypographyVariant, useTheme } from '#/lib/ThemeContext'
 import { Text } from '../text/Text'
 import { Button, type ButtonType } from './Button'
 

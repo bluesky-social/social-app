@@ -1,18 +1,34 @@
-import { type AppGndrFeedDefs, type AppGndrGraphDefs, type ComAtprotoRepoStrongRef,  } from '@gander-social-atproto/api'
-import { AtUri } from '@gander-social-atproto/api'
-import { type GndrAgent } from '@gander-social-atproto/api'
+import {
+  type AppGndrFeedDefs,
+  type AppGndrGraphDefs,
+  AtUri,
+  type ComAtprotoRepoStrongRef,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 
 import { POST_IMG_MAX } from '#/lib/constants'
 import { getLinkMeta } from '#/lib/link-meta/link-meta'
 import { resolveShortLink } from '#/lib/link-meta/resolve-short-link'
 import { downloadAndResize } from '#/lib/media/manip'
-import { createStarterPackUri, parseStarterPackUri,  } from '#/lib/strings/starter-pack'
-import { isGndrCustomFeedUrl, isGndrListUrl, isGndrPostUrl, isGndrStarterPackUrl, isGndrStartUrl, isShortLink,  } from '#/lib/strings/url-helpers'
-import { type ComposerImage } from '#/state/gallery'
-import { createComposerImage } from '#/state/gallery'
+import {
+  createStarterPackUri,
+  parseStarterPackUri,
+} from '#/lib/strings/starter-pack'
+import {
+  isGndrCustomFeedUrl,
+  isGndrListUrl,
+  isGndrPostUrl,
+  isGndrStarterPackUrl,
+  isGndrStartUrl,
+  isShortLink,
+} from '#/lib/strings/url-helpers'
+import { type ComposerImage, createComposerImage } from '#/state/gallery'
 import { type Gif } from '#/state/queries/tenor'
 import { createGIFDescription } from '../gif-alt-text'
-import { convertGndrAppUrlIfNeeded, makeRecordUri } from '../strings/url-helpers'
+import {
+  convertGndrAppUrlIfNeeded,
+  makeRecordUri,
+} from '../strings/url-helpers'
 
 type ResolvedExternalLink = {
   type: 'external'
@@ -74,7 +90,7 @@ export async function resolveLink(
     uri = convertGndrAppUrlIfNeeded(uri)
     const [_0, user, _1, rkey] = uri.split('/').filter(Boolean)
     const recordUri = makeRecordUri(user, 'app.gndr.feed.post', rkey)
-    const post = await getPost({uri: recordUri})
+    const post = await getPost({ uri: recordUri })
     if (post.viewer?.embeddingDisabled) {
       throw new EmbeddingDisabledError()
     }
@@ -93,7 +109,7 @@ export async function resolveLink(
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
     const feed = makeRecordUri(did, 'app.gndr.feed.generator', rkey)
-    const res = await agent.app.gndr.feed.getFeedGenerator({feed})
+    const res = await agent.app.gndr.feed.getFeedGenerator({ feed })
     return {
       type: 'record',
       record: {
@@ -109,7 +125,7 @@ export async function resolveLink(
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
     const list = makeRecordUri(did, 'app.gndr.graph.list', rkey)
-    const res = await agent.app.gndr.graph.getList({list})
+    const res = await agent.app.gndr.graph.getList({ list })
     return {
       type: 'record',
       record: {
@@ -128,8 +144,8 @@ export async function resolveLink(
       )
     }
     const did = await fetchDid(parsed.name)
-    const starterPack = createStarterPackUri({did, rkey: parsed.rkey})
-    const res = await agent.app.gndr.graph.getStarterPack({starterPack})
+    const starterPack = createStarterPackUri({ did, rkey: parsed.rkey })
+    const res = await agent.app.gndr.graph.getStarterPack({ starterPack })
     return {
       type: 'record',
       record: {
@@ -143,7 +159,7 @@ export async function resolveLink(
   return resolveExternal(agent, uri)
 
   // Forked from useGetPost. TODO: move into RQ.
-  async function getPost({uri}: {uri: string}) {
+  async function getPost({ uri }: { uri: string }) {
     const urip = new AtUri(uri)
     if (!urip.host.startsWith('did:')) {
       const res = await agent.resolveHandle({
@@ -164,7 +180,7 @@ export async function resolveLink(
   async function fetchDid(handleOrDid: string) {
     let identifier = handleOrDid
     if (!identifier.startsWith('did:')) {
-      const res = await agent.resolveHandle({handle: identifier})
+      const res = await agent.resolveHandle({ handle: identifier })
       identifier = res.data.did
     }
     return identifier

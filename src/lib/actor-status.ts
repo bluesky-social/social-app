@@ -1,5 +1,9 @@
 import { useMemo } from 'react'
-import { type $Typed, type AppGndrActorDefs, AppGndrEmbedExternal,  } from '@gander-social-atproto/api'
+import {
+  type $Typed,
+  type AppGndrActorDefs,
+  AppGndrEmbedExternal,
+} from '@gander-social-atproto/api'
 import { isAfter, parseISO } from 'date-fns'
 
 import { useMaybeProfileShadow } from '#/state/cache/profile-shadow'
@@ -50,7 +54,7 @@ export function isStatusStillActive(timeStr: string | undefined) {
 export function validateStatus(
   did: string,
   status: AppGndrActorDefs.StatusView,
-  config: {did: string; domains: string[]}[],
+  config: { did: string; domains: string[] }[],
 ) {
   if (status.status !== 'app.gndr.actor.status#live') return false
   const sources = config.find(cfg => cfg.did === did)

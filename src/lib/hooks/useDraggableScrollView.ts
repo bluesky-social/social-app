@@ -1,6 +1,5 @@
 import { type ForwardedRef, useEffect, useMemo, useRef } from 'react'
-import { type ScrollView } from 'react-native'
-import { Platform } from 'react-native'
+import { Platform, type ScrollView } from 'react-native'
 
 import { mergeRefs } from '#/lib/merge-refs'
 
@@ -38,7 +37,9 @@ export function useDraggableScroll<Scrollable extends ScrollView = ScrollView>({
 
     const mouseUp = () => {
       if (isDragging) {
-        slider.addEventListener('click', e => e.stopPropagation(), {once: true})
+        slider.addEventListener('click', e => e.stopPropagation(), {
+          once: true,
+        })
       }
 
       isMouseDown = false

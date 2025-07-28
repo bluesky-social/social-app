@@ -4,11 +4,11 @@ import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useQuery } from '@tanstack/react-query'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {capitalize} from '#/lib/strings/capitalize'
-import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
-import {useOnboardingDispatch} from '#/state/shell'
+import { logEvent } from '#/lib/statsig/statsig'
+import { capitalize } from '#/lib/strings/capitalize'
+import { logger } from '#/logger'
+import { useAgent } from '#/state/session'
+import { useOnboardingDispatch } from '#/state/shell'
 import {
   DescriptionText,
   OnboardingControls,
@@ -19,9 +19,9 @@ import {
   Context,
   useInterestsDisplayNames,
 } from '#/screens/Onboarding/state'
-import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { InterestButton } from '#/screens/Onboarding/StepInterests/InterestButton'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import { IconCircle } from '#/components/IconCircle'
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwise } from '#/components/icons/ArrowRotateCounterClockwise'
@@ -32,26 +32,26 @@ import { Loader } from '#/components/Loader'
 import { Text } from '#/components/Typography'
 
 export function StepInterests() {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
+  const { gtMobile } = useBreakpoints()
   const interestsDisplayNames = useInterestsDisplayNames()
 
-  const {state, dispatch} = React.useContext(Context)
+  const { state, dispatch } = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
   const [interests, setInterests] = React.useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
   )
   const onboardDispatch = useOnboardingDispatch()
   const agent = useAgent()
-  const {isLoading, isError, error, data, refetch, isFetching} = useQuery({
+  const { isLoading, isError, error, data, refetch, isFetching } = useQuery({
     queryKey: ['interests'],
     queryFn: async () => {
       try {
-        const {data} = await agent.app.gndr.unspecced.getTaggedSuggestions()
+        const { data } = await agent.app.gndr.unspecced.getTaggedSuggestions()
         return data.suggestions.reduce(
           (agg, s) => {
-            const {tag, subject, subjectType} = s
+            const { tag, subject, subjectType } = s
             const isDefault = tag === 'default'
 
             if (!agg.interests.includes(tag) && !isDefault) {
@@ -104,7 +104,7 @@ export function StepInterests() {
         apiResponse: data!,
         selectedInterests: interests,
       })
-      dispatch({type: 'next'})
+      dispatch({ type: 'next' })
       logEvent('onboarding:interests:nextPressed', {
         selectedInterests: interests,
         selectedInterestsLength: interests.length,
@@ -116,8 +116,8 @@ export function StepInterests() {
   }, [interests, data, setSaving, dispatch])
 
   const skipOnboarding = React.useCallback(() => {
-    onboardDispatch({type: 'finish'})
-    dispatch({type: 'finish'})
+    onboardDispatch({ type: 'finish' })
+    dispatch({ type: 'finish' })
   }, [onboardDispatch, dispatch])
 
   const title = isError ? (

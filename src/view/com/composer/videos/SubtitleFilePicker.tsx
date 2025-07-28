@@ -17,7 +17,7 @@ export function SubtitleFilePicker({
   onSelectFile: (file: File) => void
   disabled?: boolean
 }) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const ref = useRef<HTMLInputElement>(null)
 
   const handleClick = () => {

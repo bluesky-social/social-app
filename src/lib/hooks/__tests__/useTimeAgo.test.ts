@@ -1,7 +1,7 @@
-import {describe, expect, it} from '@jest/globals'
-import {addDays, subDays, subHours, subMinutes, subSeconds} from 'date-fns'
+import { describe, expect, it } from '@jest/globals'
+import { addDays, subDays, subHours, subMinutes, subSeconds } from 'date-fns'
 
-import {dateDiff} from '../useTimeAgo'
+import { dateDiff } from '../useTimeAgo'
 
 const base = new Date('2024-06-17T00:00:00Z')
 

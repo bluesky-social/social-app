@@ -2,7 +2,10 @@ import { useCallback, useEffect } from 'react'
 import { Platform } from 'react-native'
 import * as Notifications from 'expo-notifications'
 import { getBadgeCountAsync, setBadgeCountAsync } from 'expo-notifications'
-import { type AppBskyNotificationRegisterPush as AppGndrNotificationRegisterPush, type AtpAgent,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrNotificationRegisterPush,
+  type AtpAgent,
+} from '@gander-social-atproto/api'
 import debounce from 'lodash.debounce'
 
 import { PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID } from '#/lib/constants'
@@ -40,13 +43,13 @@ async function _registerPushToken({
       ageRestricted: extra.ageRestricted ?? false,
     }
 
-    notyLogger.debug(`registerPushToken: registering`, {...payload})
+    notyLogger.debug(`registerPushToken: registering`, { ...payload })
 
     await agent.app.gndr.notification.registerPush(payload)
 
     notyLogger.debug(`registerPushToken: success`)
   } catch (error) {
-    notyLogger.error(`registerPushToken: failed`, {safeMessage: error})
+    notyLogger.error(`registerPushToken: failed`, { safeMessage: error })
   }
 }
 
@@ -65,7 +68,7 @@ const _registerPushTokenDebounced = debounce(_registerPushToken, 100)
  */
 export function useRegisterPushToken() {
   const agent = useAgent()
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
 
   return useCallback(
     ({
@@ -94,7 +97,7 @@ export function useRegisterPushToken() {
  */
 async function getPushToken() {
   const granted = (await Notifications.getPermissionsAsync()).granted
-  notyLogger.debug(`getPushToken`, {granted})
+  notyLogger.debug(`getPushToken`, { granted })
   if (granted) {
     return Notifications.getDevicePushTokenAsync()
   }
@@ -121,7 +124,7 @@ async function getPushToken() {
  * @see https://github.com/gander-social/social-app/pull/4467
  */
 export function useGetAndRegisterPushToken() {
-  const {isAgeRestricted} = useAgeAssuranceContext()
+  const { isAgeRestricted } = useAgeAssuranceContext()
   const registerPushToken = useRegisterPushToken()
   return useCallback(
     async ({
@@ -166,10 +169,10 @@ export function useGetAndRegisterPushToken() {
  * have a current account, this handling will be registered and ready to go.
  */
 export function useNotificationsRegistration() {
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const registerPushToken = useRegisterPushToken()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
-  const {isReady: isAgeRestrictionReady, isAgeRestricted} =
+  const { isReady: isAgeRestrictionReady, isAgeRestricted } =
     useAgeAssuranceContext()
 
   useEffect(() => {
@@ -202,8 +205,8 @@ export function useNotificationsRegistration() {
      * @see https://docs.expo.dev/versions/latest/sdk/notifications/#addpushtokenlistenerlistener
      */
     const subscription = Notifications.addPushTokenListener(async token => {
-      registerPushToken({token, isAgeRestricted: isAgeRestricted})
-      notyLogger.debug(`addPushTokenListener callback`, {token})
+      registerPushToken({ token, isAgeRestricted: isAgeRestricted })
+      notyLogger.debug(`addPushTokenListener callback`, { token })
     })
 
     return () => {
@@ -219,7 +222,7 @@ export function useNotificationsRegistration() {
 }
 
 export function useRequestNotificationsPermission() {
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
   return async (

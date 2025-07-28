@@ -1,14 +1,14 @@
 import { Platform } from 'react-native'
 import type React from 'react'
 
-const onMouseUp = (e: React.MouseEvent & {target: HTMLElement}) => {
+const onMouseUp = (e: React.MouseEvent & { target: HTMLElement }) => {
   // Only handle whenever it is the middle button
   if (e.button !== 1 || e.target.closest('a') || e.target.tagName === 'A') {
     return
   }
 
   e.target.dispatchEvent(
-    new MouseEvent('click', {metaKey: true, bubbles: true}),
+    new MouseEvent('click', { metaKey: true, bubbles: true }),
   )
 }
 
@@ -18,7 +18,7 @@ const onMouseDown = (e: React.MouseEvent) => {
   e.preventDefault()
 }
 
-export function WebAuxClickWrapper({children}: React.PropsWithChildren<{}>) {
+export function WebAuxClickWrapper({ children }: React.PropsWithChildren<{}>) {
   if (Platform.OS !== 'web') return children
 
   return (

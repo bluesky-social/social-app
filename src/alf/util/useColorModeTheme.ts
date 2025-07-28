@@ -18,7 +18,7 @@ export function useColorModeTheme(): ThemeName {
 
 export function useThemeName(): ThemeName {
   const colorScheme = useColorScheme()
-  const {colorMode, darkTheme} = useThemePrefs()
+  const { colorMode, darkTheme } = useThemePrefs()
 
   return getThemeName(colorScheme, colorMode, darkTheme)
 }

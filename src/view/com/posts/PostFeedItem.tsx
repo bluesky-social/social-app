@@ -1,7 +1,18 @@
 import { memo, useCallback, useMemo, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
-import { type AppGndrActorDefs, AppGndrFeedDefs, AppGndrFeedPost, AppGndrFeedThreadgate, AtUri, type ModerationDecision, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import {
+  FontAwesomeIcon,
+  type FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {
+  type AppGndrActorDefs,
+  AppGndrFeedDefs,
+  AppGndrFeedPost,
+  AppGndrFeedThreadgate,
+  AtUri,
+  type ModerationDecision,
+  RichText as RichTextAPI,
+} from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -16,12 +27,19 @@ import { sanitizeDisplayName } from '#/lib/strings/display-names'
 import { sanitizeHandle } from '#/lib/strings/handles'
 import { countLines } from '#/lib/strings/helpers'
 import { s } from '#/lib/styles'
-import { POST_TOMBSTONE, type Shadow, usePostShadow,  } from '#/state/cache/post-shadow'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import { useFeedFeedbackContext } from '#/state/feed-feedback'
 import { unstableCacheProfileView } from '#/state/queries/profile'
 import { useSession } from '#/state/session'
 import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies'
-import { buildPostSourceKey, setUnstablePostSource,  } from '#/state/unstable-post-source'
+import {
+  buildPostSourceKey,
+  setUnstablePostSource,
+} from '#/state/unstable-post-source'
 import { FeedNameText } from '#/view/com/util/FeedInfoText'
 import { Link, TextLinkOnWebOnly } from '#/view/com/util/Link'
 import { PostMeta } from '#/view/com/util/PostMeta'
@@ -50,7 +68,7 @@ interface FeedItemProps {
     | AppGndrFeedDefs.ReasonRepost
     | AppGndrFeedDefs.ReasonPin
     | ReasonFeedSource
-    | {[k: string]: unknown; $type: string}
+    | { [k: string]: unknown; $type: string }
     | undefined
   moderation: ModerationDecision
   parentAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
@@ -152,9 +170,9 @@ let FeedItemInner = ({
   onShowLess?: (interaction: AppGndrFeedDefs.Interaction) => void
 }): React.ReactNode => {
   const queryClient = useQueryClient()
-  const {openComposer} = useOpenComposer()
+  const { openComposer } = useOpenComposer()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   const [hover, setHover] = useState(false)
 
@@ -162,7 +180,7 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
+  const { sendInteraction, feedDescriptor } = useFeedFeedbackContext()
 
   const onPressReply = () => {
     sendInteraction({
@@ -242,7 +260,7 @@ let FeedItemInner = ({
     },
   ]
 
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const isOwner =
     AppGndrFeedDefs.isReasonRepost(reason) &&
     reason.by.did === currentAccount?.did
@@ -258,7 +276,7 @@ let FeedItemInner = ({
     ? rootPost.threadgate.record
     : undefined
 
-  const {isActive: live} = useActorStatus(post.author)
+  const { isActive: live } = useActorStatus(post.author)
 
   const viaRepost = useMemo(() => {
     if (AppGndrFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
@@ -277,7 +295,7 @@ let FeedItemInner = ({
       noFeedback
       accessible={false}
       onBeforePress={onBeforePress}
-      dataSet={{feedContext}}
+      dataSet={{ feedContext }}
       onPointerEnter={() => {
         setHover(true)
       }}
@@ -285,8 +303,8 @@ let FeedItemInner = ({
         setHover(false)
       }}>
       <SubtleWebHover hover={hover} />
-      <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 42}}>
+      <View style={{ flexDirection: 'row', gap: 10, paddingLeft: 8 }}>
+        <View style={{ width: 42 }}>
           {isThreadChild && (
             <View
               style={[
@@ -301,7 +319,7 @@ let FeedItemInner = ({
           )}
         </View>
 
-        <View style={{paddingTop: 10, flexShrink: 1}}>
+        <View style={{ paddingTop: 10, flexShrink: 1 }}>
           {isReasonFeedSource(reason) ? (
             <Link href={reason.href}>
               <Text
@@ -337,7 +355,7 @@ let FeedItemInner = ({
               }
               onBeforePress={onOpenReposter}>
               <RepostIcon
-                style={{color: pal.colors.textLight, marginRight: 3}}
+                style={{ color: pal.colors.textLight, marginRight: 3 }}
                 width={13}
                 height={13}
               />
@@ -381,7 +399,7 @@ let FeedItemInner = ({
           ) : AppGndrFeedDefs.isReasonPin(reason) ? (
             <View style={styles.includeReason}>
               <PinIcon
-                style={{color: pal.colors.textLight, marginRight: 3}}
+                style={{ color: pal.colors.textLight, marginRight: 3 }}
                 width={13}
                 height={13}
               />
@@ -484,7 +502,7 @@ let PostContent = ({
   post: AppGndrFeedDefs.PostView
   threadgateRecord?: AppGndrFeedThreadgate.Record
 }): React.ReactNode => {
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
@@ -505,7 +523,7 @@ let PostContent = ({
       ? [
           {
             type: 'reply-hidden',
-            source: {type: 'user', did: currentAccount?.did},
+            source: { type: 'user', did: currentAccount?.did },
             priority: 6,
           },
         ]
@@ -568,7 +586,7 @@ function ReplyToLabel({
   notFound?: boolean
 }) {
   const pal = usePalette('default')
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
 
   let label
   if (blocked) {
@@ -614,7 +632,7 @@ function ReplyToLabel({
       <FontAwesomeIcon
         icon="reply"
         size={9}
-        style={[{color: pal.colors.textLight} as FontAwesomeIconStyle, s.mr5]}
+        style={[{ color: pal.colors.textLight } as FontAwesomeIconStyle, s.mr5]}
       />
       <Text
         type="md"

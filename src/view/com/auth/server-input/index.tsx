@@ -1,6 +1,5 @@
 import { useCallback, useImperativeHandle, useRef, useState } from 'react'
-import { View } from 'react-native'
-import { useWindowDimensions } from 'react-native'
+import { useWindowDimensions, View } from 'react-native'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -25,7 +24,7 @@ export function ServerInputDialog({
   control: Dialog.DialogOuterProps['control']
   onSelect: (url: string) => void
 }) {
-  const {height} = useWindowDimensions()
+  const { height } = useWindowDimensions()
   const formRef = useRef<DialogInnerRef>(null)
 
   // persist these options between dialog open/close
@@ -49,7 +48,7 @@ export function ServerInputDialog({
     <Dialog.Outer
       control={control}
       onClose={onClose}
-      nativeOptions={{minHeight: height / 2}}>
+      nativeOptions={{ minHeight: height / 2 }}>
       <Dialog.Handle />
       <DialogInner
         formRef={formRef}
@@ -61,7 +60,7 @@ export function ServerInputDialog({
   )
 }
 
-type DialogInnerRef = {getFormState: () => string | null}
+type DialogInnerRef = { getFormState: () => string | null }
 
 function DialogInner({
   formRef,
@@ -75,10 +74,10 @@ function DialogInner({
   initialCustomAddress: string
 }) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
-  const {accounts} = useSession()
-  const {gtMobile} = useBreakpoints()
+  const { accounts } = useSession()
+  const { gtMobile } = useBreakpoints()
   const [customAddress, setCustomAddress] = useState(initialCustomAddress)
   const [pdsAddressHistory, setPdsAddressHistory] = useState<string[]>(
     persisted.get('pdsAddressHistory') || [],

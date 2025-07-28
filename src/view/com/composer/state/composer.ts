@@ -1,19 +1,38 @@
 import { type ImagePickerAsset } from 'expo-image-picker'
-import { type AppGndrFeedPostgate, AppGndrRichtextFacet, type GndrPreferences, RichText,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrFeedPostgate,
+  AppGndrRichtextFacet,
+  type GndrPreferences,
+  RichText,
+} from '@gander-social-atproto/api'
 import { nanoid } from 'nanoid/non-secure'
 
 import { type SelfLabel } from '#/lib/moderation'
 import { insertMentionAt } from '#/lib/strings/mention-manip'
 import { shortenLinks } from '#/lib/strings/rich-text-manip'
-import { isGndrPostUrl, postUriToRelativePath, toGndrAppUrl,  } from '#/lib/strings/url-helpers'
+import {
+  isGndrPostUrl,
+  postUriToRelativePath,
+  toGndrAppUrl,
+} from '#/lib/strings/url-helpers'
 import { type ComposerImage, createInitialImages } from '#/state/gallery'
 import { createPostgateRecord } from '#/state/queries/postgate/util'
 import { type Gif } from '#/state/queries/tenor'
-import { threadgateRecordToAllowUISetting } from '#/state/queries/threadgate'
-import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate'
+import {
+  type ThreadgateAllowUISetting,
+  threadgateRecordToAllowUISetting,
+} from '#/state/queries/threadgate'
 import { type ComposerOpts } from '#/state/shell/composer'
-import { type LinkFacetMatch, suggestLinkCardUri,  } from '#/view/com/composer/text-input/text-input-util'
-import { createVideoState, type VideoAction, videoReducer, type VideoState,  } from './video'
+import {
+  type LinkFacetMatch,
+  suggestLinkCardUri,
+} from '#/view/com/composer/text-input/text-input-util'
+import {
+  createVideoState,
+  type VideoAction,
+  videoReducer,
+  type VideoState,
+} from './video'
 
 type ImagesMedia = {
   type: 'images'
@@ -55,24 +74,24 @@ export type PostDraft = {
 }
 
 export type PostAction =
-  | {type: 'update_richtext'; richtext: RichText}
-  | {type: 'update_labels'; labels: SelfLabel[]}
-  | {type: 'embed_add_images'; images: ComposerImage[]}
-  | {type: 'embed_update_image'; image: ComposerImage}
-  | {type: 'embed_remove_image'; image: ComposerImage}
+  | { type: 'update_richtext'; richtext: RichText }
+  | { type: 'update_labels'; labels: SelfLabel[] }
+  | { type: 'embed_add_images'; images: ComposerImage[] }
+  | { type: 'embed_update_image'; image: ComposerImage }
+  | { type: 'embed_remove_image'; image: ComposerImage }
   | {
       type: 'embed_add_video'
       asset: ImagePickerAsset
       abortController: AbortController
     }
-  | {type: 'embed_remove_video'}
-  | {type: 'embed_update_video'; videoAction: VideoAction}
-  | {type: 'embed_add_uri'; uri: string}
-  | {type: 'embed_remove_quote'}
-  | {type: 'embed_remove_link'}
-  | {type: 'embed_add_gif'; gif: Gif}
-  | {type: 'embed_update_gif'; alt: string}
-  | {type: 'embed_remove_gif'}
+  | { type: 'embed_remove_video' }
+  | { type: 'embed_update_video'; videoAction: VideoAction }
+  | { type: 'embed_add_uri'; uri: string }
+  | { type: 'embed_remove_quote' }
+  | { type: 'embed_remove_link' }
+  | { type: 'embed_add_gif'; gif: Gif }
+  | { type: 'embed_update_gif'; alt: string }
+  | { type: 'embed_remove_gif' }
 
 export type ThreadDraft = {
   posts: PostDraft[]
@@ -87,8 +106,8 @@ export type ComposerState = {
 }
 
 export type ComposerAction =
-  | {type: 'update_postgate'; postgate: AppGndrFeedPostgate.Record}
-  | {type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[]}
+  | { type: 'update_postgate'; postgate: AppGndrFeedPostgate.Record }
+  | { type: 'update_threadgate'; threadgate: ThreadgateAllowUISetting[] }
   | {
       type: 'update_post'
       postId: string
@@ -156,7 +175,7 @@ export function composerReducer(
       const nextPosts = [...state.thread.posts]
       nextPosts.splice(activePostIndex + 1, 0, {
         id: nanoid(),
-        richtext: new RichText({text: ''}),
+        richtext: new RichText({ text: '' }),
         shortenedGraphemeLength: 0,
         labels: [],
         embed: {
@@ -530,9 +549,9 @@ export function createComposerState({
         for (const feature of facet.features) {
           if (AppGndrRichtextFacet.isLink(feature)) {
             if (isGndrPostUrl(feature.uri)) {
-              detectedPostUris.set(feature.uri, {facet, rt: initRichText})
+              detectedPostUris.set(feature.uri, { facet, rt: initRichText })
             } else {
-              detectedExtUris.set(feature.uri, {facet, rt: initRichText})
+              detectedExtUris.set(feature.uri, { facet, rt: initRichText })
             }
           }
         }

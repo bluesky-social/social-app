@@ -1,8 +1,8 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {type Avatar} from '#/screens/Onboarding2/StepProfile/index'
-import {atoms as a, useTheme} from '#/alf'
+import { type Avatar } from '#/screens/Onboarding2/StepProfile/index'
+import { atoms as a, useTheme } from '#/alf'
 
 export function AvatarCreatorCircle({
   avatar,
@@ -36,7 +36,7 @@ export function AvatarCreatorCircle({
   return (
     <View>
       <View style={styles.imageContainer}>
-        <Icon height={85} width={85} style={{color: t.palette.white}} />
+        <Icon height={85} width={85} style={{ color: t.palette.white }} />
       </View>
     </View>
   )

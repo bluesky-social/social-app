@@ -1,5 +1,14 @@
-import { type StyleProp, StyleSheet, TouchableOpacity, View, type ViewStyle,  } from 'react-native'
-import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
+import {
+  type StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import {
+  FontAwesomeIcon,
+  type FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -21,14 +30,14 @@ export function ErrorMessage({
 }) {
   const theme = useTheme()
   const pal = usePalette('error')
-  const {_} = useLingui()
+  const { _ } = useLingui()
   return (
     <Layout.Center>
       <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
         <View
           style={[
             styles.errorIcon,
-            {backgroundColor: theme.palette.error.icon},
+            { backgroundColor: theme.palette.error.icon },
           ]}>
           <FontAwesomeIcon
             icon="exclamation"
@@ -54,7 +63,7 @@ export function ErrorMessage({
             )}>
             <FontAwesomeIcon
               icon="arrows-rotate"
-              style={{color: theme.palette.error.icon}}
+              style={{ color: theme.palette.error.icon }}
               size={18}
             />
           </TouchableOpacity>

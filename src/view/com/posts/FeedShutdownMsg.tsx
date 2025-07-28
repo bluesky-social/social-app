@@ -5,7 +5,11 @@ import { useLingui } from '@lingui/react'
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants'
 import { logger } from '#/logger'
-import { usePreferencesQuery, useRemoveFeedMutation, useReplaceForYouWithDiscoverFeedMutation,  } from '#/state/queries/preferences'
+import {
+  usePreferencesQuery,
+  useRemoveFeedMutation,
+  useReplaceForYouWithDiscoverFeedMutation,
+} from '#/state/queries/preferences'
 import { useSetSelectedFeed } from '#/state/shell/selected-feed'
 import * as Toast from '#/view/com/util/Toast'
 import { atoms as a, useTheme } from '#/alf'
@@ -14,14 +18,14 @@ import { InlineLinkText } from '#/components/Link'
 import { Loader } from '#/components/Loader'
 import { Text } from '#/components/Typography'
 
-export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
+export function FeedShutdownMsg({ feedUri }: { feedUri: string }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const setSelectedFeed = useSetSelectedFeed()
-  const {data: preferences} = usePreferencesQuery()
-  const {mutateAsync: removeFeed, isPending: isRemovePending} =
+  const { data: preferences } = usePreferencesQuery()
+  const { mutateAsync: removeFeed, isPending: isRemovePending } =
     useRemoveFeedMutation()
-  const {mutateAsync: replaceFeedWithDiscover, isPending: isReplacePending} =
+  const { mutateAsync: replaceFeedWithDiscover, isPending: isReplacePending } =
     useReplaceForYouWithDiscoverFeedMutation()
 
   const feedConfig = preferences?.savedFeeds?.find(
@@ -49,7 +53,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         ),
         'exclamation-circle',
       )
-      logger.error('Failed to update feeds', {message: err})
+      logger.error('Failed to update feeds', { message: err })
     }
   }, [removeFeed, feedConfig, _, hasDiscoverPinned, setSelectedFeed])
 
@@ -68,7 +72,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         ),
         'exclamation-circle',
       )
-      logger.error('Failed to update feeds', {message: err})
+      logger.error('Failed to update feeds', { message: err })
     }
   }, [
     replaceFeedWithDiscover,

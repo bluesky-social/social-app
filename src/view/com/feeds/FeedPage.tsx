@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { View } from 'react-native'
-import { type AppGndrActorDefs, AppGndrFeedDefs } from '@gander-social-atproto/api'
+import {
+  type AppGndrActorDefs,
+  AppGndrFeedDefs,
+} from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { type NavigationProp, useNavigation } from '@react-navigation/native'
@@ -18,8 +21,11 @@ import { listenSoftReset } from '#/state/events'
 import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback'
 import { useSetHomeBadge } from '#/state/home-badge'
 import { type SavedFeedSourceInfo } from '#/state/queries/feed'
-import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed'
-import { type FeedDescriptor, type FeedParams } from '#/state/queries/post-feed'
+import {
+  type FeedDescriptor,
+  type FeedParams,
+  RQKEY as FEED_RQKEY,
+} from '#/state/queries/post-feed'
 import { truncateAndInvalidate } from '#/state/queries/util'
 import { useSession } from '#/state/session'
 import { useSetMinimalShellMode } from '#/state/shell'
@@ -53,11 +59,11 @@ export function FeedPage({
   savedFeedConfig?: AppGndrActorDefs.SavedFeed
   feedInfo: SavedFeedSourceInfo
 }) {
-  const {hasSession} = useSession()
-  const {_} = useLingui()
+  const { hasSession } = useSession()
+  const { _ } = useLingui()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
   const queryClient = useQueryClient()
-  const {openComposer} = useOpenComposer()
+  const { openComposer } = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
   const headerOffset = useHeaderOffset()
@@ -163,7 +169,9 @@ export function FeedPage({
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
+          accessibilityLabel={_(
+            msg({ message: `New post`, context: 'action' }),
+          )}
           accessibilityHint=""
         />
       )}

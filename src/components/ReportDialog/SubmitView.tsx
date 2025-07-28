@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
-import { type AppBskyLaberDefs as AppGndrLabelerDefs } from '@gander-social-atproto/api'
+import { type AppGndrLabelerDefs } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -36,7 +36,7 @@ export function SubmitView({
   onSubmitComplete: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const agent = useAgent()
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
@@ -128,7 +128,7 @@ export function SubmitView({
           <Text style={[a.text_md, a.font_bold]}>
             {selectedReportOption.title}
           </Text>
-          <Text style={[a.leading_tight, {maxWidth: 400}]}>
+          <Text style={[a.leading_tight, { maxWidth: 400 }]}>
             {selectedReportOption.description}
           </Text>
         </View>
@@ -174,7 +174,7 @@ export function SubmitView({
             value={details}
             onChangeText={setDetails}
             label="Text field"
-            style={{paddingRight: 60}}
+            style={{ paddingRight: 60 }}
             numberOfLines={6}
           />
 
@@ -228,12 +228,12 @@ export function SubmitView({
         </Button>
       </View>
       {/* Maybe fix this later -h */}
-      {isAndroid ? <View style={{height: 300}} /> : null}
+      {isAndroid ? <View style={{ height: 300 }} /> : null}
     </View>
   )
 }
 
-function LabelerToggle({title}: {title: string}) {
+function LabelerToggle({ title }: { title: string }) {
   const t = useTheme()
   const ctx = Toggle.useItemContext()
 
@@ -262,7 +262,7 @@ function LabelerToggle({title}: {title: string}) {
         <Text
           emoji
           style={[
-            native({marginTop: 2}),
+            native({ marginTop: 2 }),
             t.atoms.text_contrast_medium,
             ctx.selected && t.atoms.text,
           ]}>

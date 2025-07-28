@@ -1,5 +1,11 @@
 import React from 'react'
-import { findNodeHandle, type ListRenderItemInfo, type StyleProp, View, type ViewStyle,  } from 'react-native'
+import {
+  findNodeHandle,
+  type ListRenderItemInfo,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -17,10 +23,10 @@ import { atoms as a, ios, useTheme } from '#/alf'
 import * as ListCard from '#/components/ListCard'
 import { ListFooter } from '#/components/Lists'
 
-const LOADING = {_reactKey: '__loading__'}
-const EMPTY = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const LOADING = { _reactKey: '__loading__' }
+const EMPTY = { _reactKey: '__empty__' }
+const ERROR_ITEM = { _reactKey: '__error__' }
+const LOAD_MORE_ERROR_ITEM = { _reactKey: '__load_more_error__' }
 
 interface SectionRef {
   scrollToTop: () => void
@@ -38,13 +44,21 @@ interface ProfileListsProps {
 
 export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
   function ProfileListsImpl(
-    {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
+    {
+      did,
+      scrollElRef,
+      headerOffset,
+      enabled,
+      style,
+      testID,
+      setScrollViewTag,
+    },
     ref,
   ) {
     const t = useTheme()
-    const {_} = useLingui()
+    const { _ } = useLingui()
     const [isPTRing, setIsPTRing] = React.useState(false)
-    const opts = React.useMemo(() => ({enabled}), [enabled])
+    const opts = React.useMemo(() => ({ enabled }), [enabled])
     const {
       data,
       isPending,
@@ -87,7 +101,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
         animated: isNative,
         offset: -headerOffset,
       })
-      queryClient.invalidateQueries({queryKey: RQKEY(did)})
+      queryClient.invalidateQueries({ queryKey: RQKEY(did) })
     }, [scrollElRef, queryClient, headerOffset, did])
 
     React.useImperativeHandle(ref, () => ({
@@ -99,7 +113,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       try {
         await refetch()
       } catch (err) {
-        logger.error('Failed to refresh lists', {message: err})
+        logger.error('Failed to refresh lists', { message: err })
       }
       setIsPTRing(false)
     }, [refetch, setIsPTRing])
@@ -109,7 +123,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       try {
         await fetchNextPage()
       } catch (err) {
-        logger.error('Failed to load more lists', {message: err})
+        logger.error('Failed to load more lists', { message: err })
       }
     }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
@@ -121,7 +135,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     // =
 
     const renderItemInner = React.useCallback(
-      ({item, index}: ListRenderItemInfo<any>) => {
+      ({ item, index }: ListRenderItemInfo<any>) => {
         if (item === EMPTY) {
           return (
             <EmptyState

@@ -1,4 +1,7 @@
-import { type ComAtprotoRepoUploadBlob, type GndrAgent,  } from '@gander-social-atproto/api'
+import {
+  type ComAtprotoRepoUploadBlob,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 
 /**
  * @note It is recommended, on web, to use the `file` instance of the file
@@ -16,7 +19,7 @@ export async function uploadBlob(
     (input.startsWith('data:') || input.startsWith('blob:'))
   ) {
     const blob = await fetch(input).then(r => r.blob())
-    return agent.uploadBlob(blob, {encoding})
+    return agent.uploadBlob(blob, { encoding })
   }
 
   if (input instanceof Blob) {

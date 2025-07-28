@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react'
 import { View } from 'react-native'
-import { AppBskyActorStatus as AppGndrActorStatus, type AppGndrActorDefs, type AppGndrEmbedExternal,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrActorDefs,
+  AppGndrActorStatus as AppGndrActorStatus,
+  type AppGndrEmbedExternal,
+} from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { differenceInMinutes } from 'date-fns'
@@ -18,7 +22,11 @@ import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/ico
 import { Loader } from '#/components/Loader'
 import { Text } from '#/components/Typography'
 import { LinkPreview } from './LinkPreview'
-import { useLiveLinkMetaQuery, useRemoveLiveStatusMutation, useUpsertLiveStatusMutation,  } from './queries'
+import {
+  useLiveLinkMetaQuery,
+  useRemoveLiveStatusMutation,
+  useUpsertLiveStatusMutation,
+} from './queries'
 import { displayDuration, useDebouncedValue } from './utils'
 
 export function EditLiveDialog({
@@ -31,7 +39,7 @@ export function EditLiveDialog({
   embed: AppGndrEmbedExternal.View
 }) {
   return (
-    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+    <Dialog.Outer control={control} nativeOptions={{ preventExpansion: true }}>
       <Dialog.Handle />
       <DialogInner status={status} embed={embed} />
     </Dialog.Outer>
@@ -46,7 +54,7 @@ function DialogInner({
   embed: AppGndrEmbedExternal.View
 }) {
   const control = Dialog.useDialogContext()
-  const {_, i18n} = useLingui()
+  const { _, i18n } = useLingui()
   const t = useTheme()
 
   const [liveLink, setLiveLink] = useState(embed.external.uri)
@@ -90,7 +98,7 @@ function DialogInner({
     error: removeLiveStatusError,
   } = useRemoveLiveStatusMutation()
 
-  const {minutesUntilExpiry, expiryDateTime} = useMemo(() => {
+  const { minutesUntilExpiry, expiryDateTime } = useMemo(() => {
     tick!
 
     const expiry = new Date(status.expiresAt ?? new Date())
@@ -109,7 +117,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={_(msg`You are Live`)}
-      style={web({maxWidth: 420})}>
+      style={web({ maxWidth: 420 })}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_2xl]}>
@@ -166,7 +174,7 @@ function DialogInner({
           {(liveLinkError || linkMetaError) && (
             <View style={[a.flex_row, a.gap_xs, a.align_center]}>
               <WarningIcon
-                style={[{color: t.palette.negative_500}]}
+                style={[{ color: t.palette.negative_500 }]}
                 size="sm"
               />
               <Text
@@ -175,7 +183,7 @@ function DialogInner({
                   a.leading_snug,
                   a.flex_1,
                   a.font_bold,
-                  {color: t.palette.negative_500},
+                  { color: t.palette.negative_500 },
                 ]}>
                 {liveLinkError ? (
                   <Trans>This is not a valid link</Trans>
@@ -206,7 +214,7 @@ function DialogInner({
           {isDirty ? (
             <Button
               label={_(msg`Save`)}
-              size={platform({native: 'large', web: 'small'})}
+              size={platform({ native: 'large', web: 'small' })}
               color="primary"
               variant="solid"
               onPress={() => goLive()}
@@ -219,7 +227,7 @@ function DialogInner({
           ) : (
             <Button
               label={_(msg`Close`)}
-              size={platform({native: 'large', web: 'small'})}
+              size={platform({ native: 'large', web: 'small' })}
               color="primary"
               variant="solid"
               onPress={() => control.close()}>
@@ -231,7 +239,7 @@ function DialogInner({
           <Button
             label={_(msg`Remove live status`)}
             onPress={() => removeLiveStatus()}
-            size={platform({native: 'large', web: 'small'})}
+            size={platform({ native: 'large', web: 'small' })}
             color="negative_secondary"
             variant="solid"
             disabled={isRemovingLiveStatus || isGoingLive}>

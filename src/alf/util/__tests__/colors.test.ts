@@ -1,10 +1,10 @@
-import {jest} from '@jest/globals'
+import { jest } from '@jest/globals'
 
-import {logger} from '#/logger'
-import {transparentifyColor} from '../colorGeneration'
+import { logger } from '#/logger'
+import { transparentifyColor } from '../colorGeneration'
 
 jest.mock('#/logger', () => ({
-  logger: {warn: jest.fn()},
+  logger: { warn: jest.fn() },
 }))
 
 describe('transparentifyColor', () => {

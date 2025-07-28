@@ -3,7 +3,10 @@ import { AppState, type AppStateStatus } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { focusManager, onlineManager, QueryClient } from '@tanstack/react-query'
-import { PersistQueryClientProvider, type PersistQueryClientProviderProps,  } from '@tanstack/react-query-persist-client'
+import {
+  PersistQueryClientProvider,
+  type PersistQueryClientProviderProps,
+} from '@tanstack/react-query-persist-client'
 import type React from 'react'
 
 import { isNative } from '#/platform/detection'

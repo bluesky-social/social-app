@@ -8,10 +8,10 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {Trans} from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
-import {HITSLOP_20} from '#/lib/constants'
-import {mergeRefs} from '#/lib/merge-refs'
+import { HITSLOP_20 } from '#/lib/constants'
+import { mergeRefs } from '#/lib/merge-refs'
 import {
   android,
   applyFonts,
@@ -21,9 +21,9 @@ import {
   useTheme,
   web,
 } from '#/alf'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Text} from '#/components/Typography'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { type Props as SVGIconProps } from '#/components/icons/common'
+import { Text } from '#/components/Typography'
 
 const Context = React.createContext<{
   inputRef: React.RefObject<TextInput> | null
@@ -45,16 +45,16 @@ const Context = React.createContext<{
   onBlur: () => {},
 })
 
-export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
+export type RootProps = React.PropsWithChildren<{ isInvalid?: boolean }>
 
-export function Root({children, isInvalid = false}: RootProps) {
+export function Root({ children, isInvalid = false }: RootProps) {
   const inputRef = React.useRef<TextInput>(null)
   const {
     state: hovered,
     onIn: onHoverIn,
     onOut: onHoverOut,
   } = useInteractionState()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const { state: focused, onIn: onFocus, onOut: onBlur } = useInteractionState()
 
   const context = React.useMemo(
     () => ({
@@ -161,7 +161,7 @@ export function createInput(Component: typeof TextInput) {
     ...rest
   }: InputProps) {
     const t = useTheme()
-    const {fonts} = useAlf()
+    const { fonts } = useAlf()
     const ctx = React.useContext(Context)
     const withinRoot = Boolean(ctx.inputRef)
 
@@ -191,7 +191,7 @@ export function createInput(Component: typeof TextInput) {
       a.flex_1,
       a.text_md,
       // t.atoms.text,
-      {color: t.palette.black},
+      { color: t.palette.black },
       {
         // paddingVertical doesn't work w/multiline - esb
         lineHeight: a.text_md.fontSize * 1.1875,
@@ -254,12 +254,12 @@ export function createInput(Component: typeof TextInput) {
         </View>
         <View
           style={[
-            {zIndex: -122},
+            { zIndex: -122 },
             a.absolute,
             a.inset_0,
             a.rounded_sm,
             // t.atoms.bg_contrast_25,
-            {borderColor: '#9B9B9B', borderWidth: 1},
+            { borderColor: '#9B9B9B', borderWidth: 1 },
             // ctx.hovered ? chromeHover : {},
             // ctx.focused ? chromeFocus : {},
             // ctx.isInvalid || isInvalid ? chromeError : {},
@@ -291,7 +291,7 @@ export const Input = createInput(TextInput)
 export function LabelText({
   nativeID,
   children,
-}: React.PropsWithChildren<{nativeID?: string}>) {
+}: React.PropsWithChildren<{ nativeID?: string }>) {
   // const t = useTheme()
   return (
     <Text
@@ -299,7 +299,7 @@ export function LabelText({
       style={[
         a.text_xs,
         a.font_normal,
-        {color: '#696969', lineHeight: 18},
+        { color: '#696969', lineHeight: 18 },
         a.mb_2xs,
       ]}>
       {children}
@@ -307,10 +307,14 @@ export function LabelText({
   )
 }
 
-export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
+export function Icon({
+  icon: Comp,
+}: {
+  icon: React.ComponentType<SVGIconProps>
+}) {
   const t = useTheme()
   const ctx = React.useContext(Context)
-  const {hover, focus, errorHover, errorFocus} = React.useMemo(() => {
+  const { hover, focus, errorHover, errorFocus } = React.useMemo(() => {
     const hover: TextStyle[] = [
       {
         color: t.palette.contrast_800,
@@ -345,7 +349,11 @@ export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
       <Comp
         size="md"
         style={[
-          {color: t.palette.contrast_500, pointerEvents: 'none', flexShrink: 0},
+          {
+            color: t.palette.contrast_500,
+            pointerEvents: 'none',
+            flexShrink: 0,
+          },
           ctx.hovered ? hover : {},
           ctx.focused ? focus : {},
           ctx.isInvalid && ctx.hovered ? errorHover : {},
@@ -380,8 +388,8 @@ export function SuffixText({
         a.text_md,
         t.atoms.text_contrast_medium,
         a.pointer_events_none,
-        web([{marginTop: -2}, a.leading_snug]),
-        (ctx.hovered || ctx.focused) && {color: t.palette.contrast_800},
+        web([{ marginTop: -2 }, a.leading_snug]),
+        (ctx.hovered || ctx.focused) && { color: t.palette.contrast_800 },
         style,
       ]}>
       {children}

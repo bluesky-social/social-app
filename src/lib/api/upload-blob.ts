@@ -1,5 +1,8 @@
 import { copyAsync } from 'expo-file-system'
-import { type ComAtprotoRepoUploadBlob, type GndrAgent,  } from '@gander-social-atproto/api'
+import {
+  type ComAtprotoRepoUploadBlob,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 
 import { safeDeleteAsync } from '#/lib/media/manip'
 
@@ -13,21 +16,21 @@ export async function uploadBlob(
 ): Promise<ComAtprotoRepoUploadBlob.Response> {
   if (typeof input === 'string' && input.startsWith('file:')) {
     const blob = await asBlob(input)
-    return agent.uploadBlob(blob, {encoding})
+    return agent.uploadBlob(blob, { encoding })
   }
 
   if (typeof input === 'string' && input.startsWith('/')) {
     const blob = await asBlob(`file://${input}`)
-    return agent.uploadBlob(blob, {encoding})
+    return agent.uploadBlob(blob, { encoding })
   }
 
   if (typeof input === 'string' && input.startsWith('data:')) {
     const blob = await fetch(input).then(r => r.blob())
-    return agent.uploadBlob(blob, {encoding})
+    return agent.uploadBlob(blob, { encoding })
   }
 
   if (input instanceof Blob) {
-    return agent.uploadBlob(input, {encoding})
+    return agent.uploadBlob(input, { encoding })
   }
 
   throw new TypeError(`Invalid uploadBlob input: ${typeof input}`)
@@ -67,7 +70,7 @@ async function withSafeFile<T>(
     // temporary file).
     const newPath = uri.replace(/\.jpe?g$/, '.bin')
     try {
-      await copyAsync({from: uri, to: newPath})
+      await copyAsync({ from: uri, to: newPath })
     } catch {
       // Failed to copy the file, just use the original
       return await fn(uri)

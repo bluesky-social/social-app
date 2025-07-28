@@ -18,7 +18,7 @@ func ExpandPostText(post *appgndr.FeedPost) string {
 	for _, facet := range post.Facets {
 		linkUri := ""
 		if slices.ContainsFunc(facet.Features, func(feat *appgndr.RichtextFacet_Features_Elem) bool {
-			if feat.RichtextFacet_Link == nil || feat.RichtextFacet_Link.LexiconTypeID != "app.bsky.richtext.facet#link" {
+			if feat.RichtextFacet_Link == nil || feat.RichtextFacet_Link.LexiconTypeID != "app.gndr.richtext.facet#link" {
 				return false
 			}
 

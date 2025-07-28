@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import { type AppBskyLaberDefs as AppGndrLabelerDefs } from '@gander-social-atproto/api'
+import { type AppGndrLabelerDefs } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -18,8 +18,8 @@ export function SelectLabelerView({
   onSelectLabeler: (v: string) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
+  const { _ } = useLingui()
+  const { gtMobile } = useBreakpoints()
 
   return (
     <View style={[a.gap_lg]}>
@@ -56,7 +56,7 @@ function LabelerButton({
   labeler: AppGndrLabelerDefs.LabelerViewDetailed
 }) {
   const t = useTheme()
-  const {hovered, pressed} = useButtonContext()
+  const { hovered, pressed } = useButtonContext()
   const interacted = hovered || pressed
 
   return (

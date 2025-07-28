@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { View } from 'react-native'
 import { useAnimatedRef } from 'react-native-reanimated'
-import { type ChatBskyActorDefs as ChatGndrActorDefs, type ChatBskyConvoDefs as ChatGndrConvoDefs,  } from '@gander-social-atproto/api'
+import {
+  type ChatGndrActorDefs,
+  type ChatGndrConvoDefs,
+} from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useFocusEffect, useIsFocused } from '@react-navigation/native'
@@ -52,7 +55,7 @@ type ListItem =
       conversation: ChatGndrConvoDefs.ConvoView
     }
 
-function renderItem({item}: {item: ListItem}) {
+function renderItem({ item }: { item: ListItem }) {
   switch (item.type) {
     case 'INBOX':
       return <InboxPreview profiles={item.profiles} />
@@ -68,7 +71,7 @@ function keyExtractor(item: ListItem) {
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
 export function MessagesScreen(props: Props) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const aaCopy = useAgeAssuranceCopy()
 
   return (
@@ -80,10 +83,10 @@ export function MessagesScreen(props: Props) {
   )
 }
 
-export function MessagesScreenInner({navigation, route}: Props) {
-  const {_} = useLingui()
+export function MessagesScreenInner({ navigation, route }: Props) {
+  const { _ } = useLingui()
   const t = useTheme()
-  const {currentAccount} = useSession()
+  const { currentAccount } = useSession()
   const newChatControl = useDialogControl()
   const scrollElRef: ListRef = useAnimatedRef()
   const pushToConversation = route.params?.pushToConversation
@@ -97,7 +100,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
       navigation.navigate('MessagesConversation', {
         conversation: pushToConversation,
       })
-      navigation.setParams({pushToConversation: undefined})
+      navigation.setParams({ pushToConversation: undefined })
     }
   }, [navigation, pushToConversation])
 
@@ -117,7 +120,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
     }, [messagesBus, isActive]),
   )
 
-  const initialNumToRender = useInitialNumToRender({minItemHeight: 80})
+  const initialNumToRender = useInitialNumToRender({ minItemHeight: 80 })
   const [isPTRing, setIsPTRing] = useState(false)
 
   const {
@@ -129,9 +132,9 @@ export function MessagesScreenInner({navigation, route}: Props) {
     isError,
     error,
     refetch,
-  } = useListConvosQuery({status: 'accepted'})
+  } = useListConvosQuery({ status: 'accepted' })
 
-  const {data: inboxData, refetch: refetchInbox} = useListConvosQuery({
+  const { data: inboxData, refetch: refetchInbox } = useListConvosQuery({
     status: 'request',
   })
 
@@ -177,7 +180,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
             ]
           : []),
         ...conversations.map(
-          convo => ({type: 'CONVERSATION', conversation: convo}) as const,
+          convo => ({ type: 'CONVERSATION', conversation: convo }) as const,
         ),
       ] satisfies ListItem[]
     }
@@ -189,7 +192,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
     try {
       await Promise.all([refetch(), refetchInbox()])
     } catch (err) {
-      logger.error('Failed to refresh conversations', {message: err})
+      logger.error('Failed to refresh conversations', { message: err })
     }
     setIsPTRing(false)
   }, [refetch, refetchInbox, setIsPTRing])
@@ -199,13 +202,13 @@ export function MessagesScreenInner({navigation, route}: Props) {
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more conversations', {message: err})
+      logger.error('Failed to load more conversations', { message: err })
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
   const onNewChat = useCallback(
     (conversation: string) =>
-      navigation.navigate('MessagesConversation', {conversation}),
+      navigation.navigate('MessagesConversation', { conversation }),
     [navigation],
   )
 
@@ -217,7 +220,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh conversations', {message: err})
+      logger.error('Failed to refresh conversations', { message: err })
     }
   }, [scrollElRef, refetch])
 
@@ -264,7 +267,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
                         a.text_center,
                         a.leading_snug,
                         t.atoms.text_contrast_medium,
-                        {maxWidth: 360},
+                        { maxWidth: 360 },
                       ]}>
                       {cleanError(error) ||
                         _(msg`Failed to load conversations`)}
@@ -331,7 +334,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
             isFetchingNextPage={isFetchingNextPage}
             error={cleanError(error)}
             onRetry={fetchNextPage}
-            style={{borderColor: 'transparent'}}
+            style={{ borderColor: 'transparent' }}
             hasNextPage={hasNextPage}
           />
         }
@@ -345,9 +348,9 @@ export function MessagesScreenInner({navigation, route}: Props) {
   )
 }
 
-function Header({newChatControl}: {newChatControl: DialogControlProps}) {
-  const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
+function Header({ newChatControl }: { newChatControl: DialogControlProps }) {
+  const { _ } = useLingui()
+  const { gtMobile } = useBreakpoints()
   const requireEmailVerification = useRequireEmailVerification()
 
   const openChatControl = useCallback(() => {

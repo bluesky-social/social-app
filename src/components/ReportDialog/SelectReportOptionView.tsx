@@ -1,18 +1,29 @@
 import React from 'react'
 import { View } from 'react-native'
-import { type AppBskyLaberDefs as AppGndrLabelerDefs } from '@gander-social-atproto/api'
+import { type AppGndrLabelerDefs } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
-import { type ReportOption, useReportOptions,  } from '#/lib/moderation/useReportOptions'
+import {
+  type ReportOption,
+  useReportOptions,
+} from '#/lib/moderation/useReportOptions'
 import { Link } from '#/components/Link'
 import { DMCA_LINK } from '#/components/ReportDialog/const'
-export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
+export { useDialogControl as useReportDialogControl } from '#/components/Dialog'
 
 import { atoms as a, useBreakpoints, useTheme } from '#/alf'
-import { Button, ButtonIcon, ButtonText, useButtonContext,  } from '#/components/Button'
+import {
+  Button,
+  ButtonIcon,
+  ButtonText,
+  useButtonContext,
+} from '#/components/Button'
 import { Divider } from '#/components/Divider'
-import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft, ChevronRight_Stroke2_Corner0_Rounded as ChevronRight,  } from '#/components/icons/Chevron'
+import {
+  ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft,
+  ChevronRight_Stroke2_Corner0_Rounded as ChevronRight,
+} from '#/components/icons/Chevron'
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight } from '#/components/icons/SquareArrowTopRight'
 import { Text } from '#/components/Typography'
 import { type ReportDialogProps } from './types'
@@ -24,8 +35,8 @@ export function SelectReportOptionView(props: {
   goBack: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
+  const { _ } = useLingui()
+  const { gtMobile } = useBreakpoints()
   const allReportOptions = useReportOptions()
   const reportOptions = allReportOptions[props.params.type]
 
@@ -145,7 +156,7 @@ function ReportOptionButton({
   description: string
 }) {
   const t = useTheme()
-  const {hovered, pressed} = useButtonContext()
+  const { hovered, pressed } = useButtonContext()
   const interacted = hovered || pressed
 
   return (
@@ -157,7 +168,7 @@ function ReportOptionButton({
         a.justify_between,
         a.p_md,
         a.rounded_md,
-        {paddingRight: 70},
+        { paddingRight: 70 },
         t.atoms.bg_contrast_25,
         interacted && t.atoms.bg_contrast_50,
       ]}>
@@ -165,7 +176,7 @@ function ReportOptionButton({
         <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
           {title}
         </Text>
-        <Text style={[a.leading_tight, {maxWidth: 400}]}>{description}</Text>
+        <Text style={[a.leading_tight, { maxWidth: 400 }]}>{description}</Text>
       </View>
 
       <View
@@ -174,7 +185,7 @@ function ReportOptionButton({
           a.inset_0,
           a.justify_center,
           a.pr_md,
-          {left: 'auto'},
+          { left: 'auto' },
         ]}>
         <ChevronRight size="md" fill={t.atoms.text_contrast_low.color} />
       </View>

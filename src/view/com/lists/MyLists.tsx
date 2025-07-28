@@ -1,5 +1,12 @@
 import React from 'react'
-import { ActivityIndicator, FlatList as RNFlatList, RefreshControl, type StyleProp, View, type ViewStyle,  } from 'react-native'
+import {
+  ActivityIndicator,
+  FlatList as RNFlatList,
+  RefreshControl,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import { type AppGndrGraphDefs as GraphDefs } from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -17,9 +24,9 @@ import { Text } from '#/components/Typography'
 import { ErrorMessage } from '../util/error/ErrorMessage'
 import { List } from '../util/List'
 
-const LOADING = {_reactKey: '__loading__'}
-const EMPTY = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
+const LOADING = { _reactKey: '__loading__' }
+const EMPTY = { _reactKey: '__empty__' }
+const ERROR_ITEM = { _reactKey: '__error__' }
 
 export function MyLists({
   filter,
@@ -36,10 +43,10 @@ export function MyLists({
 }) {
   const pal = usePalette('default')
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const moderationOpts = useModerationOpts()
   const [isPTRing, setIsPTRing] = React.useState(false)
-  const {data, isFetching, isFetched, isError, error, refetch} =
+  const { data, isFetching, isFetched, isError, error, refetch } =
     useMyListsQuery(filter)
   const isEmpty = !isFetching && !data?.length
 
@@ -83,7 +90,7 @@ export function MyLists({
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh lists', {message: err})
+      logger.error('Failed to refresh lists', { message: err })
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -92,7 +99,7 @@ export function MyLists({
   // =
 
   const renderItemInner = React.useCallback(
-    ({item, index}: {item: any; index: number}) => {
+    ({ item, index }: { item: any; index: number }) => {
       if (item === EMPTY) {
         return (
           <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_xl]}>
@@ -133,7 +140,7 @@ export function MyLists({
         )
       } else if (item === LOADING) {
         return (
-          <View style={{padding: 20}}>
+          <View style={{ padding: 20 }}>
             <ActivityIndicator />
           </View>
         )

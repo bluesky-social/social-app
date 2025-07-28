@@ -1,5 +1,15 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef,  } from 'react'
-import { KeyboardProvider, useKeyboardController,  } from 'react-native-keyboard-controller'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
+import {
+  KeyboardProvider,
+  useKeyboardController,
+} from 'react-native-keyboard-controller'
 import { useFocusEffect } from '@react-navigation/native'
 
 const KeyboardControllerRefCountContext = createContext<{
@@ -29,7 +39,7 @@ function KeyboardControllerProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const {setEnabled} = useKeyboardController()
+  const { setEnabled } = useKeyboardController()
   const refCount = useRef(0)
 
   const value = useMemo(
@@ -58,7 +68,7 @@ function KeyboardControllerProviderInner({
 }
 
 export function useEnableKeyboardController(shouldEnable: boolean) {
-  const {incrementRefCount, decrementRefCount} = useContext(
+  const { incrementRefCount, decrementRefCount } = useContext(
     KeyboardControllerRefCountContext,
   )
 
@@ -77,7 +87,7 @@ export function useEnableKeyboardController(shouldEnable: boolean) {
  * Like `useEnableKeyboardController`, but using `useFocusEffect`
  */
 export function useEnableKeyboardControllerScreen(shouldEnable: boolean) {
-  const {incrementRefCount, decrementRefCount} = useContext(
+  const { incrementRefCount, decrementRefCount } = useContext(
     KeyboardControllerRefCountContext,
   )
 

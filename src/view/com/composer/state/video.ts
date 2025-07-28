@@ -1,18 +1,26 @@
 import { type ImagePickerAsset } from 'expo-image-picker'
-import { type AppGndrVideoDefs, type BlobRef, type GndrAgent,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrVideoDefs,
+  type BlobRef,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 import { type JobStatus } from '@gander-social-atproto/api/dist/client/types/app.gndr.video/defs'
 import { type I18n } from '@lingui/core'
 import { msg } from '@lingui/macro'
 
 import { AbortError } from '#/lib/async/cancelable'
 import { compressVideo } from '#/lib/media/video/compress'
-import { ServerError, UploadLimitError, VideoTooLargeError,  } from '#/lib/media/video/errors'
+import {
+  ServerError,
+  UploadLimitError,
+  VideoTooLargeError,
+} from '#/lib/media/video/errors'
 import { type CompressedVideo } from '#/lib/media/video/types'
 import { uploadVideo } from '#/lib/media/video/upload'
 import { createVideoAgent } from '#/lib/media/video/util'
 import { logger } from '#/logger'
 
-type CaptionsTrack = {lang: string; file: File}
+type CaptionsTrack = { lang: string; file: File }
 
 export type VideoAction =
   | {
@@ -25,13 +33,13 @@ export type VideoAction =
       jobId: string
       signal: AbortSignal
     }
-  | {type: 'to_error'; error: string; signal: AbortSignal}
+  | { type: 'to_error'; error: string; signal: AbortSignal }
   | {
       type: 'to_done'
       blobRef: BlobRef
       signal: AbortSignal
     }
-  | {type: 'update_progress'; progress: number; signal: AbortSignal}
+  | { type: 'update_progress'; progress: number; signal: AbortSignal }
   | {
       type: 'update_alt_text'
       altText: string
@@ -122,7 +130,7 @@ type DoneState = {
   asset: ImagePickerAsset
   video: CompressedVideo
   jobId?: undefined
-  pendingPublish: {blobRef: BlobRef}
+  pendingPublish: { blobRef: BlobRef }
   altText: string
   captions: CaptionsTrack[]
 }
@@ -265,7 +273,7 @@ export async function processVideo(
   try {
     video = await compressVideo(asset, {
       onProgress: num => {
-        dispatch({type: 'update_progress', progress: trunc2dp(num), signal})
+        dispatch({ type: 'update_progress', progress: trunc2dp(num), signal })
       },
       signal,
     })
@@ -295,7 +303,7 @@ export async function processVideo(
       signal,
       _,
       setProgress: p => {
-        dispatch({type: 'update_progress', progress: p, signal})
+        dispatch({ type: 'update_progress', progress: p, signal })
       },
     })
   } catch (e) {
@@ -327,7 +335,7 @@ export async function processVideo(
     let status: JobStatus | undefined
     let blob: BlobRef | undefined
     try {
-      const response = await videoAgent.app.gndr.video.getJobStatus({jobId})
+      const response = await videoAgent.app.gndr.video.getJobStatus({ jobId })
       status = response.data.jobStatus
       pollFailures = 0
 
@@ -348,7 +356,7 @@ export async function processVideo(
         }
       }
 
-      logger.error('Error processing video', {safeMessage: e})
+      logger.error('Error processing video', { safeMessage: e })
       dispatch({
         type: 'to_error',
         error: _(msg`Video failed to process`),
@@ -392,7 +400,7 @@ function getCompressErrorMessage(e: unknown, _: I18n['_']): string | null {
       msg`The selected video is larger than 100 MB. Please try again with a smaller file.`,
     )
   }
-  logger.error('Error compressing video', {safeMessage: e})
+  logger.error('Error compressing video', { safeMessage: e })
   return _(msg`An error occurred while compressing the video.`)
 }
 
@@ -400,7 +408,7 @@ function getUploadErrorMessage(e: unknown, _: I18n['_']): string | null {
   if (e instanceof AbortError) {
     return null
   }
-  logger.error('Error uploading video', {safeMessage: e})
+  logger.error('Error uploading video', { safeMessage: e })
   if (e instanceof ServerError || e instanceof UploadLimitError) {
     // https://github.com/gander-social/tango/blob/lumi/lumi/worker/permissions.go#L77
     switch (e.message) {

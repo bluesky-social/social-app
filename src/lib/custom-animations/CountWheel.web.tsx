@@ -16,23 +16,23 @@ const animationConfig = {
 }
 
 const enteringUpKeyframe = [
-  {opacity: 0, transform: 'translateY(18px)'},
-  {opacity: 1, transform: 'translateY(0)'},
+  { opacity: 0, transform: 'translateY(18px)' },
+  { opacity: 1, transform: 'translateY(0)' },
 ]
 
 const enteringDownKeyframe = [
-  {opacity: 0, transform: 'translateY(-18px)'},
-  {opacity: 1, transform: 'translateY(0)'},
+  { opacity: 0, transform: 'translateY(-18px)' },
+  { opacity: 1, transform: 'translateY(0)' },
 ]
 
 const exitingUpKeyframe = [
-  {opacity: 1, transform: 'translateY(0)'},
-  {opacity: 0, transform: 'translateY(-18px)'},
+  { opacity: 1, transform: 'translateY(0)' },
+  { opacity: 0, transform: 'translateY(-18px)' },
 ]
 
 const exitingDownKeyframe = [
-  {opacity: 1, transform: 'translateY(0)'},
-  {opacity: 0, transform: 'translateY(18px)'},
+  { opacity: 1, transform: 'translateY(0)' },
+  { opacity: 0, transform: 'translateY(18px)' },
 ]
 
 export function CountWheel({
@@ -94,14 +94,14 @@ export function CountWheel({
             a.user_select_none,
             isLiked
               ? [a.font_bold, s.likeColor]
-              : {color: t.palette.contrast_500},
+              : { color: t.palette.contrast_500 },
           ]}>
           {formattedCount}
         </Text>
       </View>
       {shouldAnimate && (likeCount > 1 || !isLiked) ? (
         <View
-          style={{position: 'absolute', opacity: 0}}
+          style={{ position: 'absolute', opacity: 0 }}
           aria-disabled={true}
           // @ts-expect-error is div
           ref={prevCountView}>
@@ -111,7 +111,7 @@ export function CountWheel({
               a.user_select_none,
               isLiked
                 ? [a.font_bold, s.likeColor]
-                : {color: t.palette.contrast_500},
+                : { color: t.palette.contrast_500 },
             ]}>
             {formattedPrevCount}
           </Text>

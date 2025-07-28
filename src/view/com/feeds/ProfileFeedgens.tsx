@@ -1,5 +1,11 @@
 import React from 'react'
-import { findNodeHandle, type ListRenderItemInfo, type StyleProp, View, type ViewStyle,  } from 'react-native'
+import {
+  findNodeHandle,
+  type ListRenderItemInfo,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -8,7 +14,10 @@ import { cleanError } from '#/lib/strings/errors'
 import { logger } from '#/logger'
 import { isIOS, isNative, isWeb } from '#/platform/detection'
 import { usePreferencesQuery } from '#/state/queries/preferences'
-import { RQKEY, useProfileFeedgensQuery } from '#/state/queries/profile-feedgens'
+import {
+  RQKEY,
+  useProfileFeedgensQuery,
+} from '#/state/queries/profile-feedgens'
 import { EmptyState } from '#/view/com/util/EmptyState'
 import { ErrorMessage } from '#/view/com/util/error/ErrorMessage'
 import { List, type ListRef } from '#/view/com/util/List'
@@ -18,10 +27,10 @@ import { atoms as a, ios, useTheme } from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import { ListFooter } from '#/components/Lists'
 
-const LOADING = {_reactKey: '__loading__'}
-const EMPTY = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
+const LOADING = { _reactKey: '__loading__' }
+const EMPTY = { _reactKey: '__empty__' }
+const ERROR_ITEM = { _reactKey: '__error__' }
+const LOAD_MORE_ERROR_ITEM = { _reactKey: '__load_more_error__' }
 
 interface SectionRef {
   scrollToTop: () => void
@@ -41,13 +50,13 @@ export const ProfileFeedgens = React.forwardRef<
   SectionRef,
   ProfileFeedgensProps
 >(function ProfileFeedgensImpl(
-  {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
+  { did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag },
   ref,
 ) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
-  const opts = React.useMemo(() => ({enabled}), [enabled])
+  const opts = React.useMemo(() => ({ enabled }), [enabled])
   const {
     data,
     isPending,
@@ -59,7 +68,7 @@ export const ProfileFeedgens = React.forwardRef<
     refetch,
   } = useProfileFeedgensQuery(did, opts)
   const isEmpty = !isPending && !data?.pages[0]?.feeds.length
-  const {data: preferences} = usePreferencesQuery()
+  const { data: preferences } = usePreferencesQuery()
 
   const items = React.useMemo(() => {
     let items: any[] = []
@@ -90,7 +99,7 @@ export const ProfileFeedgens = React.forwardRef<
       animated: isNative,
       offset: -headerOffset,
     })
-    queryClient.invalidateQueries({queryKey: RQKEY(did)})
+    queryClient.invalidateQueries({ queryKey: RQKEY(did) })
   }, [scrollElRef, queryClient, headerOffset, did])
 
   React.useImperativeHandle(ref, () => ({
@@ -102,7 +111,7 @@ export const ProfileFeedgens = React.forwardRef<
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh feeds', {message: err})
+      logger.error('Failed to refresh feeds', { message: err })
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -113,7 +122,7 @@ export const ProfileFeedgens = React.forwardRef<
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more feeds', {message: err})
+      logger.error('Failed to load more feeds', { message: err })
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
@@ -125,7 +134,7 @@ export const ProfileFeedgens = React.forwardRef<
   // =
 
   const renderItem = React.useCallback(
-    ({item, index}: ListRenderItemInfo<any>) => {
+    ({ item, index }: ListRenderItemInfo<any>) => {
       if (item === EMPTY) {
         return (
           <EmptyState

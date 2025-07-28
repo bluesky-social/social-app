@@ -14,11 +14,14 @@
  * the facet-set.
  */
 
-import {TAG_REGEX, TRAILING_PUNCTUATION_REGEX} from '@gander-social-atproto/api'
-import {Mark} from '@tiptap/core'
-import {type Node as ProsemirrorNode} from '@tiptap/pm/model'
-import {Plugin, PluginKey} from '@tiptap/pm/state'
-import {Decoration, DecorationSet} from '@tiptap/pm/view'
+import {
+  TAG_REGEX,
+  TRAILING_PUNCTUATION_REGEX,
+} from '@gander-social-atproto/api'
+import { Mark } from '@tiptap/core'
+import { type Node as ProsemirrorNode } from '@tiptap/pm/model'
+import { Plugin, PluginKey } from '@tiptap/pm/state'
+import { Decoration, DecorationSet } from '@tiptap/pm/view'
 
 function getDecorations(doc: ProsemirrorNode) {
   const decorations: Decoration[] = []
@@ -62,7 +65,7 @@ const tagDecoratorPlugin: Plugin = new Plugin({
   key: new PluginKey('link-decorator'),
 
   state: {
-    init: (_, {doc}) => getDecorations(doc),
+    init: (_, { doc }) => getDecorations(doc),
     apply: (transaction, decorationSet) => {
       if (transaction.docChanged) {
         return getDecorations(transaction.doc)

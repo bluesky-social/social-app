@@ -7,7 +7,10 @@ import { logger } from '#/logger'
 import { isNative } from '#/platform/detection'
 import { useSession } from '#/state/session'
 import { useCloseAllActiveElements } from '#/state/util'
-import { parseAgeAssuranceRedirectDialogState, useAgeAssuranceRedirectDialogControl,  } from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
+import {
+  parseAgeAssuranceRedirectDialogState,
+  useAgeAssuranceRedirectDialogControl,
+} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import { useIntentDialogs } from '#/components/intents/IntentDialogs'
 import { Referrer } from '../../../modules/expo-gander-swiss-army'
 import { useApplyPullRequestOTAUpdate } from './useOTAUpdates'
@@ -25,8 +28,8 @@ export function useIntentHandler() {
   const verifyEmailIntent = useVerifyEmailIntent()
   const ageAssuranceRedirectDialogControl =
     useAgeAssuranceRedirectDialogControl()
-  const {currentAccount} = useSession()
-  const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
+  const { currentAccount } = useSession()
+  const { tryApplyUpdate } = useApplyPullRequestOTAUpdate()
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
@@ -125,8 +128,8 @@ export function useIntentHandler() {
 
 export function useComposeIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {openComposer} = useOpenComposer()
-  const {hasSession} = useSession()
+  const { openComposer } = useOpenComposer()
+  const { hasSession } = useSession()
 
   return React.useCallback(
     ({
@@ -146,7 +149,7 @@ export function useComposeIntent() {
         const [uri, width, height] = videoUri.split('|')
         openComposer({
           text: text ?? undefined,
-          videoUri: {uri, width: Number(width), height: Number(height)},
+          videoUri: { uri, width: Number(width), height: Number(height) },
         })
         return
       }
@@ -165,7 +168,7 @@ export function useComposeIntent() {
         })
         .map(part => {
           const [uri, width, height] = part.split('|')
-          return {uri, width: Number(width), height: Number(height)}
+          return { uri, width: Number(width), height: Number(height) }
         })
 
       setTimeout(() => {
@@ -181,7 +184,7 @@ export function useComposeIntent() {
 
 function useVerifyEmailIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
-  const {verifyEmailDialogControl: control, setVerifyEmailState: setState} =
+  const { verifyEmailDialogControl: control, setVerifyEmailState: setState } =
     useIntentDialogs()
   return React.useCallback(
     (code: string) => {

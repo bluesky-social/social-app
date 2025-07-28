@@ -3,10 +3,13 @@ import { type ImagePickerAsset } from 'expo-image-picker'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
-import { SUPPORTED_MIME_TYPES, type SupportedMimeTypes, VIDEO_MAX_DURATION_MS,  } from '#/lib/constants'
+import {
+  SUPPORTED_MIME_TYPES,
+  type SupportedMimeTypes,
+  VIDEO_MAX_DURATION_MS,
+} from '#/lib/constants'
 import { useVideoLibraryPermission } from '#/lib/hooks/usePermissions'
-import { isWeb } from '#/platform/detection'
-import { isNative } from '#/platform/detection'
+import { isNative, isWeb } from '#/platform/detection'
 import { atoms as a, useTheme } from '#/alf'
 import { Button } from '#/components/Button'
 import { VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon } from '#/components/icons/VideoClip'
@@ -18,10 +21,10 @@ type Props = {
   setError: (error: string) => void
 }
 
-export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
-  const {_} = useLingui()
+export function SelectVideoBtn({ onSelectVideo, disabled, setError }: Props) {
+  const { _ } = useLingui()
   const t = useTheme()
-  const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
+  const { requestVideoAccessIfNeeded } = useVideoLibraryPermission()
 
   const onPressSelectVideo = useCallback(async () => {
     if (isNative && !(await requestVideoAccessIfNeeded())) {

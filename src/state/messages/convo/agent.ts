@@ -1,4 +1,10 @@
-import { type AtpAgent, type ChatBskyActorDefs as ChatGndrActorDefs, ChatBskyConvoDefs as ChatGndrConvoDefs, type ChatBskyConvoGetLog as ChatGndrConvoGetLog, type ChatBskyConvoSendMessage as ChatGndrConvoSendMessage,  } from '@gander-social-atproto/api'
+import {
+  type AtpAgent,
+  type ChatGndrActorDefs,
+  ChatGndrConvoDefs,
+  type ChatGndrConvoGetLog,
+  type ChatGndrConvoSendMessage,
+} from '@gander-social-atproto/api'
 import { XRPCError } from '@gander-social-atproto/xrpc'
 import EventEmitter from 'eventemitter3'
 import { nanoid } from 'nanoid/non-secure'
@@ -7,8 +13,24 @@ import { networkRetry } from '#/lib/async/retry'
 import { isNetworkError } from '#/lib/strings/errors'
 import { Logger } from '#/logger'
 import { isNative } from '#/platform/detection'
-import { ACTIVE_POLL_INTERVAL, BACKGROUND_POLL_INTERVAL, INACTIVE_TIMEOUT, NETWORK_FAILURE_STATUSES,  } from '#/state/messages/convo/const'
-import { type ConvoDispatch, ConvoDispatchEvent, type ConvoError, ConvoErrorCode, type ConvoEvent, type ConvoItem, ConvoItemError, type ConvoParams, type ConvoState, ConvoStatus,  } from '#/state/messages/convo/types'
+import {
+  ACTIVE_POLL_INTERVAL,
+  BACKGROUND_POLL_INTERVAL,
+  INACTIVE_TIMEOUT,
+  NETWORK_FAILURE_STATUSES,
+} from '#/state/messages/convo/const'
+import {
+  type ConvoDispatch,
+  ConvoDispatchEvent,
+  type ConvoError,
+  ConvoErrorCode,
+  type ConvoEvent,
+  type ConvoItem,
+  ConvoItemError,
+  type ConvoParams,
+  type ConvoState,
+  ConvoStatus,
+} from '#/state/messages/convo/types'
 import { type MessagesEventBus } from '#/state/messages/events/agent'
 import { type MessagesEventBusError } from '#/state/messages/events/types'
 import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
@@ -17,7 +39,7 @@ const logger = Logger.create(Logger.Context.ConversationAgent)
 
 export function isConvoItemMessage(
   item: ConvoItem,
-): item is ConvoItem & {type: 'message'} {
+): item is ConvoItem & { type: 'message' } {
   if (!item) return false
   return (
     item.type === 'message' ||
@@ -49,7 +71,7 @@ export class Convo {
   > = new Map()
   private pendingMessages: Map<
     string,
-    {id: string; message: ChatGndrConvoSendMessage.InputSchema['message']}
+    { id: string; message: ChatGndrConvoSendMessage.InputSchema['message'] }
   > = new Map()
   private deletedMessages: Set<string> = new Set()
 
@@ -57,7 +79,7 @@ export class Convo {
 
   private lastActiveTimestamp: number | undefined
 
-  private emitter = new EventEmitter<{event: [ConvoEvent]}>()
+  private emitter = new EventEmitter<{ event: [ConvoEvent] }>()
 
   convoId: string
   convo: ChatGndrConvoDefs.ConvoView | undefined
@@ -401,7 +423,7 @@ export class Convo {
     this.fetchMessageHistoryError = undefined
     this.firehoseError = undefined
 
-    this.dispatch({event: ConvoDispatchEvent.Init})
+    this.dispatch({ event: ConvoDispatchEvent.Init })
   }
 
   maybeRecoverFromNetworkError() {
@@ -436,7 +458,7 @@ export class Convo {
 
   private async setup() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      const { convo, sender, recipients } = await this.fetchConvo()
 
       this.convo = convo
       this.sender = sender
@@ -458,9 +480,9 @@ export class Convo {
       const userIsDisabled = Boolean(this.sender.chatDisabled)
 
       if (userIsDisabled) {
-        this.dispatch({event: ConvoDispatchEvent.Disable})
+        this.dispatch({ event: ConvoDispatchEvent.Disable })
       } else {
-        this.dispatch({event: ConvoDispatchEvent.Ready})
+        this.dispatch({ event: ConvoDispatchEvent.Ready })
       }
     } catch (e: any) {
       if (!isNetworkError(e)) {
@@ -484,19 +506,19 @@ export class Convo {
   }
 
   init() {
-    this.dispatch({event: ConvoDispatchEvent.Init})
+    this.dispatch({ event: ConvoDispatchEvent.Init })
   }
 
   resume() {
-    this.dispatch({event: ConvoDispatchEvent.Resume})
+    this.dispatch({ event: ConvoDispatchEvent.Resume })
   }
 
   background() {
-    this.dispatch({event: ConvoDispatchEvent.Background})
+    this.dispatch({ event: ConvoDispatchEvent.Background })
   }
 
   suspend() {
-    this.dispatch({event: ConvoDispatchEvent.Suspend})
+    this.dispatch({ event: ConvoDispatchEvent.Suspend })
   }
 
   /**
@@ -543,7 +565,7 @@ export class Convo {
             {
               convoId: this.convoId,
             },
-            {headers: DM_SERVICE_HEADERS},
+            { headers: DM_SERVICE_HEADERS },
           )
         })
 
@@ -566,7 +588,7 @@ export class Convo {
 
   async refreshConvo() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      const { convo, sender, recipients } = await this.fetchConvo()
       // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
       this.convo = convo || this.convo
       this.sender = sender || this.sender
@@ -616,10 +638,10 @@ export class Convo {
             convoId: this.convoId,
             limit: isNative ? 30 : 60,
           },
-          {headers: DM_SERVICE_HEADERS},
+          { headers: DM_SERVICE_HEADERS },
         )
       })
-      const {cursor, messages} = response.data
+      const { cursor, messages } = response.data
 
       this.oldestRev = cursor ?? null
 
@@ -683,7 +705,7 @@ export class Convo {
       /*
        * This is VERY important — we only want events for this convo.
        */
-      {convoId: this.convoId},
+      { convoId: this.convoId },
     )
   }
 
@@ -844,14 +866,14 @@ export class Convo {
     try {
       this.isProcessingPendingMessages = true
 
-      const {id, message} = pendingMessage
+      const { id, message } = pendingMessage
 
       const response = await this.agent.api.chat.gndr.convo.sendMessage(
         {
           convoId: this.convoId,
           message,
         },
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+        { encoding: 'application/json', headers: DM_SERVICE_HEADERS },
       )
       const res = response.data
 
@@ -895,7 +917,7 @@ export class Convo {
             })
             break
           case 'Account is disabled':
-            this.dispatch({event: ConvoDispatchEvent.Disable})
+            this.dispatch({ event: ConvoDispatchEvent.Disable })
             break
           case 'Convo not found':
           case 'Account does not exist':
@@ -941,16 +963,16 @@ export class Convo {
     )
 
     try {
-      const {data} = await this.agent.api.chat.gndr.convo.sendMessageBatch(
+      const { data } = await this.agent.api.chat.gndr.convo.sendMessageBatch(
         {
-          items: messageArray.map(({message}) => ({
+          items: messageArray.map(({ message }) => ({
             convoId: this.convoId,
             message,
           })),
         },
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+        { encoding: 'application/json', headers: DM_SERVICE_HEADERS },
       )
-      const {items} = data
+      const { items } = data
 
       /*
        * Insert into `newMessages` as soon as we have a real ID. That way, when
@@ -988,7 +1010,7 @@ export class Convo {
             convoId: this.convoId,
             messageId,
           },
-          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+          { encoding: 'application/json', headers: DM_SERVICE_HEADERS },
         )
       })
     } catch (e: any) {
@@ -1169,7 +1191,7 @@ export class Convo {
   async addReaction(messageId: string, emoji: string) {
     const optimisticReaction = {
       value: emoji,
-      sender: {did: this.senderUserDid},
+      sender: { did: this.senderUserDid },
       createdAt: new Date().toISOString(),
     }
     let restore: null | (() => void) = null
@@ -1225,9 +1247,9 @@ export class Convo {
 
     try {
       logger.debug(`Adding reaction ${emoji} to message ${messageId}`)
-      const {data} = await this.agent.chat.gndr.convo.addReaction(
-        {messageId, value: emoji, convoId: this.convoId},
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      const { data } = await this.agent.chat.gndr.convo.addReaction(
+        { messageId, value: emoji, convoId: this.convoId },
+        { encoding: 'application/json', headers: DM_SERVICE_HEADERS },
       )
       if (ChatGndrConvoDefs.isMessageView(data.message)) {
         if (this.pastMessages.has(messageId)) {
@@ -1291,8 +1313,8 @@ export class Convo {
     try {
       logger.debug(`Removing reaction ${emoji} from message ${messageId}`)
       await this.agent.chat.gndr.convo.removeReaction(
-        {messageId, value: emoji, convoId: this.convoId},
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+        { messageId, value: emoji, convoId: this.convoId },
+        { encoding: 'application/json', headers: DM_SERVICE_HEADERS },
       )
     } catch (error) {
       if (restore) restore()

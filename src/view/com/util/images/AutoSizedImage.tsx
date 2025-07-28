@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, { useRef } from 'react'
 import { type DimensionValue, Pressable, View } from 'react-native'
 import Animated, {
   type AnimatedRef,
@@ -27,7 +27,7 @@ export function ConstrainedImage({
   children: React.ReactNode
 }) {
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
+  const { gtMobile } = useBreakpoints()
   /**
    * Computed as a % value to apply as `paddingTop`, this basically controls
    * the height of the image.
@@ -42,7 +42,7 @@ export function ConstrainedImage({
 
   return (
     <View style={[a.w_full]}>
-      <View style={[a.overflow_hidden, {paddingTop: outerAspectRatio}]}>
+      <View style={[a.overflow_hidden, { paddingTop: outerAspectRatio }]}>
         <View style={[a.absolute, a.inset_0, a.flex_row]}>
           <View
             style={[
@@ -50,7 +50,7 @@ export function ConstrainedImage({
               a.rounded_md,
               a.overflow_hidden,
               t.atoms.bg_contrast_25,
-              fullBleed ? a.w_full : {aspectRatio},
+              fullBleed ? a.w_full : { aspectRatio },
             ]}>
             {children}
           </View>
@@ -79,10 +79,10 @@ export function AutoSizedImage({
   onPressIn?: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
   const containerRef = useAnimatedRef()
-  const fetchedDimsRef = useRef<{width: number; height: number} | null>(null)
+  const fetchedDimsRef = useRef<{ width: number; height: number } | null>(null)
 
   let aspectRatio: number | undefined
   const dims = image.aspectRatio
@@ -109,7 +109,7 @@ export function AutoSizedImage({
   const hasAlt = !!image.alt
 
   const contents = (
-    <Animated.View ref={containerRef} collapsable={false} style={{flex: 1}}>
+    <Animated.View ref={containerRef} collapsable={false} style={{ flex: 1 }}>
       <Image
         contentFit={isContain ? 'contain' : 'cover'}
         style={[a.w_full, a.h_full]}
@@ -184,7 +184,7 @@ export function AutoSizedImage({
                 ],
               ]}>
               <Text
-                style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
+                style={[a.font_heavy, largeAlt ? a.text_xs : { fontSize: 8 }]}>
                 ALT
               </Text>
             </View>
@@ -208,7 +208,7 @@ export function AutoSizedImage({
           a.rounded_md,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
-          {aspectRatio: max ?? 1},
+          { aspectRatio: max ?? 1 },
         ]}>
         {contents}
       </Pressable>

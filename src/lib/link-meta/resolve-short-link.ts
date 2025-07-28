@@ -13,13 +13,13 @@ export async function resolveShortLink(shortLink: string) {
       signal: controller.signal,
     })
     if (res.status !== 200) {
-      logger.error('Failed to resolve short link', {status: res.status})
+      logger.error('Failed to resolve short link', { status: res.status })
       return shortLink
     }
-    const json = (await res.json()) as {url: string}
+    const json = (await res.json()) as { url: string }
     return json.url
   } catch (e: unknown) {
-    logger.error('Failed to resolve short link', {safeMessage: e})
+    logger.error('Failed to resolve short link', { safeMessage: e })
     return shortLink
   } finally {
     clearTimeout(to)

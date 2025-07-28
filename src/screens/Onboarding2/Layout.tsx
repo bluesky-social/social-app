@@ -1,11 +1,11 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { ScrollView, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
-import {Context} from '#/screens/Onboarding2/state'
+import { isWeb } from '#/platform/detection'
+import { Context } from '#/screens/Onboarding2/state'
 import {
   atoms as a,
   flatten,
@@ -13,9 +13,9 @@ import {
   useBreakpoints,
   useTheme,
 } from '#/alf'
-import {leading} from '#/alf/typography'
-import {Button, ButtonText} from '#/components/Button'
-import {P, Text} from '#/components/Typography'
+import { leading } from '#/alf/typography'
+import { Button, ButtonText } from '#/components/Button'
+import { P, Text } from '#/components/Typography'
 
 const COL_WIDTH = 420
 
@@ -27,18 +27,18 @@ export function Onboarding2Layout({
   onCancel?: () => void
   handle?: string
 }>) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
-  const {gtMobile} = useBreakpoints()
-  const {state} = React.useContext(Context)
+  const { gtMobile } = useBreakpoints()
+  const { state } = React.useContext(Context)
   const scrollview = React.useRef<ScrollView>(null)
   const prevActiveStep = React.useRef<string>(state.activeStep)
 
   React.useEffect(() => {
     if (state.activeStep !== prevActiveStep.current) {
       prevActiveStep.current = state.activeStep
-      scrollview.current?.scrollTo({y: 0, animated: false})
+      scrollview.current?.scrollTo({ y: 0, animated: false })
     }
   }, [state])
 
@@ -59,25 +59,25 @@ export function Onboarding2Layout({
       ]}>
       <ScrollView
         ref={scrollview}
-        style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
-        contentContainerStyle={{borderWidth: 0}}
+        style={[a.h_full, a.w_full, { paddingTop: insets.top }]}
+        contentContainerStyle={{ borderWidth: 0 }}
         // @ts-ignore web only --prf
-        dataSet={{'stable-gutters': 1}}>
+        dataSet={{ 'stable-gutters': 1 }}>
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
-          <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
+          <View style={[a.flex_1, { maxWidth: COL_WIDTH }]}>
             <View
               style={[
                 a.flex_1,
                 a.px_xl,
                 a.pt_2xl,
-                !gtMobile && {paddingBottom: 100},
+                !gtMobile && { paddingBottom: 100 },
               ]}>
               <View style={[a.gap_sm, a.pb_3xl]}>
                 <View style={[a.flex_row, a.justify_between, a.align_center]}>
                   <Text
                     style={[
-                      {fontWeight: '700', color: '#000000', fontSize: 16},
+                      { fontWeight: '700', color: '#000000', fontSize: 16 },
                     ]}>
                     <Trans>Step {state.activeStepIndex + 4} of 7</Trans>
                   </Text>
@@ -88,7 +88,7 @@ export function Onboarding2Layout({
                     color="soft_neutral"
                     size="small"
                     onPress={onCancel}>
-                    <ButtonText style={[{color: '#000000', fontSize: 16}]}>
+                    <ButtonText style={[{ color: '#000000', fontSize: 16 }]}>
                       <Trans>Cancel</Trans>
                     </ButtonText>
                   </Button>

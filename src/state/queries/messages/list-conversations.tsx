@@ -1,6 +1,22 @@
-import { createContext, useCallback, useContext, useEffect, useMemo } from 'react'
-import { ChatBskyConvoDefs as ChatGndrConvoDefs, type ChatBskyConvoListConvos as ChatGndrConvoListConvos, moderateProfile, type ModerationOpts,  } from '@gander-social-atproto/api'
-import { type InfiniteData, type QueryClient, useInfiniteQuery, useQueryClient,  } from '@tanstack/react-query'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react'
+import {
+  ChatGndrConvoDefs,
+  type ChatGndrConvoListConvos,
+  moderateProfile,
+  type ModerationOpts,
+} from '@gander-social-atproto/api'
+import {
+  type InfiniteData,
+  type QueryClient,
+  useInfiniteQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import throttle from 'lodash.throttle'
 
 import { useCurrentConvoId } from '#/state/messages/current-convo-id'
@@ -31,15 +47,15 @@ export function useListConvosQuery({
   return useInfiniteQuery({
     enabled,
     queryKey: RQKEY(status ?? 'all', readState),
-    queryFn: async ({pageParam}) => {
-      const {data} = await agent.chat.gndr.convo.listConvos(
+    queryFn: async ({ pageParam }) => {
+      const { data } = await agent.chat.gndr.convo.listConvos(
         {
           limit: 20,
           cursor: pageParam,
           readState: readState === 'unread' ? 'unread' : undefined,
           status,
         },
-        {headers: DM_SERVICE_HEADERS},
+        { headers: DM_SERVICE_HEADERS },
       )
       return data
     },
@@ -61,9 +77,13 @@ export function useListConvos() {
   return ctx
 }
 
-const empty = {accepted: [], request: []}
-export function ListConvosProvider({children}: {children: React.ReactNode}) {
-  const {hasSession} = useSession()
+const empty = { accepted: [], request: [] }
+export function ListConvosProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const { hasSession } = useSession()
 
   if (!hasSession) {
     return (
@@ -81,17 +101,17 @@ export function ListConvosProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const {refetch, data} = useListConvosQuery({readState: 'unread'})
+  const { refetch, data } = useListConvosQuery({ readState: 'unread' })
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
-  const {currentConvoId} = useCurrentConvoId()
-  const {currentAccount} = useSession()
+  const { currentConvoId } = useCurrentConvoId()
+  const { currentAccount } = useSession()
   const leftConvos = useLeftConvos()
 
   const debouncedRefetch = useMemo(() => {
     const refetchAndInvalidate = () => {
       refetch()
-      queryClient.invalidateQueries({queryKey: [RQKEY_ROOT]})
+      queryClient.invalidateQueries({ queryKey: [RQKEY_ROOT] })
     }
     return throttle(refetchAndInvalidate, 500, {
       leading: true,
@@ -109,12 +129,12 @@ export function ListConvosProviderInner({
             debouncedRefetch()
           } else if (ChatGndrConvoDefs.isLogLeaveConvo(log)) {
             queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
+              { queryKey: [RQKEY_ROOT] },
               (old?: ConvoListQueryData) => optimisticDelete(log.convoId, old),
             )
           } else if (ChatGndrConvoDefs.isLogDeleteMessage(log)) {
             queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
+              { queryKey: [RQKEY_ROOT] },
               (old?: ConvoListQueryData) =>
                 optimisticUpdate(log.convoId, old, convo => {
                   if (
@@ -206,28 +226,31 @@ export function ListConvosProviderInner({
             }
             // always update the unread one
             queryClient.setQueriesData(
-              {queryKey: RQKEY('all', 'unread')},
+              { queryKey: RQKEY('all', 'unread') },
               (old?: ConvoListQueryData) =>
                 old
                   ? updateFn(old)
                   : ({
                       pageParams: [undefined],
-                      pages: [{convos: [updatedConvo], cursor: undefined}],
+                      pages: [{ convos: [updatedConvo], cursor: undefined }],
                     } satisfies ConvoListQueryData),
             )
             // update the other ones based on status of the incoming message
             if (updatedConvo.status === 'accepted') {
               queryClient.setQueriesData(
-                {queryKey: RQKEY('accepted')},
+                { queryKey: RQKEY('accepted') },
                 updateFn,
               )
             } else if (updatedConvo.status === 'request') {
-              queryClient.setQueriesData({queryKey: RQKEY('request')}, updateFn)
+              queryClient.setQueriesData(
+                { queryKey: RQKEY('request') },
+                updateFn,
+              )
             }
           } else if (ChatGndrConvoDefs.isLogReadMessage(log)) {
             const logRef: ChatGndrConvoDefs.LogReadMessage = log
             queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
+              { queryKey: [RQKEY_ROOT] },
               (old?: ConvoListQueryData) =>
                 optimisticUpdate(logRef.convoId, old, convo => ({
                   ...convo,
@@ -255,7 +278,7 @@ export function ListConvosProviderInner({
                 optimisticDelete(logRef.convoId, old),
             )
             queryClient.setQueriesData(
-              {queryKey: RQKEY('accepted')},
+              { queryKey: RQKEY('accepted') },
               (old?: ConvoListQueryData) => {
                 if (!old) {
                   debouncedRefetch()
@@ -268,7 +291,7 @@ export function ListConvosProviderInner({
                       return {
                         ...page,
                         convos: [
-                          {...acceptedConvo, status: 'accepted'},
+                          { ...acceptedConvo, status: 'accepted' },
                           ...page.convos,
                         ],
                       }
@@ -281,7 +304,7 @@ export function ListConvosProviderInner({
           } else if (ChatGndrConvoDefs.isLogMuteConvo(log)) {
             const logRef: ChatGndrConvoDefs.LogMuteConvo = log
             queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
+              { queryKey: [RQKEY_ROOT] },
               (old?: ConvoListQueryData) =>
                 optimisticUpdate(logRef.convoId, old, convo => ({
                   ...convo,
@@ -292,7 +315,7 @@ export function ListConvosProviderInner({
           } else if (ChatGndrConvoDefs.isLogUnmuteConvo(log)) {
             const logRef: ChatGndrConvoDefs.LogUnmuteConvo = log
             queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
+              { queryKey: [RQKEY_ROOT] },
               (old?: ConvoListQueryData) =>
                 optimisticUpdate(logRef.convoId, old, convo => ({
                   ...convo,
@@ -303,7 +326,7 @@ export function ListConvosProviderInner({
           } else if (ChatGndrConvoDefs.isLogAddReaction(log)) {
             const logRef: ChatGndrConvoDefs.LogAddReaction = log
             queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
+              { queryKey: [RQKEY_ROOT] },
               (old?: ConvoListQueryData) =>
                 optimisticUpdate(logRef.convoId, old, convo => ({
                   ...convo,
@@ -318,7 +341,7 @@ export function ListConvosProviderInner({
           } else if (ChatGndrConvoDefs.isLogRemoveReaction(log)) {
             const logRef: ChatGndrConvoDefs.LogRemoveReaction = log
             queryClient.setQueriesData(
-              {queryKey: [RQKEY_ROOT]},
+              { queryKey: [RQKEY_ROOT] },
               (old?: ConvoListQueryData) =>
                 optimisticUpdate(logRef.convoId, old, convo => {
                   if (
@@ -383,9 +406,9 @@ export function ListConvosProviderInner({
 }
 
 export function useUnreadMessageCount() {
-  const {currentConvoId} = useCurrentConvoId()
-  const {currentAccount} = useSession()
-  const {accepted, request} = useListConvos()
+  const { currentConvoId } = useCurrentConvoId()
+  const { currentAccount } = useSession()
+  const { accepted, request } = useListConvos()
   const moderationOpts = useModerationOpts()
 
   return useMemo<{
@@ -468,7 +491,7 @@ export function useOnMarkAsRead() {
   return useCallback(
     (chatId: string) => {
       queryClient.setQueriesData(
-        {queryKey: [RQKEY_ROOT]},
+        { queryKey: [RQKEY_ROOT] },
         (old?: ConvoListQueryData) => {
           if (!old) return old
           return optimisticUpdate(chatId, old, convo => ({

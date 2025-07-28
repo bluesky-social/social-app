@@ -1,5 +1,8 @@
 import { View } from 'react-native'
-import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  type FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -27,7 +30,7 @@ export function ErrorScreen({
 }) {
   const t = useTheme()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   return (
     <Layout.Center testID={testID}>
@@ -47,10 +50,10 @@ export function ErrorScreen({
           <View
             style={[
               a.rounded_full,
-              {width: 50, height: 50},
+              { width: 50, height: 50 },
               a.align_center,
               a.justify_center,
-              {backgroundColor: t.palette.contrast_950},
+              { backgroundColor: t.palette.contrast_950 },
             ]}>
             <FontAwesomeIcon
               icon="exclamation"

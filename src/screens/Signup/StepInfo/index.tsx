@@ -1,27 +1,26 @@
-import React, {useRef} from 'react'
-import {Keyboard, type TextInput, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import React, { useRef } from 'react'
+import { Keyboard, type TextInput, View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
-import {isEmailMaybeInvalid} from '#/lib/strings/email'
-import {logger} from '#/logger'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {is13, is18, useSignupContext} from '#/screens/Signup/state'
-import {ConfirmationDialog} from '#/screens/Signup/StepInfo/ConfirmationDialog'
-import {PasswordValidation} from '#/screens/Signup/StepInfo/PasswordValidation'
-import {Policies} from '#/screens/Signup/StepInfo/Policies'
-import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
+import { isEmailMaybeInvalid } from '#/lib/strings/email'
+import { logger } from '#/logger'
+import { ScreenTransition } from '#/screens/Login/ScreenTransition'
+import { is13, is18, useSignupContext } from '#/screens/Signup/state'
+import { PasswordValidation } from '#/screens/Signup/StepInfo/PasswordValidation'
+import { Policies } from '#/screens/Signup/StepInfo/Policies'
+import { atoms as a } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { useDialogControl } from '#/components/Dialog'
 import * as DateField from '#/components/forms/DateField'
-import {type DateFieldRef} from '#/components/forms/DateField/types'
-import {FormError} from '#/components/forms/FormError'
-import {HostingProvider} from '#/components/forms/HostingProvider'
+import { type DateFieldRef } from '#/components/forms/DateField/types'
+import { FormError } from '#/components/forms/FormError'
+import { HostingProvider } from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
-import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
-import {Loader} from '#/components/Loader'
+import { Ticket_Stroke2_Corner0_Rounded as Ticket } from '#/components/icons/Ticket'
+import { Loader } from '#/components/Loader'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -44,8 +43,8 @@ export function StepInfo({
   refetchServer: () => void
   isLoadingStarterPack: boolean
 }) {
-  const {_} = useLingui()
-  const {state, dispatch} = useSignupContext()
+  const { _ } = useLingui()
+  const { state, dispatch } = useSignupContext()
 
   const inviteCodeValueRef = useRef<string>(state.inviteCode)
   const emailValueRef = useRef<string>(state.email)
@@ -168,24 +167,6 @@ export function StepInfo({
     return true
   }
 
-  const onNextPress = () => {
-    // Save form data to state before moving to next step
-    const inviteCode = inviteCodeValueRef.current
-    const email = emailValueRef.current
-    const password = passwordValueRef.current
-
-    // Save invite code if required
-    if (state.serviceDescription?.inviteCodeRequired && inviteCode) {
-      dispatch({type: 'setInviteCode', value: inviteCode})
-    }
-
-    // Save email and password to state
-    dispatch({type: 'setEmail', value: email})
-    dispatch({type: 'setPassword', value: password})
-
-    dispatch({type: 'next'})
-  }
-
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
   }, [])
@@ -202,7 +183,7 @@ export function StepInfo({
           <HostingProvider
             serviceUrl={state.serviceUrl}
             onSelectServiceUrl={v =>
-              dispatch({type: 'setServiceUrl', value: v})
+              dispatch({ type: 'setServiceUrl', value: v })
             }
             onOpenDialog={onPressSelectService}
           />
@@ -224,7 +205,7 @@ export function StepInfo({
                       state.errorField === 'invite-code' &&
                       value.trim().length > 0
                     ) {
-                      dispatch({type: 'clearError'})
+                      dispatch({ type: 'clearError' })
                     }
                   }}
                   label={_(msg`Invite code`)}
@@ -265,7 +246,7 @@ export function StepInfo({
                     trimmedValue.length > 0 &&
                     EmailValidator.validate(trimmedValue)
                   ) {
-                    dispatch({type: 'clearError'})
+                    dispatch({ type: 'clearError' })
                   }
                 }}
                 onSubmitEditing={() => {
@@ -304,7 +285,7 @@ export function StepInfo({
                         .toLowerCase()
                         .includes(emailValueRef.current.toLowerCase()))
                   ) {
-                    dispatch({type: 'clearError'})
+                    dispatch({ type: 'clearError' })
                   }
                 }}
                 onSubmitEditing={() => {
@@ -366,7 +347,11 @@ export function StepInfo({
         ) : undefined}
       </View>
       <View
-        style={[a.border_t, a.w_full, {borderColor: '#D8D8D8', borderWidth: 1}]}
+        style={[
+          a.border_t,
+          a.w_full,
+          { borderColor: '#D8D8D8', borderWidth: 1 },
+        ]}
       />
       <View style={[a.flex_row, a.align_center, a.pt_lg]}>
         <Button
@@ -418,11 +403,6 @@ export function StepInfo({
           </Button>
         )}
       </View>
-      <ConfirmationDialog
-        control={confirmationDialogControl}
-        onConfirm={onNextPress}
-        email={currentEmail}
-      />
     </ScreenTransition>
   )
 }

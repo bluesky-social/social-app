@@ -12,7 +12,7 @@ export async function compressVideo(
     onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  const {mimeType, base64} = parseDataUrl(asset.uri)
+  const { mimeType, base64 } = parseDataUrl(asset.uri)
   const blob = base64ToBlob(base64, mimeType)
   const uri = URL.createObjectURL(blob)
 
@@ -33,7 +33,7 @@ function parseDataUrl(dataUrl: string) {
   if (!mimeType || !base64) {
     throw new Error('Invalid data URL')
   }
-  return {mimeType, base64}
+  return { mimeType, base64 }
 }
 
 function base64ToBlob(base64: string, mimeType: string) {
@@ -52,5 +52,5 @@ function base64ToBlob(base64: string, mimeType: string) {
     byteArrays.push(byteArray)
   }
 
-  return new Blob(byteArrays, {type: mimeType})
+  return new Blob(byteArrays, { type: mimeType })
 }

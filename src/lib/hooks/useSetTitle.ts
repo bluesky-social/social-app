@@ -10,7 +10,7 @@ export function useSetTitle(title?: string) {
   const numUnread = useUnreadNotifications()
   useEffect(() => {
     if (title) {
-      navigation.setOptions({title: gndrTitle(title, numUnread)})
+      navigation.setOptions({ title: gndrTitle(title, numUnread) })
     }
   }, [title, navigation, numUnread])
 }

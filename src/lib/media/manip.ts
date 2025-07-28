@@ -1,6 +1,16 @@
 import { Image as RNImage } from 'react-native'
 import uuid from 'react-native-uuid'
-import { cacheDirectory, copyAsync, createDownloadResumable, deleteAsync, EncodingType, getInfoAsync, makeDirectoryAsync, StorageAccessFramework, writeAsStringAsync,  } from 'expo-file-system'
+import {
+  cacheDirectory,
+  copyAsync,
+  createDownloadResumable,
+  deleteAsync,
+  EncodingType,
+  getInfoAsync,
+  makeDirectoryAsync,
+  StorageAccessFramework,
+  writeAsStringAsync,
+} from 'expo-file-system'
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
@@ -68,7 +78,7 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
   }
 }
 
-export async function shareImageModal({uri}: {uri: string}) {
+export async function shareImageModal({ uri }: { uri: string }) {
   if (!(await Sharing.isAvailableAsync())) {
     // TODO might need to give an error to the user in this case -prf
     return
@@ -87,7 +97,7 @@ export async function shareImageModal({uri}: {uri: string}) {
 
 const ALBUM_NAME = 'Gander'
 
-export async function saveImageToMediaLibrary({uri}: {uri: string}) {
+export async function saveImageToMediaLibrary({ uri }: { uri: string }) {
   // download the file to cache
   // NOTE
   // assuming PNG
@@ -132,7 +142,7 @@ export function getImageDim(path: string): Promise<Dimensions> {
     RNImage.getSize(
       path,
       (width, height) => {
-        resolve({width, height})
+        resolve({ width, height })
       },
       reject,
     )
@@ -175,7 +185,7 @@ async function doResize(
     )
     const resizeRes = await manipulateAsync(
       localUri,
-      [{resize: newDimensions}],
+      [{ resize: newDimensions }],
       {
         format: SaveFormat.JPEG,
         compress: qualityPercentage / 100,
@@ -244,7 +254,7 @@ export async function safeDeleteAsync(path: string) {
   // Normalize is necessary for Android, otherwise it doesn't delete.
   const normalizedPath = normalizePath(path)
   try {
-    await deleteAsync(normalizedPath, {idempotent: true})
+    await deleteAsync(normalizedPath, { idempotent: true })
   } catch (e) {
     console.error('Failed to delete file', e)
   }
@@ -288,7 +298,7 @@ export async function saveToDevice(
   try {
     if (isIOS) {
       await withTempFile(filename, encoded, async tmpFileUrl => {
-        await Sharing.shareAsync(tmpFileUrl, {UTI: type})
+        await Sharing.shareAsync(tmpFileUrl, { UTI: type })
       })
       return true
     } else {
@@ -311,7 +321,7 @@ export async function saveToDevice(
       return true
     }
   } catch (e) {
-    logger.error('Error occurred while saving file', {message: e})
+    logger.error('Error occurred while saving file', { message: e })
     return false
   }
 }
@@ -324,7 +334,7 @@ async function withTempFile<T>(
   // cacheDirectory will not ever be null so we assert as a string.
   // Using a directory so that the file name is not a random string
   const tmpDirUri = joinPath(cacheDirectory as string, String(uuid.v4()))
-  await makeDirectoryAsync(tmpDirUri, {intermediates: true})
+  await makeDirectoryAsync(tmpDirUri, { intermediates: true })
 
   try {
     const tmpFileUrl = joinPath(tmpDirUri, filename)
@@ -367,7 +377,7 @@ function createPath(ext: string) {
 }
 
 async function downloadImage(uri: string, path: string, timeout: number) {
-  const dlResumable = createDownloadResumable(uri, path, {cache: true})
+  const dlResumable = createDownloadResumable(uri, path, { cache: true })
 
   const to1 = setTimeout(() => dlResumable.cancelAsync(), timeout)
 

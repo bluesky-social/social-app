@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, { memo } from 'react'
 import { type AppGndrActorDefs } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -15,7 +15,12 @@ import { logger } from '#/logger'
 import { isWeb } from '#/platform/detection'
 import { type Shadow } from '#/state/cache/types'
 import { useModalControls } from '#/state/modals'
-import { RQKEY as profileQueryKey, useProfileBlockMutationQueue, useProfileFollowMutationQueue, useProfileMuteMutationQueue,  } from '#/state/queries/profile'
+import {
+  RQKEY as profileQueryKey,
+  useProfileBlockMutationQueue,
+  useProfileFollowMutationQueue,
+  useProfileMuteMutationQueue,
+} from '#/state/queries/profile'
 import { useCanGoLive } from '#/state/service-config'
 import { useSession } from '#/state/session'
 import { EventStopper } from '#/view/com/util/EventStopper'
@@ -34,13 +39,19 @@ import { Live_Stroke2_Corner0_Rounded as LiveIcon } from '#/components/icons/Liv
 import { MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass2'
 import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute'
 import { PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus } from '#/components/icons/PeopleRemove2'
-import { PersonCheck_Stroke2_Corner0_Rounded as PersonCheck, PersonX_Stroke2_Corner0_Rounded as PersonX,  } from '#/components/icons/Person'
+import {
+  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
+  PersonX_Stroke2_Corner0_Rounded as PersonX,
+} from '#/components/icons/Person'
 import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus'
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker'
 import { EditLiveDialog } from '#/components/live/EditLiveDialog'
 import { GoLiveDialog } from '#/components/live/GoLiveDialog'
 import * as Menu from '#/components/Menu'
-import { ReportDialog, useReportDialogControl,  } from '#/components/moderation/ReportDialog'
+import {
+  ReportDialog,
+  useReportDialogControl,
+} from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import { useFullVerificationState } from '#/components/verification'
 import { VerificationCreatePrompt } from '#/components/verification/VerificationCreatePrompt'
@@ -52,9 +63,9 @@ let ProfileMenu = ({
 }: {
   profile: Shadow<AppGndrActorDefs.ProfileViewDetailed>
 }): React.ReactNode => {
-  const {_} = useLingui()
-  const {currentAccount, hasSession} = useSession()
-  const {openModal} = useModalControls()
+  const { _ } = useLingui()
+  const { currentAccount, hasSession } = useSession()
+  const { openModal } = useModalControls()
   const reportDialogControl = useReportDialogControl()
   const queryClient = useQueryClient()
   const navigation = useNavigation<NavigationProp>()
@@ -64,7 +75,7 @@ let ProfileMenu = ({
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
   const [devModeEnabled] = useDevMode()
-  const verification = useFullVerificationState({profile})
+  const verification = useFullVerificationState({ profile })
   const canGoLive = useCanGoLive(currentAccount?.did)
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
@@ -110,20 +121,20 @@ let ProfileMenu = ({
     if (profile.viewer?.muted) {
       try {
         await queueUnmute()
-        Toast.show(_(msg({message: 'Account unmuted', context: 'toast'})))
+        Toast.show(_(msg({ message: 'Account unmuted', context: 'toast' })))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
-          logger.error('Failed to unmute account', {message: e})
+          logger.error('Failed to unmute account', { message: e })
           Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     } else {
       try {
         await queueMute()
-        Toast.show(_(msg({message: 'Account muted', context: 'toast'})))
+        Toast.show(_(msg({ message: 'Account muted', context: 'toast' })))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
-          logger.error('Failed to mute account', {message: e})
+          logger.error('Failed to mute account', { message: e })
           Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
@@ -134,20 +145,20 @@ let ProfileMenu = ({
     if (profile.viewer?.blocking) {
       try {
         await queueUnblock()
-        Toast.show(_(msg({message: 'Account unblocked', context: 'toast'})))
+        Toast.show(_(msg({ message: 'Account unblocked', context: 'toast' })))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
-          logger.error('Failed to unblock account', {message: e})
+          logger.error('Failed to unblock account', { message: e })
           Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     } else {
       try {
         await queueBlock()
-        Toast.show(_(msg({message: 'Account blocked', context: 'toast'})))
+        Toast.show(_(msg({ message: 'Account blocked', context: 'toast' })))
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
-          logger.error('Failed to block account', {message: e})
+          logger.error('Failed to block account', { message: e })
           Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
@@ -157,10 +168,10 @@ let ProfileMenu = ({
   const onPressFollowAccount = React.useCallback(async () => {
     try {
       await queueFollow()
-      Toast.show(_(msg({message: 'Account followed', context: 'toast'})))
+      Toast.show(_(msg({ message: 'Account followed', context: 'toast' })))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        logger.error('Failed to follow account', {message: e})
+        logger.error('Failed to follow account', { message: e })
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
@@ -169,10 +180,10 @@ let ProfileMenu = ({
   const onPressUnfollowAccount = React.useCallback(async () => {
     try {
       await queueUnfollow()
-      Toast.show(_(msg({message: 'Account unfollowed', context: 'toast'})))
+      Toast.show(_(msg({ message: 'Account unfollowed', context: 'toast' })))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        logger.error('Failed to unfollow account', {message: e})
+        logger.error('Failed to unfollow account', { message: e })
         Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
@@ -191,7 +202,7 @@ let ProfileMenu = ({
   }, [profile.did])
 
   const onPressSearch = React.useCallback(() => {
-    navigation.navigate('ProfileSearch', {name: profile.handle})
+    navigation.navigate('ProfileSearch', { name: profile.handle })
   }, [navigation, profile.handle])
 
   const verificationCreatePromptControl = Prompt.usePromptControl()
@@ -207,7 +218,7 @@ let ProfileMenu = ({
     <EventStopper onKeyDown={false}>
       <Menu.Root>
         <Menu.Trigger label={_(msg`More options`)}>
-          {({props}) => {
+          {({ props }) => {
             return (
               <Button
                 {...props}
@@ -224,7 +235,7 @@ let ProfileMenu = ({
           }}
         </Menu.Trigger>
 
-        <Menu.Outer style={{minWidth: 170}}>
+        <Menu.Outer style={{ minWidth: 170 }}>
           <Menu.Group>
             <Menu.Item
               testID="profileHeaderDropdownShareBtn"
@@ -498,4 +509,4 @@ let ProfileMenu = ({
 }
 
 ProfileMenu = memo(ProfileMenu)
-export {ProfileMenu}
+export { ProfileMenu }

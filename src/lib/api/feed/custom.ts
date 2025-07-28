@@ -1,6 +1,14 @@
-import { type AppBskyFeedGetFeed as GetCustomFeed, type AppGndrFeedDefs, GndrAgent, jsonStringToLex,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrFeedDefs,
+  type GetCustomFeed,
+  GndrAgent,
+  jsonStringToLex,
+} from '@gander-social-atproto/api'
 
-import { getAppLanguageAsContentLanguage, getContentLanguages,  } from '#/state/preferences/languages'
+import {
+  getAppLanguageAsContentLanguage,
+  getContentLanguages,
+} from '#/state/preferences/languages'
 import { type FeedAPI, type FeedAPIResponse } from './types'
 import { createGndrTopicsHeader, isGanderOwnedFeed } from './utils'
 
@@ -30,7 +38,7 @@ export class CustomFeedAPI implements FeedAPI {
         ...this.params,
         limit: 1,
       },
-      {headers: {'Accept-Language': contentLangs}},
+      { headers: { 'Accept-Language': contentLangs } },
     )
     return res.data.feed[0]
   }
@@ -62,7 +70,7 @@ export class CustomFeedAPI implements FeedAPI {
             },
           },
         )
-      : await loggedOutFetch({...this.params, cursor, limit})
+      : await loggedOutFetch({ ...this.params, cursor, limit })
     if (res.success) {
       // NOTE
       // some custom feeds fail to enforce the pagination limit
@@ -112,12 +120,12 @@ async function loggedOutFetch({
 
   // manually construct fetch call so we can add the `lang` cache-busting param
   let res = await fetch(
-    `https://api.bsky.app/xrpc/app.gndr.feed.getFeed?feed=${feed}${
+    `https://api.gndr.app/xrpc/app.gndr.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}&lang=${contentLangs}`,
     {
       method: 'GET',
-      headers: {'Accept-Language': contentLangs, ...labelersHeader},
+      headers: { 'Accept-Language': contentLangs, ...labelersHeader },
     },
   )
   let data = res.ok
@@ -132,10 +140,10 @@ async function loggedOutFetch({
 
   // no data, try again with language headers removed
   res = await fetch(
-    `https://api.bsky.app/xrpc/app.gndr.feed.getFeed?feed=${feed}${
+    `https://api.gndr.app/xrpc/app.gndr.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}`,
-    {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},
+    { method: 'GET', headers: { 'Accept-Language': '', ...labelersHeader } },
   )
   data = res.ok
     ? (jsonStringToLex(await res.text()) as GetCustomFeed.OutputSchema)
@@ -149,6 +157,6 @@ async function loggedOutFetch({
 
   return {
     success: false,
-    data: {feed: []},
+    data: { feed: [] },
   }
 }

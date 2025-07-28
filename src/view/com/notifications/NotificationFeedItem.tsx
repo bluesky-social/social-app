@@ -1,8 +1,30 @@
-import { memo, type ReactElement, useCallback, useEffect, useMemo, useState,  } from 'react'
-import { Animated, type GestureResponderEvent, Pressable, StyleSheet, TouchableOpacity, View,  } from 'react-native'
-import { TID } from '@atprotocommon-web'
-import { type AppGndrActorDefs, type AppGndrFeedDefs, AppGndrFeedPost, AppGndrGraphFollow, moderateProfile, type ModerationDecision, type ModerationOpts,  } from '@gander-social-atproto/api'
+import {
+  memo,
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+import {
+  Animated,
+  type GestureResponderEvent,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+import {
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
+  AppGndrGraphFollow,
+  moderateProfile,
+  type ModerationDecision,
+  type ModerationOpts,
+} from '@gander-social-atproto/api'
 import { AtUri } from '@gander-social-atproto/api'
+import { TID } from '@gander-social-atproto/common-web'
 import { msg, Plural, plural, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useNavigation } from '@react-navigation/native'
@@ -31,7 +53,10 @@ import { PreviewableUserAvatar, UserAvatar } from '#/view/com/util/UserAvatar'
 import { atoms as a, platform, useTheme } from '#/alf'
 import { Button, ButtonText } from '#/components/Button'
 import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging'
-import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon, ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,  } from '#/components/icons/Chevron'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
+  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
+} from '#/components/icons/Chevron'
 import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled } from '#/components/icons/Heart2'
 import { PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person'
 import { Repost_Stroke2_Corner2_Rounded as RepostIcon } from '#/components/icons/Repost'
@@ -71,7 +96,7 @@ let NotificationFeedItem = ({
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const { _, i18n } = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     switch (item.type) {
@@ -135,7 +160,7 @@ let NotificationFeedItem = ({
         href: makeProfileLink(item.notification.author),
         moderation: moderateProfile(item.notification.author, moderationOpts),
       },
-      ...(item.additional?.map(({author}) => ({
+      ...(item.additional?.map(({ author }) => ({
         profile: author,
         href: makeProfileLink(author),
         moderation: moderateProfile(author, moderationOpts),
@@ -197,9 +222,9 @@ let NotificationFeedItem = ({
           style={[
             a.relative,
             {
-              paddingTop: platform({android: 2}),
-              marginBottom: platform({ios: -7}),
-              top: platform({web: 1}),
+              paddingTop: platform({ android: 2 }),
+              marginBottom: platform({ ios: -7 }),
+              top: platform({ web: 1 }),
               paddingLeft: 3,
               paddingRight: 2,
             },
@@ -278,7 +303,7 @@ let NotificationFeedItem = ({
     ) : (
       <Trans>{firstAuthorLink} reposted your post</Trans>
     )
-    icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
+    icon = <RepostIcon size="xl" style={{ color: t.palette.positive_600 }} />
   } else if (item.type === 'follow') {
     let isFollowBack = false
 
@@ -336,7 +361,7 @@ let NotificationFeedItem = ({
         <Trans>{firstAuthorLink} followed you</Trans>
       )
     }
-    icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
+    icon = <PersonPlusIcon size="xl" style={{ color: t.palette.primary_500 }} />
   } else if (item.type === 'feedgen-like') {
     a11yLabel = hasMultipleAuthors
       ? _(
@@ -386,7 +411,7 @@ let NotificationFeedItem = ({
       <Trans>{firstAuthorLink} signed up with your starter pack</Trans>
     )
     icon = (
-      <View style={{height: 30, width: 30}}>
+      <View style={{ height: 30, width: 30 }}>
         <StarterPack width={30} gradient="sky" />
       </View>
     )
@@ -490,7 +515,7 @@ let NotificationFeedItem = ({
     ) : (
       <Trans>{firstAuthorLink} reposted your repost</Trans>
     )
-    icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
+    icon = <RepostIcon size="xl" style={{ color: t.palette.positive_600 }} />
   } else if (item.type === 'subscribed-post') {
     const postsCount = 1 + (item.additional?.length || 0)
     a11yLabel = hasMultipleAuthors
@@ -526,7 +551,9 @@ let NotificationFeedItem = ({
         {firstAuthorLink}
       </Trans>
     )
-    icon = <BellRingingIcon size="xl" style={{color: t.palette.primary_500}} />
+    icon = (
+      <BellRingingIcon size="xl" style={{ color: t.palette.primary_500 }} />
+    )
   } else {
     return null
   }
@@ -539,7 +566,7 @@ let NotificationFeedItem = ({
       style={[
         a.flex_row,
         a.align_start,
-        {padding: 10},
+        { padding: 10 },
         a.pr_lg,
         t.atoms.border_contrast_low,
         item.notification.isRead
@@ -582,7 +609,7 @@ let NotificationFeedItem = ({
           onToggleAuthorsExpanded()
         }
       }}>
-      {({hovered}) => (
+      {({ hovered }) => (
         <>
           <SubtleWebHover hover={hovered} />
           <View style={[styles.layoutIcon, a.pr_sm]}>
@@ -608,7 +635,7 @@ let NotificationFeedItem = ({
                 style={[
                   a.flex_row,
                   a.flex_wrap,
-                  {paddingTop: 6},
+                  { paddingTop: 6 },
                   a.self_start,
                   a.text_md,
                   a.leading_snug,
@@ -617,7 +644,7 @@ let NotificationFeedItem = ({
                 accessibilityLabel={a11yLabel}>
                 {notificationContent}
                 <TimeElapsed timestamp={item.notification.indexedAt}>
-                  {({timeElapsed}) => (
+                  {({ timeElapsed }) => (
                     <>
                       {/* make sure there's whitespace around the middot -sfn */}
                       <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -678,7 +705,7 @@ let NotificationFeedItem = ({
   )
 }
 NotificationFeedItem = memo(NotificationFeedItem)
-export {NotificationFeedItem}
+export { NotificationFeedItem }
 
 function ExpandListPressable({
   hasMultipleAuthors,
@@ -703,8 +730,8 @@ function ExpandListPressable({
   }
 }
 
-function SayHelloBtn({profile}: {profile: AppGndrActorDefs.ProfileView}) {
-  const {_} = useLingui()
+function SayHelloBtn({ profile }: { profile: AppGndrActorDefs.ProfileView }) {
+  const { _ } = useLingui()
   const agent = useAgent()
   const navigation = useNavigation<NavigationProp>()
   const [isLoading, setIsLoading] = useState(false)
@@ -723,7 +750,7 @@ function SayHelloBtn({profile}: {profile: AppGndrActorDefs.ProfileView}) {
       variant="ghost"
       color="primary"
       size="small"
-      style={[a.self_center, {marginLeft: 'auto'}]}
+      style={[a.self_center, { marginLeft: 'auto' }]}
       disabled={isLoading}
       onPress={async () => {
         try {
@@ -732,13 +759,13 @@ function SayHelloBtn({profile}: {profile: AppGndrActorDefs.ProfileView}) {
             {
               members: [profile.did, agent.session!.did!],
             },
-            {headers: DM_SERVICE_HEADERS},
+            { headers: DM_SERVICE_HEADERS },
           )
           navigation.navigate('MessagesConversation', {
             conversation: res.data.convo.id,
           })
         } catch (e) {
-          logger.error('Failed to get conversation', {safeMessage: e})
+          logger.error('Failed to get conversation', { safeMessage: e })
         } finally {
           setIsLoading(false)
         }
@@ -762,7 +789,7 @@ function CondensedAuthorsList({
   showDmButton?: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   if (!visible) {
     return (
@@ -818,7 +845,7 @@ function CondensedAuthorsList({
           <Text
             style={[
               a.font_bold,
-              {paddingLeft: 6},
+              { paddingLeft: 6 },
               t.atoms.text_contrast_medium,
             ]}>
             +{authors.length - MAX_AUTHORS}
@@ -864,9 +891,9 @@ function ExpandedAuthorsList({
   )
 }
 
-function ExpandedAuthorCard({author}: {author: Author}) {
+function ExpandedAuthorCard({ author }: { author: Author }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const verification = useSimpleVerificationState({
     profile: author.profile,
   })
@@ -899,7 +926,7 @@ function ExpandedAuthorCard({author}: {author: Author}) {
               a.text_md,
               a.font_bold,
               a.leading_tight,
-              {maxWidth: '70%'},
+              { maxWidth: '70%' },
             ]}>
             {sanitizeDisplayName(
               author.profile.displayName || author.profile.handle,
@@ -930,7 +957,7 @@ function ExpandedAuthorCard({author}: {author: Author}) {
   )
 }
 
-function AdditionalPostText({post}: {post?: AppGndrFeedDefs.PostView}) {
+function AdditionalPostText({ post }: { post?: AppGndrFeedDefs.PostView }) {
   const t = useTheme()
   if (
     post &&

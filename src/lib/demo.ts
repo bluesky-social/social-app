@@ -1,7 +1,7 @@
 import { type AppGndrFeedGetFeed } from '@gander-social-atproto/api'
 import { subDays, subMinutes } from 'date-fns'
 
-import { getAppType } from './api/appPrefix';
+import { getAppType } from './api/appPrefix'
 
 const DID = `did:plc:z72i7hdynmk6r22z27h6tvur`
 const NOW = new Date()

@@ -1,13 +1,19 @@
-import React, {useCallback} from 'react'
+import React, { useCallback } from 'react'
 import { Keyboard, Pressable, View } from 'react-native'
-import { type ChatBskyConvoDefs as ChatGndrConvoDefs, type ModerationCause,  } from '@gander-social-atproto/api'
+import {
+  type ChatGndrConvoDefs,
+  type ModerationCause,
+} from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useNavigation } from '@react-navigation/native'
 
 import { type NavigationProp } from '#/lib/routes/types'
 import { type Shadow } from '#/state/cache/types'
-import { useConvoQuery, useMarkAsReadMutation,  } from '#/state/queries/messages/conversation'
+import {
+  useConvoQuery,
+  useMarkAsReadMutation,
+} from '#/state/queries/messages/conversation'
 import { useMuteConvo } from '#/state/queries/messages/mute-conversation'
 import { useProfileBlockMutationQueue } from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
@@ -19,7 +25,11 @@ import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft } from '#/componen
 import { DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid'
 import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag'
 import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute'
-import { Person_Stroke2_Corner0_Rounded as Person, PersonCheck_Stroke2_Corner0_Rounded as PersonCheck, PersonX_Stroke2_Corner0_Rounded as PersonX,  } from '#/components/icons/Person'
+import {
+  Person_Stroke2_Corner0_Rounded as Person,
+  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
+  PersonX_Stroke2_Corner0_Rounded as PersonX,
+} from '#/components/icons/Person'
 import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
@@ -51,14 +61,14 @@ let ConvoMenu = ({
   latestReportableMessage?: ChatGndrConvoDefs.MessageView
   style?: ViewStyleProp['style']
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
 
   const leaveConvoControl = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
   const blockedByListControl = Prompt.usePromptControl()
 
-  const {listBlocks} = blockInfo
+  const { listBlocks } = blockInfo
 
   return (
     <>
@@ -66,7 +76,7 @@ let ConvoMenu = ({
         {!hideTrigger && (
           <View style={[style]}>
             <Menu.Trigger label={_(msg`Chat settings`)}>
-              {({props, state}) => (
+              {({ props, state }) => (
                 <Pressable
                   {...props}
                   onPress={() => {
@@ -78,7 +88,7 @@ let ConvoMenu = ({
                     a.rounded_full,
                     (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
                     // make sure pfp is in the middle
-                    {marginLeft: -10},
+                    { marginLeft: -10 },
                   ]}>
                   <DotsHorizontal size="md" style={t.atoms.text} />
                 </Pressable>
@@ -149,26 +159,26 @@ function MenuContent({
   blockedByListControl: Prompt.PromptControlProps
 }) {
   const navigation = useNavigation<NavigationProp>()
-  const {_} = useLingui()
-  const {mutate: markAsRead} = useMarkAsReadMutation()
+  const { _ } = useLingui()
+  const { mutate: markAsRead } = useMarkAsReadMutation()
 
-  const {listBlocks, userBlock} = blockInfo
+  const { listBlocks, userBlock } = blockInfo
   const isBlocking = userBlock || !!listBlocks.length
   const isDeletedAccount = profile.handle === 'missing.invalid'
 
   const convoId = initialConvo.id
-  const {data: convo} = useConvoQuery(initialConvo)
+  const { data: convo } = useConvoQuery(initialConvo)
 
   const onNavigateToProfile = useCallback(() => {
-    navigation.navigate('Profile', {name: profile.did})
+    navigation.navigate('Profile', { name: profile.did })
   }, [navigation, profile.did])
 
-  const {mutate: muteConvo} = useMuteConvo(convoId, {
+  const { mutate: muteConvo } = useMuteConvo(convoId, {
     onSuccess: data => {
       if (data.convo.muted) {
-        Toast.show(_(msg({message: 'Chat muted', context: 'toast'})))
+        Toast.show(_(msg({ message: 'Chat muted', context: 'toast' })))
       } else {
-        Toast.show(_(msg({message: 'Chat unmuted', context: 'toast'})))
+        Toast.show(_(msg({ message: 'Chat unmuted', context: 'toast' })))
       }
     },
     onError: () => {
@@ -206,7 +216,7 @@ function MenuContent({
         {showMarkAsRead && (
           <Menu.Item
             label={_(msg`Mark as read`)}
-            onPress={() => markAsRead({convoId})}>
+            onPress={() => markAsRead({ convoId })}>
             <Menu.ItemText>
               <Trans>Mark as read</Trans>
             </Menu.ItemText>
@@ -223,7 +233,7 @@ function MenuContent({
         </Menu.Item>
         <Menu.Item
           label={_(msg`Mute conversation`)}
-          onPress={() => muteConvo({mute: !convo?.muted})}>
+          onPress={() => muteConvo({ mute: !convo?.muted })}>
           <Menu.ItemText>
             {convo?.muted ? (
               <Trans>Unmute conversation</Trans>
@@ -268,4 +278,4 @@ function MenuContent({
   )
 }
 
-export {ConvoMenu}
+export { ConvoMenu }

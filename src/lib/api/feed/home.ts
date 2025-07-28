@@ -1,4 +1,7 @@
-import { type AppGndrFeedDefs, type GndrAgent } from '@gander-social-atproto/api'
+import {
+  type AppGndrFeedDefs,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 
 import { PROD_DEFAULT_FEED } from '#/lib/constants'
 import { CustomFeedAPI } from './custom'
@@ -42,19 +45,19 @@ export class HomeFeedAPI implements FeedAPI {
     agent: GndrAgent
   }) {
     this.agent = agent
-    this.following = new FollowingFeedAPI({agent})
+    this.following = new FollowingFeedAPI({ agent })
     this.discover = new CustomFeedAPI({
       agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      feedParams: { feed: PROD_DEFAULT_FEED('whats-hot') },
     })
     this.userInterests = userInterests
   }
 
   reset() {
-    this.following = new FollowingFeedAPI({agent: this.agent})
+    this.following = new FollowingFeedAPI({ agent: this.agent })
     this.discover = new CustomFeedAPI({
       agent: this.agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      feedParams: { feed: PROD_DEFAULT_FEED('whats-hot') },
       userInterests: this.userInterests,
     })
     this.usingDiscover = false
@@ -83,7 +86,7 @@ export class HomeFeedAPI implements FeedAPI {
     let posts: AppGndrFeedDefs.FeedViewPost[] = []
 
     if (!this.usingDiscover) {
-      const res = await this.following.fetch({cursor, limit})
+      const res = await this.following.fetch({ cursor, limit })
       returnCursor = res.cursor
       posts = posts.concat(res.feed)
       if (!returnCursor) {
@@ -94,7 +97,7 @@ export class HomeFeedAPI implements FeedAPI {
     }
 
     if (this.usingDiscover && !__DEV__) {
-      const res = await this.discover.fetch({cursor, limit})
+      const res = await this.discover.fetch({ cursor, limit })
       returnCursor = res.cursor
       posts = posts.concat(res.feed)
     }

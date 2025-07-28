@@ -1,5 +1,13 @@
 import React from 'react'
-import { type ImageStyle, Keyboard, type LayoutChangeEvent, StyleSheet, TouchableOpacity, View, type ViewStyle,  } from 'react-native'
+import {
+  type ImageStyle,
+  Keyboard,
+  type LayoutChangeEvent,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import { Image } from 'expo-image'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { msg, Trans } from '@lingui/macro'
@@ -29,7 +37,7 @@ export let Gallery = (props: GalleryProps): React.ReactNode => {
   const [containerInfo, setContainerInfo] = React.useState<Dimensions>()
 
   const onLayout = (evt: LayoutChangeEvent) => {
-    const {width, height} = evt.nativeEvent.layout
+    const { width, height } = evt.nativeEvent.layout
     setContainerInfo({
       width,
       height,
@@ -50,10 +58,14 @@ interface GalleryInnerProps extends GalleryProps {
   containerInfo: Dimensions
 }
 
-const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
-  const {isMobile} = useWebMediaQueries()
+const GalleryInner = ({
+  images,
+  containerInfo,
+  dispatch,
+}: GalleryInnerProps) => {
+  const { isMobile } = useWebMediaQueries()
 
-  const {altTextControlStyle, imageControlsStyle, imageStyle} =
+  const { altTextControlStyle, imageControlsStyle, imageStyle } =
     React.useMemo(() => {
       const side =
         images.length === 1
@@ -65,19 +77,19 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
 
       return {
         altTextControlStyle: isOverflow
-          ? {left: 4, bottom: 4}
+          ? { left: 4, bottom: 4 }
           : !isMobile && images.length < 3
-            ? {left: 8, top: 8}
-            : {left: 4, top: 4},
+            ? { left: 8, top: 8 }
+            : { left: 4, top: 4 },
         imageControlsStyle: {
           display: 'flex' as const,
           flexDirection: 'row' as const,
           position: 'absolute' as const,
           ...(isOverflow
-            ? {top: 4, right: 4, gap: 4}
+            ? { top: 4, right: 4, gap: 4 }
             : !isMobile && images.length < 3
-              ? {top: 8, right: 8, gap: 8}
-              : {top: 4, right: 4, gap: 4}),
+              ? { top: 8, right: 8, gap: 8 }
+              : { top: 4, right: 4, gap: 4 }),
           zIndex: 1,
         },
         imageStyle: {
@@ -99,10 +111,10 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
               imageControlsStyle={imageControlsStyle}
               imageStyle={imageStyle}
               onChange={next => {
-                dispatch({type: 'embed_update_image', image: next})
+                dispatch({ type: 'embed_update_image', image: next })
               }}
               onRemove={() => {
-                dispatch({type: 'embed_remove_image', image})
+                dispatch({ type: 'embed_remove_image', image })
               }}
             />
           )
@@ -130,7 +142,7 @@ const GalleryItem = ({
   onChange,
   onRemove,
 }: GalleryItemProps): React.ReactNode => {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const t = useTheme()
 
   const altTextControl = Dialog.useDialogControl()
@@ -167,13 +179,13 @@ const GalleryItem = ({
           <FontAwesomeIcon
             icon="check"
             size={10}
-            style={{color: t.palette.white}}
+            style={{ color: t.palette.white }}
           />
         ) : (
           <FontAwesomeIcon
             icon="plus"
             size={10}
-            style={{color: t.palette.white}}
+            style={{ color: t.palette.white }}
           />
         )}
         <Text style={styles.altTextControlLabel} accessible={false}>
@@ -188,7 +200,11 @@ const GalleryItem = ({
           accessibilityHint=""
           onPress={onImageEdit}
           style={styles.imageControl}>
-          <FontAwesomeIcon icon="pen" size={12} style={{color: colors.white}} />
+          <FontAwesomeIcon
+            icon="pen"
+            size={12}
+            style={{ color: colors.white }}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           testID="removePhotoButton"
@@ -200,7 +216,7 @@ const GalleryItem = ({
           <FontAwesomeIcon
             icon="xmark"
             size={16}
-            style={{color: colors.white}}
+            style={{ color: colors.white }}
           />
         </TouchableOpacity>
       </View>

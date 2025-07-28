@@ -1,7 +1,7 @@
 import React from 'react'
 import { Pressable, View } from 'react-native'
 import { type ScrollView } from 'react-native-gesture-handler'
-import { type AppBskyLaberDefs as AppGndrLabelerDefs } from '@gander-social-atproto/api'
+import { type AppGndrLabelerDefs } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -19,7 +19,10 @@ import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import { useDelayedLoading } from '#/components/hooks/useDelayedLoading'
 import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry } from '#/components/icons/ArrowRotateCounterClockwise'
-import { Check_Stroke2_Corner0_Rounded as CheckThin, CheckThick_Stroke2_Corner0_Rounded as Check,  } from '#/components/icons/Check'
+import {
+  Check_Stroke2_Corner0_Rounded as CheckThin,
+  CheckThick_Stroke2_Corner0_Rounded as Check,
+} from '#/components/icons/Check'
 import { PaperPlane_Stroke2_Corner0_Rounded as PaperPlane } from '#/components/icons/PaperPlane'
 import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight } from '#/components/icons/SquareArrowTopRight'
 import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times'
@@ -34,7 +37,7 @@ import { type ReportDialogProps, type ReportSubject } from './types'
 import { parseReportSubject } from './utils/parseReportSubject'
 import { type ReportOption, useReportOptions } from './utils/useReportOptions'
 
-export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
+export { useDialogControl as useReportDialogControl } from '#/components/Dialog'
 
 const logger = Logger.create(Logger.Context.ReportDialog)
 
@@ -48,7 +51,7 @@ export function ReportDialog(
     [props.subject],
   )
   const onClose = React.useCallback(() => {
-    logger.metric('reportDialog:close', {}, {statsig: false})
+    logger.metric('reportDialog:close', {}, { statsig: false })
   }, [])
   return (
     <Dialog.Outer control={props.control} onClose={onClose}>
@@ -63,7 +66,7 @@ export function ReportDialog(
  * developer, but nevertheless we should have a graceful fallback.
  */
 function Invalid() {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   return (
     <Dialog.ScrollableInner label={_(msg`Report dialog`)}>
       <Text style={[a.font_heavy, a.text_xl, a.leading_snug, a.pb_xs]}>
@@ -82,14 +85,14 @@ function Invalid() {
 
 function Inner(props: ReportDialogProps) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const ref = React.useRef<ScrollView>(null)
   const {
     data: allLabelers,
     isLoading: isLabelerLoading,
     error: labelersLoadError,
     refetch: refetchLabelers,
-  } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
+  } = useMyLabelersQuery({ excludeNonConfigurableLabelers: true })
   const isLoading = useDelayedLoading(500, isLabelerLoading)
   const copy = useCopyForSubject(props.subject)
   const reportOptions = useReportOptions()
@@ -98,7 +101,7 @@ function Inner(props: ReportDialogProps) {
   /**
    * Submission handling
    */
-  const {mutateAsync: submitReport} = useSubmitReportMutation()
+  const { mutateAsync: submitReport } = useSubmitReportMutation()
   const [isPending, setPending] = React.useState(false)
   const [isSuccess, setSuccess] = React.useState(false)
 
@@ -137,7 +140,7 @@ function Inner(props: ReportDialogProps) {
   const hasSingleSupportedLabeler = supportedLabelers.length === 1
 
   const onSubmit = React.useCallback(async () => {
-    dispatch({type: 'clearError'})
+    dispatch({ type: 'clearError' })
 
     logger.info('submitting')
 
@@ -159,14 +162,14 @@ function Inner(props: ReportDialogProps) {
           labeler: state.selectedLabeler?.creator.handle!,
           details: !!state.details,
         },
-        {statsig: false},
+        { statsig: false },
       )
       // give time for user feedback
       setTimeout(() => {
         props.control.close()
       }, 1e3)
     } catch (e: any) {
-      logger.metric('reportDialog:failure', {}, {statsig: false})
+      logger.metric('reportDialog:failure', {}, { statsig: false })
       logger.error(e, {
         source: 'ReportDialog',
       })
@@ -185,7 +188,7 @@ function Inner(props: ReportDialogProps) {
       {
         subjectType: props.subject.type,
       },
-      {statsig: false},
+      { statsig: false },
     )
   }, [props.subject])
 
@@ -194,7 +197,7 @@ function Inner(props: ReportDialogProps) {
       testID="report:dialog"
       label={_(msg`Report dialog`)}
       ref={ref}
-      style={[a.w_full, {maxWidth: 500}]}>
+      style={[a.w_full, { maxWidth: 500 }]}>
       <View style={[a.gap_2xl, isNative && a.pt_md]}>
         <StepOuter>
           <StepTitle
@@ -244,7 +247,7 @@ function Inner(props: ReportDialogProps) {
                     color="secondary"
                     shape="round"
                     onPress={() => {
-                      dispatch({type: 'clearOption'})
+                      dispatch({ type: 'clearOption' })
                     }}>
                     <ButtonIcon icon={X} />
                   </Button>
@@ -256,7 +259,7 @@ function Inner(props: ReportDialogProps) {
                       key={o.reason}
                       option={o}
                       onSelect={() => {
-                        dispatch({type: 'selectOption', option: o})
+                        dispatch({ type: 'selectOption', option: o })
                       }}
                     />
                   ))}
@@ -267,7 +270,7 @@ function Inner(props: ReportDialogProps) {
                       label={_(
                         msg`Need to report a copyright violation, legal request, or regulatory compliance issue?`,
                       )}>
-                      {({hovered, pressed}) => (
+                      {({ hovered, pressed }) => (
                         <View
                           style={[
                             a.flex_row,
@@ -325,7 +328,7 @@ function Inner(props: ReportDialogProps) {
                         color="secondary"
                         shape="round"
                         onPress={() => {
-                          dispatch({type: 'clearLabeler'})
+                          dispatch({ type: 'clearLabeler' })
                         }}>
                         <ButtonIcon icon={X} />
                       </Button>
@@ -356,7 +359,7 @@ function Inner(props: ReportDialogProps) {
                               key={l.creator.did}
                               labeler={l}
                               onSelect={() => {
-                                dispatch({type: 'selectLabeler', labeler: l})
+                                dispatch({ type: 'selectLabeler', labeler: l })
                               }}
                             />
                           ))}
@@ -399,7 +402,7 @@ function Inner(props: ReportDialogProps) {
                     <InlineLinkText
                       label={_(msg`Add more details (optional)`)}
                       {...createStaticClick(() => {
-                        dispatch({type: 'showDetails'})
+                        dispatch({ type: 'showDetails' })
                       })}>
                       <Trans>Add more details (optional)</Trans>
                     </InlineLinkText>
@@ -413,10 +416,10 @@ function Inner(props: ReportDialogProps) {
                       multiline
                       value={state.details}
                       onChangeText={details => {
-                        dispatch({type: 'setDetails', details})
+                        dispatch({ type: 'setDetails', details })
                       }}
                       label={_(msg`Additional details (limit 300 characters)`)}
-                      style={{paddingRight: 60}}
+                      style={{ paddingRight: 60 }}
                       numberOfLines={4}
                     />
                     <View
@@ -482,7 +485,7 @@ function ActionOnce({
   return null
 }
 
-function StepOuter({children}: {children: React.ReactNode}) {
+function StepOuter({ children }: { children: React.ReactNode }) {
   return <View style={[a.gap_md, a.w_full]}>{children}</View>
 }
 
@@ -571,7 +574,7 @@ function OptionCard({
   onSelect?: (option: ReportOption) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const gutters = useGutters(['compact'])
   const onPress = React.useCallback(() => {
     onSelect?.(option)
@@ -582,7 +585,7 @@ function OptionCard({
       label={_(msg`Create report for ${option.title}`)}
       onPress={onPress}
       disabled={!onSelect}>
-      {({hovered, pressed}) => (
+      {({ hovered, pressed }) => (
         <View
           style={[
             a.w_full,
@@ -618,7 +621,7 @@ function OptionCardSkeleton() {
         a.border,
         t.atoms.bg_contrast_25,
         t.atoms.border_contrast_low,
-        {height: 55}, // magic, based on web
+        { height: 55 }, // magic, based on web
       ]}
     />
   )
@@ -632,7 +635,7 @@ function LabelerCard({
   onSelect?: (option: AppGndrLabelerDefs.LabelerViewDetailed) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const { _ } = useLingui()
   const onPress = React.useCallback(() => {
     onSelect?.(labeler)
   }, [onSelect, labeler])
@@ -646,7 +649,7 @@ function LabelerCard({
       label={_(msg`Send report to ${title}`)}
       onPress={onPress}
       disabled={!onSelect}>
-      {({hovered, pressed}) => (
+      {({ hovered, pressed }) => (
         <View
           style={[
             a.w_full,

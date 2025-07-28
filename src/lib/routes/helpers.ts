@@ -13,7 +13,7 @@ export function getRootNavigation<T extends {}>(
 
 export function getCurrentRoute(state?: State) {
   if (!state) {
-    return {name: 'Home'}
+    return { name: 'Home' }
   }
 
   let node = state.routes[state.index || 0]
@@ -83,7 +83,7 @@ export function buildStateObject(
 ) {
   if (stack === 'Flat') {
     return {
-      routes: [{name: route, params}],
+      routes: [{ name: route, params }],
     }
   }
   return {
@@ -91,7 +91,7 @@ export function buildStateObject(
       {
         name: stack,
         state: {
-          routes: [...state, {name: route, params}],
+          routes: [...state, { name: route, params }],
         },
       },
     ],

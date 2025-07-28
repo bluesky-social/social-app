@@ -1,11 +1,18 @@
-import { type PropsWithChildren } from 'react'
-import { useMemo, useRef } from 'react'
-import { Dimensions, type GestureResponderEvent, type Insets, Platform, type StyleProp, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View, type ViewStyle,  } from 'react-native'
-import Animated, {FadeIn, FadeInDown, FadeInUp} from 'react-native-reanimated'
-const RootSiblings =
-  Platform.OS !== 'web'
-    ? require('react-native-root-siblings').default
-    : undefined
+import { type PropsWithChildren, useMemo, useRef } from 'react'
+import {
+  Dimensions,
+  type GestureResponderEvent,
+  type Insets,
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  useWindowDimensions,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated'
 import { type IconProp } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { msg } from '@lingui/macro'
@@ -21,6 +28,11 @@ import { native } from '#/alf'
 import { FullWindowOverlay } from '#/components/FullWindowOverlay'
 import { Text } from '../text/Text'
 import { Button, type ButtonType } from './Button'
+
+const RootSiblings =
+  Platform.OS !== 'web'
+    ? require('react-native-root-siblings').default
+    : undefined
 
 const ESTIMATED_BTN_HEIGHT = 50
 const ESTIMATED_SEP_HEIGHT = 16
@@ -82,14 +94,14 @@ export function DropdownButton({
   hitSlop = HITSLOP_10,
   accessibilityLabel,
 }: PropsWithChildren<DropdownButtonProps>) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
 
   const ref1 = useRef<View>(null)
   const ref2 = useRef<View>(null)
 
   const onPress = (e: GestureResponderEvent) => {
     const ref = ref1.current || ref2.current
-    const {height: winHeight} = Dimensions.get('window')
+    const { height: winHeight } = Dimensions.get('window')
     const pressY = e.nativeEvent.pageY
     ref?.measure(
       (
@@ -233,8 +245,8 @@ const DropdownItems = ({
 }: DropDownItemProps) => {
   const pal = usePalette('default')
   const theme = useTheme()
-  const {_} = useLingui()
-  const {height: screenHeight} = useWindowDimensions()
+  const { _ } = useLingui()
+  const { height: screenHeight } = useWindowDimensions()
   const dropDownBackgroundColor =
     theme.colorScheme === 'dark' ? pal.btn : pal.view
   const separatorColor =
@@ -277,7 +289,7 @@ const DropdownItems = ({
         )}
         style={[
           styles.menu,
-          {left: x, top: y, width},
+          { left: x, top: y, width },
           dropDownBackgroundColor,
         ]}>
         {items.map((item, index) => {

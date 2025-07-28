@@ -19,17 +19,17 @@ export interface FABProps
   icon: JSX.Element
 }
 
-export function FABInner({testID, icon, onPress, ...props}: FABProps) {
+export function FABInner({ testID, icon, onPress, ...props }: FABProps) {
   const insets = useSafeAreaInsets()
-  const {isMobile, isTablet} = useWebMediaQueries()
+  const { isMobile, isTablet } = useWebMediaQueries()
   const playHaptic = useHaptics()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
 
   const size = isTablet ? styles.sizeLarge : styles.sizeRegular
 
   const tabletSpacing = isTablet
-    ? {right: 50, bottom: 50}
-    : {right: 24, bottom: clamp(insets.bottom, 15, 60) + 15}
+    ? { right: 50, bottom: 50 }
+    : { right: 24, bottom: clamp(insets.bottom, 15, 60) + 15 }
 
   return (
     <Animated.View
@@ -54,8 +54,8 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
         {...props}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
           style={[styles.inner, size]}>
           {icon}
         </LinearGradient>

@@ -7,7 +7,11 @@ import { type TypographyVariant, useTheme } from '#/lib/ThemeContext'
 import { logger } from '#/logger'
 import { isIOS, isWeb } from '#/platform/detection'
 import { applyFonts, useAlf } from '#/alf'
-import { childHasEmoji, renderChildrenWithEmoji, type StringChild,  } from '#/alf/typography'
+import {
+  childHasEmoji,
+  renderChildrenWithEmoji,
+  type StringChild,
+} from '#/alf/typography'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
   type?: TypographyVariant
@@ -26,7 +30,7 @@ export type CustomTextProps = Omit<TextProps, 'children'> & {
       }
   )
 
-export {Text_DEPRECATED as Text}
+export { Text_DEPRECATED as Text }
 /**
  * @deprecated use Text from `#/components/Typography.tsx` instead
  */
@@ -42,7 +46,7 @@ function Text_DEPRECATED({
   ...props
 }: React.PropsWithChildren<CustomTextProps>) {
   const theme = useTheme()
-  const {fonts} = useAlf()
+  const { fonts } = useAlf()
 
   if (__DEV__) {
     if (!emoji && childHasEmoji(children)) {
@@ -80,7 +84,7 @@ function Text_DEPRECATED({
       selectable,
       style: flattened,
       dataSet: isWeb
-        ? Object.assign({tooltip: title}, dataSet || {})
+        ? Object.assign({ tooltip: title }, dataSet || {})
         : undefined,
       ...props,
     }

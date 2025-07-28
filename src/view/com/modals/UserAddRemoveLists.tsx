@@ -1,5 +1,10 @@
-import React, {useCallback} from 'react'
-import { ActivityIndicator, StyleSheet, useWindowDimensions, View,  } from 'react-native'
+import React, { useCallback } from 'react'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import { type AppGndrGraphDefs as GraphDefs } from '@gander-social-atproto/api'
 import { msg, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
@@ -11,7 +16,13 @@ import { sanitizeHandle } from '#/lib/strings/handles'
 import { s } from '#/lib/styles'
 import { isAndroid, isMobileWeb, isWeb } from '#/platform/detection'
 import { useModalControls } from '#/state/modals'
-import { getMembership, type ListMembersip, useDangerousListMembershipsQuery, useListMembershipAddMutation, useListMembershipRemoveMutation,  } from '#/state/queries/list-memberships'
+import {
+  getMembership,
+  type ListMembersip,
+  useDangerousListMembershipsQuery,
+  useListMembershipAddMutation,
+  useListMembershipRemoveMutation,
+} from '#/state/queries/list-memberships'
 import { useSession } from '#/state/session'
 import { MyLists } from '../lists/MyLists'
 import { Button } from '../util/forms/Button'
@@ -34,11 +45,11 @@ export function Component({
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
 }) {
-  const {closeModal} = useModalControls()
+  const { closeModal } = useModalControls()
   const pal = usePalette('default')
-  const {height: screenHeight} = useWindowDimensions()
-  const {_} = useLingui()
-  const {data: memberships} = useDangerousListMembershipsQuery()
+  const { height: screenHeight } = useWindowDimensions()
+  const { _ } = useLingui()
+  const { data: memberships } = useDangerousListMembershipsQuery()
 
   const onPressDone = useCallback(() => {
     closeModal()
@@ -46,12 +57,12 @@ export function Component({
 
   const listStyle = React.useMemo(() => {
     if (isMobileWeb) {
-      return [pal.border, {height: screenHeight / 2}]
+      return [pal.border, { height: screenHeight / 2 }]
     } else if (isWeb) {
-      return [pal.border, {height: screenHeight / 1.5}]
+      return [pal.border, { height: screenHeight / 1.5 }]
     }
 
-    return [pal.border, {flex: 1, borderTopWidth: StyleSheet.hairlineWidth}]
+    return [pal.border, { flex: 1, borderTopWidth: StyleSheet.hairlineWidth }]
   }, [pal.border, screenHeight])
 
   const headerStyles = [
@@ -99,10 +110,10 @@ export function Component({
           type="default"
           onPress={onPressDone}
           style={styles.footerBtn}
-          accessibilityLabel={_(msg({message: `Done`, context: 'action'}))}
+          accessibilityLabel={_(msg({ message: `Done`, context: 'action' }))}
           accessibilityHint=""
           onAccessibilityEscape={onPressDone}
-          label={_(msg({message: `Done`, context: 'action'}))}
+          label={_(msg({ message: `Done`, context: 'action' }))}
         />
       </View>
     </View>
@@ -127,8 +138,8 @@ function ListItem({
   onRemove?: (listUri: string) => void
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
-  const {currentAccount} = useSession()
+  const { _ } = useLingui()
+  const { currentAccount } = useSession()
   const [isProcessing, setIsProcessing] = React.useState(false)
   const membership = React.useMemo(
     () => getMembership(memberships, list.uri, subject),
@@ -182,7 +193,7 @@ function ListItem({
       style={[
         styles.listItem,
         pal.border,
-        index !== 0 && {borderTopWidth: StyleSheet.hairlineWidth},
+        index !== 0 && { borderTopWidth: StyleSheet.hairlineWidth },
       ]}>
       <View style={styles.listItemAvi}>
         <UserAvatar size={40} avatar={list.avatar} type="list" />

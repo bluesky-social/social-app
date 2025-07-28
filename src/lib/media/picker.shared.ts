@@ -1,4 +1,7 @@
-import { type ImagePickerOptions, launchImageLibraryAsync,  } from 'expo-image-picker'
+import {
+  type ImagePickerOptions,
+  launchImageLibraryAsync,
+} from 'expo-image-picker'
 import { t } from '@lingui/macro'
 
 import { type ImageMeta } from '#/state/gallery'

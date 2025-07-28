@@ -18,7 +18,7 @@ export function HomeHeaderLayout(props: {
   children: React.ReactNode
   tabBarAnchor: JSX.Element | null | undefined
 }) {
-  const {gtMobile} = useBreakpoints()
+  const { gtMobile } = useBreakpoints()
   if (!gtMobile) {
     return <HomeHeaderLayoutMobile {...props} />
   } else {
@@ -34,9 +34,9 @@ function HomeHeaderLayoutDesktopAndTablet({
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const t = useTheme()
-  const {headerHeight} = useShellLayout()
-  const {hasSession} = useSession()
-  const {_} = useLingui()
+  const { headerHeight } = useShellLayout()
+  const { hasSession } = useSession()
+  const { _ } = useLingui()
   const kawaii = useKawaiiMode()
   const gutters = useGutters([0, 'base'])
 
@@ -46,7 +46,7 @@ function HomeHeaderLayoutDesktopAndTablet({
         <Layout.Center>
           <View
             style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
-            <View style={{width: 34}} />
+            <View style={{ width: 34 }} />
             <View style={[a.flex_1, a.align_center, a.justify_center]}>
               <Logo width={kawaii ? 60 : 28} />
             </View>
@@ -66,7 +66,7 @@ function HomeHeaderLayoutDesktopAndTablet({
       )}
       {tabBarAnchor}
       <Layout.Center
-        style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, {top: 0}]}
+        style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, { top: 0 }]}
         onLayout={e => {
           headerHeight.set(e.nativeEvent.layout.height)
         }}>

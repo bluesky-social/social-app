@@ -1,8 +1,17 @@
-import { type AppGndrLabelerDefs, type ComAtprotoLabelDefs, type InterpretedLabelValueDefinition, interpretLabelValueDefinition, LABELS,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrLabelerDefs,
+  type ComAtprotoLabelDefs,
+  type InterpretedLabelValueDefinition,
+  interpretLabelValueDefinition,
+  LABELS,
+} from '@gander-social-atproto/api'
 import { useLingui } from '@lingui/react'
 import * as bcp47Match from 'bcp-47-match'
 
-import { type GlobalLabelStrings, useGlobalLabelStrings,  } from '#/lib/moderation/useGlobalLabelStrings'
+import {
+  type GlobalLabelStrings,
+  useGlobalLabelStrings,
+} from '#/lib/moderation/useGlobalLabelStrings'
 import { useLabelDefinitions } from '#/state/preferences'
 
 export interface LabelInfo {
@@ -13,8 +22,8 @@ export interface LabelInfo {
 }
 
 export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
-  const {i18n} = useLingui()
-  const {labelDefs, labelers} = useLabelDefinitions()
+  const { i18n } = useLingui()
+  const { labelDefs, labelers } = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()
   const def = getDefinition(labelDefs, label)
   return {

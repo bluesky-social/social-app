@@ -1,5 +1,13 @@
-import React, {useEffect, useState} from 'react'
-import { type NativeScrollEvent, type NativeSyntheticEvent, Pressable, RefreshControl, ScrollView, StyleSheet, View,  } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import {
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 
 import { useColorSchemeStyle } from '#/lib/hooks/useColorSchemeStyle'
 import { usePalette } from '#/lib/hooks/usePalette'
@@ -9,8 +17,8 @@ import { isAndroid } from '#/platform/detection'
 import { Text } from './text/Text'
 import { FlatList_INTERNAL } from './Views'
 
-const HEADER_ITEM = {_reactKey: '__header__'}
-const SELECTOR_ITEM = {_reactKey: '__selector__'}
+const HEADER_ITEM = { _reactKey: '__header__' }
+const SELECTOR_ITEM = { _reactKey: '__selector__' }
 const STICKY_HEADER_INDICES = [1]
 
 export type ViewSelectorHandle = {
@@ -34,7 +42,7 @@ export const ViewSelector = React.forwardRef<
     onSelectView?: (viewIndex: number) => void
     onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
     onRefresh?: () => void
-    onEndReached?: (info: {distanceFromEnd: number}) => void
+    onEndReached?: (info: { distanceFromEnd: number }) => void
   }
 >(function ViewSelectorImpl(
   {
@@ -70,7 +78,7 @@ export const ViewSelector = React.forwardRef<
 
   React.useImperativeHandle(ref, () => ({
     scrollToTop: () => {
-      flatListRef.current?.scrollToOffset({offset: 0})
+      flatListRef.current?.scrollToOffset({ offset: 0 })
     },
   }))
 
@@ -78,7 +86,7 @@ export const ViewSelector = React.forwardRef<
   // =
 
   const renderItemInternal = React.useCallback(
-    ({item}: {item: any}) => {
+    ({ item }: { item: any }) => {
       if (item === HEADER_ITEM) {
         if (renderHeader) {
           return renderHeader()
@@ -125,7 +133,7 @@ export const ViewSelector = React.forwardRef<
       onEndReachedThreshold={0.6}
       contentContainerStyle={s.contentContainer}
       removeClippedSubviews={true}
-      scrollIndicatorInsets={{right: 1}} // fixes a bug where the scroll indicator is on the middle of the screen https://github.com/gander-social/social-app/pull/464
+      scrollIndicatorInsets={{ right: 1 }} // fixes a bug where the scroll indicator is on the middle of the screen https://github.com/gander-social/social-app/pull/464
     />
   )
 })
@@ -141,8 +149,8 @@ export function Selector({
 }) {
   const pal = usePalette('default')
   const borderColor = useColorSchemeStyle(
-    {borderColor: colors.black},
-    {borderColor: colors.white},
+    { borderColor: colors.black },
+    { borderColor: colors.white },
   )
 
   const onPressItem = (index: number) => {

@@ -1,4 +1,7 @@
-import { type InterpretedLabelValueDefinition, type LabelPreference,  } from '@gander-social-atproto/api'
+import {
+  type InterpretedLabelValueDefinition,
+  type LabelPreference,
+} from '@gander-social-atproto/api'
 import { msg } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
@@ -6,7 +9,7 @@ export function useLabelBehaviorDescription(
   labelValueDef: InterpretedLabelValueDefinition,
   pref: LabelPreference,
 ) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   if (pref === 'ignore') {
     return _(msg`Off`)
   }
@@ -37,7 +40,7 @@ export function useLabelLongBehaviorDescription(
   labelValueDef: InterpretedLabelValueDefinition,
   pref: LabelPreference,
 ) {
-  const {_} = useLingui()
+  const { _ } = useLingui()
   if (pref === 'ignore') {
     return _(msg`Disabled`)
   }

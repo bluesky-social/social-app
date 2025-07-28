@@ -1,11 +1,14 @@
 import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { RemoveScrollBar } from 'react-remove-scroll-bar'
 
 import { usePalette } from '#/lib/hooks/usePalette'
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
-import { type Modal as ModalIface } from '#/state/modals'
-import { useModalControls, useModals } from '#/state/modals'
+import {
+  type Modal as ModalIface,
+  useModalControls,
+  useModals,
+} from '#/state/modals'
 import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as DeleteAccountModal from './DeleteAccount'
@@ -15,7 +18,7 @@ import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettin
 import * as UserAddRemoveLists from './UserAddRemoveLists'
 
 export function ModalsContainer() {
-  const {isModalActive, activeModals} = useModals()
+  const { isModalActive, activeModals } = useModals()
 
   if (!isModalActive) {
     return null
@@ -31,11 +34,11 @@ export function ModalsContainer() {
   )
 }
 
-function Modal({modal}: {modal: ModalIface}) {
-  const {isModalActive} = useModals()
-  const {closeModal} = useModalControls()
+function Modal({ modal }: { modal: ModalIface }) {
+  const { isModalActive } = useModals()
+  const { closeModal } = useModalControls()
   const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
+  const { isMobile } = useWebMediaQueries()
 
   if (!isModalActive) {
     return null

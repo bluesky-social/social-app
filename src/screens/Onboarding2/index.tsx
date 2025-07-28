@@ -1,11 +1,11 @@
 import React from 'react'
 
-import {Onboarding2Layout} from '#/screens/Onboarding2/Layout'
-import {Context, initialState, reducer} from '#/screens/Onboarding2/state'
-import {StepFinished} from '#/screens/Onboarding2/StepFinished'
-import {StepInterests} from '#/screens/Onboarding2/StepInterests'
-import {StepProfile} from '#/screens/Onboarding2/StepProfile'
-import {Portal} from '#/components/Portal'
+import { Onboarding2Layout } from '#/screens/Onboarding2/Layout'
+import { Context, initialState, reducer } from '#/screens/Onboarding2/state'
+import { StepFinished } from '#/screens/Onboarding2/StepFinished'
+import { StepInterests } from '#/screens/Onboarding2/StepInterests'
+import { StepProfile } from '#/screens/Onboarding2/StepProfile'
+import { Portal } from '#/components/Portal'
 
 export function Onboarding2({
   onGoBack,
@@ -23,7 +23,7 @@ export function Onboarding2({
   return (
     <Portal>
       <Context.Provider
-        value={React.useMemo(() => ({state, dispatch}), [state, dispatch])}>
+        value={React.useMemo(() => ({ state, dispatch }), [state, dispatch])}>
         <Onboarding2Layout
           onGoBack={onGoBack}
           onCancel={onCancel}

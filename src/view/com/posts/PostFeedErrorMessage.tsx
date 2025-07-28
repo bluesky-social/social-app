@@ -1,6 +1,10 @@
 import React from 'react'
 import { View } from 'react-native'
-import { type AppGndrActorDefs, AppGndrFeedGetAuthorFeed, AtUri,  } from '@gander-social-atproto/api'
+import {
+  type AppGndrActorDefs,
+  AppGndrFeedGetAuthorFeed,
+  AtUri,
+} from '@gander-social-atproto/api'
 import { msg as msgLingui, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { useNavigation } from '@react-navigation/native'
@@ -41,7 +45,7 @@ export function PostFeedErrorMessage({
   onPressTryAgain: () => void
   savedFeedConfig?: AppGndrActorDefs.SavedFeed
 }) {
-  const {_: _l} = useLingui()
+  const { _: _l } = useLingui()
   const knownError = React.useMemo(
     () => detectKnownError(feedDesc, error),
     [feedDesc, error],
@@ -66,7 +70,7 @@ export function PostFeedErrorMessage({
       <EmptyState
         icon="ban"
         message={_l(msgLingui`Posts hidden`)}
-        style={{paddingVertical: 40}}
+        style={{ paddingVertical: 40 }}
       />
     )
   }
@@ -91,7 +95,7 @@ function FeedgenErrorMessage({
   savedFeedConfig?: AppGndrActorDefs.SavedFeed
 }) {
   const pal = usePalette('default')
-  const {_: _l} = useLingui()
+  const { _: _l } = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const msg = React.useMemo(
     () =>
@@ -125,10 +129,10 @@ function FeedgenErrorMessage({
   const [_, uri] = feedDesc.split('|')
   const [ownerDid] = safeParseFeedgenUri(uri)
   const removePromptControl = Prompt.usePromptControl()
-  const {mutateAsync: removeFeed} = useRemoveFeedMutation()
+  const { mutateAsync: removeFeed } = useRemoveFeedMutation()
 
   const onViewProfile = React.useCallback(() => {
-    navigation.navigate('Profile', {name: ownerDid})
+    navigation.navigate('Profile', { name: ownerDid })
   }, [navigation, ownerDid])
 
   const onPressRemoveFeed = React.useCallback(() => {
@@ -146,7 +150,7 @@ function FeedgenErrorMessage({
         ),
         'exclamation-circle',
       )
-      logger.error('Failed to remove feed', {message: err})
+      logger.error('Failed to remove feed', { message: err })
     }
   }, [removeFeed, _l, savedFeedConfig])
 
@@ -161,7 +165,7 @@ function FeedgenErrorMessage({
       case KnownError.FeedgenOffline:
       case KnownError.FeedgenUnknown: {
         return (
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             {knownError === KnownError.FeedgenDoesNotExist &&
               savedFeedConfig && (
                 <Button

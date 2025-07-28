@@ -1,4 +1,5 @@
-import { type Agent, type AppBskyFeedGetListFeed as GetListFeed,type AppGndrFeedDefs,   } from '@gander-social-atproto/api'
+import type GetListFeed from '@gander-social-atproto/api'
+import { type Agent, type AppGndrFeedDefs } from '@gander-social-atproto/api'
 
 import { type FeedAPI, type FeedAPIResponse } from './types'
 
