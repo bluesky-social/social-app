@@ -261,6 +261,9 @@ let ProfileHeaderStandard = ({
                 gtMobile ? a.text_4xl : a.text_3xl,
                 a.self_start,
                 a.font_heavy,
+                {
+                  marginBottom: platform({ios: -4}),
+                },
               ]}>
               {sanitizeDisplayName(
                 profile.displayName || sanitizeHandle(profile.handle),

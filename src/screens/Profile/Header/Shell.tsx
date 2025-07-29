@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   aviPosition: {
     position: 'absolute',
     top: 104,
-    left: 16,
+    left: 10,
   },
   avi: {
     width: 94,
