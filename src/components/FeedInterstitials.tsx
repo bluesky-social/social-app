@@ -313,7 +313,7 @@ export function ProfileGrid({
                     moderationOpts={moderationOpts}
                     size={88}
                   />
-                  <View style={[a.flex_col, a.align_center]}>
+                  <View style={[a.flex_col, a.align_center, a.max_w_full]}>
                     <ProfileCard.Name
                       profile={profile}
                       moderationOpts={moderationOpts}

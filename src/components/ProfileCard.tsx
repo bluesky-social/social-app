@@ -282,7 +282,7 @@ export function Name({
   )
   const verification = useSimpleVerificationState({profile})
   return (
-    <View style={[a.flex_row, a.align_center]}>
+    <View style={[a.flex_row, a.align_center, a.max_w_full]}>
       <Text
         emoji
         style={[
