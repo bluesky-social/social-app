@@ -101,13 +101,13 @@ jobs:
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         uses: dcarbone/install-jq-action@v2
 
-      # EXPO_PUBLIC_ENV is handled in eas.json
       - name: Env
         id: env
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "EXPO_PUBLIC_ENV=${{ inputs.channel || 'testflight' }}" >> .env
           echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> .env
           echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
           echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse HEAD)" >> .env
@@ -117,7 +117,6 @@ jobs:
           echo "EXPO_PUBLIC_BITDRIFT_API_KEY=${{ secrets.BITDRIFT_API_KEY }}" >> .env
           echo "$json" > google-services.json
 
-      # TODO do we need EXPO_PUBLIC_ENV here?
       - name: 🏗️ Create Bundle
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: >
