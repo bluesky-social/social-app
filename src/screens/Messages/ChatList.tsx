@@ -55,7 +55,7 @@ type ListItem =
 function renderItem({item}: {item: ListItem}) {
   switch (item.type) {
     case 'INBOX':
-      return <InboxPreview count={item.count} profiles={item.profiles} />
+      return <InboxPreview profiles={item.profiles} />
     case 'CONVERSATION':
       return <ChatListItem convo={item.conversation} />
   }
