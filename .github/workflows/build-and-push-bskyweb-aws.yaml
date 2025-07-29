@@ -43,7 +43,7 @@ jobs:
           tags: |
             type=sha,enable=true,priority=100,prefix=,suffix=,format=long
 
-      - name: Setup env
+      - name: Env
         id: env
         run: |
           echo "EXPO_PUBLIC_RELEASE_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_OUTPUT
