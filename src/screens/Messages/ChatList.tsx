@@ -231,11 +231,11 @@ export function MessagesScreenInner({navigation, route}: Props) {
 
   // NOTE(APiligrim)
   // Show empty state only if there are no conversations at all
-  const actualConversations = conversations.filter(
+  const activeConversations = conversations.filter(
     item => item.type === 'CONVERSATION',
   )
 
-  if (actualConversations.length === 0) {
+  if (activeConversations.length === 0) {
     return (
       <Layout.Screen>
         <Header newChatControl={newChatControl} />
