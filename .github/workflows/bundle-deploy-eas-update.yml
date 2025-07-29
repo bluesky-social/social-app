@@ -101,6 +101,7 @@ jobs:
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
         uses: dcarbone/install-jq-action@v2
 
+      # eas.json not used here, set EXPO_PUBLIC_ENV
       - name: Env
         id: env
         if: ${{ !steps.fingerprint.outputs.includes-changes }}
@@ -209,6 +210,7 @@ jobs:
       - name: 🔤 Compile translations
         run: yarn intl:build
 
+      # EXPO_PUBLIC_ENV is handled in eas.json
       - name: Env
         id: env
         run: |
@@ -298,6 +300,7 @@ jobs:
       - name: 🔤 Compile translations
         run: yarn intl:build
 
+      # EXPO_PUBLIC_ENV is handled in eas.json
       - name: Env
         id: env
         run: |
