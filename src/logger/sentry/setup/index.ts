@@ -1,6 +1,5 @@
 import {init} from '@sentry/react-native'
 
-import pkgJson from '#/../package.json'
 import * as env from '#/env'
 
 init({
@@ -10,7 +9,7 @@ init({
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: env.ENV,
   dist: env.BUNDLE_IDENTIFIER,
-  release: pkgJson.version,
+  release: env.RELEASE_VERSION,
   ignoreErrors: [
     /*
      * Unknown internals errors
