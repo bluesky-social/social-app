@@ -262,7 +262,7 @@ let ProfileHeaderStandard = ({
                 a.self_start,
                 a.font_heavy,
                 {
-                  marginBottom: platform({ios: -4}),
+                  marginBottom: platform({native: -4}),
                 },
               ]}>
               {sanitizeDisplayName(
