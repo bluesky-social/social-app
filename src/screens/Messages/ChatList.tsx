@@ -140,22 +140,24 @@ export function MessagesScreenInner({navigation, route}: Props) {
 
   const leftConvos = useLeftConvos()
 
-  const inboxPreviewConvos = useMemo(() => {
-    const inbox =
-      inboxData?.pages
-        .flatMap(page => page.convos)
-        .filter(
-          convo =>
-            !leftConvos.includes(convo.id) &&
-            !convo.muted &&
-            convo.unreadCount > 0 &&
-            convo.members.every(member => member.handle !== 'missing.invalid'),
-        ) ?? []
+  const inboxAllConvos =
+    inboxData?.pages
+      .flatMap(page => page.convos)
+      .filter(
+        convo =>
+          !leftConvos.includes(convo.id) &&
+          !convo.muted &&
+          convo.members.every(member => member.handle !== 'missing.invalid'),
+      ) ?? []
+  const hasInboxConvos = inboxAllConvos?.length > 0
 
-    return inbox
-      .map(x => x.members.find(y => y.did !== currentAccount?.did))
-      .filter(x => !!x)
-  }, [inboxData, leftConvos, currentAccount?.did])
+  const inboxUnreadConvos = inboxAllConvos.filter(
+    convo => convo.unreadCount > 0,
+  )
+
+  const inboxUnreadConvoMembers = inboxUnreadConvos
+    .map(x => x.members.find(y => y.did !== currentAccount?.did))
+    .filter(x => !!x)
 
   const conversations = useMemo(() => {
     if (data?.pages) {
@@ -164,15 +166,13 @@ export function MessagesScreenInner({navigation, route}: Props) {
         // filter out convos that are actively being left
         .filter(convo => !leftConvos.includes(convo.id))
 
-      const hasInboxRequests = inboxPreviewConvos?.length > 0
-
       return [
-        ...(hasInboxRequests
+        ...(hasInboxConvos
           ? [
               {
                 type: 'INBOX' as const,
-                count: inboxPreviewConvos.length,
-                profiles: inboxPreviewConvos.slice(0, 3),
+                count: inboxUnreadConvoMembers.length,
+                profiles: inboxUnreadConvoMembers.slice(0, 3),
               },
             ]
           : []),
@@ -182,7 +182,7 @@ export function MessagesScreenInner({navigation, route}: Props) {
       ] satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, inboxPreviewConvos])
+  }, [data, leftConvos, hasInboxConvos, inboxUnreadConvoMembers])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -234,18 +234,14 @@ export function MessagesScreenInner({navigation, route}: Props) {
   const actualConversations = conversations.filter(
     item => item.type === 'CONVERSATION',
   )
-  const hasInboxRequests = inboxPreviewConvos?.length > 0
 
   if (actualConversations.length === 0) {
     return (
       <Layout.Screen>
         <Header newChatControl={newChatControl} />
         <Layout.Center>
-          {hasInboxRequests && (
-            <InboxPreview
-              count={inboxPreviewConvos.length}
-              profiles={inboxPreviewConvos}
-            />
+          {!isLoading && hasInboxConvos && (
+            <InboxPreview profiles={inboxUnreadConvoMembers} />
           )}
           {isLoading ? (
             <ChatListLoadingPlaceholder />
