@@ -251,7 +251,7 @@ let ProfileHeaderStandard = ({
           <ProfileMenu profile={profile} />
         </View>
         <View
-          style={[a.flex_col, a.gap_sm, a.pb_sm, live ? a.pt_sm : a.pt_2xs]}>
+          style={[a.flex_col, a.gap_xs, a.pb_sm, live ? a.pt_sm : a.pt_2xs]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
             <Text
               emoji
@@ -261,6 +261,7 @@ let ProfileHeaderStandard = ({
                 gtMobile ? a.text_4xl : a.text_3xl,
                 a.self_start,
                 a.font_heavy,
+                a.leading_tight,
               ]}>
               {sanitizeDisplayName(
                 profile.displayName || sanitizeHandle(profile.handle),
