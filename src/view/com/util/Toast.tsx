@@ -21,20 +21,36 @@ import {
   FontAwesomeIcon,
   type Props as FontAwesomeProps,
 } from '@fortawesome/react-native-fontawesome'
-
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 const TIMEOUT = 2e3
 
+export type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info'
+
+const TOAST_TYPE_TO_ICON: Record<ToastType, FontAwesomeProps['icon']> = {
+  default: 'check',
+  success: 'check',
+  error: 'exclamation',
+  warning: 'circle-exclamation',
+  info: 'info',
+}
+
 export function show(
   message: string,
-  icon: FontAwesomeProps['icon'] = 'check',
+  type: ToastType | FontAwesomeProps['icon'] = 'default',
 ) {
   if (process.env.NODE_ENV === 'test') {
     return
   }
+
+  const icon =
+    typeof type === 'string' && type in TOAST_TYPE_TO_ICON
+      ? TOAST_TYPE_TO_ICON[type as ToastType]
+      : (type as FontAwesomeProps['icon'])
+
   AccessibilityInfo.announceForAccessibility(message)
   const item = new RootSiblings(
     <Toast message={message} icon={icon} destroy={() => item.destroy()} />,
@@ -153,9 +169,41 @@ function Toast({
     }
   })
 
+  // Web-specific styles for better compatibility
+  const webContainerStyle = isWeb
+    ? {
+        position: 'absolute' as const,
+        top: topOffset,
+        left: 16,
+        right: 16,
+        zIndex: 9999,
+        pointerEvents: 'auto' as const,
+      }
+    : {}
+
+  const webToastStyle = isWeb
+    ? {
+        backgroundColor:
+          t.name === 'dark' ? t.palette.contrast_25 : t.palette.white,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 10},
+        shadowOpacity: 0.1,
+        shadowRadius: 15,
+        elevation: 10,
+        borderColor: t.palette.contrast_300,
+        borderWidth: 1,
+        borderRadius: 8,
+        minHeight: 60,
+      }
+    : {}
+
   return (
     <GestureHandlerRootView
-      style={[a.absolute, {top: topOffset, left: 16, right: 16}]}
+      style={[
+        a.absolute,
+        {top: topOffset, left: 16, right: 16},
+        isWeb && webContainerStyle,
+      ]}
       pointerEvents="box-none">
       {alive && (
         <Animated.View
@@ -171,12 +219,16 @@ function Toast({
             onAccessibilityEscape={hideAndDestroyImmediately}
             style={[
               a.flex_1,
-              t.name === 'dark' ? t.atoms.bg_contrast_25 : t.atoms.bg,
-              a.shadow_lg,
-              t.atoms.border_contrast_medium,
-              a.rounded_sm,
-              a.border,
-              animatedStyle,
+              isWeb
+                ? webToastStyle
+                : [
+                    t.name === 'dark' ? t.atoms.bg_contrast_25 : t.atoms.bg,
+                    a.shadow_lg,
+                    t.atoms.border_contrast_medium,
+                    a.rounded_sm,
+                    a.border,
+                  ],
+              !isWeb && animatedStyle,
             ]}>
             <GestureDetector gesture={panGesture}>
               <View style={[a.flex_1, a.px_md, a.py_lg, a.flex_row, a.gap_md]}>
@@ -200,7 +252,13 @@ function Toast({
                     style={t.atoms.text_contrast_medium}
                   />
                 </View>
-                <View style={[a.h_full, a.justify_center, a.flex_1]}>
+                <View
+                  style={[
+                    a.h_full,
+                    a.justify_center,
+                    a.flex_1,
+                    a.justify_center,
+                  ]}>
                   <Text style={a.text_md} emoji>
                     {message}
                   </Text>
