@@ -243,7 +243,6 @@ export function ProfileGrid({
   const t = useTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
   const isLoading = isSuggestionsLoading || !moderationOpts
   const maxLength = gtMobile ? 3 : 6
@@ -403,26 +402,6 @@ export function ProfileGrid({
               style={[a.overflow_visible]}>
               <View style={[a.px_lg, a.pb_lg, a.flex_row, a.gap_md]}>
                 {content}
-
-                <Button
-                  label={_(msg`Browse more accounts on the Explore page`)}
-                  onPress={() => {
-                    navigation.navigate('SearchTab')
-                  }}>
-                  <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
-                    <View style={[a.flex_1, a.justify_center]}>
-                      <View style={[a.flex_row, a.px_lg]}>
-                        <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                          <Trans>
-                            Browse more suggestions on the Explore page
-                          </Trans>
-                        </Text>
-
-                        <Arrow size="xl" />
-                      </View>
-                    </View>
-                  </CardOuter>
-                </Button>
               </View>
             </ScrollView>
           </View>
