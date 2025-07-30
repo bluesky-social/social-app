@@ -87,8 +87,6 @@ function StorybookInner() {
               </Button>
             </View>
 
-            <Buttons />
-
             <Button
               color="primary"
               size="small"
