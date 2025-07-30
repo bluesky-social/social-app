@@ -27,8 +27,6 @@ export type ButtonColor =
   | 'secondary_inverted'
   | 'negative'
   | 'negative_secondary'
-  | 'gradient_primary'
-  | 'gradient_sky'
   | 'gradient_midnight'
   | 'gradient_sunrise'
   | 'gradient_sunset'
@@ -478,8 +476,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
         secondary_inverted: tokens.gradients.sky,
         negative: tokens.gradients.sky,
         negative_secondary: tokens.gradients.sky,
-        gradient_primary: tokens.gradients.primary,
-        gradient_sky: tokens.gradients.sky,
         gradient_midnight: tokens.gradients.midnight,
         gradient_sunrise: tokens.gradients.sunrise,
         gradient_sunset: tokens.gradients.sunset,
