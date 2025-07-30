@@ -10,7 +10,9 @@ require (
 	github.com/ipfs/go-log v1.0.5
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.17.3
+	github.com/labstack/echo-contrib v0.15.0
 	github.com/labstack/echo/v4 v4.11.3
+	github.com/prometheus/client_golang v1.17.0
 	github.com/urfave/cli/v2 v2.25.7
 )
 
@@ -73,7 +75,6 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/orandin/slog-gorm v1.3.2 // indirect
 	github.com/polydawn/refmt v0.89.1-0.20221221234430-40501e09de1f // indirect
-	github.com/prometheus/client_golang v1.17.0 // indirect
 	github.com/prometheus/client_model v0.5.0 // indirect
 	github.com/prometheus/common v0.45.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
