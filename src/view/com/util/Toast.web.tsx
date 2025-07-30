@@ -6,8 +6,10 @@ import {useEffect, useState} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 
 import {
+  convertLegacyToastType,
   getToastTypeStyles,
   getToastWebAnimationStyles,
+  type LegacyToastType,
   TOAST_TYPE_TO_ICON,
   TOAST_WEB_KEYFRAMES,
   type ToastType,
@@ -63,11 +65,11 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
 
   const toastTypeStyles = getToastTypeStyles(t)
   const toastStyles = activeToast
-    ? toastTypeStyles[activeToast.type as keyof typeof toastTypeStyles]
+    ? toastTypeStyles[activeToast.type]
     : toastTypeStyles.default
 
   const IconComponent = activeToast
-    ? TOAST_TYPE_TO_ICON[activeToast.type as keyof typeof TOAST_TYPE_TO_ICON]
+    ? TOAST_TYPE_TO_ICON[activeToast.type]
     : TOAST_TYPE_TO_ICON.default
 
   const animationStyles = getToastWebAnimationStyles()
@@ -125,12 +127,15 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
 // methods
 // =
 
-export function show(text: string, type: ToastType = 'default') {
+export function show(
+  text: string,
+  type: ToastType | LegacyToastType = 'default',
+) {
   if (toastTimeout) {
     clearTimeout(toastTimeout)
   }
 
-  globalSetActiveToast?.({text, type})
+  globalSetActiveToast?.({text, type: convertLegacyToastType(type)})
   toastTimeout = setTimeout(() => {
     globalSetActiveToast?.(undefined)
   }, DURATION)
