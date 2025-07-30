@@ -103,7 +103,7 @@ export const Link = memo(function Link({
 
   const dataSet = anchorNoUnderline
     ? {...dataSetProp, noUnderline: 1}
-    : {...dataSetProp}
+    : dataSetProp
 
   if (noFeedback) {
     return (
@@ -198,7 +198,7 @@ export const TextLink = memo(function TextLink({
 
   const dataSet = anchorNoUnderline
     ? {...dataSetProp, noUnderline: 1}
-    : {...dataSetProp}
+    : dataSetProp
 
   const onPress = useCallback(
     (e?: Event) => {
