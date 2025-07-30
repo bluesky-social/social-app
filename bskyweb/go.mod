@@ -1,11 +1,9 @@
 module github.com/bluesky-social/social-app/bskyweb
 
-go 1.23.0
-
-toolchain go1.24.5
+go 1.24.5
 
 require (
-	github.com/bluesky-social/indigo v0.0.0-20250605010711-db9bb60025dc
+	github.com/bluesky-social/indigo v0.0.0-20250729223159-573ae927246a
 	github.com/flosch/pongo2/v6 v6.0.0
 	github.com/ipfs/go-log v1.0.5
 	github.com/joho/godotenv v1.5.1
@@ -15,6 +13,8 @@ require (
 	github.com/prometheus/client_golang v1.22.0
 	github.com/urfave/cli/v2 v2.25.7
 )
+
+require github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -70,7 +70,6 @@ require (
 	github.com/multiformats/go-multibase v0.2.0 // indirect
 	github.com/multiformats/go-multihash v0.2.3 // indirect
 	github.com/multiformats/go-varint v0.0.7 // indirect
-	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/orandin/slog-gorm v1.3.2 // indirect
 	github.com/polydawn/refmt v0.89.1-0.20221221234430-40501e09de1f // indirect
