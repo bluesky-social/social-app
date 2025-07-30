@@ -415,12 +415,40 @@ export function ProfileGrid({
               style={[a.overflow_visible]}>
               <View style={[a.px_lg, a.pb_lg, a.flex_row, a.gap_md]}>
                 {content}
+
+                <SeeMoreSuggestedProfilesCard />
               </View>
             </ScrollView>
           </View>
         </BlockDrawerGesture>
       )}
     </View>
+  )
+}
+
+function SeeMoreSuggestedProfilesCard() {
+  const navigation = useNavigation<NavigationProp>()
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <Button
+      label={_(msg`Browse more accounts on the Explore page`)}
+      onPress={() => {
+        navigation.navigate('SearchTab')
+      }}>
+      <CardOuter style={[a.flex_1, t.atoms.shadow_sm]}>
+        <View style={[a.flex_1, a.justify_center]}>
+          <View style={[a.flex_col, a.align_center, a.gap_md]}>
+            <Text style={[a.leading_snug, a.text_center]}>
+              <Trans>See more accounts you might like</Trans>
+            </Text>
+
+            <Arrow size="xl" />
+          </View>
+        </View>
+      </CardOuter>
+    </Button>
   )
 }
 
