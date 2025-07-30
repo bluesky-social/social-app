@@ -154,7 +154,13 @@ func serve(cctx *cli.Context) error {
 		RedirectCode: http.StatusFound,
 	}))
 
-	e.Use(echoprometheus.NewMiddleware(""))
+	echoprom := echoprometheus.NewMiddlewareWithConfig(
+		echoprometheus.MiddlewareConfig{
+			DoNotUseRequestPathFor404: true,
+		},
+	)
+
+	e.Use(echoprom)
 
 	//
 	// configure routes
