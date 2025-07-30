@@ -14,7 +14,9 @@ require (
 	github.com/labstack/echo/v4 v4.11.3
 	github.com/prometheus/client_golang v1.17.0
 	github.com/klauspost/compress v1.18.0
+	github.com/labstack/echo-contrib v0.17.4
 	github.com/labstack/echo/v4 v4.13.3
+	github.com/prometheus/client_golang v1.22.0
 	github.com/urfave/cli/v2 v2.25.7
 )
 
@@ -57,7 +59,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
-	github.com/labstack/echo-contrib v0.17.4
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/lestrrat-go/blackmagic v1.0.1 // indirect
 	github.com/lestrrat-go/httpcc v1.0.1 // indirect
@@ -78,11 +79,6 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/orandin/slog-gorm v1.3.2 // indirect
 	github.com/polydawn/refmt v0.89.1-0.20221221234430-40501e09de1f // indirect
-	github.com/prometheus/client_model v0.5.0 // indirect
-	github.com/prometheus/common v0.45.0 // indirect
-	github.com/prometheus/procfs v0.12.0 // indirect
-	github.com/prometheus/client_golang v1.22.0 // indirect
-	github.com/prometheus/client_golang v1.22.0
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.63.0 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
