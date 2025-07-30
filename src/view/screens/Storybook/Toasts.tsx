@@ -12,8 +12,9 @@ import {H1, Text} from '#/components/Typography'
 function ToastPreview({message, type}: {message: string; type: ToastType}) {
   const t = useTheme()
   const toastStyles = getToastTypeStyles(t)
-  const colors = toastStyles[type]
-  const IconComponent = TOAST_TYPE_TO_ICON[type]
+  const colors = toastStyles[type as keyof typeof toastStyles]
+  const IconComponent =
+    TOAST_TYPE_TO_ICON[type as keyof typeof TOAST_TYPE_TO_ICON]
 
   return (
     <Pressable
