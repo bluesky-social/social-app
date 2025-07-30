@@ -1,25 +1,26 @@
-import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
-import {ComposerImage, createComposerImage} from '#/state/gallery'
-import {getDataUriSize} from '#/lib/media/util'
-import {getVideoMetadata} from '#/view/com/composer/videos/pickVideo'
-import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
-import {isNative, isWeb} from '#/platform/detection'
-import {msg} from '@lingui/macro'
-import {type ImagePickerAsset, launchImageLibraryAsync} from 'expo-image-picker'
 import {useCallback} from 'react'
+import {type ImagePickerAsset, launchImageLibraryAsync} from 'expo-image-picker'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
+
+import {
+  SUPPORTED_MIME_TYPES,
+  type SupportedMimeTypes,
+  VIDEO_MAX_DURATION_MS,
+} from '#/lib/constants'
 import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
+import {getDataUriSize} from '#/lib/media/util'
+import {isNative, isWeb} from '#/platform/detection'
+import {type ComposerImage, createComposerImage} from '#/state/gallery'
+import {getVideoMetadata} from '#/view/com/composer/videos/pickVideo'
 import * as Toast from '#/view/com/util/Toast'
-import {
-  SUPPORTED_MIME_TYPES,
-  SupportedMimeTypes,
-  VIDEO_MAX_DURATION_MS,
-} from '#/lib/constants'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
+import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
 
 type Props = {
   size: number
@@ -50,7 +51,7 @@ export function validateAndSelectVideo(
       }
     } else {
       if (typeof asset.duration !== 'number') {
-        throw Error('Asset is not a video')
+        throw Error(_(msg`Asset is not a video`))
       }
       if (asset.duration > VIDEO_MAX_DURATION_MS) {
         throw Error(_(msg`Videos must be less than 3 minutes long`))
@@ -87,6 +88,10 @@ export function SelectMediaBtn({
       ])
 
       if (!photoAccess && !videoAccess) {
+        Toast.show(
+          _(msg`You need to allow access to your media library.`),
+          'error',
+        )
         return
       }
     }
@@ -124,12 +129,7 @@ export function SelectMediaBtn({
       const limitedAssets = assets.slice(0, 4)
 
       if (assets.length > 4) {
-        Toast.show(
-          _(
-            msg`You can only select up to 4 items at a time. Using the first 4 selected.`,
-          ),
-          'info',
-        )
+        Toast.show(_(msg`Using the first 4 images.`), 'info')
       }
 
       const images: ImagePickerAsset[] = []
@@ -188,7 +188,7 @@ export function SelectMediaBtn({
         if (firstMediaType === 'video') {
           Toast.show(
             _(
-              msg`You can select either images or videos, but not both. Taking the video and discarding ${images.length} image${images.length > 1 ? 's' : ''}.`,
+              msg`You can select either images or videos. Taking the first video.`,
             ),
             'info',
           )
@@ -206,9 +206,7 @@ export function SelectMediaBtn({
           return
         } else {
           Toast.show(
-            _(
-              msg`You can select either images or videos, but not both. Taking the first ${Math.min(4, images.length)} image${Math.min(4, images.length) > 1 ? 's' : ''} and discarding ${videos.length} video${videos.length > 1 ? 's' : ''}.`,
-            ),
+            _(msg`Taking first 4 images and discarding videos.`),
             'info',
           )
           const imagesToProcess = images.slice(0, 4)
@@ -218,12 +216,7 @@ export function SelectMediaBtn({
       }
 
       if (videos.length > 1) {
-        Toast.show(
-          _(
-            msg`You can only upload 1 video at a time. Using the first video selected.`,
-          ),
-          'info',
-        )
+        Toast.show(_(msg`Using the first video selected.`), 'info')
         const video = videos[0]
 
         if (!video.mimeType && video.uri) {
@@ -268,12 +261,7 @@ export function SelectMediaBtn({
         if (size + images.length > 4) {
           const discarded = size + images.length - 4
 
-          Toast.show(
-            _(
-              msg`You can only upload up to 4 images total. ${discarded} image${discarded > 1 ? 's' : ''} discarded.`,
-            ),
-            'info',
-          )
+          Toast.show(_(msg`You can only upload up to 4 images total.`), 'info')
           await handleImageSelection(
             images.slice(0, maxAllowed),
             size,
@@ -309,7 +297,6 @@ export function SelectMediaBtn({
 
 async function handleImageSelection(
   images: ImagePickerAsset[],
-  currentSize: number,
   onAdd: (next: ComposerImage[]) => void,
   _: any,
 ) {
