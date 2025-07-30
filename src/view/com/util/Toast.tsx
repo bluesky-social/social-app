@@ -20,7 +20,9 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
+  convertLegacyToastType,
   getToastTypeStyles,
+  type LegacyToastType,
   TOAST_ANIMATION_CONFIG,
   TOAST_TYPE_TO_ICON,
   type ToastType,
@@ -30,14 +32,30 @@ import {Text} from '#/components/Typography'
 
 const TIMEOUT = 2e3
 
-export function show(message: string, type: ToastType = 'default') {
+// Use type overloading to mark certain types as deprecated -sfn
+// https://stackoverflow.com/a/78325851/13325987
+export function show(message: string, type?: ToastType): void
+/**
+ * @deprecated type is deprecated - use one of `'default' | 'success' | 'error' | 'warning' | 'info'`
+ */
+export function show(message: string, type?: LegacyToastType): void
+export function show(
+  message: string,
+  type: ToastType | LegacyToastType = 'default',
+): void {
   if (process.env.NODE_ENV === 'test') {
     return
   }
 
   AccessibilityInfo.announceForAccessibility(message)
   const item = new RootSiblings(
-    <Toast message={message} type={type} destroy={() => item.destroy()} />,
+    (
+      <Toast
+        message={message}
+        type={convertLegacyToastType(type)}
+        destroy={() => item.destroy()}
+      />
+    ),
   )
 }
 
@@ -57,9 +75,8 @@ function Toast({
   const [cardHeight, setCardHeight] = useState(0)
 
   const toastStyles = getToastTypeStyles(t)
-  const colors = toastStyles[type as keyof typeof toastStyles]
-  const IconComponent =
-    TOAST_TYPE_TO_ICON[type as keyof typeof TOAST_TYPE_TO_ICON]
+  const colors = toastStyles[type]
+  const IconComponent = TOAST_TYPE_TO_ICON[type]
 
   // for the exit animation to work on iOS the animated component
   // must not be the root component

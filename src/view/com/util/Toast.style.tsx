@@ -4,17 +4,41 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 
-export type ToastType =
-  | 'default'
-  | 'success'
-  | 'error'
-  | 'warning'
-  | 'info'
+export type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info'
+
+export type LegacyToastType =
   | 'xmark'
   | 'exclamation-circle'
   | 'check'
   | 'clipboard-check'
   | 'circle-exclamation'
+
+export const convertLegacyToastType = (
+  type: ToastType | LegacyToastType,
+): ToastType => {
+  switch (type) {
+    // these ones are fine
+    case 'default':
+    case 'success':
+    case 'error':
+    case 'warning':
+    case 'info':
+      return type
+    // legacy ones need conversion
+    case 'xmark':
+      return 'error'
+    case 'exclamation-circle':
+      return 'warning'
+    case 'check':
+      return 'success'
+    case 'clipboard-check':
+      return 'success'
+    case 'circle-exclamation':
+      return 'warning'
+    default:
+      return 'default'
+  }
+}
 
 export const TOAST_ANIMATION_CONFIG = {
   duration: 300,
@@ -165,7 +189,7 @@ export const TOAST_WEB_KEYFRAMES = `
       opacity: 1;
     }
   }
-  
+
   @keyframes toastFadeOut {
     from {
       opacity: 1;
