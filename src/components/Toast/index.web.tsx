@@ -5,16 +5,14 @@
 import {useEffect, useState} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
 
+import {atoms as a, useTheme} from '#/alf'
 import {
-  convertLegacyToastType,
   getToastTypeStyles,
   getToastWebAnimationStyles,
-  type LegacyToastType,
   TOAST_TYPE_TO_ICON,
   TOAST_WEB_KEYFRAMES,
-  type ToastType,
-} from '#/view/com/util/Toast.style'
-import {atoms as a, useTheme} from '#/alf'
+} from '#/components/Toast/style'
+import {type ToastType} from '#/components/Toast/types'
 
 const DURATION = 3500
 
@@ -127,15 +125,12 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
 // methods
 // =
 
-export function show(
-  text: string,
-  type: ToastType | LegacyToastType = 'default',
-) {
+export function show(text: string, type: ToastType = 'default') {
   if (toastTimeout) {
     clearTimeout(toastTimeout)
   }
 
-  globalSetActiveToast?.({text, type: convertLegacyToastType(type)})
+  globalSetActiveToast?.({text, type})
   toastTimeout = setTimeout(() => {
     globalSetActiveToast?.(undefined)
   }, DURATION)

@@ -1,12 +1,11 @@
 import {Pressable, View} from 'react-native'
 
-import * as Toast from '#/view/com/util/Toast'
-import {
-  getToastTypeStyles,
-  TOAST_TYPE_TO_ICON,
-  type ToastType,
-} from '#/view/com/util/Toast.style'
+import {show as deprecatedShow} from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {show} from '#/components/Toast'
+import {getToastTypeStyles, TOAST_TYPE_TO_ICON} from '#/components/Toast/style'
+import {type ToastType} from '#/components/Toast/types'
 import {H1, Text} from '#/components/Typography'
 
 function ToastPreview({message, type}: {message: string; type: ToastType}) {
@@ -19,7 +18,7 @@ function ToastPreview({message, type}: {message: string; type: ToastType}) {
   return (
     <Pressable
       accessibilityRole="button"
-      onPress={() => Toast.show(message, type)}
+      onPress={() => show(message, type)}
       style={[
         {backgroundColor: colors.backgroundColor},
         a.shadow_sm,
@@ -96,6 +95,20 @@ export function Toasts() {
             type="info"
           />
         </View>
+
+        <Button
+          label="Deprecated toast example"
+          onPress={() =>
+            deprecatedShow(
+              'This is a deprecated toast example',
+              'exclamation-circle',
+            )
+          }
+          size="large"
+          variant="solid"
+          color="secondary">
+          <ButtonText>Deprecated toast example</ButtonText>
+        </Button>
       </View>
     </View>
   )
