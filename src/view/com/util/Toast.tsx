@@ -1,8 +1,8 @@
-import {show as baseShow} from '#/components/Toast'
+import {toast} from '#/components/Toast'
 import {type ToastType} from '#/components/Toast/types'
 
 /**
- * @deprecated use {@link ToastType} and {@link baseShow} instead
+ * @deprecated use {@link ToastType} and {@link toast} instead
  */
 export type LegacyToastType =
   | 'xmark'
@@ -39,12 +39,16 @@ export const convertLegacyToastType = (
 }
 
 /**
- * @deprecated use {@link baseShow} instead
+ * @deprecated use {@link toast} instead
  */
 export function show(
   message: string,
   type: ToastType | LegacyToastType = 'default',
 ): void {
   const convertedType = convertLegacyToastType(type)
-  baseShow(message, convertedType)
+  toast.show({
+    type: convertedType,
+    content: message,
+    a11yLabel: message,
+  })
 }

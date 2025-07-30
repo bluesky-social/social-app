@@ -3,7 +3,7 @@ import {Pressable, View} from 'react-native'
 import {show as deprecatedShow} from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {show} from '#/components/Toast'
+import {toast} from '#/components/Toast'
 import {Toast} from '#/components/Toast/Toast'
 import {H1} from '#/components/Typography'
 
@@ -15,16 +15,25 @@ export function Toasts() {
       <View style={[a.gap_md]}>
         <Pressable
           accessibilityRole="button"
-          onPress={() => show('Default toast', 'default')}>
+          onPress={() =>
+            toast.show({
+              type: 'default',
+              content: 'Default toast',
+              a11yLabel: 'Default toast',
+            })
+          }>
           <Toast content="Default toast" type="default" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
           onPress={() =>
-            show(
-              'This is a longer message to test how the toast handles multiple lines of text content.',
-              'default',
-            )
+            toast.show({
+              type: 'default',
+              content:
+                'This is a longer message to test how the toast handles multiple lines of text content.',
+              a11yLabel:
+                'This is a longer message to test how the toast handles multiple lines of text content.',
+            })
           }>
           <Toast
             content="This is a longer message to test how the toast handles multiple lines of text content."
@@ -33,22 +42,46 @@ export function Toasts() {
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          onPress={() => show('Success toast', 'success')}>
+          onPress={() =>
+            toast.show({
+              type: 'success',
+              content: 'Success toast',
+              a11yLabel: 'Success toast',
+            })
+          }>
           <Toast content="Success toast" type="success" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          onPress={() => show('Info toast', 'info')}>
+          onPress={() =>
+            toast.show({
+              type: 'info',
+              content: 'Info toast',
+              a11yLabel: 'Info toast',
+            })
+          }>
           <Toast content="Info" type="info" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          onPress={() => show('Warning toast', 'warning')}>
+          onPress={() =>
+            toast.show({
+              type: 'warning',
+              content: 'Warning toast',
+              a11yLabel: 'Warning toast',
+            })
+          }>
           <Toast content="Warning" type="warning" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          onPress={() => show('Error toast', 'error')}>
+          onPress={() =>
+            toast.show({
+              type: 'error',
+              content: 'Error toast',
+              a11yLabel: 'Error toast',
+            })
+          }>
           <Toast content="Error" type="error" />
         </Pressable>
 

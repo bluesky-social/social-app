@@ -3,13 +3,13 @@
  */
 
 import {useEffect, useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {AccessibilityInfo, Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, web} from '#/alf'
 import {Toast} from '#/components/Toast/Toast'
-import {type ToastType} from '#/components/Toast/types'
+import {type ToastApi, type ToastType} from '#/components/Toast/types'
 
 const DURATION = 3500
 const TOAST_ANIMATION_STYLES = {
@@ -22,8 +22,9 @@ const TOAST_ANIMATION_STYLES = {
 }
 
 interface ActiveToast {
-  text: string
   type: ToastType
+  content: React.ReactNode
+  a11yLabel: string
 }
 type GlobalSetActiveToast = (_activeToast: ActiveToast | undefined) => void
 let globalSetActiveToast: GlobalSetActiveToast | undefined
@@ -44,6 +45,9 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
           setIsExiting(false)
         }, 200)
       } else {
+        if (t) {
+          AccessibilityInfo.announceForAccessibility(t.a11yLabel)
+        }
         setActiveToast(t)
         setIsExiting(false)
       }
@@ -66,7 +70,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
                 : TOAST_ANIMATION_STYLES.entering),
             },
           ]}>
-          <Toast content={activeToast.text} type={activeToast.type} />
+          <Toast content={activeToast.content} type={activeToast.type} />
           <Pressable
             style={[a.absolute, a.inset_0]}
             accessibilityLabel={_(msg`Dismiss toast`)}
@@ -79,13 +83,20 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
   )
 }
 
-export function show(text: string, type: ToastType = 'default') {
-  if (toastTimeout) {
-    clearTimeout(toastTimeout)
-  }
+export const toast: ToastApi = {
+  show(props) {
+    if (toastTimeout) {
+      clearTimeout(toastTimeout)
+    }
 
-  globalSetActiveToast?.({text, type})
-  toastTimeout = setTimeout(() => {
-    globalSetActiveToast?.(undefined)
-  }, DURATION)
+    globalSetActiveToast?.({
+      type: props.type,
+      content: props.content,
+      a11yLabel: props.a11yLabel,
+    })
+
+    toastTimeout = setTimeout(() => {
+      globalSetActiveToast?.(undefined)
+    }, DURATION)
+  },
 }

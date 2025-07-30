@@ -21,7 +21,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
 import {Toast} from '#/components/Toast/Toast'
-import {type ToastType} from '#/components/Toast/types'
+import {type ToastApi, type ToastType} from '#/components/Toast/types'
 
 const TIMEOUT = 2e3
 const TOAST_ANIMATION_DURATION = 300
@@ -30,30 +30,36 @@ export function ToastContainer() {
   return null
 }
 
-export function show(message: string, type: ToastType = 'default'): void {
-  if (process.env.NODE_ENV === 'test') {
-    return
-  }
+export const toast: ToastApi = {
+  show(props) {
+    if (process.env.NODE_ENV === 'test') {
+      return
+    }
 
-  AccessibilityInfo.announceForAccessibility(message)
-  const item = new RootSiblings(
-    (
-      <AnimatedToast
-        message={message}
-        type={type}
-        destroy={() => item.destroy()}
-      />
-    ),
-  )
+    AccessibilityInfo.announceForAccessibility(props.a11yLabel)
+
+    const item = new RootSiblings(
+      (
+        <AnimatedToast
+          type={props.type}
+          content={props.content}
+          a11yLabel={props.a11yLabel}
+          destroy={() => item.destroy()}
+        />
+      ),
+    )
+  },
 }
 
 function AnimatedToast({
-  message,
   type,
+  content,
+  a11yLabel,
   destroy,
 }: {
-  message: string
   type: ToastType
+  content: React.ReactNode
+  a11yLabel: string
   destroy: () => void
 }) {
   const {top} = useSafeAreaInsets()
@@ -169,12 +175,12 @@ function AnimatedToast({
           onLayout={evt => setCardHeight(evt.nativeEvent.layout.height)}
           accessibilityRole="alert"
           accessible={true}
-          accessibilityLabel={message}
+          accessibilityLabel={a11yLabel}
           accessibilityHint=""
           onAccessibilityEscape={hideAndDestroyImmediately}
           style={[a.flex_1, animatedStyle]}>
           <GestureDetector gesture={panGesture}>
-            <Toast content={message} type={type} />
+            <Toast content={content} type={type} />
           </GestureDetector>
         </Animated.View>
       )}
