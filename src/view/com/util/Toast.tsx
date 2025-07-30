@@ -6,8 +6,8 @@ import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler'
 import Animated, {
-  FadeInUp,
-  FadeOutUp,
+  FadeIn,
+  FadeOut,
   runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -17,37 +17,36 @@ import Animated, {
 } from 'react-native-reanimated'
 import RootSiblings from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  FontAwesomeIcon,
-  type Props as FontAwesomeProps,
-} from '@fortawesome/react-native-fontawesome'
-
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {
+  type ToastType,
+  TOAST_TYPE_TO_ICON,
+  getToastTypeStyles,
+  TOAST_ANIMATION_CONFIG,
+} from './Toast.style'
 
 const TIMEOUT = 2e3
 
-export function show(
-  message: string,
-  icon: FontAwesomeProps['icon'] = 'check',
-) {
+export function show(message: string, type: ToastType = 'default') {
   if (process.env.NODE_ENV === 'test') {
     return
   }
+
   AccessibilityInfo.announceForAccessibility(message)
   const item = new RootSiblings(
-    <Toast message={message} icon={icon} destroy={() => item.destroy()} />,
+    <Toast message={message} type={type} destroy={() => item.destroy()} />,
   )
 }
 
 function Toast({
   message,
-  icon,
+  type,
   destroy,
 }: {
   message: string
-  icon: FontAwesomeProps['icon']
+  type: ToastType
   destroy: () => void
 }) {
   const t = useTheme()
@@ -55,6 +54,10 @@ function Toast({
   const isPanning = useSharedValue(false)
   const dismissSwipeTranslateY = useSharedValue(0)
   const [cardHeight, setCardHeight] = useState(0)
+
+  const toastStyles = getToastTypeStyles(t)
+  const colors = toastStyles[type]
+  const IconComponent = TOAST_TYPE_TO_ICON[type]
 
   // for the exit animation to work on iOS the animated component
   // must not be the root component
@@ -159,55 +162,52 @@ function Toast({
       pointerEvents="box-none">
       {alive && (
         <Animated.View
-          entering={FadeInUp}
-          exiting={FadeOutUp}
-          style={[a.flex_1]}>
-          <Animated.View
-            onLayout={evt => setCardHeight(evt.nativeEvent.layout.height)}
-            accessibilityRole="alert"
-            accessible={true}
-            accessibilityLabel={message}
-            accessibilityHint=""
-            onAccessibilityEscape={hideAndDestroyImmediately}
-            style={[
-              a.flex_1,
-              t.name === 'dark' ? t.atoms.bg_contrast_25 : t.atoms.bg,
-              a.shadow_lg,
-              t.atoms.border_contrast_medium,
-              a.rounded_sm,
-              a.border,
-              animatedStyle,
-            ]}>
-            <GestureDetector gesture={panGesture}>
-              <View style={[a.flex_1, a.px_md, a.py_lg, a.flex_row, a.gap_md]}>
-                <View
-                  style={[
-                    a.flex_shrink_0,
-                    a.rounded_full,
-                    {width: 32, height: 32},
-                    a.align_center,
-                    a.justify_center,
-                    {
-                      backgroundColor:
-                        t.name === 'dark'
-                          ? t.palette.black
-                          : t.palette.primary_50,
-                    },
-                  ]}>
-                  <FontAwesomeIcon
-                    icon={icon}
-                    size={16}
-                    style={t.atoms.text_contrast_medium}
-                  />
-                </View>
-                <View style={[a.h_full, a.justify_center, a.flex_1]}>
-                  <Text style={a.text_md} emoji>
-                    {message}
-                  </Text>
-                </View>
+          entering={FadeIn.duration(TOAST_ANIMATION_CONFIG.duration)}
+          exiting={FadeOut.duration(TOAST_ANIMATION_CONFIG.duration * 0.7)}
+          onLayout={evt => setCardHeight(evt.nativeEvent.layout.height)}
+          accessibilityRole="alert"
+          accessible={true}
+          accessibilityLabel={message}
+          accessibilityHint=""
+          onAccessibilityEscape={hideAndDestroyImmediately}
+          style={[
+            a.flex_1,
+            {backgroundColor: colors.backgroundColor},
+            a.shadow_sm,
+            {borderColor: colors.borderColor, borderWidth: 1},
+            a.rounded_sm,
+            animatedStyle,
+          ]}>
+          <GestureDetector gesture={panGesture}>
+            <View style={[a.flex_1, a.px_md, a.py_lg, a.flex_row, a.gap_md]}>
+              <View
+                style={[
+                  a.flex_shrink_0,
+                  a.rounded_full,
+                  {width: 32, height: 32},
+                  a.align_center,
+                  a.justify_center,
+                  {
+                    backgroundColor: colors.backgroundColor,
+                  },
+                ]}>
+                <IconComponent fill={colors.iconColor} size="sm" />
               </View>
-            </GestureDetector>
-          </Animated.View>
+              <View
+                style={[
+                  a.h_full,
+                  a.justify_center,
+                  a.flex_1,
+                  a.justify_center,
+                ]}>
+                <Text
+                  style={[a.text_md, a.font_bold, {color: colors.textColor}]}
+                  emoji>
+                  {message}
+                </Text>
+              </View>
+            </View>
+          </GestureDetector>
         </Animated.View>
       )}
     </GestureHandlerRootView>
