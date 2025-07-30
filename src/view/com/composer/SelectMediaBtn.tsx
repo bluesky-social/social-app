@@ -192,15 +192,7 @@ export function SelectMediaBtn({
             ),
             'info',
           )
-          const video = videos[0]
-
-          if (!video.mimeType && video.uri) {
-            const extension = video.uri.split('.').pop()?.toLowerCase()
-            if (extension === 'mp4') video.mimeType = 'video/mp4'
-            else if (extension === 'mov') video.mimeType = 'video/quicktime'
-            else if (extension === 'webm') video.mimeType = 'video/webm'
-            else if (extension === 'avi') video.mimeType = 'video/x-msvideo'
-          }
+          const video = ensureVideoMimeType(videos[0])
 
           await validateAndSelectVideo(video, onSelectVideo, setError, _)
           return
@@ -217,30 +209,14 @@ export function SelectMediaBtn({
 
       if (videos.length > 1) {
         Toast.show(_(msg`Using the first video selected.`), 'info')
-        const video = videos[0]
-
-        if (!video.mimeType && video.uri) {
-          const extension = video.uri.split('.').pop()?.toLowerCase()
-          if (extension === 'mp4') video.mimeType = 'video/mp4'
-          else if (extension === 'mov') video.mimeType = 'video/quicktime'
-          else if (extension === 'webm') video.mimeType = 'video/webm'
-          else if (extension === 'avi') video.mimeType = 'video/x-msvideo'
-        }
+        const video = ensureVideoMimeType(videos[0])
 
         await validateAndSelectVideo(video, onSelectVideo, setError, _)
         return
       }
 
       if (videos.length === 1) {
-        const video = videos[0]
-
-        if (!video.mimeType && video.uri) {
-          const extension = video.uri.split('.').pop()?.toLowerCase()
-          if (extension === 'mp4') video.mimeType = 'video/mp4'
-          else if (extension === 'mov') video.mimeType = 'video/quicktime'
-          else if (extension === 'webm') video.mimeType = 'video/webm'
-          else if (extension === 'avi') video.mimeType = 'video/x-msvideo'
-        }
+        const video = ensureVideoMimeType(videos[0])
 
         await validateAndSelectVideo(video, onSelectVideo, setError, _)
         return
@@ -297,6 +273,7 @@ export function SelectMediaBtn({
 
 async function handleImageSelection(
   images: ImagePickerAsset[],
+  size: number,
   onAdd: (next: ComposerImage[]) => void,
   _: any,
 ) {
@@ -313,4 +290,40 @@ async function handleImageSelection(
   )
 
   onAdd(results)
+}
+
+type ValidatedVideoAsset = ImagePickerAsset & {
+  mimeType: string
+}
+
+function ensureVideoMimeType(asset: ImagePickerAsset): ValidatedVideoAsset {
+  if (asset.mimeType) {
+    return asset as ValidatedVideoAsset
+  }
+
+  if (!asset.uri) {
+    return {...asset, mimeType: 'video/mp4'} as ValidatedVideoAsset
+  }
+
+  const extension = asset.uri.split('.').pop()?.toLowerCase()
+  let mimeType: string
+
+  switch (extension) {
+    case 'mp4':
+      mimeType = 'video/mp4'
+      break
+    case 'mov':
+      mimeType = 'video/quicktime'
+      break
+    case 'webm':
+      mimeType = 'video/webm'
+      break
+    case 'avi':
+      mimeType = 'video/x-msvideo'
+      break
+    default:
+      mimeType = 'video/mp4'
+  }
+
+  return {...asset, mimeType} as ValidatedVideoAsset
 }
