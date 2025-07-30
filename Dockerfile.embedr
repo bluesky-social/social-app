@@ -1,4 +1,4 @@
-FROM golang:1.23-bullseye AS build-env
+FROM golang:1.24-bullseye AS build-env
 
 WORKDIR /usr/src/social-app
 
