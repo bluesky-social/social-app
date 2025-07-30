@@ -20,10 +20,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
+import {DEFAULT_TOAST_DURATION} from '#/components/Toast/const'
 import {Toast} from '#/components/Toast/Toast'
 import {type ToastApi, type ToastType} from '#/components/Toast/types'
 
-const TIMEOUT = 2e3
 const TOAST_ANIMATION_DURATION = 300
 
 export function ToastContainer() {
@@ -44,6 +44,7 @@ export const toast: ToastApi = {
           type={props.type}
           content={props.content}
           a11yLabel={props.a11yLabel}
+          duration={props.duration ?? DEFAULT_TOAST_DURATION}
           destroy={() => item.destroy()}
         />
       ),
@@ -55,11 +56,13 @@ function AnimatedToast({
   type,
   content,
   a11yLabel,
+  duration,
   destroy,
 }: {
   type: ToastType
   content: React.ReactNode
   a11yLabel: string
+  duration: number
   destroy: () => void
 }) {
   const {top} = useSafeAreaInsets()
@@ -82,7 +85,7 @@ function AnimatedToast({
   const destroyTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
   const hideAndDestroyAfterTimeout = useNonReactiveCallback(() => {
     clearTimeout(destroyTimeoutRef.current)
-    destroyTimeoutRef.current = setTimeout(hideAndDestroyImmediately, TIMEOUT)
+    destroyTimeoutRef.current = setTimeout(hideAndDestroyImmediately, duration)
   })
   const pauseDestroy = useNonReactiveCallback(() => {
     clearTimeout(destroyTimeoutRef.current)

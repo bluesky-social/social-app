@@ -29,6 +29,18 @@ export function Toasts() {
           onPress={() =>
             toast.show({
               type: 'default',
+              content: 'Default toast, 6 seconds',
+              a11yLabel: 'Default toast, 6 seconds',
+              duration: 6e3,
+            })
+          }>
+          <Toast content="Default toast, 6 seconds" type="default" />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            toast.show({
+              type: 'default',
               content:
                 'This is a longer message to test how the toast handles multiple lines of text content.',
               a11yLabel:

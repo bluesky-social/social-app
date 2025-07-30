@@ -5,5 +5,6 @@ export type ToastApi = {
     type: ToastType
     content: React.ReactNode
     a11yLabel: string
+    duration?: number
   }) => void
 }

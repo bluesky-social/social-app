@@ -8,10 +8,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, web} from '#/alf'
+import {DEFAULT_TOAST_DURATION} from '#/components/Toast/const'
 import {Toast} from '#/components/Toast/Toast'
 import {type ToastApi, type ToastType} from '#/components/Toast/types'
 
-const DURATION = 3500
 const TOAST_ANIMATION_STYLES = {
   entering: {
     animation: 'toastFadeIn 0.3s ease-out forwards',
@@ -97,6 +97,6 @@ export const toast: ToastApi = {
 
     toastTimeout = setTimeout(() => {
       globalSetActiveToast?.(undefined)
-    }, DURATION)
+    }, props.duration || DEFAULT_TOAST_DURATION)
   },
 }
