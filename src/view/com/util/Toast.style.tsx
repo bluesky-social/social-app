@@ -56,7 +56,7 @@ export const TOAST_TYPE_TO_ICON = {
   error: ErrorIcon,
   warning: WarningIcon,
   info: CircleInfo,
-} as const
+}
 
 export const getToastTypeStyles = (t: Theme) => ({
   default: {
@@ -168,7 +168,7 @@ export const getToastTypeStyles = (t: Theme) => ({
       dim: t.atoms.text_contrast_medium.color,
       dark: t.atoms.text_contrast_medium.color,
     }),
-  } as const,
+  },
 })
 
 export const getToastWebAnimationStyles = () => ({
