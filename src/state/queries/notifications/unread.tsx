@@ -127,7 +127,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         isPoll,
       }: {invalidate?: boolean; isPoll?: boolean} = {}) {
         try {
+          // TODO: do we actually need this check? why?
           if (!agent.session) return
+
           if (AppState.currentState !== 'active') {
             return
           }

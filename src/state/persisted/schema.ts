@@ -29,6 +29,7 @@ const accountSchema = z.object({
   status: z.string().optional(),
   pdsUrl: z.string().optional(),
   isSelfHosted: z.boolean().optional(),
+  isOauthSession: z.boolean().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 
@@ -123,6 +124,7 @@ const schema = z.object({
   kawaii: z.boolean().optional(),
   hasCheckedForStarterPack: z.boolean().optional(),
   subtitlesEnabled: z.boolean().optional(),
+  experimentalOauthEnabled: z.boolean().optional(),
   /** @deprecated */
   mutedThreads: z.array(z.string()),
   trendingDisabled: z.boolean().optional(),
@@ -172,6 +174,7 @@ export const defaults: Schema = {
   kawaii: false,
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
+  experimentalOauthEnabled: false,
   trendingDisabled: false,
   trendingVideoDisabled: false,
 }

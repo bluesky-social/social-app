@@ -214,6 +214,8 @@ func serve(cctx *cli.Context) error {
 			return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
 		})
 		e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
+		e.GET("/oauth-client-metadata.json", echo.WrapHandler(staticHandler))
+		e.GET("/oauth-client-metadata.native.json", echo.WrapHandler(staticHandler))
 	}
 
 	// default to permissive, but Disallow all if flag set
@@ -330,6 +332,9 @@ func serve(cctx *cli.Context) error {
 	e.GET("/starter-pack/:handleOrDID/:rkey", server.WebStarterPack)
 	e.GET("/starter-pack-short/:code", server.WebGeneric)
 	e.GET("/start/:handleOrDID/:rkey", server.WebStarterPack)
+
+	// auth callback
+	e.GET("/auth/web/callback", server.WebGeneric)
 
 	// ipcc
 	e.GET("/ipcc", server.WebIpCC)

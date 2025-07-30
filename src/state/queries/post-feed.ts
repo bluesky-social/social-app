@@ -217,6 +217,7 @@ export function usePostFeedQuery(
          * moderations happen later, which results in some posts being shown and
          * some not.
          */
+        // TODO: this is _not_ a good way to tell if we are signed in, frankly. we might want to change this -hailey
         if (!agent.session) {
           assertSomePostsPassModeration(
             res.feed,

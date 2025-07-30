@@ -135,6 +135,7 @@ import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {useAccountSwitcher} from './lib/hooks/useAccountSwitcher'
 import {useNonReactiveCallback} from './lib/hooks/useNonReactiveCallback'
+import {AuthCallback} from './screens/Login/AuthCallback'
 import {useLoggedOutViewControls} from './state/shell/logged-out'
 import {useCloseAllActiveElements} from './state/util'
 
@@ -598,6 +599,13 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{
           title: title(msg`Video Feed`),
           requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AuthCallback"
+        getComponent={() => AuthCallback}
+        options={{
+          title: title(msg`Authenticating...`),
         }}
       />
     </>
