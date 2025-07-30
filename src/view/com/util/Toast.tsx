@@ -32,6 +32,13 @@ import {Text} from '#/components/Typography'
 
 const TIMEOUT = 2e3
 
+// Use type overloading to mark certain types as deprecated -sfn
+// https://stackoverflow.com/a/78325851/13325987
+export function show(message: string, type?: ToastType): void
+/**
+ * @deprecated type is deprecated - use one of `'default' | 'success' | 'error' | 'warning' | 'info'`
+ */
+export function show(message: string, type?: LegacyToastType): void
 export function show(
   message: string,
   type: ToastType | LegacyToastType = 'default',
