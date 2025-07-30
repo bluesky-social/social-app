@@ -4,16 +4,6 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 
-export const TOAST_ANIMATION_CONFIG = {
-  duration: 300,
-  damping: 15,
-  stiffness: 150,
-  mass: 0.8,
-  overshootClamping: false,
-  restSpeedThreshold: 0.01,
-  restDisplacementThreshold: 0.01,
-}
-
 export const TOAST_TYPE_TO_ICON = {
   default: SuccessIcon,
   success: SuccessIcon,
@@ -132,14 +122,5 @@ export const getToastTypeStyles = (t: Theme) => ({
       dim: t.atoms.text_contrast_medium.color,
       dark: t.atoms.text_contrast_medium.color,
     }),
-  },
-})
-
-export const getToastWebAnimationStyles = () => ({
-  entering: {
-    animation: 'toastFadeIn 0.3s ease-out forwards',
-  },
-  exiting: {
-    animation: 'toastFadeOut 0.2s ease-in forwards',
   },
 })

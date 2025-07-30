@@ -8,11 +8,18 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, web} from '#/alf'
-import {getToastWebAnimationStyles} from '#/components/Toast/style'
 import {Toast} from '#/components/Toast/Toast'
 import {type ToastType} from '#/components/Toast/types'
 
 const DURATION = 3500
+const TOAST_ANIMATION_STYLES = {
+  entering: {
+    animation: 'toastFadeIn 0.3s ease-out forwards',
+  },
+  exiting: {
+    animation: 'toastFadeOut 0.2s ease-in forwards',
+  },
+}
 
 interface ActiveToast {
   text: string
@@ -43,8 +50,6 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
     }
   }, [activeToast])
 
-  const animationStyles = getToastWebAnimationStyles()
-
   return (
     <>
       {activeToast && (
@@ -57,8 +62,8 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
               width: web(`calc(100% - ${a.px_xl.paddingLeft * 2})`),
               maxWidth: 380,
               ...(isExiting
-                ? animationStyles.exiting
-                : animationStyles.entering),
+                ? TOAST_ANIMATION_STYLES.exiting
+                : TOAST_ANIMATION_STYLES.entering),
             },
           ]}>
           <Toast content={activeToast.text} type={activeToast.type} />

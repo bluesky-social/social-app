@@ -20,11 +20,19 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
-import {TOAST_ANIMATION_CONFIG} from '#/components/Toast/style'
 import {Toast as BaseToast} from '#/components/Toast/Toast'
 import {type ToastType} from '#/components/Toast/types'
 
 const TIMEOUT = 2e3
+const TOAST_ANIMATION_CONFIG = {
+  duration: 300,
+  damping: 15,
+  stiffness: 150,
+  mass: 0.8,
+  overshootClamping: false,
+  restSpeedThreshold: 0.01,
+  restDisplacementThreshold: 0.01,
+}
 
 export function ToastContainer() {
   return null
