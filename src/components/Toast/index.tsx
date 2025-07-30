@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
-import {AccessibilityInfo, View} from 'react-native'
+import {AccessibilityInfo} from 'react-native'
 import {
   Gesture,
   GestureDetector,
@@ -19,14 +19,10 @@ import RootSiblings from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {atoms as a, useTheme} from '#/alf'
-import {
-  getToastTypeStyles,
-  TOAST_ANIMATION_CONFIG,
-  TOAST_TYPE_TO_ICON,
-} from '#/components/Toast/style'
+import {atoms as a} from '#/alf'
+import {TOAST_ANIMATION_CONFIG} from '#/components/Toast/style'
+import {Toast as BaseToast} from '#/components/Toast/Toast'
 import {type ToastType} from '#/components/Toast/types'
-import {Text} from '#/components/Typography'
 
 const TIMEOUT = 2e3
 
@@ -54,15 +50,10 @@ function Toast({
   type: ToastType
   destroy: () => void
 }) {
-  const t = useTheme()
   const {top} = useSafeAreaInsets()
   const isPanning = useSharedValue(false)
   const dismissSwipeTranslateY = useSharedValue(0)
   const [cardHeight, setCardHeight] = useState(0)
-
-  const toastStyles = getToastTypeStyles(t)
-  const colors = toastStyles[type]
-  const IconComponent = TOAST_TYPE_TO_ICON[type]
 
   // for the exit animation to work on iOS the animated component
   // must not be the root component
@@ -175,43 +166,9 @@ function Toast({
           accessibilityLabel={message}
           accessibilityHint=""
           onAccessibilityEscape={hideAndDestroyImmediately}
-          style={[
-            a.flex_1,
-            {backgroundColor: colors.backgroundColor},
-            a.shadow_sm,
-            {borderColor: colors.borderColor, borderWidth: 1},
-            a.rounded_sm,
-            animatedStyle,
-          ]}>
+          style={[a.flex_1, animatedStyle]}>
           <GestureDetector gesture={panGesture}>
-            <View style={[a.flex_1, a.px_md, a.py_lg, a.flex_row, a.gap_md]}>
-              <View
-                style={[
-                  a.flex_shrink_0,
-                  a.rounded_full,
-                  {width: 32, height: 32},
-                  a.align_center,
-                  a.justify_center,
-                  {
-                    backgroundColor: colors.backgroundColor,
-                  },
-                ]}>
-                <IconComponent fill={colors.iconColor} size="sm" />
-              </View>
-              <View
-                style={[
-                  a.h_full,
-                  a.justify_center,
-                  a.flex_1,
-                  a.justify_center,
-                ]}>
-                <Text
-                  style={[a.text_md, a.font_bold, {color: colors.textColor}]}
-                  emoji>
-                  {message}
-                </Text>
-              </View>
-            </View>
+            <BaseToast content={message} type={type} />
           </GestureDetector>
         </Animated.View>
       )}

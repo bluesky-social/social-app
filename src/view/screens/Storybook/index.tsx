@@ -91,6 +91,8 @@ function StorybookInner() {
               </Button>
             </View>
 
+            <Toasts />
+
             <Button
               variant="solid"
               color="primary"
@@ -123,7 +125,6 @@ function StorybookInner() {
             <Breakpoints />
             <Dialogs />
             <Admonitions />
-            <Toasts />
             <Settings />
 
             <Button
