@@ -132,7 +132,7 @@ export function LinkItem({
   const t = useTheme()
 
   return (
-    <Link color="secondary" {...props}>
+    <Link {...props}>
       {args => (
         <Item
           destructive={destructive}
