@@ -14,13 +14,12 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 
-import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
+import {atoms as a, flatten, select, useTheme} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
-export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
+export type ButtonVariant = 'solid' | 'outline' | 'ghost'
 export type ButtonColor =
   | 'primary'
   | 'secondary'
@@ -464,42 +463,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
       }
     }, [t, variant, color, size, shape, disabled])
 
-    const gradientValues = React.useMemo(() => {
-      const gradient = {
-        primary: tokens.gradients.sky,
-        secondary: tokens.gradients.sky,
-        secondary_inverted: tokens.gradients.sky,
-        negative: tokens.gradients.sky,
-        negative_secondary: tokens.gradients.sky,
-      }[color || 'primary']
-
-      if (variant === 'gradient') {
-        if (gradient.values.length < 2) {
-          throw new Error(
-            'Gradient buttons must have at least two colors in the gradient',
-          )
-        }
-
-        return {
-          colors: gradient.values.map(([_, color]) => color) as [
-            string,
-            string,
-            ...string[],
-          ],
-          hoverColors: gradient.values.map(_ => gradient.hover_value) as [
-            string,
-            string,
-            ...string[],
-          ],
-          locations: gradient.values.map(([location, _]) => location) as [
-            number,
-            number,
-            ...number[],
-          ],
-        }
-      }
-    }, [variant, color])
-
     const context = React.useMemo<ButtonContext>(
       () => ({
         ...state,
@@ -542,27 +505,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
         onHoverOut={onHoverOut}
         onFocus={onFocus}
         onBlur={onBlur}>
-        {variant === 'gradient' && gradientValues && (
-          <View
-            style={[
-              a.absolute,
-              a.inset_0,
-              a.overflow_hidden,
-              {borderRadius: flattenedBaseStyles.borderRadius},
-            ]}>
-            <LinearGradient
-              colors={
-                state.hovered || state.pressed
-                  ? gradientValues.hoverColors
-                  : gradientValues.colors
-              }
-              locations={gradientValues.locations}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              style={[a.absolute, a.inset_0]}
-            />
-          </View>
-        )}
         <Context.Provider value={context}>
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
@@ -601,7 +543,7 @@ export function useSharedButtonTextStyles() {
         }
       }
     } else if (color === 'secondary') {
-      if (variant === 'solid' || variant === 'gradient') {
+      if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
             color: t.palette.contrast_700,
@@ -633,7 +575,7 @@ export function useSharedButtonTextStyles() {
         }
       }
     } else if (color === 'secondary_inverted') {
-      if (variant === 'solid' || variant === 'gradient') {
+      if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
             color: t.palette.contrast_50,
@@ -665,7 +607,7 @@ export function useSharedButtonTextStyles() {
         }
       }
     } else if (color === 'negative') {
-      if (variant === 'solid' || variant === 'gradient') {
+      if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
@@ -685,7 +627,7 @@ export function useSharedButtonTextStyles() {
         }
       }
     } else if (color === 'negative_secondary') {
-      if (variant === 'solid' || variant === 'gradient') {
+      if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
             color: select(t.name, {
