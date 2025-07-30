@@ -124,7 +124,7 @@ export function LinkItem({
   contentContainerStyle,
   chevronColor,
   ...props
-}: LinkProps & {
+}: Omit<LinkProps, Button.UninheritableButtonProps> & {
   contentContainerStyle?: StyleProp<ViewStyle>
   destructive?: boolean
   chevronColor?: string
@@ -154,7 +154,7 @@ export function PressableItem({
   contentContainerStyle,
   hoverStyle,
   ...props
-}: Button.ButtonProps & {
+}: Omit<Button.ButtonProps, Button.UninheritableButtonProps> & {
   contentContainerStyle?: StyleProp<ViewStyle>
   destructive?: boolean
 }) {

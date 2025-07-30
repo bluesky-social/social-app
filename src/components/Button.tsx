@@ -20,6 +20,18 @@ import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
+/**
+ * The `Button` component, and some extensions of it like `Link` are intended
+ * to be generic and therefore apply no styles by default. These `VariantProps`
+ * are what control the `Button`'s presentation, and are intended only use cases where the buttons appear as, well, buttons.
+ *
+ * If `Button` or an extension of it are used for other compound components, use this property to avoid misuse of these variant props further down the line.
+ *
+ * @example
+ * type MyComponentProps = Omit<ButtonProps, UninheritableButtonProps> & {...}
+ */
+export type UninheritableButtonProps = 'variant' | 'color' | 'size' | 'shape'
+
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor =
   | 'primary'
