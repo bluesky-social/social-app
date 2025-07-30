@@ -91,6 +91,8 @@ function StorybookInner() {
               </Button>
             </View>
 
+            <Buttons />
+
             <Button
               variant="solid"
               color="primary"
