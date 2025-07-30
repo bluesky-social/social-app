@@ -1,5 +1,5 @@
 /*
- * Note: the dataSet properties are used to leverage custom CSS in public/index.html
+ * Note: relies on styles in #/styles.css
  */
 
 import {useEffect, useState} from 'react'
