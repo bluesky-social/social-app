@@ -101,13 +101,9 @@ export const Link = memo(function Link({
     {name: 'activate', label: title},
   ]
 
-  const dataSet = useMemo(() => {
-    const ds = {...dataSetProp}
-    if (anchorNoUnderline) {
-      ds.noUnderline = 1
-    }
-    return ds
-  }, [dataSetProp, anchorNoUnderline])
+  const dataSet = anchorNoUnderline
+    ? {...dataSetProp, noUnderline: 1}
+    : {...dataSetProp}
 
   if (noFeedback) {
     return (
@@ -200,13 +196,9 @@ export const TextLink = memo(function TextLink({
     console.error('Unable to detect mismatching label')
   }
 
-  const dataSet = useMemo(() => {
-    const ds = {...dataSetProp}
-    if (anchorNoUnderline) {
-      ds.noUnderline = 1
-    }
-    return ds
-  }, [dataSetProp, anchorNoUnderline])
+  const dataSet = anchorNoUnderline
+    ? {...dataSetProp, noUnderline: 1}
+    : {...dataSetProp}
 
   const onPress = useCallback(
     (e?: Event) => {
