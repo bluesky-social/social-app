@@ -13,6 +13,8 @@ import (
 	"syscall"
 	"time"
 
+	_ "net/http/pprof"
+
 	"github.com/bluesky-social/indigo/atproto/identity"
 	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
@@ -70,7 +72,7 @@ func serve(cctx *cli.Context) error {
 		return err
 	}
 
-	metricsMux := http.NewServeMux()
+	metricsMux := http.DefaultServeMux
 	metricsMux.Handle("/metrics", promhttp.Handler())
 
 	metricsHttpd := &http.Server{
