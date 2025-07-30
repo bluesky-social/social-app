@@ -143,23 +143,3 @@ export const getToastWebAnimationStyles = () => ({
     animation: 'toastFadeOut 0.2s ease-in forwards',
   },
 })
-
-export const TOAST_WEB_KEYFRAMES = `
-  @keyframes toastFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes toastFadeOut {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-`

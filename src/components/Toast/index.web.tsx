@@ -10,7 +10,6 @@ import {
   getToastTypeStyles,
   getToastWebAnimationStyles,
   TOAST_TYPE_TO_ICON,
-  TOAST_WEB_KEYFRAMES,
 } from '#/components/Toast/style'
 import {type ToastType} from '#/components/Toast/types'
 
@@ -48,16 +47,6 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
       }
     }
   }, [activeToast])
-
-  useEffect(() => {
-    const styleId = 'toast-animations'
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement('style')
-      style.id = styleId
-      style.textContent = TOAST_WEB_KEYFRAMES
-      document.head.appendChild(style)
-    }
-  }, [])
 
   const t = useTheme()
 
