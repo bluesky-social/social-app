@@ -6,6 +6,7 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
@@ -13,7 +14,9 @@ import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
 import {BackNextButtons} from '../BackNextButtons'
 
-const CAPTCHA_PATH = '/gate/signup'
+const CAPTCHA_PATH = isWeb ? '/gate/signup' : '/gate/signup/attempt-attest'
+
+type
 
 export function StepCaptcha() {
   const {_} = useLingui()
