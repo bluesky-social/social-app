@@ -684,12 +684,6 @@ export function useSharedButtonTextStyles() {
           baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
         }
       }
-    } else {
-      if (!disabled) {
-        baseStyles.push({color: t.palette.white})
-      } else {
-        baseStyles.push({color: t.palette.white, opacity: 0.5})
-      }
     }
 
     if (size === 'large') {
