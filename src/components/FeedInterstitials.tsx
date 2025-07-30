@@ -308,10 +308,8 @@ export function ProfileGrid({
             <CardOuter
               style={[
                 a.flex_1,
-                a.border,
-                t.atoms.border_contrast_low,
-                (hovered || pressed) && t.atoms.border_contrast_high,
                 t.atoms.shadow_sm,
+                (hovered || pressed) && t.atoms.border_contrast_high,
               ]}>
               <ProfileCard.Outer>
                 <View
