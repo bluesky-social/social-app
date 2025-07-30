@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - go-124
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
