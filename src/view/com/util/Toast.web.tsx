@@ -4,14 +4,15 @@
 
 import {useEffect, useState} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
-import {atoms as a, useTheme} from '#/alf'
+
 import {
-  type ToastType,
-  TOAST_TYPE_TO_ICON,
   getToastTypeStyles,
   getToastWebAnimationStyles,
+  TOAST_TYPE_TO_ICON,
   TOAST_WEB_KEYFRAMES,
+  type ToastType,
 } from '#/view/com/util/Toast.style'
+import {atoms as a, useTheme} from '#/alf'
 
 const DURATION = 3500
 
