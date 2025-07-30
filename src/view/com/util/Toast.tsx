@@ -25,7 +25,7 @@ import {
   TOAST_TYPE_TO_ICON,
   getToastTypeStyles,
   TOAST_ANIMATION_CONFIG,
-} from './Toast.style'
+} from '#/view/com/util/Toast.style'
 
 const TIMEOUT = 2e3
 

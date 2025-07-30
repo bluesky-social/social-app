@@ -11,7 +11,7 @@ import {
   getToastTypeStyles,
   getToastWebAnimationStyles,
   TOAST_WEB_KEYFRAMES,
-} from './Toast.style'
+} from '#/view/com/util/Toast.style'
 
 const DURATION = 3500
 
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     maxWidth: 380,
     padding: 20,
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     borderRadius: 10,
     borderWidth: 1,
   },
