@@ -27,11 +27,6 @@ export type ButtonColor =
   | 'secondary_inverted'
   | 'negative'
   | 'negative_secondary'
-  | 'gradient_midnight'
-  | 'gradient_sunrise'
-  | 'gradient_sunset'
-  | 'gradient_nordic'
-  | 'gradient_bonfire'
 export type ButtonSize = 'tiny' | 'small' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
@@ -476,11 +471,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
         secondary_inverted: tokens.gradients.sky,
         negative: tokens.gradients.sky,
         negative_secondary: tokens.gradients.sky,
-        gradient_midnight: tokens.gradients.midnight,
-        gradient_sunrise: tokens.gradients.sunrise,
-        gradient_sunset: tokens.gradients.sunset,
-        gradient_nordic: tokens.gradients.nordic,
-        gradient_bonfire: tokens.gradients.bonfire,
       }[color || 'primary']
 
       if (variant === 'gradient') {

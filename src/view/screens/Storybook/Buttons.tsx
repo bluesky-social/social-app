@@ -165,16 +165,16 @@ export function Buttons() {
           <ButtonIcon icon={ChevronLeft} />
         </Button>
         <Button
-          variant="gradient"
-          color="gradient_sunset"
+          variant="solid"
+          color="primary"
           size="small"
           shape="round"
           label="Link out">
           <ButtonIcon icon={ChevronLeft} />
         </Button>
         <Button
-          variant="gradient"
-          color="gradient_sunset"
+          variant="solid"
+          color="primary"
           size="tiny"
           shape="round"
           label="Link out">
@@ -216,16 +216,16 @@ export function Buttons() {
           <ButtonIcon icon={ChevronLeft} />
         </Button>
         <Button
-          variant="gradient"
-          color="gradient_sunset"
+          variant="solid"
+          color="primary"
           size="small"
           shape="square"
           label="Link out">
           <ButtonIcon icon={ChevronLeft} />
         </Button>
         <Button
-          variant="gradient"
-          color="gradient_sunset"
+          variant="solid"
+          color="primary"
           size="tiny"
           shape="square"
           label="Link out">
