@@ -20,19 +20,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
-import {Toast as BaseToast} from '#/components/Toast/Toast'
+import {Toast} from '#/components/Toast/Toast'
 import {type ToastType} from '#/components/Toast/types'
 
 const TIMEOUT = 2e3
-const TOAST_ANIMATION_CONFIG = {
-  duration: 300,
-  damping: 15,
-  stiffness: 150,
-  mass: 0.8,
-  overshootClamping: false,
-  restSpeedThreshold: 0.01,
-  restDisplacementThreshold: 0.01,
-}
+const TOAST_ANIMATION_DURATION = 300
 
 export function ToastContainer() {
   return null
@@ -45,11 +37,17 @@ export function show(message: string, type: ToastType = 'default'): void {
 
   AccessibilityInfo.announceForAccessibility(message)
   const item = new RootSiblings(
-    <Toast message={message} type={type} destroy={() => item.destroy()} />,
+    (
+      <AnimatedToast
+        message={message}
+        type={type}
+        destroy={() => item.destroy()}
+      />
+    ),
   )
 }
 
-function Toast({
+function AnimatedToast({
   message,
   type,
   destroy,
@@ -166,8 +164,8 @@ function Toast({
       pointerEvents="box-none">
       {alive && (
         <Animated.View
-          entering={FadeIn.duration(TOAST_ANIMATION_CONFIG.duration)}
-          exiting={FadeOut.duration(TOAST_ANIMATION_CONFIG.duration * 0.7)}
+          entering={FadeIn.duration(TOAST_ANIMATION_DURATION)}
+          exiting={FadeOut.duration(TOAST_ANIMATION_DURATION * 0.7)}
           onLayout={evt => setCardHeight(evt.nativeEvent.layout.height)}
           accessibilityRole="alert"
           accessible={true}
@@ -176,7 +174,7 @@ function Toast({
           onAccessibilityEscape={hideAndDestroyImmediately}
           style={[a.flex_1, animatedStyle]}>
           <GestureDetector gesture={panGesture}>
-            <BaseToast content={message} type={type} />
+            <Toast content={message} type={type} />
           </GestureDetector>
         </Animated.View>
       )}
