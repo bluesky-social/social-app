@@ -1,4 +1,4 @@
-import {Pressable,View} from 'react-native'
+import {Pressable, View} from 'react-native'
 
 import * as Toast from '#/view/com/util/Toast'
 import {
@@ -7,7 +7,7 @@ import {
   type ToastType,
 } from '#/view/com/util/Toast.style'
 import {atoms as a, useTheme} from '#/alf'
-import {H1,Text} from '#/components/Typography'
+import {H1, Text} from '#/components/Typography'
 
 function ToastPreview({message, type}: {message: string; type: ToastType}) {
   const t = useTheme()
@@ -16,7 +16,8 @@ function ToastPreview({message, type}: {message: string; type: ToastType}) {
   const IconComponent = TOAST_TYPE_TO_ICON[type]
 
   return (
-    <Pressable accessibilityRole="button"
+    <Pressable
+      accessibilityRole="button"
       onPress={() => Toast.show(message, type)}
       style={[
         {backgroundColor: colors.backgroundColor},
