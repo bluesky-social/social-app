@@ -1,3 +1,12 @@
+import {atoms as a, useTheme} from '#/alf'
+import {Text} from '#/components/Typography'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {
+  type ToastType,
+  getToastTypeStyles,
+  TOAST_ANIMATION_CONFIG,
+  TOAST_TYPE_TO_ICON,
+} from '#/view/com/util/Toast.style'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {AccessibilityInfo, View} from 'react-native'
 import {
@@ -17,15 +26,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import RootSiblings from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
-import {
-  type ToastType,
-  TOAST_TYPE_TO_ICON,
-  getToastTypeStyles,
-  TOAST_ANIMATION_CONFIG,
-} from '#/view/com/util/Toast.style'
 
 const TIMEOUT = 2e3
 
