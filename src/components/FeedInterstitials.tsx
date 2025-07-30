@@ -25,7 +25,7 @@ import {
   type ViewStyleProp,
   web,
 } from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
@@ -64,15 +64,30 @@ function CardOuter({
 
 export function SuggestedFollowPlaceholder() {
   const t = useTheme()
+
   return (
-    <CardOuter style={[a.gap_md, t.atoms.border_contrast_low]}>
-      <View style={[a.flex_col, a.align_center, a.gap_sm]}>
-        <ProfileCard.AvatarPlaceholder size={88} />
-        <ProfileCard.NamePlaceholder />
-        <View style={[a.w_full]}>
-          <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
+    <CardOuter
+      style={[a.gap_md, t.atoms.border_contrast_low, t.atoms.shadow_sm]}>
+      <ProfileCard.Outer>
+        <View
+          style={[a.flex_col, a.align_center, a.gap_sm, a.pb_sm, a.mb_auto]}>
+          <ProfileCard.AvatarPlaceholder size={88} />
+          <ProfileCard.NamePlaceholder />
+          <View style={[a.w_full]}>
+            <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
+          </View>
         </View>
-      </View>
+
+        <Button
+          label=""
+          size="small"
+          variant="solid"
+          color="secondary"
+          disabled
+          style={[a.w_full, a.rounded_sm]}>
+          <ButtonText>Follow</ButtonText>
+        </Button>
+      </ProfileCard.Outer>
     </CardOuter>
   )
 }
