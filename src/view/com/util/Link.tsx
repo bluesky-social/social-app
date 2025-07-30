@@ -125,6 +125,8 @@ export const Link = memo(function Link({
               onAccessibilityAction?.(e)
             }
           }}
+          // @ts-ignore web only -sfn
+          dataSet={dataSet}
           {...props}
           android_ripple={{
             color: t.atoms.bg_contrast_25.backgroundColor,
