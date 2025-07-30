@@ -20,7 +20,6 @@ import {Settings} from './Settings'
 import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
 import {Theming} from './Theming'
-import {Toasts} from './Toasts'
 import {Typography} from './Typography'
 
 export function Storybook() {
@@ -123,7 +122,6 @@ function StorybookInner() {
             <Breakpoints />
             <Dialogs />
             <Admonitions />
-            <Toasts />
             <Settings />
 
             <Button
