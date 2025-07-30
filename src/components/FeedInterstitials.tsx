@@ -25,18 +25,17 @@ import {
   type ViewStyleProp,
   web,
 } from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 import {ProgressGuideList} from './ProgressGuide/List'
 
-const MOBILE_CARD_WIDTH = 300
+const MOBILE_CARD_WIDTH = 165
 
 function CardOuter({
   children,
@@ -48,8 +47,8 @@ function CardOuter({
     <View
       style={[
         a.w_full,
-        a.p_lg,
-        a.rounded_md,
+        a.p_md,
+        a.rounded_lg,
         a.border,
         t.atoms.bg,
         t.atoms.border_contrast_low,
@@ -65,14 +64,30 @@ function CardOuter({
 
 export function SuggestedFollowPlaceholder() {
   const t = useTheme()
-  return (
-    <CardOuter style={[a.gap_md, t.atoms.border_contrast_low]}>
-      <ProfileCard.Header>
-        <ProfileCard.AvatarPlaceholder />
-        <ProfileCard.NameAndHandlePlaceholder />
-      </ProfileCard.Header>
 
-      <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
+  return (
+    <CardOuter
+      style={[a.gap_md, t.atoms.border_contrast_low, t.atoms.shadow_sm]}>
+      <ProfileCard.Outer>
+        <View
+          style={[a.flex_col, a.align_center, a.gap_sm, a.pb_sm, a.mb_auto]}>
+          <ProfileCard.AvatarPlaceholder size={88} />
+          <ProfileCard.NamePlaceholder />
+          <View style={[a.w_full]}>
+            <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
+          </View>
+        </View>
+
+        <Button
+          label=""
+          size="small"
+          variant="solid"
+          color="secondary"
+          disabled
+          style={[a.w_full, a.rounded_sm]}>
+          <ButtonText>Follow</ButtonText>
+        </Button>
+      </ProfileCard.Outer>
     </CardOuter>
   )
 }
@@ -243,10 +258,9 @@ export function ProfileGrid({
   const t = useTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
   const isLoading = isSuggestionsLoading || !moderationOpts
-  const maxLength = gtMobile ? 4 : 6
+  const maxLength = gtMobile ? 3 : 6
 
   const content = isLoading ? (
     Array(maxLength)
@@ -254,7 +268,14 @@ export function ProfileGrid({
       .map((_, i) => (
         <View
           key={i}
-          style={[gtMobile && web([a.flex_0, {width: 'calc(50% - 6px)'}])]}>
+          style={[
+            gtMobile &&
+              web([
+                a.flex_0,
+                a.flex_grow,
+                {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
+              ]),
+          ]}>
           <SuggestedFollowPlaceholder />
         </View>
       ))
@@ -276,44 +297,69 @@ export function ProfileGrid({
           }}
           style={[
             a.flex_1,
-            gtMobile && web([a.flex_0, {width: 'calc(50% - 6px)'}]),
+            gtMobile &&
+              web([
+                a.flex_0,
+                a.flex_grow,
+                {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
+              ]),
           ]}>
           {({hovered, pressed}) => (
             <CardOuter
               style={[
                 a.flex_1,
+                t.atoms.shadow_sm,
                 (hovered || pressed) && t.atoms.border_contrast_high,
               ]}>
               <ProfileCard.Outer>
-                <ProfileCard.Header>
+                <View
+                  style={[
+                    a.flex_col,
+                    a.align_center,
+                    a.gap_sm,
+                    a.pb_sm,
+                    a.mb_auto,
+                  ]}>
                   <ProfileCard.Avatar
                     profile={profile}
                     moderationOpts={moderationOpts}
+                    size={88}
                   />
-                  <ProfileCard.NameAndHandle
-                    profile={profile}
-                    moderationOpts={moderationOpts}
-                  />
-                  <ProfileCard.FollowButton
-                    profile={profile}
-                    moderationOpts={moderationOpts}
-                    logContext="FeedInterstitial"
-                    shape="round"
-                    colorInverted
-                    onFollow={() => {
-                      logEvent('suggestedUser:follow', {
-                        logContext:
-                          viewContext === 'feed'
-                            ? 'InterstitialDiscover'
-                            : 'InterstitialProfile',
-                        location: 'Card',
-                        recId,
-                        position: index,
-                      })
-                    }}
-                  />
-                </ProfileCard.Header>
-                <ProfileCard.Description profile={profile} numberOfLines={2} />
+                  <View style={[a.flex_col, a.align_center, a.max_w_full]}>
+                    <ProfileCard.Name
+                      profile={profile}
+                      moderationOpts={moderationOpts}
+                    />
+                    <ProfileCard.Description
+                      profile={profile}
+                      numberOfLines={2}
+                      style={[
+                        t.atoms.text_contrast_medium,
+                        a.text_center,
+                        a.text_xs,
+                      ]}
+                    />
+                  </View>
+                </View>
+
+                <ProfileCard.FollowButton
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  logContext="FeedInterstitial"
+                  withIcon={false}
+                  style={[a.rounded_sm]}
+                  onFollow={() => {
+                    logEvent('suggestedUser:follow', {
+                      logContext:
+                        viewContext === 'feed'
+                          ? 'InterstitialDiscover'
+                          : 'InterstitialProfile',
+                      location: 'Card',
+                      recId,
+                      position: index,
+                    })
+                  }}
+                />
               </ProfileCard.Outer>
             </CardOuter>
           )}
@@ -333,35 +379,29 @@ export function ProfileGrid({
       <View
         style={[
           a.p_lg,
-          a.pb_xs,
+          a.py_md,
           a.flex_row,
           a.align_center,
           a.justify_between,
         ]}>
-        <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
+        <Text style={[a.text_sm, a.font_bold, t.atoms.text]}>
           {viewContext === 'profile' ? (
             <Trans>Similar accounts</Trans>
           ) : (
             <Trans>Suggested for you</Trans>
           )}
         </Text>
-        <Person fill={t.atoms.text_contrast_low.color} size="sm" />
+        <InlineLinkText
+          label={_(msg`See more suggested profiles on the Explore page`)}
+          to="/search">
+          <Trans>See more</Trans>
+        </InlineLinkText>
       </View>
 
       {gtMobile ? (
-        <View style={[a.flex_1, a.px_lg, a.pt_sm, a.pb_lg, a.gap_md]}>
-          <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_sm]}>
+        <View style={[a.px_lg, a.pb_lg]}>
+          <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>
             {content}
-          </View>
-
-          <View style={[a.flex_row, a.justify_end, a.align_center, a.gap_md]}>
-            <InlineLinkText
-              label={_(msg`Browse more suggestions`)}
-              to="/search"
-              style={[t.atoms.text_contrast_medium]}>
-              <Trans>Browse more suggestions</Trans>
-            </InlineLinkText>
-            <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />
           </View>
         </View>
       ) : (
@@ -371,35 +411,44 @@ export function ProfileGrid({
               horizontal
               showsHorizontalScrollIndicator={false}
               snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-              decelerationRate="fast">
-              <View style={[a.px_lg, a.pt_sm, a.pb_lg, a.flex_row, a.gap_md]}>
+              decelerationRate="fast"
+              style={[a.overflow_visible]}>
+              <View style={[a.px_lg, a.pb_lg, a.flex_row, a.gap_md]}>
                 {content}
 
-                <Button
-                  label={_(msg`Browse more accounts on the Explore page`)}
-                  onPress={() => {
-                    navigation.navigate('SearchTab')
-                  }}>
-                  <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
-                    <View style={[a.flex_1, a.justify_center]}>
-                      <View style={[a.flex_row, a.px_lg]}>
-                        <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                          <Trans>
-                            Browse more suggestions on the Explore page
-                          </Trans>
-                        </Text>
-
-                        <Arrow size="xl" />
-                      </View>
-                    </View>
-                  </CardOuter>
-                </Button>
+                <SeeMoreSuggestedProfilesCard />
               </View>
             </ScrollView>
           </View>
         </BlockDrawerGesture>
       )}
     </View>
+  )
+}
+
+function SeeMoreSuggestedProfilesCard() {
+  const navigation = useNavigation<NavigationProp>()
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <Button
+      label={_(msg`Browse more accounts on the Explore page`)}
+      onPress={() => {
+        navigation.navigate('SearchTab')
+      }}>
+      <CardOuter style={[a.flex_1, t.atoms.shadow_sm]}>
+        <View style={[a.flex_1, a.justify_center]}>
+          <View style={[a.flex_col, a.align_center, a.gap_md]}>
+            <Text style={[a.leading_snug, a.text_center]}>
+              <Trans>See more accounts you might like</Trans>
+            </Text>
+
+            <Arrow size="xl" />
+          </View>
+        </View>
+      </CardOuter>
+    </Button>
   )
 }
 
