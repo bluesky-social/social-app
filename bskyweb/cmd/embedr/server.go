@@ -13,29 +13,36 @@ import (
 	"syscall"
 	"time"
 
+	_ "net/http/pprof"
+
 	"github.com/bluesky-social/indigo/atproto/identity"
 	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
 	"github.com/bluesky-social/social-app/bskyweb"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	"github.com/labstack/echo-contrib/echoprometheus"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/klauspost/compress/gzhttp"
 	"github.com/klauspost/compress/gzip"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/urfave/cli/v2"
 )
 
 type Server struct {
-	echo  *echo.Echo
-	httpd *http.Server
-	xrpcc *xrpc.Client
-	dir   identity.Directory
+	echo         *echo.Echo
+	httpd        *http.Server
+	metricsHttpd *http.Server
+	xrpcc        *xrpc.Client
+	dir          identity.Directory
 }
 
 func serve(cctx *cli.Context) error {
 	debug := cctx.Bool("debug")
 	httpAddress := cctx.String("http-address")
 	appviewHost := cctx.String("appview-host")
+	metricsAddress := cctx.String("metrics-address")
 
 	// Echo
 	e := echo.New()
@@ -65,13 +72,28 @@ func serve(cctx *cli.Context) error {
 		return err
 	}
 
+	metricsMux := http.DefaultServeMux
+	metricsMux.Handle("/metrics", promhttp.Handler())
+
+	metricsHttpd := &http.Server{
+		Addr:    metricsAddress,
+		Handler: metricsMux,
+	}
+
+	go func() {
+		if err := metricsHttpd.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Error("failed to start metrics server", "error", err)
+		}
+	}()
+
 	//
 	// server
 	//
 	server := &Server{
-		echo:  e,
-		xrpcc: xrpcc,
-		dir:   identity.DefaultDirectory(),
+		echo:         e,
+		xrpcc:        xrpcc,
+		dir:          identity.DefaultDirectory(),
+		metricsHttpd: metricsHttpd,
 	}
 
 	// Create the HTTP server.
@@ -131,6 +153,8 @@ func serve(cctx *cli.Context) error {
 	e.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
 		RedirectCode: http.StatusFound,
 	}))
+
+	e.Use(echoprometheus.NewMiddleware(""))
 
 	//
 	// configure routes
@@ -219,6 +243,11 @@ func (srv *Server) Shutdown() error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
+
+	// Shutdown metrics server too
+	if srv.metricsHttpd != nil {
+		srv.metricsHttpd.Shutdown(ctx)
+	}
 
 	return srv.httpd.Shutdown(ctx)
 }
