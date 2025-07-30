@@ -4,14 +4,15 @@
 
 import {useEffect, useState} from 'react'
 import {Pressable, StyleSheet, Text, View} from 'react-native'
-import {atoms as a, useTheme} from '#/alf'
+
 import {
-  type ToastType,
-  TOAST_TYPE_TO_ICON,
   getToastTypeStyles,
   getToastWebAnimationStyles,
+  TOAST_TYPE_TO_ICON,
   TOAST_WEB_KEYFRAMES,
-} from './Toast.style'
+  type ToastType,
+} from '#/view/com/util/Toast.style'
+import {atoms as a, useTheme} from '#/alf'
 
 const DURATION = 3500
 
@@ -62,11 +63,11 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
 
   const toastTypeStyles = getToastTypeStyles(t)
   const toastStyles = activeToast
-    ? toastTypeStyles[activeToast.type]
+    ? toastTypeStyles[activeToast.type as keyof typeof toastTypeStyles]
     : toastTypeStyles.default
 
   const IconComponent = activeToast
-    ? TOAST_TYPE_TO_ICON[activeToast.type]
+    ? TOAST_TYPE_TO_ICON[activeToast.type as keyof typeof TOAST_TYPE_TO_ICON]
     : TOAST_TYPE_TO_ICON.default
 
   const animationStyles = getToastWebAnimationStyles()
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     maxWidth: 380,
     padding: 20,
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     borderRadius: 10,
     borderWidth: 1,
   },

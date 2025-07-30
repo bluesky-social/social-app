@@ -1,10 +1,20 @@
-import {type Theme, select} from '#/alf'
-import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
+import {select, type Theme} from '#/alf'
 import {Check_Stroke2_Corner0_Rounded as SuccessIcon} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 
-export type ToastType = 'default' | 'success' | 'error' | 'warning' | 'info'
+export type ToastType =
+  | 'default'
+  | 'success'
+  | 'error'
+  | 'warning'
+  | 'info'
+  | 'xmark'
+  | 'exclamation-circle'
+  | 'check'
+  | 'clipboard-check'
+  | 'circle-exclamation'
 
 export const TOAST_ANIMATION_CONFIG = {
   duration: 300,

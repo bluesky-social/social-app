@@ -17,15 +17,16 @@ import Animated, {
 } from 'react-native-reanimated'
 import RootSiblings from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
 import {
-  type ToastType,
-  TOAST_TYPE_TO_ICON,
   getToastTypeStyles,
   TOAST_ANIMATION_CONFIG,
-} from './Toast.style'
+  TOAST_TYPE_TO_ICON,
+  type ToastType,
+} from '#/view/com/util/Toast.style'
+import {atoms as a, useTheme} from '#/alf'
+import {Text} from '#/components/Typography'
 
 const TIMEOUT = 2e3
 
@@ -56,8 +57,9 @@ function Toast({
   const [cardHeight, setCardHeight] = useState(0)
 
   const toastStyles = getToastTypeStyles(t)
-  const colors = toastStyles[type]
-  const IconComponent = TOAST_TYPE_TO_ICON[type]
+  const colors = toastStyles[type as keyof typeof toastStyles]
+  const IconComponent =
+    TOAST_TYPE_TO_ICON[type as keyof typeof TOAST_TYPE_TO_ICON]
 
   // for the exit animation to work on iOS the animated component
   // must not be the root component

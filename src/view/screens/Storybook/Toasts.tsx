@@ -1,22 +1,24 @@
-import {View, Pressable} from 'react-native'
+import {Pressable, View} from 'react-native'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Text, H1} from '#/components/Typography'
-import {
-  type ToastType,
-  TOAST_TYPE_TO_ICON,
-  getToastTypeStyles,
-} from '#/view/com/util/Toast.style'
 import * as Toast from '#/view/com/util/Toast'
+import {
+  getToastTypeStyles,
+  TOAST_TYPE_TO_ICON,
+  type ToastType,
+} from '#/view/com/util/Toast.style'
+import {atoms as a, useTheme} from '#/alf'
+import {H1, Text} from '#/components/Typography'
 
 function ToastPreview({message, type}: {message: string; type: ToastType}) {
   const t = useTheme()
   const toastStyles = getToastTypeStyles(t)
-  const colors = toastStyles[type]
-  const IconComponent = TOAST_TYPE_TO_ICON[type]
+  const colors = toastStyles[type as keyof typeof toastStyles]
+  const IconComponent =
+    TOAST_TYPE_TO_ICON[type as keyof typeof TOAST_TYPE_TO_ICON]
 
   return (
     <Pressable
+      accessibilityRole="button"
       onPress={() => Toast.show(message, type)}
       style={[
         {backgroundColor: colors.backgroundColor},
