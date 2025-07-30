@@ -1,11 +1,11 @@
 module github.com/bluesky-social/social-app/bskyweb
 
-go 1.23
+go 1.24
 
-toolchain go1.23.4
+toolchain go1.24.4
 
 require (
-	github.com/bluesky-social/indigo v0.0.0-20250605010711-db9bb60025dc
+	github.com/bluesky-social/indigo v0.0.0-20250716175339-eebba3d96129
 	github.com/flosch/pongo2/v6 v6.0.0
 	github.com/ipfs/go-log v1.0.5
 	github.com/joho/godotenv v1.5.1
