@@ -57,8 +57,9 @@ function Toast({
   const [cardHeight, setCardHeight] = useState(0)
 
   const toastStyles = getToastTypeStyles(t)
-  const colors = toastStyles[type]
-  const IconComponent = TOAST_TYPE_TO_ICON[type]
+  const colors = toastStyles[type as keyof typeof toastStyles]
+  const IconComponent =
+    TOAST_TYPE_TO_ICON[type as keyof typeof TOAST_TYPE_TO_ICON]
 
   // for the exit animation to work on iOS the animated component
   // must not be the root component

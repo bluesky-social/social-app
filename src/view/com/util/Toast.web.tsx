@@ -63,11 +63,11 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
 
   const toastTypeStyles = getToastTypeStyles(t)
   const toastStyles = activeToast
-    ? toastTypeStyles[activeToast.type]
+    ? toastTypeStyles[activeToast.type as keyof typeof toastTypeStyles]
     : toastTypeStyles.default
 
   const IconComponent = activeToast
-    ? TOAST_TYPE_TO_ICON[activeToast.type]
+    ? TOAST_TYPE_TO_ICON[activeToast.type as keyof typeof TOAST_TYPE_TO_ICON]
     : TOAST_TYPE_TO_ICON.default
 
   const animationStyles = getToastWebAnimationStyles()
