@@ -545,30 +545,19 @@ export function useSharedButtonTextStyles() {
   return React.useMemo(() => {
     const baseStyles: TextStyle[] = []
 
-    if (color === 'primary') {
-      if (variant === 'solid') {
+    /*
+     * This is the happy path for new button styles, following the
+     * deprecation of `variant` prop. This redundant `variant` check is here
+     * just to make this handling easier to understand.
+     */
+    if (variant === 'solid') {
+      if (color === 'primary') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
           baseStyles.push({color: t.palette.white, opacity: 0.5})
         }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.primary_600,
-          })
-        } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.primary_600})
-        } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
-        }
-      }
-    } else if (color === 'secondary') {
-      if (variant === 'solid') {
+      } else if (color === 'secondary') {
         if (!disabled) {
           baseStyles.push({
             color: t.palette.contrast_700,
@@ -578,29 +567,7 @@ export function useSharedButtonTextStyles() {
             color: t.palette.contrast_400,
           })
         }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      }
-    } else if (color === 'secondary_inverted') {
-      if (variant === 'solid') {
+      } else if (color === 'secondary_inverted') {
         if (!disabled) {
           baseStyles.push({
             color: t.palette.contrast_50,
@@ -610,49 +577,13 @@ export function useSharedButtonTextStyles() {
             color: t.palette.contrast_400,
           })
         }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      }
-    } else if (color === 'negative') {
-      if (variant === 'solid') {
+      } else if (color === 'negative') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
           baseStyles.push({color: t.palette.white, opacity: 0.5})
         }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
-        } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
-        } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
-        }
-      }
-    } else if (color === 'negative_secondary') {
-      if (variant === 'solid') {
+      } else if (color === 'negative_secondary') {
         if (!disabled) {
           baseStyles.push({
             color: select(t.name, {
@@ -671,19 +602,103 @@ export function useSharedButtonTextStyles() {
             opacity: 0.5,
           })
         }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
-        } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+      }
+    } else {
+      /*
+       * BEGIN DEPRECATED STYLES
+       */
+      if (color === 'primary') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.primary_600,
+            })
+          } else {
+            baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.primary_600})
+          } else {
+            baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          }
         }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
-        } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+      } else if (color === 'secondary') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        }
+      } else if (color === 'secondary_inverted') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        }
+      } else if (color === 'negative') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        }
+      } else if (color === 'negative_secondary') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
         }
       }
+      /*
+       * END DEPRECATED STYLES
+       */
     }
 
     if (size === 'large') {
