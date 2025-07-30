@@ -1,4 +1,10 @@
-import React, {PropsWithChildren, useMemo, useRef} from 'react'
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import {
   Dimensions,
   GestureResponderEvent,
@@ -244,6 +250,22 @@ const DropdownItems = ({
     theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
   const numItems = items.filter(isBtn).length
+
+  const onEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onOuterPress()
+      }
+    },
+    [onOuterPress],
+  )
+
+  useEffect(() => {
+    if (isWeb) {
+      window.addEventListener('keydown', onEscape)
+      return () => window.removeEventListener('keydown', onEscape)
+    }
+  }, [onEscape])
 
   // TODO: Refactor dropdown components to:
   // - (On web, if not handled by React Native) use semantic <select />
