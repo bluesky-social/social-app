@@ -31,6 +31,7 @@ export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
    * The style variation of the button
+   * @deprecated Use `color` instead.
    */
   variant?: ButtonVariant
   /**
@@ -123,6 +124,15 @@ export const Button = React.forwardRef<View, ButtonProps>(
     },
     ref,
   ) => {
+    /**
+     * The `variant` prop is deprecated in favor of simply specifying `color`.
+     * If a `color` is set, then we want to use the existing codepaths for
+     * "solid" buttons. This is to maintain backwards compatibility.
+     */
+    if (!variant && color) {
+      variant = 'solid'
+    }
+
     const t = useTheme()
     const [state, setState] = React.useState({
       pressed: false,
