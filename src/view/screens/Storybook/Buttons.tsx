@@ -48,32 +48,6 @@ export function Buttons() {
             ))}
           </View>
         ))}
-
-        <View style={[a.flex_row, a.gap_md, a.align_start]}>
-          <View style={[a.gap_md, a.align_start]}>
-            {['gradient_sky', 'gradient_midnight', 'gradient_sunrise'].map(
-              name => (
-                <React.Fragment key={name}>
-                  <Button
-                    variant="gradient"
-                    color={name as ButtonColor}
-                    size="large"
-                    label="Click here">
-                    <ButtonText>Button</ButtonText>
-                  </Button>
-                  <Button
-                    disabled
-                    variant="gradient"
-                    color={name as ButtonColor}
-                    size="large"
-                    label="Click here">
-                    <ButtonText>Button</ButtonText>
-                  </Button>
-                </React.Fragment>
-              ),
-            )}
-          </View>
-        </View>
       </View>
 
       <View style={[a.flex_wrap, a.gap_md, a.align_start]}>
