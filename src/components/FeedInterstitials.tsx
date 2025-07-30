@@ -27,7 +27,7 @@ import {
 } from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
-import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -437,7 +437,7 @@ function SeeMoreSuggestedProfilesCard() {
               <Trans>See more accounts you might like</Trans>
             </Text>
 
-            <Arrow size="xl" />
+            <ArrowRight size="xl" />
           </View>
         </View>
       </CardOuter>
@@ -539,7 +539,7 @@ export function SuggestedFeeds() {
               style={[t.atoms.text_contrast_medium]}>
               <Trans>Browse more suggestions</Trans>
             </InlineLinkText>
-            <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />
+            <ArrowRight size="sm" fill={t.atoms.text_contrast_medium.color} />
           </View>
         </View>
       ) : (
@@ -567,7 +567,7 @@ export function SuggestedFeeds() {
                         </Trans>
                       </Text>
 
-                      <Arrow size="xl" />
+                      <ArrowRight size="xl" />
                     </View>
                   </View>
                 </CardOuter>
