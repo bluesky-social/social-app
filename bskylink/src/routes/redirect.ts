@@ -68,7 +68,7 @@ export default function (ctx: AppContext, app: Express) {
             case ToolsOzoneSafelinkDefs.BLOCK:
               hole = linkWarningLayout(
                 'Blocked Link Warning',
-                linkWarningContents({
+                linkWarningContents(req, {
                   type: 'block',
                   link: url.href,
                 }),
@@ -79,7 +79,7 @@ export default function (ctx: AppContext, app: Express) {
             case ToolsOzoneSafelinkDefs.WARN:
               hole = linkWarningLayout(
                 'Malicious Link Warning',
-                linkWarningContents({
+                linkWarningContents(req, {
                   type: 'warn',
                   link: url.href,
                 }),
