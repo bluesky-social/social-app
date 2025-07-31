@@ -98,9 +98,9 @@ import {
   ExternalEmbedLink,
 } from '#/view/com/composer/ExternalEmbed'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
-import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
 import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
+import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
 import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
@@ -111,22 +111,24 @@ import {
   TextInput,
   type TextInputRef,
 } from '#/view/com/composer/text-input/TextInput'
+import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
+import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
+import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
+import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
+import {Text} from '#/view/com/util/text/Text'
+import {type LegacyToastType, type ToastType} from '#/view/com/util/Toast.style'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
-import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
-import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
-import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
-import {Text as NewText} from '#/components/Typography'
-import {Text} from '#/view/com/util/text/Text'
-import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
-import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
+import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
-import * as Toast from '#/view/com/util/Toast'
+import {Text as NewText} from '#/components/Typography'
+import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {ComposerToastContainer, useComposerToasts} from './ComposerToast'
+import {SelectMediaBtn} from './SelectMediaBtn'
 import {
   type ComposerAction,
   composerReducer,
@@ -145,7 +147,6 @@ import {
 } from './state/video'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
-import {SelectMediaBtn} from './SelectMediaBtn'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -185,6 +186,9 @@ export const ComposePost = ({
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
+
+  // Composer-specific toast system for iOS modal compatibility
+  const {toasts, showToast, removeToast} = useComposerToasts()
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
@@ -513,12 +517,13 @@ export const ComposePost = ({
       onPostSuccess?.(postSuccessData)
     }
     onClose()
-    Toast.show(
+    showToast(
       thread.posts.length > 1
         ? _(msg`Your posts have been published`)
         : replyTo
           ? _(msg`Your reply has been published`)
           : _(msg`Your post has been published`),
+      'success',
     )
   }, [
     _,
@@ -534,6 +539,7 @@ export const ComposePost = ({
     replyTo,
     setLangPrefs,
     queryClient,
+    showToast,
   ])
 
   // Preserves the referential identity passed to each post item.
@@ -635,6 +641,7 @@ export const ComposePost = ({
           !isEmptyPost(activePost) && (!nextPost || !isEmptyPost(nextPost))
         }
         onError={setError}
+        showToast={showToast}
         onEmojiButtonPress={onEmojiButtonPress}
         onSelectVideo={selectVideo}
         onAddPost={() => {
@@ -681,6 +688,12 @@ export const ComposePost = ({
             />
           </ComposerTopBar>
 
+          {/* (Note) APiligrim
+          Toast container for iOS and Android modal compatibility only */}
+          {isNative && (
+            <ComposerToastContainer toasts={toasts} removeToast={removeToast} />
+          )}
+
           <Animated.ScrollView
             ref={scrollViewRef}
             layout={native(LinearTransition)}
@@ -708,6 +721,7 @@ export const ComposePost = ({
                   onClearVideo={clearVideo}
                   onPublish={onComposerPostPublish}
                   onError={setError}
+                  showToast={showToast}
                 />
                 {isWebFooterSticky && post.id === activePost.id && (
                   <View style={styles.stickyFooterWeb}>{footer}</View>
@@ -746,6 +760,7 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo,
   onError,
   onPublish,
+  showToast,
 }: {
   post: PostDraft
   dispatch: (action: ComposerAction) => void
@@ -761,6 +776,7 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
+  showToast: (message: string, type?: ToastType | LegacyToastType) => void
 }) {
   const {currentAccount} = useSession()
   const currentDid = currentAccount!.did
@@ -810,7 +826,7 @@ let ComposerPost = React.memo(function ComposerPost({
         if (isNative) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          Toast.show(_(msg`Unsupported video type`), 'xmark')
+          showToast(_(msg`Unsupported video type`), 'error')
           return
         }
         const name = `pasted.${mimeToExt(mimeType)}`
@@ -823,7 +839,7 @@ let ComposerPost = React.memo(function ComposerPost({
         onImageAdd([res])
       }
     },
-    [post.id, onSelectVideo, onImageAdd, _],
+    [post.id, onSelectVideo, onImageAdd, _, showToast],
   )
 
   useHideKeyboardOnBackground()
@@ -1247,6 +1263,7 @@ function ComposerFooter({
   showAddButton,
   onEmojiButtonPress,
   onError,
+  showToast,
   onSelectVideo,
   onAddPost,
 }: {
@@ -1255,6 +1272,7 @@ function ComposerFooter({
   showAddButton: boolean
   onEmojiButtonPress: () => void
   onError: (error: string) => void
+  showToast: (message: string, type?: any) => void
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onAddPost: () => void
 }) {
@@ -1319,6 +1337,7 @@ function ComposerFooter({
                 onAdd={onImageAdd}
                 onSelectVideo={asset => onSelectVideo(post.id, asset)}
                 setError={onError}
+                showToast={showToast}
               />
               <OpenCameraBtn
                 disabled={media?.type === 'images' ? isMaxImages : !!media}

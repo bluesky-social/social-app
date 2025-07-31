@@ -16,7 +16,6 @@ import {getDataUriSize} from '#/lib/media/util'
 import {isNative, isWeb} from '#/platform/detection'
 import {type ComposerImage, createComposerImage} from '#/state/gallery'
 import {getVideoMetadata} from '#/view/com/composer/videos/pickVideo'
-import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
@@ -28,6 +27,7 @@ type Props = {
   onAdd: (next: ComposerImage[]) => void
   onSelectVideo: (asset: ImagePickerAsset) => void
   setError: (error: string) => void
+  showToast: (message: string, type?: any) => void
 }
 
 export function validateAndSelectVideo(
@@ -73,6 +73,7 @@ export function SelectMediaBtn({
   onAdd,
   onSelectVideo,
   setError,
+  showToast,
 }: Props) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
@@ -80,56 +81,12 @@ export function SelectMediaBtn({
   const t = useTheme()
   const sheetWrapper = useSheetWrapper()
 
-  const onPressSelectMedia = useCallback(async () => {
-    if (isNative) {
-      const [photoAccess, videoAccess] = await Promise.all([
-        requestPhotoAccessIfNeeded(),
-        requestVideoAccessIfNeeded(),
-      ])
-
-      if (!photoAccess && !videoAccess) {
-        Toast.show(
-          _(msg`You need to allow access to your media library.`),
-          'error',
-        )
-        return
-      }
-    }
-
-    //APiligrim
-    //Note: selectionLimit doesn't work reliably on Android, so we handle limiting in code
-    const response = await sheetWrapper(
-      launchImageLibraryAsync({
-        exif: false,
-        mediaTypes: ['images', 'videos'],
-        quality: 1,
-        allowsMultipleSelection: true,
-        legacy: true,
-      }),
-    )
-
-    if (!response.assets || response.assets.length === 0) {
-      return
-    }
-
-    await processSelectedAssets(response.assets)
-  }, [
-    requestPhotoAccessIfNeeded,
-    requestVideoAccessIfNeeded,
-    size,
-    onAdd,
-    onSelectVideo,
-    setError,
-    sheetWrapper,
-    _,
-  ])
-
   const processSelectedAssets = useCallback(
     async (assets: ImagePickerAsset[]) => {
       const limitedAssets = assets.slice(0, 4)
 
       if (assets.length > 4) {
-        Toast.show(_(msg`Using the first 4 images.`), 'info')
+        showToast(_(msg`Using the first 4 images.`), 'info')
       }
 
       const images: ImagePickerAsset[] = []
@@ -186,7 +143,7 @@ export function SelectMediaBtn({
 
       if (videos.length > 0 && images.length > 0) {
         if (firstMediaType === 'video') {
-          Toast.show(
+          showToast(
             _(
               msg`You can select either images or videos. Taking the first video.`,
             ),
@@ -197,7 +154,7 @@ export function SelectMediaBtn({
           await validateAndSelectVideo(video, onSelectVideo, setError, _)
           return
         } else {
-          Toast.show(
+          showToast(
             _(msg`Taking first 4 images and discarding videos.`),
             'info',
           )
@@ -208,7 +165,7 @@ export function SelectMediaBtn({
       }
 
       if (videos.length > 1) {
-        Toast.show(_(msg`Using the first video selected.`), 'info')
+        showToast(_(msg`Using the first video selected.`), 'info')
         const video = ensureVideoMimeType(videos[0])
 
         await validateAndSelectVideo(video, onSelectVideo, setError, _)
@@ -226,7 +183,7 @@ export function SelectMediaBtn({
         const maxAllowed = 4 - size
 
         if (images.length > 4) {
-          Toast.show(
+          showToast(
             _(msg`You can only upload up to 4 images at a time.`),
             'info',
           )
@@ -235,9 +192,7 @@ export function SelectMediaBtn({
         }
 
         if (size + images.length > 4) {
-          const discarded = size + images.length - 4
-
-          Toast.show(_(msg`You can only upload up to 4 images total.`), 'info')
+          showToast(_(msg`You can only upload up to 4 images.`), 'info')
           await handleImageSelection(
             images.slice(0, maxAllowed),
             size,
@@ -250,8 +205,50 @@ export function SelectMediaBtn({
         await handleImageSelection(images, size, onAdd, _)
       }
     },
-    [size, onAdd, onSelectVideo, setError, _],
+    [_, showToast, onAdd, onSelectVideo, setError, size],
   )
+
+  const onPressSelectMedia = useCallback(async () => {
+    if (isNative) {
+      const [photoAccess, videoAccess] = await Promise.all([
+        requestPhotoAccessIfNeeded(),
+        requestVideoAccessIfNeeded(),
+      ])
+
+      if (!photoAccess && !videoAccess) {
+        showToast(
+          _(msg`You need to allow access to your media library.`),
+          'error',
+        )
+        return
+      }
+    }
+
+    //APiligrim
+    //Note: selectionLimit doesn't work reliably on Android, so we handle limiting in code
+    const response = await sheetWrapper(
+      launchImageLibraryAsync({
+        exif: false,
+        mediaTypes: ['images', 'videos'],
+        quality: 1,
+        allowsMultipleSelection: true,
+        legacy: true,
+      }),
+    )
+
+    if (!response.assets || response.assets.length === 0) {
+      return
+    }
+
+    await processSelectedAssets(response.assets)
+  }, [
+    requestPhotoAccessIfNeeded,
+    requestVideoAccessIfNeeded,
+    sheetWrapper,
+    _,
+    processSelectedAssets,
+    showToast,
+  ])
 
   return (
     <Button
@@ -266,7 +263,11 @@ export function SelectMediaBtn({
       shape="round"
       color="primary"
       disabled={disabled}>
-      <Image size="lg" style={disabled && t.atoms.text_contrast_low} />
+      <Image
+        size="lg"
+        style={disabled && t.atoms.text_contrast_low}
+        accessibilityIgnoresInvertColors={true}
+      />
     </Button>
   )
 }
