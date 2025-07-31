@@ -21,6 +21,7 @@ import {type ComposerImage, cropImage} from '#/state/gallery'
 import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {type PostAction} from '../state/composer'
 import {EditImageDialog} from './EditImageDialog'
 import {ImageAltTextDialog} from './ImageAltTextDialog'
@@ -230,6 +231,8 @@ const GalleryItem = ({
         cachePolicy="none"
         autoplay={false}
       />
+
+      <MediaInsetBorder />
 
       <ImageAltTextDialog
         control={altTextControl}
