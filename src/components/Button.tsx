@@ -221,11 +221,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_200,
-                dim: t.palette.primary_200,
-                dark: t.palette.primary_200,
-              }),
+              backgroundColor: t.palette.primary_200,
             })
           }
         } else if (color === 'secondary') {
@@ -258,11 +254,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_700,
-                dim: t.palette.negative_700,
-                dark: t.palette.negative_700,
-              }),
+              backgroundColor: t.palette.negative_700,
             })
           }
         } else if (color === 'negative_subtle') {
