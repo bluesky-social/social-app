@@ -444,10 +444,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
           })
         } else if (size === 'tiny') {
           baseStyles.push({
-            paddingVertical: 4,
+            paddingVertical: 6,
             paddingHorizontal: 8,
-            borderRadius: 4,
-            gap: 4,
+            borderRadius: 6,
+            gap: 2,
           })
         }
       } else if (shape === 'round' || shape === 'square') {
@@ -465,9 +465,9 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (size === 'tiny') {
           if (shape === 'round') {
-            baseStyles.push({height: 22, width: 22})
+            baseStyles.push({height: 25, width: 25})
           } else {
-            baseStyles.push({height: 21, width: 21})
+            baseStyles.push({height: 25, width: 25})
           }
         }
 
@@ -475,7 +475,9 @@ export const Button = React.forwardRef<View, ButtonProps>(
           baseStyles.push(a.rounded_full)
         } else if (shape === 'square') {
           if (size === 'tiny') {
-            baseStyles.push(a.rounded_xs)
+            baseStyles.push({
+              borderRadius: 6,
+            })
           } else {
             baseStyles.push(a.rounded_sm)
           }
@@ -725,10 +727,12 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
 
 export function ButtonIcon({
   icon: Comp,
-  position,
   size,
 }: {
   icon: React.ComponentType<SVGIconProps>
+  /**
+   * @deprecated no longer needed
+   */
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
@@ -769,7 +773,7 @@ export function ButtonIcon({
     const iconContainerSize = {
       large: 18,
       small: 16,
-      tiny: 13,
+      tiny: 12,
     }[buttonSize || 'small']
 
     return {
@@ -786,8 +790,6 @@ export function ButtonIcon({
           width: iconContainerSize,
           height: iconContainerSize,
           opacity: disabled ? 0.7 : 1,
-          marginLeft: position === 'left' ? -2 : 0,
-          marginRight: position === 'right' ? -2 : 0,
         },
       ]}>
       <View
