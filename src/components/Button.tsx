@@ -430,10 +430,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
       if (shape === 'default') {
         if (size === 'large') {
           baseStyles.push({
-            paddingVertical: 13,
-            paddingHorizontal: 20,
-            borderRadius: 8,
-            gap: 8,
+            paddingVertical: 14,
+            paddingHorizontal: 24,
+            borderRadius: 10,
+            gap: 5,
           })
         } else if (size === 'small') {
           baseStyles.push({
@@ -451,11 +451,15 @@ export const Button = React.forwardRef<View, ButtonProps>(
           })
         }
       } else if (shape === 'round' || shape === 'square') {
+        /*
+         * These sizes match the actual rendered size on screen, based on
+         * Chrome's web inspector
+         */
         if (size === 'large') {
           if (shape === 'round') {
-            baseStyles.push({height: 46, width: 46})
+            baseStyles.push({height: 45, width: 45})
           } else {
-            baseStyles.push({height: 44, width: 44})
+            baseStyles.push({height: 45, width: 45})
           }
         } else if (size === 'small') {
           if (shape === 'round') {
@@ -745,7 +749,7 @@ export function ButtonIcon({
     const iconSizeShorthand =
       size ??
       (({
-        large: 'sm',
+        large: 'md',
         small: 'sm',
         tiny: 'xs',
       }[buttonSize || 'small'] || 'sm') as Exclude<
@@ -771,9 +775,9 @@ export function ButtonIcon({
      * don't increase button size
      */
     const iconContainerSize = {
-      large: 18,
-      small: 16,
-      tiny: 12,
+      large: 17,
+      small: 17,
+      tiny: 13,
     }[buttonSize || 'small']
 
     return {
