@@ -437,10 +437,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
           })
         } else if (size === 'small') {
           baseStyles.push({
-            paddingVertical: 9,
+            paddingVertical: 8,
             paddingHorizontal: 12,
-            borderRadius: 6,
-            gap: 6,
+            borderRadius: 8,
+            gap: 3,
           })
         } else if (size === 'tiny') {
           baseStyles.push({
@@ -459,9 +459,9 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (size === 'small') {
           if (shape === 'round') {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({height: 33, width: 33})
           } else {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({height: 33, width: 33})
           }
         } else if (size === 'tiny') {
           if (shape === 'round') {
@@ -706,7 +706,7 @@ export function useSharedButtonTextStyles() {
     if (size === 'large') {
       baseStyles.push(a.text_md, a.leading_tight)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_tight)
+      baseStyles.push(a.text_md, a.leading_tight)
     } else if (size === 'tiny') {
       baseStyles.push(a.text_xs, a.leading_tight)
     }
