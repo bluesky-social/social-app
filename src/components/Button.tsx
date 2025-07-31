@@ -222,18 +222,18 @@ export const Button = React.forwardRef<View, ButtonProps>(
           } else {
             baseStyles.push({
               backgroundColor: select(t.name, {
-                light: t.palette.primary_700,
-                dim: t.palette.primary_300,
-                dark: t.palette.primary_300,
+                light: t.palette.primary_200,
+                dim: t.palette.primary_200,
+                dark: t.palette.primary_200,
               }),
             })
           }
         } else if (color === 'secondary') {
           if (!disabled) {
             baseStyles.push(t.atoms.bg_contrast_25)
-            hoverStyles.push(t.atoms.bg_contrast_50)
+            hoverStyles.push(t.atoms.bg_contrast_100)
           } else {
-            baseStyles.push(t.atoms.bg_contrast_100)
+            baseStyles.push(t.atoms.bg_contrast_50)
           }
         } else if (color === 'secondary_inverted') {
           if (!disabled) {
@@ -241,7 +241,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
               backgroundColor: t.palette.contrast_900,
             })
             hoverStyles.push({
-              backgroundColor: t.palette.contrast_950,
+              backgroundColor: t.palette.contrast_975,
             })
           } else {
             baseStyles.push({
@@ -260,8 +260,8 @@ export const Button = React.forwardRef<View, ButtonProps>(
             baseStyles.push({
               backgroundColor: select(t.name, {
                 light: t.palette.negative_700,
-                dim: t.palette.negative_300,
-                dark: t.palette.negative_300,
+                dim: t.palette.negative_700,
+                dark: t.palette.negative_700,
               }),
             })
           }
@@ -561,33 +561,29 @@ export function useSharedButtonTextStyles() {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          baseStyles.push({color: t.palette.white})
         }
       } else if (color === 'secondary') {
         if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_700,
-          })
+          baseStyles.push(t.atoms.text_contrast_medium)
         } else {
           baseStyles.push({
-            color: t.palette.contrast_400,
+            color: t.palette.contrast_300,
           })
         }
       } else if (color === 'secondary_inverted') {
         if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_50,
-          })
+          baseStyles.push(t.atoms.text_inverted)
         } else {
           baseStyles.push({
-            color: t.palette.contrast_400,
+            color: t.palette.contrast_300,
           })
         }
       } else if (color === 'negative') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          baseStyles.push({color: t.palette.negative_300})
         }
       } else if (color === 'negative_secondary') {
         if (!disabled) {
@@ -605,7 +601,6 @@ export function useSharedButtonTextStyles() {
               dim: t.palette.negative_700,
               dark: t.palette.negative_700,
             }),
-            opacity: 0.5,
           })
         }
       }
@@ -740,7 +735,7 @@ export function ButtonIcon({
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size: buttonSize, disabled} = useButtonContext()
+  const {size: buttonSize} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
   const {iconSize, iconContainerSize} = React.useMemo(() => {
     /**
@@ -793,7 +788,6 @@ export function ButtonIcon({
         {
           width: iconContainerSize,
           height: iconContainerSize,
-          opacity: disabled ? 0.7 : 1,
         },
       ]}>
       <View
