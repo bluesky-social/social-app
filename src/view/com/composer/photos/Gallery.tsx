@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  type ImageStyle,
   Keyboard,
   type LayoutChangeEvent,
   StyleSheet,
@@ -124,7 +125,7 @@ type GalleryItemProps = {
   image: ComposerImage
   altTextControlStyle?: ViewStyle
   imageControlsStyle?: ViewStyle
-  imageStyle?: ViewStyle
+  imageStyle?: ImageStyle
   onChange: (next: ComposerImage) => void
   onRemove: () => void
 }
@@ -160,7 +161,7 @@ const GalleryItem = ({
 
   return (
     <View
-      style={imageStyle}
+      style={imageStyle as ViewStyle}
       // Fixes ALT and icons appearing with half opacity when the post is inactive
       renderToHardwareTextureAndroid>
       <TouchableOpacity
