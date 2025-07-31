@@ -60,7 +60,7 @@ Please be sure to:
 
 ## Security disclosures
 
-If you discover any security issues, please send an email to security@bsky.app. The email is automatically CCed to the entire team and we'll respond promptly.
+If you discover any security issues, please send an email to security@bsky.app. The email is automatically CC'd to the entire team and we'll respond promptly.
 
 ## Are you a developer interested in building on atproto?
 
