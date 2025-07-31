@@ -253,7 +253,7 @@ export function ProfileGrid({
   profiles: bsky.profile.AnyProfileView[]
   recId?: number
   error: Error | null
-  viewContext: 'profile' | 'feed'
+  viewContext: 'profile' | 'profileHeader' | 'feed'
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -375,7 +375,11 @@ export function ProfileGrid({
 
   return (
     <View
-      style={[a.border_t, t.atoms.border_contrast_low, t.atoms.bg_contrast_25]}>
+      style={[
+        viewContext !== 'profileHeader' && a.border_t,
+        t.atoms.border_contrast_low,
+        t.atoms.bg_contrast_25,
+      ]}>
       <View
         style={[
           a.px_lg,
@@ -391,11 +395,13 @@ export function ProfileGrid({
             <Trans>Suggested for you</Trans>
           )}
         </Text>
-        <InlineLinkText
-          label={_(msg`See more suggested profiles on the Explore page`)}
-          to="/search">
-          <Trans>See more</Trans>
-        </InlineLinkText>
+        {viewContext !== 'profileHeader' && (
+          <InlineLinkText
+            label={_(msg`See more suggested profiles on the Explore page`)}
+            to="/search">
+            <Trans>See more</Trans>
+          </InlineLinkText>
+        )}
       </View>
 
       {gtMobile ? (
