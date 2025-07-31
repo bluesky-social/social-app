@@ -1,65 +1,11 @@
 import {Pressable, View} from 'react-native'
 
-import * as Toast from '#/view/com/util/Toast'
-import {
-  getToastTypeStyles,
-  TOAST_TYPE_TO_ICON,
-  type ToastType,
-} from '#/view/com/util/Toast.style'
-import {atoms as a, useTheme} from '#/alf'
-import {H1, Text} from '#/components/Typography'
-
-function ToastPreview({message, type}: {message: string; type: ToastType}) {
-  const t = useTheme()
-  const toastStyles = getToastTypeStyles(t)
-  const colors = toastStyles[type as keyof typeof toastStyles]
-  const IconComponent =
-    TOAST_TYPE_TO_ICON[type as keyof typeof TOAST_TYPE_TO_ICON]
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      onPress={() => Toast.show(message, type)}
-      style={[
-        {backgroundColor: colors.backgroundColor},
-        a.shadow_sm,
-        {borderColor: colors.borderColor},
-        a.rounded_sm,
-        a.border,
-        a.px_sm,
-        a.py_sm,
-        a.flex_row,
-        a.gap_sm,
-        a.align_center,
-      ]}>
-      <View
-        style={[
-          a.flex_shrink_0,
-          a.rounded_full,
-          {width: 24, height: 24},
-          a.align_center,
-          a.justify_center,
-          {
-            backgroundColor: colors.backgroundColor,
-          },
-        ]}>
-        <IconComponent fill={colors.iconColor} size="xs" />
-      </View>
-      <View style={[a.flex_1]}>
-        <Text
-          style={[
-            a.text_sm,
-            a.font_bold,
-            a.leading_snug,
-            {color: colors.textColor},
-          ]}
-          emoji>
-          {message}
-        </Text>
-      </View>
-    </Pressable>
-  )
-}
+import {show as deprecatedShow} from '#/view/com/util/Toast'
+import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {toast} from '#/components/Toast'
+import {Toast} from '#/components/Toast/Toast'
+import {H1} from '#/components/Typography'
 
 export function Toasts() {
   return (
@@ -67,35 +13,103 @@ export function Toasts() {
       <H1>Toast Examples</H1>
 
       <View style={[a.gap_md]}>
-        <View style={[a.gap_xs]}>
-          <ToastPreview message="Default Toast" type="default" />
-        </View>
-
-        <View style={[a.gap_xs]}>
-          <ToastPreview
-            message="Operation completed successfully!"
-            type="success"
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            toast.show({
+              type: 'default',
+              content: 'Default toast',
+              a11yLabel: 'Default toast',
+            })
+          }>
+          <Toast content="Default toast" type="default" />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            toast.show({
+              type: 'default',
+              content: 'Default toast, 6 seconds',
+              a11yLabel: 'Default toast, 6 seconds',
+              duration: 6e3,
+            })
+          }>
+          <Toast content="Default toast, 6 seconds" type="default" />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            toast.show({
+              type: 'default',
+              content:
+                'This is a longer message to test how the toast handles multiple lines of text content.',
+              a11yLabel:
+                'This is a longer message to test how the toast handles multiple lines of text content.',
+            })
+          }>
+          <Toast
+            content="This is a longer message to test how the toast handles multiple lines of text content."
+            type="default"
           />
-        </View>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            toast.show({
+              type: 'success',
+              content: 'Success toast',
+              a11yLabel: 'Success toast',
+            })
+          }>
+          <Toast content="Success toast" type="success" />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            toast.show({
+              type: 'info',
+              content: 'Info toast',
+              a11yLabel: 'Info toast',
+            })
+          }>
+          <Toast content="Info" type="info" />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            toast.show({
+              type: 'warning',
+              content: 'Warning toast',
+              a11yLabel: 'Warning toast',
+            })
+          }>
+          <Toast content="Warning" type="warning" />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() =>
+            toast.show({
+              type: 'error',
+              content: 'Error toast',
+              a11yLabel: 'Error toast',
+            })
+          }>
+          <Toast content="Error" type="error" />
+        </Pressable>
 
-        <View style={[a.gap_xs]}>
-          <ToastPreview message="Something went wrong!" type="error" />
-        </View>
-
-        <View style={[a.gap_xs]}>
-          <ToastPreview message="Please check your input" type="warning" />
-        </View>
-
-        <View style={[a.gap_xs]}>
-          <ToastPreview message="Here's some helpful information" type="info" />
-        </View>
-
-        <View style={[a.gap_xs]}>
-          <ToastPreview
-            message="This is a longer message to test how the toast handles multiple lines of text content."
-            type="info"
-          />
-        </View>
+        <Button
+          label="Deprecated toast example"
+          onPress={() =>
+            deprecatedShow(
+              'This is a deprecated toast example',
+              'exclamation-circle',
+            )
+          }
+          size="large"
+          variant="solid"
+          color="secondary">
+          <ButtonText>Deprecated toast example</ButtonText>
+        </Button>
       </View>
     </View>
   )
