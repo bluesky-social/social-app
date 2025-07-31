@@ -6,9 +6,10 @@ import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler'
 import Animated, {
-  FadeIn,
-  FadeOut,
+  Easing,
   runOnJS,
+  SlideInUp,
+  SlideOutUp,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -173,8 +174,12 @@ function AnimatedToast({
       pointerEvents="box-none">
       {alive && (
         <Animated.View
-          entering={FadeIn.duration(TOAST_ANIMATION_DURATION)}
-          exiting={FadeOut.duration(TOAST_ANIMATION_DURATION * 0.7)}
+          entering={SlideInUp.easing(Easing.out(Easing.exp)).duration(
+            TOAST_ANIMATION_DURATION,
+          )}
+          exiting={SlideOutUp.easing(Easing.in(Easing.exp)).duration(
+            TOAST_ANIMATION_DURATION * 0.7,
+          )}
           onLayout={evt => setCardHeight(evt.nativeEvent.layout.height)}
           accessibilityRole="alert"
           accessible={true}
