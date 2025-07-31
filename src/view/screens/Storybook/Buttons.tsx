@@ -23,7 +23,7 @@ export function Buttons() {
         'secondary',
         'secondary_inverted',
         'negative',
-        'negative_secondary',
+        'negative_subtle',
       ].map(color => (
         <Fragment key={color}>
           {['tiny', 'small', 'large'].map(size => (

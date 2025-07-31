@@ -25,7 +25,7 @@ export type ButtonColor =
   | 'secondary'
   | 'secondary_inverted'
   | 'negative'
-  | 'negative_secondary'
+  | 'negative_subtle'
 export type ButtonSize = 'tiny' | 'small' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
@@ -265,7 +265,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
               }),
             })
           }
-        } else if (color === 'negative_secondary') {
+        } else if (color === 'negative_subtle') {
           if (!disabled) {
             baseStyles.push({
               backgroundColor: select(t.name, {
@@ -395,7 +395,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
               })
             }
           }
-        } else if (color === 'negative_secondary') {
+        } else if (color === 'negative_subtle') {
           if (variant === 'outline') {
             baseStyles.push(a.border, t.atoms.bg, {
               borderWidth: 1,
@@ -585,7 +585,7 @@ export function useSharedButtonTextStyles() {
         } else {
           baseStyles.push({color: t.palette.negative_300})
         }
-      } else if (color === 'negative_secondary') {
+      } else if (color === 'negative_subtle') {
         if (!disabled) {
           baseStyles.push({
             color: select(t.name, {
@@ -682,7 +682,7 @@ export function useSharedButtonTextStyles() {
             baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
           }
         }
-      } else if (color === 'negative_secondary') {
+      } else if (color === 'negative_subtle') {
         if (variant === 'outline') {
           if (!disabled) {
             baseStyles.push({color: t.palette.negative_400})
