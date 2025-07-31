@@ -9,6 +9,11 @@ export enum Nux {
   ActivitySubscriptions = 'ActivitySubscriptions',
   AgeAssuranceDismissibleNotice = 'AgeAssuranceDismissibleNotice',
   AgeAssuranceDismissibleFeedBanner = 'AgeAssuranceDismissibleFeedBanner',
+
+  /*
+   * Blocking announcements. New IDs are required for each new announcement.
+   */
+  BlockingAnnouncementPolicyUpdate20250801 = 'BlockingAnnouncementPolicyUpdate20250801',
 }
 
 export const nuxNames = new Set(Object.values(Nux))
@@ -38,6 +43,10 @@ export type AppNux = BaseNux<
       id: Nux.AgeAssuranceDismissibleFeedBanner
       data: undefined
     }
+  | {
+      id: Nux.BlockingAnnouncementPolicyUpdate20250801
+      data: undefined
+    }
 >
 
 export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
@@ -47,4 +56,5 @@ export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
   [Nux.ActivitySubscriptions]: undefined,
   [Nux.AgeAssuranceDismissibleNotice]: undefined,
   [Nux.AgeAssuranceDismissibleFeedBanner]: undefined,
+  [Nux.BlockingAnnouncementPolicyUpdate20250801]: undefined,
 }

@@ -54,6 +54,7 @@ export function Outer({
   control,
   onClose,
   nativeOptions,
+  preventDismiss,
   testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const themeName = useThemeName()
@@ -165,6 +166,7 @@ export function Outer({
       cornerRadius={20}
       backgroundColor={t.atoms.bg.backgroundColor}
       {...nativeOptions}
+      preventDismiss={preventDismiss ?? nativeOptions?.preventDismiss}
       onSnapPointChange={onSnapPointChange}
       onStateChange={onStateChange}
       disableDrag={disableDrag}>
