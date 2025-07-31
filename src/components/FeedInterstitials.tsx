@@ -433,6 +433,7 @@ function SeeMoreSuggestedProfilesCard() {
   return (
     <Button
       label={_(msg`Browse more accounts on the Explore page`)}
+      style={[a.flex_col]}
       onPress={() => {
         navigation.navigate('SearchTab')
       }}>
