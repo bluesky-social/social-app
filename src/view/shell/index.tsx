@@ -26,6 +26,7 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
+import {BlockingAnnouncements} from '#/components/dialogs/BlockingAnnouncements'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
@@ -155,6 +156,7 @@ function ShellInner() {
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
+      <BlockingAnnouncements />
       <EmailDialog />
       <AgeAssuranceRedirectDialog />
       <InAppBrowserConsentDialog />
