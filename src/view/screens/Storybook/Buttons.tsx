@@ -31,7 +31,7 @@ export function Buttons() {
               <Text style={[a.font_heavy, a.text_2xl]}>
                 color={color} size={size}
               </Text>
-              <View style={[a.flex_row, a.gap_md]}>
+              <View style={[a.flex_row, a.align_start, a.gap_md]}>
                 <Button
                   color={color as ButtonColor}
                   size={size as ButtonSize}
