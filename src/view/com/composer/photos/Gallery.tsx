@@ -227,6 +227,8 @@ const GalleryItem = ({
         }}
         accessible={true}
         accessibilityIgnoresInvertColors
+        cachePolicy="none"
+        autoplay={false}
       />
 
       <ImageAltTextDialog
