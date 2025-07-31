@@ -389,10 +389,10 @@ export function ProfileGrid({
           a.justify_between,
         ]}>
         <Text style={[a.text_sm, a.font_bold, t.atoms.text]}>
-          {viewContext === 'profile' ? (
-            <Trans>Similar accounts</Trans>
-          ) : (
+          {viewContext === 'feed' ? (
             <Trans>Suggested for you</Trans>
+          ) : (
+            <Trans>Similar accounts</Trans>
           )}
         </Text>
         {viewContext !== 'profileHeader' && (
