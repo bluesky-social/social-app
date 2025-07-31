@@ -74,7 +74,7 @@ let ProfileHeaderStandard = ({
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
-  const [showSuggestedFollows, _setShowSuggestedFollows] = useState(true)
+  const [showSuggestedFollows, setShowSuggestedFollows] = useState(false)
   const isBlockedUser =
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
@@ -94,6 +94,7 @@ let ProfileHeaderStandard = ({
             )}`,
           ),
         )
+        setShowSuggestedFollows(true)
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
