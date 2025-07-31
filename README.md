@@ -27,6 +27,7 @@ The Bluesky Social application encompasses a set of schemas and APIs built in th
 
 ## Contributions
 
+> [!NOTE]
 > While we do accept contributions, we prioritize high quality issues and pull requests. Adhering to the below guidelines will ensure a more timely review.
 
 **Rules:**
