@@ -40,6 +40,7 @@ export function Toast({
     <Context.Provider value={useMemo(() => ({type}), [type])}>
       <View
         style={[
+          a.flex_1,
           a.py_lg,
           a.pl_xl,
           a.pr_2xl,

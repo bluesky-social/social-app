@@ -7,7 +7,7 @@ import {AccessibilityInfo, Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {atoms as a, web} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {DEFAULT_TOAST_DURATION} from '#/components/Toast/const'
 import {Toast} from '#/components/Toast/Toast'
 import {type ToastApi, type ToastType} from '#/components/Toast/types'
@@ -33,6 +33,7 @@ type ToastContainerProps = {}
 
 export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
   const {_} = useLingui()
+  const {gtPhone} = useBreakpoints()
   const [activeToast, setActiveToast] = useState<ActiveToast | undefined>()
   const [isExiting, setIsExiting] = useState(false)
 
@@ -62,13 +63,17 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
             a.fixed,
             {
               left: a.px_xl.paddingLeft,
+              right: a.px_xl.paddingLeft,
               bottom: a.px_xl.paddingLeft,
-              width: web(`calc(100% - ${a.px_xl.paddingLeft * 2})`),
-              maxWidth: 380,
               ...(isExiting
                 ? TOAST_ANIMATION_STYLES.exiting
                 : TOAST_ANIMATION_STYLES.entering),
             },
+            gtPhone && [
+              {
+                maxWidth: 380,
+              },
+            ],
           ]}>
           <Toast content={activeToast.content} type={activeToast.type} />
           <Pressable
