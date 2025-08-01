@@ -55,15 +55,13 @@ export function SuggestedFollowPlaceholder() {
 }
 
 export function ProfileHeaderSuggestedFollows({actorDid}: {actorDid: string}) {
-  const {
-    isPending: isSuggestionsPending,
-    data,
-    error,
-  } = useSuggestedFollowsByActorQuery({did: actorDid})
+  const {isLoading, data, error} = useSuggestedFollowsByActorQuery({
+    did: actorDid,
+  })
 
   return (
     <ProfileGrid
-      isSuggestionsLoading={isSuggestionsPending}
+      isSuggestionsLoading={isLoading}
       profiles={data?.suggestions ?? []}
       recId={data?.recId}
       error={error}
