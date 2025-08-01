@@ -63,6 +63,7 @@ function CardOuter({
 }
 
 export function SuggestedFollowPlaceholder() {
+  const {_} = useLingui()
   const t = useTheme()
 
   return (
@@ -79,7 +80,7 @@ export function SuggestedFollowPlaceholder() {
         </View>
 
         <Button
-          label=""
+          label={_(msg`Follow account placeholder`)}
           size="small"
           variant="solid"
           color="secondary"
