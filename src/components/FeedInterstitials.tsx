@@ -82,7 +82,6 @@ export function SuggestedFollowPlaceholder() {
         <Button
           label={_(msg`Follow account placeholder`)}
           size="small"
-          variant="solid"
           color="secondary"
           disabled
           style={[a.w_full, a.rounded_sm]}>
