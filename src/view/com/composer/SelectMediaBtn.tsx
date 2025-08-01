@@ -97,11 +97,11 @@ export function SelectMediaBtn({
       let firstMediaType: 'image' | 'video' | null = null
 
       for (const asset of limitedAssets) {
-        // APiligrim
-        // On web, pasted/dragged content may have data URIs without proper metadata
-        // This happens with clipboard paste, drag & drop, or browser inconsistencies
-        // We need to fetch and analyze the blob to extract missing video metadata
         if (
+          // APiligrim
+          // On web, pasted/dragged content may have data URIs without proper metadata
+          // This happens with clipboard paste, drag & drop, or browser inconsistencies
+          // We need to fetch and analyze the blob to extract missing video metadata
           isWeb &&
           asset.uri &&
           asset.uri.startsWith('data:') &&
