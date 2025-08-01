@@ -1,11 +1,5 @@
-import {memo, useCallback, useEffect, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
 import {
   type AppBskyActorDefs,
   moderateProfile,
@@ -46,7 +40,7 @@ import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
-import {ProfileHeaderSuggestedFollows} from './SuggestedFollows'
+import {AnimatedSuggestedFollows} from './SuggestedFollows'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -340,33 +334,6 @@ let ProfileHeaderStandard = ({
         <AnimatedSuggestedFollows actorDid={profile.did} />
       )}
     </>
-  )
-}
-
-const AnimatedSuggestedFollows = ({actorDid}: {actorDid: string}) => {
-  const [contentHeight, setContentHeight] = useState(0)
-  const animatedHeight = useSharedValue(0)
-
-  useEffect(() => {
-    if (contentHeight > 0) {
-      animatedHeight.value = withTiming(contentHeight, {
-        duration: 300,
-        easing: Easing.inOut(Easing.cubic),
-      })
-    }
-  }, [contentHeight, animatedHeight])
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    height: animatedHeight.value,
-    overflow: 'hidden',
-  }))
-
-  return (
-    <Animated.View style={animatedStyle}>
-      <View onLayout={e => setContentHeight(e.nativeEvent.layout.height)}>
-        <ProfileHeaderSuggestedFollows actorDid={actorDid} />
-      </View>
-    </Animated.View>
   )
 }
 
