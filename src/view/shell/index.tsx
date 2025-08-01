@@ -156,7 +156,6 @@ function ShellInner() {
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
-      <BlockingAnnouncements />
       <EmailDialog />
       <AgeAssuranceRedirectDialog />
       <InAppBrowserConsentDialog />
@@ -164,6 +163,7 @@ function ShellInner() {
       <Lightbox />
       <PortalOutlet />
       <BottomSheetOutlet />
+      <BlockingAnnouncements />
     </>
   )
 }
