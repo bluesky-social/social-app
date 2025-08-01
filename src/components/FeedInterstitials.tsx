@@ -260,7 +260,7 @@ export function ProfileGrid({
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
   const isLoading = isSuggestionsLoading || !moderationOpts
-  const maxLength = gtMobile ? 3 : 6
+  const maxLength = gtMobile ? 3 : viewContext === 'profileHeader' ? 12 : 6
 
   const content = isLoading ? (
     Array(maxLength)
