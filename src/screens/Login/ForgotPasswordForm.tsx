@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {ActivityIndicator, Keyboard, View} from 'react-native'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {BskyAgent} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -39,7 +39,7 @@ export const ForgotPasswordForm = ({
 }) => {
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [email, setEmail] = useState<string>('')
+  const emailValueRef = useRef<string>('')
   const {_} = useLingui()
 
   const onPressSelectService = React.useCallback(() => {
@@ -47,7 +47,7 @@ export const ForgotPasswordForm = ({
   }, [])
 
   const onPressNext = async () => {
-    if (!EmailValidator.validate(email)) {
+    if (!EmailValidator.validate(emailValueRef.current)) {
       return setError(_(msg`Your email appears to be invalid.`))
     }
 
@@ -56,7 +56,9 @@ export const ForgotPasswordForm = ({
 
     try {
       const agent = new BskyAgent({service: serviceUrl})
-      await agent.com.atproto.server.requestPasswordReset({email})
+      await agent.com.atproto.server.requestPasswordReset({
+        email: emailValueRef.current,
+      })
       onEmailSent()
     } catch (e: any) {
       const errMsg = e.toString()
@@ -101,8 +103,9 @@ export const ForgotPasswordForm = ({
             autoFocus
             autoCorrect={false}
             autoComplete="email"
-            value={email}
-            onChangeText={setEmail}
+            onChangeText={v => {
+              emailValueRef.current = v
+            }}
             editable={!isProcessing}
             accessibilityHint={_(msg`Sets email for password reset`)}
           />
