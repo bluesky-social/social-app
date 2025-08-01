@@ -37,13 +37,13 @@ export function StepCaptchaNative() {
         if (isIOS) {
           logger.debug('starting to generate devicecheck token...')
           const token = await ReactNativeDeviceAttest.getDeviceCheckToken()
-          setToken(encodeURIComponent(token))
+          setToken(token)
           logger.debug(`generated devicecheck token: ${token}`)
         } else {
           const {token, payload} =
             await ReactNativeDeviceAttest.getIntegrityToken('signup')
-          setToken(encodeURIComponent(token))
-          setPayload(encodeURIComponent(base64UrlEncode(payload)))
+          setToken(token)
+          setPayload(base64UrlEncode(payload))
         }
       } catch (e: any) {
         logger.error(e)
