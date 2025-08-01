@@ -58,6 +58,7 @@ buck-out/
 # Ruby / CocoaPods
 /ios/Pods/
 /vendor/bundle/
+Gemfile.lock
 
 # Testing
 coverage/
