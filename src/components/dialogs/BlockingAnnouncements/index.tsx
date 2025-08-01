@@ -1,4 +1,4 @@
-import {BlockingAnnouncementDialogOuter} from '#/components/dialogs/BlockingAnnouncements/common'
+import {AnnouncementDialogOuter} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
 import * as PolicyUpdate20250801 from '#/components/dialogs/BlockingAnnouncements/PolicyUpdate20250801'
 
 export function BlockingAnnouncements() {
@@ -9,13 +9,11 @@ export function BlockingAnnouncements() {
    * NUX state for local testing and debugging.
    */
 
+  if (policyUpdate20250801.completed) return null
+
   return (
-    <>
-      {!policyUpdate20250801.completed && (
-        <BlockingAnnouncementDialogOuter>
-          <PolicyUpdate20250801.Announcement />
-        </BlockingAnnouncementDialogOuter>
-      )}
-    </>
+    <AnnouncementDialogOuter>
+      <PolicyUpdate20250801.Announcement />
+    </AnnouncementDialogOuter>
   )
 }

@@ -71,7 +71,6 @@ function ShellInner() {
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
-      <BlockingAnnouncements />
       <EmailDialog />
       <AgeAssuranceRedirectDialog />
       <LinkWarningDialog />
@@ -115,6 +114,8 @@ function ShellInner() {
           </TouchableWithoutFeedback>
         </>
       )}
+
+      <BlockingAnnouncements />
     </>
   )
 }

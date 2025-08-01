@@ -4,16 +4,15 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {Nux} from '#/state/queries/nuxs'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
 import {
   AnnouncementBadge,
   useAnnouncementState,
-  useForceClose,
 } from '#/components/dialogs/BlockingAnnouncements/common'
 import {InlineLinkText} from '#/components/Link'
 import {Span, Text} from '#/components/Typography'
+import {AnnouncementDialog, useAnnouncementDialogContext} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
 
 export function useLocalState() {
   return useAnnouncementState({
@@ -24,12 +23,12 @@ export function useLocalState() {
 export function Announcement() {
   const t = useTheme()
   const {_} = useLingui()
-  const forceClose = useForceClose()
   const {complete} = useLocalState()
+  const {close} = useAnnouncementDialogContext()
 
   const handleClose = useCallback(() => {
-    forceClose(() => complete())
-  }, [forceClose, complete])
+    close()
+  }, [close, complete])
 
   const linkStyle = [a.text_md]
   const links = {
@@ -66,9 +65,7 @@ export function Announcement() {
   }
 
   return (
-    <Dialog.ScrollableInner
-      label={_(msg`We’re updating our policies`)}
-      style={[web({maxWidth: 420})]}>
+    <AnnouncementDialog label={_(msg`We're updating our policies`)}>
       <View style={[a.align_start, a.gap_xl]}>
         <AnnouncementBadge />
 
@@ -136,6 +133,6 @@ export function Announcement() {
           </Text>
         </View>
       </View>
-    </Dialog.ScrollableInner>
+    </AnnouncementDialog>
   )
 }
