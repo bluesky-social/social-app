@@ -56,6 +56,9 @@ interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   onBeforePress?: () => void
 }
 
+/**
+ * @deprecated use Link from `#/components/Link.tsx` instead
+ */
 export const Link = memo(function Link({
   testID,
   style,
@@ -156,6 +159,9 @@ export const Link = memo(function Link({
   )
 })
 
+/**
+ * @deprecated use InlineLinkText from `#/components/Link.tsx` instead
+ */
 export const TextLink = memo(function TextLink({
   testID,
   type = 'md',
@@ -301,6 +307,9 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   onPointerEnter?: () => void
   anchorNoUnderline?: boolean
 }
+/**
+ * @deprecated use WebOnlyInlineLinkText from `#/components/Link.tsx` instead
+ */
 export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   testID,
   type = 'md',

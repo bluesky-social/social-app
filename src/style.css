@@ -369,3 +369,23 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
     transform: translateY(0);
   }
 }
+
+/*
+ * #/components/Toast/index.web.tsx
+ */
+@keyframes toastFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes toastFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

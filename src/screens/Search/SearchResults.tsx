@@ -255,7 +255,7 @@ let SearchScreenPostResults = ({
           <Trans>
             <InlineLinkText
               style={[pal.link]}
-              label={_(msg`sign in`)}
+              label={_(msg`Sign in`)}
               to={'#'}
               onPress={showSignIn}>
               Sign in
@@ -263,7 +263,7 @@ let SearchScreenPostResults = ({
             <Text style={t.atoms.text_contrast_medium}> or </Text>
             <InlineLinkText
               style={[pal.link]}
-              label={_(msg`create an account`)}
+              label={_(msg`Create an account`)}
               to={'#'}
               onPress={showCreateAccount}>
               create an account
