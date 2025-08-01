@@ -323,6 +323,7 @@ export function ProfileGrid({
                   <ProfileCard.Avatar
                     profile={profile}
                     moderationOpts={moderationOpts}
+                    disabledPreview
                     size={88}
                   />
                   <View style={[a.flex_col, a.align_center, a.max_w_full]}>
