@@ -1,5 +1,14 @@
-import React, {useRef} from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  FadeOutDown,
+  LayoutAnimationConfig,
+  LinearTransition,
+} from 'react-native-reanimated'
+import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,15 +18,17 @@ import {
   validateServiceHandle,
 } from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {useHandleAvailabilityQuery} from '#/state/queries/handle-availablility'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
+import {borderRadius} from '#/alf/tokens'
+import {Button} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
+import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
 import {BackNextButtons} from './BackNextButtons'
 
@@ -26,19 +37,30 @@ export function StepHandle() {
   const t = useTheme()
   const {state, dispatch} = useSignupContext()
   const agent = useAgent()
-  const handleValueRef = useRef<string>(state.handle)
-  const [draftValue, setDraftValue] = React.useState(state.handle)
-  const isLoading = useThrottledValue(state.isLoading, 500)
+  const [draftValue, setDraftValue] = useState(state.handle)
+  const isNextLoading = useThrottledValue(state.isLoading, 500)
 
-  const onNextPress = React.useCallback(async () => {
-    const handle = handleValueRef.current.trim()
+  const validCheck = validateServiceHandle(draftValue, state.userDomain)
+
+  const {data: isHandleAvailable, isLoading} = useHandleAvailabilityQuery({
+    username: draftValue,
+    serviceDid: state.serviceDescription?.did ?? 'UNKNOWN',
+    serviceDomain: state.userDomain,
+    birthDate: state.dateOfBirth.toISOString(),
+    email: state.email,
+    enabled: validCheck.overall,
+  })
+
+  const onNextPress = async () => {
+    if (!isHandleAvailable?.available) return
+
+    const handle = draftValue.trim()
     dispatch({
       type: 'setHandle',
       value: handle,
     })
 
-    const newValidCheck = validateServiceHandle(handle, state.userDomain)
-    if (!newValidCheck.overall) {
+    if (!validCheck.overall) {
       return
     }
 
@@ -52,7 +74,7 @@ export function StepHandle() {
       if (res.data.did) {
         dispatch({
           type: 'setError',
-          value: _(msg`That handle is already taken.`),
+          value: _(msg`That username is already taken`),
           field: 'handle',
         })
         logger.metric('signup:handleTaken', {}, {statsig: true})
@@ -82,17 +104,10 @@ export function StepHandle() {
       return
     }
     dispatch({type: 'next'})
-  }, [
-    _,
-    dispatch,
-    state.activeStep,
-    state.serviceDescription?.phoneVerificationRequired,
-    state.userDomain,
-    agent,
-  ])
+  }
 
-  const onBackPress = React.useCallback(() => {
-    const handle = handleValueRef.current.trim()
+  const onBackPress = () => {
+    const handle = draftValue.trim()
     dispatch({
       type: 'setHandle',
       value: handle,
@@ -103,84 +118,100 @@ export function StepHandle() {
       {activeStep: state.activeStep},
       {statsig: true},
     )
-  }, [dispatch, state.activeStep])
+  }
 
-  const validCheck = validateServiceHandle(draftValue, state.userDomain)
+  const textFieldInvalid =
+    (!isLoading && isHandleAvailable && !isHandleAvailable.available) ||
+    !validCheck.frontLengthNotTooLong ||
+    !validCheck.handleChars ||
+    !validCheck.hyphenStartOrEnd ||
+    !validCheck.totalLength
+
   return (
     <ScreenTransition>
-      <View style={[a.gap_lg]}>
+      <View style={[a.gap_sm, a.pt_lg]}>
         <View>
-          <TextField.Root>
-            <TextField.Icon icon={At} />
+          <TextField.Root isInvalid={textFieldInvalid}>
+            <TextField.Icon icon={AtIcon} />
             <TextField.Input
               testID="handleInput"
               onChangeText={val => {
                 if (state.error) {
                   dispatch({type: 'setError', value: ''})
                 }
-
-                // These need to always be in sync.
-                handleValueRef.current = val
                 setDraftValue(val)
               }}
-              label={_(msg`Type your desired username`)}
+              label={state.userDomain}
               defaultValue={draftValue}
+              keyboardType="ascii-capable" // fix for iOS replacing -- with —
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus
               autoComplete="off"
             />
+            {draftValue.length > 0 && (
+              <TextField.GhostText value={state.userDomain}>
+                {draftValue}
+              </TextField.GhostText>
+            )}
+            {isHandleAvailable?.available && (
+              <CheckIcon style={[{color: t.palette.positive_600}, a.z_20]} />
+            )}
           </TextField.Root>
         </View>
-        {draftValue !== '' && (
-          <Text style={[a.text_md]}>
-            <Trans>
-              Your full username will be{' '}
-              <Text style={[a.text_md, a.font_bold]}>
-                @{createFullHandle(draftValue, state.userDomain)}
-              </Text>
-            </Trans>
-          </Text>
-        )}
-
-        {draftValue !== '' && (
-          <View
-            style={[
-              a.w_full,
-              a.rounded_sm,
-              a.border,
-              a.p_md,
-              a.gap_sm,
-              t.atoms.border_contrast_low,
-            ]}>
-            {state.error ? (
-              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-                <IsValidIcon valid={false} />
-                <Text style={[a.text_md, a.flex_1]}>{state.error}</Text>
-              </View>
-            ) : undefined}
-            {validCheck.hyphenStartOrEnd ? (
-              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-                <IsValidIcon valid={validCheck.handleChars} />
-                <Text style={[a.text_md, a.flex_1]}>
-                  <Trans>Only contains letters, numbers, and hyphens</Trans>
-                </Text>
-              </View>
-            ) : (
-              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-                <IsValidIcon valid={validCheck.hyphenStartOrEnd} />
-                <Text style={[a.text_md, a.flex_1]}>
-                  <Trans>Doesn't begin or end with a hyphen</Trans>
-                </Text>
-              </View>
+        <LayoutAnimationConfig skipEntering skipExiting>
+          <View style={[a.gap_xs]}>
+            {state.error && (
+              <Requirement>
+                <RequirementText>{state.error}</RequirementText>
+              </Requirement>
             )}
-            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-              <IsValidIcon
-                valid={validCheck.frontLength && validCheck.totalLength}
-              />
-              {!validCheck.totalLength ||
-              draftValue.length > MAX_SERVICE_HANDLE_LENGTH ? (
-                <Text style={[a.text_md, a.flex_1]}>
+            {isHandleAvailable &&
+              !isHandleAvailable.available &&
+              validCheck.overall && (
+                <>
+                  <Requirement>
+                    <RequirementText>
+                      <Trans>
+                        {createFullHandle(draftValue, state.userDomain)} is not
+                        available
+                      </Trans>
+                    </RequirementText>
+                  </Requirement>
+                  {isHandleAvailable.suggestions &&
+                    isHandleAvailable.suggestions.length > 0 && (
+                      <HandleSuggestions
+                        suggestions={isHandleAvailable.suggestions}
+                        onSelect={suggestion => {
+                          setDraftValue(
+                            suggestion.handle.slice(
+                              0,
+                              state.userDomain.length * -1,
+                            ),
+                          )
+                          // TODO: add logging
+                        }}
+                      />
+                    )}
+                </>
+              )}
+            {(!validCheck.handleChars || !validCheck.hyphenStartOrEnd) && (
+              <Requirement>
+                {!validCheck.hyphenStartOrEnd ? (
+                  <RequirementText>
+                    <Trans>Doesn't begin or end with a hyphen</Trans>
+                  </RequirementText>
+                ) : (
+                  <RequirementText>
+                    <Trans>Only contains letters, numbers, and hyphens</Trans>
+                  </RequirementText>
+                )}
+              </Requirement>
+            )}
+            <Requirement>
+              {(!validCheck.frontLengthNotTooLong ||
+                !validCheck.totalLength) && (
+                <RequirementText>
                   <Trans>
                     No longer than{' '}
                     <Plural
@@ -188,19 +219,15 @@ export function StepHandle() {
                       other="# characters"
                     />
                   </Trans>
-                </Text>
-              ) : (
-                <Text style={[a.text_md, a.flex_1]}>
-                  <Trans>At least 3 characters</Trans>
-                </Text>
+                </RequirementText>
               )}
-            </View>
+            </Requirement>
           </View>
-        )}
+        </LayoutAnimationConfig>
       </View>
       <BackNextButtons
-        isLoading={isLoading}
-        isNextDisabled={!validCheck.overall}
+        isLoading={isNextLoading}
+        isNextDisabled={!validCheck.overall || !!state.error}
         onBackPress={onBackPress}
         onNextPress={onNextPress}
       />
@@ -208,10 +235,77 @@ export function StepHandle() {
   )
 }
 
-function IsValidIcon({valid}: {valid: boolean}) {
+function Requirement({children}: {children: React.ReactNode}) {
+  return (
+    <Animated.View
+      style={[a.w_full]}
+      layout={native(LinearTransition)}
+      entering={native(FadeIn)}
+      exiting={native(FadeOut)}>
+      {children}
+    </Animated.View>
+  )
+}
+
+function RequirementText({children}: {children: React.ReactNode}) {
   const t = useTheme()
-  if (!valid) {
-    return <Times size="md" style={{color: t.palette.negative_500}} />
-  }
-  return <Check size="md" style={{color: t.palette.positive_700}} />
+  return (
+    <Text style={[a.text_sm, a.flex_1, {color: t.palette.negative_500}]}>
+      <Trans>{children}</Trans>
+    </Text>
+  )
+}
+
+function HandleSuggestions({
+  suggestions,
+  onSelect,
+}: {
+  suggestions: ComAtprotoTempCheckHandleAvailability.Suggestion[]
+  onSelect: (
+    suggestions: ComAtprotoTempCheckHandleAvailability.Suggestion,
+  ) => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <Animated.View
+      entering={FadeInDown}
+      exiting={FadeOutDown}
+      style={[
+        a.flex_1,
+        a.border,
+        a.rounded_sm,
+        a.shadow_md,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+      ]}>
+      {suggestions.map((suggestion, index) => (
+        <Button
+          label={_(msg`Select ${suggestion.handle}`)}
+          key={index}
+          onPress={() => onSelect(suggestion)}
+          style={[
+            a.w_full,
+            a.flex_row,
+            a.align_center,
+            a.justify_between,
+            a.px_md,
+            a.py_lg,
+            a.border_b,
+            t.atoms.border_contrast_low,
+            index === 0 && {borderTopEndRadius: borderRadius.sm},
+            index === suggestions.length - 1 && [
+              {borderBottomEndRadius: borderRadius.sm},
+              a.border_b_0,
+            ],
+          ]}>
+          <Text style={[a.text_md]}>{suggestion.handle}</Text>
+          <Text style={[a.text_sm, {color: t.palette.positive_700}]}>
+            <Trans>Available</Trans>
+          </Text>
+        </Button>
+      ))}
+    </Animated.View>
+  )
 }

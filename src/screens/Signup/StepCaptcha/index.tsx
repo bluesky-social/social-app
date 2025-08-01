@@ -75,7 +75,7 @@ export function StepCaptcha() {
 
   return (
     <ScreenTransition>
-      <View style={[a.gap_lg]}>
+      <View style={[a.gap_lg, a.pt_lg]}>
         <View
           style={[
             a.w_full,
