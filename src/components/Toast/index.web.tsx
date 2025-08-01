@@ -81,7 +81,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
             accessibilityLabel={_(
               msg({
                 message: `Dismiss message`,
-                comment: `Refers to dismissing a toast notification`,
+                comment: `Accessibility label for dismissing a toast notification`,
               }),
             )}
             accessibilityHint=""
