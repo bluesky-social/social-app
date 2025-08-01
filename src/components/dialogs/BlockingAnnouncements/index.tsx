@@ -1,5 +1,12 @@
 import {AnnouncementDialogOuter} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
 import * as PolicyUpdate20250801 from '#/components/dialogs/BlockingAnnouncements/PolicyUpdate20250801'
+import {createPortalGroup} from '#/components/Portal'
+
+const portalGroup = createPortalGroup()
+
+export const Provider = portalGroup.Provider
+export const Outlet = portalGroup.Outlet
+export const Portal = portalGroup.Portal
 
 export function BlockingAnnouncements() {
   const policyUpdate20250801 = PolicyUpdate20250801.useLocalState()
@@ -12,8 +19,10 @@ export function BlockingAnnouncements() {
   if (policyUpdate20250801.completed) return null
 
   return (
-    <AnnouncementDialogOuter>
-      <PolicyUpdate20250801.Announcement />
-    </AnnouncementDialogOuter>
+    <Portal>
+      <AnnouncementDialogOuter>
+        <PolicyUpdate20250801.Announcement />
+      </AnnouncementDialogOuter>
+    </Portal>
   )
 }

@@ -26,13 +26,13 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
-import {BlockingAnnouncements} from '#/components/dialogs/BlockingAnnouncements'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {Outlet as BlockingAccouncementsPortalOutlet} from '#/components/dialogs/BlockingAnnouncements'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
@@ -163,7 +163,9 @@ function ShellInner() {
       <Lightbox />
       <PortalOutlet />
       <BottomSheetOutlet />
-      <BlockingAnnouncements />
+
+      {/* MUST BE LAST */}
+      <BlockingAccouncementsPortalOutlet />
     </>
   )
 }

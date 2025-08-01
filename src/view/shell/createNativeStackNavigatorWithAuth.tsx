@@ -43,6 +43,7 @@ import {atoms as a, useLayoutBreakpoints} from '#/alf'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
+import {BlockingAnnouncements} from '#/components/dialogs/BlockingAnnouncements'
 
 type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
   requireAuth?: boolean
@@ -167,6 +168,7 @@ function NativeStackNavigator({
           {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
         </>
       )}
+      <BlockingAnnouncements />
     </NavigationContent>
   )
 }
