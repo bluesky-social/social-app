@@ -20,6 +20,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
+import {toast} from '#/components/Toast'
 
 type Props = {
   size: number
@@ -27,7 +28,6 @@ type Props = {
   onAdd: (next: ComposerImage[]) => void
   onSelectVideo: (asset: ImagePickerAsset) => void
   setError: (error: string) => void
-  showToast: (message: string, type?: any) => void
 }
 
 export function validateAndSelectVideo(
@@ -73,7 +73,6 @@ export function SelectMediaBtn({
   onAdd,
   onSelectVideo,
   setError,
-  showToast,
 }: Props) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
@@ -86,7 +85,11 @@ export function SelectMediaBtn({
       const limitedAssets = assets.slice(0, 4)
 
       if (assets.length > 4) {
-        showToast(_(msg`Using the first 4 images.`), 'info')
+        toast.show({
+          type: 'info',
+          content: _(msg`Using the first 4 images.`),
+          a11yLabel: _(msg`Using the first 4 images.`),
+        })
       }
 
       const images: ImagePickerAsset[] = []
@@ -143,21 +146,25 @@ export function SelectMediaBtn({
 
       if (videos.length > 0 && images.length > 0) {
         if (firstMediaType === 'video') {
-          showToast(
-            _(
+          toast.show({
+            type: 'info',
+            content: _(
               msg`You can select either images or videos. Taking the first video.`,
             ),
-            'info',
-          )
+            a11yLabel: _(
+              msg`You can select either images or videos. Taking the first video.`,
+            ),
+          })
           const video = ensureVideoMimeType(videos[0])
 
           await validateAndSelectVideo(video, onSelectVideo, setError, _)
           return
         } else {
-          showToast(
-            _(msg`Taking first 4 images and discarding videos.`),
-            'info',
-          )
+          toast.show({
+            type: 'info',
+            content: _(msg`Taking first 4 images and discarding videos.`),
+            a11yLabel: _(msg`Taking first 4 images and discarding videos.`),
+          })
           const imagesToProcess = images.slice(0, 4)
           await handleImageSelection(imagesToProcess, size, onAdd, _)
           return
@@ -165,7 +172,11 @@ export function SelectMediaBtn({
       }
 
       if (videos.length > 1) {
-        showToast(_(msg`Using the first video selected.`), 'info')
+        toast.show({
+          type: 'info',
+          content: _(msg`Using the first video selected.`),
+          a11yLabel: _(msg`Using the first video selected.`),
+        })
         const video = ensureVideoMimeType(videos[0])
 
         await validateAndSelectVideo(video, onSelectVideo, setError, _)
@@ -183,16 +194,21 @@ export function SelectMediaBtn({
         const maxAllowed = 4 - size
 
         if (images.length > 4) {
-          showToast(
-            _(msg`You can only upload up to 4 images at a time.`),
-            'info',
-          )
+          toast.show({
+            type: 'info',
+            content: _(msg`You can only upload up to 4 images at a time.`),
+            a11yLabel: _(msg`You can only upload up to 4 images at a time.`),
+          })
           await handleImageSelection(images.slice(0, 4), size, onAdd, _)
           return
         }
 
         if (size + images.length > 4) {
-          showToast(_(msg`You can only upload up to 4 images.`), 'info')
+          toast.show({
+            type: 'info',
+            content: _(msg`You can only upload up to 4 images.`),
+            a11yLabel: _(msg`You can only upload up to 4 images.`),
+          })
           await handleImageSelection(
             images.slice(0, maxAllowed),
             size,
@@ -205,7 +221,7 @@ export function SelectMediaBtn({
         await handleImageSelection(images, size, onAdd, _)
       }
     },
-    [_, showToast, onAdd, onSelectVideo, setError, size],
+    [_, onAdd, onSelectVideo, setError, size],
   )
 
   const onPressSelectMedia = useCallback(async () => {
@@ -216,10 +232,11 @@ export function SelectMediaBtn({
       ])
 
       if (!photoAccess && !videoAccess) {
-        showToast(
-          _(msg`You need to allow access to your media library.`),
-          'error',
-        )
+        toast.show({
+          type: 'error',
+          content: _(msg`You need to allow access to your media library.`),
+          a11yLabel: _(msg`You need to allow access to your media library.`),
+        })
         return
       }
     }
@@ -247,7 +264,6 @@ export function SelectMediaBtn({
     sheetWrapper,
     _,
     processSelectedAssets,
-    showToast,
   ])
 
   return (
