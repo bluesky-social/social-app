@@ -28,8 +28,9 @@ import {Divider} from '#/components/Divider'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {GCP_PROJECT_ID} from '#/env'
 import * as bsky from '#/types/bsky'
+import {GCP_PROJECT_ID} from '#/env'
+import {logger} from '#/logger'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {_} = useLingui()
@@ -106,10 +107,14 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
   // On Android, warmup the Play Integrity API on the signup screen so it is ready by the time we get to the gate screen.
   useEffect(() => {
+    console.log('here...')
     if (!isAndroid) {
       return
     }
-    ReactNativeDeviceAttest.warumpIntegrity(GCP_PROJECT_ID)
+    console.log('TRYING TO WARMUP')
+    ReactNativeDeviceAttest.warmupIntegrity(GCP_PROJECT_ID).catch(err =>
+      logger.error(err),
+    )
   }, [])
 
   return (
