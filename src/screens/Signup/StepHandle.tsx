@@ -2,17 +2,18 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import Animated, {
   FadeIn,
+  FadeInDown,
   FadeOut,
+  FadeOutDown,
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
+import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {BSKY_SERVICE_HANDLE_ENDSWITH} from '#/lib/constants'
 import {
   createFullHandle,
-  isHandleReserved,
   MAX_SERVICE_HANDLE_LENGTH,
   validateServiceHandle,
 } from '#/lib/strings/handles'
@@ -22,14 +23,18 @@ import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, native, useTheme} from '#/alf'
+import {borderRadius} from '#/alf/tokens'
+import {Button} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
+import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
 import {BackNextButtons} from './BackNextButtons'
 
 export function StepHandle() {
   const {_} = useLingui()
+  const t = useTheme()
   const {state, dispatch} = useSignupContext()
   const agent = useAgent()
   const [draftValue, setDraftValue] = useState(state.handle)
@@ -37,11 +42,14 @@ export function StepHandle() {
 
   const validCheck = validateServiceHandle(draftValue, state.userDomain)
 
-  const {data: isHandleAvailable, isLoading} = useHandleAvailabilityQuery(
-    draftValue,
-    state.userDomain,
-    validCheck.overall,
-  )
+  const {data: isHandleAvailable, isLoading} = useHandleAvailabilityQuery({
+    username: draftValue,
+    serviceDid: state.serviceDescription?.did ?? 'UNKNOWN',
+    serviceDomain: state.userDomain,
+    birthDate: state.dateOfBirth.toISOString(),
+    email: state.email,
+    enabled: validCheck.overall,
+  })
 
   const onNextPress = async () => {
     if (!isHandleAvailable?.available) return
@@ -53,19 +61,6 @@ export function StepHandle() {
     })
 
     if (!validCheck.overall) {
-      return
-    }
-
-    if (
-      state.userDomain === BSKY_SERVICE_HANDLE_ENDSWITH &&
-      isHandleReserved(handle)
-    ) {
-      dispatch({
-        type: 'setError',
-        value: _(msg`That username is not available`),
-        field: 'handle',
-      })
-      logger.metric('signup:handleReserved', {}, {statsig: true})
       return
     }
 
@@ -159,6 +154,9 @@ export function StepHandle() {
                 {draftValue}
               </TextField.GhostText>
             )}
+            {isHandleAvailable?.available && (
+              <CheckIcon style={[{color: t.palette.positive_600}, a.z_20]} />
+            )}
           </TextField.Root>
         </View>
         <LayoutAnimationConfig skipEntering skipExiting>
@@ -171,21 +169,31 @@ export function StepHandle() {
             {isHandleAvailable &&
               !isHandleAvailable.available &&
               validCheck.overall && (
-                <Requirement>
-                  <RequirementText>
-                    {isHandleAvailable?.reason === 'taken' ? (
+                <>
+                  <Requirement>
+                    <RequirementText>
                       <Trans>
-                        {createFullHandle(draftValue, state.userDomain)} is
-                        taken
+                        {createFullHandle(draftValue, state.userDomain)} is not
+                        available
                       </Trans>
-                    ) : (
-                      <Trans>
-                        {createFullHandle(draftValue, state.userDomain)} is
-                        invalid
-                      </Trans>
+                    </RequirementText>
+                  </Requirement>
+                  {isHandleAvailable.suggestions &&
+                    isHandleAvailable.suggestions.length > 0 && (
+                      <HandleSuggestions
+                        suggestions={isHandleAvailable.suggestions}
+                        onSelect={suggestion => {
+                          setDraftValue(
+                            suggestion.handle.slice(
+                              0,
+                              state.userDomain.length * -1,
+                            ),
+                          )
+                          // TODO: add logging
+                        }}
+                      />
                     )}
-                  </RequirementText>
-                </Requirement>
+                </>
               )}
             {(!validCheck.handleChars || !validCheck.hyphenStartOrEnd) && (
               <Requirement>
@@ -245,5 +253,59 @@ function RequirementText({children}: {children: React.ReactNode}) {
     <Text style={[a.text_sm, a.flex_1, {color: t.palette.negative_500}]}>
       <Trans>{children}</Trans>
     </Text>
+  )
+}
+
+function HandleSuggestions({
+  suggestions,
+  onSelect,
+}: {
+  suggestions: ComAtprotoTempCheckHandleAvailability.Suggestion[]
+  onSelect: (
+    suggestions: ComAtprotoTempCheckHandleAvailability.Suggestion,
+  ) => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <Animated.View
+      entering={FadeInDown}
+      exiting={FadeOutDown}
+      style={[
+        a.flex_1,
+        a.border,
+        a.rounded_sm,
+        a.shadow_md,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+      ]}>
+      {suggestions.map((suggestion, index) => (
+        <Button
+          label={_(msg`Select ${suggestion.handle}`)}
+          key={index}
+          onPress={() => onSelect(suggestion)}
+          style={[
+            a.w_full,
+            a.flex_row,
+            a.align_center,
+            a.justify_between,
+            a.px_md,
+            a.py_lg,
+            a.border_b,
+            t.atoms.border_contrast_low,
+            index === 0 && {borderTopEndRadius: borderRadius.sm},
+            index === suggestions.length - 1 && [
+              {borderBottomEndRadius: borderRadius.sm},
+              a.border_b_0,
+            ],
+          ]}>
+          <Text style={[a.text_md]}>{suggestion.handle}</Text>
+          <Text style={[a.text_sm, {color: t.palette.positive_700}]}>
+            <Trans>Available</Trans>
+          </Text>
+        </Button>
+      ))}
+    </Animated.View>
   )
 }

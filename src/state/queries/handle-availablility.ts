@@ -1,63 +1,113 @@
+import {useMemo} from 'react'
+import {Agent, ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
-import {BSKY_SERVICE_HANDLE_ENDSWITH} from '#/lib/constants'
-import {createFullHandle, isHandleReserved} from '#/lib/strings/handles'
+import {
+  BSKY_SERVICE,
+  BSKY_SERVICE_DID,
+  PUBLIC_BSKY_SERVICE,
+} from '#/lib/constants'
+import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
 import {useDebouncedValue} from '#/components/live/utils'
+import * as bsky from '#/types/bsky'
 
-export const RQKEY_handleAvailability = (handle: string) => [
-  'handle-availability',
-  handle,
-]
+export const RQKEY_handleAvailability = (
+  handle: string,
+  domain: string,
+  serviceDid: string,
+) => ['handle-availability', handle, domain, serviceDid]
 
 export function useHandleAvailabilityQuery(
-  name: string,
-  domain: string,
-  enabled: boolean,
+  {
+    username,
+    serviceDomain,
+    serviceDid,
+    enabled,
+    birthDate,
+    email,
+  }: {
+    username: string
+    serviceDomain: string
+    serviceDid: string
+    enabled: boolean
+    birthDate?: string
+    email?: string
+  },
   debounceDelayMs = 500,
 ) {
-  name = name.trim()
-  const handle = createFullHandle(name, domain)
-  const debouncedHandle = useDebouncedValue(handle, debounceDelayMs)
-  const agent = useAgent()
+  const name = username.trim()
+  const debouncedHandle = useDebouncedValue(name, debounceDelayMs)
+  const agent = useMemo(() => {
+    if (serviceDid === BSKY_SERVICE_DID) {
+      return new Agent({service: BSKY_SERVICE})
+    } else {
+      return new Agent({service: PUBLIC_BSKY_SERVICE})
+    }
+  }, [serviceDid])
 
   return useQuery({
-    enabled: enabled && handle === debouncedHandle,
-    queryKey: RQKEY_handleAvailability(debouncedHandle),
+    enabled: enabled && name === debouncedHandle,
+    queryKey: RQKEY_handleAvailability(
+      debouncedHandle,
+      serviceDomain,
+      serviceDid,
+    ),
     queryFn: async () => {
-      const frontSegment = debouncedHandle.split('.')[0]
-      if (
-        domain === BSKY_SERVICE_HANDLE_ENDSWITH &&
-        isHandleReserved(frontSegment)
-      ) {
+      const handle = createFullHandle(name, serviceDomain)
+      if (serviceDid === BSKY_SERVICE_DID) {
+        // entryway has a special API for handle availability
+        const {data} = await agent.com.atproto.temp.checkHandleAvailability({
+          handle,
+          birthDate,
+          email,
+        })
+
+        if (
+          bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultAvailable>(
+            data.result,
+            ComAtprotoTempCheckHandleAvailability.isResultAvailable,
+          )
+        ) {
+          return {available: true} as const
+        } else if (
+          bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultUnavailable>(
+            data.result,
+            ComAtprotoTempCheckHandleAvailability.isResultUnavailable,
+          )
+        ) {
+          return {
+            available: false,
+            suggestions: data.result.suggestions,
+          } as const
+        } else {
+          throw new Error(
+            `Unexpected result of \`checkHandleAvailability\`: ${JSON.stringify(data.result)}`,
+          )
+        }
+      } else {
+        // 3rd party services won't have this API so just try and resolve the handle
+        try {
+          const res = await agent.resolveHandle({
+            handle,
+          })
+
+          if (res.data.did) {
+            logger.metric(
+              'signup:handleReserved',
+              {typeahead: true},
+              {statsig: true},
+            )
+            return {available: false} as const
+          }
+        } catch {}
         logger.metric(
-          'signup:handleReserved',
+          'signup:handleAvailable',
           {typeahead: true},
           {statsig: true},
         )
-        return {available: false, reason: 'reserved'} as const
+        return {available: true} as const
       }
-      try {
-        const res = await agent.resolveHandle({
-          handle: debouncedHandle,
-        })
-
-        if (res.data.did) {
-          logger.metric(
-            'signup:handleReserved',
-            {typeahead: true},
-            {statsig: true},
-          )
-          return {available: false, reason: 'taken'} as const
-        }
-      } catch {}
-      logger.metric(
-        'signup:handleAvailable',
-        {typeahead: true},
-        {statsig: true},
-      )
-      return {available: true} as const
     },
   })
 }
