@@ -63,10 +63,10 @@
     "@atproto/xrpc" "^0.7.1"
     "@atproto/xrpc-server" "^0.9.0"
 
-"@atproto/api@^0.15.26":
-  version "0.15.26"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.15.26.tgz#452019d6d0753d4caa0f7941e8e87e9f8bfbee52"
-  integrity sha512-AdXGjeCpLZiP9YMGi4YOdK1ayqkBhklmGfSG8UefqR6tTHth59PZvYs5KiwLnFhedt2Xljt3eUlhkn14Y48wEA==
+"@atproto/api@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.16.0.tgz#55ea5200131dfe18ce2944042e16c6923ff9b606"
+  integrity sha512-PQHeae6mz/L1YirUslfci7bknfg3RrSZjXpYwzLICxIOvqGKIkOi0+qukC2Py238RhXRo8YZ9dCuole9HQBXDw==
   dependencies:
     "@atproto/common-web" "^0.4.2"
     "@atproto/lexicon" "^0.4.12"
@@ -94,14 +94,14 @@
     multiformats "^9.9.0"
     uint8arrays "3.0.0"
 
-"@atproto/bsky@^0.0.172":
-  version "0.0.172"
-  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.172.tgz#963e3e2bc661e05c03fcb58788b2621d1afa6a3e"
-  integrity sha512-P/oDJ4i4TuRBV8pQg8hht147jl+OruDYAXdVmUaHRMWPnry+godnfp6vzph9W9Y03DN+G320Z63dCfvFZquSUQ==
+"@atproto/bsky@^0.0.175":
+  version "0.0.175"
+  resolved "https://registry.yarnpkg.com/@atproto/bsky/-/bsky-0.0.175.tgz#e37671cba8014e9d6b4b41f229568fca8f3f6adf"
+  integrity sha512-i5UEwdaff3clAuL/+xBVFB1RuFDD/NviDUBCl35c5L1D2YcvjzwQPEn73fs+UKHMgH5J+TeYwnpOs8uckJpDQg==
   dependencies:
     "@atproto-labs/fetch-node" "0.1.9"
     "@atproto-labs/xrpc-utils" "0.0.17"
-    "@atproto/api" "^0.15.26"
+    "@atproto/api" "^0.16.0"
     "@atproto/common" "^0.4.11"
     "@atproto/crypto" "^0.4.4"
     "@atproto/did" "^0.1.5"
@@ -129,6 +129,7 @@
     jose "^5.0.1"
     key-encoder "^2.0.3"
     kysely "^0.22.0"
+    leo-profanity "^1.8.0"
     multiformats "^9.9.0"
     murmurhash "^2.0.1"
     p-queue "^6.6.2"
@@ -221,20 +222,20 @@
     "@noble/hashes" "^1.6.1"
     uint8arrays "3.0.0"
 
-"@atproto/dev-env@^0.3.155":
-  version "0.3.155"
-  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.155.tgz#26f865b92e9241d3e39c1c81e38c8422f2df26e2"
-  integrity sha512-KNrArdTAfrZQsRsFnwLC1Vgqh27brD5G2ZI0E3qF9BXQw2iiCH1r46IAhhggugL6xo3VXYucmM6/HGX+bKyavw==
+"@atproto/dev-env@^0.3.158":
+  version "0.3.158"
+  resolved "https://registry.yarnpkg.com/@atproto/dev-env/-/dev-env-0.3.158.tgz#26666e462ea4a0bd6461b634a544041cedb70032"
+  integrity sha512-JllbsaEYH+abs5bTXMt2PcTu7TbHnZeGQRAXguUQZji3s3bdbNfCWsceCiKbR7O3w9X1JVFg1nz4OOl7CachSg==
   dependencies:
-    "@atproto/api" "^0.15.26"
-    "@atproto/bsky" "^0.0.172"
+    "@atproto/api" "^0.16.0"
+    "@atproto/bsky" "^0.0.175"
     "@atproto/bsync" "^0.0.20"
     "@atproto/common-web" "^0.4.2"
     "@atproto/crypto" "^0.4.4"
     "@atproto/identity" "^0.4.8"
     "@atproto/lexicon" "^0.4.12"
-    "@atproto/ozone" "^0.1.131"
-    "@atproto/pds" "^0.4.161"
+    "@atproto/ozone" "^0.1.133"
+    "@atproto/pds" "^0.4.163"
     "@atproto/sync" "^0.1.29"
     "@atproto/syntax" "^0.4.0"
     "@atproto/xrpc-server" "^0.9.0"
@@ -350,12 +351,12 @@
     "@atproto/jwk" "0.4.0"
     zod "^3.23.8"
 
-"@atproto/ozone@^0.1.131":
-  version "0.1.131"
-  resolved "https://registry.yarnpkg.com/@atproto/ozone/-/ozone-0.1.131.tgz#b097c0274f424afd6af4e891cf78c563395b65b3"
-  integrity sha512-xGp0KPK89SXwtXHYza5kYNkwizCdXvn1sq0+5gwR6U8qNrvw0ibxBVMgtHTmqo9633tGD0c0woza1j+r5adm1w==
+"@atproto/ozone@^0.1.133":
+  version "0.1.133"
+  resolved "https://registry.yarnpkg.com/@atproto/ozone/-/ozone-0.1.133.tgz#3c8c6a846b1ea1fced11b9ad799d795ad52a9c90"
+  integrity sha512-Ta9U7y8VCN7M9abo2W3SFtJpnEiid6ZP4UC4FVOXkgUSXHCU3kE/UdfIf9SyoZwpDJOjrElSj9GYXN/U8DWuIQ==
   dependencies:
-    "@atproto/api" "^0.15.26"
+    "@atproto/api" "^0.16.0"
     "@atproto/common" "^0.4.11"
     "@atproto/crypto" "^0.4.4"
     "@atproto/identity" "^0.4.8"
@@ -380,14 +381,14 @@
     undici "^6.14.1"
     ws "^8.12.0"
 
-"@atproto/pds@^0.4.161":
-  version "0.4.161"
-  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.161.tgz#1f74675d5d5e4ca56361c89926571646b4c641ee"
-  integrity sha512-az1PGUCwIEx/b1neWBh9lgv27nbtczinGazI/ccG5A0AOMps1MXpTIJgEz5yJ1c6mSrhZlP0sL1EO6uC89irNA==
+"@atproto/pds@^0.4.163":
+  version "0.4.163"
+  resolved "https://registry.yarnpkg.com/@atproto/pds/-/pds-0.4.163.tgz#ec52e8194843ccdb08f7c28f16ce294a09d748b1"
+  integrity sha512-k3qgBCuVb1twc7D61qH9Z9j93uV1Mg7aq7qEOZ9I+BjiiIyyXECfwIAhw/U3EHL+lDVDmkAyir8F7H4t3j/QNQ==
   dependencies:
     "@atproto-labs/fetch-node" "0.1.9"
     "@atproto-labs/xrpc-utils" "0.0.17"
-    "@atproto/api" "^0.15.26"
+    "@atproto/api" "^0.16.0"
     "@atproto/aws" "^0.2.25"
     "@atproto/common" "^0.4.11"
     "@atproto/crypto" "^0.4.4"
@@ -11877,6 +11878,11 @@ freeport-async@^2.0.0:
   resolved "https://registry.yarnpkg.com/freeport-async/-/freeport-async-2.0.0.tgz#6adf2ec0c629d11abff92836acd04b399135bab4"
   integrity sha512-K7od3Uw45AJg00XUmy15+Hae2hOcgKcmN3/EF6Y7i01O0gaqiRx8sUSpsb9+BRNL8RPBrhzPsVfy8q9ADlJuWQ==
 
+french-badwords-list@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/french-badwords-list/-/french-badwords-list-1.0.7.tgz#8ed2442cb20fa2781c38b5a75c944f8e91a73c08"
+  integrity sha512-H1ziKs2PJh2+UXZ9oCGJ/rRQpsI9NBykGf2Sc7WaKaj1OnWFuBXfsvANTdRcfVmOghGQaUmRyZ1hJOPbDpy04Q==
+
 fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"
@@ -14087,6 +14093,14 @@ launch-editor@^2.6.0:
   dependencies:
     picocolors "^1.0.0"
     shell-quote "^1.7.3"
+
+leo-profanity@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/leo-profanity/-/leo-profanity-1.8.0.tgz#2ce6522e27c093d02253cdb9755b74cc7ffccf90"
+  integrity sha512-TATupbZhT3oFCtsiEXzgXcLvW6cDPhDtN+0yQAibjwBdSw3WJFLKM0DZ18eEW8KeFTT10x8gCP+DDZz0cI4Bfg==
+  optionalDependencies:
+    french-badwords-list "^1.0.7"
+    russian-bad-words "^0.5.0"
 
 leven@^3.1.0:
   version "3.1.0"
@@ -17574,6 +17588,11 @@ run-parallel@^1.1.9:
   integrity sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==
   dependencies:
     queue-microtask "^1.2.2"
+
+russian-bad-words@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/russian-bad-words/-/russian-bad-words-0.5.0.tgz#d4abcdc55f7af37606cdbac44bcb9e0bde6c3855"
+  integrity sha512-euNvEYki6iYYpkNbeudW+lEMMYGEmN7EBwVF8ezlbv0bZoQpVYB7W10cCeUIGV7Ed50sJynLQ0c559q5iI0ejQ==
 
 rxjs@^6.6.0:
   version "6.6.7"
