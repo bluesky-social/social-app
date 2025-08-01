@@ -25,8 +25,9 @@ export function linkWarningLayout(
           }
 
           body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-              Arial, sans-serif;
+            font-family:
+              -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial,
+              sans-serif;
             background-color: #ffffff;
             min-height: 100vh;
             display: flex;
