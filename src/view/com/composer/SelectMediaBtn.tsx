@@ -132,7 +132,7 @@ export function SelectMediaBtn({
         const typeCheck = asset.type === 'video'
         const mimeCheck = asset.mimeType && asset.mimeType.startsWith('video/')
         const extensionCheck =
-          asset.uri && /\.(mp4|mov|avi|webm|mkv|m4v)$/i.test(asset.uri)
+          asset.uri && /\.(mp4|mov|avi|webm|m4v)$/i.test(asset.uri)
         const durationCheck =
           typeof asset.duration === 'number' && asset.duration > 0
 
