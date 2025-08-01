@@ -97,6 +97,10 @@ export function SelectMediaBtn({
       let firstMediaType: 'image' | 'video' | null = null
 
       for (const asset of limitedAssets) {
+        // APiligrim
+        // On web, pasted/dragged content may have data URIs without proper metadata
+        // This happens with clipboard paste, drag & drop, or browser inconsistencies
+        // We need to fetch and analyze the blob to extract missing video metadata
         if (
           isWeb &&
           asset.uri &&
@@ -166,7 +170,7 @@ export function SelectMediaBtn({
             a11yLabel: _(msg`Taking first 4 images and discarding videos.`),
           })
           const imagesToProcess = images.slice(0, 4)
-          await handleImageSelection(imagesToProcess, size, onAdd, _)
+          await handleImageSelection(imagesToProcess, onAdd, _)
           return
         }
       }
@@ -199,7 +203,7 @@ export function SelectMediaBtn({
             content: _(msg`You can only upload up to 4 images at a time.`),
             a11yLabel: _(msg`You can only upload up to 4 images at a time.`),
           })
-          await handleImageSelection(images.slice(0, 4), size, onAdd, _)
+          await handleImageSelection(images.slice(0, 4), onAdd, size)
           return
         }
 
@@ -209,16 +213,11 @@ export function SelectMediaBtn({
             content: _(msg`You can only upload up to 4 images.`),
             a11yLabel: _(msg`You can only upload up to 4 images.`),
           })
-          await handleImageSelection(
-            images.slice(0, maxAllowed),
-            size,
-            onAdd,
-            _,
-          )
+          await handleImageSelection(images.slice(0, maxAllowed), onAdd, _)
           return
         }
 
-        await handleImageSelection(images, size, onAdd, _)
+        await handleImageSelection(images, onAdd, _)
       }
     },
     [_, onAdd, onSelectVideo, setError, size],
