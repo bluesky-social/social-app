@@ -72,6 +72,7 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {Provider as BlockingAnnouncementsPortalProvider} from '#/components/dialogs/BlockingAnnouncements'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -220,16 +221,18 @@ function App() {
                     <ModalStateProvider>
                       <DialogStateProvider>
                         <LightboxStateProvider>
-                          <PortalProvider>
-                            <BottomSheetProvider>
-                              <StarterPackProvider>
-                                <SafeAreaProvider
-                                  initialMetrics={initialWindowMetrics}>
-                                  <InnerApp />
-                                </SafeAreaProvider>
-                              </StarterPackProvider>
-                            </BottomSheetProvider>
-                          </PortalProvider>
+                          <BlockingAnnouncementsPortalProvider>
+                            <PortalProvider>
+                              <BottomSheetProvider>
+                                <StarterPackProvider>
+                                  <SafeAreaProvider
+                                    initialMetrics={initialWindowMetrics}>
+                                    <InnerApp />
+                                  </SafeAreaProvider>
+                                </StarterPackProvider>
+                              </BottomSheetProvider>
+                            </PortalProvider>
+                          </BlockingAnnouncementsPortalProvider>
                         </LightboxStateProvider>
                       </DialogStateProvider>
                     </ModalStateProvider>

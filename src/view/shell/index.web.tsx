@@ -18,7 +18,7 @@ import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
-import {BlockingAnnouncements} from '#/components/dialogs/BlockingAnnouncements'
+import {Outlet as BlockingAccouncementsPortalOutlet} from '#/components/dialogs/BlockingAnnouncements'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
@@ -115,7 +115,8 @@ function ShellInner() {
         </>
       )}
 
-      <BlockingAnnouncements />
+      {/* MUST BE LAST */}
+      <BlockingAccouncementsPortalOutlet />
     </>
   )
 }

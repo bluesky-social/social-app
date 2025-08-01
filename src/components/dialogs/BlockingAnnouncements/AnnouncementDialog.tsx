@@ -5,7 +5,8 @@ import {View, ScrollView, useWindowDimensions} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {isNative} from '#/platform/detection'
+import {FocusScope} from '#/components/FocusScope'
+import {isNative, isAndroid} from '#/platform/detection'
 import {atoms as a, useTheme, useBreakpoints, web, flatten} from '#/alf'
 import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {useA11y} from '#/state/a11y'
@@ -49,7 +50,7 @@ export function AnnouncementDialog({
   const insets = useSafeAreaInsets()
 
   return (
-    <>
+    <View style={[a.fixed, a.inset_0, {zIndex: 9999}]}>
       <View style={[a.fixed, a.inset_0, !reduceMotionEnabled && a.fade_in]}>
         <LinearGradient
           colors={[
@@ -94,8 +95,6 @@ export function AnnouncementDialog({
               },
             ],
           ]}>
-          {/* <FocusScope.FocusScope loop asChild trapped> */}
-
           {!gtPhone && (
             <View
               style={[
@@ -117,31 +116,33 @@ export function AnnouncementDialog({
             </View>
           )}
 
-          <View
-            role="dialog"
-            aria-role="dialog"
-            aria-label={label}
-            style={flatten([
-              a.relative,
-              a.w_full,
-              a.p_2xl,
-              t.atoms.bg,
-              !reduceMotionEnabled && a.zoom_fade_in,
-              gtPhone && [
-                a.rounded_md,
-                a.border,
-                t.atoms.shadow_lg,
-                t.atoms.border_contrast_low,
-                web({
-                  maxWidth: 420,
-                }),
-              ],
-            ])}>
-            {children}
-          </View>
-          {/* </FocusScope.FocusScope> */}
+          <FocusScope>
+            <View
+              accessible={isAndroid}
+              role="dialog"
+              aria-role="dialog"
+              aria-label={label}
+              style={flatten([
+                a.relative,
+                a.w_full,
+                a.p_2xl,
+                t.atoms.bg,
+                !reduceMotionEnabled && a.zoom_fade_in,
+                gtPhone && [
+                  a.rounded_md,
+                  a.border,
+                  t.atoms.shadow_lg,
+                  t.atoms.border_contrast_low,
+                  web({
+                    maxWidth: 420,
+                  }),
+                ],
+              ])}>
+              {children}
+            </View>
+          </FocusScope>
         </View>
       </ScrollView>
-    </>
+    </View>
   )
 }

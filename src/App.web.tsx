@@ -60,6 +60,7 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {Provider as BlockingAnnouncementsPortalProvider} from '#/components/dialogs/BlockingAnnouncements'
 import {ToastContainer} from '#/components/Toast'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
@@ -196,11 +197,13 @@ function App() {
                   <ModalStateProvider>
                     <DialogStateProvider>
                       <LightboxStateProvider>
+                        <BlockingAnnouncementsPortalProvider>
                         <PortalProvider>
                           <StarterPackProvider>
                             <InnerApp />
                           </StarterPackProvider>
                         </PortalProvider>
+                        </BlockingAnnouncementsPortalProvider>
                       </LightboxStateProvider>
                     </DialogStateProvider>
                   </ModalStateProvider>

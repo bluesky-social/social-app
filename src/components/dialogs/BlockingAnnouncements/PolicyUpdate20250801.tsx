@@ -12,7 +12,10 @@ import {
 } from '#/components/dialogs/BlockingAnnouncements/common'
 import {InlineLinkText} from '#/components/Link'
 import {Span, Text} from '#/components/Typography'
-import {AnnouncementDialog, useAnnouncementDialogContext} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
+import {
+  AnnouncementDialog,
+  useAnnouncementDialogContext,
+} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
 
 export function useLocalState() {
   return useAnnouncementState({
@@ -111,6 +114,8 @@ export function Announcement() {
         <View style={[a.w_full, a.gap_md]}>
           <Button
             label={_(msg`Continue`)}
+            accessibilityHint={_(msg`Tap to acknowledge that you understand and
+                  agree to these updates and continue using Bluesky`)}
             color="primary"
             size="large"
             onPress={handleClose}>
