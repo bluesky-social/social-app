@@ -78,7 +78,12 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
           <Toast content={activeToast.content} type={activeToast.type} />
           <Pressable
             style={[a.absolute, a.inset_0]}
-            accessibilityLabel={_(msg`Dismiss toast`)}
+            accessibilityLabel={_(
+              msg({
+                message: `Dismiss message`,
+                comment: `Accessibility label for dismissing a toast notification`,
+              }),
+            )}
             accessibilityHint=""
             onPress={() => setActiveToast(undefined)}
           />
