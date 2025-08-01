@@ -89,6 +89,7 @@ let ProfileHeaderStandard = ({
   const editProfileControl = useDialogControl()
 
   const onPressFollow = () => {
+    setShowSuggestedFollows(true)
     requireAuth(async () => {
       try {
         await queueFollow()
@@ -100,7 +101,6 @@ let ProfileHeaderStandard = ({
             )}`,
           ),
         )
-        setShowSuggestedFollows(true)
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
