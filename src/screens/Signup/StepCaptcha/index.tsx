@@ -75,7 +75,6 @@ function StepCaptchaInner({
 
   const stateParam = React.useMemo(() => nanoid(15), [])
   const url = React.useMemo(() => {
-    console.log(`service url: ${state.serviceUrl}`)
     const newUrl = new URL(state.serviceUrl)
     newUrl.pathname = CAPTCHA_PATH
     newUrl.searchParams.set(
