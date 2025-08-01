@@ -290,7 +290,6 @@ export function SelectMediaBtn({
 
 async function handleImageSelection(
   images: ImagePickerAsset[],
-  size: number,
   onAdd: (next: ComposerImage[]) => void,
   _: any,
 ) {
