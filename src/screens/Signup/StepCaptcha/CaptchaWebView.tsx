@@ -13,6 +13,7 @@ const ALLOWED_HOSTS = [
   'js.hcaptcha.com',
   'newassets.hcaptcha.com',
   'api2.hcaptcha.com',
+  'e9755d3e012b.ngrok.app',
 ]
 
 export function CaptchaWebView({
@@ -29,12 +30,13 @@ export function CaptchaWebView({
   onError: (error: unknown) => void
 }) {
   const redirectHost = React.useMemo(() => {
-    if (!state?.serviceUrl) return 'bsky.app'
-
-    return state?.serviceUrl &&
-      new URL(state?.serviceUrl).host === 'staging.bsky.dev'
-      ? 'staging.bsky.app'
-      : 'bsky.app'
+    return 'e9755d3e012b.ngrok.app'
+    // if (!state?.serviceUrl) return 'bsky.app'
+    //
+    // return state?.serviceUrl &&
+    //   new URL(state?.serviceUrl).host === 'staging.bsky.dev'
+    //   ? 'staging.bsky.app'
+    //   : 'bsky.app'
   }, [state?.serviceUrl])
 
   const wasSuccessful = React.useRef(false)
@@ -52,7 +54,7 @@ export function CaptchaWebView({
       if (wasSuccessful.current) return
 
       const urlp = new URL(e.url)
-      if (urlp.host !== redirectHost) return
+      if (urlp.host !== redirectHost || urlp.pathname === '/gate/signup') return
 
       const code = urlp.searchParams.get('code')
       if (urlp.searchParams.get('state') !== stateParam || !code) {

@@ -16787,6 +16787,11 @@ react-native-date-picker@^5.0.12:
   resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-5.0.12.tgz#12540b6a58500811ee7e4fc0244e3accc7cca9c1"
   integrity sha512-R/mUnCKhcuxbhKPFwYdBQCxQt9HHLqpM4ruRUqlcBjiUZ3N2wdnwOMyc888Ps8qp8e7v29PrDHtUlG8LPuFn9w==
 
+react-native-device-attest@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/react-native-device-attest/-/react-native-device-attest-0.1.6.tgz#51796a92d9199b1d231d4aa62d557019753b30c3"
+  integrity sha512-oTgBu6il+czHIMLs2IVWv2+WZ6a/vUtVLQ40q6/Dgns7NuG69mwmR8lS0e2Sl/yOtpD9YZXc8cYzBDKHAyV5MA==
+
 react-native-dotenv@^3.4.11:
   version "3.4.11"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.11.tgz#2e6c4eabd55d5f1bf109b3dd9141dadf9c55cdd4"

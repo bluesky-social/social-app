@@ -78,3 +78,10 @@ export const SENTRY_DSN: string | undefined = process.env.EXPO_PUBLIC_SENTRY_DSN
  */
 export const BITDRIFT_API_KEY: string | undefined =
   process.env.EXPO_PUBLIC_BITDRIFT_API_KEY
+
+/**
+ * GCP project ID which is required for device attestation
+ */
+export const GCP_PROJECT_ID: number = Number(
+  process.env.EXPO_PUBLIC_GCP_PROJECT_ID,
+)
