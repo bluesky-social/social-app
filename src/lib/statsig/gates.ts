@@ -4,6 +4,7 @@ export type Gate =
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'
   | 'explore_show_suggested_feeds'
+  | 'new_auth_flow'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
   | 'post_threads_v2_unspecced'

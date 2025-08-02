@@ -1,5 +1,5 @@
-import {ComponentProps} from 'react'
-import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import {type ComponentProps} from 'react'
+import {StyleSheet} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -13,8 +13,7 @@ import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
 import {ios} from '#/alf'
 
-export interface FABProps
-  extends ComponentProps<typeof TouchableWithoutFeedback> {
+export interface FABProps extends ComponentProps<typeof PressableScale> {
   testID?: string
   icon: JSX.Element
 }
