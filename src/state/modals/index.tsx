@@ -23,14 +23,6 @@ export interface DeleteAccountModal {
   name: 'delete-account'
 }
 
-export interface WaitlistModal {
-  name: 'waitlist'
-}
-
-export interface InviteCodesModal {
-  name: 'invite-codes'
-}
-
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
@@ -58,10 +50,6 @@ export type Modal =
   // Lists
   | CreateOrEditListModal
   | UserAddRemoveListsModal
-
-  // Bluesky access
-  | WaitlistModal
-  | InviteCodesModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean
