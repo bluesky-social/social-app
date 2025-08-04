@@ -138,22 +138,53 @@ function ViewportObserver({
   useEffect(() => {
     if (!ref.current) return
     if (isFullscreen && !isFirefox) return
+
+    let scrollTimeout: NodeJS.Timeout | null = null
+    let lastObserverEntry: IntersectionObserverEntry | null = null
+
+    const updatePositionFromEntry = () => {
+      if (!lastObserverEntry) return
+      const rect = lastObserverEntry.boundingClientRect
+      const position = rect.y + rect.height / 2
+      sendPosition(position)
+    }
+
+    const handleScroll = () => {
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
+      }
+      scrollTimeout = setTimeout(updatePositionFromEntry, 4) // ~240fps
+    }
+
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
         if (!entry) return
-        const position =
-          entry.boundingClientRect.y + entry.boundingClientRect.height / 2
-        sendPosition(position)
+        lastObserverEntry = entry
         setNearScreen(entry.isIntersecting)
+        const rect = entry.boundingClientRect
+        const position = rect.y + rect.height / 2
+        sendPosition(position)
       },
-      {threshold: Array.from({length: 101}, (_, i) => i / 100)},
+      {threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0]},
     )
-    observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [sendPosition, isFullscreen])
 
-  // In case scrolling hasn't started yet, send up the position
+    observer.observe(ref.current)
+
+    if (nearScreen) {
+      window.addEventListener('scroll', handleScroll, {passive: true})
+    }
+
+    return () => {
+      observer.disconnect()
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout)
+      }
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [sendPosition, isFullscreen, nearScreen])
+
+  // In case scrolling hasn't started yet, send the original position
   useEffect(() => {
     if (ref.current && !isAnyViewActive) {
       const rect = ref.current.getBoundingClientRect()
