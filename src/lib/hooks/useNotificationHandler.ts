@@ -436,14 +436,7 @@ export function notificationToURL(payload: NotificationPayload): string | null {
     case 'unverified':
       return '/notifications'
     default:
-      // little heuristic - if it's an unknown notification type with a `uri`,
-      // assume it's a valid notification that we don't know about yet.
-      if (payload && (payload as any)?.uri) {
-        return '/notifications'
-      } else {
-        // unknown notification type without a uri - android can give us notifications
-        // when booting that aren't actually our notifications, so just ignore them
-        return null
-      }
+      // do nothing if we don't know what to do with it
+      return null
   }
 }
