@@ -1,15 +1,20 @@
-import {createContext, useMemo, useContext, useState, ReactNode} from 'react'
-import {View, ScrollView, useWindowDimensions} from 'react-native'
-// import {FocusScope} from 'radix-ui/internal'
-// import {RemoveScrollBar} from 'react-remove-scroll-bar'
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
+import {ScrollView, useWindowDimensions, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {FocusScope} from '#/components/FocusScope'
-import {isNative, isAndroid} from '#/platform/detection'
-import {atoms as a, useTheme, useBreakpoints, web, flatten} from '#/alf'
-import {transparentifyColor} from '#/alf/util/colorGeneration'
+import {isAndroid, isNative} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
+import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
+import {FocusScope} from '#/components/FocusScope'
+import {LockScroll} from '#/components/LockScroll'
 
 const GUTTER = 24
 
@@ -50,21 +55,34 @@ export function AnnouncementDialog({
   const insets = useSafeAreaInsets()
 
   return (
-    <View style={[a.fixed, a.inset_0, {zIndex: 9999}]}>
-      <View style={[a.fixed, a.inset_0, !reduceMotionEnabled && a.fade_in]}>
-        <LinearGradient
-          colors={[
-            transparentifyColor(t.atoms.bg.backgroundColor, 0),
-            t.atoms.bg.backgroundColor,
-            t.atoms.bg.backgroundColor,
-          ]}
-          start={[0.5, 0]}
-          end={[0.5, 1]}
-          style={[a.absolute, a.inset_0]}
-        />
-      </View>
+    <>
+      <LockScroll />
 
-      {/* <RemoveScrollBar /> */}
+      <View style={[a.fixed, a.inset_0, !reduceMotionEnabled && a.fade_in]}>
+        {gtPhone ? (
+          <View style={[a.absolute, a.inset_0, {opacity: 0.8}]}>
+            <View
+              style={[
+                a.fixed,
+                a.inset_0,
+                {backgroundColor: t.palette.black},
+                !reduceMotionEnabled && a.fade_in,
+              ]}
+            />
+          </View>
+        ) : (
+          <LinearGradient
+            colors={[
+              transparentifyColor(t.atoms.bg.backgroundColor, 0),
+              t.atoms.bg.backgroundColor,
+              t.atoms.bg.backgroundColor,
+            ]}
+            start={[0.5, 0]}
+            end={[0.5, 1]}
+            style={[a.absolute, a.inset_0]}
+          />
+        )}
+      </View>
 
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -143,6 +161,6 @@ export function AnnouncementDialog({
           </FocusScope>
         </View>
       </ScrollView>
-    </View>
+    </>
   )
 }

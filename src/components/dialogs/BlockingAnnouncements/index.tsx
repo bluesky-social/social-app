@@ -1,3 +1,5 @@
+import {View} from 'react-native'
+
 import {AnnouncementDialogOuter} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
 import * as PolicyUpdate20250801 from '#/components/dialogs/BlockingAnnouncements/PolicyUpdate20250801'
 import {createPortalGroup} from '#/components/Portal'
@@ -5,8 +7,15 @@ import {createPortalGroup} from '#/components/Portal'
 const portalGroup = createPortalGroup()
 
 export const Provider = portalGroup.Provider
-export const Outlet = portalGroup.Outlet
 export const Portal = portalGroup.Portal
+
+export function Outlet() {
+  return (
+    <View style={{zIndex: 9999}}>
+      <portalGroup.Outlet />
+    </View>
+  )
+}
 
 export function BlockingAnnouncements() {
   const policyUpdate20250801 = PolicyUpdate20250801.useLocalState()
