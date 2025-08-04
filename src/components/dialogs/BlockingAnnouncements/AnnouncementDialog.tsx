@@ -5,8 +5,11 @@ import {
   useMemo,
   useState,
 } from 'react'
-import {ScrollView, useWindowDimensions, View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {ScrollView, View} from 'react-native'
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
 import {isAndroid, isNative} from '#/platform/detection'
@@ -51,8 +54,8 @@ export function AnnouncementDialog({
   const t = useTheme()
   const {gtPhone} = useBreakpoints()
   const {reduceMotionEnabled} = useA11y()
-  const {height} = useWindowDimensions()
   const insets = useSafeAreaInsets()
+  const frame = useSafeAreaFrame()
 
   return (
     <>
@@ -86,15 +89,15 @@ export function AnnouncementDialog({
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={[a.fixed, a.inset_0, a.z_10]}
-        contentContainerStyle={[
-          a.align_center,
+        style={[
+          a.z_10,
           gtPhone &&
             web({
               paddingHorizontal: GUTTER,
               paddingVertical: '10vh',
             }),
-        ]}>
+        ]}
+        contentContainerStyle={[a.align_center]}>
         {/**
          * This is needed to prevent centered dialogs from overflowing
          * above the screen, and provides a "natural" centering so that
@@ -105,8 +108,7 @@ export function AnnouncementDialog({
             a.w_full,
             a.z_20,
             a.align_center,
-            !gtPhone && a.justify_end,
-            {minHeight: height},
+            !gtPhone && [a.justify_end, {minHeight: frame.height}],
             isNative && [
               {
                 paddingBottom: Math.max(insets.bottom, a.p_2xl.padding),
