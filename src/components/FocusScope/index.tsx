@@ -21,12 +21,26 @@ import {useLingui} from '@lingui/react'
 
 import {useA11y} from '#/state/a11y'
 
+/**
+ * Conditionally wraps children in a `FocusTrap` component based on whether
+ * screen reader support is enabled. THIS SHOULD BE USED SPARINGLY, only when
+ * no better option is available.
+ */
 export function FocusScope({children}: {children: ReactNode}) {
   const {screenReaderEnabled} = useA11y()
 
   return screenReaderEnabled ? <FocusTrap>{children}</FocusTrap> : children
 }
 
+/**
+ * `FocusTrap` is intended as a last-ditch effort to ensure that users keep
+ * focus within a certain section of the app, like an overlay.
+ *
+ * It works by placing "guards" at the start and end of the active content.
+ * Then when the user reaches either of those guards, it will announce that
+ * they have reached the start or end of the content and tell them how to
+ * remain within the active content section.
+ */
 function FocusTrap({children}: {children: ReactNode}) {
   const {_} = useLingui()
   const child = useRef<View>(null)
