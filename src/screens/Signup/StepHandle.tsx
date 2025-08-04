@@ -18,7 +18,10 @@ import {
   validateServiceHandle,
 } from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {useHandleAvailabilityQuery} from '#/state/queries/handle-availablility'
+import {
+  checkHandleAvailability,
+  useHandleAvailabilityQuery,
+} from '#/state/queries/handle-availability'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
@@ -67,24 +70,24 @@ export function StepHandle() {
       return
     }
 
+    dispatch({type: 'setIsLoading', value: true})
+
     try {
-      dispatch({type: 'setIsLoading', value: true})
+      const {available: handleAvailable} = await checkHandleAvailability(
+        agent,
+        handle,
+        state.serviceDescription?.did ?? 'UNKNOWN',
+        {typeahead: false},
+      )
 
-      const res = await agent.resolveHandle({
-        handle: createFullHandle(handle, state.userDomain),
-      })
-
-      if (res.data.did) {
+      if (!handleAvailable) {
         dispatch({
           type: 'setError',
           value: _(msg`That username is already taken`),
           field: 'handle',
         })
-        logger.metric('signup:handleTaken', {}, {statsig: true})
         return
       }
-    } catch (e) {
-      // Don't have to handle
     } finally {
       dispatch({type: 'setIsLoading', value: false})
     }

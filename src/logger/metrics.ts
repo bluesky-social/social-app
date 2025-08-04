@@ -68,7 +68,6 @@ export type MetricEvents = {
     backgroundCount: number
   }
   'signup:handleTaken': {typeahead?: boolean}
-  'signup:handleReserved': {typeahead?: boolean}
   'signup:handleAvailable': {typeahead?: boolean}
   'signup:handleSuggestionSelected': {method: string}
   'signin:hostingProviderPressed': {
