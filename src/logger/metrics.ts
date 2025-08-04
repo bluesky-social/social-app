@@ -70,6 +70,7 @@ export type MetricEvents = {
   'signup:handleTaken': {typeahead?: boolean}
   'signup:handleReserved': {typeahead?: boolean}
   'signup:handleAvailable': {typeahead?: boolean}
+  'signup:handleSuggestionSelected': {method: string}
   'signin:hostingProviderPressed': {
     hostingProviderDidChange: boolean
   }

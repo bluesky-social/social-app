@@ -16,7 +16,7 @@ export const RQKEY_handleAvailability = (
   handle: string,
   domain: string,
   serviceDid: string,
-) => ['handle-availability', handle, domain, serviceDid]
+) => ['handle-availability', {handle, domain, serviceDid}]
 
 export function useHandleAvailabilityQuery(
   {
@@ -46,68 +46,71 @@ export function useHandleAvailabilityQuery(
     }
   }, [serviceDid])
 
-  return useQuery({
+  return {
     enabled: enabled && name === debouncedHandle,
-    queryKey: RQKEY_handleAvailability(
-      debouncedHandle,
-      serviceDomain,
-      serviceDid,
-    ),
-    queryFn: async () => {
-      const handle = createFullHandle(name, serviceDomain)
-      if (serviceDid === BSKY_SERVICE_DID) {
-        // entryway has a special API for handle availability
-        const {data} = await agent.com.atproto.temp.checkHandleAvailability({
-          handle,
-          birthDate,
-          email,
-        })
-
-        if (
-          bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultAvailable>(
-            data.result,
-            ComAtprotoTempCheckHandleAvailability.isResultAvailable,
-          )
-        ) {
-          return {available: true} as const
-        } else if (
-          bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultUnavailable>(
-            data.result,
-            ComAtprotoTempCheckHandleAvailability.isResultUnavailable,
-          )
-        ) {
-          return {
-            available: false,
-            suggestions: data.result.suggestions,
-          } as const
-        } else {
-          throw new Error(
-            `Unexpected result of \`checkHandleAvailability\`: ${JSON.stringify(data.result)}`,
-          )
-        }
-      } else {
-        // 3rd party services won't have this API so just try and resolve the handle
-        try {
-          const res = await agent.resolveHandle({
+    query: useQuery({
+      enabled: enabled && name === debouncedHandle,
+      queryKey: RQKEY_handleAvailability(
+        debouncedHandle,
+        serviceDomain,
+        serviceDid,
+      ),
+      queryFn: async () => {
+        const handle = createFullHandle(name, serviceDomain)
+        if (serviceDid === BSKY_SERVICE_DID) {
+          // entryway has a special API for handle availability
+          const {data} = await agent.com.atproto.temp.checkHandleAvailability({
             handle,
+            birthDate,
+            email,
           })
 
-          if (res.data.did) {
-            logger.metric(
-              'signup:handleReserved',
-              {typeahead: true},
-              {statsig: true},
+          if (
+            bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultAvailable>(
+              data.result,
+              ComAtprotoTempCheckHandleAvailability.isResultAvailable,
             )
-            return {available: false} as const
+          ) {
+            return {available: true} as const
+          } else if (
+            bsky.dangerousIsType<ComAtprotoTempCheckHandleAvailability.ResultUnavailable>(
+              data.result,
+              ComAtprotoTempCheckHandleAvailability.isResultUnavailable,
+            )
+          ) {
+            return {
+              available: false,
+              suggestions: data.result.suggestions,
+            } as const
+          } else {
+            throw new Error(
+              `Unexpected result of \`checkHandleAvailability\`: ${JSON.stringify(data.result)}`,
+            )
           }
-        } catch {}
-        logger.metric(
-          'signup:handleAvailable',
-          {typeahead: true},
-          {statsig: true},
-        )
-        return {available: true} as const
-      }
-    },
-  })
+        } else {
+          // 3rd party services won't have this API so just try and resolve the handle
+          try {
+            const res = await agent.resolveHandle({
+              handle,
+            })
+
+            if (res.data.did) {
+              logger.metric(
+                'signup:handleReserved',
+                {typeahead: true},
+                {statsig: true},
+              )
+              return {available: false} as const
+            }
+          } catch {}
+          logger.metric(
+            'signup:handleAvailable',
+            {typeahead: true},
+            {statsig: true},
+          )
+          return {available: true} as const
+        }
+      },
+    }),
+  }
 }

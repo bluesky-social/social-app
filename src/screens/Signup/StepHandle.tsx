@@ -1,10 +1,10 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import Animated, {
+  Easing,
   FadeIn,
   FadeInDown,
   FadeOut,
-  FadeOutDown,
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
@@ -42,7 +42,10 @@ export function StepHandle() {
 
   const validCheck = validateServiceHandle(draftValue, state.userDomain)
 
-  const {data: isHandleAvailable, isLoading} = useHandleAvailabilityQuery({
+  const {
+    enabled: queryEnabled,
+    query: {data: isHandleAvailable, isPending},
+  } = useHandleAvailabilityQuery({
     username: draftValue,
     serviceDid: state.serviceDescription?.did ?? 'UNKNOWN',
     serviceDomain: state.userDomain,
@@ -121,7 +124,10 @@ export function StepHandle() {
   }
 
   const textFieldInvalid =
-    (!isLoading && isHandleAvailable && !isHandleAvailable.available) ||
+    (!isPending &&
+      queryEnabled &&
+      isHandleAvailable &&
+      !isHandleAvailable.available) ||
     !validCheck.frontLengthNotTooLong ||
     !validCheck.handleChars ||
     !validCheck.hyphenStartOrEnd ||
@@ -129,7 +135,7 @@ export function StepHandle() {
 
   return (
     <ScreenTransition>
-      <View style={[a.gap_sm, a.pt_lg]}>
+      <View style={[a.gap_sm, a.pt_lg, a.z_10]}>
         <View>
           <TextField.Root isInvalid={textFieldInvalid}>
             <TextField.Icon icon={AtIcon} />
@@ -142,7 +148,7 @@ export function StepHandle() {
                 setDraftValue(val)
               }}
               label={state.userDomain}
-              defaultValue={draftValue}
+              value={draftValue}
               keyboardType="ascii-capable" // fix for iOS replacing -- with —
               autoCapitalize="none"
               autoCorrect={false}
@@ -166,7 +172,8 @@ export function StepHandle() {
                 <RequirementText>{state.error}</RequirementText>
               </Requirement>
             )}
-            {isHandleAvailable &&
+            {queryEnabled &&
+              isHandleAvailable &&
               !isHandleAvailable.available &&
               validCheck.overall && (
                 <>
@@ -189,7 +196,9 @@ export function StepHandle() {
                               state.userDomain.length * -1,
                             ),
                           )
-                          // TODO: add logging
+                          logger.metric('signup:handleSuggestionSelected', {
+                            method: suggestion.method,
+                          })
                         }}
                       />
                     )}
@@ -225,12 +234,14 @@ export function StepHandle() {
           </View>
         </LayoutAnimationConfig>
       </View>
-      <BackNextButtons
-        isLoading={isNextLoading}
-        isNextDisabled={!validCheck.overall || !!state.error}
-        onBackPress={onBackPress}
-        onNextPress={onNextPress}
-      />
+      <Animated.View layout={native(LinearTransition)}>
+        <BackNextButtons
+          isLoading={isNextLoading}
+          isNextDisabled={!validCheck.overall || !!state.error}
+          onBackPress={onBackPress}
+          onNextPress={onNextPress}
+        />
+      </Animated.View>
     </ScreenTransition>
   )
 }
@@ -270,33 +281,43 @@ function HandleSuggestions({
 
   return (
     <Animated.View
-      entering={FadeInDown}
-      exiting={FadeOutDown}
+      entering={native(FadeInDown.easing(Easing.out(Easing.exp)))}
+      exiting={native(FadeOut)}
       style={[
         a.flex_1,
         a.border,
         a.rounded_sm,
-        a.shadow_md,
+        t.atoms.shadow_sm,
         t.atoms.bg,
         t.atoms.border_contrast_low,
+        a.mt_xs,
+        a.z_50,
+        a.w_full,
+        a.zoom_fade_in,
       ]}>
       {suggestions.map((suggestion, index) => (
         <Button
           label={_(msg`Select ${suggestion.handle}`)}
           key={index}
           onPress={() => onSelect(suggestion)}
+          hoverStyle={[t.atoms.bg_contrast_25]}
           style={[
             a.w_full,
             a.flex_row,
             a.align_center,
             a.justify_between,
-            a.px_md,
-            a.py_lg,
+            a.p_md,
             a.border_b,
             t.atoms.border_contrast_low,
-            index === 0 && {borderTopEndRadius: borderRadius.sm},
+            index === 0 && {
+              borderTopStartRadius: borderRadius.sm,
+              borderTopEndRadius: borderRadius.sm,
+            },
             index === suggestions.length - 1 && [
-              {borderBottomEndRadius: borderRadius.sm},
+              {
+                borderBottomStartRadius: borderRadius.sm,
+                borderBottomEndRadius: borderRadius.sm,
+              },
               a.border_b_0,
             ],
           ]}>
