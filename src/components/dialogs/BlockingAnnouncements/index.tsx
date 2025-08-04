@@ -1,5 +1,7 @@
+import {useContext} from 'react'
 import {View} from 'react-native'
 
+import {atoms as a} from '#/alf'
 import {AnnouncementDialogOuter} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
 import * as PolicyUpdate20250801 from '#/components/dialogs/BlockingAnnouncements/PolicyUpdate20250801'
 import {createPortalGroup} from '#/components/Portal'
@@ -10,11 +12,10 @@ export const Provider = portalGroup.Provider
 export const Portal = portalGroup.Portal
 
 export function Outlet() {
-  return (
-    <View style={{zIndex: 9999}}>
-      <portalGroup.Outlet />
-    </View>
-  )
+  const {outlet} = useContext(portalGroup.Context)
+  return outlet ? (
+    <View style={[a.fixed, a.inset_0, {zIndex: 9999}]}>{outlet}</View>
+  ) : null
 }
 
 export function BlockingAnnouncements() {
