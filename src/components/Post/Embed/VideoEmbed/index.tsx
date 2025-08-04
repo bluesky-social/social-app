@@ -125,17 +125,11 @@ function InnerWrapper({embed}: Props) {
       >
         {showOverlay && (
           <Button
-            style={[
-              a.flex_1,
-              a.align_center,
-              a.justify_center,
-              a.bg_transparent,
-            ]}
+            style={[a.flex_1, a.align_center, a.justify_center]}
             onPress={() => {
               ref.current?.togglePlayback()
             }}
-            label={_(msg`Play video`)}
-            color="secondary">
+            label={_(msg`Play video`)}>
             {showSpinner ? (
               <View
                 style={[
