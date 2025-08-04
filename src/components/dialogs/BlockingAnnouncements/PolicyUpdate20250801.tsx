@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isAndroid} from '#/platform/detection'
 import {Nux} from '#/state/queries/nuxs'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -10,12 +11,13 @@ import {
   AnnouncementBadge,
   useAnnouncementState,
 } from '#/components/dialogs/BlockingAnnouncements/common'
-import {InlineLinkText} from '#/components/Link'
-import {Span, Text} from '#/components/Typography'
+import {InlineLinkText, Link} from '#/components/Link'
+import {Text} from '#/components/Typography'
 import {
   AnnouncementDialog,
   useAnnouncementDialogContext,
 } from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
+import {useA11y} from '#/state/a11y'
 
 export function useLocalState() {
   return useAnnouncementState({
@@ -28,6 +30,7 @@ export function Announcement() {
   const {_} = useLingui()
   const {complete} = useLocalState()
   const {close} = useAnnouncementDialogContext()
+  const {screenReaderEnabled} = useA11y()
 
   const handleClose = useCallback(() => {
     close()
@@ -39,77 +42,134 @@ export function Announcement() {
       overridePresentation: true,
       to: `https://bsky.social/about/support`,
       label: _(msg`Terms of Service`),
-      style: linkStyle,
     },
     privacy: {
       overridePresentation: true,
       to: `https://bsky.social/about/support`,
       label: _(msg`Privacy Policy`),
-      style: linkStyle,
     },
     copyright: {
       overridePresentation: true,
       to: `https://bsky.social/about/support`,
       label: _(msg`Copyright Policy`),
-      style: linkStyle,
     },
     guidelines: {
       overridePresentation: true,
       to: `https://bsky.social/about/support`,
       label: _(msg`Community Guidelines`),
-      style: linkStyle,
     },
     blog: {
       overridePresentation: true,
       to: `https://bsky.social/about/support`,
       label: _(msg`Our blog post`),
-      style: linkStyle,
     },
   }
+  const linkButtonStyles = {
+    overridePresentation: true,
+    color: 'secondary',
+    size: 'small',
+  } as const
+
+  const label = isAndroid
+    ? _(
+        msg`We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 1st, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 1st, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post.`,
+      )
+    : _(msg`We're updating our policies`)
 
   return (
-    <AnnouncementDialog label={_(msg`We're updating our policies`)}>
+    <AnnouncementDialog label={label}>
       <View style={[a.align_start, a.gap_xl]}>
         <AnnouncementBadge />
 
-        <View style={[a.gap_sm]}>
-          <Text style={[a.text_2xl, a.font_bold, a.leading_snug]}>
-            <Trans>Hey there 👋</Trans>
-          </Text>
-          <Text emoji style={[a.leading_snug, a.text_md]}>
-            <Trans>
-              We’re updating our{' '}
-              <InlineLinkText {...links.terms}>Terms of Service</InlineLinkText>
-              ,{' '}
-              <InlineLinkText {...links.privacy}>Privacy Policy</InlineLinkText>
-              , and{' '}
-              <InlineLinkText {...links.copyright}>
-                Copyright Policy
-              </InlineLinkText>
-              , <Span style={[]}>effective September 1st, 2025.</Span>
-            </Trans>
-          </Text>
-          <Text style={[a.leading_snug, a.text_md]}>
-            <Trans>
-              We're also updating our{' '}
-              <InlineLinkText {...links.guidelines}>
-                Community Guidelines
-              </InlineLinkText>
-              , <Span style={[]}>and we want your input!</Span> These new
-              guidelines will take effect on{' '}
-              <Span style={[]}>October 1st, 2025.</Span>
-            </Trans>
-          </Text>
-          <Text emoji style={[a.leading_snug, a.text_md]}>
-            <Trans>
-              Learn more about these changes and how to share your thoughts with
-              us by{' '}
-              <InlineLinkText {...links.blog}>
-                reading our blog post.
-              </InlineLinkText>
-            </Trans>
-          </Text>
-        </View>
+        {screenReaderEnabled ? (
+          <View style={[a.gap_sm]}>
+            <Text emoji style={[a.text_2xl, a.font_bold, a.leading_snug]}>
+              <Trans>Hey there 👋</Trans>
+            </Text>
+            <Text style={[a.leading_snug, a.text_md]}>
+              <Trans>
+                We’re updating our Terms of Service, Privacy Policy, and
+                Copyright Policy, effective September 1st, 2025.
+              </Trans>
+            </Text>
+            <Text style={[a.leading_snug, a.text_md]}>
+              <Trans>
+                We're also updating our Community Guidelines, and we want your
+                input! These new guidelines will take effect on October 1st,
+                2025.
+              </Trans>
+            </Text>
+            <Text style={[a.leading_snug, a.text_md]}>
+              <Trans>
+                Learn more about these changes and how to share your thoughts
+                with us by reading our blog post.
+              </Trans>
+            </Text>
+
+            <Link {...links.terms} {...linkButtonStyles}>
+              <ButtonText>
+                <Trans>Terms of Service</Trans>
+              </ButtonText>
+            </Link>
+            <Link {...links.privacy} {...linkButtonStyles}>
+              <ButtonText>
+                <Trans>Privacy Policy</Trans>
+              </ButtonText>
+            </Link>
+            <Link {...links.copyright} {...linkButtonStyles}>
+              <ButtonText>
+                <Trans>Copyright Policy</Trans>
+              </ButtonText>
+            </Link>
+            <Link {...links.blog} {...linkButtonStyles}>
+              <ButtonText>
+                <Trans>Read our blog post</Trans>
+              </ButtonText>
+            </Link>
+          </View>
+        ) : (
+          <View style={[a.gap_sm]}>
+            <Text emoji style={[a.text_2xl, a.font_bold, a.leading_snug]}>
+              <Trans>Hey there 👋</Trans>
+            </Text>
+            <Text style={[a.leading_snug, a.text_md]}>
+              <Trans>
+                We’re updating our{' '}
+                <InlineLinkText {...links.terms} style={linkStyle}>
+                  Terms of Service
+                </InlineLinkText>
+                ,{' '}
+                <InlineLinkText {...links.privacy} style={linkStyle}>
+                  Privacy Policy
+                </InlineLinkText>
+                , and{' '}
+                <InlineLinkText {...links.copyright} style={linkStyle}>
+                  Copyright Policy
+                </InlineLinkText>
+                , effective September 1st, 2025.
+              </Trans>
+            </Text>
+            <Text style={[a.leading_snug, a.text_md]}>
+              <Trans>
+                We're also updating our{' '}
+                <InlineLinkText {...links.guidelines} style={linkStyle}>
+                  Community Guidelines
+                </InlineLinkText>
+                , and we want your input! These new guidelines will take effect
+                on October 1st, 2025.
+              </Trans>
+            </Text>
+            <Text style={[a.leading_snug, a.text_md]}>
+              <Trans>
+                Learn more about these changes and how to share your thoughts
+                with us by{' '}
+                <InlineLinkText {...links.blog} style={linkStyle}>
+                  reading our blog post.
+                </InlineLinkText>
+              </Trans>
+            </Text>
+          </View>
+        )}
 
         <View style={[a.w_full, a.gap_md]}>
           <Button
