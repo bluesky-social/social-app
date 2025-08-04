@@ -400,9 +400,7 @@ export function getNotificationPayload(
   }
 }
 
-export function notificationToURL(
-  payload: NotificationPayload,
-): string | undefined {
+export function notificationToURL(payload: NotificationPayload): string | null {
   switch (payload?.reason) {
     case 'like':
     case 'repost':
@@ -433,10 +431,19 @@ export function notificationToURL(
     }
     case 'chat-message':
       // should be handled separately
-      return undefined
+      return null
     case 'verified':
     case 'unverified':
-    default:
       return '/notifications'
+    default:
+      // little heuristic - if it's an unknown notification type with a `uri`,
+      // assume it's a valid notification that we don't know about yet.
+      if (payload && (payload as any)?.uri) {
+        return '/notifications'
+      } else {
+        // unknown notification type without a uri - android can give us notifications
+        // when booting that aren't actually our notifications, so just ignore them
+        return null
+      }
   }
 }
