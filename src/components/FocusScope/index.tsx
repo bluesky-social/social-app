@@ -1,20 +1,20 @@
 import {
   Children,
   cloneElement,
-  ReactNode,
-  useRef,
-  useMemo,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
   useCallback,
   useEffect,
-  isValidElement,
-  FunctionComponentElement,
+  useMemo,
+  useRef,
 } from 'react'
 import {
   AccessibilityInfo,
-  Pressable,
-  View,
-  Text,
   findNodeHandle,
+  Pressable,
+  Text,
+  type View,
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -31,10 +31,22 @@ function FocusTrap({children}: {children: ReactNode}) {
   const {_} = useLingui()
   const child = useRef<View>(null)
 
-  const content = useMemo(() => {
+  /*
+   * Here we add a ref to the first child of this component. This currently
+   * overrides any ref already on that first child, so we throw an error here
+   * to prevent us from ever accidentally doing this.
+   */
+  const decoratedChildren = useMemo(() => {
     return Children.toArray(children).map((node, i) => {
       if (i === 0 && isValidElement(node)) {
-        return cloneElement(node as FunctionComponentElement<any>, {
+        const n = node as ReactElement<any>
+        if (n.props.ref !== undefined) {
+          throw new Error(
+            'FocusScope needs to override the ref on its first child.',
+          )
+        }
+        return cloneElement(n, {
+          ...n.props,
           ref: child,
         })
       }
@@ -42,7 +54,7 @@ function FocusTrap({children}: {children: ReactNode}) {
     })
   }, [children])
 
-  const focus = useCallback((ref: View | null) => {
+  const focusNode = useCallback((ref: View | null) => {
     if (!ref) return
     const node = findNodeHandle(ref)
     if (node) {
@@ -52,37 +64,43 @@ function FocusTrap({children}: {children: ReactNode}) {
 
   useEffect(() => {
     setTimeout(() => {
-      focus(child.current)
+      focusNode(child.current)
     }, 1e3)
-  }, [focus])
+  }, [focusNode])
 
   return (
     <>
       <Pressable
         accessible
         accessibilityLabel={_(
-          msg`You've reached the start of the active content. Please go back, or activate to focus the first item.`,
+          msg`You've reached the start of the active content.`,
+        )}
+        accessibilityHint={_(
+          msg`Please go back, or activate this element to return to the start of the active content.`,
         )}
         accessibilityActions={[{name: 'activate', label: 'activate'}]}
         onAccessibilityAction={event => {
           switch (event.nativeEvent.actionName) {
             case 'activate': {
-              focus(child.current)
+              focusNode(child.current)
             }
           }
         }}>
         <Noop />
       </Pressable>
-      {content}
+      {decoratedChildren}
       <Pressable
         accessibilityLabel={_(
-          msg`You've reached the end of the active content. Please go back, or activate to go back to the beginning.`,
+          msg`You've reached the end of the active content.`,
+        )}
+        accessibilityHint={_(
+          msg`Please go back, or activate this element to return to the start of the active content.`,
         )}
         accessibilityActions={[{name: 'activate', label: 'activate'}]}
         onAccessibilityAction={event => {
           switch (event.nativeEvent.actionName) {
             case 'activate': {
-              focus(child.current)
+              focusNode(child.current)
             }
           }
         }}>
