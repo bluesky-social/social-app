@@ -125,7 +125,12 @@ function InnerWrapper({embed}: Props) {
       >
         {showOverlay && (
           <Button
-            style={[a.flex_1, a.align_center, a.justify_center]}
+            style={[
+              a.flex_1,
+              a.align_center,
+              a.justify_center,
+              a.bg_transparent,
+            ]}
             onPress={() => {
               ref.current?.togglePlayback()
             }}
