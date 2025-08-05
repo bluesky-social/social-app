@@ -21,9 +21,10 @@ export function AccordionAnimation({
   children,
 }: AccordionAnimationProps) {
   const height = useSharedValue(0)
-  const derivedHeight = useDerivedValue(() =>
-    withTiming(height.value * Number(isExpanded.value), {duration}),
-  )
+  const derivedHeight = useDerivedValue(() => {
+    const targetHeight = isExpanded ? height.value : 0
+    return withTiming(targetHeight, {duration})
+  }, [isExpanded, duration])
 
   const bodyStyle = useAnimatedStyle(() => ({
     height: derivedHeight.value,
