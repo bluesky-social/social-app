@@ -1,4 +1,4 @@
-import {createContext, type ReactNode, useContext, useMemo} from 'react'
+import {createContext, type ReactNode, useContext} from 'react'
 
 import {Provider as PortalProvider} from '#/components/PolicyUpdateOverlay/Portal'
 import {
@@ -26,9 +26,7 @@ export function Provider({children}: {children?: ReactNode}) {
 
   return (
     <PortalProvider>
-      <Context.Provider value={useMemo(() => state, [state])}>
-        {children}
-      </Context.Provider>
+      <Context.Provider value={state}>{children}</Context.Provider>
     </PortalProvider>
   )
 }
