@@ -109,6 +109,7 @@ export function Overlay({
 
           <FocusScope>
             <View
+              accessibilityViewIsModal
               accessible={isAndroid}
               role="dialog"
               aria-role="dialog"

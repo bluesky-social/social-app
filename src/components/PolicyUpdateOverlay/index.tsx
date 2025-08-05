@@ -3,18 +3,16 @@ import {View} from 'react-native'
 import {isIOS} from '#/platform/detection'
 import {atoms as a} from '#/alf'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
+import {usePolicyUpdateStateContext} from '#/components/PolicyUpdateOverlay/context'
+import {Portal} from '#/components/PolicyUpdateOverlay/Portal'
 import {Content} from '#/components/PolicyUpdateOverlay/updates/202508'
-import {usePolicyUpdateState} from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
-import {createPortalGroup} from '#/components/Portal'
 
-const portalGroup = createPortalGroup()
-
-export const Provider = portalGroup.Provider
-export const Portal = portalGroup.Portal
-export const Outlet = portalGroup.Outlet
+export {Provider} from '#/components/PolicyUpdateOverlay/context'
+export {usePolicyUpdateStateContext} from '#/components/PolicyUpdateOverlay/context'
+export {Outlet} from '#/components/PolicyUpdateOverlay/Portal'
 
 export function PolicyUpdateOverlay() {
-  const state = usePolicyUpdateState()
+  const state = usePolicyUpdateStateContext()
 
   /*
    * See `window.clearNux` example in `/state/queries/nuxs` for a way to clear
