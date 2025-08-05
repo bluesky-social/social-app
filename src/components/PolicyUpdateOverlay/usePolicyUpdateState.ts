@@ -48,6 +48,7 @@ export function usePolicyUpdateState() {
           completed: true,
           data: undefined,
         })
+        setCompletedForDevice(true)
       },
     }
   }, [nux, save, variables, deviceStorage, debugOverride])
