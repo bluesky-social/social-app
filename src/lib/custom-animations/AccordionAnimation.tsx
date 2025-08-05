@@ -1,25 +1,25 @@
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {
-  type SharedValue,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 
-import {atoms as a, type ViewStyleProp} from '#/alf'
+import {atoms as a} from '#/alf'
 
-interface AccordionAnimationProps {
-  isExpanded: SharedValue<boolean>
+type AccordionAnimationProps = React.PropsWithChildren<{
+  isExpanded: boolean
   duration?: number
-}
+  style?: StyleProp<ViewStyle>
+}>
 
 export function AccordionAnimation({
   isExpanded,
   duration = 300,
-  children,
   style,
-}: AccordionAnimationProps & React.PropsWithChildren & ViewStyleProp) {
+  children,
+}: AccordionAnimationProps) {
   const height = useSharedValue(0)
   const derivedHeight = useDerivedValue(() =>
     withTiming(height.value * Number(isExpanded.value), {duration}),
