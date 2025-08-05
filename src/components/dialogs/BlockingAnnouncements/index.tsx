@@ -1,5 +1,6 @@
 import {View} from 'react-native'
 
+import {isIOS} from '#/platform/detection'
 import {atoms as a} from '#/alf'
 import {Announcement} from '#/components/dialogs/BlockingAnnouncements/announcements/PolicyUpdate202508'
 import {useAnnouncementState} from '#/components/dialogs/BlockingAnnouncements/useAnnouncementState'
@@ -25,7 +26,15 @@ export function BlockingAnnouncements() {
   return (
     <Portal>
       <FullWindowOverlay>
-        <View style={[a.fixed, a.inset_0, {zIndex: 9999}]}>
+        <View
+          style={[
+            a.fixed,
+            a.inset_0,
+            // setting a zIndex when using FullWindowOverlay on iOS
+            // means the taps pass straight through to the underlying content (???)
+            // so don't set it on iOS. FullWindowOverlay already does the job.
+            !isIOS && {zIndex: 9999},
+          ]}>
           <Announcement state={state} />
         </View>
       </FullWindowOverlay>
