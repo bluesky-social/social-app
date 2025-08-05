@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {atoms as a} from '#/alf'
 import {Announcement} from '#/components/dialogs/BlockingAnnouncements/announcements/PolicyUpdate202508'
 import {useAnnouncementState} from '#/components/dialogs/BlockingAnnouncements/useAnnouncementState'
+import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createPortalGroup} from '#/components/Portal'
 
 const portalGroup = createPortalGroup()
@@ -23,9 +24,11 @@ export function BlockingAnnouncements() {
 
   return (
     <Portal>
-      <View style={[a.fixed, a.inset_0, {zIndex: 9999}]}>
-        <Announcement state={state} />
-      </View>
+      <FullWindowOverlay>
+        <View style={[a.fixed, a.inset_0, {zIndex: 9999}]}>
+          <Announcement state={state} />
+        </View>
+      </FullWindowOverlay>
     </Portal>
   )
 }
