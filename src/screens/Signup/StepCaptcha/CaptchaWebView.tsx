@@ -1,9 +1,9 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
-import {WebView, WebViewNavigation} from 'react-native-webview'
-import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
+import {WebView, type WebViewNavigation} from 'react-native-webview'
+import {type ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
 
-import {SignupState} from '#/screens/Signup/state'
+import {type SignupState} from '#/screens/Signup/state'
 
 const ALLOWED_HOSTS = [
   'bsky.social',
@@ -30,13 +30,12 @@ export function CaptchaWebView({
   onError: (error: unknown) => void
 }) {
   const redirectHost = React.useMemo(() => {
-    return 'e9755d3e012b.ngrok.app'
-    // if (!state?.serviceUrl) return 'bsky.app'
-    //
-    // return state?.serviceUrl &&
-    //   new URL(state?.serviceUrl).host === 'staging.bsky.dev'
-    //   ? 'staging.bsky.app'
-    //   : 'bsky.app'
+    if (!state?.serviceUrl) return 'bsky.app'
+
+    return state?.serviceUrl &&
+      new URL(state?.serviceUrl).host === 'staging.bsky.dev'
+      ? 'staging.bsky.app'
+      : 'bsky.app'
   }, [state?.serviceUrl])
 
   const wasSuccessful = React.useRef(false)
