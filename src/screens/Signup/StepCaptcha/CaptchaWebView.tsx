@@ -10,6 +10,7 @@ const ALLOWED_HOSTS = [
   'bsky.app',
   'staging.bsky.app',
   'staging.bsky.dev',
+  'app.staging.bsky.dev',
   'js.hcaptcha.com',
   'newassets.hcaptcha.com',
   'api2.hcaptcha.com',
@@ -34,7 +35,7 @@ export function CaptchaWebView({
 
     return state?.serviceUrl &&
       new URL(state?.serviceUrl).host === 'staging.bsky.dev'
-      ? 'staging.bsky.app'
+      ? 'app.staging.bsky.dev'
       : 'bsky.app'
   }, [state?.serviceUrl])
 
