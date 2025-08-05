@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import {StyleSheet} from 'react-native'
 import {WebView, type WebViewNavigation} from 'react-native-webview'
 import {type ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
@@ -17,6 +17,8 @@ const ALLOWED_HOSTS = [
   'e9755d3e012b.ngrok.app',
 ]
 
+const MIN_DELAY = 3_500
+
 export function CaptchaWebView({
   url,
   stateParam,
@@ -30,6 +32,17 @@ export function CaptchaWebView({
   onSuccess: (code: string) => void
   onError: (error: unknown) => void
 }) {
+  const startedAt = useRef(Date.now())
+  const successTo = useRef<NodeJS.Timeout>()
+
+  useEffect(() => {
+    return () => {
+      if (successTo) {
+        clearTimeout(successTo.current)
+      }
+    }
+  }, [])
+
   const redirectHost = React.useMemo(() => {
     if (!state?.serviceUrl) return 'bsky.app'
 
@@ -62,8 +75,17 @@ export function CaptchaWebView({
         return
       }
 
+      // We want to delay the completion of this screen ever so slightly so that it doesn't appear to be a glitch if it completes too fast
       wasSuccessful.current = true
-      onSuccess(code)
+      const now = Date.now()
+      const timeTaken = now - startedAt.current
+      if (timeTaken < MIN_DELAY) {
+        successTo.current = setTimeout(() => {
+          onSuccess(code)
+        }, MIN_DELAY - timeTaken)
+      } else {
+        onSuccess(code)
+      }
     },
     [redirectHost, stateParam, onSuccess, onError],
   )

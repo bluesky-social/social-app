@@ -92,8 +92,6 @@ function StepCaptchaInner({
       }
     }
 
-    console.log(newUrl.href)
-
     return newUrl.href
   }, [
     state.serviceUrl,
