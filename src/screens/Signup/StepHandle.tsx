@@ -151,7 +151,7 @@ export function StepHandle() {
                 if (state.error) {
                   dispatch({type: 'setError', value: ''})
                 }
-                setDraftValue(val)
+                setDraftValue(val.toLocaleLowerCase())
               }}
               label={state.userDomain}
               value={draftValue}
