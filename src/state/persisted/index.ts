@@ -3,11 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {logger} from '#/logger'
 import {
   defaults,
-  Schema,
+  type Schema,
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
-import {PersistedApi} from './types'
+import {device} from '#/storage'
+import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
@@ -53,6 +54,7 @@ onUpdate satisfies PersistedApi['onUpdate']
 export async function clearStorage() {
   try {
     await AsyncStorage.removeItem(BSKY_STORAGE)
+    device.removeAll()
   } catch (e: any) {
     logger.error(`persisted store: failed to clear`, {message: e.toString()})
   }
