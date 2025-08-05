@@ -4,10 +4,37 @@ import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {webLinks} from '#/lib/constants'
 import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+
+function CommunityGuidelinesNotice({}: {}) {
+  const {_} = useLingui()
+  return (
+    <View style={[a.pt_xs]}>
+      <Admonition type="info">
+        <Trans>
+          You also agree to{' '}
+          <InlineLinkText
+            label={_(msg`Bluesky's Community Guidelines`)}
+            to={webLinks.communityDeprecated}>
+            Bluesky’s Community Guidelines
+          </InlineLinkText>
+          . An{' '}
+          <InlineLinkText
+            label={_(msg`Bluesky's Community Guidelines`)}
+            to={webLinks.community}>
+            updated version of our Community Guidelines
+          </InlineLinkText>{' '}
+          will take effect on October 8.
+        </Trans>
+      </Admonition>
+    </View>
+  )
+}
 
 export const Policies = ({
   serviceDescription,
@@ -115,6 +142,8 @@ export const Policies = ({
           </Trans>
         </Text>
       ) : undefined}
+
+      <CommunityGuidelinesNotice />
     </View>
   )
 }
