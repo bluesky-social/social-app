@@ -400,9 +400,7 @@ export function getNotificationPayload(
   }
 }
 
-export function notificationToURL(
-  payload: NotificationPayload,
-): string | undefined {
+export function notificationToURL(payload: NotificationPayload): string | null {
   switch (payload?.reason) {
     case 'like':
     case 'repost':
@@ -433,10 +431,12 @@ export function notificationToURL(
     }
     case 'chat-message':
       // should be handled separately
-      return undefined
+      return null
     case 'verified':
     case 'unverified':
-    default:
       return '/notifications'
+    default:
+      // do nothing if we don't know what to do with it
+      return null
   }
 }
