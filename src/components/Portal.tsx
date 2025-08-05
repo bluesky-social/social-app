@@ -73,7 +73,7 @@ export function createPortalGroup() {
     return null
   }
 
-  return {Provider, Outlet, Portal, Context}
+  return {Provider, Outlet, Portal}
 }
 
 const DefaultPortal = createPortalGroup()

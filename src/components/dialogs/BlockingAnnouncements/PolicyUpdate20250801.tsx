@@ -4,37 +4,23 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isAndroid} from '#/platform/detection'
-import {Nux} from '#/state/queries/nuxs'
+import {useA11y} from '#/state/a11y'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {
-  AnnouncementBadge,
-  useAnnouncementState,
-} from '#/components/dialogs/BlockingAnnouncements/common'
+import {AnnouncementBadge} from '#/components/dialogs/BlockingAnnouncements/AnnouncementBadge'
+import {AnnouncementDialog} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
+import {type AnnouncementState} from '#/components/dialogs/BlockingAnnouncements/useAnnouncementState'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {
-  AnnouncementDialog,
-  useAnnouncementDialogContext,
-} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
-import {useA11y} from '#/state/a11y'
 
-export function useLocalState() {
-  return useAnnouncementState({
-    id: Nux.BlockingAnnouncementPolicyUpdate20250801,
-  })
-}
-
-export function Announcement() {
+export function Announcement({state}: {state: AnnouncementState}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {complete} = useLocalState()
-  const {close} = useAnnouncementDialogContext()
   const {screenReaderEnabled} = useA11y()
 
   const handleClose = useCallback(() => {
-    close()
-  }, [close, complete])
+    state.complete()
+  }, [state])
 
   const linkStyle = [a.text_md]
   const links = {

@@ -1,10 +1,4 @@
-import {
-  createContext,
-  type ReactNode,
-  useContext,
-  useMemo,
-  useState,
-} from 'react'
+import {type ReactNode} from 'react'
 import {ScrollView, View} from 'react-native'
 import {
   useSafeAreaFrame,
@@ -20,29 +14,6 @@ import {FocusScope} from '#/components/FocusScope'
 import {LockScroll} from '#/components/LockScroll'
 
 const GUTTER = 24
-
-export const Context = createContext({
-  close: () => {},
-})
-
-export function useAnnouncementDialogContext() {
-  return useContext(Context)
-}
-
-export function AnnouncementDialogOuter({children}: {children: ReactNode}) {
-  const [open, setOpen] = useState(true)
-
-  const ctx = useMemo(
-    () => ({
-      close() {
-        setOpen(false)
-      },
-    }),
-    [setOpen],
-  )
-
-  return <Context.Provider value={ctx}>{open && children}</Context.Provider>
-}
 
 export function AnnouncementDialog({
   children,
