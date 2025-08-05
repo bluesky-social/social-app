@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {Platform} from 'react-native'
+import {Platform, View} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import * as FileSystem from 'expo-file-system'
 import {Image} from 'expo-image'
@@ -12,10 +12,12 @@ import {Statsig} from 'statsig-react-native-expo'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid, isIOS, isNative} from '#/platform/detection'
-import {Nux} from '#/state/queries/nuxs'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
+import {atoms as a} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {ID as PolicyUpdate202508} from '#/components/dialogs/BlockingAnnouncements/announcements/PolicyUpdate202508/config'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/components/icons/BroomSparkle'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
@@ -24,6 +26,7 @@ import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/i
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import * as env from '#/env'
 import {device, useStorage} from '#/storage'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
@@ -200,32 +203,39 @@ function PolicyUpdateDebug() {
 
   return (
     <>
-      <SettingsList.PressableItem
-        onPress={() => {
-          setOverride(!override)
-        }}
-        label="Toggle">
-        <SettingsList.ItemIcon icon={AtomIcon} />
-        <SettingsList.ItemText>
-          Enable policy update override
-        </SettingsList.ItemText>
-      </SettingsList.PressableItem>
+      <SettingsList.Divider />
+      <View style={[a.p_xl, a.gap_md]}>
+        <Text style={[a.text_lg, a.font_bold]}>PolicyUpdate202508 Debug</Text>
 
-      {override && (
-        <SettingsList.PressableItem
-          onPress={() => {
-            device.set([Nux.BlockingAnnouncementPolicyUpdate202508], false)
-            agent.bskyAppRemoveNuxs([
-              Nux.BlockingAnnouncementPolicyUpdate202508,
-            ])
-          }}
-          label="Reset policy update nux">
-          <SettingsList.ItemIcon icon={AtomIcon} />
-          <SettingsList.ItemText>
-            Reset policy update state
-          </SettingsList.ItemText>
-        </SettingsList.PressableItem>
-      )}
+        <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_md]}>
+          <Button
+            onPress={() => {
+              setOverride(!override)
+            }}
+            label="Toggle"
+            color={override ? 'primary' : 'secondary'}
+            size="small"
+            style={[a.flex_1]}>
+            <ButtonText>
+              {override ? 'Disable debug mode' : 'Enable debug mode'}
+            </ButtonText>
+          </Button>
+
+          <Button
+            onPress={() => {
+              device.set([PolicyUpdate202508], false)
+              agent.bskyAppRemoveNuxs([PolicyUpdate202508])
+              Toast.show(`Done`, 'info')
+            }}
+            label="Reset policy update nux"
+            color="secondary"
+            size="small"
+            disabled={!override}>
+            <ButtonText>Reset state</ButtonText>
+          </Button>
+        </View>
+      </View>
+      <SettingsList.Divider />
     </>
   )
 }

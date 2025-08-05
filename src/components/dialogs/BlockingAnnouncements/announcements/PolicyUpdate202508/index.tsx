@@ -25,33 +25,33 @@ export function Announcement({state}: {state: AnnouncementState}) {
   const linkStyle = [a.text_md]
   const links = {
     terms: {
-      overridePresentation: true,
+      overridePresentation: false,
       to: `https://bsky.social/about/support`,
       label: _(msg`Terms of Service`),
     },
     privacy: {
-      overridePresentation: true,
+      overridePresentation: false,
       to: `https://bsky.social/about/support`,
       label: _(msg`Privacy Policy`),
     },
     copyright: {
-      overridePresentation: true,
+      overridePresentation: false,
       to: `https://bsky.social/about/support`,
       label: _(msg`Copyright Policy`),
     },
     guidelines: {
-      overridePresentation: true,
+      overridePresentation: false,
       to: `https://bsky.social/about/support`,
       label: _(msg`Community Guidelines`),
     },
     blog: {
-      overridePresentation: true,
+      overridePresentation: false,
       to: `https://bsky.social/about/support`,
       label: _(msg`Our blog post`),
     },
   }
   const linkButtonStyles = {
-    overridePresentation: true,
+    overridePresentation: false,
     color: 'secondary',
     size: 'small',
   } as const
