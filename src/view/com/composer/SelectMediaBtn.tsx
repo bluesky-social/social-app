@@ -30,197 +30,232 @@ type Props = {
   setError: (error: string) => void
 }
 
-export function validateAndSelectVideo(
-  asset: ImagePickerAsset,
-  onSelectVideo: (asset: ImagePickerAsset) => void,
-  setError: (error: string) => void,
-  _: any,
-) {
-  try {
-    if (isWeb) {
-      // asset.duration is null for gifs (see the TODO in pickVideo.web.ts)
-      if (asset.duration && asset.duration > VIDEO_MAX_DURATION_MS) {
-        throw Error(_(msg`Videos must be less than 3 minutes long`))
-      }
-      // compression step on native converts to mp4, so no need to check there
-      if (
-        asset.mimeType &&
-        !SUPPORTED_MIME_TYPES.includes(asset.mimeType as SupportedMimeTypes)
-      ) {
-        throw Error(_(msg`Unsupported video type: ${asset.mimeType}`))
-      }
-    } else {
-      if (typeof asset.duration !== 'number') {
-        throw Error(_(msg`Asset is not a video`))
-      }
-      if (asset.duration > VIDEO_MAX_DURATION_MS) {
-        throw Error(_(msg`Videos must be less than 3 minutes long`))
-      }
-    }
-    onSelectVideo(asset)
-  } catch (err) {
-    if (err instanceof Error) {
-      setError(err.message)
-    } else {
-      setError(_(msg`An error occurred while selecting the video`))
-    }
-  }
-}
+// (Note)APiligrim
+// The SelectMediaBtn is responsible for supporting the selection of the following media in the Composer:
+// up to 4 images
+// up to 1 video
+// up to 1 GIF (handled like a video - passed to onSelectVideo)
 
-export function SelectMediaBtn({
-  size,
-  disabled,
-  onAdd,
-  onSelectVideo,
-  setError,
-}: Props) {
+export function SelectMediaBtn({disabled, onAdd, onSelectVideo}: Props) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
-  const t = useTheme()
   const sheetWrapper = useSheetWrapper()
+  const t = useTheme()
 
   const processSelectedAssets = useCallback(
     async (assets: ImagePickerAsset[]) => {
-      const limitedAssets = assets.slice(0, 4)
+      function performEarlyValidation(assetList: ImagePickerAsset[]) {
+        const images: ImagePickerAsset[] = []
+        const videosAndGifs: ImagePickerAsset[] = []
+        const invalids: ImagePickerAsset[] = []
 
-      if (assets.length > 4) {
-        toast.show({
-          type: 'info',
-          content: _(msg`Using the first 4 images.`),
-          a11yLabel: _(msg`Using the first 4 images.`),
-        })
-      }
+        // Categorize assets using basic checks (even without complete metadata)
+        for (const asset of assetList) {
+          const ext = asset.uri?.split('.').pop()?.toLowerCase()
+          const isGif = isGifAsset(asset, ext)
+          const isVideo = isVideoAsset(asset)
+          const isImage = isImageAsset(asset)
 
-      const images: ImagePickerAsset[] = []
-      const videos: ImagePickerAsset[] = []
-      let firstMediaType: 'image' | 'video' | null = null
-
-      for (const asset of limitedAssets) {
-        if (
-          // APiligrim
-          // On web, pasted/dragged content may have data URIs without proper metadata
-          // This happens with clipboard paste, drag & drop, or browser inconsistencies
-          // We need to fetch and analyze the blob to extract missing video metadata
-          isWeb &&
-          asset.uri &&
-          asset.uri.startsWith('data:') &&
-          !asset.mimeType &&
-          !asset.duration
-        ) {
-          try {
-            const response = await fetch(asset.uri)
-            const blob = await response.blob()
-            const file = new File([blob], 'video', {type: blob.type})
-
-            const videoAsset = await getVideoMetadata(file)
-
-            Object.assign(asset, {
-              mimeType: videoAsset.mimeType,
-              duration: videoAsset.duration,
-              width: videoAsset.width,
-              height: videoAsset.height,
-              type: videoAsset.mimeType?.startsWith('video/')
-                ? 'video'
-                : asset.type,
-            })
-          } catch (error) {
-            console.error('Failed to extract metadata:', error)
+          if (isGif || isVideo) {
+            // GIFs and videos are handled the same way (fixing regression)
+            videosAndGifs.push(asset)
+          } else if (isImage) {
+            images.push(asset)
+          } else {
+            invalids.push(asset)
+            console.error('Invalid asset detected:', asset)
           }
         }
 
-        const typeCheck = asset.type === 'video'
-        const mimeCheck = asset.mimeType && asset.mimeType.startsWith('video/')
-        const extensionCheck =
-          asset.uri && /\.(mp4|mov|avi|webm|m4v)$/i.test(asset.uri)
-        const durationCheck =
-          typeof asset.duration === 'number' && asset.duration > 0
+        // Determine media type based on selected assets and preserve selection order
+        let mediaType: 'image' | 'video' | null = null
+        for (const asset of assetList) {
+          const ext = asset.uri?.split('.').pop()?.toLowerCase()
+          const isGif = isGifAsset(asset, ext)
+          const isVideo = isVideoAsset(asset)
+          const isImage = isImageAsset(asset)
 
-        const isVideo =
-          typeCheck || mimeCheck || extensionCheck || durationCheck
-
-        if (isVideo) {
-          videos.push(asset)
-          if (firstMediaType === null) firstMediaType = 'video'
-        } else {
-          images.push(asset)
-          if (firstMediaType === null) firstMediaType = 'image'
+          if (isGif || isVideo) {
+            // GIFs are treated like videos
+            mediaType = 'video'
+            break
+          } else if (isImage) {
+            mediaType = 'image'
+            break
+          }
         }
+
+        let validAssets: ImagePickerAsset[] = []
+        let trimmed = false
+
+        if (mediaType === 'image') {
+          validAssets = images.slice(0, 4)
+          if (images.length > 4) trimmed = true
+
+          if (videosAndGifs.length > 0) {
+            toast.show({
+              type: 'info',
+              content:
+                'You can select either images or videos. Taking the images.',
+              a11yLabel:
+                'You can select either images or videos. Taking the images.',
+            })
+          }
+        } else if (mediaType === 'video') {
+          // For videos/GIFs: take only the first one, show toast if mixed media
+          validAssets = videosAndGifs.slice(0, 1)
+
+          if (images.length > 0 || videosAndGifs.length > 1) {
+            toast.show({
+              type: 'info',
+              content:
+                'You can select either images or videos. Taking the first video.',
+              a11yLabel:
+                'You can select either images or videos. Taking the first video.',
+            })
+          }
+        }
+
+        return {validAssets, mediaType, trimmed}
       }
 
-      if (videos.length > 0 && images.length > 0) {
-        if (firstMediaType === 'video') {
-          toast.show({
-            type: 'info',
-            content: _(
-              msg`You can select either images or videos. Taking the first video.`,
-            ),
-            a11yLabel: _(
-              msg`You can select either images or videos. Taking the first video.`,
-            ),
-          })
-          const video = ensureVideoMimeType(videos[0])
+      async function normalizeAssets(assetList: ImagePickerAsset[]) {
+        const normalizedAssets: ImagePickerAsset[] = []
+        const failedAssets: ImagePickerAsset[] = []
 
-          await validateAndSelectVideo(video, onSelectVideo, setError, _)
-          return
-        } else {
-          toast.show({
-            type: 'info',
-            content: _(msg`Taking first 4 images and discarding videos.`),
-            a11yLabel: _(msg`Taking first 4 images and discarding videos.`),
-          })
-          const imagesToProcess = images.slice(0, 4)
-          await handleImageSelection(imagesToProcess, onAdd, _)
-          return
+        for (const asset of assetList) {
+          try {
+            let normalizedAsset = asset
+
+            // Check if we need to enrich metadata
+            const needsEnrichment =
+              !asset.mimeType ||
+              (asset.type === 'video' && !asset.duration) ||
+              (isGifAsset(asset, asset.uri?.split('.').pop()?.toLowerCase()) &&
+                !asset.duration)
+
+            if (needsEnrichment) {
+              const enrichedAsset = await getMissingMetadata(asset)
+              if (enrichedAsset) {
+                normalizedAsset = enrichedAsset
+              }
+
+              // Last ditch effort: infer mimeType from extension if still missing
+              if (!normalizedAsset.mimeType) {
+                normalizedAsset = {
+                  ...normalizedAsset,
+                  mimeType:
+                    normalizedAsset.type === 'image'
+                      ? 'image/jpeg'
+                      : inferMimeTypeFromURI(normalizedAsset.uri || ''),
+                }
+              }
+            }
+
+            normalizedAssets.push(normalizedAsset)
+          } catch (error) {
+            console.error('Failed to normalize asset:', asset, error)
+            failedAssets.push(asset)
+          }
         }
+
+        return {normalizedAssets, failedAssets}
       }
 
-      if (videos.length > 1) {
+      function performFinalValidation(
+        assetList: ImagePickerAsset[],
+        mediaType: 'image' | 'video' | null,
+      ) {
+        const validAssets: ImagePickerAsset[] = []
+
+        for (const asset of assetList) {
+          if (mediaType === 'image') {
+            // Images just need basic validation
+            if (asset.mimeType && asset.mimeType.startsWith('image/')) {
+              validAssets.push(asset)
+            } else {
+              console.error('Image failed final validation:', asset)
+            }
+          } else if (mediaType === 'video') {
+            // Videos and GIFs need duration and format checks
+            const isValid = validateVideoOrGIF(asset)
+            if (isValid) {
+              validAssets.push(asset)
+            } else {
+              console.error('Video/GIF failed final validation:', asset)
+            }
+          }
+        }
+
+        return validAssets
+      }
+
+      // 1. Early validation to detect asset format and count limits
+      const {validAssets, mediaType, trimmed} = performEarlyValidation(assets)
+
+      if (validAssets.length === 0) {
+        toast.show({
+          type: 'error',
+          content: 'No valid media files selected',
+          a11yLabel: 'No valid media files selected',
+        })
+        return
+      }
+
+      // Show toast if selected files were trimmed
+      if (trimmed) {
         toast.show({
           type: 'info',
-          content: _(msg`Using the first video selected.`),
-          a11yLabel: _(msg`Using the first video selected.`),
+          content: 'Selection limited to first 4 files.',
+          a11yLabel: 'Selection limited to first 4 files.',
         })
-        const video = ensureVideoMimeType(videos[0])
+      }
 
-        await validateAndSelectVideo(video, onSelectVideo, setError, _)
+      // 2. Normalize assets by adding missing metadata
+      const {normalizedAssets, failedAssets} =
+        await normalizeAssets(validAssets)
+
+      if (failedAssets.length > 0) {
+        console.error('Some assets failed to normalize:', failedAssets)
+        if (normalizedAssets.length === 0) {
+          toast.show({
+            type: 'error',
+            content: 'Failed to process selected files',
+            a11yLabel: 'Failed to process selected files',
+          })
+          return
+        } else {
+          toast.show({
+            type: 'info',
+            content: 'Some files could not be processed. Using valid files.',
+            a11yLabel: 'Some files could not be processed. Using valid files.',
+          })
+        }
+      }
+
+      // 3. Final validation checks on normalized assets
+      const finalAssets = performFinalValidation(normalizedAssets, mediaType)
+
+      if (finalAssets.length === 0) {
+        toast.show({
+          type: 'error',
+          content: 'This media type is not supported',
+          a11yLabel: 'This media type is not supported',
+        })
         return
       }
 
-      if (videos.length === 1) {
-        const video = ensureVideoMimeType(videos[0])
-
-        await validateAndSelectVideo(video, onSelectVideo, setError, _)
-        return
-      }
-
-      if (images.length > 0) {
-        const maxAllowed = 4 - size
-
-        if (images.length > 4) {
-          toast.show({
-            type: 'info',
-            content: _(msg`You can only upload up to 4 images at a time.`),
-            a11yLabel: _(msg`You can only upload up to 4 images at a time.`),
-          })
-          await handleImageSelection(images.slice(0, 4), onAdd, size)
-          return
-        }
-
-        if (size + images.length > 4) {
-          toast.show({
-            type: 'info',
-            content: _(msg`You can only upload up to 4 images.`),
-            a11yLabel: _(msg`You can only upload up to 4 images.`),
-          })
-          await handleImageSelection(images.slice(0, maxAllowed), onAdd, _)
-          return
-        }
-
-        await handleImageSelection(images, onAdd, _)
+      // 4. Add finalized assets to the composer
+      if (mediaType === 'image') {
+        const composerImages = await generateComposerImages(finalAssets)
+        onAdd(composerImages)
+      } else {
+        // Both videos and GIFs get selected with onSelectVideo
+        onSelectVideo(finalAssets[0])
       }
     },
-    [_, onAdd, onSelectVideo, setError, size],
+    [onAdd, onSelectVideo],
   )
 
   const onPressSelectMedia = useCallback(async () => {
@@ -233,8 +268,8 @@ export function SelectMediaBtn({
       if (!photoAccess && !videoAccess) {
         toast.show({
           type: 'error',
-          content: _(msg`You need to allow access to your media library.`),
-          a11yLabel: _(msg`You need to allow access to your media library.`),
+          content: 'You need to allow access to your media library.',
+          a11yLabel: 'You need to allow access to your media library.',
         })
         return
       }
@@ -261,7 +296,6 @@ export function SelectMediaBtn({
     requestPhotoAccessIfNeeded,
     requestVideoAccessIfNeeded,
     sheetWrapper,
-    _,
     processSelectedAssets,
   ])
 
@@ -271,7 +305,7 @@ export function SelectMediaBtn({
       onPress={onPressSelectMedia}
       label={_(msg`Media`)}
       accessibilityHint={_(
-        msg`Opens device gallery to select images or videos`,
+        msg`Opens device gallery to select images, a video, or a GIF.`,
       )}
       style={a.p_sm}
       variant="ghost"
@@ -287,11 +321,9 @@ export function SelectMediaBtn({
   )
 }
 
-async function handleImageSelection(
+async function generateComposerImages(
   images: ImagePickerAsset[],
-  onAdd: (next: ComposerImage[]) => void,
-  _: any,
-) {
+): Promise<ComposerImage[]> {
   const imageMetas = images.map(image => ({
     mime: image.mimeType || 'image/jpeg',
     height: image.height,
@@ -304,41 +336,169 @@ async function handleImageSelection(
     imageMetas.map(img => createComposerImage(img)),
   )
 
-  onAdd(results)
+  return results
 }
 
-type ValidatedVideoAsset = ImagePickerAsset & {
-  mimeType: string
+function isGifAsset(asset: ImagePickerAsset, ext?: string): boolean {
+  return asset.mimeType === 'image/gif' || ext === 'gif'
 }
 
-function ensureVideoMimeType(asset: ImagePickerAsset): ValidatedVideoAsset {
-  if (asset.mimeType) {
-    return asset as ValidatedVideoAsset
+function isVideoAsset(asset: ImagePickerAsset): boolean {
+  if (asset.type === 'video') {
+    return true
+  }
+  if (asset.mimeType && asset.mimeType.startsWith('video/')) {
+    return true
+  }
+  if (asset.uri && /\.(mp4|mov|avi|webm|m4v)$/i.test(asset.uri)) {
+    return true
   }
 
-  if (!asset.uri) {
-    return {...asset, mimeType: 'video/mp4'} as ValidatedVideoAsset
+  // Check for data URI with video mime type
+  if (asset.uri && asset.uri.startsWith('data:video/')) {
+    return true
   }
 
-  const extension = asset.uri.split('.').pop()?.toLowerCase()
-  let mimeType: string
+  if (typeof asset.duration === 'number' && asset.duration > 0) {
+    return true
+  }
 
-  switch (extension) {
+  return false
+}
+
+function isImageAsset(asset: ImagePickerAsset): boolean {
+  if (asset.type === 'image') return true
+  if (asset.mimeType && asset.mimeType.startsWith('image/')) return true
+  return false
+}
+
+function validateVideoOrGIF(asset: ImagePickerAsset): boolean {
+  if (!asset) {
+    console.error('Asset is null or undefined')
+    return false
+  }
+
+  if (isWeb) {
+    // asset.duration is null for gifs (see the TODO in pickVideo.web.ts)
+    if (asset.duration && asset.duration > VIDEO_MAX_DURATION_MS) {
+      toast.show({
+        type: 'error',
+        content: 'Videos must be less than 3 minutes long',
+        a11yLabel: 'Videos must be less than 3 minutes long',
+      })
+      return false
+    }
+    // compression step on native converts to mp4, so no need to check there
+    if (
+      asset.mimeType &&
+      !SUPPORTED_MIME_TYPES.includes(asset.mimeType as SupportedMimeTypes)
+    ) {
+      toast.show({
+        type: 'error',
+        content: 'This video format is not supported',
+        a11yLabel: 'This video format is not supported',
+      })
+      return false
+    }
+  } else {
+    // Check if asset exists and has duration property before accessing it
+    if (!asset.duration || typeof asset.duration !== 'number') {
+      toast.show({
+        type: 'error',
+        content: 'Please select a valid video file',
+        a11yLabel: 'Please select a valid video file',
+      })
+      return false
+    }
+    if (asset.duration > VIDEO_MAX_DURATION_MS) {
+      toast.show({
+        type: 'error',
+        content: 'Videos must be less than 3 minutes long',
+        a11yLabel: 'Videos must be less than 3 minutes long',
+      })
+      return false
+    }
+  }
+  return true
+}
+
+function inferMimeTypeFromURI(uri: string): string {
+  const ext = uri.split('.').pop()?.toLowerCase()
+  switch (ext) {
     case 'mp4':
-      mimeType = 'video/mp4'
-      break
+      return 'video/mp4'
     case 'mov':
-      mimeType = 'video/quicktime'
-      break
+      return 'video/quicktime'
     case 'webm':
-      mimeType = 'video/webm'
-      break
+      return 'video/webm'
     case 'avi':
-      mimeType = 'video/x-msvideo'
-      break
+      return 'video/x-msvideo'
+    case 'gif':
+      return 'image/gif'
     default:
-      mimeType = 'video/mp4'
+      return 'video/mp4'
+  }
+}
+
+async function getMissingMetadata(
+  asset: ImagePickerAsset,
+): Promise<ImagePickerAsset | null> {
+  if (!isWeb || !asset.uri) return asset
+
+  if (asset.uri.startsWith('data:')) {
+    try {
+      const mimeTypeMatch = asset.uri.match(/^data:([^;]+)/)
+      const extractedMimeType = mimeTypeMatch ? mimeTypeMatch[1] : null
+
+      const response = await fetch(asset.uri)
+      const blob = await response.blob()
+      const file = new File([blob], 'file', {
+        type: blob.type || extractedMimeType || '',
+      })
+
+      let enrichedAsset = asset
+
+      // If it's a video, try to get video metadata
+      if (
+        extractedMimeType?.startsWith('video/') ||
+        blob.type.startsWith('video/')
+      ) {
+        try {
+          const videoAsset = await getVideoMetadata(file)
+          enrichedAsset = {
+            ...asset,
+            ...videoAsset,
+            mimeType: videoAsset.mimeType || extractedMimeType || blob.type,
+            type: 'video',
+          }
+        } catch (error) {
+          console.error(
+            ' if getting metadata for a video fails, using basic info',
+            error,
+          )
+
+          enrichedAsset = {
+            ...asset,
+            mimeType: extractedMimeType || blob.type,
+            type: extractedMimeType?.startsWith('video/')
+              ? 'video'
+              : asset.type,
+          }
+        }
+      } else {
+        // For non-video assets (images and GIFs), setting the mime type
+        enrichedAsset = {
+          ...asset,
+          mimeType: extractedMimeType || blob.type,
+        }
+      }
+
+      return enrichedAsset
+    } catch (error) {
+      console.error('Failed to extract metadata:', error)
+      return null
+    }
   }
 
-  return {...asset, mimeType} as ValidatedVideoAsset
+  return asset
 }
