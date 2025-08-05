@@ -1,34 +1,119 @@
 import {useMemo} from 'react'
 
-import {type Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
+import {useNux, useSaveNux} from '#/state/queries/nuxs'
+import {ACTIVE_ANNOUNCEMENT} from '#/components/dialogs/BlockingAnnouncements/config'
+import {device, useStorage} from '#/storage'
 
 export type AnnouncementState = {
   completed: boolean
   complete: () => void
 }
 
-export function useAnnouncementState({id}: {id: Nux}) {
-  const nux = useNux(id)
+export function useAnnouncementState() {
+  const nux = useNux(ACTIVE_ANNOUNCEMENT)
   const {mutate: save, variables} = useSaveNux()
+  const deviceStorage = useStorage(device, [ACTIVE_ANNOUNCEMENT])
   return useMemo(() => {
-    /**
-     * Until data has loaded, assumed completed
-     */
-    let completed = nux.status === 'ready' ? nux.nux?.completed === true : true
+    const nuxIsReady = nux.status === 'ready'
+    const nuxIsCompleted = nux.nux?.completed === true
+    const nuxIsOptimisticallyCompleted = !!variables?.completed
+    const [completedForDevice, setCompletedForDevice] = deviceStorage
 
-    if (variables?.completed) {
-      completed = true
-    }
+    const completed = computeCompletedState({
+      nuxIsReady,
+      nuxIsCompleted,
+      nuxIsOptimisticallyCompleted,
+      completedForDevice,
+    })
+
+    syncCompletedState({
+      nuxIsReady,
+      nuxIsCompleted,
+      nuxIsOptimisticallyCompleted,
+      completedForDevice,
+      save,
+      setCompletedForDevice,
+    })
 
     return {
       completed,
       complete() {
         save({
-          id,
+          id: ACTIVE_ANNOUNCEMENT,
           completed: true,
           data: undefined,
         })
       },
     }
-  }, [id, nux, save, variables])
+  }, [nux, save, variables, deviceStorage])
+}
+
+export function computeCompletedState({
+  nuxIsReady,
+  nuxIsCompleted,
+  nuxIsOptimisticallyCompleted,
+  completedForDevice,
+}: {
+  nuxIsReady: boolean
+  nuxIsCompleted: boolean
+  nuxIsOptimisticallyCompleted: boolean
+  completedForDevice: boolean | undefined
+}): boolean {
+  /**
+   * Assume completed to prevent flash
+   */
+  let completed = true
+
+  /**
+   * Prefer server state, if available
+   */
+  if (nuxIsReady) {
+    completed = nuxIsCompleted
+  }
+
+  /**
+   * Override with optimistic state or device state
+   */
+  if (nuxIsOptimisticallyCompleted || !!completedForDevice) {
+    completed = true
+  }
+
+  return completed
+}
+
+export function syncCompletedState({
+  nuxIsReady,
+  nuxIsCompleted,
+  nuxIsOptimisticallyCompleted,
+  completedForDevice,
+  save,
+  setCompletedForDevice,
+}: {
+  nuxIsReady: boolean
+  nuxIsCompleted: boolean
+  nuxIsOptimisticallyCompleted: boolean
+  completedForDevice: boolean | undefined
+  save: ReturnType<typeof useSaveNux>['mutate']
+  setCompletedForDevice: (value: boolean) => void
+}) {
+  /*
+   * Sync device state to server state for this account
+   */
+  if (
+    nuxIsReady &&
+    !nuxIsCompleted &&
+    !nuxIsOptimisticallyCompleted &&
+    !!completedForDevice
+  ) {
+    save({
+      id: ACTIVE_ANNOUNCEMENT,
+      completed: true,
+      data: undefined,
+    })
+  } else if (nuxIsReady && nuxIsCompleted && !completedForDevice) {
+    /*
+     * Sync server state to device state
+     */
+    setCompletedForDevice(true)
+  }
 }

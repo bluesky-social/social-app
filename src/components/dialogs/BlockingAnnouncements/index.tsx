@@ -1,6 +1,5 @@
 import {View} from 'react-native'
 
-import {Nux} from '#/state/queries/nuxs'
 import {atoms as a} from '#/alf'
 import {Announcement} from '#/components/dialogs/BlockingAnnouncements/announcements/PolicyUpdate202508'
 import {useAnnouncementState} from '#/components/dialogs/BlockingAnnouncements/useAnnouncementState'
@@ -13,9 +12,7 @@ export const Portal = portalGroup.Portal
 export const Outlet = portalGroup.Outlet
 
 export function BlockingAnnouncements() {
-  const state = useAnnouncementState({
-    id: Nux.BlockingAnnouncementPolicyUpdate202508,
-  })
+  const state = useAnnouncementState()
 
   /*
    * See `window.clearNux` example in `/state/queries/nuxs` for a way to clear

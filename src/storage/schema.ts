@@ -1,3 +1,5 @@
+import {type Nux} from '#/state/queries/nuxs'
+
 /**
  * Device data that's specific to the device and does not vary based account
  */
@@ -13,6 +15,11 @@ export type Device = {
   devMode: boolean
   demoMode: boolean
   activitySubscriptionsNudged?: boolean
+
+  /**
+   * Blocking announcements. New IDs are required for each new announcement.
+   */
+  [Nux.BlockingAnnouncementPolicyUpdate202508]?: boolean
 }
 
 export type Account = {
