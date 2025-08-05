@@ -211,7 +211,7 @@ export function StepHandle() {
               <Requirement>
                 {!validCheck.hyphenStartOrEnd ? (
                   <RequirementText>
-                    <Trans>Doesn't begin or end with a hyphen</Trans>
+                    <Trans>Username cannot begin or end with a hyphen</Trans>
                   </RequirementText>
                 ) : (
                   <RequirementText>
@@ -225,7 +225,7 @@ export function StepHandle() {
                 !validCheck.totalLength) && (
                 <RequirementText>
                   <Trans>
-                    No longer than{' '}
+                    Username cannot be longer than{' '}
                     <Plural
                       value={MAX_SERVICE_HANDLE_LENGTH}
                       other="# characters"
@@ -265,7 +265,7 @@ function RequirementText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
     <Text style={[a.text_sm, a.flex_1, {color: t.palette.negative_500}]}>
-      <Trans>{children}</Trans>
+      {children}
     </Text>
   )
 }
@@ -300,7 +300,12 @@ function HandleSuggestions({
       ]}>
       {suggestions.map((suggestion, index) => (
         <Button
-          label={_(msg`Select ${suggestion.handle}`)}
+          label={_(
+            msg({
+              message: `Select ${suggestion.handle}`,
+              comment: `Accessibility label for a username suggestion in the account creation flow`,
+            }),
+          )}
           key={index}
           onPress={() => onSelect(suggestion)}
           hoverStyle={[t.atoms.bg_contrast_25]}
@@ -326,7 +331,9 @@ function HandleSuggestions({
           ]}>
           <Text style={[a.text_md]}>{suggestion.handle}</Text>
           <Text style={[a.text_sm, {color: t.palette.positive_700}]}>
-            <Trans>Available</Trans>
+            <Trans comment="Shown next to an available username suggestion in the account creation flow">
+              Available
+            </Trans>
           </Text>
         </Button>
       ))}
