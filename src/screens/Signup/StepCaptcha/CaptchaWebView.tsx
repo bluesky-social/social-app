@@ -13,7 +13,6 @@ const ALLOWED_HOSTS = [
   'js.hcaptcha.com',
   'newassets.hcaptcha.com',
   'api2.hcaptcha.com',
-  'e9755d3e012b.ngrok.app',
 ]
 
 const MIN_DELAY = 3_500
