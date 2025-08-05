@@ -1,4 +1,3 @@
-import {useMemo} from 'react'
 import {Agent, ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
@@ -38,13 +37,6 @@ export function useHandleAvailabilityQuery(
 ) {
   const name = username.trim()
   const debouncedHandle = useDebouncedValue(name, debounceDelayMs)
-  const agent = useMemo(() => {
-    if (serviceDid === BSKY_SERVICE_DID) {
-      return new Agent({service: BSKY_SERVICE})
-    } else {
-      return new Agent({service: PUBLIC_BSKY_SERVICE})
-    }
-  }, [serviceDid])
 
   return {
     enabled: enabled && name === debouncedHandle,
@@ -57,7 +49,7 @@ export function useHandleAvailabilityQuery(
       ),
       queryFn: async () => {
         const handle = createFullHandle(name, serviceDomain)
-        return await checkHandleAvailability(agent, handle, serviceDid, {
+        return await checkHandleAvailability(handle, serviceDid, {
           email,
           birthDate,
           typeahead: true,
@@ -68,7 +60,6 @@ export function useHandleAvailabilityQuery(
 }
 
 export async function checkHandleAvailability(
-  agent: Agent,
   handle: string,
   serviceDid: string,
   {
@@ -82,6 +73,7 @@ export async function checkHandleAvailability(
   },
 ) {
   if (serviceDid === BSKY_SERVICE_DID) {
+    const agent = new Agent({service: BSKY_SERVICE})
     // entryway has a special API for handle availability
     const {data} = await agent.com.atproto.temp.checkHandleAvailability({
       handle,
@@ -116,6 +108,7 @@ export async function checkHandleAvailability(
     }
   } else {
     // 3rd party PDSes won't have this API so just try and resolve the handle
+    const agent = new Agent({service: PUBLIC_BSKY_SERVICE})
     try {
       const res = await agent.resolveHandle({
         handle,

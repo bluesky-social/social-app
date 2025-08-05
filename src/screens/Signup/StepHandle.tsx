@@ -22,7 +22,6 @@ import {
   checkHandleAvailability,
   useHandleAvailabilityQuery,
 } from '#/state/queries/handle-availability'
-import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, native, useTheme} from '#/alf'
@@ -39,7 +38,6 @@ export function StepHandle() {
   const {_} = useLingui()
   const t = useTheme()
   const {state, dispatch} = useSignupContext()
-  const agent = useAgent()
   const [draftValue, setDraftValue] = useState(state.handle)
   const isNextLoading = useThrottledValue(state.isLoading, 500)
 
@@ -58,8 +56,6 @@ export function StepHandle() {
   })
 
   const onNextPress = async () => {
-    if (!isHandleAvailable?.available) return
-
     const handle = draftValue.trim()
     dispatch({
       type: 'setHandle',
@@ -74,8 +70,7 @@ export function StepHandle() {
 
     try {
       const {available: handleAvailable} = await checkHandleAvailability(
-        agent,
-        handle,
+        createFullHandle(handle, state.userDomain),
         state.serviceDescription?.did ?? 'UNKNOWN',
         {typeahead: false},
       )
@@ -88,6 +83,11 @@ export function StepHandle() {
         })
         return
       }
+    } catch (error) {
+      logger.error('Failed to check handle availability on next press', {
+        safeMessage: error,
+      })
+      // do nothing on error, let them pass
     } finally {
       dispatch({type: 'setIsLoading', value: false})
     }
