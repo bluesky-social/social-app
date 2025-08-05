@@ -14,7 +14,7 @@ import {
   findNodeHandle,
   Pressable,
   Text,
-  type View,
+  View,
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -102,7 +102,13 @@ function FocusTrap({children}: {children: ReactNode}) {
         }}>
         <Noop />
       </Pressable>
-      {decoratedChildren}
+      <View
+        /**
+         * This property traps focus effectively on iOS, but not on Android.
+         */
+        accessibilityViewIsModal>
+        {decoratedChildren}
+      </View>
       <Pressable
         accessibilityLabel={_(
           msg`You've reached the end of the active content.`,
