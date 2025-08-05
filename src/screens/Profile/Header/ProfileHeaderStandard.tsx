@@ -1,6 +1,5 @@
-import {memo, useCallback, useMemo} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {useSharedValue} from 'react-native-reanimated'
 import {
   type AppBskyActorDefs,
   moderateProfile,
@@ -11,7 +10,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useActorStatus} from '#/lib/actor-status'
-import {AccordionAnimation} from '#/lib/custom-animations/AccordionAnimation'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
@@ -42,7 +40,7 @@ import {EditProfileDialog} from './EditProfileDialog'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderShell} from './Shell'
-import {ProfileHeaderSuggestedFollows} from './SuggestedFollows'
+import {AnimatedProfileHeaderSuggestedFollows} from './SuggestedFollows'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -76,7 +74,7 @@ let ProfileHeaderStandard = ({
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
-  const showSuggestedFollows = useSharedValue(false)
+  const [showSuggestedFollows, setShowSuggestedFollows] = useState(false)
   const isBlockedUser =
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
@@ -85,7 +83,7 @@ let ProfileHeaderStandard = ({
   const editProfileControl = useDialogControl()
 
   const onPressFollow = () => {
-    showSuggestedFollows.value = true
+    setShowSuggestedFollows(true)
     requireAuth(async () => {
       try {
         await queueFollow()
@@ -107,7 +105,7 @@ let ProfileHeaderStandard = ({
   }
 
   const onPressUnfollow = () => {
-    showSuggestedFollows.value = false
+    setShowSuggestedFollows(false)
     requireAuth(async () => {
       try {
         await queueUnfollow()
@@ -333,9 +331,10 @@ let ProfileHeaderStandard = ({
         />
       </ProfileHeaderShell>
 
-      <AccordionAnimation isExpanded={showSuggestedFollows}>
-        <ProfileHeaderSuggestedFollows actorDid={profile.did} />
-      </AccordionAnimation>
+      <AnimatedProfileHeaderSuggestedFollows
+        isExpanded={showSuggestedFollows}
+        actorDid={profile.did}
+      />
     </>
   )
 }
