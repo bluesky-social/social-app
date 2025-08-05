@@ -70,9 +70,9 @@ import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
+import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
-import {Provider as BlockingAnnouncementsPortalProvider} from '#/components/dialogs/BlockingAnnouncements'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -221,7 +221,7 @@ function App() {
                     <ModalStateProvider>
                       <DialogStateProvider>
                         <LightboxStateProvider>
-                          <BlockingAnnouncementsPortalProvider>
+                          <PolicyUpdateOverlayProvider>
                             <PortalProvider>
                               <BottomSheetProvider>
                                 <StarterPackProvider>
@@ -232,7 +232,7 @@ function App() {
                                 </StarterPackProvider>
                               </BottomSheetProvider>
                             </PortalProvider>
-                          </BlockingAnnouncementsPortalProvider>
+                          </PolicyUpdateOverlayProvider>
                         </LightboxStateProvider>
                       </DialogStateProvider>
                     </ModalStateProvider>

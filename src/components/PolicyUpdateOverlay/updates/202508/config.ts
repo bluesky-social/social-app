@@ -4,4 +4,4 @@
 
 import {Nux} from '#/state/queries/nuxs'
 
-export const ID = Nux.BlockingAnnouncementPolicyUpdate202508
+export const ID = Nux.PolicyUpdate202508

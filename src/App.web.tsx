@@ -54,10 +54,10 @@ import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
-import {Provider as BlockingAnnouncementsPortalProvider} from '#/components/dialogs/BlockingAnnouncements'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
+import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
@@ -197,13 +197,13 @@ function App() {
                   <ModalStateProvider>
                     <DialogStateProvider>
                       <LightboxStateProvider>
-                        <BlockingAnnouncementsPortalProvider>
+                        <PolicyUpdateOverlayProvider>
                           <PortalProvider>
                             <StarterPackProvider>
                               <InnerApp />
                             </StarterPackProvider>
                           </PortalProvider>
-                        </BlockingAnnouncementsPortalProvider>
+                        </PolicyUpdateOverlayProvider>
                       </LightboxStateProvider>
                     </DialogStateProvider>
                   </ModalStateProvider>

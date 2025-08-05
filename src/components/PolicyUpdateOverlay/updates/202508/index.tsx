@@ -7,13 +7,13 @@ import {isAndroid} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {AnnouncementBadge} from '#/components/dialogs/BlockingAnnouncements/AnnouncementBadge'
-import {AnnouncementDialog} from '#/components/dialogs/BlockingAnnouncements/AnnouncementDialog'
-import {type AnnouncementState} from '#/components/dialogs/BlockingAnnouncements/useAnnouncementState'
 import {InlineLinkText, Link} from '#/components/Link'
+import {Badge} from '#/components/PolicyUpdateOverlay/Badge'
+import {Overlay} from '#/components/PolicyUpdateOverlay/Overlay'
+import {type PolicyUpdateState} from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
 import {Text} from '#/components/Typography'
 
-export function Announcement({state}: {state: AnnouncementState}) {
+export function Content({state}: {state: PolicyUpdateState}) {
   const t = useTheme()
   const {_} = useLingui()
   const {screenReaderEnabled} = useA11y()
@@ -63,9 +63,9 @@ export function Announcement({state}: {state: AnnouncementState}) {
     : _(msg`We're updating our policies`)
 
   return (
-    <AnnouncementDialog label={label}>
+    <Overlay label={label}>
       <View style={[a.align_start, a.gap_xl]}>
-        <AnnouncementBadge />
+        <Badge />
 
         {screenReaderEnabled ? (
           <View style={[a.gap_sm]}>
@@ -184,6 +184,6 @@ export function Announcement({state}: {state: AnnouncementState}) {
           </Text>
         </View>
       </View>
-    </AnnouncementDialog>
+    </Overlay>
   )
 }

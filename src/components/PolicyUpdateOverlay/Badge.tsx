@@ -5,7 +5,7 @@ import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
-export function AnnouncementBadge() {
+export function Badge() {
   const t = useTheme()
   return (
     <View style={[a.align_start]}>

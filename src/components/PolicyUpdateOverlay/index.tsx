@@ -2,9 +2,9 @@ import {View} from 'react-native'
 
 import {isIOS} from '#/platform/detection'
 import {atoms as a} from '#/alf'
-import {Announcement} from '#/components/dialogs/BlockingAnnouncements/announcements/PolicyUpdate202508'
-import {useAnnouncementState} from '#/components/dialogs/BlockingAnnouncements/useAnnouncementState'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
+import {Content} from '#/components/PolicyUpdateOverlay/updates/202508'
+import {usePolicyUpdateState} from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
 import {createPortalGroup} from '#/components/Portal'
 
 const portalGroup = createPortalGroup()
@@ -13,8 +13,8 @@ export const Provider = portalGroup.Provider
 export const Portal = portalGroup.Portal
 export const Outlet = portalGroup.Outlet
 
-export function BlockingAnnouncements() {
-  const state = useAnnouncementState()
+export function PolicyUpdateOverlay() {
+  const state = usePolicyUpdateState()
 
   /*
    * See `window.clearNux` example in `/state/queries/nuxs` for a way to clear
@@ -35,7 +35,7 @@ export function BlockingAnnouncements() {
             // so don't set it on iOS. FullWindowOverlay already does the job.
             !isIOS && {zIndex: 9999},
           ]}>
-          <Announcement state={state} />
+          <Content state={state} />
         </View>
       </FullWindowOverlay>
     </Portal>

@@ -1,21 +1,21 @@
 import {useMemo} from 'react'
 
 import {useNux, useSaveNux} from '#/state/queries/nuxs'
-import {ACTIVE_ANNOUNCEMENT} from '#/components/dialogs/BlockingAnnouncements/config'
+import {ACTIVE_UPDATE_ID} from '#/components/PolicyUpdateOverlay/config'
 import {IS_DEV} from '#/env'
 import {device, useStorage} from '#/storage'
 
-export type AnnouncementState = {
+export type PolicyUpdateState = {
   completed: boolean
   complete: () => void
 }
 
-export function useAnnouncementState() {
-  const nux = useNux(ACTIVE_ANNOUNCEMENT)
+export function usePolicyUpdateState() {
+  const nux = useNux(ACTIVE_UPDATE_ID)
   const {mutate: save, variables} = useSaveNux()
-  const deviceStorage = useStorage(device, [ACTIVE_ANNOUNCEMENT])
-  const devOnlyOverride =
-    useStorage(device, ['blockingAnnouncementOverride']) && IS_DEV
+  const deviceStorage = useStorage(device, [ACTIVE_UPDATE_ID])
+  const debugOverride =
+    useStorage(device, ['policyUpdateDebugOverride']) && IS_DEV
   return useMemo(() => {
     const nuxIsReady = nux.status === 'ready'
     const nuxIsCompleted = nux.nux?.completed === true
@@ -29,7 +29,7 @@ export function useAnnouncementState() {
       completedForDevice,
     })
 
-    if (!devOnlyOverride) {
+    if (!debugOverride) {
       syncCompletedState({
         nuxIsReady,
         nuxIsCompleted,
@@ -44,13 +44,13 @@ export function useAnnouncementState() {
       completed,
       complete() {
         save({
-          id: ACTIVE_ANNOUNCEMENT,
+          id: ACTIVE_UPDATE_ID,
           completed: true,
           data: undefined,
         })
       },
     }
-  }, [nux, save, variables, deviceStorage, devOnlyOverride])
+  }, [nux, save, variables, deviceStorage, debugOverride])
 }
 
 export function computeCompletedState({
@@ -111,7 +111,7 @@ export function syncCompletedState({
     !!completedForDevice
   ) {
     save({
-      id: ACTIVE_ANNOUNCEMENT,
+      id: ACTIVE_UPDATE_ID,
       completed: true,
       data: undefined,
     })

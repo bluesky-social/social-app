@@ -31,8 +31,8 @@ import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsen
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
+import {Outlet as PolicyUpdateOverlayPortal} from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
-import {Outlet as BlockingAccouncementsPortalOutlet} from '#/components/dialogs/BlockingAnnouncements'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
@@ -165,7 +165,7 @@ function ShellInner() {
       <BottomSheetOutlet />
 
       {/* MUST BE LAST */}
-      <BlockingAccouncementsPortalOutlet />
+      <PolicyUpdateOverlayPortal />
     </>
   )
 }

@@ -17,7 +17,6 @@ import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {ID as PolicyUpdate202508} from '#/components/dialogs/BlockingAnnouncements/announcements/PolicyUpdate202508/config'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/components/icons/BroomSparkle'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
@@ -26,6 +25,7 @@ import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/i
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
 import {Text} from '#/components/Typography'
 import * as env from '#/env'
 import {device, useStorage} from '#/storage'
@@ -198,7 +198,7 @@ export function AboutSettingsScreen({}: Props) {
 function PolicyUpdateDebug() {
   const agent = useAgent()
   const [override, setOverride] = useStorage(device, [
-    'blockingAnnouncementOverride',
+    'policyUpdateDebugOverride',
   ])
 
   return (

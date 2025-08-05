@@ -15,7 +15,7 @@ import {LockScroll} from '#/components/LockScroll'
 
 const GUTTER = 24
 
-export function AnnouncementDialog({
+export function Overlay({
   children,
   label,
 }: {

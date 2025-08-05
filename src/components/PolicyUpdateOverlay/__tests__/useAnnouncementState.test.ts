@@ -3,9 +3,9 @@ import {describe, test} from '@jest/globals'
 import {
   computeCompletedState,
   syncCompletedState,
-} from '#/components/dialogs/BlockingAnnouncements/useAnnouncementState'
+} from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
 
-jest.mock('../../../../state/queries/nuxs')
+jest.mock('../../../state/queries/nuxs')
 
 describe('computeCompletedState', () => {
   test(`initial state`, () => {
