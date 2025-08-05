@@ -12,6 +12,8 @@ import {Statsig} from 'statsig-react-native-expo'
 import {STATUS_PAGE_URL} from '#/lib/constants'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid, isIOS, isNative} from '#/platform/detection'
+import {Nux} from '#/state/queries/nuxs'
+import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
@@ -23,6 +25,7 @@ import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/W
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as env from '#/env'
+import {device, useStorage} from '#/storage'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {OTAInfo} from './components/OTAInfo'
@@ -179,10 +182,50 @@ export function AboutSettingsScreen({}: Props) {
                   </SettingsList.ItemText>
                 </SettingsList.PressableItem>
               )}
+
+              <PolicyUpdateDebug />
             </>
           )}
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
+  )
+}
+
+function PolicyUpdateDebug() {
+  const agent = useAgent()
+  const [override, setOverride] = useStorage(device, [
+    'blockingAnnouncementOverride',
+  ])
+
+  return (
+    <>
+      <SettingsList.PressableItem
+        onPress={() => {
+          setOverride(!override)
+        }}
+        label="Toggle">
+        <SettingsList.ItemIcon icon={AtomIcon} />
+        <SettingsList.ItemText>
+          Enable policy update override
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+
+      {override && (
+        <SettingsList.PressableItem
+          onPress={() => {
+            device.set([Nux.BlockingAnnouncementPolicyUpdate202508], false)
+            agent.bskyAppRemoveNuxs([
+              Nux.BlockingAnnouncementPolicyUpdate202508,
+            ])
+          }}
+          label="Reset policy update nux">
+          <SettingsList.ItemIcon icon={AtomIcon} />
+          <SettingsList.ItemText>
+            Reset policy update state
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      )}
+    </>
   )
 }

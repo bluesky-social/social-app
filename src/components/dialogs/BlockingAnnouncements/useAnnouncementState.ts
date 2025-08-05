@@ -2,6 +2,7 @@ import {useMemo} from 'react'
 
 import {useNux, useSaveNux} from '#/state/queries/nuxs'
 import {ACTIVE_ANNOUNCEMENT} from '#/components/dialogs/BlockingAnnouncements/config'
+import {IS_DEV} from '#/env'
 import {device, useStorage} from '#/storage'
 
 export type AnnouncementState = {
@@ -13,6 +14,8 @@ export function useAnnouncementState() {
   const nux = useNux(ACTIVE_ANNOUNCEMENT)
   const {mutate: save, variables} = useSaveNux()
   const deviceStorage = useStorage(device, [ACTIVE_ANNOUNCEMENT])
+  const devOnlyOverride =
+    useStorage(device, ['blockingAnnouncementOverride']) && IS_DEV
   return useMemo(() => {
     const nuxIsReady = nux.status === 'ready'
     const nuxIsCompleted = nux.nux?.completed === true
@@ -26,14 +29,16 @@ export function useAnnouncementState() {
       completedForDevice,
     })
 
-    syncCompletedState({
-      nuxIsReady,
-      nuxIsCompleted,
-      nuxIsOptimisticallyCompleted,
-      completedForDevice,
-      save,
-      setCompletedForDevice,
-    })
+    if (!devOnlyOverride) {
+      syncCompletedState({
+        nuxIsReady,
+        nuxIsCompleted,
+        nuxIsOptimisticallyCompleted,
+        completedForDevice,
+        save,
+        setCompletedForDevice,
+      })
+    }
 
     return {
       completed,
@@ -45,7 +50,7 @@ export function useAnnouncementState() {
         })
       },
     }
-  }, [nux, save, variables, deviceStorage])
+  }, [nux, save, variables, deviceStorage, devOnlyOverride])
 }
 
 export function computeCompletedState({

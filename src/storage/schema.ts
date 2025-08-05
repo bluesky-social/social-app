@@ -19,6 +19,7 @@ export type Device = {
   /**
    * Blocking announcements. New IDs are required for each new announcement.
    */
+  blockingAnnouncementOverride?: boolean
   [Nux.BlockingAnnouncementPolicyUpdate202508]?: boolean
 }
 
