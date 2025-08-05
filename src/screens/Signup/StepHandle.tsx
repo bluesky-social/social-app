@@ -126,11 +126,14 @@ export function StepHandle() {
     )
   }
 
+  const isHandleTaken =
+    !isPending &&
+    queryEnabled &&
+    isHandleAvailable &&
+    !isHandleAvailable.available
+
   const textFieldInvalid =
-    (!isPending &&
-      queryEnabled &&
-      isHandleAvailable &&
-      !isHandleAvailable.available) ||
+    isHandleTaken ||
     !validCheck.frontLengthNotTooLong ||
     !validCheck.handleChars ||
     !validCheck.hyphenStartOrEnd ||
@@ -175,38 +178,35 @@ export function StepHandle() {
                 <RequirementText>{state.error}</RequirementText>
               </Requirement>
             )}
-            {queryEnabled &&
-              isHandleAvailable &&
-              !isHandleAvailable.available &&
-              validCheck.overall && (
-                <>
-                  <Requirement>
-                    <RequirementText>
-                      <Trans>
-                        {createFullHandle(draftValue, state.userDomain)} is not
-                        available
-                      </Trans>
-                    </RequirementText>
-                  </Requirement>
-                  {isHandleAvailable.suggestions &&
-                    isHandleAvailable.suggestions.length > 0 && (
-                      <HandleSuggestions
-                        suggestions={isHandleAvailable.suggestions}
-                        onSelect={suggestion => {
-                          setDraftValue(
-                            suggestion.handle.slice(
-                              0,
-                              state.userDomain.length * -1,
-                            ),
-                          )
-                          logger.metric('signup:handleSuggestionSelected', {
-                            method: suggestion.method,
-                          })
-                        }}
-                      />
-                    )}
-                </>
-              )}
+            {isHandleTaken && validCheck.overall && (
+              <>
+                <Requirement>
+                  <RequirementText>
+                    <Trans>
+                      {createFullHandle(draftValue, state.userDomain)} is not
+                      available
+                    </Trans>
+                  </RequirementText>
+                </Requirement>
+                {isHandleAvailable.suggestions &&
+                  isHandleAvailable.suggestions.length > 0 && (
+                    <HandleSuggestions
+                      suggestions={isHandleAvailable.suggestions}
+                      onSelect={suggestion => {
+                        setDraftValue(
+                          suggestion.handle.slice(
+                            0,
+                            state.userDomain.length * -1,
+                          ),
+                        )
+                        logger.metric('signup:handleSuggestionSelected', {
+                          method: suggestion.method,
+                        })
+                      }}
+                    />
+                  )}
+              </>
+            )}
             {(!validCheck.handleChars || !validCheck.hyphenStartOrEnd) && (
               <Requirement>
                 {!validCheck.hyphenStartOrEnd ? (
@@ -215,7 +215,10 @@ export function StepHandle() {
                   </RequirementText>
                 ) : (
                   <RequirementText>
-                    <Trans>Only contains letters, numbers, and hyphens</Trans>
+                    <Trans>
+                      Username must only contain letters (a-z), numbers, and
+                      hyphens
+                    </Trans>
                   </RequirementText>
                 )}
               </Requirement>
@@ -240,7 +243,7 @@ export function StepHandle() {
       <Animated.View layout={native(LinearTransition)}>
         <BackNextButtons
           isLoading={isNextLoading}
-          isNextDisabled={!validCheck.overall || !!state.error}
+          isNextDisabled={!validCheck.overall || !!state.error || isHandleTaken}
           onBackPress={onBackPress}
           onNextPress={onNextPress}
         />
