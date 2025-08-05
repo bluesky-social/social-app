@@ -40,7 +40,6 @@ export function Outer({
   control,
   onClose,
   webOptions,
-  preventDismiss,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
@@ -53,9 +52,7 @@ export function Outer({
   }, [setIsOpen, setDialogIsOpen, control.id])
 
   const close = React.useCallback<DialogControlProps['close']>(
-    (cb, force) => {
-      if (preventDismiss && !force) return
-
+    cb => {
       setDialogIsOpen(control.id, false)
       setIsOpen(false)
 
@@ -75,7 +72,7 @@ export function Outer({
 
       onClose?.()
     },
-    [control.id, onClose, setDialogIsOpen, preventDismiss],
+    [control.id, onClose, setDialogIsOpen],
   )
 
   const handleBackgroundPress = React.useCallback(async () => {
@@ -99,9 +96,8 @@ export function Outer({
       disableDrag: false,
       setDisableDrag: () => {},
       isWithinDialog: true,
-      preventDismiss: preventDismiss ?? false,
     }),
-    [close, preventDismiss],
+    [close],
   )
 
   return (
@@ -243,10 +239,7 @@ export const InnerFlatList = React.forwardRef<
 
 export function Close() {
   const {_} = useLingui()
-  const {close, preventDismiss} = React.useContext(Context)
-
-  if (preventDismiss) return null
-
+  const {close} = React.useContext(Context)
   return (
     <View
       style={[

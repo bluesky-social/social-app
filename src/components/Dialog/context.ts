@@ -22,7 +22,6 @@ export const Context = createContext<DialogContextProps>({
   disableDrag: false,
   setDisableDrag: () => {},
   isWithinDialog: false,
-  preventDismiss: false,
 })
 
 export function useDialogContext() {

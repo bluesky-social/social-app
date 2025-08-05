@@ -26,7 +26,7 @@ export type DialogControlRefProps = {
   open: (
     options?: DialogControlOpenOptions & Partial<GestureResponderEvent>,
   ) => void
-  close: (callback?: () => void, force?: boolean) => void
+  close: (callback?: () => void) => void
 }
 
 /**
@@ -46,7 +46,6 @@ export type DialogContextProps = {
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
   // in the event that the hook is used outside of a dialog
   isWithinDialog: boolean
-  preventDismiss: boolean
 }
 
 export type DialogControlOpenOptions = {
@@ -63,7 +62,6 @@ export type DialogOuterProps = {
   control: DialogControlProps
   onClose?: () => void
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
-  preventDismiss?: boolean
   webOptions?: {
     alignCenter?: boolean
   }
