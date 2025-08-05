@@ -1,21 +1,21 @@
 import {useCallback} from 'react'
 
-import {useSaveNux} from '#/state/queries/nuxs'
 import {ACTIVE_UPDATE_ID} from '#/components/PolicyUpdateOverlay/config'
+import {logger} from '#/components/PolicyUpdateOverlay/logger'
 import {device, useStorage} from '#/storage'
 
+/*
+ * Marks the active policy update as completed in device storage.
+ * `usePolicyUpdateState` will react to this and replicate this status in the
+ * server NUX state for this account.
+ */
 export function usePreemptivelyCompleteActivePolicyUpdate() {
-  const {mutate: save} = useSaveNux()
   const [_completedForDevice, setCompletedForDevice] = useStorage(device, [
     ACTIVE_UPDATE_ID,
   ])
 
   return useCallback(() => {
-    save({
-      id: ACTIVE_UPDATE_ID,
-      completed: true,
-      data: undefined,
-    })
+    logger.debug(`preemptively completing active policy update`)
     setCompletedForDevice(true)
-  }, [save, setCompletedForDevice])
+  }, [setCompletedForDevice])
 }
