@@ -92,39 +92,55 @@ function useToastStyles({type}: {type: ToastType}) {
     return {
       default: {
         backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-        borderColor: t.atoms.border_contrast_high.borderColor,
+        borderColor: t.atoms.border_contrast_low.borderColor,
         iconColor: t.atoms.text.color,
         textColor: t.atoms.text.color,
       },
       success: {
         backgroundColor: t.palette.primary_25,
-        borderColor: t.palette.primary_300,
-        iconColor: t.palette.primary_600,
-        textColor: t.palette.primary_600,
+        borderColor: select(t.name, {
+          light: t.palette.primary_300,
+          dim: t.palette.primary_200,
+          dark: t.palette.primary_100,
+        }),
+        iconColor: select(t.name, {
+          light: t.palette.primary_600,
+          dim: t.palette.primary_700,
+          dark: t.palette.primary_700,
+        }),
+        textColor: select(t.name, {
+          light: t.palette.primary_600,
+          dim: t.palette.primary_700,
+          dark: t.palette.primary_700,
+        }),
       },
       error: {
         backgroundColor: t.palette.negative_25,
-        borderColor: t.palette.negative_300,
+        borderColor: select(t.name, {
+          light: t.palette.negative_200,
+          dim: t.palette.negative_200,
+          dark: t.palette.negative_100,
+        }),
         iconColor: select(t.name, {
           light: t.palette.negative_700,
           dim: t.palette.negative_900,
-          dark: t.palette.negative_800,
+          dark: t.palette.negative_900,
         }),
         textColor: select(t.name, {
           light: t.palette.negative_700,
           dim: t.palette.negative_900,
-          dark: t.palette.negative_800,
+          dark: t.palette.negative_900,
         }),
       },
       warning: {
         backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-        borderColor: t.atoms.border_contrast_high.borderColor,
+        borderColor: t.atoms.border_contrast_low.borderColor,
         iconColor: t.atoms.text.color,
         textColor: t.atoms.text.color,
       },
       info: {
         backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
-        borderColor: t.atoms.border_contrast_high.borderColor,
+        borderColor: t.atoms.border_contrast_low.borderColor,
         iconColor: t.atoms.text.color,
         textColor: t.atoms.text.color,
       },
