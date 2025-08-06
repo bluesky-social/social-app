@@ -215,7 +215,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
     )
 
     const {baseStyles, hoverStyles} = React.useMemo(() => {
-      const baseStyles: ViewStyle[] = []
+      const baseStyles: ViewStyle[] = [
+        {
+          borderCurve: 'continuous',
+        },
+      ]
       const hoverStyles: ViewStyle[] = []
 
       /*
