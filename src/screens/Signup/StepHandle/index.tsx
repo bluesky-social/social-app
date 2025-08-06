@@ -1,14 +1,11 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import Animated, {
-  Easing,
   FadeIn,
-  FadeInDown,
   FadeOut,
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -26,14 +23,13 @@ import {
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, native, useTheme} from '#/alf'
-import {borderRadius} from '#/alf/tokens'
-import {Button} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
-import {BackNextButtons} from './BackNextButtons'
+import {BackNextButtons} from '../BackNextButtons'
+import {HandleSuggestions} from './HandleSuggestions'
 
 export function StepHandle() {
   const {_} = useLingui()
@@ -273,76 +269,5 @@ function RequirementText({children}: {children: React.ReactNode}) {
     <Text style={[a.text_sm, a.flex_1, {color: t.palette.negative_500}]}>
       {children}
     </Text>
-  )
-}
-
-function HandleSuggestions({
-  suggestions,
-  onSelect,
-}: {
-  suggestions: ComAtprotoTempCheckHandleAvailability.Suggestion[]
-  onSelect: (
-    suggestions: ComAtprotoTempCheckHandleAvailability.Suggestion,
-  ) => void
-}) {
-  const t = useTheme()
-  const {_} = useLingui()
-
-  return (
-    <Animated.View
-      entering={native(FadeInDown.easing(Easing.out(Easing.exp)))}
-      exiting={native(FadeOut)}
-      style={[
-        a.flex_1,
-        a.border,
-        a.rounded_sm,
-        t.atoms.shadow_sm,
-        t.atoms.bg,
-        t.atoms.border_contrast_low,
-        a.mt_xs,
-        a.z_50,
-        a.w_full,
-        a.zoom_fade_in,
-      ]}>
-      {suggestions.map((suggestion, index) => (
-        <Button
-          label={_(
-            msg({
-              message: `Select ${suggestion.handle}`,
-              comment: `Accessibility label for a username suggestion in the account creation flow`,
-            }),
-          )}
-          key={index}
-          onPress={() => onSelect(suggestion)}
-          hoverStyle={[t.atoms.bg_contrast_25]}
-          style={[
-            a.w_full,
-            a.flex_row,
-            a.align_center,
-            a.justify_between,
-            a.p_md,
-            a.border_b,
-            t.atoms.border_contrast_low,
-            index === 0 && {
-              borderTopStartRadius: borderRadius.sm,
-              borderTopEndRadius: borderRadius.sm,
-            },
-            index === suggestions.length - 1 && [
-              {
-                borderBottomStartRadius: borderRadius.sm,
-                borderBottomEndRadius: borderRadius.sm,
-              },
-              a.border_b_0,
-            ],
-          ]}>
-          <Text style={[a.text_md]}>{suggestion.handle}</Text>
-          <Text style={[a.text_sm, {color: t.palette.positive_700}]}>
-            <Trans comment="Shown next to an available username suggestion in the account creation flow">
-              Available
-            </Trans>
-          </Text>
-        </Button>
-      ))}
-    </Animated.View>
   )
 }
