@@ -1,4 +1,3 @@
-import {forwardRef} from 'react'
 import {
   type NativeSyntheticEvent,
   type TextInput,
@@ -17,6 +16,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {IS_NATIVE} from '#/env'
 
 type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
+  ref?: React.Ref<TextInput>
   label?: TextField.InputProps['label']
   /**
    * Called when the user presses the (X) button
@@ -28,74 +28,79 @@ type SearchInputProps = Omit<TextField.InputProps, 'label'> & {
   onEscape?: () => void
 }
 
-export const SearchInput = forwardRef<TextInput, SearchInputProps>(
-  function SearchInput({value, label, onClearText, onEscape, ...rest}, ref) {
-    const t = useTheme()
-    const {_} = useLingui()
-    const showClear = value && value.length > 0
+export function SearchInput({
+  ref,
+  value,
+  label,
+  onClearText,
+  onEscape,
+  ...rest
+}: SearchInputProps) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const showClear = value && value.length > 0
 
-    const onKeyPress = (
-      evt: NativeSyntheticEvent<TextInputKeyPressEventData>,
-    ) => {
-      if (evt.nativeEvent.key === 'Escape') {
-        onEscape?.()
-      }
+  const onKeyPress = (
+    evt: NativeSyntheticEvent<TextInputKeyPressEventData>,
+  ) => {
+    if (evt.nativeEvent.key === 'Escape') {
+      onEscape?.()
     }
+  }
 
-    return (
-      <View style={[a.w_full, a.relative]}>
-        <TextField.Root>
-          <TextField.Icon icon={MagnifyingGlassIcon} />
-          <TextField.Input
-            inputRef={ref}
-            label={label || _(msg`Search`)}
-            value={value}
-            placeholder={_(msg`Search`)}
-            returnKeyType="search"
-            keyboardAppearance={t.scheme}
-            selectTextOnFocus={IS_NATIVE}
-            autoFocus={false}
-            accessibilityRole="search"
-            autoCorrect={false}
-            autoComplete="off"
-            autoCapitalize="none"
-            onKeyPress={onKeyPress}
-            style={[
-              showClear
-                ? {
-                    paddingRight: 24,
-                  }
-                : {},
-            ]}
-            {...rest}
-          />
-        </TextField.Root>
+  return (
+    <View style={[a.w_full, a.relative]}>
+      <TextField.Root>
+        <TextField.Icon icon={MagnifyingGlassIcon} />
+        <TextField.Input
+          inputRef={ref}
+          label={label || _(msg`Search`)}
+          value={value}
+          placeholder={_(msg`Search`)}
+          returnKeyType="search"
+          keyboardAppearance={t.scheme}
+          selectTextOnFocus={IS_NATIVE}
+          autoFocus={false}
+          accessibilityRole="search"
+          autoCorrect={false}
+          autoComplete="off"
+          autoCapitalize="none"
+          onKeyPress={onKeyPress}
+          style={[
+            showClear
+              ? {
+                  paddingRight: 24,
+                }
+              : {},
+          ]}
+          {...rest}
+        />
+      </TextField.Root>
 
-        {showClear && (
-          <View
-            style={[
-              a.absolute,
-              a.z_20,
-              a.my_auto,
-              a.inset_0,
-              a.justify_center,
-              a.pr_sm,
-              {left: 'auto'},
-            ]}>
-            <Button
-              testID="searchTextInputClearBtn"
-              onPress={onClearText}
-              label={_(msg`Clear search query`)}
-              hitSlop={HITSLOP_10}
-              size="tiny"
-              shape="round"
-              variant="ghost"
-              color="secondary">
-              <ButtonIcon icon={X} size="xs" />
-            </Button>
-          </View>
-        )}
-      </View>
-    )
-  },
-)
+      {showClear && (
+        <View
+          style={[
+            a.absolute,
+            a.z_20,
+            a.my_auto,
+            a.inset_0,
+            a.justify_center,
+            a.pr_sm,
+            {left: 'auto'},
+          ]}>
+          <Button
+            testID="searchTextInputClearBtn"
+            onPress={onClearText}
+            label={_(msg`Clear search query`)}
+            hitSlop={HITSLOP_10}
+            size="tiny"
+            shape="round"
+            variant="ghost"
+            color="secondary">
+            <ButtonIcon icon={X} size="xs" />
+          </Button>
+        </View>
+      )}
+    </View>
+  )
+}
