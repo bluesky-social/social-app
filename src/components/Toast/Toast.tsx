@@ -91,114 +91,38 @@ function useToastStyles({type}: {type: ToastType}) {
   return useMemo(() => {
     return {
       default: {
-        backgroundColor: select(t.name, {
-          light: t.atoms.bg_contrast_25.backgroundColor,
-          dim: t.atoms.bg_contrast_25.backgroundColor,
-          dark: t.atoms.bg_contrast_25.backgroundColor,
-        }),
-        borderColor: select(t.name, {
-          light: t.atoms.border_contrast_high.borderColor,
-          dim: t.atoms.border_contrast_high.borderColor,
-          dark: t.atoms.border_contrast_high.borderColor,
-        }),
-        iconColor: select(t.name, {
-          light: t.atoms.text.color,
-          dim: t.atoms.text.color,
-          dark: t.atoms.text.color,
-        }),
-        textColor: select(t.name, {
-          light: t.atoms.text.color,
-          dim: t.atoms.text.color,
-          dark: t.atoms.text.color,
-        }),
+        backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
+        borderColor: t.atoms.border_contrast_high.borderColor,
+        iconColor: t.atoms.text.color,
+        textColor: t.atoms.text.color,
       },
       success: {
-        backgroundColor: select(t.name, {
-          light: t.palette.primary_25,
-          dim: t.palette.primary_25,
-          dark: t.palette.primary_25,
-        }),
+        backgroundColor: t.palette.primary_25,
         borderColor: select(t.name, {
           light: t.palette.primary_300,
           dim: t.palette.primary_600,
           dark: t.palette.primary_300,
         }),
-        iconColor: select(t.name, {
-          light: t.palette.primary_600,
-          dim: t.palette.primary_600,
-          dark: t.palette.primary_600,
-        }),
-        textColor: select(t.name, {
-          light: t.palette.primary_600,
-          dim: t.palette.primary_600,
-          dark: t.palette.primary_600,
-        }),
+        iconColor: t.palette.primary_600,
+        textColor: t.palette.primary_600,
       },
       error: {
-        backgroundColor: select(t.name, {
-          light: t.palette.negative_25,
-          dim: t.palette.negative_25,
-          dark: t.palette.negative_25,
-        }),
-        borderColor: select(t.name, {
-          light: t.palette.negative_300,
-          dim: t.palette.negative_300,
-          dark: t.palette.negative_300,
-        }),
-        iconColor: select(t.name, {
-          light: t.palette.negative_600,
-          dim: t.palette.negative_600,
-          dark: t.palette.negative_600,
-        }),
-        textColor: select(t.name, {
-          light: t.palette.negative_600,
-          dim: t.palette.negative_600,
-          dark: t.palette.negative_600,
-        }),
+        backgroundColor: t.palette.negative_25,
+        borderColor: t.palette.negative_300,
+        iconColor: t.palette.negative_600,
+        textColor: t.palette.negative_600,
       },
       warning: {
-        backgroundColor: select(t.name, {
-          light: t.atoms.bg_contrast_25.backgroundColor,
-          dim: t.atoms.bg_contrast_25.backgroundColor,
-          dark: t.atoms.bg_contrast_25.backgroundColor,
-        }),
-        borderColor: select(t.name, {
-          light: t.atoms.border_contrast_high.borderColor,
-          dim: t.atoms.border_contrast_high.borderColor,
-          dark: t.atoms.border_contrast_high.borderColor,
-        }),
-        iconColor: select(t.name, {
-          light: t.atoms.text.color,
-          dim: t.atoms.text.color,
-          dark: t.atoms.text.color,
-        }),
-        textColor: select(t.name, {
-          light: t.atoms.text.color,
-          dim: t.atoms.text.color,
-          dark: t.atoms.text.color,
-        }),
+        backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
+        borderColor: t.atoms.border_contrast_high.borderColor,
+        iconColor: t.atoms.text.color,
+        textColor: t.atoms.text.color,
       },
       info: {
-        backgroundColor: select(t.name, {
-          light: t.atoms.bg_contrast_25.backgroundColor,
-          dim: t.atoms.bg_contrast_25.backgroundColor,
-          dark: t.atoms.bg_contrast_25.backgroundColor,
-        }),
-        borderColor: select(t.name, {
-          light: t.atoms.border_contrast_high.borderColor,
-          dim: t.atoms.border_contrast_high.borderColor,
-          dark: t.atoms.border_contrast_high.borderColor,
-        }),
-        iconColor: select(t.name, {
-          light: t.atoms.text.color,
-          dim: t.atoms.text.color,
-          dark: t.atoms.text.color,
-        }),
-        textColor: select(t.name, {
-          light: t.atoms.text.color,
-          dim: t.atoms.text.color,
-          dark: t.atoms.text.color,
-        }),
+        backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
+        borderColor: t.atoms.border_contrast_high.borderColor,
+        iconColor: t.atoms.text.color,
+        textColor: t.atoms.text.color,
       },
     }[type]
   }, [t, type])
