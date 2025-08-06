@@ -2699,10 +2699,6 @@ msgstr ""
 msgid "Dismiss this section"
 msgstr ""
 
-#: src/components/Toast/index.web.tsx:81
-msgid "Dismiss toast"
-msgstr ""
-
 #: src/screens/Settings/AccessibilitySettings.tsx:69
 #: src/screens/Settings/AccessibilitySettings.tsx:74
 msgid "Display larger alt text badges"
