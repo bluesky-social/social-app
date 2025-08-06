@@ -288,7 +288,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           } else {
             baseStyles.push({
               backgroundColor: select(t.name, {
-                light: t.palette.negative_100,
+                light: t.palette.negative_25,
                 dim: t.palette.negative_50,
                 dark: t.palette.negative_50,
               }),
@@ -593,17 +593,17 @@ export function useSharedButtonTextStyles() {
         if (!disabled) {
           baseStyles.push({
             color: select(t.name, {
-              light: t.palette.negative_500,
+              light: t.palette.negative_600,
               dim: t.palette.negative_950,
-              dark: t.palette.negative_900,
+              dark: t.palette.negative_950,
             }),
           })
         } else {
           baseStyles.push({
             color: select(t.name, {
-              light: t.palette.negative_500,
-              dim: t.palette.negative_700,
-              dark: t.palette.negative_700,
+              light: t.palette.negative_200,
+              dim: t.palette.negative_300,
+              dark: t.palette.negative_300,
             }),
           })
         }
