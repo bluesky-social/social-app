@@ -393,7 +393,7 @@ export function getNotificationPayload(
     isIOS ? e.request.trigger.payload : e.request.content.data
   ) as NotificationPayload
 
-  if (payload) {
+  if (payload && payload.reason) {
     return payload
   } else {
     return null
