@@ -127,6 +127,7 @@
     "bcp-47-match": "^2.0.3",
     "date-fns": "^2.30.0",
     "deprecated-react-native-prop-types": "^5.0.0",
+    "downshift": "^9.0.10",
     "email-validator": "^2.0.4",
     "emoji-mart": "^5.5.2",
     "emoji-regex": "^10.4.0",

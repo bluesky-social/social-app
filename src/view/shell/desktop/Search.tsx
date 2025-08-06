@@ -1,4 +1,4 @@
-import {useDeferredValue, useRef, useState} from 'react'
+import {useDeferredValue, useMemo, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   type StyleProp,
@@ -9,6 +9,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
+import {useCombobox} from 'downshift'
 
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -54,9 +55,7 @@ export function DesktopSearch() {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-
   const searchInputRef = useRef<TextInput>(null)
-  const [isFocused, setIsFocused] = useState(false)
   const [query, setQuery] = useState('')
   const deferredQuery = useDeferredValue(query)
   const {data: autocompleteData, isFetching} = useActorAutocompleteQuery(
@@ -64,11 +63,18 @@ export function DesktopSearch() {
     true,
   )
 
-  const moderationOpts = useModerationOpts()
+  const items = useMemo(() => {
+    if (deferredQuery.length === 0) return []
+    return ['__TEXT__', ...(autocompleteData || [])]
+  }, [deferredQuery, autocompleteData])
 
-  const onChangeText = (text: string) => {
-    setQuery(text)
-  }
+  const {getInputProps, isOpen} = useCombobox({
+    items,
+    getItemId: index =>
+      typeof items[index] === 'string' ? items[index] : items[index].did,
+  })
+
+  const moderationOpts = useModerationOpts()
 
   const onPressCancelSearch = () => {
     setQuery('')
@@ -89,19 +95,18 @@ export function DesktopSearch() {
     setQuery('')
   }
 
+  console.log(getInputProps())
+
   return (
     <View style={[a.w_full, a.z_10]}>
       <SearchInput
         ref={searchInputRef}
-        value={query}
-        onChangeText={onChangeText}
         onClearText={onPressCancelSearch}
         onEscape={onEscape}
         onSubmitEditing={onSubmit}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        {...getInputProps()}
       />
-      {(deferredQuery !== '' || isFocused) && moderationOpts && (
+      {isOpen && moderationOpts && (
         <View style={[a.w_full]}>
           <View
             style={[
