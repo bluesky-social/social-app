@@ -207,3 +207,10 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
+
+export const webLinks = {
+  tos: `https://bsky.social/about/support/tos`,
+  privacy: `https://bsky.social/about/support/privacy-policy`,
+  community: `https://bsky.social/about/support/community-guidelines`,
+  communityDeprecated: `https://bsky.social/about/support/community-guidelines-deprecated`,
+}
