@@ -31,6 +31,10 @@ import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsen
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
+import {
+  Outlet as PolicyUpdateOverlayPortalOutlet,
+  usePolicyUpdateStateContext,
+} from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
@@ -45,6 +49,7 @@ function ShellInner() {
   const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
   const insets = useSafeAreaInsets()
+  const policyUpdateState = usePolicyUpdateStateContext()
 
   const renderDrawerContent = useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = useCallback(
@@ -151,6 +156,7 @@ function ShellInner() {
           </Drawer>
         </ErrorBoundary>
       </View>
+
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />
@@ -160,8 +166,16 @@ function ShellInner() {
       <InAppBrowserConsentDialog />
       <LinkWarningDialog />
       <Lightbox />
-      <PortalOutlet />
-      <BottomSheetOutlet />
+
+      {/* Until policy update has been completed by the user, don't render anything that is portaled */}
+      {policyUpdateState.completed && (
+        <>
+          <PortalOutlet />
+          <BottomSheetOutlet />
+        </>
+      )}
+
+      <PolicyUpdateOverlayPortalOutlet />
     </>
   )
 }

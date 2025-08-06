@@ -4,10 +4,41 @@ import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {webLinks} from '#/lib/constants'
+import {useGate} from '#/lib/statsig/statsig'
 import {atoms as a, useTheme} from '#/alf'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Admonition} from '#/components/Admonition'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+
+function CommunityGuidelinesNotice({}: {}) {
+  const {_} = useLingui()
+  const gate = useGate()
+
+  if (gate('disable_onboarding_policy_update_notice')) return null
+
+  return (
+    <View style={[a.pt_xs]}>
+      <Admonition type="tip">
+        <Trans>
+          You also agree to{' '}
+          <InlineLinkText
+            label={_(msg`Bluesky's Community Guidelines`)}
+            to={webLinks.communityDeprecated}>
+            Bluesky’s Community Guidelines
+          </InlineLinkText>
+          . An{' '}
+          <InlineLinkText
+            label={_(msg`Bluesky's Updated Community Guidelines`)}
+            to={webLinks.community}>
+            updated version of our Community Guidelines
+          </InlineLinkText>{' '}
+          will take effect on October 13th.
+        </Trans>
+      </Admonition>
+    </View>
+  )
+}
 
 export const Policies = ({
   serviceDescription,
@@ -30,14 +61,13 @@ export const Policies = ({
 
   if (!tos && !pp) {
     return (
-      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <CircleInfo size="md" fill={t.atoms.text_contrast_low.color} />
-
-        <Text style={[t.atoms.text_contrast_medium]}>
+      <View style={[a.gap_sm]}>
+        <Admonition type="info">
           <Trans>
             This service has not provided terms of service or a privacy policy.
           </Trans>
-        </Text>
+        </Admonition>
+        <CommunityGuidelinesNotice />
       </View>
     )
   }
@@ -102,19 +132,21 @@ export const Policies = ({
       ) : null}
 
       {under13 ? (
-        <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
+        <Admonition type="error">
           <Trans>
             You must be 13 years of age or older to create an account.
           </Trans>
-        </Text>
+        </Admonition>
       ) : needsGuardian ? (
-        <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
+        <Admonition type="warning">
           <Trans>
             If you are not yet an adult according to the laws of your country,
             your parent or legal guardian must read these Terms on your behalf.
           </Trans>
-        </Text>
+        </Admonition>
       ) : undefined}
+
+      <CommunityGuidelinesNotice />
     </View>
   )
 }

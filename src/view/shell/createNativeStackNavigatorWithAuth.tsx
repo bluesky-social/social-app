@@ -40,6 +40,7 @@ import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
 import {Takendown} from '#/screens/Takendown'
 import {atoms as a, useLayoutBreakpoints} from '#/alf'
+import {PolicyUpdateOverlay} from '#/components/PolicyUpdateOverlay'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
 import {DesktopRightNav} from './desktop/RightNav'
@@ -167,6 +168,9 @@ function NativeStackNavigator({
           {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
         </>
       )}
+
+      {/* Only shown after logged in and onboaring etc are complete */}
+      {hasSession && <PolicyUpdateOverlay />}
     </NavigationContent>
   )
 }
