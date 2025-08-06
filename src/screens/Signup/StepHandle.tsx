@@ -12,6 +12,7 @@ import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {
   createFullHandle,
   MAX_SERVICE_HANDLE_LENGTH,
@@ -37,6 +38,7 @@ import {BackNextButtons} from './BackNextButtons'
 export function StepHandle() {
   const {_} = useLingui()
   const t = useTheme()
+  const gate = useGate()
   const {state, dispatch} = useSignupContext()
   const [draftValue, setDraftValue] = useState(state.handle)
   const isNextLoading = useThrottledValue(state.isLoading, 500)
@@ -189,7 +191,8 @@ export function StepHandle() {
                   </RequirementText>
                 </Requirement>
                 {isHandleAvailable.suggestions &&
-                  isHandleAvailable.suggestions.length > 0 && (
+                  isHandleAvailable.suggestions.length > 0 &&
+                  gate('handle_suggestions') && (
                     <HandleSuggestions
                       suggestions={isHandleAvailable.suggestions}
                       onSelect={suggestion => {
