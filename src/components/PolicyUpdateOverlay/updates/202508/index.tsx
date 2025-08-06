@@ -58,7 +58,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
 
   const label = isAndroid
     ? _(
-        msg`We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 1st, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 1st, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post.`,
+        msg`We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 8th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 8th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post.`,
       )
     : _(msg`We're updating our policies`)
 
@@ -75,13 +75,13 @@ export function Content({state}: {state: PolicyUpdateState}) {
             <Text style={[a.leading_snug, a.text_md]}>
               <Trans>
                 We’re updating our Terms of Service, Privacy Policy, and
-                Copyright Policy, effective September 1st, 2025.
+                Copyright Policy, effective September 8th, 2025.
               </Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
               <Trans>
                 We're also updating our Community Guidelines, and we want your
-                input! These new guidelines will take effect on October 1st,
+                input! These new guidelines will take effect on October 8th,
                 2025.
               </Trans>
             </Text>
@@ -132,7 +132,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
                 <InlineLinkText {...links.copyright} style={linkStyle}>
                   Copyright Policy
                 </InlineLinkText>
-                , effective September 1st, 2025.
+                , effective September 8th, 2025.
               </Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
@@ -142,7 +142,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
                   Community Guidelines
                 </InlineLinkText>
                 , and we want your input! These new guidelines will take effect
-                on October 1st, 2025.
+                on October 8th, 2025.
               </Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
@@ -160,8 +160,9 @@ export function Content({state}: {state: PolicyUpdateState}) {
         <View style={[a.w_full, a.gap_md]}>
           <Button
             label={_(msg`Continue`)}
-            accessibilityHint={_(msg`Tap to acknowledge that you understand and
-                  agree to these updates and continue using Bluesky`)}
+            accessibilityHint={_(
+              msg`Tap to acknowledge that you understand and agree to these updates and continue using Bluesky`,
+            )}
             color="primary"
             size="large"
             onPress={handleClose}>
