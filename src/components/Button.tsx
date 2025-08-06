@@ -437,7 +437,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             paddingVertical: 14,
             paddingHorizontal: 24,
             borderRadius: 10,
-            gap: 5,
+            gap: 4,
           })
         } else if (size === 'small') {
           baseStyles.push({
@@ -748,7 +748,7 @@ export function ButtonIcon({
     const iconSizeShorthand =
       size ??
       (({
-        large: 'md',
+        large: 'sm',
         small: 'sm',
         tiny: 'xs',
       }[buttonSize || 'small'] || 'sm') as Exclude<
