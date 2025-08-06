@@ -51,7 +51,7 @@ afterEvaluate {
 }
 
 android {
-  compileSdkVersion safeExtGet("compileSdkVersion", 33)
+  compileSdkVersion safeExtGet("compileSdkVersion", 35)
 
   def agpVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION
   if (agpVersion.tokenize('.')[0].toInteger() < 8) {
@@ -68,7 +68,7 @@ android {
   namespace "xyz.blueskyweb.app.exporeceiveandroidintents"
   defaultConfig {
     minSdkVersion safeExtGet("minSdkVersion", 21)
-    targetSdkVersion safeExtGet("targetSdkVersion", 34)
+    targetSdkVersion safeExtGet("targetSdkVersion", 35)
     versionCode 1
     versionName "0.4.1"
   }
