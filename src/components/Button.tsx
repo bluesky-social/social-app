@@ -37,6 +37,7 @@ export type ButtonColor =
   | 'secondary'
   | 'secondary_inverted'
   | 'negative'
+  | 'primary_subtle'
   | 'negative_subtle'
 export type ButtonSize = 'tiny' | 'small' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
@@ -267,6 +268,31 @@ export const Button = React.forwardRef<View, ButtonProps>(
           } else {
             baseStyles.push({
               backgroundColor: t.palette.negative_700,
+            })
+          }
+        } else if (color === 'primary_subtle') {
+          if (!disabled) {
+            baseStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.primary_50,
+                dim: t.palette.primary_100,
+                dark: t.palette.primary_100,
+              }),
+            })
+            hoverStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.primary_100,
+                dim: t.palette.primary_200,
+                dark: t.palette.primary_200,
+              }),
+            })
+          } else {
+            baseStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.primary_25,
+                dim: t.palette.primary_50,
+                dark: t.palette.primary_50,
+              }),
             })
           }
         } else if (color === 'negative_subtle') {
@@ -589,21 +615,39 @@ export function useSharedButtonTextStyles() {
         } else {
           baseStyles.push({color: t.palette.negative_300})
         }
+      } else if (color === 'primary_subtle') {
+        if (!disabled) {
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.primary_600,
+              dim: t.palette.primary_800,
+              dark: t.palette.primary_800,
+            }),
+          })
+        } else {
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.primary_200,
+              dim: t.palette.primary_200,
+              dark: t.palette.primary_200,
+            }),
+          })
+        }
       } else if (color === 'negative_subtle') {
         if (!disabled) {
           baseStyles.push({
             color: select(t.name, {
               light: t.palette.negative_600,
-              dim: t.palette.negative_950,
-              dark: t.palette.negative_950,
+              dim: t.palette.negative_800,
+              dark: t.palette.negative_800,
             }),
           })
         } else {
           baseStyles.push({
             color: select(t.name, {
               light: t.palette.negative_200,
-              dim: t.palette.negative_300,
-              dark: t.palette.negative_300,
+              dim: t.palette.negative_200,
+              dark: t.palette.negative_200,
             }),
           })
         }
