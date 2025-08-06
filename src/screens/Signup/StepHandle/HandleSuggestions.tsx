@@ -1,5 +1,4 @@
-import {Easing} from 'react-native'
-import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
+import Animated, {Easing, FadeInDown, FadeOut} from 'react-native-reanimated'
 import {type ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
