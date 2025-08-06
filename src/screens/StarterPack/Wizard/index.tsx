@@ -584,7 +584,7 @@ function Footer({
             (state.currentStep === 'Profiles' && items.length < 8)
           }>
           <ButtonText>{nextBtnText}</ButtonText>
-          {state.processing && <Loader size="xs" style={{color: 'white'}} />}
+          {state.processing && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
     </View>
