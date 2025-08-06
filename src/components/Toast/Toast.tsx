@@ -104,13 +104,17 @@ function useToastStyles({type}: {type: ToastType}) {
       },
       error: {
         backgroundColor: t.palette.negative_25,
-        borderColor: select(t.name, {
-          light: t.palette.negative_300,
-          dim: t.palette.negative_300,
-          dark: t.palette.negative_300,
+        borderColor: t.palette.negative_300,
+        iconColor: select(t.name, {
+          light: t.palette.negative_700,
+          dim: t.palette.negative_900,
+          dark: t.palette.negative_800,
         }),
-        iconColor: t.palette.negative_600,
-        textColor: t.palette.negative_600,
+        textColor: select(t.name, {
+          light: t.palette.negative_700,
+          dim: t.palette.negative_900,
+          dark: t.palette.negative_800,
+        }),
       },
       warning: {
         backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
