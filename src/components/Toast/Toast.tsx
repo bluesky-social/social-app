@@ -2,20 +2,20 @@ import {createContext, useContext, useMemo} from 'react'
 import {View} from 'react-native'
 
 import {atoms as a, select, useTheme} from '#/alf'
-import {Check_Stroke2_Corner0_Rounded as SuccessIcon} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {type ToastType} from '#/components/Toast/types'
 import {Text} from '#/components/Typography'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '../icons/CircleCheck'
 
 type ContextType = {
   type: ToastType
 }
 
 export const ICONS = {
-  default: SuccessIcon,
-  success: SuccessIcon,
+  default: CircleCheck,
+  success: CircleCheck,
   error: ErrorIcon,
   warning: WarningIcon,
   info: CircleInfo,
@@ -91,114 +91,38 @@ function useToastStyles({type}: {type: ToastType}) {
   return useMemo(() => {
     return {
       default: {
-        backgroundColor: select(t.name, {
-          light: t.atoms.bg_contrast_25.backgroundColor,
-          dim: t.atoms.bg_contrast_100.backgroundColor,
-          dark: t.atoms.bg_contrast_100.backgroundColor,
-        }),
-        borderColor: select(t.name, {
-          light: t.atoms.border_contrast_low.borderColor,
-          dim: t.atoms.border_contrast_high.borderColor,
-          dark: t.atoms.border_contrast_high.borderColor,
-        }),
-        iconColor: select(t.name, {
-          light: t.atoms.text_contrast_medium.color,
-          dim: t.atoms.text_contrast_medium.color,
-          dark: t.atoms.text_contrast_medium.color,
-        }),
-        textColor: select(t.name, {
-          light: t.atoms.text_contrast_medium.color,
-          dim: t.atoms.text_contrast_medium.color,
-          dark: t.atoms.text_contrast_medium.color,
-        }),
+        backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
+        borderColor: t.atoms.border_contrast_high.borderColor,
+        iconColor: t.atoms.text.color,
+        textColor: t.atoms.text.color,
       },
       success: {
-        backgroundColor: select(t.name, {
-          light: t.palette.primary_100,
-          dim: t.palette.primary_100,
-          dark: t.palette.primary_50,
-        }),
-        borderColor: select(t.name, {
-          light: t.palette.primary_500,
-          dim: t.palette.primary_500,
-          dark: t.palette.primary_500,
-        }),
-        iconColor: select(t.name, {
-          light: t.palette.primary_500,
-          dim: t.palette.primary_600,
-          dark: t.palette.primary_600,
-        }),
-        textColor: select(t.name, {
-          light: t.palette.primary_500,
-          dim: t.palette.primary_600,
-          dark: t.palette.primary_600,
-        }),
+        backgroundColor: t.palette.primary_25,
+        borderColor: t.palette.primary_300,
+        iconColor: t.palette.primary_600,
+        textColor: t.palette.primary_600,
       },
       error: {
-        backgroundColor: select(t.name, {
-          light: t.palette.negative_200,
-          dim: t.palette.negative_25,
-          dark: t.palette.negative_25,
-        }),
+        backgroundColor: t.palette.negative_25,
         borderColor: select(t.name, {
           light: t.palette.negative_300,
           dim: t.palette.negative_300,
           dark: t.palette.negative_300,
         }),
-        iconColor: select(t.name, {
-          light: t.palette.negative_600,
-          dim: t.palette.negative_600,
-          dark: t.palette.negative_600,
-        }),
-        textColor: select(t.name, {
-          light: t.palette.negative_600,
-          dim: t.palette.negative_600,
-          dark: t.palette.negative_600,
-        }),
+        iconColor: t.palette.negative_600,
+        textColor: t.palette.negative_600,
       },
       warning: {
-        backgroundColor: select(t.name, {
-          light: t.atoms.bg_contrast_25.backgroundColor,
-          dim: t.atoms.bg_contrast_100.backgroundColor,
-          dark: t.atoms.bg_contrast_100.backgroundColor,
-        }),
-        borderColor: select(t.name, {
-          light: t.atoms.border_contrast_low.borderColor,
-          dim: t.atoms.border_contrast_high.borderColor,
-          dark: t.atoms.border_contrast_high.borderColor,
-        }),
-        iconColor: select(t.name, {
-          light: t.atoms.text_contrast_medium.color,
-          dim: t.atoms.text_contrast_medium.color,
-          dark: t.atoms.text_contrast_medium.color,
-        }),
-        textColor: select(t.name, {
-          light: t.atoms.text_contrast_medium.color,
-          dim: t.atoms.text_contrast_medium.color,
-          dark: t.atoms.text_contrast_medium.color,
-        }),
+        backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
+        borderColor: t.atoms.border_contrast_high.borderColor,
+        iconColor: t.atoms.text.color,
+        textColor: t.atoms.text.color,
       },
       info: {
-        backgroundColor: select(t.name, {
-          light: t.atoms.bg_contrast_25.backgroundColor,
-          dim: t.atoms.bg_contrast_100.backgroundColor,
-          dark: t.atoms.bg_contrast_100.backgroundColor,
-        }),
-        borderColor: select(t.name, {
-          light: t.atoms.border_contrast_low.borderColor,
-          dim: t.atoms.border_contrast_high.borderColor,
-          dark: t.atoms.border_contrast_high.borderColor,
-        }),
-        iconColor: select(t.name, {
-          light: t.atoms.text_contrast_medium.color,
-          dim: t.atoms.text_contrast_medium.color,
-          dark: t.atoms.text_contrast_medium.color,
-        }),
-        textColor: select(t.name, {
-          light: t.atoms.text_contrast_medium.color,
-          dim: t.atoms.text_contrast_medium.color,
-          dark: t.atoms.text_contrast_medium.color,
-        }),
+        backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
+        borderColor: t.atoms.border_contrast_high.borderColor,
+        iconColor: t.atoms.text.color,
+        textColor: t.atoms.text.color,
       },
     }[type]
   }, [t, type])
