@@ -1,10 +1,10 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type $Typed,
-  AppBskyFeedDefs,
-  type AppBskyGraphDefs,
+  AppGndrFeedDefs,
+  type AppGndrGraphDefs,
   AtUri,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -26,8 +26,8 @@ import {MissingFeed} from './MissingFeed'
 type FeedSourceCardProps = {
   feedUri: string
   feedData?:
-    | $Typed<AppBskyFeedDefs.GeneratorView>
-    | $Typed<AppBskyGraphDefs.ListView>
+    | $Typed<AppGndrFeedDefs.GeneratorView>
+    | $Typed<AppGndrGraphDefs.ListView>
   style?: StyleProp<ViewStyle>
   showSaveBtn?: boolean
   showDescription?: boolean
@@ -45,7 +45,7 @@ export function FeedSourceCard({
 }: FeedSourceCardProps) {
   if (feedData) {
     let feed: FeedSourceInfo
-    if (AppBskyFeedDefs.isGeneratorView(feedData)) {
+    if (AppGndrFeedDefs.isGeneratorView(feedData)) {
       feed = hydrateFeedGenerator(feedData)
     } else {
       feed = hydrateList(feedData)

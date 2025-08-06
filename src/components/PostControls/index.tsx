@@ -1,11 +1,11 @@
 import {memo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
+  type AppGndrFeedDefs,
+  type AppGndrFeedPost,
+  type AppGndrFeedThreadgate,
   type RichText as RichTextAPI,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -53,8 +53,8 @@ let PostControls = ({
   viaRepost,
 }: {
   big?: boolean
-  post: Shadow<AppBskyFeedDefs.PostView>
-  record: AppBskyFeedPost.Record
+  post: Shadow<AppGndrFeedDefs.PostView>
+  record: AppGndrFeedPost.Record
   richText: RichTextAPI
   feedContext?: string | undefined
   reqId?: string | undefined
@@ -62,8 +62,8 @@ let PostControls = ({
   onPressReply: () => void
   onPostReply?: (postUri: string | undefined) => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
-  threadgateRecord?: AppBskyFeedThreadgate.Record
-  onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  threadgateRecord?: AppGndrFeedThreadgate.Record
+  onShowLess?: (interaction: AppGndrFeedDefs.Interaction) => void
   viaRepost?: {uri: string; cid: string}
 }): React.ReactNode => {
   const {_, i18n} = useLingui()
@@ -110,7 +110,7 @@ let PostControls = ({
         playHaptic('Light')
         sendInteraction({
           item: post.uri,
-          event: 'app.bsky.feed.defs#interactionLike',
+          event: 'app.gndr.feed.defs#interactionLike',
           feedContext,
           reqId,
         })
@@ -139,7 +139,7 @@ let PostControls = ({
       if (!post.viewer?.repost) {
         sendInteraction({
           item: post.uri,
-          event: 'app.bsky.feed.defs#interactionRepost',
+          event: 'app.gndr.feed.defs#interactionRepost',
           feedContext,
           reqId,
         })
@@ -165,7 +165,7 @@ let PostControls = ({
 
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#interactionQuote',
+      event: 'app.gndr.feed.defs#interactionQuote',
       feedContext,
       reqId,
     })
@@ -178,7 +178,7 @@ let PostControls = ({
   const onShare = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#interactionShare',
+      event: 'app.gndr.feed.defs#interactionShare',
       feedContext,
       reqId,
     })

@@ -1,20 +1,20 @@
 import {
-  AppBskyFeedDefs,
-  AppBskyFeedGetAuthorFeed as GetAuthorFeed,
-  BskyAgent,
-} from '@atproto/api'
+  AppGndrFeedDefs,
+  type AppGndrFeedGetAuthorFeed as GetAuthorFeed,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 
-import {FeedAPI, FeedAPIResponse} from './types'
+import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class AuthorFeedAPI implements FeedAPI {
-  agent: BskyAgent
+  agent: GndrAgent
   _params: GetAuthorFeed.QueryParams
 
   constructor({
     agent,
     feedParams,
   }: {
-    agent: BskyAgent
+    agent: GndrAgent
     feedParams: GetAuthorFeed.QueryParams
   }) {
     this.agent = agent
@@ -29,7 +29,7 @@ export class AuthorFeedAPI implements FeedAPI {
     return params
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost> {
     const res = await this.agent.getAuthorFeed({
       ...this.params,
       limit: 1,
@@ -60,12 +60,12 @@ export class AuthorFeedAPI implements FeedAPI {
     }
   }
 
-  _filter(feed: AppBskyFeedDefs.FeedViewPost[]) {
+  _filter(feed: AppGndrFeedDefs.FeedViewPost[]) {
     if (this.params.filter === 'posts_and_author_threads') {
       return feed.filter(post => {
         const isReply = post.reply
-        const isRepost = AppBskyFeedDefs.isReasonRepost(post.reason)
-        const isPin = AppBskyFeedDefs.isReasonPin(post.reason)
+        const isRepost = AppGndrFeedDefs.isReasonRepost(post.reason)
+        const isPin = AppGndrFeedDefs.isReasonPin(post.reason)
         if (!isReply) return true
         if (isRepost || isPin) return true
         return isReply && isAuthorReplyChain(this.params.actor, post, feed)
@@ -78,15 +78,15 @@ export class AuthorFeedAPI implements FeedAPI {
 
 function isAuthorReplyChain(
   actor: string,
-  post: AppBskyFeedDefs.FeedViewPost,
-  posts: AppBskyFeedDefs.FeedViewPost[],
+  post: AppGndrFeedDefs.FeedViewPost,
+  posts: AppGndrFeedDefs.FeedViewPost[],
 ): boolean {
   // current post is by a different user (shouldn't happen)
   if (post.post.author.did !== actor) return false
 
   const replyParent = post.reply?.parent
 
-  if (AppBskyFeedDefs.isPostView(replyParent)) {
+  if (AppGndrFeedDefs.isPostView(replyParent)) {
     // reply parent is by a different user
     if (replyParent.author.did !== actor) return false
 

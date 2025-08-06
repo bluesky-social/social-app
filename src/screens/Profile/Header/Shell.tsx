@@ -8,7 +8,7 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
+import {type AppGndrActorDefs, type ModerationDecision} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -38,7 +38,7 @@ import {GrowableBanner} from './GrowableBanner'
 import {StatusBarShadow} from './StatusBarShadow'
 
 interface Props {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean

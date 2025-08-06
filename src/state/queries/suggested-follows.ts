@@ -1,20 +1,20 @@
 import {
-  AppBskyActorDefs,
-  AppBskyActorGetSuggestions,
-  AppBskyGraphGetSuggestedFollowsByActor,
+  type AppGndrActorDefs,
+  type AppGndrActorGetSuggestions,
+  type AppGndrGraphGetSuggestedFollowsByActor,
   moderateProfile,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useQuery,
 } from '@tanstack/react-query'
 
 import {
   aggregateUserInterests,
-  createBskyTopicsHeader,
+  createGndrTopicsHeader,
 } from '#/lib/api/feed/utils'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
@@ -44,9 +44,9 @@ export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
   const limit = options?.limit || 25
 
   return useInfiniteQuery<
-    AppBskyActorGetSuggestions.OutputSchema,
+    AppGndrActorGetSuggestions.OutputSchema,
     Error,
-    InfiniteData<AppBskyActorGetSuggestions.OutputSchema>,
+    InfiniteData<AppGndrActorGetSuggestions.OutputSchema>,
     QueryKey,
     string | undefined
   >({
@@ -59,14 +59,14 @@ export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
         options?.subsequentPageLimit && pageParam
           ? options.subsequentPageLimit
           : limit
-      const res = await agent.app.bsky.actor.getSuggestions(
+      const res = await agent.app.gndr.actor.getSuggestions(
         {
           limit: maybeDifferentLimit,
           cursor: pageParam,
         },
         {
           headers: {
-            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+            ...createGndrTopicsHeader(aggregateUserInterests(preferences)),
             'Accept-Language': contentLangs,
           },
         },
@@ -114,7 +114,7 @@ export function useSuggestedFollowsByActorQuery({
   return useQuery({
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
-      const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
+      const res = await agent.app.gndr.graph.getSuggestedFollowsByActor({
         actor: did,
       })
       const suggestions = res.data.isFallback
@@ -129,7 +129,7 @@ export function useSuggestedFollowsByActorQuery({
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedFollowsByActorQueryData(queryClient, did)
 }
@@ -139,7 +139,7 @@ function* findAllProfilesInSuggestedFollowsQueryData(
   did: string,
 ) {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyActorGetSuggestions.OutputSchema>
+    InfiniteData<AppGndrActorGetSuggestions.OutputSchema>
   >({
     queryKey: [suggestedFollowsQueryKeyRoot],
   })
@@ -162,7 +162,7 @@ function* findAllProfilesInSuggestedFollowsByActorQueryData(
   did: string,
 ) {
   const queryDatas =
-    queryClient.getQueriesData<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema>(
+    queryClient.getQueriesData<AppGndrGraphGetSuggestedFollowsByActor.OutputSchema>(
       {
         queryKey: [suggestedFollowsByActorQueryKeyRoot],
       },

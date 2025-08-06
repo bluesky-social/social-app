@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
+import {type AppGndrNotificationDeclaration} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -115,8 +115,8 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                 <View style={[a.flex_1, a.gap_sm]}>
                   <Admonition.Text>
                     <Trans>
-                      Note: Bluesky is an open and public network. This setting
-                      only limits the visibility of your content on the Bluesky
+                      Note: Gander is an open and public network. This setting
+                      only limits the visibility of your content on the Gander
                       app and website, and other apps may not respect this
                       setting. Your content may still be shown to logged-out
                       users by other apps and websites.
@@ -125,10 +125,10 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                   <Admonition.Text>
                     <InlineLinkText
                       label={_(
-                        msg`Learn more about what is public on Bluesky.`,
+                        msg`Learn more about what is public on Gander.`,
                       )}
-                      to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
-                      <Trans>Learn more about what is public on Bluesky.</Trans>
+                      to="https://ganderweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
+                      <Trans>Learn more about what is public on Gander.</Trans>
                     </InlineLinkText>
                   </Admonition.Text>
                 </View>
@@ -146,7 +146,7 @@ function NotificationDeclaration({
   isError,
 }: {
   data?: {
-    value: AppBskyNotificationDeclaration.Record
+    value: AppGndrNotificationDeclaration.Record
   }
   isError?: boolean
 }) {

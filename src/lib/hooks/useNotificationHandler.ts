@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {CommonActions, useNavigation} from '@react-navigation/native'
@@ -407,7 +407,7 @@ export function notificationToURL(payload: NotificationPayload): string | null {
     case 'like-via-repost':
     case 'repost-via-repost': {
       const urip = new AtUri(payload.subject)
-      if (urip.collection === 'app.bsky.feed.post') {
+      if (urip.collection === 'app.gndr.feed.post') {
         return `/profile/${urip.host}/post/${urip.rkey}`
       } else {
         return '/notifications'
@@ -418,7 +418,7 @@ export function notificationToURL(payload: NotificationPayload): string | null {
     case 'mention':
     case 'subscribed-post': {
       const urip = new AtUri(payload.uri)
-      if (urip.collection === 'app.bsky.feed.post') {
+      if (urip.collection === 'app.gndr.feed.post') {
         return `/profile/${urip.host}/post/${urip.rkey}`
       } else {
         return '/notifications'

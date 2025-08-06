@@ -1,17 +1,17 @@
 import {
-  type AppBskyActorDefs,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-} from '@atproto/api'
+  type AppGndrActorDefs,
+  AppGndrEmbedRecord,
+  AppGndrEmbedRecordWithMedia,
+  AppGndrFeedDefs,
+  AppGndrFeedPost,
+} from '@gander-social-atproto/api'
 
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 import {isPostInLanguage} from '../../locale/helpers'
 import {FALLBACK_MARKER_POST} from './feed/home'
 import {type ReasonFeedSource} from './feed/types'
 
-type FeedViewPost = AppBskyFeedDefs.FeedViewPost
+type FeedViewPost = AppGndrFeedDefs.FeedViewPost
 
 export type FeedTunerFn = (
   tuner: FeedTuner,
@@ -20,18 +20,18 @@ export type FeedTunerFn = (
 ) => FeedViewPostsSlice[]
 
 type FeedSliceItem = {
-  post: AppBskyFeedDefs.PostView
-  record: AppBskyFeedPost.Record
-  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  post: AppGndrFeedDefs.PostView
+  record: AppGndrFeedPost.Record
+  parentAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
   isParentBlocked: boolean
   isParentNotFound: boolean
 }
 
 type AuthorContext = {
-  author: AppBskyActorDefs.ProfileViewBasic
-  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
-  grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
-  rootAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  author: AppGndrActorDefs.ProfileViewBasic
+  parentAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
+  grandparentAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
+  rootAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
 }
 
 export class FeedViewPostsSlice {
@@ -53,7 +53,7 @@ export class FeedViewPostsSlice {
     this.isOrphan = false
     this.isThreadMuted = post.viewer?.threadMuted ?? false
     this.feedPostUri = post.uri
-    if (AppBskyFeedDefs.isPostView(reply?.root)) {
+    if (AppGndrFeedDefs.isPostView(reply?.root)) {
       this.rootUri = reply.root.uri
     } else {
       this.rootUri = post.uri
@@ -69,16 +69,16 @@ export class FeedViewPostsSlice {
       return
     }
     if (
-      !AppBskyFeedPost.isRecord(post.record) ||
-      !bsky.validate(post.record, AppBskyFeedPost.validateRecord)
+      !AppGndrFeedPost.isRecord(post.record) ||
+      !gndr.validate(post.record, AppGndrFeedPost.validateRecord)
     ) {
       return
     }
     const parent = reply?.parent
-    const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent)
-    const isParentNotFound = AppBskyFeedDefs.isNotFoundPost(parent)
-    let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
-    if (AppBskyFeedDefs.isPostView(parent)) {
+    const isParentBlocked = AppGndrFeedDefs.isBlockedPost(parent)
+    const isParentNotFound = AppGndrFeedDefs.isNotFoundPost(parent)
+    let parentAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
+    if (AppGndrFeedDefs.isPostView(parent)) {
       parentAuthor = parent.author
     }
     this.items.push({
@@ -100,18 +100,18 @@ export class FeedViewPostsSlice {
       return
     }
     if (
-      !AppBskyFeedDefs.isPostView(parent) ||
-      !AppBskyFeedPost.isRecord(parent.record) ||
-      !bsky.validate(parent.record, AppBskyFeedPost.validateRecord)
+      !AppGndrFeedDefs.isPostView(parent) ||
+      !AppGndrFeedPost.isRecord(parent.record) ||
+      !gndr.validate(parent.record, AppGndrFeedPost.validateRecord)
     ) {
       this.isOrphan = true
       return
     }
     const root = reply.root
     const rootIsView =
-      AppBskyFeedDefs.isPostView(root) ||
-      AppBskyFeedDefs.isBlockedPost(root) ||
-      AppBskyFeedDefs.isNotFoundPost(root)
+      AppGndrFeedDefs.isPostView(root) ||
+      AppGndrFeedDefs.isBlockedPost(root) ||
+      AppGndrFeedDefs.isNotFoundPost(root)
     /*
      * If the parent is also the root, we just so happen to have the data we
      * need to compute if the parent's parent (grandparent) is blocked. This
@@ -124,10 +124,10 @@ export class FeedViewPostsSlice {
         : undefined
     const grandparentAuthor = reply.grandparentAuthor
     const isGrandparentBlocked = Boolean(
-      grandparent && AppBskyFeedDefs.isBlockedPost(grandparent),
+      grandparent && AppGndrFeedDefs.isBlockedPost(grandparent),
     )
     const isGrandparentNotFound = Boolean(
-      grandparent && AppBskyFeedDefs.isNotFoundPost(grandparent),
+      grandparent && AppGndrFeedDefs.isNotFoundPost(grandparent),
     )
     this.items.unshift({
       post: parent,
@@ -142,9 +142,9 @@ export class FeedViewPostsSlice {
       // de-deduping
     }
     if (
-      !AppBskyFeedDefs.isPostView(root) ||
-      !AppBskyFeedPost.isRecord(root.record) ||
-      !bsky.validate(root.record, AppBskyFeedPost.validateRecord)
+      !AppGndrFeedDefs.isPostView(root) ||
+      !AppGndrFeedPost.isRecord(root.record) ||
+      !gndr.validate(root.record, AppGndrFeedPost.validateRecord)
     ) {
       this.isOrphan = true
       return
@@ -167,14 +167,14 @@ export class FeedViewPostsSlice {
   get isQuotePost() {
     const embed = this._feedPost.post.embed
     return (
-      AppBskyEmbedRecord.isView(embed) ||
-      AppBskyEmbedRecordWithMedia.isView(embed)
+      AppGndrEmbedRecord.isView(embed) ||
+      AppGndrEmbedRecordWithMedia.isView(embed)
     )
   }
 
   get isReply() {
     return (
-      AppBskyFeedPost.isRecord(this._feedPost.post.record) &&
+      AppGndrFeedPost.isRecord(this._feedPost.post.record) &&
       !!this._feedPost.post.record.reply
     )
   }
@@ -195,7 +195,7 @@ export class FeedViewPostsSlice {
 
   get isRepost() {
     const reason = this._feedPost.reason
-    return AppBskyFeedDefs.isReasonRepost(reason)
+    return AppGndrFeedDefs.isReasonRepost(reason)
   }
 
   get likeCount() {
@@ -208,18 +208,18 @@ export class FeedViewPostsSlice {
 
   getAuthors(): AuthorContext {
     const feedPost = this._feedPost
-    let author: AppBskyActorDefs.ProfileViewBasic = feedPost.post.author
-    let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
-    let grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
-    let rootAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+    let author: AppGndrActorDefs.ProfileViewBasic = feedPost.post.author
+    let parentAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
+    let grandparentAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
+    let rootAuthor: AppGndrActorDefs.ProfileViewBasic | undefined
     if (feedPost.reply) {
-      if (AppBskyFeedDefs.isPostView(feedPost.reply.parent)) {
+      if (AppGndrFeedDefs.isPostView(feedPost.reply.parent)) {
         parentAuthor = feedPost.reply.parent.author
       }
       if (feedPost.reply.grandparentAuthor) {
         grandparentAuthor = feedPost.reply.grandparentAuthor
       }
-      if (AppBskyFeedDefs.isPostView(feedPost.reply.root)) {
+      if (AppGndrFeedDefs.isPostView(feedPost.reply.root)) {
         rootAuthor = feedPost.reply.root.author
       }
     }
@@ -514,7 +514,7 @@ function shouldDisplayReplyInFollowing(
 }
 
 function isSelfOrFollowing(
-  profile: AppBskyActorDefs.ProfileViewBasic,
+  profile: AppGndrActorDefs.ProfileViewBasic,
   userDid: string,
 ) {
   return Boolean(profile.did === userDid || profile.viewer?.following)

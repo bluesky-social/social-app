@@ -1,4 +1,4 @@
-import {BskyAgent} from '@atproto/api'
+import {GndrAgent} from '@gander-social-atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 const RQKEY_ROOT = 'service'
@@ -8,7 +8,7 @@ export function useServiceQuery(serviceUrl: string) {
   return useQuery({
     queryKey: RQKEY(serviceUrl),
     queryFn: async () => {
-      const agent = new BskyAgent({service: serviceUrl})
+      const agent = new GndrAgent({service: serviceUrl})
       const res = await agent.com.atproto.server.describeServer()
       return res.data
     },

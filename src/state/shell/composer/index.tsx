@@ -1,16 +1,16 @@
 import React from 'react'
 import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  type AppGndrUnspeccedGetPostThreadV2,
   type ModerationDecision,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {postUriToRelativePath, toBskyAppUrl} from '#/lib/strings/url-helpers'
+import {postUriToRelativePath, toGndrAppUrl} from '#/lib/strings/url-helpers'
 import {purgeTemporaryImageFiles} from '#/state/gallery'
 import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
 import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
@@ -20,15 +20,15 @@ export interface ComposerOptsPostRef {
   uri: string
   cid: string
   text: string
-  author: AppBskyActorDefs.ProfileViewBasic
-  embed?: AppBskyFeedDefs.PostView['embed']
+  author: AppGndrActorDefs.ProfileViewBasic
+  embed?: AppGndrFeedDefs.PostView['embed']
   moderation?: ModerationDecision
 }
 
 export type OnPostSuccessData =
   | {
       replyToUri?: string
-      posts: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
+      posts: AppGndrUnspeccedGetPostThreadV2.ThreadItem[]
     }
   | undefined
 
@@ -36,7 +36,7 @@ export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
   onPostSuccess?: (data: OnPostSuccessData) => void
-  quote?: AppBskyFeedDefs.PostView
+  quote?: AppGndrFeedDefs.PostView
   mention?: string // handle of user to mention
   openEmojiPicker?: (pos: EmojiPickerPosition | undefined) => void
   text?: string
@@ -67,7 +67,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     if (opts.quote) {
       const path = postUriToRelativePath(opts.quote.uri)
       if (path) {
-        const appUrl = toBskyAppUrl(path)
+        const appUrl = toGndrAppUrl(path)
         precacheResolveLinkQuery(queryClient, appUrl, {
           type: 'record',
           kind: 'post',

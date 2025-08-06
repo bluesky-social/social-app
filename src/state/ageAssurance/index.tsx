@@ -1,5 +1,5 @@
 import {createContext, useContext, useMemo, useState} from 'react'
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
+import {type AppGndrUnspeccedDefs} from '@gander-social-atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -17,7 +17,7 @@ import {useAgent} from '#/state/session'
 export const createAgeAssuranceQueryKey = (did: string) =>
   ['ageAssurance', did] as const
 
-const DEFAULT_AGE_ASSURANCE_STATE: AppBskyUnspeccedDefs.AgeAssuranceState = {
+const DEFAULT_AGE_ASSURANCE_STATE: AppGndrUnspeccedDefs.AgeAssuranceState = {
   lastInitiatedAt: undefined,
   status: 'unknown',
 }
@@ -62,13 +62,13 @@ export function Provider({children}: {children: React.ReactNode}) {
 
       try {
         const {data} = await networkRetry(3, () =>
-          agent.app.bsky.unspecced.getAgeAssuranceState(),
+          agent.app.gndr.unspecced.getAgeAssuranceState(),
         )
         // const {data} = {
         //   data: {
         //     lastInitiatedAt: new Date().toISOString(),
         //     status: 'pending',
-        //   } as AppBskyUnspeccedDefs.AgeAssuranceState,
+        //   } as AppGndrUnspeccedDefs.AgeAssuranceState,
         // }
 
         logger.debug(`fetch`, {

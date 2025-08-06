@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@gander-social-atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -560,7 +560,7 @@ function DialogInner({
                 control={reportDialogControl}
                 subject={{
                   ...info.view,
-                  $type: 'app.bsky.feed.defs#generatorView',
+                  $type: 'app.gndr.feed.defs#generatorView',
                 }}
               />
             )}

@@ -12,10 +12,10 @@ import Animated, {
   ZoomOut,
 } from 'react-native-reanimated'
 import {
-  AppBskyEmbedRecord,
-  ChatBskyConvoDefs,
+  AppGndrEmbedRecord,
+  ChatGndrConvoDefs,
   RichText as RichTextAPI,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -51,7 +51,7 @@ let MessageItem = ({
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
-  const nextIsMessage = ChatBskyConvoDefs.isMessageView(nextMessage)
+  const nextIsMessage = ChatGndrConvoDefs.isMessageView(nextMessage)
 
   const isNextFromSelf =
     nextIsMessage && nextMessage.sender?.did === currentAccount?.did
@@ -85,7 +85,7 @@ let MessageItem = ({
     }
 
     // or, if there's a 5 minute gap between this message and the next
-    if (ChatBskyConvoDefs.isMessageView(nextMessage)) {
+    if (ChatGndrConvoDefs.isMessageView(nextMessage)) {
       const thisDate = new Date(message.sentAt)
       const nextDate = new Date(nextMessage.sentAt)
 
@@ -181,7 +181,7 @@ let MessageItem = ({
           nextIsMessage && !isNextFromSameSender && a.mb_md,
         ]}>
         <ActionsWrapper isFromSelf={isFromSelf} message={message}>
-          {AppBskyEmbedRecord.isView(message.embed) && (
+          {AppGndrEmbedRecord.isView(message.embed) && (
             <MessageItemEmbed embed={message.embed} />
           )}
           {rt.text.length > 0 && (

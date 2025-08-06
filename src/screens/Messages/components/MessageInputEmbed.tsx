@@ -1,21 +1,24 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
 import {
-  AppBskyFeedPost,
-  AppBskyRichtextFacet,
+  AppGndrFeedPost,
+  AppGndrRichtextFacet,
   AtUri,
   moderatePost,
   RichText as RichTextAPI,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {
-  convertBskyAppUrlIfNeeded,
-  isBskyPostUrl,
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
+import {
+  convertGndrAppUrlIfNeeded,
+  isGndrPostUrl,
   makeRecordUri,
 } from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -30,7 +33,7 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function useMessageEmbed() {
   const route =
@@ -56,9 +59,9 @@ export function useMessageEmbed() {
 
         if (embedFromParams) return
 
-        const url = convertBskyAppUrlIfNeeded(embedUrl)
+        const url = convertGndrAppUrlIfNeeded(embedUrl)
         const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
-        const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
+        const uri = makeRecordUri(user, 'app.gndr.feed.post', rkey)
 
         setEmbed(uri)
       },
@@ -78,7 +81,7 @@ export function useExtractEmbedFromFacets(
 
   for (const facet of rt.facets ?? []) {
     for (const feature of facet.features) {
-      if (AppBskyRichtextFacet.isLink(feature) && isBskyPostUrl(feature.uri)) {
+      if (AppGndrRichtextFacet.isLink(feature) && isGndrPostUrl(feature.uri)) {
         uriFromFacet = feature.uri
         break
       }
@@ -114,9 +117,9 @@ export function MessageInputEmbed({
   const {rt, record} = useMemo(() => {
     if (
       post &&
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      gndr.dangerousIsType<AppGndrFeedPost.Record>(
         post.record,
-        AppBskyFeedPost.isRecord,
+        AppGndrFeedPost.isRecord,
       )
     ) {
       return {

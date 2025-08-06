@@ -1,4 +1,4 @@
-import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
+import {type AtpSessionEvent, type GndrAgent} from '@gander-social-atproto/api'
 
 import {createPublicAgent} from './agent'
 import {wrapSessionReducerForLogging} from './logging'
@@ -6,7 +6,7 @@ import {type SessionAccount} from './types'
 
 // A hack so that the reducer can't read anything from the agent.
 // From the reducer's point of view, it should be a completely opaque object.
-type OpaqueBskyAgent = {
+type OpaqueGndrAgent = {
   readonly service: URL
   readonly api: unknown
   readonly app: unknown
@@ -14,7 +14,7 @@ type OpaqueBskyAgent = {
 }
 
 type AgentState = {
-  readonly agent: OpaqueBskyAgent
+  readonly agent: OpaqueGndrAgent
   readonly did: string | undefined
 }
 
@@ -27,14 +27,14 @@ export type State = {
 export type Action =
   | {
       type: 'received-agent-event'
-      agent: OpaqueBskyAgent
+      agent: OpaqueGndrAgent
       accountDid: string
       refreshedAccount: SessionAccount | undefined
       sessionEvent: AtpSessionEvent
     }
   | {
       type: 'switched-to-account'
-      newAgent: OpaqueBskyAgent
+      newAgent: OpaqueGndrAgent
       newAccount: SessionAccount
     }
   | {
@@ -187,7 +187,7 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'partial-refresh-session': {
       const {accountDid, patch} = action
-      const agent = state.currentAgentState.agent as BskyAgent
+      const agent = state.currentAgentState.agent as GndrAgent
 
       /*
        * Only mutating values that are safe. Be very careful with this.

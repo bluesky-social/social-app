@@ -1,16 +1,16 @@
 import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-  type AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadOtherV2,
-  type AppBskyUnspeccedGetPostThreadV2,
+  type AppGndrFeedDefs,
+  type AppGndrFeedPost,
+  type AppGndrFeedThreadgate,
+  type AppGndrUnspeccedDefs,
+  type AppGndrUnspeccedGetPostThreadOtherV2,
+  type AppGndrUnspeccedGetPostThreadV2,
   type ModerationDecision,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 
 export type ApiThreadItem =
-  | AppBskyUnspeccedGetPostThreadV2.ThreadItem
-  | AppBskyUnspeccedGetPostThreadOtherV2.ThreadItem
+  | AppGndrUnspeccedGetPostThreadV2.ThreadItem
+  | AppGndrUnspeccedGetPostThreadOtherV2.ThreadItem
 
 export const postThreadQueryKeyRoot = 'post-thread-v2' as const
 
@@ -18,13 +18,13 @@ export const createPostThreadQueryKey = (props: PostThreadParams) =>
   [postThreadQueryKeyRoot, props] as const
 
 export const createPostThreadOtherQueryKey = (
-  props: Omit<AppBskyUnspeccedGetPostThreadOtherV2.QueryParams, 'anchor'> & {
+  props: Omit<AppGndrUnspeccedGetPostThreadOtherV2.QueryParams, 'anchor'> & {
     anchor?: string
   },
 ) => [postThreadQueryKeyRoot, 'other', props] as const
 
 export type PostThreadParams = Pick<
-  AppBskyUnspeccedGetPostThreadV2.QueryParams,
+  AppGndrUnspeccedGetPostThreadV2.QueryParams,
   'sort' | 'prioritizeFollowedUsers'
 > & {
   anchor?: string
@@ -33,9 +33,9 @@ export type PostThreadParams = Pick<
 
 export type UsePostThreadQueryResult = {
   hasOtherReplies: boolean
-  thread: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
-  threadgate?: Omit<AppBskyFeedDefs.ThreadgateView, 'record'> & {
-    record: AppBskyFeedThreadgate.Record
+  thread: AppGndrUnspeccedGetPostThreadV2.ThreadItem[]
+  threadgate?: Omit<AppGndrFeedDefs.ThreadgateView, 'record'> & {
+    record: AppGndrFeedThreadgate.Record
   }
 }
 
@@ -45,9 +45,9 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: Omit<AppBskyUnspeccedDefs.ThreadItemPost, 'post'> & {
-        post: Omit<AppBskyFeedDefs.PostView, 'record'> & {
-          record: AppBskyFeedPost.Record
+      value: Omit<AppGndrUnspeccedDefs.ThreadItemPost, 'post'> & {
+        post: Omit<AppGndrFeedDefs.PostView, 'record'> & {
+          record: AppGndrFeedPost.Record
         }
       }
       isBlurred: boolean
@@ -67,7 +67,7 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated
+      value: AppGndrUnspeccedDefs.ThreadItemNoUnauthenticated
       ui: {
         showParentReplyLine: boolean
         showChildReplyLine: boolean
@@ -78,14 +78,14 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedDefs.ThreadItemNotFound
+      value: AppGndrUnspeccedDefs.ThreadItemNotFound
     }
   | {
       type: 'threadPostBlocked'
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedDefs.ThreadItemBlocked
+      value: AppGndrUnspeccedDefs.ThreadItemBlocked
     }
   | {
       type: 'replyComposer'

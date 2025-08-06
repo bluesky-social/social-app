@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
+import {AppGndrGraphStarterpack, AtUri} from '@gander-social-atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -18,12 +18,12 @@ import {
   type LinkProps as BaseLinkProps,
 } from '#/components/Link'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function Default({
   starterPack,
 }: {
-  starterPack?: bsky.starterPack.AnyStarterPackView
+  starterPack?: gndr.starterPack.AnyStarterPackView
 }) {
   if (!starterPack) return null
   return (
@@ -36,7 +36,7 @@ export function Default({
 export function Notification({
   starterPack,
 }: {
-  starterPack?: bsky.starterPack.AnyStarterPackView
+  starterPack?: gndr.starterPack.AnyStarterPackView
 }) {
   if (!starterPack) return null
   return (
@@ -51,7 +51,7 @@ export function Card({
   noIcon,
   noDescription,
 }: {
-  starterPack: bsky.starterPack.AnyStarterPackView
+  starterPack: gndr.starterPack.AnyStarterPackView
   noIcon?: boolean
   noDescription?: boolean
 }) {
@@ -62,9 +62,9 @@ export function Card({
   const {currentAccount} = useSession()
 
   if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    !gndr.dangerousIsType<AppGndrGraphStarterpack.Record>(
       record,
-      AppBskyGraphStarterpack.isRecord,
+      AppGndrGraphStarterpack.isRecord,
     )
   ) {
     return null
@@ -98,7 +98,7 @@ export function Card({
       ) : null}
       {!!joinedAllTimeCount && joinedAllTimeCount >= 50 && (
         <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-          <Trans comment="Number of users (always at least 50) who have joined Bluesky using a specific starter pack">
+          <Trans comment="Number of users (always at least 50) who have joined Gander using a specific starter pack">
             <Plural value={joinedAllTimeCount} other="# users have" /> joined!
           </Trans>
         </Text>
@@ -110,7 +110,7 @@ export function Card({
 export function useStarterPackLink({
   view,
 }: {
-  view: bsky.starterPack.AnyStarterPackView
+  view: gndr.starterPack.AnyStarterPackView
 }) {
   const {_} = useLingui()
   const qc = useQueryClient()
@@ -126,7 +126,7 @@ export function useStarterPackLink({
 
   return {
     to: `/starter-pack/${handleOrDid}/${rkey}`,
-    label: AppBskyGraphStarterpack.isRecord(view.record)
+    label: AppGndrGraphStarterpack.isRecord(view.record)
       ? _(msg`Navigate to ${view.record.name}`)
       : _(msg`Navigate to starter pack`),
     precache,
@@ -137,7 +137,7 @@ export function Link({
   starterPack,
   children,
 }: {
-  starterPack: bsky.starterPack.AnyStarterPackView
+  starterPack: gndr.starterPack.AnyStarterPackView
   onPress?: () => void
   children: BaseLinkProps['children']
 }) {
@@ -150,7 +150,7 @@ export function Link({
     return {rkey, handleOrDid: creator.handle || creator.did}
   }, [starterPack])
 
-  if (!AppBskyGraphStarterpack.isRecord(record)) {
+  if (!AppGndrGraphStarterpack.isRecord(record)) {
     return null
   }
 
@@ -175,7 +175,7 @@ export function Link({
 export function Embed({
   starterPack,
 }: {
-  starterPack: bsky.starterPack.AnyStarterPackView
+  starterPack: gndr.starterPack.AnyStarterPackView
 }) {
   const t = useTheme()
   const imageUri = getStarterPackOgCard(starterPack)

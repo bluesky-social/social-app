@@ -42,14 +42,14 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  AppBskyFeedDefs,
-  type AppBskyFeedGetPostThread,
-  AppBskyUnspeccedDefs,
-  type BskyAgent,
-  type RichText,
-} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  AppGndrFeedDefs,
+  type AppGndrFeedGetPostThread,
+  AppGndrUnspeccedDefs,
+  type GndrAgent,
+  type RichText,
+} from '@gander-social-atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -418,7 +418,7 @@ export const ComposePost = ({
             5,
             _e => true,
             async () => {
-              const res = await agent.app.bsky.unspecced.getPostThreadV2({
+              const res = await agent.app.gndr.unspecced.getPostThreadV2({
                 anchor: postUri!,
                 above: false,
                 below: thread.posts.length - 1,
@@ -429,7 +429,7 @@ export const ComposePost = ({
               }
               if (
                 !res.data.thread.every(p =>
-                  AppBskyUnspeccedDefs.isThreadItemPost(p.value),
+                  AppGndrUnspeccedDefs.isThreadItemPost(p.value),
                 )
               ) {
                 throw new Error(`composer: app view returned non-post items`)
@@ -500,7 +500,7 @@ export const ComposePost = ({
       whenAppViewReady(agent, initQuote.uri, res => {
         const quotedThread = res.data.thread
         if (
-          AppBskyFeedDefs.isThreadViewPost(quotedThread) &&
+          AppGndrFeedDefs.isThreadViewPost(quotedThread) &&
           quotedThread.post.quoteCount !== initQuote.quoteCount
         ) {
           onPost?.(postUri)
@@ -1510,16 +1510,16 @@ function useKeyboardVerticalOffset() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: GndrAgent,
   uri: string,
-  fn: (res: AppBskyFeedGetPostThread.Response) => boolean,
+  fn: (res: AppGndrFeedGetPostThread.Response) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.feed.getPostThread({
+      agent.app.gndr.feed.getPostThread({
         uri,
         depth: 0,
       }),

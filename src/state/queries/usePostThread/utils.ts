@@ -1,11 +1,11 @@
 import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyFeedThreadgate,
-  AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
+  AppGndrFeedThreadgate,
+  AppGndrUnspeccedDefs,
+  type AppGndrUnspeccedGetPostThreadV2,
   AtUri,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 
 import {
   type ApiThreadItem,
@@ -13,24 +13,24 @@ import {
   type TraversalMetadata,
 } from '#/state/queries/usePostThread/types'
 import {isDevMode} from '#/storage/hooks/dev-mode'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function getThreadgateRecord(
-  view: AppBskyUnspeccedGetPostThreadV2.OutputSchema['threadgate'],
+  view: AppGndrUnspeccedGetPostThreadV2.OutputSchema['threadgate'],
 ) {
-  return bsky.dangerousIsType<AppBskyFeedThreadgate.Record>(
+  return gndr.dangerousIsType<AppGndrFeedThreadgate.Record>(
     view?.record,
-    AppBskyFeedThreadgate.isRecord,
+    AppGndrFeedThreadgate.isRecord,
   )
     ? view?.record
     : undefined
 }
 
-export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
+export function getRootPostAtUri(post: AppGndrFeedDefs.PostView) {
   if (
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    gndr.dangerousIsType<AppGndrFeedPost.Record>(
       post.record,
-      AppBskyFeedPost.isRecord,
+      AppGndrFeedPost.isRecord,
     )
   ) {
     /**
@@ -45,8 +45,8 @@ export function getRootPostAtUri(post: AppBskyFeedDefs.PostView) {
   }
 }
 
-export function getPostRecord(post: AppBskyFeedDefs.PostView) {
-  return post.record as AppBskyFeedPost.Record
+export function getPostRecord(post: AppGndrFeedDefs.PostView) {
+  return post.record as AppGndrFeedPost.Record
 }
 
 export function getTraversalMetadata({
@@ -60,7 +60,7 @@ export function getTraversalMetadata({
   nextItem?: ApiThreadItem
   parentMetadata?: TraversalMetadata
 }): TraversalMetadata {
-  if (!AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+  if (!AppGndrUnspeccedDefs.isThreadItemPost(item.value)) {
     throw new Error(`Expected thread item to be a post`)
   }
   const repliesCount = item.value.post.replyCount || 0

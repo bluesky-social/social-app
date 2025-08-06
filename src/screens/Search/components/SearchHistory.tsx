@@ -1,5 +1,5 @@
 import {Pressable, ScrollView, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -18,7 +18,7 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function SearchHistory({
   searchHistory,
@@ -29,11 +29,11 @@ export function SearchHistory({
   onRemoveProfileClick,
 }: {
   searchHistory: string[]
-  selectedProfiles: bsky.profile.AnyProfileView[]
+  selectedProfiles: gndr.profile.AnyProfileView[]
   onItemClick: (item: string) => void
-  onProfileClick: (profile: bsky.profile.AnyProfileView) => void
+  onProfileClick: (profile: gndr.profile.AnyProfileView) => void
   onRemoveItemClick: (item: string) => void
-  onRemoveProfileClick: (profile: bsky.profile.AnyProfileView) => void
+  onRemoveProfileClick: (profile: gndr.profile.AnyProfileView) => void
 }) {
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -114,7 +114,7 @@ function RecentProfileItem({
   onPress,
   onRemove,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress: () => void
   onRemove: () => void

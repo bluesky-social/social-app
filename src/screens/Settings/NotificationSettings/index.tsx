@@ -1,7 +1,7 @@
 import {useEffect} from 'react'
 import {Linking, View} from 'react-native'
 import * as Notification from 'expo-notifications'
-import {type AppBskyNotificationDefs} from '@atproto/api'
+import {type AppGndrNotificationDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
@@ -70,7 +70,7 @@ export function NotificationSettingsScreen({}: Props) {
             [
               {
                 key: 'android.provider.extra.APP_PACKAGE',
-                value: 'xyz.blueskyweb.app',
+                value: 'xyz.ganderweb.app',
               },
             ],
           )
@@ -252,8 +252,8 @@ function SettingPreview({
   preference,
 }: {
   preference?:
-    | AppBskyNotificationDefs.Preference
-    | AppBskyNotificationDefs.FilterablePreference
+    | AppGndrNotificationDefs.Preference
+    | AppGndrNotificationDefs.FilterablePreference
 }) {
   const {_} = useLingui()
   if (!preference) {

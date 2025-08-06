@@ -1,4 +1,8 @@
-import {AppBskyRichtextFacet, RichText, UnicodeString} from '@atproto/api'
+import {
+  AppGndrRichtextFacet,
+  type RichText,
+  UnicodeString,
+} from '@gander-social-atproto/api'
 
 import {toShortUrl} from './url-helpers'
 
@@ -10,7 +14,7 @@ export function shortenLinks(rt: RichText): RichText {
   // enumerate the link facets
   if (rt.facets) {
     for (const facet of rt.facets) {
-      const isLink = !!facet.features.find(AppBskyRichtextFacet.isLink)
+      const isLink = !!facet.features.find(AppGndrRichtextFacet.isLink)
       if (!isLink) {
         continue
       }
@@ -40,7 +44,7 @@ export function stripInvalidMentions(rt: RichText): RichText {
   rt = rt.clone()
   if (rt.facets) {
     rt.facets = rt.facets?.filter(facet => {
-      const mention = facet.features.find(AppBskyRichtextFacet.isMention)
+      const mention = facet.features.find(AppGndrRichtextFacet.isMention)
       if (mention && !mention.did) {
         return false
       }

@@ -1,11 +1,11 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyNotificationDefs,
-  type AppBskyNotificationListActivitySubscriptions,
+  type AppGndrNotificationDefs,
+  type AppGndrNotificationListActivitySubscriptions,
   type ModerationOpts,
   type Un$Typed,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -37,7 +37,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function SubscribeProfileDialog({
   control,
@@ -46,7 +46,7 @@ export function SubscribeProfileDialog({
   includeProfile,
 }: {
   control: Dialog.DialogControlProps
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   includeProfile?: boolean
 }) {
@@ -67,7 +67,7 @@ function DialogInner({
   moderationOpts,
   includeProfile,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   includeProfile?: boolean
 }) {
@@ -119,9 +119,9 @@ function DialogInner({
     error,
   } = useMutation({
     mutationFn: async (
-      activitySubscription: Un$Typed<AppBskyNotificationDefs.ActivitySubscription>,
+      activitySubscription: Un$Typed<AppGndrNotificationDefs.ActivitySubscription>,
     ) => {
-      await agent.app.bsky.notification.putActivitySubscription({
+      await agent.app.gndr.notification.putActivitySubscription({
         subject: profile.did,
         activitySubscription,
       })
@@ -145,7 +145,7 @@ function DialogInner({
           queryClient.setQueryData(
             RQKEY_getActivitySubscriptions,
             (
-              old?: InfiniteData<AppBskyNotificationListActivitySubscriptions.OutputSchema>,
+              old?: InfiniteData<AppGndrNotificationListActivitySubscriptions.OutputSchema>,
             ) => {
               if (!old) return old
               return {
@@ -301,8 +301,8 @@ function DialogInner({
 }
 
 function parseActivitySubscription(
-  sub?: AppBskyNotificationDefs.ActivitySubscription,
-): Un$Typed<AppBskyNotificationDefs.ActivitySubscription> {
+  sub?: AppGndrNotificationDefs.ActivitySubscription,
+): Un$Typed<AppGndrNotificationDefs.ActivitySubscription> {
   if (!sub) return {post: false, reply: false}
   const {post, reply} = sub
   return {post, reply}

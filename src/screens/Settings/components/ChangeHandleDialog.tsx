@@ -10,7 +10,7 @@ import Animated, {
   SlideOutLeft,
   SlideOutRight,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
@@ -269,7 +269,7 @@ function ProvidedHandlePage({
               lets you self-verify your identity.{' '}
               <InlineLinkText
                 label={_(msg`learn more`)}
-                to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
+                to="https://gndr.social/about/blog/4-28-2023-domain-handle-tutorial"
                 style={[a.font_bold]}
                 disableMismatchWarning>
                 Learn more here.
@@ -508,7 +508,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Animated.View>
       )}
       <Animated.View layout={native(LinearTransition)}>
-        {currentAccount?.handle?.endsWith('.bsky.social') && (
+        {currentAccount?.handle?.endsWith('.gndr.social') && (
           <Admonition type="info" style={[a.mb_md]}>
             <Trans>
               Your current handle{' '}

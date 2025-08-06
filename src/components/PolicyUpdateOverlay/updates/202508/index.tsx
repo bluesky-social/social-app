@@ -26,27 +26,27 @@ export function Content({state}: {state: PolicyUpdateState}) {
   const links = {
     terms: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support`,
+      to: `https://gndr.social/about/support`,
       label: _(msg`Terms of Service`),
     },
     privacy: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support`,
+      to: `https://gndr.social/about/support`,
       label: _(msg`Privacy Policy`),
     },
     copyright: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support`,
+      to: `https://gndr.social/about/support`,
       label: _(msg`Copyright Policy`),
     },
     guidelines: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support`,
+      to: `https://gndr.social/about/support`,
       label: _(msg`Community Guidelines`),
     },
     blog: {
       overridePresentation: false,
-      to: `https://bsky.social/about/support`,
+      to: `https://gndr.social/about/support`,
       label: _(msg`Our blog post`),
     },
   }
@@ -161,7 +161,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
           <Button
             label={_(msg`Continue`)}
             accessibilityHint={_(
-              msg`Tap to acknowledge that you understand and agree to these updates and continue using Bluesky`,
+              msg`Tap to acknowledge that you understand and agree to these updates and continue using Gander`,
             )}
             color="primary"
             size="large"

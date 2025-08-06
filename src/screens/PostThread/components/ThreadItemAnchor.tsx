@@ -1,12 +1,12 @@
 import {memo, useCallback, useMemo} from 'react'
 import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
 import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
+  AppGndrFeedDefs,
+  AppGndrFeedPost,
+  type AppGndrFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -59,7 +59,7 @@ import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
 import {WhoCanReply} from '#/components/WhoCanReply'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function ThreadItemAnchor({
   item,
@@ -69,7 +69,7 @@ export function ThreadItemAnchor({
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: AppGndrFeedThreadgate.Record
   postSource?: PostSource
 }) {
   const postShadow = usePostShadow(item.value.post)
@@ -169,9 +169,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
   isRoot: boolean
-  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  postShadow: Shadow<AppGndrFeedDefs.PostView>
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: AppGndrFeedThreadgate.Record
   postSource?: PostSource
 }) {
   const t = useTheme()
@@ -229,7 +229,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       : []
   }, [post, currentAccount?.did, threadgateHiddenReplies, threadRootUri])
   const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
-    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
+    rule => rule.$type === 'app.gndr.feed.threadgate#followerRule',
   )
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
@@ -237,7 +237,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const viaRepost = useMemo(() => {
     const reason = postSource?.post.reason
 
-    if (AppBskyFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
+    if (AppGndrFeedDefs.isReasonRepost(reason) && reason.uri && reason.cid) {
       return {
         uri: reason.uri,
         cid: reason.cid,
@@ -261,7 +261,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
+        event: 'app.gndr.feed.defs#interactionReply',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })
@@ -280,7 +280,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughAuthor',
+        event: 'app.gndr.feed.defs#clickthroughAuthor',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })
@@ -291,7 +291,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughEmbed',
+        event: 'app.gndr.feed.defs#clickthroughEmbed',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })
@@ -532,9 +532,9 @@ function ExpandedPostDetails({
       openLink(translatorUrl, true)
 
       if (
-        bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        gndr.dangerousIsType<AppGndrFeedPost.Record>(
           post.record,
-          AppBskyFeedPost.isRecord,
+          AppGndrFeedPost.isRecord,
         )
       ) {
         logger.metric('translate', {
@@ -579,15 +579,15 @@ function ExpandedPostDetails({
   )
 }
 
-function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
+function BackdatedPostIndicator({post}: {post: AppGndrFeedDefs.PostView}) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const control = Prompt.usePromptControl()
 
   const indexedAt = new Date(post.indexedAt)
-  const createdAt = bsky.dangerousIsType<AppBskyFeedPost.Record>(
+  const createdAt = gndr.dangerousIsType<AppGndrFeedPost.Record>(
     post.record,
-    AppBskyFeedPost.isRecord,
+    AppGndrFeedPost.isRecord,
   )
     ? new Date(post.record.createdAt)
     : new Date(post.indexedAt)
@@ -648,7 +648,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
           <Trans>
             This post claims to have been created on{' '}
             <RNText style={[a.font_bold]}>{niceDate(i18n, createdAt)}</RNText>,
-            but was first seen by Bluesky on{' '}
+            but was first seen by Gander on{' '}
             <RNText style={[a.font_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
           </Trans>
         </Prompt.DescriptionText>
@@ -660,7 +660,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
             a.pb_xl,
           ]}>
           <Trans>
-            Bluesky cannot confirm the authenticity of the claimed date.
+            Gander cannot confirm the authenticity of the claimed date.
           </Trans>
         </Text>
         <Prompt.Actions>
@@ -672,8 +672,8 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
 }
 
 function getThreadAuthor(
-  post: AppBskyFeedDefs.PostView,
-  record: AppBskyFeedPost.Record,
+  post: AppGndrFeedDefs.PostView,
+  record: AppGndrFeedPost.Record,
 ): string {
   if (!record.reply) {
     return post.author.did

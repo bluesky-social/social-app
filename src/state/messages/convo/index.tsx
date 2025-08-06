@@ -1,5 +1,5 @@
 import React, {useContext, useState, useSyncExternalStore} from 'react'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatGndrConvoDefs} from '@gander-social-atproto/api'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -65,7 +65,7 @@ export function ConvoProvider({
   const agent = useAgent()
   const events = useMessagesEventBus()
   const [convo] = useState(() => {
-    const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
+    const placeholder = queryClient.getQueryData<ChatGndrConvoDefs.ConvoView>(
       getConvoKey(convoId),
     )
     return new Convo({

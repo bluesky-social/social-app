@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
 import {findNodeHandle, type ListRenderItemInfo, View} from 'react-native'
 import {
-  type AppBskyLabelerDefs,
+  type AppGndrLabelerDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinitions,
   type ModerationOpts,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -25,7 +25,7 @@ import {type SectionRef} from './types'
 interface LabelsSectionProps {
   ref: React.Ref<SectionRef>
   isLabelerLoading: boolean
-  labelerInfo: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  labelerInfo: AppGndrLabelerDefs.LabelerViewDetailed | undefined
   labelerError: Error | null
   moderationOpts: ModerationOpts
   scrollElRef: ListRef
@@ -160,7 +160,7 @@ export function LabelerListHeader({
 }: {
   isLabelerLoading: boolean
   labelerError?: Error | null
-  labelerInfo?: AppBskyLabelerDefs.LabelerViewDetailed
+  labelerInfo?: AppGndrLabelerDefs.LabelerViewDetailed
   hasValues: boolean
   isSubscribed: boolean
 }) {

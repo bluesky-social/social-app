@@ -1,5 +1,5 @@
 import React from 'react'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -35,7 +35,7 @@ export function ListsScreen({}: Props) {
   const onPressNewList = React.useCallback(() => {
     openModal({
       name: 'create-or-edit-list',
-      purpose: 'app.bsky.graph.defs#curatelist',
+      purpose: 'app.gndr.graph.defs#curatelist',
       onSave: (uri: string) => {
         try {
           const urip = new AtUri(uri)

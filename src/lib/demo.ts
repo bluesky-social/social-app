@@ -1,4 +1,4 @@
-import {type AppBskyFeedGetFeed} from '@atproto/api'
+import {type AppGndrFeedGetFeed} from '@gander-social-atproto/api'
 import {subDays, subMinutes} from 'date-fns'
 
 const DID = `did:plc:z72i7hdynmk6r22z27h6tvur`
@@ -11,17 +11,17 @@ export const DEMO_FEED = {
   feed: [
     {
       post: {
-        uri: 'at://did:plc:pvooorihapc2lf2pijehgrdf/app.bsky.feed.post/3lniysofyll2d',
+        uri: 'at://did:plc:pvooorihapc2lf2pijehgrdf/app.gndr.feed.post/3lniysofyll2d',
         cid: 'bafyreihwh3wxxme732ylbylhhdyz7ex6t4jtu6s3gjxxvnnh4feddhg3ku',
         author: {
           did: 'did:plc:pvooorihapc2lf2pijehgrdf',
-          handle: 'forkedriverband.bsky.social',
+          handle: 'forkedriverband.gndr.social',
           displayName: 'Forked River Band',
-          avatar: 'https://bsky.social/about/adi/post_1_avi.jpg',
+          avatar: 'https://gndr.social/about/adi/post_1_avi.jpg',
           viewer: {
             muted: false,
             blockedBy: false,
-            following: `at://${DID}/app.bsky.graph.follow/post1`,
+            following: `at://${DID}/app.gndr.graph.follow/post1`,
           },
           labels: [],
           createdAt: POST_1_DATE,
@@ -29,7 +29,7 @@ export const DEMO_FEED = {
             verifications: [
               {
                 issuer: DID,
-                uri: `at://${DID}/app.bsky.graph.verification/post1`,
+                uri: `at://${DID}/app.gndr.graph.verification/post1`,
                 isValid: true,
                 createdAt: subDays(NOW, 11).toISOString(),
               },
@@ -39,10 +39,10 @@ export const DEMO_FEED = {
           },
         },
         record: {
-          $type: 'app.bsky.feed.post',
+          $type: 'app.gndr.feed.post',
           createdAt: POST_1_DATE,
           // embed: {
-          //   $type: 'app.bsky.embed.images',
+          //   $type: 'app.gndr.embed.images',
           //   images: [
           //     {
           //       alt: 'Fake flier for Sebastapol Bluegrass Fest',
@@ -66,11 +66,11 @@ export const DEMO_FEED = {
           text: 'Sonoma County folks: Come tip your hats our way and see us play new and old bluegrass tunes at Sebastopol Solstice Fest on June 20th.',
         },
         embed: {
-          $type: 'app.bsky.embed.images#view',
+          $type: 'app.gndr.embed.images#view',
           images: [
             {
-              thumb: 'https://bsky.social/about/adi/post_1_image.jpg',
-              fullsize: 'https://bsky.social/about/adi/post_1_image.jpg',
+              thumb: 'https://gndr.social/about/adi/post_1_image.jpg',
+              fullsize: 'https://gndr.social/about/adi/post_1_image.jpg',
               alt: 'Fake flier for Sebastapol Bluegrass Fest',
               aspectRatio: {
                 height: 1350,
@@ -93,26 +93,26 @@ export const DEMO_FEED = {
     },
     {
       post: {
-        uri: 'at://did:plc:fhhqii56ppgyh5qcm2b3mokf/app.bsky.feed.post/3lnizc7fug52c',
+        uri: 'at://did:plc:fhhqii56ppgyh5qcm2b3mokf/app.gndr.feed.post/3lnizc7fug52c',
         cid: 'bafyreienuabsr55rycirdf4ewue5tjcseg5lzqompcsh2brqzag6hvxllm',
         author: {
           did: 'did:plc:fhhqii56ppgyh5qcm2b3mokf',
-          handle: 'dinh-designs.bsky.social',
+          handle: 'dinh-designs.gndr.social',
           displayName: 'Rich Dinh Designs',
-          avatar: 'https://bsky.social/about/adi/post_2_avi.jpg',
+          avatar: 'https://gndr.social/about/adi/post_2_avi.jpg',
           viewer: {
             muted: false,
             blockedBy: false,
-            following: `at://${DID}/app.bsky.graph.follow/post2`,
+            following: `at://${DID}/app.gndr.graph.follow/post2`,
           },
           labels: [],
           createdAt: POST_2_DATE,
         },
         record: {
-          $type: 'app.bsky.feed.post',
+          $type: 'app.gndr.feed.post',
           createdAt: POST_2_DATE,
           // embed: {
-          //   $type: 'app.bsky.embed.images',
+          //   $type: 'app.gndr.embed.images',
           //   images: [
           //     {
           //       alt: 'Placeholder image of interior design',
@@ -136,11 +136,11 @@ export const DEMO_FEED = {
           text: 'Details from our install at the Lucas residence in Joshua Tree. We populated the space with rich, earthy tones and locally-sourced materials to suit the landscape.',
         },
         embed: {
-          $type: 'app.bsky.embed.images#view',
+          $type: 'app.gndr.embed.images#view',
           images: [
             {
-              thumb: 'https://bsky.social/about/adi/post_2_image.jpg',
-              fullsize: 'https://bsky.social/about/adi/post_2_image.jpg',
+              thumb: 'https://gndr.social/about/adi/post_2_image.jpg',
+              fullsize: 'https://gndr.social/about/adi/post_2_image.jpg',
               alt: 'Placeholder image of interior design',
               aspectRatio: {
                 height: 872,
@@ -163,23 +163,23 @@ export const DEMO_FEED = {
     },
     {
       post: {
-        uri: 'at://did:plc:h7fwnfejmmifveeea5eyxgkc/app.bsky.feed.post/3lnizna3g4f2t',
+        uri: 'at://did:plc:h7fwnfejmmifveeea5eyxgkc/app.gndr.feed.post/3lnizna3g4f2t',
         cid: 'bafyreiepn7obmlshliori4j34texpaukrqkyyu7cq6nmpzk4lkis7nqeae',
         author: {
           did: 'did:plc:h7fwnfejmmifveeea5eyxgkc',
-          handle: 'rodyalbuerne.bsky.social',
+          handle: 'rodyalbuerne.gndr.social',
           displayName: 'Rody Albuerne',
-          avatar: 'https://bsky.social/about/adi/post_3_avi.jpg',
+          avatar: 'https://gndr.social/about/adi/post_3_avi.jpg',
           viewer: {
             muted: false,
             blockedBy: false,
-            following: `at://${DID}/app.bsky.graph.follow/post3`,
+            following: `at://${DID}/app.gndr.graph.follow/post3`,
           },
           labels: [],
           createdAt: POST_3_DATE,
         },
         record: {
-          $type: 'app.bsky.feed.post',
+          $type: 'app.gndr.feed.post',
           createdAt: POST_3_DATE,
           langs: ['en'],
           text: 'Tinkering with the basics of traditional wooden joinery in my shop lately. Starting small with this ox, made using simple mortise and tenon joints.',
@@ -197,6 +197,6 @@ export const DEMO_FEED = {
       },
     },
   ],
-} satisfies AppBskyFeedGetFeed.OutputSchema
+} satisfies AppGndrFeedGetFeed.OutputSchema
 
-export const BOTTOM_BAR_AVI = 'https://bsky.social/about/adi/user_avi.jpg'
+export const BOTTOM_BAR_AVI = 'https://gndr.social/about/adi/user_avi.jpg'

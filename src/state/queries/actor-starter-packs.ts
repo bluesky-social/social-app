@@ -1,8 +1,8 @@
-import {AppBskyGraphGetActorStarterPacks} from '@atproto/api'
+import {type AppGndrGraphGetActorStarterPacks} from '@gander-social-atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -21,15 +21,15 @@ export function useActorStarterPacksQuery({
   const agent = useAgent()
 
   return useInfiniteQuery<
-    AppBskyGraphGetActorStarterPacks.OutputSchema,
+    AppGndrGraphGetActorStarterPacks.OutputSchema,
     Error,
-    InfiniteData<AppBskyGraphGetActorStarterPacks.OutputSchema>,
+    InfiniteData<AppGndrGraphGetActorStarterPacks.OutputSchema>,
     QueryKey,
     string | undefined
   >({
     queryKey: RQKEY(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
-      const res = await agent.app.bsky.graph.getActorStarterPacks({
+      const res = await agent.app.gndr.graph.getActorStarterPacks({
         actor: did!,
         limit: 10,
         cursor: pageParam,

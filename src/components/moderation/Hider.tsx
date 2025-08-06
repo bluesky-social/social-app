@@ -1,8 +1,8 @@
 import React from 'react'
-import {ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@gander-social-atproto/api'
 
 import {
-  ModerationCauseDescription,
+  type ModerationCauseDescription,
   useModerationCauseDescription,
 } from '#/lib/moderation/useModerationCauseDescription'
 import {

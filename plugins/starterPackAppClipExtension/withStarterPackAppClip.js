@@ -5,7 +5,7 @@ const {withClipInfoPlist} = require('./withClipInfoPlist')
 const {withFiles} = require('./withFiles')
 const {withXcodeTarget} = require('./withXcodeTarget')
 
-const APP_CLIP_TARGET_NAME = 'BlueskyClip'
+const APP_CLIP_TARGET_NAME = 'GanderClip'
 
 const withStarterPackAppClip = config => {
   return withPlugins(config, [

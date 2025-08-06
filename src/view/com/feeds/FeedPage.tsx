@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
+import {type AppGndrActorDefs, AppGndrFeedDefs} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
@@ -50,7 +50,7 @@ export function FeedPage({
   isPageAdjacent: boolean
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: AppGndrActorDefs.SavedFeed
   feedInfo: SavedFeedSourceInfo
 }) {
   const {hasSession} = useSession()
@@ -66,10 +66,10 @@ export function FeedPage({
   const [hasNew, setHasNew] = useState(false)
   const setHomeBadge = useSetHomeBadge()
   const isVideoFeed = useMemo(() => {
-    const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
+    const isGndrVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
-      feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
-    const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
+      feedInfo.contentMode === AppGndrFeedDefs.CONTENTMODEVIDEO
+    const _isVideoFeed = isGndrVideoFeed || feedIsVideoMode
     return isNative && _isVideoFeed
   }, [feedInfo])
 

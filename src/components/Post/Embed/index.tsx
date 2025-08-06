@@ -2,12 +2,12 @@ import React from 'react'
 import {View} from 'react-native'
 import {
   type $Typed,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
   AtUri,
   moderatePost,
   RichText as RichTextAPI,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -24,12 +24,12 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 import {
   type Embed as TEmbed,
   type EmbedType,
   parseEmbed,
-} from '#/types/bsky/post'
+} from '#/types/gndr/post'
 import {ExternalEmbed} from './ExternalEmbed'
 import {ModeratedFeedEmbed} from './FeedEmbed'
 import {ImageEmbed} from './ImageEmbed'
@@ -226,10 +226,10 @@ export function QuoteEmbed({
   viewContext?: QuoteEmbedViewContext
 }) {
   const moderationOpts = useModerationOpts()
-  const quote = React.useMemo<$Typed<AppBskyFeedDefs.PostView>>(
+  const quote = React.useMemo<$Typed<AppGndrFeedDefs.PostView>>(
     () => ({
       ...embed.view,
-      $type: 'app.bsky.feed.defs#postView',
+      $type: 'app.gndr.feed.defs#postView',
       record: embed.view.value,
       embed: embed.view.embeds?.[0],
     }),
@@ -248,9 +248,9 @@ export function QuoteEmbed({
 
   const richText = React.useMemo(() => {
     if (
-      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      !gndr.dangerousIsType<AppGndrFeedPost.Record>(
         quote.record,
-        AppBskyFeedPost.isRecord,
+        AppGndrFeedPost.isRecord,
       )
     )
       return undefined

@@ -244,12 +244,12 @@ function SubtitleFileRow({
             onChange={evt => handleValueChange(evt.target.value)}
             style={{maxWidth: 200, flex: 1}}>
             <option value="" disabled selected hidden>
-              {/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
+              {/* eslint-disable-next-line gndr-internal/avoid-unwrapped-text */}
               <Trans>Select language...</Trans>
             </option>
             {otherLanguages.map(lang => (
               <option key={langCode(lang)} value={langCode(lang)}>
-                {/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
+                {/* eslint-disable-next-line gndr-internal/avoid-unwrapped-text */}
                 {`${lang.name} (${langCode(lang)})`}
               </option>
             ))}

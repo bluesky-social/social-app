@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedExternal} from '@atproto/api'
+import {type AppGndrEmbedExternal} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -27,7 +27,7 @@ export const ExternalEmbed = ({
   style,
   hideAlt,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
+  link: AppGndrEmbedExternal.ViewExternal
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   hideAlt?: boolean

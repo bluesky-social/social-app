@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  type AppBskyFeedDefs,
-  AppBskyFeedPostgate,
+  AppGndrEmbedRecord,
+  AppGndrEmbedRecordWithMedia,
+  type AppGndrFeedDefs,
+  AppGndrFeedPostgate,
   AtUri,
-  type BskyAgent,
-} from '@atproto/api'
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
@@ -21,15 +21,15 @@ import {
   POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util'
 import {useAgent} from '#/state/session'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export async function getPostgateRecord({
   agent,
   postUri,
 }: {
-  agent: BskyAgent
+  agent: GndrAgent
   postUri: string
-}): Promise<AppBskyFeedPostgate.Record | undefined> {
+}): Promise<AppGndrFeedPostgate.Record | undefined> {
   const urip = new AtUri(postUri)
 
   if (!urip.host.startsWith('did:')) {
@@ -63,7 +63,7 @@ export async function getPostgateRecord({
 
     if (
       data.value &&
-      bsky.validate(data.value, AppBskyFeedPostgate.validateRecord)
+      gndr.validate(data.value, AppGndrFeedPostgate.validateRecord)
     ) {
       return data.value
     } else {
@@ -88,9 +88,9 @@ export async function writePostgateRecord({
   postUri,
   postgate,
 }: {
-  agent: BskyAgent
+  agent: GndrAgent
   postUri: string
-  postgate: AppBskyFeedPostgate.Record
+  postgate: AppGndrFeedPostgate.Record
 }) {
   const postUrip = new AtUri(postUri)
 
@@ -109,12 +109,12 @@ export async function upsertPostgate(
     agent,
     postUri,
   }: {
-    agent: BskyAgent
+    agent: GndrAgent
     postUri: string
   },
   callback: (
-    postgate: AppBskyFeedPostgate.Record | undefined,
-  ) => Promise<AppBskyFeedPostgate.Record | undefined>,
+    postgate: AppGndrFeedPostgate.Record | undefined,
+  ) => Promise<AppGndrFeedPostgate.Record | undefined>,
 ) {
   const prev = await getPostgateRecord({
     agent,
@@ -153,7 +153,7 @@ export function useWritePostgateMutation() {
       postgate,
     }: {
       postUri: string
-      postgate: AppBskyFeedPostgate.Record
+      postgate: AppGndrFeedPostgate.Record
     }) => {
       return writePostgateRecord({
         agent,
@@ -173,7 +173,7 @@ export function useToggleQuoteDetachmentMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const getPosts = useGetPosts()
-  const prevEmbed = React.useRef<AppBskyFeedDefs.PostView['embed']>()
+  const prevEmbed = React.useRef<AppGndrFeedDefs.PostView['embed']>()
 
   return useMutation({
     mutationFn: async ({
@@ -181,7 +181,7 @@ export function useToggleQuoteDetachmentMutation() {
       quoteUri,
       action,
     }: {
-      post: AppBskyFeedDefs.PostView
+      post: AppGndrFeedDefs.PostView
       quoteUri: string
       action: 'detach' | 'reattach'
     }) => {
@@ -247,8 +247,8 @@ export function useToggleQuoteDetachmentMutation() {
       if (action === 'detach' && prevEmbed.current) {
         // detach failed, add the embed back
         if (
-          AppBskyEmbedRecord.isView(prevEmbed.current) ||
-          AppBskyEmbedRecordWithMedia.isView(prevEmbed.current)
+          AppGndrEmbedRecord.isView(prevEmbed.current) ||
+          AppGndrEmbedRecordWithMedia.isView(prevEmbed.current)
         ) {
           updatePostShadow(queryClient, post.uri, {
             embed: prevEmbed.current,
@@ -277,7 +277,7 @@ export function useToggleQuotepostEnabledMutation() {
         if (prev) {
           if (action === 'disable') {
             return mergePostgateRecords(prev, {
-              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+              embeddingRules: [{$type: 'app.gndr.feed.postgate#disableRule'}],
             })
           } else if (action === 'enable') {
             return {
@@ -289,7 +289,7 @@ export function useToggleQuotepostEnabledMutation() {
           if (action === 'disable') {
             return createPostgateRecord({
               post: postUri,
-              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+              embeddingRules: [{$type: 'app.gndr.feed.postgate#disableRule'}],
             })
           }
         }

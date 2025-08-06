@@ -1,27 +1,27 @@
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@gander-social-atproto/api'
 import psl from 'psl'
 import TLDs from 'tlds'
 
-import {BSKY_SERVICE} from '#/lib/constants'
+import {GNDR_SERVICE} from '#/lib/constants'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 
-export const BSKY_APP_HOST = 'https://bsky.app'
-const BSKY_TRUSTED_HOSTS = [
-  'bsky\\.app',
-  'bsky\\.social',
-  'blueskyweb\\.xyz',
-  'blueskyweb\\.zendesk\\.com',
+export const GNDR_APP_HOST = 'https://gndr.app'
+const GNDR_TRUSTED_HOSTS = [
+  'gndr\\.app',
+  'gndr\\.social',
+  'ganderweb\\.xyz',
+  'ganderweb\\.zendesk\\.com',
   ...(__DEV__ ? ['localhost:19006', 'localhost:8100'] : []),
 ]
 
 /*
- * This will allow any BSKY_TRUSTED_HOSTS value by itself or with a subdomain.
+ * This will allow any GNDR_TRUSTED_HOSTS value by itself or with a subdomain.
  * It will also allow relative paths like /profile as well as #.
  */
 const TRUSTED_REGEX = new RegExp(
-  `^(http(s)?://(([\\w-]+\\.)?${BSKY_TRUSTED_HOSTS.join(
+  `^(http(s)?://(([\\w-]+\\.)?${GNDR_TRUSTED_HOSTS.join(
     '|([\\w-]+\\.)?',
   )})|/|#)`,
 )
@@ -51,8 +51,8 @@ export function makeRecordUri(
 export function toNiceDomain(url: string): string {
   try {
     const urlp = new URL(url)
-    if (`https://${urlp.host}` === BSKY_SERVICE) {
-      return 'Bluesky Social'
+    if (`https://${urlp.host}` === GNDR_SERVICE) {
+      return 'Gander Social'
     }
     return urlp.host ? urlp.host : url
   } catch (e) {
@@ -79,35 +79,35 @@ export function toShortUrl(url: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
-    const urlp = new URL('https://bsky.app')
+    const urlp = new URL('https://gndr.app')
     urlp.pathname = url
     url = urlp.toString()
   }
   return url
 }
 
-export function toBskyAppUrl(url: string): string {
-  return new URL(url, BSKY_APP_HOST).toString()
+export function toGndrAppUrl(url: string): string {
+  return new URL(url, GNDR_APP_HOST).toString()
 }
 
-export function isBskyAppUrl(url: string): boolean {
-  return url.startsWith('https://bsky.app/')
+export function isGndrAppUrl(url: string): boolean {
+  return url.startsWith('https://gndr.app/')
 }
 
 export function isRelativeUrl(url: string): boolean {
   return /^\/[^/]/.test(url)
 }
 
-export function isBskyRSSUrl(url: string): boolean {
+export function isGndrRSSUrl(url: string): boolean {
   return (
-    (url.startsWith('https://bsky.app/') || isRelativeUrl(url)) &&
+    (url.startsWith('https://gndr.app/') || isRelativeUrl(url)) &&
     /\/rss\/?$/.test(url)
   )
 }
 
 export function isExternalUrl(url: string): boolean {
-  const external = !isBskyAppUrl(url) && url.startsWith('http')
-  const rss = isBskyRSSUrl(url)
+  const external = !isGndrAppUrl(url) && url.startsWith('http')
+  const rss = isGndrRSSUrl(url)
   return external || rss
 }
 
@@ -115,8 +115,8 @@ export function isTrustedUrl(url: string): boolean {
   return TRUSTED_REGEX.test(url)
 }
 
-export function isBskyPostUrl(url: string): boolean {
-  if (isBskyAppUrl(url)) {
+export function isGndrPostUrl(url: string): boolean {
+  if (isGndrAppUrl(url)) {
     try {
       const urlp = new URL(url)
       return /profile\/(?<name>[^/]+)\/post\/(?<rkey>[^/]+)/i.test(
@@ -127,8 +127,8 @@ export function isBskyPostUrl(url: string): boolean {
   return false
 }
 
-export function isBskyCustomFeedUrl(url: string): boolean {
-  if (isBskyAppUrl(url)) {
+export function isGndrCustomFeedUrl(url: string): boolean {
+  if (isGndrAppUrl(url)) {
     try {
       const urlp = new URL(url)
       return /profile\/(?<name>[^/]+)\/feed\/(?<rkey>[^/]+)/i.test(
@@ -139,57 +139,57 @@ export function isBskyCustomFeedUrl(url: string): boolean {
   return false
 }
 
-export function isBskyListUrl(url: string): boolean {
-  if (isBskyAppUrl(url)) {
+export function isGndrListUrl(url: string): boolean {
+  if (isGndrAppUrl(url)) {
     try {
       const urlp = new URL(url)
       return /profile\/(?<name>[^/]+)\/lists\/(?<rkey>[^/]+)/i.test(
         urlp.pathname,
       )
     } catch {
-      console.error('Unexpected error in isBskyListUrl()', url)
+      console.error('Unexpected error in isGndrListUrl()', url)
     }
   }
   return false
 }
 
-export function isBskyStartUrl(url: string): boolean {
-  if (isBskyAppUrl(url)) {
+export function isGndrStartUrl(url: string): boolean {
+  if (isGndrAppUrl(url)) {
     try {
       const urlp = new URL(url)
       return /start\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname)
     } catch {
-      console.error('Unexpected error in isBskyStartUrl()', url)
+      console.error('Unexpected error in isGndrStartUrl()', url)
     }
   }
   return false
 }
 
-export function isBskyStarterPackUrl(url: string): boolean {
-  if (isBskyAppUrl(url)) {
+export function isGndrStarterPackUrl(url: string): boolean {
+  if (isGndrAppUrl(url)) {
     try {
       const urlp = new URL(url)
       return /starter-pack\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname)
     } catch {
-      console.error('Unexpected error in isBskyStartUrl()', url)
+      console.error('Unexpected error in isGndrStartUrl()', url)
     }
   }
   return false
 }
 
-export function isBskyDownloadUrl(url: string): boolean {
+export function isGndrDownloadUrl(url: string): boolean {
   if (isExternalUrl(url)) {
     return false
   }
   return url === '/download' || url.startsWith('/download?')
 }
 
-export function convertBskyAppUrlIfNeeded(url: string): string {
-  if (isBskyAppUrl(url)) {
+export function convertGndrAppUrlIfNeeded(url: string): string {
+  if (isGndrAppUrl(url)) {
     try {
       const urlp = new URL(url)
 
-      if (isBskyStartUrl(url)) {
+      if (isGndrStartUrl(url)) {
         return startUriToStarterPackUri(urlp.pathname)
       }
 
@@ -200,7 +200,7 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
 
       return urlp.pathname
     } catch (e) {
-      console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
+      console.error('Unexpected error in convertGndrAppUrlIfNeeded()', e)
     }
   } else if (isShortLink(url)) {
     // We only want to do this on native, web handles the 301 for us
@@ -320,9 +320,9 @@ export function splitApexDomain(hostname: string): [string, string] {
   ]
 }
 
-export function createBskyAppAbsoluteUrl(path: string): string {
-  const sanitizedPath = path.replace(BSKY_APP_HOST, '').replace(/^\/+/, '')
-  return `${BSKY_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`
+export function createGndrAppAbsoluteUrl(path: string): string {
+  const sanitizedPath = path.replace(GNDR_APP_HOST, '').replace(/^\/+/, '')
+  return `${GNDR_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`
 }
 
 export function createProxiedUrl(url: string): string {
@@ -337,11 +337,11 @@ export function createProxiedUrl(url: string): string {
     return url
   }
 
-  return `https://go.bsky.app/redirect?u=${encodeURIComponent(url)}`
+  return `https://go.gndr.app/redirect?u=${encodeURIComponent(url)}`
 }
 
 export function isShortLink(url: string): boolean {
-  return url.startsWith('https://go.bsky.app/')
+  return url.startsWith('https://go.gndr.app/')
 }
 
 export function shortLinkToHref(url: string): string {

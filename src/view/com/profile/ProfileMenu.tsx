@@ -1,5 +1,5 @@
 import React, {memo} from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -61,7 +61,7 @@ import {useDevMode} from '#/storage/hooks/dev-mode'
 let ProfileMenu = ({
   profile,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<AppGndrActorDefs.ProfileViewDetailed>
 }): React.ReactNode => {
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
@@ -444,7 +444,7 @@ let ProfileMenu = ({
         control={reportDialogControl}
         subject={{
           ...profile,
-          $type: 'app.bsky.actor.defs#profileViewDetailed',
+          $type: 'app.gndr.actor.defs#profileViewDetailed',
         }}
       />
 

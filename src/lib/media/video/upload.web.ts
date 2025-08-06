@@ -1,12 +1,12 @@
-import {AppBskyVideoDefs} from '@atproto/api'
-import {BskyAgent} from '@atproto/api'
-import {I18n} from '@lingui/core'
+import {type AppGndrVideoDefs} from '@gander-social-atproto/api'
+import {type GndrAgent} from '@gander-social-atproto/api'
+import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
-import {CompressedVideo} from '#/lib/media/video/types'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 
@@ -19,7 +19,7 @@ export async function uploadVideo({
   _,
 }: {
   video: CompressedVideo
-  agent: BskyAgent
+  agent: GndrAgent
   did: string
   setProgress: (progress: number) => void
   signal: AbortSignal
@@ -30,7 +30,7 @@ export async function uploadVideo({
   }
   await getVideoUploadLimits(agent, _)
 
-  const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
+  const uri = createVideoEndpointUrl('/xrpc/app.gndr.video.uploadVideo', {
     did,
     name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
   })
@@ -56,7 +56,7 @@ export async function uploadVideo({
     throw new AbortError()
   }
   const xhr = new XMLHttpRequest()
-  const res = await new Promise<AppBskyVideoDefs.JobStatus>(
+  const res = await new Promise<AppGndrVideoDefs.JobStatus>(
     (resolve, reject) => {
       xhr.upload.addEventListener('progress', e => {
         const progress = e.loaded / e.total
@@ -68,7 +68,7 @@ export async function uploadVideo({
         } else if (xhr.readyState === 4) {
           const uploadRes = JSON.parse(
             xhr.responseText,
-          ) as AppBskyVideoDefs.JobStatus
+          ) as AppGndrVideoDefs.JobStatus
           resolve(uploadRes)
         } else {
           reject(new ServerError(_(msg`Failed to upload video`)))

@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppGndrFeedDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
@@ -61,7 +61,7 @@ export function ProfileFeedScreen(props: Props) {
   const navigation = useNavigation<NavigationProp>()
 
   const uri = useMemo(
-    () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
+    () => makeRecordUri(handleOrDid, 'app.gndr.feed.generator', rkey),
     [rkey, handleOrDid],
   )
   const {error, data: resolvedUri} = useResolveUriQuery(uri)
@@ -193,10 +193,10 @@ export function ProfileFeedScreenInner({
   }, [_])
 
   const isVideoFeed = React.useMemo(() => {
-    const isBskyVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
+    const isGndrVideoFeed = VIDEO_FEED_URIS.includes(feedInfo.uri)
     const feedIsVideoMode =
-      feedInfo.contentMode === AppBskyFeedDefs.CONTENTMODEVIDEO
-    const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
+      feedInfo.contentMode === AppGndrFeedDefs.CONTENTMODEVIDEO
+    const _isVideoFeed = isGndrVideoFeed || feedIsVideoMode
     return isNative && _isVideoFeed
   }, [feedInfo])
 

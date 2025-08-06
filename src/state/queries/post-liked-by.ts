@@ -1,8 +1,11 @@
-import {AppBskyActorDefs, AppBskyFeedGetLikes} from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type AppGndrActorDefs,
+  type AppGndrFeedGetLikes,
+} from '@gander-social-atproto/api'
+import {
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -18,9 +21,9 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 export function useLikedByQuery(resolvedUri: string | undefined) {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyFeedGetLikes.OutputSchema,
+    AppGndrFeedGetLikes.OutputSchema,
     Error,
-    InfiniteData<AppBskyFeedGetLikes.OutputSchema>,
+    InfiniteData<AppGndrFeedGetLikes.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
@@ -42,9 +45,9 @@ export function useLikedByQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedGetLikes.OutputSchema>
+    InfiniteData<AppGndrFeedGetLikes.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })

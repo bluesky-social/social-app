@@ -2,7 +2,7 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
+import {type AppGndrNotificationRegisterPush, type AtpAgent} from '@gander-social-atproto/api'
 import debounce from 'lodash.debounce'
 
 import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
@@ -14,7 +14,7 @@ import BackgroundNotificationHandler from '#/../modules/expo-background-notifica
 
 /**
  * @private
- * Registers the device's push notification token with the Bluesky server.
+ * Registers the device's push notification token with the Gander server.
  */
 async function _registerPushToken({
   agent,
@@ -30,19 +30,19 @@ async function _registerPushToken({
   }
 }) {
   try {
-    const payload: AppBskyNotificationRegisterPush.InputSchema = {
+    const payload: AppGndrNotificationRegisterPush.InputSchema = {
       serviceDid: currentAccount.service?.includes('staging')
         ? PUBLIC_STAGING_APPVIEW_DID
         : PUBLIC_APPVIEW_DID,
       platform: Platform.OS,
       token: token.data,
-      appId: 'xyz.blueskyweb.app',
+      appId: 'xyz.ganderweb.app',
       ageRestricted: extra.ageRestricted ?? false,
     }
 
     notyLogger.debug(`registerPushToken: registering`, {...payload})
 
-    await agent.app.bsky.notification.registerPush(payload)
+    await agent.app.gndr.notification.registerPush(payload)
 
     notyLogger.debug(`registerPushToken: success`)
   } catch (error) {
@@ -57,7 +57,7 @@ async function _registerPushToken({
 const _registerPushTokenDebounced = debounce(_registerPushToken, 100)
 
 /**
- * Hook to register the device's push notification token with the Bluesky. If
+ * Hook to register the device's push notification token with the Gander. If
  * the user is not logged in, this will do nothing.
  *
  * Use this instead of using `_registerPushToken` or
@@ -101,7 +101,7 @@ async function getPushToken() {
 }
 
 /**
- * Hook to get the device push token and register it with the Bluesky server.
+ * Hook to get the device push token and register it with the Gander server.
  * Should only be called after a user has logged-in, since registration is an
  * authed endpoint.
  *
@@ -118,7 +118,7 @@ async function getPushToken() {
  *
  * @see https://github.com/expo/expo/issues/28656
  * @see https://github.com/expo/expo/issues/29909
- * @see https://github.com/bluesky-social/social-app/pull/4467
+ * @see https://github.com/gander-social/social-app/pull/4467
  */
 export function useGetAndRegisterPushToken() {
   const {isAgeRestricted} = useAgeAssuranceContext()
@@ -159,7 +159,7 @@ export function useGetAndRegisterPushToken() {
 }
 
 /**
- * Hook to register the device's push notification token with the Bluesky
+ * Hook to register the device's push notification token with the Gander
  * server, as well as listen for push token updates, should they occurr.
  *
  * Registered via the shell, which wraps the navigation stack, meaning if we
@@ -189,7 +189,7 @@ export function useNotificationsRegistration() {
     getAndRegisterPushToken()
 
     /**
-     * Register the push token with the Bluesky server, whenever it changes.
+     * Register the push token with the Gander server, whenever it changes.
      * This is also fired any time `getDevicePushTokenAsync` is called.
      *
      * Since this is registered immediately after `getAndRegisterPushToken`, it
@@ -260,7 +260,7 @@ export function useRequestNotificationsPermission() {
          * Right after login, `currentAccount` in this scope will be undefined,
          * but calling `getPushToken` will result in `addPushTokenListener`
          * listeners being called, which will handle the registration with the
-         * Bluesky server.
+         * Gander server.
          */
         getPushToken()
       }

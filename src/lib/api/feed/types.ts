@@ -1,12 +1,12 @@
-import {AppBskyFeedDefs} from '@atproto/api'
+import {type AppGndrFeedDefs} from '@gander-social-atproto/api'
 
 export interface FeedAPIResponse {
   cursor?: string
-  feed: AppBskyFeedDefs.FeedViewPost[]
+  feed: AppGndrFeedDefs.FeedViewPost[]
 }
 
 export interface FeedAPI {
-  peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost>
+  peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost>
   fetch({
     cursor,
     limit,

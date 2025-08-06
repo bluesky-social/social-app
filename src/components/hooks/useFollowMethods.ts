@@ -2,19 +2,19 @@ import React from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {LogEvents} from '#/lib/statsig/statsig'
+import {type LogEvents} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useRequireAuth} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function useFollowMethods({
   profile,
   logContext,
 }: {
-  profile: Shadow<bsky.profile.AnyProfileView>
+  profile: Shadow<gndr.profile.AnyProfileView>
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext']
 }) {

@@ -1,8 +1,11 @@
-import {AppBskyActorDefs, AppBskyFeedGetRepostedBy} from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type AppGndrActorDefs,
+  type AppGndrFeedGetRepostedBy,
+} from '@gander-social-atproto/api'
+import {
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -18,9 +21,9 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 export function usePostRepostedByQuery(resolvedUri: string | undefined) {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyFeedGetRepostedBy.OutputSchema,
+    AppGndrFeedGetRepostedBy.OutputSchema,
     Error,
-    InfiniteData<AppBskyFeedGetRepostedBy.OutputSchema>,
+    InfiniteData<AppGndrFeedGetRepostedBy.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
@@ -42,9 +45,9 @@ export function usePostRepostedByQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedGetRepostedBy.OutputSchema>
+    InfiniteData<AppGndrFeedGetRepostedBy.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })

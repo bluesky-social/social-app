@@ -1,4 +1,4 @@
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@gander-social-atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
@@ -21,10 +21,10 @@ export function useUpdateActorDeclaration({
       if (!currentAccount) throw new Error('Not signed in')
       const result = await agent.com.atproto.repo.putRecord({
         repo: currentAccount.did,
-        collection: 'chat.bsky.actor.declaration',
+        collection: 'chat.gndr.actor.declaration',
         rkey: 'self',
         record: {
-          $type: 'chat.bsky.actor.declaration',
+          $type: 'chat.gndr.actor.declaration',
           allowIncoming,
         },
       })
@@ -34,7 +34,7 @@ export function useUpdateActorDeclaration({
       if (!currentAccount) return
       queryClient.setQueryData(
         PROFILE_RKEY(currentAccount?.did),
-        (old?: AppBskyActorDefs.ProfileViewDetailed) => {
+        (old?: AppGndrActorDefs.ProfileViewDetailed) => {
           if (!old) return old
           return {
             ...old,
@@ -44,7 +44,7 @@ export function useUpdateActorDeclaration({
                 allowIncoming,
               },
             },
-          } satisfies AppBskyActorDefs.ProfileViewDetailed
+          } satisfies AppGndrActorDefs.ProfileViewDetailed
         },
       )
     },
@@ -71,7 +71,7 @@ export function useDeleteActorDeclaration() {
       if (!currentAccount) throw new Error('Not signed in')
       const result = await agent.api.com.atproto.repo.deleteRecord({
         repo: currentAccount.did,
-        collection: 'chat.bsky.actor.declaration',
+        collection: 'chat.gndr.actor.declaration',
         rkey: 'self',
       })
       return result

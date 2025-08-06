@@ -46,9 +46,9 @@ function createTenorApi<Input extends object>(
     params.set(
       'client_key',
       Platform.select({
-        ios: 'bluesky-ios',
-        android: 'bluesky-android',
-        default: 'bluesky-web',
+        ios: 'gander-ios',
+        android: 'gander-android',
+        default: 'gander-web',
       }),
     )
 
@@ -87,15 +87,15 @@ function createTenorApi<Input extends object>(
   }
 }
 
-export function tenorUrlToBskyGifUrl(tenorUrl: string) {
+export function tenorUrlToGndrGifUrl(tenorUrl: string) {
   let url
   try {
     url = new URL(tenorUrl)
   } catch (e) {
-    logger.debug('invalid url passed to tenorUrlToBskyGifUrl()')
+    logger.debug('invalid url passed to tenorUrlToGndrGifUrl()')
     return ''
   }
-  url.hostname = 't.gifs.bsky.app'
+  url.hostname = 't.gifs.gndr.app'
   return url.href
 }
 

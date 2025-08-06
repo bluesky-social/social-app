@@ -1,0 +1,4 @@
+Contact: mailto:security@gndr.app
+Preferred-Languages: en
+Canonical: https://gndr.app/.well-known/security.txt
+Acknowledgements: https://github.com/gander-social/atproto/blob/main/CONTRIBUTORS.md

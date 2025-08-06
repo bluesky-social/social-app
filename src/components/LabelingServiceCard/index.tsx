@@ -1,22 +1,22 @@
-import React from 'react'
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {type AppGndrLabelerDefs} from '@gander-social-atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '../icons/Chevron'
 
 type LabelingServiceProps = {
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
+  labeler: AppGndrLabelerDefs.LabelerViewDetailed
 }
 
 export function Outer({
@@ -187,7 +187,7 @@ export function Loader({
   loading?: React.ComponentType<{}>
   error?: React.ComponentType<{error: string}>
   component: React.ComponentType<{
-    labeler: AppBskyLabelerDefs.LabelerViewDetailed
+    labeler: AppGndrLabelerDefs.LabelerViewDetailed
   }>
 }) {
   const {isLoading, data, error} = useLabelerInfoQuery({did})

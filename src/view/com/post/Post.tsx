@@ -1,14 +1,14 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
   AtUri,
   moderatePost,
   type ModerationDecision,
   RichText as RichTextAPI,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -41,7 +41,7 @@ import {PostControls} from '#/components/PostControls'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export function Post({
   post,
@@ -49,15 +49,15 @@ export function Post({
   hideTopBorder,
   style,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: AppGndrFeedDefs.PostView
   showReplyLine?: boolean
   hideTopBorder?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const moderationOpts = useModerationOpts()
-  const record = useMemo<AppBskyFeedPost.Record | undefined>(
+  const record = useMemo<AppGndrFeedPost.Record | undefined>(
     () =>
-      bsky.validate(post.record, AppBskyFeedPost.validateRecord)
+      gndr.validate(post.record, AppGndrFeedPost.validateRecord)
         ? post.record
         : undefined,
     [post],
@@ -105,8 +105,8 @@ function PostInner({
   hideTopBorder,
   style,
 }: {
-  post: Shadow<AppBskyFeedDefs.PostView>
-  record: AppBskyFeedPost.Record
+  post: Shadow<AppGndrFeedDefs.PostView>
+  record: AppGndrFeedPost.Record
   richText: RichTextAPI
   moderation: ModerationDecision
   showReplyLine?: boolean

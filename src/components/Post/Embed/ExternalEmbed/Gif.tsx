@@ -21,8 +21,8 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
-import {type GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
+import {GifView} from '../../../../../modules/expo-gander-gif-view'
+import {type GifViewStateChangeEvent} from '../../../../../modules/expo-gander-gif-view/src/GifView.types'
 
 function PlaybackControls({
   onPress,

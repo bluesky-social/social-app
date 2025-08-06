@@ -1,9 +1,9 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type ChatBskyConvoDefs,
-  type ChatBskyConvoListConvos,
-} from '@atproto/api'
+  type ChatGndrConvoDefs,
+  type ChatGndrConvoListConvos,
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -119,10 +119,10 @@ function RequestList({
   hasUnreadConvos,
 }: {
   listConvosQuery: UseInfiniteQueryResult<
-    InfiniteData<ChatBskyConvoListConvos.OutputSchema>,
+    InfiniteData<ChatGndrConvoListConvos.OutputSchema>,
     Error
   >
-  conversations: ChatBskyConvoDefs.ConvoView[]
+  conversations: ChatGndrConvoDefs.ConvoView[]
   hasUnreadConvos: boolean
 }) {
   const {_} = useLingui()
@@ -297,11 +297,11 @@ function RequestList({
   )
 }
 
-function keyExtractor(item: ChatBskyConvoDefs.ConvoView) {
+function keyExtractor(item: ChatGndrConvoDefs.ConvoView) {
   return item.id
 }
 
-function renderItem({item}: {item: ChatBskyConvoDefs.ConvoView}) {
+function renderItem({item}: {item: ChatGndrConvoDefs.ConvoView}) {
   return <RequestListItem convo={item} />
 }
 

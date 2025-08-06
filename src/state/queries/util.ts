@@ -1,14 +1,18 @@
 import {
-  AppBskyActorDefs,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-} from '@atproto/api'
-import {InfiniteData, QueryClient, QueryKey} from '@tanstack/react-query'
+  type AppGndrActorDefs,
+  AppGndrEmbedRecord,
+  AppGndrEmbedRecordWithMedia,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
+  type AtUri,
+} from '@gander-social-atproto/api'
+import {
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
+} from '@tanstack/react-query'
 
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 export async function truncateAndInvalidate<T = any>(
   queryClient: QueryClient,
@@ -34,7 +38,7 @@ export async function truncateAndInvalidate<T = any>(
 // of the currentUri that is being checked.
 export function didOrHandleUriMatches(
   atUri: AtUri,
-  record: {uri: string; author: AppBskyActorDefs.ProfileViewBasic},
+  record: {uri: string; author: AppGndrActorDefs.ProfileViewBasic},
 ) {
   if (atUri.host.startsWith('did:')) {
     return atUri.href === record.uri
@@ -45,26 +49,26 @@ export function didOrHandleUriMatches(
 
 export function getEmbeddedPost(
   v: unknown,
-): AppBskyEmbedRecord.ViewRecord | undefined {
+): AppGndrEmbedRecord.ViewRecord | undefined {
   if (
-    bsky.dangerousIsType<AppBskyEmbedRecord.View>(v, AppBskyEmbedRecord.isView)
+    gndr.dangerousIsType<AppGndrEmbedRecord.View>(v, AppGndrEmbedRecord.isView)
   ) {
     if (
-      AppBskyEmbedRecord.isViewRecord(v.record) &&
-      AppBskyFeedPost.isRecord(v.record.value)
+      AppGndrEmbedRecord.isViewRecord(v.record) &&
+      AppGndrFeedPost.isRecord(v.record.value)
     ) {
       return v.record
     }
   }
   if (
-    bsky.dangerousIsType<AppBskyEmbedRecordWithMedia.View>(
+    gndr.dangerousIsType<AppGndrEmbedRecordWithMedia.View>(
       v,
-      AppBskyEmbedRecordWithMedia.isView,
+      AppGndrEmbedRecordWithMedia.isView,
     )
   ) {
     if (
-      AppBskyEmbedRecord.isViewRecord(v.record.record) &&
-      AppBskyFeedPost.isRecord(v.record.record.value)
+      AppGndrEmbedRecord.isViewRecord(v.record.record) &&
+      AppGndrFeedPost.isRecord(v.record.record.value)
     ) {
       return v.record.record
     }
@@ -72,8 +76,8 @@ export function getEmbeddedPost(
 }
 
 export function embedViewRecordToPostView(
-  v: AppBskyEmbedRecord.ViewRecord,
-): AppBskyFeedDefs.PostView {
+  v: AppGndrEmbedRecord.ViewRecord,
+): AppGndrFeedDefs.PostView {
   return {
     uri: v.uri,
     cid: v.cid,

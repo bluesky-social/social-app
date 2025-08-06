@@ -14,7 +14,7 @@
  * -prf
  */
 
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@gander-social-atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
@@ -51,7 +51,7 @@ export function useDangerousListMembershipsQuery() {
       let cursor
       let arr: ListMembersip[] = []
       for (let i = 0; i < SANITY_PAGE_LIMIT; i++) {
-        const res = await agent.app.bsky.graph.listitem.list({
+        const res = await agent.app.gndr.graph.listitem.list({
           repo: currentAccount.did,
           limit: PAGE_SIZE,
           cursor,
@@ -109,7 +109,7 @@ export function useListMembershipAddMutation({
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      const res = await agent.app.bsky.graph.listitem.create(
+      const res = await agent.app.gndr.graph.listitem.create(
         {repo: currentAccount.did},
         {
           subject: actorDid,
@@ -177,7 +177,7 @@ export function useListMembershipRemoveMutation({
         throw new Error('Not signed in')
       }
       const membershipUrip = new AtUri(membershipUri)
-      await agent.app.bsky.graph.listitem.delete({
+      await agent.app.gndr.graph.listitem.delete({
         repo: currentAccount.did,
         rkey: membershipUrip.rkey,
       })

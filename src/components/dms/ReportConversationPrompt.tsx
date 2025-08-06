@@ -1,7 +1,7 @@
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 
 export function ReportConversationPrompt({

@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-  BskyAgent,
   DEFAULT_LABEL_SETTINGS,
+  GndrAgent,
   interpretLabelValueDefinitions,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useLabelersDetailedInfoQuery} from '../labeler'
@@ -25,7 +25,7 @@ export function useMyLabelersQuery({
   const prefs = usePreferencesQuery()
   let dids = Array.from(
     new Set(
-      BskyAgent.appLabelers.concat(
+      GndrAgent.appLabelers.concat(
         prefs.data?.moderationPrefs.labelers.map(l => l.did) || [],
       ),
     ),

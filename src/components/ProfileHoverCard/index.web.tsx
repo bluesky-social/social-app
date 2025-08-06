@@ -1,14 +1,13 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
+import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {
-  type AppBskyActorDefs,
+  type AppGndrActorDefs,
   moderateProfile,
   type ModerationOpts,
-} from '@atproto/api'
-import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
+} from '@gander-social-atproto/api'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {isTouchDevice} from '#/lib/browser'
@@ -43,6 +42,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {useNavigation} from '#/Navigation'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -416,7 +416,7 @@ function Inner({
   moderationOpts,
   hide,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hide: () => void
 }) {

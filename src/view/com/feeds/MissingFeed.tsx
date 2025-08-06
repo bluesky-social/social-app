@@ -1,5 +1,5 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

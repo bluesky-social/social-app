@@ -81,7 +81,7 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
 
           setThreadMute(root, true)
 
-          await agent.api.app.bsky.graph
+          await agent.api.app.gndr.graph
             .muteThread({root})
             // not a big deal if this fails, since the post might have been deleted
             .catch(console.error)

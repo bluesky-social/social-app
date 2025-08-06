@@ -1,4 +1,4 @@
-import {type Did} from '@atproto/api'
+import {type Did} from '@gander-social-atproto/api'
 
 import packageJson from '#/../package.json'
 
@@ -66,7 +66,7 @@ export const LOG_DEBUG: string = process.env.EXPO_PUBLIC_LOG_DEBUG || ''
  * The DID of the chat service to proxy to
  */
 export const CHAT_PROXY_DID: Did =
-  process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
+  process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.gndr.chat'
 
 /**
  * Sentry DSN for telemetry

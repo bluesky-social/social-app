@@ -7,7 +7,7 @@ import Animated, {
   runOnUI,
   useAnimatedRef,
 } from 'react-native-reanimated'
-import {type AppBskyGraphDefs} from '@atproto/api'
+import {type AppGndrGraphDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -42,7 +42,7 @@ export function ProfileSubpageHeader({
   title: string | undefined
   avatar: string | undefined
   isOwner: boolean | undefined
-  purpose: AppBskyGraphDefs.ListPurpose | undefined
+  purpose: AppGndrGraphDefs.ListPurpose | undefined
   creator:
     | {
         did: string
@@ -153,7 +153,7 @@ export function ProfileSubpageHeader({
             <LoadingPlaceholder width={50} height={8} />
           ) : (
             <Text type="lg" style={[pal.textLight]} numberOfLines={1}>
-              {purpose === 'app.bsky.graph.defs#curatelist' ? (
+              {purpose === 'app.gndr.graph.defs#curatelist' ? (
                 isOwner ? (
                   <Trans>List by you</Trans>
                 ) : (
@@ -166,7 +166,7 @@ export function ProfileSubpageHeader({
                     />
                   </Trans>
                 )
-              ) : purpose === 'app.bsky.graph.defs#modlist' ? (
+              ) : purpose === 'app.gndr.graph.defs#modlist' ? (
                 isOwner ? (
                   <Trans>Moderation list by you</Trans>
                 ) : (
@@ -179,7 +179,7 @@ export function ProfileSubpageHeader({
                     />
                   </Trans>
                 )
-              ) : purpose === 'app.bsky.graph.defs#referencelist' ? (
+              ) : purpose === 'app.gndr.graph.defs#referencelist' ? (
                 isOwner ? (
                   <Trans>Starter pack by you</Trans>
                 ) : (

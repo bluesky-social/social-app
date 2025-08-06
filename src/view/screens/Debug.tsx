@@ -4,16 +4,19 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
-import {PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
+import {type PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Button} from '#/view/com/util/forms/Button'
 import {
   DropdownButton,
-  DropdownItem,
+  type DropdownItem,
 } from '#/view/com/util/forms/DropdownButton'
 import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import * as LoadingPlaceholder from '#/view/com/util/LoadingPlaceholder'

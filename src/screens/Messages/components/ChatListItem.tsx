@@ -1,11 +1,11 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
-  AppBskyEmbedRecord,
-  ChatBskyConvoDefs,
+  AppGndrEmbedRecord,
+  ChatGndrConvoDefs,
   moderateProfile,
   type ModerationOpts,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -17,7 +17,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {
   postUriToRelativePath,
-  toBskyAppUrl,
+  toGndrAppUrl,
   toShortUrl,
 } from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
@@ -45,14 +45,14 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export let ChatListItem = ({
   convo,
   showMenu = true,
   children,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
+  convo: ChatGndrConvoDefs.ConvoView
   showMenu?: boolean
   children?: React.ReactNode
 }): React.ReactNode => {
@@ -87,8 +87,8 @@ function ChatListItemReady({
   showMenu,
   children,
 }: {
-  convo: ChatBskyConvoDefs.ConvoView
-  profile: bsky.profile.AnyProfileView
+  convo: ChatGndrConvoDefs.ConvoView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
   showMenu?: boolean
   children?: React.ReactNode
@@ -140,9 +140,9 @@ function ChatListItemReady({
       // eslint-disable-next-line @typescript-eslint/no-shadow
       let lastMessageSentAt: string | null = null
       // eslint-disable-next-line @typescript-eslint/no-shadow
-      let latestReportableMessage: ChatBskyConvoDefs.MessageView | undefined
+      let latestReportableMessage: ChatGndrConvoDefs.MessageView | undefined
 
-      if (ChatBskyConvoDefs.isMessageView(convo.lastMessage)) {
+      if (ChatGndrConvoDefs.isMessageView(convo.lastMessage)) {
         const isFromMe = convo.lastMessage.sender?.did === currentAccount?.did
 
         if (!isFromMe) {
@@ -160,15 +160,15 @@ function ChatListItemReady({
             msg`(contains embedded content)`,
           )
 
-          if (AppBskyEmbedRecord.isView(convo.lastMessage.embed)) {
+          if (AppGndrEmbedRecord.isView(convo.lastMessage.embed)) {
             const embed = convo.lastMessage.embed
 
-            if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
+            if (AppGndrEmbedRecord.isViewRecord(embed.record)) {
               const record = embed.record
               const path = postUriToRelativePath(record.uri, {
                 handle: record.author.handle,
               })
-              const href = path ? toBskyAppUrl(path) : undefined
+              const href = path ? toGndrAppUrl(path) : undefined
               const short = href
                 ? toShortUrl(href)
                 : defaultEmbeddedContentMessage
@@ -189,7 +189,7 @@ function ChatListItemReady({
 
         lastMessageSentAt = convo.lastMessage.sentAt
       }
-      if (ChatBskyConvoDefs.isDeletedMessageView(convo.lastMessage)) {
+      if (ChatGndrConvoDefs.isDeletedMessageView(convo.lastMessage)) {
         lastMessageSentAt = convo.lastMessage.sentAt
 
         lastMessage = isDeletedAccount
@@ -197,7 +197,7 @@ function ChatListItemReady({
           : _(msg`Message deleted`)
       }
 
-      if (ChatBskyConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
+      if (ChatGndrConvoDefs.isMessageAndReactionView(convo.lastReaction)) {
         if (
           !lastMessageSentAt ||
           new Date(lastMessageSentAt) <

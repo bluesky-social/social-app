@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name           = 'BottomSheet'
   s.version        = '1.0.0'
-  s.summary        = 'A bottom sheet for use in Bluesky'
-  s.description    = 'A bottom sheet for use in Bluesky'
+  s.summary        = 'A bottom sheet for use in Gander'
+  s.description    = 'A bottom sheet for use in Gander'
   s.author         = ''
-  s.homepage       = 'https://github.com/bluesky-social/social-app'
+  s.homepage       = 'https://github.com/gander-social/social-app'
   s.platforms      = { :ios => '15.0', :tvos => '15.0' }
   s.source         = { git: '' }
   s.static_framework = true

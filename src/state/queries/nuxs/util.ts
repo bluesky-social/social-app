@@ -1,13 +1,13 @@
-import {AppBskyActorDefs, nuxSchema} from '@atproto/api'
+import {type AppGndrActorDefs, nuxSchema} from '@gander-social-atproto/api'
 
 import {
-  AppNux,
-  Nux,
+  type AppNux,
+  type Nux,
   nuxNames,
   NuxSchemas,
 } from '#/state/queries/nuxs/definitions'
 
-export function parseAppNux(nux: AppBskyActorDefs.Nux): AppNux | undefined {
+export function parseAppNux(nux: AppGndrActorDefs.Nux): AppNux | undefined {
   if (!nuxNames.has(nux.id as Nux)) return
   if (!nuxSchema.safeParse(nux).success) return
 
@@ -32,11 +32,11 @@ export function parseAppNux(nux: AppBskyActorDefs.Nux): AppNux | undefined {
   } as AppNux
 }
 
-export function serializeAppNux(nux: AppNux): AppBskyActorDefs.Nux {
+export function serializeAppNux(nux: AppNux): AppGndrActorDefs.Nux {
   const {data, ...rest} = nux
   const schema = NuxSchemas[nux.id as Nux]
 
-  const result: AppBskyActorDefs.Nux = {
+  const result: AppGndrActorDefs.Nux = {
     ...rest,
     data: undefined,
   }

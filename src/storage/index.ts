@@ -137,16 +137,16 @@ export function useStorage<
  *
  *   `device.set([key], true)`
  */
-export const device = new Storage<[], Device>({id: 'bsky_device'})
+export const device = new Storage<[], Device>({id: 'gndr_device'})
 
 /**
  * Account data that's specific to the account on this device
  */
-export const account = new Storage<[string], Account>({id: 'bsky_account'})
+export const account = new Storage<[string], Account>({id: 'gndr_account'})
 
 if (__DEV__ && typeof window !== 'undefined') {
   // @ts-expect-error - dev global
-  window.bsky_storage = {
+  window.gndr_storage = {
     device,
     account,
   }

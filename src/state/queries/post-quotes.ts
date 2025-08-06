@@ -1,14 +1,14 @@
 import {
-  AppBskyActorDefs,
-  AppBskyEmbedRecord,
-  AppBskyFeedDefs,
-  AppBskyFeedGetQuotes,
+  type AppGndrActorDefs,
+  AppGndrEmbedRecord,
+  type AppGndrFeedDefs,
+  type AppGndrFeedGetQuotes,
   AtUri,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -28,15 +28,15 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 export function usePostQuotesQuery(resolvedUri: string | undefined) {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyFeedGetQuotes.OutputSchema,
+    AppGndrFeedGetQuotes.OutputSchema,
     Error,
-    InfiniteData<AppBskyFeedGetQuotes.OutputSchema>,
+    InfiniteData<AppGndrFeedGetQuotes.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.api.app.bsky.feed.getQuotes({
+      const res = await agent.api.app.gndr.feed.getQuotes({
         uri: resolvedUri || '',
         limit: PAGE_SIZE,
         cursor: pageParam,
@@ -53,8 +53,8 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
           return {
             ...page,
             posts: page.posts.filter(post => {
-              if (post.embed && AppBskyEmbedRecord.isView(post.embed)) {
-                if (AppBskyEmbedRecord.isViewDetached(post.embed.record)) {
+              if (post.embed && AppGndrEmbedRecord.isView(post.embed)) {
+                if (AppGndrEmbedRecord.isViewDetached(post.embed.record)) {
                   return false
                 }
               }
@@ -70,9 +70,9 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
+): Generator<AppGndrActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedGetQuotes.OutputSchema>
+    InfiniteData<AppGndrFeedGetQuotes.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })
@@ -97,9 +97,9 @@ export function* findAllProfilesInQueryData(
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<AppGndrFeedDefs.PostView, undefined> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedGetQuotes.OutputSchema>
+    InfiniteData<AppGndrFeedGetQuotes.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })

@@ -1,10 +1,10 @@
 import React from 'react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
-import {FeedSourceInfo} from '#/state/queries/feed'
+import {type NavigationProp} from '#/lib/routes/types'
+import {type FeedSourceInfo} from '#/state/queries/feed'
 import {useSession} from '#/state/session'
-import {RenderTabBarFnProps} from '#/view/com/pager/Pager'
+import {type RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {TabBar} from '../pager/TabBar'
 import {HomeHeaderLayout} from './HomeHeaderLayout'
 

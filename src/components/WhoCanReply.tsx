@@ -7,11 +7,11 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type AppBskyGraphDefs,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
+  type AppGndrGraphDefs,
   AtUri,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -35,11 +35,11 @@ import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
 interface WhoCanReplyProps {
-  post: AppBskyFeedDefs.PostView
+  post: AppGndrFeedDefs.PostView
   isThreadAuthor: boolean
   style?: StyleProp<ViewStyle>
 }
@@ -55,9 +55,9 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
    * unexpectedly, we should check to make sure it's for sure the root URI.
    */
   const rootUri =
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    gndr.dangerousIsType<AppGndrFeedPost.Record>(
       post.record,
-      AppBskyFeedPost.isRecord,
+      AppGndrFeedPost.isRecord,
     ) && post.record.reply?.root
       ? post.record.reply.root.uri
       : post.uri
@@ -175,7 +175,7 @@ function WhoCanReplyDialog({
   embeddingDisabled,
 }: {
   control: Dialog.DialogControlProps
-  post: AppBskyFeedDefs.PostView
+  post: AppGndrFeedDefs.PostView
   settings: ThreadgateAllowUISetting[]
   embeddingDisabled: boolean
 }) {
@@ -221,7 +221,7 @@ function Rules({
   settings,
   embeddingDisabled,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: AppGndrFeedDefs.PostView
   settings: ThreadgateAllowUISetting[]
   embeddingDisabled: boolean
 }) {
@@ -279,8 +279,8 @@ function Rule({
   lists,
 }: {
   rule: ThreadgateAllowUISetting
-  post: AppBskyFeedDefs.PostView
-  lists: AppBskyGraphDefs.ListViewBasic[] | undefined
+  post: AppGndrFeedDefs.PostView
+  lists: AppGndrGraphDefs.ListViewBasic[] | undefined
 }) {
   if (rule.type === 'mention') {
     return <Trans>mentioned users</Trans>

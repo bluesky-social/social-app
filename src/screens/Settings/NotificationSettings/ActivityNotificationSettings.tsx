@@ -1,6 +1,6 @@
 import {useCallback, useMemo} from 'react'
 import {type ListRenderItemInfo, Text as RNText, View} from 'react-native'
-import {type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -29,7 +29,7 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 import * as SettingsList from '../components/SettingsList'
 import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
 import {PreferenceControls} from './components/PreferenceControls'
@@ -60,7 +60,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
   }, [subscriptions])
 
   const renderItem = useCallback(
-    ({item}: ListRenderItemInfo<bsky.profile.AnyProfileView>) => {
+    ({item}: ListRenderItemInfo<gndr.profile.AnyProfileView>) => {
       if (!moderationOpts) return null
       return (
         <ActivitySubscriptionCard
@@ -189,7 +189,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
   )
 }
 
-function keyExtractor(item: bsky.profile.AnyProfileView) {
+function keyExtractor(item: gndr.profile.AnyProfileView) {
   return item.did
 }
 
@@ -197,7 +197,7 @@ function ActivitySubscriptionCard({
   profile: profileUnshadowed,
   moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const profile = useProfileShadow(profileUnshadowed)

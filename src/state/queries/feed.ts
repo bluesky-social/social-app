@@ -1,13 +1,13 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type AppBskyUnspeccedGetPopularFeedGenerators,
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  type AppGndrGraphDefs,
+  type AppGndrUnspeccedGetPopularFeedGenerators,
   AtUri,
   moderateFeedGenerator,
   RichText,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {
   type InfiniteData,
   keepPreviousData,
@@ -33,7 +33,7 @@ import {precacheResolvedUri} from './resolve-uri'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
-  view?: AppBskyFeedDefs.GeneratorView
+  view?: AppGndrFeedDefs.GeneratorView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -49,12 +49,12 @@ export type FeedSourceFeedInfo = {
   creatorHandle: string
   likeCount: number | undefined
   likeUri: string | undefined
-  contentMode: AppBskyFeedDefs.GeneratorView['contentMode']
+  contentMode: AppGndrFeedDefs.GeneratorView['contentMode']
 }
 
 export type FeedSourceListInfo = {
   type: 'list'
-  view?: AppBskyGraphDefs.ListView
+  view?: AppGndrGraphDefs.ListView
   uri: string
   feedDescriptor: FeedDescriptor
   route: {
@@ -80,16 +80,16 @@ export const feedSourceInfoQueryKey = ({uri}: {uri: string}) => [
 ]
 
 const feedSourceNSIDs = {
-  feed: 'app.bsky.feed.generator',
-  list: 'app.bsky.graph.list',
+  feed: 'app.gndr.feed.generator',
+  list: 'app.gndr.graph.list',
 }
 
 export function hydrateFeedGenerator(
-  view: AppBskyFeedDefs.GeneratorView,
+  view: AppGndrFeedDefs.GeneratorView,
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
-    urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
+    urip.collection === 'app.gndr.feed.generator' ? 'feed' : 'lists'
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
@@ -120,10 +120,10 @@ export function hydrateFeedGenerator(
   }
 }
 
-export function hydrateList(view: AppBskyGraphDefs.ListView): FeedSourceInfo {
+export function hydrateList(view: AppGndrGraphDefs.ListView): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
-    urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
+    urip.collection === 'app.gndr.feed.generator' ? 'feed' : 'lists'
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
@@ -172,10 +172,10 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
       let view: FeedSourceInfo
 
       if (type === 'feed') {
-        const res = await agent.app.bsky.feed.getFeedGenerator({feed: uri})
+        const res = await agent.app.gndr.feed.getFeedGenerator({feed: uri})
         view = hydrateFeedGenerator(res.data.view)
       } else {
-        const res = await agent.app.bsky.graph.getList({
+        const res = await agent.app.gndr.graph.getList({
           list: uri,
           limit: 1,
         })
@@ -193,14 +193,14 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 // for the ones we know need it
 // -prf
 export const KNOWN_AUTHED_ONLY_FEEDS = [
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends', // popular with friends, by bsky.app
-  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/mutuals', // mutuals, by skyfeed
-  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/only-posts', // only posts, by skyfeed
-  'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.bsky.feed.generator/mentions', // mentions, by flicknow
-  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/bangers', // my bangers, by jaz
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/mutuals', // mutuals, by bluesky
-  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/my-followers', // followers, by jaz
-  'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.gndr.feed.generator/with-friends', // popular with friends, by gndr.app
+  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.gndr.feed.generator/mutuals', // mutuals, by skyfeed
+  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.gndr.feed.generator/only-posts', // only posts, by skyfeed
+  'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.gndr.feed.generator/mentions', // mentions, by flicknow
+  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.gndr.feed.generator/bangers', // my bangers, by jaz
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.gndr.feed.generator/mutuals', // mutuals, by bluesky
+  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.gndr.feed.generator/my-followers', // followers, by jaz
+  'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.gndr.feed.generator/followpics', // the gram, by why
 ]
 
 type GetPopularFeedsOptions = {limit?: number; enabled?: boolean}
@@ -231,16 +231,16 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
   const lastPageCountRef = useRef(0)
 
   const query = useInfiniteQuery<
-    AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
+    AppGndrUnspeccedGetPopularFeedGenerators.OutputSchema,
     Error,
-    InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
+    InfiniteData<AppGndrUnspeccedGetPopularFeedGenerators.OutputSchema>,
     QueryKey,
     string | undefined
   >({
     enabled: Boolean(moderationOpts) && options?.enabled !== false,
     queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.gndr.unspecced.getPopularFeedGenerators({
         limit,
         cursor: pageParam,
       })
@@ -257,7 +257,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
     getNextPageParam: lastPage => lastPage.cursor,
     select: useCallback(
       (
-        data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
+        data: InfiniteData<AppGndrUnspeccedGetPopularFeedGenerators.OutputSchema>,
       ) => {
         const {
           savedFeeds,
@@ -326,7 +326,7 @@ export function useSearchPopularFeedsMutation() {
 
   return useMutation({
     mutationFn: async (query: string) => {
-      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.gndr.unspecced.getPopularFeedGenerators({
         limit: 10,
         query: query,
       })
@@ -364,7 +364,7 @@ export function usePopularFeedsSearch({
     enabled: enabledInner,
     queryKey: createPopularFeedsSearchQueryKey(query),
     queryFn: async () => {
-      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.gndr.unspecced.getPopularFeedGenerators({
         limit: 15,
         query: query,
       })
@@ -382,7 +382,7 @@ export function usePopularFeedsSearch({
 }
 
 export type SavedFeedSourceInfo = FeedSourceInfo & {
-  savedFeed: AppBskyActorDefs.SavedFeed
+  savedFeed: AppGndrActorDefs.SavedFeed
 }
 
 const PWI_DISCOVER_FEED_STUB: SavedFeedSourceInfo = {
@@ -437,7 +437,7 @@ export function usePinnedFeedsInfos() {
       const pinnedFeeds = pinnedItems.filter(feed => feed.type === 'feed')
       let feedsPromise = Promise.resolve()
       if (pinnedFeeds.length > 0) {
-        feedsPromise = agent.app.bsky.feed
+        feedsPromise = agent.app.gndr.feed
           .getFeedGenerators({
             feeds: pinnedFeeds.map(f => f.value),
           })
@@ -452,7 +452,7 @@ export function usePinnedFeedsInfos() {
       // Get all lists. This currently has to be done individually.
       const pinnedLists = pinnedItems.filter(feed => feed.type === 'list')
       const listsPromises = pinnedLists.map(list =>
-        agent.app.bsky.graph
+        agent.app.gndr.graph
           .getList({
             list: list.value,
             limit: 1,
@@ -506,17 +506,17 @@ export function usePinnedFeedsInfos() {
 export type SavedFeedItem =
   | {
       type: 'feed'
-      config: AppBskyActorDefs.SavedFeed
-      view: AppBskyFeedDefs.GeneratorView
+      config: AppGndrActorDefs.SavedFeed
+      view: AppGndrFeedDefs.GeneratorView
     }
   | {
       type: 'list'
-      config: AppBskyActorDefs.SavedFeed
-      view: AppBskyGraphDefs.ListView
+      config: AppGndrActorDefs.SavedFeed
+      view: AppGndrGraphDefs.ListView
     }
   | {
       type: 'timeline'
-      config: AppBskyActorDefs.SavedFeed
+      config: AppGndrActorDefs.SavedFeed
       view: undefined
     }
 
@@ -540,15 +540,15 @@ export function useSavedFeeds() {
       )
     },
     queryFn: async () => {
-      const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>()
-      const resolvedLists = new Map<string, AppBskyGraphDefs.ListView>()
+      const resolvedFeeds = new Map<string, AppGndrFeedDefs.GeneratorView>()
+      const resolvedLists = new Map<string, AppGndrGraphDefs.ListView>()
 
       const savedFeeds = savedItems.filter(feed => feed.type === 'feed')
       const savedLists = savedItems.filter(feed => feed.type === 'list')
 
       let feedsPromise = Promise.resolve()
       if (savedFeeds.length > 0) {
-        feedsPromise = agent.app.bsky.feed
+        feedsPromise = agent.app.gndr.feed
           .getFeedGenerators({
             feeds: savedFeeds.map(f => f.value),
           })
@@ -560,7 +560,7 @@ export function useSavedFeeds() {
       }
 
       const listsPromises = savedLists.map(list =>
-        agent.app.bsky.graph
+        agent.app.gndr.graph
           .getList({
             list: list.value,
             limit: 1,
@@ -633,10 +633,10 @@ function precacheFeed(queryClient: QueryClient, hydratedFeed: FeedSourceInfo) {
 
 export function precacheList(
   queryClient: QueryClient,
-  list: AppBskyGraphDefs.ListView,
+  list: AppGndrGraphDefs.ListView,
 ) {
   precacheResolvedUri(queryClient, list.creator.handle, list.creator.did)
-  queryClient.setQueryData<AppBskyGraphDefs.ListView>(
+  queryClient.setQueryData<AppGndrGraphDefs.ListView>(
     listQueryKey(list.uri),
     list,
   )
@@ -644,7 +644,7 @@ export function precacheList(
 
 export function precacheFeedFromGeneratorView(
   queryClient: QueryClient,
-  view: AppBskyFeedDefs.GeneratorView,
+  view: AppGndrFeedDefs.GeneratorView,
 ) {
   const hydratedFeed = hydrateFeedGenerator(view)
   precacheFeed(queryClient, hydratedFeed)

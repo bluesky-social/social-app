@@ -13,7 +13,7 @@ export function useGetConvoAvailabilityQuery(did: string) {
   return useQuery({
     queryKey: RQKEY(did),
     queryFn: async () => {
-      const {data} = await agent.chat.bsky.convo.getConvoAvailability(
+      const {data} = await agent.chat.gndr.convo.getConvoAvailability(
         {members: [did]},
         {headers: DM_SERVICE_HEADERS},
       )

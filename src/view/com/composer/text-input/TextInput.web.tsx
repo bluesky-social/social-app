@@ -1,7 +1,7 @@
 import React, {useRef} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppGndrRichtextFacet, RichText} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 import {Document} from '@tiptap/extension-document'
 import Hardbreak from '@tiptap/extension-hard-break'
@@ -251,7 +251,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         if (newRt.facets) {
           for (const facet of newRt.facets) {
             for (const feature of facet.features) {
-              if (AppBskyRichtextFacet.isLink(feature)) {
+              if (AppGndrRichtextFacet.isLink(feature)) {
                 nextDetectedUris.set(feature.uri, {facet, rt: newRt})
               }
             }

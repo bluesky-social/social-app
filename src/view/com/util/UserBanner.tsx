@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
-import {type ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

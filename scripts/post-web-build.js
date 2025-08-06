@@ -4,7 +4,7 @@ const fs = require('fs')
 const projectRoot = path.join(__dirname, '..')
 const templateFile = path.join(
   projectRoot,
-  'bskyweb',
+  'gndrweb',
   'templates',
   'scripts.html',
 )
@@ -43,6 +43,6 @@ function copyFiles(sourceDir, targetDir) {
   })
 }
 
-copyFiles('web-build/static/js', 'bskyweb/static/js')
-copyFiles('web-build/static/css', 'bskyweb/static/css')
-copyFiles('web-build/static/media', 'bskyweb/static/media')
+copyFiles('web-build/static/js', 'gndrweb/static/js')
+copyFiles('web-build/static/css', 'gndrweb/static/css')
+copyFiles('web-build/static/media', 'gndrweb/static/media')

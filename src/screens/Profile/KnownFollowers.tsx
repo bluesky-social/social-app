@@ -1,11 +1,14 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useProfileKnownFollowersQuery} from '#/state/queries/known-followers'
@@ -21,7 +24,7 @@ function renderItem({
   item,
   index,
 }: {
-  item: AppBskyActorDefs.ProfileView
+  item: AppGndrActorDefs.ProfileView
   index: number
 }) {
   return (
@@ -33,7 +36,7 @@ function renderItem({
   )
 }
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
+function keyExtractor(item: AppGndrActorDefs.ProfileViewBasic) {
   return item.did
 }
 

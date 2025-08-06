@@ -1,4 +1,4 @@
-import {type ModerationPrefs} from '@atproto/api'
+import {type ModerationPrefs} from '@gander-social-atproto/api'
 
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 

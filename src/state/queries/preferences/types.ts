@@ -1,14 +1,14 @@
 import {
-  BskyFeedViewPreference,
-  BskyPreferences,
-  BskyThreadViewPreference,
-} from '@atproto/api'
+  type GndrFeedViewPreference,
+  type GndrPreferences,
+  type GndrThreadViewPreference,
+} from '@gander-social-atproto/api'
 
 export type UsePreferencesQueryResponse = Omit<
-  BskyPreferences,
+  GndrPreferences,
   'contentLabels' | 'feedViewPrefs' | 'feeds'
 > & {
-  feedViewPrefs: BskyFeedViewPreference & {
+  feedViewPrefs: GndrFeedViewPreference & {
     lab_mergeFeedEnabled?: boolean
   }
   /**
@@ -19,7 +19,7 @@ export type UsePreferencesQueryResponse = Omit<
 }
 
 export type ThreadViewPreferences = Pick<
-  BskyThreadViewPreference,
+  GndrThreadViewPreference,
   'prioritizeFollowedUsers'
 > & {
   sort: 'hotness' | 'oldest' | 'newest' | 'most-likes' | 'random' | string

@@ -1,7 +1,7 @@
 import {createContext, useContext, useMemo} from 'react'
 import {View} from 'react-native'
 
-import {atoms as a, ViewStyleProp} from '#/alf'
+import {atoms as a, type ViewStyleProp} from '#/alf'
 
 const Context = createContext({
   gap: 0,

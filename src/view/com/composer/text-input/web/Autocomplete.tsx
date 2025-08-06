@@ -1,6 +1,6 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 import {ReactRenderer} from '@tiptap/react'
 import {
@@ -185,7 +185,7 @@ function AutocompleteProfileCard({
   totalItems,
   onPress,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppGndrActorDefs.ProfileViewBasic
   isSelected: boolean
   itemIndex: number
   totalItems: number

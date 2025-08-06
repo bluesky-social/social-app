@@ -9,7 +9,7 @@ import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
   usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'

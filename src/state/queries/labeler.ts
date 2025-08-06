@@ -1,4 +1,4 @@
-import {type AppBskyLabelerDefs} from '@atproto/api'
+import {type AppGndrLabelerDefs} from '@gander-social-atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
@@ -40,11 +40,11 @@ export function useLabelerInfoQuery({
     enabled: !!did && enabled !== false,
     queryKey: labelerInfoQueryKey(did as string),
     queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({
+      const res = await agent.app.gndr.labeler.getServices({
         dids: [did!],
         detailed: true,
       })
-      return res.data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed
+      return res.data.views[0] as AppGndrLabelerDefs.LabelerViewDetailed
     },
   })
 }
@@ -55,8 +55,8 @@ export function useLabelersInfoQuery({dids}: {dids: string[]}) {
     enabled: !!dids.length,
     queryKey: labelersInfoQueryKey(dids),
     queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({dids})
-      return res.data.views as AppBskyLabelerDefs.LabelerView[]
+      const res = await agent.app.gndr.labeler.getServices({dids})
+      return res.data.views as AppGndrLabelerDefs.LabelerView[]
     },
   })
 }
@@ -69,11 +69,11 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
     gcTime: 1000 * 60 * 60 * 6, // 6 hours
     staleTime: STALE.MINUTES.ONE,
     queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({
+      const res = await agent.app.gndr.labeler.getServices({
         dids,
         detailed: true,
       })
-      return res.data.views as AppBskyLabelerDefs.LabelerViewDetailed[]
+      return res.data.views as AppGndrLabelerDefs.LabelerViewDetailed[]
     },
   })
 }

@@ -1,16 +1,16 @@
 import {
-  $Typed,
-  ChatBskyConvoDefs,
-  ComAtprotoModerationCreateReport,
-} from '@atproto/api'
+  type $Typed,
+  type ChatGndrConvoDefs,
+  type ComAtprotoModerationCreateReport,
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useAgent} from '#/state/session'
-import {ReportState} from './state'
-import {ParsedReportSubject} from './types'
+import {type ReportState} from './state'
+import {type ParsedReportSubject} from './types'
 
 export function useSubmitReportMutation() {
   const {_} = useLingui()
@@ -34,7 +34,7 @@ export function useSubmitReportMutation() {
       let report:
         | ComAtprotoModerationCreateReport.InputSchema
         | (Omit<ComAtprotoModerationCreateReport.InputSchema, 'subject'> & {
-            subject: $Typed<ChatBskyConvoDefs.MessageRef>
+            subject: $Typed<ChatGndrConvoDefs.MessageRef>
           })
 
       switch (subject.type) {
@@ -69,7 +69,7 @@ export function useSubmitReportMutation() {
             reasonType: state.selectedOption.reason,
             reason: state.details,
             subject: {
-              $type: 'chat.bsky.convo.defs#messageRef',
+              $type: 'chat.gndr.convo.defs#messageRef',
               messageId: subject.message.id,
               convoId: subject.convoId,
               did: subject.message.sender.did,

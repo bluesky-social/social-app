@@ -1,6 +1,6 @@
 import {type ReactElement} from 'react'
 import {View} from 'react-native'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,13 +23,13 @@ function CommunityGuidelinesNotice({}: {}) {
         <Trans>
           You also agree to{' '}
           <InlineLinkText
-            label={_(msg`Bluesky's Community Guidelines`)}
+            label={_(msg`Gander's Community Guidelines`)}
             to={webLinks.communityDeprecated}>
-            Bluesky’s Community Guidelines
+            Gander’s Community Guidelines
           </InlineLinkText>
           . An{' '}
           <InlineLinkText
-            label={_(msg`Bluesky's Updated Community Guidelines`)}
+            label={_(msg`Gander's Updated Community Guidelines`)}
             to={webLinks.community}>
             updated version of our Community Guidelines
           </InlineLinkText>{' '}
@@ -78,14 +78,14 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={_(msg`Read the Gander Terms of Service`)}
           key="tos"
           to={tos}>
           Terms of Service
         </InlineLinkText>{' '}
         and{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={_(msg`Read the Gander Privacy Policy`)}
           key="pp"
           to={pp}>
           Privacy Policy
@@ -98,7 +98,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Terms of Service`)}
+          label={_(msg`Read the Gander Terms of Service`)}
           key="tos"
           to={tos}>
           Terms of Service
@@ -111,7 +111,7 @@ export const Policies = ({
       <Trans>
         By creating an account you agree to the{' '}
         <InlineLinkText
-          label={_(msg`Read the Bluesky Privacy Policy`)}
+          label={_(msg`Read the Gander Privacy Policy`)}
           key="pp"
           to={pp}>
           Privacy Policy

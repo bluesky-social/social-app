@@ -1,6 +1,6 @@
-import React from 'react'
-import {StyleProp, ViewStyle} from 'react-native'
+import {type StyleProp, type ViewStyle} from 'react-native'
 import Animated, {FadeInRight, FadeOutLeft} from 'react-native-reanimated'
+import type React from 'react'
 
 export function ScreenTransition({
   style,

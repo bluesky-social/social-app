@@ -1,4 +1,4 @@
-package xyz.blueskyweb.app.exporeceiveandroidintents
+package xyz.ganderweb.app.exporeceiveandroidintents
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -56,7 +56,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
   private fun handleTextIntent(intent: Intent) {
     intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
       val encoded = URLEncoder.encode(it, "UTF-8")
-      "bluesky://intent/compose?text=$encoded".toUri().let { uri ->
+      "gander://intent/compose?text=$encoded".toUri().let { uri ->
         val newIntent = Intent(Intent.ACTION_VIEW, uri)
         appContext.currentActivity?.startActivity(newIntent)
       }
@@ -122,7 +122,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
     val encoded = URLEncoder.encode(allParams, "UTF-8")
 
-    "bluesky://intent/compose?imageUris=$encoded".toUri().let {
+    "gander://intent/compose?imageUris=$encoded".toUri().let {
       val newIntent = Intent(Intent.ACTION_VIEW, it)
       appContext.currentActivity?.startActivity(newIntent)
     }
@@ -147,7 +147,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
     val info = getVideoInfo(uri) ?: return
 
-    "bluesky://intent/compose?videoUri=${URLEncoder.encode(file.path, "UTF-8")}|${info["width"]}|${info["height"]}".toUri().let {
+    "gander://intent/compose?videoUri=${URLEncoder.encode(file.path, "UTF-8")}|${info["width"]}|${info["height"]}".toUri().let {
       val newIntent = Intent(Intent.ACTION_VIEW, it)
       appContext.currentActivity?.startActivity(newIntent)
     }

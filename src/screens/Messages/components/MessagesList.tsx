@@ -11,17 +11,17 @@ import Animated, {
 import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {
   type $Typed,
-  type AppBskyEmbedRecord,
-  AppBskyRichtextFacet,
+  type AppGndrEmbedRecord,
+  AppGndrRichtextFacet,
   RichText,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 
 import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorder'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {
-  convertBskyAppUrlIfNeeded,
-  isBskyPostUrl,
+  convertGndrAppUrlIfNeeded,
+  isGndrPostUrl,
 } from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
@@ -315,14 +315,14 @@ export function MessagesList({
       // we want to remove the post link from the text, re-trim, then detect facets
       rt.detectFacetsWithoutResolution()
 
-      let embed: $Typed<AppBskyEmbedRecord.Main> | undefined
+      let embed: $Typed<AppGndrEmbedRecord.Main> | undefined
 
       if (embedUri) {
         try {
           const post = await getPost({uri: embedUri})
           if (post) {
             embed = {
-              $type: 'app.bsky.embed.record',
+              $type: 'app.gndr.embed.record',
               record: {
                 uri: post.uri,
                 cid: post.cid,
@@ -332,9 +332,9 @@ export function MessagesList({
             // look for the embed uri in the facets, so we can remove it from the text
             const postLinkFacet = rt.facets?.find(facet => {
               return facet.features.find(feature => {
-                if (AppBskyRichtextFacet.isLink(feature)) {
-                  if (isBskyPostUrl(feature.uri)) {
-                    const url = convertBskyAppUrlIfNeeded(feature.uri)
+                if (AppGndrRichtextFacet.isLink(feature)) {
+                  if (isGndrPostUrl(feature.uri)) {
+                    const url = convertGndrAppUrlIfNeeded(feature.uri)
                     const [_0, _1, _2, rkey] = url.split('/').filter(Boolean)
 
                     // this might have a handle instead of a DID

@@ -1,4 +1,4 @@
-import {LogLevel, Metadata, Serializable} from '#/logger/types'
+import {LogLevel, type Metadata, type Serializable} from '#/logger/types'
 
 export const enabledLogLevels: {
   [key in LogLevel]: LogLevel[]

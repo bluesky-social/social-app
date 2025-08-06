@@ -1,23 +1,23 @@
 import {
   type Agent,
-  type AppBskyFeedDefs,
-  type AppBskyFeedGetPosts,
-} from '@atproto/api'
+  type AppGndrFeedDefs,
+  type AppGndrFeedGetPosts,
+} from '@gander-social-atproto/api'
 
 import {logger} from '#/logger'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class PostListFeedAPI implements FeedAPI {
   agent: Agent
-  params: AppBskyFeedGetPosts.QueryParams
-  peek: AppBskyFeedDefs.FeedViewPost | null = null
+  params: AppGndrFeedGetPosts.QueryParams
+  peek: AppGndrFeedDefs.FeedViewPost | null = null
 
   constructor({
     agent,
     feedParams,
   }: {
     agent: Agent
-    feedParams: AppBskyFeedGetPosts.QueryParams
+    feedParams: AppGndrFeedGetPosts.QueryParams
   }) {
     this.agent = agent
     if (feedParams.uris.length > 25) {
@@ -30,13 +30,13 @@ export class PostListFeedAPI implements FeedAPI {
     }
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost> {
     if (this.peek) return this.peek
     throw new Error('Has not fetched yet')
   }
 
   async fetch({}: {}): Promise<FeedAPIResponse> {
-    const res = await this.agent.app.bsky.feed.getPosts({
+    const res = await this.agent.app.gndr.feed.getPosts({
       ...this.params,
     })
     if (res.success) {

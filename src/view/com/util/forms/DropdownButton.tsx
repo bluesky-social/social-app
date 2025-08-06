@@ -4,6 +4,7 @@ import {
   Dimensions,
   type GestureResponderEvent,
   type Insets,
+  Platform,
   type StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -13,7 +14,10 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Animated, {FadeIn, FadeInDown, FadeInUp} from 'react-native-reanimated'
-import RootSiblings from 'react-native-root-siblings'
+const RootSiblings =
+  Platform.OS !== 'web'
+    ? require('react-native-root-siblings').default
+    : undefined
 import {type IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'

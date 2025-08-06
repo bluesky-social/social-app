@@ -42,7 +42,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {account, useStorage} from '#/storage'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 import {AutocompleteResults} from './components/AutocompleteResults'
 import {SearchHistory} from './components/SearchHistory'
 import {SearchLanguageDropdown} from './components/SearchLanguageDropdown'
@@ -108,7 +108,7 @@ export function SearchScreenShell({
   )
 
   const updateProfileHistory = useCallback(
-    async (item: bsky.profile.AnyProfileView) => {
+    async (item: gndr.profile.AnyProfileView) => {
       const newAccountHistory = [
         item.did,
         ...accountHistory.filter(p => p !== item.did),
@@ -125,7 +125,7 @@ export function SearchScreenShell({
     [termHistory, setTermHistory],
   )
   const deleteProfileHistoryItem = useCallback(
-    async (item: bsky.profile.AnyProfileView) => {
+    async (item: gndr.profile.AnyProfileView) => {
       setAccountHistory(accountHistory.filter(p => p !== item.did))
     },
     [accountHistory, setAccountHistory],
@@ -223,7 +223,7 @@ export function SearchScreenShell({
   )
 
   const handleProfileClick = useCallback(
-    (profile: bsky.profile.AnyProfileView) => {
+    (profile: gndr.profile.AnyProfileView) => {
       unstableCacheProfileView(queryClient, profile)
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
@@ -473,7 +473,7 @@ let SearchScreenInner = ({
             style={t.atoms.text_contrast_medium as StyleProp<ViewStyle>}
           />
           <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            <Trans>Find posts, users, and feeds on Bluesky</Trans>
+            <Trans>Find posts, users, and feeds on Gander</Trans>
           </Text>
         </View>
       </View>

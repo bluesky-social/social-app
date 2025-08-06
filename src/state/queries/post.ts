@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {type AppBskyActorDefs, type AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppGndrActorDefs, type AppGndrFeedDefs, AtUri} from '@gander-social-atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
@@ -17,7 +17,7 @@ export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
 
 export function usePostQuery(uri: string | undefined) {
   const agent = useAgent()
-  return useQuery<AppBskyFeedDefs.PostView>({
+  return useQuery<AppGndrFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       const urip = new AtUri(uri!)
@@ -98,7 +98,7 @@ export function useGetPosts() {
 }
 
 export function usePostLikeMutationQueue(
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<AppGndrFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
   logContext: LogEvents['post:like']['logContext'] &
@@ -163,7 +163,7 @@ export function usePostLikeMutationQueue(
 function usePostLikeMutation(
   feedDescriptor: string | undefined,
   logContext: LogEvents['post:like']['logContext'],
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<AppGndrFeedDefs.PostView>,
 ) {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
@@ -175,7 +175,7 @@ function usePostLikeMutation(
     {uri: string; cid: string; via?: {uri: string; cid: string}} // the post's uri and cid, and the repost uri/cid if present
   >({
     mutationFn: ({uri, cid, via}) => {
-      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
+      let ownProfile: AppGndrActorDefs.ProfileViewDetailed | undefined
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
@@ -215,7 +215,7 @@ function usePostUnlikeMutation(
 }
 
 export function usePostRepostMutationQueue(
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<AppGndrFeedDefs.PostView>,
   viaRepost: {uri: string; cid: string} | undefined,
   feedDescriptor: string | undefined,
   logContext: LogEvents['post:repost']['logContext'] &
@@ -319,7 +319,7 @@ export function usePostDeleteMutation() {
 }
 
 export function useThreadMuteMutationQueue(
-  post: Shadow<AppBskyFeedDefs.PostView>,
+  post: Shadow<AppGndrFeedDefs.PostView>,
   rootUri: string,
 ) {
   const threadMuteMutation = useThreadMuteMutation()
@@ -372,7 +372,7 @@ function useThreadMuteMutation() {
   >({
     mutationFn: ({uri}) => {
       logger.metric('post:mute', {})
-      return agent.api.app.bsky.graph.muteThread({root: uri})
+      return agent.api.app.gndr.graph.muteThread({root: uri})
     },
   })
 }
@@ -382,7 +382,7 @@ function useThreadUnmuteMutation() {
   return useMutation<{}, Error, {uri: string}>({
     mutationFn: ({uri}) => {
       logger.metric('post:unmute', {})
-      return agent.api.app.bsky.graph.unmuteThread({root: uri})
+      return agent.api.app.gndr.graph.unmuteThread({root: uri})
     },
   })
 }

@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyNotificationDefs} from '@atproto/api'
-import {type FilterablePreference} from '@atproto/api/dist/client/types/app/bsky/notification/defs'
+import {type AppGndrNotificationDefs} from '@gander-social-atproto/api'
+import {type FilterablePreference} from '@gander-social-atproto/api/dist/client/types/app/gndr/notification/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -19,13 +19,13 @@ export function PreferenceControls({
   preference,
   allowDisableInApp = true,
 }: {
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
+  name: Exclude<keyof AppGndrNotificationDefs.Preferences, '$type'>
   /**
    * Keep other prefs in sync with `name`. For use in the "everything else" category
    * which groups starterpack joins + verified + unverified notifications into a single toggle.
    */
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference?: AppBskyNotificationDefs.Preference | FilterablePreference
+  syncOthers?: Exclude<keyof AppGndrNotificationDefs.Preferences, '$type'>[]
+  preference?: AppGndrNotificationDefs.Preference | FilterablePreference
   allowDisableInApp?: boolean
 }) {
   if (!preference)
@@ -51,9 +51,9 @@ export function Inner({
   preference,
   allowDisableInApp,
 }: {
-  name: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>
-  syncOthers?: Exclude<keyof AppBskyNotificationDefs.Preferences, '$type'>[]
-  preference: AppBskyNotificationDefs.Preference | FilterablePreference
+  name: Exclude<keyof AppGndrNotificationDefs.Preferences, '$type'>
+  syncOthers?: Exclude<keyof AppGndrNotificationDefs.Preferences, '$type'>[]
+  preference: AppGndrNotificationDefs.Preference | FilterablePreference
   allowDisableInApp: boolean
 }) {
   const t = useTheme()

@@ -1,11 +1,11 @@
 import {memo, type ReactNode, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedThreadgate,
+  type AppGndrFeedDefs,
+  type AppGndrFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {useActorStatus} from '#/lib/actor-status'
@@ -51,7 +51,7 @@ export type ThreadItemPostProps = {
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: AppGndrFeedThreadgate.Record
 }
 
 export function ThreadItemPost({
@@ -182,7 +182,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
   onPostSuccess,
   threadgateRecord,
 }: ThreadItemPostProps & {
-  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  postShadow: Shadow<AppGndrFeedDefs.PostView>
 }) {
   const t = useTheme()
   const {openComposer} = useOpenComposer()

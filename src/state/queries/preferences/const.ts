@@ -34,7 +34,7 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   userAge: 13, // TODO(pwi)
   interests: {tags: []},
   savedFeeds: [],
-  bskyAppState: {
+  gndrAppState: {
     queuedNudges: [],
     activeProgressGuide: undefined,
     nuxs: [],
