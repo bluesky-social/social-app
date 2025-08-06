@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {webLinks} from '#/lib/constants'
+import {useGate} from '#/lib/statsig/statsig'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -13,6 +14,10 @@ import {Text} from '#/components/Typography'
 
 function CommunityGuidelinesNotice({}: {}) {
   const {_} = useLingui()
+  const gate = useGate()
+
+  if (gate('disable_onboarding_policy_update_notice')) return null
+
   return (
     <View style={[a.pt_xs]}>
       <Admonition type="info">
@@ -25,7 +30,7 @@ function CommunityGuidelinesNotice({}: {}) {
           </InlineLinkText>
           . An{' '}
           <InlineLinkText
-            label={_(msg`Bluesky's Community Guidelines`)}
+            label={_(msg`Bluesky's Updated Community Guidelines`)}
             to={webLinks.community}>
             updated version of our Community Guidelines
           </InlineLinkText>{' '}
@@ -57,14 +62,18 @@ export const Policies = ({
 
   if (!tos && !pp) {
     return (
-      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <CircleInfo size="md" fill={t.atoms.text_contrast_low.color} />
+      <View style={[a.gap_md]}>
+        <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+          <CircleInfo size="md" fill={t.atoms.text_contrast_low.color} />
 
-        <Text style={[t.atoms.text_contrast_medium]}>
-          <Trans>
-            This service has not provided terms of service or a privacy policy.
-          </Trans>
-        </Text>
+          <Text style={[t.atoms.text_contrast_medium]}>
+            <Trans>
+              This service has not provided terms of service or a privacy
+              policy.
+            </Trans>
+          </Text>
+        </View>
+        <CommunityGuidelinesNotice />
       </View>
     )
   }
