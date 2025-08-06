@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {getCurrentRoute} from '#/lib/routes/helpers'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
@@ -30,7 +30,8 @@ export function DesktopFeeds() {
       <View
         style={[
           {
-            gap: 12,
+            gap: 10,
+            paddingVertical: 2,
           },
         ]}>
         {Array(5)
@@ -66,6 +67,7 @@ export function DesktopFeeds() {
            * height of the screen with lots of feeds.
            */
           paddingVertical: 2,
+          marginHorizontal: -2,
           overflowY: 'auto',
         }),
       ]}>
@@ -90,6 +92,10 @@ export function DesktopFeeds() {
               current
                 ? [a.font_bold, t.atoms.text]
                 : [t.atoms.text_contrast_medium],
+              web({
+                marginHorizontal: 2,
+                width: 'calc(100% - 4px)',
+              }),
             ]}
             numberOfLines={1}>
             {feedInfo.displayName}
@@ -100,7 +106,14 @@ export function DesktopFeeds() {
       <InlineLinkText
         to="/feeds"
         label={_(msg`More feeds`)}
-        style={[a.text_md, a.leading_snug]}
+        style={[
+          a.text_md,
+          a.leading_snug,
+          web({
+            marginHorizontal: 2,
+            width: 'calc(100% - 4px)',
+          }),
+        ]}
         numberOfLines={1}>
         {_(msg`More feeds`)}
       </InlineLinkText>
