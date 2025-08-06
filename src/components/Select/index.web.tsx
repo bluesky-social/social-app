@@ -190,6 +190,7 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
             a.border,
             t.atoms.border_contrast_low,
             a.rounded_sm,
+            a.overflow_hidden,
           ]}>
           <RadixSelect.ScrollUpButton style={flatten(up)}>
             <ChevronUpIcon style={[t.atoms.text]} size="xs" />
