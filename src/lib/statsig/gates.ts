@@ -5,7 +5,6 @@ export type Gate =
   | 'debug_subscriptions'
   | 'disable_onboarding_policy_update_notice'
   | 'explore_show_suggested_feeds'
-  | 'old_postonboarding'
   | 'onboarding_add_video_feed'
   | 'post_threads_v2_unspecced'
   | 'remove_show_latest_button'
