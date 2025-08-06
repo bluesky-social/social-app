@@ -309,7 +309,7 @@ function WizardInner({
             }
           }}
         />
-        <Layout.Header.Content>
+        <Layout.Header.Content align="left">
           <Layout.Header.TitleText>
             {currUiStrings.header}
           </Layout.Header.TitleText>
