@@ -116,15 +116,15 @@ function useToastStyles({type}: {type: ToastType}) {
         backgroundColor: select(t.name, {
           light: t.palette.primary_25,
           dim: t.palette.primary_25,
-          dark: t.palette.primary_50,
+          dark: t.palette.primary_25,
         }),
         borderColor: select(t.name, {
           light: t.palette.primary_300,
           dim: t.palette.primary_600,
-          dark: t.palette.primary_500,
+          dark: t.palette.primary_300,
         }),
         iconColor: select(t.name, {
-          light: t.palette.primary_500,
+          light: t.palette.primary_600,
           dim: t.palette.primary_600,
           dark: t.palette.primary_600,
         }),
