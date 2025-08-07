@@ -42,10 +42,6 @@ export function usePolicyUpdateContext() {
 export function Provider({children}: {children?: ReactNode}) {
   const {hasSession} = useSession()
   const [isReadyToShowOverlay, setIsReadyToShowOverlay] = useState(false)
-  console.log({
-    isReadyToShowOverlay,
-    hasSession,
-  })
   const state = usePolicyUpdateState({
     // only enable the policy update overlay in non-test environments
     enabled:
