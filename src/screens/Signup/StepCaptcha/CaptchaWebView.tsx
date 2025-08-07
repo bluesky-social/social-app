@@ -35,7 +35,7 @@ export function CaptchaWebView({
 
   useEffect(() => {
     return () => {
-      if (successTo) {
+      if (successTo.current) {
         clearTimeout(successTo.current)
       }
     }
