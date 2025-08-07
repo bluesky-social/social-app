@@ -3,6 +3,7 @@ import {type GestureResponderEvent, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
+import Color from 'color'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -56,7 +57,18 @@ export function Outer({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
+        sticky &&
+          web([
+            a.sticky,
+            a.z_10,
+            {
+              top: 0,
+              backgroundColor: Color(t.atoms.bg.backgroundColor)
+                .alpha(0.75)
+                .string(),
+              backdropFilter: 'blur(10px)',
+            },
+          ]),
         gutters,
         platform({
           native: [a.pb_xs, {minHeight: 48}],
