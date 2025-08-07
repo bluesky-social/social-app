@@ -1,5 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -23,7 +24,10 @@ export function AccordionAnimation({
   const height = useSharedValue(0)
   const derivedHeight = useDerivedValue(() => {
     const targetHeight = isExpanded ? height.value : 0
-    return withTiming(targetHeight, {duration})
+    return withTiming(targetHeight, {
+      duration,
+      easing: Easing.out(Easing.cubic),
+    })
   }, [isExpanded, duration])
 
   const bodyStyle = useAnimatedStyle(() => ({
