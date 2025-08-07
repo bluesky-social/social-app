@@ -1,5 +1,9 @@
+import {type ToastApi} from '#/components/Toast/types'
+
 export function ToastContainer() {
   return null
 }
 
-export function show() {}
+export const toast: ToastApi = {
+  show() {},
+}
