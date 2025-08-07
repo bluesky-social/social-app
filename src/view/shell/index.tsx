@@ -33,7 +33,7 @@ import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {
   Outlet as PolicyUpdateOverlayPortalOutlet,
-  usePolicyUpdateStateContext,
+  usePolicyUpdateContext,
 } from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
@@ -49,7 +49,7 @@ function ShellInner() {
   const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
   const insets = useSafeAreaInsets()
-  const policyUpdateState = usePolicyUpdateStateContext()
+  const {state: policyUpdateState} = usePolicyUpdateContext()
 
   const renderDrawerContent = useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = useCallback(

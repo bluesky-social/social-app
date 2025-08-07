@@ -11,13 +11,20 @@ export type PolicyUpdateState = {
   complete: () => void
 }
 
-export function usePolicyUpdateState() {
+export function usePolicyUpdateState({enabled}: {enabled: boolean}) {
   const nux = useNux(ACTIVE_UPDATE_ID)
   const {mutate: save, variables} = useSaveNux()
   const deviceStorage = useStorage(device, [ACTIVE_UPDATE_ID])
   const debugOverride =
     !!useStorage(device, ['policyUpdateDebugOverride'])[0] && IS_DEV
   return useMemo(() => {
+    if (!enabled) {
+      return {
+        completed: true,
+        complete() {},
+      }
+    }
+
     const nuxIsReady = nux.status === 'ready'
     const nuxIsCompleted = nux.nux?.completed === true
     const nuxIsOptimisticallyCompleted = !!variables?.completed
@@ -59,7 +66,7 @@ export function usePolicyUpdateState() {
         setCompletedForDevice(true)
       },
     }
-  }, [nux, save, variables, deviceStorage, debugOverride])
+  }, [enabled, nux, save, variables, deviceStorage, debugOverride])
 }
 
 export function computeCompletedState({
