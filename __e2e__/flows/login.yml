@@ -23,4 +23,7 @@ appId: xyz.blueskyweb.app
     id: "loginPasswordInput"
 - inputText: "hunter2"
 - pressKey: Enter
+- tapOn:
+    text: "Not Now"
+    optional: true
 - assertVisible: "Following"
