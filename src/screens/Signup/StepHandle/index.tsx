@@ -28,6 +28,7 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
+import {IS_INTERNAL} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
 import {HandleSuggestions} from './HandleSuggestions'
 
@@ -193,7 +194,7 @@ export function StepHandle() {
                 </Requirement>
                 {isHandleAvailable.suggestions &&
                   isHandleAvailable.suggestions.length > 0 &&
-                  (gate('handle_suggestions') || __DEV__) && (
+                  (gate('handle_suggestions') || IS_INTERNAL) && (
                     <HandleSuggestions
                       suggestions={isHandleAvailable.suggestions}
                       onSelect={suggestion => {
