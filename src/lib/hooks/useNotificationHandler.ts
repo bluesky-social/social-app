@@ -301,17 +301,6 @@ export function useNotificationsHandler() {
         const payload = getNotificationPayload(e.notification)
 
         if (payload) {
-          if (!payload.reason) {
-            notyLogger.error(
-              'useNotificationsHandler: received unknown payload',
-              {
-                payload,
-                identifier: e.notification.request.identifier,
-              },
-            )
-            return
-          }
-
           notyLogger.debug(
             'User pressed a notification, opening notifications tab',
             {},
@@ -396,6 +385,12 @@ export function getNotificationPayload(
   if (payload && payload.reason) {
     return payload
   } else {
+    if (payload) {
+      notyLogger.warn('getNotificationPayload: received unknown payload', {
+        payload,
+        identifier: e.request.identifier,
+      })
+    }
     return null
   }
 }
