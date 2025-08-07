@@ -195,16 +195,18 @@ let NotificationFeedItem = ({
     }
     const isHighlighted = highlightUnread && !item.notification.isRead
     return (
-      <Post
-        post={item.subject}
-        style={
-          isHighlighted && {
-            backgroundColor: pal.colors.unreadNotifBg,
-            borderColor: pal.colors.unreadNotifBorder,
+      <View testID={`feedItem-by-${item.notification.author.handle}`}>
+        <Post
+          post={item.subject}
+          style={
+            isHighlighted && {
+              backgroundColor: pal.colors.unreadNotifBg,
+              borderColor: pal.colors.unreadNotifBorder,
+            }
           }
-        }
-        hideTopBorder={hideTopBorder}
-      />
+          hideTopBorder={hideTopBorder}
+        />
+      </View>
     )
   }
 
