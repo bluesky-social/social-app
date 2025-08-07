@@ -35,7 +35,10 @@ export function usePolicyUpdateContext() {
 
 export function Provider({children}: {children?: ReactNode}) {
   const [isReadyToShowOverlay, setIsReadyToShowOverlay] = useState(false)
-  const state = usePolicyUpdateState({enabled: isReadyToShowOverlay})
+  const state = usePolicyUpdateState({
+    // only enable the policy update overlay in non-test environments
+    enabled: isReadyToShowOverlay && process.env.NODE_ENV !== 'test',
+  })
 
   const ctx = useMemo(
     () => ({
