@@ -240,7 +240,7 @@ function DialogInner({
             label={_(msg`Remove live status`)}
             onPress={() => removeLiveStatus()}
             size={platform({native: 'large', web: 'small'})}
-            color="negative_secondary"
+            color="negative_subtle"
             variant="solid"
             disabled={isRemovingLiveStatus || isGoingLive}>
             <ButtonText>
