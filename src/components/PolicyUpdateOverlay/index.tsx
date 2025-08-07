@@ -16,6 +16,9 @@ export function PolicyUpdateOverlay() {
   const {state, setIsReadyToShowOverlay} = usePolicyUpdateContext()
 
   useEffect(() => {
+    /**
+     * Tell the context that we are ready to show the overlay.
+     */
     setIsReadyToShowOverlay()
   }, [setIsReadyToShowOverlay])
 

@@ -11,13 +11,26 @@ export type PolicyUpdateState = {
   complete: () => void
 }
 
-export function usePolicyUpdateState({enabled}: {enabled: boolean}) {
+export function usePolicyUpdateState({
+  enabled,
+}: {
+  /**
+   * Used to skip the policy update overlay until we're actually ready to
+   * show it.
+   */
+  enabled: boolean
+}) {
   const nux = useNux(ACTIVE_UPDATE_ID)
   const {mutate: save, variables} = useSaveNux()
   const deviceStorage = useStorage(device, [ACTIVE_UPDATE_ID])
   const debugOverride =
     !!useStorage(device, ['policyUpdateDebugOverride'])[0] && IS_DEV
+
   return useMemo(() => {
+    /**
+     * If not enabled, then just return a completed state so the app functions
+     * as normal.
+     */
     if (!enabled) {
       return {
         completed: true,

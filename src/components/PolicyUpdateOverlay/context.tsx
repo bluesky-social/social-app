@@ -20,6 +20,11 @@ const Context = createContext<{
     completed: true,
     complete: () => {},
   },
+  /**
+   * Although our data will be ready to go when the app shell mounts, we don't
+   * want to show the overlay until we actually render it, which happens after
+   * sigin/signup/onboarding in `createNativeStackNavigatorWithAuth`.
+   */
   setIsReadyToShowOverlay: () => {},
 })
 
