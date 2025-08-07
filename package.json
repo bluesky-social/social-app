@@ -186,6 +186,7 @@
     "react-native": "^0.79.3",
     "react-native-compressor": "^1.11.0",
     "react-native-date-picker": "^5.0.12",
+    "react-native-device-attest": "^0.1.6",
     "react-native-drawer-layout": "^4.1.8",
     "react-native-edge-to-edge": "^1.6.0",
     "react-native-gesture-handler": "2.25.0",
