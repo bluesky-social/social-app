@@ -592,7 +592,13 @@ export function useSharedButtonTextStyles() {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white})
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.white,
+              dim: t.atoms.text_inverted.color,
+              dark: t.atoms.text_inverted.color,
+            }),
+          })
         }
       } else if (color === 'secondary') {
         if (!disabled) {
