@@ -215,11 +215,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
     )
 
     const {baseStyles, hoverStyles} = React.useMemo(() => {
-      const baseStyles: ViewStyle[] = [
-        {
-          borderCurve: 'continuous',
-        },
-      ]
+      const baseStyles: ViewStyle[] = []
       const hoverStyles: ViewStyle[] = []
 
       /*
@@ -559,6 +555,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.flex_row,
           a.align_center,
           a.justify_center,
+          a.curve_continuous,
           flattenedBaseStyles,
           ...(state.hovered || state.pressed
             ? [hoverStyles, flatten(hoverStyleProp)]
