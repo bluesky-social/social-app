@@ -1,12 +1,15 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {
   Easing,
+  FadeIn,
+  FadeOut,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 
+import {isWeb} from '#/platform/detection'
 import {atoms as a} from '#/alf'
 
 type AccordionAnimationProps = React.PropsWithChildren<{
@@ -15,7 +18,7 @@ type AccordionAnimationProps = React.PropsWithChildren<{
   style?: StyleProp<ViewStyle>
 }>
 
-export function AccordionAnimation({
+function WebAccordion({
   isExpanded,
   duration = 300,
   style,
@@ -43,4 +46,25 @@ export function AccordionAnimation({
       </View>
     </Animated.View>
   )
+}
+
+function MobileAccordion({
+  isExpanded,
+  style,
+  children,
+}: AccordionAnimationProps) {
+  if (!isExpanded) return null
+
+  return (
+    <Animated.View
+      style={style}
+      entering={FadeIn.duration(150)}
+      exiting={FadeOut.duration(100)}>
+      {children}
+    </Animated.View>
+  )
+}
+
+export function AccordionAnimation(props: AccordionAnimationProps) {
+  return isWeb ? <WebAccordion {...props} /> : <MobileAccordion {...props} />
 }
