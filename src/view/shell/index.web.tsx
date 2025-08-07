@@ -24,7 +24,7 @@ import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {
   Outlet as PolicyUpdateOverlayPortalOutlet,
-  usePolicyUpdateStateContext,
+  usePolicyUpdateContext,
 } from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
@@ -41,7 +41,7 @@ function ShellInner() {
   const {_} = useLingui()
   const showDrawer = !isDesktop && isDrawerOpen
   const [showDrawerDelayedExit, setShowDrawerDelayedExit] = useState(showDrawer)
-  const policyUpdateState = usePolicyUpdateStateContext()
+  const {state: policyUpdateState} = usePolicyUpdateContext()
 
   useLayoutEffect(() => {
     if (showDrawer !== showDrawerDelayedExit) {

@@ -1,18 +1,26 @@
+import {useEffect} from 'react'
 import {View} from 'react-native'
 
 import {isIOS} from '#/platform/detection'
 import {atoms as a} from '#/alf'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
-import {usePolicyUpdateStateContext} from '#/components/PolicyUpdateOverlay/context'
+import {usePolicyUpdateContext} from '#/components/PolicyUpdateOverlay/context'
 import {Portal} from '#/components/PolicyUpdateOverlay/Portal'
 import {Content} from '#/components/PolicyUpdateOverlay/updates/202508'
 
 export {Provider} from '#/components/PolicyUpdateOverlay/context'
-export {usePolicyUpdateStateContext} from '#/components/PolicyUpdateOverlay/context'
+export {usePolicyUpdateContext} from '#/components/PolicyUpdateOverlay/context'
 export {Outlet} from '#/components/PolicyUpdateOverlay/Portal'
 
 export function PolicyUpdateOverlay() {
-  const state = usePolicyUpdateStateContext()
+  const {state, setIsReadyToShowOverlay} = usePolicyUpdateContext()
+
+  useEffect(() => {
+    /**
+     * Tell the context that we are ready to show the overlay.
+     */
+    setIsReadyToShowOverlay()
+  }, [setIsReadyToShowOverlay])
 
   /*
    * See `window.clearNux` example in `/state/queries/nuxs` for a way to clear
