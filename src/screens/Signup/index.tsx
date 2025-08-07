@@ -157,8 +157,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               a.pt_2xl,
               !gtMobile && {paddingBottom: 100},
             ]}>
-            <View style={[a.gap_sm, a.pb_3xl]}>
-              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+            <View style={[a.gap_sm, a.pb_sm]}>
+              <Text
+                style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
                 <Trans>
                   Step {state.activeStep + 1} of{' '}
                   {state.serviceDescription &&
@@ -167,7 +168,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     : '3'}
                 </Trans>
               </Text>
-              <Text style={[a.text_3xl, a.font_bold]}>
+              <Text style={[a.text_3xl, a.font_heavy]}>
                 {state.activeStep === SignupStep.INFO ? (
                   <Trans>Your account</Trans>
                 ) : state.activeStep === SignupStep.HANDLE ? (
