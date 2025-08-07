@@ -1,7 +1,7 @@
 import {createContext, useContext, useMemo} from 'react'
 import {View} from 'react-native'
 
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, select, useAlf, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
@@ -32,9 +32,19 @@ export function Toast({
   type: ToastType
   content: React.ReactNode
 }) {
+  const {fonts} = useAlf()
   const t = useTheme()
   const styles = useToastStyles({type})
   const Icon = ICONS[type]
+  /**
+   * Vibes-based number, adjusts `top` of `View` that wraps the text to
+   * compensate for different type sizes and keep the first line of text
+   * aligned with the icon. - esb
+   */
+  const fontScaleCompensation = useMemo(
+    () => parseInt(fonts.scale) * -1 * 0.65,
+    [fonts.scale],
+  )
 
   return (
     <Context.Provider value={useMemo(() => ({type}), [type])}>
@@ -56,7 +66,13 @@ export function Toast({
         ]}>
         <Icon size="md" fill={styles.iconColor} />
 
-        <View style={[a.flex_1]}>
+        <View
+          style={[
+            a.flex_1,
+            {
+              top: fontScaleCompensation,
+            },
+          ]}>
           {typeof content === 'string' ? (
             <ToastText>{content}</ToastText>
           ) : (
