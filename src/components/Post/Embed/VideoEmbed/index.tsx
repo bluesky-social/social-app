@@ -1,7 +1,7 @@
 import {useCallback, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {type AppBskyEmbedVideo} from '@atproto/api'
+import {type AppGndrEmbedVideo} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,7 +15,7 @@ import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 interface Props {
-  embed: AppBskyEmbedVideo.View
+  embed: AppGndrEmbedVideo.View
   crop?: 'none' | 'square' | 'constrained'
 }
 

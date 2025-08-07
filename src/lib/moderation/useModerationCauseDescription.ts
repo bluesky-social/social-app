@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-  BSKY_LABELER_DID,
+  GNDR_LABELER_DID,
   type ModerationCause,
   type ModerationCauseSource,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -137,9 +137,9 @@ export function useModerationCauseDescription(
         : undefined
       let sourceDisplayName = labeler?.creator.displayName
       if (!source) {
-        if (cause.label.src === BSKY_LABELER_DID) {
-          source = 'moderation.bsky.app'
-          sourceDisplayName = 'Bluesky Moderation Service'
+        if (cause.label.src === GNDR_LABELER_DID) {
+          source = 'moderation.gndr.app'
+          sourceDisplayName = 'Gander Moderation Service'
         } else {
           source = _(msg`an unknown labeler`)
         }

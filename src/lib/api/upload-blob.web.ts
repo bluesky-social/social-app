@@ -1,4 +1,7 @@
-import {BskyAgent, ComAtprotoRepoUploadBlob} from '@atproto/api'
+import {
+  type ComAtprotoRepoUploadBlob,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 
 /**
  * @note It is recommended, on web, to use the `file` instance of the file
@@ -7,7 +10,7 @@ import {BskyAgent, ComAtprotoRepoUploadBlob} from '@atproto/api'
  * be passed directly to this function.
  */
 export async function uploadBlob(
-  agent: BskyAgent,
+  agent: GndrAgent,
   input: string | Blob,
   encoding?: string,
 ): Promise<ComAtprotoRepoUploadBlob.Response> {

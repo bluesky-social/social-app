@@ -1,21 +1,21 @@
 import {
-  type AppBskyFeedDefs,
-  AppBskyFeedLike,
-  AppBskyFeedPost,
-  AppBskyFeedRepost,
-  type AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-  type AppBskyNotificationListNotifications,
-  type BskyAgent,
+  type AppGndrFeedDefs,
+  AppGndrFeedLike,
+  AppGndrFeedPost,
+  AppGndrFeedRepost,
+  type AppGndrGraphDefs,
+  AppGndrGraphStarterpack,
+  type AppGndrNotificationListNotifications,
+  type GndrAgent,
   hasMutedWord,
   moderateNotification,
   type ModerationOpts,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 import {precacheProfile} from '../profile'
 import {
   type FeedNotification,
@@ -46,7 +46,7 @@ export async function fetchPage({
   fetchAdditionalData,
   reasons,
 }: {
-  agent: BskyAgent
+  agent: GndrAgent
   cursor: string | undefined
   limit: number
   queryClient: QueryClient
@@ -116,7 +116,7 @@ export async function fetchPage({
 // =
 
 export function shouldFilterNotif(
-  notif: AppBskyNotificationListNotifications.Notification,
+  notif: AppGndrNotificationListNotifications.Notification,
   moderationOpts: ModerationOpts | undefined,
 ): boolean {
   const containsImperative = !!notif.author.labels?.some(labelIsHideableOffense)
@@ -128,9 +128,9 @@ export function shouldFilterNotif(
   }
   if (
     notif.reason === 'subscribed-post' &&
-    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+    gndr.dangerousIsType<AppGndrFeedPost.Record>(
       notif.record,
-      AppBskyFeedPost.isRecord,
+      AppGndrFeedPost.isRecord,
     ) &&
     hasMutedWord({
       mutedWords: moderationOpts.prefs.mutedWords,
@@ -150,7 +150,7 @@ export function shouldFilterNotif(
 }
 
 export function groupNotifications(
-  notifs: AppBskyNotificationListNotifications.Notification[],
+  notifs: AppGndrNotificationListNotifications.Notification[],
 ): FeedNotification[] {
   const groupedNotifs: FeedNotification[] = []
   for (const notif of notifs) {
@@ -204,19 +204,19 @@ export function groupNotifications(
 }
 
 async function fetchSubjects(
-  agent: BskyAgent,
+  agent: GndrAgent,
   groupedNotifs: FeedNotification[],
 ): Promise<{
-  posts: Map<string, AppBskyFeedDefs.PostView>
-  starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>
+  posts: Map<string, AppGndrFeedDefs.PostView>
+  starterPacks: Map<string, AppGndrGraphDefs.StarterPackViewBasic>
 }> {
   const postUris = new Set<string>()
   const packUris = new Set<string>()
   for (const notif of groupedNotifs) {
-    if (notif.subjectUri?.includes('app.bsky.feed.post')) {
+    if (notif.subjectUri?.includes('app.gndr.feed.post')) {
       postUris.add(notif.subjectUri)
     } else if (
-      notif.notification.reasonSubject?.includes('app.bsky.graph.starterpack')
+      notif.notification.reasonSubject?.includes('app.gndr.graph.starterpack')
     ) {
       packUris.add(notif.notification.reasonSubject)
     }
@@ -225,25 +225,25 @@ async function fetchSubjects(
   const packUriChunks = chunk(Array.from(packUris), 25)
   const postsChunks = await Promise.all(
     postUriChunks.map(uris =>
-      agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
+      agent.app.gndr.feed.getPosts({uris}).then(res => res.data.posts),
     ),
   )
   const packsChunks = await Promise.all(
     packUriChunks.map(uris =>
-      agent.app.bsky.graph
+      agent.app.gndr.graph
         .getStarterPacks({uris})
         .then(res => res.data.starterPacks),
     ),
   )
-  const postsMap = new Map<string, AppBskyFeedDefs.PostView>()
-  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackViewBasic>()
+  const postsMap = new Map<string, AppGndrFeedDefs.PostView>()
+  const packsMap = new Map<string, AppGndrGraphDefs.StarterPackViewBasic>()
   for (const post of postsChunks.flat()) {
-    if (AppBskyFeedPost.isRecord(post.record)) {
+    if (AppGndrFeedPost.isRecord(post.record)) {
       postsMap.set(post.uri, post)
     }
   }
   for (const pack of packsChunks.flat()) {
-    if (AppBskyGraphStarterpack.isRecord(pack.record)) {
+    if (AppGndrGraphStarterpack.isRecord(pack.record)) {
       packsMap.set(pack.uri, pack)
     }
   }
@@ -254,7 +254,7 @@ async function fetchSubjects(
 }
 
 function toKnownType(
-  notif: AppBskyNotificationListNotifications.Notification,
+  notif: AppGndrNotificationListNotifications.Notification,
 ): NotificationType {
   if (notif.reason === 'like') {
     if (notif.reasonSubject?.includes('feed.generator')) {
@@ -282,7 +282,7 @@ function toKnownType(
 
 function getSubjectUri(
   type: NotificationType,
-  notif: AppBskyNotificationListNotifications.Notification,
+  notif: AppGndrNotificationListNotifications.Notification,
 ): string | undefined {
   if (
     type === 'reply' ||
@@ -298,13 +298,13 @@ function getSubjectUri(
     type === 'repost-via-repost'
   ) {
     if (
-      bsky.dangerousIsType<AppBskyFeedRepost.Record>(
+      gndr.dangerousIsType<AppGndrFeedRepost.Record>(
         notif.record,
-        AppBskyFeedRepost.isRecord,
+        AppGndrFeedRepost.isRecord,
       ) ||
-      bsky.dangerousIsType<AppBskyFeedLike.Record>(
+      gndr.dangerousIsType<AppGndrFeedLike.Record>(
         notif.record,
-        AppBskyFeedLike.isRecord,
+        AppGndrFeedLike.isRecord,
       )
     ) {
       return typeof notif.record.subject?.uri === 'string'

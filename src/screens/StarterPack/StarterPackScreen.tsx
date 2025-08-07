@@ -1,14 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
+  AppGndrGraphDefs,
+  AppGndrGraphStarterpack,
   AtUri,
   type ModerationOpts,
   RichText as RichTextAPI,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+} from '@gander-social-atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -72,7 +72,7 @@ import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 type StarterPackScreeProps = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -144,8 +144,8 @@ export function StarterPackScreenInner({
   const isValid =
     starterPack &&
     (starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
-    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
-    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+    AppGndrGraphDefs.validateStarterPackView(starterPack) &&
+    AppGndrGraphStarterpack.validateRecord(starterPack.record)
 
   if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
@@ -176,7 +176,7 @@ function StarterPackScreenLoaded({
   routeParams,
   moderationOpts,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: AppGndrGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   moderationOpts: ModerationOpts
 }) {
@@ -297,7 +297,7 @@ function Header({
   routeParams,
   onOpenShareDialog,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: AppGndrGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
 }) {
@@ -344,7 +344,7 @@ function Header({
 
     setIsProcessing(true)
 
-    let listItems: AppBskyGraphDefs.ListItemView[] = []
+    let listItems: AppGndrGraphDefs.ListItemView[] = []
     try {
       listItems = await getAllListMembers(agent, starterPack.list.uri)
     } catch (e) {
@@ -393,9 +393,9 @@ function Header({
   }
 
   if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+    !gndr.dangerousIsType<AppGndrGraphStarterpack.Record>(
       record,
-      AppBskyGraphStarterpack.isRecord,
+      AppGndrGraphStarterpack.isRecord,
     )
   ) {
     return null
@@ -417,7 +417,7 @@ function Header({
         isOwner={isOwn}
         avatar={undefined}
         creator={creator}
-        purpose="app.bsky.graph.defs#referencelist"
+        purpose="app.gndr.graph.defs#referencelist"
         avatarType="starter-pack">
         {hasSession ? (
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
@@ -463,7 +463,7 @@ function Header({
           ) : null}
           {!hasSession ? (
             <Button
-              label={_(msg`Join Bluesky`)}
+              label={_(msg`Join Gander`)}
               onPress={() => {
                 setActiveStarterPack({
                   uri: starterPack.uri,
@@ -474,7 +474,7 @@ function Header({
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
-                <Trans>Join Bluesky</Trans>
+                <Trans>Join Gander</Trans>
               </ButtonText>
             </Button>
           ) : null}
@@ -487,7 +487,7 @@ function Header({
               />
               <Text
                 style={[a.font_bold, a.text_sm, t.atoms.text_contrast_medium]}>
-                <Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific starter pack">
+                <Trans comment="Number of users (always at least 25) who have joined Gander using a specific starter pack">
                   <Plural
                     value={starterPack.joinedAllTimeCount || 0}
                     other="# people have"
@@ -508,7 +508,7 @@ function OverflowMenu({
   routeParams,
   onOpenShareDialog,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: AppGndrGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
 }) {
@@ -644,7 +644,7 @@ function OverflowMenu({
           control={reportDialogControl}
           subject={{
             ...starterPack,
-            $type: 'app.bsky.graph.defs#starterPackView',
+            $type: 'app.gndr.graph.defs#starterPackView',
           }}
         />
       )}

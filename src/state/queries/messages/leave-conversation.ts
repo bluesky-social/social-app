@@ -1,5 +1,8 @@
 import {useMemo} from 'react'
-import {ChatBskyConvoLeaveConvo, ChatBskyConvoListConvos} from '@atproto/api'
+import {
+  type ChatGndrConvoLeaveConvo,
+  type ChatGndrConvoListConvos,
+} from '@gander-social-atproto/api'
 import {
   useMutation,
   useMutationState,
@@ -24,7 +27,7 @@ export function useLeaveConvo(
     onError,
   }: {
     onMutate?: () => void
-    onSuccess?: (data: ChatBskyConvoLeaveConvo.OutputSchema) => void
+    onSuccess?: (data: ChatGndrConvoLeaveConvo.OutputSchema) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -36,7 +39,7 @@ export function useLeaveConvo(
     mutationFn: async () => {
       if (!convoId) throw new Error('No convoId provided')
 
-      const {data} = await agent.chat.bsky.convo.leaveConvo(
+      const {data} = await agent.chat.gndr.convo.leaveConvo(
         {convoId},
         {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
       )
@@ -44,12 +47,12 @@ export function useLeaveConvo(
       return data
     },
     onMutate: () => {
-      let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
+      let prevPages: ChatGndrConvoListConvos.OutputSchema[] = []
       queryClient.setQueryData(
         [CONVO_LIST_KEY],
         (old?: {
           pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
+          pages: Array<ChatGndrConvoListConvos.OutputSchema>
         }) => {
           if (!old) return old
           prevPages = old.pages
@@ -77,7 +80,7 @@ export function useLeaveConvo(
         [CONVO_LIST_KEY],
         (old?: {
           pageParams: Array<string | undefined>
-          pages: Array<ChatBskyConvoListConvos.OutputSchema>
+          pages: Array<ChatGndrConvoListConvos.OutputSchema>
         }) => {
           if (!old) return old
           return {

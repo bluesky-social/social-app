@@ -1,14 +1,14 @@
 import {useCallback} from 'react'
 import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetProfile,
-  type AppBskyActorGetProfiles,
-  type AppBskyActorProfile,
+  type AppGndrActorDefs,
+  type AppGndrActorGetProfile,
+  type AppGndrActorGetProfiles,
+  type AppGndrActorProfile,
   AtUri,
-  type BskyAgent,
   type ComAtprotoRepoUploadBlob,
+  type GndrAgent,
   type Un$Typed,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {
   keepPreviousData,
   type QueryClient,
@@ -33,7 +33,7 @@ import {
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
 import {useAgent, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
@@ -66,7 +66,7 @@ export function useProfileQuery({
 }) {
   const agent = useAgent()
   const {getUnstableProfile} = useUnstableProfileViewCache()
-  return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
+  return useQuery<AppGndrActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
     // if you remove it, the UI infinite-loops
@@ -80,7 +80,7 @@ export function useProfileQuery({
     },
     placeholderData: () => {
       if (!did) return
-      return getUnstableProfile(did) as AppBskyActorDefs.ProfileViewDetailed
+      return getUnstableProfile(did) as AppGndrActorDefs.ProfileViewDetailed
     },
     enabled: !!did,
   })
@@ -125,15 +125,15 @@ export function usePrefetchProfileQuery() {
 }
 
 interface ProfileUpdateParams {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
   updates:
-    | Un$Typed<AppBskyActorProfile.Record>
+    | Un$Typed<AppGndrActorProfile.Record>
     | ((
-        existing: Un$Typed<AppBskyActorProfile.Record>,
-      ) => Un$Typed<AppBskyActorProfile.Record>)
+        existing: Un$Typed<AppGndrActorProfile.Record>,
+      ) => Un$Typed<AppGndrActorProfile.Record>)
   newUserAvatar?: ImageMeta | undefined | null
   newUserBanner?: ImageMeta | undefined | null
-  checkCommitted?: (res: AppBskyActorGetProfile.Response) => boolean
+  checkCommitted?: (res: AppGndrActorGetProfile.Response) => boolean
 }
 export function useProfileUpdateMutation() {
   const queryClient = useQueryClient()
@@ -168,7 +168,7 @@ export function useProfileUpdateMutation() {
         )
       }
       await agent.upsertProfile(async existing => {
-        let next: Un$Typed<AppBskyActorProfile.Record> = existing || {}
+        let next: Un$Typed<AppGndrActorProfile.Record> = existing || {}
         if (typeof updates === 'function') {
           next = updates(next)
         } else {
@@ -239,7 +239,7 @@ export function useProfileUpdateMutation() {
 }
 
 export function useProfileFollowMutationQueue(
-  profile: Shadow<bsky.profile.AnyProfileView>,
+  profile: Shadow<gndr.profile.AnyProfileView>,
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:follow']['logContext'],
 ) {
@@ -277,7 +277,7 @@ export function useProfileFollowMutationQueue(
       })
 
       if (finalFollowingUri) {
-        agent.app.bsky.graph
+        agent.app.gndr.graph
           .getSuggestedFollowsByActor({
             actor: did,
           })
@@ -313,7 +313,7 @@ export function useProfileFollowMutationQueue(
 
 function useProfileFollowMutation(
   logContext: LogEvents['profile:follow']['logContext'],
-  profile: Shadow<bsky.profile.AnyProfileView>,
+  profile: Shadow<gndr.profile.AnyProfileView>,
 ) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -322,7 +322,7 @@ function useProfileFollowMutation(
 
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
-      let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
+      let ownProfile: AppGndrActorDefs.ProfileViewDetailed | undefined
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
@@ -356,7 +356,7 @@ function useProfileUnfollowMutation(
 }
 
 export function useProfileMuteMutationQueue(
-  profile: Shadow<bsky.profile.AnyProfileView>,
+  profile: Shadow<gndr.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -431,7 +431,7 @@ function useProfileUnmuteMutation() {
 }
 
 export function useProfileBlockMutationQueue(
-  profile: Shadow<bsky.profile.AnyProfileView>,
+  profile: Shadow<gndr.profile.AnyProfileView>,
 ) {
   const queryClient = useQueryClient()
   const did = profile.did
@@ -494,7 +494,7 @@ function useProfileBlockMutation() {
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      return await agent.app.bsky.graph.block.create(
+      return await agent.app.gndr.graph.block.create(
         {repo: currentAccount.did},
         {subject: did, createdAt: new Date().toISOString()},
       )
@@ -516,7 +516,7 @@ function useProfileUnblockMutation() {
         throw new Error('Not signed in')
       }
       const {rkey} = new AtUri(blockUri)
-      await agent.app.bsky.graph.block.delete({
+      await agent.app.gndr.graph.block.delete({
         repo: currentAccount.did,
         rkey,
       })
@@ -528,24 +528,24 @@ function useProfileUnblockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: GndrAgent,
   actor: string,
-  fn: (res: AppBskyActorGetProfile.Response) => boolean,
+  fn: (res: AppGndrActorGetProfile.Response) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.actor.getProfile({actor}),
+    () => agent.app.gndr.actor.getProfile({actor}),
   )
 }
 
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewDetailed, void> {
+): Generator<AppGndrActorDefs.ProfileViewDetailed, void> {
   const profileQueryDatas =
-    queryClient.getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
+    queryClient.getQueriesData<AppGndrActorDefs.ProfileViewDetailed>({
       queryKey: [RQKEY_ROOT],
     })
   for (const [_queryKey, queryData] of profileQueryDatas) {
@@ -557,7 +557,7 @@ export function* findAllProfilesInQueryData(
     }
   }
   const profilesQueryDatas =
-    queryClient.getQueriesData<AppBskyActorGetProfiles.OutputSchema>({
+    queryClient.getQueriesData<AppGndrActorGetProfiles.OutputSchema>({
       queryKey: [profilesQueryKeyRoot],
     })
   for (const [_queryKey, queryData] of profilesQueryDatas) {
@@ -575,8 +575,8 @@ export function* findAllProfilesInQueryData(
 export function findProfileQueryData(
   queryClient: QueryClient,
   did: string,
-): AppBskyActorDefs.ProfileViewDetailed | undefined {
-  return queryClient.getQueryData<AppBskyActorDefs.ProfileViewDetailed>(
+): AppGndrActorDefs.ProfileViewDetailed | undefined {
+  return queryClient.getQueryData<AppGndrActorDefs.ProfileViewDetailed>(
     RQKEY(did),
   )
 }

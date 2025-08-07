@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -19,7 +19,7 @@ import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Mes
 export function MessageProfileButton({
   profile,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()

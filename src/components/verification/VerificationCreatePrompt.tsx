@@ -16,14 +16,14 @@ import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function VerificationCreatePrompt({
   control,
   profile,
 }: {
   control: DialogControlProps
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
 }) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()

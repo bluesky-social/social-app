@@ -1,6 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs as ActorDefs} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'

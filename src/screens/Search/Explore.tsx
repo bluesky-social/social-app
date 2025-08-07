@@ -1,10 +1,10 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig} from 'react-native'
 import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-} from '@atproto/api'
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  type AppGndrGraphDefs,
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -157,7 +157,7 @@ type ExploreScreenItems =
   | {
       type: 'profile'
       key: string
-      profile: AppBskyActorDefs.ProfileView
+      profile: AppGndrActorDefs.ProfileView
       recId?: number
     }
   | {
@@ -167,7 +167,7 @@ type ExploreScreenItems =
   | {
       type: 'feed'
       key: string
-      feed: AppBskyFeedDefs.GeneratorView
+      feed: AppGndrFeedDefs.GeneratorView
     }
   | {
       type: 'loadMore'
@@ -193,7 +193,7 @@ type ExploreScreenItems =
   | {
       type: 'starterPack'
       key: string
-      view: AppBskyGraphDefs.StarterPackView
+      view: AppGndrGraphDefs.StarterPackView
     }
   | {
       type: 'starterPackSkeleton'

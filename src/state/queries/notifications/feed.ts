@@ -18,12 +18,12 @@
 
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
-  type AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppGndrActorDefs,
+  AppGndrFeedDefs,
+  AppGndrFeedPost,
   AtUri,
   moderatePost,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -199,7 +199,7 @@ export function useNotificationFeedQuery(opts: {
                        * a `$type` field on the `subject`. But if the nested
                        * `record` is a post, we know it's a post view.
                        */
-                      if (AppBskyFeedPost.isRecord(item.subject?.record)) {
+                      if (AppGndrFeedPost.isRecord(item.subject?.record)) {
                         const mod = moderatePost(item.subject, moderationOpts!)
                         if (mod.ui('contentList').filter) {
                           return false
@@ -276,7 +276,7 @@ export function useNotificationFeedQuery(opts: {
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, void> {
+): Generator<AppGndrFeedDefs.PostView, void> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
@@ -295,7 +295,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (AppBskyFeedDefs.isPostView(item.subject)) {
+        if (AppGndrFeedDefs.isPostView(item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
             yield embedViewRecordToPostView(quotedPost!)
@@ -309,7 +309,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
+): Generator<AppGndrActorDefs.ProfileViewBasic, void> {
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
     queryKey: [RQKEY_ROOT],
   })
@@ -325,7 +325,7 @@ export function* findAllProfilesInQueryData(
         ) {
           yield item.subject.author
         }
-        if (AppBskyFeedDefs.isPostView(item.subject)) {
+        if (AppGndrFeedDefs.isPostView(item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost?.author.did === did) {
             yield quotedPost.author

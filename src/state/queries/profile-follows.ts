@@ -1,8 +1,11 @@
-import {AppBskyActorDefs, AppBskyGraphGetFollows} from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type AppGndrActorDefs,
+  type AppGndrGraphGetFollows,
+} from '@gander-social-atproto/api'
+import {
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -28,16 +31,16 @@ export function useProfileFollowsQuery(
 ) {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyGraphGetFollows.OutputSchema,
+    AppGndrGraphGetFollows.OutputSchema,
     Error,
-    InfiniteData<AppBskyGraphGetFollows.OutputSchema>,
+    InfiniteData<AppGndrGraphGetFollows.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getFollows({
+      const res = await agent.app.gndr.graph.getFollows({
         actor: did || '',
         limit: limit || PAGE_SIZE,
         cursor: pageParam,
@@ -53,9 +56,9 @@ export function useProfileFollowsQuery(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyGraphGetFollows.OutputSchema>
+    InfiniteData<AppGndrGraphGetFollows.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })

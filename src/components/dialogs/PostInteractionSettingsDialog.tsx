@@ -1,10 +1,10 @@
 import React from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPostgate,
+  type AppGndrFeedDefs,
+  type AppGndrFeedPostgate,
   AtUri,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -48,8 +48,8 @@ export type PostInteractionSettingsFormProps = {
   onSave: () => void
   isSaving?: boolean
 
-  postgate: AppBskyFeedPostgate.Record
-  onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
+  postgate: AppGndrFeedPostgate.Record
+  onChangePostgate: (v: AppGndrFeedPostgate.Record) => void
 
   threadgateAllowUISettings: ThreadgateAllowUISetting[]
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
@@ -124,10 +124,10 @@ export type PostInteractionSettingsDialogProps = {
    */
   rootPostUri: string
   /**
-   * Optional initial {@link AppBskyFeedDefs.ThreadgateView} to use if we
+   * Optional initial {@link AppGndrFeedDefs.ThreadgateView} to use if we
    * happen to have one before opening the settings dialog.
    */
-  initialThreadgateView?: AppBskyFeedDefs.ThreadgateView
+  initialThreadgateView?: AppGndrFeedDefs.ThreadgateView
 }
 
 export function PostInteractionSettingsDialog(
@@ -158,7 +158,7 @@ export function PostInteractionSettingsDialogControlledInner(
   const {mutateAsync: setThreadgateAllow} = useSetThreadgateAllowMutation()
 
   const [editedPostgate, setEditedPostgate] =
-    React.useState<AppBskyFeedPostgate.Record>()
+    React.useState<AppGndrFeedPostgate.Record>()
   const [editedAllowUISettings, setEditedAllowUISettings] =
     React.useState<ThreadgateAllowUISetting[]>()
 

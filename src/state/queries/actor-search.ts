@@ -1,7 +1,7 @@
 import {
-  type AppBskyActorDefs,
-  type AppBskyActorSearchActors,
-} from '@atproto/api'
+  type AppGndrActorDefs,
+  type AppGndrActorSearchActors,
+} from '@gander-social-atproto/api'
 import {
   type InfiniteData,
   keepPreviousData,
@@ -32,7 +32,7 @@ export function useActorSearch({
   enabled?: boolean
 }) {
   const agent = useAgent()
-  return useQuery<AppBskyActorDefs.ProfileView[]>({
+  return useQuery<AppGndrActorDefs.ProfileView[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(query || ''),
     async queryFn() {
@@ -58,9 +58,9 @@ export function useActorSearchPaginated({
 }) {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyActorSearchActors.OutputSchema,
+    AppGndrActorSearchActors.OutputSchema,
     Error,
-    InfiniteData<AppBskyActorSearchActors.OutputSchema>,
+    InfiniteData<AppGndrActorSearchActors.OutputSchema>,
     QueryKey,
     string | undefined
   >({
@@ -85,7 +85,7 @@ export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
 ) {
-  const queryDatas = queryClient.getQueriesData<AppBskyActorDefs.ProfileView[]>(
+  const queryDatas = queryClient.getQueriesData<AppGndrActorDefs.ProfileView[]>(
     {
       queryKey: [RQKEY_ROOT],
     },
@@ -102,7 +102,7 @@ export function* findAllProfilesInQueryData(
   }
 
   const queryDatasPaginated = queryClient.getQueriesData<
-    InfiniteData<AppBskyActorSearchActors.OutputSchema>
+    InfiniteData<AppGndrActorSearchActors.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT_PAGINATED],
   })

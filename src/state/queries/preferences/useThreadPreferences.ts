@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {type AppBskyUnspeccedGetPostThreadV2} from '@atproto/api'
+import {type AppGndrUnspeccedGetPostThreadV2} from '@gander-social-atproto/api'
 import debounce from 'lodash.debounce'
 
 import {OnceKey, useCallOnce} from '#/lib/hooks/useCallOnce'
@@ -12,7 +12,7 @@ import {type ThreadViewPreferences} from '#/state/queries/preferences/types'
 import {type Literal} from '#/types/utils'
 
 export type ThreadSortOption = Literal<
-  AppBskyUnspeccedGetPostThreadV2.QueryParams['sort'],
+  AppGndrUnspeccedGetPostThreadV2.QueryParams['sort'],
   string
 >
 export type ThreadViewOption = 'linear' | 'tree'

@@ -1,11 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
-import {BSKY_LABELER_DID, ModerationCause} from '@atproto/api'
+import {
+  GNDR_LABELER_DID,
+  type ModerationCause,
+} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ModerationDetailsDialog,
@@ -64,8 +67,8 @@ export function Label({
   const control = useModerationDetailsDialogControl()
   const desc = useModerationCauseDescription(cause)
   const isLabeler = Boolean(desc.sourceType && desc.sourceDid)
-  const isBlueskyLabel =
-    desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID
+  const isGanderLabel =
+    desc.sourceType === 'labeler' && desc.sourceDid === GNDR_LABELER_DID
 
   const {outer, avi, text} = React.useMemo(() => {
     switch (size) {
@@ -120,7 +123,7 @@ export function Label({
               outer,
               (hovered || pressed) && t.atoms.bg_contrast_50,
             ]}>
-            {isBlueskyLabel || !isLabeler ? (
+            {isGanderLabel || !isLabeler ? (
               <desc.icon
                 width={avi}
                 fill={t.atoms.text_contrast_medium.color}

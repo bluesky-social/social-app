@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
-import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
+import {type AppGndrUnspeccedDefs, moderateProfile} from '@gander-social-atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -62,7 +62,7 @@ export function TrendRow({
   children,
   onPress,
 }: ViewStyleProp & {
-  trend: AppBskyUnspeccedDefs.TrendView
+  trend: AppGndrUnspeccedDefs.TrendView
   rank: number
   children?: React.ReactNode
   onPress?: () => void
@@ -224,7 +224,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
 }
 
 function useCategoryDisplayName(
-  category: AppBskyUnspeccedDefs.TrendView['category'],
+  category: AppGndrUnspeccedDefs.TrendView['category'],
 ) {
   const {_} = useLingui()
 
@@ -285,7 +285,7 @@ export function TrendingTopicRowSkeleton({}: {withPosts: boolean}) {
 }
 
 function useModerateTrendingActors(
-  actors: AppBskyUnspeccedDefs.TrendView['actors'],
+  actors: AppGndrUnspeccedDefs.TrendView['actors'],
 ) {
   const moderationOpts = useModerationOpts()
 

@@ -1,6 +1,6 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppBskyGraphDefs, type ModerationOpts} from '@atproto/api'
+import {type AppGndrGraphDefs, type ModerationOpts} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,7 +23,7 @@ import {
 } from '#/components/dialogs/SearchablePeopleList'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function ListAddRemoveUsersDialog({
   control,
@@ -31,10 +31,10 @@ export function ListAddRemoveUsersDialog({
   onChange,
 }: {
   control: Dialog.DialogControlProps
-  list: AppBskyGraphDefs.ListView
+  list: AppGndrGraphDefs.ListView
   onChange?: (
     type: 'add' | 'remove',
-    profile: bsky.profile.AnyProfileView,
+    profile: gndr.profile.AnyProfileView,
   ) => void | undefined
 }) {
   return (
@@ -49,10 +49,10 @@ function DialogInner({
   list,
   onChange,
 }: {
-  list: AppBskyGraphDefs.ListView
+  list: AppGndrGraphDefs.ListView
   onChange?: (
     type: 'add' | 'remove',
-    profile: bsky.profile.AnyProfileView,
+    profile: gndr.profile.AnyProfileView,
   ) => void | undefined
 }) {
   const {_} = useLingui()
@@ -89,12 +89,12 @@ function UserResult({
   onChange,
   moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
-  list: AppBskyGraphDefs.ListView
+  profile: gndr.profile.AnyProfileView
+  list: AppGndrGraphDefs.ListView
   memberships: ListMembersip[] | undefined
   onChange?: (
     type: 'add' | 'remove',
-    profile: bsky.profile.AnyProfileView,
+    profile: gndr.profile.AnyProfileView,
   ) => void | undefined
   moderationOpts?: ModerationOpts
 }) {

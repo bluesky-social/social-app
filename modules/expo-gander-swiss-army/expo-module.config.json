@@ -1,0 +1,19 @@
+{
+  "platforms": ["ios", "tvos", "android", "web"],
+  "ios": {
+    "modules": [
+      "ExpoGanderSharedPrefsModule",
+      "ExpoGanderReferrerModule",
+      "ExpoGanderVisibilityViewModule",
+      "ExpoPlatformInfoModule"
+    ]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.ganderswissarmy.sharedprefs.ExpoGanderSharedPrefsModule",
+      "expo.modules.ganderswissarmy.referrer.ExpoGanderReferrerModule",
+      "expo.modules.ganderswissarmy.visibilityview.ExpoGanderVisibilityViewModule",
+      "expo.modules.ganderswissarmy.platforminfo.ExpoPlatformInfoModule"
+    ]
+  }
+}

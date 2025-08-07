@@ -12,7 +12,7 @@ import {type FullVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
 import {VerificationsDialog} from '#/components/verification/VerificationsDialog'
 import {VerifierDialog} from '#/components/verification/VerifierDialog'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function shouldShowVerificationCheckButton(
   state: FullVerificationState,
@@ -53,7 +53,7 @@ export function VerificationCheckButton({
   profile,
   size,
 }: {
-  profile: Shadow<bsky.profile.AnyProfileView>
+  profile: Shadow<gndr.profile.AnyProfileView>
   size: 'lg' | 'md' | 'sm'
 }) {
   const state = useFullVerificationState({
@@ -72,7 +72,7 @@ export function Badge({
   verificationState: state,
   size,
 }: {
-  profile: Shadow<bsky.profile.AnyProfileView>
+  profile: Shadow<gndr.profile.AnyProfileView>
   verificationState: FullVerificationState
   size: 'lg' | 'md' | 'sm'
 }) {

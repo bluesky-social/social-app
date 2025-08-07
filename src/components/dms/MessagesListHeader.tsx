@@ -1,11 +1,11 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
-  type AppBskyActorDefs,
+  type AppGndrActorDefs,
   type ModerationCause,
   type ModerationDecision,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -34,7 +34,7 @@ export let MessagesListHeader = ({
   profile,
   moderation,
 }: {
-  profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile?: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   moderation?: ModerationDecision
 }): React.ReactNode => {
   const t = useTheme()
@@ -141,7 +141,7 @@ function HeaderReady({
   moderation,
   blockInfo,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
   blockInfo: {
     listBlocks: ModerationCause[]

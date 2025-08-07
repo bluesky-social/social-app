@@ -1,5 +1,5 @@
 import React, {memo, useState} from 'react'
-import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
+import {type LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedReaction,
@@ -8,11 +8,11 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
-  AppBskyActorDefs,
-  AppBskyLabelerDefs,
-  ModerationOpts,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+  type AppGndrActorDefs,
+  type AppGndrLabelerDefs,
+  type ModerationOpts,
+  type RichText as RichTextAPI,
+} from '@gander-social-atproto/api'
 import {useIsFocused} from '@react-navigation/native'
 
 import {isNative} from '#/platform/detection'
@@ -48,8 +48,8 @@ ProfileHeaderLoading = memo(ProfileHeaderLoading)
 export {ProfileHeaderLoading}
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  profile: AppGndrActorDefs.ProfileViewDetailed
+  labeler: AppGndrLabelerDefs.LabelerViewDetailed | undefined
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -89,7 +89,7 @@ const MinimalHeader = React.memo(function MinimalHeader({
   onLayout,
 }: {
   onLayout: (e: LayoutChangeEvent) => void
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
   hideBackButton?: boolean
 }) {
   const t = useTheme()

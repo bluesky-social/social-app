@@ -1,14 +1,14 @@
 import {
   type $Typed,
-  type AppBskyGraphDefs,
-  type AppBskyGraphGetList,
-  type AppBskyGraphList,
+  type AppGndrGraphDefs,
+  type AppGndrGraphGetList,
+  type AppGndrGraphList,
   AtUri,
-  type BskyAgent,
   type ComAtprotoRepoApplyWrites,
   type Facet,
+  type GndrAgent,
   type Un$Typed,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
@@ -25,14 +25,14 @@ export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
 export function useListQuery(uri?: string) {
   const agent = useAgent()
-  return useQuery<AppBskyGraphDefs.ListView, Error>({
+  return useQuery<AppGndrGraphDefs.ListView, Error>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
       if (!uri) {
         throw new Error('URI not provided')
       }
-      const res = await agent.app.bsky.graph.getList({
+      const res = await agent.app.gndr.graph.getList({
         list: uri,
         limit: 1,
       })
@@ -66,12 +66,12 @@ export function useListCreateMutation() {
           throw new Error('Not signed in')
         }
         if (
-          purpose !== 'app.bsky.graph.defs#curatelist' &&
-          purpose !== 'app.bsky.graph.defs#modlist'
+          purpose !== 'app.gndr.graph.defs#curatelist' &&
+          purpose !== 'app.gndr.graph.defs#modlist'
         ) {
           throw new Error('Invalid list purpose: must be curatelist or modlist')
         }
-        const record: Un$Typed<AppBskyGraphList.Record> = {
+        const record: Un$Typed<AppGndrGraphList.Record> = {
           purpose,
           name,
           description,
@@ -83,7 +83,7 @@ export function useListCreateMutation() {
           const blobRes = await uploadBlob(agent, avatar.path, avatar.mime)
           record.avatar = blobRes.data.blob
         }
-        const res = await agent.app.bsky.graph.list.create(
+        const res = await agent.app.gndr.graph.list.create(
           {
             repo: currentAccount.did,
           },
@@ -94,7 +94,7 @@ export function useListCreateMutation() {
         await whenAppViewReady(
           agent,
           res.uri,
-          (v: AppBskyGraphGetList.Response) => {
+          (v: AppGndrGraphGetList.Response) => {
             return typeof v?.data?.list.uri === 'string'
           },
         )
@@ -136,7 +136,7 @@ export function useListMetadataMutation() {
       }
 
       // get the current record
-      const {value: record} = await agent.app.bsky.graph.list.get({
+      const {value: record} = await agent.app.gndr.graph.list.get({
         repo: currentAccount.did,
         rkey,
       })
@@ -154,7 +154,7 @@ export function useListMetadataMutation() {
       const res = (
         await agent.com.atproto.repo.putRecord({
           repo: currentAccount.did,
-          collection: 'app.bsky.graph.list',
+          collection: 'app.gndr.graph.list',
           rkey,
           record,
         })
@@ -164,7 +164,7 @@ export function useListMetadataMutation() {
       await whenAppViewReady(
         agent,
         res.uri,
-        (v: AppBskyGraphGetList.Response) => {
+        (v: AppGndrGraphGetList.Response) => {
           const list = v.data.list
           return (
             list.name === record.name && list.description === record.description
@@ -198,7 +198,7 @@ export function useListDeleteMutation() {
       let cursor
       let listitemRecordUris: string[] = []
       for (let i = 0; i < 100; i++) {
-        const res = await agent.app.bsky.graph.listitem.list({
+        const res = await agent.app.gndr.graph.listitem.list({
           repo: currentAccount.did,
           cursor,
           limit: 100,
@@ -238,7 +238,7 @@ export function useListDeleteMutation() {
       }
 
       // wait for the appview to update
-      await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
+      await whenAppViewReady(agent, uri, (v: AppGndrGraphGetList.Response) => {
         return !v?.success
       })
     },
@@ -263,7 +263,7 @@ export function useListMuteMutation() {
         await agent.unmuteModList(uri)
       }
 
-      await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
+      await whenAppViewReady(agent, uri, (v: AppGndrGraphGetList.Response) => {
         return Boolean(v?.data.list.viewer?.muted) === mute
       })
     },
@@ -286,7 +286,7 @@ export function useListBlockMutation() {
         await agent.unblockModList(uri)
       }
 
-      await whenAppViewReady(agent, uri, (v: AppBskyGraphGetList.Response) => {
+      await whenAppViewReady(agent, uri, (v: AppGndrGraphGetList.Response) => {
         return block
           ? typeof v?.data.list.viewer?.blocked === 'string'
           : !v?.data.list.viewer?.blocked
@@ -301,16 +301,16 @@ export function useListBlockMutation() {
 }
 
 async function whenAppViewReady(
-  agent: BskyAgent,
+  agent: GndrAgent,
   uri: string,
-  fn: (res: AppBskyGraphGetList.Response) => boolean,
+  fn: (res: AppGndrGraphGetList.Response) => boolean,
 ) {
   await until(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.graph.getList({
+      agent.app.gndr.graph.getList({
         list: uri,
         limit: 1,
       }),

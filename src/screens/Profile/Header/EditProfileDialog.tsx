@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react'
 import {Dimensions, View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@gander-social-atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -35,7 +35,7 @@ export function EditProfileDialog({
   control,
   onUpdate,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
   control: Dialog.DialogControlProps
   onUpdate?: () => void
 }) {
@@ -98,7 +98,7 @@ function DialogInner({
   setDirty,
   onPressCancel,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
   onUpdate?: () => void
   setDirty: (dirty: boolean) => void
   onPressCancel: () => void

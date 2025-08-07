@@ -1,12 +1,12 @@
 import React from 'react'
-import {type AppBskyGraphDefs} from '@atproto/api'
+import {type AppGndrGraphDefs} from '@gander-social-atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
-  list?: AppBskyGraphDefs.ListView
+  list?: AppGndrGraphDefs.ListView
   onSave?: (uri: string) => void
 }
 
@@ -59,7 +59,7 @@ export type Modal =
   | CreateOrEditListModal
   | UserAddRemoveListsModal
 
-  // Bluesky access
+  // Gander access
   | WaitlistModal
   | InviteCodesModal
 

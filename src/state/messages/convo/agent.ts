@@ -1,11 +1,11 @@
 import {
   type AtpAgent,
-  type ChatBskyActorDefs,
-  ChatBskyConvoDefs,
-  type ChatBskyConvoGetLog,
-  type ChatBskyConvoSendMessage,
-} from '@atproto/api'
-import {XRPCError} from '@atproto/xrpc'
+  type ChatGndrActorDefs,
+  ChatGndrConvoDefs,
+  type ChatGndrConvoGetLog,
+  type ChatGndrConvoSendMessage,
+} from '@gander-social-atproto/api'
+import {XRPCError} from '@gander-social-atproto/xrpc'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -63,15 +63,15 @@ export class Convo {
 
   private pastMessages: Map<
     string,
-    ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+    ChatGndrConvoDefs.MessageView | ChatGndrConvoDefs.DeletedMessageView
   > = new Map()
   private newMessages: Map<
     string,
-    ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+    ChatGndrConvoDefs.MessageView | ChatGndrConvoDefs.DeletedMessageView
   > = new Map()
   private pendingMessages: Map<
     string,
-    {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
+    {id: string; message: ChatGndrConvoSendMessage.InputSchema['message']}
   > = new Map()
   private deletedMessages: Set<string> = new Set()
 
@@ -82,9 +82,9 @@ export class Convo {
   private emitter = new EventEmitter<{event: [ConvoEvent]}>()
 
   convoId: string
-  convo: ChatBskyConvoDefs.ConvoView | undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
+  convo: ChatGndrConvoDefs.ConvoView | undefined
+  sender: ChatGndrActorDefs.ProfileViewBasic | undefined
+  recipients: ChatGndrActorDefs.ProfileViewBasic[] | undefined
   snapshot: ConvoState | undefined
 
   constructor(params: ConvoParams) {
@@ -546,22 +546,22 @@ export class Convo {
 
   private pendingFetchConvo:
     | Promise<{
-        convo: ChatBskyConvoDefs.ConvoView
-        sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-        recipients: ChatBskyActorDefs.ProfileViewBasic[]
+        convo: ChatGndrConvoDefs.ConvoView
+        sender: ChatGndrActorDefs.ProfileViewBasic | undefined
+        recipients: ChatGndrActorDefs.ProfileViewBasic[]
       }>
     | undefined
   async fetchConvo() {
     if (this.pendingFetchConvo) return this.pendingFetchConvo
 
     this.pendingFetchConvo = new Promise<{
-      convo: ChatBskyConvoDefs.ConvoView
-      sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-      recipients: ChatBskyActorDefs.ProfileViewBasic[]
+      convo: ChatGndrConvoDefs.ConvoView
+      sender: ChatGndrActorDefs.ProfileViewBasic | undefined
+      recipients: ChatGndrActorDefs.ProfileViewBasic[]
     }>(async (resolve, reject) => {
       try {
         const response = await networkRetry(2, () => {
-          return this.agent.api.chat.bsky.convo.getConvo(
+          return this.agent.api.chat.gndr.convo.getConvo(
             {
               convoId: this.convoId,
             },
@@ -632,7 +632,7 @@ export class Convo {
 
       const nextCursor = this.oldestRev // for TS
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.getMessages(
+        return this.agent.api.chat.gndr.convo.getMessages(
           {
             cursor: nextCursor,
             convoId: this.convoId,
@@ -647,8 +647,8 @@ export class Convo {
 
       for (const message of messages) {
         if (
-          ChatBskyConvoDefs.isMessageView(message) ||
-          ChatBskyConvoDefs.isDeletedMessageView(message)
+          ChatGndrConvoDefs.isMessageView(message) ||
+          ChatGndrConvoDefs.isDeletedMessageView(message)
         ) {
           /*
            * If this message is already in new messages, it was added by the
@@ -722,7 +722,7 @@ export class Convo {
     this.commit()
   }
 
-  ingestFirehose(events: ChatBskyConvoGetLog.OutputSchema['logs']) {
+  ingestFirehose(events: ChatGndrConvoGetLog.OutputSchema['logs']) {
     let needsCommit = false
 
     for (const ev of events) {
@@ -752,8 +752,8 @@ export class Convo {
           this.latestRev = ev.rev
 
           if (
-            ChatBskyConvoDefs.isLogCreateMessage(ev) &&
-            ChatBskyConvoDefs.isMessageView(ev.message)
+            ChatGndrConvoDefs.isLogCreateMessage(ev) &&
+            ChatGndrConvoDefs.isMessageView(ev.message)
           ) {
             /**
              * If this message is already in new messages, it was added by our
@@ -768,8 +768,8 @@ export class Convo {
             this.newMessages.set(ev.message.id, ev.message)
             needsCommit = true
           } else if (
-            ChatBskyConvoDefs.isLogDeleteMessage(ev) &&
-            ChatBskyConvoDefs.isDeletedMessageView(ev.message)
+            ChatGndrConvoDefs.isLogDeleteMessage(ev) &&
+            ChatGndrConvoDefs.isDeletedMessageView(ev.message)
           ) {
             /*
              * Update if we have this in state. If we don't, don't worry about it.
@@ -784,9 +784,9 @@ export class Convo {
               needsCommit = true
             }
           } else if (
-            (ChatBskyConvoDefs.isLogAddReaction(ev) ||
-              ChatBskyConvoDefs.isLogRemoveReaction(ev)) &&
-            ChatBskyConvoDefs.isMessageView(ev.message)
+            (ChatGndrConvoDefs.isLogAddReaction(ev) ||
+              ChatGndrConvoDefs.isLogRemoveReaction(ev)) &&
+            ChatGndrConvoDefs.isMessageView(ev.message)
           ) {
             /*
              * Update if we have this in state - replace message wholesale. If we don't, don't worry about it.
@@ -811,7 +811,7 @@ export class Convo {
 
   private pendingMessageFailure: 'recoverable' | 'unrecoverable' | null = null
 
-  sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
+  sendMessage(message: ChatGndrConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim() && !message.embed) return
 
@@ -868,7 +868,7 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await this.agent.api.chat.bsky.convo.sendMessage(
+      const response = await this.agent.api.chat.gndr.convo.sendMessage(
         {
           convoId: this.convoId,
           message,
@@ -886,7 +886,7 @@ export class Convo {
        */
       this.newMessages.set(res.id, {
         ...res,
-        $type: 'chat.bsky.convo.defs#messageView',
+        $type: 'chat.gndr.convo.defs#messageView',
       })
       // render new message state, prior to firehose
       this.commit()
@@ -963,7 +963,7 @@ export class Convo {
     )
 
     try {
-      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
+      const {data} = await this.agent.api.chat.gndr.convo.sendMessageBatch(
         {
           items: messageArray.map(({message}) => ({
             convoId: this.convoId,
@@ -981,7 +981,7 @@ export class Convo {
       for (const item of items) {
         this.newMessages.set(item.id, {
           ...item,
-          $type: 'chat.bsky.convo.defs#messageView',
+          $type: 'chat.gndr.convo.defs#messageView',
         })
       }
 
@@ -1005,7 +1005,7 @@ export class Convo {
 
     try {
       await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.deleteMessageForSelf(
+        return this.agent.api.chat.gndr.convo.deleteMessageForSelf(
           {
             convoId: this.convoId,
             messageId,
@@ -1040,7 +1040,7 @@ export class Convo {
     const items: ConvoItem[] = []
 
     this.pastMessages.forEach(m => {
-      if (ChatBskyConvoDefs.isMessageView(m)) {
+      if (ChatGndrConvoDefs.isMessageView(m)) {
         items.unshift({
           type: 'message',
           key: m.id,
@@ -1048,7 +1048,7 @@ export class Convo {
           nextMessage: null,
           prevMessage: null,
         })
-      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
+      } else if (ChatGndrConvoDefs.isDeletedMessageView(m)) {
         items.unshift({
           type: 'deleted-message',
           key: m.id,
@@ -1071,7 +1071,7 @@ export class Convo {
     }
 
     this.newMessages.forEach(m => {
-      if (ChatBskyConvoDefs.isMessageView(m)) {
+      if (ChatGndrConvoDefs.isMessageView(m)) {
         items.push({
           type: 'message',
           key: m.id,
@@ -1079,7 +1079,7 @@ export class Convo {
           nextMessage: null,
           prevMessage: null,
         })
-      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
+      } else if (ChatGndrConvoDefs.isDeletedMessageView(m)) {
         items.push({
           type: 'deleted-message',
           key: m.id,
@@ -1097,7 +1097,7 @@ export class Convo {
         message: {
           ...m.message,
           embed: undefined,
-          $type: 'chat.bsky.convo.defs#messageView',
+          $type: 'chat.gndr.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',
           sentAt: new Date().toISOString(),
@@ -1106,7 +1106,7 @@ export class Convo {
            * `this.sender` is defined
            */
           sender: {
-            $type: 'chat.bsky.convo.defs#messageViewSender',
+            $type: 'chat.gndr.convo.defs#messageViewSender',
             did: this.sender!.did,
           },
         },
@@ -1147,15 +1147,15 @@ export class Convo {
 
         if (isMessage) {
           if (
-            ChatBskyConvoDefs.isMessageView(item.message) ||
-            ChatBskyConvoDefs.isDeletedMessageView(item.message)
+            ChatGndrConvoDefs.isMessageView(item.message) ||
+            ChatGndrConvoDefs.isDeletedMessageView(item.message)
           ) {
             const next = arr[i + 1]
 
             if (
               isConvoItemMessage(next) &&
-              (ChatBskyConvoDefs.isMessageView(next.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(next.message))
+              (ChatGndrConvoDefs.isMessageView(next.message) ||
+                ChatGndrConvoDefs.isDeletedMessageView(next.message))
             ) {
               nextMessage = next.message
             }
@@ -1164,8 +1164,8 @@ export class Convo {
 
             if (
               isConvoItemMessage(prev) &&
-              (ChatBskyConvoDefs.isMessageView(prev.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(prev.message))
+              (ChatGndrConvoDefs.isMessageView(prev.message) ||
+                ChatGndrConvoDefs.isDeletedMessageView(prev.message))
             ) {
               prevMessage = prev.message
             }
@@ -1198,7 +1198,7 @@ export class Convo {
     if (this.pastMessages.has(messageId)) {
       const prevMessage = this.pastMessages.get(messageId)
       if (
-        ChatBskyConvoDefs.isMessageView(prevMessage) &&
+        ChatGndrConvoDefs.isMessageView(prevMessage) &&
         // skip optimistic update if reaction already exists
         !prevMessage.reactions?.find(
           reaction =>
@@ -1228,7 +1228,7 @@ export class Convo {
     } else if (this.newMessages.has(messageId)) {
       const prevMessage = this.newMessages.get(messageId)
       if (
-        ChatBskyConvoDefs.isMessageView(prevMessage) &&
+        ChatGndrConvoDefs.isMessageView(prevMessage) &&
         !prevMessage.reactions?.find(reaction => reaction.value === emoji)
       ) {
         if (prevMessage.reactions && prevMessage.reactions.length >= 5)
@@ -1247,11 +1247,11 @@ export class Convo {
 
     try {
       logger.debug(`Adding reaction ${emoji} to message ${messageId}`)
-      const {data} = await this.agent.chat.bsky.convo.addReaction(
+      const {data} = await this.agent.chat.gndr.convo.addReaction(
         {messageId, value: emoji, convoId: this.convoId},
         {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
       )
-      if (ChatBskyConvoDefs.isMessageView(data.message)) {
+      if (ChatGndrConvoDefs.isMessageView(data.message)) {
         if (this.pastMessages.has(messageId)) {
           this.pastMessages.set(messageId, data.message)
           this.commit()
@@ -1276,7 +1276,7 @@ export class Convo {
     let restore: null | (() => void) = null
     if (this.pastMessages.has(messageId)) {
       const prevMessage = this.pastMessages.get(messageId)
-      if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+      if (ChatGndrConvoDefs.isMessageView(prevMessage)) {
         this.pastMessages.set(messageId, {
           ...prevMessage,
           reactions: prevMessage.reactions?.filter(
@@ -1293,7 +1293,7 @@ export class Convo {
       }
     } else if (this.newMessages.has(messageId)) {
       const prevMessage = this.newMessages.get(messageId)
-      if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+      if (ChatGndrConvoDefs.isMessageView(prevMessage)) {
         this.newMessages.set(messageId, {
           ...prevMessage,
           reactions: prevMessage.reactions?.filter(
@@ -1312,7 +1312,7 @@ export class Convo {
 
     try {
       logger.debug(`Removing reaction ${emoji} from message ${messageId}`)
-      await this.agent.chat.bsky.convo.removeReaction(
+      await this.agent.chat.gndr.convo.removeReaction(
         {messageId, value: emoji, convoId: this.convoId},
         {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
       )

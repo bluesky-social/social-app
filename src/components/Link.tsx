@@ -6,15 +6,15 @@ import {
   StackActions,
 } from '@react-navigation/native'
 
-import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
+import {GNDR_DOWNLOAD_URL} from '#/lib/constants'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
-  convertBskyAppUrlIfNeeded,
-  isBskyDownloadUrl,
+  convertGndrAppUrlIfNeeded,
   isExternalUrl,
+  isGndrDownloadUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
 import {isNative, isWeb} from '#/platform/detection'
@@ -97,11 +97,11 @@ export function useLink({
   const navigation = useNavigationDeduped()
   const href = useMemo(() => {
     return typeof to === 'string'
-      ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
+      ? convertGndrAppUrlIfNeeded(sanitizeUrl(to))
       : to.screen
         ? router.matchName(to.screen)?.build(to.params)
         : to.href
-          ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
+          ? convertGndrAppUrlIfNeeded(sanitizeUrl(to.href))
           : undefined
   }, [to])
 
@@ -144,8 +144,8 @@ export function useLink({
         } else {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
 
-          if (isBskyDownloadUrl(href)) {
-            shareUrl(BSKY_DOWNLOAD_URL)
+          if (isGndrDownloadUrl(href)) {
+            shareUrl(GNDR_DOWNLOAD_URL)
           } else if (
             shouldOpenInNewTab ||
             href.startsWith('http') ||

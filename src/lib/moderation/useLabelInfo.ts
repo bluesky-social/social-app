@@ -1,15 +1,15 @@
 import {
-  AppBskyLabelerDefs,
-  ComAtprotoLabelDefs,
-  InterpretedLabelValueDefinition,
+  type AppGndrLabelerDefs,
+  type ComAtprotoLabelDefs,
+  type InterpretedLabelValueDefinition,
   interpretLabelValueDefinition,
   LABELS,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {useLingui} from '@lingui/react'
 import * as bcp47Match from 'bcp-47-match'
 
 import {
-  GlobalLabelStrings,
+  type GlobalLabelStrings,
   useGlobalLabelStrings,
 } from '#/lib/moderation/useGlobalLabelStrings'
 import {useLabelDefinitions} from '#/state/preferences'
@@ -18,7 +18,7 @@ export interface LabelInfo {
   label: ComAtprotoLabelDefs.Label
   def: InterpretedLabelValueDefinition
   strings: ComAtprotoLabelDefs.LabelValueDefinitionStrings
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  labeler: AppGndrLabelerDefs.LabelerViewDetailed | undefined
 }
 
 export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {

@@ -1,6 +1,6 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AppGndrFeedDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -157,7 +157,7 @@ type SearchResultSlice =
   | {
       type: 'post'
       key: string
-      post: AppBskyFeedDefs.PostView
+      post: AppGndrFeedDefs.PostView
     }
   | {
       type: 'loadingMore'
@@ -271,7 +271,7 @@ let SearchScreenPostResults = ({
             <Text> </Text>
             <Text style={t.atoms.text_contrast_medium}>
               to search for news, sports, politics, and everything else
-              happening on Bluesky.
+              happening on Gander.
             </Text>
           </Trans>
         </Text>

@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name           = 'EmojiPickerModule'
   s.version        = '1.0.0'
-  s.summary        = 'An emoji picker for use in Bluesky'
-  s.description    = 'An emoji picker for use in Bluesky'
+  s.summary        = 'An emoji picker for use in Gander'
+  s.description    = 'An emoji picker for use in Gander'
   s.author         = 'alanjhughes'
-  s.homepage       = 'https://github.com/bluesky-social/social-app'
+  s.homepage       = 'https://github.com/gander-social/social-app'
   s.platforms      = {
     :ios => '15.1',
     :tvos => '15.1'

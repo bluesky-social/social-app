@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppGndrFeedDefs, AtUri} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -32,7 +32,7 @@ import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Has
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 import {ProgressGuideList} from './ProgressGuide/List'
 
 const MOBILE_CARD_WIDTH = 165
@@ -250,7 +250,7 @@ export function ProfileGrid({
   viewContext = 'feed',
 }: {
   isSuggestionsLoading: boolean
-  profiles: bsky.profile.AnyProfileView[]
+  profiles: gndr.profile.AnyProfileView[]
   recId?: number
   error: Error | null
   viewContext: 'profile' | 'feed'
@@ -463,7 +463,7 @@ export function SuggestedFeeds() {
   const {gtMobile} = useBreakpoints()
 
   const feeds = React.useMemo(() => {
-    const items: AppBskyFeedDefs.GeneratorView[] = []
+    const items: AppGndrFeedDefs.GeneratorView[] = []
 
     if (!data) return items
 

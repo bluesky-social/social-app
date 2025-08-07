@@ -1,13 +1,13 @@
 import {Keyboard, View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
   moderateFeedGenerator,
   moderateProfile,
-  ModerationOpts,
-  ModerationUI,
-} from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+  type ModerationOpts,
+  type ModerationUI,
+} from '@gander-social-atproto/api'
+import {type GeneratorView} from '@gander-social-atproto/api/dist/client/types/app/gndr/feed/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,13 +16,16 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
+import {
+  type WizardAction,
+  type WizardState,
+} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 function WizardListCard({
   type,
@@ -37,8 +40,8 @@ function WizardListCard({
 }: {
   type: 'user' | 'algo'
   btnType: 'checkbox' | 'remove'
-  profile?: AppBskyActorDefs.ProfileViewBasic
-  feed?: AppBskyFeedDefs.GeneratorView
+  profile?: AppGndrActorDefs.ProfileViewBasic
+  feed?: AppGndrFeedDefs.GeneratorView
   displayName: string
   subtitle: string
   onPress: () => void
@@ -124,7 +127,7 @@ export function WizardProfileCard({
   btnType: 'checkbox' | 'remove'
   state: WizardState
   dispatch: (action: WizardAction) => void
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   moderationOpts: ModerationOpts
 }) {
   const {currentAccount} = useSession()

@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'

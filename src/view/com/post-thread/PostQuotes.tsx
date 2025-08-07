@@ -1,10 +1,10 @@
 import {useCallback, useState} from 'react'
 import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppGndrFeedDefs,
+  AppGndrFeedPost,
   moderatePost,
-  ModerationDecision,
-} from '@atproto/api'
+  type ModerationDecision,
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,9 +23,9 @@ function renderItem({
   index,
 }: {
   item: {
-    post: AppBskyFeedDefs.PostView
+    post: AppGndrFeedDefs.PostView
     moderation: ModerationDecision
-    record: AppBskyFeedPost.Record
+    record: AppGndrFeedPost.Record
   }
   index: number
 }) {
@@ -33,9 +33,9 @@ function renderItem({
 }
 
 function keyExtractor(item: {
-  post: AppBskyFeedDefs.PostView
+  post: AppGndrFeedDefs.PostView
   moderation: ModerationDecision
-  record: AppBskyFeedPost.Record
+  record: AppGndrFeedPost.Record
 }) {
   return item.post.uri
 }
@@ -68,7 +68,7 @@ export function PostQuotes({uri}: {uri: string}) {
     data?.pages
       .flatMap(page =>
         page.posts.map(post => {
-          if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
+          if (!AppGndrFeedPost.isRecord(post.record) || !moderationOpts) {
             return null
           }
           const moderation = moderatePost(post, moderationOpts)

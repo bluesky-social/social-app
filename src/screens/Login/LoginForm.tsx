@@ -9,7 +9,7 @@ import {
 import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

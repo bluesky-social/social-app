@@ -5,7 +5,7 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
+import {type AppGndrEmbedImages} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -68,7 +68,7 @@ export function AutoSizedImage({
   onLongPress,
   onPressIn,
 }: {
-  image: AppBskyEmbedImages.ViewImage
+  image: AppGndrEmbedImages.ViewImage
   crop?: 'none' | 'square' | 'constrained'
   hideBadge?: boolean
   onPress?: (

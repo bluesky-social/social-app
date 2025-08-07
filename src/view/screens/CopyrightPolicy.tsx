@@ -5,7 +5,10 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {TextLink} from '#/view/com/util/Link'
@@ -36,8 +39,8 @@ export const CopyrightPolicyScreen = (_props: Props) => {
               The Copyright Policy has been moved to{' '}
               <TextLink
                 style={pal.link}
-                href="https://bsky.social/about/support/copyright"
-                text="bsky.social/about/support/copyright"
+                href="https://gndr.social/about/support/copyright"
+                text="gndr.social/about/support/copyright"
               />
             </Trans>
           </Text>

@@ -1,11 +1,11 @@
-import {Keyboard, StyleProp, ViewStyle} from 'react-native'
-import {AnimatedStyle} from 'react-native-reanimated'
-import {AppBskyFeedPostgate} from '@atproto/api'
+import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
+import {type AnimatedStyle} from 'react-native-reanimated'
+import {type AppGndrFeedPostgate} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {native} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -19,8 +19,8 @@ export function ThreadgateBtn({
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
 }: {
-  postgate: AppBskyFeedPostgate.Record
-  onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
+  postgate: AppGndrFeedPostgate.Record
+  onChangePostgate: (v: AppGndrFeedPostgate.Record) => void
 
   threadgateAllowUISettings: ThreadgateAllowUISetting[]
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void

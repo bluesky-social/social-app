@@ -1,20 +1,20 @@
 import {
   type $Typed,
-  type AppBskyEmbedExternal,
-  type AppBskyEmbedImages,
-  type AppBskyEmbedRecord,
-  type AppBskyEmbedRecordWithMedia,
-  type AppBskyEmbedVideo,
-  type AppBskyFeedPost,
+  type AppGndrEmbedExternal,
+  type AppGndrEmbedImages,
+  type AppGndrEmbedRecord,
+  type AppGndrEmbedRecordWithMedia,
+  type AppGndrEmbedVideo,
+  type AppGndrFeedPost,
   AtUri,
   BlobRef,
-  type BskyAgent,
   type ComAtprotoLabelDefs,
   type ComAtprotoRepoApplyWrites,
   type ComAtprotoRepoStrongRef,
+  type GndrAgent,
   RichText,
-} from '@atproto/api'
-import {TID} from '@atproto/common-web'
+} from '@gander-social-atproto/api'
+import {TID} from '@gander-social-atproto/common-web'
 import * as dcbor from '@ipld/dag-cbor'
 import {t} from '@lingui/macro'
 import {type QueryClient} from '@tanstack/react-query'
@@ -52,7 +52,7 @@ interface PostOpts {
 }
 
 export async function post(
-  agent: BskyAgent,
+  agent: GndrAgent,
   queryClient: QueryClient,
   opts: PostOpts,
 ) {
@@ -60,8 +60,8 @@ export async function post(
   opts.onStateChange?.(t`Processing...`)
 
   let replyPromise:
-    | Promise<AppBskyFeedPost.Record['reply']>
-    | AppBskyFeedPost.Record['reply']
+    | Promise<AppGndrFeedPost.Record['reply']>
+    | AppGndrFeedPost.Record['reply']
     | undefined
   if (opts.replyTo) {
     // Not awaited to avoid waterfalls.
@@ -105,16 +105,16 @@ export async function post(
     now.setMilliseconds(now.getMilliseconds() + 1)
     tid = TID.next(tid)
     const rkey = tid.toString()
-    const uri = `at://${did}/app.bsky.feed.post/${rkey}`
+    const uri = `at://${did}/app.gndr.feed.post/${rkey}`
     uris.push(uri)
 
     const rt = await rtPromise
     const embed = await embedPromise
     const reply = await replyPromise
-    const record: AppBskyFeedPost.Record = {
+    const record: AppGndrFeedPost.Record = {
       // IMPORTANT: $type has to exist, CID is calculated with the `$type` field
       // present and will produce the wrong CID if you omit it.
-      $type: 'app.bsky.feed.post',
+      $type: 'app.gndr.feed.post',
       createdAt: now.toISOString(),
       text: rt.text,
       facets: rt.facets,
@@ -125,7 +125,7 @@ export async function post(
     }
     writes.push({
       $type: 'com.atproto.repo.applyWrites#create',
-      collection: 'app.bsky.feed.post',
+      collection: 'app.gndr.feed.post',
       rkey: rkey,
       value: record,
     })
@@ -133,7 +133,7 @@ export async function post(
     if (i === 0 && thread.threadgate.some(tg => tg.type !== 'everybody')) {
       writes.push({
         $type: 'com.atproto.repo.applyWrites#create',
-        collection: 'app.bsky.feed.threadgate',
+        collection: 'app.gndr.feed.threadgate',
         rkey: rkey,
         value: createThreadgateRecord({
           createdAt: now.toISOString(),
@@ -149,11 +149,11 @@ export async function post(
     ) {
       writes.push({
         $type: 'com.atproto.repo.applyWrites#create',
-        collection: 'app.bsky.feed.postgate',
+        collection: 'app.gndr.feed.postgate',
         rkey: rkey,
         value: {
           ...thread.postgate,
-          $type: 'app.bsky.feed.postgate',
+          $type: 'app.gndr.feed.postgate',
           createdAt: now.toISOString(),
           post: uri,
         },
@@ -193,7 +193,7 @@ export async function post(
   return {uris}
 }
 
-async function resolveRT(agent: BskyAgent, richtext: RichText) {
+async function resolveRT(agent: GndrAgent, richtext: RichText) {
   const trimmedText = richtext.text
     // Trim leading whitespace-only lines (but don't break ASCII art).
     .replace(/^(\s*\n)+/, '')
@@ -207,7 +207,7 @@ async function resolveRT(agent: BskyAgent, richtext: RichText) {
   return rt
 }
 
-async function resolveReply(agent: BskyAgent, replyTo: string) {
+async function resolveReply(agent: GndrAgent, replyTo: string) {
   const replyToUrip = new AtUri(replyTo)
   const parentPost = await agent.getPost({
     repo: replyToUrip.host,
@@ -226,16 +226,16 @@ async function resolveReply(agent: BskyAgent, replyTo: string) {
 }
 
 async function resolveEmbed(
-  agent: BskyAgent,
+  agent: GndrAgent,
   queryClient: QueryClient,
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
-  | $Typed<AppBskyEmbedImages.Main>
-  | $Typed<AppBskyEmbedVideo.Main>
-  | $Typed<AppBskyEmbedExternal.Main>
-  | $Typed<AppBskyEmbedRecord.Main>
-  | $Typed<AppBskyEmbedRecordWithMedia.Main>
+  | $Typed<AppGndrEmbedImages.Main>
+  | $Typed<AppGndrEmbedVideo.Main>
+  | $Typed<AppGndrEmbedExternal.Main>
+  | $Typed<AppGndrEmbedRecord.Main>
+  | $Typed<AppGndrEmbedRecordWithMedia.Main>
   | undefined
 > {
   if (draft.embed.quote) {
@@ -245,16 +245,16 @@ async function resolveEmbed(
     ])
     if (resolvedMedia) {
       return {
-        $type: 'app.bsky.embed.recordWithMedia',
+        $type: 'app.gndr.embed.recordWithMedia',
         record: {
-          $type: 'app.bsky.embed.record',
+          $type: 'app.gndr.embed.record',
           record: resolvedQuote,
         },
         media: resolvedMedia,
       }
     }
     return {
-      $type: 'app.bsky.embed.record',
+      $type: 'app.gndr.embed.record',
       record: resolvedQuote,
     }
   }
@@ -275,7 +275,7 @@ async function resolveEmbed(
     )
     if (resolvedLink.type === 'record') {
       return {
-        $type: 'app.bsky.embed.record',
+        $type: 'app.gndr.embed.record',
         record: resolvedLink.record,
       }
     }
@@ -284,14 +284,14 @@ async function resolveEmbed(
 }
 
 async function resolveMedia(
-  agent: BskyAgent,
+  agent: GndrAgent,
   queryClient: QueryClient,
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
-  | $Typed<AppBskyEmbedExternal.Main>
-  | $Typed<AppBskyEmbedImages.Main>
-  | $Typed<AppBskyEmbedVideo.Main>
+  | $Typed<AppGndrEmbedExternal.Main>
+  | $Typed<AppGndrEmbedImages.Main>
+  | $Typed<AppGndrEmbedVideo.Main>
   | undefined
 > {
   if (embedDraft.media?.type === 'images') {
@@ -300,7 +300,7 @@ async function resolveMedia(
       count: imagesDraft.length,
     })
     onStateChange?.(t`Uploading images...`)
-    const images: AppBskyEmbedImages.Image[] = await Promise.all(
+    const images: AppGndrEmbedImages.Image[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
         const {path, width, height, mime} = await compressImage(image)
@@ -314,7 +314,7 @@ async function resolveMedia(
       }),
     )
     return {
-      $type: 'app.bsky.embed.images',
+      $type: 'app.gndr.embed.images',
       images,
     }
   }
@@ -349,7 +349,7 @@ async function resolveMedia(
     }
 
     return {
-      $type: 'app.bsky.embed.video',
+      $type: 'app.gndr.embed.video',
       video: videoDraft.pendingPublish.blobRef,
       alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
@@ -371,7 +371,7 @@ async function resolveMedia(
       blob = response.data.blob
     }
     return {
-      $type: 'app.bsky.embed.external',
+      $type: 'app.gndr.embed.external',
       external: {
         uri: resolvedGif.uri,
         title: resolvedGif.title,
@@ -395,7 +395,7 @@ async function resolveMedia(
         blob = response.data.blob
       }
       return {
-        $type: 'app.bsky.embed.external',
+        $type: 'app.gndr.embed.external',
         external: {
           uri: resolvedLink.uri,
           title: resolvedLink.title,
@@ -409,7 +409,7 @@ async function resolveMedia(
 }
 
 async function resolveRecord(
-  agent: BskyAgent,
+  agent: GndrAgent,
   queryClient: QueryClient,
   uri: string,
 ): Promise<ComAtprotoRepoStrongRef.Main> {
@@ -431,7 +431,7 @@ const mf_sha256 = Hasher.from({
   },
 })
 
-async function computeCid(record: AppBskyFeedPost.Record): Promise<string> {
+async function computeCid(record: AppGndrFeedPost.Record): Promise<string> {
   // IMPORTANT: `prepareObject` prepares the record to be hashed by removing
   // fields with undefined value, and converting BlobRef instances to the
   // right IPLD representation.

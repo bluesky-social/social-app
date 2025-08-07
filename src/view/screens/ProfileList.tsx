@@ -1,14 +1,14 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
-  AppBskyGraphDefs,
+  AppGndrGraphDefs,
   AtUri,
   moderateUserList,
   type ModerationOpts,
   RichText as RichTextAPI,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
@@ -103,7 +103,7 @@ function ProfileListScreenInner(props: Props) {
   const {_} = useLingui()
   const {name: handleOrDid, rkey} = props.route.params
   const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
-    AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
+    AtUri.make(handleOrDid, 'app.gndr.graph.list', rkey).toString(),
   )
   const {data: preferences} = usePreferencesQuery()
   const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
@@ -149,7 +149,7 @@ function ProfileListScreenLoaded({
   preferences,
 }: Props & {
   uri: string
-  list: AppBskyGraphDefs.ListView
+  list: AppGndrGraphDefs.ListView
   moderationOpts: ModerationOpts
   preferences: UsePreferencesQueryResponse
 }) {
@@ -161,7 +161,7 @@ function ProfileListScreenLoaded({
   const {rkey} = route.params
   const feedSectionRef = React.useRef<SectionRef>(null)
   const aboutSectionRef = React.useRef<SectionRef>(null)
-  const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
+  const isCurateList = list.purpose === AppGndrGraphDefs.CURATELIST
   const isScreenFocused = useIsFocused()
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
   const isOwner = currentAccount?.did === list.creator.did
@@ -305,7 +305,7 @@ function Header({
   preferences,
 }: {
   rkey: string
-  list: AppBskyGraphDefs.ListView
+  list: AppGndrGraphDefs.ListView
   preferences: UsePreferencesQueryResponse
 }) {
   const pal = usePalette('default')
@@ -318,8 +318,8 @@ function Header({
   const listMuteMutation = useListMuteMutation()
   const listBlockMutation = useListBlockMutation()
   const listDeleteMutation = useListDeleteMutation()
-  const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
-  const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
+  const isCurateList = list.purpose === 'app.gndr.graph.defs#curatelist'
+  const isModList = list.purpose === 'app.gndr.graph.defs#modlist'
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isOwner = list.creator.did === currentAccount?.did
@@ -704,7 +704,7 @@ function Header({
           control={reportDialogControl}
           subject={{
             ...list,
-            $type: 'app.bsky.graph.defs#listView',
+            $type: 'app.gndr.graph.defs#listView',
           }}
         />
         {isCurateList ? (
@@ -885,7 +885,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 )
 
 interface AboutSectionProps {
-  list: AppBskyGraphDefs.ListView
+  list: AppGndrGraphDefs.ListView
   onPressAddUser: () => void
   headerHeight: number
   scrollElRef: ListRef

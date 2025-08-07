@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {AppLanguage} from '#/locale/languages'
+import {type AppLanguage} from '#/locale/languages'
 import * as persisted from '#/state/persisted'
 
 type SetStateCb = (

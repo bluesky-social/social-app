@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyActorDefs,
+  type AppGndrActorDefs,
   moderateProfile,
   type ModerationDecision,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -197,7 +197,7 @@ function InnerReady({
   setHasScrolled,
 }: {
   moderation: ModerationDecision
-  recipient: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  recipient: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   hasScrolled: boolean
   setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
 }) {

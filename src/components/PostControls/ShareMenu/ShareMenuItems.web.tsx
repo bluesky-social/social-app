@@ -1,8 +1,7 @@
 import {memo, useMemo} from 'react'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 import type React from 'react'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -23,6 +22,7 @@ import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/i
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
 import * as Menu from '#/components/Menu'
+import {useNavigation} from '#/Navigation'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {type ShareMenuItemsProps} from './ShareMenuItems.types'
 

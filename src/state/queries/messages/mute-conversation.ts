@@ -1,9 +1,13 @@
 import {
-  ChatBskyConvoDefs,
-  ChatBskyConvoListConvos,
-  ChatBskyConvoMuteConvo,
-} from '@atproto/api'
-import {InfiniteData, useMutation, useQueryClient} from '@tanstack/react-query'
+  type ChatGndrConvoDefs,
+  type ChatGndrConvoListConvos,
+  type ChatGndrConvoMuteConvo,
+} from '@gander-social-atproto/api'
+import {
+  type InfiniteData,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent} from '#/state/session'
@@ -16,7 +20,7 @@ export function useMuteConvo(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyConvoMuteConvo.OutputSchema) => void
+    onSuccess?: (data: ChatGndrConvoMuteConvo.OutputSchema) => void
     onError?: (error: Error) => void
   },
 ) {
@@ -27,13 +31,13 @@ export function useMuteConvo(
     mutationFn: async ({mute}: {mute: boolean}) => {
       if (!convoId) throw new Error('No convoId provided')
       if (mute) {
-        const {data} = await agent.api.chat.bsky.convo.muteConvo(
+        const {data} = await agent.api.chat.gndr.convo.muteConvo(
           {convoId},
           {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
         )
         return data
       } else {
-        const {data} = await agent.api.chat.bsky.convo.unmuteConvo(
+        const {data} = await agent.api.chat.gndr.convo.unmuteConvo(
           {convoId},
           {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
         )
@@ -41,7 +45,7 @@ export function useMuteConvo(
       }
     },
     onSuccess: (data, params) => {
-      queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
+      queryClient.setQueryData<ChatGndrConvoDefs.ConvoView>(
         CONVO_KEY(data.convo.id),
         prev => {
           if (!prev) return
@@ -52,7 +56,7 @@ export function useMuteConvo(
         },
       )
       queryClient.setQueryData<
-        InfiniteData<ChatBskyConvoListConvos.OutputSchema>
+        InfiniteData<ChatGndrConvoListConvos.OutputSchema>
       >([CONVO_LIST_KEY], prev => {
         if (!prev?.pages) return
         return {

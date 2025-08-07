@@ -1,9 +1,9 @@
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatGndrConvoDefs} from '@gander-social-atproto/api'
 
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
-export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
+export function canBeMessaged(profile: gndr.profile.AnyProfileView) {
   switch (profile.associated?.chat?.allowIncoming) {
     case 'none':
       return false
@@ -30,7 +30,7 @@ export function localDateString(date: Date) {
 }
 
 export function hasAlreadyReacted(
-  message: ChatBskyConvoDefs.MessageView,
+  message: ChatGndrConvoDefs.MessageView,
   myDid: string | undefined,
   emoji: string,
 ): boolean {
@@ -43,7 +43,7 @@ export function hasAlreadyReacted(
 }
 
 export function hasReachedReactionLimit(
-  message: ChatBskyConvoDefs.MessageView,
+  message: ChatGndrConvoDefs.MessageView,
   myDid: string | undefined,
 ): boolean {
   if (!message.reactions) {

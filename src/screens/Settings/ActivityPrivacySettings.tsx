@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
+import {type AppGndrNotificationDeclaration} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -84,7 +84,7 @@ export function Inner({
   notificationDeclaration: {
     uri?: string
     cid?: string
-    value: AppBskyNotificationDeclaration.Record
+    value: AppGndrNotificationDeclaration.Record
   }
 }) {
   const t = useTheme()
@@ -93,7 +93,7 @@ export function Inner({
 
   const onChangeFilter = ([declaration]: string[]) => {
     mutate({
-      $type: 'app.bsky.notification.declaration',
+      $type: 'app.gndr.notification.declaration',
       allowSubscriptions: declaration,
     })
   }

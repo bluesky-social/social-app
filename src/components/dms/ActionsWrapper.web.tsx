@@ -1,6 +1,6 @@
 import {useCallback, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatGndrConvoDefs} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type React from 'react'
@@ -20,7 +20,7 @@ export function ActionsWrapper({
   isFromSelf,
   children,
 }: {
-  message: ChatBskyConvoDefs.MessageView
+  message: ChatGndrConvoDefs.MessageView
   isFromSelf: boolean
   children: React.ReactNode
 }) {

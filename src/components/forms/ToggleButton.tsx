@@ -1,5 +1,10 @@
 import React from 'react'
-import {AccessibilityProps, TextStyle, View, ViewStyle} from 'react-native'
+import {
+  type AccessibilityProps,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
 import {atoms as a, native, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'

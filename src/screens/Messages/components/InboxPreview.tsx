@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type ChatBskyActorDefs} from '@atproto/api'
+import {type ChatGndrActorDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,7 +13,7 @@ import {Link} from '#/components/Link'
 export function InboxPreview({
   profiles,
 }: {
-  profiles: ChatBskyActorDefs.ProfileViewBasic[]
+  profiles: ChatGndrActorDefs.ProfileViewBasic[]
 }) {
   const {_} = useLingui()
   const t = useTheme()

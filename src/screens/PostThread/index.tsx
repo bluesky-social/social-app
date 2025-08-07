@@ -98,7 +98,7 @@ export function PostThread({uri}: {uri: string}) {
     if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
+        event: 'app.gndr.feed.defs#interactionReply',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })

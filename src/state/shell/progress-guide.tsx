@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {logEvent} from '#/lib/statsig/statsig'
 import {
   ProgressGuideToast,
-  ProgressGuideToastRef,
+  type ProgressGuideToastRef,
 } from '#/components/ProgressGuide/Toast'
 import {
   usePreferencesQuery,
@@ -76,7 +76,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const activeProgressGuide = useMemo(() => {
     const rawProgressGuide = (
-      isPending ? variables : preferences?.bskyAppState?.activeProgressGuide
+      isPending ? variables : preferences?.gndrAppState?.activeProgressGuide
     ) as ProgressGuide
 
     if (!rawProgressGuide) return undefined

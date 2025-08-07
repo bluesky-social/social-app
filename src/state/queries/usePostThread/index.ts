@@ -71,7 +71,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
     queryKey: postThreadQueryKey,
     async queryFn(ctx) {
-      const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
+      const {data} = await agent.app.gndr.unspecced.getPostThreadV2({
         anchor: anchor!,
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
@@ -162,7 +162,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: additionalQueryEnabled,
     queryKey: postThreadOtherQueryKey,
     async queryFn() {
-      const {data} = await agent.app.bsky.unspecced.getPostThreadOtherV2({
+      const {data} = await agent.app.gndr.unspecced.getPostThreadOtherV2({
         anchor: anchor!,
         prioritizeFollowedUsers,
       })

@@ -1,12 +1,12 @@
 import React from 'react'
-import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {type GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {type AppGndrGraphDefs, AppGndrGraphStarterpack} from '@gander-social-atproto/api'
+import {type GeneratorView} from '@gander-social-atproto/api/dist/client/types/app/gndr/feed/defs'
 import {msg, plural} from '@lingui/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const
 type Step = (typeof steps)[number]
@@ -17,7 +17,7 @@ type Action =
   | {type: 'SetCanNext'; canNext: boolean}
   | {type: 'SetName'; name: string}
   | {type: 'SetDescription'; description: string}
-  | {type: 'AddProfile'; profile: bsky.profile.AnyProfileView}
+  | {type: 'AddProfile'; profile: gndr.profile.AnyProfileView}
   | {type: 'RemoveProfile'; profileDid: string}
   | {type: 'AddFeed'; feed: GeneratorView}
   | {type: 'RemoveFeed'; feedUri: string}
@@ -29,7 +29,7 @@ interface State {
   currentStep: Step
   name?: string
   description?: string
-  profiles: bsky.profile.AnyProfileView[]
+  profiles: gndr.profile.AnyProfileView[]
   feeds: GeneratorView[]
   processing: boolean
   error?: string
@@ -116,8 +116,8 @@ export function Provider({
   listItems,
   children,
 }: {
-  starterPack?: AppBskyGraphDefs.StarterPackView
-  listItems?: AppBskyGraphDefs.ListItemView[]
+  starterPack?: AppGndrGraphDefs.StarterPackView
+  listItems?: AppGndrGraphDefs.ListItemView[]
   children: React.ReactNode
 }) {
   const {currentAccount} = useSession()
@@ -125,7 +125,7 @@ export function Provider({
   const createInitialState = (): State => {
     if (
       starterPack &&
-      bsky.validate(starterPack.record, AppBskyGraphStarterpack.validateRecord)
+      gndr.validate(starterPack.record, AppGndrGraphStarterpack.validateRecord)
     ) {
       return {
         canNext: true,

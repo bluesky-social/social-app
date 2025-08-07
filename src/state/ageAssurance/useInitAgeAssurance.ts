@@ -1,8 +1,8 @@
 import {
-  type AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedInitAgeAssurance,
+  type AppGndrUnspeccedDefs,
+  type AppGndrUnspeccedInitAgeAssurance,
   AtpAgent,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
@@ -39,7 +39,7 @@ export function useInitAgeAssurance() {
   const {geolocation} = useGeolocation()
   return useMutation({
     async mutationFn(
-      props: Omit<AppBskyUnspeccedInitAgeAssurance.InputSchema, 'countryCode'>,
+      props: Omit<AppGndrUnspeccedInitAgeAssurance.InputSchema, 'countryCode'>,
     ) {
       if (!geolocation?.countryCode) {
         throw new Error(`Geolocation not available, cannot init age assurance.`)
@@ -49,7 +49,7 @@ export function useInitAgeAssurance() {
         data: {token},
       } = await agent.com.atproto.server.getServiceAuth({
         aud: APPVIEW_DID,
-        lxm: `app.bsky.unspecced.initAgeAssurance`,
+        lxm: `app.gndr.unspecced.initAgeAssurance`,
       })
 
       const appView = new AtpAgent({service: APPVIEW})
@@ -63,13 +63,13 @@ export function useInitAgeAssurance() {
        */
       const {data} = await wait(
         2e3,
-        appView.app.bsky.unspecced.initAgeAssurance({
+        appView.app.gndr.unspecced.initAgeAssurance({
           ...props,
           countryCode: geolocation?.countryCode?.toUpperCase(),
         }),
       )
 
-      qc.setQueryData<AppBskyUnspeccedDefs.AgeAssuranceState>(
+      qc.setQueryData<AppGndrUnspeccedDefs.AgeAssuranceState>(
         createAgeAssuranceQueryKey(agent.session?.did ?? 'never'),
         () => data,
       )

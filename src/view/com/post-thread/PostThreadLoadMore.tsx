@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {View} from 'react-native'
-import {AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {type AppGndrFeedDefs, AtUri} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -9,7 +9,7 @@ import {Text} from '#/components/Typography'
 import {Link} from '../util/Link'
 import {UserAvatar} from '../util/UserAvatar'
 
-export function PostThreadLoadMore({post}: {post: AppBskyFeedDefs.PostView}) {
+export function PostThreadLoadMore({post}: {post: AppGndrFeedDefs.PostView}) {
   const t = useTheme()
 
   const postHref = React.useMemo(() => {

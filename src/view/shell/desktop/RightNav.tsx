@@ -106,13 +106,13 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           </>
         )}
         <InlineLinkText
-          to="https://bsky.social/about/support/privacy-policy"
+          to="https://gndr.social/about/support/privacy-policy"
           label={_(msg`Privacy`)}>
           {_(msg`Privacy`)}
         </InlineLinkText>
         {' • '}
         <InlineLinkText
-          to="https://bsky.social/about/support/tos"
+          to="https://gndr.social/about/support/tos"
           label={_(msg`Terms`)}>
           {_(msg`Terms`)}
         </InlineLinkText>
@@ -127,9 +127,9 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           <Trans>
             Logo by{' '}
             <InlineLinkText
-              label={_(msg`Logo by @sawaratsuki.bsky.social`)}
-              to="/profile/sawaratsuki.bsky.social">
-              @sawaratsuki.bsky.social
+              label={_(msg`Logo by @sawaratsuki.gndr.social`)}
+              to="/profile/sawaratsuki.gndr.social">
+              @sawaratsuki.gndr.social
             </InlineLinkText>
           </Trans>
         </Text>

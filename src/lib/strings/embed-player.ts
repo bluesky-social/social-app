@@ -9,10 +9,10 @@ const IFRAME_HOST = isWeb
   ? // @ts-ignore only for web
     window.location.host === 'localhost:8100'
     ? 'http://localhost:8100'
-    : 'https://bsky.app'
+    : 'https://gndr.app'
   : __DEV__ && !process.env.JEST_WORKER_ID
     ? 'http://localhost:8100'
-    : 'https://bsky.app'
+    : 'https://gndr.app'
 
 export const embedPlayerSources = [
   'youtube',
@@ -564,7 +564,7 @@ export function parseTenorGif(urlp: URL):
 
   return {
     success: true,
-    playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
+    playerUri: `https://t.gifs.gndr.app/${id}/${filename}`,
     dimensions,
   }
 }

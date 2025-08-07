@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react'
-import {AccessibilityInfo} from 'react-native'
+import {AccessibilityInfo, Platform} from 'react-native'
 import {
   Gesture,
   GestureDetector,
@@ -16,7 +16,10 @@ import Animated, {
   withDecay,
   withSpring,
 } from 'react-native-reanimated'
-import RootSiblings from 'react-native-root-siblings'
+const RootSiblings =
+  Platform.OS !== 'web'
+    ? require('react-native-root-siblings').default
+    : undefined
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'

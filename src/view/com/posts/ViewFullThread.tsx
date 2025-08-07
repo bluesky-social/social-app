@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

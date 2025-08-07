@@ -1,5 +1,5 @@
 import {ScrollView, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -18,7 +18,7 @@ import {useDialogContext} from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export function RecentChats({postUri}: {postUri: string}) {
   const control = useDialogContext()
@@ -91,7 +91,7 @@ function RecentChatItem({
   onPress,
   moderationOpts,
 }: {
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   onPress: () => void
   moderationOpts: ModerationOpts
 }) {

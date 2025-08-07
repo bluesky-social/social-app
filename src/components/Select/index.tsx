@@ -274,7 +274,7 @@ export function ItemText({children}: ItemTextProps) {
   const {selected} = useItemContext()
   const t = useTheme()
 
-  // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
+  // eslint-disable-next-line gndr-internal/avoid-unwrapped-text
   return (
     <View style={[a.flex_1, a.py_md, a.border_b, t.atoms.border_contrast_low]}>
       <Text style={[a.text_md, selected && a.font_bold]}>{children}</Text>

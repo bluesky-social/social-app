@@ -1,6 +1,6 @@
-import {ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatGndrConvoDefs} from '@gander-social-atproto/api'
 import {
-  QueryClient,
+  type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -11,7 +11,7 @@ import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useOnMarkAsRead} from '#/state/queries/messages/list-conversations'
 import {useAgent} from '#/state/session'
 import {
-  ConvoListQueryData,
+  type ConvoListQueryData,
   getConvoFromQueryData,
   RQKEY_ROOT as LIST_CONVOS_KEY,
 } from './list-conversations'
@@ -19,13 +19,13 @@ import {
 const RQKEY_ROOT = 'convo'
 export const RQKEY = (convoId: string) => [RQKEY_ROOT, convoId]
 
-export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
+export function useConvoQuery(convo: ChatGndrConvoDefs.ConvoView) {
   const agent = useAgent()
 
   return useQuery({
     queryKey: RQKEY(convo.id),
     queryFn: async () => {
-      const {data} = await agent.chat.bsky.convo.getConvo(
+      const {data} = await agent.chat.gndr.convo.getConvo(
         {convoId: convo.id},
         {headers: DM_SERVICE_HEADERS},
       )
@@ -38,7 +38,7 @@ export function useConvoQuery(convo: ChatBskyConvoDefs.ConvoView) {
 
 export function precacheConvoQuery(
   queryClient: QueryClient,
-  convo: ChatBskyConvoDefs.ConvoView,
+  convo: ChatGndrConvoDefs.ConvoView,
 ) {
   queryClient.setQueryData(RQKEY(convo.id), convo)
 }
@@ -58,7 +58,7 @@ export function useMarkAsReadMutation() {
     }) => {
       if (!convoId) throw new Error('No convoId provided')
 
-      await agent.api.chat.bsky.convo.updateRead(
+      await agent.api.chat.gndr.convo.updateRead(
         {
           convoId,
           messageId,

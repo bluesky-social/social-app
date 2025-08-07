@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 
 export const ZENDESK_SUPPORT_URL =
-  'https://blueskyweb.zendesk.com/hc/requests/new'
+  'https://ganderweb.zendesk.com/hc/requests/new'
 
 export enum SupportCode {
   AA_DID = 'AA_DID',

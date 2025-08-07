@@ -11,7 +11,7 @@ import {
   atoms as a,
   flatten,
   native,
-  TextStyleProp,
+  type TextStyleProp,
   useBreakpoints,
   useTheme,
   web,
@@ -53,7 +53,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       aria-role="dialog"
       aria-label={dialogLabel}
       accessibilityLabel={dialogLabel}
-      accessibilityHint={_(msg`Customizes your Bluesky experience`)}
+      accessibilityHint={_(msg`Customizes your Gander experience`)}
       style={[
         // @ts-ignore web only -prf
         isWeb ? a.fixed : a.absolute,

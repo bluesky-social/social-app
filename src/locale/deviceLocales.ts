@@ -1,4 +1,4 @@
-import {getLocales as defaultGetLocales, Locale} from 'expo-localization'
+import {getLocales as defaultGetLocales, type Locale} from 'expo-localization'
 
 import {dedupArray} from '#/lib/functions'
 
@@ -11,7 +11,7 @@ type LocalWithLanguageCode = Locale & {
  *
  * Handles legacy migration for Java devices.
  *
- * {@link https://github.com/bluesky-social/social-app/pull/4461}
+ * {@link https://github.com/gander-social/social-app/pull/4461}
  * {@link https://xml.coverpages.org/iso639a.html}
  *
  * Convert Chinese language tags for Native.

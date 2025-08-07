@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -30,7 +30,7 @@ export function PostThreadFollowBtn({did}: {did: string}) {
 function PostThreadFollowBtnLoaded({
   profile: profileUnshadowed,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: AppGndrActorDefs.ProfileViewDetailed
 }) {
   const navigation = useNavigation()
   const {_} = useLingui()

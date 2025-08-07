@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {ActivityIndicator, Keyboard, View} from 'react-native'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
-import {BskyAgent} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@gander-social-atproto/api'
+import {GndrAgent} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
@@ -55,7 +55,7 @@ export const ForgotPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
+      const agent = new GndrAgent({service: serviceUrl})
       await agent.com.atproto.server.requestPasswordReset({email})
       onEmailSent()
     } catch (e: any) {

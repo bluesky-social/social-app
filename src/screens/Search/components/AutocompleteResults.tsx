@@ -1,6 +1,6 @@
 import {memo} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -20,11 +20,11 @@ let AutocompleteResults = ({
   onProfileClick,
 }: {
   isAutocompleteFetching: boolean
-  autocompleteData: AppBskyActorDefs.ProfileViewBasic[] | undefined
+  autocompleteData: AppGndrActorDefs.ProfileViewBasic[] | undefined
   searchText: string
   onSubmit: () => void
   onResultPress: () => void
-  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onProfileClick: (profile: AppGndrActorDefs.ProfileViewBasic) => void
 }): React.ReactNode => {
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()

@@ -1,5 +1,5 @@
 import React from 'react'
-import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
+import {type AtpSessionEvent, type GndrAgent} from '@gander-social-atproto/api'
 
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
@@ -8,10 +8,10 @@ import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {emitSessionDropped} from '../events'
 import {
   agentToSessionAccount,
-  type BskyAppAgent,
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
+  type GndrAppAgent,
   sessionAccountToSession,
 } from './agent'
 import {getInitialState, reducer} from './reducer'
@@ -31,7 +31,7 @@ const StateContext = React.createContext<SessionStateContext>({
   hasSession: false,
 })
 
-const AgentContext = React.createContext<BskyAgent | null>(null)
+const AgentContext = React.createContext<GndrAgent | null>(null)
 
 const ApiContext = React.createContext<SessionApiContext>({
   createAccount: async () => {},
@@ -52,7 +52,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   })
 
   const onAgentSessionChange = React.useCallback(
-    (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
+    (agent: GndrAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
       const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
       if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
         emitSessionDropped()
@@ -186,7 +186,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const partialRefreshSession = React.useCallback<
     SessionApiContext['partialRefreshSession']
   >(async () => {
-    const agent = state.currentAgentState.agent as BskyAppAgent
+    const agent = state.currentAgentState.agent as GndrAppAgent
     const signal = cancelPendingTask()
     const {data} = await agent.com.atproto.server.getSession()
     if (signal.aborted) return
@@ -247,7 +247,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           resumeSession(syncedAccount)
         } else {
-          const agent = state.currentAgentState.agent as BskyAgent
+          const agent = state.currentAgentState.agent as GndrAgent
           const prevSession = agent.session
           agent.sessionManager.session = sessionAccountToSession(syncedAccount)
           addSessionDebugLog({
@@ -296,7 +296,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // @ts-expect-error window type is not declared, debug only
   if (__DEV__ && isWeb) window.agent = state.currentAgentState.agent
 
-  const agent = state.currentAgentState.agent as BskyAppAgent
+  const agent = state.currentAgentState.agent as GndrAppAgent
   const currentAgentRef = React.useRef(agent)
   React.useEffect(() => {
     if (currentAgentRef.current !== agent) {
@@ -357,7 +357,7 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): BskyAgent {
+export function useAgent(): GndrAgent {
   const agent = React.useContext(AgentContext)
   if (!agent) {
     throw Error('useAgent() must be below <SessionProvider>.')

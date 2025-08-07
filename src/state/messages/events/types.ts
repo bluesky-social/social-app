@@ -1,7 +1,10 @@
-import {BskyAgent, ChatBskyConvoGetLog} from '@atproto/api'
+import {
+  type ChatGndrConvoGetLog,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 
 export type MessagesEventBusParams = {
-  agent: BskyAgent
+  agent: GndrAgent
 }
 
 export enum MessagesEventBusStatus {
@@ -64,5 +67,5 @@ export type MessagesEventBusEvent =
     }
   | {
       type: 'logs'
-      logs: ChatBskyConvoGetLog.OutputSchema['logs']
+      logs: ChatGndrConvoGetLog.OutputSchema['logs']
     }

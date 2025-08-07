@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {type ChatBskyActorDefs, type ChatBskyConvoDefs} from '@atproto/api'
+import {type ChatGndrActorDefs, type ChatGndrConvoDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
@@ -45,11 +45,11 @@ type ListItem =
   | {
       type: 'INBOX'
       count: number
-      profiles: ChatBskyActorDefs.ProfileViewBasic[]
+      profiles: ChatGndrActorDefs.ProfileViewBasic[]
     }
   | {
       type: 'CONVERSATION'
-      conversation: ChatBskyConvoDefs.ConvoView
+      conversation: ChatGndrConvoDefs.ConvoView
     }
 
 function renderItem({item}: {item: ListItem}) {

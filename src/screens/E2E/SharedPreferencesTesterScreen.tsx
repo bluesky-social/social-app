@@ -6,7 +6,7 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
+import {SharedPrefs} from '../../../modules/expo-gander-swiss-army'
 
 export function SharedPreferencesTesterScreen() {
   const [currentTestOutput, setCurrentTestOutput] = React.useState<string>('')

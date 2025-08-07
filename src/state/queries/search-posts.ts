@@ -1,15 +1,15 @@
 import React from 'react'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyFeedSearchPosts,
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  type AppGndrFeedSearchPosts,
   AtUri,
   moderatePost,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -47,21 +47,21 @@ export function useSearchPostsQuery({
     [query, moderationOpts],
   )
   const lastRun = React.useRef<{
-    data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
+    data: InfiniteData<AppGndrFeedSearchPosts.OutputSchema>
     args: typeof selectArgs
-    result: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
+    result: InfiniteData<AppGndrFeedSearchPosts.OutputSchema>
   } | null>(null)
 
   return useInfiniteQuery<
-    AppBskyFeedSearchPosts.OutputSchema,
+    AppGndrFeedSearchPosts.OutputSchema,
     Error,
-    InfiniteData<AppBskyFeedSearchPosts.OutputSchema>,
+    InfiniteData<AppGndrFeedSearchPosts.OutputSchema>,
     QueryKey,
     string | undefined
   >({
     queryKey: searchPostsQueryKey({query, sort}),
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.bsky.feed.searchPosts({
+      const res = await agent.app.gndr.feed.searchPosts({
         q: query,
         limit: 25,
         cursor: pageParam,
@@ -73,7 +73,7 @@ export function useSearchPostsQuery({
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: enabled ?? !!moderationOpts,
     select: React.useCallback(
-      (data: InfiniteData<AppBskyFeedSearchPosts.OutputSchema>) => {
+      (data: InfiniteData<AppGndrFeedSearchPosts.OutputSchema>) => {
         const {moderationOpts, isSearchingSpecificUser} = selectArgs
 
         /*
@@ -144,9 +144,9 @@ export function useSearchPostsQuery({
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<AppGndrFeedDefs.PostView, undefined> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
+    InfiniteData<AppGndrFeedSearchPosts.OutputSchema>
   >({
     queryKey: [searchPostsQueryKeyRoot],
   })
@@ -174,9 +174,9 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
+): Generator<AppGndrActorDefs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
+    InfiniteData<AppGndrFeedSearchPosts.OutputSchema>
   >({
     queryKey: [searchPostsQueryKeyRoot],
   })

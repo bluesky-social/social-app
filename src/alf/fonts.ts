@@ -1,7 +1,7 @@
-import {TextStyle} from 'react-native'
+import {type TextStyle} from 'react-native'
 
 import {isAndroid, isWeb} from '#/platform/detection'
-import {Device, device} from '#/storage'
+import {type Device, device} from '#/storage'
 
 const WEB_FONT_FAMILIES = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
 
@@ -89,7 +89,7 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
 
     /**
      * Overridden to previous spacing for the `system` font option.
-     * https://github.com/bluesky-social/social-app/commit/2419096e2409008b7d71fd6b8f8d0dd5b016e267
+     * https://github.com/gander-social/social-app/commit/2419096e2409008b7d71fd6b8f8d0dd5b016e267
      */
     style.letterSpacing = 0.25
   }

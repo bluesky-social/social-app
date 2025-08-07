@@ -7,10 +7,10 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {
-  type AppBskyActorDefs,
+  type AppGndrActorDefs,
   type ModerationCause,
   type ModerationUI,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -32,7 +32,7 @@ interface Props extends ComponentProps<typeof Link> {
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppGndrActorDefs.ProfileViewBasic
   interpretFilterAsBlur?: boolean
 }
 

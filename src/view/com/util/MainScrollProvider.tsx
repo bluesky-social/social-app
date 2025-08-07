@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react'
-import {NativeScrollEvent} from 'react-native'
+import {type NativeScrollEvent} from 'react-native'
 import {interpolate, useSharedValue, withSpring} from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
 

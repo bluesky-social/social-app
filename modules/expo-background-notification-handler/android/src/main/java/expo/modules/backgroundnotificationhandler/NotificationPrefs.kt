@@ -18,7 +18,7 @@ class NotificationPrefs(
   private val context: Context?,
 ) {
   private val prefs =
-    context?.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE)
+    context?.getSharedPreferences("xyz.ganderweb.app", Context.MODE_PRIVATE)
       ?: throw Error("Context is null")
 
   fun initialize() {

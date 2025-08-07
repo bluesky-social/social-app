@@ -1,4 +1,4 @@
-import {type AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {type AppGndrGraphDefs, AtUri} from '@gander-social-atproto/api'
 
 import {isInvalidHandle} from '#/lib/strings/handles'
 
@@ -44,15 +44,15 @@ export function makeSearchLink(props: {query: string; from?: 'me' | string}) {
 
 export function makeStarterPackLink(
   starterPackOrName:
-    | AppBskyGraphDefs.StarterPackViewBasic
-    | AppBskyGraphDefs.StarterPackView
+    | AppGndrGraphDefs.StarterPackViewBasic
+    | AppGndrGraphDefs.StarterPackView
     | string,
   rkey?: string,
 ) {
   if (typeof starterPackOrName === 'string') {
-    return `https://bsky.app/start/${starterPackOrName}/${rkey}`
+    return `https://gndr.app/start/${starterPackOrName}/${rkey}`
   } else {
     const uriRkey = new AtUri(starterPackOrName.uri).rkey
-    return `https://bsky.app/start/${starterPackOrName.creator.handle}/${uriRkey}`
+    return `https://gndr.app/start/${starterPackOrName.creator.handle}/${uriRkey}`
   }
 }

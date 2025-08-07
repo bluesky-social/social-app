@@ -8,8 +8,8 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
-import {type ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {type ModerationUI} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -53,7 +53,7 @@ import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import type * as bsky from '#/types/bsky'
+import type * as gndr from '#/types/gndr'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -81,7 +81,7 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  profile: bsky.profile.AnyProfileView
+  profile: gndr.profile.AnyProfileView
   disableHoverCard?: boolean
   disableNavigation?: boolean
   onBeforePress?: () => void

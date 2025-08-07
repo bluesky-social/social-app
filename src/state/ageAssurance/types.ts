@@ -1,4 +1,4 @@
-import {type AppBskyUnspeccedDefs} from '@atproto/api'
+import {type AppGndrUnspeccedDefs} from '@gander-social-atproto/api'
 import {type QueryObserverBaseResult} from '@tanstack/react-query'
 
 export type AgeAssuranceContextType = {
@@ -11,11 +11,11 @@ export type AgeAssuranceContextType = {
   /**
    * The server-reported status of the user's age verification process.
    */
-  status: AppBskyUnspeccedDefs.AgeAssuranceState['status']
+  status: AppGndrUnspeccedDefs.AgeAssuranceState['status']
   /**
    * The last time the age assurance state was attempted by the user.
    */
-  lastInitiatedAt: AppBskyUnspeccedDefs.AgeAssuranceState['lastInitiatedAt']
+  lastInitiatedAt: AppGndrUnspeccedDefs.AgeAssuranceState['lastInitiatedAt']
   /**
    * Indicates the user is age restricted based on the requirements of their
    * region, and their server-provided age assurance status. Does not factor in

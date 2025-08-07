@@ -1,8 +1,11 @@
-import {AppBskyActorDefs, AppBskyGraphGetMutes} from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type AppGndrActorDefs,
+  type AppGndrGraphGetMutes,
+} from '@gander-social-atproto/api'
+import {
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
@@ -15,15 +18,15 @@ type RQPageParam = string | undefined
 export function useMyMutedAccountsQuery() {
   const agent = useAgent()
   return useInfiniteQuery<
-    AppBskyGraphGetMutes.OutputSchema,
+    AppGndrGraphGetMutes.OutputSchema,
     Error,
-    InfiniteData<AppBskyGraphGetMutes.OutputSchema>,
+    InfiniteData<AppGndrGraphGetMutes.OutputSchema>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getMutes({
+      const res = await agent.app.gndr.graph.getMutes({
         limit: 30,
         cursor: pageParam,
       })
@@ -37,9 +40,9 @@ export function useMyMutedAccountsQuery() {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<AppGndrActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyGraphGetMutes.OutputSchema>
+    InfiniteData<AppGndrGraphGetMutes.OutputSchema>
   >({
     queryKey: [RQKEY_ROOT],
   })

@@ -1,11 +1,11 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedThreadgate,
+  type AppGndrFeedDefs,
+  type AppGndrFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {MAX_POST_LINES} from '#/lib/constants'
@@ -60,7 +60,7 @@ export function ThreadItemTreePost({
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: AppGndrFeedThreadgate.Record
 }) {
   const postShadow = usePostShadow(item.value.post)
 
@@ -241,13 +241,13 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   threadgateRecord,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
-  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  postShadow: Shadow<AppGndrFeedDefs.PostView>
   overrides?: {
     moderation?: boolean
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: AppGndrFeedThreadgate.Record
 }): React.ReactNode {
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()

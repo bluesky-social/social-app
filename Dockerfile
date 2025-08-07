@@ -72,22 +72,22 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN SENTRY_RELEASE=$EXPO_PUBLIC_RELEASE_VERSION SENTRY_DIST=$EXPO_PUBLIC_BUNDLE_IDENTIFIER yarn build-web
 
 # DEBUG
-RUN find ./bskyweb/static && find ./web-build/static
+RUN find ./gndrweb/static && find ./web-build/static
 
 #
-# Generate the bskyweb Go binary.
+# Generate the gndrweb Go binary.
 #
-RUN cd bskyweb/ && \
+RUN cd gndrweb/ && \
   go mod download && \
   go mod verify
 
-RUN cd bskyweb/ && \
+RUN cd gndrweb/ && \
   go build \
     -v  \
     -trimpath \
     -tags timetzdata \
-    -o /bskyweb \
-    ./cmd/bskyweb
+    -o /gndrweb \
+    ./cmd/gndrweb
 
 FROM debian:bullseye-slim
 
@@ -101,13 +101,13 @@ RUN apt-get update && apt-get install --yes \
 
 ENTRYPOINT ["dumb-init", "--"]
 
-WORKDIR /bskyweb
-COPY --from=build-env /bskyweb /usr/bin/bskyweb
+WORKDIR /gndrweb
+COPY --from=build-env /gndrweb /usr/bin/gndrweb
 
-CMD ["/usr/bin/bskyweb"]
+CMD ["/usr/bin/gndrweb"]
 
-LABEL org.opencontainers.image.source=https://github.com/bluesky-social/social-app
-LABEL org.opencontainers.image.description="bsky.app Web App"
+LABEL org.opencontainers.image.source=https://github.com/gander-social/social-app
+LABEL org.opencontainers.image.description="gndr.app Web App"
 LABEL org.opencontainers.image.licenses=MIT
 
 # NOOP

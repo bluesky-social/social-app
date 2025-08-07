@@ -2,12 +2,12 @@ import {IsValidHandle, validateServiceHandle} from '#/lib/strings/handles'
 
 describe('handle validation', () => {
   const valid = [
-    ['ali', 'bsky.social'],
-    ['alice', 'bsky.social'],
-    ['a-lice', 'bsky.social'],
-    ['a-----lice', 'bsky.social'],
-    ['123', 'bsky.social'],
-    ['123456789012345678', 'bsky.social'],
+    ['ali', 'gndr.social'],
+    ['alice', 'gndr.social'],
+    ['a-lice', 'gndr.social'],
+    ['a-----lice', 'gndr.social'],
+    ['123', 'gndr.social'],
+    ['123456789012345678', 'gndr.social'],
     ['alice', 'custom-pds.com'],
     ['alice', 'my-custom-pds-with-long-name.social'],
     ['123456789012345678', 'my-custom-pds-with-long-name.social'],
@@ -18,11 +18,11 @@ describe('handle validation', () => {
   })
 
   const invalid = [
-    ['al', 'bsky.social', 'frontLength'],
-    ['-alice', 'bsky.social', 'hyphenStartOrEnd'],
-    ['alice-', 'bsky.social', 'hyphenStartOrEnd'],
-    ['%%%', 'bsky.social', 'handleChars'],
-    ['1234567890123456789', 'bsky.social', 'frontLength'],
+    ['al', 'gndr.social', 'frontLength'],
+    ['-alice', 'gndr.social', 'hyphenStartOrEnd'],
+    ['alice-', 'gndr.social', 'hyphenStartOrEnd'],
+    ['%%%', 'gndr.social', 'handleChars'],
+    ['1234567890123456789', 'gndr.social', 'frontLength'],
     [
       '1234567890123456789',
       'my-custom-pds-with-long-name.social',

@@ -2,7 +2,7 @@ import {View} from 'react-native'
 import {
   type InterpretedLabelValueDefinition,
   type LabelPreference,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type React from 'react'

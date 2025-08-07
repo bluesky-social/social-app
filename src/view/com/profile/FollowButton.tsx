@@ -1,11 +1,11 @@
-import {StyleProp, TextStyle, View} from 'react-native'
+import {type StyleProp, type TextStyle, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import * as bsky from '#/types/bsky'
-import {Button, ButtonType} from '../util/forms/Button'
+import type * as gndr from '#/types/gndr'
+import {Button, type ButtonType} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 
 export function FollowButton({
@@ -18,7 +18,7 @@ export function FollowButton({
 }: {
   unfollowedType?: ButtonType
   followedType?: ButtonType
-  profile: Shadow<bsky.profile.AnyProfileView>
+  profile: Shadow<gndr.profile.AnyProfileView>
   labelStyle?: StyleProp<TextStyle>
   logContext: 'ProfileCard' | 'StarterPackProfilesList'
   onFollow?: () => void

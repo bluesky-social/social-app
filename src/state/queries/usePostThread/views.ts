@@ -1,13 +1,13 @@
 import {
   type $Typed,
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2,
+  type AppGndrFeedDefs,
+  type AppGndrFeedPost,
+  type AppGndrUnspeccedDefs,
+  type AppGndrUnspeccedGetPostThreadV2,
   AtUri,
   moderatePost,
   type ModerationOpts,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -26,7 +26,7 @@ export function threadPostNoUnauthenticated({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated,
+    value: value as AppGndrUnspeccedDefs.ThreadItemNoUnauthenticated,
     // @ts-ignore populated by the traversal
     ui: {},
   }
@@ -42,7 +42,7 @@ export function threadPostNotFound({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedDefs.ThreadItemNotFound,
+    value: value as AppGndrUnspeccedDefs.ThreadItemNotFound,
   }
 }
 
@@ -56,7 +56,7 @@ export function threadPostBlocked({
     key: uri,
     uri,
     depth,
-    value: value as AppBskyUnspeccedDefs.ThreadItemBlocked,
+    value: value as AppGndrUnspeccedDefs.ThreadItemBlocked,
   }
 }
 
@@ -69,7 +69,7 @@ export function threadPost({
 }: {
   uri: string
   depth: number
-  value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
+  value: $Typed<AppGndrUnspeccedDefs.ThreadItemPost>
   moderationOpts: ModerationOpts
   threadgateHiddenReplies: Set<string>
 }): Extract<ThreadItem, {type: 'threadPost'}> {
@@ -91,8 +91,8 @@ export function threadPost({
        * Do not spread anything here, load bearing for post shadow strict
        * equality reference checks.
        */
-      post: value.post as Omit<AppBskyFeedDefs.PostView, 'record'> & {
-        record: AppBskyFeedPost.Record
+      post: value.post as Omit<AppGndrFeedDefs.PostView, 'record'> & {
+        record: AppGndrFeedPost.Record
       },
     },
     isBlurred,
@@ -161,18 +161,18 @@ export function skeleton({
 }
 
 export function postViewToThreadPlaceholder(
-  post: AppBskyFeedDefs.PostView,
+  post: AppGndrFeedDefs.PostView,
 ): $Typed<
-  Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-    value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
+  Omit<AppGndrUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
+    value: $Typed<AppGndrUnspeccedDefs.ThreadItemPost>
   }
 > {
   return {
-    $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
+    $type: 'app.gndr.unspecced.getPostThreadV2#threadItem',
     uri: post.uri,
     depth: 0, // reset to 0 for highlighted post
     value: {
-      $type: 'app.bsky.unspecced.defs#threadItemPost',
+      $type: 'app.gndr.unspecced.defs#threadItemPost',
       post,
       opThread: false,
       moreParents: false,

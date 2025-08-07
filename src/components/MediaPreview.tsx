@@ -1,15 +1,15 @@
-import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {type AppGndrFeedDefs} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
+import type React from 'react'
 
 import {isTenorGifUri} from '#/lib/strings/embed-player'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import * as bsky from '#/types/bsky'
+import * as gndr from '#/types/gndr'
 
 /**
  * Streamlined MediaPreview component which just handles images, gifs, and videos
@@ -18,10 +18,10 @@ export function Embed({
   embed,
   style,
 }: {
-  embed: AppBskyFeedDefs.PostView['embed']
+  embed: AppGndrFeedDefs.PostView['embed']
   style?: StyleProp<ViewStyle>
 }) {
-  const e = bsky.post.parseEmbed(embed)
+  const e = gndr.post.parseEmbed(embed)
 
   if (!e) return null
 

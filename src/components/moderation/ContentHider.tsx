@@ -1,6 +1,6 @@
 import React from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

@@ -1,10 +1,13 @@
-import {AppBskyLabelerDefs, ComAtprotoModerationDefs} from '@atproto/api'
+import {
+  type AppGndrLabelerDefs,
+  ComAtprotoModerationDefs,
+} from '@gander-social-atproto/api'
 
-import {ReportOption} from './utils/useReportOptions'
+import {type ReportOption} from './utils/useReportOptions'
 
 export type ReportState = {
   selectedOption?: ReportOption
-  selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed
+  selectedLabeler?: AppGndrLabelerDefs.LabelerViewDetailed
   details?: string
   detailsOpen: boolean
   activeStepIndex1: number
@@ -21,7 +24,7 @@ export type ReportAction =
     }
   | {
       type: 'selectLabeler'
-      labeler: AppBskyLabelerDefs.LabelerViewDetailed
+      labeler: AppGndrLabelerDefs.LabelerViewDetailed
     }
   | {
       type: 'clearLabeler'

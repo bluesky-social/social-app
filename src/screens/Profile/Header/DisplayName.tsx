@@ -1,9 +1,12 @@
 import {View} from 'react-native'
-import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
+import {
+  type AppGndrActorDefs,
+  type ModerationDecision,
+} from '@gander-social-atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
@@ -11,7 +14,7 @@ export function ProfileHeaderDisplayName({
   profile,
   moderation,
 }: {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: Shadow<AppGndrActorDefs.ProfileViewDetailed>
   moderation: ModerationDecision
 }) {
   const t = useTheme()

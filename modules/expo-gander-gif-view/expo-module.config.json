@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android", "web"],
+  "ios": {
+    "modules": ["ExpoGanderGifViewModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.gandergifview.ExpoGanderGifViewModule"]
+  }
+}

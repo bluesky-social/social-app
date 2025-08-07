@@ -1,9 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
-import {ImagePickerAsset} from 'expo-image-picker'
-import {BlueskyVideoView} from '@haileyok/bluesky-video'
+import {type ImagePickerAsset} from 'expo-image-picker'
+import {GanderVideoView} from '@haileyok/bluesky-video'
 
-import {CompressedVideo} from '#/lib/media/video/types'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
@@ -23,7 +23,7 @@ export function VideoPreview({
   clear: () => void
 }) {
   const t = useTheme()
-  const playerRef = React.useRef<BlueskyVideoView>(null)
+  const playerRef = React.useRef<GanderVideoView>(null)
   const autoplayDisabled = useAutoplayDisabled()
   let aspectRatio = asset.width / asset.height
 
@@ -48,7 +48,7 @@ export function VideoPreview({
         <VideoTranscodeBackdrop uri={asset.uri} />
       </View>
       {isActivePost && (
-        <BlueskyVideoView
+        <GanderVideoView
           url={video.uri}
           autoplay={!autoplayDisabled}
           beginMuted={true}

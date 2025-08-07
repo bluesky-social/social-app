@@ -1,6 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
-import {BSKY_LABELER_DID, ComAtprotoModerationDefs} from '@atproto/api'
+import {
+  ComAtprotoModerationDefs,
+  GNDR_LABELER_DID,
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
@@ -59,7 +62,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
         {
           encoding: 'application/json',
           headers: {
-            'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
+            'atproto-proxy': `${GNDR_LABELER_DID}#atproto_labeler`,
           },
         },
       )

@@ -1,10 +1,10 @@
 import {useMemo} from 'react'
 import {
-  type AppBskyActorDefs,
-  AppBskyFeedDefs,
+  type AppGndrActorDefs,
+  AppGndrFeedDefs,
   AtUri,
   moderatePost,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -36,27 +36,27 @@ const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
 const LIMIT = 8 // sliced to 6, overfetch to account for moderation
 const PINNED_POST_URIS: Record<string, boolean> = {
   // 📰 News
-  'at://did:plc:kkf4naxqmweop7dv4l2iqqf5/app.bsky.feed.post/3lgh27w2ngc2b': true,
+  'at://did:plc:kkf4naxqmweop7dv4l2iqqf5/app.gndr.feed.post/3lgh27w2ngc2b': true,
   // Gardening
-  'at://did:plc:5rw2on4i56btlcajojaxwcat/app.bsky.feed.post/3kjorckgcwc27': true,
+  'at://did:plc:5rw2on4i56btlcajojaxwcat/app.gndr.feed.post/3kjorckgcwc27': true,
   // Web Development Trending
-  'at://did:plc:m2sjv3wncvsasdapla35hzwj/app.bsky.feed.post/3lfaw445axs22': true,
+  'at://did:plc:m2sjv3wncvsasdapla35hzwj/app.gndr.feed.post/3lfaw445axs22': true,
   // Anime & Manga EN
-  'at://did:plc:tazrmeme4dzahimsykusrwrk/app.bsky.feed.post/3knxx2gmkns2y': true,
+  'at://did:plc:tazrmeme4dzahimsykusrwrk/app.gndr.feed.post/3knxx2gmkns2y': true,
   // 📽️ Film
-  'at://did:plc:2hwwem55ce6djnk6bn62cstr/app.bsky.feed.post/3llhpzhbq7c2g': true,
+  'at://did:plc:2hwwem55ce6djnk6bn62cstr/app.gndr.feed.post/3llhpzhbq7c2g': true,
   // PopSky
-  'at://did:plc:lfdf4srj43iwdng7jn35tjsp/app.bsky.feed.post/3lbblgly65c2g': true,
+  'at://did:plc:lfdf4srj43iwdng7jn35tjsp/app.gndr.feed.post/3lbblgly65c2g': true,
   // Science
-  'at://did:plc:hu2obebw3nhfj667522dahfg/app.bsky.feed.post/3kl33otd6ob2s': true,
+  'at://did:plc:hu2obebw3nhfj667522dahfg/app.gndr.feed.post/3kl33otd6ob2s': true,
   // Birds! 🦉
-  'at://did:plc:ffkgesg3jsv2j7aagkzrtcvt/app.bsky.feed.post/3lbg4r57yk22d': true,
+  'at://did:plc:ffkgesg3jsv2j7aagkzrtcvt/app.gndr.feed.post/3lbg4r57yk22d': true,
   // Astronomy
-  'at://did:plc:xy2zorw2ys47poflotxthlzg/app.bsky.feed.post/3kyzye4lujs2w': true,
+  'at://did:plc:xy2zorw2ys47poflotxthlzg/app.gndr.feed.post/3kyzye4lujs2w': true,
   // What's Cooking 🍽️
-  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3lfqhgvxbqc2q': true,
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.gndr.feed.post/3lfqhgvxbqc2q': true,
   // BookSky 💙📚 #booksky
-  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.bsky.feed.post/3kgrm2rw5ww2e': true,
+  'at://did:plc:geoqe3qls5mwezckxxsewys2/app.gndr.feed.post/3kgrm2rw5ww2e': true,
 }
 
 export type FeedPreviewItem =
@@ -85,7 +85,7 @@ export type FeedPreviewItem =
   | {
       type: 'preview:header'
       key: string
-      feed: AppBskyFeedDefs.GeneratorView
+      feed: AppGndrFeedDefs.GeneratorView
     }
   | {
       type: 'preview:footer'
@@ -97,7 +97,7 @@ export type FeedPreviewItem =
       key: string
       slice: FeedPostSlice
       indexInSlice: number
-      feed: AppBskyFeedDefs.GeneratorView
+      feed: AppGndrFeedDefs.GeneratorView
       showReplyTo: boolean
       hideTopBorder: boolean
     }
@@ -108,7 +108,7 @@ export type FeedPreviewItem =
     }
 
 export function useFeedPreviews(
-  feedsMaybeWithDuplicates: AppBskyFeedDefs.GeneratorView[],
+  feedsMaybeWithDuplicates: AppGndrFeedDefs.GeneratorView[],
   isEnabled: boolean = true,
 ) {
   const feeds = useMemo(
@@ -325,13 +325,13 @@ export function useFeedPreviews(
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<AppGndrFeedDefs.PostView, undefined> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<{
-      feed: AppBskyFeedDefs.GeneratorView
-      posts: AppBskyFeedDefs.FeedViewPost[]
+      feed: AppGndrFeedDefs.GeneratorView
+      posts: AppGndrFeedDefs.FeedViewPost[]
     }>
   >({
     queryKey: [RQKEY_ROOT],
@@ -351,7 +351,7 @@ export function* findAllPostsInQueryData(
           yield embedViewRecordToPostView(quotedPost)
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+        if (AppGndrFeedDefs.isPostView(item.reply?.parent)) {
           if (didOrHandleUriMatches(atUri, item.reply.parent)) {
             yield item.reply.parent
           }
@@ -365,7 +365,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+        if (AppGndrFeedDefs.isPostView(item.reply?.root)) {
           if (didOrHandleUriMatches(atUri, item.reply.root)) {
             yield item.reply.root
           }
@@ -383,11 +383,11 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
+): Generator<AppGndrActorDefs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<{
-      feed: AppBskyFeedDefs.GeneratorView
-      posts: AppBskyFeedDefs.FeedViewPost[]
+      feed: AppGndrFeedDefs.GeneratorView
+      posts: AppGndrFeedDefs.FeedViewPost[]
     }>
   >({
     queryKey: [RQKEY_ROOT],
@@ -406,13 +406,13 @@ export function* findAllProfilesInQueryData(
           yield quotedPost.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.parent) &&
+          AppGndrFeedDefs.isPostView(item.reply?.parent) &&
           item.reply?.parent?.author.did === did
         ) {
           yield item.reply.parent.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.root) &&
+          AppGndrFeedDefs.isPostView(item.reply?.root) &&
           item.reply?.root?.author.did === did
         ) {
           yield item.reply.root.author

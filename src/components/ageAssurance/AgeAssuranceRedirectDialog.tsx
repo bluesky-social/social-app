@@ -106,7 +106,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           if (!agent.session) return
           if (unmounted.current) return
 
-          const {data} = await agent.app.bsky.unspecced.getAgeAssuranceState()
+          const {data} = await agent.app.gndr.unspecced.getAgeAssuranceState()
 
           if (data.status !== 'assured') {
             throw new Error(

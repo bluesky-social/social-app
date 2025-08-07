@@ -1,9 +1,9 @@
 import {View} from 'react-native'
-import {AppBskyEmbedVideo} from '@atproto/api'
+import {AppGndrEmbedVideo} from '@gander-social-atproto/api'
 
 import {logEvent} from '#/lib/statsig/statsig'
-import {FeedPostSliceItem} from '#/state/queries/post-feed'
-import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
+import {type FeedPostSliceItem} from '#/state/queries/post-feed'
+import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useGutters} from '#/alf'
 import * as Grid from '#/components/Grid'
 import {
@@ -20,7 +20,7 @@ export function PostFeedVideoGridRow({
 }) {
   const gutters = useGutters(['base', 'base', 0, 'base'])
   const posts = slices
-    .filter(slice => AppBskyEmbedVideo.isView(slice.post.embed))
+    .filter(slice => AppGndrEmbedVideo.isView(slice.post.embed))
     .map(slice => ({
       post: slice.post,
       moderation: slice.moderation,

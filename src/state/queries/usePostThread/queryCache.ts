@@ -1,12 +1,12 @@
 import {
   type $Typed,
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadOtherV2,
-  type AppBskyUnspeccedGetPostThreadV2,
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  AppGndrUnspeccedDefs,
+  type AppGndrUnspeccedGetPostThreadOtherV2,
+  type AppGndrUnspeccedGetPostThreadV2,
   AtUri,
-} from '@atproto/api'
+} from '@gander-social-atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 
 import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
@@ -41,18 +41,18 @@ export function createCacheMutator({
   return {
     insertReplies(
       parentUri: string,
-      replies: AppBskyUnspeccedGetPostThreadV2.ThreadItem[],
+      replies: AppGndrUnspeccedGetPostThreadV2.ThreadItem[],
     ) {
       /*
        * Main thread query mutator.
        */
-      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
+      queryClient.setQueryData<AppGndrUnspeccedGetPostThreadV2.OutputSchema>(
         postThreadQueryKey,
         data => {
           if (!data) return
           return {
             ...data,
-            thread: mutator<AppBskyUnspeccedGetPostThreadV2.ThreadItem>([
+            thread: mutator<AppGndrUnspeccedGetPostThreadV2.ThreadItem>([
               ...data.thread,
             ]),
           }
@@ -62,13 +62,13 @@ export function createCacheMutator({
       /*
        * Additional replies query mutator.
        */
-      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadOtherV2.OutputSchema>(
+      queryClient.setQueryData<AppGndrUnspeccedGetPostThreadOtherV2.OutputSchema>(
         postThreadOtherQueryKey,
         data => {
           if (!data) return
           return {
             ...data,
-            thread: mutator<AppBskyUnspeccedGetPostThreadOtherV2.ThreadItem>([
+            thread: mutator<AppGndrUnspeccedGetPostThreadOtherV2.ThreadItem>([
               ...data.thread,
             ]),
           }
@@ -79,7 +79,7 @@ export function createCacheMutator({
         for (let i = 0; i < thread.length; i++) {
           const parent = thread[i]
 
-          if (!AppBskyUnspeccedDefs.isThreadItemPost(parent.value)) continue
+          if (!AppGndrUnspeccedDefs.isThreadItemPost(parent.value)) continue
           if (parent.uri !== parentUri) continue
 
           /*
@@ -97,7 +97,7 @@ export function createCacheMutator({
           const isParentRoot = parent.depth === 0
           const isParentBelowRoot = parent.depth > 0
           const optimisticReply = replies.at(0)
-          const opIsReplier = AppBskyUnspeccedDefs.isThreadItemPost(
+          const opIsReplier = AppGndrUnspeccedDefs.isThreadItemPost(
             optimisticReply?.value,
           )
             ? opDid === optimisticReply.value.post.author.did
@@ -145,8 +145,8 @@ export function createCacheMutator({
      * Unused atm, post shadow does the trick, but it would be nice to clean up
      * the whole sub-tree on deletes.
      */
-    deletePost(post: AppBskyUnspeccedGetPostThreadV2.ThreadItem) {
-      queryClient.setQueryData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
+    deletePost(post: AppGndrUnspeccedGetPostThreadV2.ThreadItem) {
+      queryClient.setQueryData<AppGndrUnspeccedGetPostThreadV2.OutputSchema>(
         postThreadQueryKey,
         queryData => {
           if (!queryData) return
@@ -155,7 +155,7 @@ export function createCacheMutator({
 
           for (let i = 0; i < thread.length; i++) {
             const existingPost = thread[i]
-            if (!AppBskyUnspeccedDefs.isThreadItemPost(post.value)) continue
+            if (!AppGndrUnspeccedDefs.isThreadItemPost(post.value)) continue
 
             if (existingPost.uri === post.uri) {
               const branch = getBranch(thread, i, existingPost.depth)
@@ -177,7 +177,7 @@ export function createCacheMutator({
 export function getThreadPlaceholder(
   queryClient: QueryClient,
   uri: string,
-): $Typed<AppBskyUnspeccedGetPostThreadV2.ThreadItem> | void {
+): $Typed<AppGndrUnspeccedGetPostThreadV2.ThreadItem> | void {
   let partial
   for (let item of getThreadPlaceholderCandidates(queryClient, uri)) {
     /*
@@ -204,8 +204,8 @@ export function* getThreadPlaceholderCandidates(
   uri: string,
 ): Generator<
   $Typed<
-    Omit<AppBskyUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
-      value: $Typed<AppBskyUnspeccedDefs.ThreadItemPost>
+    Omit<AppGndrUnspeccedGetPostThreadV2.ThreadItem, 'value'> & {
+      value: $Typed<AppGndrUnspeccedDefs.ThreadItemPost>
     }
   >,
   void
@@ -246,10 +246,10 @@ export function* getThreadPlaceholderCandidates(
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, void> {
+): Generator<AppGndrFeedDefs.PostView, void> {
   const atUri = new AtUri(uri)
   const queryDatas =
-    queryClient.getQueriesData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>({
+    queryClient.getQueriesData<AppGndrUnspeccedGetPostThreadV2.OutputSchema>({
       queryKey: [postThreadQueryKeyRoot],
     })
 
@@ -259,7 +259,7 @@ export function* findAllPostsInQueryData(
     const {thread} = queryData
 
     for (const item of thread) {
-      if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+      if (AppGndrUnspeccedDefs.isThreadItemPost(item.value)) {
         if (didOrHandleUriMatches(atUri, item.value.post)) {
           yield item.value.post
         }
@@ -276,9 +276,9 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, void> {
+): Generator<AppGndrActorDefs.ProfileViewBasic, void> {
   const queryDatas =
-    queryClient.getQueriesData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>({
+    queryClient.getQueriesData<AppGndrUnspeccedGetPostThreadV2.OutputSchema>({
       queryKey: [postThreadQueryKeyRoot],
     })
 
@@ -288,7 +288,7 @@ export function* findAllProfilesInQueryData(
     const {thread} = queryData
 
     for (const item of thread) {
-      if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+      if (AppGndrUnspeccedDefs.isThreadItemPost(item.value)) {
         if (item.value.post.author.did === did) {
           yield item.value.post.author
         }

@@ -1,24 +1,24 @@
-import {BSKY_LABELER_DID, BskyAgent} from '@atproto/api'
+import {GNDR_LABELER_DID, GndrAgent} from '@gander-social-atproto/api'
 
 import {IS_TEST_USER} from '#/lib/constants'
 import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
 import {readLabelers} from './agent-config'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 
 export function configureModerationForGuest() {
   // This global mutation is *only* OK because this code is only relevant for testing.
   // Don't add any other global behavior here!
-  switchToBskyAppLabeler()
+  switchToGndrAppLabeler()
   configureAdditionalModerationAuthorities()
 }
 
 export async function configureModerationForAccount(
-  agent: BskyAgent,
+  agent: GndrAgent,
   account: SessionAccount,
 ) {
   // This global mutation is *only* OK because this code is only relevant for testing.
   // Don't add any other global behavior here!
-  switchToBskyAppLabeler()
+  switchToGndrAppLabeler()
   if (IS_TEST_USER(account.handle)) {
     await trySwitchToTestAppLabeler(agent)
   }
@@ -27,7 +27,7 @@ export async function configureModerationForAccount(
   const labelerDids = await readLabelers(account.did).catch(_ => {})
   if (labelerDids) {
     agent.configureLabelersHeader(
-      labelerDids.filter(did => did !== BSKY_LABELER_DID),
+      labelerDids.filter(did => did !== GNDR_LABELER_DID),
     )
   } else {
     // If there are no headers in the storage, we'll not send them on the initial requests.
@@ -37,11 +37,11 @@ export async function configureModerationForAccount(
   configureAdditionalModerationAuthorities()
 }
 
-function switchToBskyAppLabeler() {
-  BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
+function switchToGndrAppLabeler() {
+  GndrAgent.configure({appLabelers: [GNDR_LABELER_DID]})
 }
 
-async function trySwitchToTestAppLabeler(agent: BskyAgent) {
+async function trySwitchToTestAppLabeler(agent: GndrAgent) {
   const did = (
     await agent
       .resolveHandle({handle: 'mod-authority.test'})
@@ -49,6 +49,6 @@ async function trySwitchToTestAppLabeler(agent: BskyAgent) {
   )?.data.did
   if (did) {
     console.warn('USING TEST ENV MODERATION')
-    BskyAgent.configure({appLabelers: [did]})
+    GndrAgent.configure({appLabelers: [did]})
   }
 }

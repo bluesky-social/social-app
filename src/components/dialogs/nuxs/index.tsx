@@ -1,5 +1,5 @@
 import React from 'react'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppGndrActorDefs} from '@gander-social-atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -28,7 +28,7 @@ const queuedNuxs: {
   enabled?: (props: {
     gate: ReturnType<typeof useGate>
     currentAccount: SessionAccount
-    currentProfile: AppBskyActorDefs.ProfileViewDetailed
+    currentProfile: AppGndrActorDefs.ProfileViewDetailed
     preferences: UsePreferencesQueryResponse
   }) => boolean
 }[] = [
@@ -82,7 +82,7 @@ function Inner({
   preferences,
 }: {
   currentAccount: SessionAccount
-  currentProfile: AppBskyActorDefs.ProfileViewDetailed
+  currentProfile: AppGndrActorDefs.ProfileViewDetailed
   preferences: UsePreferencesQueryResponse
 }) {
   const gate = useGate()

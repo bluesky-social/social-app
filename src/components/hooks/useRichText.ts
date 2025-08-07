@@ -1,5 +1,5 @@
 import React from 'react'
-import {RichText as RichTextAPI} from '@atproto/api'
+import {RichText as RichTextAPI} from '@gander-social-atproto/api'
 
 import {useAgent} from '#/state/session'
 

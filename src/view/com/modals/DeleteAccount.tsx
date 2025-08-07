@@ -67,7 +67,7 @@ export function Component({}: {}) {
 
     try {
       // inform chat service of intent to delete account
-      const {success} = await agent.api.chat.bsky.actor.deleteAccount(
+      const {success} = await agent.api.chat.gndr.actor.deleteAccount(
         undefined,
         {
           headers: DM_SERVICE_HEADERS,
