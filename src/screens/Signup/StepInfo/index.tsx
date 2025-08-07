@@ -7,7 +7,6 @@ import type tldts from 'tldts'
 
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
 import {logger} from '#/logger'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
 import {atoms as a, native} from '#/alf'
@@ -143,7 +142,7 @@ export function StepInfo({
   }
 
   return (
-    <ScreenTransition>
+    <>
       <View style={[a.gap_md]}>
         <FormError error={state.error} />
         <HostingProvider
@@ -288,6 +287,6 @@ export function StepInfo({
         onRetryPress={refetchServer}
         overrideNextText={hasWarnedEmail ? _(msg`It's correct`) : undefined}
       />
-    </ScreenTransition>
+    </>
   )
 }
