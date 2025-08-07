@@ -42,6 +42,7 @@ export function StepHandle() {
   const validCheck = validateServiceHandle(draftValue, state.userDomain)
 
   const {
+    debouncedUsername: debouncedDraftValue,
     enabled: queryEnabled,
     query: {data: isHandleAvailable, isPending},
   } = useHandleAvailabilityQuery({
@@ -124,11 +125,15 @@ export function StepHandle() {
     )
   }
 
+  const hasDebounceSettled = draftValue === debouncedDraftValue
   const isHandleTaken =
     !isPending &&
     queryEnabled &&
     isHandleAvailable &&
     !isHandleAvailable.available
+  const isNotReady = isPending || !hasDebounceSettled
+  const isNextDisabled =
+    !validCheck.overall || !!state.error || isNotReady ? true : isHandleTaken
 
   const textFieldInvalid =
     isHandleTaken ||
@@ -188,7 +193,7 @@ export function StepHandle() {
                 </Requirement>
                 {isHandleAvailable.suggestions &&
                   isHandleAvailable.suggestions.length > 0 &&
-                  gate('handle_suggestions') && (
+                  (gate('handle_suggestions') || __DEV__) && (
                     <HandleSuggestions
                       suggestions={isHandleAvailable.suggestions}
                       onSelect={suggestion => {
@@ -242,7 +247,7 @@ export function StepHandle() {
       <Animated.View layout={native(LinearTransition)}>
         <BackNextButtons
           isLoading={isNextLoading}
-          isNextDisabled={!validCheck.overall || !!state.error || isHandleTaken}
+          isNextDisabled={isNextDisabled}
           onBackPress={onBackPress}
           onNextPress={onNextPress}
         />

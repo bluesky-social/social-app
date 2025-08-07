@@ -39,6 +39,7 @@ export function useHandleAvailabilityQuery(
   const debouncedHandle = useDebouncedValue(name, debounceDelayMs)
 
   return {
+    debouncedUsername: debouncedHandle,
     enabled: enabled && name === debouncedHandle,
     query: useQuery({
       enabled: enabled && name === debouncedHandle,
