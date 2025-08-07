@@ -6,6 +6,7 @@ import {
   useState,
 } from 'react'
 
+import {useSession} from '#/state/session'
 import {Provider as PortalProvider} from '#/components/PolicyUpdateOverlay/Portal'
 import {
   type PolicyUpdateState,
@@ -39,10 +40,16 @@ export function usePolicyUpdateContext() {
 }
 
 export function Provider({children}: {children?: ReactNode}) {
+  const {hasSession} = useSession()
   const [isReadyToShowOverlay, setIsReadyToShowOverlay] = useState(false)
+  console.log({
+    isReadyToShowOverlay,
+    hasSession,
+  })
   const state = usePolicyUpdateState({
     // only enable the policy update overlay in non-test environments
-    enabled: isReadyToShowOverlay && process.env.NODE_ENV !== 'test',
+    enabled:
+      isReadyToShowOverlay && hasSession && process.env.NODE_ENV !== 'test',
   })
 
   const ctx = useMemo(
