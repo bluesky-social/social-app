@@ -14,9 +14,11 @@ import {
 import {Container} from '../components/container'
 import {Link} from '../components/link'
 import {Post} from '../components/post'
-import {niceDate} from '../utils'
+import * as bsky from '../types/bsky'
+import {niceDate} from '../util/nice-date'
 
-const DEFAULT_POST = 'https://bsky.app/profile/emilyliu.me/post/3jzn6g7ixgq2y'
+const DEFAULT_POST =
+  'https://bsky.app/profile/did:plc:vjug55kidv6sye7ykr5faxxn/post/3jzn6g7ixgq2y'
 const DEFAULT_URI =
   'at://did:plc:vjug55kidv6sye7ykr5faxxn/app.bsky.feed.post/3jzn6g7ixgq2y'
 
@@ -222,7 +224,12 @@ function Snippet({
   const snippet = useMemo(() => {
     const record = thread.post.record
 
-    if (!AppBskyFeedPost.isRecord(record)) {
+    if (
+      !bsky.dangerousIsType<AppBskyFeedPost.Record>(
+        record,
+        AppBskyFeedPost.isRecord,
+      )
+    ) {
       return ''
     }
 
