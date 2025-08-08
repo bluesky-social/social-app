@@ -1,16 +1,19 @@
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {
+  type LayoutChangeEvent,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import Animated, {
   Easing,
   FadeIn,
   FadeOut,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 
 import {isWeb} from '#/platform/detection'
-import {atoms as a} from '#/alf'
 
 type AccordionAnimationProps = React.PropsWithChildren<{
   isExpanded: boolean
@@ -24,26 +27,27 @@ function WebAccordion({
   style,
   children,
 }: AccordionAnimationProps) {
-  const height = useSharedValue(0)
-  const derivedHeight = useDerivedValue(() => {
-    const targetHeight = isExpanded ? height.value : 0
-    return withTiming(targetHeight, {
-      duration,
-      easing: Easing.out(Easing.cubic),
-    })
-  }, [isExpanded, duration])
+  const heightValue = useSharedValue(0)
 
-  const bodyStyle = useAnimatedStyle(() => ({
-    height: derivedHeight.value,
-  }))
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      height: withTiming(isExpanded ? heightValue.value : 0, {
+        duration,
+        easing: Easing.out(Easing.cubic),
+      }),
+      overflow: 'hidden',
+    }
+  })
+
+  const onLayout = (e: LayoutChangeEvent) => {
+    if (heightValue.value === 0) {
+      heightValue.value = e.nativeEvent.layout.height
+    }
+  }
 
   return (
-    <Animated.View style={[a.overflow_hidden, bodyStyle, style]}>
-      <View
-        style={[a.absolute]}
-        onLayout={e => (height.value = e.nativeEvent.layout.height)}>
-        {children}
-      </View>
+    <Animated.View style={[animatedStyle, style]}>
+      <View onLayout={onLayout}>{children}</View>
     </Animated.View>
   )
 }
