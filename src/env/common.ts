@@ -80,8 +80,10 @@ export const BITDRIFT_API_KEY: string | undefined =
   process.env.EXPO_PUBLIC_BITDRIFT_API_KEY
 
 /**
- * GCP project ID which is required for device attestation
+ * GCP project ID which is required for native device attestation. On web, this
+ * should be unset and evaluate to 0.
  */
-export const GCP_PROJECT_ID: number = Number(
-  process.env.EXPO_PUBLIC_GCP_PROJECT_ID,
-)
+export const GCP_PROJECT_ID: number =
+  process.env.EXPO_PUBLIC_GCP_PROJECT_ID === undefined
+    ? 0
+    : Number(process.env.EXPO_PUBLIC_GCP_PROJECT_ID)
