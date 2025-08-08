@@ -6,8 +6,8 @@ import {
 } from 'react-native'
 import Animated, {
   Easing,
-  FadeIn,
-  FadeOut,
+  FadeInUp,
+  FadeOutDown,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -54,6 +54,7 @@ function WebAccordion({
 
 function MobileAccordion({
   isExpanded,
+  duration = 200,
   style,
   children,
 }: AccordionAnimationProps) {
@@ -62,8 +63,8 @@ function MobileAccordion({
   return (
     <Animated.View
       style={style}
-      entering={FadeIn.duration(150)}
-      exiting={FadeOut.duration(100)}>
+      entering={FadeInUp.duration(duration)}
+      exiting={FadeOutDown.duration(duration / 2)}>
       {children}
     </Animated.View>
   )
