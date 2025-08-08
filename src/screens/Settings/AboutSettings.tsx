@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {Platform} from 'react-native'
+import {Platform, View} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import * as FileSystem from 'expo-file-system'
 import {Image} from 'expo-image'
@@ -14,6 +14,7 @@ import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {isAndroid, isIOS, isNative} from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
+import {atoms as a} from '#/alf'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {BroomSparkle_Stroke2_Corner2_Rounded as BroomSparkleIcon} from '#/components/icons/BroomSparkle'
 import {CodeLines_Stroke2_Corner2_Rounded as CodeLinesIcon} from '#/components/icons/CodeLines'
@@ -22,6 +23,7 @@ import {Newspaper_Stroke2_Corner2_Rounded as NewspaperIcon} from '#/components/i
 import {Wrench_Stroke2_Corner2_Rounded as WrenchIcon} from '#/components/icons/Wrench'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import * as env from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
@@ -146,7 +148,7 @@ export function AboutSettingsScreen({}: Props) {
             }}
             onPress={() => {
               setStringAsync(
-                `Build version: ${env.APP_VERSION}; Bundle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Anonymous ID: ${stableID}`,
+                `Build version: ${env.APP_VERSION}; gndle info: ${env.APP_METADATA}; Bundle date: ${env.BUNDLE_DATE}; Platform: ${Platform.OS}; Platform version: ${Platform.Version}; Anonymous ID: ${stableID}`,
               )
               Toast.show(_(msg`Copied build version to clipboard`))
             }}>
@@ -179,6 +181,20 @@ export function AboutSettingsScreen({}: Props) {
                   </SettingsList.ItemText>
                 </SettingsList.PressableItem>
               )}
+              <View style={[a.gap_sm]}>
+                <Text>ENV: {env.ENV}</Text>
+                <Text>IS_TESTFLIGHT: {String(env.IS_TESTFLIGHT)}</Text>
+                <Text>IS_DEV: {String(env.IS_DEV)}</Text>
+                <Text>IS_INTERNAL: {String(env.IS_INTERNAL)}</Text>
+                <Text>BUNDLE_IDENTIFIER: {env.BUNDLE_IDENTIFIER}</Text>
+                <Text>BUNDLE_DATE: {env.BUNDLE_DATE}</Text>
+                <Text>LOG_LEVEL: {env.LOG_LEVEL}</Text>
+                <Text>CHAT_PROXY_DID: {env.CHAT_PROXY_DID}</Text>
+                <Text>SENTRY_DSN: {env.SENTRY_DSN}</Text>
+                <Text>APP_VERSION: {env.APP_VERSION}</Text>
+                <Text>APP_METADATA: {env.APP_METADATA}</Text>
+                <Text>GCP_PROJECT_ID: {String(env.GCP_PROJECT_ID)}</Text>
+              </View>
             </>
           )}
         </SettingsList.Container>
