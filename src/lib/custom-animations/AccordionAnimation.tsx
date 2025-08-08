@@ -30,8 +30,9 @@ function WebAccordion({
   const heightValue = useSharedValue(0)
 
   const animatedStyle = useAnimatedStyle(() => {
+    const targetHeight = isExpanded ? heightValue.get() : 0
     return {
-      height: withTiming(isExpanded ? heightValue.value : 0, {
+      height: withTiming(targetHeight, {
         duration,
         easing: Easing.out(Easing.cubic),
       }),
@@ -40,8 +41,8 @@ function WebAccordion({
   })
 
   const onLayout = (e: LayoutChangeEvent) => {
-    if (heightValue.value === 0) {
-      heightValue.value = e.nativeEvent.layout.height
+    if (heightValue.get() === 0) {
+      heightValue.set(e.nativeEvent.layout.height)
     }
   }
 
