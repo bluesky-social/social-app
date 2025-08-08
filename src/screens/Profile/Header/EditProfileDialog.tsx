@@ -23,6 +23,7 @@ import * as TextField from '#/components/forms/TextField'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
+import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
@@ -329,22 +330,18 @@ function DialogInner({
             />
           </TextField.Root>
           {displayNameTooLong && (
-            <TextField.SuffixText
+            <Text
               style={[
                 a.text_sm,
                 a.mt_xs,
                 a.font_bold,
                 {color: t.palette.negative_400},
-              ]}
-              label={_(msg`Display name is too long`)}>
-              <Trans>
-                Display name is too long.{' '}
-                <Plural
-                  value={DISPLAY_NAME_MAX_GRAPHEMES}
-                  other="The maximum number of characters is #."
-                />
-              </Trans>
-            </TextField.SuffixText>
+              ]}>
+              <Plural
+                value={DISPLAY_NAME_MAX_GRAPHEMES}
+                other="Display name is too long. The maximum number of characters is #."
+              />
+            </Text>
           )}
         </View>
 
@@ -379,22 +376,18 @@ function DialogInner({
             />
           </TextField.Root>
           {descriptionTooLong && (
-            <TextField.SuffixText
+            <Text
               style={[
                 a.text_sm,
                 a.mt_xs,
                 a.font_bold,
                 {color: t.palette.negative_400},
-              ]}
-              label={_(msg`Description is too long`)}>
-              <Trans>
-                Description is too long.{' '}
-                <Plural
-                  value={DESCRIPTION_MAX_GRAPHEMES}
-                  other="The maximum number of characters is #."
-                />
-              </Trans>
-            </TextField.SuffixText>
+              ]}>
+              <Plural
+                value={DESCRIPTION_MAX_GRAPHEMES}
+                other="Description is too long. The maximum number of characters is #."
+              />
+            </Text>
           )}
         </View>
       </View>
