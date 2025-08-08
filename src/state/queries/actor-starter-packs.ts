@@ -90,3 +90,13 @@ export async function invalidateActorStarterPacksQuery({
 }) {
   await queryClient.invalidateQueries({queryKey: RQKEY(did)})
 }
+
+export async function invalidateActorStarterPacksWithMembershipQuery({
+  queryClient,
+  did,
+}: {
+  queryClient: QueryClient
+  did: string
+}) {
+  await queryClient.invalidateQueries({queryKey: RQKEY_WITH_MEMBERSHIP(did)})
+}

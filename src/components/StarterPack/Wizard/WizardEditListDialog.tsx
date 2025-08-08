@@ -48,7 +48,6 @@ export function WizardEditListDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
 
   const listRef = useRef<ListMethods>(null)
@@ -56,10 +55,7 @@ export function WizardEditListDialog({
   const getData = () => {
     if (state.currentStep === 'Feeds') return state.feeds
 
-    return [
-      profile,
-      ...state.profiles.filter(p => p.did !== currentAccount?.did),
-    ]
+    return [profile, ...state.profiles.filter(p => p.did !== profile.did)]
   }
 
   const renderItem = ({item}: ListRenderItemInfo<any>) =>

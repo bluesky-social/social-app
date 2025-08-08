@@ -12,7 +12,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
-  RQKEY_WITH_MEMBERSHIP,
+  invalidateActorStarterPacksWithMembershipQuery,
   useActorStarterPacksWithMembershipsQuery,
 } from '#/state/queries/actor-starter-packs'
 import {
@@ -35,7 +35,6 @@ import {TimesLarge_Stroke2_Corner0_Rounded} from '../icons/Times'
 type StarterPackWithMembership =
   AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership
 
-// Simple module-level state for dialog coordination
 let dialogCallbacks: {
   onSuccess?: () => void
 } = {}
@@ -48,14 +47,12 @@ export function notifyDialogSuccess() {
 
 export type StarterPackDialogProps = {
   control: Dialog.DialogControlProps
-  accountDid: string
   targetDid: string
   enabled?: boolean
 }
 
 export function StarterPackDialog({
   control,
-  accountDid: _accountDid,
   targetDid,
   enabled,
 }: StarterPackDialogProps) {
@@ -73,8 +70,11 @@ export function StarterPackDialog({
 
   const navToWizard = React.useCallback(() => {
     control.close()
-    navigation.navigate('StarterPackWizard', {fromDialog: true})
-  }, [navigation, control])
+    navigation.navigate('StarterPackWizard', {
+      fromDialog: true,
+      targetDid: targetDid,
+    })
+  }, [navigation, control, targetDid])
 
   const wrappedNavToWizard = requireEmailVerification(navToWizard, {
     instructions: [
@@ -85,7 +85,6 @@ export function StarterPackDialog({
   })
 
   const onClose = React.useCallback(() => {
-    // setCurrentView('initial')
     control.close()
   }, [control])
 
@@ -252,69 +251,60 @@ function StarterPackItem({
   const {_} = useLingui()
   const t = useTheme()
   const queryClient = useQueryClient()
-  const [isUpdating, setIsUpdating] = React.useState(false)
 
   const starterPack = starterPackWithMembership.starterPack
   const isInPack = !!starterPackWithMembership.listItem
-  console.log('StarterPackItem render. 111', {
-    starterPackWithMembership: starterPackWithMembership.listItem?.subject,
-  })
 
-  console.log('StarterPackItem render', {
-    starterPackWithMembership,
-  })
+  const {mutate: addMembership, isPending: isAddingPending} =
+    useListMembershipAddMutation({
+      onSuccess: () => {
+        Toast.show(_(msg`Added to starter pack`))
+        invalidateActorStarterPacksWithMembershipQuery({
+          queryClient,
+          did: targetDid,
+        })
+      },
+      onError: () => {
+        Toast.show(_(msg`Failed to add to starter pack`), 'xmark')
+      },
+    })
 
-  const {mutateAsync: addMembership} = useListMembershipAddMutation({
-    onSuccess: () => {
-      Toast.show(_(msg`Added to starter pack`))
-    },
-    onError: () => {
-      Toast.show(_(msg`Failed to add to starter pack`), 'xmark')
-    },
-  })
+  const {mutate: removeMembership, isPending: isRemovingPending} =
+    useListMembershipRemoveMutation({
+      onSuccess: () => {
+        Toast.show(_(msg`Removed from starter pack`))
+        invalidateActorStarterPacksWithMembershipQuery({
+          queryClient,
+          did: targetDid,
+        })
+      },
+      onError: () => {
+        Toast.show(_(msg`Failed to remove from starter pack`), 'xmark')
+      },
+    })
 
-  const {mutateAsync: removeMembership} = useListMembershipRemoveMutation({
-    onSuccess: () => {
-      Toast.show(_(msg`Removed from starter pack`))
-    },
-    onError: () => {
-      Toast.show(_(msg`Failed to remove from starter pack`), 'xmark')
-    },
-  })
+  const isMutating = isAddingPending || isRemovingPending
 
-  const handleToggleMembership = async () => {
-    if (!starterPack.list?.uri || isUpdating) return
+  const handleToggleMembership = () => {
+    if (!starterPack.list?.uri || isMutating) return
 
     const listUri = starterPack.list.uri
-    setIsUpdating(true)
 
-    try {
-      if (!isInPack) {
-        await addMembership({
-          listUri: listUri,
-          actorDid: targetDid,
-        })
-      } else {
-        if (!starterPackWithMembership.listItem?.uri) {
-          console.error('Cannot remove: missing membership URI')
-          return
-        }
-        await removeMembership({
-          listUri: listUri,
-          actorDid: targetDid,
-          membershipUri: starterPackWithMembership.listItem.uri,
-        })
+    if (!isInPack) {
+      addMembership({
+        listUri: listUri,
+        actorDid: targetDid,
+      })
+    } else {
+      if (!starterPackWithMembership.listItem?.uri) {
+        console.error('Cannot remove: missing membership URI')
+        return
       }
-
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: RQKEY_WITH_MEMBERSHIP(targetDid),
-        }),
-      ])
-    } catch (error) {
-      console.error('Failed to toggle membership:', error)
-    } finally {
-      setIsUpdating(false)
+      removeMembership({
+        listUri: listUri,
+        actorDid: targetDid,
+        membershipUri: starterPackWithMembership.listItem.uri,
+      })
     }
   }
 
@@ -377,7 +367,7 @@ function StarterPackItem({
         label={isInPack ? _(msg`Remove`) : _(msg`Add`)}
         color={isInPack ? 'secondary' : 'primary'}
         size="tiny"
-        disabled={isUpdating}
+        disabled={isMutating}
         onPress={handleToggleMembership}>
         <ButtonText>
           {isInPack ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
