@@ -8,6 +8,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {Trans} from '@lingui/macro'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
@@ -15,7 +16,6 @@ import {
   android,
   applyFonts,
   atoms as a,
-  ios,
   type TextStyleProp,
   useAlf,
   useTheme,
@@ -99,24 +99,24 @@ export function useSharedInputStyles() {
   return React.useMemo(() => {
     const hover: ViewStyle[] = [
       {
-        borderColor: t.palette.contrast_100,
+        borderColor: t.palette.black,
       },
     ]
     const focus: ViewStyle[] = [
       {
-        backgroundColor: t.palette.contrast_50,
-        borderColor: t.palette.primary_500,
+        // backgroundColor: t.palette.contrast_50,
+        borderColor: t.palette.black,
       },
     ]
     const error: ViewStyle[] = [
       {
-        backgroundColor: t.palette.negative_25,
+        // backgroundColor: t.palette.negative_25,
         borderColor: t.palette.negative_300,
       },
     ]
     const errorHover: ViewStyle[] = [
       {
-        backgroundColor: t.palette.negative_25,
+        // backgroundColor: t.palette.negative_25,
         borderColor: t.palette.negative_500,
       },
     ]
@@ -141,10 +141,14 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   onChangeText?: (value: string) => void
   isInvalid?: boolean
   inputRef?: React.RefObject<TextInput> | React.ForwardedRef<TextInput>
+  isFirst?: boolean
+  isLast?: boolean
 }
 
 export function createInput(Component: typeof TextInput) {
   return function Input({
+    isFirst,
+    isLast,
     label,
     placeholder,
     value,
@@ -161,8 +165,8 @@ export function createInput(Component: typeof TextInput) {
     const ctx = React.useContext(Context)
     const withinRoot = Boolean(ctx.inputRef)
 
-    const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
-      useSharedInputStyles()
+    // const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
+    //   useSharedInputStyles()
 
     if (!withinRoot) {
       return (
@@ -186,8 +190,8 @@ export function createInput(Component: typeof TextInput) {
       a.z_20,
       a.flex_1,
       a.text_md,
-      t.atoms.text,
-      a.px_xs,
+      // t.atoms.text,
+      {color: t.palette.black},
       {
         // paddingVertical doesn't work w/multiline - esb
         lineHeight: a.text_md.fontSize * 1.1875,
@@ -195,16 +199,16 @@ export function createInput(Component: typeof TextInput) {
         minHeight: rest.multiline ? 80 : undefined,
         minWidth: 0,
       },
-      ios({paddingTop: 12, paddingBottom: 13}),
-      // Needs to be sm on Paper, md on Fabric for some godforsaken reason -sfn
-      android(a.py_sm),
-      // fix for autofill styles covering border
-      web({
-        paddingTop: 10,
-        paddingBottom: 11,
-        marginTop: 2,
-        marginBottom: 2,
-      }),
+      // ios({paddingTop: 12, paddingBottom: 13}),
+      // // Needs to be sm on Paper, md on Fabric for some godforsaken reason -sfn
+      android(a.py_0),
+      // // fix for autofill styles covering border
+      // web({
+      //   paddingTop: 10,
+      //   paddingBottom: 11,
+      //   marginTop: 2,
+      //   marginBottom: 2,
+      // }),
       style,
     ])
 
@@ -222,41 +226,58 @@ export function createInput(Component: typeof TextInput) {
 
     return (
       <>
-        <Component
-          accessibilityHint={undefined}
-          hitSlop={HITSLOP_20}
-          {...rest}
-          accessibilityLabel={label}
-          ref={refs}
-          value={value}
-          onChangeText={onChangeText}
-          onFocus={e => {
-            ctx.onFocus()
-            onFocus?.(e)
-          }}
-          onBlur={e => {
-            ctx.onBlur()
-            onBlur?.(e)
-          }}
-          placeholder={placeholder || label}
-          placeholderTextColor={t.palette.contrast_500}
-          keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          style={flattened}
-        />
-
+        <View style={[a.flex_1, a.pb_s10, a.pt_s6]}>
+          <LabelText>
+            <Trans>{label}</Trans>
+          </LabelText>
+          <Component
+            accessibilityHint={undefined}
+            hitSlop={HITSLOP_20}
+            {...rest}
+            accessibilityLabel={label}
+            ref={refs}
+            value={value}
+            onChangeText={onChangeText}
+            onFocus={e => {
+              ctx.onFocus()
+              onFocus?.(e)
+            }}
+            onBlur={e => {
+              ctx.onBlur()
+              onBlur?.(e)
+            }}
+            placeholder={placeholder || label}
+            placeholderTextColor={t.palette.contrast_500}
+            keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
+            style={flattened}
+          />
+        </View>
         <View
           style={[
-            a.z_10,
+            {zIndex: -122},
             a.absolute,
             a.inset_0,
             a.rounded_sm,
-            t.atoms.bg_contrast_25,
-            {borderColor: 'transparent', borderWidth: 2},
-            ctx.hovered ? chromeHover : {},
-            ctx.focused ? chromeFocus : {},
-            ctx.isInvalid || isInvalid ? chromeError : {},
-            (ctx.isInvalid || isInvalid) && (ctx.hovered || ctx.focused)
-              ? chromeErrorHover
+            // t.atoms.bg_contrast_25,
+            {borderColor: '#9B9B9B', borderWidth: 1},
+            // ctx.hovered ? chromeHover : {},
+            // ctx.focused ? chromeFocus : {},
+            // ctx.isInvalid || isInvalid ? chromeError : {},
+            // (ctx.isInvalid || isInvalid) && (ctx.hovered || ctx.focused)
+            //   ? chromeErrorHover
+            //   : {},
+            isFirst
+              ? {
+                  borderBottomWidth: 0,
+                  borderBottomRightRadius: 0,
+                  borderBottomLeftRadius: 0,
+                }
+              : {},
+            isLast
+              ? {
+                  borderTopRightRadius: 0,
+                  borderTopLeftRadius: 0,
+                }
               : {},
           ]}
         />
@@ -271,11 +292,16 @@ export function LabelText({
   nativeID,
   children,
 }: React.PropsWithChildren<{nativeID?: string}>) {
-  const t = useTheme()
+  // const t = useTheme()
   return (
     <Text
       nativeID={nativeID}
-      style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium, a.mb_sm]}>
+      style={[
+        a.text_xs,
+        a.font_normal,
+        {color: '#696969', lineHeight: 18},
+        a.mb_2xs,
+      ]}>
       {children}
     </Text>
   )

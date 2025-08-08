@@ -1,5 +1,9 @@
 import {useCallback} from 'react'
-import {type AppGndrActorDefs, type AppGndrFeedDefs, AtUri} from '@gander-social-atproto/api'
+import {
+  type AppGndrActorDefs,
+  type AppGndrFeedDefs,
+  AtUri,
+} from '@gander-social-atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'

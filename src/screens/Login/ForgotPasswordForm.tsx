@@ -11,12 +11,14 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {PasswordLock} from '#/components/icons/PasswordLock'
 import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
+import {ResetPasswordDialog} from './ResetpasswordDialog'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -27,7 +29,7 @@ export const ForgotPasswordForm = ({
   setError,
   setServiceUrl,
   onPressBack,
-  onEmailSent,
+  onPasswordSet,
 }: {
   error: string
   serviceUrl: string
@@ -35,18 +37,21 @@ export const ForgotPasswordForm = ({
   setError: (v: string) => void
   setServiceUrl: (v: string) => void
   onPressBack: () => void
-  onEmailSent: () => void
+  onPasswordSet: () => void
 }) => {
+  const [isAlreadyHaveCode, setAlreadyHaveCode] = useState(false)
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [email, setEmail] = useState<string>('')
   const {_} = useLingui()
+  const resetPasswordDialogControl = useDialogControl()
 
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
   }, [])
 
   const onPressNext = async () => {
+    setAlreadyHaveCode(false)
     if (!EmailValidator.validate(email)) {
       return setError(_(msg`Your email appears to be invalid.`))
     }
@@ -57,7 +62,9 @@ export const ForgotPasswordForm = ({
     try {
       const agent = new GndrAgent({service: serviceUrl})
       await agent.com.atproto.server.requestPasswordReset({email})
-      onEmailSent()
+      setIsProcessing(false)
+      Keyboard.dismiss()
+      resetPasswordDialogControl.open()
     } catch (e: any) {
       const errMsg = e.toString()
       logger.warn('Failed to request password reset', {error: e})
@@ -75,13 +82,33 @@ export const ForgotPasswordForm = ({
   }
 
   return (
-    <FormContainer
-      testID="forgotPasswordForm"
-      titleText={<Trans>Reset password</Trans>}>
+    <FormContainer testID="forgotPasswordForm" style={a.gap_2xl}>
+      <ResetPasswordDialog
+        isAlreadyHaveCode={isAlreadyHaveCode}
+        email={email}
+        control={resetPasswordDialogControl}
+        onSelect={() => {
+          Keyboard.dismiss()
+        }}
+        error={error}
+        setError={setError}
+        serviceUrl={serviceUrl}
+        onPasswordSet={onPasswordSet}
+      />
+      <Text
+        style={[a.text_md, a.font_medium, t.atoms.text_contrast_high, a.mb_sm]}>
+        <Trans>Forgot Password</Trans>
+      </Text>
+      <PasswordLock />
+
+      <Text style={[a.text_md, a.font_normal, t.atoms.text_contrast_high]}>
+        <Trans>
+          Select your hosting provider and enter the email you used to create
+          your account. We’ll send you a “reset code” so you can set a new
+          password.
+        </Trans>
+      </Text>
       <View>
-        <TextField.LabelText>
-          <Trans>Hosting provider</Trans>
-        </TextField.LabelText>
         <HostingProvider
           serviceUrl={serviceUrl}
           onSelectServiceUrl={setServiceUrl}
@@ -89,11 +116,7 @@ export const ForgotPasswordForm = ({
         />
       </View>
       <View>
-        <TextField.LabelText>
-          <Trans>Email address</Trans>
-        </TextField.LabelText>
         <TextField.Root>
-          <TextField.Icon icon={At} />
           <TextField.Input
             testID="forgotPasswordEmail"
             label={_(msg`Enter your email address`)}
@@ -108,17 +131,43 @@ export const ForgotPasswordForm = ({
           />
         </TextField.Root>
       </View>
-
-      <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
+      <View style={[a.flex_row]}>
+        <Button
+          testID="skipSendEmailButton"
+          onPress={() => {
+            setAlreadyHaveCode(true)
+            Keyboard.dismiss()
+            resetPasswordDialogControl.open()
+          }}
+          label={_(msg`Go to next`)}
+          accessibilityHint={_(msg`Navigates to the next screen`)}
+          style={[a.px_0, a.py_0]}
+          size="large"
+          variant="ghost"
+          color="link">
+          <ButtonText>
+            <Trans>I already have a reset code?</Trans>
+          </ButtonText>
+        </Button>
+      </View>
+      {/* <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
         <Trans>
           Enter the email you used to create your account. We'll send you a
           "reset code" so you can set a new password.
         </Trans>
-      </Text>
+      </Text> */}
 
       <FormError error={error} />
+      <View style={a.flex_1} />
 
-      <View style={[a.flex_row, a.align_center, a.pt_md]}>
+      <View
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.pt_md,
+          a.border_t,
+          {borderColor: '#D8D8D8'},
+        ]}>
         <Button
           label={_(msg`Back`)}
           variant="solid"
@@ -140,7 +189,7 @@ export const ForgotPasswordForm = ({
             size="large"
             onPress={onPressNext}>
             <ButtonText>
-              <Trans>Next</Trans>
+              <Trans>Send Code</Trans>
             </ButtonText>
           </Button>
         )}
@@ -149,28 +198,6 @@ export const ForgotPasswordForm = ({
             <Trans>Processing...</Trans>
           </Text>
         ) : undefined}
-      </View>
-      <View
-        style={[
-          t.atoms.border_contrast_medium,
-          a.border_t,
-          a.pt_2xl,
-          a.mt_md,
-          a.flex_row,
-          a.justify_center,
-        ]}>
-        <Button
-          testID="skipSendEmailButton"
-          onPress={onEmailSent}
-          label={_(msg`Go to next`)}
-          accessibilityHint={_(msg`Navigates to the next screen`)}
-          size="large"
-          variant="ghost"
-          color="secondary">
-          <ButtonText>
-            <Trans>Already have a code?</Trans>
-          </ButtonText>
-        </Button>
       </View>
     </FormContainer>
   )

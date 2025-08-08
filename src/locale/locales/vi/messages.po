@@ -128,6 +128,11 @@ msgstr "{0, plural, other {{1} bài đăng}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, other {# người dùng}} đã dùng gói khởi đầu này!"
 
+#: src/screens/Welcome/index.tsx:74
+#: src/screens/Welcome/index.tsx:83
+msgid "{0}"
+msgstr ""
+
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
@@ -402,6 +407,10 @@ msgstr ""
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, other {# người dùng}} đã đăng ký!"
 
+#: src/components/forms/TextField.tsx:231
+msgid "{label}"
+msgstr ""
+
 #: src/components/live/utils.ts:10
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr ""
@@ -496,7 +505,7 @@ msgstr "⚠Tên người dùng không hợp lệ"
 msgid "24 hours"
 msgstr "24 giờ"
 
-#: src/screens/Login/LoginForm.tsx:268
+#: src/screens/Login/LoginForm.tsx:335
 msgid "2FA Confirmation"
 msgstr "Xác nhận 2FA"
 
@@ -553,7 +562,6 @@ msgid "Accessibility Settings"
 msgstr "Cài đặt trợ năng"
 
 #: src/Navigation.tsx:398
-#: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:49
 #: src/screens/Settings/Settings.tsx:174
 #: src/screens/Settings/Settings.tsx:177
@@ -590,6 +598,10 @@ msgstr "Tài khoản đã bị ẩn bởi Danh sách"
 #: src/screens/Settings/Settings.tsx:624
 msgid "Account options"
 msgstr "Tùy chọn tài khoản"
+
+#: src/components/forms/HostingProvider.tsx:75
+msgid "Account Provider"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:660
 msgid "Account removed from quick access"
@@ -815,6 +827,10 @@ msgstr ""
 msgid "Age assurance only takes a few minutes"
 msgstr ""
 
+#: src/screens/Login/LoginForm.tsx:428
+msgid "Agree and continue"
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:223
 msgid "alice@example.com"
 msgstr "alice@example.com"
@@ -864,12 +880,11 @@ msgstr "Cho phép trả lời từ:"
 msgid "Allows access to direct messages"
 msgstr "Cho phép truy cập tin nhắn"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:182
 msgid "Already have a code?"
 msgstr "Bạn đã có mã rồi?"
 
-#: src/screens/Login/ChooseAccountForm.tsx:43
+#: src/screens/Login/ChooseAccountForm.tsx:46
 msgid "Already signed in as @{0}"
 msgstr "Đã đăng nhập dưới tên @{0}"
 
@@ -1204,12 +1219,11 @@ msgstr "Tự động phát video và GIF"
 #: src/components/dms/MessagesListHeader.tsx:84
 #: src/components/moderation/LabelsOnMeDialog.tsx:315
 #: src/components/moderation/LabelsOnMeDialog.tsx:316
-#: src/screens/Login/ChooseAccountForm.tsx:90
-#: src/screens/Login/ChooseAccountForm.tsx:95
-#: src/screens/Login/ForgotPasswordForm.tsx:123
-#: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:310
-#: src/screens/Login/LoginForm.tsx:316
+#: src/screens/Login/ForgotPasswordForm.tsx:172
+#: src/screens/Login/ForgotPasswordForm.tsx:178
+#: src/screens/Login/LoginForm.tsx:388
+#: src/screens/Login/ResetpasswordDialog.tsx:234
+#: src/screens/Login/ResetpasswordDialog.tsx:240
 #: src/screens/Login/SetNewPasswordForm.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Messages/components/ChatDisabled.tsx:133
@@ -1479,6 +1493,11 @@ msgstr "Máy ảnh"
 #: src/components/Prompt.tsx:143
 #: src/components/Prompt.tsx:145
 #: src/screens/Deactivated.tsx:158
+#: src/screens/Login/ChooseAccountForm.tsx:81
+#: src/screens/Login/ChooseAccountForm.tsx:87
+#: src/screens/Login/LoginForm.tsx:204
+#: src/screens/Login/LoginForm.tsx:210
+#: src/screens/Login/LoginForm.tsx:394
 #: src/screens/Profile/Header/EditProfileDialog.tsx:225
 #: src/screens/Profile/Header/EditProfileDialog.tsx:233
 #: src/screens/Search/Shell.tsx:349
@@ -1661,7 +1680,7 @@ msgstr "Chats"
 msgid "Check my status"
 msgstr "Kiểm tra trạng thái của tôi"
 
-#: src/screens/Login/LoginForm.tsx:301
+#: src/screens/Login/LoginForm.tsx:368
 msgid "Check your email for a sign in code and enter it here."
 msgstr "Kiểm tra email của bạn để tìm mã đăng nhập và nhập nó vào đây."
 
@@ -1956,7 +1975,7 @@ msgid "Confirm your birthdate"
 msgstr "Xác nhận ngày sinh của bạn"
 
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
-#: src/screens/Login/LoginForm.tsx:274
+#: src/screens/Login/LoginForm.tsx:341
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
 #: src/view/com/modals/DeleteAccount.tsx:220
@@ -1964,7 +1983,7 @@ msgstr "Xác nhận ngày sinh của bạn"
 msgid "Confirmation code"
 msgstr "Mã xác nhận"
 
-#: src/screens/Login/LoginForm.tsx:337
+#: src/screens/Login/LoginForm.tsx:415
 msgid "Connecting..."
 msgstr "Đang kết nối..."
 
@@ -2045,7 +2064,7 @@ msgstr "Nền trình đơn, nhấn để đóng trình đơn."
 msgid "Continue"
 msgstr "Tiếp tục"
 
-#: src/components/AccountList.tsx:128
+#: src/components/AccountList.tsx:135
 msgid "Continue as {0} (currently signed in)"
 msgstr "Tiếp tục dưới tên {0} (đang đăng nhập)"
 
@@ -2260,7 +2279,7 @@ msgstr "Tạo gói khởi đầu"
 msgid "Create a starter pack for me"
 msgstr "Tạo gói khởi đầu cho tôi"
 
-#: src/view/com/auth/SplashScreen.tsx:55
+#: src/view/com/auth/SplashScreen.tsx:53
 #: src/view/com/auth/SplashScreen.web.tsx:117
 #: src/view/shell/bottom-bar/BottomBar.tsx:345
 #: src/view/shell/bottom-bar/BottomBar.tsx:350
@@ -2294,7 +2313,7 @@ msgstr "Tạo hình đại diện"
 msgid "Create another"
 msgstr "Tạo thêm"
 
-#: src/view/com/auth/SplashScreen.tsx:47
+#: src/view/com/auth/SplashScreen.tsx:45
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
 msgstr "Tạo tài khoản mới"
@@ -2618,6 +2637,7 @@ msgid "Dismiss error"
 msgstr "Bỏ qua lỗi "
 
 #: src/components/ProgressGuide/List.tsx:42
+#: src/screens/Login/ResetpasswordDialog.tsx:145
 msgid "Dismiss getting started guide"
 msgstr "Bỏ qua hướng dẫn bắt đầu"
 
@@ -2789,6 +2809,9 @@ msgstr "vd: người dùng hay trả lời bằng quảng cáo."
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Mỗi mã chỉ được dùng một lần. Bạn sẽ nhận thêm mã mời theo định kỳ."
 
+#: src/components/forms/HostingProvider.tsx:85
+#: src/components/forms/HostingProvider.tsx:87
+#: src/components/forms/HostingProvider.tsx:91
 #: src/screens/Settings/AccountSettings.tsx:143
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:249
 #: src/screens/StarterPack/StarterPackScreen.tsx:588
@@ -2909,10 +2932,6 @@ msgstr "Đã tắt Email 2FA"
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
 msgid "Email 2FA enabled"
 msgstr "Đã bật Email 2FA"
-
-#: src/screens/Login/ForgotPasswordForm.tsx:93
-msgid "Email address"
-msgstr "Địa chỉ email"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:104
 msgid "Email Resent"
@@ -3035,6 +3054,10 @@ msgstr ""
 msgid "Enter fullscreen"
 msgstr "Vào chế độ toàn màn hình"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:159
+msgid "Enter the code we sent to {0}"
+msgstr ""
+
 #: src/view/com/modals/ChangePassword.tsx:165
 msgid "Enter the code you received to change your password."
 msgstr "Nhập mã bạn nhận được để thay đổi mật khẩu."
@@ -3043,28 +3066,24 @@ msgstr "Nhập mã bạn nhận được để thay đổi mật khẩu."
 msgid "Enter the domain you want to use"
 msgstr "Nhập tên miền bạn muốn sử dụng"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:113
-msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Nhập email bạn đã dùng để tạo tài khoản. Chúng tôi sẽ gửi cho bạn một \"mã khôi phục\" để bạn có thể đặt mật khẩu mới."
-
-#: src/screens/Login/LoginForm.tsx:218
+#: src/screens/Login/LoginForm.tsx:290
 msgid "Enter the username or email address you used when you created your account"
-msgstr "Nhập tên tài khoản hoặc địa chỉ email bạn dùng khi đăng ký tài khoản"
+msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:104
 msgid "Enter your birth date"
 msgstr "Nhập ngày sinh của bạn"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:99
+#: src/screens/Login/ForgotPasswordForm.tsx:122
 #: src/screens/Signup/StepInfo/index.tsx:213
 msgid "Enter your email address"
 msgstr "Nhập địa chỉ email của bạn"
 
-#: src/screens/Login/LoginForm.tsx:243
+#: src/screens/Login/LoginForm.tsx:316
 msgid "Enter your password"
 msgstr "Nhập mật khẩu"
 
-#: src/screens/Login/index.tsx:123
+#: src/screens/Login/index.tsx:141
 msgid "Enter your username and password"
 msgstr "Nhập tên đăng nhập và mật khẩu"
 
@@ -3736,16 +3755,17 @@ msgstr "Dành cho bạn"
 msgid "Forever"
 msgstr "Vĩnh viễn"
 
-#: src/screens/Login/index.tsx:153
-#: src/screens/Login/index.tsx:168
+#: src/screens/Login/ForgotPasswordForm.tsx:100
+#: src/screens/Login/index.tsx:173
+#: src/screens/Login/index.tsx:188
 msgid "Forgot Password"
 msgstr "Quên mật khẩu"
 
-#: src/screens/Login/LoginForm.tsx:248
+#: src/screens/Login/LoginForm.tsx:321
 msgid "Forgot password?"
 msgstr "Quên mật khẩu?"
 
-#: src/screens/Login/LoginForm.tsx:259
+#: src/screens/Login/LoginForm.tsx:326
 msgid "Forgot?"
 msgstr "Quên?"
 
@@ -3897,8 +3917,13 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
+#: src/screens/Welcome/index.tsx:108
 msgid "Get started"
 msgstr "Bắt đầu"
+
+#: src/screens/Welcome/index.tsx:102
+msgid "GetStarted"
+msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:35
 msgid "Getting started"
@@ -3927,7 +3952,7 @@ msgstr "Vi phạm rõ ràng luật pháp hoặc điều khoản dịch vụ"
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1141
 #: src/screens/VideoFeed/index.tsx:1145
-#: src/view/com/auth/LoggedOut.tsx:72
+#: src/view/com/auth/LoggedOut.tsx:78
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1038
 msgid "Go back"
@@ -3991,7 +4016,7 @@ msgstr ""
 msgid "Go to conversation with {0}"
 msgstr "Đến hội thoại với {0}"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:165
+#: src/screens/Login/ForgotPasswordForm.tsx:142
 #: src/view/com/modals/ChangePassword.tsx:179
 msgid "Go to next"
 msgstr "Tiếp theo"
@@ -4104,6 +4129,7 @@ msgstr "Danh sách ẩn"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
+#: src/screens/Login/ResetpasswordDialog.tsx:209
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "Ẩn"
@@ -4217,11 +4243,6 @@ msgstr "Trang chủ"
 msgid "Host:"
 msgstr "Host:"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:83
-#: src/screens/Login/LoginForm.tsx:184
-msgid "Hosting provider"
-msgstr "Nhà cung cấp lưu trữ"
-
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
 msgid "Hot"
 msgstr "Nổi bật"
@@ -4237,6 +4258,10 @@ msgstr "Trả lời nổi bật trước"
 #: src/components/dialogs/InAppBrowserConsent.tsx:66
 msgid "How should we open this link?"
 msgstr "Liên kết này nên được mở thế nào?"
+
+#: src/screens/Login/ForgotPasswordForm.tsx:149
+msgid "I already have a reset code?"
+msgstr ""
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:133
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
@@ -4371,10 +4396,11 @@ msgstr "Tin nhắn không phù hợp hoặc liên kết nhạy cảm"
 msgid "Inbox zero!"
 msgstr "Không có yêu cầu nào!"
 
-#: src/screens/Login/LoginForm.tsx:164
+#: src/screens/Login/LoginForm.tsx:181
 msgid "Incorrect username or password"
 msgstr "Tên người dùng hoặc mật khẩu không hợp lệ"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:179
 #: src/screens/Login/SetNewPasswordForm.tsx:133
 msgid "Input code sent to your email for password reset"
 msgstr "Nhập mã được gởi đến email của bạn để đặt lại mật khẩu"
@@ -4383,6 +4409,7 @@ msgstr "Nhập mã được gởi đến email của bạn để đặt lại m�
 msgid "Input confirmation code for account deletion"
 msgstr "Nhập mã xác nhận để xóa tài khoản"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:199
 #: src/screens/Login/SetNewPasswordForm.tsx:159
 msgid "Input new password"
 msgstr "Nhập mật khẩu mới"
@@ -4391,7 +4418,7 @@ msgstr "Nhập mật khẩu mới"
 msgid "Input password for account deletion"
 msgstr "Nhập mật khẩu cho việc xóa tài khoản"
 
-#: src/screens/Login/LoginForm.tsx:289
+#: src/screens/Login/LoginForm.tsx:356
 msgid "Input the code which has been emailed to you"
 msgstr "Nhập mã đã được gởi đến email của bạn"
 
@@ -4407,7 +4434,7 @@ msgstr "Cài đặt tương tác"
 msgid "Introducing activity notifications"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:156
+#: src/screens/Login/LoginForm.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "Mã xác nhận 2FA không hợp lệ"
@@ -4580,6 +4607,7 @@ msgstr "tìm hiểu thêm"
 #: src/screens/Moderation/VerificationSettings.tsx:47
 #: src/screens/Profile/Header/EditProfileDialog.tsx:359
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:212
+#: src/screens/Welcome/index.tsx:96
 msgid "Learn more"
 msgstr "Tìm hiểm thêm"
 
@@ -4639,6 +4667,10 @@ msgstr ""
 msgid "Learn more."
 msgstr "Tìm hiểu thêm."
 
+#: src/screens/Welcome/index.tsx:89
+msgid "Learnmore"
+msgstr ""
+
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Leave"
 msgstr "Rời đi"
@@ -4673,8 +4705,8 @@ msgstr "còn lại."
 msgid "Let me choose"
 msgstr "Để tôi chọn"
 
-#: src/screens/Login/index.tsx:154
-#: src/screens/Login/index.tsx:169
+#: src/screens/Login/index.tsx:174
+#: src/screens/Login/index.tsx:189
 msgid "Let's get your password reset!"
 msgstr "Cùng đặt lại mật khẩu của bạn nào!"
 
@@ -4911,6 +4943,7 @@ msgstr "Logo bởi <0>@sawaratsuki.gndr.social</0>"
 msgid "Long press to open tag menu for #{tag}"
 msgstr "Nhấn giữ lâu để mở trình đơn thẻ cho #{tag}"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
 msgstr "Có dạng XXXXX-XXXXX"
@@ -5295,8 +5328,8 @@ msgstr "Điều hướng đến {0}"
 msgid "Navigate to starter pack"
 msgstr "Đi đến gói khởi đầu"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:344
+#: src/screens/Login/ForgotPasswordForm.tsx:143
+#: src/screens/Login/LoginForm.tsx:422
 #: src/view/com/modals/ChangePassword.tsx:180
 msgid "Navigates to the next screen"
 msgstr "Điều hướng đến màn hình kế tiếp"
@@ -5389,6 +5422,7 @@ msgstr "Danh sách kiểm duyệt mới"
 msgid "New password"
 msgstr "Mật khẩu mới"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:188
 #: src/view/com/modals/ChangePassword.tsx:229
 msgid "New Password"
 msgstr "Mật khẩu mới"
@@ -5445,10 +5479,8 @@ msgstr "Trả lời mới nhất trước"
 msgid "News"
 msgstr "Tin tức"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:137
-#: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:343
-#: src/screens/Login/LoginForm.tsx:350
+#: src/screens/Login/ForgotPasswordForm.tsx:186
+#: src/screens/Login/LoginForm.tsx:421
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
@@ -5466,6 +5498,10 @@ msgstr "Tiếp theo"
 #: src/view/com/lightbox/Lightbox.web.tsx:169
 msgid "Next image"
 msgstr "Hình kế tiếp"
+
+#: src/screens/Welcome/index.tsx:64
+msgid "Nicely done.Welcome to Gander."
+msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
@@ -5919,12 +5955,12 @@ msgstr "Mở thư viện ảnh trên thiết bị"
 msgid "Opens emoji picker"
 msgstr "Mở trình chọn emoji"
 
-#: src/view/com/auth/SplashScreen.tsx:49
+#: src/view/com/auth/SplashScreen.tsx:47
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Gander account"
 msgstr "Mở quy trình tạo tài khoản Gander mới"
 
-#: src/view/com/auth/SplashScreen.tsx:63
+#: src/view/com/auth/SplashScreen.tsx:61
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Gander account"
 msgstr "Mở quy trình đăng nhập vào tài khoản Gander hiện tại của bạn"
@@ -5949,7 +5985,7 @@ msgstr "Mở danh sách mã mời"
 msgid "Opens live status dialog"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:249
+#: src/screens/Login/LoginForm.tsx:322
 msgid "Opens password reset form"
 msgstr "Mở biểu mẫu đặt lại mật khẩu"
 
@@ -6005,9 +6041,9 @@ msgstr "Trạng thái OTA: Không có cập nhật"
 msgid "Other"
 msgstr "Khác"
 
-#: src/components/AccountList.tsx:88
-msgid "Other account"
-msgstr "Tài khoản khác"
+#: src/components/AccountList.tsx:92
+msgid "Other Account"
+msgstr ""
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
@@ -6034,7 +6070,7 @@ msgstr "Không tìm thấy trang"
 msgid "Page Not Found"
 msgstr "Không tìm thấy trang"
 
-#: src/screens/Login/LoginForm.tsx:228
+#: src/screens/Login/LoginForm.tsx:301
 #: src/screens/Settings/AccountSettings.tsx:119
 #: src/screens/Settings/AccountSettings.tsx:123
 #: src/screens/Signup/StepInfo/index.tsx:228
@@ -6051,7 +6087,7 @@ msgstr "Đã thay đổi mật khẩu"
 msgid "Password must be at least 8 characters long."
 msgstr "Mật khẩu phải có ít nhất 8 ký tự."
 
-#: src/screens/Login/index.tsx:181
+#: src/screens/Login/index.tsx:201
 msgid "Password updated"
 msgstr "Đã cập nhật mật khẩu"
 
@@ -6213,6 +6249,7 @@ msgstr "Vui lòng hoàn thành xác minh captcha."
 msgid "Please double-check that you have entered your email address correctly."
 msgstr "Vui lòng kiểm tra lại là bạn đã điền đúng địa chỉ email."
 
+#: src/screens/Login/ResetpasswordDialog.tsx:71
 #: src/screens/Login/SetNewPasswordForm.tsx:58
 msgid "Please enter a password."
 msgstr "Vui lòng nhập mật khẩu."
@@ -6252,6 +6289,10 @@ msgstr ""
 msgid "Please enter the security code we sent to your previous email address."
 msgstr ""
 
+#: src/screens/Login/LoginForm.tsx:107
+msgid "Please enter your email address"
+msgstr ""
+
 #: src/screens/Signup/state.ts:265
 #: src/screens/Signup/StepInfo/index.tsx:91
 msgid "Please enter your email."
@@ -6265,17 +6306,13 @@ msgstr "Vui lòng nhập mã mời."
 msgid "Please enter your new email address."
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:99
+#: src/screens/Login/LoginForm.tsx:112
 msgid "Please enter your password"
 msgstr "Vui lòng nhập mật khẩu"
 
 #: src/view/com/modals/DeleteAccount.tsx:235
 msgid "Please enter your password as well:"
 msgstr "Vui lòng nhập mật khẩu của bạn nữa:"
-
-#: src/screens/Login/LoginForm.tsx:94
-msgid "Please enter your username"
-msgstr "Vui lòng nhập tên tài khoản"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -6520,7 +6557,7 @@ msgid "Processing video..."
 msgstr "Đang xử lý video..."
 
 #: src/lib/api/index.ts:60
-#: src/screens/Login/ForgotPasswordForm.tsx:149
+#: src/screens/Login/ForgotPasswordForm.tsx:198
 msgid "Processing..."
 msgstr "Đang xử lý..."
 
@@ -7192,11 +7229,11 @@ msgstr "Mã đặt lại"
 msgid "Reset onboarding state"
 msgstr "Đặt lại trại thái hướng dẫn"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:80
+#: src/screens/Login/ResetpasswordDialog.tsx:137
 msgid "Reset password"
 msgstr "Đặt lại mật khẩu"
 
-#: src/screens/Login/LoginForm.tsx:324
+#: src/screens/Login/LoginForm.tsx:402
 msgid "Retries signing in"
 msgstr "Thử đăng nhập lại"
 
@@ -7212,8 +7249,8 @@ msgstr "Thử lại hành động cuối cùng (đã xảy ra lỗi)"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:57
 #: src/components/StarterPack/ProfileStarterPacks.tsx:346
-#: src/screens/Login/LoginForm.tsx:323
-#: src/screens/Login/LoginForm.tsx:330
+#: src/screens/Login/LoginForm.tsx:401
+#: src/screens/Login/LoginForm.tsx:408
 #: src/screens/Messages/ChatList.tsx:280
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:218
@@ -7475,10 +7512,6 @@ msgstr "Thanh trượt. Sử dụng các phím mũi tên để tìm kiếm về 
 msgid "Select a color"
 msgstr "Chọn màu"
 
-#: src/screens/Login/ChooseAccountForm.tsx:77
-msgid "Select account"
-msgstr "Chọn tài khoản"
-
 #: src/components/AppLanguageDropdown.tsx:60
 msgid "Select an app language"
 msgstr ""
@@ -7507,7 +7540,7 @@ msgstr "Chọn ngôn ngữ nội dung"
 msgid "Select duration"
 msgstr ""
 
-#: src/screens/Login/index.tsx:144
+#: src/screens/Login/index.tsx:164
 msgid "Select from an existing account"
 msgstr "Chọn từ một tài khoản đã tồn tại"
 
@@ -7581,6 +7614,10 @@ msgstr "Chọn ngôn ngữ bạn muốn bảng tin đăng ký của mình bao g�
 msgid "Select your date of birth"
 msgstr "Chọn ngày sinh"
 
+#: src/screens/Login/ForgotPasswordForm.tsx:105
+msgid "Select your hosting provider and enter the email you used to create your account. We’ll send you a “reset code” so you can set a new password."
+msgstr ""
+
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 #: src/screens/Settings/InterestsSettings.tsx:161
 msgid "Select your interests from the options below"
@@ -7601,6 +7638,14 @@ msgstr "Lựa chọn {0} trong {numItems}"
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
 msgstr "Gửi một trang web hay!"
+
+#: src/screens/Login/ResetpasswordDialog.tsx:224
+msgid "Send a new code"
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:192
+msgid "Send Code"
+msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:181
@@ -7683,7 +7728,7 @@ msgstr "Đặt mất khẩu mới"
 msgid "Set up your account"
 msgstr "Thiết lập tài khoản của bạn"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:107
+#: src/screens/Login/ForgotPasswordForm.tsx:130
 msgid "Sets email for password reset"
 msgstr "Đặt email để đặt lại mật khẩu"
 
@@ -7834,6 +7879,7 @@ msgstr "Trình kiểm tra cài đặt đã chia sẻ"
 #: src/components/moderation/ContentHider.tsx:203
 #: src/components/moderation/LabelPreference.tsx:143
 #: src/components/moderation/PostHider.tsx:134
+#: src/screens/Login/ResetpasswordDialog.tsx:209
 msgid "Show"
 msgstr "Hiện"
 
@@ -7891,6 +7937,11 @@ msgstr ""
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show muted replies"
 msgstr "Hiển thị trả lời đã bị ẩn"
+
+#: src/screens/Login/ResetpasswordDialog.tsx:204
+#: src/screens/Login/ResetpasswordDialog.tsx:205
+msgid "Show password"
+msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show post replies in a threaded tree view"
@@ -7959,12 +8010,11 @@ msgstr "Hiển thị nội dung"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
-#: src/screens/Login/index.tsx:122
-#: src/screens/Login/index.tsx:143
-#: src/screens/Login/LoginForm.tsx:181
+#: src/screens/Login/index.tsx:133
+#: src/screens/Login/index.tsx:156
 #: src/screens/Search/SearchResults.tsx:258
-#: src/view/com/auth/SplashScreen.tsx:61
-#: src/view/com/auth/SplashScreen.tsx:69
+#: src/view/com/auth/SplashScreen.tsx:59
+#: src/view/com/auth/SplashScreen.tsx:67
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
 #: src/view/shell/bottom-bar/BottomBar.tsx:355
@@ -7976,13 +8026,9 @@ msgstr "Hiển thị nội dung"
 msgid "Sign in"
 msgstr "Đăng nhập"
 
-#: src/components/AccountList.tsx:129
+#: src/components/AccountList.tsx:136
 msgid "Sign in as {0}"
 msgstr "Đăng nhập bằng {0}"
-
-#: src/screens/Login/ChooseAccountForm.tsx:80
-msgid "Sign in as..."
-msgstr "Đăng nhập bằng..."
 
 #: src/screens/Deactivated.tsx:203
 #: src/screens/Deactivated.tsx:209
@@ -7993,13 +8039,19 @@ msgstr "Đăng nhập hoặc đăng ký tài khoản"
 msgid "Sign in or create your account to join the conversation!"
 msgstr "Đăng nhập hoặc tạo tài khoản để tham gia cuộc trò chuyện!"
 
-#: src/components/AccountList.tsx:68
+#: src/components/AccountList.tsx:71
+#: src/screens/Login/ResetpasswordDialog.tsx:221
 msgid "Sign in to account that is not listed"
 msgstr "Đăng nhập vào tải khoản chưa được liệt kê"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Gander or create a new account"
 msgstr "Đăng nhập vào Gander hoặc tạo tài khoản mới"
+
+#: src/screens/Login/ChooseAccountForm.tsx:109
+#: src/screens/Login/LoginForm.tsx:238
+msgid "Sign in to Gander."
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:463
@@ -8033,7 +8085,7 @@ msgid "Sign-in Required"
 msgstr "Yêu cầu đăng nhập"
 
 #: src/lib/hooks/useAccountSwitcher.ts:41
-#: src/screens/Login/ChooseAccountForm.tsx:53
+#: src/screens/Login/ChooseAccountForm.tsx:56
 msgid "Signed in as @{0}"
 msgstr "Đăng nhâp bằng @{0}"
 
@@ -8239,6 +8291,8 @@ msgstr "Storybook"
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:124
 #: src/components/moderation/LabelsOnMeDialog.tsx:324
 #: src/components/moderation/LabelsOnMeDialog.tsx:325
+#: src/screens/Login/ResetpasswordDialog.tsx:248
+#: src/screens/Login/ResetpasswordDialog.tsx:254
 #: src/screens/Messages/components/ChatDisabled.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
@@ -8809,6 +8863,10 @@ msgstr "Thông tin này không được chia sẻ với người dùng khác."
 msgid "This is not a valid link"
 msgstr ""
 
+#: src/screens/Welcome/index.tsx:67
+msgid "This is where social media gets sane again."
+msgstr ""
+
 #: src/components/moderation/ModerationDetailsDialog.tsx:168
 msgid "This label was applied by the author."
 msgstr "Nhãn này đã được gắn bởi tác giả."
@@ -9079,9 +9137,11 @@ msgstr "Loại:"
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "Không thể kết nối. Vui lòng kiểm tra kết nối mạng của bạn và thử lại."
 
-#: src/screens/Login/ForgotPasswordForm.tsx:68
-#: src/screens/Login/index.tsx:79
-#: src/screens/Login/LoginForm.tsx:169
+#: src/screens/Login/ForgotPasswordForm.tsx:75
+#: src/screens/Login/index.tsx:93
+#: src/screens/Login/LoginForm.tsx:186
+#: src/screens/Login/ResetpasswordDialog.tsx:96
+#: src/screens/Login/ResetpasswordDialog.tsx:121
 #: src/screens/Login/SetNewPasswordForm.tsx:81
 #: src/screens/Signup/index.tsx:72
 #: src/view/com/modals/ChangePassword.tsx:71
@@ -9332,6 +9392,7 @@ msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "Không thể cập nhật trạng thái hiển thị của trả lời"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:260
 #: src/screens/Login/SetNewPasswordForm.tsx:194
 msgid "Updating..."
 msgstr "Đang cập nhật..."
@@ -9463,9 +9524,9 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "Đã cập nhật danh sách người dùng"
 
-#: src/screens/Login/LoginForm.tsx:201
-msgid "Username or email address"
-msgstr "Tên tài khoản hoặc địa chỉ email"
+#: src/screens/Login/LoginForm.tsx:273
+msgid "Username or Email Address"
+msgstr ""
 
 #: src/components/WhoCanReply.tsx:303
 msgid "users followed by <0>@{0}</0>"
@@ -9953,7 +10014,7 @@ msgstr "Bạn quan tâm đến những gì?"
 msgid "What do you want to call your starter pack?"
 msgstr "Bạn muốn gọi gói khởi đầu của mình là gì?"
 
-#: src/view/com/auth/SplashScreen.tsx:38
+#: src/view/com/auth/SplashScreen.tsx:36
 #: src/view/com/auth/SplashScreen.web.tsx:99
 #: src/view/com/composer/Composer.tsx:777
 msgid "What's up?"
@@ -10175,7 +10236,7 @@ msgstr "Bạn có thể tiếp tục cuộc trò chuyện đang diễn ra bất 
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
 msgstr ""
 
-#: src/screens/Login/index.tsx:182
+#: src/screens/Login/index.tsx:202
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
 msgid "You can now sign in with your new password."
 msgstr "Bạn có thể đăng nhập bằng mật khẩu mới của mình."
@@ -10236,6 +10297,7 @@ msgstr "Bạn đã chặn người dùng này. Bạn không thể xem nội dung
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr ""
 
+#: src/screens/Login/ResetpasswordDialog.tsx:62
 #: src/screens/Login/SetNewPasswordForm.tsx:49
 #: src/screens/Login/SetNewPasswordForm.tsx:95
 #: src/view/com/modals/ChangePassword.tsx:87
@@ -10540,7 +10602,7 @@ msgstr "Tên tài khoản hiện tại <0>{0}</0> sẽ tự động được gi�
 msgid "Your email"
 msgstr ""
 
-#: src/screens/Login/ForgotPasswordForm.tsx:51
+#: src/screens/Login/ForgotPasswordForm.tsx:56
 #: src/screens/Signup/state.ts:273
 #: src/screens/Signup/StepInfo/index.tsx:98
 #: src/view/com/modals/ChangePassword.tsx:55
@@ -10596,6 +10658,7 @@ msgstr "Từ cấm của bạn"
 msgid "Your password has been changed successfully!"
 msgstr "Mật khẩu đã được thay đổi thành công!"
 
+#: src/screens/Login/LoginForm.tsx:117
 #: src/screens/Signup/StepInfo/index.tsx:127
 msgid "Your password must be at least 8 characters long."
 msgstr "Mật khẩu của bạn phải có ít nhất 8 ký tự."

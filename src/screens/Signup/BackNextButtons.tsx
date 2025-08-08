@@ -30,7 +30,7 @@ export function BackNextButtons({
   const {_} = useLingui()
 
   return (
-    <View style={[a.flex_row, a.justify_between, a.pb_lg, a.pt_3xl]}>
+    <View style={[a.flex_row, a.justify_between, a.pb_lg, a.pt_lg]}>
       <Button
         label={_(msg`Go back to previous step`)}
         variant="solid"

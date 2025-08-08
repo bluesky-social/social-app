@@ -27,7 +27,13 @@ enum Forms {
   PasswordUpdated,
 }
 
-export const Login = ({onPressBack}: {onPressBack: () => void}) => {
+export const Login = ({
+  onPressBack,
+  // showWelcomeScreen,
+}: {
+  onPressBack: () => void
+  showWelcomeScreen: () => void
+}) => {
   const {_} = useLingui()
   const failedAttemptCountRef = useRef(0)
   const startTimeRef = useRef(Date.now())
@@ -45,6 +51,9 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const [initialHandle, setInitialHandle] = React.useState<string>(
     requestedAccount?.handle || '',
   )
+  const [account, setAccount] = React.useState<SessionAccount | null>(
+    requestedAccount ?? null,
+  )
   const [currentForm, setCurrentForm] = React.useState<Forms>(
     requestedAccount
       ? Forms.Login
@@ -59,11 +68,16 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     refetch: refetchService,
   } = useServiceQuery(serviceUrl)
 
-  const onSelectAccount = (account?: SessionAccount) => {
-    if (account?.service) {
-      setServiceUrl(account.service)
+  const onSelectAccount = (_account?: SessionAccount) => {
+    if (_account) {
+      setAccount(_account)
+    } else {
+      setAccount(null)
     }
-    setInitialHandle(account?.handle || '')
+    if (_account?.service) {
+      setServiceUrl(_account.service)
+    }
+    setInitialHandle(_account?.handle || '')
     setCurrentForm(Forms.Login)
   }
 
@@ -89,6 +103,10 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   }, [serviceError, serviceUrl, _])
 
   const onPressForgotPassword = () => {
+    // It is for showing signup thanks screen
+    // showWelcomeScreen()
+    // return
+
     setCurrentForm(Forms.ForgotPassword)
     logEvent('signin:forgotPasswordPressed', {})
   }
@@ -124,6 +142,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       content = (
         <LoginForm
           error={error}
+          account={account}
           serviceUrl={serviceUrl}
           serviceDescription={serviceDescription}
           initialHandle={initialHandle}
@@ -136,6 +155,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           }
           onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={refetchService}
+          pendingDid={null}
         />
       )
       break
@@ -160,7 +180,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           setError={setError}
           setServiceUrl={setServiceUrl}
           onPressBack={() => gotoForm(Forms.Login)}
-          onEmailSent={() => gotoForm(Forms.SetNewPassword)}
+          onPasswordSet={() => gotoForm(Forms.PasswordUpdated)}
         />
       )
       break
@@ -194,7 +214,9 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
         description={description}
         scrollable>
         <LayoutAnimationConfig skipEntering skipExiting>
-          <ScreenTransition key={currentForm}>{content}</ScreenTransition>
+          <ScreenTransition style={a.flex_1} key={currentForm}>
+            {content}
+          </ScreenTransition>
         </LayoutAnimationConfig>
       </LoggedOutLayout>
     </KeyboardAvoidingView>

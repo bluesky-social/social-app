@@ -124,9 +124,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                   </Admonition.Text>
                   <Admonition.Text>
                     <InlineLinkText
-                      label={_(
-                        msg`Learn more about what is public on Gander.`,
-                      )}
+                      label={_(msg`Learn more about what is public on Gander.`)}
                       to="https://ganderweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
                       <Trans>Learn more about what is public on Gander.</Trans>
                     </InlineLinkText>

@@ -128,6 +128,11 @@ msgstr ""
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr ""
 
+#: src/screens/Welcome/index.tsx:74
+#: src/screens/Welcome/index.tsx:83
+msgid "{0}"
+msgstr ""
+
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
@@ -402,6 +407,10 @@ msgstr ""
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr ""
 
+#: src/components/forms/TextField.tsx:231
+msgid "{label}"
+msgstr ""
+
 #: src/components/live/utils.ts:10
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr ""
@@ -496,7 +505,7 @@ msgstr "⚠Недопустимий псевдонім"
 msgid "24 hours"
 msgstr "24 години"
 
-#: src/screens/Login/LoginForm.tsx:268
+#: src/screens/Login/LoginForm.tsx:335
 msgid "2FA Confirmation"
 msgstr "Підтвердження двофакторної автентифікації"
 
@@ -553,7 +562,6 @@ msgid "Accessibility Settings"
 msgstr "Налаштування доступності"
 
 #: src/Navigation.tsx:398
-#: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:49
 #: src/screens/Settings/Settings.tsx:174
 #: src/screens/Settings/Settings.tsx:177
@@ -590,6 +598,10 @@ msgstr "Обліковий запис ігноровано списком"
 #: src/screens/Settings/Settings.tsx:624
 msgid "Account options"
 msgstr "Параметри облікового запису"
+
+#: src/components/forms/HostingProvider.tsx:75
+msgid "Account Provider"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:660
 msgid "Account removed from quick access"
@@ -815,6 +827,10 @@ msgstr ""
 msgid "Age assurance only takes a few minutes"
 msgstr ""
 
+#: src/screens/Login/LoginForm.tsx:428
+msgid "Agree and continue"
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:223
 msgid "alice@example.com"
 msgstr ""
@@ -864,12 +880,11 @@ msgstr "Дозволити відповіді від:"
 msgid "Allows access to direct messages"
 msgstr "Надати доступ до особистих повідомлень"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:182
 msgid "Already have a code?"
 msgstr "Вже маєте код?"
 
-#: src/screens/Login/ChooseAccountForm.tsx:43
+#: src/screens/Login/ChooseAccountForm.tsx:46
 msgid "Already signed in as @{0}"
 msgstr "Вже увійшли як @{0}"
 
@@ -1204,12 +1219,11 @@ msgstr "Автовідтворення відео та GIF"
 #: src/components/dms/MessagesListHeader.tsx:84
 #: src/components/moderation/LabelsOnMeDialog.tsx:315
 #: src/components/moderation/LabelsOnMeDialog.tsx:316
-#: src/screens/Login/ChooseAccountForm.tsx:90
-#: src/screens/Login/ChooseAccountForm.tsx:95
-#: src/screens/Login/ForgotPasswordForm.tsx:123
-#: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:310
-#: src/screens/Login/LoginForm.tsx:316
+#: src/screens/Login/ForgotPasswordForm.tsx:172
+#: src/screens/Login/ForgotPasswordForm.tsx:178
+#: src/screens/Login/LoginForm.tsx:388
+#: src/screens/Login/ResetpasswordDialog.tsx:234
+#: src/screens/Login/ResetpasswordDialog.tsx:240
 #: src/screens/Login/SetNewPasswordForm.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Messages/components/ChatDisabled.tsx:133
@@ -1479,6 +1493,11 @@ msgstr "Камера"
 #: src/components/Prompt.tsx:143
 #: src/components/Prompt.tsx:145
 #: src/screens/Deactivated.tsx:158
+#: src/screens/Login/ChooseAccountForm.tsx:81
+#: src/screens/Login/ChooseAccountForm.tsx:87
+#: src/screens/Login/LoginForm.tsx:204
+#: src/screens/Login/LoginForm.tsx:210
+#: src/screens/Login/LoginForm.tsx:394
 #: src/screens/Profile/Header/EditProfileDialog.tsx:225
 #: src/screens/Profile/Header/EditProfileDialog.tsx:233
 #: src/screens/Search/Shell.tsx:349
@@ -1661,7 +1680,7 @@ msgstr ""
 msgid "Check my status"
 msgstr "Перевірити мій статус"
 
-#: src/screens/Login/LoginForm.tsx:301
+#: src/screens/Login/LoginForm.tsx:368
 msgid "Check your email for a sign in code and enter it here."
 msgstr ""
 
@@ -1956,7 +1975,7 @@ msgid "Confirm your birthdate"
 msgstr "Підтвердити вашу дату народження"
 
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
-#: src/screens/Login/LoginForm.tsx:274
+#: src/screens/Login/LoginForm.tsx:341
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
 #: src/view/com/modals/DeleteAccount.tsx:220
@@ -1964,7 +1983,7 @@ msgstr "Підтвердити вашу дату народження"
 msgid "Confirmation code"
 msgstr "Код підтвердження"
 
-#: src/screens/Login/LoginForm.tsx:337
+#: src/screens/Login/LoginForm.tsx:415
 msgid "Connecting..."
 msgstr "З’єднання..."
 
@@ -2045,7 +2064,7 @@ msgstr "Тло контекстного меню натисніть, щоб за
 msgid "Continue"
 msgstr "Далі"
 
-#: src/components/AccountList.tsx:128
+#: src/components/AccountList.tsx:135
 msgid "Continue as {0} (currently signed in)"
 msgstr "Продовжити як {0} (поточний користувач)"
 
@@ -2260,7 +2279,7 @@ msgstr "Створити власну підбірку"
 msgid "Create a starter pack for me"
 msgstr "Створення власної підбірки для мене"
 
-#: src/view/com/auth/SplashScreen.tsx:55
+#: src/view/com/auth/SplashScreen.tsx:53
 #: src/view/com/auth/SplashScreen.web.tsx:117
 #: src/view/shell/bottom-bar/BottomBar.tsx:345
 #: src/view/shell/bottom-bar/BottomBar.tsx:350
@@ -2294,7 +2313,7 @@ msgstr "Натомість створити аватар"
 msgid "Create another"
 msgstr "Створити інший"
 
-#: src/view/com/auth/SplashScreen.tsx:47
+#: src/view/com/auth/SplashScreen.tsx:45
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
 msgstr "Створити новий обліковий запис"
@@ -2618,6 +2637,7 @@ msgid "Dismiss error"
 msgstr "Пропустити помилку"
 
 #: src/components/ProgressGuide/List.tsx:42
+#: src/screens/Login/ResetpasswordDialog.tsx:145
 msgid "Dismiss getting started guide"
 msgstr "Пропустити посібник нового користувача"
 
@@ -2789,6 +2809,9 @@ msgstr "напр. Користувачі, що неодноразово відп
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Кожен код запрошення працює лише один раз. Час від часу ви будете отримувати нові коди."
 
+#: src/components/forms/HostingProvider.tsx:85
+#: src/components/forms/HostingProvider.tsx:87
+#: src/components/forms/HostingProvider.tsx:91
 #: src/screens/Settings/AccountSettings.tsx:143
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:249
 #: src/screens/StarterPack/StarterPackScreen.tsx:588
@@ -2909,10 +2932,6 @@ msgstr "Двофакторну автентифікацію електронно
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
 msgid "Email 2FA enabled"
 msgstr "Двофакторну автентифікацію за допомогою електронної пошти увімкнено"
-
-#: src/screens/Login/ForgotPasswordForm.tsx:93
-msgid "Email address"
-msgstr "Адреса електронної пошти"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:104
 msgid "Email Resent"
@@ -3035,6 +3054,10 @@ msgstr ""
 msgid "Enter fullscreen"
 msgstr "Повноекранний режим"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:159
+msgid "Enter the code we sent to {0}"
+msgstr ""
+
 #: src/view/com/modals/ChangePassword.tsx:165
 msgid "Enter the code you received to change your password."
 msgstr "Введіть код, який ви отримали, щоб змінити пароль."
@@ -3043,11 +3066,7 @@ msgstr "Введіть код, який ви отримали, щоб зміни
 msgid "Enter the domain you want to use"
 msgstr "Введіть домен, який ви хочете використовувати"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:113
-msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Введіть адресу електронної пошти, яку ви використовували для створення облікового запису. Ми надішлемо вам код підтвердження, щоб ви могли встановити новий пароль."
-
-#: src/screens/Login/LoginForm.tsx:218
+#: src/screens/Login/LoginForm.tsx:290
 msgid "Enter the username or email address you used when you created your account"
 msgstr ""
 
@@ -3055,16 +3074,16 @@ msgstr ""
 msgid "Enter your birth date"
 msgstr "Введіть вашу дату народження"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:99
+#: src/screens/Login/ForgotPasswordForm.tsx:122
 #: src/screens/Signup/StepInfo/index.tsx:213
 msgid "Enter your email address"
 msgstr "Введіть адресу електронної пошти"
 
-#: src/screens/Login/LoginForm.tsx:243
+#: src/screens/Login/LoginForm.tsx:316
 msgid "Enter your password"
 msgstr ""
 
-#: src/screens/Login/index.tsx:123
+#: src/screens/Login/index.tsx:141
 msgid "Enter your username and password"
 msgstr "Введіть псевдонім та пароль"
 
@@ -3736,16 +3755,17 @@ msgstr ""
 msgid "Forever"
 msgstr "Назавжди"
 
-#: src/screens/Login/index.tsx:153
-#: src/screens/Login/index.tsx:168
+#: src/screens/Login/ForgotPasswordForm.tsx:100
+#: src/screens/Login/index.tsx:173
+#: src/screens/Login/index.tsx:188
 msgid "Forgot Password"
 msgstr "Забули пароль"
 
-#: src/screens/Login/LoginForm.tsx:248
+#: src/screens/Login/LoginForm.tsx:321
 msgid "Forgot password?"
 msgstr "Забули пароль?"
 
-#: src/screens/Login/LoginForm.tsx:259
+#: src/screens/Login/LoginForm.tsx:326
 msgid "Forgot?"
 msgstr "Забули пароль?"
 
@@ -3897,7 +3917,12 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
+#: src/screens/Welcome/index.tsx:108
 msgid "Get started"
+msgstr ""
+
+#: src/screens/Welcome/index.tsx:102
+msgid "GetStarted"
 msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:35
@@ -3927,7 +3952,7 @@ msgstr "Грубі порушення закону чи умов викорис�
 #: src/screens/VideoFeed/components/Header.tsx:163
 #: src/screens/VideoFeed/index.tsx:1141
 #: src/screens/VideoFeed/index.tsx:1145
-#: src/view/com/auth/LoggedOut.tsx:72
+#: src/view/com/auth/LoggedOut.tsx:78
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1038
 msgid "Go back"
@@ -3991,7 +4016,7 @@ msgstr ""
 msgid "Go to conversation with {0}"
 msgstr "Перейти до розмови з {0}"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:165
+#: src/screens/Login/ForgotPasswordForm.tsx:142
 #: src/view/com/modals/ChangePassword.tsx:179
 msgid "Go to next"
 msgstr "Далі"
@@ -4104,6 +4129,7 @@ msgstr "Прихований список"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
+#: src/screens/Login/ResetpasswordDialog.tsx:209
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:110
 msgid "Hide"
 msgstr "Приховати"
@@ -4217,11 +4243,6 @@ msgstr "Головна"
 msgid "Host:"
 msgstr "Хост:"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:83
-#: src/screens/Login/LoginForm.tsx:184
-msgid "Hosting provider"
-msgstr "Хостинг-провайдер"
-
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
 msgid "Hot"
 msgstr ""
@@ -4237,6 +4258,10 @@ msgstr "Спочатку найновіші"
 #: src/components/dialogs/InAppBrowserConsent.tsx:66
 msgid "How should we open this link?"
 msgstr "Як ви хочете відкрити це посилання?"
+
+#: src/screens/Login/ForgotPasswordForm.tsx:149
+msgid "I already have a reset code?"
+msgstr ""
 
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:133
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:136
@@ -4371,10 +4396,11 @@ msgstr "Непристойні повідомлення або посиланн�
 msgid "Inbox zero!"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:164
+#: src/screens/Login/LoginForm.tsx:181
 msgid "Incorrect username or password"
 msgstr "Невірне ім'я користувача або пароль"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:179
 #: src/screens/Login/SetNewPasswordForm.tsx:133
 msgid "Input code sent to your email for password reset"
 msgstr "Вести код, надісланий на вашу електронну пошту для скидання пароля"
@@ -4383,6 +4409,7 @@ msgstr "Вести код, надісланий на вашу електронн
 msgid "Input confirmation code for account deletion"
 msgstr "Ввести код підтвердження для видалення облікового запису"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:199
 #: src/screens/Login/SetNewPasswordForm.tsx:159
 msgid "Input new password"
 msgstr "Ввести новий пароль"
@@ -4391,7 +4418,7 @@ msgstr "Ввести новий пароль"
 msgid "Input password for account deletion"
 msgstr "Введіть пароль для видалення облікового запису"
 
-#: src/screens/Login/LoginForm.tsx:289
+#: src/screens/Login/LoginForm.tsx:356
 msgid "Input the code which has been emailed to you"
 msgstr "Введіть код, надісланий вам на електронну пошту"
 
@@ -4407,7 +4434,7 @@ msgstr ""
 msgid "Introducing activity notifications"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:156
+#: src/screens/Login/LoginForm.tsx:173
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "Невірний код підтвердження двофакторної автентифікації."
@@ -4580,6 +4607,7 @@ msgstr "дізнатись більше"
 #: src/screens/Moderation/VerificationSettings.tsx:47
 #: src/screens/Profile/Header/EditProfileDialog.tsx:359
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:212
+#: src/screens/Welcome/index.tsx:96
 msgid "Learn more"
 msgstr ""
 
@@ -4634,10 +4662,20 @@ msgstr "Дізнатися більше про те, що є публічним 
 msgid "Learn more in your <0>account settings.</0>"
 msgstr ""
 
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
+msgid "Learn more about what is public on Gander."
+msgstr "Дізнатися більше про те, що є публічним в Gander."
+
+#: src/components/moderation/ContentHider.tsx:239
 #: src/components/moderation/ContentHider.tsx:242
 #: src/view/com/auth/server-input/index.tsx:220
 msgid "Learn more."
 msgstr "Дізнатися більше."
+
+#: src/screens/Welcome/index.tsx:89
+msgid "Learnmore"
+msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Leave"
@@ -4673,8 +4711,8 @@ msgstr "ще залишилося."
 msgid "Let me choose"
 msgstr "Дозвольте обрати мені"
 
-#: src/screens/Login/index.tsx:154
-#: src/screens/Login/index.tsx:169
+#: src/screens/Login/index.tsx:174
+#: src/screens/Login/index.tsx:189
 msgid "Let's get your password reset!"
 msgstr "Давайте відновимо ваш пароль!"
 
@@ -4911,6 +4949,7 @@ msgstr "Лого від <0>@sawaratsuki.gndr.social</0>"
 msgid "Long press to open tag menu for #{tag}"
 msgstr "Тривале натискання відкриває меню тегів для #{tag}"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:122
 msgid "Looks like XXXXX-XXXXX"
 msgstr "Виглядає як XXXXX-XXXXXXX"
@@ -5295,8 +5334,8 @@ msgstr "Перейти до {0}"
 msgid "Navigate to starter pack"
 msgstr ""
 
-#: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:344
+#: src/screens/Login/ForgotPasswordForm.tsx:143
+#: src/screens/Login/LoginForm.tsx:422
 #: src/view/com/modals/ChangePassword.tsx:180
 msgid "Navigates to the next screen"
 msgstr "Переходить до наступного екрана"
@@ -5389,6 +5428,7 @@ msgstr "Новий список модерації"
 msgid "New password"
 msgstr "Новий пароль"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:188
 #: src/view/com/modals/ChangePassword.tsx:229
 msgid "New Password"
 msgstr "Новий пароль"
@@ -5445,10 +5485,8 @@ msgstr "Спочатку найновіші"
 msgid "News"
 msgstr "Новини"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:137
-#: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:343
-#: src/screens/Login/LoginForm.tsx:350
+#: src/screens/Login/ForgotPasswordForm.tsx:186
+#: src/screens/Login/LoginForm.tsx:421
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
@@ -5466,6 +5504,10 @@ msgstr "Наступне"
 #: src/view/com/lightbox/Lightbox.web.tsx:169
 msgid "Next image"
 msgstr "Наступне зображення"
+
+#: src/screens/Welcome/index.tsx:64
+msgid "Nicely done.Welcome to Gander."
+msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
@@ -5919,12 +5961,12 @@ msgstr "Відкриє фотогалерею пристрою"
 msgid "Opens emoji picker"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:49
+#: src/view/com/auth/SplashScreen.tsx:47
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Gander account"
 msgstr "Відкриє процес створення нового облікового запису Gander"
 
-#: src/view/com/auth/SplashScreen.tsx:63
+#: src/view/com/auth/SplashScreen.tsx:61
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Gander account"
 msgstr ""
@@ -5949,7 +5991,7 @@ msgstr "Відкриє список кодів запрошення"
 msgid "Opens live status dialog"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:249
+#: src/screens/Login/LoginForm.tsx:322
 msgid "Opens password reset form"
 msgstr "Відкриває форму скидання пароля"
 
@@ -6005,9 +6047,9 @@ msgstr ""
 msgid "Other"
 msgstr "Інше"
 
-#: src/components/AccountList.tsx:88
-msgid "Other account"
-msgstr "Інший обліковий запис"
+#: src/components/AccountList.tsx:92
+msgid "Other Account"
+msgstr ""
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
@@ -6034,7 +6076,7 @@ msgstr "Сторінку не знайдено"
 msgid "Page Not Found"
 msgstr "Сторінку не знайдено"
 
-#: src/screens/Login/LoginForm.tsx:228
+#: src/screens/Login/LoginForm.tsx:301
 #: src/screens/Settings/AccountSettings.tsx:119
 #: src/screens/Settings/AccountSettings.tsx:123
 #: src/screens/Signup/StepInfo/index.tsx:228
@@ -6051,7 +6093,7 @@ msgstr "Пароль змінено"
 msgid "Password must be at least 8 characters long."
 msgstr ""
 
-#: src/screens/Login/index.tsx:181
+#: src/screens/Login/index.tsx:201
 msgid "Password updated"
 msgstr "Пароль змінено"
 
@@ -6213,6 +6255,7 @@ msgstr "Просимо завершити перевірку Captcha."
 msgid "Please double-check that you have entered your email address correctly."
 msgstr ""
 
+#: src/screens/Login/ResetpasswordDialog.tsx:71
 #: src/screens/Login/SetNewPasswordForm.tsx:58
 msgid "Please enter a password."
 msgstr ""
@@ -6252,6 +6295,10 @@ msgstr ""
 msgid "Please enter the security code we sent to your previous email address."
 msgstr ""
 
+#: src/screens/Login/LoginForm.tsx:107
+msgid "Please enter your email address"
+msgstr ""
+
 #: src/screens/Signup/state.ts:265
 #: src/screens/Signup/StepInfo/index.tsx:91
 msgid "Please enter your email."
@@ -6265,17 +6312,13 @@ msgstr "Будь ласка, введіть код запрошення."
 msgid "Please enter your new email address."
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:99
+#: src/screens/Login/LoginForm.tsx:112
 msgid "Please enter your password"
 msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:235
 msgid "Please enter your password as well:"
 msgstr "Просимо також ввести ваш пароль:"
-
-#: src/screens/Login/LoginForm.tsx:94
-msgid "Please enter your username"
-msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -6520,7 +6563,7 @@ msgid "Processing video..."
 msgstr "Обробка відео..."
 
 #: src/lib/api/index.ts:60
-#: src/screens/Login/ForgotPasswordForm.tsx:149
+#: src/screens/Login/ForgotPasswordForm.tsx:198
 msgid "Processing..."
 msgstr "Обробка..."
 
@@ -7192,11 +7235,11 @@ msgstr "Код скидання"
 msgid "Reset onboarding state"
 msgstr ""
 
-#: src/screens/Login/ForgotPasswordForm.tsx:80
+#: src/screens/Login/ResetpasswordDialog.tsx:137
 msgid "Reset password"
 msgstr "Скинути пароль"
 
-#: src/screens/Login/LoginForm.tsx:324
+#: src/screens/Login/LoginForm.tsx:402
 msgid "Retries signing in"
 msgstr ""
 
@@ -7212,8 +7255,8 @@ msgstr "Повторити останню дію, яка спричинила п
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:57
 #: src/components/StarterPack/ProfileStarterPacks.tsx:346
-#: src/screens/Login/LoginForm.tsx:323
-#: src/screens/Login/LoginForm.tsx:330
+#: src/screens/Login/LoginForm.tsx:401
+#: src/screens/Login/LoginForm.tsx:408
 #: src/screens/Messages/ChatList.tsx:280
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:218
@@ -7475,10 +7518,6 @@ msgstr "Повзунок пошуку. Використовуйте клавіш
 msgid "Select a color"
 msgstr "Вибрати колір"
 
-#: src/screens/Login/ChooseAccountForm.tsx:77
-msgid "Select account"
-msgstr "Вибрати обліковий запис"
-
 #: src/components/AppLanguageDropdown.tsx:60
 msgid "Select an app language"
 msgstr ""
@@ -7507,7 +7546,7 @@ msgstr "Вибрати мови вмісту"
 msgid "Select duration"
 msgstr ""
 
-#: src/screens/Login/index.tsx:144
+#: src/screens/Login/index.tsx:164
 msgid "Select from an existing account"
 msgstr "Вибрати існуючий обліковий запис"
 
@@ -7581,6 +7620,10 @@ msgstr "Оберіть мови постів, які ви хочете бачи�
 msgid "Select your date of birth"
 msgstr "Вибрати дату народження"
 
+#: src/screens/Login/ForgotPasswordForm.tsx:105
+msgid "Select your hosting provider and enter the email you used to create your account. We’ll send you a “reset code” so you can set a new password."
+msgstr ""
+
 #: src/screens/Onboarding/StepInterests/index.tsx:192
 #: src/screens/Settings/InterestsSettings.tsx:161
 msgid "Select your interests from the options below"
@@ -7601,6 +7644,14 @@ msgstr ""
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
 msgstr "Надішліть нарядний сайт!"
+
+#: src/screens/Login/ResetpasswordDialog.tsx:224
+msgid "Send a new code"
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:192
+msgid "Send Code"
+msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:181
@@ -7683,7 +7734,7 @@ msgstr "Встановити новий пароль"
 msgid "Set up your account"
 msgstr "Налаштуйте ваш обліковий запис"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:107
+#: src/screens/Login/ForgotPasswordForm.tsx:130
 msgid "Sets email for password reset"
 msgstr "Встановлює ел. адресу для скидання пароля"
 
@@ -7834,6 +7885,7 @@ msgstr "Тестувальник спільних налаштувань"
 #: src/components/moderation/ContentHider.tsx:203
 #: src/components/moderation/LabelPreference.tsx:143
 #: src/components/moderation/PostHider.tsx:134
+#: src/screens/Login/ResetpasswordDialog.tsx:209
 msgid "Show"
 msgstr "Показати"
 
@@ -7891,6 +7943,11 @@ msgstr ""
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:22
 msgid "Show muted replies"
 msgstr "Показати стишені відповіді"
+
+#: src/screens/Login/ResetpasswordDialog.tsx:204
+#: src/screens/Login/ResetpasswordDialog.tsx:205
+msgid "Show password"
+msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:143
 msgid "Show post replies in a threaded tree view"
@@ -7959,12 +8016,11 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
-#: src/screens/Login/index.tsx:122
-#: src/screens/Login/index.tsx:143
-#: src/screens/Login/LoginForm.tsx:181
+#: src/screens/Login/index.tsx:133
+#: src/screens/Login/index.tsx:156
 #: src/screens/Search/SearchResults.tsx:258
-#: src/view/com/auth/SplashScreen.tsx:61
-#: src/view/com/auth/SplashScreen.tsx:69
+#: src/view/com/auth/SplashScreen.tsx:59
+#: src/view/com/auth/SplashScreen.tsx:67
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
 #: src/view/shell/bottom-bar/BottomBar.tsx:355
@@ -7976,13 +8032,9 @@ msgstr ""
 msgid "Sign in"
 msgstr "Увійти"
 
-#: src/components/AccountList.tsx:129
+#: src/components/AccountList.tsx:136
 msgid "Sign in as {0}"
 msgstr "Увійти як {0}"
-
-#: src/screens/Login/ChooseAccountForm.tsx:80
-msgid "Sign in as..."
-msgstr "Увійти як..."
 
 #: src/screens/Deactivated.tsx:203
 #: src/screens/Deactivated.tsx:209
@@ -7993,12 +8045,18 @@ msgstr ""
 msgid "Sign in or create your account to join the conversation!"
 msgstr "Увійти або створити обліковий запис, щоб приєднатися до розмови!"
 
-#: src/components/AccountList.tsx:68
+#: src/components/AccountList.tsx:71
+#: src/screens/Login/ResetpasswordDialog.tsx:221
 msgid "Sign in to account that is not listed"
 msgstr ""
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Gander or create a new account"
+msgstr ""
+
+#: src/screens/Login/ChooseAccountForm.tsx:109
+#: src/screens/Login/LoginForm.tsx:238
+msgid "Sign in to Gander."
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
@@ -8033,7 +8091,7 @@ msgid "Sign-in Required"
 msgstr "Необхідно увійти для перегляду"
 
 #: src/lib/hooks/useAccountSwitcher.ts:41
-#: src/screens/Login/ChooseAccountForm.tsx:53
+#: src/screens/Login/ChooseAccountForm.tsx:56
 msgid "Signed in as @{0}"
 msgstr "Ви увійшли як @{0}"
 
@@ -8239,6 +8297,8 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:124
 #: src/components/moderation/LabelsOnMeDialog.tsx:324
 #: src/components/moderation/LabelsOnMeDialog.tsx:325
+#: src/screens/Login/ResetpasswordDialog.tsx:248
+#: src/screens/Login/ResetpasswordDialog.tsx:254
 #: src/screens/Messages/components/ChatDisabled.tsx:142
 #: src/screens/Messages/components/ChatDisabled.tsx:143
 msgid "Submit"
@@ -8809,6 +8869,10 @@ msgstr "Ця інформація не розкривається іншим к�
 msgid "This is not a valid link"
 msgstr ""
 
+#: src/screens/Welcome/index.tsx:67
+msgid "This is where social media gets sane again."
+msgstr ""
+
 #: src/components/moderation/ModerationDetailsDialog.tsx:168
 msgid "This label was applied by the author."
 msgstr "Ця мітка була додана автором."
@@ -9079,9 +9143,11 @@ msgstr "Тип:"
 msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "Не вдається з'єднатись. Будь ласка, перевірте з'єднання з Інтернетом та повторіть спробу."
 
-#: src/screens/Login/ForgotPasswordForm.tsx:68
-#: src/screens/Login/index.tsx:79
-#: src/screens/Login/LoginForm.tsx:169
+#: src/screens/Login/ForgotPasswordForm.tsx:75
+#: src/screens/Login/index.tsx:93
+#: src/screens/Login/LoginForm.tsx:186
+#: src/screens/Login/ResetpasswordDialog.tsx:96
+#: src/screens/Login/ResetpasswordDialog.tsx:121
 #: src/screens/Login/SetNewPasswordForm.tsx:81
 #: src/screens/Signup/index.tsx:72
 #: src/view/com/modals/ChangePassword.tsx:71
@@ -9332,6 +9398,7 @@ msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "Не вдалось оновити видимість відповіді"
 
+#: src/screens/Login/ResetpasswordDialog.tsx:260
 #: src/screens/Login/SetNewPasswordForm.tsx:194
 msgid "Updating..."
 msgstr "Оновлення..."
@@ -9463,9 +9530,9 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "Список користувачів оновлено"
 
-#: src/screens/Login/LoginForm.tsx:201
-msgid "Username or email address"
-msgstr "Ім'я користувача або електронна адреса"
+#: src/screens/Login/LoginForm.tsx:273
+msgid "Username or Email Address"
+msgstr ""
 
 #: src/components/WhoCanReply.tsx:303
 msgid "users followed by <0>@{0}</0>"
@@ -9953,7 +10020,7 @@ msgstr "Чим ви цікавитесь?"
 msgid "What do you want to call your starter pack?"
 msgstr "Яку назву оберете для власної підбірки?"
 
-#: src/view/com/auth/SplashScreen.tsx:38
+#: src/view/com/auth/SplashScreen.tsx:36
 #: src/view/com/auth/SplashScreen.web.tsx:99
 #: src/view/com/composer/Composer.tsx:777
 msgid "What's up?"
@@ -10175,7 +10242,7 @@ msgstr "Ви можете продовжувати поточні розмови
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
 msgstr ""
 
-#: src/screens/Login/index.tsx:182
+#: src/screens/Login/index.tsx:202
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
 msgid "You can now sign in with your new password."
 msgstr "Тепер ви можете увійти за допомогою нового пароля."
@@ -10236,6 +10303,7 @@ msgstr "Ви заблокували цього користувача. Ви не
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
 msgstr ""
 
+#: src/screens/Login/ResetpasswordDialog.tsx:62
 #: src/screens/Login/SetNewPasswordForm.tsx:49
 #: src/screens/Login/SetNewPasswordForm.tsx:95
 #: src/view/com/modals/ChangePassword.tsx:87
@@ -10540,7 +10608,7 @@ msgstr ""
 msgid "Your email"
 msgstr ""
 
-#: src/screens/Login/ForgotPasswordForm.tsx:51
+#: src/screens/Login/ForgotPasswordForm.tsx:56
 #: src/screens/Signup/state.ts:273
 #: src/screens/Signup/StepInfo/index.tsx:98
 #: src/view/com/modals/ChangePassword.tsx:55
@@ -10596,6 +10664,7 @@ msgstr "Ваші ігноровані слова"
 msgid "Your password has been changed successfully!"
 msgstr "Ваш пароль успішно змінено!"
 
+#: src/screens/Login/LoginForm.tsx:117
 #: src/screens/Signup/StepInfo/index.tsx:127
 msgid "Your password must be at least 8 characters long."
 msgstr ""

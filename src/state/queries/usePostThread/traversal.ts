@@ -1,5 +1,8 @@
 /* eslint-disable no-labels */
-import {AppGndrUnspeccedDefs, type ModerationOpts} from '@gander-social-atproto/api'
+import {
+  AppGndrUnspeccedDefs,
+  type ModerationOpts,
+} from '@gander-social-atproto/api'
 
 import {
   type ApiThreadItem,

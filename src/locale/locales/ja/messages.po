@@ -128,6 +128,11 @@ msgstr "{0, plural, other {{1}件の投稿}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, other {#人が}}このスターターパックを使用しました！"
 
+#: src/screens/Login/Welcome.tsx:55
+#: src/screens/Login/Welcome.tsx:64
+msgid "{0}"
+msgstr ""
+
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
@@ -402,6 +407,10 @@ msgstr "{hours, plural, other {#時間}}"
 msgid "{joinedAllTimeCount, plural, other {# users have}} joined!"
 msgstr "{joinedAllTimeCount, plural, other {#人のユーザーが}}参加しました！"
 
+#: src/components/forms/TextField.tsx:231
+msgid "{label}"
+msgstr ""
+
 #: src/components/live/utils.ts:10
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr "{minutes, plural, other {#分}}"
@@ -496,7 +505,7 @@ msgstr "⚠無効なハンドル"
 msgid "24 hours"
 msgstr "24時間"
 
-#: src/screens/Login/LoginForm.tsx:268
+#: src/screens/Login/LoginForm.tsx:317
 msgid "2FA Confirmation"
 msgstr "２要素認証の確認"
 
@@ -553,7 +562,6 @@ msgid "Accessibility Settings"
 msgstr "アクセシビリティの設定"
 
 #: src/Navigation.tsx:398
-#: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:49
 #: src/screens/Settings/Settings.tsx:174
 #: src/screens/Settings/Settings.tsx:177
@@ -815,6 +823,10 @@ msgstr "年齢保証の問い合わせが送られました"
 msgid "Age assurance only takes a few minutes"
 msgstr "年齢保証には数分かかります"
 
+#: src/screens/Login/LoginForm.tsx:410
+msgid "Agree and continue"
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:223
 msgid "alice@example.com"
 msgstr "alice@example.com"
@@ -869,7 +881,7 @@ msgstr "ダイレクトメッセージへのアクセスを許可"
 msgid "Already have a code?"
 msgstr "コードをすでに持っていますか？"
 
-#: src/screens/Login/ChooseAccountForm.tsx:43
+#: src/screens/Login/ChooseAccountForm.tsx:46
 msgid "Already signed in as @{0}"
 msgstr "@{0}としてすでにサインイン済み"
 
@@ -1204,12 +1216,9 @@ msgstr "ビデオとGIFの自動再生"
 #: src/components/dms/MessagesListHeader.tsx:84
 #: src/components/moderation/LabelsOnMeDialog.tsx:315
 #: src/components/moderation/LabelsOnMeDialog.tsx:316
-#: src/screens/Login/ChooseAccountForm.tsx:90
-#: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
 #: src/screens/Login/ForgotPasswordForm.tsx:129
-#: src/screens/Login/LoginForm.tsx:310
-#: src/screens/Login/LoginForm.tsx:316
+#: src/screens/Login/LoginForm.tsx:370
 #: src/screens/Login/SetNewPasswordForm.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Messages/components/ChatDisabled.tsx:133
@@ -1479,6 +1488,11 @@ msgstr "カメラ"
 #: src/components/Prompt.tsx:143
 #: src/components/Prompt.tsx:145
 #: src/screens/Deactivated.tsx:158
+#: src/screens/Login/ChooseAccountForm.tsx:81
+#: src/screens/Login/ChooseAccountForm.tsx:87
+#: src/screens/Login/LoginForm.tsx:205
+#: src/screens/Login/LoginForm.tsx:211
+#: src/screens/Login/LoginForm.tsx:376
 #: src/screens/Profile/Header/EditProfileDialog.tsx:225
 #: src/screens/Profile/Header/EditProfileDialog.tsx:233
 #: src/screens/Search/Shell.tsx:349
@@ -1661,7 +1675,7 @@ msgstr "チャット"
 msgid "Check my status"
 msgstr "ステータスを確認"
 
-#: src/screens/Login/LoginForm.tsx:301
+#: src/screens/Login/LoginForm.tsx:350
 msgid "Check your email for a sign in code and enter it here."
 msgstr "確認コードが記載されたメールを確認し、ここに入力してください。"
 
@@ -1956,7 +1970,7 @@ msgid "Confirm your birthdate"
 msgstr "生年月日の確認"
 
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
-#: src/screens/Login/LoginForm.tsx:274
+#: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:144
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:150
 #: src/view/com/modals/DeleteAccount.tsx:220
@@ -1964,7 +1978,7 @@ msgstr "生年月日の確認"
 msgid "Confirmation code"
 msgstr "確認コード"
 
-#: src/screens/Login/LoginForm.tsx:337
+#: src/screens/Login/LoginForm.tsx:397
 msgid "Connecting..."
 msgstr "接続中…"
 
@@ -2045,7 +2059,7 @@ msgstr "コンテキストメニューの背景をクリックし、メニュー
 msgid "Continue"
 msgstr "続行"
 
-#: src/components/AccountList.tsx:128
+#: src/components/AccountList.tsx:129
 msgid "Continue as {0} (currently signed in)"
 msgstr "{0}として続行（現在サインイン中）"
 
@@ -2260,7 +2274,7 @@ msgstr "スターターパックを作成"
 msgid "Create a starter pack for me"
 msgstr "私向けのスターターパックを作成"
 
-#: src/view/com/auth/SplashScreen.tsx:55
+#: src/view/com/auth/SplashScreen.tsx:53
 #: src/view/com/auth/SplashScreen.web.tsx:117
 #: src/view/shell/bottom-bar/BottomBar.tsx:345
 #: src/view/shell/bottom-bar/BottomBar.tsx:350
@@ -2294,7 +2308,7 @@ msgstr "代わりにアバターを作成"
 msgid "Create another"
 msgstr "別のものを作成"
 
-#: src/view/com/auth/SplashScreen.tsx:47
+#: src/view/com/auth/SplashScreen.tsx:45
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
 msgstr "新しいアカウントを作成"
@@ -2911,6 +2925,7 @@ msgid "Email 2FA enabled"
 msgstr "メールでの２要素認証が有効"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:93
+#: src/screens/Login/LoginForm.tsx:257
 msgid "Email address"
 msgstr "メールアドレス"
 
@@ -3043,13 +3058,13 @@ msgstr "パスワードをリセットするために受け取ったコードを
 msgid "Enter the domain you want to use"
 msgstr "使用するドメインを入力してください"
 
+#: src/screens/Login/LoginForm.tsx:274
+msgid "Enter the email address you used when you created your account"
+msgstr ""
+
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "アカウントの作成に使用したメールアドレスを入力します。新しいパスワードを設定できるように、「リセットコード」をお送りします。"
-
-#: src/screens/Login/LoginForm.tsx:218
-msgid "Enter the username or email address you used when you created your account"
-msgstr "アカウント作成時に使用したユーザー名またはメールアドレスを入力してください"
 
 #: src/components/dialogs/BirthDateSettings.tsx:104
 msgid "Enter your birth date"
@@ -3060,11 +3075,11 @@ msgstr "生年月日を入力してください"
 msgid "Enter your email address"
 msgstr "メールアドレスを入力してください"
 
-#: src/screens/Login/LoginForm.tsx:243
+#: src/screens/Login/LoginForm.tsx:299
 msgid "Enter your password"
 msgstr "パスワードを入力"
 
-#: src/screens/Login/index.tsx:123
+#: src/screens/Login/index.tsx:134
 msgid "Enter your username and password"
 msgstr "ユーザー名とパスワードを入力してください"
 
@@ -3736,16 +3751,16 @@ msgstr "あなたへ"
 msgid "Forever"
 msgstr "永久"
 
-#: src/screens/Login/index.tsx:153
-#: src/screens/Login/index.tsx:168
+#: src/screens/Login/index.tsx:166
+#: src/screens/Login/index.tsx:181
 msgid "Forgot Password"
 msgstr "パスワードを忘れた"
 
-#: src/screens/Login/LoginForm.tsx:248
+#: src/screens/Login/LoginForm.tsx:304
 msgid "Forgot password?"
 msgstr "パスワードを忘れた？"
 
-#: src/screens/Login/LoginForm.tsx:259
+#: src/screens/Login/LoginForm.tsx:309
 msgid "Forgot?"
 msgstr "忘れた？"
 
@@ -3897,8 +3912,13 @@ msgstr "誰かが投稿したときに通知を受け取る"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:76
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:86
+#: src/screens/Login/Welcome.tsx:89
 msgid "Get started"
 msgstr "開始"
+
+#: src/screens/Login/Welcome.tsx:83
+msgid "GetStarted"
+msgstr ""
 
 #: src/components/ProgressGuide/List.tsx:35
 msgid "Getting started"
@@ -4218,7 +4238,6 @@ msgid "Host:"
 msgstr "ホスト："
 
 #: src/screens/Login/ForgotPasswordForm.tsx:83
-#: src/screens/Login/LoginForm.tsx:184
 msgid "Hosting provider"
 msgstr "ホスティングプロバイダー"
 
@@ -4371,7 +4390,7 @@ msgstr "不適切なメッセージ、または露骨なコンテンツへのリ
 msgid "Inbox zero!"
 msgstr "受信トレイが空です！"
 
-#: src/screens/Login/LoginForm.tsx:164
+#: src/screens/Login/LoginForm.tsx:185
 msgid "Incorrect username or password"
 msgstr "無効なユーザー名またはパスワード"
 
@@ -4391,7 +4410,7 @@ msgstr "新しいパスワードを入力"
 msgid "Input password for account deletion"
 msgstr "アカウント削除のためにパスワードを入力"
 
-#: src/screens/Login/LoginForm.tsx:289
+#: src/screens/Login/LoginForm.tsx:338
 msgid "Input the code which has been emailed to you"
 msgstr "メールで送られたコードを入力"
 
@@ -4407,7 +4426,7 @@ msgstr "反応関連の設定"
 msgid "Introducing activity notifications"
 msgstr "アクティビティの通知の紹介"
 
-#: src/screens/Login/LoginForm.tsx:156
+#: src/screens/Login/LoginForm.tsx:177
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "無効な２要素認証の確認コードです。"
@@ -4577,6 +4596,7 @@ msgstr "詳細"
 
 #: src/components/verification/VerificationsDialog.tsx:165
 #: src/components/verification/VerifierDialog.tsx:132
+#: src/screens/Login/Welcome.tsx:77
 #: src/screens/Moderation/VerificationSettings.tsx:47
 #: src/screens/Profile/Header/EditProfileDialog.tsx:359
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:212
@@ -4639,6 +4659,10 @@ msgstr "<0>アカウント設定で詳細を確認する。</0>"
 msgid "Learn more."
 msgstr "詳細。"
 
+#: src/screens/Login/Welcome.tsx:70
+msgid "Learnmore"
+msgstr ""
+
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Leave"
 msgstr "退出"
@@ -4673,8 +4697,8 @@ msgstr "あと少しです。"
 msgid "Let me choose"
 msgstr "選ばせて"
 
-#: src/screens/Login/index.tsx:154
-#: src/screens/Login/index.tsx:169
+#: src/screens/Login/index.tsx:167
+#: src/screens/Login/index.tsx:182
 msgid "Let's get your password reset!"
 msgstr "パスワードをリセットしましょう！"
 
@@ -5296,7 +5320,7 @@ msgid "Navigate to starter pack"
 msgstr "スターターパックに移動"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:166
-#: src/screens/Login/LoginForm.tsx:344
+#: src/screens/Login/LoginForm.tsx:404
 #: src/view/com/modals/ChangePassword.tsx:180
 msgid "Navigates to the next screen"
 msgstr "次の画面に移動します"
@@ -5447,8 +5471,7 @@ msgstr "ニュース"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/LoginForm.tsx:343
-#: src/screens/Login/LoginForm.tsx:350
+#: src/screens/Login/LoginForm.tsx:403
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
@@ -5466,6 +5489,10 @@ msgstr "次へ"
 #: src/view/com/lightbox/Lightbox.web.tsx:169
 msgid "Next image"
 msgstr "次の画像"
+
+#: src/screens/Login/Welcome.tsx:45
+msgid "Nicely done.Welcome to Gander."
+msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
@@ -5919,12 +5946,12 @@ msgstr "デバイスのフォトギャラリーを開く"
 msgid "Opens emoji picker"
 msgstr "絵文字選択を開く"
 
-#: src/view/com/auth/SplashScreen.tsx:49
+#: src/view/com/auth/SplashScreen.tsx:47
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Gander account"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.tsx:63
+#: src/view/com/auth/SplashScreen.tsx:61
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Gander account"
 msgstr ""
@@ -5949,7 +5976,7 @@ msgstr "招待コードのリストを開く"
 msgid "Opens live status dialog"
 msgstr "ライブステータスのダイアログを開く"
 
-#: src/screens/Login/LoginForm.tsx:249
+#: src/screens/Login/LoginForm.tsx:305
 msgid "Opens password reset form"
 msgstr "パスワードリセットのフォームを開く"
 
@@ -6005,9 +6032,9 @@ msgstr "OTA ステータス: 利用可能なものはありません"
 msgid "Other"
 msgstr "その他"
 
-#: src/components/AccountList.tsx:88
-msgid "Other account"
-msgstr "その他のアカウント"
+#: src/components/AccountList.tsx:86
+msgid "Other Account"
+msgstr ""
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:93
 msgid "Other..."
@@ -6034,7 +6061,7 @@ msgstr "ページが見つかりません"
 msgid "Page Not Found"
 msgstr "ページが見つかりません"
 
-#: src/screens/Login/LoginForm.tsx:228
+#: src/screens/Login/LoginForm.tsx:285
 #: src/screens/Settings/AccountSettings.tsx:119
 #: src/screens/Settings/AccountSettings.tsx:123
 #: src/screens/Signup/StepInfo/index.tsx:228
@@ -6051,7 +6078,7 @@ msgstr "パスワードが変更されました"
 msgid "Password must be at least 8 characters long."
 msgstr "パスワードは 8 文字以上である必要があります。"
 
-#: src/screens/Login/index.tsx:181
+#: src/screens/Login/index.tsx:194
 msgid "Password updated"
 msgstr "パスワードが更新されました"
 
@@ -6252,6 +6279,10 @@ msgstr "以下の<0>{0}</0>に送信したコードを入力してください�
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "前のメールアドレスに送ったセキュリティコードを入力してください。"
 
+#: src/screens/Login/LoginForm.tsx:106
+msgid "Please enter your email address"
+msgstr ""
+
 #: src/screens/Signup/state.ts:265
 #: src/screens/Signup/StepInfo/index.tsx:91
 msgid "Please enter your email."
@@ -6265,17 +6296,13 @@ msgstr "招待コードを入力してください。"
 msgid "Please enter your new email address."
 msgstr "新しいメールアドレスを入力してください。"
 
-#: src/screens/Login/LoginForm.tsx:99
+#: src/screens/Login/LoginForm.tsx:116
 msgid "Please enter your password"
 msgstr "パスワードを入力してください"
 
 #: src/view/com/modals/DeleteAccount.tsx:235
 msgid "Please enter your password as well:"
 msgstr "パスワードも入力してください："
-
-#: src/screens/Login/LoginForm.tsx:94
-msgid "Please enter your username"
-msgstr "ユーザー名を入力してください"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:290
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -7196,7 +7223,7 @@ msgstr "オンボーディングの状態をリセット"
 msgid "Reset password"
 msgstr "パスワードをリセット"
 
-#: src/screens/Login/LoginForm.tsx:324
+#: src/screens/Login/LoginForm.tsx:384
 msgid "Retries signing in"
 msgstr "サインインを再試行"
 
@@ -7212,8 +7239,8 @@ msgstr "エラーになった最後のアクションをやり直す"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:57
 #: src/components/StarterPack/ProfileStarterPacks.tsx:346
-#: src/screens/Login/LoginForm.tsx:323
-#: src/screens/Login/LoginForm.tsx:330
+#: src/screens/Login/LoginForm.tsx:383
+#: src/screens/Login/LoginForm.tsx:390
 #: src/screens/Messages/ChatList.tsx:280
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:218
@@ -7475,10 +7502,6 @@ msgstr "シークバー。矢印キーで早送りや早戻し、スペースで
 msgid "Select a color"
 msgstr "色を選択"
 
-#: src/screens/Login/ChooseAccountForm.tsx:77
-msgid "Select account"
-msgstr "アカウントを選択"
-
 #: src/components/AppLanguageDropdown.tsx:60
 msgid "Select an app language"
 msgstr "アプリの言語を選択"
@@ -7507,7 +7530,7 @@ msgstr "コンテンツの言語を選択"
 msgid "Select duration"
 msgstr "配信の長さを選択"
 
-#: src/screens/Login/index.tsx:144
+#: src/screens/Login/index.tsx:157
 msgid "Select from an existing account"
 msgstr "既存のアカウントから選択"
 
@@ -7959,12 +7982,11 @@ msgstr "コンテンツを表示"
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
-#: src/screens/Login/index.tsx:122
-#: src/screens/Login/index.tsx:143
-#: src/screens/Login/LoginForm.tsx:181
+#: src/screens/Login/index.tsx:133
+#: src/screens/Login/index.tsx:156
 #: src/screens/Search/SearchResults.tsx:258
-#: src/view/com/auth/SplashScreen.tsx:61
-#: src/view/com/auth/SplashScreen.tsx:69
+#: src/view/com/auth/SplashScreen.tsx:59
+#: src/view/com/auth/SplashScreen.tsx:67
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
 #: src/view/shell/bottom-bar/BottomBar.tsx:355
@@ -7976,13 +7998,9 @@ msgstr "コンテンツを表示"
 msgid "Sign in"
 msgstr "サインイン"
 
-#: src/components/AccountList.tsx:129
+#: src/components/AccountList.tsx:130
 msgid "Sign in as {0}"
 msgstr "{0}としてサインイン"
-
-#: src/screens/Login/ChooseAccountForm.tsx:80
-msgid "Sign in as..."
-msgstr "アカウントの選択"
 
 #: src/screens/Deactivated.tsx:203
 #: src/screens/Deactivated.tsx:209
@@ -7993,12 +8011,17 @@ msgstr "サインインまたはアカウントを作成"
 msgid "Sign in or create your account to join the conversation!"
 msgstr "会話に参加するにはサインインするか新しくアカウントを登録してください！"
 
-#: src/components/AccountList.tsx:68
+#: src/components/AccountList.tsx:69
 msgid "Sign in to account that is not listed"
 msgstr "リストにないアカウントにサインイン"
 
 #: src/components/dialogs/Signin.tsx:46
 msgid "Sign in to Gander or create a new account"
+msgstr ""
+
+#: src/screens/Login/ChooseAccountForm.tsx:108
+#: src/screens/Login/LoginForm.tsx:239
+msgid "Sign in to Gander."
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
@@ -8033,7 +8056,7 @@ msgid "Sign-in Required"
 msgstr "サインインが必要"
 
 #: src/lib/hooks/useAccountSwitcher.ts:41
-#: src/screens/Login/ChooseAccountForm.tsx:53
+#: src/screens/Login/ChooseAccountForm.tsx:56
 msgid "Signed in as @{0}"
 msgstr "@{0}でサインイン"
 
@@ -8809,6 +8832,10 @@ msgstr "この情報は他のユーザーと共有されません。"
 msgid "This is not a valid link"
 msgstr "有効なリンクではありません"
 
+#: src/screens/Login/Welcome.tsx:48
+msgid "This is where social media gets sane again."
+msgstr ""
+
 #: src/components/moderation/ModerationDetailsDialog.tsx:168
 msgid "This label was applied by the author."
 msgstr "投稿者によって適用されたラベルです。"
@@ -9080,8 +9107,8 @@ msgid "Unable to connect. Please check your internet connection and try again."
 msgstr "接続できません。インターネットへの接続を確認して再度試してください。"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
-#: src/screens/Login/index.tsx:79
-#: src/screens/Login/LoginForm.tsx:169
+#: src/screens/Login/index.tsx:88
+#: src/screens/Login/LoginForm.tsx:190
 #: src/screens/Login/SetNewPasswordForm.tsx:81
 #: src/screens/Signup/index.tsx:72
 #: src/view/com/modals/ChangePassword.tsx:71
@@ -9462,10 +9489,6 @@ msgstr "ユーザーリストを作成しました"
 msgctxt "toast"
 msgid "User list updated"
 msgstr "ユーザーリストを更新しました"
-
-#: src/screens/Login/LoginForm.tsx:201
-msgid "Username or email address"
-msgstr "ユーザー名またはメールアドレス"
 
 #: src/components/WhoCanReply.tsx:303
 msgid "users followed by <0>@{0}</0>"
@@ -9953,7 +9976,7 @@ msgstr "なにに興味がありますか？"
 msgid "What do you want to call your starter pack?"
 msgstr "あなたのスターターパックを何と呼びたいですか？"
 
-#: src/view/com/auth/SplashScreen.tsx:38
+#: src/view/com/auth/SplashScreen.tsx:36
 #: src/view/com/auth/SplashScreen.web.tsx:99
 #: src/view/com/composer/Composer.tsx:777
 msgid "What's up?"
@@ -10175,7 +10198,7 @@ msgstr "どの設定を選択しても進行中の会話は続けることがで
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
 msgstr "特定のユーザーが投稿した時に通知を受け取ることができるようになります。更新情報をタイムリーに受け取りたい人がいたら、その人のプロフィールのページに移動し、フォローボタンの近くのベルのアイコンを探してください。"
 
-#: src/screens/Login/index.tsx:182
+#: src/screens/Login/index.tsx:195
 #: src/screens/Login/PasswordUpdatedForm.tsx:26
 msgid "You can now sign in with your new password."
 msgstr "新しいパスワードでサインインできるようになりました。"
@@ -10541,6 +10564,7 @@ msgid "Your email"
 msgstr "あなたのメールアドレス"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
+#: src/screens/Login/LoginForm.tsx:110
 #: src/screens/Signup/state.ts:273
 #: src/screens/Signup/StepInfo/index.tsx:98
 #: src/view/com/modals/ChangePassword.tsx:55
@@ -10596,6 +10620,7 @@ msgstr "ミュートしたワード"
 msgid "Your password has been changed successfully!"
 msgstr "パスワードの変更が完了しました！"
 
+#: src/screens/Login/LoginForm.tsx:121
 #: src/screens/Signup/StepInfo/index.tsx:127
 msgid "Your password must be at least 8 characters long."
 msgstr "パスワードは 8 文字以上である必要があります。"

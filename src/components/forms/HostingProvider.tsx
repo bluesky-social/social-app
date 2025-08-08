@@ -8,7 +8,7 @@ import {ServerInputDialog} from '#/view/com/auth/server-input'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
+import * as TextField from '#/components/forms/TextField'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
 import {Text} from '#/components/Typography'
 
@@ -67,56 +67,42 @@ export function HostingProvider({
           testID="selectServiceButton"
           label={toNiceDomain(serviceUrl)}
           accessibilityHint={_(msg`Changes hosting provider`)}
-          variant="solid"
-          color="secondary"
-          style={[
-            a.w_full,
-            a.flex_row,
-            a.align_center,
-            a.rounded_sm,
-            a.py_sm,
-            a.pl_md,
-            a.pr_sm,
-            a.gap_xs,
-          ]}
+          style={[a.w_full, a.flex_row, a.align_center, a.rounded_sm, a.gap_xs]}
           onPress={onPressSelectService}>
-          {({hovered, pressed}) => {
-            const interacted = hovered || pressed
-            return (
-              <>
-                <View style={a.pr_xs}>
-                  <GlobeIcon
-                    size="md"
-                    fill={
-                      interacted
-                        ? t.palette.contrast_800
-                        : t.palette.contrast_500
-                    }
-                  />
-                </View>
-                <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
-                <View
-                  style={[
-                    a.rounded_sm,
-                    interacted
-                      ? t.atoms.bg_contrast_300
-                      : t.atoms.bg_contrast_100,
-                    {marginLeft: 'auto', padding: 6},
-                  ]}>
-                  <PencilIcon
-                    size="sm"
-                    style={{
-                      color: interacted
-                        ? t.palette.contrast_800
-                        : t.palette.contrast_500,
-                    }}
-                  />
-                </View>
-              </>
-            )
-          }}
+          <>
+            <View style={[a.pb_s10, a.pt_s6, a.flex_1, a.px_md]}>
+              <TextField.LabelText>
+                <Trans>Account Provider</Trans>
+              </TextField.LabelText>
+              <Text style={[a.text_md, a.flex_1]}>
+                {toNiceDomain(serviceUrl)}
+              </Text>
+            </View>
+            <Button
+              testID="Edit"
+              disabled={true}
+              onPress={onOpenDialog}
+              label={_(msg`Edit`)}
+              style={a.pr_md}
+              accessibilityHint={_(msg`Edit`)}
+              variant="ghost"
+              color="link">
+              <ButtonText>
+                <Trans>Edit</Trans>
+              </ButtonText>
+            </Button>
+          </>
         </Button>
       )}
+      <View
+        style={[
+          {zIndex: -122},
+          a.absolute,
+          a.inset_0,
+          a.rounded_sm,
+          {borderColor: '#9B9B9B', borderWidth: 1},
+        ]}
+      />
     </>
   )
 }

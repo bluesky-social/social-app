@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useActorStatus} from '#/lib/actor-status'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+// import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -44,10 +45,11 @@ export function AccountList({
     <View
       pointerEvents={pendingDid ? 'none' : 'auto'}
       style={[
-        a.rounded_md,
         a.overflow_hidden,
-        {borderWidth: 1},
         t.atoms.border_contrast_low,
+        a.mt_md,
+
+        {borderRadius: 8},
       ]}>
       {accounts.map(account => (
         <React.Fragment key={account.did}>
@@ -58,10 +60,11 @@ export function AccountList({
             isCurrentAccount={account.did === currentAccount?.did}
             isPendingAccount={account.did === pendingDid}
           />
-          <View style={[{borderBottomWidth: 1}, t.atoms.border_contrast_low]} />
+          <View style={[{borderBottomWidth: 1, borderColor: '#D8D8D8'}]} />
         </React.Fragment>
       ))}
       <Button
+        hitSlop={24}
         testID="chooseAddAccountBtn"
         style={[a.flex_1]}
         onPress={pendingDid ? undefined : onPressAddAccount}
@@ -72,22 +75,23 @@ export function AccountList({
               a.flex_1,
               a.flex_row,
               a.align_center,
-              {height: 48},
+              a.py_lg,
+              a.px_sm,
+              {borderBottomStartRadius: 8, borderBottomEndRadius: 8},
               (hovered || pressed) && t.atoms.bg_contrast_25,
             ]}>
             <Text
               style={[
-                a.font_bold,
                 a.flex_1,
                 a.flex_row,
-                a.py_sm,
+                a.font_bold,
                 a.leading_tight,
-                t.atoms.text_contrast_medium,
-                {paddingLeft: 56},
+                a.text_md,
+                a.py_md,
               ]}>
-              {otherLabel ?? <Trans>Other account</Trans>}
+              {otherLabel ?? <Trans>Other Account</Trans>}
             </Text>
-            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+            <Chevron size="sm" style={[t.atoms.text]} />
           </View>
         )}
       </Button>
@@ -95,18 +99,20 @@ export function AccountList({
   )
 }
 
-function AccountItem({
+export function AccountItem({
   profile,
   account,
   onSelect,
   isCurrentAccount,
   isPendingAccount,
+  hideEndIcon = false,
 }: {
   profile?: AppGndrActorDefs.ProfileViewDetailed
   account: SessionAccount
   onSelect: (account: SessionAccount) => void
   isCurrentAccount: boolean
   isPendingAccount: boolean
+  hideEndIcon?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -119,6 +125,7 @@ function AccountItem({
 
   return (
     <Button
+      hitSlop={24}
       testID={`chooseAccountBtn-${account.handle}`}
       key={account.did}
       style={[a.w_full]}
@@ -134,24 +141,24 @@ function AccountItem({
             a.flex_1,
             a.flex_row,
             a.align_center,
-            a.px_md,
             a.gap_sm,
-            {height: 56},
+            a.py_lg,
+            a.px_sm,
             (hovered || pressed || isPendingAccount) && t.atoms.bg_contrast_25,
           ]}>
           <UserAvatar
             avatar={profile?.avatar}
-            size={36}
+            size={45}
             type={profile?.associated?.labeler ? 'labeler' : 'user'}
             live={live}
             hideLiveBadge
           />
 
-          <View style={[a.flex_1, a.gap_2xs, a.pr_2xl]}>
+          <View style={[a.flex_1, a.pr_2xl, a.gap_2xs]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <Text
                 emoji
-                style={[a.font_bold, a.leading_tight]}
+                style={[a.font_bold, a.leading_tight, a.text_md]}
                 numberOfLines={1}>
                 {sanitizeDisplayName(
                   profile?.displayName || profile?.handle || account.handle,
@@ -160,7 +167,7 @@ function AccountItem({
               {verification.showBadge && (
                 <View>
                   <VerificationCheck
-                    width={12}
+                    width={15}
                     verifier={verification.role === 'verifier'}
                   />
                 </View>
@@ -171,7 +178,7 @@ function AccountItem({
             </Text>
           </View>
 
-          {isCurrentAccount ? (
+          {hideEndIcon ? null : isCurrentAccount ? (
             <Check size="sm" style={[{color: t.palette.positive_600}]} />
           ) : (
             <Chevron size="sm" style={[t.atoms.text]} />

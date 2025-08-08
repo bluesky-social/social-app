@@ -1,5 +1,8 @@
 import {useCallback} from 'react'
-import {type ChatGndrActorDefs, ChatGndrConvoDefs} from '@gander-social-atproto/api'
+import {
+  type ChatGndrActorDefs,
+  ChatGndrConvoDefs,
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'

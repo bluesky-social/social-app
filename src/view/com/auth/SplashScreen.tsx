@@ -5,8 +5,8 @@ import {useLingui} from '@lingui/react'
 
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a, useTheme} from '#/alf'
+// import {Logotype} from '#/view/icons/Logotype'
+import {atoms as a} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
@@ -19,19 +19,15 @@ export const SplashScreen = ({
   onPressSignin: () => void
   onPressCreateAccount: () => void
 }) => {
-  const t = useTheme()
   const {_} = useLingui()
-
   const insets = useSafeAreaInsets()
 
   return (
     <CenteredView style={[a.h_full, a.flex_1]}>
       <ErrorBoundary>
-        <View style={[{flex: 1}, a.justify_center, a.align_center]}>
-          <Logo width={92} fill="sky" />
-
-          <View style={[a.pb_sm, a.pt_5xl]}>
-            <Logotype width={161} fill={t.atoms.text.color} />
+        <View style={[a.flex_1, a.justify_center, a.align_center]}>
+          <View style={[a.pb_sm, a.pt_5xl, a.self_center]}>
+            <Logo width={104} fill={t.atoms.text.color} />
           </View>
 
           <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
@@ -46,7 +42,7 @@ export const SplashScreen = ({
             onPress={onPressCreateAccount}
             label={_(msg`Create new account`)}
             accessibilityHint={_(
-              msg`Opens flow to create a new Gander account`,
+              msg`Opens flow to create a new Bluesky account`,
             )}
             size="large"
             variant="solid"
@@ -60,7 +56,7 @@ export const SplashScreen = ({
             onPress={onPressSignin}
             label={_(msg`Sign in`)}
             accessibilityHint={_(
-              msg`Opens flow to sign in to your existing Gander account`,
+              msg`Opens flow to sign in to your existing Bluesky account`,
             )}
             size="large"
             variant="solid"

@@ -1,5 +1,9 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {type AppGndrVideoDefs, type BlobRef, type GndrAgent} from '@gander-social-atproto/api'
+import {
+  type AppGndrVideoDefs,
+  type BlobRef,
+  type GndrAgent,
+} from '@gander-social-atproto/api'
 import {type JobStatus} from '@gander-social-atproto/api/dist/client/types/app/gndr/video/defs'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'

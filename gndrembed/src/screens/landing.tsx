@@ -1,6 +1,11 @@
 import '../index.css'
 
-import {AppGndrFeedDefs, AppGndrFeedPost, AtpAgent, AtUri} from '@gander-social-atproto/api'
+import {
+  AppGndrFeedDefs,
+  AppGndrFeedPost,
+  AtpAgent,
+  AtUri,
+} from '@gander-social-atproto/api'
 import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
@@ -226,7 +231,11 @@ function Snippet({
       return ''
     }
 
-    const lang = record.langs && record.langs.length > 0 ? record.langs[0] : ''
+    const lang =
+      Array.isArray((record as {langs?: string[]}).langs) &&
+      (record as {langs?: string[]}).langs!.length > 0
+        ? (record as {langs?: string[]}).langs![0]
+        : ''
     const profileHref = toShareUrl(
       ['/profile', thread.post.author.did].join('/'),
     )
@@ -245,7 +254,7 @@ function Snippet({
       thread.post.cid,
     )}" data-gander-embed-color-mode="${escapeHtml(
       colorMode,
-    )}"><p lang="${escapeHtml(lang)}">${escapeHtml(record.text)}${
+    )}"><p lang="${escapeHtml(lang)}">${escapeHtml(typeof record.text === 'string' ? record.text : '')}${
       record.embed
         ? `<br><br><a href="${escapeHtml(href)}">[image or embed]</a>`
         : ''

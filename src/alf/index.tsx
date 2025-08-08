@@ -75,6 +75,7 @@ export function ThemeProvider({
   const setFontScaleAndPersist = React.useCallback<
     Alf['fonts']['setFontScale']
   >(
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     fontScale => {
       setFontScale(fontScale)
       persistFontScale(fontScale)
@@ -88,6 +89,7 @@ export function ThemeProvider({
   const setFontFamilyAndPersist = React.useCallback<
     Alf['fonts']['setFontFamily']
   >(
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     fontFamily => {
       setFontFamily(fontFamily)
       persistFontFamily(fontFamily)

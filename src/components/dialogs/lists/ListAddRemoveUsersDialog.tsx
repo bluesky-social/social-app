@@ -1,6 +1,9 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppGndrGraphDefs, type ModerationOpts} from '@gander-social-atproto/api'
+import {
+  type AppGndrGraphDefs,
+  type ModerationOpts,
+} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

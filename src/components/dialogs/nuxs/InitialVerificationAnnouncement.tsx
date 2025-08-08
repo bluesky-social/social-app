@@ -130,8 +130,7 @@ export function InitialVerificationAnnouncement() {
             <View style={[a.gap_sm]}>
               <Text style={[a.leading_snug, a.text_md]}>
                 <Trans>
-                  Gander will proactively verify notable and authentic
-                  accounts.
+                  Gander will proactively verify notable and authentic accounts.
                 </Trans>
               </Text>
               <Text style={[a.leading_snug, a.text_md]}>
