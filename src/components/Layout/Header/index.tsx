@@ -3,7 +3,6 @@ import {type GestureResponderEvent, Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import Color from 'color'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -19,6 +18,7 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
@@ -63,10 +63,11 @@ export function Outer({
             a.z_10,
             {
               top: 0,
-              backgroundColor: Color(t.atoms.bg.backgroundColor)
-                .alpha(0.75)
-                .string(),
-              backdropFilter: 'blur(10px)',
+              backgroundColor: transparentifyColor(
+                t.atoms.bg.backgroundColor,
+                0.8,
+              ),
+              backdropFilter: 'blur(12px)',
             },
           ]),
         gutters,

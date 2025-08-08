@@ -33,6 +33,7 @@ import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {atoms as a, useTheme} from '#/alf'
 import {web} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
@@ -51,6 +52,7 @@ type Props = NativeStackScreenProps<
 >
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
+  const t = useTheme()
   const {openComposer} = useOpenComposer()
   const unreadNotifs = useUnreadNotifications()
   const hasNew = !!unreadNotifs
@@ -146,7 +148,21 @@ export function NotificationsScreen({}: Props) {
       <Pager
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
+          <Layout.Center
+            style={[
+              a.z_10,
+              web([
+                a.sticky,
+                {
+                  top: 0,
+                  backgroundColor: transparentifyColor(
+                    t.atoms.bg.backgroundColor,
+                    0.8,
+                  ),
+                  backdropFilter: 'blur(12px)',
+                },
+              ]),
+            ]}>
             <TabBar
               {...props}
               items={sections.map(section => section.title)}

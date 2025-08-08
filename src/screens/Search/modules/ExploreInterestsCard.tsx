@@ -55,12 +55,7 @@ export function ExploreInterestsCard() {
 
       <View style={[a.pb_2xs]}>
         <View
-          style={[
-            a.p_lg,
-            a.border_b,
-            a.gap_md,
-            t.atoms.border_contrast_medium,
-          ]}>
+          style={[a.p_lg, a.border_b, a.gap_md, t.atoms.border_contrast_low]}>
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             <Shapes />
             <Text style={[a.text_xl, a.font_bold, a.leading_tight]}>
