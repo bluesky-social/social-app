@@ -714,12 +714,8 @@ export function Explore({
     ({item, index}: {item: ExploreScreenItems; index: number}) => {
       switch (item.type) {
         case 'topBorder':
-          return (
-            !isWeb && (
-              <View
-                style={[a.w_full, t.atoms.border_contrast_low, a.border_t]}
-              />
-            )
+          return isWeb ? null : (
+            <View style={[a.w_full, t.atoms.border_contrast_low, a.border_t]} />
           )
         case 'header': {
           return (
