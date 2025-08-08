@@ -72,10 +72,14 @@ export function Wizard({
   const params = route.params ?? {}
   const rkey = 'rkey' in params ? params.rkey : undefined
   const fromDialog = 'fromDialog' in params ? params.fromDialog : false
+  const targetDid = 'targetDid' in params ? params.targetDid : undefined
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
   const {_} = useLingui()
+
+  // Use targetDid if provided (from dialog), otherwise use current account
+  const profileDid = targetDid || currentAccount!.did
 
   const {
     data: starterPack,
@@ -94,7 +98,7 @@ export function Wizard({
     data: profile,
     isLoading: isLoadingProfile,
     isError: isErrorProfile,
-  } = useProfileQuery({did: currentAccount?.did})
+  } = useProfileQuery({did: profileDid})
 
   const isEdit = Boolean(rkey)
   const isReady =
@@ -493,8 +497,12 @@ function Footer({
             {
               items.length < 2 ? (
                 <Trans>
-                  It's just you right now! Add more people to your starter pack
-                  by searching above.
+                  It's just{' '}
+                  <Text style={[a.font_bold, textStyles]} emoji>
+                    {getName(items[0])}{' '}
+                  </Text>
+                  right now! Add more people to your starter pack by searching
+                  above.
                 </Trans>
               ) : items.length === 2 ? (
                 <Trans>
