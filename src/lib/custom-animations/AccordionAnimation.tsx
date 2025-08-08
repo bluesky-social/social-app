@@ -7,7 +7,7 @@ import {
 import Animated, {
   Easing,
   FadeInUp,
-  FadeOutDown,
+  FadeOutUp,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -65,7 +65,7 @@ function MobileAccordion({
     <Animated.View
       style={style}
       entering={FadeInUp.duration(duration)}
-      exiting={FadeOutDown.duration(duration / 2)}>
+      exiting={FadeOutUp.duration(duration / 2)}>
       {children}
     </Animated.View>
   )
