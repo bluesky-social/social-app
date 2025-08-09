@@ -63,6 +63,7 @@ function CardOuter({
 }
 
 export function SuggestedFollowPlaceholder() {
+  const {_} = useLingui()
   const t = useTheme()
 
   return (
@@ -79,9 +80,8 @@ export function SuggestedFollowPlaceholder() {
         </View>
 
         <Button
-          label=""
+          label={_(msg`Follow account placeholder`)}
           size="small"
-          variant="solid"
           color="secondary"
           disabled
           style={[a.w_full, a.rounded_sm]}>
@@ -253,14 +253,14 @@ export function ProfileGrid({
   profiles: bsky.profile.AnyProfileView[]
   recId?: number
   error: Error | null
-  viewContext: 'profile' | 'feed'
+  viewContext: 'profile' | 'profileHeader' | 'feed'
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
   const isLoading = isSuggestionsLoading || !moderationOpts
-  const maxLength = gtMobile ? 3 : 6
+  const maxLength = gtMobile ? 3 : viewContext === 'profileHeader' ? 12 : 6
 
   const content = isLoading ? (
     Array(maxLength)
@@ -323,6 +323,7 @@ export function ProfileGrid({
                   <ProfileCard.Avatar
                     profile={profile}
                     moderationOpts={moderationOpts}
+                    disabledPreview
                     size={88}
                   />
                   <View style={[a.flex_col, a.align_center, a.max_w_full]}>
@@ -375,7 +376,11 @@ export function ProfileGrid({
 
   return (
     <View
-      style={[a.border_t, t.atoms.border_contrast_low, t.atoms.bg_contrast_25]}>
+      style={[
+        viewContext !== 'profileHeader' && a.border_t,
+        t.atoms.border_contrast_low,
+        t.atoms.bg_contrast_25,
+      ]}>
       <View
         style={[
           a.px_lg,
@@ -385,17 +390,19 @@ export function ProfileGrid({
           a.justify_between,
         ]}>
         <Text style={[a.text_sm, a.font_bold, t.atoms.text]}>
-          {viewContext === 'profile' ? (
-            <Trans>Similar accounts</Trans>
-          ) : (
+          {viewContext === 'feed' ? (
             <Trans>Suggested for you</Trans>
+          ) : (
+            <Trans>Similar accounts</Trans>
           )}
         </Text>
-        <InlineLinkText
-          label={_(msg`See more suggested profiles on the Explore page`)}
-          to="/search">
-          <Trans>See more</Trans>
-        </InlineLinkText>
+        {viewContext !== 'profileHeader' && (
+          <InlineLinkText
+            label={_(msg`See more suggested profiles on the Explore page`)}
+            to="/search">
+            <Trans>See more</Trans>
+          </InlineLinkText>
+        )}
       </View>
 
       {gtMobile ? (
