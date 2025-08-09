@@ -40,6 +40,7 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
+import {RootSiblingParent} from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
@@ -103,7 +104,6 @@ import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
-import {SelectPhotoBtn} from '#/view/com/composer/photos/SelectPhotoBtn'
 import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
@@ -113,12 +113,10 @@ import {
   type TextInputRef,
 } from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
-import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
 import {Text} from '#/view/com/util/text/Text'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -127,8 +125,10 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
+import {toast} from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {SelectMediaBtn} from './SelectMediaBtn'
 import {
   type ComposerAction,
   composerReducer,
@@ -514,13 +514,6 @@ export const ComposePost = ({
       onPostSuccess?.(postSuccessData)
     }
     onClose()
-    Toast.show(
-      thread.posts.length > 1
-        ? _(msg`Your posts have been published`)
-        : replyTo
-          ? _(msg`Your reply has been published`)
-          : _(msg`Your post has been published`),
-    )
   }, [
     _,
     agent,
@@ -650,84 +643,88 @@ export const ComposePost = ({
   const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
-      <KeyboardAvoidingView
-        testID="composePostView"
-        behavior={isIOS ? 'padding' : 'height'}
-        keyboardVerticalOffset={keyboardVerticalOffset}
-        style={a.flex_1}>
-        <View
-          style={[a.flex_1, viewStyles]}
-          aria-modal
-          accessibilityViewIsModal>
-          <ComposerTopBar
-            canPost={canPost}
-            isReply={!!replyTo}
-            isPublishQueued={publishOnUpload}
-            isPublishing={isPublishing}
-            isThread={thread.posts.length > 1}
-            publishingStage={publishingStage}
-            topBarAnimatedStyle={topBarAnimatedStyle}
-            onCancel={onPressCancel}
-            onPublish={onPressPublish}>
-            {missingAltError && <AltTextReminder error={missingAltError} />}
-            <ErrorBanner
-              error={error}
-              videoState={erroredVideo}
-              clearError={() => setError('')}
-              clearVideo={
-                erroredVideoPostId
-                  ? () => clearVideo(erroredVideoPostId)
-                  : () => {}
-              }
-            />
-          </ComposerTopBar>
-
-          <Animated.ScrollView
-            ref={scrollViewRef}
-            layout={native(LinearTransition)}
-            onScroll={scrollHandler}
-            contentContainerStyle={a.flex_grow}
-            style={a.flex_1}
-            keyboardShouldPersistTaps="always"
-            onContentSizeChange={onScrollViewContentSizeChange}
-            onLayout={onScrollViewLayout}>
-            {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-            {thread.posts.map((post, index) => (
-              <React.Fragment key={post.id}>
-                <ComposerPost
-                  post={post}
-                  dispatch={composerDispatch}
-                  textInput={post.id === activePost.id ? textInput : null}
-                  isFirstPost={index === 0}
-                  isLastPost={index === thread.posts.length - 1}
-                  isPartOfThread={thread.posts.length > 1}
-                  isReply={index > 0 || !!replyTo}
-                  isActive={post.id === activePost.id}
-                  canRemovePost={thread.posts.length > 1}
-                  canRemoveQuote={index > 0 || !initQuote}
-                  onSelectVideo={selectVideo}
-                  onClearVideo={clearVideo}
-                  onPublish={onComposerPostPublish}
-                  onError={setError}
+      <RootSiblingParent>
+        <KeyboardAvoidingView
+          testID="composePostView"
+          behavior={isIOS ? 'padding' : 'height'}
+          keyboardVerticalOffset={keyboardVerticalOffset}
+          style={a.flex_1}>
+          <View
+            style={[a.flex_1, viewStyles]}
+            aria-modal
+            accessibilityViewIsModal>
+            <RootSiblingParent>
+              <ComposerTopBar
+                canPost={canPost}
+                isReply={!!replyTo}
+                isPublishQueued={publishOnUpload}
+                isPublishing={isPublishing}
+                isThread={thread.posts.length > 1}
+                publishingStage={publishingStage}
+                topBarAnimatedStyle={topBarAnimatedStyle}
+                onCancel={onPressCancel}
+                onPublish={onPressPublish}>
+                {missingAltError && <AltTextReminder error={missingAltError} />}
+                <ErrorBanner
+                  error={error}
+                  videoState={erroredVideo}
+                  clearError={() => setError('')}
+                  clearVideo={
+                    erroredVideoPostId
+                      ? () => clearVideo(erroredVideoPostId)
+                      : () => {}
+                  }
                 />
-                {isWebFooterSticky && post.id === activePost.id && (
-                  <View style={styles.stickyFooterWeb}>{footer}</View>
-                )}
-              </React.Fragment>
-            ))}
-          </Animated.ScrollView>
-          {!isWebFooterSticky && footer}
-        </View>
+              </ComposerTopBar>
 
-        <Prompt.Basic
-          control={discardPromptControl}
-          title={_(msg`Discard draft?`)}
-          description={_(msg`Are you sure you'd like to discard this draft?`)}
-          onConfirm={onClose}
-          confirmButtonCta={_(msg`Discard`)}
-          confirmButtonColor="negative"
-        />
-      </KeyboardAvoidingView>
+              <Animated.ScrollView
+                ref={scrollViewRef}
+                layout={native(LinearTransition)}
+                onScroll={scrollHandler}
+                contentContainerStyle={a.flex_grow}
+                style={a.flex_1}
+                keyboardShouldPersistTaps="always"
+                onContentSizeChange={onScrollViewContentSizeChange}
+                onLayout={onScrollViewLayout}>
+                {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
+                {thread.posts.map((post, index) => (
+                  <React.Fragment key={post.id}>
+                    <ComposerPost
+                      post={post}
+                      dispatch={composerDispatch}
+                      textInput={post.id === activePost.id ? textInput : null}
+                      isFirstPost={index === 0}
+                      isLastPost={index === thread.posts.length - 1}
+                      isPartOfThread={thread.posts.length > 1}
+                      isReply={index > 0 || !!replyTo}
+                      isActive={post.id === activePost.id}
+                      canRemovePost={thread.posts.length > 1}
+                      canRemoveQuote={index > 0 || !initQuote}
+                      onSelectVideo={selectVideo}
+                      onClearVideo={clearVideo}
+                      onPublish={onComposerPostPublish}
+                      onError={setError}
+                    />
+                    {isWebFooterSticky && post.id === activePost.id && (
+                      <View style={styles.stickyFooterWeb}>{footer}</View>
+                    )}
+                  </React.Fragment>
+                ))}
+              </Animated.ScrollView>
+              {!isWebFooterSticky && footer}
+            </RootSiblingParent>
+          </View>
+
+          <Prompt.Basic
+            control={discardPromptControl}
+            title={_(msg`Discard draft?`)}
+            description={_(msg`Are you sure you'd like to discard this draft?`)}
+            onConfirm={onClose}
+            confirmButtonCta={_(msg`Discard`)}
+            confirmButtonColor="negative"
+          />
+        </KeyboardAvoidingView>
+      </RootSiblingParent>
     </BottomSheetPortalProvider>
   )
 }
@@ -811,7 +808,11 @@ let ComposerPost = React.memo(function ComposerPost({
         if (isNative) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          Toast.show(_(msg`Unsupported video type`), 'xmark')
+          toast.show({
+            type: 'error',
+            content: _(msg`Unsupported video type`),
+            a11yLabel: _(msg`Unsupported video type.`),
+          })
           return
         }
         const name = `pasted.${mimeToExt(mimeType)}`
@@ -1248,6 +1249,7 @@ function ComposerFooter({
   showAddButton,
   onEmojiButtonPress,
   onError,
+
   onSelectVideo,
   onAddPost,
 }: {
@@ -1267,6 +1269,17 @@ function ComposerFooter({
   const images = media?.type === 'images' ? media.images : []
   const video = media?.type === 'video' ? media.video : null
   const isMaxImages = images.length >= MAX_IMAGES
+  const isMaxVideos = !!video
+
+  let isMediaSelectionDisabled = false
+
+  if (media?.type === 'images') {
+    isMediaSelectionDisabled = isMaxImages
+  } else if (media?.type === 'video') {
+    isMediaSelectionDisabled = isMaxVideos
+  } else {
+    isMediaSelectionDisabled = !!media
+  }
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
@@ -1303,14 +1316,11 @@ function ComposerFooter({
             <VideoUploadToolbar state={video} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <SelectPhotoBtn
+              <SelectMediaBtn
                 size={images.length}
-                disabled={media?.type === 'images' ? isMaxImages : !!media}
+                disabled={isMediaSelectionDisabled}
                 onAdd={onImageAdd}
-              />
-              <SelectVideoBtn
                 onSelectVideo={asset => onSelectVideo(post.id, asset)}
-                disabled={!!media}
                 setError={onError}
               />
               <OpenCameraBtn
