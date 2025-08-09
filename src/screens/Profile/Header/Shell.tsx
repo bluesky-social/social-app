@@ -26,6 +26,7 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
 import {EditLiveDialog} from '#/components/live/EditLiveDialog'
@@ -148,30 +149,39 @@ let ProfileHeaderShell = ({
         <StatusBarShadow />
         <GrowableBanner
           backButton={
-            <>
-              {!hideBackButton && (
-                <TouchableWithoutFeedback
-                  testID="profileHeaderBackBtn"
-                  onPress={onPressBack}
-                  hitSlop={BACK_HITSLOP}
-                  accessibilityRole="button"
-                  accessibilityLabel={_(msg`Back`)}
-                  accessibilityHint="">
+            !hideBackButton && (
+              <Button
+                testID="profileHeaderBackBtn"
+                onPress={onPressBack}
+                hitSlop={BACK_HITSLOP}
+                label={_(msg`Back`)}
+                style={[
+                  styles.backBtnWrapper,
+                  {
+                    top: platform({
+                      web: 10,
+                      default: topInset,
+                    }),
+                    left: platform({
+                      web: 18,
+                      default: 12,
+                    }),
+                  },
+                ]}>
+                {({hovered}) => (
                   <View
                     style={[
-                      styles.backBtnWrapper,
-                      {
-                        top: platform({
-                          web: 10,
-                          default: topInset,
-                        }),
+                      styles.backBtn,
+                      a.rounded_sm,
+                      hovered && {
+                        backgroundColor: '#000',
                       },
                     ]}>
                     <ArrowLeftIcon size="lg" fill="white" />
                   </View>
-                </TouchableWithoutFeedback>
-              )}
-            </>
+                )}
+              </Button>
+            )
           }>
           {isPlaceholderProfile ? (
             <LoadingPlaceholder
@@ -261,20 +271,12 @@ export {ProfileHeaderShell}
 const styles = StyleSheet.create({
   backBtnWrapper: {
     position: 'absolute',
-    left: 12,
-    width: 30,
-    height: 30,
-    overflow: 'hidden',
-    borderRadius: 15,
     cursor: 'pointer',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   backBtn: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 31,
+    height: 31,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     alignItems: 'center',
     justifyContent: 'center',
   },
