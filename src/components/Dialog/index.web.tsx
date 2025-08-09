@@ -44,6 +44,7 @@ export function Outer({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
+  const [pressStartedInside, setPressStartedInside] = React.useState(false)
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   const open = React.useCallback(() => {
@@ -75,9 +76,16 @@ export function Outer({
     [control.id, onClose, setDialogIsOpen],
   )
 
-  const handleBackgroundPress = React.useCallback(async () => {
-    close()
-  }, [close])
+  const handlePressIn = React.useCallback(() => {
+    setPressStartedInside(true)
+  }, [])
+
+  const handlePressOut = React.useCallback(() => {
+    if (pressStartedInside) {
+      close()
+    }
+    setPressStartedInside(false)
+  }, [close, pressStartedInside])
 
   useImperativeHandle(
     control.ref,
@@ -109,7 +117,8 @@ export function Outer({
             <TouchableWithoutFeedback
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
-              onPress={handleBackgroundPress}>
+              onPressIn={handlePressIn}
+              onPressOut={handlePressOut}>
               <View
                 style={[
                   web(a.fixed),
