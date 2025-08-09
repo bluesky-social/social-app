@@ -4,10 +4,12 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
 import {useSession} from '#/state/session'
@@ -57,7 +59,11 @@ export function RecentChats({postUri}: {postUri: string}) {
               member => member.did !== currentAccount?.did,
             )
 
-            if (!otherMember || otherMember.handle === 'missing.invalid')
+            if (
+              !otherMember ||
+              otherMember.handle === 'missing.invalid' ||
+              convo.muted
+            )
               return null
 
             return (
@@ -87,7 +93,7 @@ export function RecentChats({postUri}: {postUri: string}) {
 const WIDTH = 80
 
 function RecentChatItem({
-  profile,
+  profile: profileUnshadowed,
   onPress,
   moderationOpts,
 }: {
@@ -98,12 +104,18 @@ function RecentChatItem({
   const {_} = useLingui()
   const t = useTheme()
 
+  const profile = useProfileShadow(profileUnshadowed)
+
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
   const verification = useSimpleVerificationState({profile})
+
+  if (isBlockedOrBlocking(profile) || isMuted(profile)) {
+    return null
+  }
 
   return (
     <Button
