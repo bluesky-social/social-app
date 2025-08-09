@@ -1,7 +1,7 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
@@ -9,6 +9,7 @@ import {useShellLayout} from '#/state/shell/shell-layout'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useBreakpoints, useGutters, useTheme} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
@@ -66,7 +67,19 @@ function HomeHeaderLayoutDesktopAndTablet({
       )}
       {tabBarAnchor}
       <Layout.Center
-        style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, {top: 0}]}
+        style={[
+          a.sticky,
+          a.z_10,
+          a.align_center,
+          {
+            top: 0,
+            backgroundColor: transparentifyColor(
+              t.atoms.bg.backgroundColor,
+              0.8,
+            ),
+            backdropFilter: 'blur(12px)',
+          },
+        ]}
         onLayout={e => {
           headerHeight.set(e.nativeEvent.layout.height)
         }}>
