@@ -9,6 +9,11 @@ import {
 } from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 
+import {
+  createApplyPostCacheMutator,
+  DELETED_POST,
+  uriMatches,
+} from '#/state/queries/cache/util'
 import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
@@ -301,3 +306,42 @@ export function* findAllProfilesInQueryData(
     }
   }
 }
+
+export const applyPostCacheMutator = createApplyPostCacheMutator(
+  ({qc, uri, mutator}) => {
+    qc.setQueriesData<AppBskyUnspeccedGetPostThreadV2.OutputSchema>(
+      {queryKey: [postThreadQueryKeyRoot]},
+      data => {
+        if (!data) return
+
+        const thread = []
+
+        for (const item of data.thread) {
+          if (
+            AppBskyUnspeccedDefs.isThreadItemPost(item.value) &&
+            uriMatches(uri, item.value.post.uri, item.value.post.author.handle)
+          ) {
+            const post = mutator(item.value.post)
+
+            if (post !== DELETED_POST) {
+              thread.push({
+                ...item,
+                value: {
+                  ...item.value,
+                  post,
+                },
+              })
+            }
+          } else {
+            thread.push(item)
+          }
+        }
+
+        return {
+          ...data,
+          thread,
+        }
+      },
+    )
+  },
+)
