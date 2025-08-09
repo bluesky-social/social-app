@@ -47,6 +47,8 @@ export const LoginForm = ({
   onPressForgotPassword,
   onAttemptSuccess,
   onAttemptFailed,
+  debouncedResolveService,
+  isResolvingService,
 }: {
   error: string
   serviceUrl: string
@@ -59,6 +61,8 @@ export const LoginForm = ({
   onPressForgotPassword: () => void
   onAttemptSuccess: () => void
   onAttemptFailed: () => void
+  debouncedResolveService: (identifier: string) => void
+  isResolvingService: boolean
 }) => {
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -182,6 +186,13 @@ export const LoginForm = ({
       <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>
+          {isResolvingService && (
+            <ActivityIndicator
+              size={12}
+              color={t.palette.contrast_500}
+              style={a.ml_sm}
+            />
+          )}
         </TextField.LabelText>
         <HostingProvider
           serviceUrl={serviceUrl}
@@ -208,6 +219,10 @@ export const LoginForm = ({
               defaultValue={initialHandle || ''}
               onChangeText={v => {
                 identifierValueRef.current = v
+                // Trigger PDS auto-resolution for handles/DIDs
+                if (v.trim() && (v.includes('.') || v.startsWith('did:'))) {
+                  debouncedResolveService(v.trim())
+                }
               }}
               onSubmitEditing={() => {
                 passwordRef.current?.focus()
