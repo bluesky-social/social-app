@@ -54,6 +54,7 @@ import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {notifyDialogSuccess} from '#/components/dialogs/StarterPackDialog'
 import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -68,11 +69,17 @@ export function Wizard({
   CommonNavigatorParams,
   'StarterPackEdit' | 'StarterPackWizard'
 >) {
-  const {rkey} = route.params ?? {}
+  const params = route.params ?? {}
+  const rkey = 'rkey' in params ? params.rkey : undefined
+  const fromDialog = 'fromDialog' in params ? params.fromDialog : false
+  const targetDid = 'targetDid' in params ? params.targetDid : undefined
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
   const {_} = useLingui()
+
+  // Use targetDid if provided (from dialog), otherwise use current account
+  const profileDid = targetDid || currentAccount!.did
 
   const {
     data: starterPack,
@@ -91,7 +98,7 @@ export function Wizard({
     data: profile,
     isLoading: isLoadingProfile,
     isError: isErrorProfile,
-  } = useProfileQuery({did: currentAccount?.did})
+  } = useProfileQuery({did: profileDid})
 
   const isEdit = Boolean(rkey)
   const isReady =
@@ -133,6 +140,7 @@ export function Wizard({
           currentListItems={listItems}
           profile={profile}
           moderationOpts={moderationOpts}
+          fromDialog={fromDialog}
         />
       </Provider>
     </Layout.Screen>
@@ -144,17 +152,20 @@ function WizardInner({
   currentListItems,
   profile,
   moderationOpts,
+  fromDialog,
 }: {
   currentStarterPack?: AppBskyGraphDefs.StarterPackView
   currentListItems?: AppBskyGraphDefs.ListItemView[]
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
+  fromDialog?: boolean
 }) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
+
   const {data: currentProfile} = useProfileQuery({
     did: currentAccount?.did,
     staleTime: 0,
@@ -213,21 +224,35 @@ function WizardInner({
     })
     Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)])
     dispatch({type: 'SetProcessing', processing: false})
-    navigation.replace('StarterPack', {
-      name: currentAccount!.handle,
-      rkey,
-      new: true,
-    })
+
+    // If launched from ProfileMenu dialog, notify the dialog and go back
+    if (fromDialog) {
+      navigation.goBack()
+      notifyDialogSuccess()
+    } else {
+      // Original behavior for other entry points
+      navigation.replace('StarterPack', {
+        name: currentAccount!.handle,
+        rkey,
+        new: true,
+      })
+    }
   }
 
   const onSuccessEdit = () => {
-    if (navigation.canGoBack()) {
+    // If launched from ProfileMenu dialog, go back to stay on profile page
+    if (fromDialog) {
       navigation.goBack()
     } else {
-      navigation.replace('StarterPack', {
-        name: currentAccount!.handle,
-        rkey: parsed!.rkey,
-      })
+      // Original behavior for other entry points
+      if (navigation.canGoBack()) {
+        navigation.goBack()
+      } else {
+        navigation.replace('StarterPack', {
+          name: currentAccount!.handle,
+          rkey: parsed!.rkey,
+        })
+      }
     }
   }
 
@@ -472,8 +497,12 @@ function Footer({
             {
               items.length < 2 ? (
                 <Trans>
-                  It's just you right now! Add more people to your starter pack
-                  by searching above.
+                  It's just{' '}
+                  <Text style={[a.font_bold, textStyles]} emoji>
+                    {getName(items[0])}{' '}
+                  </Text>
+                  right now! Add more people to your starter pack by searching
+                  above.
                 </Trans>
               ) : items.length === 2 ? (
                 <Trans>
