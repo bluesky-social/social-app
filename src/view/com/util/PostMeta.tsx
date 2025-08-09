@@ -171,7 +171,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
                   &middot;{' '}
                 </Text>
               )}
-              {timeElapsed}
+              <time dateTime={opts.timestamp}>
+                {timeElapsed}
+              </time>
             </WebOnlyInlineLinkText>
           )}
         </TimeElapsed>
