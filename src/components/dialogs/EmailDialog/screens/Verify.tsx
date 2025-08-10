@@ -211,7 +211,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
               <Trans>Verify your email</Trans>
             )
           ) : (
-            <Trans comment="Dialog title shown when a user is choosing to verify their email address using a code they have been sent">
+            <Trans comment="Dialog title shown when a user is choosing to verify their email address by entering a code they have been sent">
               Verify email code
             </Trans>
           )}
