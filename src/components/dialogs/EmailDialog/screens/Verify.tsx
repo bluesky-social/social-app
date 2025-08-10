@@ -349,7 +349,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
               msg({
                 message: `Verify code`,
                 context: `action`,
-                comment: `Button text and accessibility label for action to verify the account email address using the code entered by the user`,
+                comment: `Button text and accessibility label for action to verify the user's email address using the code entered`,
               }),
             )}
             size="large"
@@ -364,7 +364,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
             <ButtonText>
               <Trans
                 context="action"
-                comment="Button text and accessibility label for action to verify the account email address using the code entered by the user">
+                comment="Button text and accessibility label for action to verify the user's email address using the code entered">
                 Verify code
               </Trans>
             </ButtonText>
