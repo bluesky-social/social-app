@@ -216,7 +216,7 @@ msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
 #: src/lib/generate-starterpack.ts:111
-#: src/screens/StarterPack/Wizard/index.tsx:178
+#: src/screens/StarterPack/Wizard/index.tsx:184
 msgid "{displayName}'s Starter Pack"
 msgstr ""
 
@@ -445,12 +445,12 @@ msgstr ""
 msgid "+{computedTotal}"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:449
+#: src/screens/StarterPack/Wizard/index.tsx:488
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:502
+#: src/screens/StarterPack/Wizard/index.tsx:541
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
@@ -463,11 +463,11 @@ msgstr ""
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:490
+#: src/screens/StarterPack/Wizard/index.tsx:529
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:483
+#: src/screens/StarterPack/Wizard/index.tsx:522
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr ""
 
@@ -483,7 +483,7 @@ msgstr ""
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:440
+#: src/screens/StarterPack/Wizard/index.tsx:479
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr ""
 
@@ -631,7 +631,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:551
+#: src/screens/StarterPack/Wizard/index.tsx:572
 msgid "Add {0} more to continue"
 msgstr ""
 
@@ -731,7 +731,7 @@ msgstr ""
 msgid "Add recommended feeds"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:471
+#: src/screens/StarterPack/Wizard/index.tsx:510
 msgid "Add some feeds to your starter pack!"
 msgstr ""
 
@@ -1216,7 +1216,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:158
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:286
+#: src/screens/StarterPack/Wizard/index.tsx:303
 msgid "Back"
 msgstr ""
 
@@ -1733,7 +1733,7 @@ msgstr ""
 msgid "Choose domain verification method"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:194
+#: src/screens/StarterPack/Wizard/index.tsx:200
 msgid "Choose Feeds"
 msgstr ""
 
@@ -1741,7 +1741,7 @@ msgstr ""
 msgid "Choose for me"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:190
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose People"
 msgstr ""
 
@@ -2848,8 +2848,8 @@ msgstr ""
 #: src/screens/Settings/AccountSettings.tsx:143
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:249
 #: src/screens/StarterPack/StarterPackScreen.tsx:588
-#: src/screens/StarterPack/Wizard/index.tsx:534
-#: src/screens/StarterPack/Wizard/index.tsx:541
+#: src/screens/StarterPack/Wizard/index.tsx:319
+#: src/screens/StarterPack/Wizard/index.tsx:324
 msgid "Edit"
 msgstr ""
 
@@ -3336,8 +3336,8 @@ msgstr ""
 msgid "Failed to create conversation"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:233
-#: src/screens/StarterPack/Wizard/index.tsx:241
+#: src/screens/StarterPack/Wizard/index.tsx:239
+#: src/screens/StarterPack/Wizard/index.tsx:247
 msgid "Failed to create starter pack"
 msgstr ""
 
@@ -3611,7 +3611,7 @@ msgstr ""
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:201
 msgid "Finish"
 msgstr ""
 
@@ -4460,7 +4460,7 @@ msgstr ""
 msgid "It's correct"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:435
+#: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
@@ -5450,10 +5450,10 @@ msgstr ""
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:187
-#: src/screens/StarterPack/Wizard/index.tsx:191
-#: src/screens/StarterPack/Wizard/index.tsx:341
-#: src/screens/StarterPack/Wizard/index.tsx:348
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:197
+#: src/screens/StarterPack/Wizard/index.tsx:376
+#: src/screens/StarterPack/Wizard/index.tsx:383
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:267
 msgid "Next"
@@ -7237,7 +7237,7 @@ msgstr ""
 msgid "Returns to previous page"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:287
+#: src/screens/StarterPack/Wizard/index.tsx:304
 msgid "Returns to the previous step"
 msgstr ""
 
@@ -7364,7 +7364,7 @@ msgstr ""
 msgid "Search for \"{searchText}\""
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/index.tsx:474
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
 
@@ -8035,7 +8035,7 @@ msgid "Similar accounts"
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:201
 msgid "Skip"
 msgstr ""
 
@@ -8180,7 +8180,7 @@ msgstr ""
 
 #: src/Navigation.tsx:578
 #: src/Navigation.tsx:583
-#: src/screens/StarterPack/Wizard/index.tsx:186
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Starter Pack"
 msgstr ""
 
@@ -8465,8 +8465,8 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:111
 #: src/screens/StarterPack/StarterPackScreen.tsx:155
 #: src/screens/StarterPack/StarterPackScreen.tsx:156
-#: src/screens/StarterPack/Wizard/index.tsx:104
-#: src/screens/StarterPack/Wizard/index.tsx:114
+#: src/screens/StarterPack/Wizard/index.tsx:110
+#: src/screens/StarterPack/Wizard/index.tsx:120
 msgid "That starter pack could not be found."
 msgstr ""
 
