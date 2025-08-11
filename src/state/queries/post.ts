@@ -1,9 +1,9 @@
 import {useCallback} from 'react'
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedDefs,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
   AtUri,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
@@ -376,7 +376,7 @@ function useThreadMuteMutation() {
   >({
     mutationFn: ({uri}) => {
       logger.metric('post:mute', {})
-      return agent.api.app.gndr.graph.muteThread({root: uri})
+      return agent.api.app.bsky.graph.muteThread({root: uri})
     },
   })
 }
@@ -386,7 +386,7 @@ function useThreadUnmuteMutation() {
   return useMutation<{}, Error, {uri: string}>({
     mutationFn: ({uri}) => {
       logger.metric('post:unmute', {})
-      return agent.api.app.gndr.graph.unmuteThread({root: uri})
+      return agent.api.app.bsky.graph.unmuteThread({root: uri})
     },
   })
 }

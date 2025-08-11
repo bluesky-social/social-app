@@ -1,16 +1,16 @@
 import {
-  type AppGndrFeedDefs,
-  AppGndrFeedLike,
-  AppGndrFeedPost,
-  AppGndrFeedRepost,
-  type AppGndrGraphDefs,
-  AppGndrGraphStarterpack,
-  type AppGndrNotificationListNotifications,
-  type GndrAgent,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedLike as AppGndrFeedLike,
+  AppBskyFeedPost as AppGndrFeedPost,
+  AppBskyFeedRepost as AppGndrFeedRepost,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
+  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
+  type AppBskyNotificationListNotifications as AppGndrNotificationListNotifications,
+  type BskyAgent as GndrAgent,
   hasMutedWord,
   moderateNotification,
   type ModerationOpts,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
@@ -213,10 +213,10 @@ async function fetchSubjects(
   const postUris = new Set<string>()
   const packUris = new Set<string>()
   for (const notif of groupedNotifs) {
-    if (notif.subjectUri?.includes('app.gndr.feed.post')) {
+    if (notif.subjectUri?.includes('app.bsky.feed.post')) {
       postUris.add(notif.subjectUri)
     } else if (
-      notif.notification.reasonSubject?.includes('app.gndr.graph.starterpack')
+      notif.notification.reasonSubject?.includes('app.bsky.graph.starterpack')
     ) {
       packUris.add(notif.notification.reasonSubject)
     }
@@ -225,12 +225,12 @@ async function fetchSubjects(
   const packUriChunks = chunk(Array.from(packUris), 25)
   const postsChunks = await Promise.all(
     postUriChunks.map(uris =>
-      agent.app.gndr.feed.getPosts({uris}).then(res => res.data.posts),
+      agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
     ),
   )
   const packsChunks = await Promise.all(
     packUriChunks.map(uris =>
-      agent.app.gndr.graph
+      agent.app.bsky.graph
         .getStarterPacks({uris})
         .then(res => res.data.starterPacks),
     ),

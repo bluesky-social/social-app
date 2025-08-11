@@ -13,7 +13,7 @@ import {
   type TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
-import {AppGndrRichtextFacet, RichText} from '@gander-social-atproto/api'
+import {AppBskyRichtextFacet as AppGndrRichtextFacet, RichText} from '@atproto/api'
 import PasteInput, {
   type PastedFile,
   type PasteInputRef, // @ts-expect-error no types when installing from github

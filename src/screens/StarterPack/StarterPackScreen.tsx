@@ -1,14 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
-  AppGndrGraphDefs,
-  AppGndrGraphStarterpack,
+  AppBskyGraphDefs as AppGndrGraphDefs,
+  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
   AtUri,
   type ModerationOpts,
   RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -417,7 +417,7 @@ function Header({
         isOwner={isOwn}
         avatar={undefined}
         creator={creator}
-        purpose="app.gndr.graph.defs#referencelist"
+        purpose="app.bsky.graph.defs#referencelist"
         avatarType="starter-pack">
         {hasSession ? (
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
@@ -644,7 +644,7 @@ function OverflowMenu({
           control={reportDialogControl}
           subject={{
             ...starterPack,
-            $type: 'app.gndr.graph.defs#starterPackView',
+            $type: 'app.bsky.graph.defs#starterPackView',
           }}
         />
       )}

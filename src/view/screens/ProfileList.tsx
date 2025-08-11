@@ -1,14 +1,14 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
-  AppGndrGraphDefs,
+  AppBskyGraphDefs as AppGndrGraphDefs,
   AtUri,
   moderateUserList,
   type ModerationOpts,
   RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
@@ -103,7 +103,7 @@ function ProfileListScreenInner(props: Props) {
   const {_} = useLingui()
   const {name: handleOrDid, rkey} = props.route.params
   const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
-    AtUri.make(handleOrDid, 'app.gndr.graph.list', rkey).toString(),
+    AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
   )
   const {data: preferences} = usePreferencesQuery()
   const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
@@ -318,8 +318,8 @@ function Header({
   const listMuteMutation = useListMuteMutation()
   const listBlockMutation = useListBlockMutation()
   const listDeleteMutation = useListDeleteMutation()
-  const isCurateList = list.purpose === 'app.gndr.graph.defs#curatelist'
-  const isModList = list.purpose === 'app.gndr.graph.defs#modlist'
+  const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
+  const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isOwner = list.creator.did === currentAccount?.did
@@ -704,7 +704,7 @@ function Header({
           control={reportDialogControl}
           subject={{
             ...list,
-            $type: 'app.gndr.graph.defs#listView',
+            $type: 'app.bsky.graph.defs#listView',
           }}
         />
         {isCurateList ? (

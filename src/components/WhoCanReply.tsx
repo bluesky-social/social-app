@@ -7,11 +7,11 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {
-  type AppGndrFeedDefs,
-  AppGndrFeedPost,
-  type AppGndrGraphDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
   AtUri,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

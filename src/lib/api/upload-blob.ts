@@ -1,8 +1,8 @@
 import {copyAsync} from 'expo-file-system'
 import {
+  type BskyAgent as GndrAgent,
   type ComAtprotoRepoUploadBlob,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
 import {safeDeleteAsync} from '#/lib/media/manip'
 

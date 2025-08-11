@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {type AppGndrFeedDefs, AtUri} from '@gander-social-atproto/api'
+import {type AppBskyFeedDefs as AppGndrFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'

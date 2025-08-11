@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {type AppGndrUnspeccedGetPostThreadV2} from '@gander-social-atproto/api'
+import {type AppBskyUnspeccedGetPostThreadV2 as AppGndrUnspeccedGetPostThreadV2} from '@atproto/api'
 
 /**
  * See the `below` param on {@link AppGndrUnspeccedGetPostThreadV2.QueryParams}

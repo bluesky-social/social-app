@@ -10,7 +10,7 @@ import Animated, {
   SlideOutLeft,
   SlideOutRight,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerDescribeServer} from '@gander-social-atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'

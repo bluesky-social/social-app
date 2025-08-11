@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppGndrGraphStarterpack, AtUri} from '@gander-social-atproto/api'
+import {AppBskyGraphStarterpack as AppGndrGraphStarterpack, AtUri} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'

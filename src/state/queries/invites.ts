@@ -1,4 +1,4 @@
-import {type ComAtprotoServerDefs} from '@gander-social-atproto/api'
+import {type ComAtprotoServerDefs} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'

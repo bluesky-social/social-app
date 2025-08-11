@@ -10,7 +10,7 @@ Get the app itself:
 
 ## Development Resources
 
-This is a [React Native](https://reactnative.dev/) application, written in the TypeScript programming language. It builds on the `gander-social-atproto` TypeScript packages (like [`@gander-social-atproto/api`](https://www.npmjs.com/package/@gander-social-atproto/api)), which are also open source, but in [a different git repository](https://github.com/gander-social/atproto).
+This is a [React Native](https://reactnative.dev/) application, written in the TypeScript programming language. It builds on the `gander-social-atproto` TypeScript packages (like [`@atproto/api`](https://www.npmjs.com/package/@atproto/api)), which are also open source, but in [a different git repository](https://github.com/gander-social/atproto).
 
 There is a small amount of Go language source code (in `./gndrweb/`), for a web service that returns the React Native Web application.
 
@@ -23,7 +23,7 @@ The Authenticated Transfer Protocol ("AT Protocol" or "gander-social-atproto") i
 - [Protocol Specifications](https://atproto.com/specs/atp)
 - [Blogpost on self-authenticating data structures](https://gndr.social/about/blog/3-6-2022-a-self-authenticating-social-protocol)
 
-The Gander Social application encompasses a set of schemas and APIs built in the overall AT Protocol framework. The namespace for these "Lexicons" is `app.gndr.*`.
+The Gander Social application encompasses a set of schemas and APIs built in the overall AT Protocol framework. The namespace for these "Lexicons" is `app.bsky.*`.
 
 ## Contributions
 

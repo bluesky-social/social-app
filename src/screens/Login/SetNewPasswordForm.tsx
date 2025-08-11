@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {GndrAgent} from '@gander-social-atproto/api'
+import {BskyAgent as GndrAgent} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

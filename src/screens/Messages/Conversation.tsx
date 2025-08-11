@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect} from 'react'
 import {View} from 'react-native'
 import {
-  type AppGndrActorDefs,
+  type AppBskyActorDefs as AppGndrActorDefs,
   moderateProfile,
   type ModerationDecision,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {

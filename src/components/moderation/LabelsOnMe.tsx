@@ -1,8 +1,8 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
-  type AppGndrFeedDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
   type ComAtprotoLabelDefs,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

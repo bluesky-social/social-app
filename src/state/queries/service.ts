@@ -1,4 +1,4 @@
-import {GndrAgent} from '@gander-social-atproto/api'
+import {BskyAgent as GndrAgent} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 const RQKEY_ROOT = 'service'

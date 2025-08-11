@@ -1,7 +1,7 @@
 import {useImperativeHandle, useRef, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppGndrEmbedVideo} from '@gander-social-atproto/api'
-import {GanderVideoView} from '@haileyok/bluesky-video'
+import {type AppBskyEmbedVideo as AppGndrEmbedVideo} from '@atproto/api'
+import {BlueskyVideoView} from '@haileyok/bluesky-video'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -31,7 +31,7 @@ export function VideoEmbedInnerNative({
   setIsActive: (isActive: boolean) => void
 }) {
   const {_} = useLingui()
-  const videoRef = useRef<GanderVideoView>(null)
+  const videoRef = useRef<BlueskyVideoView>(null)
   const autoplayDisabled = useAutoplayDisabled()
   const isWithinMessage = useIsWithinMessage()
   const [muted, setMuted] = useVideoMuteState()
@@ -52,7 +52,7 @@ export function VideoEmbedInnerNative({
 
   return (
     <View style={[a.flex_1, a.relative]}>
-      <GanderVideoView
+      <BlueskyVideoView
         url={embed.playlist}
         autoplay={!autoplayDisabled && !isWithinMessage}
         beginMuted={autoplayDisabled ? false : muted}

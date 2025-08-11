@@ -145,7 +145,14 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const setDrawerOpen = useSetDrawerOpen()
-  const navigation = useNavigation<NavigationProp>()
+  // const navigation = useNavigation<NavigationProp>()
+  let navigation: NavigationProp | undefined;
+  try {
+    navigation = useNavigation<NavigationProp>();
+  } catch {
+    navigation = isAtHome
+  }
+
   const {
     isAtHome,
     isAtSearch,

@@ -1,7 +1,7 @@
 import {
   type AppGndrFeedGetActorFeeds,
   moderateFeedGenerator,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryKey,
@@ -34,7 +34,7 @@ export function useProfileFeedgensQuery(
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.gndr.feed.getActorFeeds({
+      const res = await agent.app.bsky.feed.getActorFeeds({
         actor: did,
         limit: PAGE_SIZE,
         cursor: pageParam,

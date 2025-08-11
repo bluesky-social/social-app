@@ -2,10 +2,10 @@ import {useRef} from 'react'
 import {type ListRenderItemInfo} from 'react-native'
 import {View} from 'react-native'
 import {
-  type AppGndrActorDefs,
+  type AppBskyActorDefs as AppGndrActorDefs,
   type ModerationOpts,
-} from '@gander-social-atproto/api'
-import {type GeneratorView} from '@gander-social-atproto/api/dist/client/types/app/gndr/feed/defs'
+} from '@atproto/api'
+import {type GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

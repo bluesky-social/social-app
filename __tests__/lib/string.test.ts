@@ -1,4 +1,4 @@
-import {RichText} from '@gander-social-atproto/api'
+import {RichText} from '@atproto/api'
 
 import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {
@@ -975,7 +975,7 @@ describe('parseStarterPackHttpUri', () => {
 
 describe('createStarterPackGooglePlayUri', () => {
   const base =
-    'https://play.google.com/store/apps/details?id=xyz.ganderweb.app&referrer=utm_source%3Dgander%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
+    'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dgander%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
 
   it('returns valid google play uri when input is valid', () => {
     expect(createStarterPackGooglePlayUri('name', 'rkey')).toEqual(

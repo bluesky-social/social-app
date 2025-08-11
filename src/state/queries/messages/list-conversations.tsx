@@ -1,10 +1,10 @@
 import {createContext, useCallback, useContext, useEffect, useMemo} from 'react'
 import {
-  ChatGndrConvoDefs,
-  type ChatGndrConvoListConvos,
+  ChatBskyConvoDefs as ChatGndrConvoDefs,
+  type ChatBskyConvoListConvos as ChatGndrConvoListConvos,
   moderateProfile,
   type ModerationOpts,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,

@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {Dimensions, type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppGndrGraphDefs} from '@gander-social-atproto/api'
+import {type AppGndrGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

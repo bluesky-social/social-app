@@ -24,7 +24,7 @@ export function useGetSuggestedFeedsQuery({enabled}: {enabled?: boolean}) {
     queryKey: createGetSuggestedFeedsQueryKey(),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const {data} = await agent.app.gndr.unspecced.getSuggestedFeeds(
+      const {data} = await agent.app.bsky.unspecced.getSuggestedFeeds(
         {
           limit: DEFAULT_LIMIT,
         },

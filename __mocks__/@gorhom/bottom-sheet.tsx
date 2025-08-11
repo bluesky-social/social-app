@@ -1,5 +1,5 @@
-import React, {ReactNode} from 'react'
-import {View, ScrollView, Modal, FlatList, TextInput} from 'react-native'
+import React, {type ReactNode} from 'react'
+import {FlatList, Modal, ScrollView, TextInput,View} from 'react-native'
 
 const BottomSheetModalContext = React.createContext(null)
 
@@ -47,13 +47,13 @@ export {useBottomSheetInternal}
 export {useBottomSheetDynamicSnapPoints}
 
 export {
-  BottomSheetModalProvider,
   BottomSheetBackdrop,
+  BottomSheetFlatList,
+  BottomSheetFooter,
   BottomSheetHandle,
   BottomSheetModal,
-  BottomSheetFooter,
+  BottomSheetModalProvider,
   BottomSheetScrollView,
-  BottomSheetFlatList,
   BottomSheetTextInput,
 }
 

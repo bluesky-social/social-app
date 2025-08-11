@@ -1,4 +1,4 @@
-import {AppGndrGraphDefs} from '@gander-social-atproto/api'
+import {AppBskyGraphDefs as AppGndrGraphDefs} from '@atproto/api'
 
 export const isBasicView = AppGndrGraphDefs.isStarterPackViewBasic
 export const isView = AppGndrGraphDefs.isStarterPackView

@@ -1,10 +1,10 @@
 import {memo, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedPost,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedPost as AppGndrFeedPost,
   AtUri,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

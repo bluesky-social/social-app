@@ -3,12 +3,12 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {
-  type AppGndrActorDefs,
-  AppGndrEmbedVideo,
-  type AppGndrFeedDefs,
-  AppGndrFeedPost,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  AppBskyEmbedVideo as AppGndrEmbedVideo,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
   type ModerationDecision,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

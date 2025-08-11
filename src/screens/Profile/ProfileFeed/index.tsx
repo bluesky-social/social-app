@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {AppGndrFeedDefs} from '@gander-social-atproto/api'
+import {AppBskyFeedDefs as AppGndrFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
@@ -61,7 +61,7 @@ export function ProfileFeedScreen(props: Props) {
   const navigation = useNavigation<NavigationProp>()
 
   const uri = useMemo(
-    () => makeRecordUri(handleOrDid, 'app.gndr.feed.generator', rkey),
+    () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
     [rkey, handleOrDid],
   )
   const {error, data: resolvedUri} = useResolveUriQuery(uri)

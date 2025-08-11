@@ -1,4 +1,4 @@
-import {type Did} from '@gander-social-atproto/api'
+import {type Did} from '@atproto/api'
 
 import packageJson from '#/../package.json'
 

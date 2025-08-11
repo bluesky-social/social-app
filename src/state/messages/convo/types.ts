@@ -1,9 +1,9 @@
 import {
-  type ChatGndrActorDefs,
-  type ChatGndrConvoDefs,
-  type ChatGndrConvoSendMessage,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
+  type BskyAgent as GndrAgent,
+  type ChatBskyActorDefs as ChatGndrActorDefs,
+  type ChatBskyConvoDefs as ChatGndrConvoDefs,
+  type ChatBskyConvoSendMessage as ChatGndrConvoSendMessage,
+} from '@atproto/api'
 
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 

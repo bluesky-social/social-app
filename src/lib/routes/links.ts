@@ -1,4 +1,4 @@
-import {type AppGndrGraphDefs, AtUri} from '@gander-social-atproto/api'
+import {type AppBskyGraphDefs as AppGndrGraphDefs, AtUri} from '@atproto/api'
 
 import {isInvalidHandle} from '#/lib/strings/handles'
 

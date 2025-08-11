@@ -1,10 +1,10 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
-  type AppGndrVideoDefs,
+  type AppBskyVideoDefs as AppGndrVideoDefs,
   type BlobRef,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
-import {type JobStatus} from '@gander-social-atproto/api/dist/client/types/app/gndr/video/defs'
+  type BskyAgent as GndrAgent,
+} from '@atproto/api'
+import {type JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
@@ -335,7 +335,7 @@ export async function processVideo(
     let status: JobStatus | undefined
     let blob: BlobRef | undefined
     try {
-      const response = await videoAgent.app.gndr.video.getJobStatus({jobId})
+      const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
       status = response.data.jobStatus
       pollFailures = 0
 

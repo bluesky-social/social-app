@@ -1,13 +1,13 @@
 import {
   type $Typed,
-  type AppGndrFeedDefs,
-  type AppGndrFeedPost,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedPost as AppGndrFeedPost,
   type AppGndrUnspeccedDefs,
   type AppGndrUnspeccedGetPostThreadV2,
   AtUri,
   moderatePost,
   type ModerationOpts,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -168,11 +168,11 @@ export function postViewToThreadPlaceholder(
   }
 > {
   return {
-    $type: 'app.gndr.unspecced.getPostThreadV2#threadItem',
+    $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
     uri: post.uri,
     depth: 0, // reset to 0 for highlighted post
     value: {
-      $type: 'app.gndr.unspecced.defs#threadItemPost',
+      $type: 'app.bsky.unspecced.defs#threadItemPost',
       post,
       opThread: false,
       moreParents: false,

@@ -1,4 +1,4 @@
-import {type AppGndrFeedDefs, AppGndrFeedPost} from '@gander-social-atproto/api'
+import {type AppBskyFeedDefs as AppGndrFeedDefs, AppGndrFeedPost} from '@atproto/api'
 import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 

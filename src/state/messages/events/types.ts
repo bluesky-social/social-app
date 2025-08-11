@@ -1,7 +1,7 @@
 import {
-  type ChatGndrConvoGetLog,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
+  type BskyAgent as GndrAgent,
+  type ChatBskyConvoGetLog as ChatGndrConvoGetLog,
+} from '@atproto/api'
 
 export type MessagesEventBusParams = {
   agent: GndrAgent

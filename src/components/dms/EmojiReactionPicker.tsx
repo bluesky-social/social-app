@@ -1,6 +1,6 @@
 import {useMemo, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {type ChatGndrConvoDefs} from '@gander-social-atproto/api'
+import {type ChatGndrConvoDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

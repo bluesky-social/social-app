@@ -1,4 +1,4 @@
-import {type AppGndrGraphDefs} from '@gander-social-atproto/api'
+import {type AppBskyGraphDefs as AppGndrGraphDefs} from '@atproto/api'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {accumulate} from '#/lib/async/accumulate'
@@ -24,7 +24,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
       let lists: AppGndrGraphDefs.ListView[] = []
       const promises = [
         accumulate(cursor =>
-          agent.app.gndr.graph
+          agent.app.bsky.graph
             .getLists({
               actor: currentAccount!.did,
               cursor,
@@ -39,7 +39,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
       if (filter === 'all-including-subscribed' || filter === 'mod') {
         promises.push(
           accumulate(cursor =>
-            agent.app.gndr.graph
+            agent.app.bsky.graph
               .getListMutes({
                 cursor,
                 limit: 50,
@@ -52,7 +52,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
         )
         promises.push(
           accumulate(cursor =>
-            agent.app.gndr.graph
+            agent.app.bsky.graph
               .getListBlocks({
                 cursor,
                 limit: 50,
@@ -69,13 +69,13 @@ export function useMyListsQuery(filter: MyListsFilter) {
         for (let list of res) {
           if (
             filter === 'curate' &&
-            list.purpose !== 'app.gndr.graph.defs#curatelist'
+            list.purpose !== 'app.bsky.graph.defs#curatelist'
           ) {
             continue
           }
           if (
             filter === 'mod' &&
-            list.purpose !== 'app.gndr.graph.defs#modlist'
+            list.purpose !== 'app.bsky.graph.defs#modlist'
           ) {
             continue
           }

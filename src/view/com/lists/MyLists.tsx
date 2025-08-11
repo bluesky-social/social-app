@@ -7,7 +7,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type AppGndrGraphDefs as GraphDefs} from '@gander-social-atproto/api'
+import {type AppGndrGraphDefs as GraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

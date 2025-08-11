@@ -2,11 +2,11 @@ import {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   type $Typed,
-  type AppGndrActorDefs,
-  type ChatGndrConvoDefs,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type ChatBskyConvoDefs as ChatGndrConvoDefs,
   type ComAtprotoModerationCreateReport,
   RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -157,7 +157,7 @@ function SubmitStep({
       if (params.type === 'convoMessage') {
         const {convoId, message} = params
         const subject: $Typed<ChatGndrConvoDefs.MessageRef> = {
-          $type: 'chat.gndr.convo.defs#messageRef',
+          $type: 'chat.bsky.convo.defs#messageRef',
           messageId: message.id,
           convoId,
           did: message.sender.did,

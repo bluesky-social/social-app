@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type AppGndrNotificationDeclaration} from '@gander-social-atproto/api'
+import {type AppGndrNotificationDeclaration} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'

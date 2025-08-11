@@ -66,7 +66,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
 
   const allowUI = React.useMemo(() => {
     return threadgateRecordToAllowUISetting({
-      $type: 'app.gndr.feed.threadgate',
+      $type: 'app.bsky.feed.threadgate',
       post: '',
       createdAt: new Date().toString(),
       allow: preferences.postInteractionSettings.threadgateAllowRules,

@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {Pressable, View} from 'react-native'
+import {type ChatBskyConvoDefs as ChatGndrConvoDefs} from '@atproto/api'
 import EmojiPicker from '@emoji-mart/react'
-import {type ChatGndrConvoDefs} from '@gander-social-atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {DropdownMenu} from 'radix-ui'

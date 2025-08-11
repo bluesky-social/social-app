@@ -1,20 +1,20 @@
 import {
   type $Typed,
-  type AppGndrEmbedExternal,
-  type AppGndrEmbedImages,
-  type AppGndrEmbedRecord,
-  type AppGndrEmbedRecordWithMedia,
-  type AppGndrEmbedVideo,
-  type AppGndrFeedPost,
+  type AppBskyEmbedExternal as AppGndrEmbedExternal,
+  type AppBskyEmbedImages as AppGndrEmbedImages,
+  type AppBskyEmbedRecord as AppGndrEmbedRecord,
+  type AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
+  type AppBskyEmbedVideo as AppGndrEmbedVideo,
+  type AppBskyFeedPost as  AppGndrFeedPost,
   AtUri,
   BlobRef,
+  type BskyAgent as GndrAgent,
   type ComAtprotoLabelDefs,
   type ComAtprotoRepoApplyWrites,
   type ComAtprotoRepoStrongRef,
-  type GndrAgent,
   RichText,
-} from '@gander-social-atproto/api'
-import {TID} from '@gander-social-atproto/common-web'
+} from '@atproto/api'
+import {TID} from '@atproto/common-web'
 import * as dcbor from '@ipld/dag-cbor'
 import {t} from '@lingui/macro'
 import {type QueryClient} from '@tanstack/react-query'
@@ -105,7 +105,7 @@ export async function post(
     now.setMilliseconds(now.getMilliseconds() + 1)
     tid = TID.next(tid)
     const rkey = tid.toString()
-    const uri = `at://${did}/app.gndr.feed.post/${rkey}`
+    const uri = `at://${did}/app.bsky.feed.post/${rkey}`
     uris.push(uri)
 
     const rt = await rtPromise
@@ -114,7 +114,7 @@ export async function post(
     const record: AppGndrFeedPost.Record = {
       // IMPORTANT: $type has to exist, CID is calculated with the `$type` field
       // present and will produce the wrong CID if you omit it.
-      $type: 'app.gndr.feed.post',
+      $type: 'app.bsky.feed.post',
       createdAt: now.toISOString(),
       text: rt.text,
       facets: rt.facets,
@@ -125,7 +125,7 @@ export async function post(
     }
     writes.push({
       $type: 'com.atproto.repo.applyWrites#create',
-      collection: 'app.gndr.feed.post',
+      collection: 'app.bsky.feed.post',
       rkey: rkey,
       value: record,
     })
@@ -133,7 +133,7 @@ export async function post(
     if (i === 0 && thread.threadgate.some(tg => tg.type !== 'everybody')) {
       writes.push({
         $type: 'com.atproto.repo.applyWrites#create',
-        collection: 'app.gndr.feed.threadgate',
+        collection: 'app.bsky.feed.threadgate',
         rkey: rkey,
         value: createThreadgateRecord({
           createdAt: now.toISOString(),
@@ -149,11 +149,11 @@ export async function post(
     ) {
       writes.push({
         $type: 'com.atproto.repo.applyWrites#create',
-        collection: 'app.gndr.feed.postgate',
+        collection: 'app.bsky.feed.postgate',
         rkey: rkey,
         value: {
           ...thread.postgate,
-          $type: 'app.gndr.feed.postgate',
+          $type: 'app.bsky.feed.postgate',
           createdAt: now.toISOString(),
           post: uri,
         },
@@ -245,16 +245,16 @@ async function resolveEmbed(
     ])
     if (resolvedMedia) {
       return {
-        $type: 'app.gndr.embed.recordWithMedia',
+        $type: 'app.bsky.embed.recordWithMedia',
         record: {
-          $type: 'app.gndr.embed.record',
+          $type: 'app.bsky.embed.record',
           record: resolvedQuote,
         },
         media: resolvedMedia,
       }
     }
     return {
-      $type: 'app.gndr.embed.record',
+      $type: 'app.bsky.embed.record',
       record: resolvedQuote,
     }
   }
@@ -275,7 +275,7 @@ async function resolveEmbed(
     )
     if (resolvedLink.type === 'record') {
       return {
-        $type: 'app.gndr.embed.record',
+        $type: 'app.bsky.embed.record',
         record: resolvedLink.record,
       }
     }
@@ -314,7 +314,7 @@ async function resolveMedia(
       }),
     )
     return {
-      $type: 'app.gndr.embed.images',
+      $type: 'app.bsky.embed.images',
       images,
     }
   }
@@ -349,7 +349,7 @@ async function resolveMedia(
     }
 
     return {
-      $type: 'app.gndr.embed.video',
+      $type: 'app.bsky.embed.video',
       video: videoDraft.pendingPublish.blobRef,
       alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
@@ -371,7 +371,7 @@ async function resolveMedia(
       blob = response.data.blob
     }
     return {
-      $type: 'app.gndr.embed.external',
+      $type: 'app.bsky.embed.external',
       external: {
         uri: resolvedGif.uri,
         title: resolvedGif.title,
@@ -395,7 +395,7 @@ async function resolveMedia(
         blob = response.data.blob
       }
       return {
-        $type: 'app.gndr.embed.external',
+        $type: 'app.bsky.embed.external',
         external: {
           uri: resolvedLink.uri,
           title: resolvedLink.title,

@@ -1,7 +1,7 @@
 import {
   type AtpSessionData,
   type AtpSessionEvent,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {sha256} from 'js-sha256'
 import {Statsig} from 'statsig-react-native-expo'
 

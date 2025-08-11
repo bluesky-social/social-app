@@ -5,7 +5,7 @@ import {
   Pressable,
 } from 'react-native'
 import {Image} from 'expo-image'
-import {type AppGndrEmbedExternal} from '@gander-social-atproto/api'
+import {type AppGndrEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

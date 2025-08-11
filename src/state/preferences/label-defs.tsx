@@ -1,8 +1,8 @@
 import React from 'react'
 import {
-  type AppGndrLabelerDefs,
+  type AppBskyLabelerDefs as AppGndrLabelerDefs,
   type InterpretedLabelValueDefinition,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
 import {useLabelDefinitionsQuery} from '../queries/preferences'
 

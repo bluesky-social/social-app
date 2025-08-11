@@ -1,9 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
+  BSKY_LABELER_DID as GNDR_LABELER_DID,
   ComAtprotoModerationDefs,
-  GNDR_LABELER_DID,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'

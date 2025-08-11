@@ -18,7 +18,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeedLikedBy'>
 export const ProfileFeedLikedByScreen = ({route}: Props) => {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {name, rkey} = route.params
-  const uri = makeRecordUri(name, 'app.gndr.feed.generator', rkey)
+  const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey)
   const {_} = useLingui()
 
   useFocusEffect(

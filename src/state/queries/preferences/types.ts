@@ -2,7 +2,7 @@ import {
   type GndrFeedViewPreference,
   type GndrPreferences,
   type GndrThreadViewPreference,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
 export type UsePreferencesQueryResponse = Omit<
   GndrPreferences,

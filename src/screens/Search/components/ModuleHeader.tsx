@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppGndrFeedDefs, AtUri} from '@gander-social-atproto/api'
+import {type AppBskyFeedDefs as AppGndrFeedDefs, AtUri} from '@atproto/api'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {makeCustomFeedLink} from '#/lib/routes/links'

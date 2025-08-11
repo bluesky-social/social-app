@@ -1,4 +1,4 @@
-import {ErrorRequestHandler, Request, RequestHandler, Response} from 'express'
+import {type ErrorRequestHandler, type Request, type RequestHandler, type Response} from 'express'
 
 import {httpLogger} from '../logger.js'
 

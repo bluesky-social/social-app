@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {type AppGndrUnspeccedGetPostThreadV2} from '@gander-social-atproto/api'
+import {type AppBskyUnspeccedGetPostThreadV2 as AppGndrUnspeccedGetPostThreadV2} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {OnceKey, useCallOnce} from '#/lib/hooks/useCallOnce'

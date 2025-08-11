@@ -1,10 +1,10 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  type AppGndrGraphDefs,
-  AppGndrGraphStarterpack,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
+  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
   moderateProfile,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

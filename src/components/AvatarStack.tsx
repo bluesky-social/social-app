@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {moderateProfile} from '@gander-social-atproto/api'
+import {moderateProfile} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

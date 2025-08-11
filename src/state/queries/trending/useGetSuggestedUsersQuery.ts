@@ -1,7 +1,7 @@
 import {
-  type AppGndrActorDefs,
-  type AppGndrUnspeccedGetSuggestedUsers,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyUnspeccedGetSuggestedUsers as AppGndrUnspeccedGetSuggestedUsers,
+} from '@atproto/api'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {
@@ -36,7 +36,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const {data} = await agent.app.gndr.unspecced.getSuggestedUsers(
+      const {data} = await agent.app.bsky.unspecced.getSuggestedUsers(
         {
           category: props.category ?? undefined,
           limit: props.limit || 10,

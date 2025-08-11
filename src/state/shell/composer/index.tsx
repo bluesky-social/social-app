@@ -1,10 +1,10 @@
 import React from 'react'
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedDefs,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
   type AppGndrUnspeccedGetPostThreadV2,
   type ModerationDecision,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'

@@ -10,8 +10,8 @@
     "install-fonts": "node --loader ts-node/esm scripts/install-fonts.ts"
   },
   "dependencies": {
-    "@gander-social-atproto/api": "0.12.19-next.0",
-    "@gander-social-atproto/common": "^0.4.0",
+    "@atproto/api": "0.16.2",
+    "@atproto/common": "^0.4.0",
     "@resvg/resvg-js": "^2.6.2",
     "express": "^4.19.2",
     "http-terminator": "^3.2.0",

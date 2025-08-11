@@ -1,13 +1,13 @@
 import {
   type $Typed,
-  AppGndrEmbedRecord,
-  AppGndrEmbedRecordWithMedia,
-  type AppGndrFeedDefs,
-  type AppGndrFeedPostgate,
+  AppBskyEmbedRecord as AppGndrEmbedRecord,
+  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedPostgate as AppGndrFeedPostgate,
   AtUri,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
-export const POSTGATE_COLLECTION = 'app.gndr.feed.postgate'
+export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
 
 export function createPostgateRecord(
   postgate: Partial<AppGndrFeedPostgate.Record> & {
@@ -52,12 +52,12 @@ export function createEmbedViewDetachedRecord({
   uri: string
 }): $Typed<AppGndrEmbedRecord.View> {
   const record: $Typed<AppGndrEmbedRecord.ViewDetached> = {
-    $type: 'app.gndr.embed.record#viewDetached',
+    $type: 'app.bsky.embedrecord#viewDetached',
     uri,
     detached: true,
   }
   return {
-    $type: 'app.gndr.embed.record#view',
+    $type: 'app.bsky.embedrecord#view',
     record,
   }
 }
@@ -102,7 +102,7 @@ export function createEmbedViewRecordFromPost(
   post: AppGndrFeedDefs.PostView,
 ): $Typed<AppGndrEmbedRecord.ViewRecord> {
   return {
-    $type: 'app.gndr.embed.record#viewRecord',
+    $type: 'app.bsky.embedrecord#viewRecord',
     uri: post.uri,
     cid: post.cid,
     author: post.author,
@@ -123,7 +123,7 @@ export function createEmbedRecordView({
   post: AppGndrFeedDefs.PostView
 }): AppGndrEmbedRecord.View {
   return {
-    $type: 'app.gndr.embed.record#view',
+    $type: 'app.bsky.embedrecord#view',
     record: createEmbedViewRecordFromPost(post),
   }
 }
@@ -199,5 +199,5 @@ export function getMaybeDetachedQuoteEmbed({
 }
 
 export const embeddingRules = {
-  disableRule: {$type: 'app.gndr.feed.postgate#disableRule'},
+  disableRule: {$type: 'app.bsky.feed.postgate#disableRule'},
 }

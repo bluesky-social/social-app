@@ -1,6 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {type AppGndrActorDefs} from '@gander-social-atproto/api'
+import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation, useNavigationState} from '@react-navigation/native'

@@ -1,17 +1,53 @@
 import {type Insets, Platform} from 'react-native'
-import {type AppGndrActorDefs} from '@gander-social-atproto/api'
+import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
+
+const LOCAL_API_URL = 'http://localhost:2584' // Change port if needed
+const PUBLIC_API_URL = 'https://public.api.bsky.app'
+
+function getApiUrl() {
+  if (typeof process !== 'undefined' && process.env && process.env.API_URL) {
+    return process.env.API_URL
+  }
+  // Only check window in web environments
+  if (typeof window !== 'undefined' && Platform.OS === 'web') {
+    if (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1'
+    ) {
+      return LOCAL_API_URL
+    }
+  }
+  // If process.env.EXPO_PUBLIC_ENV is set and not 'production', use local API URL
+  if (
+    typeof process !== 'undefined' &&
+    process.env &&
+    process.env.EXPO_PUBLIC_ENV
+  ) {
+    if (process.env.EXPO_PUBLIC_ENV !== 'production') {
+      return LOCAL_API_URL
+    }
+  }
+  return PUBLIC_API_URL
+}
+let defaultURL = getApiUrl()
+
+if (defaultURL.endsWith('/')) {
+  defaultURL = defaultURL.slice(0, -1)
+}
+export const API_URL = defaultURL
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
-export const STAGING_SERVICE = 'https://staging.gndr.dev'
-export const GNDR_SERVICE = 'https://gndr.social'
-export const PUBLIC_GNDR_SERVICE = 'https://public.api.gndr.app'
-export const DEFAULT_SERVICE = GNDR_SERVICE
-const HELP_DESK_LANG = 'en-us'
-export const HELP_DESK_URL = `https://ganderweb.zendesk.com/hc/${HELP_DESK_LANG}`
-export const EMBED_SERVICE = 'https://embed.gndr.app'
+// TODO: Update these to the correct links when they are ready
+export const STAGING_SERVICE = ''
+export const GNDR_SERVICE = 'https://bsky.social'
+export const PUBLIC_GNDR_SERVICE = defaultURL
+export const DEFAULT_SERVICE = PUBLIC_GNDR_SERVICE
+// const HELP_DESK_LANG = 'en-us'
+export const HELP_DESK_URL = ``
+export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
-export const GNDR_DOWNLOAD_URL = 'https://gndr.app/download'
+export const GNDR_DOWNLOAD_URL = 'https://bsky.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
 
 // HACK
@@ -49,6 +85,8 @@ export function FEEDBACK_FORM_URL({
       str += `&tf_17205412673421=${encodeURIComponent(handle)}`
     }
   }
+  // TODO: Remove this override once we have a help desk installed
+  str = 'formation@gandersocial.ca'
   return str
 }
 
@@ -70,14 +108,16 @@ export function IS_TEST_USER(handle?: string) {
 }
 
 export function IS_PROD_SERVICE(url?: string) {
-  return url && url !== STAGING_SERVICE && !url.startsWith(LOCAL_DEV_SERVICE)
+  url
+  // return url && url !== STAGING_SERVICE && !url.startsWith(LOCAL_DEV_SERVICE)
+  return false //TODO - once we are preparing for prod, re-enable this
 }
 
 export const PROD_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.gndr.feed.generator/${rkey}`
+  `at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/${rkey}`
 
 export const STAGING_DEFAULT_FEED = (rkey: string) =>
-  `at://did:plc:yofh3kx63drvfljkibw5zuxo/app.gndr.feed.generator/${rkey}`
+  `at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/${rkey}`
 
 export const PROD_FEEDS = [
   `feedgen|${PROD_DEFAULT_FEED('whats-hot')}`,
@@ -136,11 +176,11 @@ export const GNDR_FEED_OWNER_DIDS = [
 ]
 
 export const DISCOVER_FEED_URI =
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.gndr.feed.generator/whats-hot'
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
 export const VIDEO_FEED_URI =
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.gndr.feed.generator/thevids'
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/thevids'
 export const STAGING_VIDEO_FEED_URI =
-  'at://did:plc:yofh3kx63drvfljkibw5zuxo/app.gndr.feed.generator/thevids'
+  'at://did:plc:yofh3kx63drvfljkibw5zuxo/app.bsky.feed.generator/thevids'
 export const VIDEO_FEED_URIS = [VIDEO_FEED_URI, STAGING_VIDEO_FEED_URI]
 export const DISCOVER_SAVED_FEED = {
   type: 'feed',
@@ -164,7 +204,7 @@ export const RECOMMENDED_SAVED_FEEDS: Pick<
 >[] = [DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
 
 export const KNOWN_SHUTDOWN_FEEDS = [
-  'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.gndr.feed.generator/the-algorithm', // for you by skygaze
+  'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm', // for you by skygaze
 ]
 
 export const GIF_SERVICE = 'https://gifs.gndr.app'
@@ -197,20 +237,22 @@ export const EMOJI_REACTION_LIMIT = 5
 export const urls = {
   website: {
     blog: {
-      initialVerificationAnnouncement: `https://gndr.social/about/blog/04-21-2025-verification`,
+      initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
     },
   },
 }
 
-export const PUBLIC_APPVIEW = 'https://api.gndr.app'
-export const PUBLIC_APPVIEW_DID = 'did:web:api.gndr.app'
-export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.gndr.dev'
+export const PUBLIC_APPVIEW = 'https://api.bsky.app'
+export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
+// TODO: Update this to the correct link when it is ready
+export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.bsky.app'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
 
+// TODO: Update these to the correct links when they are ready
 export const webLinks = {
-  tos: `https://gndr.social/about/support/tos`,
-  privacy: `https://gndr.social/about/support/privacy-policy`,
-  community: `https://gndr.social/about/support/community-guidelines`,
-  communityDeprecated: `https://gndr.social/about/support/community-guidelines-deprecated`,
+  tos: `https://bsky.social/about/support/tos`,
+  privacy: `https://bksy.social/about/support/privacy-policy`,
+  community: `https://bsky.social/about/support/community-guidelines`,
+  communityDeprecated: `https://bsky.social/about/support/community-guidelines-deprecated`,
 }

@@ -1,4 +1,7 @@
-import {AppGndrRichtextFacet, type RichText} from '@gander-social-atproto/api'
+import {
+  AppBskyRichtextFacet as AppGndrRichtextFacet,
+  type RichText,
+} from '@atproto/api'
 
 import {linkRequiresWarning} from './url-helpers'
 

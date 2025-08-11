@@ -23,7 +23,7 @@ export function useSuggestedStarterPacksQuery({enabled}: {enabled?: boolean}) {
     staleTime: STALE.MINUTES.THREE,
     queryKey: createSuggestedStarterPacksQueryKey(),
     async queryFn() {
-      const {data} = await agent.app.gndr.unspecced.getSuggestedStarterPacks(
+      const {data} = await agent.app.bsky.unspecced.getSuggestedStarterPacks(
         undefined,
         {
           headers: {

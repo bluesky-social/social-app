@@ -1,10 +1,10 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   type $Typed,
-  AppGndrFeedDefs,
-  type AppGndrGraphDefs,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
   AtUri,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

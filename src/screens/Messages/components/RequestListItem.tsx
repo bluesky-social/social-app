@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type ChatGndrConvoDefs} from '@gander-social-atproto/api'
+import {type ChatBskyConvoDefs as ChatGndrConvoDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'

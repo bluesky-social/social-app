@@ -1,12 +1,12 @@
 import React from 'react'
 import {
-  AppGndrEmbedRecord,
-  AppGndrEmbedRecordWithMedia,
-  type AppGndrFeedDefs,
-  AppGndrFeedPostgate,
+  AppBskyEmbedRecord as AppGndrEmbedRecord,
+  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPostgate as AppGndrFeedPostgate,
   AtUri,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
+  type BskyAgent as GndrAgent,
+} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
@@ -277,7 +277,7 @@ export function useToggleQuotepostEnabledMutation() {
         if (prev) {
           if (action === 'disable') {
             return mergePostgateRecords(prev, {
-              embeddingRules: [{$type: 'app.gndr.feed.postgate#disableRule'}],
+              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
             })
           } else if (action === 'enable') {
             return {
@@ -289,7 +289,7 @@ export function useToggleQuotepostEnabledMutation() {
           if (action === 'disable') {
             return createPostgateRecord({
               post: postUri,
-              embeddingRules: [{$type: 'app.gndr.feed.postgate#disableRule'}],
+              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
             })
           }
         }

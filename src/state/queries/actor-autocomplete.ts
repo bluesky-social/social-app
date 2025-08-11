@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-  type AppGndrActorDefs,
+  type AppBskyActorDefs as AppGndrActorDefs,
   moderateProfile,
   type ModerationOpts,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {keepPreviousData, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'

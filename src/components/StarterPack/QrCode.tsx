@@ -4,9 +4,9 @@ import {View} from 'react-native'
 import QRCode from 'react-native-qrcode-styled'
 import type ViewShot from 'react-native-view-shot'
 import {
-  type AppGndrGraphDefs,
-  AppGndrGraphStarterpack,
-} from '@gander-social-atproto/api'
+  type AppBskyGraphDefs as AppGndrGraphDefs,
+  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
+} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {isWeb} from '#/platform/detection'

@@ -1,9 +1,9 @@
 import {
-  AppGndrActorDefs,
-  AppGndrFeedDefs,
-  AppGndrFeedPost,
-  AppGndrGraphDefs,
-} from '@gander-social-atproto/api'
+  AppBskyActorDefs as AppGndrActorDefs,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
+  AppBskyGraphDefs as AppGndrGraphDefs,
+} from '@atproto/api'
 
 import {
   type ParsedReportSubject,
@@ -31,28 +31,28 @@ export function parseReportSubject(
     return {
       type: 'account',
       did: subject.did,
-      nsid: 'app.gndr.actor.profile',
+      nsid: 'app.bsky.actor.profile',
     }
   } else if (AppGndrGraphDefs.isListView(subject)) {
     return {
       type: 'list',
       uri: subject.uri,
       cid: subject.cid,
-      nsid: 'app.gndr.graph.list',
+      nsid: 'app.bsky.graph.list',
     }
   } else if (AppGndrFeedDefs.isGeneratorView(subject)) {
     return {
       type: 'feed',
       uri: subject.uri,
       cid: subject.cid,
-      nsid: 'app.gndr.feed.generator',
+      nsid: 'app.bsky.feed.generator',
     }
   } else if (AppGndrGraphDefs.isStarterPackView(subject)) {
     return {
       type: 'starterPack',
       uri: subject.uri,
       cid: subject.cid,
-      nsid: 'app.gndr.graph.starterPack',
+      nsid: 'app.bsky.graph.starterPack',
     }
   } else if (AppGndrFeedDefs.isPostView(subject)) {
     const record = subject.record
@@ -67,7 +67,7 @@ export function parseReportSubject(
         type: 'post',
         uri: subject.uri,
         cid: subject.cid,
-        nsid: 'app.gndr.feed.post',
+        nsid: 'app.bsky.feed.post',
         attributes: {
           reply: !!record.reply,
           image:

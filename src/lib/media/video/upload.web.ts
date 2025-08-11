@@ -1,5 +1,5 @@
-import {type AppGndrVideoDefs} from '@gander-social-atproto/api'
-import {type GndrAgent} from '@gander-social-atproto/api'
+import {type AppBskyVideoDefs as AppGndrVideoDefs} from '@atproto/api'
+import {type BskyAgent as GndrAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {nanoid} from 'nanoid/non-secure'
@@ -30,7 +30,7 @@ export async function uploadVideo({
   }
   await getVideoUploadLimits(agent, _)
 
-  const uri = createVideoEndpointUrl('/xrpc/app.gndr.video.uploadVideo', {
+  const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
     did,
     name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
   })

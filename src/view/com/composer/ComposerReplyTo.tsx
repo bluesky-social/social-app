@@ -2,11 +2,11 @@ import {useCallback, useMemo, useState} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 import {
-  AppGndrEmbedImages,
-  AppGndrEmbedRecord,
-  AppGndrEmbedRecordWithMedia,
-  AppGndrFeedPost,
-} from '@gander-social-atproto/api'
+  AppBskyEmbedImages as AppGndrEmbedImages,
+  AppBskyEmbedRecord as AppGndrEmbedRecord,
+  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
+  AppBskyFeedPost as AppGndrFeedPost,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -54,7 +54,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   }, [embed])
   const parsedQuoteEmbed = quoteEmbed
     ? parseEmbed({
-        $type: 'app.gndr.embed.record#view',
+        $type: 'app.bsky.embedrecord#view',
         ...quoteEmbed,
       })
     : null

@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type AppGndrUnspeccedDefs} from '@gander-social-atproto/api'
+import {type AppBskyUnspeccedDefs as AppGndrUnspeccedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'

@@ -1,11 +1,11 @@
 import {memo, type ReactNode, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type AppGndrFeedDefs,
-  type AppGndrFeedThreadgate,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {useActorStatus} from '#/lib/actor-status'

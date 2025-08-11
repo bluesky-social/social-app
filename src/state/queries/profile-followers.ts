@@ -1,7 +1,7 @@
 import {
-  type AppGndrActorDefs,
+  type AppBskyActorDefs as AppGndrActorDefs,
   type AppGndrGraphGetFollowers,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -28,7 +28,7 @@ export function useProfileFollowersQuery(did: string | undefined) {
   >({
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.gndr.graph.getFollowers({
+      const res = await agent.app.bsky.graph.getFollowers({
         actor: did || '',
         limit: PAGE_SIZE,
         cursor: pageParam,

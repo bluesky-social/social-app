@@ -1,7 +1,7 @@
 import {
-  type ChatGndrConvoGetLog,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
+  type BskyAgent as GndrAgent,
+  type ChatBskyConvoGetLog as ChatGndrConvoGetLog,
+} from '@atproto/api'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -243,7 +243,7 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.gndr.convo.getLog(
+        return this.agent.chat.bsky.convo.getLog(
           {},
           {headers: DM_SERVICE_HEADERS},
         )
@@ -339,7 +339,7 @@ export class MessagesEventBus {
 
     try {
       const response = await networkRetry(2, () => {
-        return this.agent.chat.gndr.convo.getLog(
+        return this.agent.chat.bsky.convo.getLog(
           {
             cursor: this.latestRev,
           },

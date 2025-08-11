@@ -1,5 +1,5 @@
-import {AtUri, GndrAgent} from '@gander-social-atproto/api'
-import {TestGndr, TestNetwork} from '@gander-social-atproto/dev-env'
+import {AtUri, GndrAgent} from '@atproto/api'
+import {type TestGndr, TestNetwork} from '@atproto/dev-env'
 import fs from 'fs'
 import net from 'net'
 import path from 'path'
@@ -88,7 +88,7 @@ export async function createServer(
   //   password: 'hunter2',
   // })
   // agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-  // await agent.api.app.gndr.actor.profile.create(
+  // await agent.api.app.bsky.actor.profile.create(
   //   {repo: res.data.did},
   //   {
   //     displayName: 'Dev-env Moderation',
@@ -96,7 +96,7 @@ export async function createServer(
   //   },
   // )
 
-  // await agent.api.app.gndr.labeler.service.create(
+  // await agent.api.app.bsky.labeler.service.create(
   //   {repo: res.data.did, rkey: 'self'},
   //   {
   //     policies: {
@@ -248,7 +248,7 @@ class Mocker {
       text,
       langs: ['en'],
       embed: {
-        $type: 'app.gndr.embed.images',
+        $type: 'app.bsky.embedimages',
         images: [{image: blob.data.blob, alt: ''}],
       },
       createdAt: new Date().toISOString(),
@@ -266,7 +266,7 @@ class Mocker {
     }
     return await agent.post({
       text,
-      embed: {$type: 'app.gndr.embed.record', record: {uri, cid}},
+      embed: {$type: 'app.bsky.embed.record', record: {uri, cid}},
       langs: ['en'],
       createdAt: new Date().toISOString(),
     })
@@ -304,7 +304,7 @@ class Mocker {
     }
     const fgUri = AtUri.make(
       this.users[user].did,
-      'app.gndr.feed.generator',
+      'app.bsky.feed.generator',
       rkey,
     )
     const fg1 = await this.testNet.createFeedGen({
@@ -320,7 +320,7 @@ class Mocker {
     const avatarRes = await agent.api.com.atproto.repo.uploadBlob(this.pic, {
       encoding: 'image/png',
     })
-    return await agent.api.app.gndr.feed.generator.create(
+    return await agent.api.app.bsky.feed.generator.create(
       {repo: this.users[user].did, rkey},
       {
         did: fg1.did,
@@ -366,7 +366,7 @@ class Mocker {
       throw new Error(`Invalid user: ${user}`)
     }
 
-    const profile = await agent.app.gndr.actor.profile.get({
+    const profile = await agent.app.bsky.actor.profile.get({
       repo: user + '.test',
       rkey: 'self',
     })
@@ -395,22 +395,22 @@ class Mocker {
   }
 
   async createMuteList(user: string, name: string): Promise<string> {
-    const res = await this.users[user]?.agent.app.gndr.graph.list.create(
+    const res = await this.users[user]?.agent.app.bsky.graph.list.create(
       {repo: this.users[user]?.did},
       {
-        purpose: 'app.gndr.graph.defs#modlist',
+        purpose: 'app.bsky.graph.defs#modlist',
         name,
         createdAt: new Date().toISOString(),
       },
     )
-    await this.users[user]?.agent.app.gndr.graph.muteActorList({
+    await this.users[user]?.agent.app.bsky.graph.muteActorList({
       list: res.uri,
     })
     return res.uri
   }
 
   async addToMuteList(owner: string, list: string, subject: string) {
-    await this.users[owner]?.agent.app.gndr.graph.listitem.create(
+    await this.users[owner]?.agent.app.bsky.graph.listitem.create(
       {repo: this.users[owner]?.did},
       {
         list,

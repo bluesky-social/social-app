@@ -1,4 +1,4 @@
-import {IsValidHandle, validateServiceHandle} from '#/lib/strings/handles'
+import {type IsValidHandle, validateServiceHandle} from '#/lib/strings/handles'
 
 describe('handle validation', () => {
   const valid = [

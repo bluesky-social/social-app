@@ -1,10 +1,10 @@
 import {
-  type AppGndrActorDefs,
-  AppGndrEmbedRecord,
-  type AppGndrFeedDefs,
-  type AppGndrFeedGetQuotes,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  AppBskyEmbedRecord as AppGndrEmbedRecord,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedGetQuotes as AppGndrFeedGetQuotes,
   AtUri,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -36,7 +36,7 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.api.app.gndr.feed.getQuotes({
+      const res = await agent.api.app.bsky.feed.getQuotes({
         uri: resolvedUri || '',
         limit: PAGE_SIZE,
         cursor: pageParam,

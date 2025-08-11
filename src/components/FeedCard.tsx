@@ -1,11 +1,11 @@
 import React from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
-  type AppGndrFeedDefs,
-  type AppGndrGraphDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
   AtUri,
   RichText as RichTextApi,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -254,10 +254,12 @@ function SaveButtonInner({
     useRemoveFeedMutation()
 
   const uri = view.uri
-  const type = view.uri.includes('app.gndr.feed.generator') ? 'feed' : 'list'
+  const type = view.uri.includes('app.bsky.feed.generator') ? 'feed' : 'list'
 
   const savedFeedConfig = React.useMemo(() => {
-    return preferences?.savedFeeds?.find(feed => feed.value === uri)
+    return preferences?.savedFeeds?.find(
+      (feed: {value: string}) => feed.value === uri,
+    )
   }, [preferences?.savedFeeds, uri])
   const removePromptControl = Prompt.usePromptControl()
   const isPending = isAddSavedFeedPending || isRemovePending

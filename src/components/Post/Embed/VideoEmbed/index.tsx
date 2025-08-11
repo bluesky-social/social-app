@@ -1,7 +1,7 @@
 import {useCallback, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {type AppGndrEmbedVideo} from '@gander-social-atproto/api'
+import {type AppGndrEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

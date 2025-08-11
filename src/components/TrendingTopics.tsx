@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {type AtUri} from '@gander-social-atproto/api'
+import {type AtUri} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -205,7 +205,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
     } else {
       const urip = new AtUri(link)
       switch (urip.collection) {
-        case 'app.gndr.actor.profile': {
+        case 'app.bsky.actor.profile': {
           return {
             type: 'profile',
             label: _(msg`View ${displayName}'s profile`),
@@ -214,7 +214,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
             url: makeProfileLink({did: urip.host, handle: urip.host}),
           }
         }
-        case 'app.gndr.feed.generator': {
+        case 'app.bsky.feed.generator': {
           return {
             type: 'feed',
             label: _(msg`Browse the ${displayName} feed`),

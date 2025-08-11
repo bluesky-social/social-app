@@ -1,7 +1,7 @@
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedGetRepostedBy,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedGetRepostedBy as AppGndrFeedGetRepostedBy,
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,

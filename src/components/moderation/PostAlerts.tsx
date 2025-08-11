@@ -2,7 +2,7 @@ import {type StyleProp, type ViewStyle} from 'react-native'
 import {
   type ModerationCause,
   type ModerationUI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
 import {getModerationCauseKey, unique} from '#/lib/moderation'
 import * as Pills from '#/components/Pills'

@@ -1,5 +1,5 @@
 import React from 'react'
-import {type AtpSessionEvent, type GndrAgent} from '@gander-social-atproto/api'
+import {type AtpSessionEvent, type BskyAgent as GndrAgent} from '@atproto/api'
 
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
@@ -46,7 +46,12 @@ const ApiContext = React.createContext<SessionApiContext>({
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const cancelPendingTask = useOneTaskAtATime()
   const [state, dispatch] = React.useReducer(reducer, null, () => {
-    const initialState = getInitialState(persisted.get('session').accounts)
+
+    const persistedSession = persisted.get('session')
+    const accounts = persistedSession && Array.isArray(persistedSession.accounts)
+      ? persistedSession.accounts
+      : []
+    const initialState = getInitialState(accounts)
     addSessionDebugLog({type: 'reducer:init', state: initialState})
     return initialState
   })

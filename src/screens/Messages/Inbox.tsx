@@ -1,9 +1,9 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type ChatGndrConvoDefs,
-  type ChatGndrConvoListConvos,
-} from '@gander-social-atproto/api'
+  type ChatBskyConvoDefs as ChatGndrConvoDefs,
+  type ChatBskyConvoListConvos as ChatGndrConvoListConvos,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'

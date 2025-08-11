@@ -1,11 +1,11 @@
 import {memo, useMemo, useState} from 'react'
 import {
-  type AppGndrFeedDefs,
-  type AppGndrFeedPost,
-  type AppGndrFeedThreadgate,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedPost as AppGndrFeedPost,
+  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
   AtUri,
   type RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type React from 'react'

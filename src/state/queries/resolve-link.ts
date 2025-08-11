@@ -9,7 +9,7 @@ export const RQKEY_LINK = (url: string) => [RQKEY_LINK_ROOT, url]
 const RQKEY_GIF_ROOT = 'resolve-gif'
 export const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url]
 
-import {type GndrAgent} from '@gander-social-atproto/api'
+import {type BskyAgent as GndrAgent} from '@atproto/api'
 
 import {type ResolvedLink, resolveGif, resolveLink} from '#/lib/api/resolve'
 import {type Gif} from './tenor'

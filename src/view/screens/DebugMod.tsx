@@ -1,9 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedDefs,
-  type AppGndrFeedPost,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedPost as AppGndrFeedPost,
   type ComAtprotoLabelDefs,
   interpretLabelValueDefinition,
   type LabelPreference,
@@ -15,7 +15,7 @@ import {
   type ModerationDecision,
   type ModerationOpts,
   RichText,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -116,20 +116,20 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                 mock.label({
                   src: isSelfLabel ? did : undefined,
                   val: label[0],
-                  uri: `at://${did}/app.gndr.actor.profile/self`,
+                  uri: `at://${did}/app.bsky.actor.profile/self`,
                 }),
               ]
             : undefined,
       viewer: mock.actorViewerState({
         following: isFollowing
-          ? `at://${currentAccount?.did || ''}/app.gndr.graph.follow/1234`
+          ? `at://${currentAccount?.did || ''}/app.bsky.graph.follow/1234`
           : undefined,
         muted: scenario[0] === 'mute',
         mutedByList: undefined,
         blockedBy: undefined,
         blocking:
           scenario[0] === 'block'
-            ? `at://did:web:alice.test/app.gndr.actor.block/fake`
+            ? `at://did:web:alice.test/app.bsky.actor.block/fake`
             : undefined,
         blockingByList: undefined,
       }),
@@ -154,7 +154,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               mock.label({
                 src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at://${did}/app.gndr.feed.post/fake`,
+                uri: `at://${did}/app.bsky.feed.post/fake`,
               }),
             ]
           : undefined,
@@ -170,14 +170,14 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                       mock.label({
                         src: isSelfLabel ? did : undefined,
                         val: label[0],
-                        uri: `at://${did}/app.gndr.feed.post/fake`,
+                        uri: `at://${did}/app.bsky.feed.post/fake`,
                       }),
                     ]
                   : undefined,
               author: profile,
             })
           : {
-              $type: 'app.gndr.embed.images#view',
+              $type: 'app.bsky.embedimages#view',
               images: [
                 {
                   thumb:
@@ -197,11 +197,11 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         text: "This is the body of the post. It's where the text goes. You get the idea.",
         reply: {
           parent: {
-            uri: `at://${did}/app.gndr.feed.post/fake-parent`,
+            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
             cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
           },
           root: {
-            uri: `at://${did}/app.gndr.feed.post/fake-parent`,
+            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
             cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
           },
         },
@@ -213,7 +213,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               mock.label({
                 src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at://${did}/app.gndr.feed.post/fake`,
+                uri: `at://${did}/app.bsky.feed.post/fake`,
               }),
             ]
           : undefined,

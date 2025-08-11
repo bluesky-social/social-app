@@ -1,10 +1,10 @@
 import {type PressableProps, type StyleProp, type ViewStyle} from 'react-native'
 import {
-  type AppGndrFeedDefs,
-  type AppGndrFeedPost,
-  type AppGndrFeedThreadgate,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedPost as AppGndrFeedPost,
+  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
   type RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 

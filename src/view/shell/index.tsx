@@ -60,7 +60,13 @@ function ShellInner() {
     () => setIsDrawerOpen(false),
     [setIsDrawerOpen],
   )
-  const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
+  let canGoBack = false;
+  try {
+    canGoBack = useNavigationState(state => state.index > 0);
+  } catch {
+    canGoBack = false;
+  }
+  // const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession} = useSession()
   const closeAnyActiveElement = useCloseAnyActiveElement()
 

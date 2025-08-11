@@ -1,6 +1,6 @@
 import React from 'react'
-import {type AppGndrUnspeccedGetTrends} from '@gander-social-atproto/api'
-import {hasMutedWord} from '@gander-social-atproto/api/dist/moderation/mutewords'
+import {type AppBskyUnspeccedGetTrends as AppGndrUnspeccedGetTrends} from '@atproto/api'
+import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
 import {useQuery} from '@tanstack/react-query'
 
 import {
@@ -29,7 +29,7 @@ export function useGetTrendsQuery() {
     queryKey: createGetTrendsQueryKey(),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const {data} = await agent.app.gndr.unspecced.getTrends(
+      const {data} = await agent.app.bsky.unspecced.getTrends(
         {
           limit: DEFAULT_LIMIT,
         },

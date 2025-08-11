@@ -3,9 +3,9 @@ import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {
-  type AppGndrNotificationRegisterPush,
+  type AppBskyNotificationRegisterPush as AppGndrNotificationRegisterPush,
   type AtpAgent,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
@@ -39,13 +39,13 @@ async function _registerPushToken({
         : PUBLIC_APPVIEW_DID,
       platform: Platform.OS,
       token: token.data,
-      appId: 'xyz.ganderweb.app',
+      appId: 'xyz.blueskyweb.app',
       ageRestricted: extra.ageRestricted ?? false,
     }
 
     notyLogger.debug(`registerPushToken: registering`, {...payload})
 
-    await agent.app.gndr.notification.registerPush(payload)
+    await agent.app.bsky.notification.registerPush(payload)
 
     notyLogger.debug(`registerPushToken: success`)
   } catch (error) {

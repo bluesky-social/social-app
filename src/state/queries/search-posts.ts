@@ -1,11 +1,11 @@
 import React from 'react'
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedDefs,
-  type AppGndrFeedSearchPosts,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedSearchPosts as AppGndrFeedSearchPosts,
   AtUri,
   moderatePost,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -61,7 +61,7 @@ export function useSearchPostsQuery({
   >({
     queryKey: searchPostsQueryKey({query, sort}),
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.gndr.feed.searchPosts({
+      const res = await agent.app.bsky.feed.searchPosts({
         q: query,
         limit: 25,
         cursor: pageParam,

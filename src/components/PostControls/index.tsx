@@ -1,11 +1,11 @@
 import {memo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
-  type AppGndrFeedDefs,
-  type AppGndrFeedPost,
-  type AppGndrFeedThreadgate,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedPost as AppGndrFeedPost,
+  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
   type RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -110,7 +110,7 @@ let PostControls = ({
         playHaptic('Light')
         sendInteraction({
           item: post.uri,
-          event: 'app.gndr.feed.defs#interactionLike',
+          event: 'app.bsky.feed.defs#interactionLike',
           feedContext,
           reqId,
         })
@@ -139,7 +139,7 @@ let PostControls = ({
       if (!post.viewer?.repost) {
         sendInteraction({
           item: post.uri,
-          event: 'app.gndr.feed.defs#interactionRepost',
+          event: 'app.bsky.feed.defs#interactionRepost',
           feedContext,
           reqId,
         })
@@ -165,7 +165,7 @@ let PostControls = ({
 
     sendInteraction({
       item: post.uri,
-      event: 'app.gndr.feed.defs#interactionQuote',
+      event: 'app.bsky.feed.defs#interactionQuote',
       feedContext,
       reqId,
     })
@@ -178,7 +178,7 @@ let PostControls = ({
   const onShare = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.gndr.feed.defs#interactionShare',
+      event: 'app.bsky.feed.defs#interactionShare',
       feedContext,
       reqId,
     })

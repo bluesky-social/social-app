@@ -1,8 +1,8 @@
 import {useEffect, useMemo, useState} from 'react'
 import {
-  type AppGndrActorDefs,
-  type AppGndrNotificationDefs,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyNotificationDefs as AppGndrNotificationDefs,
+} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 

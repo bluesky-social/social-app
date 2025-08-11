@@ -1,5 +1,5 @@
 import {memo, useMemo} from 'react'
-import {AtUri} from '@gander-social-atproto/api'
+import {AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type React from 'react'

@@ -1,4 +1,4 @@
-import {type AppGndrFeedGetSuggestedFeeds} from '@gander-social-atproto/api'
+import {type AppBskyFeedGetSuggestedFeeds as AppGndrFeedGetSuggestedFeeds} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryKey,
@@ -23,7 +23,7 @@ export function useSuggestedFeedsQuery() {
     staleTime: STALE.HOURS.ONE,
     queryKey: suggestedFeedsQueryKey,
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.gndr.feed.getSuggestedFeeds({
+      const res = await agent.app.bsky.feed.getSuggestedFeeds({
         limit: 10,
         cursor: pageParam,
       })

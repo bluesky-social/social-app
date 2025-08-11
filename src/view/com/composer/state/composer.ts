@@ -1,10 +1,10 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
-  type AppGndrFeedPostgate,
-  AppGndrRichtextFacet,
-  type GndrPreferences,
+  type AppBskyFeedPostgate as AppGndrFeedPostgate,
+  AppBskyRichtextFacet as AppGndrRichtextFacet,
+  type BskyPreferences as GndrPreferences,
   RichText,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type SelfLabel} from '#/lib/moderation'
@@ -610,7 +610,7 @@ export function createComposerState({
         embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
       }),
       threadgate: threadgateRecordToAllowUISetting({
-        $type: 'app.gndr.feed.threadgate',
+        $type: 'app.bsky.feed.threadgate',
         post: '',
         createdAt: new Date().toString(),
         allow: initInteractionSettings?.threadgateAllowRules,

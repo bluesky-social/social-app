@@ -1,7 +1,7 @@
 import {
-  type AppGndrActorDefs,
-  type AppGndrGraphGetMutes,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyGraphGetMutes as AppGndrGraphGetMutes,
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -26,7 +26,7 @@ export function useMyMutedAccountsQuery() {
   >({
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.gndr.graph.getMutes({
+      const res = await agent.app.bsky.graph.getMutes({
         limit: 30,
         cursor: pageParam,
       })

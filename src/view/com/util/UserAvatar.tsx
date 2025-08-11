@@ -8,8 +8,8 @@ import {
   type ViewStyle,
 } from 'react-native'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
+import {type ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {type ModerationUI} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'

@@ -1,4 +1,4 @@
-import {GNDR_LABELER_DID, GndrAgent} from '@gander-social-atproto/api'
+import {BSKY_LABELER_DID as GNDR_LABELER_DID, BskyAgent as GndrAgent} from '@atproto/api'
 
 import {IS_TEST_USER} from '#/lib/constants'
 import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'

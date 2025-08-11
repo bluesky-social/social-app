@@ -10,9 +10,9 @@ import {
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 import {
-  type AppGndrGraphDefs,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
   RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -67,9 +67,9 @@ export function Component({
     if (purpose) {
       return purpose
     }
-    return 'app.gndr.graph.defs#curatelist'
+    return 'app.bsky.graph.defs#curatelist'
   }, [list, purpose])
-  const isCurateList = activePurpose === 'app.gndr.graph.defs#curatelist'
+  const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [name, setName] = useState<string>(list?.name || '')

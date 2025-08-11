@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {type ScrollView} from 'react-native-gesture-handler'
-import {type AppGndrLabelerDefs} from '@gander-social-atproto/api'
+import {type AppBskyLaberDefs as AppGndrLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

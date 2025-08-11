@@ -1,6 +1,6 @@
 import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {type AppGndrFeedDefs} from '@gander-social-atproto/api'
+import {type AppGndrFeedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import type React from 'react'
 

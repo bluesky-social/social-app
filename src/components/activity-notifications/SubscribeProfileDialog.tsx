@@ -1,11 +1,11 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type AppGndrNotificationDefs,
-  type AppGndrNotificationListActivitySubscriptions,
+  type AppBskyNotificationDefs as  AppGndrNotificationDefs,
+  type AppBskyNotificationListActivitySubscriptions as AppGndrNotificationListActivitySubscriptions,
   type ModerationOpts,
   type Un$Typed,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -121,7 +121,7 @@ function DialogInner({
     mutationFn: async (
       activitySubscription: Un$Typed<AppGndrNotificationDefs.ActivitySubscription>,
     ) => {
-      await agent.app.gndr.notification.putActivitySubscription({
+      await agent.app.bsky.notification.putActivitySubscription({
         subject: profile.did,
         activitySubscription,
       })
