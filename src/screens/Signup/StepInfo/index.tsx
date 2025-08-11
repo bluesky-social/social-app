@@ -20,6 +20,7 @@ import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/E
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
+import {usePreemptivelyCompleteActivePolicyUpdate} from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
 import {BackNextButtons} from '../BackNextButtons'
 
 function sanitizeDate(date: Date): Date {
@@ -45,6 +46,8 @@ export function StepInfo({
 }) {
   const {_} = useLingui()
   const {state, dispatch} = useSignupContext()
+  const preemptivelyCompleteActivePolicyUpdate =
+    usePreemptivelyCompleteActivePolicyUpdate()
 
   const inviteCodeValueRef = useRef<string>(state.inviteCode)
   const emailValueRef = useRef<string>(state.email)
@@ -129,6 +132,7 @@ export function StepInfo({
       })
     }
 
+    preemptivelyCompleteActivePolicyUpdate()
     dispatch({type: 'setInviteCode', value: inviteCode})
     dispatch({type: 'setEmail', value: email})
     dispatch({type: 'setPassword', value: password})
