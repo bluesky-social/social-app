@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react'
 import {MMKV} from 'react-native-mmkv'
 
 import {type Account, type Device} from '#/storage/schema'
+import {logger} from '#/components/PolicyUpdateOverlay/logger'
 
 export * from '#/storage/schema'
 
@@ -105,6 +106,7 @@ export function useStorage<
 >(
   storage: Store,
   scopes: [...StorageScopes<Store>, Key],
+  debug?: string
 ): [
   StorageSchema<Store>[Key] | undefined,
   (data: StorageSchema<Store>[Key]) => void,
@@ -116,6 +118,9 @@ export function useStorage<
 
   useEffect(() => {
     const sub = storage.addOnValueChangedListener(scopes, () => {
+      if (debug) logger.debug(`${debug} - storage change`, {
+        value: storage.get(scopes) ?? 'unset',
+      })
       setValue(storage.get(scopes))
     })
     return () => sub.remove()
@@ -128,6 +133,11 @@ export function useStorage<
     },
     [storage, scopes],
   )
+
+  if (debug) logger.debug(`${debug}`, {
+    value: value ?? 'unset',
+    raw: storage.get(scopes) ?? 'unset',
+  })
 
   return [value, setter] as const
 }

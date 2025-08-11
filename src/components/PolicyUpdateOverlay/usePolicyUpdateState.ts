@@ -22,7 +22,7 @@ export function usePolicyUpdateState({
 }) {
   const nux = useNux(ACTIVE_UPDATE_ID)
   const {mutate: save, variables} = useSaveNux()
-  const deviceStorage = useStorage(device, [ACTIVE_UPDATE_ID])
+  const deviceStorage = useStorage(device, [ACTIVE_UPDATE_ID], 'usePolicyUpdateState')
   const debugOverride =
     !!useStorage(device, ['policyUpdateDebugOverride'])[0] && IS_DEV
 
