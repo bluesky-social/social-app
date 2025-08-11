@@ -15,7 +15,6 @@ import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
-import {usePreemptivelyCompleteActivePolicyUpdate} from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -253,8 +252,6 @@ export function useSubmitSignup() {
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
-  const preemptivelyCompleteActivePolicyUpdate =
-    usePreemptivelyCompleteActivePolicyUpdate()
 
   return useCallback(
     async (state: SignupState, dispatch: (action: SignupAction) => void) => {
@@ -308,15 +305,6 @@ export function useSubmitSignup() {
       dispatch({type: 'setIsLoading', value: true})
 
       try {
-        /**
-         * Marks any active policy update as completed, since user just agreed
-         * to TOS/privacy during sign up.
-         *
-         * THIS MUST RUN BEFORE createAccount, which will re-render the whole
-         * app with the new account.
-         */
-        preemptivelyCompleteActivePolicyUpdate()
-
         await createAccount(
           {
             service: state.serviceUrl,
@@ -375,11 +363,6 @@ export function useSubmitSignup() {
         dispatch({type: 'setIsLoading', value: false})
       }
     },
-    [
-      _,
-      onboardingDispatch,
-      createAccount,
-      preemptivelyCompleteActivePolicyUpdate,
-    ],
+    [_, onboardingDispatch, createAccount],
   )
 }
