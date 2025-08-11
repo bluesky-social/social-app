@@ -760,7 +760,7 @@ export function useSharedButtonTextStyles() {
     if (size === 'large') {
       baseStyles.push(a.text_md, a.leading_tight)
     } else if (size === 'small') {
-      baseStyles.push(a.text_md, a.leading_tight)
+      baseStyles.push(a.text_sm, a.leading_tight)
     } else if (size === 'tiny') {
       baseStyles.push(a.text_xs, a.leading_tight)
     }
