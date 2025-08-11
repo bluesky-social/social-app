@@ -28,6 +28,7 @@ const Context = createContext<{
    */
   setIsReadyToShowOverlay: () => {},
 })
+Context.displayName = 'PolicyUpdateOverlayContext'
 
 export function usePolicyUpdateContext() {
   const context = useContext(Context)

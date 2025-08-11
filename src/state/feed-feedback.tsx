@@ -35,6 +35,7 @@ const stateContext = createContext<StateContext>({
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
   feedDescriptor: undefined,
 })
+stateContext.displayName = 'FeedFeedbackContext'
 
 export function useFeedFeedback(
   feed: FeedDescriptor | undefined,

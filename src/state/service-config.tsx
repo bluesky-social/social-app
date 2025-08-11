@@ -16,8 +16,10 @@ type LiveNowContext = {
 const TrendingContext = createContext<TrendingContext>({
   enabled: false,
 })
+TrendingContext.displayName = 'TrendingContext'
 
 const LiveNowContext = createContext<LiveNowContext | null>(null)
+LiveNowContext.displayName = 'LiveNowContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
   const langPrefs = useLanguagePrefs()

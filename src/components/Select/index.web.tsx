@@ -23,6 +23,7 @@ import {
 } from './types'
 
 const SelectedValueContext = createContext<string | undefined | null>(null)
+SelectedValueContext.displayName = 'SelectSelectedValueContext'
 
 export function Root(props: RootProps) {
   return (
@@ -219,6 +220,7 @@ const ItemContext = createContext<{
   pressed: false,
   selected: false,
 })
+ItemContext.displayName = 'SelectItemContext'
 
 export function useItemContext() {
   return useContext(ItemContext)

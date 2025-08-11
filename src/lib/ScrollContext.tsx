@@ -1,5 +1,6 @@
-import React, {createContext, useContext, useMemo} from 'react'
-import {ScrollHandlers} from 'react-native-reanimated'
+import {createContext, useContext, useMemo} from 'react'
+import {type ScrollHandlers} from 'react-native-reanimated'
+import type React from 'react'
 
 const ScrollContext = createContext<ScrollHandlers<any>>({
   onBeginDrag: undefined,
@@ -7,6 +8,7 @@ const ScrollContext = createContext<ScrollHandlers<any>>({
   onScroll: undefined,
   onMomentumEnd: undefined,
 })
+ScrollContext.displayName = 'ScrollContext'
 
 export function useScrollHandlers(): ScrollHandlers<any> {
   return useContext(ScrollContext)

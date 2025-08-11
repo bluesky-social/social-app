@@ -14,11 +14,13 @@ const StateContext = React.createContext<StateContext>({
   uris: new Set(),
   recentlyUnhiddenUris: new Set(),
 })
+StateContext.displayName = 'ThreadgateHiddenRepliesStateContext'
 
 const ApiContext = React.createContext<ApiContext>({
   addHiddenReplyUri: () => {},
   removeHiddenReplyUri: () => {},
 })
+ApiContext.displayName = 'ThreadgateHiddenRepliesApiContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [uris, setHiddenReplyUris] = React.useState<Set<string>>(new Set())

@@ -8,7 +8,9 @@ type SetContext = (v: boolean) => void
 const stateContext = React.createContext<StateContext>(
   Boolean(persisted.defaults.disableHaptics),
 )
+stateContext.displayName = 'DisableHapticsStateContext'
 const setContext = React.createContext<SetContext>((_: boolean) => {})
+setContext.displayName = 'DisableHapticsSetContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [state, setState] = React.useState(

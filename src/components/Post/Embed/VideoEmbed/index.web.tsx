@@ -125,6 +125,7 @@ export function VideoEmbed({
 }
 
 const NearScreenContext = createContext(false)
+NearScreenContext.displayName = 'VideoNearScreenContext'
 
 /**
  * Renders a 100vh tall div and watches it with an IntersectionObserver to

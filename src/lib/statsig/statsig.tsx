@@ -147,6 +147,7 @@ function toStringRecord<E extends keyof MetricEvents>(
 // and it's been difficult to get it to behave in a predictable way.
 // Our own cache ensures consistent evaluation within a single session.
 const GateCache = React.createContext<Map<string, boolean> | null>(null)
+GateCache.displayName = 'StatsigGateCacheContext'
 
 type GateOptions = {
   dangerouslyDisableExposureLogging?: boolean

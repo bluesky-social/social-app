@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {isWeb} from '#/platform/detection'
-import {DialogControlRefProps} from '#/components/Dialog'
+import {type DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet'
 
@@ -31,10 +31,12 @@ interface IDialogControlContext {
 }
 
 const DialogContext = React.createContext<IDialogContext>({} as IDialogContext)
+DialogContext.displayName = 'DialogContext'
 
 const DialogControlContext = React.createContext<IDialogControlContext>(
   {} as IDialogControlContext,
 )
+DialogControlContext.displayName = 'DialogControlContext'
 
 export function useDialogStateContext() {
   return React.useContext(DialogContext)
@@ -104,3 +106,4 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     </DialogContext.Provider>
   )
 }
+Provider.displayName = 'DialogsProvider'

@@ -19,6 +19,8 @@ const KeyboardControllerRefCountContext = createContext<{
   incrementRefCount: () => {},
   decrementRefCount: () => {},
 })
+KeyboardControllerRefCountContext.displayName =
+  'KeyboardControllerRefCountContext'
 
 export function KeyboardControllerProvider({
   children,
