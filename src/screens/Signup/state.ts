@@ -308,6 +308,15 @@ export function useSubmitSignup() {
       dispatch({type: 'setIsLoading', value: true})
 
       try {
+        /**
+         * Marks any active policy update as completed, since user just agreed
+         * to TOS/privacy during sign up.
+         *
+         * THIS MUST RUN BEFORE createAccount, which will re-render the whole
+         * app with the new account.
+         */
+        preemptivelyCompleteActivePolicyUpdate()
+
         await createAccount(
           {
             service: state.serviceUrl,
@@ -327,12 +336,6 @@ export function useSubmitSignup() {
             backgroundCount: state.backgroundCount,
           },
         )
-
-        /**
-         * Marks any active policy update as completed, since user just agreed
-         * to TOS/privacy during sign up
-         */
-        preemptivelyCompleteActivePolicyUpdate()
 
         /*
          * Must happen last so that if the user has multiple tabs open and
