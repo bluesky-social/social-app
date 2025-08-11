@@ -30,7 +30,12 @@ export function useTranslate() {
                 'android.intent.extra.PROCESS_TEXT': text,
                 'android.intent.extra.PROCESS_TEXT_READONLY': true,
               },
-              packageName: 'com.google.android.apps.translate',
+              // note: to skip the intermediate app select, we need to specify a
+              // `className`. however, this isn't safe to hardcode, we'd need to query the
+              // package manager for the correct activity. this requires native code, so
+              // skip for now -sfn
+              // packageName: 'com.google.android.apps.translate',
+              // className: 'com.google.android.apps.translate.TranslateActivity',
             },
           )
         } catch (err) {
