@@ -34,7 +34,8 @@ export function sanitizeHandle(handle: string, prefix = ''): string {
 export interface IsValidHandle {
   handleChars: boolean
   hyphenStartOrEnd: boolean
-  frontLength: boolean
+  frontLengthNotTooShort: boolean
+  frontLengthNotTooLong: boolean
   totalLength: boolean
   overall: boolean
 }
@@ -50,7 +51,8 @@ export function validateServiceHandle(
     handleChars:
       !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
     hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
-    frontLength: str.length >= 3 && str.length <= MAX_SERVICE_HANDLE_LENGTH,
+    frontLengthNotTooShort: str.length >= 3,
+    frontLengthNotTooLong: str.length <= MAX_SERVICE_HANDLE_LENGTH,
     totalLength: fullHandle.length <= 253,
   }
 

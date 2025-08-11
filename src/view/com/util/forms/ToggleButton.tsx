@@ -1,12 +1,21 @@
-import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
+import {
+  type StyleProp,
+  StyleSheet,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
 import {choose} from '#/lib/functions'
 import {colors} from '#/lib/styles'
 import {useTheme} from '#/lib/ThemeContext'
-import {TypographyVariant} from '#/lib/ThemeContext'
+import {type TypographyVariant} from '#/lib/ThemeContext'
 import {Text} from '../text/Text'
-import {Button, ButtonType} from './Button'
+import {Button, type ButtonType} from './Button'
 
+/**
+ * @deprecated use Toggle from `#/components/form/Toggle.tsx` instead
+ */
 export function ToggleButton({
   testID,
   type = 'default-light',

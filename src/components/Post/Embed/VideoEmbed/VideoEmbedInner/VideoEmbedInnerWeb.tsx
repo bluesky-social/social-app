@@ -224,15 +224,19 @@ function useHLS({
       throw new HLSUnsupportedError()
     }
 
+    const latestEstimate = BandwidthEstimate.get()
     const hls = new Hls({
       maxMaxBufferLength: 10, // only load 10s ahead
       // note: the amount buffered is affected by both maxBufferLength and maxBufferSize
       // it will buffer until it is greater than *both* of those values
       // so we use maxMaxBufferLength to set the actual maximum amount of buffering instead
+      startLevel:
+        latestEstimate === undefined ? -1 : Hls.DefaultConfig.startLevel,
+      // the '-1' value makes a test request to estimate bandwidth and quality level
+      // before showing the first fragment
     })
     hlsRef.current = hls
 
-    const latestEstimate = BandwidthEstimate.get()
     if (latestEstimate !== undefined) {
       hls.bandwidthEstimate = latestEstimate
     }

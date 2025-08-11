@@ -50,7 +50,6 @@ import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import * as Toast from '#/view/com/util/Toast'
-import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
@@ -58,9 +57,11 @@ import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
+import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {ToastContainer} from '#/components/Toast'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
@@ -117,45 +118,47 @@ function InnerApp() {
                   // Resets the entire tree below when it changes:
                   key={currentAccount?.did}>
                   <QueryProvider currentDid={currentAccount?.did}>
-                    <StatsigProvider>
-                      <AgeAssuranceProvider>
-                        <ComposerProvider>
-                          <MessagesProvider>
-                            {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                            <LabelDefsProvider>
-                              <ModerationOptsProvider>
-                                <LoggedOutViewProvider>
-                                  <SelectedFeedProvider>
-                                    <HiddenRepliesProvider>
-                                      <HomeBadgeProvider>
-                                        <UnreadNotifsProvider>
-                                          <BackgroundNotificationPreferencesProvider>
-                                            <MutedThreadsProvider>
-                                              <SafeAreaProvider>
-                                                <ProgressGuideProvider>
-                                                  <ServiceConfigProvider>
-                                                    <HideBottomBarBorderProvider>
-                                                      <IntentDialogProvider>
-                                                        <Shell />
-                                                        <NuxDialogs />
-                                                      </IntentDialogProvider>
-                                                    </HideBottomBarBorderProvider>
-                                                  </ServiceConfigProvider>
-                                                </ProgressGuideProvider>
-                                              </SafeAreaProvider>
-                                            </MutedThreadsProvider>
-                                          </BackgroundNotificationPreferencesProvider>
-                                        </UnreadNotifsProvider>
-                                      </HomeBadgeProvider>
-                                    </HiddenRepliesProvider>
-                                  </SelectedFeedProvider>
-                                </LoggedOutViewProvider>
-                              </ModerationOptsProvider>
-                            </LabelDefsProvider>
-                          </MessagesProvider>
-                        </ComposerProvider>
-                      </AgeAssuranceProvider>
-                    </StatsigProvider>
+                    <PolicyUpdateOverlayProvider>
+                      <StatsigProvider>
+                        <AgeAssuranceProvider>
+                          <ComposerProvider>
+                            <MessagesProvider>
+                              {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                              <LabelDefsProvider>
+                                <ModerationOptsProvider>
+                                  <LoggedOutViewProvider>
+                                    <SelectedFeedProvider>
+                                      <HiddenRepliesProvider>
+                                        <HomeBadgeProvider>
+                                          <UnreadNotifsProvider>
+                                            <BackgroundNotificationPreferencesProvider>
+                                              <MutedThreadsProvider>
+                                                <SafeAreaProvider>
+                                                  <ProgressGuideProvider>
+                                                    <ServiceConfigProvider>
+                                                      <HideBottomBarBorderProvider>
+                                                        <IntentDialogProvider>
+                                                          <Shell />
+                                                          <NuxDialogs />
+                                                        </IntentDialogProvider>
+                                                      </HideBottomBarBorderProvider>
+                                                    </ServiceConfigProvider>
+                                                  </ProgressGuideProvider>
+                                                </SafeAreaProvider>
+                                              </MutedThreadsProvider>
+                                            </BackgroundNotificationPreferencesProvider>
+                                          </UnreadNotifsProvider>
+                                        </HomeBadgeProvider>
+                                      </HiddenRepliesProvider>
+                                    </SelectedFeedProvider>
+                                  </LoggedOutViewProvider>
+                                </ModerationOptsProvider>
+                              </LabelDefsProvider>
+                            </MessagesProvider>
+                          </ComposerProvider>
+                        </AgeAssuranceProvider>
+                      </StatsigProvider>
+                    </PolicyUpdateOverlayProvider>
                   </QueryProvider>
                   <ToastContainer />
                 </React.Fragment>

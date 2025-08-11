@@ -14,31 +14,37 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 
-import {atoms as a, flatten, select, tokens, useTheme} from '#/alf'
+import {atoms as a, flatten, select, useTheme} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
-export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
+/**
+ * The `Button` component, and some extensions of it like `Link` are intended
+ * to be generic and therefore apply no styles by default. These `VariantProps`
+ * are what control the `Button`'s presentation, and are intended only use cases where the buttons appear as, well, buttons.
+ *
+ * If `Button` or an extension of it are used for other compound components, use this property to avoid misuse of these variant props further down the line.
+ *
+ * @example
+ * type MyComponentProps = Omit<ButtonProps, UninheritableButtonProps> & {...}
+ */
+export type UninheritableButtonProps = 'variant' | 'color' | 'size' | 'shape'
+
+export type ButtonVariant = 'solid' | 'outline' | 'ghost'
 export type ButtonColor =
   | 'primary'
   | 'secondary'
   | 'secondary_inverted'
   | 'negative'
-  | 'negative_secondary'
-  | 'gradient_primary'
-  | 'gradient_sky'
-  | 'gradient_midnight'
-  | 'gradient_sunrise'
-  | 'gradient_sunset'
-  | 'gradient_nordic'
-  | 'gradient_bonfire'
+  | 'primary_subtle'
+  | 'negative_subtle'
 export type ButtonSize = 'tiny' | 'small' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
    * The style variation of the button
+   * @deprecated Use `color` instead.
    */
   variant?: ButtonVariant
   /**
@@ -131,6 +137,15 @@ export const Button = React.forwardRef<View, ButtonProps>(
     },
     ref,
   ) => {
+    /**
+     * The `variant` prop is deprecated in favor of simply specifying `color`.
+     * If a `color` is set, then we want to use the existing codepaths for
+     * "solid" buttons. This is to maintain backwards compatibility.
+     */
+    if (!variant && color) {
+      variant = 'solid'
+    }
+
     const t = useTheme()
     const [state, setState] = React.useState({
       pressed: false,
@@ -203,8 +218,13 @@ export const Button = React.forwardRef<View, ButtonProps>(
       const baseStyles: ViewStyle[] = []
       const hoverStyles: ViewStyle[] = []
 
-      if (color === 'primary') {
-        if (variant === 'solid') {
+      /*
+       * This is the happy path for new button styles, following the
+       * deprecation of `variant` prop. This redundant `variant` check is here
+       * just to make this handling easier to understand.
+       */
+      if (variant === 'solid') {
+        if (color === 'primary') {
           if (!disabled) {
             baseStyles.push({
               backgroundColor: t.palette.primary_500,
@@ -214,108 +234,30 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_700,
-                dim: t.palette.primary_300,
-                dark: t.palette.primary_300,
-              }),
+              backgroundColor: t.palette.primary_200,
             })
           }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.primary_500,
-            })
-            hoverStyles.push(a.border, {
-              backgroundColor: t.palette.primary_50,
-            })
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.primary_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.primary_100,
-            })
-          }
-        }
-      } else if (color === 'secondary') {
-        if (variant === 'solid') {
+        } else if (color === 'secondary') {
           if (!disabled) {
             baseStyles.push(t.atoms.bg_contrast_25)
-            hoverStyles.push(t.atoms.bg_contrast_50)
+            hoverStyles.push(t.atoms.bg_contrast_100)
           } else {
-            baseStyles.push(t.atoms.bg_contrast_100)
+            baseStyles.push(t.atoms.bg_contrast_50)
           }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_300,
-            })
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_25,
-            })
-          }
-        }
-      } else if (color === 'secondary_inverted') {
-        if (variant === 'solid') {
+        } else if (color === 'secondary_inverted') {
           if (!disabled) {
             baseStyles.push({
               backgroundColor: t.palette.contrast_900,
             })
             hoverStyles.push({
-              backgroundColor: t.palette.contrast_950,
+              backgroundColor: t.palette.contrast_975,
             })
           } else {
             baseStyles.push({
               backgroundColor: t.palette.contrast_600,
             })
           }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_300,
-            })
-            hoverStyles.push(t.atoms.bg_contrast_50)
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.contrast_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.contrast_25,
-            })
-          }
-        }
-      } else if (color === 'negative') {
-        if (variant === 'solid') {
+        } else if (color === 'negative') {
           if (!disabled) {
             baseStyles.push({
               backgroundColor: t.palette.negative_500,
@@ -325,40 +267,35 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
+              backgroundColor: t.palette.negative_700,
+            })
+          }
+        } else if (color === 'primary_subtle') {
+          if (!disabled) {
+            baseStyles.push({
               backgroundColor: select(t.name, {
-                light: t.palette.negative_700,
-                dim: t.palette.negative_300,
-                dark: t.palette.negative_300,
+                light: t.palette.primary_50,
+                dim: t.palette.primary_100,
+                dark: t.palette.primary_100,
+              }),
+            })
+            hoverStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.primary_100,
+                dim: t.palette.primary_200,
+                dark: t.palette.primary_200,
+              }),
+            })
+          } else {
+            baseStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.primary_25,
+                dim: t.palette.primary_50,
+                dark: t.palette.primary_50,
               }),
             })
           }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
-
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_500,
-            })
-            hoverStyles.push(a.border, {
-              backgroundColor: t.palette.negative_50,
-            })
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_200,
-            })
-          }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.negative_100,
-            })
-          }
-        }
-      } else if (color === 'negative_secondary') {
-        if (variant === 'solid') {
+        } else if (color === 'negative_subtle') {
           if (!disabled) {
             baseStyles.push({
               backgroundColor: select(t.name, {
@@ -377,80 +314,194 @@ export const Button = React.forwardRef<View, ButtonProps>(
           } else {
             baseStyles.push({
               backgroundColor: select(t.name, {
-                light: t.palette.negative_100,
+                light: t.palette.negative_25,
                 dim: t.palette.negative_50,
                 dark: t.palette.negative_50,
               }),
             })
           }
-        } else if (variant === 'outline') {
-          baseStyles.push(a.border, t.atoms.bg, {
-            borderWidth: 1,
-          })
+        }
+      } else {
+        /*
+         * BEGIN DEPRECATED STYLES
+         */
+        if (color === 'primary') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
+            })
 
-          if (!disabled) {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_500,
-            })
-            hoverStyles.push(a.border, {
-              backgroundColor: t.palette.negative_50,
-            })
-          } else {
-            baseStyles.push(a.border, {
-              borderColor: t.palette.negative_200,
-            })
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.primary_500,
+              })
+              hoverStyles.push(a.border, {
+                backgroundColor: t.palette.primary_50,
+              })
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.primary_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.primary_100,
+              })
+            }
           }
-        } else if (variant === 'ghost') {
-          if (!disabled) {
-            baseStyles.push(t.atoms.bg)
-            hoverStyles.push({
-              backgroundColor: t.palette.negative_100,
+        } else if (color === 'secondary') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
             })
+
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.contrast_300,
+              })
+              hoverStyles.push(t.atoms.bg_contrast_50)
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.contrast_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.contrast_25,
+              })
+            }
+          }
+        } else if (color === 'secondary_inverted') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
+            })
+
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.contrast_300,
+              })
+              hoverStyles.push(t.atoms.bg_contrast_50)
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.contrast_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.contrast_25,
+              })
+            }
+          }
+        } else if (color === 'negative') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
+            })
+
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.negative_500,
+              })
+              hoverStyles.push(a.border, {
+                backgroundColor: t.palette.negative_50,
+              })
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.negative_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.negative_100,
+              })
+            }
+          }
+        } else if (color === 'negative_subtle') {
+          if (variant === 'outline') {
+            baseStyles.push(a.border, t.atoms.bg, {
+              borderWidth: 1,
+            })
+
+            if (!disabled) {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.negative_500,
+              })
+              hoverStyles.push(a.border, {
+                backgroundColor: t.palette.negative_50,
+              })
+            } else {
+              baseStyles.push(a.border, {
+                borderColor: t.palette.negative_200,
+              })
+            }
+          } else if (variant === 'ghost') {
+            if (!disabled) {
+              baseStyles.push(t.atoms.bg)
+              hoverStyles.push({
+                backgroundColor: t.palette.negative_100,
+              })
+            }
           }
         }
+        /*
+         * END DEPRECATED STYLES
+         */
       }
 
       if (shape === 'default') {
         if (size === 'large') {
           baseStyles.push({
-            paddingVertical: 13,
-            paddingHorizontal: 20,
-            borderRadius: 8,
-            gap: 8,
+            paddingVertical: 14,
+            paddingHorizontal: 24,
+            borderRadius: 10,
+            gap: 4,
           })
         } else if (size === 'small') {
           baseStyles.push({
-            paddingVertical: 9,
+            paddingVertical: 8,
             paddingHorizontal: 12,
-            borderRadius: 6,
-            gap: 6,
+            borderRadius: 8,
+            gap: 3,
           })
         } else if (size === 'tiny') {
           baseStyles.push({
-            paddingVertical: 4,
+            paddingVertical: 6,
             paddingHorizontal: 8,
-            borderRadius: 4,
-            gap: 4,
+            borderRadius: 6,
+            gap: 2,
           })
         }
       } else if (shape === 'round' || shape === 'square') {
+        /*
+         * These sizes match the actual rendered size on screen, based on
+         * Chrome's web inspector
+         */
         if (size === 'large') {
           if (shape === 'round') {
-            baseStyles.push({height: 46, width: 46})
+            baseStyles.push({height: 45, width: 45})
           } else {
-            baseStyles.push({height: 44, width: 44})
+            baseStyles.push({height: 45, width: 45})
           }
         } else if (size === 'small') {
           if (shape === 'round') {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({height: 33, width: 33})
           } else {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({height: 33, width: 33})
           }
         } else if (size === 'tiny') {
           if (shape === 'round') {
-            baseStyles.push({height: 22, width: 22})
+            baseStyles.push({height: 25, width: 25})
           } else {
-            baseStyles.push({height: 21, width: 21})
+            baseStyles.push({height: 25, width: 25})
           }
         }
 
@@ -458,7 +509,9 @@ export const Button = React.forwardRef<View, ButtonProps>(
           baseStyles.push(a.rounded_full)
         } else if (shape === 'square') {
           if (size === 'tiny') {
-            baseStyles.push(a.rounded_xs)
+            baseStyles.push({
+              borderRadius: 6,
+            })
           } else {
             baseStyles.push(a.rounded_sm)
           }
@@ -470,49 +523,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
         hoverStyles,
       }
     }, [t, variant, color, size, shape, disabled])
-
-    const gradientValues = React.useMemo(() => {
-      const gradient = {
-        primary: tokens.gradients.sky,
-        secondary: tokens.gradients.sky,
-        secondary_inverted: tokens.gradients.sky,
-        negative: tokens.gradients.sky,
-        negative_secondary: tokens.gradients.sky,
-        gradient_primary: tokens.gradients.primary,
-        gradient_sky: tokens.gradients.sky,
-        gradient_midnight: tokens.gradients.midnight,
-        gradient_sunrise: tokens.gradients.sunrise,
-        gradient_sunset: tokens.gradients.sunset,
-        gradient_nordic: tokens.gradients.nordic,
-        gradient_bonfire: tokens.gradients.bonfire,
-      }[color || 'primary']
-
-      if (variant === 'gradient') {
-        if (gradient.values.length < 2) {
-          throw new Error(
-            'Gradient buttons must have at least two colors in the gradient',
-          )
-        }
-
-        return {
-          colors: gradient.values.map(([_, color]) => color) as [
-            string,
-            string,
-            ...string[],
-          ],
-          hoverColors: gradient.values.map(_ => gradient.hover_value) as [
-            string,
-            string,
-            ...string[],
-          ],
-          locations: gradient.values.map(([location, _]) => location) as [
-            number,
-            number,
-            ...number[],
-          ],
-        }
-      }
-    }, [variant, color])
 
     const context = React.useMemo<ButtonContext>(
       () => ({
@@ -545,6 +555,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.flex_row,
           a.align_center,
           a.justify_center,
+          a.curve_continuous,
           flattenedBaseStyles,
           ...(state.hovered || state.pressed
             ? [hoverStyles, flatten(hoverStyleProp)]
@@ -556,27 +567,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
         onHoverOut={onHoverOut}
         onFocus={onFocus}
         onBlur={onBlur}>
-        {variant === 'gradient' && gradientValues && (
-          <View
-            style={[
-              a.absolute,
-              a.inset_0,
-              a.overflow_hidden,
-              {borderRadius: flattenedBaseStyles.borderRadius},
-            ]}>
-            <LinearGradient
-              colors={
-                state.hovered || state.pressed
-                  ? gradientValues.hoverColors
-                  : gradientValues.colors
-              }
-              locations={gradientValues.locations}
-              start={{x: 0, y: 0}}
-              end={{x: 1, y: 1}}
-              style={[a.absolute, a.inset_0]}
-            />
-          </View>
-        )}
         <Context.Provider value={context}>
           {typeof children === 'function' ? children(context) : children}
         </Context.Provider>
@@ -592,157 +582,185 @@ export function useSharedButtonTextStyles() {
   return React.useMemo(() => {
     const baseStyles: TextStyle[] = []
 
-    if (color === 'primary') {
-      if (variant === 'solid') {
+    /*
+     * This is the happy path for new button styles, following the
+     * deprecation of `variant` prop. This redundant `variant` check is here
+     * just to make this handling easier to understand.
+     */
+    if (variant === 'solid') {
+      if (color === 'primary') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
-        }
-      } else if (variant === 'outline') {
-        if (!disabled) {
           baseStyles.push({
-            color: t.palette.primary_600,
-          })
-        } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.primary_600})
-        } else {
-          baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
-        }
-      }
-    } else if (color === 'secondary') {
-      if (variant === 'solid' || variant === 'gradient') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_700,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_400,
+            color: select(t.name, {
+              light: t.palette.white,
+              dim: t.atoms.text_inverted.color,
+              dark: t.atoms.text_inverted.color,
+            }),
           })
         }
-      } else if (variant === 'outline') {
+      } else if (color === 'secondary') {
         if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
+          baseStyles.push(t.atoms.text_contrast_medium)
         } else {
           baseStyles.push({
             color: t.palette.contrast_300,
           })
         }
-      } else if (variant === 'ghost') {
+      } else if (color === 'secondary_inverted') {
         if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
+          baseStyles.push(t.atoms.text_inverted)
         } else {
           baseStyles.push({
             color: t.palette.contrast_300,
           })
         }
-      }
-    } else if (color === 'secondary_inverted') {
-      if (variant === 'solid' || variant === 'gradient') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_50,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_400,
-          })
-        }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_600,
-          })
-        } else {
-          baseStyles.push({
-            color: t.palette.contrast_300,
-          })
-        }
-      }
-    } else if (color === 'negative') {
-      if (variant === 'solid' || variant === 'gradient') {
+      } else if (color === 'negative') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          baseStyles.push({color: t.palette.negative_300})
         }
-      } else if (variant === 'outline') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
-        } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
-        } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
-        }
-      }
-    } else if (color === 'negative_secondary') {
-      if (variant === 'solid' || variant === 'gradient') {
+      } else if (color === 'primary_subtle') {
         if (!disabled) {
           baseStyles.push({
             color: select(t.name, {
-              light: t.palette.negative_500,
-              dim: t.palette.negative_950,
-              dark: t.palette.negative_900,
+              light: t.palette.primary_600,
+              dim: t.palette.primary_800,
+              dark: t.palette.primary_800,
             }),
           })
         } else {
           baseStyles.push({
             color: select(t.name, {
-              light: t.palette.negative_500,
-              dim: t.palette.negative_700,
-              dark: t.palette.negative_700,
+              light: t.palette.primary_200,
+              dim: t.palette.primary_200,
+              dark: t.palette.primary_200,
             }),
-            opacity: 0.5,
           })
         }
-      } else if (variant === 'outline') {
+      } else if (color === 'negative_subtle') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.negative_600,
+              dim: t.palette.negative_800,
+              dark: t.palette.negative_800,
+            }),
+          })
         } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
-        }
-      } else if (variant === 'ghost') {
-        if (!disabled) {
-          baseStyles.push({color: t.palette.negative_400})
-        } else {
-          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.negative_200,
+              dim: t.palette.negative_200,
+              dark: t.palette.negative_200,
+            }),
+          })
         }
       }
     } else {
-      if (!disabled) {
-        baseStyles.push({color: t.palette.white})
-      } else {
-        baseStyles.push({color: t.palette.white, opacity: 0.5})
+      /*
+       * BEGIN DEPRECATED STYLES
+       */
+      if (color === 'primary') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.primary_600,
+            })
+          } else {
+            baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.primary_600})
+          } else {
+            baseStyles.push({color: t.palette.primary_600, opacity: 0.5})
+          }
+        }
+      } else if (color === 'secondary') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        }
+      } else if (color === 'secondary_inverted') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({
+              color: t.palette.contrast_600,
+            })
+          } else {
+            baseStyles.push({
+              color: t.palette.contrast_300,
+            })
+          }
+        }
+      } else if (color === 'negative') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        }
+      } else if (color === 'negative_subtle') {
+        if (variant === 'outline') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        } else if (variant === 'ghost') {
+          if (!disabled) {
+            baseStyles.push({color: t.palette.negative_400})
+          } else {
+            baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
+          }
+        }
       }
+      /*
+       * END DEPRECATED STYLES
+       */
     }
 
     if (size === 'large') {
       baseStyles.push(a.text_md, a.leading_tight)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_tight)
+      baseStyles.push(a.text_md, a.leading_tight)
     } else if (size === 'tiny') {
       baseStyles.push(a.text_xs, a.leading_tight)
     }
@@ -763,14 +781,16 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
 
 export function ButtonIcon({
   icon: Comp,
-  position,
   size,
 }: {
   icon: React.ComponentType<SVGIconProps>
+  /**
+   * @deprecated no longer needed
+   */
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size: buttonSize, disabled} = useButtonContext()
+  const {size: buttonSize} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
   const {iconSize, iconContainerSize} = React.useMemo(() => {
     /**
@@ -805,8 +825,8 @@ export function ButtonIcon({
      * don't increase button size
      */
     const iconContainerSize = {
-      large: 18,
-      small: 16,
+      large: 17,
+      small: 17,
       tiny: 13,
     }[buttonSize || 'small']
 
@@ -823,9 +843,6 @@ export function ButtonIcon({
         {
           width: iconContainerSize,
           height: iconContainerSize,
-          opacity: disabled ? 0.7 : 1,
-          marginLeft: position === 'left' ? -2 : 0,
-          marginRight: position === 'right' ? -2 : 0,
         },
       ]}>
       <View

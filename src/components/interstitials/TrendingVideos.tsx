@@ -16,7 +16,6 @@ import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -25,7 +24,7 @@ import {
   CompactVideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
 
-const CARD_WIDTH = 100
+const CARD_WIDTH = 108
 
 const FEED_DESC = `feedgen|${VIDEO_FEED_URI}`
 const FEED_PARAMS: {
@@ -68,9 +67,10 @@ export function TrendingVideos() {
   return (
     <View
       style={[
-        a.pt_lg,
+        a.pt_sm,
         a.pb_lg,
         a.border_t,
+        a.overflow_hidden,
         t.atoms.border_contrast_low,
         t.atoms.bg_contrast_25,
       ]}>
@@ -82,20 +82,17 @@ export function TrendingVideos() {
           a.align_center,
           a.justify_between,
         ]}>
-        <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_xs]}>
-          <Graph />
-          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
-            <Trans>Trending Videos</Trans>
-          </Text>
-        </View>
+        <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
+          <Trans>Trending Videos</Trans>
+        </Text>
         <Button
           label={_(msg`Dismiss this section`)}
           size="tiny"
-          variant="ghost"
+          variant="solid"
           color="secondary"
-          shape="round"
+          shape="square"
           onPress={() => trendingPrompt.open()}>
-          <ButtonIcon icon={X} />
+          <ButtonIcon icon={X} size="sm" />
         </Button>
       </View>
 
@@ -104,11 +101,12 @@ export function TrendingVideos() {
           horizontal
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
-          snapToInterval={CARD_WIDTH + a.gap_sm.gap}>
+          snapToInterval={CARD_WIDTH + a.gap_md.gap}
+          style={[a.overflow_visible]}>
           <View
             style={[
               a.flex_row,
-              a.gap_sm,
+              a.gap_md,
               {
                 paddingLeft: gutters.paddingLeft,
                 paddingRight: gutters.paddingRight,
@@ -193,8 +191,11 @@ function VideoCards({
             a.justify_center,
             a.align_center,
             a.flex_1,
-            a.rounded_md,
+            a.rounded_lg,
+            a.border,
+            t.atoms.border_contrast_low,
             t.atoms.bg,
+            t.atoms.shadow_sm,
           ]}>
           {({pressed}) => (
             <View
