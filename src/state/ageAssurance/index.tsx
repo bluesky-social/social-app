@@ -4,7 +4,6 @@ import {useQuery} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
 import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
-import {useGate} from '#/lib/statsig/statsig'
 import {isNetworkError} from '#/lib/strings/errors'
 import {
   type AgeAssuranceAPIContextType,
@@ -41,7 +40,6 @@ const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
  * performance.
  */
 export function Provider({children}: {children: React.ReactNode}) {
-  const gate = useGate()
   const agent = useAgent()
   const {geolocation} = useGeolocation()
   const isAgeAssuranceEnabled = useIsAgeAssuranceEnabled()
@@ -78,12 +76,10 @@ export function Provider({children}: {children: React.ReactNode}) {
           account: agent.session?.did,
         })
 
-        if (gate('age_assurance')) {
-          await getAndRegisterPushToken({
-            isAgeRestricted:
-              !!geolocation?.isAgeRestrictedGeo && data.status !== 'assured',
-          })
-        }
+        await getAndRegisterPushToken({
+          isAgeRestricted:
+            !!geolocation?.isAgeRestrictedGeo && data.status !== 'assured',
+        })
 
         return data
       } catch (e) {

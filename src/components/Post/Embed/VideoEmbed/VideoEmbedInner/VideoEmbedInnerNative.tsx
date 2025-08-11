@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import {useImperativeHandle, useRef, useState} from 'react'
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {BlueskyVideoView} from '@haileyok/bluesky-video'
@@ -17,91 +17,88 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useVideoMuteState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
 import {TimeIndicator} from './TimeIndicator'
 
-export const VideoEmbedInnerNative = React.forwardRef(
-  function VideoEmbedInnerNative(
-    {
-      embed,
-      setStatus,
-      setIsLoading,
-      setIsActive,
-    }: {
-      embed: AppBskyEmbedVideo.View
-      setStatus: (status: 'playing' | 'paused') => void
-      setIsLoading: (isLoading: boolean) => void
-      setIsActive: (isActive: boolean) => void
+export function VideoEmbedInnerNative({
+  ref,
+  embed,
+  setStatus,
+  setIsLoading,
+  setIsActive,
+}: {
+  ref: React.Ref<{togglePlayback: () => void}>
+  embed: AppBskyEmbedVideo.View
+  setStatus: (status: 'playing' | 'paused') => void
+  setIsLoading: (isLoading: boolean) => void
+  setIsActive: (isActive: boolean) => void
+}) {
+  const {_} = useLingui()
+  const videoRef = useRef<BlueskyVideoView>(null)
+  const autoplayDisabled = useAutoplayDisabled()
+  const isWithinMessage = useIsWithinMessage()
+  const [muted, setMuted] = useVideoMuteState()
+
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [timeRemaining, setTimeRemaining] = useState(0)
+  const [error, setError] = useState<string>()
+
+  useImperativeHandle(ref, () => ({
+    togglePlayback: () => {
+      videoRef.current?.togglePlayback()
     },
-    ref: React.Ref<{togglePlayback: () => void}>,
-  ) {
-    const {_} = useLingui()
-    const videoRef = useRef<BlueskyVideoView>(null)
-    const autoplayDisabled = useAutoplayDisabled()
-    const isWithinMessage = useIsWithinMessage()
-    const [muted, setMuted] = useVideoMuteState()
+  }))
 
-    const [isPlaying, setIsPlaying] = React.useState(false)
-    const [timeRemaining, setTimeRemaining] = React.useState(0)
-    const [error, setError] = React.useState<string>()
+  if (error) {
+    throw new Error(error)
+  }
 
-    React.useImperativeHandle(ref, () => ({
-      togglePlayback: () => {
-        videoRef.current?.togglePlayback()
-      },
-    }))
-
-    if (error) {
-      throw new Error(error)
-    }
-
-    return (
-      <View style={[a.flex_1, a.relative]}>
-        <BlueskyVideoView
-          url={embed.playlist}
-          autoplay={!autoplayDisabled && !isWithinMessage}
-          beginMuted={autoplayDisabled ? false : muted}
-          style={[a.rounded_sm]}
-          onActiveChange={e => {
-            setIsActive(e.nativeEvent.isActive)
-          }}
-          onLoadingChange={e => {
-            setIsLoading(e.nativeEvent.isLoading)
-          }}
-          onMutedChange={e => {
-            setMuted(e.nativeEvent.isMuted)
-          }}
-          onStatusChange={e => {
-            setStatus(e.nativeEvent.status)
-            setIsPlaying(e.nativeEvent.status === 'playing')
-          }}
-          onTimeRemainingChange={e => {
-            setTimeRemaining(e.nativeEvent.timeRemaining)
-          }}
-          onError={e => {
-            setError(e.nativeEvent.error)
-          }}
-          ref={videoRef}
-          accessibilityLabel={
-            embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
-          }
-          accessibilityHint=""
-        />
-        <VideoControls
-          enterFullscreen={() => {
-            videoRef.current?.enterFullscreen(true)
-          }}
-          toggleMuted={() => {
-            videoRef.current?.toggleMuted()
-          }}
-          togglePlayback={() => {
-            videoRef.current?.togglePlayback()
-          }}
-          isPlaying={isPlaying}
-          timeRemaining={timeRemaining}
-        />
-        <MediaInsetBorder />
-      </View>
-    )
-  },
-)
+  return (
+    <View style={[a.flex_1, a.relative]}>
+      <BlueskyVideoView
+        url={embed.playlist}
+        autoplay={!autoplayDisabled && !isWithinMessage}
+        beginMuted={autoplayDisabled ? false : muted}
+        style={[a.rounded_sm]}
+        onActiveChange={e => {
+          setIsActive(e.nativeEvent.isActive)
+        }}
+        onLoadingChange={e => {
+          setIsLoading(e.nativeEvent.isLoading)
+        }}
+        onMutedChange={e => {
+          setMuted(e.nativeEvent.isMuted)
+        }}
+        onStatusChange={e => {
+          setStatus(e.nativeEvent.status)
+          setIsPlaying(e.nativeEvent.status === 'playing')
+        }}
+        onTimeRemainingChange={e => {
+          setTimeRemaining(e.nativeEvent.timeRemaining)
+        }}
+        onError={e => {
+          setError(e.nativeEvent.error)
+        }}
+        ref={videoRef}
+        accessibilityLabel={
+          embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
+        }
+        accessibilityHint=""
+      />
+      <VideoControls
+        enterFullscreen={() => {
+          videoRef.current?.enterFullscreen(true)
+        }}
+        toggleMuted={() => {
+          videoRef.current?.toggleMuted()
+        }}
+        togglePlayback={() => {
+          videoRef.current?.togglePlayback()
+        }}
+        isPlaying={isPlaying}
+        timeRemaining={timeRemaining}
+      />
+      <MediaInsetBorder />
+    </View>
+  )
+}
 
 function VideoControls({
   enterFullscreen,

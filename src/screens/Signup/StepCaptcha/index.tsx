@@ -1,21 +1,74 @@
-import React from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import React, {useEffect, useState} from 'react'
+import {ActivityIndicator, Platform, View} from 'react-native'
+import ReactNativeDeviceAttest from 'react-native-device-attest'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
+import {GCP_PROJECT_ID} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
 
-const CAPTCHA_PATH = '/gate/signup'
+const CAPTCHA_PATH =
+  isWeb || GCP_PROJECT_ID === 0 ? '/gate/signup' : '/gate/signup/attempt-attest'
 
 export function StepCaptcha() {
+  if (isWeb) {
+    return <StepCaptchaInner />
+  } else {
+    return <StepCaptchaNative />
+  }
+}
+
+export function StepCaptchaNative() {
+  const [token, setToken] = useState<string>()
+  const [payload, setPayload] = useState<string>()
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    ;(async () => {
+      logger.debug('trying to generate attestation token...')
+      try {
+        if (isIOS) {
+          logger.debug('starting to generate devicecheck token...')
+          const token = await ReactNativeDeviceAttest.getDeviceCheckToken()
+          setToken(token)
+          logger.debug(`generated devicecheck token: ${token}`)
+        } else {
+          const {token, payload} =
+            await ReactNativeDeviceAttest.getIntegrityToken('signup')
+          setToken(token)
+          setPayload(base64UrlEncode(payload))
+        }
+      } catch (e: any) {
+        logger.error(e)
+      } finally {
+        setReady(true)
+      }
+    })()
+  }, [])
+
+  if (!ready) {
+    return <View />
+  }
+
+  return <StepCaptchaInner token={token} payload={payload} />
+}
+
+function StepCaptchaInner({
+  token,
+  payload,
+}: {
+  token?: string
+  payload?: string
+}) {
   const {_} = useLingui()
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
@@ -33,8 +86,24 @@ export function StepCaptcha() {
     newUrl.searchParams.set('state', stateParam)
     newUrl.searchParams.set('colorScheme', theme.name)
 
+    if (isNative && token) {
+      newUrl.searchParams.set('platform', Platform.OS)
+      newUrl.searchParams.set('token', token)
+      if (isAndroid && payload) {
+        newUrl.searchParams.set('payload', payload)
+      }
+    }
+
     return newUrl.href
-  }, [state.serviceUrl, state.handle, state.userDomain, stateParam, theme.name])
+  }, [
+    state.serviceUrl,
+    state.handle,
+    state.userDomain,
+    stateParam,
+    theme.name,
+    token,
+    payload,
+  ])
 
   const onSuccess = React.useCallback(
     (code: string) => {
@@ -75,7 +144,7 @@ export function StepCaptcha() {
 
   return (
     <ScreenTransition>
-      <View style={[a.gap_lg]}>
+      <View style={[a.gap_lg, a.pt_lg]}>
         <View
           style={[
             a.w_full,
@@ -104,4 +173,14 @@ export function StepCaptcha() {
       />
     </ScreenTransition>
   )
+}
+
+function base64UrlEncode(data: string): string {
+  const encoder = new TextEncoder()
+  const bytes = encoder.encode(data)
+
+  const binaryString = String.fromCharCode(...bytes)
+  const base64 = btoa(binaryString)
+
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/[=]/g, '')
 }

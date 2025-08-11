@@ -70,6 +70,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
   type: UserAvatarType
   moderation?: ModerationUI
   usePlainRNImage?: boolean
+  noBorder?: boolean
   onLoad?: () => void
   style?: StyleProp<ViewStyle>
 }
@@ -219,6 +220,7 @@ let UserAvatar = ({
   style,
   live,
   hideLiveBadge,
+  noBorder,
 }: UserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
@@ -309,7 +311,7 @@ let UserAvatar = ({
           onLoad={onLoad}
         />
       )}
-      <MediaInsetBorder style={borderStyle} />
+      {!noBorder && <MediaInsetBorder style={borderStyle} />}
       {live && size > 16 && !hideLiveBadge && (
         <LiveIndicator size={size > 32 ? 'small' : 'tiny'} />
       )}
@@ -318,7 +320,7 @@ let UserAvatar = ({
   ) : (
     <View style={containerStyle}>
       <DefaultAvatar type={type} shape={finalShape} size={size} />
-      <MediaInsetBorder style={borderStyle} />
+      {!noBorder && <MediaInsetBorder style={borderStyle} />}
       {live && size > 16 && !hideLiveBadge && (
         <LiveIndicator size={size > 32 ? 'small' : 'tiny'} />
       )}

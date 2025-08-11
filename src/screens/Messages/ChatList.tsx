@@ -55,7 +55,7 @@ type ListItem =
 function renderItem({item}: {item: ListItem}) {
   switch (item.type) {
     case 'INBOX':
-      return <InboxPreview count={item.count} profiles={item.profiles} />
+      return <InboxPreview profiles={item.profiles} />
     case 'CONVERSATION':
       return <ChatListItem convo={item.conversation} />
   }
@@ -140,22 +140,24 @@ export function MessagesScreenInner({navigation, route}: Props) {
 
   const leftConvos = useLeftConvos()
 
-  const inboxPreviewConvos = useMemo(() => {
-    const inbox =
-      inboxData?.pages
-        .flatMap(page => page.convos)
-        .filter(
-          convo =>
-            !leftConvos.includes(convo.id) &&
-            !convo.muted &&
-            convo.unreadCount > 0 &&
-            convo.members.every(member => member.handle !== 'missing.invalid'),
-        ) ?? []
+  const inboxAllConvos =
+    inboxData?.pages
+      .flatMap(page => page.convos)
+      .filter(
+        convo =>
+          !leftConvos.includes(convo.id) &&
+          !convo.muted &&
+          convo.members.every(member => member.handle !== 'missing.invalid'),
+      ) ?? []
+  const hasInboxConvos = inboxAllConvos?.length > 0
 
-    return inbox
-      .map(x => x.members.find(y => y.did !== currentAccount?.did))
-      .filter(x => !!x)
-  }, [inboxData, leftConvos, currentAccount?.did])
+  const inboxUnreadConvos = inboxAllConvos.filter(
+    convo => convo.unreadCount > 0,
+  )
+
+  const inboxUnreadConvoMembers = inboxUnreadConvos
+    .map(x => x.members.find(y => y.did !== currentAccount?.did))
+    .filter(x => !!x)
 
   const conversations = useMemo(() => {
     if (data?.pages) {
@@ -165,18 +167,22 @@ export function MessagesScreenInner({navigation, route}: Props) {
         .filter(convo => !leftConvos.includes(convo.id))
 
       return [
-        {
-          type: 'INBOX',
-          count: inboxPreviewConvos.length,
-          profiles: inboxPreviewConvos.slice(0, 3),
-        },
+        ...(hasInboxConvos
+          ? [
+              {
+                type: 'INBOX' as const,
+                count: inboxUnreadConvoMembers.length,
+                profiles: inboxUnreadConvoMembers.slice(0, 3),
+              },
+            ]
+          : []),
         ...conversations.map(
           convo => ({type: 'CONVERSATION', conversation: convo}) as const,
         ),
       ] satisfies ListItem[]
     }
     return []
-  }, [data, leftConvos, inboxPreviewConvos])
+  }, [data, leftConvos, hasInboxConvos, inboxUnreadConvoMembers])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -223,16 +229,20 @@ export function MessagesScreenInner({navigation, route}: Props) {
     return listenSoftReset(onSoftReset)
   }, [onSoftReset, isScreenFocused])
 
-  // Will always have 1 item - the inbox button
-  if (conversations.length < 2) {
+  // NOTE(APiligrim)
+  // Show empty state only if there are no conversations at all
+  const activeConversations = conversations.filter(
+    item => item.type === 'CONVERSATION',
+  )
+
+  if (activeConversations.length === 0) {
     return (
       <Layout.Screen>
         <Header newChatControl={newChatControl} />
         <Layout.Center>
-          <InboxPreview
-            count={inboxPreviewConvos.length}
-            profiles={inboxPreviewConvos}
-          />
+          {!isLoading && hasInboxConvos && (
+            <InboxPreview profiles={inboxUnreadConvoMembers} />
+          )}
           {isLoading ? (
             <ChatListLoadingPlaceholder />
           ) : (

@@ -1,4 +1,11 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -83,9 +90,7 @@ export function VideoEmbed({
       style={{display: 'flex', flex: 1, cursor: 'default'}}
       onClick={evt => evt.stopPropagation()}>
       <ErrorBoundary renderError={renderError} key={key}>
-        <ViewportObserver
-          sendPosition={sendPosition}
-          isAnyViewActive={currentActiveView !== null}>
+        <OnlyNearScreen>
           <VideoEmbedInnerWeb
             embed={embed}
             active={active}
@@ -93,31 +98,39 @@ export function VideoEmbed({
             onScreen={onScreen}
             lastKnownTime={lastKnownTime}
           />
-        </ViewportObserver>
+        </OnlyNearScreen>
       </ErrorBoundary>
     </div>
   )
 
   return (
     <View style={[a.pt_xs]}>
-      {cropDisabled ? (
-        <View style={[a.w_full, a.overflow_hidden, {aspectRatio: max ?? 1}]}>
-          {contents}
-        </View>
-      ) : (
-        <ConstrainedImage
-          fullBleed={crop === 'square'}
-          aspectRatio={constrained || 1}>
-          {contents}
-        </ConstrainedImage>
-      )}
+      <ViewportObserver
+        sendPosition={sendPosition}
+        isAnyViewActive={currentActiveView !== null}>
+        {cropDisabled ? (
+          <View style={[a.w_full, a.overflow_hidden, {aspectRatio: max ?? 1}]}>
+            {contents}
+          </View>
+        ) : (
+          <ConstrainedImage
+            fullBleed={crop === 'square'}
+            aspectRatio={constrained || 1}>
+            {contents}
+          </ConstrainedImage>
+        )}
+      </ViewportObserver>
     </View>
   )
 }
 
+const NearScreenContext = createContext(false)
+
 /**
  * Renders a 100vh tall div and watches it with an IntersectionObserver to
  * send the position of the div when it's near the screen.
+ *
+ * IMPORTANT: ViewportObserver _must_ not be within a `overflow: hidden` container.
  */
 function ViewportObserver({
   children,
@@ -164,7 +177,9 @@ function ViewportObserver({
 
   return (
     <View style={[a.flex_1, a.flex_row]}>
-      {nearScreen && children}
+      <NearScreenContext.Provider value={nearScreen}>
+        {children}
+      </NearScreenContext.Provider>
       <div
         ref={ref}
         style={{
@@ -180,6 +195,18 @@ function ViewportObserver({
       />
     </View>
   )
+}
+
+/**
+ * Awkward data flow here, but we need to hide the video when it's not near the screen.
+ * But also, ViewportObserver _must_ not be within a `overflow: hidden` container.
+ * So we put it at the top level of the component tree here, then hide the children of
+ * the auto-resizing container.
+ */
+export const OnlyNearScreen = ({children}: {children: React.ReactNode}) => {
+  const nearScreen = useContext(NearScreenContext)
+
+  return nearScreen ? children : null
 }
 
 function VideoError({error, retry}: {error: unknown; retry: () => void}) {

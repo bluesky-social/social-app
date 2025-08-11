@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 
 import {FeedTuner} from '#/lib/api/feed-manip'
-import {FeedDescriptor} from '../queries/post-feed'
+import {type FeedDescriptor} from '../queries/post-feed'
 import {usePreferencesQuery} from '../queries/preferences'
 import {useSession} from '../session'
 import {useLanguagePrefs} from './languages'
@@ -19,7 +19,10 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       }
     }
     if (feedDesc.startsWith('feedgen')) {
-      return [FeedTuner.preferredLangOnly(langPrefs.contentLanguages)]
+      return [
+        FeedTuner.preferredLangOnly(langPrefs.contentLanguages),
+        FeedTuner.removeMutedThreads,
+      ]
     }
     if (feedDesc === 'following' || feedDesc.startsWith('list')) {
       const feedTuners = [FeedTuner.removeOrphans]
@@ -40,6 +43,7 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
         feedTuners.push(FeedTuner.removeQuotePosts)
       }
       feedTuners.push(FeedTuner.dedupThreads)
+      feedTuners.push(FeedTuner.removeMutedThreads)
 
       return feedTuners
     }

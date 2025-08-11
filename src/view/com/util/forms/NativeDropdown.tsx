@@ -1,9 +1,15 @@
 import React from 'react'
-import {Platform, Pressable, StyleSheet, View, ViewStyle} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import {type IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
+import {type MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useTheme} from '#/lib/ThemeContext'
@@ -12,8 +18,14 @@ import {Portal} from '#/components/Portal'
 
 // Custom Dropdown Menu Components
 // ==
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export const DropdownMenuRoot = DropdownMenu.Root
 // export const DropdownMenuTrigger = DropdownMenu.Trigger
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export const DropdownMenuContent = DropdownMenu.Content
 
 type TriggerProps = Omit<
@@ -25,6 +37,9 @@ type TriggerProps = Omit<
     accessibilityLabel?: string
     accessibilityHint?: string
   }>
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export const DropdownMenuTrigger = DropdownMenu.create(
   (props: TriggerProps) => {
     const theme = useTheme()
@@ -59,6 +74,9 @@ export const DropdownMenuTrigger = DropdownMenu.create(
 )
 
 type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export const DropdownMenuItem = DropdownMenu.create(
   (props: ItemProps & {testID?: string}) => {
     const theme = useTheme()
@@ -84,6 +102,9 @@ export const DropdownMenuItem = DropdownMenu.create(
 )
 
 type TitleProps = React.ComponentProps<(typeof DropdownMenu)['ItemTitle']>
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export const DropdownMenuItemTitle = DropdownMenu.create(
   (props: TitleProps) => {
     const pal = usePalette('default')
@@ -98,11 +119,17 @@ export const DropdownMenuItemTitle = DropdownMenu.create(
 )
 
 type IconProps = React.ComponentProps<(typeof DropdownMenu)['ItemIcon']>
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export const DropdownMenuItemIcon = DropdownMenu.create((props: IconProps) => {
   return <DropdownMenu.ItemIcon {...props} />
 }, 'ItemIcon')
 
 type SeparatorProps = React.ComponentProps<(typeof DropdownMenu)['Separator']>
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export const DropdownMenuSeparator = DropdownMenu.create(
   (props: SeparatorProps) => {
     const pal = usePalette('default')
@@ -142,11 +169,14 @@ type Props = {
   triggerStyle?: ViewStyle
 }
 
-/* The `NativeDropdown` function uses native iOS and Android dropdown menus.
+/**
+ * The `NativeDropdown` function uses native iOS and Android dropdown menus.
  * It also creates a animated custom dropdown for web that uses
  * Radix UI primitives under the hood
  * @prop {DropdownItem[]} items - An array of dropdown items
  * @prop {React.ReactNode} children - A custom dropdown trigger
+ *
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
  */
 export function NativeDropdown({
   items,

@@ -608,6 +608,8 @@ type IPCCResponse struct {
 	AgeRestrictedGeo bool   `json:"isAgeRestrictedGeo,omitempty"`
 }
 
+// IP address data is powered by IPinfo
+// https://ipinfo.io
 func (srv *Server) WebIpCC(c echo.Context) error {
 	realIP := c.RealIP()
 	addr, err := netip.ParseAddr(realIP)

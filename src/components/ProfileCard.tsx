@@ -20,7 +20,13 @@ import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {
+  atoms as a,
+  platform,
+  type TextStyleProp,
+  useTheme,
+  type ViewStyleProp,
+} from '#/alf'
 import {
   Button,
   ButtonIcon,
@@ -136,12 +142,14 @@ export function Avatar({
   onPress,
   disabledPreview,
   liveOverride,
+  size = 40,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onPress?: () => void
   disabledPreview?: boolean
   liveOverride?: boolean
+  size?: number
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
 
@@ -149,7 +157,7 @@ export function Avatar({
 
   return disabledPreview ? (
     <UserAvatar
-      size={40}
+      size={size}
       avatar={profile.avatar}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       moderation={moderation.ui('avatar')}
@@ -157,7 +165,7 @@ export function Avatar({
     />
   ) : (
     <PreviewableUserAvatar
-      size={40}
+      size={size}
       profile={profile}
       moderation={moderation.ui('avatar')}
       onBeforePress={onPress}
@@ -166,7 +174,7 @@ export function Avatar({
   )
 }
 
-export function AvatarPlaceholder() {
+export function AvatarPlaceholder({size = 40}: {size?: number}) {
   const t = useTheme()
   return (
     <View
@@ -174,8 +182,8 @@ export function AvatarPlaceholder() {
         a.rounded_full,
         t.atoms.bg_contrast_25,
         {
-          width: 40,
-          height: 40,
+          width: size,
+          height: size,
         },
       ]}
     />
@@ -274,7 +282,7 @@ export function Name({
   )
   const verification = useSimpleVerificationState({profile})
   return (
-    <View style={[a.flex_row, a.align_center]}>
+    <View style={[a.flex_row, a.align_center, a.max_w_full]}>
       <Text
         emoji
         style={[
@@ -343,13 +351,32 @@ export function NameAndHandlePlaceholder() {
   )
 }
 
+export function NamePlaceholder({style}: ViewStyleProp) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.rounded_xs,
+        t.atoms.bg_contrast_25,
+        {
+          width: '60%',
+          height: 14,
+        },
+        style,
+      ]}
+    />
+  )
+}
+
 export function Description({
   profile: profileUnshadowed,
   numberOfLines = 3,
+  style,
 }: {
   profile: bsky.profile.AnyProfileView
   numberOfLines?: number
-}) {
+} & TextStyleProp) {
   const profile = useProfileShadow(profileUnshadowed)
   const rt = useMemo(() => {
     if (!('description' in profile)) return
@@ -369,7 +396,7 @@ export function Description({
     <View style={[a.pt_xs]}>
       <RichText
         value={rt}
-        style={[a.leading_snug]}
+        style={[a.leading_snug, style]}
         numberOfLines={numberOfLines}
         disableLinks
       />

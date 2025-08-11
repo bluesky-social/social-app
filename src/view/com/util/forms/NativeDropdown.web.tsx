@@ -63,6 +63,9 @@ type Props = {
   triggerStyle?: ViewStyle
 }
 
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export function NativeDropdown({
   items,
   children,

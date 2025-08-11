@@ -15,6 +15,7 @@ import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {usePreemptivelyCompleteActivePolicyUpdate} from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -252,6 +253,8 @@ export function useSubmitSignup() {
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
+  const preemptivelyCompleteActivePolicyUpdate =
+    usePreemptivelyCompleteActivePolicyUpdate()
 
   return useCallback(
     async (state: SignupState, dispatch: (action: SignupAction) => void) => {
@@ -325,6 +328,12 @@ export function useSubmitSignup() {
           },
         )
 
+        /**
+         * Marks any active policy update as completed, since user just agreed
+         * to TOS/privacy during sign up
+         */
+        preemptivelyCompleteActivePolicyUpdate()
+
         /*
          * Must happen last so that if the user has multiple tabs open and
          * createAccount fails, one tab is not stuck in onboarding — Eric
@@ -363,6 +372,11 @@ export function useSubmitSignup() {
         dispatch({type: 'setIsLoading', value: false})
       }
     },
-    [_, onboardingDispatch, createAccount],
+    [
+      _,
+      onboardingDispatch,
+      createAccount,
+      preemptivelyCompleteActivePolicyUpdate,
+    ],
   )
 }

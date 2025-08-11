@@ -301,17 +301,6 @@ export function useNotificationsHandler() {
         const payload = getNotificationPayload(e.notification)
 
         if (payload) {
-          if (!payload.reason) {
-            notyLogger.error(
-              'useNotificationsHandler: received unknown payload',
-              {
-                payload,
-                identifier: e.notification.request.identifier,
-              },
-            )
-            return
-          }
-
           notyLogger.debug(
             'User pressed a notification, opening notifications tab',
             {},
@@ -393,16 +382,20 @@ export function getNotificationPayload(
     isIOS ? e.request.trigger.payload : e.request.content.data
   ) as NotificationPayload
 
-  if (payload) {
+  if (payload && payload.reason) {
     return payload
   } else {
+    if (payload) {
+      notyLogger.warn('getNotificationPayload: received unknown payload', {
+        payload,
+        identifier: e.request.identifier,
+      })
+    }
     return null
   }
 }
 
-export function notificationToURL(
-  payload: NotificationPayload,
-): string | undefined {
+export function notificationToURL(payload: NotificationPayload): string | null {
   switch (payload?.reason) {
     case 'like':
     case 'repost':
@@ -433,10 +426,12 @@ export function notificationToURL(
     }
     case 'chat-message':
       // should be handled separately
-      return undefined
+      return null
     case 'verified':
     case 'unverified':
-    default:
       return '/notifications'
+    default:
+      // do nothing if we don't know what to do with it
+      return null
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextInput, View} from 'react-native'
+import {type TextInput, View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -216,8 +216,8 @@ export function Forms() {
       </View>
 
       <Button
-        variant="gradient"
-        color="gradient_nordic"
+        variant="solid"
+        color="primary"
         size="small"
         label="Reset all toggles"
         onPress={() => {

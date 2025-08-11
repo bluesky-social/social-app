@@ -26,12 +26,7 @@ module.exports = function (_config) {
     ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
   ]
 
-  const UPDATES_CHANNEL = IS_TESTFLIGHT
-    ? 'testflight'
-    : IS_PRODUCTION
-      ? 'production'
-      : undefined
-  const UPDATES_ENABLED = !!UPDATES_CHANNEL
+  const UPDATES_ENABLED = IS_TESTFLIGHT || IS_PRODUCTION
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
@@ -190,7 +185,6 @@ module.exports = function (_config) {
             }
           : undefined,
         checkAutomatically: 'NEVER',
-        channel: UPDATES_CHANNEL,
       },
       plugins: [
         'expo-video',

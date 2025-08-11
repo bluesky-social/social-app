@@ -96,6 +96,12 @@ export function TestCtrls() {
         style={BTN}
       />
       <Pressable
+        testID="storybookBtn"
+        onPress={() => navigate('Debug')}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      <Pressable
         testID="e2eRefreshHome"
         onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
         accessibilityRole="button"

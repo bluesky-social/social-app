@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {type AppBskyEmbedVideo} from '@atproto/api'
@@ -81,13 +81,13 @@ export function VideoEmbed({embed, crop}: Props) {
 
 function InnerWrapper({embed}: Props) {
   const {_} = useLingui()
-  const ref = React.useRef<{togglePlayback: () => void}>(null)
+  const ref = useRef<{togglePlayback: () => void}>(null)
 
-  const [status, setStatus] = React.useState<'playing' | 'paused' | 'pending'>(
+  const [status, setStatus] = useState<'playing' | 'paused' | 'pending'>(
     'pending',
   )
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [isActive, setIsActive] = React.useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isActive, setIsActive] = useState(false)
   const showSpinner = useThrottledValue(isActive && isLoading, 100)
 
   const showOverlay =
@@ -96,11 +96,9 @@ function InnerWrapper({embed}: Props) {
     (status === 'paused' && !isActive) ||
     status === 'pending'
 
-  React.useEffect(() => {
-    if (!isActive && status !== 'pending') {
-      setStatus('pending')
-    }
-  }, [isActive, status])
+  if (!isActive && status !== 'pending') {
+    setStatus('pending')
+  }
 
   return (
     <>
@@ -131,8 +129,7 @@ function InnerWrapper({embed}: Props) {
             onPress={() => {
               ref.current?.togglePlayback()
             }}
-            label={_(msg`Play video`)}
-            color="secondary">
+            label={_(msg`Play video`)}>
             {showSpinner ? (
               <View
                 style={[
