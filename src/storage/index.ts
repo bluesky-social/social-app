@@ -113,14 +113,21 @@ export function useStorage<
 ] {
   type Schema = StorageSchema<Store>
   const initialized = useRef(false)
-  const [value, setValue] = useState<Schema[Key] | undefined>(() =>
-    storage.get(scopes),
-  )
+  const [value, setValue] = useState<Schema[Key] | undefined>(() => {
+    if (debug) logger.debug(`${debug} - init`, {
+      value: storage.get(scopes) ?? 'unset'
+    })
+    return storage.get(scopes)
+  })
 
   useEffect(() => {
     if (!initialized.current) {
       const raw = storage.get(scopes)
       if (value !== raw) {
+        logger.debug(`${debug} - syncing initial`, {
+          value: value ?? 'unset',
+          raw: raw ?? 'unset',
+        })
         initialized.current = true
         setValue(raw)
       }
