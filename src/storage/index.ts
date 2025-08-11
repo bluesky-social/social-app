@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState, useRef} from 'react'
+import {useCallback, useEffect, useState, useRef, useId} from 'react'
 import {MMKV} from 'react-native-mmkv'
 
 import {type Account, type Device} from '#/storage/schema'
@@ -112,6 +112,12 @@ export function useStorage<
   (data: StorageSchema<Store>[Key]) => void,
 ] {
   type Schema = StorageSchema<Store>
+  const id = useId()
+
+  if (debug) {
+    debug = `${debug} - ${id}`
+  }
+
   const initialized = useRef(false)
   const [value, setValue] = useState<Schema[Key] | undefined>(() => {
     if (debug) logger.debug(`${debug} - init`, {
@@ -120,19 +126,19 @@ export function useStorage<
     return storage.get(scopes)
   })
 
-  useEffect(() => {
-    if (!initialized.current) {
-      const raw = storage.get(scopes)
-      if (value !== raw) {
-        logger.debug(`${debug} - syncing initial`, {
-          value: value ?? 'unset',
-          raw: raw ?? 'unset',
-        })
-        initialized.current = true
-        setValue(raw)
-      }
-    }
-  }, [value, scopes])
+  // useEffect(() => {
+  //   if (!initialized.current) {
+  //     const raw = storage.get(scopes)
+  //     if (value !== raw) {
+  //       logger.debug(`${debug} - syncing initial`, {
+  //         value: value ?? 'unset',
+  //         raw: raw ?? 'unset',
+  //       })
+  //       setValue(raw)
+  //     }
+  //     initialized.current = true
+  //   }
+  // }, [value, scopes])
 
   useEffect(() => {
     const sub = storage.addOnValueChangedListener(scopes, () => {
