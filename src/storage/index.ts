@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState, useRef, useId} from 'react'
 import {MMKV} from 'react-native-mmkv'
+import EventEmitter from 'eventemitter3'
 
 import {type Account, type Device} from '#/storage/schema'
 import {logger} from '#/components/PolicyUpdateOverlay/logger'
@@ -13,6 +14,8 @@ export * from '#/storage/schema'
 export class Storage<Scopes extends unknown[], Schema> {
   protected sep = ':'
   protected store: MMKV
+
+  protected events = new EventEmitter()
 
   constructor({id}: {id: string}) {
     this.store = new MMKV({id})
@@ -30,6 +33,7 @@ export class Storage<Scopes extends unknown[], Schema> {
   ): void {
     // stored as `{ data: <value> }` structure to ease stringification
     this.store.set(scopes.join(this.sep), JSON.stringify({data}))
+    this.events.emit('change', scopes.join(this.sep))
   }
 
   /**
@@ -55,6 +59,7 @@ export class Storage<Scopes extends unknown[], Schema> {
    */
   remove<Key extends keyof Schema>(scopes: [...Scopes, Key]) {
     this.store.delete(scopes.join(this.sep))
+    this.events.emit('change', scopes.join(this.sep))
   }
 
   /**
@@ -83,11 +88,20 @@ export class Storage<Scopes extends unknown[], Schema> {
     scopes: [...Scopes, Key],
     callback: () => void,
   ) {
-    return this.store.addOnValueChangedListener(key => {
+    const handler = (key: string) => {
       if (key === scopes.join(this.sep)) {
         callback()
       }
-    })
+    }
+    this.events.on('change', handler)
+    return () => {
+      this.events.off('change', handler)
+    }
+    // return this.store.addOnValueChangedListener(key => {
+    //   if (key === scopes.join(this.sep)) {
+    //     callback()
+    //   }
+    // })
   }
 }
 
@@ -141,13 +155,17 @@ export function useStorage<
   // }, [value, scopes])
 
   useEffect(() => {
+    if (debug) logger.debug(`${debug} - subscribe`)
     const sub = storage.addOnValueChangedListener(scopes, () => {
       if (debug) logger.debug(`${debug} - storage change`, {
         value: storage.get(scopes) ?? 'unset',
       })
       setValue(storage.get(scopes))
     })
-    return () => sub.remove()
+    return () => {
+      if (debug) logger.debug(`${debug} - unsubscribe`)
+      sub()
+    }
   }, [storage, scopes])
 
   const setter = useCallback(
