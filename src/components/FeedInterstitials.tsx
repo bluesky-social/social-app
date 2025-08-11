@@ -25,7 +25,7 @@ import {
   type ViewStyleProp,
   web,
 } from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
@@ -63,7 +63,6 @@ function CardOuter({
 }
 
 export function SuggestedFollowPlaceholder() {
-  const {_} = useLingui()
   const t = useTheme()
 
   return (
@@ -79,14 +78,7 @@ export function SuggestedFollowPlaceholder() {
           </View>
         </View>
 
-        <Button
-          label={_(msg`Follow account placeholder`)}
-          size="small"
-          color="secondary"
-          disabled
-          style={[a.w_full, a.rounded_sm]}>
-          <ButtonText>Follow</ButtonText>
-        </Button>
+        <ProfileCard.FollowButtonPlaceholder />
       </ProfileCard.Outer>
     </CardOuter>
   )
