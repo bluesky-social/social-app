@@ -80,7 +80,7 @@ function Inner({
             ]}>
             <Shield size="md" />
           </View>
-          <View style={[a.flex_1, a.gap_xs, a.pr_2xl]}>
+          <View style={[a.flex_1, a.gap_xs, a.pr_4xl]}>
             <Text style={[a.text_sm, a.leading_snug]}>{children}</Text>
             <Text style={[a.text_sm, a.leading_snug, a.font_bold]}>
               <Trans>
