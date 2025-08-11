@@ -1,7 +1,7 @@
-import {TextStyle} from 'react-native'
+import {type TextStyle} from 'react-native'
 
 import {isAndroid, isWeb} from '#/platform/detection'
-import {Device, device} from '#/storage'
+import {type Device, device} from '#/storage'
 
 const WEB_FONT_FAMILIES = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
 
@@ -43,7 +43,7 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
       style.fontFamily =
         {
           400: 'Inter-Regular',
-          500: 'Inter-Regular',
+          500: 'Inter-Medium',
           600: 'Inter-SemiBold',
           700: 'Inter-SemiBold',
           800: 'Inter-ExtraBold',

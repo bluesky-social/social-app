@@ -250,6 +250,8 @@ module.exports = function (_config) {
               // Android only
               './assets/fonts/inter/Inter-Regular.otf',
               './assets/fonts/inter/Inter-Italic.otf',
+              './assets/fonts/inter/Inter-Medium.otf',
+              './assets/fonts/inter/Inter-MediumItalic.otf',
               './assets/fonts/inter/Inter-SemiBold.otf',
               './assets/fonts/inter/Inter-SemiBoldItalic.otf',
               './assets/fonts/inter/Inter-ExtraBold.otf',
