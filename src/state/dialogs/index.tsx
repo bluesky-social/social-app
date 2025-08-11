@@ -25,25 +25,18 @@ interface IDialogControlContext {
   setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>
 }
 
-interface IDialogFullyExpandedContext {
-  /**
-   * The number of dialogs that are fully expanded. This is used to determine the background color of the status bar
-   * on iOS.
-   */
-  fullyExpandedCount: number
-}
-
 const DialogContext = React.createContext<IDialogContext>({} as IDialogContext)
 
 const DialogControlContext = React.createContext<IDialogControlContext>(
   {} as IDialogControlContext,
 )
 
-const DialogFullyExpandedContext =
-  React.createContext<IDialogFullyExpandedContext>({
-    fullyExpandedCount: 0,
-  } as IDialogFullyExpandedContext)
-DialogFullyExpandedContext.displayName = 'DialogFullyExpandedContext'
+/**
+ * The number of dialogs that are fully expanded. This is used to determine the background color of the status bar
+ * on iOS.
+ */
+const DialogFullyExpandedCountContext = React.createContext<number>(0)
+DialogFullyExpandedCountContext.displayName = 'DialogFullyExpandedCountContext'
 
 export function useDialogStateContext() {
   return React.useContext(DialogContext)
@@ -53,8 +46,9 @@ export function useDialogStateControlContext() {
   return React.useContext(DialogControlContext)
 }
 
-export function useDialogFullyExpandedContext() {
-  return React.useContext(DialogFullyExpandedContext)
+/** The number of dialogs that are fully expanded */
+export function useDialogFullyExpandedCountContext() {
+  return React.useContext(DialogFullyExpandedCountContext)
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
@@ -103,19 +97,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [closeAllDialogs, setDialogIsOpen, setFullyExpandedCount],
   )
 
-  const fullyExpanded = React.useMemo(
-    () => ({
-      fullyExpandedCount,
-    }),
-    [fullyExpandedCount],
-  )
-
   return (
     <DialogContext.Provider value={context}>
       <DialogControlContext.Provider value={controls}>
-        <DialogFullyExpandedContext.Provider value={fullyExpanded}>
+        <DialogFullyExpandedCountContext.Provider value={fullyExpandedCount}>
           <GlobalDialogsProvider>{children}</GlobalDialogsProvider>
-        </DialogFullyExpandedContext.Provider>
+        </DialogFullyExpandedCountContext.Provider>
       </DialogControlContext.Provider>
     </DialogContext.Provider>
   )
