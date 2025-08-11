@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState, useRef} from 'react'
 import {MMKV} from 'react-native-mmkv'
 
 import {type Account, type Device} from '#/storage/schema'
@@ -112,9 +112,20 @@ export function useStorage<
   (data: StorageSchema<Store>[Key]) => void,
 ] {
   type Schema = StorageSchema<Store>
+  const initialized = useRef(false)
   const [value, setValue] = useState<Schema[Key] | undefined>(() =>
     storage.get(scopes),
   )
+
+  useEffect(() => {
+    if (!initialized.current) {
+      const raw = storage.get(scopes)
+      if (value !== raw) {
+        initialized.current = true
+        setValue(raw)
+      }
+    }
+  }, [value, scopes])
 
   useEffect(() => {
     const sub = storage.addOnValueChangedListener(scopes, () => {
