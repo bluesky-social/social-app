@@ -46,11 +46,13 @@ function CardOuter({
   return (
     <View
       style={[
+        a.flex_1,
         a.w_full,
         a.p_md,
         a.rounded_lg,
         a.border,
         t.atoms.bg,
+        t.atoms.shadow_sm,
         t.atoms.border_contrast_low,
         !gtMobile && {
           width: MOBILE_CARD_WIDTH,
@@ -63,11 +65,8 @@ function CardOuter({
 }
 
 export function SuggestedFollowPlaceholder() {
-  const t = useTheme()
-
   return (
-    <CardOuter
-      style={[a.gap_md, t.atoms.border_contrast_low, t.atoms.shadow_sm]}>
+    <CardOuter>
       <ProfileCard.Outer>
         <View
           style={[a.flex_col, a.align_center, a.gap_sm, a.pb_sm, a.mb_auto]}>
@@ -85,9 +84,8 @@ export function SuggestedFollowPlaceholder() {
 }
 
 export function SuggestedFeedsCardPlaceholder() {
-  const t = useTheme()
   return (
-    <CardOuter style={[a.gap_sm, t.atoms.border_contrast_low]}>
+    <CardOuter style={[a.gap_sm]}>
       <FeedCard.Header>
         <FeedCard.AvatarPlaceholder />
         <FeedCard.TitleAndBylinePlaceholder creator />
@@ -261,6 +259,7 @@ export function ProfileGrid({
         <View
           key={i}
           style={[
+            a.flex_1,
             gtMobile &&
               web([
                 a.flex_0,
@@ -298,11 +297,7 @@ export function ProfileGrid({
           ]}>
           {({hovered, pressed}) => (
             <CardOuter
-              style={[
-                a.flex_1,
-                t.atoms.shadow_sm,
-                (hovered || pressed) && t.atoms.border_contrast_high,
-              ]}>
+              style={[(hovered || pressed) && t.atoms.border_contrast_high]}>
               <ProfileCard.Outer>
                 <View
                   style={[
@@ -426,7 +421,6 @@ export function ProfileGrid({
 
 function SeeMoreSuggestedProfilesCard() {
   const navigation = useNavigation<NavigationProp>()
-  const t = useTheme()
   const {_} = useLingui()
 
   return (
@@ -436,7 +430,7 @@ function SeeMoreSuggestedProfilesCard() {
       onPress={() => {
         navigation.navigate('SearchTab')
       }}>
-      <CardOuter style={[a.flex_1, t.atoms.shadow_sm]}>
+      <CardOuter>
         <View style={[a.flex_1, a.justify_center]}>
           <View style={[a.flex_col, a.align_center, a.gap_md]}>
             <Text style={[a.leading_snug, a.text_center]}>
@@ -490,10 +484,7 @@ export function SuggestedFeeds() {
           }}>
           {({hovered, pressed}) => (
             <CardOuter
-              style={[
-                a.flex_1,
-                (hovered || pressed) && t.atoms.border_contrast_high,
-              ]}>
+              style={[(hovered || pressed) && t.atoms.border_contrast_high]}>
               <FeedCard.Outer>
                 <FeedCard.Header>
                   <FeedCard.Avatar src={feed.avatar} />
@@ -567,7 +558,7 @@ export function SuggestedFeeds() {
                   navigation.navigate('SearchTab')
                 }}
                 style={[a.flex_col]}>
-                <CardOuter style={[a.flex_1]}>
+                <CardOuter>
                   <View style={[a.flex_1, a.justify_center]}>
                     <View style={[a.flex_row, a.px_lg]}>
                       <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
