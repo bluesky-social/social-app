@@ -67,6 +67,13 @@ export class Storage<Scopes extends unknown[], Schema> {
   }
 
   /**
+   * For debugging purposes
+   */
+  removeAll() {
+    this.store.clearAll()
+  }
+
+  /**
    * Fires a callback when the storage associated with a given key changes
    *
    * @returns Listener - call `remove()` to stop listening

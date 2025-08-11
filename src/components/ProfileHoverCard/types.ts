@@ -6,4 +6,5 @@ export type ProfileHoverCardProps = ViewStyleProp & {
   children: React.ReactNode
   did: string
   disable?: boolean
+  inline?: boolean
 }

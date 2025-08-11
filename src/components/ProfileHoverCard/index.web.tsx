@@ -74,7 +74,9 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
     return props.children
   } else {
     return (
-      <View onPointerMove={onPointerMove} style={[a.flex_shrink, props.style]}>
+      <View
+        onPointerMove={onPointerMove}
+        style={[a.flex_shrink, props.inline && a.inline, props.style]}>
         <ProfileHoverCardInner {...props} />
       </View>
     )
@@ -326,7 +328,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       onPointerLeave={onPointerLeaveTarget}
       // @ts-ignore web only prop
       onMouseUp={onPress}
-      style={{flexShrink: 1}}>
+      style={[a.flex_shrink, props.inline && a.inline]}>
       {props.children}
       {isVisible && (
         <Portal>

@@ -67,6 +67,9 @@ export const atoms = {
     zIndex: 50,
   },
 
+  overflow_visible: {
+    overflow: 'visible',
+  },
   overflow_hidden: {
     overflow: 'hidden',
   },
@@ -976,6 +979,12 @@ export const atoms = {
   hidden: {
     display: 'none',
   },
+  inline: web({
+    display: 'inline',
+  }),
+  block: web({
+    display: 'block',
+  }),
 
   /*
    * Transition

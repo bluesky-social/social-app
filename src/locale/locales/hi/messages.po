@@ -8,7 +8,7 @@ msgstr ""
 "Language: hi\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-22 03:05\n"
+"PO-Revision-Date: 2025-08-07 22:21\n"
 "Last-Translator: \n"
 "Language-Team: Hindi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -90,12 +90,12 @@ msgstr ""
 msgid "{0, plural, one {#mo} other {#mo}}"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:442
+#: src/components/ProfileHoverCard/index.web.tsx:444
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "{0, plural, one {फ़ॉलोअर} other {फ़ॉलोअर}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:446
+#: src/components/ProfileHoverCard/index.web.tsx:448
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {फ़ॉलोइंग} other {फ़ॉलोइंग}}"
@@ -150,6 +150,10 @@ msgstr ""
 msgid "{0} is not a valid URL"
 msgstr ""
 
+#: src/screens/Signup/StepHandle/index.tsx:189
+msgid "{0} is not available"
+msgstr ""
+
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:223
 msgid "{0} joined this week"
 msgstr "{0} लोग इस हफ़्ते शामिल हुए"
@@ -179,8 +183,8 @@ msgstr ""
 msgid "{0}, a list by {1}"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:570
-#: src/view/com/util/UserAvatar.tsx:588
+#: src/view/com/util/UserAvatar.tsx:572
+#: src/view/com/util/UserAvatar.tsx:590
 msgid "{0}'s avatar"
 msgstr "{0} का अवतार"
 
@@ -229,159 +233,159 @@ msgstr ""
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, other {मिनट}}"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:349
+#: src/view/com/notifications/NotificationFeedItem.tsx:353
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
 msgstr "{firstAuthorLink} और <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}}</0> ने आपको फ़ॉलो किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:375
+#: src/view/com/notifications/NotificationFeedItem.tsx:379
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
 msgstr "{firstAuthorLink} और <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}}</0> ने आपके कस्टम फ़ीड को पसंद किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:268
+#: src/view/com/notifications/NotificationFeedItem.tsx:272
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your post"
 msgstr "{firstAuthorLink} और <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}}</0> ने आपके पोस्ट को पसंद किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:480
+#: src/view/com/notifications/NotificationFeedItem.tsx:484
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:453
+#: src/view/com/notifications/NotificationFeedItem.tsx:457
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:292
+#: src/view/com/notifications/NotificationFeedItem.tsx:296
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your post"
 msgstr "{firstAuthorLink} और <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}}</0> ने आपके पोस्ट को रीपोस्ट किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:504
+#: src/view/com/notifications/NotificationFeedItem.tsx:508
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:399
+#: src/view/com/notifications/NotificationFeedItem.tsx:403
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
 msgstr "{firstAuthorLink} और <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}}</0> ने आपके स्टार्टर पैक से साइन अप किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:428
+#: src/view/com/notifications/NotificationFeedItem.tsx:432
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:361
+#: src/view/com/notifications/NotificationFeedItem.tsx:365
 msgid "{firstAuthorLink} followed you"
 msgstr "{firstAuthorLink} ने आपको फ़ॉलो किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:338
+#: src/view/com/notifications/NotificationFeedItem.tsx:342
 msgid "{firstAuthorLink} followed you back"
 msgstr "{firstAuthorLink} ने आपको वापस फ़ॉलो किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:387
+#: src/view/com/notifications/NotificationFeedItem.tsx:391
 msgid "{firstAuthorLink} liked your custom feed"
 msgstr "{firstAuthorLink} ने आपके कस्टम फ़ीड को पसंद किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:280
+#: src/view/com/notifications/NotificationFeedItem.tsx:284
 msgid "{firstAuthorLink} liked your post"
 msgstr "{firstAuthorLink} ने आपके पोस्ट को पसंद किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:492
+#: src/view/com/notifications/NotificationFeedItem.tsx:496
 msgid "{firstAuthorLink} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:465
+#: src/view/com/notifications/NotificationFeedItem.tsx:469
 msgid "{firstAuthorLink} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:304
+#: src/view/com/notifications/NotificationFeedItem.tsx:308
 msgid "{firstAuthorLink} reposted your post"
 msgstr "{firstAuthorLink} ने आपके पोस्ट को रीपोस्ट किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:516
+#: src/view/com/notifications/NotificationFeedItem.tsx:520
 msgid "{firstAuthorLink} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:411
+#: src/view/com/notifications/NotificationFeedItem.tsx:415
 msgid "{firstAuthorLink} signed up with your starter pack"
 msgstr "{firstAuthorLink} ने आपके स्टार्टर पैक से साइन अप किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:440
+#: src/view/com/notifications/NotificationFeedItem.tsx:444
 msgid "{firstAuthorLink} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:342
+#: src/view/com/notifications/NotificationFeedItem.tsx:346
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
 msgstr "{firstAuthorName} और {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}} ने आपको फ़ॉलो किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:368
+#: src/view/com/notifications/NotificationFeedItem.tsx:372
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
 msgstr "{firstAuthorName} और {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}} ने आपके कस्टम फ़ीड को पसंद किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:261
+#: src/view/com/notifications/NotificationFeedItem.tsx:265
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
 msgstr "{firstAuthorName} और {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}} ने आपके पोस्ट को पसंद किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:473
+#: src/view/com/notifications/NotificationFeedItem.tsx:477
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:446
+#: src/view/com/notifications/NotificationFeedItem.tsx:450
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:285
+#: src/view/com/notifications/NotificationFeedItem.tsx:289
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
 msgstr "{firstAuthorName} और {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}} ने आपके पोस्ट को रीपोस्ट किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:497
+#: src/view/com/notifications/NotificationFeedItem.tsx:501
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:392
+#: src/view/com/notifications/NotificationFeedItem.tsx:396
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
 msgstr "{firstAuthorName} और {additionalAuthorsCount, plural, one {{formattedAuthorsCount} अन्य} other {{formattedAuthorsCount} अन्यों}} ने आपके स्टार्टर पैक से साइन अप किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:421
+#: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:347
+#: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorName} followed you"
 msgstr "ने आपको फ़ॉलो किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:337
+#: src/view/com/notifications/NotificationFeedItem.tsx:341
 msgid "{firstAuthorName} followed you back"
 msgstr "{firstAuthorName} ने आपको वापस फ़ॉलो किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:373
+#: src/view/com/notifications/NotificationFeedItem.tsx:377
 msgid "{firstAuthorName} liked your custom feed"
 msgstr "{firstAuthorName} ने आपके कस्टम फ़ीड को पसंद किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:266
+#: src/view/com/notifications/NotificationFeedItem.tsx:270
 msgid "{firstAuthorName} liked your post"
 msgstr "{firstAuthorName} ने आपके पोस्ट को पसंद किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:478
+#: src/view/com/notifications/NotificationFeedItem.tsx:482
 msgid "{firstAuthorName} liked your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:451
+#: src/view/com/notifications/NotificationFeedItem.tsx:455
 msgid "{firstAuthorName} removed their verification from your account"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:290
+#: src/view/com/notifications/NotificationFeedItem.tsx:294
 msgid "{firstAuthorName} reposted your post"
 msgstr "{firstAuthorName} ने आपके पोस्ट को रीपोस्ट किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:502
+#: src/view/com/notifications/NotificationFeedItem.tsx:506
 msgid "{firstAuthorName} reposted your repost"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:397
+#: src/view/com/notifications/NotificationFeedItem.tsx:401
 msgid "{firstAuthorName} signed up with your starter pack"
 msgstr "{firstAuthorName} ने आपके स्टार्टर पैक से साइन अप किया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:426
+#: src/view/com/notifications/NotificationFeedItem.tsx:430
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:570
+#: src/components/ProfileHoverCard/index.web.tsx:572
 msgid "{following} following"
 msgstr "{following} फ़ॉलोइंग"
 
@@ -480,6 +484,10 @@ msgstr "<0>{0}</0> सदस्य"
 msgid "<0>{date}</0> at {time}"
 msgstr "<0>{date}</0> को {time}"
 
+#: src/screens/Search/SearchResults.tsx:255
+msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
+msgstr ""
+
 #: src/screens/StarterPack/Wizard/index.tsx:440
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>आप</0> और<1> </1><2>{0} </2>आपके स्टार्टर पैक में शामिल हैं"
@@ -519,8 +527,8 @@ msgstr ""
 
 #: src/Navigation.tsx:523
 #: src/screens/Settings/AboutSettings.tsx:75
-#: src/screens/Settings/Settings.tsx:238
-#: src/screens/Settings/Settings.tsx:241
+#: src/screens/Settings/Settings.tsx:244
+#: src/screens/Settings/Settings.tsx:247
 msgid "About"
 msgstr "परिचय"
 
@@ -539,8 +547,8 @@ msgid "Accept Request"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:44
-#: src/screens/Settings/Settings.tsx:214
-#: src/screens/Settings/Settings.tsx:217
+#: src/screens/Settings/Settings.tsx:220
+#: src/screens/Settings/Settings.tsx:223
 msgid "Accessibility"
 msgstr "सुलभता"
 
@@ -551,8 +559,8 @@ msgstr "सुलभता के सेटिंग"
 #: src/Navigation.tsx:398
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:49
-#: src/screens/Settings/Settings.tsx:168
-#: src/screens/Settings/Settings.tsx:171
+#: src/screens/Settings/Settings.tsx:174
+#: src/screens/Settings/Settings.tsx:177
 msgid "Account"
 msgstr "खाता"
 
@@ -583,11 +591,11 @@ msgstr "खाता म्यूट किया गया"
 msgid "Account Muted by List"
 msgstr "सूची द्वारा खाता म्यूट किया गया"
 
-#: src/screens/Settings/Settings.tsx:532
+#: src/screens/Settings/Settings.tsx:624
 msgid "Account options"
 msgstr "खाते के विकल्प"
 
-#: src/screens/Settings/Settings.tsx:568
+#: src/screens/Settings/Settings.tsx:660
 msgid "Account removed from quick access"
 msgstr "जल्द पहुँच से खाता हटाया गया"
 
@@ -658,8 +666,8 @@ msgstr "खाता जोड़ें"
 #: src/view/com/composer/GifAltText.tsx:76
 #: src/view/com/composer/GifAltText.tsx:144
 #: src/view/com/composer/GifAltText.tsx:210
-#: src/view/com/composer/photos/Gallery.tsx:169
-#: src/view/com/composer/photos/Gallery.tsx:216
+#: src/view/com/composer/photos/Gallery.tsx:170
+#: src/view/com/composer/photos/Gallery.tsx:217
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:88
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:93
 msgid "Add alt text"
@@ -669,14 +677,14 @@ msgstr "विवरण जोड़ें"
 msgid "Add alt text (optional)"
 msgstr "विवरण जोड़ें (वैकल्पिक)"
 
-#: src/screens/Settings/Settings.tsx:472
-#: src/screens/Settings/Settings.tsx:475
+#: src/screens/Settings/Settings.tsx:564
+#: src/screens/Settings/Settings.tsx:567
 #: src/view/shell/desktop/LeftNav.tsx:259
 #: src/view/shell/desktop/LeftNav.tsx:263
 msgid "Add another account"
 msgstr "एक और खाता जोड़ें"
 
-#: src/view/com/composer/Composer.tsx:773
+#: src/view/com/composer/Composer.tsx:776
 msgid "Add another post"
 msgstr "एक और पोस्ट जोड़ें"
 
@@ -707,7 +715,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr "म्यूट किए गए शब्द और टैग जोड़ें"
 
-#: src/view/com/composer/Composer.tsx:1335
+#: src/view/com/composer/Composer.tsx:1340
 msgid "Add new post"
 msgstr "नया पोस्ट जोड़ें"
 
@@ -871,7 +879,7 @@ msgstr "@{0} द्वारा पहले से साइन इन कि�
 
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:186
 #: src/view/com/composer/GifAltText.tsx:100
-#: src/view/com/composer/photos/Gallery.tsx:187
+#: src/view/com/composer/photos/Gallery.tsx:188
 msgid "ALT"
 msgstr "ALT"
 
@@ -889,7 +897,7 @@ msgstr "वैकल्पिक पाठ"
 msgid "Alt Text"
 msgstr "वैकल्पिक पाठ"
 
-#: src/view/com/composer/photos/Gallery.tsx:255
+#: src/view/com/composer/photos/Gallery.tsx:260
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "वैकल्पिक पाठ अंधे और कम दृश्य लोगों के लिए छवियों का वर्णन करता है, और सब को संदर्भ देने में मदद करता है।"
 
@@ -922,11 +930,11 @@ msgstr ""
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "आपके स्टार्टर पैक बनाने में त्रुटि हुई। फिर से प्रयास करें?"
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:160
+#: src/components/Post/Embed/VideoEmbed/index.tsx:157
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "वीडियो लोड करते समय त्रुटि हुई। बाद में फिर प्रयास करें।"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:199
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:226
 msgid "An error occurred while loading the video. Please try again."
 msgstr "वीडियो लोड करते समय में त्रुटि हुई। फिर से प्रयास करें।"
 
@@ -967,8 +975,8 @@ msgstr "बातचीत खोलते समय समस्या हु�
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:457
-#: src/components/ProfileCard.tsx:478
+#: src/components/ProfileCard.tsx:484
+#: src/components/ProfileCard.tsx:505
 #: src/view/com/profile/FollowButton.tsx:38
 #: src/view/com/profile/FollowButton.tsx:48
 msgid "An issue occurred, please try again."
@@ -999,6 +1007,10 @@ msgstr "प्राणि"
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:149
 msgid "Animated GIF"
 msgstr "एनिमेटेड GIF"
+
+#: src/components/PolicyUpdateOverlay/Badge.tsx:33
+msgid "Announcement"
+msgstr ""
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:37
 msgid "Announcing verification on Bluesky"
@@ -1094,8 +1106,8 @@ msgstr "इस निर्णय पर अपील करें"
 
 #: src/Navigation.tsx:390
 #: src/screens/Settings/AppearanceSettings.tsx:88
-#: src/screens/Settings/Settings.tsx:206
-#: src/screens/Settings/Settings.tsx:209
+#: src/screens/Settings/Settings.tsx:212
+#: src/screens/Settings/Settings.tsx:215
 msgid "Appearance"
 msgstr "दिखावट"
 
@@ -1103,6 +1115,11 @@ msgstr "दिखावट"
 #: src/screens/Home/NoFeedsPinned.tsx:93
 msgid "Apply default recommended feeds"
 msgstr "डिफ़ॉल्‍ट अनुशंसित फ़ीड लगाएँ"
+
+#: src/screens/Settings/Settings.tsx:498
+#: src/screens/Settings/Settings.tsx:500
+msgid "Apply Pull Request"
+msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:637
 #: src/view/com/post-thread/PostThreadItem.tsx:955
@@ -1144,11 +1161,11 @@ msgstr "क्या आप सच में इस बातचीत को �
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "क्या आप सच में इसे अपने फ़ीड से हटाना चाहते हैं?"
 
-#: src/view/com/composer/Composer.tsx:724
+#: src/view/com/composer/Composer.tsx:725
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "क्या आप सच में इस ड्राफ़्ट को ख़ारिज करना चाहेंगे?"
 
-#: src/view/com/composer/Composer.tsx:905
+#: src/view/com/composer/Composer.tsx:910
 msgid "Are you sure you'd like to discard this post?"
 msgstr "क्या आप सच में इस पोस्ट को ख़ारिज करना चाहेंगे?"
 
@@ -1174,10 +1191,6 @@ msgstr "कलात्मक या गैर-कामुक नग्नत�
 msgid "Assign topic for algo"
 msgstr ""
 
-#: src/screens/Signup/StepHandle.tsx:194
-msgid "At least 3 characters"
-msgstr "कम से कम 3 वर्ण"
-
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:48
 msgctxt "Name of app icon variant"
 msgid "Aurora"
@@ -1187,6 +1200,11 @@ msgstr ""
 #: src/screens/Settings/ContentAndMediaSettings.tsx:122
 msgid "Autoplay videos and GIFs"
 msgstr "वीडियो और GIF स्वतः चलाएँ"
+
+#. Shown next to an available username suggestion in the account creation flow
+#: src/screens/Signup/StepHandle/HandleSuggestions.tsx:72
+msgid "Available"
+msgstr ""
 
 #: src/components/dms/MessagesListHeader.tsx:84
 #: src/components/moderation/LabelsOnMeDialog.tsx:315
@@ -1235,7 +1253,7 @@ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
-#: src/screens/Messages/ChatList.tsx:348
+#: src/screens/Messages/ChatList.tsx:358
 #: src/screens/Messages/Conversation.tsx:228
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
@@ -1258,7 +1276,7 @@ msgid "Birthday"
 msgstr "जन्मदिन"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:757
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:319
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:320
 #: src/view/com/profile/ProfileMenu.tsx:473
 msgid "Block"
 msgstr "अवरुद्ध करें"
@@ -1398,6 +1416,14 @@ msgstr "Bluesky लॉग आउट उपयोगकर्ताओं को 
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr ""
 
+#: src/screens/Signup/StepInfo/Policies.tsx:26
+msgid "Bluesky's Community Guidelines"
+msgstr ""
+
+#: src/screens/Signup/StepInfo/Policies.tsx:32
+msgid "Bluesky's Updated Community Guidelines"
+msgstr ""
+
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
 msgstr "Bluesky+"
@@ -1419,23 +1445,20 @@ msgstr "छवि धुंधला करें और फ़ीड से फ़ि
 msgid "Books"
 msgstr "किताबें"
 
-#: src/components/FeedInterstitials.tsx:379
+#: src/components/FeedInterstitials.tsx:435
 msgid "Browse more accounts on the Explore page"
 msgstr "एक्सप्लोर पृष्ठ पर और खाते देखें"
 
-#: src/components/FeedInterstitials.tsx:517
+#: src/components/FeedInterstitials.tsx:566
 msgid "Browse more feeds on the Explore page"
 msgstr "एक्सप्लोर पृष्ठ पर और सूची देखें"
 
-#: src/components/FeedInterstitials.tsx:359
-#: src/components/FeedInterstitials.tsx:362
-#: src/components/FeedInterstitials.tsx:498
-#: src/components/FeedInterstitials.tsx:501
+#: src/components/FeedInterstitials.tsx:547
+#: src/components/FeedInterstitials.tsx:550
 msgid "Browse more suggestions"
 msgstr "और सुझाव देखें"
 
-#: src/components/FeedInterstitials.tsx:387
-#: src/components/FeedInterstitials.tsx:526
+#: src/components/FeedInterstitials.tsx:575
 msgid "Browse more suggestions on the Explore page"
 msgstr "एक्सप्लोर पृष्ठ पर और सुझाव देखें"
 
@@ -1479,19 +1502,23 @@ msgstr "{0} के द्वारा"
 msgid "By <0>{0}</0>"
 msgstr "<0>{0}</0> के द्वार"
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:181
+msgid "By clicking \"Continue\" you acknowledge that you understand and agree to these updates."
+msgstr ""
+
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:329
 msgid "By continuing, you agree to the <0>KWS Terms of Use</0> and acknowledge that KWS will store your verified status with your hashed email address in accordance with the <1>KWS Privacy Policy</1>. This means you won’t need to verify again the next time you use this email for other apps, games, and services powered by KWS technology."
 msgstr ""
 
-#: src/screens/Signup/StepInfo/Policies.tsx:81
+#: src/screens/Signup/StepInfo/Policies.tsx:111
 msgid "By creating an account you agree to the <0>Privacy Policy</0>."
 msgstr "खाता बनाने से आप <0>गोपनियता नीति</0> से सहमत हैं।"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:48
+#: src/screens/Signup/StepInfo/Policies.tsx:78
 msgid "By creating an account you agree to the <0>Terms of Service</0> and <1>Privacy Policy</1>."
 msgstr "खाता बनाने से आप <0>सेवा की शर्तें</0> और <0>गोपनियता नीति</0> से सहमत हैं।"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:68
+#: src/screens/Signup/StepInfo/Policies.tsx:98
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr "खाता बनाने से आप <0>सेवा की शर्तों</0> से सहमत हैं।"
 
@@ -1524,11 +1551,11 @@ msgstr "कैमरा"
 #: src/screens/Settings/AppIconSettings/index.tsx:225
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:78
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:85
-#: src/screens/Settings/Settings.tsx:283
+#: src/screens/Settings/Settings.tsx:289
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:960
-#: src/view/com/composer/Composer.tsx:971
+#: src/view/com/composer/Composer.tsx:965
+#: src/view/com/composer/Composer.tsx:976
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:52
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1662,11 +1689,11 @@ msgid "Chat muted"
 msgstr "बातचीत म्यूट किया गया"
 
 #: src/Navigation.tsx:558
-#: src/screens/Messages/components/InboxPreview.tsx:24
+#: src/screens/Messages/components/InboxPreview.tsx:22
 msgid "Chat request inbox"
 msgstr ""
 
-#: src/screens/Messages/components/InboxPreview.tsx:64
+#: src/screens/Messages/components/InboxPreview.tsx:62
 #: src/screens/Messages/Inbox.tsx:56
 #: src/screens/Messages/Inbox.tsx:98
 msgid "Chat requests"
@@ -1674,7 +1701,7 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:75
 #: src/Navigation.tsx:553
-#: src/screens/Messages/ChatList.tsx:357
+#: src/screens/Messages/ChatList.tsx:367
 msgid "Chat settings"
 msgstr "बातचीत सेटिंग"
 
@@ -1689,8 +1716,8 @@ msgid "Chat unmuted"
 msgstr "बातचीत अनम्यूट किया गया"
 
 #: src/screens/Messages/ChatList.tsx:76
-#: src/screens/Messages/ChatList.tsx:373
-#: src/screens/Messages/ChatList.tsx:397
+#: src/screens/Messages/ChatList.tsx:383
+#: src/screens/Messages/ChatList.tsx:407
 msgid "Chats"
 msgstr ""
 
@@ -1743,15 +1770,15 @@ msgstr "आपका अपना टाइमलाइन चुनें! स�
 msgid "Choose your password"
 msgstr "अपना पासवर्ड चुनें"
 
-#: src/screens/Signup/index.tsx:160
+#: src/screens/Signup/index.tsx:175
 msgid "Choose your username"
 msgstr "आपका उपयोगकर्ता हैंडल"
 
-#: src/screens/Settings/Settings.tsx:450
+#: src/screens/Settings/Settings.tsx:490
 msgid "Clear all storage data"
 msgstr "सभी स्टोरेज डेटा खाली करें"
 
-#: src/screens/Settings/Settings.tsx:452
+#: src/screens/Settings/Settings.tsx:492
 msgid "Clear all storage data (restart after this)"
 msgstr "सभी स्टोरेज डेटा खाली करें (इसके बाद फिर से खोलें)"
 
@@ -1857,7 +1884,7 @@ msgstr "निचला ड्रॉयर बंद करो"
 msgid "Close dialog"
 msgstr "डायलॉग बंद करें"
 
-#: src/view/shell/index.web.tsx:89
+#: src/view/shell/index.web.tsx:100
 msgid "Close drawer menu"
 msgstr ""
 
@@ -1892,7 +1919,7 @@ msgstr "यह डायलॉग बंद करें"
 msgid "Closes password update alert"
 msgstr "पासवर्ड अपडेट सूचना बंद करता है"
 
-#: src/view/com/composer/Composer.tsx:968
+#: src/view/com/composer/Composer.tsx:973
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -1905,11 +1932,11 @@ msgstr ""
 msgid "Closes viewer for header image"
 msgstr "हेडर छवि का दर्शक बंद करता है"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:587
+#: src/view/com/notifications/NotificationFeedItem.tsx:591
 msgid "Collapse list of users"
 msgstr "उपयोगकर्ताओं की सूची को संक्षिप्त करें"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:801
+#: src/view/com/notifications/NotificationFeedItem.tsx:805
 msgid "Collapses list of users for a given notification"
 msgstr "किसी अधिसूचना के उपयोगकर्ताओं की सूची को संक्षिप्त करता है"
 
@@ -1932,6 +1959,7 @@ msgstr "हास्य"
 msgid "Comics"
 msgstr "कॉमिक"
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:45
 #: src/Navigation.tsx:340
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
@@ -1941,7 +1969,7 @@ msgstr "समुदाय दिशानिर्देश"
 msgid "Complete onboarding and start using your account"
 msgstr "समाप्त करें और खाते का उपयोग शुरू करें"
 
-#: src/screens/Signup/index.tsx:162
+#: src/screens/Signup/index.tsx:177
 msgid "Complete the challenge"
 msgstr "चुनौती पूरी करें"
 
@@ -1949,7 +1977,7 @@ msgstr "चुनौती पूरी करें"
 msgid "Compose new post"
 msgstr "नया पोस्ट बनाएँ"
 
-#: src/view/com/composer/Composer.tsx:869
+#: src/view/com/composer/Composer.tsx:874
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -1957,7 +1985,7 @@ msgstr ""
 msgid "Compose reply"
 msgstr "जवाब लिखें"
 
-#: src/view/com/composer/Composer.tsx:1729
+#: src/view/com/composer/Composer.tsx:1734
 msgid "Compressing video..."
 msgstr "वीडियो कंप्रेस हो रहा है..."
 
@@ -2015,8 +2043,8 @@ msgid "Contact our moderation team"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:155
-#: src/screens/Signup/index.tsx:197
-#: src/screens/Signup/index.tsx:200
+#: src/screens/Signup/index.tsx:212
+#: src/screens/Signup/index.tsx:215
 msgid "Contact support"
 msgstr "सहायता से संपर्क करें"
 
@@ -2028,8 +2056,8 @@ msgstr ""
 msgid "Content & Media"
 msgstr "सामाग्री और मीडिया"
 
-#: src/screens/Settings/Settings.tsx:198
-#: src/screens/Settings/Settings.tsx:201
+#: src/screens/Settings/Settings.tsx:204
+#: src/screens/Settings/Settings.tsx:207
 msgid "Content and media"
 msgstr "सामग्री और मीडिया"
 
@@ -2075,6 +2103,8 @@ msgstr "सामग्री चेतावनियाँ"
 msgid "Context menu backdrop, click to close the menu."
 msgstr "संदर्भ मेनू पृष्ठभूमि, मेनू बंद करने के लिए क्लिक करें "
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:244
 #: src/screens/Onboarding/StepProfile/index.tsx:276
 msgid "Continue"
@@ -2229,6 +2259,8 @@ msgstr "QR कोड कॉपी करें"
 msgid "Copy TXT record value"
 msgstr "TXT रिकॉर्ड मूल्य कॉपी करें "
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:40
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:107
 #: src/Navigation.tsx:345
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
@@ -2304,12 +2336,13 @@ msgstr "मेरे लिए स्टार्टर पैक बनाए�
 msgid "Create account"
 msgstr "साइन अप करें"
 
-#: src/screens/Signup/index.tsx:108
+#: src/screens/Signup/index.tsx:122
 msgid "Create Account"
 msgstr "खाता बनाएँ"
 
 #: src/components/dialogs/Signin.tsx:86
 #: src/components/dialogs/Signin.tsx:88
+#: src/screens/Search/SearchResults.tsx:266
 msgid "Create an account"
 msgstr "खाता बनाएँ"
 
@@ -2396,7 +2429,7 @@ msgstr "जन्मतिथि"
 msgid "Deactivate account"
 msgstr "खाता निष्क्रिय करें"
 
-#: src/screens/Settings/Settings.tsx:415
+#: src/screens/Settings/Settings.tsx:455
 msgid "Debug Moderation"
 msgstr "मॉडरेशन डिबग करें"
 
@@ -2445,7 +2478,7 @@ msgstr "ऐप पासवर्ड मिटाएँ?"
 msgid "Delete chat"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:422
+#: src/screens/Settings/Settings.tsx:462
 msgid "Delete chat declaration record"
 msgstr "बातचीत घोषणा रेकॉर्ड मिटाएँ"
 
@@ -2482,7 +2515,7 @@ msgstr "मेरा खाता मिटाएँ"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:682
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:684
-#: src/view/com/composer/Composer.tsx:879
+#: src/view/com/composer/Composer.tsx:884
 msgid "Delete post"
 msgstr "पोस्ट मिटाएँ"
 
@@ -2561,8 +2594,8 @@ msgctxt "toast"
 msgid "Developer mode enabled"
 msgstr "डेवलपर मोड सक्षम"
 
-#: src/screens/Settings/Settings.tsx:265
-#: src/screens/Settings/Settings.tsx:268
+#: src/screens/Settings/Settings.tsx:271
+#: src/screens/Settings/Settings.tsx:274
 msgid "Developer options"
 msgstr "डेवलपर विकल्प"
 
@@ -2606,8 +2639,8 @@ msgid "Disabled"
 msgstr "अक्षम"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:88
-#: src/view/com/composer/Composer.tsx:726
-#: src/view/com/composer/Composer.tsx:912
+#: src/view/com/composer/Composer.tsx:727
+#: src/view/com/composer/Composer.tsx:917
 msgid "Discard"
 msgstr "ख़ारिज करें"
 
@@ -2615,11 +2648,11 @@ msgstr "ख़ारिज करें"
 msgid "Discard changes?"
 msgstr "बदलाव ख़ारिज करें?"
 
-#: src/view/com/composer/Composer.tsx:723
+#: src/view/com/composer/Composer.tsx:724
 msgid "Discard draft?"
 msgstr "ड्राफ़्ट ख़ारिज करें?"
 
-#: src/view/com/composer/Composer.tsx:904
+#: src/view/com/composer/Composer.tsx:909
 msgid "Discard post?"
 msgstr "पोस्ट ख़ारिज करें?"
 
@@ -2645,7 +2678,7 @@ msgstr "नए फ़ीड की खोज करें"
 msgid "Dismiss"
 msgstr "ख़ारिज करें"
 
-#: src/view/com/composer/Composer.tsx:1653
+#: src/view/com/composer/Composer.tsx:1658
 msgid "Dismiss error"
 msgstr "त्रुटि ख़ारिज करें"
 
@@ -2657,7 +2690,12 @@ msgstr "शुरुआती गाइड ख़ारिज करें"
 msgid "Dismiss interests"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:92
+#. Accessibility label for dismissing a toast notification
+#: src/components/Toast/index.web.tsx:82
+msgid "Dismiss message"
+msgstr ""
+
+#: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr ""
 
@@ -2692,10 +2730,6 @@ msgstr "फ़ॉलो किए गए उपयोगकर्ताओं �
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
 msgstr "नग्नता शामिल नहीं है"
-
-#: src/screens/Signup/StepHandle.tsx:173
-msgid "Doesn't begin or end with a hyphen"
-msgstr "हाइफ़न से शुरू या अंत नहीं होता"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:507
 msgid "Domain verified!"
@@ -2830,7 +2864,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "संपादित करें"
 
-#: src/view/com/util/UserAvatar.tsx:437
+#: src/view/com/util/UserAvatar.tsx:439
 #: src/view/com/util/UserBanner.tsx:119
 msgid "Edit avatar"
 msgstr "अवतार संपादित करें"
@@ -2841,7 +2875,7 @@ msgstr "फ़ीड संपादित करें"
 
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:85
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:89
-#: src/view/com/composer/photos/Gallery.tsx:194
+#: src/view/com/composer/photos/Gallery.tsx:195
 msgid "Edit image"
 msgstr "छवि संपादित करें"
 
@@ -3095,7 +3129,7 @@ msgstr ""
 msgid "Enter your username and password"
 msgstr "अपने उपयोगकर्ता नाम और पासवर्ड दर्ज करें"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:132
 msgid "Enters full screen"
 msgstr ""
 
@@ -3103,7 +3137,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1738
+#: src/view/com/composer/Composer.tsx:1743
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "त्रुटि"
@@ -3124,7 +3158,7 @@ msgstr ""
 msgid "Error occurred while saving file"
 msgstr "फ़ाइल सहेजते समय त्रुटि हुई"
 
-#: src/screens/Signup/StepCaptcha/index.tsx:55
+#: src/screens/Signup/StepCaptcha/index.tsx:124
 msgid "Error receiving captcha response."
 msgstr "CAPTCHA उत्तर पाने मे त्रुटि हुई"
 
@@ -3132,7 +3166,7 @@ msgstr "CAPTCHA उत्तर पाने मे त्रुटि हुई
 msgid "Error:"
 msgstr "त्रुटि:"
 
-#: src/screens/Search/SearchResults.tsx:131
+#: src/screens/Search/SearchResults.tsx:144
 msgid "Error: {error}"
 msgstr ""
 
@@ -3198,7 +3232,7 @@ msgstr "छवि दर्शन से निकलता है"
 msgid "Expand alt text"
 msgstr "वैकल्पिक पाठ बढ़ाता है"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:588
+#: src/view/com/notifications/NotificationFeedItem.tsx:592
 msgid "Expand list of users"
 msgstr "उपयोगकर्ताओं की सूची बढ़ाताा है"
 
@@ -3334,7 +3368,7 @@ msgstr "पोस्ट मिटाने में असफल, फिर स
 msgid "Failed to delete starter pack"
 msgstr "स्टार्टर पैक मिटाने में असफल"
 
-#: src/screens/Messages/ChatList.tsx:260
+#: src/screens/Messages/ChatList.tsx:270
 #: src/screens/Messages/Inbox.tsx:208
 msgid "Failed to load conversations"
 msgstr ""
@@ -3510,7 +3544,7 @@ msgid "Feedback sent!"
 msgstr "प्रतिक्रिया भेजी गई!"
 
 #: src/Navigation.tsx:573
-#: src/screens/Search/SearchResults.tsx:68
+#: src/screens/Search/SearchResults.tsx:73
 #: src/screens/StarterPack/StarterPackScreen.tsx:190
 #: src/view/screens/Feeds.tsx:511
 #: src/view/screens/Profile.tsx:230
@@ -3610,9 +3644,9 @@ msgid "Flexible"
 msgstr "लचीला"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:490
-#: src/components/ProfileHoverCard/index.web.tsx:494
-#: src/components/ProfileHoverCard/index.web.tsx:505
+#: src/components/ProfileCard.tsx:517
+#: src/components/ProfileHoverCard/index.web.tsx:496
+#: src/components/ProfileHoverCard/index.web.tsx:507
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:245
 #: src/screens/VideoFeed/index.tsx:850
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:131
@@ -3662,19 +3696,19 @@ msgctxt "action"
 msgid "Follow Back"
 msgstr "वापस फ़ॉलो करें"
 
-#: src/components/KnownFollowers.tsx:234
+#: src/components/KnownFollowers.tsx:238
 msgid "Followed by <0>{0}</0>"
 msgstr "<0>{0}</0> फ़ॉलो करते हैं"
 
-#: src/components/KnownFollowers.tsx:220
+#: src/components/KnownFollowers.tsx:224
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
 msgstr "<0>{0}</0> और {1, plural, one {# अन्य} other {# अन्य}} फ़ॉलो करते हैं"
 
-#: src/components/KnownFollowers.tsx:207
+#: src/components/KnownFollowers.tsx:211
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
 msgstr "<0>{0}</0> और <1>{1}</1> फ़ॉलो करते हैं"
 
-#: src/components/KnownFollowers.tsx:189
+#: src/components/KnownFollowers.tsx:193
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "<0>{0}</0>, <1>{1}</1>, और {2, plural, one {# अन्य} other {# अन्य}} फ़ॉलो करते हैं"
 
@@ -3688,9 +3722,9 @@ msgid "Followers you know"
 msgstr "फ़ॉलोअर जिन्हें आप जानते हैं"
 
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:484
-#: src/components/ProfileHoverCard/index.web.tsx:493
-#: src/components/ProfileHoverCard/index.web.tsx:504
+#: src/components/ProfileCard.tsx:511
+#: src/components/ProfileHoverCard/index.web.tsx:495
+#: src/components/ProfileHoverCard/index.web.tsx:506
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:241
 #: src/screens/VideoFeed/index.tsx:848
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:134
@@ -3703,7 +3737,7 @@ msgctxt "feed-name"
 msgid "Following"
 msgstr "फ़ॉलोइंग"
 
-#: src/components/ProfileCard.tsx:447
+#: src/components/ProfileCard.tsx:474
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:89
 msgid "Following {0}"
 msgstr "{0} को फ़ॉलो करते हैं"
@@ -3944,7 +3978,7 @@ msgstr ""
 msgid "Go live for"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:218
+#: src/view/com/notifications/NotificationFeedItem.tsx:221
 msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
@@ -4023,12 +4057,12 @@ msgstr "हैशटैग {tag}"
 msgid "Have a code? <0>Click here.</0>"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:195
+#: src/screens/Signup/index.tsx:210
 msgid "Having trouble?"
 msgstr "मुश्किल हो रही है?"
 
-#: src/screens/Settings/Settings.tsx:230
-#: src/screens/Settings/Settings.tsx:234
+#: src/screens/Settings/Settings.tsx:236
+#: src/screens/Settings/Settings.tsx:240
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
 #: src/view/shell/Drawer.tsx:370
@@ -4043,8 +4077,13 @@ msgstr "तस्वीर अपलोड कर के या अवतार 
 msgid "Here is your app password!"
 msgstr "यह है आपका ऐप पासवर्ड!"
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:73
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:119
+msgid "Hey there 👋"
+msgstr ""
+
 #: src/components/VideoPostCard.tsx:178
-#: src/components/VideoPostCard.tsx:454
+#: src/components/VideoPostCard.tsx:460
 msgid "Hidden"
 msgstr ""
 
@@ -4057,7 +4096,7 @@ msgid "Hidden list"
 msgstr "छिपाई गई सूची"
 
 #: src/components/interstitials/Trending.tsx:131
-#: src/components/interstitials/TrendingVideos.tsx:140
+#: src/components/interstitials/TrendingVideos.tsx:138
 #: src/components/moderation/ContentHider.tsx:203
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:134
@@ -4070,7 +4109,7 @@ msgstr "छिपाई गई सूची"
 msgid "Hide"
 msgstr "छिपाएँ"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:808
+#: src/view/com/notifications/NotificationFeedItem.tsx:812
 msgctxt "action"
 msgid "Hide"
 msgstr "छिपाएँ"
@@ -4117,11 +4156,11 @@ msgstr "रुझान छिपाएँ"
 msgid "Hide trending topics?"
 msgstr "रुझान छिपाएँ?"
 
-#: src/components/interstitials/TrendingVideos.tsx:138
+#: src/components/interstitials/TrendingVideos.tsx:136
 msgid "Hide trending videos?"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:799
+#: src/view/com/notifications/NotificationFeedItem.tsx:803
 msgid "Hide user list"
 msgstr "उपयोगकर्ता सूची छुपाएँ"
 
@@ -4219,7 +4258,7 @@ msgstr "मैं समझा"
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr "यदि वैकल्पिक पाठ लंबा है, बड़े आकार का वैकल्पिक पाठ लागू कर्ता है"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:112
+#: src/screens/Signup/StepInfo/Policies.tsx:142
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr "यदि आप अपने देश के क़ानून के अनुसार अभी वयस्क नहीं है, आपके माता-पिता या क़ानूनी अभिभावक को आपकी जगह इन शर्तों को पढ़ना होगा।"
 
@@ -4398,7 +4437,7 @@ msgstr "दोस्त को आमंत्रित करें"
 msgid "Invite code"
 msgstr "आमंत्रण कोड"
 
-#: src/screens/Signup/state.ts:339
+#: src/screens/Signup/state.ts:348
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "आमंत्रण कोड स्वीकार नहीं हुआ। देख लें कि आपने उसे सही से दर्ज किया है और फिर से प्रयास करें।"
 
@@ -4430,7 +4469,7 @@ msgstr "सही है"
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "अभी इसमें बस आप ही हैं! ऊपर खोजकर अपने स्टार्टर पैक में और लोगों को जोड़ें।"
 
-#: src/view/com/composer/Composer.tsx:1672
+#: src/view/com/composer/Composer.tsx:1677
 msgid "Job ID: {0}"
 msgstr "काम आईडी: {0}"
 
@@ -4510,8 +4549,8 @@ msgid "Language Settings"
 msgstr "भाषा सेटिंग"
 
 #: src/screens/Settings/LanguageSettings.tsx:78
-#: src/screens/Settings/Settings.tsx:222
-#: src/screens/Settings/Settings.tsx:225
+#: src/screens/Settings/Settings.tsx:228
+#: src/screens/Settings/Settings.tsx:231
 msgid "Languages"
 msgstr "भाषा"
 
@@ -4528,7 +4567,7 @@ msgid "Last initiated just now"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:95
-#: src/screens/Search/SearchResults.tsx:52
+#: src/screens/Search/SearchResults.tsx:57
 #: src/screens/Topic.tsx:77
 msgid "Latest"
 msgstr "नए"
@@ -4568,6 +4607,14 @@ msgstr ""
 #: src/components/moderation/ContentHider.tsx:218
 msgid "Learn more about the moderation applied to this content."
 msgstr "इस सामग्री पर लगाए गए मॉडरेशन के बारे में अधिक जानें।"
+
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:149
+msgid "Learn more about these changes and how to share your thoughts with us by <0>reading our blog post.</0>"
+msgstr ""
+
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:89
+msgid "Learn more about these changes and how to share your thoughts with us by reading our blog post."
+msgstr ""
 
 #: src/components/moderation/PostHider.tsx:110
 #: src/components/moderation/ScreenHider.tsx:127
@@ -5017,8 +5064,8 @@ msgstr "भ्रमित करने वाला पोस्ट"
 
 #: src/Navigation.tsx:176
 #: src/screens/Moderation/index.tsx:99
-#: src/screens/Settings/Settings.tsx:182
-#: src/screens/Settings/Settings.tsx:185
+#: src/screens/Settings/Settings.tsx:188
+#: src/screens/Settings/Settings.tsx:191
 msgid "Moderation"
 msgstr "मॉडरेशन"
 
@@ -5109,7 +5156,7 @@ msgstr "सिनेमा"
 msgid "Music"
 msgstr "संगीत"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:153
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:96
 msgctxt "video"
 msgid "Mute"
@@ -5286,17 +5333,17 @@ msgctxt "action"
 msgid "New"
 msgstr "नया"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:549
+#: src/view/com/notifications/NotificationFeedItem.tsx:553
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:532
+#: src/view/com/notifications/NotificationFeedItem.tsx:536
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
 msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
-#: src/screens/Messages/ChatList.tsx:380
-#: src/screens/Messages/ChatList.tsx:387
+#: src/screens/Messages/ChatList.tsx:390
+#: src/screens/Messages/ChatList.tsx:397
 msgid "New chat"
 msgstr "नया बातचीत"
 
@@ -5366,11 +5413,11 @@ msgctxt "action"
 msgid "New Post"
 msgstr "नया पोस्ट"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:538
+#: src/view/com/notifications/NotificationFeedItem.tsx:542
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0>"
 msgstr ""
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:523
+#: src/view/com/notifications/NotificationFeedItem.tsx:527
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
@@ -5451,14 +5498,10 @@ msgstr ""
 msgid "No likes yet"
 msgstr "अभी तक कोई पसंद नहीं"
 
-#: src/components/ProfileCard.tsx:469
+#: src/components/ProfileCard.tsx:496
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:110
 msgid "No longer following {0}"
 msgstr "{0} को और फ़ॉलो नहीं कर रहे"
-
-#: src/screens/Signup/StepHandle.tsx:184
-msgid "No longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
-msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:139
 msgid "No messages yet"
@@ -5510,7 +5553,7 @@ msgstr "कोई परिणाम नहीं"
 msgid "No results for \"{0}\"."
 msgstr ""
 
-#: src/components/Lists.tsx:189
+#: src/components/Lists.tsx:190
 msgid "No results found"
 msgstr "कोई परिणाम नहीं मिले"
 
@@ -5518,9 +5561,9 @@ msgstr "कोई परिणाम नहीं मिले"
 msgid "No results found for \"{query}\""
 msgstr "\"{query}\" के लिए कोई परिणाम नहीं मिला"
 
-#: src/screens/Search/SearchResults.tsx:248
-#: src/screens/Search/SearchResults.tsx:284
-#: src/screens/Search/SearchResults.tsx:329
+#: src/screens/Search/SearchResults.tsx:311
+#: src/screens/Search/SearchResults.tsx:347
+#: src/screens/Search/SearchResults.tsx:392
 msgid "No results found for {query}"
 msgstr "{query} के लिए कोई परिणाम नहीं मिला"
 
@@ -5566,7 +5609,7 @@ msgstr "ग़ैर-यौन नग्नता"
 msgid "None"
 msgstr ""
 
-#: src/components/KnownFollowers.tsx:255
+#: src/components/KnownFollowers.tsx:259
 msgid "Not followed by anyone you're following"
 msgstr ""
 
@@ -5587,7 +5630,7 @@ msgstr "टिप्पणी: Bluesky एक खुला और सार्�
 msgid "Note: This post is only visible to logged-in users."
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:281
+#: src/screens/Messages/ChatList.tsx:291
 msgid "Nothing here"
 msgstr "यहाँ कुछ नहीं"
 
@@ -5619,8 +5662,8 @@ msgstr "अधिसूचना ध्वनि"
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:30
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:30
-#: src/screens/Settings/Settings.tsx:190
-#: src/screens/Settings/Settings.tsx:193
+#: src/screens/Settings/Settings.tsx:196
+#: src/screens/Settings/Settings.tsx:199
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:655
@@ -5693,7 +5736,7 @@ msgstr "सबसे पुराने जवाब पहले"
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "<0><1/><2><3/></2></0>"
 
-#: src/screens/Settings/Settings.tsx:372
+#: src/screens/Settings/Settings.tsx:388
 msgid "Onboarding reset"
 msgstr "ज्ञानप्राप्ति रीसेट"
 
@@ -5717,10 +5760,6 @@ msgstr "केवल .jpg और .png फ़ाइलें समर्थित �
 msgid "Only {0} can reply."
 msgstr "केवल {0} जवाब दे सकता है"
 
-#: src/screens/Signup/StepHandle.tsx:166
-msgid "Only contains letters, numbers, and hyphens"
-msgstr "केवल आक्षर, संख्या और हाइफ़न है"
-
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
@@ -5735,11 +5774,11 @@ msgstr "केवल छवि फाइलें समर्थित है�
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr "केवल वेबवीटीटी (.vtt) फ़ाइलें समर्थित हैं"
 
-#: src/components/Lists.tsx:94
+#: src/components/Lists.tsx:95
 msgid "Oops, something went wrong!"
 msgstr "अरे, कोई गड़बड़ हुई!"
 
-#: src/components/Lists.tsx:173
+#: src/components/Lists.tsx:174
 #: src/components/StarterPack/ProfileStarterPacks.tsx:332
 #: src/components/StarterPack/ProfileStarterPacks.tsx:341
 #: src/screens/Settings/AppPasswords.tsx:59
@@ -5766,7 +5805,7 @@ msgid "Open drawer menu"
 msgstr "ड्रॉअर मेनू खोलें"
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1320
+#: src/view/com/composer/Composer.tsx:1325
 msgid "Open emoji picker"
 msgstr "इमोजी चयन खोलें"
 
@@ -5791,7 +5830,7 @@ msgstr "{niceUrl} का लिंक खोलें"
 msgid "Open message options"
 msgstr "संदेश विकल्प खोलें"
 
-#: src/screens/Settings/Settings.tsx:413
+#: src/screens/Settings/Settings.tsx:453
 msgid "Open moderation debug page"
 msgstr "मॉडरेशन डीबग पृष्ठ खोलें"
 
@@ -5820,16 +5859,16 @@ msgstr ""
 msgid "Open starter pack menu"
 msgstr "स्टार्टर पैक मेनू खोलें"
 
-#: src/screens/Settings/Settings.tsx:406
-#: src/screens/Settings/Settings.tsx:420
+#: src/screens/Settings/Settings.tsx:446
+#: src/screens/Settings/Settings.tsx:460
 msgid "Open storybook page"
 msgstr "कहानी की किताब का पृष्ठ खोलें"
 
-#: src/screens/Settings/Settings.tsx:399
+#: src/screens/Settings/Settings.tsx:439
 msgid "Open system log"
 msgstr "सिस्टम लॉग खोलें"
 
-#: src/view/com/util/forms/DropdownButton.tsx:162
+#: src/view/com/util/forms/DropdownButton.tsx:167
 msgid "Opens {numItems} options"
 msgstr "{numItems} का विकल्प खोलता है"
 
@@ -5869,7 +5908,7 @@ msgstr "रचयिता खोलता है"
 msgid "Opens device photo gallery"
 msgstr "उपकरण की तस्वीर गैलरी खोलता है"
 
-#: src/view/com/composer/Composer.tsx:1321
+#: src/view/com/composer/Composer.tsx:1326
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -5887,7 +5926,7 @@ msgstr "अपने मौजूदा Bluesky खाते में साइ
 msgid "Opens GIF select dialog"
 msgstr "GIF चयन डायलॉग खोलता है"
 
-#: src/screens/Settings/Settings.tsx:231
+#: src/screens/Settings/Settings.tsx:237
 msgid "Opens helpdesk in browser"
 msgstr ""
 
@@ -5899,7 +5938,7 @@ msgstr ""
 msgid "Opens list of invite codes"
 msgstr "आमंत्रण कोड की सूची खोलता है"
 
-#: src/view/com/util/UserAvatar.tsx:574
+#: src/view/com/util/UserAvatar.tsx:576
 msgid "Opens live status dialog"
 msgstr ""
 
@@ -5907,8 +5946,8 @@ msgstr ""
 msgid "Opens password reset form"
 msgstr "पासवर्ड रीसेट फ़ॉर्म खोलें"
 
-#: src/view/com/notifications/NotificationFeedItem.tsx:902
-#: src/view/com/util/UserAvatar.tsx:592
+#: src/view/com/notifications/NotificationFeedItem.tsx:906
+#: src/view/com/util/UserAvatar.tsx:594
 msgid "Opens this profile"
 msgstr "यह प्रोफ़ाइल खोलता है"
 
@@ -5967,6 +6006,10 @@ msgstr "अन्य खाता"
 msgid "Other..."
 msgstr "अन्य..."
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:50
+msgid "Our blog post"
+msgstr ""
+
 #: src/components/dms/ReportDialog.tsx:348
 msgid "Our moderation team has received your report."
 msgstr ""
@@ -5975,7 +6018,7 @@ msgstr ""
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "हमारे मॉडरेटर ने शिकायतें देखी और Bluesky पर आपकी बातचीत तक पहुँच को अक्षम करने का निर्णय लिया।"
 
-#: src/components/Lists.tsx:190
+#: src/components/Lists.tsx:191
 #: src/view/screens/NotFound.tsx:47
 msgid "Page not found"
 msgstr "पृष्ठ नहीं मिला"
@@ -6010,7 +6053,7 @@ msgid "Password updated!"
 msgstr "पासवर्ड अपडेट किया गया!"
 
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:43
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:369
 msgid "Pause"
 msgstr "रोकें"
@@ -6019,7 +6062,7 @@ msgstr "रोकें"
 msgid "Pause video"
 msgstr "वीडियो रोकें"
 
-#: src/screens/Search/SearchResults.tsx:62
+#: src/screens/Search/SearchResults.tsx:67
 #: src/screens/StarterPack/StarterPackScreen.tsx:189
 #: src/view/screens/ProfileList.tsx:170
 msgid "People"
@@ -6099,7 +6142,7 @@ msgid "Pinned to your feeds"
 msgstr "आपके फ़ीड में पिन किया गया"
 
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:43
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:140
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:137
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:370
 msgid "Play"
 msgstr "चलाएँ"
@@ -6108,7 +6151,7 @@ msgstr "चलाएँ"
 msgid "Play {0}"
 msgstr "{0} चलाएँ"
 
-#: src/components/Post/Embed/VideoEmbed/index.tsx:134
+#: src/components/Post/Embed/VideoEmbed/index.tsx:132
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr "वीडियो चलाएँ"
@@ -6121,7 +6164,7 @@ msgstr "वीडियो चलाएँ"
 msgid "Plays or pauses the GIF"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:138
 msgid "Plays or pauses the video"
 msgstr ""
 
@@ -6141,11 +6184,11 @@ msgstr ""
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr ""
 
-#: src/screens/Signup/state.ts:286
+#: src/screens/Signup/state.ts:289
 msgid "Please choose your handle."
 msgstr "कृपया अपना हैंडल चुनें"
 
-#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/state.ts:281
 #: src/screens/Signup/StepInfo/index.tsx:120
 msgid "Please choose your password."
 msgstr "कृपया अपना पासवर्ड चुनें"
@@ -6154,7 +6197,7 @@ msgstr "कृपया अपना पासवर्ड चुनें"
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr ""
 
-#: src/screens/Signup/state.ts:301
+#: src/screens/Signup/state.ts:304
 msgid "Please complete the verification captcha."
 msgstr "कृपया सत्यापन कैपचा समाप्त करें"
 
@@ -6202,7 +6245,7 @@ msgstr ""
 msgid "Please enter the security code we sent to your previous email address."
 msgstr ""
 
-#: src/screens/Signup/state.ts:262
+#: src/screens/Signup/state.ts:265
 #: src/screens/Signup/StepInfo/index.tsx:91
 msgid "Please enter your email."
 msgstr "कृपया अपना ईमेल दर्ज करें।"
@@ -6234,6 +6277,11 @@ msgstr "कृपया व्याख्या करें कि क्य�
 #: src/screens/Messages/components/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr "कृपया व्याख्या करें कि क्यों आपको लगता है कि आपके बातचीत ग़लती से अक्षम की गई"
+
+#: src/components/FocusScope/index.tsx:93
+#: src/components/FocusScope/index.tsx:117
+msgid "Please go back, or activate this element to return to the start of the active content."
+msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:98
 msgid "Please provide any additional details you feel moderators may need in order to properly assess your Age Assurance status."
@@ -6280,12 +6328,12 @@ msgctxt "description"
 msgid "Post"
 msgstr "पोस्ट करें"
 
-#: src/view/com/composer/Composer.tsx:1031
+#: src/view/com/composer/Composer.tsx:1036
 msgctxt "action"
 msgid "Post"
 msgstr "पोस्ट करें"
 
-#: src/view/com/composer/Composer.tsx:1029
+#: src/view/com/composer/Composer.tsx:1034
 msgctxt "action"
 msgid "Post All"
 msgstr "सभी पोस्ट करें"
@@ -6403,13 +6451,13 @@ msgid "Press to attempt reconnection"
 msgstr "फिर कनेक्ट करने का प्रयास करने के लिए दबाएँ"
 
 #: src/components/Error.tsx:60
-#: src/components/Lists.tsx:99
+#: src/components/Lists.tsx:100
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:47
 msgid "Press to retry"
 msgstr "फिर प्रयास करने के लिए दबाएँ"
 
-#: src/components/KnownFollowers.tsx:125
+#: src/components/KnownFollowers.tsx:129
 msgid "Press to view followers of this account that you also follow"
 msgstr "इस खाते के फ़ॉलोअर देखने के लिए दबाएँ जिन्हें आप भी फ़ॉलो करते हैं"
 
@@ -6433,8 +6481,8 @@ msgstr "अपने फ़ॉलो किए गए खातों को प
 msgid "Privacy"
 msgstr "गोपनीयता"
 
-#: src/screens/Settings/Settings.tsx:176
-#: src/screens/Settings/Settings.tsx:179
+#: src/screens/Settings/Settings.tsx:182
+#: src/screens/Settings/Settings.tsx:185
 msgid "Privacy and security"
 msgstr "गोपनियता और सुरक्षा"
 
@@ -6449,6 +6497,8 @@ msgstr "गोपनियता और सुरक्षा"
 msgid "Privacy and Security settings"
 msgstr ""
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:35
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:102
 #: src/Navigation.tsx:330
 #: src/screens/Settings/AboutSettings.tsx:92
 #: src/screens/Settings/AboutSettings.tsx:95
@@ -6458,7 +6508,7 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr "गोपनीयता नीति"
 
-#: src/view/com/composer/Composer.tsx:1735
+#: src/view/com/composer/Composer.tsx:1740
 msgid "Processing video..."
 msgstr "वीडियो प्रसंस्करण हो रहा है..."
 
@@ -6497,22 +6547,22 @@ msgid "Public, sharable lists which can be used to drive feeds."
 msgstr "सार्वजनिक, साझा योग्य सूचियाँ जो फ़ीड चला सकती हैं।"
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1011
+#: src/view/com/composer/Composer.tsx:1016
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1004
+#: src/view/com/composer/Composer.tsx:1009
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:989
+#: src/view/com/composer/Composer.tsx:994
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:996
+#: src/view/com/composer/Composer.tsx:1001
 msgid "Publish reply"
 msgstr ""
 
@@ -6631,17 +6681,21 @@ msgstr ""
 msgid "Read more replies"
 msgstr ""
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:112
+msgid "Read our blog post"
+msgstr ""
+
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Read the Bluesky blog"
 msgstr "Bluesky ब्लॉग पढ़ें"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:58
-#: src/screens/Signup/StepInfo/Policies.tsx:84
+#: src/screens/Signup/StepInfo/Policies.tsx:88
+#: src/screens/Signup/StepInfo/Policies.tsx:114
 msgid "Read the Bluesky Privacy Policy"
 msgstr "Bluesky गोपनियता नीति पढ़ें"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:51
-#: src/screens/Signup/StepInfo/Policies.tsx:71
+#: src/screens/Signup/StepInfo/Policies.tsx:81
+#: src/screens/Signup/StepInfo/Policies.tsx:101
 msgid "Read the Bluesky Terms of Service"
 msgstr "Bluesky सेवा की शर्तें पढ़ें"
 
@@ -6683,7 +6737,7 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:264
+#: src/screens/Messages/ChatList.tsx:274
 #: src/screens/Messages/Inbox.tsx:212
 msgid "Reload conversations"
 msgstr "बातचीत फिर लोड करें"
@@ -6693,7 +6747,7 @@ msgstr "बातचीत फिर लोड करें"
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:109
-#: src/screens/Settings/Settings.tsx:570
+#: src/screens/Settings/Settings.tsx:662
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:217
 msgid "Remove"
@@ -6707,8 +6761,8 @@ msgstr "स्टार्टर पैक से {displayName} को हटा
 msgid "Remove {historyItem}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:549
-#: src/screens/Settings/Settings.tsx:552
+#: src/screens/Settings/Settings.tsx:641
+#: src/screens/Settings/Settings.tsx:644
 msgid "Remove account"
 msgstr "खाता हटाएँ"
 
@@ -6716,8 +6770,8 @@ msgstr "खाता हटाएँ"
 msgid "Remove attachment"
 msgstr "अटैचमेंट हटाएँ"
 
-#: src/view/com/util/UserAvatar.tsx:496
-#: src/view/com/util/UserAvatar.tsx:499
+#: src/view/com/util/UserAvatar.tsx:498
+#: src/view/com/util/UserAvatar.tsx:501
 msgid "Remove Avatar"
 msgstr "अवतार हटाएँ"
 
@@ -6747,7 +6801,7 @@ msgstr "फ़ीड हटाएँ?"
 msgid "Remove from my feeds"
 msgstr "मेरे फ़ीड से हटाएँ"
 
-#: src/screens/Settings/Settings.tsx:562
+#: src/screens/Settings/Settings.tsx:654
 msgid "Remove from quick access?"
 msgstr "जल्द पहुँच से हटाएँ?"
 
@@ -6760,7 +6814,7 @@ msgstr "सहेजे फ़ीड से हटाएँ"
 msgid "Remove from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/photos/Gallery.tsx:203
+#: src/view/com/composer/photos/Gallery.tsx:204
 msgid "Remove image"
 msgstr "छवि हटाएँ"
 
@@ -6855,7 +6909,7 @@ msgstr "जवाब अक्षम"
 msgid "Replies to this post are disabled."
 msgstr "इस पोस्ट पर जवाब अक्षम है"
 
-#: src/view/com/composer/Composer.tsx:1027
+#: src/view/com/composer/Composer.tsx:1032
 msgctxt "action"
 msgid "Reply"
 msgstr "जवाब दें"
@@ -7112,8 +7166,8 @@ msgstr "ईमेल फिर भेजें"
 msgid "Resend Verification Email"
 msgstr "सत्यापन ईमेल फिर भेजें"
 
-#: src/screens/Settings/Settings.tsx:442
-#: src/screens/Settings/Settings.tsx:444
+#: src/screens/Settings/Settings.tsx:482
+#: src/screens/Settings/Settings.tsx:484
 msgid "Reset activity subscription nudge"
 msgstr ""
 
@@ -7126,8 +7180,8 @@ msgstr "कोड रीसेट करें"
 msgid "Reset Code"
 msgstr "कोड रीसेट करें"
 
-#: src/screens/Settings/Settings.tsx:427
-#: src/screens/Settings/Settings.tsx:429
+#: src/screens/Settings/Settings.tsx:467
+#: src/screens/Settings/Settings.tsx:469
 msgid "Reset onboarding state"
 msgstr "ज्ञानप्राप्ति स्थिति को रीसेट करें"
 
@@ -7146,14 +7200,14 @@ msgstr "पिछली क्रिया का फिर से प्रय�
 
 #: src/components/dms/MessageItem.tsx:321
 #: src/components/Error.tsx:65
-#: src/components/Lists.tsx:110
+#: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:57
 #: src/components/StarterPack/ProfileStarterPacks.tsx:346
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
-#: src/screens/Messages/ChatList.tsx:270
+#: src/screens/Messages/ChatList.tsx:280
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Onboarding/StepInterests/index.tsx:217
@@ -7266,8 +7320,8 @@ msgstr "छवि क्रॉप सेटिंग सहेजता है"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/NotificationFeedItem.tsx:747
-#: src/view/com/notifications/NotificationFeedItem.tsx:772
+#: src/view/com/notifications/NotificationFeedItem.tsx:751
+#: src/view/com/notifications/NotificationFeedItem.tsx:776
 msgid "Say hello!"
 msgstr "नमस्ते कहें!"
 
@@ -7335,6 +7389,10 @@ msgstr ""
 msgid "Search GIFs"
 msgstr "GIF खोजें"
 
+#: src/screens/Search/SearchResults.tsx:253
+msgid "Search is currently unavailable when logged out"
+msgstr ""
+
 #: src/screens/Profile/ProfileSearch.tsx:36
 msgid "Search my posts"
 msgstr ""
@@ -7386,6 +7444,18 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr "Bluesky में नौकरियाँ देखें"
 
+#: src/components/FeedInterstitials.tsx:397
+msgid "See more"
+msgstr ""
+
+#: src/components/FeedInterstitials.tsx:444
+msgid "See more accounts you might like"
+msgstr ""
+
+#: src/components/FeedInterstitials.tsx:395
+msgid "See more suggested profiles on the Explore page"
+msgstr ""
+
 #: src/view/screens/SavedFeeds.tsx:213
 msgid "See this guide"
 msgstr "यह गाइड देखें"
@@ -7393,6 +7463,11 @@ msgstr "यह गाइड देखें"
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:195
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
 msgstr "सीक स्लाइडर। एरो की से आगे और पीछे सीक करें, और स्पेस से चालू/बंद करें"
+
+#. Accessibility label for a username suggestion in the account creation flow
+#: src/screens/Signup/StepHandle/HandleSuggestions.tsx:42
+msgid "Select {0}"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -7517,7 +7592,7 @@ msgstr "अपने फ़ीड में अनुवाद के लिए 
 msgid "Select your preferred notification channels"
 msgstr ""
 
-#: src/view/com/util/forms/DropdownButton.tsx:297
+#: src/view/com/util/forms/DropdownButton.tsx:302
 msgid "Selects option {0} of {numItems}"
 msgstr ""
 
@@ -7611,7 +7686,7 @@ msgid "Sets email for password reset"
 msgstr "पासवर्ड रीसेट करने के लिए ईमेल चुनता है"
 
 #: src/Navigation.tsx:212
-#: src/screens/Settings/Settings.tsx:93
+#: src/screens/Settings/Settings.tsx:99
 #: src/view/shell/desktop/LeftNav.tsx:728
 #: src/view/shell/Drawer.tsx:572
 msgid "Settings"
@@ -7871,7 +7946,7 @@ msgstr "चेतावनी दिखाएँ और फ़ीड से फ़ि�
 msgid "Shows information about when this post was created"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:119
+#: src/screens/Settings/Settings.tsx:125
 msgid "Shows other accounts you can switch to"
 msgstr ""
 
@@ -7885,6 +7960,7 @@ msgstr ""
 #: src/screens/Login/index.tsx:122
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/LoginForm.tsx:181
+#: src/screens/Search/SearchResults.tsx:258
 #: src/view/com/auth/SplashScreen.tsx:61
 #: src/view/com/auth/SplashScreen.tsx:69
 #: src/view/com/auth/SplashScreen.web.tsx:123
@@ -7928,9 +8004,9 @@ msgstr "Bluesky में साइन इन करें या नया ख�
 msgid "Sign in to view post"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:248
-#: src/screens/Settings/Settings.tsx:250
-#: src/screens/Settings/Settings.tsx:282
+#: src/screens/Settings/Settings.tsx:254
+#: src/screens/Settings/Settings.tsx:256
+#: src/screens/Settings/Settings.tsx:288
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:85
@@ -7944,7 +8020,7 @@ msgstr "साइन आउट करें"
 msgid "Sign Out"
 msgstr "साइन आउट करें"
 
-#: src/screens/Settings/Settings.tsx:279
+#: src/screens/Settings/Settings.tsx:285
 #: src/view/shell/desktop/LeftNav.tsx:208
 msgid "Sign out?"
 msgstr "साइन आउट करें?"
@@ -7959,7 +8035,7 @@ msgstr "साइन इन आवश्यक"
 msgid "Signed in as @{0}"
 msgstr "@{0} कए रूप में साइन इन किया गया है"
 
-#: src/components/FeedInterstitials.tsx:343
+#: src/components/FeedInterstitials.tsx:389
 msgid "Similar accounts"
 msgstr "एक जैसे खाते"
 
@@ -7989,7 +8065,7 @@ msgstr "सॉफ़्टवेयर डेवलपर"
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:480
+#: src/components/FeedInterstitials.tsx:529
 msgid "Some other feeds you might like"
 msgstr "कुछ अन्य फ़ीड जो आपको शायद पसंद आएँ"
 
@@ -8026,7 +8102,7 @@ msgstr "कोई गड़बड़ हुई, फिर प्रयास करे
 msgid "Something went wrong, please try again."
 msgstr "कोई गड़बड़ हुई, फिर प्रयास करें।"
 
-#: src/components/Lists.tsx:174
+#: src/components/Lists.tsx:175
 msgid "Something went wrong!"
 msgstr "कोई गड़बड़ हुई!"
 
@@ -8042,8 +8118,8 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr "कुछ गड़बड़ है? हमें बताएँ।"
 
-#: src/App.native.tsx:123
-#: src/App.web.tsx:100
+#: src/App.native.tsx:124
+#: src/App.web.tsx:101
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
@@ -8144,16 +8220,16 @@ msgstr "स्टार्टर पैक आपको अपने पसं�
 msgid "Status Page"
 msgstr "स्थिति पृष्ठ"
 
-#: src/screens/Signup/index.tsx:148
+#: src/screens/Signup/index.tsx:163
 msgid "Step {0} of {1}"
 msgstr "{1} से चरण {0}"
 
-#: src/screens/Settings/Settings.tsx:377
+#: src/screens/Settings/Settings.tsx:393
 msgid "Storage cleared, you need to restart the app now."
 msgstr "स्टोरेज खाली की गई, आपको ऐप फिर से खोलना पड़ेगा।"
 
 #: src/Navigation.tsx:305
-#: src/screens/Settings/Settings.tsx:408
+#: src/screens/Settings/Settings.tsx:448
 msgid "Storybook"
 msgstr "कहानी की किताब"
 
@@ -8221,7 +8297,7 @@ msgstr ""
 msgid "Suggested Accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:345
+#: src/components/FeedInterstitials.tsx:391
 msgid "Suggested for you"
 msgstr "आपके लिए सुझाव"
 
@@ -8246,9 +8322,9 @@ msgstr ""
 msgid "Support"
 msgstr "सहायता"
 
-#: src/screens/Settings/Settings.tsx:117
-#: src/screens/Settings/Settings.tsx:131
-#: src/screens/Settings/Settings.tsx:512
+#: src/screens/Settings/Settings.tsx:123
+#: src/screens/Settings/Settings.tsx:137
+#: src/screens/Settings/Settings.tsx:604
 #: src/view/shell/desktop/LeftNav.tsx:245
 msgid "Switch account"
 msgstr "खाता बदलें"
@@ -8275,7 +8351,7 @@ msgstr "सिस्टम"
 
 #: src/screens/Settings/AboutSettings.tsx:107
 #: src/screens/Settings/AboutSettings.tsx:110
-#: src/screens/Settings/Settings.tsx:401
+#: src/screens/Settings/Settings.tsx:441
 msgid "System log"
 msgstr "सिस्टम लॉग"
 
@@ -8289,6 +8365,10 @@ msgstr ""
 
 #: src/view/com/feeds/MissingFeed.tsx:44
 msgid "Tap for more information"
+msgstr ""
+
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:164
+msgid "Tap to acknowledge that you understand and agree to these updates and continue using Bluesky"
 msgstr ""
 
 #: src/components/ContextMenu/Backdrop.ios.tsx:54
@@ -8335,6 +8415,8 @@ msgstr "हमें थोड़ा और बताएँ"
 msgid "Terms"
 msgstr "शर्तें"
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:30
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:97
 #: src/Navigation.tsx:335
 #: src/screens/Settings/AboutSettings.tsx:84
 #: src/screens/Settings/AboutSettings.tsx:87
@@ -8384,10 +8466,6 @@ msgstr "धन्यवाद, आपने सफलतापूर्वक �
 msgid "That contains the following:"
 msgstr "जिसमें निम्नलिखित शामिल हैं:"
 
-#: src/screens/Signup/StepHandle.tsx:55
-msgid "That handle is already taken."
-msgstr "वह हैंडल पहले से ले लिया गया है।"
-
 #: src/screens/StarterPack/StarterPackScreen.tsx:110
 #: src/screens/StarterPack/StarterPackScreen.tsx:111
 #: src/screens/StarterPack/StarterPackScreen.tsx:155
@@ -8397,6 +8475,10 @@ msgstr "वह हैंडल पहले से ले लिया गया
 msgid "That starter pack could not be found."
 msgstr "वह स्टार्टर पैक नहीं मिला।"
 
+#: src/screens/Signup/StepHandle/index.tsx:81
+msgid "That username is already taken"
+msgstr ""
+
 #: src/view/com/post-thread/PostQuotes.tsx:132
 msgid "That's all, folks!"
 msgstr "बस इतना ही, दोस्तों!"
@@ -8405,7 +8487,7 @@ msgstr "बस इतना ही, दोस्तों!"
 msgid "That's everything!"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:315
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:316
 #: src/view/com/profile/ProfileMenu.tsx:461
 msgid "The account will be able to interact with you after unblocking."
 msgstr "अनअवरुद्ध करने के बाद खाता आपसे संपर्क कर सकेगा।"
@@ -8790,7 +8872,7 @@ msgstr ""
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "इस जवाब को आपके थ्रेड के नीचे एक छिपे अनुभाग में डाल दिया जाएगा और उत्तरवर्ती जवाबों के अधिसूचनाओं को सभी के लिए म्यूट किया जाएगा।"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:37
+#: src/screens/Signup/StepInfo/Policies.tsx:66
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr "इस सेवा ने कोई सेवा की शर्तें या गोपनियता नीति नहीं दी है।"
 
@@ -8843,7 +8925,7 @@ msgstr "यह उपयोगकर्ता किसी को फ़ॉल�
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "यह आपके म्यूट शब्दों से \"{0}\" को मिटा देगा। आप हमेशा इसे "
 
-#: src/screens/Settings/Settings.tsx:564
+#: src/screens/Settings/Settings.tsx:656
 msgid "This will remove @{0} from the quick access list."
 msgstr "यह @{0} को जल्द पहुँच सूची से हटा देगा।"
 
@@ -8908,7 +8990,7 @@ msgstr "आप यह शिकायत किसे भेजना चाह�
 msgid "Today"
 msgstr "आज"
 
-#: src/view/com/util/forms/DropdownButton.tsx:258
+#: src/view/com/util/forms/DropdownButton.tsx:263
 msgid "Toggle dropdown"
 msgstr "ड्रॉपडाउन टॉगल करें"
 
@@ -8916,12 +8998,12 @@ msgstr "ड्रॉपडाउन टॉगल करें"
 msgid "Toggle to enable or disable adult content"
 msgstr "वयस्क सामग्री सक्षम या अक्षम करने के लिए टॉगल करें"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:158
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
 msgid "Toggles the sound"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:84
-#: src/screens/Search/SearchResults.tsx:42
+#: src/screens/Search/SearchResults.tsx:47
 #: src/screens/Topic.tsx:71
 msgid "Top"
 msgstr "बहतरीन"
@@ -8957,7 +9039,7 @@ msgstr ""
 msgid "Trending"
 msgstr "रुझान"
 
-#: src/components/interstitials/TrendingVideos.tsx:88
+#: src/components/interstitials/TrendingVideos.tsx:86
 msgid "Trending Videos"
 msgstr ""
 
@@ -8978,10 +9060,6 @@ msgstr "टीवी"
 msgid "Two-factor authentication (2FA)"
 msgstr "दो-चरणीय प्रमाणीकरण (2FA)"
 
-#: src/screens/Signup/StepHandle.tsx:126
-msgid "Type your desired username"
-msgstr "अपना उपयोगकर्ता हैंडल दर्ज करें"
-
 #: src/screens/Messages/components/MessageInput.tsx:153
 msgid "Type your message here"
 msgstr "अपना संदेश यहाँ लिखें"
@@ -8999,7 +9077,7 @@ msgstr "कनेक्ट करने में असफल। कृपय�
 #: src/screens/Login/index.tsx:79
 #: src/screens/Login/LoginForm.tsx:169
 #: src/screens/Login/SetNewPasswordForm.tsx:81
-#: src/screens/Signup/index.tsx:72
+#: src/screens/Signup/index.tsx:76
 #: src/view/com/modals/ChangePassword.tsx:71
 #: src/view/com/modals/ChangePassword.tsx:117
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -9008,6 +9086,14 @@ msgstr "आपकी सेवा से संपर्क करने मे�
 #: src/screens/StarterPack/StarterPackScreen.tsx:673
 msgid "Unable to delete"
 msgstr "मिटाने में असमर्थ"
+
+#: src/screens/Settings/Settings.tsx:507
+msgid "Unapply Pull Request"
+msgstr ""
+
+#: src/screens/Settings/Settings.tsx:509
+msgid "Unapply Pull Request {currentChannel}"
+msgstr ""
 
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:51
 msgid "Unavailable"
@@ -9022,7 +9108,7 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:112
 #: src/components/dms/MessagesListBlockedFooter.tsx:119
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:203
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:319
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:320
 #: src/view/com/profile/ProfileMenu.tsx:473
 #: src/view/screens/ProfileList.tsx:723
 msgid "Unblock"
@@ -9040,7 +9126,7 @@ msgstr "अनअवरुद्ध करें"
 msgid "Unblock account"
 msgstr "खाता अनअवरुद्ध करें"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:313
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
 #: src/view/com/profile/ProfileMenu.tsx:455
 msgid "Unblock Account?"
 msgstr "खाता अनअवरुद्ध करें?"
@@ -9094,7 +9180,7 @@ msgstr "नापसंद करें"
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr "नापसंद करें ({0, plural, one {# पसंद} other {# पसंद}})"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:155
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VolumeControl.tsx:95
 msgctxt "video"
 msgid "Unmute"
@@ -9168,8 +9254,8 @@ msgstr "{0} को होम पिन से हटाया गया"
 msgid "Unpinned from your feeds"
 msgstr "आपके फ़ीड से पिन से हटाया गया"
 
-#: src/screens/Settings/Settings.tsx:434
-#: src/screens/Settings/Settings.tsx:436
+#: src/screens/Settings/Settings.tsx:474
+#: src/screens/Settings/Settings.tsx:476
 msgid "Unsnooze email reminder"
 msgstr ""
 
@@ -9190,7 +9276,7 @@ msgstr "इस लेबलकर्ता की सदस्यता छो�
 msgid "Unsubscribed from list"
 msgstr "सूची की सदस्यता छोड़ी गई"
 
-#: src/view/com/composer/Composer.tsx:811
+#: src/view/com/composer/Composer.tsx:814
 msgid "Unsupported video type"
 msgstr "असमर्थित वीडियो प्रकार"
 
@@ -9252,20 +9338,20 @@ msgstr "इसके बदले फ़ोटो अपलोड करें"
 msgid "Upload a text file to:"
 msgstr "यहाँ पाठ फ़ाइल अपलोड करें:"
 
-#: src/view/com/util/UserAvatar.tsx:467
-#: src/view/com/util/UserAvatar.tsx:470
+#: src/view/com/util/UserAvatar.tsx:469
+#: src/view/com/util/UserAvatar.tsx:472
 #: src/view/com/util/UserBanner.tsx:157
 #: src/view/com/util/UserBanner.tsx:160
 msgid "Upload from Camera"
 msgstr "कैमरा से अपलोड करें"
 
-#: src/view/com/util/UserAvatar.tsx:484
+#: src/view/com/util/UserAvatar.tsx:486
 #: src/view/com/util/UserBanner.tsx:174
 msgid "Upload from Files"
 msgstr "फ़ाइलों से अपलोड करें"
 
-#: src/view/com/util/UserAvatar.tsx:478
-#: src/view/com/util/UserAvatar.tsx:482
+#: src/view/com/util/UserAvatar.tsx:480
+#: src/view/com/util/UserAvatar.tsx:484
 #: src/view/com/util/UserBanner.tsx:168
 #: src/view/com/util/UserBanner.tsx:172
 msgid "Upload from Library"
@@ -9280,7 +9366,7 @@ msgstr "छवि अपलोड हो रहा है..."
 msgid "Uploading link thumbnail..."
 msgstr "लिंक थंबनेल अपलोड हो रहा है..."
 
-#: src/view/com/composer/Composer.tsx:1732
+#: src/view/com/composer/Composer.tsx:1737
 msgid "Uploading video..."
 msgstr "वीडियो अपलोड हो रहा है..."
 
@@ -9370,6 +9456,18 @@ msgstr "उपयोगकर्ता सूची बनाई गई"
 msgctxt "toast"
 msgid "User list updated"
 msgstr "उपयोगकर्ता सूची अपडेट की गई"
+
+#: src/screens/Signup/StepHandle/index.tsx:235
+msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
+msgstr ""
+
+#: src/screens/Signup/StepHandle/index.tsx:219
+msgid "Username cannot begin or end with a hyphen"
+msgstr ""
+
+#: src/screens/Signup/StepHandle/index.tsx:223
+msgid "Username must only contain letters (a-z), numbers, and hyphens"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:201
 msgid "Username or email address"
@@ -9484,11 +9582,11 @@ msgstr ""
 
 #: src/screens/Settings/AboutSettings.tsx:126
 #: src/screens/Settings/AboutSettings.tsx:155
-msgid "Version {appVersion}"
-msgstr "संस्कारण {appVersion}"
+msgid "Version {0}"
+msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:134
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:131
 msgid "Video"
 msgstr "वीडियो"
 
@@ -9518,7 +9616,7 @@ msgstr ""
 msgid "Video is playing"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:192
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:219
 msgid "Video not found."
 msgstr "वीडियो नहीं मिला"
 
@@ -9526,11 +9624,11 @@ msgstr "वीडियो नहीं मिला"
 msgid "Video settings"
 msgstr "वीडियो सेटिंग"
 
-#: src/view/com/composer/Composer.tsx:1742
+#: src/view/com/composer/Composer.tsx:1747
 msgid "Video uploaded"
 msgstr "वीडियो अपलोड किया गया"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:83
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
 msgid "Video: {0}"
 msgstr "वीडियो: {0}"
 
@@ -9547,11 +9645,11 @@ msgstr ""
 msgid "View {0}'s avatar"
 msgstr "{0} का अवतार देखें"
 
-#: src/components/ProfileCard.tsx:118
+#: src/components/ProfileCard.tsx:124
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:454
 #: src/screens/Search/components/SearchProfileCard.tsx:36
 #: src/screens/VideoFeed/index.tsx:790
-#: src/view/com/notifications/NotificationFeedItem.tsx:595
+#: src/view/com/notifications/NotificationFeedItem.tsx:599
 msgid "View {0}'s profile"
 msgstr "{0} का प्रोफ़ाइल देखें"
 
@@ -9559,7 +9657,7 @@ msgstr "{0} का प्रोफ़ाइल देखें"
 msgid "View {displayName}'s profile"
 msgstr "{displayName} का प्रोफ़ाइल देखें"
 
-#: src/components/ProfileHoverCard/index.web.tsx:478
+#: src/components/ProfileHoverCard/index.web.tsx:480
 msgid "View blocked user's profile"
 msgstr "अवरुद्ध उपयोगकर्ता का प्रोफ़ाइल देखें"
 
@@ -9589,16 +9687,16 @@ msgstr "पूरा थ्रेड देखें"
 msgid "View information about these labels"
 msgstr "इन लेबलों के बारे में जानकारी देखें"
 
-#: src/components/interstitials/TrendingVideos.tsx:191
-#: src/components/interstitials/TrendingVideos.tsx:210
+#: src/components/interstitials/TrendingVideos.tsx:189
+#: src/components/interstitials/TrendingVideos.tsx:211
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:194
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:213
 msgid "View more"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:464
-#: src/components/ProfileHoverCard/index.web.tsx:484
-#: src/components/ProfileHoverCard/index.web.tsx:511
+#: src/components/ProfileHoverCard/index.web.tsx:466
+#: src/components/ProfileHoverCard/index.web.tsx:486
+#: src/components/ProfileHoverCard/index.web.tsx:513
 #: src/view/com/posts/PostFeedErrorMessage.tsx:179
 #: src/view/com/util/PostMeta.tsx:91
 #: src/view/com/util/PostMeta.tsx:128
@@ -9621,7 +9719,7 @@ msgstr ""
 msgid "View users who like this feed"
 msgstr "इस फ़ीड को पसंद करने वाले उपयोगकर्ता देखें"
 
-#: src/components/VideoPostCard.tsx:398
+#: src/components/VideoPostCard.tsx:399
 msgid "View video"
 msgstr ""
 
@@ -9771,6 +9869,14 @@ msgstr ""
 msgid "We'll use this to help customize your experience."
 msgstr "हम इसका उपयोग आपके अनुभव को वैयक्तिकृत करने के लिए करेंगे।"
 
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:139
+msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 13th, 2025."
+msgstr ""
+
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:82
+msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 13th, 2025."
+msgstr ""
+
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
 msgid "We're confirming your age assurance status with our servers. This should only take a few seconds."
 msgstr ""
@@ -9788,7 +9894,7 @@ msgstr "हमें नेटवर्क समस्याएँ हो र�
 msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
 msgstr ""
 
-#: src/screens/Signup/index.tsx:109
+#: src/screens/Signup/index.tsx:123
 msgid "We're so excited to have you join us!"
 msgstr "हम आपके हमारे साथ जुड़ने को लेकर बहुत उत्साहित हैं!"
 
@@ -9800,7 +9906,7 @@ msgstr "हमें क्षमा करें, पर हम इस सू�
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "हमें क्षमा करें, पर हम अभी आपके म्यूट शब्द लोड नहीं कर सके। कृपया फिर प्रयास करें।"
 
-#: src/screens/Search/SearchResults.tsx:222
+#: src/screens/Search/SearchResults.tsx:285
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "हमें क्षमा करें, पर आपका खोज पूरा नहीं किया जा सके। कृपया कुछ मिनट बाद फिर प्रयास करें।"
 
@@ -9808,7 +9914,7 @@ msgstr "हमें क्षमा करें, पर आपका खोज
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "हमें क्षमा करें! आप जिस पोस्ट को जवाब दे रहे हैं उसे मिटा दिया गया है।"
 
-#: src/components/Lists.tsx:194
+#: src/components/Lists.tsx:195
 #: src/view/screens/NotFound.tsx:50
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "हमें क्षमा करें! हमें वह पृष्ठ नहीं मिल रहा जिसे आप ढूँढ रहे थे।"
@@ -9816,6 +9922,22 @@ msgstr "हमें क्षमा करें! हमें वह पृष
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:343
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr "हमें क्षमा करें! आप केवल बीस लेबलकर्ताओं की सदस्यता ले सकते हैं, और आप बीस की सीमा तक पहुँच गए हैं।"
+
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:122
+msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 12th, 2025."
+msgstr ""
+
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:63
+msgid "We're updating our policies"
+msgstr ""
+
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:76
+msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 12th, 2025."
+msgstr ""
+
+#: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:61
+msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 12th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 13th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
+msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
 msgid "We've confirmed your age assurance status. You can now close this dialog."
@@ -9839,7 +9961,7 @@ msgstr "आप अपने स्टार्टर पैक को क्य�
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:774
+#: src/view/com/composer/Composer.tsx:777
 msgid "What's up?"
 msgstr "क्या चल रहा है?"
 
@@ -9868,12 +9990,12 @@ msgid "Who can verify?"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:248
+#: src/screens/Messages/ChatList.tsx:258
 #: src/screens/Messages/Inbox.tsx:197
 msgid "Whoops!"
 msgstr "उफ़!"
 
-#: src/components/interstitials/TrendingVideos.tsx:127
+#: src/components/interstitials/TrendingVideos.tsx:125
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:108
 msgid "Whoops! Trending videos failed to load."
 msgstr ""
@@ -9921,11 +10043,11 @@ msgstr "इस उपयोगकर्ता की समीक्षा क�
 msgid "Write a message"
 msgstr "संदेश लिखें"
 
-#: src/view/com/composer/Composer.tsx:867
+#: src/view/com/composer/Composer.tsx:872
 msgid "Write post"
 msgstr "पोस्ट लिखें"
 
-#: src/view/com/composer/Composer.tsx:772
+#: src/view/com/composer/Composer.tsx:775
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:90
 msgid "Write your reply"
 msgstr "अपना जवाब दें"
@@ -9976,6 +10098,10 @@ msgstr "कल"
 #: src/components/NewskieDialog.tsx:43
 msgid "You"
 msgstr "आप"
+
+#: src/screens/Signup/StepInfo/Policies.tsx:23
+msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 13th."
+msgstr ""
 
 #: src/components/verification/VerifierDialog.tsx:59
 msgid "You are a trusted verifier"
@@ -10069,7 +10195,7 @@ msgid "You can set default interaction settings in <0>Settings → Moderation �
 msgstr ""
 
 #: src/components/interstitials/Trending.tsx:130
-#: src/components/interstitials/TrendingVideos.tsx:139
+#: src/components/interstitials/TrendingVideos.tsx:137
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:109
 msgid "You can update this later from your settings."
 msgstr "आप इसे बाद में अपने सेटिंग में बदल सकते हैं।"
@@ -10140,7 +10266,7 @@ msgstr "आपने इस खाते को म्यूट किया ह
 msgid "You have muted this user"
 msgstr "आपने इस उपयोगकर्ता को म्यूट किया है"
 
-#: src/screens/Messages/ChatList.tsx:291
+#: src/screens/Messages/ChatList.tsx:301
 msgid "You have no conversations yet. Start one!"
 msgstr "आपके कोई बातचीत नहीं हैं। एक शुरू करें!"
 
@@ -10161,7 +10287,7 @@ msgstr "आपने अभी तक किसी खाते को अवर
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr "आपने अभी तक किसी खाते को म्यूट नहीं किया है। खाता म्यूट करने के लिए, उनके प्रोफ़ाइल पर जाकर मेनू से \"खाता म्यूट करें\" चुनें।"
 
-#: src/components/Lists.tsx:57
+#: src/components/Lists.tsx:58
 msgid "You have reached the end"
 msgstr "आप अंत तक आ गए हैं"
 
@@ -10210,7 +10336,7 @@ msgstr "आप अधिकतम केवल 3 फ़ीड जोड़ सकत�
 msgid "You may only select up to 4 images"
 msgstr "आप अधिकतम 4 छवियों को चुन सकते हैं"
 
-#: src/screens/Signup/StepInfo/Policies.tsx:106
+#: src/screens/Signup/StepInfo/Policies.tsx:136
 msgid "You must be 13 years of age or older to create an account."
 msgstr ""
 
@@ -10247,7 +10373,7 @@ msgstr ""
 msgid "You previously deactivated @{0}."
 msgstr "आपने पहले @{0} को निष्क्रिय किया था।"
 
-#: src/screens/Settings/Settings.tsx:388
+#: src/screens/Settings/Settings.tsx:404
 msgid "You probably want to restart the app now."
 msgstr ""
 
@@ -10259,7 +10385,7 @@ msgstr ""
 msgid "You reacted {0} to {1}"
 msgstr ""
 
-#: src/screens/Settings/Settings.tsx:280
+#: src/screens/Settings/Settings.tsx:286
 #: src/view/shell/desktop/LeftNav.tsx:209
 msgid "You will be signed out of all your accounts."
 msgstr "आप अपने सभी खातों से साइन आउट हो जाएँगे।"
@@ -10292,11 +10418,11 @@ msgstr "आप: {defaultEmbeddedContentMessage}"
 msgid "You: {short}"
 msgstr "आप: {short}"
 
-#: src/screens/Signup/index.tsx:125
+#: src/screens/Signup/index.tsx:139
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
 msgstr "अपना खाना बनाने के बाद आप सुझाए गए उपयोगकर्ताओं और फ़ीड को फ़ॉलो करेंगे!"
 
-#: src/screens/Signup/index.tsx:130
+#: src/screens/Signup/index.tsx:144
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr "अपना खाना बनाने के बाद आप सुझाए गए उपयोगकर्ताओं को फ़ॉलो करेंगे!"
 
@@ -10338,12 +10464,20 @@ msgstr "आपने इस पोस्ट में से एक शब्द
 msgid "You've found some people to follow"
 msgstr "आपने फ़ॉलो करने के लिए कुछ लोगों को ढूँढा है"
 
+#: src/components/FocusScope/index.tsx:114
+msgid "You've reached the end of the active content."
+msgstr ""
+
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "आप अपने फ़ीड के अंत तक पहुँच गए! कुछ और खातों को फ़ॉलो करें!"
 
 #: src/lib/hooks/useCleanError.ts:58
 msgid "You've reached the maximum number of requests allowed. Please try again later."
+msgstr ""
+
+#: src/components/FocusScope/index.tsx:90
+msgid "You've reached the start of the active content."
 msgstr ""
 
 #: src/view/com/composer/state/video.ts:423
@@ -10358,7 +10492,7 @@ msgstr "आप वीडियो अपलोड करने की दैन�
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:158
+#: src/screens/Signup/index.tsx:173
 msgid "Your account"
 msgstr "आपका खाता"
 
@@ -10390,7 +10524,7 @@ msgstr ""
 msgid "Your birth date"
 msgstr "आपकी जन्मतिथि"
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:196
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:223
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "आपका ब्राउज़र वीडियो के प्रकार का समर्थन नहीं करता। कृपया कोई नया ब्राउज़र आज़माएँ।"
 
@@ -10413,7 +10547,7 @@ msgid "Your email"
 msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
-#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/state.ts:273
 #: src/screens/Signup/StepInfo/index.tsx:98
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
@@ -10438,10 +10572,6 @@ msgstr "आपका फ़ॉलोइंग फ़ीड खाली है! क
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:240
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "आपका पूरा हैंडल <0>@{0}</0> होगा"
-
-#: src/screens/Signup/StepHandle.tsx:137
-msgid "Your full username will be <0>@{0}</0>"
-msgstr ""
 
 #: src/Navigation.tsx:515
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
