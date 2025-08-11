@@ -1,6 +1,6 @@
 import {STALE} from '#/state/queries'
 import {useProfileQuery} from '#/state/queries/profile'
-import {useServiceConfigQuery} from '#/state/queries/service-config'
+import {useCheckEmailConfirmed} from '#/state/service-config'
 import {useSession} from '#/state/session'
 import {BSKY_SERVICE} from '../constants'
 import {getHostnameFromUrl} from '../strings/url-helpers'
@@ -8,13 +8,12 @@ import {getHostnameFromUrl} from '../strings/url-helpers'
 export function useEmail() {
   const {currentAccount} = useSession()
 
-  const {data: serviceConfig} = useServiceConfigQuery()
   const {data: profile} = useProfileQuery({
     did: currentAccount?.did,
     staleTime: STALE.INFINITY,
   })
 
-  const checkEmailConfirmed = !!serviceConfig?.checkEmailConfirmed
+  const checkEmailConfirmed = useCheckEmailConfirmed()
 
   // Date set for 11 AM PST on the 18th of November
   const isNewEnough =
