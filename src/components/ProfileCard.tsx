@@ -561,6 +561,24 @@ export function FollowButtonInner({
   )
 }
 
+export function FollowButtonPlaceholder({style}: ViewStyleProp) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.rounded_sm,
+        t.atoms.bg_contrast_25,
+        a.w_full,
+        {
+          height: 33,
+        },
+        style,
+      ]}
+    />
+  )
+}
+
 export function Labels({
   profile,
   moderationOpts,
