@@ -22,6 +22,8 @@ export function useTranslate() {
             throw new Error('Translate app not installed')
           }
 
+          // TODO: this should only be called one at a time, use something like
+          // RQ's `scope` - otherwise can trigger the browser to open unexpectedly when the call throws -sfn
           await IntentLauncher.startActivityAsync(
             'android.intent.action.PROCESS_TEXT',
             {
