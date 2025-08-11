@@ -178,3 +178,17 @@ describe('isTrustedUrl', () => {
     expect(output).toEqual(expected)
   })
 })
+
+describe('lineBreakHandling', () => {
+  type Case = [string, string]
+  const cases: Case[] = [
+    ['line1<br>line2', 'line1\nline2'],
+    ['line1<br>\nline2', 'line1\n\nline2'],
+    ['line1\nline2', 'line1\nline2'],
+  ]
+
+  it.each(cases)('given input text %p, returns %p', (input, expected) => {
+    const output = input.replace(/<br>/g, '\n')
+    expect(output).toEqual(expected)
+  })
+})
