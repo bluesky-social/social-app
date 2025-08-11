@@ -758,11 +758,11 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_snug)
+      baseStyles.push(a.text_md, a.leading_snug, a.font_medium)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_snug)
+      baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_snug)
+      baseStyles.push(a.text_xs, a.leading_snug, a.font_bold)
     }
 
     return StyleSheet.flatten(baseStyles)
@@ -773,7 +773,7 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
+    <Text {...rest} style={[a.text_center, textStyles, style]}>
       {children}
     </Text>
   )
