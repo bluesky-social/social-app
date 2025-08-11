@@ -409,7 +409,9 @@ export function ProfileGrid({
               <View style={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}>
                 {content}
 
-                <SeeMoreSuggestedProfilesCard />
+                {viewContext !== 'profileHeader' && (
+                  <SeeMoreSuggestedProfilesCard />
+                )}
               </View>
             </ScrollView>
           </View>
