@@ -1,6 +1,6 @@
 import {STALE} from '#/state/queries'
-import {useServiceConfigQuery} from '#/state/queries/email-verification-required'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useServiceConfigQuery} from '#/state/queries/service-config'
 import {useSession} from '#/state/session'
 import {BSKY_SERVICE} from '../constants'
 import {getHostnameFromUrl} from '../strings/url-helpers'
