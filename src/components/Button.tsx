@@ -460,22 +460,22 @@ export const Button = React.forwardRef<View, ButtonProps>(
       if (shape === 'default') {
         if (size === 'large') {
           baseStyles.push({
-            paddingVertical: 14,
-            paddingHorizontal: 24,
+            paddingVertical: 12,
+            paddingHorizontal: 25,
             borderRadius: 10,
-            gap: 4,
+            gap: 3,
           })
         } else if (size === 'small') {
           baseStyles.push({
             paddingVertical: 8,
-            paddingHorizontal: 12,
+            paddingHorizontal: 13,
             borderRadius: 8,
             gap: 3,
           })
         } else if (size === 'tiny') {
           baseStyles.push({
-            paddingVertical: 6,
-            paddingHorizontal: 8,
+            paddingVertical: 5,
+            paddingHorizontal: 9,
             borderRadius: 6,
             gap: 2,
           })
@@ -487,9 +487,9 @@ export const Button = React.forwardRef<View, ButtonProps>(
          */
         if (size === 'large') {
           if (shape === 'round') {
-            baseStyles.push({height: 45, width: 45})
+            baseStyles.push({height: 44, width: 44})
           } else {
-            baseStyles.push({height: 45, width: 45})
+            baseStyles.push({height: 44, width: 44})
           }
         } else if (size === 'small') {
           if (shape === 'round') {
@@ -758,11 +758,11 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_tight)
+      baseStyles.push(a.text_md, a.leading_snug, a.font_medium)
     } else if (size === 'small') {
-      baseStyles.push(a.text_md, a.leading_tight)
+      baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_tight)
+      baseStyles.push(a.text_xs, a.leading_snug, a.font_medium)
     }
 
     return StyleSheet.flatten(baseStyles)
@@ -773,7 +773,7 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
+    <Text {...rest} style={[a.text_center, textStyles, style]}>
       {children}
     </Text>
   )
@@ -799,7 +799,7 @@ export function ButtonIcon({
     const iconSizeShorthand =
       size ??
       (({
-        large: 'sm',
+        large: 'md',
         small: 'sm',
         tiny: 'xs',
       }[buttonSize || 'small'] || 'sm') as Exclude<
@@ -814,7 +814,7 @@ export function ButtonIcon({
     const iconSize = {
       xs: 12,
       sm: 16,
-      md: 20,
+      md: 18,
       lg: 24,
       xl: 28,
       '2xl': 32,
@@ -825,9 +825,9 @@ export function ButtonIcon({
      * don't increase button size
      */
     const iconContainerSize = {
-      large: 17,
+      large: 20,
       small: 17,
-      tiny: 13,
+      tiny: 15,
     }[buttonSize || 'small']
 
     return {
