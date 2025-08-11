@@ -18,6 +18,7 @@ import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as AgeAssuranceProvider} from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
+import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {
   beginResolveGeolocation,
@@ -136,12 +137,14 @@ function InnerApp() {
                                                 <SafeAreaProvider>
                                                   <ProgressGuideProvider>
                                                     <ServiceConfigProvider>
-                                                      <HideBottomBarBorderProvider>
-                                                        <IntentDialogProvider>
-                                                          <Shell />
-                                                          <NuxDialogs />
-                                                        </IntentDialogProvider>
-                                                      </HideBottomBarBorderProvider>
+                                                      <EmailVerificationProvider>
+                                                        <HideBottomBarBorderProvider>
+                                                          <IntentDialogProvider>
+                                                            <Shell />
+                                                            <NuxDialogs />
+                                                          </IntentDialogProvider>
+                                                        </HideBottomBarBorderProvider>
+                                                      </EmailVerificationProvider>
                                                     </ServiceConfigProvider>
                                                   </ProgressGuideProvider>
                                                 </SafeAreaProvider>
