@@ -97,7 +97,7 @@ export function useCanGoLive(did?: string) {
 
 export function useCheckEmailConfirmed() {
   const ctx = useContext(CheckEmailConfirmedContext)
-  if (typeof ctx === 'undefined') {
+  if (ctx === null) {
     throw new Error(
       'useCheckEmailConfirmed must be used within a ServiceConfigManager',
     )
