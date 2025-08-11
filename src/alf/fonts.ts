@@ -46,8 +46,8 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
           500: 'Inter-Medium',
           600: 'Inter-SemiBold',
           700: 'Inter-SemiBold',
-          800: 'Inter-ExtraBold',
-          900: 'Inter-ExtraBold',
+          800: 'Inter-Bold',
+          900: 'Inter-Bold',
         }[String(style.fontWeight || '400')] || 'Inter-Regular'
 
       if (style.fontStyle === 'italic') {

@@ -15,7 +15,7 @@ export function DO_NOT_USE() {
     'Inter-MediumItalic': require('../../../assets/fonts/inter/Inter-MediumItalic.otf'),
     'Inter-SemiBold': require('../../../assets/fonts/inter/Inter-SemiBold.otf'),
     'Inter-SemiBoldItalic': require('../../../assets/fonts/inter/Inter-SemiBoldItalic.otf'),
-    'Inter-Black': require('../../../assets/fonts/inter/Inter-ExtraBold.otf'),
-    'Inter-BlackItalic': require('../../../assets/fonts/inter/Inter-ExtraBoldItalic.otf'),
+    'Inter-Bold': require('../../../assets/fonts/inter/Inter-Bold.otf'),
+    'Inter-BoldItalic': require('../../../assets/fonts/inter/Inter-BoldItalic.otf'),
   })
 }
