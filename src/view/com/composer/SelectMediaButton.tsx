@@ -449,7 +449,7 @@ export function SelectMediaButton({
         quality: 1,
         allowsMultipleSelection: true,
         legacy: true,
-        selectionLimit,
+        selectionLimit: isIOS ? selectionLimit : undefined,
         preferredAssetRepresentationMode:
           UIImagePickerPreferredAssetRepresentationMode.Current,
       }),
