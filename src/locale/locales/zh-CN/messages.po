@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-12 00:28\n"
+"PO-Revision-Date: 2025-08-12 01:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -9536,7 +9536,7 @@ msgstr "重新验证"
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:367
 msgctxt "action"
 msgid "Verify code"
-msgstr ""
+msgstr "验证码"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:549
@@ -9875,11 +9875,11 @@ msgstr "我们将使用这些信息来帮助定制你的体验。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:139
 msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 15th, 2025."
-msgstr ""
+msgstr "我们正在改进<0>社群准则</0>，希望能得到你的宝贵意见！新的准则将于 2025 年 10 月 15 日生效。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:82
 msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025."
-msgstr ""
+msgstr "我们正在改进社群准则，希望能得到你的宝贵意见！新的准则将于 2025 年 10 月 15 日生效。"
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
 msgid "We're confirming your age assurance status with our servers. This should only take a few seconds."
@@ -9929,7 +9929,7 @@ msgstr "很抱歉！你目前只能订阅 20 个标记者，你已达到上限�
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:122
 msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 15th, 2025."
-msgstr ""
+msgstr "我们正在更新<0>服务条款</0>、<1>隐私政策</1>以及<2>版权政策</2>，自 2025 年 9 月 15 日起生效。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:63
 msgid "We're updating our policies"
@@ -9937,11 +9937,11 @@ msgstr "我们正在更新相关政策"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:76
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025."
-msgstr ""
+msgstr "我们正在更新服务条款、隐私政策以及版权政策，自 2025 年 9 月 15 日起生效。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:61
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
-msgstr ""
+msgstr "我们正在更新我们的服务条款、隐私政策以及版权政策，自 2025 年 9 月 15 日起生效。同时我们也在改进我们的社群准则，希望能得到你的意见！新的准则将于 2025 年 10 月 15 日生效。你可以阅读我们的博客文章。了解有关这些改动的更多资讯，以及如何与我们分享你的想法。"
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
 msgid "We've confirmed your age assurance status. You can now close this dialog."
@@ -10105,7 +10105,7 @@ msgstr "你"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:23
 msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 15th."
-msgstr ""
+msgstr "你也同意<0>Bluesky 社群准则</0>，<1>一个更新版本的社群准则</1>将于 10 月 15 日生效。"
 
 #: src/components/verification/VerifierDialog.tsx:59
 msgid "You are a trusted verifier"

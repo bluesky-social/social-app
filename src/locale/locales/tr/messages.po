@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-12 00:28\n"
+"PO-Revision-Date: 2025-08-12 01:46\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -9536,7 +9536,7 @@ msgstr "Tekrar onayla"
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:367
 msgctxt "action"
 msgid "Verify code"
-msgstr ""
+msgstr "Kodu doğrula"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:549
@@ -9875,11 +9875,11 @@ msgstr "Bu, deneyiminizi özelleştirmenize yardımcı olmak için kullanılacak
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:139
 msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 15th, 2025."
-msgstr ""
+msgstr "Ayrıca <0>Topluluk Kurallarımızı</0> güncelliyor ve görüşlerinizi istiyoruz! Bu yeni kurallar 15 Ekim 2025 tarihinde devreye girecektir."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:82
 msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025."
-msgstr ""
+msgstr "Ayrıca Topluluk Kurallarımızı güncelliyor ve görüşlerinizi istiyoruz! Bu yeni kurallar 15 Ekim 2025 tarihinde devreye girecektir."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
 msgid "We're confirming your age assurance status with our servers. This should only take a few seconds."
@@ -9929,7 +9929,7 @@ msgstr "Üzgünüz! Sadece yirmi işaretleyiciye abone olabilirsiniz ve yirmilik
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:122
 msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 15th, 2025."
-msgstr ""
+msgstr "15 Eylül 2025 itibariyle <0>Hizmet Şartlarımızı</0>, <1>Gizlilik Politikamızı</1> ve <2>Telif Politikamızı</2> güncelliyoruz."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:63
 msgid "We're updating our policies"
@@ -9937,11 +9937,11 @@ msgstr "Politikalarımızı güncelliyoruz"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:76
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025."
-msgstr ""
+msgstr "15 Eylül 2025 itibariyle Hizmet Şartlarımızı, Gizlilik Politikamızı ve Telif Politikamızı güncelliyoruz."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:61
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
-msgstr ""
+msgstr "15 Eylül 2025 itibariyle Hizmet Şartlarımızı, Gizlilik Politikamızı ve Telif Politikamızı güncelliyoruz. Ayrıca Topluluk Kurallarımızı da güncelliyor ve görüşlerinizi istiyoruz! Bu yeni kurallar 15 Ekim 2025 tarihinde devreye girecektir. Blog gönderimizi okuyarak bu değişikliklere ve düşüncelerinizi bize nasıl iletebileceğinize dair bilgi edinebilirsiniz."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
 msgid "We've confirmed your age assurance status. You can now close this dialog."
@@ -10105,7 +10105,7 @@ msgstr "Siz"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:23
 msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 15th."
-msgstr ""
+msgstr "Ayrıca <0>Bluesky’ın Topluluk Kuralları</0>nı da kabul ediyorsunuz. <1>Topluluk Kurallarımızın güncel sürümü</1> 15 Ekim'de devreye girecektir."
 
 #: src/components/verification/VerifierDialog.tsx:59
 msgid "You are a trusted verifier"

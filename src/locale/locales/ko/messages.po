@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-12 00:28\n"
+"PO-Revision-Date: 2025-08-12 01:46\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -9536,7 +9536,7 @@ msgstr "다시 인증하기"
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:367
 msgctxt "action"
 msgid "Verify code"
-msgstr ""
+msgstr "코드 인증"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:549
@@ -9875,11 +9875,11 @@ msgstr "이를 통해 사용자 환경을 맞춤 설정할 수 있습니다."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:139
 msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 15th, 2025."
-msgstr ""
+msgstr "또한 <0>커뮤니티 가이드라인</0>도 업데이트될 예정이며, 이에 대한 여러분의 의견을 기다립니다! 새로운 가이드라인은 2025년 10월 15일부터 적용됩니다."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:82
 msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025."
-msgstr ""
+msgstr "또한 커뮤니티 가이드라인도 업데이트될 예정이며, 이에 대한 여러분의 의견을 기다립니다! 새로운 가이드라인은 2025년 10월 15일부터 적용됩니다."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
 msgid "We're confirming your age assurance status with our servers. This should only take a few seconds."
@@ -9929,7 +9929,7 @@ msgstr "죄송합니다. 라벨러는 20개까지만 구독할 수 있으며 20�
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:122
 msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 15th, 2025."
-msgstr ""
+msgstr "2025년 9월 15일부터 <0>서비스 이용약관</0>, <1>개인정보 처리방침</1>, <2>저작권 정책</2>이 업데이트됩니다."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:63
 msgid "We're updating our policies"
@@ -9937,11 +9937,11 @@ msgstr "정책 업데이트 안내"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:76
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025."
-msgstr ""
+msgstr "2025년 9월 15일부터 서비스 이용약관, 개인정보 처리방침, 저작권 정책이 업데이트됩니다."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:61
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
-msgstr ""
+msgstr "2025년 9월 15일부터 서비스 이용약관, 개인정보 처리방침, 저작권 정책이 업데이트됩니다. 또한 커뮤니티 가이드라인도 업데이트될 예정이며, 이에 대한 여러분의 의견을 기다립니다! 새로운 가이드라인은 2025년 10월 15일부터 적용됩니다. 이 변경 사항에 대한 자세한 내용과 의견 제출 방법은 이 블로그 게시물에서 확인할 수 있습니다."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
 msgid "We've confirmed your age assurance status. You can now close this dialog."
@@ -10105,7 +10105,7 @@ msgstr "나"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:23
 msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 15th."
-msgstr ""
+msgstr "또한 <0>Bluesky 커뮤니티 가이드라인</0>에도 동의하는 것입니다. <1>업데이트된 가이드라인</1>은 10월 15일부터 적용됩니다."
 
 #: src/components/verification/VerifierDialog.tsx:59
 msgid "You are a trusted verifier"

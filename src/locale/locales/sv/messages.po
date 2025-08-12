@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-12 00:49\n"
+"PO-Revision-Date: 2025-08-12 01:46\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -7948,7 +7948,7 @@ msgstr "Visar information om när det här inlägget skapades"
 
 #: src/screens/Settings/Settings.tsx:125
 msgid "Shows other accounts you can switch to"
-msgstr "Visar andra konton som du kan växla till"
+msgstr "Visar andra konton som du kan byta till"
 
 #: src/components/moderation/ContentHider.tsx:155
 #: src/components/moderation/PostHider.tsx:89
@@ -8327,20 +8327,20 @@ msgstr "Support"
 #: src/screens/Settings/Settings.tsx:604
 #: src/view/shell/desktop/LeftNav.tsx:245
 msgid "Switch account"
-msgstr "Växla konto"
+msgstr "Byt konto"
 
 #: src/components/dialogs/SwitchAccount.tsx:46
 #: src/components/dialogs/SwitchAccount.tsx:49
 msgid "Switch Account"
-msgstr "Växla konto"
+msgstr "Byt konto"
 
 #: src/view/shell/desktop/LeftNav.tsx:109
 msgid "Switch accounts"
-msgstr "Växla mellan konton"
+msgstr "Byt mellan konton"
 
 #: src/view/shell/desktop/LeftNav.tsx:293
 msgid "Switch to {0}"
-msgstr "Växla till {0}"
+msgstr "Byt till {0}"
 
 #: src/components/dialogs/Embed.tsx:157
 #: src/components/dialogs/Embed.tsx:159

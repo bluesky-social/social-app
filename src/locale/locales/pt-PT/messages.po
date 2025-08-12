@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-12 00:28\n"
+"PO-Revision-Date: 2025-08-12 01:46\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -9536,7 +9536,7 @@ msgstr "Verificar novamente"
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:367
 msgctxt "action"
 msgid "Verify code"
-msgstr ""
+msgstr "Verificar código"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:528
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:549
@@ -9875,11 +9875,11 @@ msgstr "Vamos usar isto para ajudar a personalizar a sua experiência."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:139
 msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 15th, 2025."
-msgstr ""
+msgstr "Também estamos a atualizar as nossas <0>Diretrizes da Comunidade</0> e queremos a sua opinião! Estas novas diretrizes entrarão em vigor a 15 de outubro de 2025."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:82
 msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025."
-msgstr ""
+msgstr "Também estamos a atualizar as nossas Diretrizes da Comunidade, e queremos a sua opinião! Estas novas diretrizes entrarão em vigor a 15 de outubro de 2025."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
 msgid "We're confirming your age assurance status with our servers. This should only take a few seconds."
@@ -9929,7 +9929,7 @@ msgstr "Pedimos desculpa! Apenas pode subscrever a vinte rotuladores, e atingiu 
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:122
 msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 15th, 2025."
-msgstr ""
+msgstr "Estamos a atualizar os nossos <0>Termos de Serviço</0>, <1>Política de Privacidade</1> e <2>Política de Direitos de Autor</2>, em vigor a partir de dia 15 de setembro de 2025."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:63
 msgid "We're updating our policies"
@@ -9937,11 +9937,11 @@ msgstr "Estamos a atualizar as nossas políticas"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:76
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025."
-msgstr ""
+msgstr "Estamos a atualizar os nossos Termos de Serviço, Política de Privacidade e Política de Direitos de Autor, em vigor a partir de dia 15 de setembro de 2025."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:61
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
-msgstr ""
+msgstr "Estamos a atualizar os nossos Termos de Serviço, Política de Privacidade e Política de Direitos de Autor, em vigor a partir de dia 15 de setembro de 2025. Também estamos a atualizar as nossas Diretrizes da Comunidade, e queremos a sua opinião! Estas novas diretrizes entrarão em vigor a 15 de outubro de 2025. Saiba mais sobre estas alterações e como partilhar as suas ideias connosco lendo a nossa publicação no blog."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
 msgid "We've confirmed your age assurance status. You can now close this dialog."
@@ -10105,7 +10105,7 @@ msgstr "Você"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:23
 msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 15th."
-msgstr ""
+msgstr "Concorda também com as <0>Diretrizes da Comunidade do Bluesky</0>. Uma <1>versão atualizada das nossas Diretrizes da Comunidade</1> entrará em vigor no dia 15 de outubro."
 
 #: src/components/verification/VerifierDialog.tsx:59
 msgid "You are a trusted verifier"
