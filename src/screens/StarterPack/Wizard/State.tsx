@@ -1,6 +1,9 @@
 import React from 'react'
-import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {type GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+} from '@atproto/api'
 import {msg, plural} from '@lingui/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
@@ -19,7 +22,7 @@ type Action =
   | {type: 'SetDescription'; description: string}
   | {type: 'AddProfile'; profile: bsky.profile.AnyProfileView}
   | {type: 'RemoveProfile'; profileDid: string}
-  | {type: 'AddFeed'; feed: GeneratorView}
+  | {type: 'AddFeed'; feed: AppBskyFeedDefs.GeneratorView}
   | {type: 'RemoveFeed'; feedUri: string}
   | {type: 'SetProcessing'; processing: boolean}
   | {type: 'SetError'; error: string}
@@ -30,7 +33,7 @@ interface State {
   name?: string
   description?: string
   profiles: bsky.profile.AnyProfileView[]
-  feeds: GeneratorView[]
+  feeds: AppBskyFeedDefs.GeneratorView[]
   processing: boolean
   error?: string
   transitionDirection: 'Backward' | 'Forward'

@@ -5,11 +5,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 import {
   type AppBskyActorDefs,
+  type AppBskyFeedDefs,
   type AppBskyGraphDefs,
   AtUri,
   type ModerationOpts,
 } from '@atproto/api'
-import {type GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
@@ -591,7 +591,9 @@ function Footer({
   )
 }
 
-function getName(item: bsky.profile.AnyProfileView | GeneratorView) {
+function getName(
+  item: bsky.profile.AnyProfileView | AppBskyFeedDefs.GeneratorView,
+) {
   if (typeof item.displayName === 'string') {
     return enforceLen(sanitizeDisplayName(item.displayName), 28, true)
   } else if ('handle' in item && typeof item.handle === 'string') {
