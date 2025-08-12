@@ -2,9 +2,9 @@ import {
   type AccessibilityProps,
   type GestureResponderEvent,
   type ScrollViewProps,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native'
-import {type ViewStyle} from 'react-native'
-import {type StyleProp} from 'react-native'
 import type React from 'react'
 
 import {type ViewStyleProp} from '#/alf'
