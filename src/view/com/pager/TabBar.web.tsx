@@ -2,6 +2,7 @@ import {useCallback, useEffect, useRef} from 'react'
 import {type ScrollView, StyleSheet, View} from 'react-native'
 
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Text} from '#/components/Typography'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -96,7 +97,16 @@ export function TabBar({
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollElRef}
-        contentContainerStyle={styles.contentContainer}>
+        contentContainerStyle={[
+          styles.contentContainer,
+          web({
+            backgroundColor: transparentifyColor(
+              t.atoms.bg.backgroundColor,
+              0.8,
+            ),
+            backdropFilter: 'blur(12px)',
+          }),
+        ]}>
         {items.map((item, i) => {
           const selected = i === selectedPage
           return (
@@ -147,7 +157,6 @@ const desktopStyles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
     paddingHorizontal: 0,
-    backgroundColor: 'transparent',
   },
   item: {
     flexGrow: 1,
