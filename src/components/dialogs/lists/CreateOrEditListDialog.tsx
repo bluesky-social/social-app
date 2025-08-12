@@ -346,8 +346,8 @@ function DialogInner({
       ? _(msg`Edit user list`)
       : _(msg`Edit moderation list`)
     : isCurateList
-    ? _(msg`Create user list`)
-    : _(msg`Create moderation list`)
+      ? _(msg`Create user list`)
+      : _(msg`Create moderation list`)
 
   return (
     <Dialog.ScrollableInner
