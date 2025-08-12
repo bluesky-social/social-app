@@ -78,7 +78,11 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
-import {type ComposerImage, pasteImage} from '#/state/gallery'
+import {
+  type ComposerImage,
+  createComposerImage,
+  pasteImage,
+} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -128,7 +132,10 @@ import * as Prompt from '#/components/Prompt'
 import {toast} from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
-import {SelectMediaBtn} from './SelectMediaBtn'
+import {
+  type Props as SelectMediaButtonProps,
+  SelectMediaBtn,
+} from './SelectMediaBtn'
 import {
   type ComposerAction,
   composerReducer,
@@ -1271,12 +1278,15 @@ function ComposerFooter({
   const isMaxImages = images.length >= MAX_IMAGES
   const isMaxVideos = !!video
 
+  let selectedAssetsCount = 0
   let isMediaSelectionDisabled = false
 
   if (media?.type === 'images') {
     isMediaSelectionDisabled = isMaxImages
+    selectedAssetsCount = images.length
   } else if (media?.type === 'video') {
     isMediaSelectionDisabled = isMaxVideos
+    selectedAssetsCount = 1
   } else {
     isMediaSelectionDisabled = !!media
   }
@@ -1296,6 +1306,48 @@ function ComposerFooter({
       dispatch({type: 'embed_add_gif', gif})
     },
     [dispatch],
+  )
+
+  const onSelectAssets = useCallback<SelectMediaButtonProps['onSelectAssets']>(
+    async ({type, assets, errors}) => {
+      if (assets.length) {
+        if (type === 'image') {
+          const images: ComposerImage[] = []
+          for (const image of assets) {
+            try {
+              images.push(
+                await createComposerImage({
+                  path: image.uri,
+                  width: image.width,
+                  height: image.height,
+                  mime: image.mimeType!,
+                }),
+              )
+            } catch (e: any) {
+              logger.error(`createComposerImage failed`, {
+                safeMessage: e.message,
+              })
+            }
+          }
+
+          onImageAdd(images)
+        } else if (type === 'video') {
+          onSelectVideo(post.id, assets[0])
+        } else if (type === 'gif') {
+          onSelectVideo(post.id, assets[0])
+        }
+      }
+
+      errors.map((error, i) => {
+        toast.show({
+          type: 'error',
+          content: error,
+          a11yLabel: error,
+          duration: 3e3 * (errors.length - i),
+        })
+      })
+    },
+    [post.id, onSelectVideo, onImageAdd],
   )
 
   return (
@@ -1319,9 +1371,9 @@ function ComposerFooter({
               <SelectMediaBtn
                 size={images.length}
                 disabled={isMediaSelectionDisabled}
-                onAdd={onImageAdd}
-                onSelectVideo={asset => onSelectVideo(post.id, asset)}
                 setError={onError}
+                selectedAssetsCount={selectedAssetsCount}
+                onSelectAssets={onSelectAssets}
               />
               <OpenCameraBtn
                 disabled={media?.type === 'images' ? isMaxImages : !!media}
