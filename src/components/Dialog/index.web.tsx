@@ -2,6 +2,7 @@ import React, {useImperativeHandle} from 'react'
 import {
   FlatList,
   type FlatListProps,
+  type GestureResponderEvent,
   type StyleProp,
   TouchableWithoutFeedback,
   View,
@@ -75,9 +76,12 @@ export function Outer({
     [control.id, onClose, setDialogIsOpen],
   )
 
-  const handleBackgroundPress = React.useCallback(async () => {
-    close()
-  }, [close])
+  const handleBackgroundPress = React.useCallback(
+    async (e: GestureResponderEvent) => {
+      webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
+    },
+    [webOptions, close],
+  )
 
   useImperativeHandle(
     control.ref,
