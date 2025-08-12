@@ -154,6 +154,7 @@ export const TextInput = forwardRef(function TextInputImpl(
       }
 
       const uris = files.map(f => f.uri)
+      // TODO
       const uri = uris.find(isUriImage)
 
       if (uri) {

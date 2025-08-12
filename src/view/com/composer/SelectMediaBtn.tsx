@@ -1,5 +1,9 @@
 import {useCallback} from 'react'
-import {type ImagePickerAsset, launchImageLibraryAsync} from 'expo-image-picker'
+import {
+  type ImagePickerAsset,
+  launchImageLibraryAsync,
+  UIImagePickerPreferredAssetRepresentationMode,
+} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,6 +19,7 @@ import {
 import {getDataUriSize} from '#/lib/media/util'
 import {isNative, isWeb} from '#/platform/detection'
 import {type ComposerImage, createComposerImage} from '#/state/gallery'
+import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {getVideoMetadata} from '#/view/com/composer/videos/pickVideo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -275,23 +280,22 @@ export function SelectMediaBtn({disabled, onAdd, onSelectVideo}: Props) {
       }
     }
 
-    //APiligrim
-    //Note: selectionLimit doesn't work reliably on Android, so we handle limiting in code
-    const response = await sheetWrapper(
+    const {assets} = await sheetWrapper(
       launchImageLibraryAsync({
         exif: false,
         mediaTypes: ['images', 'videos'],
         quality: 1,
         allowsMultipleSelection: true,
         legacy: true,
+        selectionLimit: MAX_IMAGES,
+        preferredAssetRepresentationMode:
+          UIImagePickerPreferredAssetRepresentationMode.Current,
       }),
     )
 
-    if (!response.assets || response.assets.length === 0) {
-      return
-    }
+    if (!assets || assets.length === 0) return
 
-    await processSelectedAssets(response.assets)
+    await processSelectedAssets(assets)
   }, [
     requestPhotoAccessIfNeeded,
     requestVideoAccessIfNeeded,
