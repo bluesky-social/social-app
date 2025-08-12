@@ -1313,22 +1313,22 @@ function ComposerFooter({
       if (assets.length) {
         if (type === 'image') {
           const images: ComposerImage[] = []
-          for (const image of assets) {
-            try {
-              images.push(
-                await createComposerImage({
-                  path: image.uri,
-                  width: image.width,
-                  height: image.height,
-                  mime: image.mimeType!,
-                }),
-              )
-            } catch (e: any) {
-              logger.error(`createComposerImage failed`, {
-                safeMessage: e.message,
+
+          await Promise.all(
+            assets.map(async image => {
+              const composerImage = await createComposerImage({
+                path: image.uri,
+                width: image.width,
+                height: image.height,
+                mime: image.mimeType!,
               })
-            }
-          }
+              images.push(composerImage)
+            }),
+          ).catch(e => {
+            logger.error(`createComposerImage failed`, {
+              safeMessage: e.message,
+            })
+          })
 
           onImageAdd(images)
         } else if (type === 'video') {
