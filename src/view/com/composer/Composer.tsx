@@ -133,9 +133,9 @@ import {toast} from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
-  type Props as SelectMediaButtonProps,
-  SelectMediaBtn,
-} from './SelectMediaBtn'
+  SelectMediaButton,
+  type SelectMediaButtonProps,
+} from './SelectMediaButton'
 import {
   type ComposerAction,
   composerReducer,
@@ -1368,7 +1368,7 @@ function ComposerFooter({
             <VideoUploadToolbar state={video} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <SelectMediaBtn
+              <SelectMediaButton
                 size={images.length}
                 disabled={isMediaSelectionDisabled}
                 setError={onError}

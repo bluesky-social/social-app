@@ -24,7 +24,7 @@ import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {toast} from '#/components/Toast'
 
-export type Props = {
+export type SelectMediaButtonProps = {
   size: number
   disabled?: boolean
   setError: (error: string) => void
@@ -362,11 +362,11 @@ async function processImagePickerAssets(
   }
 }
 
-export function SelectMediaBtn({
+export function SelectMediaButton({
   disabled,
   selectedAssetsCount,
   onSelectAssets,
-}: Props) {
+}: SelectMediaButtonProps) {
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
