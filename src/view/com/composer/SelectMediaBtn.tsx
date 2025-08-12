@@ -21,7 +21,7 @@ import {getVideoMetadata} from '#/view/com/composer/videos/pickVideo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
+import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {toast} from '#/components/Toast'
 
 export type Props = {
@@ -30,22 +30,28 @@ export type Props = {
   setError: (error: string) => void
   selectedAssetsCount: number
   onSelectAssets: (props: {
-    type: SelectedAsset['type']
+    type: AssetType
     assets: ImagePickerAsset[]
     errors: string[]
   }) => void
 }
 
-export type SelectedAsset = {
-  asset: ImagePickerAsset
-  type: 'video' | 'image' | 'gif'
-}
+/**
+ * Generic asset classes, or buckets, that we support.
+ */
+type AssetType = 'video' | 'image' | 'gif'
 
-export type ValidatedImagePickerAsset = Omit<ImagePickerAsset, 'mimeType'> & {
+/**
+ * Shadows `ImagePickerAsset` from `expo-image-picker`, but with a guaranteed `mimeType`
+ */
+type ValidatedImagePickerAsset = Omit<ImagePickerAsset, 'mimeType'> & {
   mimeType: string
 }
 
-export enum SelectedAssetError {
+/**
+ * Codes for known validation states
+ */
+enum SelectedAssetError {
   Unsupported = 'Unsupported',
   MixedTypes = 'MixedTypes',
   MaxImages = 'MaxImages',
@@ -55,20 +61,27 @@ export enum SelectedAssetError {
   NoGifsOnNative = 'NoGifsOnNative',
 }
 
+/**
+ * Supported video mime types. This differs slightly from
+ * `SUPPORTED_MIME_TYPES` from `#/lib/constants` because we only care about
+ * videos here.
+ */
 const SUPPORTED_VIDEO_MIME_TYPES = [
   'video/mp4',
   'video/mpeg',
   'video/webm',
   'video/quicktime',
 ] as const
-export type SupportedVideoMimeType = (typeof SUPPORTED_VIDEO_MIME_TYPES)[number]
-
+type SupportedVideoMimeType = (typeof SUPPORTED_VIDEO_MIME_TYPES)[number]
 function isSupportedVideoMimeType(
   mimeType: string,
 ): mimeType is SupportedVideoMimeType {
   return SUPPORTED_VIDEO_MIME_TYPES.includes(mimeType as SupportedVideoMimeType)
 }
 
+/**
+ * Supported image mime types.
+ */
 const SUPPORTED_IMAGE_MIME_TYPES = (
   [
     'image/gif',
@@ -79,17 +92,19 @@ const SUPPORTED_IMAGE_MIME_TYPES = (
     isIOS && 'image/heic',
   ] as const
 ).filter(Boolean)
-export type SupportedImageMimeType = Exclude<
+type SupportedImageMimeType = Exclude<
   (typeof SUPPORTED_IMAGE_MIME_TYPES)[number],
   boolean
 >
-
 function isSupportedImageMimeType(
   mimeType: string,
 ): mimeType is SupportedImageMimeType {
   return SUPPORTED_IMAGE_MIME_TYPES.includes(mimeType as SupportedImageMimeType)
 }
 
+/**
+ * This is a last-ditch effort type thing here, try not to rely on this.
+ */
 const extensionToMimeType: Record<
   string,
   SupportedVideoMimeType | SupportedImageMimeType
@@ -97,6 +112,7 @@ const extensionToMimeType: Record<
   mp4: 'video/mp4',
   mov: 'video/quicktime',
   webm: 'video/webm',
+  webp: 'image/webp',
   gif: 'image/gif',
   jpg: 'image/jpeg',
   jpeg: 'image/jpeg',
@@ -105,10 +121,15 @@ const extensionToMimeType: Record<
   heic: 'image/heic',
 }
 
+/**
+ * Attemps to bucket the given asset into one of our known types based on its
+ * `mimeType`. If `mimeType` is not available, we try to infer it through
+ * various means.
+ */
 function classifyImagePickerAsset(asset: ImagePickerAsset):
   | {
       success: true
-      type: SelectedAsset['type']
+      type: AssetType
       mimeType: string
     }
   | {
@@ -153,7 +174,7 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
   /*
    * Distill this down into a type "class".
    */
-  let type: SelectedAsset['type'] | undefined
+  let type: AssetType | undefined
   if (mimeType === 'image/gif') {
     type = 'gif'
   } else if (mimeType?.startsWith('video/')) {
@@ -187,8 +208,9 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
 }
 
 /*
- * On web, certain file formats (like `.mov`) don't give us a duration or
- * dimensions, so we need to load the file manually to extract this.
+ * WEB ONLY. On web, certain file formats (like `.mov`) don't give us a
+ * duration or dimensions, so we need to load the file manually to extract
+ * this.
  */
 async function getAdditionalVideoMetadata(asset: ValidatedImagePickerAsset) {
   if (isNative) return asset
@@ -203,6 +225,11 @@ async function getAdditionalVideoMetadata(asset: ValidatedImagePickerAsset) {
   return await getVideoMetadata(file)
 }
 
+/**
+ * Takes in raw assets from `expo-image-picker` and applies validation. Returns
+ * the dominant `AssetType`, any valid assets, and any errors encountered along
+ * the way.
+ */
 async function processImagePickerAssets(
   assets: ImagePickerAsset[],
   {
@@ -220,7 +247,7 @@ async function processImagePickerAssets(
    * We only support selecting a single type of media at a time, so this
    * gets set to whatever the first asset type is.
    */
-  let primaryMediaType: SelectedAsset['type'] | undefined
+  let primaryMediaType: AssetType | undefined
 
   /*
    * This will hold the assets that we can actually use, after filtering
@@ -452,7 +479,7 @@ export function SelectMediaBtn({
       shape="round"
       color="primary"
       disabled={disabled}>
-      <Image
+      <ImageIcon
         size="lg"
         style={disabled && t.atoms.text_contrast_low}
         accessibilityIgnoresInvertColors={true}
