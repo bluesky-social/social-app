@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-07 22:21\n"
+"PO-Revision-Date: 2025-08-12 01:46\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -101,7 +101,7 @@ msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {urmărit} few {urmăriți} other {de urmăriți}}"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:468
-#: src/view/com/post-thread/PostThreadItem.tsx:541
+#: src/view/com/post-thread/PostThreadItem.tsx:537
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {apreciere} few {aprecieri} other {de aprecieri}}"
 
@@ -110,12 +110,12 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {postare} few {postări} other {de postări}}"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:452
-#: src/view/com/post-thread/PostThreadItem.tsx:525
+#: src/view/com/post-thread/PostThreadItem.tsx:521
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {citat} few {citate} other {de citate}}"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:434
-#: src/view/com/post-thread/PostThreadItem.tsx:507
+#: src/view/com/post-thread/PostThreadItem.tsx:503
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {repostare} few {repostări} other {de repostări}}"
 
@@ -152,7 +152,7 @@ msgstr "{0} nu este un URL valid"
 
 #: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
-msgstr ""
+msgstr "{0} nu este disponibil"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:223
 msgid "{0} joined this week"
@@ -221,7 +221,7 @@ msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {Un element necitit} few {# elemente necitite} other {# de elemente necitite}}"
 
 #: src/lib/generate-starterpack.ts:111
-#: src/screens/StarterPack/Wizard/index.tsx:178
+#: src/screens/StarterPack/Wizard/index.tsx:184
 msgid "{displayName}'s Starter Pack"
 msgstr "Pachetul de pornire al lui {displayName}"
 
@@ -450,12 +450,12 @@ msgstr "Verificările utilizatorului {userName}"
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:449
+#: src/screens/StarterPack/Wizard/index.tsx:488
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1}, </1>și {2, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} sunt incluși în pachetul dvs. de pornire"
 
-#: src/screens/StarterPack/Wizard/index.tsx:502
+#: src/screens/StarterPack/Wizard/index.tsx:541
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1}, </1>și {2, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} sunt incluși în pachetul dvs. de pornire"
@@ -468,11 +468,11 @@ msgstr "<0>{0}</0> {1, plural, one {urmăritor} few {urmăritori} other {de urm�
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {urmărit} few {urmăriți} other {de urmăriți}}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:490
+#: src/screens/StarterPack/Wizard/index.tsx:529
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr "<0>{0}</0> și<1> </1><2>{1} </2>sunt incluși în pachetul dvs. de pornire"
 
-#: src/screens/StarterPack/Wizard/index.tsx:483
+#: src/screens/StarterPack/Wizard/index.tsx:522
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> este inclus în pachetul dvs. de pornire"
 
@@ -488,7 +488,7 @@ msgstr "<0>{date}</0> la {time}"
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "<0>Conectați-vă</0><1> sau </1><2>creați un cont</2><3> </3><4>pentru a căuta știri, sport, politică și tot ce se întâmplă pe Bluesky.</4>"
 
-#: src/screens/StarterPack/Wizard/index.tsx:440
+#: src/screens/StarterPack/Wizard/index.tsx:479
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>Tu</0> și<1> </1><2>{0} </2> sunteți incluși în pachetul dvs. de pornire"
 
@@ -564,7 +564,7 @@ msgstr "Setări de Accesibilitate"
 msgid "Account"
 msgstr "Cont"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:361
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:357
 #: src/screens/Messages/components/RequestButtons.tsx:91
 #: src/view/com/profile/ProfileMenu.tsx:158
 msgctxt "toast"
@@ -576,7 +576,7 @@ msgctxt "toast"
 msgid "Account followed"
 msgstr "Cont urmărit"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:380
 #: src/view/com/profile/ProfileMenu.tsx:134
 msgctxt "toast"
 msgid "Account muted"
@@ -610,7 +610,7 @@ msgctxt "toast"
 msgid "Account unfollowed"
 msgstr "Nu mai urmăriți acest cont"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:374
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:370
 #: src/view/com/profile/ProfileMenu.tsx:124
 msgctxt "toast"
 msgid "Account unmuted"
@@ -636,7 +636,7 @@ msgstr "Notificări de activitate"
 msgid "Add"
 msgstr "Adăugare"
 
-#: src/screens/StarterPack/Wizard/index.tsx:551
+#: src/screens/StarterPack/Wizard/index.tsx:572
 msgid "Add {0} more to continue"
 msgstr "Adăugați încă {0} pentru a continua"
 
@@ -736,7 +736,7 @@ msgstr "Adăugare Reacție"
 msgid "Add recommended feeds"
 msgstr "Adăugați fluxuri recomandate"
 
-#: src/screens/StarterPack/Wizard/index.tsx:471
+#: src/screens/StarterPack/Wizard/index.tsx:510
 msgid "Add some feeds to your starter pack!"
 msgstr "Adăugați niște fluxuri la pachetul de pornire!"
 
@@ -1010,7 +1010,7 @@ msgstr "GIF animat"
 
 #: src/components/PolicyUpdateOverlay/Badge.tsx:33
 msgid "Announcement"
-msgstr ""
+msgstr "Anunț"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:37
 msgid "Announcing verification on Bluesky"
@@ -1121,15 +1121,15 @@ msgstr "Aplicați fluxurile recomandate implicit"
 msgid "Apply Pull Request"
 msgstr "Aplicați solicitarea de tragere"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:637
-#: src/view/com/post-thread/PostThreadItem.tsx:955
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:638
+#: src/view/com/post-thread/PostThreadItem.tsx:953
 msgid "Archived from {0}"
 msgstr "Arhivat de la {0}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:606
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:645
-#: src/view/com/post-thread/PostThreadItem.tsx:924
-#: src/view/com/post-thread/PostThreadItem.tsx:963
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:607
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:646
+#: src/view/com/post-thread/PostThreadItem.tsx:922
+#: src/view/com/post-thread/PostThreadItem.tsx:961
 msgid "Archived post"
 msgstr "Postare arhivată"
 
@@ -1137,7 +1137,7 @@ msgstr "Postare arhivată"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "Sigur doriți să ștergeți parola de aplicație „{0}”?"
 
-#: src/components/dms/MessageContextMenu.tsx:188
+#: src/components/dms/MessageContextMenu.tsx:183
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "Sunteți sigur că doriți să ștergeți acest mesaj? Mesajul va fi șters pentru dvs., dar nu și pentru celălalt participant."
 
@@ -1186,8 +1186,8 @@ msgstr "Artă"
 msgid "Artistic or non-erotic nudity."
 msgstr "Nuditate artistică sau non-erotică."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:495
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:497
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:491
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:493
 msgid "Assign topic for algo"
 msgstr "Atribuiți subiectul pentru algoritm"
 
@@ -1204,7 +1204,7 @@ msgstr "Redare automată videoclipuri și GIF-uri"
 #. Shown next to an available username suggestion in the account creation flow
 #: src/screens/Signup/StepHandle/HandleSuggestions.tsx:72
 msgid "Available"
-msgstr ""
+msgstr "Disponibil"
 
 #: src/components/dms/MessagesListHeader.tsx:84
 #: src/components/moderation/LabelsOnMeDialog.tsx:315
@@ -1221,7 +1221,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:158
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:286
+#: src/screens/StarterPack/Wizard/index.tsx:303
 msgid "Back"
 msgstr "Înapoi"
 
@@ -1275,7 +1275,7 @@ msgstr "Începeți procesul de verificare a vârstei completând câmpurile de m
 msgid "Birthday"
 msgstr "Zi de naștere"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:757
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:753
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:320
 #: src/view/com/profile/ProfileMenu.tsx:473
 msgid "Block"
@@ -1283,8 +1283,8 @@ msgstr "Blocare"
 
 #: src/components/dms/ConvoMenu.tsx:247
 #: src/components/dms/ConvoMenu.tsx:250
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:642
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:644
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:638
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:640
 #: src/screens/Messages/components/RequestButtons.tsx:144
 #: src/screens/Messages/components/RequestButtons.tsx:146
 #: src/view/com/profile/ProfileMenu.tsx:384
@@ -1292,7 +1292,7 @@ msgstr "Blocare"
 msgid "Block account"
 msgstr "Blocare cont"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:752
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:748
 #: src/view/com/profile/ProfileMenu.tsx:456
 msgid "Block Account?"
 msgstr "Blocați Contul?"
@@ -1343,7 +1343,7 @@ msgstr "Conturi blocate"
 msgid "Blocked Accounts"
 msgstr "Conturi Blocate"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:754
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:750
 #: src/view/com/profile/ProfileMenu.tsx:468
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Conturile blocate nu pot răspunde în firele dvs., să vă menționeze, sau să interacționeze într-un fel cu dvs."
@@ -1377,8 +1377,8 @@ msgstr "Blog"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:662
-#: src/view/com/post-thread/PostThreadItem.tsx:980
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:663
+#: src/view/com/post-thread/PostThreadItem.tsx:978
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky nu poate confirma autenticitatea datei revendicate."
 
@@ -1418,11 +1418,11 @@ msgstr "Bluesky va verifica proactiv conturile notabile și autentice."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:26
 msgid "Bluesky's Community Guidelines"
-msgstr ""
+msgstr "Regulile Comunității Bluesky"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:32
 msgid "Bluesky's Updated Community Guidelines"
-msgstr ""
+msgstr "Regulile Comunității Actualizate ale Bluesky"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:99
 msgid "Bluesky+"
@@ -1494,7 +1494,7 @@ msgstr "Afaceri"
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:683
 #: src/screens/Search/components/StarterPackCard.tsx:106
-#: src/screens/Search/Explore.tsx:934
+#: src/screens/Search/Explore.tsx:930
 msgid "By {0}"
 msgstr "De {0}"
 
@@ -1504,7 +1504,7 @@ msgstr "de <0>{0}</0>"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:181
 msgid "By clicking \"Continue\" you acknowledge that you understand and agree to these updates."
-msgstr ""
+msgstr "Făcând clic pe „Continuare”, confirmați că ați înțeles și sunteți de acord cu aceste actualizări."
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:329
 msgid "By continuing, you agree to the <0>KWS Terms of Use</0> and acknowledge that KWS will store your verified status with your hashed email address in accordance with the <1>KWS Privacy Policy</1>. This means you won’t need to verify again the next time you use this email for other apps, games, and services powered by KWS technology."
@@ -1738,7 +1738,7 @@ msgstr "Verificați-vă inbox-ul pentru un e-mail cu codul de confirmare pentru 
 msgid "Choose domain verification method"
 msgstr "Alegeți metoda de verificare a domeniului"
 
-#: src/screens/StarterPack/Wizard/index.tsx:194
+#: src/screens/StarterPack/Wizard/index.tsx:200
 msgid "Choose Feeds"
 msgstr "Alegeți Fluxuri"
 
@@ -1746,7 +1746,7 @@ msgstr "Alegeți Fluxuri"
 msgid "Choose for me"
 msgstr "Alegeți pentru mine"
 
-#: src/screens/StarterPack/Wizard/index.tsx:190
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose People"
 msgstr "Alegeți Persoane"
 
@@ -1766,7 +1766,7 @@ msgstr "Alegeți furnizorul de cont"
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "Alegeți propria cronologie! Fluxurile create de comunitate vă ajută să găsiți conținutul care vă place."
 
-#: src/screens/Signup/StepInfo/index.tsx:241
+#: src/screens/Signup/StepInfo/index.tsx:245
 msgid "Choose your password"
 msgstr "Alegeți-vă parola"
 
@@ -1799,11 +1799,11 @@ msgstr "Clic pentru informații"
 msgid "click here"
 msgstr "faceți clic aici"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:371
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:383
 msgid "Click here to restart the verification process."
 msgstr "Faceți clic aici pentru a reporni procesul de verificare."
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:273
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:275
 msgid "Click here to update your email"
 msgstr "Faceți clic aici pentru a vă actualiza e-mailul"
 
@@ -2155,9 +2155,9 @@ msgstr "Copiat"
 msgid "Copied build version to clipboard"
 msgstr "Versiunea de compilare a fost copiată în clipboard"
 
-#: src/components/dms/MessageContextMenu.tsx:56
-#: src/components/PostControls/DiscoverDebug.tsx:42
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:234
+#: src/components/dms/MessageContextMenu.tsx:55
+#: src/components/PostControls/DiscoverDebug.tsx:41
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:230
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:72
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
@@ -2236,8 +2236,8 @@ msgstr "Copiere link profil"
 msgid "Copy link to starter pack"
 msgstr "Copiere link pachet de pornire"
 
-#: src/components/dms/MessageContextMenu.tsx:149
-#: src/components/dms/MessageContextMenu.tsx:152
+#: src/components/dms/MessageContextMenu.tsx:144
+#: src/components/dms/MessageContextMenu.tsx:147
 msgid "Copy message text"
 msgstr "Copiere mesaj text"
 
@@ -2246,8 +2246,8 @@ msgstr "Copiere mesaj text"
 msgid "Copy post at:// URI"
 msgstr "Copiere at:// URI postare"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:454
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:448
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:450
 msgid "Copy post text"
 msgstr "Copiere text postare"
 
@@ -2419,7 +2419,7 @@ msgstr "Mod întunecat"
 msgid "Dark theme"
 msgstr "Temă întunecată"
 
-#: src/screens/Signup/StepInfo/index.tsx:269
+#: src/screens/Signup/StepInfo/index.tsx:273
 msgid "Date of birth"
 msgstr "Data nașterii"
 
@@ -2445,8 +2445,8 @@ msgstr "Implicit"
 msgid "Default icons"
 msgstr "Pictograme implicite"
 
-#: src/components/dms/MessageContextMenu.tsx:190
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:701
+#: src/components/dms/MessageContextMenu.tsx:185
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:697
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:599
@@ -2493,7 +2493,7 @@ msgstr "Ștergere conversație"
 msgid "Delete Conversation"
 msgstr "Ștergere Conversație"
 
-#: src/components/dms/MessageContextMenu.tsx:163
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete for me"
 msgstr "Ștergeți pentru mine"
 
@@ -2501,11 +2501,11 @@ msgstr "Ștergeți pentru mine"
 msgid "Delete list"
 msgstr "Ștergere listă"
 
-#: src/components/dms/MessageContextMenu.tsx:186
+#: src/components/dms/MessageContextMenu.tsx:181
 msgid "Delete message"
 msgstr "Ștergere mesaj"
 
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:156
 msgid "Delete message for me"
 msgstr "Ștergere mesaj pentru mine"
 
@@ -2513,8 +2513,8 @@ msgstr "Ștergere mesaj pentru mine"
 msgid "Delete my account"
 msgstr "Șterge-mi contul"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:682
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:684
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:678
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:680
 #: src/view/com/composer/Composer.tsx:884
 msgid "Delete post"
 msgstr "Ștergere postare"
@@ -2532,7 +2532,7 @@ msgstr "Ștergeți pachetul de pornire?"
 msgid "Delete this list?"
 msgstr "Ștergeți această listă?"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:696
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:692
 msgid "Delete this post?"
 msgstr "Ștergeți această postare?"
 
@@ -2575,12 +2575,12 @@ msgstr "Descrierea este prea lungă. {DESCRIPTION_MAX_GRAPHEMES, plural, one {Nu
 msgid "Descriptive alt text"
 msgstr "Text alternativ descriptiv"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:586
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:582
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:592
 msgid "Detach quote"
 msgstr "Detașare citat"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:732
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:728
 msgid "Detach quote post?"
 msgstr "Detașați postarea citat?"
 
@@ -2735,7 +2735,7 @@ msgstr "Nu include nuditate."
 msgid "Domain verified!"
 msgstr "Domeniu verificat!"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:368
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:380
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
 msgstr "Nu aveți un cod sau aveți nevoie de unul nou? <0>Faceți clic aici.</0>"
 
@@ -2853,8 +2853,8 @@ msgstr "Fiecare cod funcționează o dată. Veți primi mai multe coduri de invi
 #: src/screens/Settings/AccountSettings.tsx:143
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:249
 #: src/screens/StarterPack/StarterPackScreen.tsx:588
-#: src/screens/StarterPack/Wizard/index.tsx:534
-#: src/screens/StarterPack/Wizard/index.tsx:541
+#: src/screens/StarterPack/Wizard/index.tsx:319
+#: src/screens/StarterPack/Wizard/index.tsx:324
 msgid "Edit"
 msgstr "Editare"
 
@@ -2879,8 +2879,8 @@ msgstr "Editare Fluxuri"
 msgid "Edit image"
 msgstr "Editare imagine"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:663
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:676
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:659
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:672
 msgid "Edit interaction settings"
 msgstr "Editare setări de interacțiune"
 
@@ -2958,7 +2958,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr "Fie creatorul acestei liste v-a blocat sau dvs. ați blocat creatorul."
 
 #: src/screens/Settings/AccountSettings.tsx:64
-#: src/screens/Signup/StepInfo/index.tsx:193
+#: src/screens/Signup/StepInfo/index.tsx:197
 msgid "Email"
 msgstr "E-mail"
 
@@ -3088,7 +3088,7 @@ msgid "Enter a word or tag"
 msgstr "Introduceți un cuvânt sau o etichetă"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:201
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:318
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:320
 msgid "Enter code"
 msgstr "Introduceți codul"
 
@@ -3117,7 +3117,7 @@ msgid "Enter your birth date"
 msgstr "Introduceți-vă data nașterii"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
-#: src/screens/Signup/StepInfo/index.tsx:213
+#: src/screens/Signup/StepInfo/index.tsx:217
 msgid "Enter your email address"
 msgstr "Introduceți-vă adresa de e-mail"
 
@@ -3325,7 +3325,7 @@ msgid "Failed to accept chat"
 msgstr "Acceptarea conversației a eșuat"
 
 #: src/components/dms/ActionsWrapper.web.tsx:67
-#: src/components/dms/MessageContextMenu.tsx:104
+#: src/components/dms/MessageContextMenu.tsx:99
 msgid "Failed to add emoji reaction"
 msgstr "Adăugarea reacției emoji a eșuat"
 
@@ -3341,8 +3341,8 @@ msgstr "Nu s-a reușit crearea parolei de aplicație. Încercați din nou."
 msgid "Failed to create conversation"
 msgstr "Crearea conversației a eșuat"
 
-#: src/screens/StarterPack/Wizard/index.tsx:233
-#: src/screens/StarterPack/Wizard/index.tsx:241
+#: src/screens/StarterPack/Wizard/index.tsx:239
+#: src/screens/StarterPack/Wizard/index.tsx:247
 msgid "Failed to create starter pack"
 msgstr "Creare pachetului de pornire a eșuat"
 
@@ -3356,11 +3356,11 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr "Ștergerea conversației a eșuat"
 
-#: src/components/dms/MessageContextMenu.tsx:84
+#: src/components/dms/MessageContextMenu.tsx:79
 msgid "Failed to delete message"
 msgstr "Ștergerea mesajului a eșuat"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:203
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:199
 msgid "Failed to delete post, please try again"
 msgstr "Ștergerea postării a eșuat, vă rugăm să încercați din nou"
 
@@ -3427,7 +3427,7 @@ msgid "Failed to pin post"
 msgstr "Nu s-a reușit fixarea postării"
 
 #: src/components/dms/ActionsWrapper.web.tsx:61
-#: src/components/dms/MessageContextMenu.tsx:98
+#: src/components/dms/MessageContextMenu.tsx:93
 msgid "Failed to remove emoji reaction"
 msgstr "Ștergerea reacției emoji a eșuat"
 
@@ -3462,7 +3462,7 @@ msgstr "Trimiterea e-mailului a eșuat, încercați din nou."
 msgid "Failed to submit appeal, please try again."
 msgstr "Nu s-a putut trimite contestația, vă rugăm să încercați din nou."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:223
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:219
 msgid "Failed to toggle thread mute, please try again"
 msgstr "Nu s-a putut comuta amuțirea firului, vă rugăm încercați din nou"
 
@@ -3537,8 +3537,8 @@ msgstr "Flux indisponibil"
 msgid "Feedback"
 msgstr "Feedback"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:273
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:289
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:269
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:285
 msgctxt "toast"
 msgid "Feedback sent!"
 msgstr "Feedback trimis!"
@@ -3616,7 +3616,7 @@ msgstr "Găsiți persoane pe care să le urmăriți"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Găsiți postări, utilizatori și fluxuri pe Bluesky"
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:201
 msgid "Finish"
 msgstr "Finalizare"
 
@@ -4053,7 +4053,7 @@ msgid "Hashtag {tag}"
 msgstr "Hashtag {tag}"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:198
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:315
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:317
 msgid "Have a code? <0>Click here.</0>"
 msgstr "Aveți un cod? <0>Faceți clic aici.</0>"
 
@@ -4080,7 +4080,7 @@ msgstr "Iată parola dvs. de aplicație!"
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:73
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:119
 msgid "Hey there 👋"
-msgstr ""
+msgstr "Salut 👋"
 
 #: src/components/VideoPostCard.tsx:178
 #: src/components/VideoPostCard.tsx:460
@@ -4100,7 +4100,7 @@ msgstr "Listă ascunsă"
 #: src/components/moderation/ContentHider.tsx:203
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:134
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:712
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:708
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
@@ -4118,18 +4118,18 @@ msgstr "Ascundere"
 msgid "Hide customization options"
 msgstr "Ascundere opțiuni de personalizare"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:543
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:549
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:539
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:545
 msgid "Hide post for me"
 msgstr "Ascundere postare pentru mine"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:560
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:570
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:556
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:566
 msgid "Hide reply for everyone"
 msgstr "Ascundere răspuns pentru toată lumea"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:542
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:538
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:544
 msgid "Hide reply for me"
 msgstr "Ascundere răspuns pentru mine"
 
@@ -4137,12 +4137,12 @@ msgstr "Ascundere răspuns pentru mine"
 msgid "Hide this card"
 msgstr "Ascundeți acest card"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:707
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:703
 msgid "Hide this post?"
 msgstr "Ascundeți această postare?"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:707
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:742
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:703
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:738
 msgid "Hide this reply?"
 msgstr "Ascundeți acest răspuns?"
 
@@ -4270,11 +4270,11 @@ msgstr "Dacă ștergeți această listă, nu o veți putea recupera."
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "Dacă aveți propriul domeniu, îl puteți folosi ca identificator. Acest lucru vă permite să vă verificați identitatea automat. <0>Aflați mai multe aici.</0>"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:270
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:272
 msgid "If you need to update your email, <0>click here</0>."
 msgstr "Dacă trebuie să vă actualizați adresa de e-mail, <0>faceți clic aici</0>."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:698
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:694
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "Dacă eliminați această postare, nu o veți putea recupera."
 
@@ -4417,7 +4417,7 @@ msgstr "Cod de confirmare A2F invalid."
 msgid "Invalid handle. Please try a different one."
 msgstr "Identificator nevalid. Vă rugăm să încercați unul diferit."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:351
+#: src/view/com/post-thread/PostThreadItem.tsx:347
 msgid "Invalid or unsupported post record"
 msgstr "Înregistrare postare nevalidă sau neacceptată"
 
@@ -4433,11 +4433,11 @@ msgstr "Cod de Verificare Nevalid"
 msgid "Invite a Friend"
 msgstr "Invitați un Prieten"
 
-#: src/screens/Signup/StepInfo/index.tsx:163
+#: src/screens/Signup/StepInfo/index.tsx:167
 msgid "Invite code"
 msgstr "Cod de invitație"
 
-#: src/screens/Signup/state.ts:348
+#: src/screens/Signup/state.ts:339
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Codul de invitație nu este acceptat. Verificați dacă l-ați introdus corect și încercați din nou."
 
@@ -4461,11 +4461,11 @@ msgstr "Invitați-vă prietenii să vă urmărească fluxurile și persoanele pr
 msgid "Invites, but personal"
 msgstr "Invitații, dar personale"
 
-#: src/screens/Signup/StepInfo/index.tsx:289
+#: src/screens/Signup/StepInfo/index.tsx:293
 msgid "It's correct"
 msgstr "Este corect"
 
-#: src/screens/StarterPack/Wizard/index.tsx:435
+#: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Sunteți doar dvs. acum! Adăugați mai multe persoane la pachetul dvs. de pornire căutând mai sus."
 
@@ -4610,11 +4610,11 @@ msgstr "Aflați mai multe despre moderarea aplicată acestui conținut."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:149
 msgid "Learn more about these changes and how to share your thoughts with us by <0>reading our blog post.</0>"
-msgstr ""
+msgstr "Aflați mai multe despre aceste modificări și cum să vă împărtășiți gândurile cu noi până la <0>citind postarea noastră pe blog.</0>"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:89
 msgid "Learn more about these changes and how to share your thoughts with us by reading our blog post."
-msgstr ""
+msgstr "Aflați mai multe despre aceste modificări și cum să vă împărtășiți gândurile cu noi citind postarea noastră pe blog."
 
 #: src/components/moderation/PostHider.tsx:110
 #: src/components/moderation/ScreenHider.tsx:127
@@ -5009,7 +5009,7 @@ msgstr "Meniu"
 msgid "Message {0}"
 msgstr "Trimiteți mesaj lui {0}"
 
-#: src/components/dms/MessageContextMenu.tsx:82
+#: src/components/dms/MessageContextMenu.tsx:77
 msgctxt "toast"
 msgid "Message deleted"
 msgstr "Mesaj șters"
@@ -5018,7 +5018,7 @@ msgstr "Mesaj șters"
 msgid "Message deleted"
 msgstr "Mesaj șters"
 
-#: src/components/dms/MessageContextMenu.tsx:130
+#: src/components/dms/MessageContextMenu.tsx:125
 msgid "Message from @{0}: {1}"
 msgstr "Mesaj de la @{0}: {1}"
 
@@ -5035,7 +5035,7 @@ msgstr "Câmp introducere mesaj"
 msgid "Message is too long"
 msgstr "Mesajul este prea lung"
 
-#: src/components/dms/MessageContextMenu.tsx:128
+#: src/components/dms/MessageContextMenu.tsx:123
 msgid "Message options"
 msgstr "Opțiuni mesaj"
 
@@ -5123,7 +5123,7 @@ msgstr "Instrumente de moderare"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Moderatorul a decis să seteze un avertisment general asupra acestui conținutului."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:731
+#: src/view/com/post-thread/PostThreadItem.tsx:727
 msgid "More"
 msgstr "Mai multe"
 
@@ -5167,8 +5167,8 @@ msgstr "Dezactivare sunet"
 msgid "Mute {tag}"
 msgstr "Amuțiți {tag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:625
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:631
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:627
 #: src/view/com/profile/ProfileMenu.tsx:363
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "Mute account"
@@ -5219,13 +5219,13 @@ msgstr "Amuțiți acest cuvânt doar în etichete"
 msgid "Mute this word until you unmute it"
 msgstr "Amuțiți acest cuvânt până îl dezamuțiți"
 
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:505
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:509
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:513
 msgid "Mute thread"
 msgstr "Amuțire fir"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:523
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:525
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:519
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:521
 msgid "Mute words & tags"
 msgstr "Amuțire cuvinte & etichete"
 
@@ -5455,10 +5455,10 @@ msgstr "Știri"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:187
-#: src/screens/StarterPack/Wizard/index.tsx:191
-#: src/screens/StarterPack/Wizard/index.tsx:341
-#: src/screens/StarterPack/Wizard/index.tsx:348
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:197
+#: src/screens/StarterPack/Wizard/index.tsx:376
+#: src/screens/StarterPack/Wizard/index.tsx:383
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:267
 msgid "Next"
@@ -5716,8 +5716,8 @@ msgid "OK"
 msgstr "OK"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:667
-#: src/view/com/post-thread/PostThreadItem.tsx:985
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:668
+#: src/view/com/post-thread/PostThreadItem.tsx:983
 msgid "Okay"
 msgstr "Okay"
 
@@ -6008,7 +6008,7 @@ msgstr "Altul..."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:50
 msgid "Our blog post"
-msgstr ""
+msgstr "Postarea noastră de pe blog"
 
 #: src/components/dms/ReportDialog.tsx:348
 msgid "Our moderation team has received your report."
@@ -6030,7 +6030,7 @@ msgstr "Pagina N-a Fost Găsită"
 #: src/screens/Login/LoginForm.tsx:228
 #: src/screens/Settings/AccountSettings.tsx:119
 #: src/screens/Settings/AccountSettings.tsx:123
-#: src/screens/Signup/StepInfo/index.tsx:228
+#: src/screens/Signup/StepInfo/index.tsx:232
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
@@ -6119,8 +6119,8 @@ msgstr "Fixare la acasă"
 msgid "Pin to Home"
 msgstr "Fixare la Acasă"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:420
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:427
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:416
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:423
 msgid "Pin to your profile"
 msgstr "Fixați la profilul dvs."
 
@@ -6184,12 +6184,12 @@ msgstr "Vă rugăm să adăugați orice etichete de avertizare de conținut care
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "Vă rugăm să verificați inbox-ul de e-mail pentru instrucțiuni suplimentare. Este posibil să dureze un minut sau două până ajunge."
 
-#: src/screens/Signup/state.ts:289
+#: src/screens/Signup/state.ts:286
 msgid "Please choose your handle."
 msgstr "Vă rugăm să vă alegeți identificatorul."
 
-#: src/screens/Signup/state.ts:281
-#: src/screens/Signup/StepInfo/index.tsx:120
+#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/StepInfo/index.tsx:123
 msgid "Please choose your password."
 msgstr "Vă rugăm să vă alegeți parola."
 
@@ -6197,12 +6197,12 @@ msgstr "Vă rugăm să vă alegeți parola."
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "Vă rugăm faceți clic pe linkul din e-mailul pe care tocmai vi l-am trimis pentru a vă verifica noua adresă de e-mail. Acesta este un pas important pentru a vă permite să vă bucurați în continuare de toate caracteristicile Bluesky."
 
-#: src/screens/Signup/state.ts:304
+#: src/screens/Signup/state.ts:301
 msgid "Please complete the verification captcha."
 msgstr "Vă rugăm să completați verificarea captcha."
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:101
-#: src/screens/Signup/StepInfo/index.tsx:109
+#: src/screens/Signup/StepInfo/index.tsx:112
 msgid "Please double-check that you have entered your email address correctly."
 msgstr "Vă rugăm să verificați din nou dacă ați introdus corect adresa de e-mail."
 
@@ -6237,7 +6237,7 @@ msgstr "Vă rugăm să introduceți un cuvânt, o etichetă sau o expresie valid
 msgid "Please enter a valid, non-temporary email address. You may need to access this email in the future."
 msgstr "Vă rugăm să introduceți o adresă de e-mail validă, ne-temporară. Este posibil să fie nevoie să accesați această adresă de e-mail în viitor."
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:257
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:259
 msgid "Please enter the code we sent to <0>{0}</0> below."
 msgstr "Vă rugăm să introduceți mai jos codul pe care l-am trimis către <0>{0}</0>."
 
@@ -6245,12 +6245,12 @@ msgstr "Vă rugăm să introduceți mai jos codul pe care l-am trimis către <0>
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "Vă rugăm să introduceți codul de securitate pe care l-am trimis la adresa dvs. de e-mail anterioară."
 
-#: src/screens/Signup/state.ts:265
-#: src/screens/Signup/StepInfo/index.tsx:91
+#: src/screens/Signup/state.ts:262
+#: src/screens/Signup/StepInfo/index.tsx:94
 msgid "Please enter your email."
 msgstr "Vă rugăm să introduceți adresa dvs. de e-mail."
 
-#: src/screens/Signup/StepInfo/index.tsx:84
+#: src/screens/Signup/StepInfo/index.tsx:87
 msgid "Please enter your invite code."
 msgstr "Vă rugăm să introduceți codul de invitație."
 
@@ -6281,7 +6281,7 @@ msgstr "Vă rugăm să explicați de ce credeți că conversațiile dvs. au fost
 #: src/components/FocusScope/index.tsx:93
 #: src/components/FocusScope/index.tsx:117
 msgid "Please go back, or activate this element to return to the start of the active content."
-msgstr ""
+msgstr "Vă rugăm să reveniți, sau să activați acest element pentru a reveni la începutul conținutului activ."
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:98
 msgid "Please provide any additional details you feel moderators may need in order to properly assess your Age Assurance status."
@@ -6353,7 +6353,7 @@ msgstr "Postare de {0}"
 msgid "Post by @{0}"
 msgstr "Postare de @{0}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:183
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:179
 msgctxt "toast"
 msgid "Post deleted"
 msgstr "Postare ștearsă"
@@ -6605,11 +6605,11 @@ msgstr "Notificări pentru citate"
 msgid "Quote post"
 msgstr "Citați postarea"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:308
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:304
 msgid "Quote post was re-attached"
 msgstr "Postarea citat a fost reatașată"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:307
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:303
 msgid "Quote post was successfully detached"
 msgstr "Postarea citat a fost detașată cu succes"
 
@@ -6647,8 +6647,8 @@ msgstr "Aleatoriu (adică „Ruleta Postărilor”)"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "Limita ratei a fost depășită – ați încercat să vă modificați identificatorul de prea multe ori într-o perioadă scurtă. Vă rugăm să așteptați un minut înainte de a încerca din nou."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:585
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:595
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:581
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:591
 msgid "Re-attach quote"
 msgstr "Reatașați citatul"
 
@@ -6683,7 +6683,7 @@ msgstr "Citiți mai multe răspunsuri"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:112
 msgid "Read our blog post"
-msgstr ""
+msgstr "Citiți postarea noastră de pe blog"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Read the Bluesky blog"
@@ -6968,16 +6968,16 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "Răspuns la dvs."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:339
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:335
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr "Vizibilitatea răspunsului actualizată"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:338
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:334
 msgid "Reply was successfully hidden"
 msgstr "Răspunsul a fost ascuns cu succes"
 
-#: src/components/dms/MessageContextMenu.tsx:171
+#: src/components/dms/MessageContextMenu.tsx:166
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -7011,12 +7011,12 @@ msgstr "Raportați fluxul"
 msgid "Report list"
 msgstr "Raportare listă"
 
-#: src/components/dms/MessageContextMenu.tsx:169
+#: src/components/dms/MessageContextMenu.tsx:164
 msgid "Report message"
 msgstr "Raportare mesaj"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:651
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:653
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:647
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:649
 msgid "Report post"
 msgstr "Raportare postare"
 
@@ -7141,7 +7141,7 @@ msgstr "Solicitați text alternativ înainte de a posta"
 msgid "Require an email code to sign in to your account."
 msgstr "Solicitați un cod de e-mail pentru a vă conecta la contul dvs."
 
-#: src/screens/Signup/StepInfo/index.tsx:177
+#: src/screens/Signup/StepInfo/index.tsx:181
 msgid "Required for this provider"
 msgstr "Necesar pentru acest furnizor"
 
@@ -7242,7 +7242,7 @@ msgstr "Revine la acasă"
 msgid "Returns to previous page"
 msgstr "Revine la pagina anterioară"
 
-#: src/screens/StarterPack/Wizard/index.tsx:287
+#: src/screens/StarterPack/Wizard/index.tsx:304
 msgid "Returns to the previous step"
 msgstr "Revine la pasul anterior"
 
@@ -7369,7 +7369,7 @@ msgstr "Căutați „{query}”"
 msgid "Search for \"{searchText}\""
 msgstr "Căutați „{searchText}”"
 
-#: src/screens/StarterPack/Wizard/index.tsx:474
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Căutați fluxuri pe care doriți să le sugerați altora."
 
@@ -7467,7 +7467,7 @@ msgstr "Glisor căutare. Folosiți tastele săgeți pentru a căuta înainte și
 #. Accessibility label for a username suggestion in the account creation flow
 #: src/screens/Signup/StepHandle/HandleSuggestions.tsx:42
 msgid "Select {0}"
-msgstr ""
+msgstr "Selectare {0}"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -7575,7 +7575,7 @@ msgstr "Selectați ce limbă să utilizați pentru interfața de utilizator a ap
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "Selectați limbile pe care doriți ca fluxurile dvs. abonate să le includă. Dacă nu selectați nimic, toate limbile vor fi afișate."
 
-#: src/screens/Signup/StepInfo/index.tsx:270
+#: src/screens/Signup/StepInfo/index.tsx:274
 msgid "Select your date of birth"
 msgstr "Selectați-vă data de naștere"
 
@@ -7602,7 +7602,7 @@ msgstr "Trimite un web site frumos!"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:181
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:300
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:302
 #: src/view/com/modals/DeleteAccount.tsx:145
 msgid "Send email"
 msgstr "Trimitere e-mail"
@@ -7621,7 +7621,7 @@ msgstr "Trimiteți feedback"
 msgid "Send message"
 msgstr "Trimitere mesaj"
 
-#: src/components/PostControls/ShareMenu/RecentChats.tsx:111
+#: src/components/PostControls/ShareMenu/RecentChats.tsx:123
 msgid "Send post to {name}"
 msgstr "Trimitere postare către {name}"
 
@@ -7644,7 +7644,7 @@ msgstr "Trimitere raport către {0}"
 msgid "Send report to {title}"
 msgstr "Trimitere raport către {title}"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:293
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:295
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:123
 msgid "Send verification email"
@@ -7864,8 +7864,8 @@ msgstr "Afișare opțiuni de personalizare"
 msgid "Show hidden replies"
 msgstr "Afișați răspunsurile ascunse"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:483
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:485
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:479
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:481
 msgid "Show less like this"
 msgstr "Afișați mai puține asemănătoare"
 
@@ -7877,8 +7877,8 @@ msgstr "Afișați lista oricum"
 msgid "Show More"
 msgstr "Afișați mai multe"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:475
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:477
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:471
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:473
 msgid "Show more like this"
 msgstr "Afișați mai multe asemănătoare"
 
@@ -7918,8 +7918,8 @@ msgstr "Afișați răspunsurile ca fire"
 msgid "Show replies by people you follow before all other replies"
 msgstr "Afișați răspunsurile persoanelor pe care le urmăriți înaintea tuturor celorlalte răspunsuri"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:559
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:569
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:555
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:565
 msgid "Show reply for everyone"
 msgstr "Afișați răspunsul pentru toată lumea"
 
@@ -7941,8 +7941,8 @@ msgstr "Afișare avertisment"
 msgid "Show warning and filter from feeds"
 msgstr "Afișează avertismente și filtrează din fluxuri"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:608
-#: src/view/com/post-thread/PostThreadItem.tsx:926
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:609
+#: src/view/com/post-thread/PostThreadItem.tsx:924
 msgid "Shows information about when this post was created"
 msgstr "Afișează informații despre când a fost creată această postare"
 
@@ -7999,8 +7999,8 @@ msgstr "Conectați-vă la un cont care nu este listat"
 msgid "Sign in to Bluesky or create a new account"
 msgstr "Conectați-vă la Bluesky sau creați un cont nou"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:463
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:457
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:459
 msgid "Sign in to view post"
 msgstr "Conectați-vă pentru a vizualiza postarea"
 
@@ -8040,7 +8040,7 @@ msgid "Similar accounts"
 msgstr "Conturi similare"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:201
 msgid "Skip"
 msgstr "Omitere"
 
@@ -8161,7 +8161,7 @@ msgstr "Spam; mențiuni sau răspunsuri excesive"
 msgid "Sports"
 msgstr "Sport"
 
-#: src/components/PostControls/ShareMenu/RecentChats.tsx:196
+#: src/components/PostControls/ShareMenu/RecentChats.tsx:208
 msgid "Start a conversation, and it will appear here."
 msgstr "Începeți o conversație și ea va apărea aici."
 
@@ -8185,7 +8185,7 @@ msgstr "Începeți conversația cu {displayName}"
 
 #: src/Navigation.tsx:578
 #: src/Navigation.tsx:583
-#: src/screens/StarterPack/Wizard/index.tsx:186
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Starter Pack"
 msgstr "Pachet de Pornire"
 
@@ -8369,7 +8369,7 @@ msgstr "Atingeți pentru mai multe informații"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:164
 msgid "Tap to acknowledge that you understand and agree to these updates and continue using Bluesky"
-msgstr ""
+msgstr "Atingeți pentru a confirma că înțelegeți și sunteți de acord cu aceste actualizări și pentru a continua să utilizați Bluesky"
 
 #: src/components/ContextMenu/Backdrop.ios.tsx:54
 #: src/components/ContextMenu/Backdrop.ios.tsx:80
@@ -8470,14 +8470,14 @@ msgstr "Acesta conține următoarele:"
 #: src/screens/StarterPack/StarterPackScreen.tsx:111
 #: src/screens/StarterPack/StarterPackScreen.tsx:155
 #: src/screens/StarterPack/StarterPackScreen.tsx:156
-#: src/screens/StarterPack/Wizard/index.tsx:104
-#: src/screens/StarterPack/Wizard/index.tsx:114
+#: src/screens/StarterPack/Wizard/index.tsx:110
+#: src/screens/StarterPack/Wizard/index.tsx:120
 msgid "That starter pack could not be found."
 msgstr "Acest pachet de pornire nu a putut fi găsit."
 
 #: src/screens/Signup/StepHandle/index.tsx:81
 msgid "That username is already taken"
-msgstr ""
+msgstr "Acel nume de utilizator este deja luat"
 
 #: src/view/com/post-thread/PostQuotes.tsx:132
 msgid "That's all, folks!"
@@ -8617,7 +8617,7 @@ msgstr "A apărut o problemă la contactarea serverului, vă rugăm să vă veri
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "A apărut o problemă la preluarea notificărilor. Atingeți aici pentru a încerca din nou."
 
-#: src/screens/Search/Explore.tsx:990
+#: src/screens/Search/Explore.tsx:986
 #: src/view/com/posts/PostFeed.tsx:701
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "A apărut o problemă la preluarea postărilor. Atingeți aici pentru a încerca din nou."
@@ -8654,9 +8654,9 @@ msgstr "A apărut o problemă la trimiterea raportului dvs. Vă rugăm să vă v
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
 msgstr "A apărut o problemă la actualizarea fluxurilor dvs., vă rugăm să vă verificați conexiunea la internet și să încercați din nou."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:365
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:378
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:388
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:361
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:374
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:132
@@ -8839,8 +8839,8 @@ msgstr "Această listă este goală."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Acest serviciu de moderare nu este disponibil. Consultați mai jos pentru mai multe detalii. Dacă problema persistă, contactați-ne."
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:648
-#: src/view/com/post-thread/PostThreadItem.tsx:966
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:649
+#: src/view/com/post-thread/PostThreadItem.tsx:964
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Această postare pretinde că a fost creată pe <0>{0}</0>, dar a fost văzută prima dată de Bluesky pe <1>{1}</1>."
 
@@ -8856,7 +8856,7 @@ msgstr "Această postare a fost ștearsă."
 msgid "This post is only visible to logged-in users."
 msgstr "Această postare este vizibilă numai pentru utilizatorii conectați."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:709
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:705
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Această postare va fi ascunsă de fluxuri și fire. Acest lucru nu poate fi anulat."
 
@@ -8868,7 +8868,7 @@ msgstr "Autorul acestei postări a dezactivat postările citate."
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Acest profil este vizibil numai pentru utilizatorii conectați. Nu va fi vizibil pentru persoanele care nu sunt conectate."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:744
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:740
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "Acest răspuns va fi sortat într-o secțiune ascunsă în partea de jos a firului dvs. și va amuții notificările pentru răspunsurile ulterioare - atât pentru dvs., cât și pentru ceilalți."
 
@@ -8929,7 +8929,7 @@ msgstr "Aceasta va șterge „{0}” din cuvintele dvs. amuțite. Îl puteți ad
 msgid "This will remove @{0} from the quick access list."
 msgstr "Aceasta va elimina @{0} din lista de acces rapid."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:734
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:730
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Aceasta va elimina postarea dvs. din această postare citat pentru toți utilizatorii și o va înlocui cu un substituent."
 
@@ -9019,14 +9019,14 @@ msgstr "Răspunsurile de top primele"
 msgid "Topic"
 msgstr "Subiect"
 
-#: src/components/dms/MessageContextMenu.tsx:142
-#: src/components/dms/MessageContextMenu.tsx:144
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:570
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:573
-#: src/view/com/post-thread/PostThreadItem.tsx:888
-#: src/view/com/post-thread/PostThreadItem.tsx:891
+#: src/components/dms/MessageContextMenu.tsx:137
+#: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:440
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:442
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:571
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:574
+#: src/view/com/post-thread/PostThreadItem.tsx:886
+#: src/view/com/post-thread/PostThreadItem.tsx:889
 msgid "Translate"
 msgstr "Traducere"
 
@@ -9195,8 +9195,8 @@ msgstr "Dezamuțire"
 msgid "Unmute {tag}"
 msgstr "Dezamuțiți {tag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:624
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:626
 #: src/view/com/profile/ProfileMenu.tsx:362
 #: src/view/com/profile/ProfileMenu.tsx:368
 msgid "Unmute account"
@@ -9210,8 +9210,8 @@ msgstr "Dezamuțire conversație"
 msgid "Unmute list"
 msgstr "Dezamuțire listă"
 
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:505
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:509
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:513
 msgid "Unmute thread"
 msgstr "Dezamuțire fir"
 
@@ -9237,8 +9237,8 @@ msgstr "Anulați Fixarea Fluxului"
 msgid "Unpin from home"
 msgstr "Anulați fixarea de la acasă"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:419
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:426
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:415
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:422
 msgid "Unpin from profile"
 msgstr "Anulați fixarea de la profil"
 
@@ -9316,12 +9316,12 @@ msgstr "Actualizare la {domain}"
 msgid "Update your email"
 msgstr "Actualizați-vă e-mailul"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:312
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:308
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr "Actualizarea atașamentului din citat a eșuat"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:343
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:339
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "Actualizarea vizibilității răspunsului a eșuat"
@@ -9459,15 +9459,15 @@ msgstr "Listă de utilizatori actualizată"
 
 #: src/screens/Signup/StepHandle/index.tsx:235
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
-msgstr ""
+msgstr "Numele de utilizator nu poate fi mai lung decât {MAX_SERVICE_HANDLE_LENGTH, plural, one {} few {# caractere}other {# de caractere}}"
 
 #: src/screens/Signup/StepHandle/index.tsx:219
 msgid "Username cannot begin or end with a hyphen"
-msgstr ""
+msgstr "Numele de utilizator nu poate începe sau termina cu o cratimă"
 
 #: src/screens/Signup/StepHandle/index.tsx:223
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
-msgstr ""
+msgstr "Numele de utilizator trebuie să conțină doar litere (a-z), cifre și cratime"
 
 #: src/screens/Login/LoginForm.tsx:201
 msgid "Username or email address"
@@ -9530,8 +9530,11 @@ msgstr "Verificare cont"
 msgid "Verify again"
 msgstr "Verificați din nou"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:348
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:359
+#. Button text and accessibility label for action to verify the user's email address using the code entered
+#. Button text and accessibility label for action to verify the user's email address using the code entered
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:351
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:367
+msgctxt "action"
 msgid "Verify code"
 msgstr "Verificați codul"
 
@@ -9540,6 +9543,7 @@ msgstr "Verificați codul"
 msgid "Verify DNS Record"
 msgstr "Verificați înregistrarea DNS"
 
+#. Dialog title when a user is verifying their email address by entering a code they have been sent
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:214
 msgid "Verify email code"
 msgstr "Verificați codul de e-mail"
@@ -9833,7 +9837,7 @@ msgstr "Am rămas fără postări de la urmăritorii dvs. Iată cele mai recente
 msgid "We recommend selecting at least two interests."
 msgstr "Vă recomandăm să selectați cel puțin două interese."
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:238
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:240
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Am trimis un e-mail la <0>{0}</0> care conține un link. Faceți clic pe el pentru a finaliza procesul de verificare a e-mailului."
 
@@ -9861,7 +9865,7 @@ msgstr "Nu ne-am putut conecta. Vă rugăm să încercați din nou să continua�
 msgid "We will let you know when your account is ready."
 msgstr "Vă vom anunța când contul dvs. este gata."
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:247
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:249
 msgid "We'll send an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Vom trimite un e-mail la <0>{0}</0> care conține un link. Faceți clic pe el pentru a finaliza procesul de verificare a e-mailului."
 
@@ -9870,12 +9874,12 @@ msgid "We'll use this to help customize your experience."
 msgstr "Vom folosi acest lucru pentru a ajuta să vă personalizați experiența."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:139
-msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 13th, 2025."
-msgstr ""
+msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 15th, 2025."
+msgstr "De asemenea, actualizăm <0>Regulile Comunității</0>, și dorim să vă auzim părerea! Aceste reguli noi vor intra în vigoare pe 15 Octombrie 2025."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:82
-msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 13th, 2025."
-msgstr ""
+msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025."
+msgstr "De asemenea, actualizăm Regulile Comunității, și dorim să vă auzim părerea! Aceste reguli noi vor intra în vigoare pe 15 Octombrie 2025."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
 msgid "We're confirming your age assurance status with our servers. This should only take a few seconds."
@@ -9924,20 +9928,20 @@ msgid "We're sorry! You can only subscribe to twenty labelers, and you've reache
 msgstr "Ne pare rău! Vă puteți abona doar la douăzeci de etichete și ați atins limita de douăzeci."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:122
-msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 12th, 2025."
-msgstr ""
+msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 15th, 2025."
+msgstr "Actualizăm <0>Termenii de Serviciu</0>, <1>Politica de Confidențialitate</1> și <2>Politica Privind Drepturile de Autor</2>, care intră în vigoare pe 15 Septembrie 2025."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:63
 msgid "We're updating our policies"
-msgstr ""
+msgstr "Ne actualizăm politicile"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:76
-msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 12th, 2025."
-msgstr ""
+msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025."
+msgstr "Actualizăm Termenii de Serviciu, Politica de Confidențialitate și Politica Privind Drepturile de Autor, care intră în vigoare pe 15 Septembrie 2025."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:61
-msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 12th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 13th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
-msgstr ""
+msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
+msgstr "Actualizăm Termenii de Serviciu, Politica de Confidențialitate și Politica Privind Drepturile de Autor, care intră în vigoare pe 15 Septembrie 2025. De asemenea, actualizăm Regulile Comunității, și dorim să vă auzim părerea! Aceste reguli noi vor intra în vigoare pe 15 Octombrie 2025. Aflați mai multe despre aceste modificări și cum să vă împărtășiți gândurile cu noi citind postarea noastră pe blog."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
 msgid "We've confirmed your age assurance status. You can now close this dialog."
@@ -10079,11 +10083,11 @@ msgstr "Da, dezactivare"
 msgid "Yes, delete this starter pack"
 msgstr "Da, ștergeți acest pachet de pornire"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:737
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:733
 msgid "Yes, detach"
 msgstr "Da, detașare"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:747
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:743
 msgid "Yes, hide"
 msgstr "Da, ascundere"
 
@@ -10100,8 +10104,8 @@ msgid "You"
 msgstr "Dvs."
 
 #: src/screens/Signup/StepInfo/Policies.tsx:23
-msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 13th."
-msgstr ""
+msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 15th."
+msgstr "De asemenea, sunteți de acord cu <0>Regulile Comunității Bluesky</0>. O <1>versiune actualizată a Regulilor Comunității</1> va intra în vigoare pe 15 Octombrie."
 
 #: src/components/verification/VerifierDialog.tsx:59
 msgid "You are a trusted verifier"
@@ -10394,11 +10398,11 @@ msgstr "Veți fi deconectat de la toate conturile dvs."
 msgid "You will no longer receive notifications for {0}"
 msgstr "Nu veți mai primi notificări pentru {0}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:212
 msgid "You will no longer receive notifications for this thread"
 msgstr "Nu veți mai primi notificări pentru acest fir"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:212
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:208
 msgid "You will now receive notifications for this thread"
 msgstr "Acum veți primi notificări pentru acest fir"
 
@@ -10466,7 +10470,7 @@ msgstr "Ați găsit niște persoane pe care să le urmăriți"
 
 #: src/components/FocusScope/index.tsx:114
 msgid "You've reached the end of the active content."
-msgstr ""
+msgstr "Ați ajuns la sfârșitul conținutului activ."
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:44
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -10478,7 +10482,7 @@ msgstr "Ați atins numărul maxim de solicitări permise. Vă rugăm să încerc
 
 #: src/components/FocusScope/index.tsx:90
 msgid "You've reached the start of the active content."
-msgstr ""
+msgstr "Ați ajuns la începutul conținutului activ."
 
 #: src/view/com/composer/state/video.ts:423
 msgid "You've reached your daily limit for video uploads (too many bytes)"
@@ -10520,7 +10524,7 @@ msgstr "Contul dvs. a fost găsit încălcând <0>Termenii de Serviciu a Bluesky
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr "Contestația dvs. a fost trimisă. Dacă contestația dvs. este acceptată, veți primi un e-mail."
 
-#: src/screens/Signup/StepInfo/index.tsx:257
+#: src/screens/Signup/StepInfo/index.tsx:261
 msgid "Your birth date"
 msgstr "Data nașterii"
 
@@ -10547,8 +10551,8 @@ msgid "Your email"
 msgstr "E-mailul dvs."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
-#: src/screens/Signup/state.ts:273
-#: src/screens/Signup/StepInfo/index.tsx:98
+#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/StepInfo/index.tsx:101
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
 msgstr "E-mailul dvs. pare a fi nevalid."
@@ -10598,7 +10602,7 @@ msgstr "Cuvintele dvs. amuțite"
 msgid "Your password has been changed successfully!"
 msgstr "Parola dvs. a fost modificată cu succes!"
 
-#: src/screens/Signup/StepInfo/index.tsx:127
+#: src/screens/Signup/StepInfo/index.tsx:130
 msgid "Your password must be at least 8 characters long."
 msgstr "Parola dvs. trebuie să aibă cel puțin 8 caractere."
 

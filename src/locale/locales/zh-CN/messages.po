@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-07 22:21\n"
+"PO-Revision-Date: 2025-08-12 01:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -101,7 +101,7 @@ msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:468
-#: src/view/com/post-thread/PostThreadItem.tsx:541
+#: src/view/com/post-thread/PostThreadItem.tsx:537
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {喜欢} other {喜欢}}"
 
@@ -110,12 +110,12 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {帖文} other {帖文}}"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:452
-#: src/view/com/post-thread/PostThreadItem.tsx:525
+#: src/view/com/post-thread/PostThreadItem.tsx:521
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {引用} other {引用}}"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:434
-#: src/view/com/post-thread/PostThreadItem.tsx:507
+#: src/view/com/post-thread/PostThreadItem.tsx:503
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {转发} other {转发}}"
 
@@ -152,7 +152,7 @@ msgstr "{0} 不是有效的 URL 地址"
 
 #: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
-msgstr ""
+msgstr "{0} 已被占用"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:223
 msgid "{0} joined this week"
@@ -221,7 +221,7 @@ msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# 条未读} other {# 条未读}}"
 
 #: src/lib/generate-starterpack.ts:111
-#: src/screens/StarterPack/Wizard/index.tsx:178
+#: src/screens/StarterPack/Wizard/index.tsx:184
 msgid "{displayName}'s Starter Pack"
 msgstr "{displayName}的新手包"
 
@@ -450,12 +450,12 @@ msgstr "{userName} 的认证"
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:449
+#: src/screens/StarterPack/Wizard/index.tsx:488
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}、</0><1>{1}</1> 及{2, plural, one {其他 # } other {其他 # }}人已包含在你的新手包中"
 
-#: src/screens/StarterPack/Wizard/index.tsx:502
+#: src/screens/StarterPack/Wizard/index.tsx:541
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}、</0><1>{1}</1> 及{2, plural, one {其他 # } other {其他 # }}人已包含在你的新手包中"
@@ -468,11 +468,11 @@ msgstr "<0>{0}</0> {1, plural, one {关注者} other {关注者}}"
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {正在关注} other {正在关注}}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:490
+#: src/screens/StarterPack/Wizard/index.tsx:529
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr "<0>{0}</0>及<1></1><2>{1} </2>已包含在你的新手包中"
 
-#: src/screens/StarterPack/Wizard/index.tsx:483
+#: src/screens/StarterPack/Wizard/index.tsx:522
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> 已包含在你的新手包中"
 
@@ -488,7 +488,7 @@ msgstr "<0>{date}</0> {time}"
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "请<0>登录</0><1>或</1><2>创建账户</2><3></3><4>以便于使用 Bluesky 的搜索功能寻找新闻、体育、政治等你所感兴趣的新鲜事。</4>"
 
-#: src/screens/StarterPack/Wizard/index.tsx:440
+#: src/screens/StarterPack/Wizard/index.tsx:479
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>你</0> 及<1> </1><2>{0} </2>已包含在你的新手包中"
 
@@ -564,7 +564,7 @@ msgstr "无障碍设置"
 msgid "Account"
 msgstr "账户"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:361
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:357
 #: src/screens/Messages/components/RequestButtons.tsx:91
 #: src/view/com/profile/ProfileMenu.tsx:158
 msgctxt "toast"
@@ -576,7 +576,7 @@ msgctxt "toast"
 msgid "Account followed"
 msgstr "已关注该账户"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:380
 #: src/view/com/profile/ProfileMenu.tsx:134
 msgctxt "toast"
 msgid "Account muted"
@@ -610,7 +610,7 @@ msgctxt "toast"
 msgid "Account unfollowed"
 msgstr "已取消关注该账户"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:374
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:370
 #: src/view/com/profile/ProfileMenu.tsx:124
 msgctxt "toast"
 msgid "Account unmuted"
@@ -636,7 +636,7 @@ msgstr "动态提醒"
 msgid "Add"
 msgstr "添加"
 
-#: src/screens/StarterPack/Wizard/index.tsx:551
+#: src/screens/StarterPack/Wizard/index.tsx:572
 msgid "Add {0} more to continue"
 msgstr "再添加至少 {0} 个以继续"
 
@@ -736,7 +736,7 @@ msgstr "添加反应"
 msgid "Add recommended feeds"
 msgstr "添加推荐的动态源"
 
-#: src/screens/StarterPack/Wizard/index.tsx:471
+#: src/screens/StarterPack/Wizard/index.tsx:510
 msgid "Add some feeds to your starter pack!"
 msgstr "添加一些推荐的动态源到你的新手包里面！"
 
@@ -1121,15 +1121,15 @@ msgstr "使用默认推荐的动态源"
 msgid "Apply Pull Request"
 msgstr "应用提交变更"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:637
-#: src/view/com/post-thread/PostThreadItem.tsx:955
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:638
+#: src/view/com/post-thread/PostThreadItem.tsx:953
 msgid "Archived from {0}"
 msgstr "自 {0} 起被归档"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:606
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:645
-#: src/view/com/post-thread/PostThreadItem.tsx:924
-#: src/view/com/post-thread/PostThreadItem.tsx:963
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:607
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:646
+#: src/view/com/post-thread/PostThreadItem.tsx:922
+#: src/view/com/post-thread/PostThreadItem.tsx:961
 msgid "Archived post"
 msgstr "已归档帖文"
 
@@ -1137,7 +1137,7 @@ msgstr "已归档帖文"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "你确定要删除此应用密码“{0}”吗？"
 
-#: src/components/dms/MessageContextMenu.tsx:188
+#: src/components/dms/MessageContextMenu.tsx:183
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "你确定要删除这条私信吗？此操作将仅为你删除私信，而不会为其他参与者删除。"
 
@@ -1186,8 +1186,8 @@ msgstr "艺术"
 msgid "Artistic or non-erotic nudity."
 msgstr "带有艺术性或非色情的裸露。"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:495
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:497
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:491
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:493
 msgid "Assign topic for algo"
 msgstr "为算法指定主题"
 
@@ -1204,7 +1204,7 @@ msgstr "自动播放视频及 GIF"
 #. Shown next to an available username suggestion in the account creation flow
 #: src/screens/Signup/StepHandle/HandleSuggestions.tsx:72
 msgid "Available"
-msgstr ""
+msgstr "可用"
 
 #: src/components/dms/MessagesListHeader.tsx:84
 #: src/components/moderation/LabelsOnMeDialog.tsx:315
@@ -1221,7 +1221,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:158
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:286
+#: src/screens/StarterPack/Wizard/index.tsx:303
 msgid "Back"
 msgstr "返回"
 
@@ -1275,7 +1275,7 @@ msgstr "请填写以下栏位，以开始年龄验证流程。"
 msgid "Birthday"
 msgstr "生日"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:757
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:753
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:320
 #: src/view/com/profile/ProfileMenu.tsx:473
 msgid "Block"
@@ -1283,8 +1283,8 @@ msgstr "屏蔽"
 
 #: src/components/dms/ConvoMenu.tsx:247
 #: src/components/dms/ConvoMenu.tsx:250
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:642
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:644
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:638
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:640
 #: src/screens/Messages/components/RequestButtons.tsx:144
 #: src/screens/Messages/components/RequestButtons.tsx:146
 #: src/view/com/profile/ProfileMenu.tsx:384
@@ -1292,7 +1292,7 @@ msgstr "屏蔽"
 msgid "Block account"
 msgstr "屏蔽账户"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:752
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:748
 #: src/view/com/profile/ProfileMenu.tsx:456
 msgid "Block Account?"
 msgstr "要屏蔽账户吗？"
@@ -1343,7 +1343,7 @@ msgstr "已屏蔽账户"
 msgid "Blocked Accounts"
 msgstr "已屏蔽账户"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:754
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:750
 #: src/view/com/profile/ProfileMenu.tsx:468
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "已被屏蔽的账户无法在你的帖文下回复、提及你或以其他方式与你互动。"
@@ -1377,8 +1377,8 @@ msgstr "博客"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:662
-#: src/view/com/post-thread/PostThreadItem.tsx:980
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:663
+#: src/view/com/post-thread/PostThreadItem.tsx:978
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky 无法确认帖文发布时间的真实性。"
 
@@ -1494,7 +1494,7 @@ msgstr "商务"
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:683
 #: src/screens/Search/components/StarterPackCard.tsx:106
-#: src/screens/Search/Explore.tsx:934
+#: src/screens/Search/Explore.tsx:930
 msgid "By {0}"
 msgstr "来自 {0}"
 
@@ -1738,7 +1738,7 @@ msgstr "请在下方输入发送到你电子邮箱的验证码："
 msgid "Choose domain verification method"
 msgstr "选择验证域名的方式"
 
-#: src/screens/StarterPack/Wizard/index.tsx:194
+#: src/screens/StarterPack/Wizard/index.tsx:200
 msgid "Choose Feeds"
 msgstr "选择动态源"
 
@@ -1746,7 +1746,7 @@ msgstr "选择动态源"
 msgid "Choose for me"
 msgstr "帮我选择"
 
-#: src/screens/StarterPack/Wizard/index.tsx:190
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose People"
 msgstr "选择用户"
 
@@ -1766,7 +1766,7 @@ msgstr "选择你的服务提供商"
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "自定义专属于你的时间线！由社群打造的动态源能帮助你找到喜欢的内容。"
 
-#: src/screens/Signup/StepInfo/index.tsx:241
+#: src/screens/Signup/StepInfo/index.tsx:245
 msgid "Choose your password"
 msgstr "设置你的密码"
 
@@ -1799,11 +1799,11 @@ msgstr "点击以了解详情"
 msgid "click here"
 msgstr "点击这里"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:371
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:383
 msgid "Click here to restart the verification process."
 msgstr "点击这里来重新开始验证流程。"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:273
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:275
 msgid "Click here to update your email"
 msgstr "点击这里来更新你的电子邮箱"
 
@@ -2155,9 +2155,9 @@ msgstr "已复制"
 msgid "Copied build version to clipboard"
 msgstr "已复制构建版本号至剪贴板"
 
-#: src/components/dms/MessageContextMenu.tsx:56
-#: src/components/PostControls/DiscoverDebug.tsx:42
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:234
+#: src/components/dms/MessageContextMenu.tsx:55
+#: src/components/PostControls/DiscoverDebug.tsx:41
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:230
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:72
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
@@ -2236,8 +2236,8 @@ msgstr "复制个人资料链接"
 msgid "Copy link to starter pack"
 msgstr "复制新手包链接"
 
-#: src/components/dms/MessageContextMenu.tsx:149
-#: src/components/dms/MessageContextMenu.tsx:152
+#: src/components/dms/MessageContextMenu.tsx:144
+#: src/components/dms/MessageContextMenu.tsx:147
 msgid "Copy message text"
 msgstr "复制私信文字"
 
@@ -2246,8 +2246,8 @@ msgstr "复制私信文字"
 msgid "Copy post at:// URI"
 msgstr "复制帖文 at:// 链接"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:454
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:448
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:450
 msgid "Copy post text"
 msgstr "复制帖文文字"
 
@@ -2419,7 +2419,7 @@ msgstr "深色模式"
 msgid "Dark theme"
 msgstr "深色模式"
 
-#: src/screens/Signup/StepInfo/index.tsx:269
+#: src/screens/Signup/StepInfo/index.tsx:273
 msgid "Date of birth"
 msgstr "出生日期"
 
@@ -2445,8 +2445,8 @@ msgstr "默认"
 msgid "Default icons"
 msgstr "默认图标"
 
-#: src/components/dms/MessageContextMenu.tsx:190
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:701
+#: src/components/dms/MessageContextMenu.tsx:185
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:697
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:599
@@ -2493,7 +2493,7 @@ msgstr "删除对话"
 msgid "Delete Conversation"
 msgstr "删除对话"
 
-#: src/components/dms/MessageContextMenu.tsx:163
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete for me"
 msgstr "仅为我删除"
 
@@ -2501,11 +2501,11 @@ msgstr "仅为我删除"
 msgid "Delete list"
 msgstr "删除列表"
 
-#: src/components/dms/MessageContextMenu.tsx:186
+#: src/components/dms/MessageContextMenu.tsx:181
 msgid "Delete message"
 msgstr "删除私信"
 
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:156
 msgid "Delete message for me"
 msgstr "仅为我删除私信"
 
@@ -2513,8 +2513,8 @@ msgstr "仅为我删除私信"
 msgid "Delete my account"
 msgstr "删除我的账户"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:682
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:684
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:678
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:680
 #: src/view/com/composer/Composer.tsx:884
 msgid "Delete post"
 msgstr "删除帖文"
@@ -2532,7 +2532,7 @@ msgstr "要删除新手包吗？"
 msgid "Delete this list?"
 msgstr "要删除此列表吗？"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:696
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:692
 msgid "Delete this post?"
 msgstr "要删除这则帖文吗？"
 
@@ -2575,12 +2575,12 @@ msgstr "简介太长，{DESCRIPTION_MAX_GRAPHEMES, plural, other {不能超过 #
 msgid "Descriptive alt text"
 msgstr "扩充描述替代文本"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:586
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:582
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:592
 msgid "Detach quote"
 msgstr "分离引用"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:732
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:728
 msgid "Detach quote post?"
 msgstr "要分离引用帖文吗？"
 
@@ -2735,7 +2735,7 @@ msgstr "不包含裸露内容。"
 msgid "Domain verified!"
 msgstr "域名已通过验证！"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:368
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:380
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
 msgstr "没有验证码或需要重新请求一个？<0>点击这里。</0>"
 
@@ -2853,8 +2853,8 @@ msgstr "每个邀请码仅可被使用一次。后续你将不定期获得新的
 #: src/screens/Settings/AccountSettings.tsx:143
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:249
 #: src/screens/StarterPack/StarterPackScreen.tsx:588
-#: src/screens/StarterPack/Wizard/index.tsx:534
-#: src/screens/StarterPack/Wizard/index.tsx:541
+#: src/screens/StarterPack/Wizard/index.tsx:319
+#: src/screens/StarterPack/Wizard/index.tsx:324
 msgid "Edit"
 msgstr "编辑"
 
@@ -2879,8 +2879,8 @@ msgstr "编辑动态源"
 msgid "Edit image"
 msgstr "编辑图片"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:663
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:676
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:659
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:672
 msgid "Edit interaction settings"
 msgstr "编辑互动选项"
 
@@ -2958,7 +2958,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr "此列表的创建者屏蔽了你，或你已屏蔽了对方。"
 
 #: src/screens/Settings/AccountSettings.tsx:64
-#: src/screens/Signup/StepInfo/index.tsx:193
+#: src/screens/Signup/StepInfo/index.tsx:197
 msgid "Email"
 msgstr "电子邮箱"
 
@@ -3088,7 +3088,7 @@ msgid "Enter a word or tag"
 msgstr "输入字词或标签"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:201
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:318
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:320
 msgid "Enter code"
 msgstr "输入验证码"
 
@@ -3117,7 +3117,7 @@ msgid "Enter your birth date"
 msgstr "输入你的出生日期"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
-#: src/screens/Signup/StepInfo/index.tsx:213
+#: src/screens/Signup/StepInfo/index.tsx:217
 msgid "Enter your email address"
 msgstr "输入你的电子邮箱地址"
 
@@ -3325,7 +3325,7 @@ msgid "Failed to accept chat"
 msgstr "无法接受私信请求"
 
 #: src/components/dms/ActionsWrapper.web.tsx:67
-#: src/components/dms/MessageContextMenu.tsx:104
+#: src/components/dms/MessageContextMenu.tsx:99
 msgid "Failed to add emoji reaction"
 msgstr "无法添加表情符号反应"
 
@@ -3341,8 +3341,8 @@ msgstr "无法创建应用密码。请重试。"
 msgid "Failed to create conversation"
 msgstr "无法创建对话"
 
-#: src/screens/StarterPack/Wizard/index.tsx:233
-#: src/screens/StarterPack/Wizard/index.tsx:241
+#: src/screens/StarterPack/Wizard/index.tsx:239
+#: src/screens/StarterPack/Wizard/index.tsx:247
 msgid "Failed to create starter pack"
 msgstr "无法创建新手包"
 
@@ -3356,11 +3356,11 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr "无法删除私信"
 
-#: src/components/dms/MessageContextMenu.tsx:84
+#: src/components/dms/MessageContextMenu.tsx:79
 msgid "Failed to delete message"
 msgstr "无法删除私信"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:203
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:199
 msgid "Failed to delete post, please try again"
 msgstr "无法删除帖文，请重试"
 
@@ -3427,7 +3427,7 @@ msgid "Failed to pin post"
 msgstr "无法固定帖文"
 
 #: src/components/dms/ActionsWrapper.web.tsx:61
-#: src/components/dms/MessageContextMenu.tsx:98
+#: src/components/dms/MessageContextMenu.tsx:93
 msgid "Failed to remove emoji reaction"
 msgstr "无法删除表情符号反应"
 
@@ -3462,7 +3462,7 @@ msgstr "无法发送电子邮件，请重试。"
 msgid "Failed to submit appeal, please try again."
 msgstr "无法提交申诉，请重试。"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:223
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:219
 msgid "Failed to toggle thread mute, please try again"
 msgstr "无法隐藏讨论串，请重试"
 
@@ -3537,8 +3537,8 @@ msgstr "动态源不可用"
 msgid "Feedback"
 msgstr "反馈"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:273
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:289
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:269
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:285
 msgctxt "toast"
 msgid "Feedback sent!"
 msgstr "已发送反馈！"
@@ -3616,7 +3616,7 @@ msgstr "寻找一些用户关注"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "在 Bluesky 寻找感兴趣的帖文、用户和动态源"
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:201
 msgid "Finish"
 msgstr "完成"
 
@@ -4053,7 +4053,7 @@ msgid "Hashtag {tag}"
 msgstr "标签 {tag}"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:198
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:315
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:317
 msgid "Have a code? <0>Click here.</0>"
 msgstr "拥有验证码？<0>点击这里。</0>"
 
@@ -4100,7 +4100,7 @@ msgstr "隐藏列表"
 #: src/components/moderation/ContentHider.tsx:203
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:134
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:712
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:708
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
@@ -4118,18 +4118,18 @@ msgstr "隐藏"
 msgid "Hide customization options"
 msgstr "隐藏自定义选项"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:543
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:549
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:539
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:545
 msgid "Hide post for me"
 msgstr "仅为我隐藏这则帖文"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:560
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:570
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:556
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:566
 msgid "Hide reply for everyone"
 msgstr "为所有人隐藏回复"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:542
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:538
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:544
 msgid "Hide reply for me"
 msgstr "仅为我隐藏回复"
 
@@ -4137,12 +4137,12 @@ msgstr "仅为我隐藏回复"
 msgid "Hide this card"
 msgstr "隐藏这张卡片"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:707
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:703
 msgid "Hide this post?"
 msgstr "要隐藏这则帖文吗？"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:707
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:742
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:703
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:738
 msgid "Hide this reply?"
 msgstr "要隐藏这则回复吗？"
 
@@ -4270,11 +4270,11 @@ msgstr "如果你删除此列表，则以后将无法恢复。"
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "若你拥有自己的域名，你可以将其用作自己的账户代码，这同时还能帮你验证身份。<0>了解详情。</0>"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:270
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:272
 msgid "If you need to update your email, <0>click here</0>."
 msgstr "如果你需要更新你的电子邮箱，请<0>点击这里</0>。"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:698
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:694
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "如果你删除这则帖文，则以后将无法恢复。"
 
@@ -4417,7 +4417,7 @@ msgstr "两步验证码无效。"
 msgid "Invalid handle. Please try a different one."
 msgstr "账户代码无效，请尝试输入另一个。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:351
+#: src/view/com/post-thread/PostThreadItem.tsx:347
 msgid "Invalid or unsupported post record"
 msgstr "帖文记录无效或不受支持"
 
@@ -4433,11 +4433,11 @@ msgstr "验证码无效"
 msgid "Invite a Friend"
 msgstr "邀请朋友"
 
-#: src/screens/Signup/StepInfo/index.tsx:163
+#: src/screens/Signup/StepInfo/index.tsx:167
 msgid "Invite code"
 msgstr "邀请码"
 
-#: src/screens/Signup/state.ts:348
+#: src/screens/Signup/state.ts:339
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "邀请码无效，请检查你输入的邀请码并重试。"
 
@@ -4461,11 +4461,11 @@ msgstr "邀请朋友关注你喜欢的动态源和用户"
 msgid "Invites, but personal"
 msgstr "以个性化的方式邀请朋友加入"
 
-#: src/screens/Signup/StepInfo/index.tsx:289
+#: src/screens/Signup/StepInfo/index.tsx:293
 msgid "It's correct"
 msgstr "这是正确的电子邮箱地址"
 
-#: src/screens/StarterPack/Wizard/index.tsx:435
+#: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "现在只有你一个！通过上面的列表将更多人添加到你的新手包里面。"
 
@@ -5009,7 +5009,7 @@ msgstr "菜单"
 msgid "Message {0}"
 msgstr "传送私信给 {0}"
 
-#: src/components/dms/MessageContextMenu.tsx:82
+#: src/components/dms/MessageContextMenu.tsx:77
 msgctxt "toast"
 msgid "Message deleted"
 msgstr "已删除私信"
@@ -5018,7 +5018,7 @@ msgstr "已删除私信"
 msgid "Message deleted"
 msgstr "已删除私信"
 
-#: src/components/dms/MessageContextMenu.tsx:130
+#: src/components/dms/MessageContextMenu.tsx:125
 msgid "Message from @{0}: {1}"
 msgstr "来自 @{0} 的私信：{1}"
 
@@ -5035,7 +5035,7 @@ msgstr "私信输入框"
 msgid "Message is too long"
 msgstr "私信过长"
 
-#: src/components/dms/MessageContextMenu.tsx:128
+#: src/components/dms/MessageContextMenu.tsx:123
 msgid "Message options"
 msgstr "私信选项"
 
@@ -5123,7 +5123,7 @@ msgstr "内容审核工具"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "内容审核服务提供方已对该内容标记一般警告。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:731
+#: src/view/com/post-thread/PostThreadItem.tsx:727
 msgid "More"
 msgstr "更多"
 
@@ -5167,8 +5167,8 @@ msgstr "隐藏"
 msgid "Mute {tag}"
 msgstr "隐藏 {tag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:625
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:631
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:627
 #: src/view/com/profile/ProfileMenu.tsx:363
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "Mute account"
@@ -5219,13 +5219,13 @@ msgstr "仅隐藏包含该字词的标签"
 msgid "Mute this word until you unmute it"
 msgstr "将这个字词隐藏，直到你取消为止"
 
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:505
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:509
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:513
 msgid "Mute thread"
 msgstr "隐藏讨论串"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:523
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:525
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:519
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:521
 msgid "Mute words & tags"
 msgstr "隐藏字词和标签"
 
@@ -5455,10 +5455,10 @@ msgstr "新闻"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:187
-#: src/screens/StarterPack/Wizard/index.tsx:191
-#: src/screens/StarterPack/Wizard/index.tsx:341
-#: src/screens/StarterPack/Wizard/index.tsx:348
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:197
+#: src/screens/StarterPack/Wizard/index.tsx:376
+#: src/screens/StarterPack/Wizard/index.tsx:383
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:267
 msgid "Next"
@@ -5716,8 +5716,8 @@ msgid "OK"
 msgstr "好的"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:667
-#: src/view/com/post-thread/PostThreadItem.tsx:985
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:668
+#: src/view/com/post-thread/PostThreadItem.tsx:983
 msgid "Okay"
 msgstr "好的"
 
@@ -6030,7 +6030,7 @@ msgstr "无法找到此页面"
 #: src/screens/Login/LoginForm.tsx:228
 #: src/screens/Settings/AccountSettings.tsx:119
 #: src/screens/Settings/AccountSettings.tsx:123
-#: src/screens/Signup/StepInfo/index.tsx:228
+#: src/screens/Signup/StepInfo/index.tsx:232
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
@@ -6119,8 +6119,8 @@ msgstr "固定到主页"
 msgid "Pin to Home"
 msgstr "固定到主页"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:420
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:427
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:416
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:423
 msgid "Pin to your profile"
 msgstr "固定到你的个人资料"
 
@@ -6184,12 +6184,12 @@ msgstr "请为你所发布的媒体内容添加适当的内容警告标签。"
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "请转到你的电子邮箱地址以继续完成验证流程，相关邮件应该会在两分钟内发送到你的电子邮箱。"
 
-#: src/screens/Signup/state.ts:289
+#: src/screens/Signup/state.ts:286
 msgid "Please choose your handle."
 msgstr "请设置你的账户代码。"
 
-#: src/screens/Signup/state.ts:281
-#: src/screens/Signup/StepInfo/index.tsx:120
+#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/StepInfo/index.tsx:123
 msgid "Please choose your password."
 msgstr "请设置你的密码。"
 
@@ -6197,12 +6197,12 @@ msgstr "请设置你的密码。"
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "请点击我们发送给你电子邮件中的链接来验证你的新电子邮箱地址。你需要先完成此步骤才能继续使用 Bluesky 的所有功能。"
 
-#: src/screens/Signup/state.ts:304
+#: src/screens/Signup/state.ts:301
 msgid "Please complete the verification captcha."
 msgstr "请完成 CAPTCHA（人机验证）。"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:101
-#: src/screens/Signup/StepInfo/index.tsx:109
+#: src/screens/Signup/StepInfo/index.tsx:112
 msgid "Please double-check that you have entered your email address correctly."
 msgstr "请再次确认你输入的电子邮箱地址是否正确。"
 
@@ -6237,7 +6237,7 @@ msgstr "请输入有效的字词或标签以进行隐藏"
 msgid "Please enter a valid, non-temporary email address. You may need to access this email in the future."
 msgstr "请输入一个有效、非临时的电子邮箱地址，你日后可能需要再次使用此电子邮箱。"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:257
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:259
 msgid "Please enter the code we sent to <0>{0}</0> below."
 msgstr "请输入我们发送到 <0>{0}</0> 的验证码。"
 
@@ -6245,12 +6245,12 @@ msgstr "请输入我们发送到 <0>{0}</0> 的验证码。"
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "请输入我们之前发送到你电子邮箱地址的验证码。"
 
-#: src/screens/Signup/state.ts:265
-#: src/screens/Signup/StepInfo/index.tsx:91
+#: src/screens/Signup/state.ts:262
+#: src/screens/Signup/StepInfo/index.tsx:94
 msgid "Please enter your email."
 msgstr "请输入你的电子邮箱地址。"
 
-#: src/screens/Signup/StepInfo/index.tsx:84
+#: src/screens/Signup/StepInfo/index.tsx:87
 msgid "Please enter your invite code."
 msgstr "请输入你的邀请码。"
 
@@ -6353,7 +6353,7 @@ msgstr "{0} 的帖文"
 msgid "Post by @{0}"
 msgstr "@{0} 的帖文"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:183
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:179
 msgctxt "toast"
 msgid "Post deleted"
 msgstr "已删除帖文"
@@ -6605,11 +6605,11 @@ msgstr "引用通知"
 msgid "Quote post"
 msgstr "引用帖文"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:308
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:304
 msgid "Quote post was re-attached"
 msgstr "已重新关联引用帖文"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:307
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:303
 msgid "Quote post was successfully detached"
 msgstr "已成功分离引用帖文"
 
@@ -6647,8 +6647,8 @@ msgstr "随机显示（又名“试试手气”）"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "超过速率限制——你在短时间内尝试修改账户代码的次数过多，请稍后再试。"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:585
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:595
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:581
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:591
 msgid "Re-attach quote"
 msgstr "重新关联引用帖文"
 
@@ -6968,16 +6968,16 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "对你进行回复"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:339
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:335
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr "已更新回复可见性"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:338
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:334
 msgid "Reply was successfully hidden"
 msgstr "已成功隐藏回复"
 
-#: src/components/dms/MessageContextMenu.tsx:171
+#: src/components/dms/MessageContextMenu.tsx:166
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -7011,12 +7011,12 @@ msgstr "举报动态源"
 msgid "Report list"
 msgstr "举报列表"
 
-#: src/components/dms/MessageContextMenu.tsx:169
+#: src/components/dms/MessageContextMenu.tsx:164
 msgid "Report message"
 msgstr "举报私信"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:651
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:653
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:647
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:649
 msgid "Report post"
 msgstr "举报帖文"
 
@@ -7141,7 +7141,7 @@ msgstr "发布时检查媒体是否提供替代文本"
 msgid "Require an email code to sign in to your account."
 msgstr "需要电子邮件验证码才能登录到你的账户。"
 
-#: src/screens/Signup/StepInfo/index.tsx:177
+#: src/screens/Signup/StepInfo/index.tsx:181
 msgid "Required for this provider"
 msgstr "服务提供商有此要求"
 
@@ -7242,7 +7242,7 @@ msgstr "返回主页"
 msgid "Returns to previous page"
 msgstr "返回上一页"
 
-#: src/screens/StarterPack/Wizard/index.tsx:287
+#: src/screens/StarterPack/Wizard/index.tsx:304
 msgid "Returns to the previous step"
 msgstr "返回上一步"
 
@@ -7369,7 +7369,7 @@ msgstr "搜索“{query}”"
 msgid "Search for \"{searchText}\""
 msgstr "搜索“{searchText}”"
 
-#: src/screens/StarterPack/Wizard/index.tsx:474
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "Search for feeds that you want to suggest to others."
 msgstr "通过搜索来添加你想分享的动态源。"
 
@@ -7467,7 +7467,7 @@ msgstr "播放进度条。使用方向键来前进或后退，按空格键控制
 #. Accessibility label for a username suggestion in the account creation flow
 #: src/screens/Signup/StepHandle/HandleSuggestions.tsx:42
 msgid "Select {0}"
-msgstr ""
+msgstr "选择 {0}"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -7575,7 +7575,7 @@ msgstr "选择应用界面所使用的语言。"
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "选择你希望在动态源中显示的语言。如果留空，将默认显示全部语言的帖文。"
 
-#: src/screens/Signup/StepInfo/index.tsx:270
+#: src/screens/Signup/StepInfo/index.tsx:274
 msgid "Select your date of birth"
 msgstr "输入你的出生日期"
 
@@ -7602,7 +7602,7 @@ msgstr "发送一个有趣的网站吧！"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:181
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:300
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:302
 #: src/view/com/modals/DeleteAccount.tsx:145
 msgid "Send email"
 msgstr "发送电子邮件"
@@ -7621,7 +7621,7 @@ msgstr "提交反馈"
 msgid "Send message"
 msgstr "发送私信"
 
-#: src/components/PostControls/ShareMenu/RecentChats.tsx:111
+#: src/components/PostControls/ShareMenu/RecentChats.tsx:123
 msgid "Send post to {name}"
 msgstr "发送帖文给 {name}"
 
@@ -7644,7 +7644,7 @@ msgstr "将举报提交给 {0}"
 msgid "Send report to {title}"
 msgstr "将举报提交给 {title}"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:293
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:295
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:123
 msgid "Send verification email"
@@ -7864,8 +7864,8 @@ msgstr "显示自定义选项"
 msgid "Show hidden replies"
 msgstr "显示已隐藏的回复"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:483
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:485
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:479
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:481
 msgid "Show less like this"
 msgstr "显示更少类似内容"
 
@@ -7877,8 +7877,8 @@ msgstr "仍然显示列表"
 msgid "Show More"
 msgstr "显示更多"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:475
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:477
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:471
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:473
 msgid "Show more like this"
 msgstr "显示更多类似内容"
 
@@ -7918,8 +7918,8 @@ msgstr "使用树形视图显示回复"
 msgid "Show replies by people you follow before all other replies"
 msgstr "将来自你关注的人的回复排在最前面"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:559
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:569
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:555
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:565
 msgid "Show reply for everyone"
 msgstr "公开显示回复"
 
@@ -7941,8 +7941,8 @@ msgstr "显示警告"
 msgid "Show warning and filter from feeds"
 msgstr "显示警告并从动态源中过滤"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:608
-#: src/view/com/post-thread/PostThreadItem.tsx:926
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:609
+#: src/view/com/post-thread/PostThreadItem.tsx:924
 msgid "Shows information about when this post was created"
 msgstr "显示这则帖文的创建时间"
 
@@ -7999,8 +7999,8 @@ msgstr "登录未列出的账户"
 msgid "Sign in to Bluesky or create a new account"
 msgstr "登录 Bluesky 或创建新账户"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:463
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:457
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:459
 msgid "Sign in to view post"
 msgstr "登录以查看帖文"
 
@@ -8040,7 +8040,7 @@ msgid "Similar accounts"
 msgstr "类似账户"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:201
 msgid "Skip"
 msgstr "跳过"
 
@@ -8161,7 +8161,7 @@ msgstr "垃圾内容、过于频繁的提及或回复"
 msgid "Sports"
 msgstr "运动"
 
-#: src/components/PostControls/ShareMenu/RecentChats.tsx:196
+#: src/components/PostControls/ShareMenu/RecentChats.tsx:208
 msgid "Start a conversation, and it will appear here."
 msgstr "当你和其他人开启一段对话后，对话就会出现在这里。"
 
@@ -8185,7 +8185,7 @@ msgstr "与 {displayName} 开始私信"
 
 #: src/Navigation.tsx:578
 #: src/Navigation.tsx:583
-#: src/screens/StarterPack/Wizard/index.tsx:186
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Starter Pack"
 msgstr "新手包"
 
@@ -8470,14 +8470,14 @@ msgstr "其中包含以下内容："
 #: src/screens/StarterPack/StarterPackScreen.tsx:111
 #: src/screens/StarterPack/StarterPackScreen.tsx:155
 #: src/screens/StarterPack/StarterPackScreen.tsx:156
-#: src/screens/StarterPack/Wizard/index.tsx:104
-#: src/screens/StarterPack/Wizard/index.tsx:114
+#: src/screens/StarterPack/Wizard/index.tsx:110
+#: src/screens/StarterPack/Wizard/index.tsx:120
 msgid "That starter pack could not be found."
 msgstr "找不到那个新手包。"
 
 #: src/screens/Signup/StepHandle/index.tsx:81
 msgid "That username is already taken"
-msgstr ""
+msgstr "该用户名已被占用"
 
 #: src/view/com/post-thread/PostQuotes.tsx:132
 msgid "That's all, folks!"
@@ -8617,7 +8617,7 @@ msgstr "连接至服务器时出现问题。请检查网络连接并重试。"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/screens/Search/Explore.tsx:990
+#: src/screens/Search/Explore.tsx:986
 #: src/view/com/posts/PostFeed.tsx:701
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
@@ -8654,9 +8654,9 @@ msgstr "提交举报时出现问题。请检查网络连接。"
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
 msgstr "更新动态源时出现问题。请检查网络连接并重试。"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:365
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:378
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:388
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:361
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:374
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:132
@@ -8839,8 +8839,8 @@ msgstr "此列表为空。"
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "该内容审核提供服务不可用，请查看下方获取更多详情。如果问题持续存在，请联系我们。"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:648
-#: src/view/com/post-thread/PostThreadItem.tsx:966
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:649
+#: src/view/com/post-thread/PostThreadItem.tsx:964
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "这则帖文声称发布于 <0>{0}</0>，但首次出现在 Bluesky 的时间为 <1>{1}</1>。"
 
@@ -8856,7 +8856,7 @@ msgstr "这则帖文已被删除。"
 msgid "This post is only visible to logged-in users."
 msgstr "这则帖文仅对已登录用户可见。"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:709
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:705
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "这则帖文将从动态源和讨论串中隐藏。注意：此操作无法撤消。"
 
@@ -8868,7 +8868,7 @@ msgstr "这则帖文的发布者已停用引用帖文。"
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "此个人资料只对已登录用户可见，未登录的用户将无法看到。"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:744
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:740
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "这则回复将被折叠到你讨论串底部的隐藏部分，并且会对你自己和其他人隐藏后续回复的通知。"
 
@@ -8929,7 +8929,7 @@ msgstr "这将从你的隐藏字词中删除“{0}”。你随时可以将其重
 msgid "This will remove @{0} from the quick access list."
 msgstr "这将从你的快速访问中移除 @{0}。"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:734
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:730
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "你的帖文将从这则引用中删除，并替换为一个占位符。"
 
@@ -9019,14 +9019,14 @@ msgstr "热门回复优先"
 msgid "Topic"
 msgstr "话题"
 
-#: src/components/dms/MessageContextMenu.tsx:142
-#: src/components/dms/MessageContextMenu.tsx:144
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:570
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:573
-#: src/view/com/post-thread/PostThreadItem.tsx:888
-#: src/view/com/post-thread/PostThreadItem.tsx:891
+#: src/components/dms/MessageContextMenu.tsx:137
+#: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:440
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:442
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:571
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:574
+#: src/view/com/post-thread/PostThreadItem.tsx:886
+#: src/view/com/post-thread/PostThreadItem.tsx:889
 msgid "Translate"
 msgstr "翻译"
 
@@ -9195,8 +9195,8 @@ msgstr "取消隐藏"
 msgid "Unmute {tag}"
 msgstr "取消隐藏 {tag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:624
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:626
 #: src/view/com/profile/ProfileMenu.tsx:362
 #: src/view/com/profile/ProfileMenu.tsx:368
 msgid "Unmute account"
@@ -9210,8 +9210,8 @@ msgstr "取消隐藏对话"
 msgid "Unmute list"
 msgstr "取消隐藏列表"
 
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:505
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:509
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:513
 msgid "Unmute thread"
 msgstr "取消隐藏讨论串"
 
@@ -9237,8 +9237,8 @@ msgstr "取消固定动态源"
 msgid "Unpin from home"
 msgstr "从主页取消固定"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:419
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:426
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:415
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:422
 msgid "Unpin from profile"
 msgstr "从个人资料取消固定"
 
@@ -9316,12 +9316,12 @@ msgstr "更新至 {domain}"
 msgid "Update your email"
 msgstr "更新你的电子邮箱"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:312
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:308
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr "更新引用关联状态失败"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:343
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:339
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "更新回复可见性失败"
@@ -9459,15 +9459,15 @@ msgstr "已更新用户列表"
 
 #: src/screens/Signup/StepHandle/index.tsx:235
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
-msgstr ""
+msgstr "用户名不能超过 {MAX_SERVICE_HANDLE_LENGTH, plural, other {# 个字符}}"
 
 #: src/screens/Signup/StepHandle/index.tsx:219
 msgid "Username cannot begin or end with a hyphen"
-msgstr ""
+msgstr "用户名不能使用连字符（-）开头或结尾"
 
 #: src/screens/Signup/StepHandle/index.tsx:223
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
-msgstr ""
+msgstr "用户名只能包含字母（a-z）、数字及连字符（-）"
 
 #: src/screens/Login/LoginForm.tsx:201
 msgid "Username or email address"
@@ -9530,8 +9530,11 @@ msgstr "认证账户"
 msgid "Verify again"
 msgstr "重新验证"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:348
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:359
+#. Button text and accessibility label for action to verify the user's email address using the code entered
+#. Button text and accessibility label for action to verify the user's email address using the code entered
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:351
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:367
+msgctxt "action"
 msgid "Verify code"
 msgstr "验证码"
 
@@ -9540,6 +9543,7 @@ msgstr "验证码"
 msgid "Verify DNS Record"
 msgstr "验证 DNS 记录"
 
+#. Dialog title when a user is verifying their email address by entering a code they have been sent
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:214
 msgid "Verify email code"
 msgstr "电子邮箱验证码"
@@ -9833,7 +9837,7 @@ msgstr "我们已经看完了所有你关注的帖文。这里是来自 <0/> 的
 msgid "We recommend selecting at least two interests."
 msgstr "我们建议至少选择两个感兴趣的主题。"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:238
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:240
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "我们将向 <0>{0}</0> 发送一封含有链接的电子邮件，请点击邮件内容来完成电子邮箱的验证流程。"
 
@@ -9861,7 +9865,7 @@ msgstr "我们无法连接到网络，请重试以继续设置你的账户。若
 msgid "We will let you know when your account is ready."
 msgstr "我们会在你的账户准备好时通知你。"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:247
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:249
 msgid "We'll send an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "我们将向 <0>{0}</0> 发送一封含有链接的电子邮件，请点击邮件内容来完成电子邮箱的验证流程。"
 
@@ -9870,12 +9874,12 @@ msgid "We'll use this to help customize your experience."
 msgstr "我们将使用这些信息来帮助定制你的体验。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:139
-msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 13th, 2025."
-msgstr "我们正在改进<0>社群准则</0>，希望能得到你的宝贵意见！新的准则将于 2025 年 10 月 13 日生效。"
+msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 15th, 2025."
+msgstr "我们正在改进<0>社群准则</0>，希望能得到你的宝贵意见！新的准则将于 2025 年 10 月 15 日生效。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:82
-msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 13th, 2025."
-msgstr "我们正在改进社群准则，希望能得到你的宝贵意见！新的准则将于 2025 年 10 月 13 日生效。"
+msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025."
+msgstr "我们正在改进社群准则，希望能得到你的宝贵意见！新的准则将于 2025 年 10 月 15 日生效。"
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
 msgid "We're confirming your age assurance status with our servers. This should only take a few seconds."
@@ -9924,20 +9928,20 @@ msgid "We're sorry! You can only subscribe to twenty labelers, and you've reache
 msgstr "很抱歉！你目前只能订阅 20 个标记者，你已达到上限。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:122
-msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 12th, 2025."
-msgstr "我们正在更新<0>服务条款</0>、<1>隐私政策</1>以及<2>版权政策</2>，自 2025 年 9 月 12 日起生效。"
+msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 15th, 2025."
+msgstr "我们正在更新<0>服务条款</0>、<1>隐私政策</1>以及<2>版权政策</2>，自 2025 年 9 月 15 日起生效。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:63
 msgid "We're updating our policies"
 msgstr "我们正在更新相关政策"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:76
-msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 12th, 2025."
-msgstr "我们正在更新服务条款、隐私政策以及版权政策，自 2025 年 9 月 12 日起生效。"
+msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025."
+msgstr "我们正在更新服务条款、隐私政策以及版权政策，自 2025 年 9 月 15 日起生效。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:61
-msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 12th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 13th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
-msgstr "我们正在更新我们的服务条款、隐私政策以及版权政策，自 2025 年 9 月 12 日起生效。同时我们也在改进我们的社群准则，希望能得到你的意见！新的准则将于 2025 年 10 月 13 日生效。你可以阅读我们的博客文章。了解有关这些改动的更多资讯，以及如何与我们分享你的想法。"
+msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
+msgstr "我们正在更新我们的服务条款、隐私政策以及版权政策，自 2025 年 9 月 15 日起生效。同时我们也在改进我们的社群准则，希望能得到你的意见！新的准则将于 2025 年 10 月 15 日生效。你可以阅读我们的博客文章。了解有关这些改动的更多资讯，以及如何与我们分享你的想法。"
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
 msgid "We've confirmed your age assurance status. You can now close this dialog."
@@ -10079,11 +10083,11 @@ msgstr "确定停用"
 msgid "Yes, delete this starter pack"
 msgstr "确定删除此新手包"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:737
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:733
 msgid "Yes, detach"
 msgstr "确定分离"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:747
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:743
 msgid "Yes, hide"
 msgstr "确定隐藏"
 
@@ -10100,8 +10104,8 @@ msgid "You"
 msgstr "你"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:23
-msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 13th."
-msgstr "你也同意<0>Bluesky 社群准则</0>，<1>一个更新版本的社群准则</1>将于 10 月 13 日生效。"
+msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 15th."
+msgstr "你也同意<0>Bluesky 社群准则</0>，<1>一个更新版本的社群准则</1>将于 10 月 15 日生效。"
 
 #: src/components/verification/VerifierDialog.tsx:59
 msgid "You are a trusted verifier"
@@ -10394,11 +10398,11 @@ msgstr "你将登出所有账户。"
 msgid "You will no longer receive notifications for {0}"
 msgstr "你将不再收到 {0} 的动态提醒"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:212
 msgid "You will no longer receive notifications for this thread"
 msgstr "你将不再收到这条讨论串的通知"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:212
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:208
 msgid "You will now receive notifications for this thread"
 msgstr "你将收到这条讨论串的通知"
 
@@ -10520,7 +10524,7 @@ msgstr "你的账户被判定违反了<0>Bluesky 服务条款</0>。你应该已
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr "已提交申诉。如果申诉成功，我们会通过电子邮件通知你。"
 
-#: src/screens/Signup/StepInfo/index.tsx:257
+#: src/screens/Signup/StepInfo/index.tsx:261
 msgid "Your birth date"
 msgstr "你的生日"
 
@@ -10547,8 +10551,8 @@ msgid "Your email"
 msgstr "你的电子邮件"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
-#: src/screens/Signup/state.ts:273
-#: src/screens/Signup/StepInfo/index.tsx:98
+#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/StepInfo/index.tsx:101
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
 msgstr "你的电子邮箱似乎无效。"
@@ -10598,7 +10602,7 @@ msgstr "你的隐藏字词"
 msgid "Your password has been changed successfully!"
 msgstr "已成功更改你的密码！"
 
-#: src/screens/Signup/StepInfo/index.tsx:127
+#: src/screens/Signup/StepInfo/index.tsx:130
 msgid "Your password must be at least 8 characters long."
 msgstr "你输入的密码应至少包含 8 个字符。"
 

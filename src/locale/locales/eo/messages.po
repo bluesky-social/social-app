@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-07 22:21\n"
+"PO-Revision-Date: 2025-08-12 01:46\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -101,7 +101,7 @@ msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {sekvata} other {sekvataj}}"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:468
-#: src/view/com/post-thread/PostThreadItem.tsx:541
+#: src/view/com/post-thread/PostThreadItem.tsx:537
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {ŝato} other {ŝatoj}}"
 
@@ -110,12 +110,12 @@ msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {afiŝo} other {afiŝoj}}"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:452
-#: src/view/com/post-thread/PostThreadItem.tsx:525
+#: src/view/com/post-thread/PostThreadItem.tsx:521
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {citaĵo} other {citaĵoj}}"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:434
-#: src/view/com/post-thread/PostThreadItem.tsx:507
+#: src/view/com/post-thread/PostThreadItem.tsx:503
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {reafiŝo} other {reafiŝoj}}"
 
@@ -221,7 +221,7 @@ msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr "{count, plural, one {# nelegita elemento} other {# nelegitaj elementoj}}"
 
 #: src/lib/generate-starterpack.ts:111
-#: src/screens/StarterPack/Wizard/index.tsx:178
+#: src/screens/StarterPack/Wizard/index.tsx:184
 msgid "{displayName}'s Starter Pack"
 msgstr "Startpako de {displayName}"
 
@@ -450,12 +450,12 @@ msgstr "Konfirmoj de {userName}"
 msgid "+{computedTotal}"
 msgstr "+{computedTotal}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:449
+#: src/screens/StarterPack/Wizard/index.tsx:488
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1}, </1>kaj {2, plural, one {# alia} other {# aliaj}} estas en via startpako"
 
-#: src/screens/StarterPack/Wizard/index.tsx:502
+#: src/screens/StarterPack/Wizard/index.tsx:541
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1}, </1>kaj {2, plural, one {# alia} other {# aliaj}} estas en via startpako"
@@ -468,11 +468,11 @@ msgstr "<0>{0}</0> {1, plural, one {sekvanto} other {sekvantoj}}"
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {sekvata} other {sekvataj}}"
 
-#: src/screens/StarterPack/Wizard/index.tsx:490
+#: src/screens/StarterPack/Wizard/index.tsx:529
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr "<0>{0}</0> kaj<1> </1><2>{1} </2>estas en via startpako"
 
-#: src/screens/StarterPack/Wizard/index.tsx:483
+#: src/screens/StarterPack/Wizard/index.tsx:522
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> estas en via startpako"
 
@@ -488,7 +488,7 @@ msgstr "<0>{date}</0> je {time}"
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr "<0>Ensalutu</0><1> aŭ </1><2>kreu konton</2><3> </3><4>por serĉi pri novaĵoj, sportoj, politiko kaj ĉio alia okazanta ĉe Bluesky.</4>"
 
-#: src/screens/StarterPack/Wizard/index.tsx:440
+#: src/screens/StarterPack/Wizard/index.tsx:479
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr "<0>Vi</0> kaj<1> </1><2>{0} </2>estas en via startpako"
 
@@ -564,7 +564,7 @@ msgstr "Alireblecaj agordoj"
 msgid "Account"
 msgstr "Konto"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:361
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:357
 #: src/screens/Messages/components/RequestButtons.tsx:91
 #: src/view/com/profile/ProfileMenu.tsx:158
 msgctxt "toast"
@@ -576,7 +576,7 @@ msgctxt "toast"
 msgid "Account followed"
 msgstr "Konto eksekvita"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:380
 #: src/view/com/profile/ProfileMenu.tsx:134
 msgctxt "toast"
 msgid "Account muted"
@@ -610,7 +610,7 @@ msgctxt "toast"
 msgid "Account unfollowed"
 msgstr "Konto ne plu sekvata"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:374
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:370
 #: src/view/com/profile/ProfileMenu.tsx:124
 msgctxt "toast"
 msgid "Account unmuted"
@@ -636,7 +636,7 @@ msgstr "Agadaj sciigoj"
 msgid "Add"
 msgstr "Aldoni"
 
-#: src/screens/StarterPack/Wizard/index.tsx:551
+#: src/screens/StarterPack/Wizard/index.tsx:572
 msgid "Add {0} more to continue"
 msgstr "Aldoni {0} pli por daŭrigi"
 
@@ -736,7 +736,7 @@ msgstr "Aldoni reagon"
 msgid "Add recommended feeds"
 msgstr "Aldoni rekomenditajn fluojn"
 
-#: src/screens/StarterPack/Wizard/index.tsx:471
+#: src/screens/StarterPack/Wizard/index.tsx:510
 msgid "Add some feeds to your starter pack!"
 msgstr "Aldonu iujn fluojn al via startpako!"
 
@@ -1121,15 +1121,15 @@ msgstr "Apliki defaŭltajn rekomenditajn fluojn"
 msgid "Apply Pull Request"
 msgstr "Apliki tirpeton"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:637
-#: src/view/com/post-thread/PostThreadItem.tsx:955
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:638
+#: src/view/com/post-thread/PostThreadItem.tsx:953
 msgid "Archived from {0}"
 msgstr "Arkivigita de {0}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:606
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:645
-#: src/view/com/post-thread/PostThreadItem.tsx:924
-#: src/view/com/post-thread/PostThreadItem.tsx:963
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:607
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:646
+#: src/view/com/post-thread/PostThreadItem.tsx:922
+#: src/view/com/post-thread/PostThreadItem.tsx:961
 msgid "Archived post"
 msgstr "Arkivigita afiŝo"
 
@@ -1137,7 +1137,7 @@ msgstr "Arkivigita afiŝo"
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr "Ĉu vi certas, ke vi volas forigi la apan pasvorton \"{0}\"?"
 
-#: src/components/dms/MessageContextMenu.tsx:188
+#: src/components/dms/MessageContextMenu.tsx:183
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "Ĉu vi certas, ke vi volas forigi ĉi tiun mesaĝon? La mesaĝo estos forigita por vi, sed ne por la alia partoprenanto."
 
@@ -1186,8 +1186,8 @@ msgstr "Arto"
 msgid "Artistic or non-erotic nudity."
 msgstr "Arta aŭ ne-erotika nudeco."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:495
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:497
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:491
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:493
 msgid "Assign topic for algo"
 msgstr "Asigni temon por algoritmo"
 
@@ -1221,7 +1221,7 @@ msgstr ""
 #: src/screens/Messages/components/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:158
 #: src/screens/Signup/BackNextButtons.tsx:41
-#: src/screens/StarterPack/Wizard/index.tsx:286
+#: src/screens/StarterPack/Wizard/index.tsx:303
 msgid "Back"
 msgstr "Reen"
 
@@ -1275,7 +1275,7 @@ msgstr "Komencu procezon de garantio pri aĝo kompletigante la kampojn sube."
 msgid "Birthday"
 msgstr "Naskiĝtago"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:757
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:753
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:320
 #: src/view/com/profile/ProfileMenu.tsx:473
 msgid "Block"
@@ -1283,8 +1283,8 @@ msgstr "Bloki"
 
 #: src/components/dms/ConvoMenu.tsx:247
 #: src/components/dms/ConvoMenu.tsx:250
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:642
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:644
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:638
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:640
 #: src/screens/Messages/components/RequestButtons.tsx:144
 #: src/screens/Messages/components/RequestButtons.tsx:146
 #: src/view/com/profile/ProfileMenu.tsx:384
@@ -1292,7 +1292,7 @@ msgstr "Bloki"
 msgid "Block account"
 msgstr "Bloki konton"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:752
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:748
 #: src/view/com/profile/ProfileMenu.tsx:456
 msgid "Block Account?"
 msgstr "Ĉu bloki konton?"
@@ -1343,7 +1343,7 @@ msgstr "Blokitaj kontoj"
 msgid "Blocked Accounts"
 msgstr "Blokitaj kontoj"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:754
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:750
 #: src/view/com/profile/ProfileMenu.tsx:468
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Blokitaj kontoj ne povas respondi en viaj fadenoj, mencii vin nek alimaniere interagi kun vi."
@@ -1377,8 +1377,8 @@ msgstr "Blogo"
 msgid "Bluesky"
 msgstr "Bluesky"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:662
-#: src/view/com/post-thread/PostThreadItem.tsx:980
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:663
+#: src/view/com/post-thread/PostThreadItem.tsx:978
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky ne povas konfirmi la aŭtentecon de la donita dato."
 
@@ -1494,7 +1494,7 @@ msgstr "Komerco"
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:683
 #: src/screens/Search/components/StarterPackCard.tsx:106
-#: src/screens/Search/Explore.tsx:934
+#: src/screens/Search/Explore.tsx:930
 msgid "By {0}"
 msgstr "De {0}"
 
@@ -1738,7 +1738,7 @@ msgstr "En via ricevujo serĉu retmesaĝon kun konfirmkodo, kaj entajpu ĝin sub
 msgid "Choose domain verification method"
 msgstr "Elektu metodon por konfirmi vian domajnon"
 
-#: src/screens/StarterPack/Wizard/index.tsx:194
+#: src/screens/StarterPack/Wizard/index.tsx:200
 msgid "Choose Feeds"
 msgstr "Elektu fluojn"
 
@@ -1746,7 +1746,7 @@ msgstr "Elektu fluojn"
 msgid "Choose for me"
 msgstr "Elektu por mi"
 
-#: src/screens/StarterPack/Wizard/index.tsx:190
+#: src/screens/StarterPack/Wizard/index.tsx:196
 msgid "Choose People"
 msgstr "Elektu homojn"
 
@@ -1766,7 +1766,7 @@ msgstr "Elektu vian kontogastiganton"
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr "Elektu vian propran novaĵfluon! Fluoj konstruitaj de la komunumo helpas vin trovi enhavon, kiun vi amos."
 
-#: src/screens/Signup/StepInfo/index.tsx:241
+#: src/screens/Signup/StepInfo/index.tsx:245
 msgid "Choose your password"
 msgstr "Elektu vian pasvorton"
 
@@ -1799,11 +1799,11 @@ msgstr "Alklaku por informoj"
 msgid "click here"
 msgstr "alklaku ĉi tie"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:371
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:383
 msgid "Click here to restart the verification process."
 msgstr "Alklaku ĉi tie por restarti la konfimadan procezon."
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:273
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:275
 msgid "Click here to update your email"
 msgstr "Alklaku ĉi tie por ĝisdatigi vian retpoŝtadreson"
 
@@ -2155,9 +2155,9 @@ msgstr "Kopiita"
 msgid "Copied build version to clipboard"
 msgstr "Versio kopiita al tondujo"
 
-#: src/components/dms/MessageContextMenu.tsx:56
-#: src/components/PostControls/DiscoverDebug.tsx:42
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:234
+#: src/components/dms/MessageContextMenu.tsx:55
+#: src/components/PostControls/DiscoverDebug.tsx:41
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:230
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:72
 #: src/lib/sharing.ts:25
 #: src/lib/sharing.ts:41
@@ -2236,8 +2236,8 @@ msgstr "Kopii ligilon al profilo"
 msgid "Copy link to starter pack"
 msgstr "Kopii ligilon al startpako"
 
-#: src/components/dms/MessageContextMenu.tsx:149
-#: src/components/dms/MessageContextMenu.tsx:152
+#: src/components/dms/MessageContextMenu.tsx:144
+#: src/components/dms/MessageContextMenu.tsx:147
 msgid "Copy message text"
 msgstr "Kopii mesaĝan tekston"
 
@@ -2246,8 +2246,8 @@ msgstr "Kopii mesaĝan tekston"
 msgid "Copy post at:// URI"
 msgstr "Kopii URI-on at:// de afiŝo"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:454
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:448
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:450
 msgid "Copy post text"
 msgstr "Kopii afiŝan tekston"
 
@@ -2419,7 +2419,7 @@ msgstr "Malhela reĝimo"
 msgid "Dark theme"
 msgstr "Malhela etoso"
 
-#: src/screens/Signup/StepInfo/index.tsx:269
+#: src/screens/Signup/StepInfo/index.tsx:273
 msgid "Date of birth"
 msgstr "Naskiĝdato"
 
@@ -2445,8 +2445,8 @@ msgstr "Defaŭlta"
 msgid "Default icons"
 msgstr "Defaŭltaj piktogramoj"
 
-#: src/components/dms/MessageContextMenu.tsx:190
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:701
+#: src/components/dms/MessageContextMenu.tsx:185
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:697
 #: src/screens/Messages/components/ChatStatusInfo.tsx:55
 #: src/screens/Settings/AppPasswords.tsx:212
 #: src/screens/StarterPack/StarterPackScreen.tsx:599
@@ -2493,7 +2493,7 @@ msgstr "Forigi konversacion"
 msgid "Delete Conversation"
 msgstr "Forigi konversacion"
 
-#: src/components/dms/MessageContextMenu.tsx:163
+#: src/components/dms/MessageContextMenu.tsx:158
 msgid "Delete for me"
 msgstr "Forigi por mi"
 
@@ -2501,11 +2501,11 @@ msgstr "Forigi por mi"
 msgid "Delete list"
 msgstr "Forigi liston"
 
-#: src/components/dms/MessageContextMenu.tsx:186
+#: src/components/dms/MessageContextMenu.tsx:181
 msgid "Delete message"
 msgstr "Forigi mesaĝon"
 
-#: src/components/dms/MessageContextMenu.tsx:161
+#: src/components/dms/MessageContextMenu.tsx:156
 msgid "Delete message for me"
 msgstr "Forigi mesaĝon por mi"
 
@@ -2513,8 +2513,8 @@ msgstr "Forigi mesaĝon por mi"
 msgid "Delete my account"
 msgstr "Forigi mian konton"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:682
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:684
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:678
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:680
 #: src/view/com/composer/Composer.tsx:884
 msgid "Delete post"
 msgstr "Forigi afiŝon"
@@ -2532,7 +2532,7 @@ msgstr "Ĉu forigi startpakon?"
 msgid "Delete this list?"
 msgstr "Ĉu forigi ĉi tiun liston?"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:696
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:692
 msgid "Delete this post?"
 msgstr "Ĉu forigi ĉi tiun afiŝon?"
 
@@ -2575,12 +2575,12 @@ msgstr "Priskribo estas tro longa. La maksimuma nombro da signoj estas {DESCRIPT
 msgid "Descriptive alt text"
 msgstr "Priskriba alternativa teksto"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:586
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:582
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:592
 msgid "Detach quote"
 msgstr "Malligi citaĵon"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:732
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:728
 msgid "Detach quote post?"
 msgstr "Ĉu malligi citatan afiŝon?"
 
@@ -2735,7 +2735,7 @@ msgstr "Ne inkluzivas nudecon."
 msgid "Domain verified!"
 msgstr "Domajno konfirmita!"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:368
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:380
 msgid "Don't have a code or need a new one? <0>Click here.</0>"
 msgstr "Ĉu vi ne havas kodon aŭ bezonas novan? <0>Alklaku ĉi tie.</0>"
 
@@ -2853,8 +2853,8 @@ msgstr "Ĉiu kodo funkcias unufoje. Vi ricevos pli da invitaj kodoj periode."
 #: src/screens/Settings/AccountSettings.tsx:143
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:249
 #: src/screens/StarterPack/StarterPackScreen.tsx:588
-#: src/screens/StarterPack/Wizard/index.tsx:534
-#: src/screens/StarterPack/Wizard/index.tsx:541
+#: src/screens/StarterPack/Wizard/index.tsx:319
+#: src/screens/StarterPack/Wizard/index.tsx:324
 msgid "Edit"
 msgstr "Redakti"
 
@@ -2879,8 +2879,8 @@ msgstr "Redakti fluojn"
 msgid "Edit image"
 msgstr "Redakti bildon"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:663
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:676
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:659
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:672
 msgid "Edit interaction settings"
 msgstr "Redakti interagajn agordojn"
 
@@ -2958,7 +2958,7 @@ msgid "Either the creator of this list has blocked you or you have blocked the c
 msgstr "Aŭ la kreinto de ĉi tiu listo blokis vin aŭ vi blokis la kreinton."
 
 #: src/screens/Settings/AccountSettings.tsx:64
-#: src/screens/Signup/StepInfo/index.tsx:193
+#: src/screens/Signup/StepInfo/index.tsx:197
 msgid "Email"
 msgstr "Retpoŝtadreso"
 
@@ -3088,7 +3088,7 @@ msgid "Enter a word or tag"
 msgstr "Entajpu vorton aŭ kradvorton"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:201
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:318
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:320
 msgid "Enter code"
 msgstr "Entajpu kodon"
 
@@ -3117,7 +3117,7 @@ msgid "Enter your birth date"
 msgstr "Entajpu vian naskiĝdaton"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:99
-#: src/screens/Signup/StepInfo/index.tsx:213
+#: src/screens/Signup/StepInfo/index.tsx:217
 msgid "Enter your email address"
 msgstr "Entajpu vian retpoŝtadreson"
 
@@ -3325,7 +3325,7 @@ msgid "Failed to accept chat"
 msgstr "Malsukcesis akcepti babilejon"
 
 #: src/components/dms/ActionsWrapper.web.tsx:67
-#: src/components/dms/MessageContextMenu.tsx:104
+#: src/components/dms/MessageContextMenu.tsx:99
 msgid "Failed to add emoji reaction"
 msgstr "Malsukcesis aldoni emoĝian reagon"
 
@@ -3341,8 +3341,8 @@ msgstr "Malsukcesis krei apan pasvorton. Bonvolu reprovi."
 msgid "Failed to create conversation"
 msgstr "Malsukcesis krei konversacion"
 
-#: src/screens/StarterPack/Wizard/index.tsx:233
-#: src/screens/StarterPack/Wizard/index.tsx:241
+#: src/screens/StarterPack/Wizard/index.tsx:239
+#: src/screens/StarterPack/Wizard/index.tsx:247
 msgid "Failed to create starter pack"
 msgstr "Malsukcesis krei startpakon"
 
@@ -3356,11 +3356,11 @@ msgctxt "toast"
 msgid "Failed to delete chat"
 msgstr "Malsukcesis forigi babilejon"
 
-#: src/components/dms/MessageContextMenu.tsx:84
+#: src/components/dms/MessageContextMenu.tsx:79
 msgid "Failed to delete message"
 msgstr "Malsukcesis forigi mesaĝon"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:203
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:199
 msgid "Failed to delete post, please try again"
 msgstr "Malsukcesis forigi afiŝon, bonvolu reprovi"
 
@@ -3427,7 +3427,7 @@ msgid "Failed to pin post"
 msgstr "Malsukcesis alpingli afiŝon"
 
 #: src/components/dms/ActionsWrapper.web.tsx:61
-#: src/components/dms/MessageContextMenu.tsx:98
+#: src/components/dms/MessageContextMenu.tsx:93
 msgid "Failed to remove emoji reaction"
 msgstr "Malsukcesis forigi emoĝian reagon"
 
@@ -3462,7 +3462,7 @@ msgstr "Malsukcesis sendi retmesaĝon, bonvolu reprovi."
 msgid "Failed to submit appeal, please try again."
 msgstr "Malsukcesis sendi apelacion, bonvole reprovu."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:223
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:219
 msgid "Failed to toggle thread mute, please try again"
 msgstr "Malsukcesis baskuligi la silentigon de fadeno, bonvolu reprovi"
 
@@ -3537,8 +3537,8 @@ msgstr "Fluo ne disponebla"
 msgid "Feedback"
 msgstr "Prikomentado"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:273
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:289
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:269
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:285
 msgctxt "toast"
 msgid "Feedback sent!"
 msgstr "Prikomento sendita!"
@@ -3616,7 +3616,7 @@ msgstr "Trovi homojn por sekvi"
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr "Trovi afiŝojn, uzantojn kaj fluojn ĉe Bluesky"
 
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:201
 msgid "Finish"
 msgstr "Fini"
 
@@ -4053,7 +4053,7 @@ msgid "Hashtag {tag}"
 msgstr "Kradvorto {tag}"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:198
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:315
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:317
 msgid "Have a code? <0>Click here.</0>"
 msgstr "Ĉu vi havas kodon? <0>Alklaku ĉi tie.</0>"
 
@@ -4100,7 +4100,7 @@ msgstr "Kaŝita listo"
 #: src/components/moderation/ContentHider.tsx:203
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:134
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:712
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:708
 #: src/lib/moderation/useLabelBehaviorDescription.ts:15
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
@@ -4118,18 +4118,18 @@ msgstr "Kaŝi"
 msgid "Hide customization options"
 msgstr "Kaŝi adaptadajn opciojn"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:543
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:549
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:539
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:545
 msgid "Hide post for me"
 msgstr "Kaŝi afiŝon por mi"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:560
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:570
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:556
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:566
 msgid "Hide reply for everyone"
 msgstr "Kaŝi respondon por ĉiuj"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:542
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:538
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:544
 msgid "Hide reply for me"
 msgstr "Kaŝi respondon por mi"
 
@@ -4137,12 +4137,12 @@ msgstr "Kaŝi respondon por mi"
 msgid "Hide this card"
 msgstr "Kaŝi ĉi tiun karton"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:707
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:703
 msgid "Hide this post?"
 msgstr "Ĉu kaŝi ĉi tiun afiŝon?"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:707
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:742
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:703
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:738
 msgid "Hide this reply?"
 msgstr "Ĉu kaŝi ĉi tiun respondon?"
 
@@ -4270,11 +4270,11 @@ msgstr "Se vi forigos ĉi tiun liston, vi ne povos restaŭri ĝin."
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr "Se vi havas vian propran domajnon, vi povas uzi ĝin kiel via identigilo. Ĉi tio permesas al vi aŭtentikigi vin mem. <0>Eksciu pli.</0>"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:270
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:272
 msgid "If you need to update your email, <0>click here</0>."
 msgstr "Se vi bezonas ĝisdatigi vian retpoŝtadreson, <0>alklaku ĉi tie</0>."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:698
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:694
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "Se vi forigos ĉi tiun afiŝon, vi ne povos restaŭri ĝin."
 
@@ -4417,7 +4417,7 @@ msgstr "Nevalida 2FA-konfirmkodo."
 msgid "Invalid handle. Please try a different one."
 msgstr "Nevalida identigilo. Bonvolu uzi iun alian."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:351
+#: src/view/com/post-thread/PostThreadItem.tsx:347
 msgid "Invalid or unsupported post record"
 msgstr "Nevalida aŭ nesubtenita afiŝ-rikordo"
 
@@ -4433,11 +4433,11 @@ msgstr "Nevalida aŭtentikig-kodo"
 msgid "Invite a Friend"
 msgstr "Inviti amikon"
 
-#: src/screens/Signup/StepInfo/index.tsx:163
+#: src/screens/Signup/StepInfo/index.tsx:167
 msgid "Invite code"
 msgstr "Invita kodo"
 
-#: src/screens/Signup/state.ts:348
+#: src/screens/Signup/state.ts:339
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Invita kodo neakceptita. Kontrolu ĉu vi entajpis ĝin ĝuste kaj reprovu."
 
@@ -4461,11 +4461,11 @@ msgstr "Invitu viajn amikojn, por ke ili sekvu viajn plej ŝatatajn fluojn kaj h
 msgid "Invites, but personal"
 msgstr "Invitoj sed personaj"
 
-#: src/screens/Signup/StepInfo/index.tsx:289
+#: src/screens/Signup/StepInfo/index.tsx:293
 msgid "It's correct"
 msgstr "Ĝi ĝustas"
 
-#: src/screens/StarterPack/Wizard/index.tsx:435
+#: src/screens/StarterPack/Wizard/index.tsx:474
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Vi estas sola ĉi-momente! Aldoni pli da homoj al via startpako serĉante supre."
 
@@ -5009,7 +5009,7 @@ msgstr "Menuo"
 msgid "Message {0}"
 msgstr "Mesaĝo {0}"
 
-#: src/components/dms/MessageContextMenu.tsx:82
+#: src/components/dms/MessageContextMenu.tsx:77
 msgctxt "toast"
 msgid "Message deleted"
 msgstr "Mesaĝo forigita"
@@ -5018,7 +5018,7 @@ msgstr "Mesaĝo forigita"
 msgid "Message deleted"
 msgstr "Mesaĝo forigita"
 
-#: src/components/dms/MessageContextMenu.tsx:130
+#: src/components/dms/MessageContextMenu.tsx:125
 msgid "Message from @{0}: {1}"
 msgstr "Mesaĝo de @{0}: {1}"
 
@@ -5035,7 +5035,7 @@ msgstr "Enigujo de la mesaĝo"
 msgid "Message is too long"
 msgstr "Mesaĝo tro longas"
 
-#: src/components/dms/MessageContextMenu.tsx:128
+#: src/components/dms/MessageContextMenu.tsx:123
 msgid "Message options"
 msgstr "Opcioj de mesaĝo"
 
@@ -5123,7 +5123,7 @@ msgstr "Kontroladaj iloj"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "Kontrolanto decidis starigi ĝeneralan averton pri la enhavo."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:731
+#: src/view/com/post-thread/PostThreadItem.tsx:727
 msgid "More"
 msgstr "Pli"
 
@@ -5167,8 +5167,8 @@ msgstr "Silentigi"
 msgid "Mute {tag}"
 msgstr "Silentigi kradvorton {tag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:625
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:631
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:627
 #: src/view/com/profile/ProfileMenu.tsx:363
 #: src/view/com/profile/ProfileMenu.tsx:370
 msgid "Mute account"
@@ -5219,13 +5219,13 @@ msgstr "Silentigi ĉi tiun vorton nur en kradvortoj"
 msgid "Mute this word until you unmute it"
 msgstr "Silentigi ĉi tiun vorton ĝis kiam ĝi estos malsilentigita"
 
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:505
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:509
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:513
 msgid "Mute thread"
 msgstr "Silentigi fadenon"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:523
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:525
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:519
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:521
 msgid "Mute words & tags"
 msgstr "Silentigi vortojn kaj kradvortojn"
 
@@ -5455,10 +5455,10 @@ msgstr "Novaĵoj"
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
-#: src/screens/StarterPack/Wizard/index.tsx:187
-#: src/screens/StarterPack/Wizard/index.tsx:191
-#: src/screens/StarterPack/Wizard/index.tsx:341
-#: src/screens/StarterPack/Wizard/index.tsx:348
+#: src/screens/StarterPack/Wizard/index.tsx:193
+#: src/screens/StarterPack/Wizard/index.tsx:197
+#: src/screens/StarterPack/Wizard/index.tsx:376
+#: src/screens/StarterPack/Wizard/index.tsx:383
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:267
 msgid "Next"
@@ -5716,8 +5716,8 @@ msgid "OK"
 msgstr "Bone"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:667
-#: src/view/com/post-thread/PostThreadItem.tsx:985
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:668
+#: src/view/com/post-thread/PostThreadItem.tsx:983
 msgid "Okay"
 msgstr "Bone"
 
@@ -6008,7 +6008,7 @@ msgstr "Alia..."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:50
 msgid "Our blog post"
-msgstr ""
+msgstr "Nia blogafiŝo"
 
 #: src/components/dms/ReportDialog.tsx:348
 msgid "Our moderation team has received your report."
@@ -6030,7 +6030,7 @@ msgstr "Paĝo netrovita"
 #: src/screens/Login/LoginForm.tsx:228
 #: src/screens/Settings/AccountSettings.tsx:119
 #: src/screens/Settings/AccountSettings.tsx:123
-#: src/screens/Signup/StepInfo/index.tsx:228
+#: src/screens/Signup/StepInfo/index.tsx:232
 #: src/view/com/modals/DeleteAccount.tsx:239
 #: src/view/com/modals/DeleteAccount.tsx:246
 msgid "Password"
@@ -6119,8 +6119,8 @@ msgstr "Alpingli al hejmo"
 msgid "Pin to Home"
 msgstr "Alpingli al hejmo"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:420
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:427
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:416
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:423
 msgid "Pin to your profile"
 msgstr "Alpingli al via profilo"
 
@@ -6184,12 +6184,12 @@ msgstr "Bonvolu aldoni ĉiujn avertajn etikedojn de la enhavo, kiuj aplikeblas a
 msgid "Please check your email inbox for further instructions. It may take a minute or two to arrive."
 msgstr "Bonvolu kontroli vian retpoŝtan ricevujon por sekvaj instrukcioj. Eble daŭros minuton aŭ du por ke ĝi alvenu."
 
-#: src/screens/Signup/state.ts:289
+#: src/screens/Signup/state.ts:286
 msgid "Please choose your handle."
 msgstr "Bonvolu elekti vian identigilon."
 
-#: src/screens/Signup/state.ts:281
-#: src/screens/Signup/StepInfo/index.tsx:120
+#: src/screens/Signup/state.ts:278
+#: src/screens/Signup/StepInfo/index.tsx:123
 msgid "Please choose your password."
 msgstr "Bonvolu elekti vian pasvorton."
 
@@ -6197,12 +6197,12 @@ msgstr "Bonvolu elekti vian pasvorton."
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
 msgstr "Bonvolu alklaki la ligilon en la retmesaĝo, kiun ni ĵus sendis al vi, por konfirmi vian novan retpoŝtadreson. Ĉi tio estas grava paŝo por permesi al vi daŭre ĝui ĉiujn funkciojn de Bluesky."
 
-#: src/screens/Signup/state.ts:304
+#: src/screens/Signup/state.ts:301
 msgid "Please complete the verification captcha."
 msgstr "Bonvolu plenumi la captcha-kontrolon."
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:101
-#: src/screens/Signup/StepInfo/index.tsx:109
+#: src/screens/Signup/StepInfo/index.tsx:112
 msgid "Please double-check that you have entered your email address correctly."
 msgstr "Bonvolu rekontroli ĉu vi ĝuste entajpis vian retpoŝtadreson."
 
@@ -6237,7 +6237,7 @@ msgstr "Bonvolu entajpi validan vorton, kradvorton, aŭ frazon por silentigi"
 msgid "Please enter a valid, non-temporary email address. You may need to access this email in the future."
 msgstr "Bonvolu entajpi validan, neprovizoran retpoŝtadreson. Vi eble bezonos aliri ĉi tiun retpoŝtadreson estontece."
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:257
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:259
 msgid "Please enter the code we sent to <0>{0}</0> below."
 msgstr "Bonvolu entajpi suben la kodon, kiun ni sendis al <0>{0}</0>."
 
@@ -6245,12 +6245,12 @@ msgstr "Bonvolu entajpi suben la kodon, kiun ni sendis al <0>{0}</0>."
 msgid "Please enter the security code we sent to your previous email address."
 msgstr "Bonvolu entajpi la sekurecan kodon, kiun ni sendis al via antaŭa retpoŝtadreso."
 
-#: src/screens/Signup/state.ts:265
-#: src/screens/Signup/StepInfo/index.tsx:91
+#: src/screens/Signup/state.ts:262
+#: src/screens/Signup/StepInfo/index.tsx:94
 msgid "Please enter your email."
 msgstr "Bonvolu entajpi vian retpoŝtadreson."
 
-#: src/screens/Signup/StepInfo/index.tsx:84
+#: src/screens/Signup/StepInfo/index.tsx:87
 msgid "Please enter your invite code."
 msgstr "Bonvolu entajpi vian invitan kodon."
 
@@ -6353,7 +6353,7 @@ msgstr "Afiŝo de {0}"
 msgid "Post by @{0}"
 msgstr "Afiŝo de @{0}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:183
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:179
 msgctxt "toast"
 msgid "Post deleted"
 msgstr "Afiŝo forigita"
@@ -6605,11 +6605,11 @@ msgstr "Sciigoj pri citaĵoj"
 msgid "Quote post"
 msgstr "Citi afiŝon"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:308
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:304
 msgid "Quote post was re-attached"
 msgstr "La citafiŝo estis religita"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:307
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:303
 msgid "Quote post was successfully detached"
 msgstr "La citaĵo estis sukcese malligita"
 
@@ -6647,8 +6647,8 @@ msgstr "Hazarde (alinome \"Afiŝinta ruleto\")"
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr "Limo de operacioj transpasita – vi provis ŝanĝi vian identigilon tro multajn fojojn dum mallonga tempo. Bonvolu atendi minuton antaŭ provi denove."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:585
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:595
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:581
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:591
 msgid "Re-attach quote"
 msgstr "Religi citaĵon"
 
@@ -6667,7 +6667,7 @@ msgstr "Legi {0} {1, plural, one {respondon} other {respondojn}} pli"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:173
 msgid "Read blog post"
-msgstr "Legi blogan afiŝon"
+msgstr "Legu blogafiŝon"
 
 #: src/screens/VideoFeed/index.tsx:966
 msgid "Read less"
@@ -6683,7 +6683,7 @@ msgstr "Legi pli da respondoj"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:112
 msgid "Read our blog post"
-msgstr ""
+msgstr "Legu nian blogafiŝon"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Read the Bluesky blog"
@@ -6968,16 +6968,16 @@ msgctxt "description"
 msgid "Reply to you"
 msgstr "Respondo al vi"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:339
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:335
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr "Videbleco de respondoj ĝisdatiĝis"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:338
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:334
 msgid "Reply was successfully hidden"
 msgstr "Respondo estis sukcese kaŝita"
 
-#: src/components/dms/MessageContextMenu.tsx:171
+#: src/components/dms/MessageContextMenu.tsx:166
 #: src/components/dms/MessagesListBlockedFooter.tsx:85
 #: src/components/dms/MessagesListBlockedFooter.tsx:92
 msgid "Report"
@@ -7011,12 +7011,12 @@ msgstr "Raporti fluon"
 msgid "Report list"
 msgstr "Raporti liston"
 
-#: src/components/dms/MessageContextMenu.tsx:169
+#: src/components/dms/MessageContextMenu.tsx:164
 msgid "Report message"
 msgstr "Raporti mesaĝon"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:651
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:653
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:647
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:649
 msgid "Report post"
 msgstr "Raporti afiŝon"
 
@@ -7141,7 +7141,7 @@ msgstr "Devigi alternativan tekston antaŭ ol afiŝi"
 msgid "Require an email code to sign in to your account."
 msgstr "Devigi retmesaĝan kodon por ensaluti al via konto."
 
-#: src/screens/Signup/StepInfo/index.tsx:177
+#: src/screens/Signup/StepInfo/index.tsx:181
 msgid "Required for this provider"
 msgstr "Necesa por ĉi tiu provizanto"
 
@@ -7242,7 +7242,7 @@ msgstr "Revenas al hejmpaĝo"
 msgid "Returns to previous page"
 msgstr "Revenas al antaŭa paĝo"
 
-#: src/screens/StarterPack/Wizard/index.tsx:287
+#: src/screens/StarterPack/Wizard/index.tsx:304
 msgid "Returns to the previous step"
 msgstr "Revenas al la antaŭa paŝo"
 
@@ -7369,7 +7369,7 @@ msgstr "Serĉi \"{query}\""
 msgid "Search for \"{searchText}\""
 msgstr "Serĉi \"{searchText}\""
 
-#: src/screens/StarterPack/Wizard/index.tsx:474
+#: src/screens/StarterPack/Wizard/index.tsx:513
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Serĉu fluojn, kiujn vi volas proponi al aliuloj."
 
@@ -7575,7 +7575,7 @@ msgstr "Elektu kiun lingvon uzi por la apa uzantinterfaco."
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "Elektu kiujn lingvojn vi volas en viaj abonitaj fluoj. Se neniu elektita, ĉiuj lingvoj estos montrotaj."
 
-#: src/screens/Signup/StepInfo/index.tsx:270
+#: src/screens/Signup/StepInfo/index.tsx:274
 msgid "Select your date of birth"
 msgstr "Elektu la daton de via naskiĝo"
 
@@ -7602,7 +7602,7 @@ msgstr "Sendu mojosan retejon!"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:174
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:181
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:300
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:302
 #: src/view/com/modals/DeleteAccount.tsx:145
 msgid "Send email"
 msgstr "Sendi retmesaĝon"
@@ -7621,7 +7621,7 @@ msgstr "Sendi prikomentadon"
 msgid "Send message"
 msgstr "Sendi mesaĝon"
 
-#: src/components/PostControls/ShareMenu/RecentChats.tsx:111
+#: src/components/PostControls/ShareMenu/RecentChats.tsx:123
 msgid "Send post to {name}"
 msgstr "Sendi afiŝon al {name}"
 
@@ -7644,7 +7644,7 @@ msgstr "Sendi raporton al {0}"
 msgid "Send report to {title}"
 msgstr "Sendi raporton al {title}"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:293
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:295
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:120
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:123
 msgid "Send verification email"
@@ -7864,8 +7864,8 @@ msgstr "Montri adaptadajn opciojn"
 msgid "Show hidden replies"
 msgstr "Montri kaŝitajn respondojn"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:483
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:485
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:479
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:481
 msgid "Show less like this"
 msgstr "Montri malpli da similaj afiŝoj"
 
@@ -7877,8 +7877,8 @@ msgstr "Montri liston ĉiuokaze"
 msgid "Show More"
 msgstr "Montri pli"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:475
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:477
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:471
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:473
 msgid "Show more like this"
 msgstr "Montri pli da similaj afiŝoj"
 
@@ -7918,8 +7918,8 @@ msgstr "Montri respondojn fadene"
 msgid "Show replies by people you follow before all other replies"
 msgstr "Montri respondojn de miaj sekvatoj antaŭ ĉiuj aliaj respondoj"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:559
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:569
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:555
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:565
 msgid "Show reply for everyone"
 msgstr "Montri respondojn por ĉiuj"
 
@@ -7941,8 +7941,8 @@ msgstr "Montri averton"
 msgid "Show warning and filter from feeds"
 msgstr "Montri averton kaj elfiltri el fluoj"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:608
-#: src/view/com/post-thread/PostThreadItem.tsx:926
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:609
+#: src/view/com/post-thread/PostThreadItem.tsx:924
 msgid "Shows information about when this post was created"
 msgstr "Montri informojn pri kiam ĉi tiu afiŝo estis kreita"
 
@@ -7999,8 +7999,8 @@ msgstr "Ensaluti al nelistigitan konton"
 msgid "Sign in to Bluesky or create a new account"
 msgstr "Ensalutu al Bluesky aŭ kreu novan konton"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:461
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:463
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:457
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:459
 msgid "Sign in to view post"
 msgstr "Ensalutu por vidi la afiŝon"
 
@@ -8040,7 +8040,7 @@ msgid "Similar accounts"
 msgstr "Similaj kontoj"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/StarterPack/Wizard/index.tsx:195
+#: src/screens/StarterPack/Wizard/index.tsx:201
 msgid "Skip"
 msgstr "Preterpasi"
 
@@ -8161,7 +8161,7 @@ msgstr "Trudaĵo; troaj mencioj aŭ respondoj"
 msgid "Sports"
 msgstr "Sporto"
 
-#: src/components/PostControls/ShareMenu/RecentChats.tsx:196
+#: src/components/PostControls/ShareMenu/RecentChats.tsx:208
 msgid "Start a conversation, and it will appear here."
 msgstr "Komencu konversacion, kaj ĝi aperos ĉi tie."
 
@@ -8185,7 +8185,7 @@ msgstr "Komenci babili kun {displayName}"
 
 #: src/Navigation.tsx:578
 #: src/Navigation.tsx:583
-#: src/screens/StarterPack/Wizard/index.tsx:186
+#: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Starter Pack"
 msgstr "Startpako"
 
@@ -8470,8 +8470,8 @@ msgstr "Tio enhavas la jenan:"
 #: src/screens/StarterPack/StarterPackScreen.tsx:111
 #: src/screens/StarterPack/StarterPackScreen.tsx:155
 #: src/screens/StarterPack/StarterPackScreen.tsx:156
-#: src/screens/StarterPack/Wizard/index.tsx:104
-#: src/screens/StarterPack/Wizard/index.tsx:114
+#: src/screens/StarterPack/Wizard/index.tsx:110
+#: src/screens/StarterPack/Wizard/index.tsx:120
 msgid "That starter pack could not be found."
 msgstr "Tiu startpako ne troveblas."
 
@@ -8617,7 +8617,7 @@ msgstr "Estis problemo konektante servilon, bonvolu kontroli vian interretan kon
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Estis problemo ŝargante sciigojn. Tuŝetu ĉi tie por reprovi."
 
-#: src/screens/Search/Explore.tsx:990
+#: src/screens/Search/Explore.tsx:986
 #: src/view/com/posts/PostFeed.tsx:701
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Estis problemo ŝargante afiŝojn. Tuŝeti ĉi tie por reprovi."
@@ -8654,9 +8654,9 @@ msgstr "Estis problemo sendante vian raporton. Bonvolu kontroli vian interretan 
 msgid "There was an issue updating your feeds, please check your internet connection and try again."
 msgstr "Estis problemo ĝisdatigante viajn fluojn, bonvolu kontroli vian interretan konekton kaj reprovu."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:365
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:378
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:388
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:361
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:374
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:132
@@ -8839,8 +8839,8 @@ msgstr "Ĉi tiu listo malplenas."
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Ĉi tiu kontrolservo neatingeblas. Vidu pli da detaloj sube. Se ĉi tiu problemo daŭras, kontaktu nin."
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:648
-#: src/view/com/post-thread/PostThreadItem.tsx:966
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:649
+#: src/view/com/post-thread/PostThreadItem.tsx:964
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Ĉi tiu afiŝo asertas, ke ĝi estis kreita je <0>{0}</0>, sed ĝi estis unue vidita ĉe Bluesky je <1>{1}</1>."
 
@@ -8856,7 +8856,7 @@ msgstr "Ĉi tiu afiŝo estis forigita."
 msgid "This post is only visible to logged-in users."
 msgstr "Ĉi tiu afiŝo videblas nur al ensalutintaj uzantoj."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:709
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:705
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Ĉi tiu afiŝo estos kaŝota el fluoj kaj fadenoj. Tio ne povas esti malfarita."
 
@@ -8868,7 +8868,7 @@ msgstr "La aŭtoro de ĉi tiu afiŝo malŝaltis citafiŝojn."
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr "Ĉi tiu profilo estas videbla nur al ensalutintaj uzantoj. Ĝi ne estos videbla al ne ensalutintaj homoj."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:744
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:740
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr "Ĉi tiu respondo estos ordigota en kaŝitan sekcion ĉe la subo de via fadeno kaj silentigos sciigojn pri sekvontaj respondoj - ambaŭ por vi kaj aliuloj."
 
@@ -8929,7 +8929,7 @@ msgstr "Ĉi tio forigos \"{0}\" de viaj silentigitaj vortoj. Vi ĉiam povos real
 msgid "This will remove @{0} from the quick access list."
 msgstr "Ĉi tio forigos @{0} el la listo de rapidatingo."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:734
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:730
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr "Ĉi tio forigos vian afiŝon el ĉi tiu citafiŝo por ĉiuj uzantoj kaj anstataŭigos ĝin per lokokupilo."
 
@@ -9019,14 +9019,14 @@ msgstr "La plej popularaj respondoj unue"
 msgid "Topic"
 msgstr "Temo"
 
-#: src/components/dms/MessageContextMenu.tsx:142
-#: src/components/dms/MessageContextMenu.tsx:144
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:570
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:573
-#: src/view/com/post-thread/PostThreadItem.tsx:888
-#: src/view/com/post-thread/PostThreadItem.tsx:891
+#: src/components/dms/MessageContextMenu.tsx:137
+#: src/components/dms/MessageContextMenu.tsx:139
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:440
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:442
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:571
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:574
+#: src/view/com/post-thread/PostThreadItem.tsx:886
+#: src/view/com/post-thread/PostThreadItem.tsx:889
 msgid "Translate"
 msgstr "Traduki"
 
@@ -9195,8 +9195,8 @@ msgstr "Malsilentigi"
 msgid "Unmute {tag}"
 msgstr "Malsilentigi {tag}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:624
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:630
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:626
 #: src/view/com/profile/ProfileMenu.tsx:362
 #: src/view/com/profile/ProfileMenu.tsx:368
 msgid "Unmute account"
@@ -9210,8 +9210,8 @@ msgstr "Malsilentigi konversacion"
 msgid "Unmute list"
 msgstr "Malsilentigi liston"
 
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:505
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:509
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:513
 msgid "Unmute thread"
 msgstr "Malsilentigi fadenon"
 
@@ -9237,8 +9237,8 @@ msgstr "Depingli fluon"
 msgid "Unpin from home"
 msgstr "Depingli de la hejmpaĝo"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:419
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:426
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:415
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:422
 msgid "Unpin from profile"
 msgstr "Depingli de la profilo"
 
@@ -9316,12 +9316,12 @@ msgstr "Ŝanĝi al {domain}"
 msgid "Update your email"
 msgstr "Ĝisdatigi vian retpoŝtadreson"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:312
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:308
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr "Ĝisdatigo de citaĵa aldonaĵo malsukcesis"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:343
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:339
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr "Ĝisdatigado de responda videbleco malsukcesis"
@@ -9530,8 +9530,11 @@ msgstr "Konfirmi konton"
 msgid "Verify again"
 msgstr "Konfirmi denove"
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:348
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:359
+#. Button text and accessibility label for action to verify the user's email address using the code entered
+#. Button text and accessibility label for action to verify the user's email address using the code entered
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:351
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:367
+msgctxt "action"
 msgid "Verify code"
 msgstr "Konfirmi kodon"
 
@@ -9540,6 +9543,7 @@ msgstr "Konfirmi kodon"
 msgid "Verify DNS Record"
 msgstr "Kontrolu DNS-rikordon"
 
+#. Dialog title when a user is verifying their email address by entering a code they have been sent
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:214
 msgid "Verify email code"
 msgstr "Konfirmi retmesaĝan kodon"
@@ -9833,7 +9837,7 @@ msgstr "Ne plu da afiŝoj de viaj sekvantoj. Jen la plej lastaj de <0/>."
 msgid "We recommend selecting at least two interests."
 msgstr "Ni rekomendas al vi elekti almenaŭ du interesojn."
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:238
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:240
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Ni sendis retmesaĝon al <0>{0}</0> enhavatan ligilon. Bonvolu alklaki ĝin por plenumi la procezon de retpoŝtadresa konfirmado."
 
@@ -9861,7 +9865,7 @@ msgstr "Ne eblis konetktiĝi. Bonvolu reprovi por kontinui agordadon de via kont
 msgid "We will let you know when your account is ready."
 msgstr "Ni informos vin kiam via konto estos preta."
 
-#: src/components/dialogs/EmailDialog/screens/Verify.tsx:247
+#: src/components/dialogs/EmailDialog/screens/Verify.tsx:249
 msgid "We'll send an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Ni sendos retmesaĝon al <0>{0}</0> enhavatan ligilon. Bonvolu alklaki ĝin por plenumi la procezon de retpoŝtadresa konfirmado."
 
@@ -9870,11 +9874,11 @@ msgid "We'll use this to help customize your experience."
 msgstr "Ni uzos ĉi tion por adapti vian ĝuon."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:139
-msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 13th, 2025."
+msgid "We're also updating our <0>Community Guidelines</0>, and we want your input! These new guidelines will take effect on October 15th, 2025."
 msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:82
-msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 13th, 2025."
+msgid "We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:227
@@ -9924,7 +9928,7 @@ msgid "We're sorry! You can only subscribe to twenty labelers, and you've reache
 msgstr "Ni bedaŭras! Vi povas aboni nur dudek etikedilojn kaj vi atingis vian limon de dudek."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:122
-msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 12th, 2025."
+msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 15th, 2025."
 msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:63
@@ -9932,11 +9936,11 @@ msgid "We're updating our policies"
 msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:76
-msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 12th, 2025."
+msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025."
 msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:61
-msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 12th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 13th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
+msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
@@ -10079,11 +10083,11 @@ msgstr "Jes, malaktivigi"
 msgid "Yes, delete this starter pack"
 msgstr "Jes, forigu ĉi tiun startpakon"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:737
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:733
 msgid "Yes, detach"
 msgstr "Jes, malligi"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:747
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:743
 msgid "Yes, hide"
 msgstr "Jes, kaŝi"
 
@@ -10100,7 +10104,7 @@ msgid "You"
 msgstr "Vi"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:23
-msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 13th."
+msgid "You also agree to <0>Bluesky’s Community Guidelines</0>. An <1>updated version of our Community Guidelines</1> will take effect on October 15th."
 msgstr ""
 
 #: src/components/verification/VerifierDialog.tsx:59
@@ -10394,11 +10398,11 @@ msgstr "Vi elsalutos el ĉiuj viaj kontoj."
 msgid "You will no longer receive notifications for {0}"
 msgstr "Vi ne plu ricevos sciigojn pri {0}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:212
 msgid "You will no longer receive notifications for this thread"
 msgstr "Vi ne plu ricevos sciigojn pri ĉi tiu fadeno"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:212
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:208
 msgid "You will now receive notifications for this thread"
 msgstr "Vi nun ricevos sciigojn pri ĉi tiu fadeno"
 
@@ -10520,7 +10524,7 @@ msgstr "Via konto evidentiĝis esti kontraŭ la <0>Uzokondiĉoj de Bluesky Socia
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr "Via apelacio estas sendita. Se via apelacio sukcesos, vi ricevos retmesaĝon."
 
-#: src/screens/Signup/StepInfo/index.tsx:257
+#: src/screens/Signup/StepInfo/index.tsx:261
 msgid "Your birth date"
 msgstr "Via naskiĝdato"
 
@@ -10547,8 +10551,8 @@ msgid "Your email"
 msgstr "Via retpoŝtadreso"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:51
-#: src/screens/Signup/state.ts:273
-#: src/screens/Signup/StepInfo/index.tsx:98
+#: src/screens/Signup/state.ts:270
+#: src/screens/Signup/StepInfo/index.tsx:101
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
 msgstr "Via retpoŝtadreso ŝajnas esti nevalida."
@@ -10598,7 +10602,7 @@ msgstr "Viaj silentigitaj vortoj"
 msgid "Your password has been changed successfully!"
 msgstr "Via pasvorto estis ŝanĝita sukcese!"
 
-#: src/screens/Signup/StepInfo/index.tsx:127
+#: src/screens/Signup/StepInfo/index.tsx:130
 msgid "Your password must be at least 8 characters long."
 msgstr "Via pasvorto bezonas almenaŭ 8 signojn."
 
