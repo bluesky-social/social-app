@@ -1340,7 +1340,7 @@ function ComposerFooter({
 
       errors.map((error, i) => {
         toast.show({
-          type: 'error',
+          type: 'warning',
           content: error,
           a11yLabel: error,
           duration: 3e3 * (errors.length - i),
