@@ -52,6 +52,7 @@ export enum SelectedAssetError {
   MaxVideos = 'MaxVideos',
   VideoTooLong = 'VideoTooLong',
   MaxGIFs = 'MaxGIFs',
+  NoGifsOnNative = 'NoGifsOnNative',
 }
 
 const SUPPORTED_VIDEO_MIME_TYPES = [
@@ -61,6 +62,12 @@ const SUPPORTED_VIDEO_MIME_TYPES = [
   'video/quicktime',
 ] as const
 export type SupportedVideoMimeType = (typeof SUPPORTED_VIDEO_MIME_TYPES)[number]
+
+function isSupportedVideoMimeType(
+  mimeType: string,
+): mimeType is SupportedVideoMimeType {
+  return SUPPORTED_VIDEO_MIME_TYPES.includes(mimeType as SupportedVideoMimeType)
+}
 
 const SUPPORTED_IMAGE_MIME_TYPES = (
   [
@@ -76,6 +83,12 @@ export type SupportedImageMimeType = Exclude<
   (typeof SUPPORTED_IMAGE_MIME_TYPES)[number],
   boolean
 >
+
+function isSupportedImageMimeType(
+  mimeType: string,
+): mimeType is SupportedImageMimeType {
+  return SUPPORTED_IMAGE_MIME_TYPES.includes(mimeType as SupportedImageMimeType)
+}
 
 const extensionToMimeType: Record<
   string,
@@ -138,27 +151,14 @@ function getImagePickerAssetType(asset: ImagePickerAsset):
   }
 
   /*
-   * We can now do some validation of the `mimeType` and distill it down into
-   * our supported `type` groups.
+   * Distill this down into a type "group".
    */
   let type: SelectedAsset['type'] | undefined
   if (mimeType === 'image/gif') {
     type = 'gif'
   } else if (mimeType?.startsWith('video/')) {
-    /**
-     * We don't care about mimeType at this point on native, since the
-     * `processVideo` step later on will convert to `.mp4`.
-     */
-    if (
-      !isWeb ||
-      SUPPORTED_VIDEO_MIME_TYPES.includes(mimeType as SupportedVideoMimeType)
-    ) {
-      type = 'video'
-    }
-  } else if (
-    mimeType?.startsWith('image/') &&
-    SUPPORTED_IMAGE_MIME_TYPES.includes(mimeType as SupportedImageMimeType)
-  ) {
+    type = 'video'
+  } else if (mimeType?.startsWith('image/')) {
     type = 'image'
   }
 
@@ -203,6 +203,138 @@ async function getAdditionalVideoMetadata(asset: ValidatedImagePickerAsset) {
   return await getVideoMetadata(file)
 }
 
+async function processImagePickerAssets(
+  assets: ImagePickerAsset[],
+  {
+    selectionLimit,
+  }: {
+    selectionLimit: number
+  },
+) {
+  /*
+   * A deduped set of error codes, which we'll use later
+   */
+  const errors = new Set<SelectedAssetError>()
+
+  /*
+   * We only support selecting a single type of media at a time, so this
+   * gets set to whatever the first asset type is.
+   */
+  let primaryMediaType: SelectedAsset['type'] | undefined
+
+  /*
+   * This will hold the assets that we can actually use, after filtering
+   */
+  let supportedAssets: ValidatedImagePickerAsset[] = []
+
+  for (const asset of assets) {
+    const {success, type, mimeType} = getImagePickerAssetType(asset)
+
+    if (!success) {
+      errors.add(SelectedAssetError.Unsupported)
+      continue
+    }
+
+    // set the primary media type to the first valid asset type
+    primaryMediaType = primaryMediaType || type
+
+    // ignore mixed types
+    if (type !== primaryMediaType) {
+      errors.add(SelectedAssetError.MixedTypes)
+      continue
+    }
+
+    if (type === 'video') {
+      /**
+       * We don't care too much about mimeType at this point on native,
+       * since the `processVideo` step later on will convert to `.mp4`.
+       */
+      if (isWeb && !isSupportedVideoMimeType(mimeType)) {
+        errors.add(SelectedAssetError.Unsupported)
+        continue
+      }
+    }
+
+    if (type === 'image') {
+      if (!isSupportedImageMimeType(mimeType)) {
+        errors.add(SelectedAssetError.Unsupported)
+        continue
+      }
+    }
+
+    if (type === 'gif') {
+      if (isNative) {
+        errors.add(SelectedAssetError.NoGifsOnNative)
+        continue
+      }
+    }
+
+    /*
+     * All validations passed, we have an asset!
+     */
+    supportedAssets.push({
+      mimeType,
+      ...asset,
+    })
+  }
+
+  if (primaryMediaType === 'image') {
+    if (supportedAssets.length > selectionLimit) {
+      errors.add(SelectedAssetError.MaxImages)
+      supportedAssets = supportedAssets.slice(0, selectionLimit)
+    }
+  } else if (primaryMediaType === 'video') {
+    if (supportedAssets.length > 1) {
+      errors.add(SelectedAssetError.MaxVideos)
+      supportedAssets = supportedAssets.slice(0, 1)
+    }
+
+    const selectedVideo = supportedAssets[0]
+
+    if (typeof selectedVideo.duration !== 'number') {
+      try {
+        const metadata = await getAdditionalVideoMetadata(selectedVideo)
+        selectedVideo.duration = metadata.duration
+        selectedVideo.width = metadata.width
+        selectedVideo.height = metadata.height
+      } catch (e: any) {
+        logger.error(`processSelectedAssets: failed to get video metadata`, {
+          safeMessage: e.message,
+        })
+        errors.add(SelectedAssetError.Unsupported)
+        supportedAssets = []
+      }
+    } else {
+      /*
+       * The `duration` is in seconds on web, but in milliseconds on
+       * native. We normalize to milliseconds.
+       */
+      if (isWeb) {
+        selectedVideo.duration = selectedVideo.duration * 1000
+      }
+    }
+
+    if (
+      selectedVideo.duration &&
+      selectedVideo.duration > VIDEO_MAX_DURATION_MS
+    ) {
+      errors.add(SelectedAssetError.VideoTooLong)
+      supportedAssets = []
+    }
+  } else if (primaryMediaType === 'gif') {
+    if (supportedAssets.length > 1) {
+      errors.add(SelectedAssetError.MaxGIFs)
+      supportedAssets = supportedAssets.slice(0, 1)
+    }
+  }
+
+  return {
+    type: primaryMediaType!, // set above
+    assets: supportedAssets,
+    errors,
+  }
+}
+
 export function SelectMediaBtn({
   disabled,
   selectedAssetsCount,
@@ -217,98 +349,12 @@ export function SelectMediaBtn({
   const selectionLimit = MAX_IMAGES - selectedAssetsCount
 
   const processSelectedAssets = useCallback(
-    async (assets: ImagePickerAsset[]) => {
-      /*
-       * A deduped set of error codes, which we'll use later
-       */
-      const errorCodes = new Set<SelectedAssetError>()
-
-      /*
-       * We only support selecting a single type of media at a time, so this
-       * gets set to whatever the first asset type is.
-       */
-      let primaryMediaType: SelectedAsset['type'] | undefined
-
-      /*
-       * This will hold the assets that we can actually use, after filtering
-       */
-      let supportedAssets: ValidatedImagePickerAsset[] = []
-
-      for (const asset of assets) {
-        const {success, type, mimeType} = getImagePickerAssetType(asset)
-
-        if (!success) {
-          errorCodes.add(SelectedAssetError.Unsupported)
-          continue
-        }
-
-        // set the primary media type to the first valid asset type
-        primaryMediaType = primaryMediaType || type
-
-        // ignore mixed types
-        if (type !== primaryMediaType) {
-          errorCodes.add(SelectedAssetError.MixedTypes)
-          continue
-        }
-
-        supportedAssets.push({
-          mimeType,
-          ...asset,
-        })
-      }
-
-      if (primaryMediaType === 'image') {
-        if (supportedAssets.length > selectionLimit) {
-          errorCodes.add(SelectedAssetError.MaxImages)
-          supportedAssets = supportedAssets.slice(0, selectionLimit)
-        }
-      } else if (primaryMediaType === 'video') {
-        if (supportedAssets.length > 1) {
-          errorCodes.add(SelectedAssetError.MaxVideos)
-          supportedAssets = supportedAssets.slice(0, 1)
-        }
-
-        const selectedVideo = supportedAssets[0]
-
-        if (typeof selectedVideo.duration !== 'number') {
-          try {
-            const metadata = await getAdditionalVideoMetadata(selectedVideo)
-            selectedVideo.duration = metadata.duration
-            selectedVideo.width = metadata.width
-            selectedVideo.height = metadata.height
-          } catch (e: any) {
-            logger.error(
-              `processSelectedAssets: failed to get video metadata`,
-              {
-                safeMessage: e.message,
-              },
-            )
-            errorCodes.add(SelectedAssetError.Unsupported)
-            supportedAssets = []
-          }
-        } else {
-          /*
-           * The `duration` is in seconds on web, but in milliseconds on
-           * native. We normalize to milliseconds.
-           */
-          if (isWeb) {
-            selectedVideo.duration = selectedVideo.duration * 1000
-          }
-        }
-
-        if (
-          selectedVideo.duration &&
-          selectedVideo.duration > VIDEO_MAX_DURATION_MS
-        ) {
-          errorCodes.add(SelectedAssetError.VideoTooLong)
-          supportedAssets = []
-        }
-      } else if (primaryMediaType === 'gif') {
-        if (supportedAssets.length > 1) {
-          errorCodes.add(SelectedAssetError.MaxGIFs)
-          supportedAssets = supportedAssets.slice(0, 1)
-        }
-      }
+    async (rawAssets: ImagePickerAsset[]) => {
+      const {
+        type,
+        assets,
+        errors: errorCodes,
+      } = await processImagePickerAssets(rawAssets, {selectionLimit})
 
       /*
        * Convert error codes to user-friendly messages.
@@ -333,16 +379,19 @@ export function SelectMediaBtn({
           [SelectedAssetError.MaxGIFs]: _(
             msg`You can only select one GIF at a time.`,
           ),
+          [SelectedAssetError.NoGifsOnNative]: _(
+            msg`GIFs are only supported on web at this time.`,
+          ),
         }[error]
       })
 
       /*
-       * Finally, report the selected assets and any errors back to the
+       * Report the selected assets and any errors back to the
        * composer.
        */
       onSelectAssets({
-        type: primaryMediaType!,
-        assets: supportedAssets,
+        type,
+        assets,
         errors,
       })
     },
