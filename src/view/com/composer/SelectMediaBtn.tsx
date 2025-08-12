@@ -105,7 +105,7 @@ const extensionToMimeType: Record<
   heic: 'image/heic',
 }
 
-function getImagePickerAssetType(asset: ImagePickerAsset):
+function classifyImagePickerAsset(asset: ImagePickerAsset):
   | {
       success: true
       type: SelectedAsset['type']
@@ -151,7 +151,7 @@ function getImagePickerAssetType(asset: ImagePickerAsset):
   }
 
   /*
-   * Distill this down into a type "group".
+   * Distill this down into a type "class".
    */
   let type: SelectedAsset['type'] | undefined
   if (mimeType === 'image/gif') {
@@ -228,7 +228,7 @@ async function processImagePickerAssets(
   let supportedAssets: ValidatedImagePickerAsset[] = []
 
   for (const asset of assets) {
-    const {success, type, mimeType} = getImagePickerAssetType(asset)
+    const {success, type, mimeType} = classifyImagePickerAsset(asset)
 
     if (!success) {
       errors.add(SelectedAssetError.Unsupported)
