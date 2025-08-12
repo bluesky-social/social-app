@@ -191,6 +191,7 @@ function getImagePickerAssetType(asset: ImagePickerAsset):
  * dimensions, so we need to load the file manually to extract this.
  */
 async function getAdditionalVideoMetadata(asset: ValidatedImagePickerAsset) {
+  if (isNative) return asset
   const file = await fetch(asset.uri)
     .then(res => res.blob())
     .then(
