@@ -22,12 +22,10 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
-import {toast} from '#/components/Toast'
+import * as toast from '#/components/Toast'
 
 export type SelectMediaButtonProps = {
-  size: number
   disabled?: boolean
-  setError: (error: string) => void
   selectedAssetsCount: number
   onSelectAssets: (props: {
     type: AssetType
@@ -433,10 +431,8 @@ export function SelectMediaButton({
       ])
 
       if (!photoAccess && !videoAccess) {
-        toast.show({
+        toast.show(_(msg`You need to allow access to your media library.`), {
           type: 'error',
-          content: 'You need to allow access to your media library.',
-          a11yLabel: 'You need to allow access to your media library.',
         })
         return
       }
@@ -459,6 +455,7 @@ export function SelectMediaButton({
 
     await processSelectedAssets(assets)
   }, [
+    _,
     requestPhotoAccessIfNeeded,
     requestVideoAccessIfNeeded,
     sheetWrapper,

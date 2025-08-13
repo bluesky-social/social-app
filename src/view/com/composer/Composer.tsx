@@ -129,7 +129,7 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
-import {toast} from '#/components/Toast'
+import * as toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
@@ -815,10 +815,8 @@ let ComposerPost = React.memo(function ComposerPost({
         if (isNative) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          toast.show({
+          toast.show(_(msg`Unsupported video type`), {
             type: 'error',
-            content: _(msg`Unsupported video type`),
-            a11yLabel: _(msg`Unsupported video type.`),
           })
           return
         }
@@ -1255,8 +1253,6 @@ function ComposerFooter({
   dispatch,
   showAddButton,
   onEmojiButtonPress,
-  onError,
-
   onSelectVideo,
   onAddPost,
 }: {
@@ -1338,12 +1334,9 @@ function ComposerFooter({
         }
       }
 
-      errors.map((error, i) => {
-        toast.show({
+      errors.map(error => {
+        toast.show(error, {
           type: 'warning',
-          content: error,
-          a11yLabel: error,
-          duration: 3e3 * (errors.length - i),
         })
       })
     },
@@ -1369,9 +1362,7 @@ function ComposerFooter({
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
               <SelectMediaButton
-                size={images.length}
                 disabled={isMediaSelectionDisabled}
-                setError={onError}
                 selectedAssetsCount={selectedAssetsCount}
                 onSelectAssets={onSelectAssets}
               />
