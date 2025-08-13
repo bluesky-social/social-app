@@ -1,27 +1,24 @@
-import React, {useCallback} from 'react'
-import {TouchableOpacity, View} from 'react-native'
+import {useMemo} from 'react'
+import {View} from 'react-native'
 import {
   type AppBskyActorDefs,
   type ModerationCause,
   type ModerationDecision,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
-import {BACK_HITSLOP} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
-import {type NavigationProp} from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isWeb} from '#/platform/detection'
 import {type Shadow} from '#/state/cache/profile-shadow'
 import {isConvoActive, useConvo} from '#/state/messages/convo'
 import {type ConvoItem} from '#/state/messages/convo/types'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {ConvoMenu} from '#/components/dms/ConvoMenu'
 import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
+import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
@@ -30,19 +27,16 @@ import {VerificationCheck} from '#/components/verification/VerificationCheck'
 
 const PFP_SIZE = isWeb ? 40 : 34
 
-export let MessagesListHeader = ({
+export function MessagesListHeader({
   profile,
   moderation,
 }: {
   profile?: Shadow<AppBskyActorDefs.ProfileViewDetailed>
   moderation?: ModerationDecision
-}): React.ReactNode => {
+}) {
   const t = useTheme()
-  const {_} = useLingui()
-  const {gtTablet} = useBreakpoints()
-  const navigation = useNavigation<NavigationProp>()
 
-  const blockInfo = React.useMemo(() => {
+  const blockInfo = useMemo(() => {
     if (!moderation) return
     const modui = moderation.ui('profileView')
     const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
@@ -54,44 +48,9 @@ export let MessagesListHeader = ({
     }
   }, [moderation])
 
-  const onPressBack = useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Messages', {})
-    }
-  }, [navigation])
-
   return (
-    <View
-      style={[
-        t.atoms.bg,
-        t.atoms.border_contrast_low,
-        a.border_b,
-        a.flex_row,
-        a.align_start,
-        a.gap_sm,
-        gtTablet ? a.pl_lg : a.pl_xl,
-        a.pr_lg,
-        a.py_sm,
-      ]}>
-      <TouchableOpacity
-        testID="conversationHeaderBackBtn"
-        onPress={onPressBack}
-        hitSlop={BACK_HITSLOP}
-        style={{width: 30, height: 30, marginTop: isWeb ? 6 : 4}}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Back`)}
-        accessibilityHint="">
-        <FontAwesomeIcon
-          size={18}
-          icon="angle-left"
-          style={{
-            marginTop: 6,
-          }}
-          color={t.atoms.text.color}
-        />
-      </TouchableOpacity>
+    <Layout.Header.Outer>
+      <Layout.Header.BackButton />
 
       {profile && moderation && blockInfo ? (
         <HeaderReady
@@ -131,10 +90,9 @@ export let MessagesListHeader = ({
           <View style={{width: 30}} />
         </>
       )}
-    </View>
+    </Layout.Header.Outer>
   )
 }
-MessagesListHeader = React.memo(MessagesListHeader)
 
 function HeaderReady({
   profile,
