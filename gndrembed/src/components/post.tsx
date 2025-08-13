@@ -1,9 +1,9 @@
 import {
-  AppGndrFeedDefs,
-  AppGndrFeedPost,
-  AppGndrRichtextFacet,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
+  AppBskyRichtextFacet as AppGndrRichtextFacet,
   RichText,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {h} from 'preact'
 
 import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'

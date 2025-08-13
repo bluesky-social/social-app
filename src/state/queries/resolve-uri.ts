@@ -1,4 +1,4 @@
-import {AtUri} from '@gander-social-atproto/api'
+import {AtUri} from '@atproto/api'
 import {
   type QueryClient,
   useQuery,

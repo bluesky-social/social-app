@@ -1,5 +1,5 @@
 import React from 'react'
-import {type AppGndrActorDefs} from '@gander-social-atproto/api'
+import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'

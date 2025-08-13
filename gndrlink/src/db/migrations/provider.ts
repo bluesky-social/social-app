@@ -1,4 +1,4 @@
-import {Migration, MigrationProvider} from 'kysely'
+import {type Migration, type MigrationProvider} from 'kysely'
 
 export class DbMigrationProvider implements MigrationProvider {
   constructor(private migrations: Record<string, Migration>) {}

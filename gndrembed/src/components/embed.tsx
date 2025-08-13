@@ -1,15 +1,15 @@
 import {
-  AppGndrEmbedExternal,
-  AppGndrEmbedImages,
-  AppGndrEmbedRecord,
-  AppGndrEmbedRecordWithMedia,
-  AppGndrEmbedVideo,
-  AppGndrFeedDefs,
-  AppGndrFeedPost,
-  AppGndrGraphDefs,
-  AppGndrGraphStarterpack,
-  AppGndrLabelerDefs,
-} from '@gander-social-atproto/api'
+  AppBskyEmbedExternal as AppGndrEmbedExternal,
+  AppBskyEmbedImages as AppGndrEmbedImages,
+  AppBskyEmbedRecord as AppGndrEmbedRecord,
+  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
+  AppBskyEmbedVideo as AppGndrEmbedVideo,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
+  AppBskyGraphDefs as AppGndrGraphDefs,
+  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
+  AppBskyLabelerDefs as AppGndrLabelerDefs,
+} from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
@@ -59,7 +59,7 @@ export function Embed({
         )
         if (pwiOptOut) {
           return (
-            <Info>
+            <Info children={undefined}>
               The author of the quoted post has requested their posts not be
               displayed on external sites.
             </Info>
@@ -149,12 +149,12 @@ export function Embed({
 
       // Case 3.6: Post not found
       if (AppGndrEmbedRecord.isViewNotFound(record)) {
-        return <Info>Quoted post not found, it may have been deleted.</Info>
+        return <Info children={undefined}>Quoted post not found, it may have been deleted.</Info>
       }
 
       // Case 3.7: Post blocked
       if (AppGndrEmbedRecord.isViewBlocked(record)) {
-        return <Info>The quoted post is blocked.</Info>
+        return <Info children={undefined}>The quoted post is blocked.</Info>
       }
 
       // Case 3.8: Detached quote post
@@ -186,7 +186,7 @@ export function Embed({
           />
           <Embed
             content={{
-              $type: 'app.gndr.embed.record#view',
+              $type: 'app.bsky.embed.record#view',
               record: content.record.record,
             }}
             labels={content.record.record.labels}

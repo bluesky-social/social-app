@@ -1,4 +1,4 @@
-import {envInt, envStr} from '@gander-social-atproto/common'
+import {envInt, envStr} from '@atproto/common'
 
 export type Config = {
   service: ServiceConfig
@@ -31,7 +31,7 @@ export const envToCfg = (env: Environment): Config => {
   const serviceCfg: ServiceConfig = {
     port: env.port ?? 3000,
     version: env.version,
-    appviewUrl: env.appviewUrl ?? 'https://api.gndr.app',
+    appviewUrl: env.appviewUrl ?? 'https://api.bsky.app',
     originVerify: env.originVerify,
   }
   return {

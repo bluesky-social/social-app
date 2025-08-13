@@ -1,11 +1,11 @@
 import '../index.css'
 
 import {
-  AppGndrFeedDefs,
-  AppGndrFeedPost,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
   AtpAgent,
   AtUri,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {h, render} from 'preact'
 import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
 
@@ -34,7 +34,7 @@ if (!root) throw new Error('No root element')
 initSystemColorMode()
 
 const agent = new AtpAgent({
-  service: 'https://public.api.gndr.app',
+  service: 'https://public.api.bsky.app',
 })
 
 render(<LandingPage />, root)

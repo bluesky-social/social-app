@@ -8,7 +8,7 @@ import {type MetricEvents} from '#/logger/metrics'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import * as env from '#/env'
-import {useSession} from '../../state/session'
+import {useSession} from '#/state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
 import {type Gate} from './gates'
@@ -60,7 +60,7 @@ function createStatsigOptions(prefetchUsers: StatsigUser[]) {
     initTimeoutMs: 1,
     // Get fresh flags for other accounts as well, if any.
     prefetchUsers,
-    api: 'https://events.gndr.app/v2',
+    api: 'https://events.bsky.app/v2',
   }
 }
 

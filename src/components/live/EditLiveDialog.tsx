@@ -1,10 +1,10 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  type AppGndrActorDefs,
-  AppGndrActorStatus,
-  type AppGndrEmbedExternal,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  AppBskyActorStatus as AppGndrActorStatus,
+  type AppBskyEmbedExternal as AppGndrEmbedExternal,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {differenceInMinutes} from 'date-fns'

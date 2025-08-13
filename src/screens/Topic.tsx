@@ -1,6 +1,6 @@
 import React from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import {type PostView} from '@gander-social-atproto/api/dist/client/types/app/gndr/feed/defs'
+import {type PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'

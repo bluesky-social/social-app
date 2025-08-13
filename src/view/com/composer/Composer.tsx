@@ -42,14 +42,14 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
-  AppGndrFeedDefs,
-  type AppGndrFeedGetPostThread,
-  AppGndrUnspeccedDefs,
-  type GndrAgent,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedGetPostThread as AppGndrFeedGetPostThread,
+  AppBskyUnspeccedDefs as AppGndrUnspeccedDefs,
+  type BskyAgent as GndrAgent,
   type RichText,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -418,7 +418,7 @@ export const ComposePost = ({
             5,
             _e => true,
             async () => {
-              const res = await agent.app.gndr.unspecced.getPostThreadV2({
+              const res = await agent.app.bsky.unspecced.getPostThreadV2({
                 anchor: postUri!,
                 above: false,
                 below: thread.posts.length - 1,
@@ -1519,7 +1519,7 @@ async function whenAppViewReady(
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.gndr.feed.getPostThread({
+      agent.app.bsky.feed.getPostThread({
         uri,
         depth: 0,
       }),

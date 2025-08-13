@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-  type AppGndrGraphDefs,
-  AppGndrGraphStarterpack,
-} from '@gander-social-atproto/api'
-import {type GeneratorView} from '@gander-social-atproto/api/dist/client/types/app/gndr/feed/defs'
+  type AppBskyGraphDefs as AppGndrGraphDefs,
+  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
+} from '@atproto/api'
+import {type GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, plural} from '@lingui/macro'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'

@@ -1,11 +1,11 @@
 import {
-  type AppGndrActorDefs,
-  AppGndrEmbedRecord,
-  AppGndrEmbedRecordWithMedia,
-  type AppGndrFeedDefs,
-  AppGndrFeedPost,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  AppBskyEmbedRecord as AppGndrEmbedRecord,
+  AppBskyEmbedRecord as AppGndrEmbedRecordWithMedia,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
   type AtUri,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,

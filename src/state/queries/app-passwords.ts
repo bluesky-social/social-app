@@ -1,4 +1,4 @@
-import {type ComAtprotoServerCreateAppPassword} from '@gander-social-atproto/api'
+import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'

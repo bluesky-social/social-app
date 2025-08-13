@@ -1,7 +1,7 @@
 import {memo, useCallback} from 'react'
 import {LayoutAnimation} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {type ChatGndrConvoDefs, RichText} from '@gander-social-atproto/api'
+import {type ChatBskyConvoDefs as ChatGndrConvoDefs, RichText} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

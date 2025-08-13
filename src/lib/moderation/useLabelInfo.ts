@@ -1,10 +1,10 @@
 import {
-  type AppGndrLabelerDefs,
+  type AppBskyLabelerDefs as AppGndrLabelerDefs,
   type ComAtprotoLabelDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinition,
   LABELS,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import * as bcp47Match from 'bcp-47-match'
 

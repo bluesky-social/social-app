@@ -1,7 +1,7 @@
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedGetLikes,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedGetLikes as AppGndrFeedGetLikes,
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,

@@ -1,18 +1,18 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {
-  type AppGndrActorDefs,
-  AppGndrFeedDefs,
-  AppGndrFeedPost,
-  AppGndrFeedThreadgate,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
+  AppBskyFeedThreadgate as AppGndrFeedThreadgate,
   AtUri,
   type ModerationDecision,
   RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
+import {
+  FontAwesomeIcon,
+  type FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -185,7 +185,7 @@ let FeedItemInner = ({
   const onPressReply = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.gndr.feed.defs#interactionReply',
+      event: 'app.bsky.feed.defs#interactionReply',
       feedContext,
       reqId,
     })
@@ -204,7 +204,7 @@ let FeedItemInner = ({
   const onOpenAuthor = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.gndr.feed.defs#clickthroughAuthor',
+      event: 'app.bsky.feed.defs#clickthroughAuthor',
       feedContext,
       reqId,
     })
@@ -213,7 +213,7 @@ let FeedItemInner = ({
   const onOpenReposter = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.gndr.feed.defs#clickthroughReposter',
+      event: 'app.bsky.feed.defs#clickthroughReposter',
       feedContext,
       reqId,
     })
@@ -222,7 +222,7 @@ let FeedItemInner = ({
   const onOpenEmbed = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.gndr.feed.defs#clickthroughEmbed',
+      event: 'app.bsky.feed.defs#clickthroughEmbed',
       feedContext,
       reqId,
     })
@@ -231,7 +231,7 @@ let FeedItemInner = ({
   const onBeforePress = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.gndr.feed.defs#clickthroughItem',
+      event: 'app.bsky.feed.defs#clickthroughItem',
       feedContext,
       reqId,
     })

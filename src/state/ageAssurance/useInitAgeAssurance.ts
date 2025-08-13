@@ -1,8 +1,8 @@
 import {
-  type AppGndrUnspeccedDefs,
-  type AppGndrUnspeccedInitAgeAssurance,
+  type AppBskyUnspeccedDefs as AppGndrUnspeccedDefs,
+  type AppBskyUnspeccedInitAgeAssurance as AppGndrUnspeccedInitAgeAssurance,
   AtpAgent,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
@@ -49,7 +49,7 @@ export function useInitAgeAssurance() {
         data: {token},
       } = await agent.com.atproto.server.getServiceAuth({
         aud: APPVIEW_DID,
-        lxm: `app.gndr.unspecced.initAgeAssurance`,
+        lxm: `app.bsky.unspecced.initAgeAssurance`,
       })
 
       const appView = new AtpAgent({service: APPVIEW})
@@ -63,7 +63,7 @@ export function useInitAgeAssurance() {
        */
       const {data} = await wait(
         2e3,
-        appView.app.gndr.unspecced.initAgeAssurance({
+        appView.app.bsky.unspecced.initAgeAssurance({
           ...props,
           countryCode: geolocation?.countryCode?.toUpperCase(),
         }),

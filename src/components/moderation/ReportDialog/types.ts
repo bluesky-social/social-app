@@ -1,10 +1,10 @@
 import {
   type $Typed,
-  type AppGndrActorDefs,
-  type AppGndrFeedDefs,
-  type AppGndrGraphDefs,
-  type ChatGndrConvoDefs,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
+  type ChatBskyConvoDefs as ChatGndrConvoDefs,
+} from '@atproto/api'
 
 import type * as Dialog from '#/components/Dialog'
 

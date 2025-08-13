@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {moderateUserList} from '@gander-social-atproto/api'
+import {moderateUserList} from '@atproto/api'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'

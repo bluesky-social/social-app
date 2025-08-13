@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type ModerationCause} from '@gander-social-atproto/api'
+import {type ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {type AppGndrFeedDefs} from '@gander-social-atproto/api'
+import {type AppGndrFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'

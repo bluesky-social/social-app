@@ -41,7 +41,7 @@ Only `json` is supported; `xml` is a 501.
 
 ## iframe URL
 
-`https://embed.gndr.app/embed/<did>/app.gndr.feed.post/<rkey>`
+`https://embed.gndr.app/embed/<did>/app.bsky.feed.post/<rkey>`
 `https://embed.gndr.app/static/embed.js`
 
 ```

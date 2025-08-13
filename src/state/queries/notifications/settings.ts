@@ -1,4 +1,4 @@
-import {type AppGndrNotificationDefs} from '@gander-social-atproto/api'
+import {type AppBskyNotificationDefs as AppGndrNotificationDefs} from '@atproto/api'
 import {t} from '@lingui/macro'
 import {
   type QueryClient,
@@ -22,7 +22,7 @@ export function useNotificationSettingsQuery({
   return useQuery({
     queryKey: RQKEY,
     queryFn: async () => {
-      const response = await agent.app.gndr.notification.getPreferences()
+      const response = await agent.app.bsky.notification.getPreferences()
       return response.data.preferences
     },
     enabled,
@@ -37,7 +37,7 @@ export function useNotificationSettingsUpdateMutation() {
       update: Partial<AppGndrNotificationDefs.Preferences>,
     ) => {
       const response =
-        await agent.app.gndr.notification.putPreferencesV2(update)
+        await agent.app.bsky.notification.putPreferencesV2(update)
       return response.data.preferences
     },
     onMutate: update => {

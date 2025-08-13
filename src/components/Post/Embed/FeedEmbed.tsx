@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {moderateFeedGenerator} from '@gander-social-atproto/api'
+import {moderateFeedGenerator} from '@atproto/api'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, useTheme} from '#/alf'

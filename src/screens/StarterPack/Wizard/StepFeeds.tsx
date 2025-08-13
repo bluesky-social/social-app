@@ -2,9 +2,9 @@ import {useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {
-  type AppGndrFeedDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
   type ModerationOpts,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'

@@ -1,9 +1,9 @@
 import {useEffect, useMemo, useState} from 'react'
 import {
-  AppGndrEmbedRecord,
-  AppGndrEmbedRecordWithMedia,
-  type AppGndrFeedDefs,
-} from '@gander-social-atproto/api'
+  AppBskyEmbedRecord as AppGndrEmbedRecord,
+  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+} from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 

@@ -2,9 +2,9 @@ import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {
-  type AppGndrActorDefs,
-  type AppGndrEmbedExternal,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyEmbedExternal as AppGndrEmbedExternal,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'

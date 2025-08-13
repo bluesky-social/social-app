@@ -1,10 +1,10 @@
 import {
-  type AppGndrActorDefs,
-  AppGndrEmbedRecord,
-  AppGndrEmbedRecordWithMedia,
-  AppGndrFeedDefs,
-  AppGndrFeedPost,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  AppBskyEmbedRecord as AppGndrEmbedRecord,
+  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
+} from '@atproto/api'
 
 import * as gndr from '#/types/gndr'
 import {isPostInLanguage} from '../../locale/helpers'

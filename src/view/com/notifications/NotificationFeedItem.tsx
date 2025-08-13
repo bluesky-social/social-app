@@ -15,16 +15,16 @@ import {
   View,
 } from 'react-native'
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedDefs,
-  AppGndrFeedPost,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
   AppGndrGraphFollow,
   moderateProfile,
   type ModerationDecision,
   type ModerationOpts,
-} from '@gander-social-atproto/api'
-import {AtUri} from '@gander-social-atproto/api'
-import {TID} from '@gander-social-atproto/common-web'
+} from '@atproto/api'
+import {AtUri} from '@atproto/api'
+import {TID} from '@atprotocommon-web'
 import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'

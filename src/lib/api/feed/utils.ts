@@ -1,4 +1,4 @@
-import {AtUri} from '@gander-social-atproto/api'
+import {AtUri} from '@atproto/api'
 
 import {GNDR_FEED_OWNER_DIDS} from '#/lib/constants'
 import {isWeb} from '#/platform/detection'

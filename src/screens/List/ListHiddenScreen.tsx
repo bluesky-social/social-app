@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppGndrGraphDefs} from '@gander-social-atproto/api'
+import {AppBskyGraphDefs as AppGndrGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'

@@ -5,7 +5,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
-import {type AppGndrGraphDefs as GraphDefs} from '@gander-social-atproto/api'
+import {type AppGndrGraphDefs as GraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -207,7 +207,7 @@ function ListItem({
           {sanitizeDisplayName(list.name)}
         </Text>
         <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-          {list.purpose === 'app.gndr.graph.defs#curatelist' &&
+          {list.purpose === 'app.bsky.graph.defs#curatelist' &&
             (list.creator.did === currentAccount?.did ? (
               <Trans>User list by you</Trans>
             ) : (
@@ -215,7 +215,7 @@ function ListItem({
                 User list by {sanitizeHandle(list.creator.handle, '@')}
               </Trans>
             ))}
-          {list.purpose === 'app.gndr.graph.defs#modlist' &&
+          {list.purpose === 'app.bsky.graph.defs#modlist' &&
             (list.creator.did === currentAccount?.did ? (
               <Trans>Moderation list by you</Trans>
             ) : (

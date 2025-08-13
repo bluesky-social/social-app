@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import {AddressInfo} from 'node:net'
+import {type AddressInfo} from 'node:net'
 import {after, before, describe, it} from 'node:test'
 
 import {Database, envToCfg, LinkService, readEnv} from '../src/index.js'

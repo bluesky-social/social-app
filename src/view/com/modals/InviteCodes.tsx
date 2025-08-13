@@ -6,11 +6,11 @@ import {
   View,
 } from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
+import {type ComAtprotoServerDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
   type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {type ComAtprotoServerDefs} from '@gander-social-atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

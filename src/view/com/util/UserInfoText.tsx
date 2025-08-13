@@ -1,5 +1,5 @@
 import {type StyleProp, StyleSheet, type TextStyle} from 'react-native'
-import {type AppGndrActorGetProfile as GetProfile} from '@gander-social-atproto/api'
+import {type AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'

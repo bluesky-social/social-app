@@ -1,7 +1,7 @@
 import React, {useRef} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {AppGndrRichtextFacet, RichText} from '@gander-social-atproto/api'
+import {AppBskyRichtextFacet as AppGndrRichtextFacet, RichText} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import {Document} from '@tiptap/extension-document'
 import Hardbreak from '@tiptap/extension-hard-break'

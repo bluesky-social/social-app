@@ -1,4 +1,4 @@
-import {type GndrAgent} from '@gander-social-atproto/api'
+import {type BskyAgent as GndrAgent} from '@atproto/api'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
@@ -33,11 +33,11 @@ export async function getServiceAuthToken({
 export async function getVideoUploadLimits(agent: GndrAgent, _: I18n['_']) {
   const token = await getServiceAuthToken({
     agent,
-    lxm: 'app.gndr.video.getUploadLimits',
+    lxm: 'app.bsky.video.getUploadLimits',
     aud: VIDEO_SERVICE_DID,
   })
   const videoAgent = createVideoAgent()
-  const {data: limits} = await videoAgent.app.gndr.video
+  const {data: limits} = await videoAgent.app.bsky.video
     .getUploadLimits({}, {headers: {Authorization: `Bearer ${token}`}})
     .catch(err => {
       if (err instanceof Error) {

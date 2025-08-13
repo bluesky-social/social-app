@@ -1,4 +1,4 @@
-import {type AppGndrActorDefs} from '@gander-social-atproto/api'
+import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
 
 export type Data = Record<string, unknown> | undefined
 

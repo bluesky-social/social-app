@@ -7,7 +7,7 @@ import Animated, {
   LinearTransition,
   StretchOutY,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerListAppPasswords} from '@gander-social-atproto/api'
+import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'

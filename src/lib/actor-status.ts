@@ -1,9 +1,9 @@
 import {useMemo} from 'react'
 import {
   type $Typed,
-  type AppGndrActorDefs,
-  AppGndrEmbedExternal,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  AppBskyEmbedExternal as AppGndrEmbedExternal,
+} from '@atproto/api'
 import {isAfter, parseISO} from 'date-fns'
 
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
@@ -28,7 +28,7 @@ export function useActorStatus(actor?: gndr.profile.AnyProfileView) {
     ) {
       return {
         isActive: true,
-        status: 'app.gndr.actor.status#live',
+        status: 'app.bsky.actor.status#live',
         embed: shadowed.status.embed as $Typed<AppGndrEmbedExternal.View>, // temp_isStatusValid asserts this
         expiresAt: shadowed.status.expiresAt!, // isStatusStillActive asserts this
         record: shadowed.status.record,
@@ -56,7 +56,7 @@ export function validateStatus(
   status: AppGndrActorDefs.StatusView,
   config: {did: string; domains: string[]}[],
 ) {
-  if (status.status !== 'app.gndr.actor.status#live') return false
+  if (status.status !== 'app.bsky.actor.status#live') return false
   const sources = config.find(cfg => cfg.did === did)
   if (!sources) {
     return false

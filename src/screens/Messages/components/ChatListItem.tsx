@@ -1,11 +1,11 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import {
-  AppGndrEmbedRecord,
-  ChatGndrConvoDefs,
+  AppBskyEmbedRecord as AppGndrEmbedRecord,
+  ChatBskyConvoDefs as ChatGndrConvoDefs,
   moderateProfile,
   type ModerationOpts,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'

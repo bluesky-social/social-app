@@ -1,6 +1,6 @@
 import {useCallback, useMemo} from 'react'
 import {type ListRenderItemInfo, Text as RNText, View} from 'react-native'
-import {type ModerationOpts} from '@gander-social-atproto/api'
+import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

@@ -1,8 +1,8 @@
 {
-    "$type": "app.gndr.feed.post",
+    "$type": "app.bsky.feed.post",
     "createdAt": "2023-12-04T19:30:03.024Z",
     "embed": {
-        "$type": "app.gndr.embed.external",
+        "$type": "app.bsky.embedexternal",
         "external": {
         "description": "🕸 Bridges the IndieWeb to Mastodon and the fediverse via ActivityPub. - GitHub - snarfed/bridgy-fed: 🕸 Bridges the IndieWeb to Mastodon and the fediverse via ActivityPub.",
         "thumb": {
@@ -21,7 +21,7 @@
         {
         "features": [
             {
-            "$type": "app.gndr.richtext.facet#link",
+            "$type": "app.bsky.richtext.facet#link",
             "uri": "https://github.com/snarfed/bridgy-fed"
             }
         ],
@@ -33,7 +33,7 @@
         {
         "features": [
             {
-            "$type": "app.gndr.richtext.facet#mention",
+            "$type": "app.bsky.richtext.facet#mention",
             "did": "did:plc:fdme4gb7mu7zrie7peay7tst"
             }
         ],
@@ -49,11 +49,11 @@
     "reply": {
         "parent": {
         "cid": "bafyreifaidyl62p4snkdwsygviemsxyidi3cd7dxvjomh5644sovxhsppa",
-        "uri": "at://did:plc:ewvi7nxzyoun6zhxrhs64oiz/app.gndr.feed.post/3kfqklhpalh2c"
+        "uri": "at://did:plc:ewvi7nxzyoun6zhxrhs64oiz/app.bsky.feed.post/3kfqklhpalh2c"
         },
         "root": {
         "cid": "bafyreibiimdwmsp5mqpm7utqcdmvo6fdqmofblp5obs3h7ub6652zyooci",
-        "uri": "at://did:plc:ewvi7nxzyoun6zhxrhs64oiz/app.gndr.feed.post/3kfqkkjdkic2e"
+        "uri": "at://did:plc:ewvi7nxzyoun6zhxrhs64oiz/app.bsky.feed.post/3kfqkkjdkic2e"
         }
     },
     "text": "Bridgy Fed is an open-source project — check out the code here: github.com/snarfed/brid...\n\nStay updated with the project by following @snarfed.org!"

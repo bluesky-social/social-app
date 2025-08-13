@@ -2,9 +2,9 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {
-  type ChatGndrActorDefs,
-  type ChatGndrConvoDefs,
-} from '@gander-social-atproto/api'
+  type ChatBskyActorDefs as ChatGndrActorDefs,
+  type ChatBskyConvoDefs as ChatGndrConvoDefs,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'

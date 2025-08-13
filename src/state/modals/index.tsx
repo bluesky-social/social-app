@@ -1,5 +1,5 @@
 import React from 'react'
-import {type AppGndrGraphDefs} from '@gander-social-atproto/api'
+import {type AppBskyGraphDefs as AppGndrGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 

@@ -1,12 +1,12 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
 import {
-  AppGndrFeedPost,
-  AppGndrRichtextFacet,
+  AppBskyFeedPost as AppGndrFeedPost,
+  AppBskyRichtextFacet as AppGndrRichtextFacet,
   AtUri,
   moderatePost,
   RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
@@ -61,7 +61,7 @@ export function useMessageEmbed() {
 
         const url = convertGndrAppUrlIfNeeded(embedUrl)
         const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
-        const uri = makeRecordUri(user, 'app.gndr.feed.post', rkey)
+        const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
 
         setEmbed(uri)
       },

@@ -1,4 +1,4 @@
-import {type AppGndrFeedDefs, type GndrAgent} from '@gander-social-atproto/api'
+import {type AppBskyFeedDefs as AppGndrFeedDefs, type BskyAgent as GndrAgent} from '@atproto/api'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {CustomFeedAPI} from './custom'

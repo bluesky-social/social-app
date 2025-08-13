@@ -1,6 +1,6 @@
 import React from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {type $Typed, type AppGndrEmbedRecord} from '@gander-social-atproto/api'
+import {type $Typed, type AppBskyEmbedRecord as AppGndrEmbedRecord} from '@atproto/api'
 
 import {atoms as a, native, tokens, useTheme, web} from '#/alf'
 import {PostEmbedViewContext} from '#/components/Post/Embed'

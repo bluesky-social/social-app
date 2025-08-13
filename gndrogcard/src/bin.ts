@@ -1,6 +1,6 @@
-import cluster, {Worker} from 'node:cluster'
+import cluster, {type Worker} from 'node:cluster'
 
-import {envInt} from '@gander-social-atproto/common'
+import {envInt} from '@atproto/common'
 
 import {CardService, envToCfg, httpLogger, readEnv} from './index.js'
 

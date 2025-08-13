@@ -11,6 +11,7 @@ import type React from 'react'
 
 import {isNative} from '#/platform/detection'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
+import {API_URL} from './constants'
 
 // any query keys in this array will be persisted to AsyncStorage
 export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
@@ -22,7 +23,7 @@ async function checkIsOnline(): Promise<boolean> {
     setTimeout(() => {
       controller.abort()
     }, 15e3)
-    const res = await fetch('https://public.api.gndr.app/xrpc/_health', {
+    const res = await fetch(`${API_URL}/xrpc/_health`, {
       cache: 'no-store',
       signal: controller.signal,
     })

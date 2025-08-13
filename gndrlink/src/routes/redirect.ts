@@ -1,6 +1,6 @@
 import assert from 'node:assert'
 
-import {DAY, SECOND} from '@gander-social-atproto/common'
+import {DAY, SECOND} from '@atproto/common'
 import escapeHTML from 'escape-html'
 import {type Express} from 'express'
 

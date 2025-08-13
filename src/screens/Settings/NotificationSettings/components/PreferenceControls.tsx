@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {type AppGndrNotificationDefs} from '@gander-social-atproto/api'
-import {type FilterablePreference} from '@gander-social-atproto/api/dist/client/types/app/gndr/notification/defs'
+import {type AppBskyNotificationDefs as AppGndrNotificationDefs} from '@atproto/api'
+import {type FilterablePreference} from '@atproto/api/dist/client/types/app/bsky/notification/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

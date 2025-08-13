@@ -1,11 +1,11 @@
-import {AppGndrFeedDefs} from '@gander-social-atproto/api'
+import {AppBskyFeedDefs as AppGndrFeedDefs} from '@atproto/api'
 
 export const CONTENT_LABELS = ['porn', 'sexual', 'nudity', 'graphic-media']
 
 export function labelsToInfo(
   labels?: AppGndrFeedDefs.PostView['labels'],
 ): string | undefined {
-  const label = labels?.find(label => CONTENT_LABELS.includes(label.val))
+  const label = labels?.find((label: { val: string }) => CONTENT_LABELS.includes(label.val))
 
   switch (label?.val) {
     case 'porn':

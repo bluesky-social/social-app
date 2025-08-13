@@ -6,13 +6,13 @@ import {
   View,
 } from 'react-native'
 import {
-  AppGndrFeedDefs,
-  AppGndrFeedPost,
-  type AppGndrFeedThreadgate,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
+  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
   AtUri,
   type ModerationDecision,
   RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -268,7 +268,7 @@ let PostThreadItemLoaded = ({
   }, [post.uri, post.author])
   const quotesTitle = _(msg`Quotes of this post`)
   const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
-    rule => rule.$type === 'app.gndr.feed.threadgate#followerRule',
+    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
   )
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
@@ -290,7 +290,7 @@ let PostThreadItemLoaded = ({
     if (anchorPostSource && isHighlightedPost) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.gndr.feed.defs#interactionReply',
+        event: 'app.bsky.feed.defs#interactionReply',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })
@@ -313,7 +313,7 @@ let PostThreadItemLoaded = ({
     if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.gndr.feed.defs#clickthroughAuthor',
+        event: 'app.bsky.feed.defs#clickthroughAuthor',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })
@@ -324,7 +324,7 @@ let PostThreadItemLoaded = ({
     if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.gndr.feed.defs#clickthroughEmbed',
+        event: 'app.bsky.feed.defs#clickthroughEmbed',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })

@@ -1,5 +1,5 @@
 import {useEffect, useId, useState} from 'react'
-import {type AppGndrFeedDefs, AtUri} from '@gander-social-atproto/api'
+import {type AppBskyFeedDefs as AppGndrFeedDefs, AtUri} from '@atproto/api'
 
 import {Logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'

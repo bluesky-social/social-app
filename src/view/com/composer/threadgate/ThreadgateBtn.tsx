@@ -1,6 +1,6 @@
 import {Keyboard, type StyleProp, type ViewStyle} from 'react-native'
 import {type AnimatedStyle} from 'react-native-reanimated'
-import {type AppGndrFeedPostgate} from '@gander-social-atproto/api'
+import {type AppGndrFeedPostgate} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

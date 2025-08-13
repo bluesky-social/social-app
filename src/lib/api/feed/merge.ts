@@ -1,8 +1,8 @@
 import {
-  type AppGndrFeedDefs,
-  type AppGndrFeedGetTimeline,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedGetTimeline as AppGndrFeedGetTimeline,
+  type BskyAgent as GndrAgent,
+} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
 
 import {bundleAsync} from '#/lib/async/bundle'
@@ -291,7 +291,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     try {
       const contentLangs = getContentLanguages().join(',')
       const isGanderOwned = isGanderOwnedFeed(this.feedUri)
-      const res = await this.agent.app.gndr.feed.getFeed(
+      const res = await this.agent.app.bsky.feed.getFeed(
         {
           cursor,
           limit,

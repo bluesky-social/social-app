@@ -1,6 +1,6 @@
 import {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {type AppGndrEmbedVideo} from '@gander-social-atproto/api'
+import {type AppGndrEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type * as HlsTypes from 'hls.js'

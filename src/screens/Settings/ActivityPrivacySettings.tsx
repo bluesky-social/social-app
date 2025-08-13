@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {type AppGndrNotificationDeclaration} from '@gander-social-atproto/api'
+import {type AppBskyNotificationDeclaration as AppGndrNotificationDeclaration} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -93,7 +93,7 @@ export function Inner({
 
   const onChangeFilter = ([declaration]: string[]) => {
     mutate({
-      $type: 'app.gndr.notification.declaration',
+      $type: 'app.bsky.notification.declaration',
       allowSubscriptions: declaration,
     })
   }

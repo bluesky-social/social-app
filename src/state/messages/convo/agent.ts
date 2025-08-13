@@ -1,11 +1,11 @@
 import {
   type AtpAgent,
-  type ChatGndrActorDefs,
-  ChatGndrConvoDefs,
-  type ChatGndrConvoGetLog,
-  type ChatGndrConvoSendMessage,
-} from '@gander-social-atproto/api'
-import {XRPCError} from '@gander-social-atproto/xrpc'
+  type ChatBskyActorDefs as ChatGndrActorDefs,
+  ChatBskyConvoDefs as ChatGndrConvoDefs,
+  type ChatBskyConvoGetLog as ChatGndrConvoGetLog,
+  type ChatBskyConvoSendMessage as ChatGndrConvoSendMessage,
+} from '@atproto/api'
+import {XRPCError} from '@atproto/xrpc'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 

@@ -1,7 +1,7 @@
 import {
+  type BskyAgent as GndrAgent,
   type ComAtprotoRepoUploadBlob,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
 /**
  * @note It is recommended, on web, to use the `file` instance of the file

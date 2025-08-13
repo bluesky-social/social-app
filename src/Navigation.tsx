@@ -776,8 +776,8 @@ const FlatNavigator = () => {
 
 const LINKING = {
   // TODO figure out what we are going to use
-  // note: `gander://` is what is used in app.config.js
-  prefixes: ['gndr://', 'gander://', 'https://gndr.app'],
+  // note: `bluesky://` is what is used in app.config.js
+  prefixes: ['bsky://', 'bluesky://', 'https://bsky.app'],
 
   getPathFromState(state: State) {
     // find the current node in the navigation tree
@@ -1087,6 +1087,18 @@ function logModuleInitTime() {
   }
 }
 
+// Export useNavigation: web-safe hook for web, otherwise from react-navigation
+let useNavigation: typeof import('@react-navigation/native').useNavigation
+if (isWeb || !isNative) {
+  // Dynamically import the web-safe hook from Navigation.web
+  // (avoids circular dependency if both files import each other)
+  // @ts-ignore
+  useNavigation = require('./Navigation.web').useNavigation
+} else {
+  // @ts-ignore
+  useNavigation = require('@react-navigation/native').useNavigation
+}
+
 export {
   FlatNavigator,
   navigate,
@@ -1094,4 +1106,5 @@ export {
   resetToTab,
   RoutesContainer,
   TabsNavigator,
+  useNavigation,
 }

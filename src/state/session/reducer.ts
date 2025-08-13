@@ -1,4 +1,4 @@
-import {type AtpSessionEvent, type GndrAgent} from '@gander-social-atproto/api'
+import {type AtpSessionEvent, type BskyAgent as GndrAgent} from '@atproto/api'
 
 import {createPublicAgent} from './agent'
 import {wrapSessionReducerForLogging} from './logging'

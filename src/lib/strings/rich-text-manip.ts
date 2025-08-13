@@ -1,8 +1,8 @@
 import {
-  AppGndrRichtextFacet,
+  AppBskyRichtextFacet as AppGndrRichtextFacet,
   type RichText,
   UnicodeString,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
 import {toShortUrl} from './url-helpers'
 

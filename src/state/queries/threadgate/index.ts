@@ -1,10 +1,10 @@
 import {
-  AppGndrFeedDefs,
-  type AppGndrFeedGetPostThread,
-  AppGndrFeedThreadgate,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedGetPostThread as AppGndrFeedGetPostThread,
+  AppBskyFeedThreadgate as AppGndrFeedThreadgate,
   AtUri,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
+  type BskyAgent as GndrAgent,
+} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
@@ -89,7 +89,7 @@ export async function getThreadgateView({
   agent: GndrAgent
   postUri: string
 }) {
-  const {data} = await agent.app.gndr.feed.getPostThread({
+  const {data} = await agent.app.bsky.feed.getPostThread({
     uri: postUri!,
     depth: 0,
   })
@@ -134,7 +134,7 @@ export async function getThreadgateRecord({
       () =>
         agent.api.com.atproto.repo.getRecord({
           repo: urip.host,
-          collection: 'app.gndr.feed.threadgate',
+          collection: 'app.bsky.feed.threadgate',
           rkey: urip.rkey,
         }),
     )
@@ -180,7 +180,7 @@ export async function writeThreadgateRecord({
   await networkRetry(2, () =>
     agent.api.com.atproto.repo.putRecord({
       repo: agent.session!.did,
-      collection: 'app.gndr.feed.threadgate',
+      collection: 'app.bsky.feed.threadgate',
       rkey: postUrip.rkey,
       record,
     }),
@@ -280,7 +280,7 @@ export function useSetThreadgateAllowMutation() {
           return false
         },
         () => {
-          return agent.app.gndr.feed.getPostThread({
+          return agent.app.bsky.feed.getPostThread({
             uri: postUri,
             depth: 0,
           })

@@ -1,6 +1,6 @@
 import {Fragment, useCallback} from 'react'
 import {Linking, View} from 'react-native'
-import {LABELS} from '@gander-social-atproto/api'
+import {LABELS} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'

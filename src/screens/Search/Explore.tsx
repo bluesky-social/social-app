@@ -1,10 +1,10 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
 import {View, type ViewabilityConfig} from 'react-native'
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedDefs,
-  type AppGndrGraphDefs,
-} from '@gander-social-atproto/api'
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'

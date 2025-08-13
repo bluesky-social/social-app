@@ -1,4 +1,4 @@
-import {type AppGndrUnspeccedDefs} from '@gander-social-atproto/api'
+import {type AppBskyUnspeccedDefs as AppGndrUnspeccedDefs} from '@atproto/api'
 import {type QueryObserverBaseResult} from '@tanstack/react-query'
 
 export type AgeAssuranceContextType = {

@@ -8,7 +8,7 @@ import {type ReportOption} from '#/lib/moderation/useReportOptions'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
-import {type AppGndrLabelerDefs} from '@gander-social-atproto/api'
+import {type AppBskyLaberDefs as AppGndrLabelerDefs} from '@atproto/api'
 
 import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'

@@ -1,7 +1,7 @@
 import {
-  type AppGndrLabelerDefs,
+  type AppBskyLabelerDefs as AppGndrLabelerDefs,
   ComAtprotoModerationDefs,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 
 import {type ReportOption} from './utils/useReportOptions'
 

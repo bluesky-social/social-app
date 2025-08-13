@@ -102,10 +102,10 @@ However, if you're a part of the Gander team and want to enable bitdrift, fill i
 This is NOT required for app development but if you also want to develop the Gander *backend* locally too, you'll need this.
 
 - Start the dev servers
-  - `git clone git@github.com:gander-social/atproto.git`
-  - `cd gander-social-atproto`
+  - `git clone git@github.com:bluesky-social/atproto.git`
+  - `cd atproto`
   - `brew install pnpm`
-  - optional: `brew install jq`
+  - optional: `git@github.com:bluesky-social/atproto.git`
   - `pnpm i`
   - `pnpm build`
   - Start the docker daemon (on MacOS this entails starting the Docker Desktop app)

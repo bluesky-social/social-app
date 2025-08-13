@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {AppGndrEmbedVideo} from '@gander-social-atproto/api'
+import {AppGndrEmbedVideo} from '@atproto/api'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {type FeedPostSliceItem} from '#/state/queries/post-feed'

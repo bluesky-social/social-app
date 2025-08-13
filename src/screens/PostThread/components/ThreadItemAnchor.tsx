@@ -1,12 +1,12 @@
 import {memo, useCallback, useMemo} from 'react'
 import {type GestureResponderEvent, Text as RNText, View} from 'react-native'
 import {
-  AppGndrFeedDefs,
-  AppGndrFeedPost,
-  type AppGndrFeedThreadgate,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
+  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -229,7 +229,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       : []
   }, [post, currentAccount?.did, threadgateHiddenReplies, threadRootUri])
   const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
-    rule => rule.$type === 'app.gndr.feed.threadgate#followerRule',
+    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
   )
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
@@ -261,7 +261,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.gndr.feed.defs#interactionReply',
+        event: 'app.bsky.feed.defs#interactionReply',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })
@@ -280,7 +280,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.gndr.feed.defs#clickthroughAuthor',
+        event: 'app.bsky.feed.defs#clickthroughAuthor',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })
@@ -291,7 +291,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
     if (postSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.gndr.feed.defs#clickthroughEmbed',
+        event: 'app.bsky.feed.defs#clickthroughEmbed',
         feedContext: postSource.post.feedContext,
         reqId: postSource.post.reqId,
       })

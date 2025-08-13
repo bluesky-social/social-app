@@ -1,10 +1,10 @@
 import {useCallback, useState} from 'react'
 import {
-  type AppGndrFeedDefs,
-  AppGndrFeedPost,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  AppBskyFeedPost as AppGndrFeedPost,
   moderatePost,
   type ModerationDecision,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

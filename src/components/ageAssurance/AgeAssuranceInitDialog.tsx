@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {XRPCError} from '@gander-social-atproto/xrpc'
+import {XRPCError} from '@atproto/xrpc'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {validate as validateEmail} from 'email-validator'

@@ -1,7 +1,7 @@
 import {createServer as createHTTPServer} from 'node:http'
 import {parse} from 'node:url'
 
-import {createServer, TestPDS} from '../jest/test-pds'
+import {createServer, type TestPDS} from '../jest/test-pds'
 
 async function main() {
   let server: TestPDS
@@ -436,7 +436,7 @@ async function main() {
             'blocking reply',
             anchorPost,
           )
-          await server.mocker.users.alice.agent.app.gndr.graph.block.create(
+          await server.mocker.users.alice.agent.app.bsky.graph.block.create(
             {
               repo: server.mocker.users.alice.did,
             },
@@ -459,7 +459,7 @@ async function main() {
           )
           await server.mocker.users[
             'blockedby-account'
-          ].agent.app.gndr.graph.block.create(
+          ].agent.app.bsky.graph.block.create(
             {
               repo: server.mocker.users['blockedby-account'].did,
             },
@@ -483,7 +483,7 @@ async function main() {
             'mutual-block reply',
             anchorPost,
           )
-          await server.mocker.users.alice.agent.app.gndr.graph.block.create(
+          await server.mocker.users.alice.agent.app.bsky.graph.block.create(
             {
               repo: server.mocker.users.alice.did,
             },
@@ -494,7 +494,7 @@ async function main() {
           )
           await server.mocker.users[
             'mutual-block-account'
-          ].agent.app.gndr.graph.block.create(
+          ].agent.app.bsky.graph.block.create(
             {
               repo: server.mocker.users['mutual-block-account'].did,
             },

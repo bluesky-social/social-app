@@ -1,13 +1,13 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  type AppGndrActorProfile,
-  type AppGndrGraphDefs,
-  AppGndrGraphStarterpack,
+  type AppBskyActorProfile as AppGndrActorProfile,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
+  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
   type Un$Typed,
-} from '@gander-social-atproto/api'
-import {type SavedFeed} from '@gander-social-atproto/api/dist/client/types/app/gndr/actor/defs'
-import {TID} from '@gander-social-atproto/common-web'
+} from '@atproto/api'
+import {type SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -74,7 +74,7 @@ export function StepFinished() {
 
     if (activeStarterPack?.uri) {
       try {
-        const spRes = await agent.app.gndr.graph.getStarterPack({
+        const spRes = await agent.app.bsky.graph.getStarterPack({
           starterPack: activeStarterPack.uri,
         })
         starterPack = spRes.data.starterPack

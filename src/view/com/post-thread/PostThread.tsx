@@ -3,10 +3,10 @@ import {useWindowDimensions, View} from 'react-native'
 import {runOnJS, useAnimatedStyle} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {
-  AppGndrFeedDefs,
-  type AppGndrFeedThreadgate,
+  AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
   moderatePost,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -407,7 +407,7 @@ export function PostThread({uri}: {uri: string}) {
     if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: thread.post.uri,
-        event: 'app.gndr.feed.defs#interactionReply',
+        event: 'app.bsky.feed.defs#interactionReply',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })

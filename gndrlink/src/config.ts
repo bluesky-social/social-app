@@ -1,4 +1,4 @@
-import {envInt, envList, envStr} from '@gander-social-atproto/common'
+import {envInt, envList, envStr} from '@atproto/common'
 
 export type Config = {
   service: ServiceConfig

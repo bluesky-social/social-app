@@ -1,10 +1,10 @@
 import {
-  type AppGndrFeedDefs,
-  type AppGndrGraphDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
   type ComAtprotoRepoStrongRef,
-} from '@gander-social-atproto/api'
-import {AtUri} from '@gander-social-atproto/api'
-import {type GndrAgent} from '@gander-social-atproto/api'
+} from '@atproto/api'
+import {AtUri} from '@atproto/api'
+import {type BskyAgent as GndrAgent} from '@atproto/api'
 
 import {POST_IMG_MAX} from '#/lib/constants'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
@@ -87,7 +87,7 @@ export async function resolveLink(
   if (isGndrPostUrl(uri)) {
     uri = convertGndrAppUrlIfNeeded(uri)
     const [_0, user, _1, rkey] = uri.split('/').filter(Boolean)
-    const recordUri = makeRecordUri(user, 'app.gndr.feed.post', rkey)
+    const recordUri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
     const post = await getPost({uri: recordUri})
     if (post.viewer?.embeddingDisabled) {
       throw new EmbeddingDisabledError()
@@ -106,8 +106,8 @@ export async function resolveLink(
     uri = convertGndrAppUrlIfNeeded(uri)
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
-    const feed = makeRecordUri(did, 'app.gndr.feed.generator', rkey)
-    const res = await agent.app.gndr.feed.getFeedGenerator({feed})
+    const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
+    const res = await agent.app.bsky.feed.getFeedGenerator({feed})
     return {
       type: 'record',
       record: {
@@ -122,8 +122,8 @@ export async function resolveLink(
     uri = convertGndrAppUrlIfNeeded(uri)
     const [_0, handleOrDid, _1, rkey] = uri.split('/').filter(Boolean)
     const did = await fetchDid(handleOrDid)
-    const list = makeRecordUri(did, 'app.gndr.graph.list', rkey)
-    const res = await agent.app.gndr.graph.getList({list})
+    const list = makeRecordUri(did, 'app.bsky.graph.list', rkey)
+    const res = await agent.app.bsky.graph.getList({list})
     return {
       type: 'record',
       record: {
@@ -143,7 +143,7 @@ export async function resolveLink(
     }
     const did = await fetchDid(parsed.name)
     const starterPack = createStarterPackUri({did, rkey: parsed.rkey})
-    const res = await agent.app.gndr.graph.getStarterPack({starterPack})
+    const res = await agent.app.bsky.graph.getStarterPack({starterPack})
     return {
       type: 'record',
       record: {

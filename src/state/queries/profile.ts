@@ -1,14 +1,14 @@
 import {useCallback} from 'react'
 import {
-  type AppGndrActorDefs,
-  type AppGndrActorGetProfile,
-  type AppGndrActorGetProfiles,
-  type AppGndrActorProfile,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyActorGetProfile as AppGndrActorGetProfile,
+  type AppBskyActorGetProfiles as AppGndrActorGetProfiles,
+  type AppBskyActorProfile as AppGndrActorProfile,
   AtUri,
+  type BskyAgent as GndrAgent,
   type ComAtprotoRepoUploadBlob,
-  type GndrAgent,
   type Un$Typed,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {
   keepPreviousData,
   type QueryClient,
@@ -277,7 +277,7 @@ export function useProfileFollowMutationQueue(
       })
 
       if (finalFollowingUri) {
-        agent.app.gndr.graph
+        agent.app.bsky.graph
           .getSuggestedFollowsByActor({
             actor: did,
           })
@@ -494,7 +494,7 @@ function useProfileBlockMutation() {
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      return await agent.app.gndr.graph.block.create(
+      return await agent.app.bsky.graph.block.create(
         {repo: currentAccount.did},
         {subject: did, createdAt: new Date().toISOString()},
       )
@@ -516,7 +516,7 @@ function useProfileUnblockMutation() {
         throw new Error('Not signed in')
       }
       const {rkey} = new AtUri(blockUri)
-      await agent.app.gndr.graph.block.delete({
+      await agent.app.bsky.graph.block.delete({
         repo: currentAccount.did,
         rkey,
       })
@@ -536,7 +536,7 @@ async function whenAppViewReady(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.gndr.actor.getProfile({actor}),
+    () => agent.app.bsky.actor.getProfile({actor}),
   )
 }
 

@@ -1,8 +1,8 @@
 import {
-  type AppGndrFeedDefs,
-  type AppGndrFeedGetActorLikes as GetActorLikes,
-  type GndrAgent,
-} from '@gander-social-atproto/api'
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyFeedGetActorLikes as GetActorLikes,
+  type BskyAgent as GndrAgent,
+} from '@atproto/api'
 
 import {type FeedAPI, type FeedAPIResponse} from './types'
 

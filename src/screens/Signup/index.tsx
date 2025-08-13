@@ -2,7 +2,7 @@ import {useEffect, useReducer, useState} from 'react'
 import {AppState, type AppStateStatus, View} from 'react-native'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import Svg, {Path} from 'react-native-svg'
-import {AppGndrGraphStarterpack} from '@gander-social-atproto/api'
+import {AppBskyGraphStarterpack as AppGndrGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

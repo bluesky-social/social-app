@@ -1,4 +1,4 @@
-import {type AppGndrActorDefs, nuxSchema} from '@gander-social-atproto/api'
+import {type AppBskyActorDefs as AppGndrActorDefs, nuxSchema} from '@atproto/api'
 
 import {
   type AppNux,

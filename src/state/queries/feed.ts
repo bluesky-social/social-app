@@ -1,13 +1,13 @@
 import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
-  type AppGndrActorDefs,
-  type AppGndrFeedDefs,
-  type AppGndrGraphDefs,
-  type AppGndrUnspeccedGetPopularFeedGenerators,
+  type AppBskyActorDefs as AppGndrActorDefs,
+  type AppBskyFeedDefs as AppGndrFeedDefs,
+  type AppBskyGraphDefs as AppGndrGraphDefs,
+  type AppBskyUnspeccedGetPopularFeedGenerators as AppGndrUnspeccedGetPopularFeedGenerators,
   AtUri,
   moderateFeedGenerator,
   RichText,
-} from '@gander-social-atproto/api'
+} from '@atproto/api'
 import {
   type InfiniteData,
   keepPreviousData,
@@ -80,8 +80,8 @@ export const feedSourceInfoQueryKey = ({uri}: {uri: string}) => [
 ]
 
 const feedSourceNSIDs = {
-  feed: 'app.gndr.feed.generator',
-  list: 'app.gndr.graph.list',
+  feed: 'app.bsky.feed.generator',
+  list: 'app.bsky.graph.list',
 }
 
 export function hydrateFeedGenerator(
@@ -89,7 +89,7 @@ export function hydrateFeedGenerator(
 ): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
-    urip.collection === 'app.gndr.feed.generator' ? 'feed' : 'lists'
+    urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
@@ -123,7 +123,7 @@ export function hydrateFeedGenerator(
 export function hydrateList(view: AppGndrGraphDefs.ListView): FeedSourceInfo {
   const urip = new AtUri(view.uri)
   const collection =
-    urip.collection === 'app.gndr.feed.generator' ? 'feed' : 'lists'
+    urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'lists'
   const href = `/profile/${urip.hostname}/${collection}/${urip.rkey}`
   const route = router.matchPath(href)
 
@@ -172,10 +172,10 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
       let view: FeedSourceInfo
 
       if (type === 'feed') {
-        const res = await agent.app.gndr.feed.getFeedGenerator({feed: uri})
+        const res = await agent.app.bsky.feed.getFeedGenerator({feed: uri})
         view = hydrateFeedGenerator(res.data.view)
       } else {
-        const res = await agent.app.gndr.graph.getList({
+        const res = await agent.app.bsky.graph.getList({
           list: uri,
           limit: 1,
         })
@@ -193,14 +193,14 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 // for the ones we know need it
 // -prf
 export const KNOWN_AUTHED_ONLY_FEEDS = [
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.gndr.feed.generator/with-friends', // popular with friends, by gndr.app
-  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.gndr.feed.generator/mutuals', // mutuals, by skyfeed
-  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.gndr.feed.generator/only-posts', // only posts, by skyfeed
-  'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.gndr.feed.generator/mentions', // mentions, by flicknow
-  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.gndr.feed.generator/bangers', // my bangers, by jaz
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.gndr.feed.generator/mutuals', // mutuals, by bluesky
-  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.gndr.feed.generator/my-followers', // followers, by jaz
-  'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.gndr.feed.generator/followpics', // the gram, by why
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends', // popular with friends, by gndr.app
+  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/mutuals', // mutuals, by skyfeed
+  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/only-posts', // only posts, by skyfeed
+  'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.bsky.feed.generator/mentions', // mentions, by flicknow
+  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/bangers', // my bangers, by jaz
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/mutuals', // mutuals, by bluesky
+  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/my-followers', // followers, by jaz
+  'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
 ]
 
 type GetPopularFeedsOptions = {limit?: number; enabled?: boolean}
@@ -240,7 +240,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
     enabled: Boolean(moderationOpts) && options?.enabled !== false,
     queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.gndr.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit,
         cursor: pageParam,
       })
@@ -326,7 +326,7 @@ export function useSearchPopularFeedsMutation() {
 
   return useMutation({
     mutationFn: async (query: string) => {
-      const res = await agent.app.gndr.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         query: query,
       })
@@ -364,7 +364,7 @@ export function usePopularFeedsSearch({
     enabled: enabledInner,
     queryKey: createPopularFeedsSearchQueryKey(query),
     queryFn: async () => {
-      const res = await agent.app.gndr.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit: 15,
         query: query,
       })
@@ -437,7 +437,7 @@ export function usePinnedFeedsInfos() {
       const pinnedFeeds = pinnedItems.filter(feed => feed.type === 'feed')
       let feedsPromise = Promise.resolve()
       if (pinnedFeeds.length > 0) {
-        feedsPromise = agent.app.gndr.feed
+        feedsPromise = agent.app.bsky.feed
           .getFeedGenerators({
             feeds: pinnedFeeds.map(f => f.value),
           })
@@ -452,7 +452,7 @@ export function usePinnedFeedsInfos() {
       // Get all lists. This currently has to be done individually.
       const pinnedLists = pinnedItems.filter(feed => feed.type === 'list')
       const listsPromises = pinnedLists.map(list =>
-        agent.app.gndr.graph
+        agent.app.bsky.graph
           .getList({
             list: list.value,
             limit: 1,
@@ -548,7 +548,7 @@ export function useSavedFeeds() {
 
       let feedsPromise = Promise.resolve()
       if (savedFeeds.length > 0) {
-        feedsPromise = agent.app.gndr.feed
+        feedsPromise = agent.app.bsky.feed
           .getFeedGenerators({
             feeds: savedFeeds.map(f => f.value),
           })
@@ -560,7 +560,7 @@ export function useSavedFeeds() {
       }
 
       const listsPromises = savedLists.map(list =>
-        agent.app.gndr.graph
+        agent.app.bsky.graph
           .getList({
             list: list.value,
             limit: 1,
