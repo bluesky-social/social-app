@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {isWeb} from '#/platform/detection'
-import {DialogControlRefProps} from '#/components/Dialog'
+import {type DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet'
 
@@ -22,11 +22,6 @@ interface IDialogContext {
 interface IDialogControlContext {
   closeAllDialogs(): boolean
   setDialogIsOpen(id: string, isOpen: boolean): void
-  /**
-   * The number of dialogs that are fully expanded. This is used to determine the backgground color of the status bar
-   * on iOS.
-   */
-  fullyExpandedCount: number
   setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>
 }
 
@@ -36,12 +31,24 @@ const DialogControlContext = React.createContext<IDialogControlContext>(
   {} as IDialogControlContext,
 )
 
+/**
+ * The number of dialogs that are fully expanded. This is used to determine the background color of the status bar
+ * on iOS.
+ */
+const DialogFullyExpandedCountContext = React.createContext<number>(0)
+DialogFullyExpandedCountContext.displayName = 'DialogFullyExpandedCountContext'
+
 export function useDialogStateContext() {
   return React.useContext(DialogContext)
 }
 
 export function useDialogStateControlContext() {
   return React.useContext(DialogControlContext)
+}
+
+/** The number of dialogs that are fully expanded */
+export function useDialogFullyExpandedCountContext() {
+  return React.useContext(DialogFullyExpandedCountContext)
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
@@ -85,21 +92,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       closeAllDialogs,
       setDialogIsOpen,
-      fullyExpandedCount,
       setFullyExpandedCount,
     }),
-    [
-      closeAllDialogs,
-      setDialogIsOpen,
-      fullyExpandedCount,
-      setFullyExpandedCount,
-    ],
+    [closeAllDialogs, setDialogIsOpen, setFullyExpandedCount],
   )
 
   return (
     <DialogContext.Provider value={context}>
       <DialogControlContext.Provider value={controls}>
-        <GlobalDialogsProvider>{children}</GlobalDialogsProvider>
+        <DialogFullyExpandedCountContext.Provider value={fullyExpandedCount}>
+          <GlobalDialogsProvider>{children}</GlobalDialogsProvider>
+        </DialogFullyExpandedCountContext.Provider>
       </DialogControlContext.Provider>
     </DialogContext.Provider>
   )
