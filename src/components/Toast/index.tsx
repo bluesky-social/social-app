@@ -33,10 +33,6 @@ export function ToastContainer() {
 
 export const toast: ToastApi = {
   show(props) {
-    if (process.env.NODE_ENV === 'test') {
-      return
-    }
-
     AccessibilityInfo.announceForAccessibility(props.a11yLabel)
 
     const item = new RootSiblings(
