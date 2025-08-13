@@ -19,10 +19,16 @@ import {Text} from '#/components/Typography'
 const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
 const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
-export function SuggestedLanguage({text}: {text: string}) {
+export function SuggestedLanguage({
+  text,
+  fallback,
+}: {
+  text: string
+  fallback?: string
+}) {
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
-  >()
+  >(fallback)
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const t = useTheme()
@@ -34,7 +40,7 @@ export function SuggestedLanguage({text}: {text: string}) {
     // Don't run the language model on small posts, the results are likely
     // to be inaccurate anyway.
     if (textTrimmed.length < 40) {
-      setSuggestedLanguage(undefined)
+      setSuggestedLanguage(fallback)
       return
     }
 
@@ -43,7 +49,7 @@ export function SuggestedLanguage({text}: {text: string}) {
     })
 
     return () => cancelIdle(idle)
-  }, [text])
+  }, [text, fallback])
 
   if (
     suggestedLanguage &&

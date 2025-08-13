@@ -197,6 +197,7 @@ let FeedItemInner = ({
         author: post.author,
         embed: post.embed,
         moderation,
+        langs: record.langs,
       },
     })
   }
