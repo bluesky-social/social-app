@@ -4,6 +4,7 @@ import {Modal, View} from 'react-native'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {useComposerState} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
+import {Outlet as ToastPortalOutlet, ToastProvider} from '#/components/Toast'
 import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
 
 export function Composer({}: {winHeight: number}) {
@@ -32,19 +33,22 @@ export function Composer({}: {winHeight: number}) {
       presentationStyle="pageSheet"
       animationType="slide"
       onRequestClose={() => ref.current?.onPressCancel()}>
-      <View style={[t.atoms.bg, a.flex_1]}>
-        <ComposePost
-          cancelRef={ref}
-          replyTo={state?.replyTo}
-          onPost={state?.onPost}
-          onPostSuccess={state?.onPostSuccess}
-          quote={state?.quote}
-          mention={state?.mention}
-          text={state?.text}
-          imageUris={state?.imageUris}
-          videoUri={state?.videoUri}
-        />
-      </View>
+      <ToastProvider offsetTop={a.pt_lg.paddingTop}>
+        <View style={[t.atoms.bg, a.flex_1]}>
+          <ComposePost
+            cancelRef={ref}
+            replyTo={state?.replyTo}
+            onPost={state?.onPost}
+            onPostSuccess={state?.onPostSuccess}
+            quote={state?.quote}
+            mention={state?.mention}
+            text={state?.text}
+            imageUris={state?.imageUris}
+            videoUri={state?.videoUri}
+          />
+        </View>
+        <ToastPortalOutlet />
+      </ToastProvider>
     </Modal>
   )
 }

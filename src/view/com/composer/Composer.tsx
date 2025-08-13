@@ -127,6 +127,7 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
+import {useToast} from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
@@ -776,6 +777,7 @@ let ComposerPost = React.memo(function ComposerPost({
       : _(msg`Add another post`)
     : _(msg`What's up?`)
   const discardPromptControl = Prompt.usePromptControl()
+  const {show: showToast} = useToast()
 
   const dispatchPost = useCallback(
     (action: PostAction) => {
@@ -807,6 +809,11 @@ let ComposerPost = React.memo(function ComposerPost({
 
   const onPhotoPasted = useCallback(
     async (uri: string) => {
+      showToast({
+        type: 'success',
+        content: _(msg`Pasty wasty`),
+        a11yLabel: _(msg`Pasty wasty`),
+      })
       if (uri.startsWith('data:video/') || uri.startsWith('data:image/gif')) {
         if (isNative) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
@@ -824,7 +831,7 @@ let ComposerPost = React.memo(function ComposerPost({
         onImageAdd([res])
       }
     },
-    [post.id, onSelectVideo, onImageAdd, _],
+    [post.id, onSelectVideo, onImageAdd, _, showToast],
   )
 
   useHideKeyboardOnBackground()

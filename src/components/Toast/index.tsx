@@ -37,7 +37,13 @@ export {Outlet} from '#/components/Toast/Portal'
 
 const TOAST_ANIMATION_DURATION = 300
 
-export function ToastProvider({children}: {children: React.ReactNode}) {
+export function ToastProvider({
+  children,
+  offsetTop,
+}: {
+  children: React.ReactNode
+  offsetTop?: number
+}) {
   const {top} = useSafeAreaInsets()
   const [toasts, setToasts] = useState<
     {
@@ -96,7 +102,7 @@ export function ToastProvider({children}: {children: React.ReactNode}) {
                 a.gap_sm,
                 {
                   flexDirection: 'column-reverse',
-                  top: top,
+                  top: offsetTop ?? top,
                   left: a.px_lg.paddingLeft,
                   right: a.px_lg.paddingLeft,
                 },
