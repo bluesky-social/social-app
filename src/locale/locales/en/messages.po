@@ -487,7 +487,7 @@ msgstr ""
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
 msgstr ""
 
-#: src/screens/Profile/Header/Handle.tsx:53
+#: src/screens/Profile/Header/Handle.tsx:57
 msgid "⚠Invalid Handle"
 msgstr ""
 
@@ -635,7 +635,7 @@ msgstr ""
 msgid "Add {0} more to continue"
 msgstr ""
 
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:59
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:61
 msgid "Add {displayName} to starter pack"
 msgstr ""
 
@@ -913,7 +913,7 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:400
+#: src/view/com/composer/state/video.ts:399
 msgid "An error occurred while compressing the video."
 msgstr ""
 
@@ -946,7 +946,7 @@ msgstr ""
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:441
+#: src/view/com/composer/state/video.ts:440
 msgid "An error occurred while uploading the video."
 msgstr ""
 
@@ -1845,8 +1845,8 @@ msgstr ""
 #: src/components/NewskieDialog.tsx:153
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
 #: src/components/ProgressGuide/FollowDialog.tsx:386
-#: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:123
+#: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:129
 #: src/components/verification/VerificationsDialog.tsx:144
 #: src/components/verification/VerifierDialog.tsx:144
 #: src/components/WhoCanReply.tsx:202
@@ -2864,7 +2864,7 @@ msgstr ""
 msgid "Edit avatar"
 msgstr ""
 
-#: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:111
+#: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 msgid "Edit Feeds"
 msgstr ""
 
@@ -2906,7 +2906,7 @@ msgstr ""
 msgid "Edit notifications from {0}"
 msgstr ""
 
-#: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:109
+#: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:115
 msgid "Edit People"
 msgstr ""
 
@@ -3518,7 +3518,7 @@ msgstr ""
 msgid "Feed menu"
 msgstr ""
 
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:55
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:57
 msgid "Feed toggle"
 msgstr ""
 
@@ -4197,7 +4197,7 @@ msgstr ""
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:415
+#: src/view/com/composer/state/video.ts:414
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr ""
 
@@ -6080,7 +6080,7 @@ msgstr ""
 msgid "Permission to access your photo library was denied. Please enable it in your system settings."
 msgstr ""
 
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:55
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:57
 msgid "Person toggle"
 msgstr ""
 
@@ -6740,15 +6740,15 @@ msgstr ""
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
 #: src/components/FeedCard.tsx:343
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:102
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:109
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:104
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:111
 #: src/screens/Settings/Settings.tsx:662
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:217
 msgid "Remove"
 msgstr ""
 
-#: src/components/StarterPack/Wizard/WizardListCard.tsx:58
+#: src/components/StarterPack/Wizard/WizardListCard.tsx:60
 msgid "Remove {displayName} from starter pack"
 msgstr ""
 
@@ -8554,8 +8554,8 @@ msgstr ""
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:396
-#: src/view/com/composer/state/video.ts:435
+#: src/view/com/composer/state/video.ts:395
+#: src/view/com/composer/state/video.ts:434
 msgid "The selected video is larger than 100 MB. Please try again with a smaller file."
 msgstr ""
 
@@ -9589,7 +9589,7 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:358
+#: src/view/com/composer/state/video.ts:357
 msgid "Video failed to process"
 msgstr ""
 
@@ -9836,7 +9836,7 @@ msgstr ""
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:419
+#: src/view/com/composer/state/video.ts:418
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
@@ -10131,7 +10131,7 @@ msgstr ""
 msgid "You are not allowed to go live"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:412
+#: src/view/com/composer/state/video.ts:411
 msgid "You are not allowed to upload videos."
 msgstr ""
 
@@ -10323,11 +10323,11 @@ msgstr ""
 msgid "You may appeal these labels if you feel they were placed in error."
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/State.tsx:76
+#: src/screens/StarterPack/Wizard/State.tsx:79
 msgid "You may only add up to {STARTER_PACK_MAX_SIZE, plural, other {{STARTER_PACK_MAX_SIZE} profiles}}"
 msgstr ""
 
-#: src/screens/StarterPack/Wizard/State.tsx:95
+#: src/screens/StarterPack/Wizard/State.tsx:98
 msgid "You may only add up to 3 feeds"
 msgstr ""
 
@@ -10479,11 +10479,11 @@ msgstr ""
 msgid "You've reached the start of the active content."
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:423
+#: src/view/com/composer/state/video.ts:422
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:427
+#: src/view/com/composer/state/video.ts:426
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr ""
 
@@ -10503,7 +10503,7 @@ msgstr ""
 msgid "Your account has been suspended"
 msgstr ""
 
-#: src/view/com/composer/state/video.ts:431
+#: src/view/com/composer/state/video.ts:430
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr ""
 
