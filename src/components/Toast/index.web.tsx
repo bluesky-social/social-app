@@ -1,10 +1,14 @@
 import {toast as sonner, Toaster} from 'sonner'
 
 import {atoms as a} from '#/alf'
-import {DEFAULT_TOAST_DURATION} from '#/components/Toast/const'
+import {DURATION} from '#/components/Toast/const'
 import {Toast} from '#/components/Toast/Toast'
-import {type ToastApi} from '#/components/Toast/types'
+import {type BaseToastOptions} from '#/components/Toast/types'
 
+/**
+ * Toasts are rendered in a global outlet, which is placed at the top of the
+ * component tree.
+ */
 export function ToastOutlet() {
   return (
     <Toaster
@@ -16,11 +20,21 @@ export function ToastOutlet() {
   )
 }
 
-export const toast: ToastApi = {
-  show(props) {
-    sonner(<Toast content={props.content} type={props.type} />, {
-      duration: props.duration ?? DEFAULT_TOAST_DURATION,
-      unstyled: true,
-    })
-  },
+/**
+ * Access the full Sonner API
+ */
+export const api = sonner
+
+/**
+ * Our base toast API, using the `Toast` export of this file.
+ */
+export function show(
+  content: React.ReactNode,
+  {type, ...options}: BaseToastOptions = {},
+) {
+  sonner(<Toast content={content} type={type} />, {
+    unstyled: true, // required on web
+    ...options,
+    duration: options?.duration ?? DURATION,
+  })
 }

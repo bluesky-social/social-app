@@ -1,1 +1,1 @@
-export const DEFAULT_TOAST_DURATION = 3e3
+export const DURATION = 3e3
