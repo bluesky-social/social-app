@@ -1,6 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
+import {ScrollView, View} from 'react-native'
 import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -400,21 +399,19 @@ export function ProfileGrid({
         </View>
       ) : (
         <BlockDrawerGesture>
-          <View>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
-              decelerationRate="fast">
-              <View style={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}>
-                {content}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+            decelerationRate="fast">
+            <View style={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}>
+              {content}
 
-                {viewContext !== 'profileHeader' && (
-                  <SeeMoreSuggestedProfilesCard />
-                )}
-              </View>
-            </ScrollView>
-          </View>
+              {viewContext !== 'profileHeader' && (
+                <SeeMoreSuggestedProfilesCard />
+              )}
+            </View>
+          </ScrollView>
         </BlockDrawerGesture>
       )}
     </View>
