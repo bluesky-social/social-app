@@ -476,7 +476,12 @@ export function SelectMediaButton({
     <Button
       testID="openMediaBtn"
       onPress={onPressSelectMedia}
-      label={_(msg`Media`)}
+      label={_(
+        msg({
+          message: `Add media to post`,
+          comment: `Accessibility label for button in composer to add photos or a video to a post`,
+        }),
+      )}
       accessibilityHint={_(
         msg`Opens device gallery to select images, a video, or a GIF.`,
       )}
