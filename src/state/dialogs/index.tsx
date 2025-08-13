@@ -26,10 +26,12 @@ interface IDialogControlContext {
 }
 
 const DialogContext = React.createContext<IDialogContext>({} as IDialogContext)
+DialogContext.displayName = 'DialogContext'
 
 const DialogControlContext = React.createContext<IDialogControlContext>(
   {} as IDialogControlContext,
 )
+DialogControlContext.displayName = 'DialogControlContext'
 
 /**
  * The number of dialogs that are fully expanded. This is used to determine the background color of the status bar
@@ -107,3 +109,4 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     </DialogContext.Provider>
   )
 }
+Provider.displayName = 'DialogsProvider'

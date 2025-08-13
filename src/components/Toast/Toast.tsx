@@ -24,6 +24,7 @@ export const ICONS = {
 const Context = createContext<ContextType>({
   type: 'default',
 })
+Context.displayName = 'ToastContext'
 
 export function Toast({
   type,

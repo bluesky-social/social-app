@@ -109,6 +109,7 @@ const Context = React.createContext<VariantProps & ButtonState>({
   pressed: false,
   disabled: false,
 })
+Context.displayName = 'ButtonContext'
 
 export function useButtonContext() {
   return React.useContext(Context)

@@ -47,6 +47,7 @@ const Context = React.createContext<Context>({
   activeNux: undefined,
   dismissActiveNux: () => {},
 })
+Context.displayName = 'NuxDialogContext'
 
 export function useNuxDialogContext() {
   return React.useContext(Context)

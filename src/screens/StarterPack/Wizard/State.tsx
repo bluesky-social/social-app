@@ -45,6 +45,7 @@ const StateContext = React.createContext<TStateContext>([
   {} as State,
   (_: Action) => {},
 ])
+StateContext.displayName = 'StarterPackWizardStateContext'
 export const useWizardState = () => React.useContext(StateContext)
 
 function reducer(state: State, action: Action): State {
