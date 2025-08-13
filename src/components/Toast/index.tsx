@@ -11,19 +11,18 @@ function ToastOuter({children}: {children: React.ReactNode}) {
 }
 
 export function ToastOutlet() {
-  return (
-    <Toaster
-      pauseWhenPageIsHidden
-      gap={a.gap_sm.gap}
-      ToastWrapper={ToastOuter}
-    />
-  )
+  return <Toaster pauseWhenPageIsHidden gap={a.gap_sm.gap} />
 }
 
 export const toast: ToastApi = {
   show(props) {
-    sonner.custom(<Toast content={props.content} type={props.type} />, {
-      duration: props.duration ?? DEFAULT_TOAST_DURATION,
-    })
+    sonner.custom(
+      <ToastOuter>
+        <Toast content={props.content} type={props.type} />
+      </ToastOuter>,
+      {
+        duration: props.duration ?? DEFAULT_TOAST_DURATION,
+      },
+    )
   },
 }
