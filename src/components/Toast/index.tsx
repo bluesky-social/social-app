@@ -18,6 +18,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import RootSiblings from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {Motion} from '@legendapp/motion'
 import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -36,6 +37,8 @@ export {useToast} from '#/components/Toast/Context'
 export {Outlet} from '#/components/Toast/Portal'
 
 const TOAST_ANIMATION_DURATION = 300
+const ANIMATION_DURATION = 300
+const TOAST_GAP = 8 // Gap between toasts
 
 export function ToastProvider({
   children,
@@ -48,24 +51,54 @@ export function ToastProvider({
   const [toasts, setToasts] = useState<
     {
       id: string
-      toast: ToastProps
-      timeout: NodeJS.Timeout
+      props: ToastProps
+      dimensions: {
+        width: number | undefined
+        height: number | undefined
+      }
+      setDimensions: (width: number, height: number) => void
+      exiting: boolean
+      timers: NodeJS.Timeout[]
     }[]
   >([])
 
   const show = useCallback<ToastApi['show']>(props => {
-    AccessibilityInfo.announceForAccessibility(props.a11yLabel)
-
     setToasts(prevToasts => {
       const id = nanoid()
+      const duration = props.duration || DEFAULT_TOAST_DURATION
       return [
         ...prevToasts,
         {
           id,
-          toast: props,
-          timeout: setTimeout(() => {
-            setToasts(currentToasts => currentToasts.filter(t => t.id !== id))
-          }, props.duration || DEFAULT_TOAST_DURATION),
+          props,
+          dimensions: {width: undefined, height: undefined},
+          exiting: false,
+          setDimensions: (width: number, height: number) => {
+            setToasts(currentToasts =>
+              currentToasts.map(t => {
+                if (t.id === id) {
+                  t.dimensions.width = width
+                  t.dimensions.height = height
+                }
+                return t
+              }),
+            )
+          },
+          timers: [
+            setTimeout(() => {
+              setToasts(currentToasts =>
+                currentToasts.map(t => {
+                  if (t.id === id) {
+                    t.exiting = true
+                  }
+                  return t
+                }),
+              )
+            }, duration),
+            setTimeout(() => {
+              setToasts(currentToasts => currentToasts.filter(t => t.id !== id))
+            }, duration + ANIMATION_DURATION),
+          ],
         },
       ]
     })
@@ -74,8 +107,8 @@ export function ToastProvider({
   useEffect(() => {
     return () => {
       setToasts(toasts => {
-        toasts.map(({timeout}) => {
-          clearTimeout(timeout)
+        toasts.map(({timers}) => {
+          timers.map(clearTimeout)
         })
         return toasts
       })
@@ -99,17 +132,71 @@ export function ToastProvider({
             <View
               style={[
                 a.absolute,
-                a.gap_sm,
                 {
-                  flexDirection: 'column-reverse',
                   top: offsetTop ?? top,
                   left: a.px_lg.paddingLeft,
                   right: a.px_lg.paddingLeft,
                 },
               ]}>
-              {toasts.map(({id, toast}) => (
-                <Toast key={id} type={toast.type} content={toast.content} />
-              ))}
+              {toasts.map(toast => {
+                const isReady = !!toast.dimensions.width
+                const toastComponent = (
+                  <Toast
+                    content={toast.props.content}
+                    type={toast.props.type}
+                  />
+                )
+
+                if (!isReady) {
+                  return (
+                    <View key={toast.id} style={[{opacity: 0}]}>
+                      <View
+                        style={[{paddingBottom: TOAST_GAP}]}
+                        onLayout={e => {
+                          if (toast.dimensions.width) return
+                          toast.setDimensions(
+                            e.nativeEvent.layout.width,
+                            e.nativeEvent.layout.height,
+                          )
+                        }}>
+                        {toastComponent}
+                      </View>
+                    </View>
+                  )
+                }
+
+                return (
+                  <Motion.View
+                    key={toast.id}
+                    initial={{opacity: 0, y: 20}}
+                    animate={{
+                      y: 0,
+                      opacity: toast.exiting ? 0 : 1,
+                      height: toast.exiting ? 0 : toast.dimensions.height,
+                    }}
+                    transition={{
+                      type: 'timing',
+                      easing: 'circOut',
+                      duration: ANIMATION_DURATION,
+                    }}>
+                    <View
+                      key={toast.id}
+                      style={[
+                        {
+                          position: toast.exiting ? 'absolute' : 'relative',
+                          width: toast.dimensions.width,
+                          height: toast.dimensions.height,
+                          paddingBottom: TOAST_GAP,
+                        },
+                      ]}>
+                      <Toast
+                        content={toast.props.content}
+                        type={toast.props.type}
+                      />
+                    </View>
+                  </Motion.View>
+                )
+              })}
             </View>
           </Portal.Portal>
         ) : null}
