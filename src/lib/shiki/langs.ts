@@ -1,10 +1,10 @@
-import bash from '@shikijs/langs/bash'
-import javascript from '@shikijs/langs/javascript'
-import json from '@shikijs/langs/json'
-import jsx from '@shikijs/langs/jsx'
-import markdown from '@shikijs/langs/markdown'
-import tsx from '@shikijs/langs/tsx'
-import typescript from '@shikijs/langs/typescript'
+import bash from '@shikijs/langs/dist/bash.mjs'
+import javascript from '@shikijs/langs/dist/javascript.mjs'
+import json from '@shikijs/langs/dist/json.mjs'
+import jsx from '@shikijs/langs/dist/jsx.mjs'
+import markdown from '@shikijs/langs/dist/markdown.mjs'
+import tsx from '@shikijs/langs/dist/tsx.mjs'
+import typescript from '@shikijs/langs/dist/typescript.mjs'
 
 export const shikiLangs = [
   javascript,
