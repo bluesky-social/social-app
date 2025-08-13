@@ -14,7 +14,7 @@ const PostControlContext = createContext<{
   color?: {color: string}
 }>({})
 
-// Base button style, which the the other ones extend
+// Base button style, which the other ones extend
 export function PostControlButton({
   ref,
   onPress,
