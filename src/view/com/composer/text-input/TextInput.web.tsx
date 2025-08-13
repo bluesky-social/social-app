@@ -13,6 +13,7 @@ import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {Fragment, Node, Slice} from '@tiptap/pm/model'
 import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
+import Graphemer from 'graphemer'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -214,10 +215,28 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             }
           }
         },
-        handleKeyDown: (_, event) => {
+        handleKeyDown: (view, event) => {
           if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
             textInputWebEmitter.emit('publish')
             return true
+          }
+          if (event.code === 'Backspace') {
+            const isNotSelection = view.state.selection.empty
+            if (isNotSelection) {
+              const cursorPosition = view.state.selection.$anchor.pos
+              const textBefore = view.state.doc.textBetween(0, cursorPosition)
+              const graphemes = new Graphemer().splitGraphemes(textBefore)
+
+              if (graphemes.length > 0) {
+                const lastGrapheme = graphemes[graphemes.length - 1]
+                const deleteFrom = cursorPosition - lastGrapheme.length
+                editor?.commands.deleteRange({
+                  from: deleteFrom,
+                  to: cursorPosition,
+                })
+                return true
+              }
+            }
           }
         },
       },
