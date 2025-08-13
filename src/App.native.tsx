@@ -29,6 +29,7 @@ import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as AgeAssuranceProvider} from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
+import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {
   beginResolveGeolocation,
@@ -155,18 +156,20 @@ function InnerApp() {
                                               <MutedThreadsProvider>
                                                 <ProgressGuideProvider>
                                                   <ServiceAccountManager>
-                                                    <HideBottomBarBorderProvider>
-                                                      <GestureHandlerRootView
-                                                        style={s.h100pct}>
-                                                        <GlobalGestureEventsProvider>
-                                                          <IntentDialogProvider>
-                                                            <TestCtrls />
-                                                            <Shell />
-                                                            <NuxDialogs />
-                                                          </IntentDialogProvider>
-                                                        </GlobalGestureEventsProvider>
-                                                      </GestureHandlerRootView>
-                                                    </HideBottomBarBorderProvider>
+                                                    <EmailVerificationProvider>
+                                                      <HideBottomBarBorderProvider>
+                                                        <GestureHandlerRootView
+                                                          style={s.h100pct}>
+                                                          <GlobalGestureEventsProvider>
+                                                            <IntentDialogProvider>
+                                                              <TestCtrls />
+                                                              <Shell />
+                                                              <NuxDialogs />
+                                                            </IntentDialogProvider>
+                                                          </GlobalGestureEventsProvider>
+                                                        </GestureHandlerRootView>
+                                                      </HideBottomBarBorderProvider>
+                                                    </EmailVerificationProvider>
                                                   </ServiceAccountManager>
                                                 </ProgressGuideProvider>
                                               </MutedThreadsProvider>

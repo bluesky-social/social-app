@@ -18,8 +18,8 @@ import Graphemer from 'graphemer'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {useEmail} from '#/lib/hooks/useEmail'
 import {isIOS, isWeb} from '#/platform/detection'
+import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
   useSaveMessageDraft,

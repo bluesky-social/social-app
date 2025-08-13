@@ -15,7 +15,6 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useEmail} from '#/lib/hooks/useEmail'
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
@@ -24,6 +23,7 @@ import {
 } from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {type Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
+import {useEmail} from '#/state/email-verification'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
