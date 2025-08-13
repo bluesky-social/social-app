@@ -5,6 +5,7 @@ import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {atoms as a, flatten, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
+import {CodeBlockText} from '#/components/CodeBlock'
 import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
@@ -59,6 +60,41 @@ export function RichText({
   const {text, facets} = richText
 
   if (!facets?.length) {
+    const fencedRegex = /```([a-zA-Z0-9_-]+)?\n([\s\S]*?)```/g
+    const matches = [...text.matchAll(fencedRegex)]
+    if (matches.length > 0) {
+      const els = [] as React.ReactNode[]
+      let lastIndex = 0
+      let key = 0
+      for (const m of matches) {
+        const start = m.index || 0
+        const end = start + m[0].length
+        if (start > lastIndex) {
+          els.push(text.slice(lastIndex, start))
+        }
+        const lang = (m[1] || '').trim() || undefined
+        const code = m[2] || ''
+        els.push(<CodeBlockText key={`cb-${key++}`} code={code} lang={lang} />)
+        lastIndex = end
+      }
+      if (lastIndex < text.length) {
+        els.push(text.slice(lastIndex))
+      }
+      return (
+        <Text
+          emoji
+          selectable={selectable}
+          testID={testID}
+          style={plainStyles}
+          numberOfLines={numberOfLines}
+          onLayout={onLayout}
+          onTextLayout={onTextLayout}
+          // @ts-ignore web only -prf
+          dataSet={WORD_WRAP}>
+          {els}
+        </Text>
+      )
+    }
     if (isOnlyEmoji(text)) {
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
