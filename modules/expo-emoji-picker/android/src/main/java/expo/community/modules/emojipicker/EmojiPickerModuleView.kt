@@ -8,33 +8,35 @@ import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
 
-
 @SuppressLint("ViewConstructor")
-class EmojiPickerModuleView(context: Context, appContext: AppContext) :
-    ExpoView(context, appContext) {
-    private var emojiView: EmojiPickerView = EmojiPickerView(context)
-    private val onEmojiSelected by EventDispatcher()
+class EmojiPickerModuleView(
+  context: Context,
+  appContext: AppContext,
+) : ExpoView(context, appContext) {
+  private var emojiView: EmojiPickerView = EmojiPickerView(context)
+  private val onEmojiSelected by EventDispatcher()
 
-    init {
-        setupView()
+  init {
+    setupView()
+  }
+
+  private fun setupView() {
+    addView(
+      emojiView,
+      LayoutParams(
+        LayoutParams.MATCH_PARENT,
+        LayoutParams.MATCH_PARENT,
+      ),
+    )
+
+    emojiView.setOnEmojiPickedListener { emoji ->
+      onEmojiSelected(mapOf("emoji" to emoji.emoji))
     }
+  }
 
-    private fun setupView() {
-        addView(
-            emojiView, LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT
-            )
-        )
-
-        emojiView.setOnEmojiPickedListener { emoji ->
-            onEmojiSelected(mapOf("emoji" to emoji.emoji))
-        }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
-        removeView(emojiView)
-        setupView()
-    }
+  override fun onConfigurationChanged(newConfig: Configuration?) {
+    super.onConfigurationChanged(newConfig)
+    removeView(emojiView)
+    setupView()
+  }
 }
