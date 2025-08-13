@@ -20,7 +20,7 @@
   },
   "scripts": {
     "prepare": "is-ci || husky install",
-    "postinstall": "patch-package && yarn intl:compile",
+    "postinstall": "patch-package && yarn intl:compile-if-needed",
     "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
     "android:prod": "expo run:android --variant release",
@@ -58,6 +58,7 @@
     "intl:extract": "lingui extract --clean --locale en",
     "intl:extract:all": "lingui extract --clean",
     "intl:compile": "lingui compile",
+    "intl:compile-if-needed": "is-ci || [ -f src/locale/locales/en/messages.js ] || yarn intl:compile",
     "intl:pull": "crowdin download translations --verbose -b main",
     "intl:push": "crowdin push translations --verbose -b main",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
