@@ -482,9 +482,15 @@ export function SelectMediaButton({
           comment: `Accessibility label for button in composer to add photos or a video to a post`,
         }),
       )}
-      accessibilityHint={_(
-        msg`Opens device gallery to select images, a video, or a GIF.`,
-      )}
+      accessibilityHint={
+        isNative
+          ? _(
+              msg`Opens device gallery to select up to ${MAX_IMAGES} images, or a single video.`,
+            )
+          : _(
+              msg`Opens device gallery to select up to ${MAX_IMAGES} images, or a single video or GIF.`,
+            )
+      }
       style={a.p_sm}
       variant="ghost"
       shape="round"
