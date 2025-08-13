@@ -50,7 +50,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git merge --no-edit ${{ github.head_ref }}
           yarn install
-          yarn intl:compile
+          yarn intl:build
 
       - name: 🔦 Generate stats file for PR
         run: |
@@ -74,7 +74,7 @@ jobs:
         if: ${{ !steps.get-base-stats.outputs.cache-hit }}
         run: |
           yarn install
-          yarn intl:compile
+          yarn intl:build
           yarn generate-webpack-stats-file
           mv stats.json stats-base.json
 
