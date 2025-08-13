@@ -28,7 +28,7 @@ export function AppIconSettingsScreen({}: Props) {
     getAppIconName(DynamicAppIcon.getAppIcon()),
   )
 
-  const onSetAppIcon = (icon: string) => {
+  const onSetAppIcon = (icon: DynamicAppIcon.IconName) => {
     if (isAndroid) {
       const next =
         sets.defaults.find(i => i.id === icon) ??
@@ -37,7 +37,7 @@ export function AppIconSettingsScreen({}: Props) {
         next
           ? _(msg`Change app icon to "${next.name}"`)
           : _(msg`Change app icon`),
-        // to determine - can we stop this happening? -sfn
+        // unfortunately necessary -sfn
         _(msg`The app will be restarted`),
         [
           {
@@ -119,7 +119,7 @@ export function AppIconSettingsScreen({}: Props) {
   )
 }
 
-function setAppIcon(icon: string) {
+function setAppIcon(icon: DynamicAppIcon.IconName) {
   if (icon === 'default_light') {
     return getAppIconName(DynamicAppIcon.setAppIcon(null))
   } else {
@@ -127,11 +127,11 @@ function setAppIcon(icon: string) {
   }
 }
 
-function getAppIconName(icon: string | false) {
+function getAppIconName(icon: string | false): DynamicAppIcon.IconName {
   if (!icon || icon === 'DEFAULT') {
     return 'default_light'
   } else {
-    return icon
+    return icon as DynamicAppIcon.IconName
   }
 }
 
@@ -143,8 +143,8 @@ function Group({
 }: {
   children: React.ReactNode
   label: string
-  value: string
-  onChange: (value: string) => void
+  value: DynamicAppIcon.IconName
+  onChange: (value: DynamicAppIcon.IconName) => void
 }) {
   return (
     <Toggle.Group
@@ -153,7 +153,7 @@ function Group({
       values={[value]}
       maxSelections={1}
       onChange={vals => {
-        if (vals[0]) onChange(vals[0])
+        if (vals[0]) onChange(vals[0] as DynamicAppIcon.IconName)
       }}>
       <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
         {children}
