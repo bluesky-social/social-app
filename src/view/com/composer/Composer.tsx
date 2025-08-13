@@ -522,6 +522,14 @@ export const ComposePost = ({
       onPostSuccess?.(postSuccessData)
     }
     onClose()
+    toast.show(
+      thread.posts.length > 1
+        ? _(msg`Your posts have been published`)
+        : replyTo
+          ? _(msg`Your reply has been published`)
+          : _(msg`Your post has been published`),
+      {type: 'success'},
+    )
   }, [
     _,
     agent,
