@@ -4,13 +4,29 @@ import {show as deprecatedShow} from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {toast} from '#/components/Toast'
+import {useToast} from '#/components/Toast/Context'
 import {Toast} from '#/components/Toast/Toast'
 import {H1} from '#/components/Typography'
 
 export function Toasts() {
+  const {show} = useToast()
   return (
     <View style={[a.gap_md]}>
       <H1>Toast Examples</H1>
+
+      <Button
+        label="show toast"
+        size="large"
+        color="primary"
+        onPress={() => {
+          show({
+            type: 'default',
+            content: 'This is a toast example',
+            a11yLabel: 'This is a toast example',
+          })
+        }}>
+        <ButtonText>New Toast</ButtonText>
+      </Button>
 
       <View style={[a.gap_md]}>
         <Pressable

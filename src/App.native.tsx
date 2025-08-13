@@ -73,6 +73,7 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {ToastProvider} from '#/components/Toast'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -133,59 +134,61 @@ function InnerApp() {
         <ContextMenuProvider>
           <Splash isReady={isReady && hasCheckedReferrer}>
             <RootSiblingParent>
-              <VideoVolumeProvider>
-                <React.Fragment
-                  // Resets the entire tree below when it changes:
-                  key={currentAccount?.did}>
-                  <QueryProvider currentDid={currentAccount?.did}>
-                    <PolicyUpdateOverlayProvider>
-                      <StatsigProvider>
-                        <AgeAssuranceProvider>
-                          <ComposerProvider>
-                            <MessagesProvider>
-                              {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                              <LabelDefsProvider>
-                                <ModerationOptsProvider>
-                                  <LoggedOutViewProvider>
-                                    <SelectedFeedProvider>
-                                      <HiddenRepliesProvider>
-                                        <HomeBadgeProvider>
-                                          <UnreadNotifsProvider>
-                                            <BackgroundNotificationPreferencesProvider>
-                                              <MutedThreadsProvider>
-                                                <ProgressGuideProvider>
-                                                  <ServiceAccountManager>
-                                                    <HideBottomBarBorderProvider>
-                                                      <GestureHandlerRootView
-                                                        style={s.h100pct}>
-                                                        <GlobalGestureEventsProvider>
-                                                          <IntentDialogProvider>
-                                                            <TestCtrls />
-                                                            <Shell />
-                                                            <NuxDialogs />
-                                                          </IntentDialogProvider>
-                                                        </GlobalGestureEventsProvider>
-                                                      </GestureHandlerRootView>
-                                                    </HideBottomBarBorderProvider>
-                                                  </ServiceAccountManager>
-                                                </ProgressGuideProvider>
-                                              </MutedThreadsProvider>
-                                            </BackgroundNotificationPreferencesProvider>
-                                          </UnreadNotifsProvider>
-                                        </HomeBadgeProvider>
-                                      </HiddenRepliesProvider>
-                                    </SelectedFeedProvider>
-                                  </LoggedOutViewProvider>
-                                </ModerationOptsProvider>
-                              </LabelDefsProvider>
-                            </MessagesProvider>
-                          </ComposerProvider>
-                        </AgeAssuranceProvider>
-                      </StatsigProvider>
-                    </PolicyUpdateOverlayProvider>
-                  </QueryProvider>
-                </React.Fragment>
-              </VideoVolumeProvider>
+              <ToastProvider>
+                <VideoVolumeProvider>
+                  <React.Fragment
+                    // Resets the entire tree below when it changes:
+                    key={currentAccount?.did}>
+                    <QueryProvider currentDid={currentAccount?.did}>
+                      <PolicyUpdateOverlayProvider>
+                        <StatsigProvider>
+                          <AgeAssuranceProvider>
+                            <ComposerProvider>
+                              <MessagesProvider>
+                                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                                <LabelDefsProvider>
+                                  <ModerationOptsProvider>
+                                    <LoggedOutViewProvider>
+                                      <SelectedFeedProvider>
+                                        <HiddenRepliesProvider>
+                                          <HomeBadgeProvider>
+                                            <UnreadNotifsProvider>
+                                              <BackgroundNotificationPreferencesProvider>
+                                                <MutedThreadsProvider>
+                                                  <ProgressGuideProvider>
+                                                    <ServiceAccountManager>
+                                                      <HideBottomBarBorderProvider>
+                                                        <GestureHandlerRootView
+                                                          style={s.h100pct}>
+                                                          <GlobalGestureEventsProvider>
+                                                            <IntentDialogProvider>
+                                                              <TestCtrls />
+                                                              <Shell />
+                                                              <NuxDialogs />
+                                                            </IntentDialogProvider>
+                                                          </GlobalGestureEventsProvider>
+                                                        </GestureHandlerRootView>
+                                                      </HideBottomBarBorderProvider>
+                                                    </ServiceAccountManager>
+                                                  </ProgressGuideProvider>
+                                                </MutedThreadsProvider>
+                                              </BackgroundNotificationPreferencesProvider>
+                                            </UnreadNotifsProvider>
+                                          </HomeBadgeProvider>
+                                        </HiddenRepliesProvider>
+                                      </SelectedFeedProvider>
+                                    </LoggedOutViewProvider>
+                                  </ModerationOptsProvider>
+                                </LabelDefsProvider>
+                              </MessagesProvider>
+                            </ComposerProvider>
+                          </AgeAssuranceProvider>
+                        </StatsigProvider>
+                      </PolicyUpdateOverlayProvider>
+                    </QueryProvider>
+                  </React.Fragment>
+                </VideoVolumeProvider>
+              </ToastProvider>
             </RootSiblingParent>
           </Splash>
         </ContextMenuProvider>

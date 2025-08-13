@@ -86,6 +86,7 @@ function StorybookInner() {
                 <ButtonText>Dark</ButtonText>
               </Button>
             </View>
+            <Toasts />
 
             <Button
               color="primary"
@@ -106,7 +107,6 @@ function StorybookInner() {
               <Theming />
             </ThemeProvider>
 
-            <Toasts />
             <Buttons />
             <Forms />
             <Typography />

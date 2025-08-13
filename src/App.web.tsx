@@ -61,7 +61,7 @@ import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdate
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
-import {ToastContainer} from '#/components/Toast'
+import {ToastContainer, ToastProvider} from '#/components/Toast'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
@@ -112,28 +112,28 @@ function InnerApp() {
       <ThemeProvider theme={theme}>
         <ContextMenuProvider>
           <RootSiblingParent>
-            <VideoVolumeProvider>
-              <ActiveVideoProvider>
-                <React.Fragment
-                  // Resets the entire tree below when it changes:
-                  key={currentAccount?.did}>
-                  <QueryProvider currentDid={currentAccount?.did}>
-                    <PolicyUpdateOverlayProvider>
-                      <StatsigProvider>
-                        <AgeAssuranceProvider>
-                          <ComposerProvider>
-                            <MessagesProvider>
-                              {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                              <LabelDefsProvider>
-                                <ModerationOptsProvider>
-                                  <LoggedOutViewProvider>
-                                    <SelectedFeedProvider>
-                                      <HiddenRepliesProvider>
-                                        <HomeBadgeProvider>
-                                          <UnreadNotifsProvider>
-                                            <BackgroundNotificationPreferencesProvider>
-                                              <MutedThreadsProvider>
-                                                <SafeAreaProvider>
+            <ToastProvider>
+              <VideoVolumeProvider>
+                <ActiveVideoProvider>
+                  <React.Fragment
+                    // Resets the entire tree below when it changes:
+                    key={currentAccount?.did}>
+                    <QueryProvider currentDid={currentAccount?.did}>
+                      <PolicyUpdateOverlayProvider>
+                        <StatsigProvider>
+                          <AgeAssuranceProvider>
+                            <ComposerProvider>
+                              <MessagesProvider>
+                                {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                                <LabelDefsProvider>
+                                  <ModerationOptsProvider>
+                                    <LoggedOutViewProvider>
+                                      <SelectedFeedProvider>
+                                        <HiddenRepliesProvider>
+                                          <HomeBadgeProvider>
+                                            <UnreadNotifsProvider>
+                                              <BackgroundNotificationPreferencesProvider>
+                                                <MutedThreadsProvider>
                                                   <ProgressGuideProvider>
                                                     <ServiceConfigProvider>
                                                       <HideBottomBarBorderProvider>
@@ -144,26 +144,26 @@ function InnerApp() {
                                                       </HideBottomBarBorderProvider>
                                                     </ServiceConfigProvider>
                                                   </ProgressGuideProvider>
-                                                </SafeAreaProvider>
-                                              </MutedThreadsProvider>
-                                            </BackgroundNotificationPreferencesProvider>
-                                          </UnreadNotifsProvider>
-                                        </HomeBadgeProvider>
-                                      </HiddenRepliesProvider>
-                                    </SelectedFeedProvider>
-                                  </LoggedOutViewProvider>
-                                </ModerationOptsProvider>
-                              </LabelDefsProvider>
-                            </MessagesProvider>
-                          </ComposerProvider>
-                        </AgeAssuranceProvider>
-                      </StatsigProvider>
-                    </PolicyUpdateOverlayProvider>
-                  </QueryProvider>
-                  <ToastContainer />
-                </React.Fragment>
-              </ActiveVideoProvider>
-            </VideoVolumeProvider>
+                                                </MutedThreadsProvider>
+                                              </BackgroundNotificationPreferencesProvider>
+                                            </UnreadNotifsProvider>
+                                          </HomeBadgeProvider>
+                                        </HiddenRepliesProvider>
+                                      </SelectedFeedProvider>
+                                    </LoggedOutViewProvider>
+                                  </ModerationOptsProvider>
+                                </LabelDefsProvider>
+                              </MessagesProvider>
+                            </ComposerProvider>
+                          </AgeAssuranceProvider>
+                        </StatsigProvider>
+                      </PolicyUpdateOverlayProvider>
+                    </QueryProvider>
+                    <ToastContainer />
+                  </React.Fragment>
+                </ActiveVideoProvider>
+              </VideoVolumeProvider>
+            </ToastProvider>
           </RootSiblingParent>
         </ContextMenuProvider>
       </ThemeProvider>
@@ -201,7 +201,9 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <InnerApp />
+                            <SafeAreaProvider>
+                              <InnerApp />
+                            </SafeAreaProvider>
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>

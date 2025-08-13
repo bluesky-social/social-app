@@ -1,5 +1,5 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
-import {AccessibilityInfo} from 'react-native'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {AccessibilityInfo, View} from 'react-native'
 import {
   Gesture,
   GestureDetector,
@@ -18,14 +18,99 @@ import Animated, {
 } from 'react-native-reanimated'
 import RootSiblings from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
 import {DEFAULT_TOAST_DURATION} from '#/components/Toast/const'
+import {Context} from '#/components/Toast/Context'
+import * as Portal from '#/components/Toast/Portal'
 import {Toast} from '#/components/Toast/Toast'
-import {type ToastApi, type ToastType} from '#/components/Toast/types'
+import {
+  type ToastApi,
+  type ToastProps,
+  type ToastType,
+} from '#/components/Toast/types'
+
+export {useToast} from '#/components/Toast/Context'
+export {Outlet} from '#/components/Toast/Portal'
 
 const TOAST_ANIMATION_DURATION = 300
+
+export function ToastProvider({children}: {children: React.ReactNode}) {
+  const {top} = useSafeAreaInsets()
+  const [toasts, setToasts] = useState<
+    {
+      id: string
+      toast: ToastProps
+      timeout: NodeJS.Timeout
+    }[]
+  >([])
+
+  const show = useCallback<ToastApi['show']>(props => {
+    AccessibilityInfo.announceForAccessibility(props.a11yLabel)
+
+    setToasts(prevToasts => {
+      const id = nanoid()
+      return [
+        ...prevToasts,
+        {
+          id,
+          toast: props,
+          timeout: setTimeout(() => {
+            setToasts(currentToasts => currentToasts.filter(t => t.id !== id))
+          }, props.duration || DEFAULT_TOAST_DURATION),
+        },
+      ]
+    })
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      setToasts(toasts => {
+        toasts.map(({timeout}) => {
+          clearTimeout(timeout)
+        })
+        return toasts
+      })
+    }
+  }, [])
+
+  const ctx = useMemo(
+    () => ({
+      show,
+    }),
+    [show],
+  )
+
+  return (
+    <Context.Provider value={ctx}>
+      <Portal.Provider>
+        {children}
+
+        {toasts.length ? (
+          <Portal.Portal>
+            <View
+              style={[
+                a.absolute,
+                a.gap_sm,
+                {
+                  flexDirection: 'column-reverse',
+                  top: top,
+                  left: a.px_lg.paddingLeft,
+                  right: a.px_lg.paddingLeft,
+                },
+              ]}>
+              {toasts.map(({id, toast}) => (
+                <Toast key={id} type={toast.type} content={toast.content} />
+              ))}
+            </View>
+          </Portal.Portal>
+        ) : null}
+      </Portal.Provider>
+    </Context.Provider>
+  )
+}
 
 export function ToastContainer() {
   return null

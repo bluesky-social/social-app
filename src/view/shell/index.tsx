@@ -36,6 +36,7 @@ import {
   usePolicyUpdateContext,
 } from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {Outlet as ToastPortalOutlet} from '#/components/Toast/Portal'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
@@ -172,6 +173,7 @@ function ShellInner() {
         <>
           <PortalOutlet />
           <BottomSheetOutlet />
+          <ToastPortalOutlet />
         </>
       )}
 

@@ -27,6 +27,7 @@ import {
   usePolicyUpdateContext,
 } from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {Outlet as ToastPortalOutlet} from '#/components/Toast/Portal'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer.web'
 import {DrawerContent} from './Drawer'
@@ -84,6 +85,7 @@ function ShellInner() {
       {policyUpdateState.completed && (
         <>
           <PortalOutlet />
+          <ToastPortalOutlet />
         </>
       )}
 
