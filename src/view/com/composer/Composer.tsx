@@ -133,6 +133,7 @@ import * as toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
+  type AssetType,
   SelectMediaButton,
   type SelectMediaButtonProps,
 } from './SelectMediaButton'
@@ -1267,6 +1268,13 @@ function ComposerFooter({
   const t = useTheme()
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
+  /*
+   * Once we've allowed a certain type of asset to be selected, we don't allow
+   * other types of media to be selected.
+   */
+  const [selectedAssetsType, setSelectedAssetsType] = useState<
+    AssetType | undefined
+  >(undefined)
 
   const media = post.embed.media
   const images = media?.type === 'images' ? media.images : []
@@ -1304,8 +1312,17 @@ function ComposerFooter({
     [dispatch],
   )
 
+  /*
+   * Reset if the user clears any selected media
+   */
+  if (selectedAssetsType !== undefined && !media) {
+    setSelectedAssetsType(undefined)
+  }
+
   const onSelectAssets = useCallback<SelectMediaButtonProps['onSelectAssets']>(
     async ({type, assets, errors}) => {
+      setSelectedAssetsType(type)
+
       if (assets.length) {
         if (type === 'image') {
           const images: ComposerImage[] = []
@@ -1363,6 +1380,7 @@ function ComposerFooter({
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
               <SelectMediaButton
                 disabled={isMediaSelectionDisabled}
+                allowedAssetTypes={selectedAssetsType}
                 selectedAssetsCount={selectedAssetsCount}
                 onSelectAssets={onSelectAssets}
               />

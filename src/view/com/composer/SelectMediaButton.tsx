@@ -26,6 +26,10 @@ import * as toast from '#/components/Toast'
 
 export type SelectMediaButtonProps = {
   disabled?: boolean
+  /**
+   * If set, this limits the types of assets that can be selected.
+   */
+  allowedAssetTypes: AssetType | undefined
   selectedAssetsCount: number
   onSelectAssets: (props: {
     type: AssetType
@@ -37,7 +41,7 @@ export type SelectMediaButtonProps = {
 /**
  * Generic asset classes, or buckets, that we support.
  */
-type AssetType = 'video' | 'image' | 'gif'
+export type AssetType = 'video' | 'image' | 'gif'
 
 /**
  * Shadows `ImagePickerAsset` from `expo-image-picker`, but with a guaranteed `mimeType`
@@ -231,9 +235,11 @@ async function getAdditionalVideoMetadata(asset: ValidatedImagePickerAsset) {
 async function processImagePickerAssets(
   assets: ImagePickerAsset[],
   {
-    selectionLimit,
+    selectionCountRemaining,
+    allowedAssetTypes,
   }: {
-    selectionLimit: number
+    selectionCountRemaining: number
+    allowedAssetTypes: AssetType | undefined
   },
 ) {
   /*
@@ -242,10 +248,11 @@ async function processImagePickerAssets(
   const errors = new Set<SelectedAssetError>()
 
   /*
-   * We only support selecting a single type of media at a time, so this
-   * gets set to whatever the first asset type is.
+   * We only support selecting a single type of media at a time, so this gets
+   * set to whatever the first valid asset type is, OR to whatever
+   * `allowedAssetTypes` is set to.
    */
-  let primaryMediaType: AssetType | undefined
+  let selectableAssetType: AssetType | undefined
 
   /*
    * This will hold the assets that we can actually use, after filtering
@@ -260,11 +267,15 @@ async function processImagePickerAssets(
       continue
     }
 
-    // set the primary media type to the first valid asset type
-    primaryMediaType = primaryMediaType || type
+    /*
+     * If we have an `allowedAssetTypes` prop, constrain to that. Otherwise,
+     * set this to the first valid asset type we see, and then use that to
+     * constrain all remaining selected assets.
+     */
+    selectableAssetType = allowedAssetTypes || selectableAssetType || type
 
     // ignore mixed types
-    if (type !== primaryMediaType) {
+    if (type !== selectableAssetType) {
       errors.add(SelectedAssetError.MixedTypes)
       continue
     }
@@ -303,12 +314,12 @@ async function processImagePickerAssets(
     })
   }
 
-  if (primaryMediaType === 'image') {
-    if (supportedAssets.length > selectionLimit) {
+  if (selectableAssetType === 'image') {
+    if (supportedAssets.length > selectionCountRemaining) {
       errors.add(SelectedAssetError.MaxImages)
-      supportedAssets = supportedAssets.slice(0, selectionLimit)
+      supportedAssets = supportedAssets.slice(0, selectionCountRemaining)
     }
-  } else if (primaryMediaType === 'video') {
+  } else if (selectableAssetType === 'video') {
     if (supportedAssets.length > 1) {
       errors.add(SelectedAssetError.MaxVideos)
       supportedAssets = supportedAssets.slice(0, 1)
@@ -346,7 +357,7 @@ async function processImagePickerAssets(
       errors.add(SelectedAssetError.VideoTooLong)
       supportedAssets = []
     }
-  } else if (primaryMediaType === 'gif') {
+  } else if (selectableAssetType === 'gif') {
     if (supportedAssets.length > 1) {
       errors.add(SelectedAssetError.MaxGIFs)
       supportedAssets = supportedAssets.slice(0, 1)
@@ -354,7 +365,7 @@ async function processImagePickerAssets(
   }
 
   return {
-    type: primaryMediaType!, // set above
+    type: selectableAssetType!, // set above
     assets: supportedAssets,
     errors,
   }
@@ -362,6 +373,7 @@ async function processImagePickerAssets(
 
 export function SelectMediaButton({
   disabled,
+  allowedAssetTypes,
   selectedAssetsCount,
   onSelectAssets,
 }: SelectMediaButtonProps) {
@@ -371,7 +383,7 @@ export function SelectMediaButton({
   const sheetWrapper = useSheetWrapper()
   const t = useTheme()
 
-  const selectionLimit = MAX_IMAGES - selectedAssetsCount
+  const selectionCountRemaining = MAX_IMAGES - selectedAssetsCount
 
   const processSelectedAssets = useCallback(
     async (rawAssets: ImagePickerAsset[]) => {
@@ -379,7 +391,10 @@ export function SelectMediaButton({
         type,
         assets,
         errors: errorCodes,
-      } = await processImagePickerAssets(rawAssets, {selectionLimit})
+      } = await processImagePickerAssets(rawAssets, {
+        selectionCountRemaining,
+        allowedAssetTypes,
+      })
 
       /*
        * Convert error codes to user-friendly messages.
@@ -420,7 +435,7 @@ export function SelectMediaButton({
         errors,
       })
     },
-    [_, onSelectAssets, selectionLimit],
+    [_, onSelectAssets, selectionCountRemaining, allowedAssetTypes],
   )
 
   const onPressSelectMedia = useCallback(async () => {
@@ -445,7 +460,7 @@ export function SelectMediaButton({
         quality: 1,
         allowsMultipleSelection: true,
         legacy: true,
-        selectionLimit: isIOS ? selectionLimit : undefined,
+        selectionLimit: isIOS ? selectionCountRemaining : undefined,
         preferredAssetRepresentationMode:
           UIImagePickerPreferredAssetRepresentationMode.Current,
       }),
@@ -460,7 +475,7 @@ export function SelectMediaButton({
     requestVideoAccessIfNeeded,
     sheetWrapper,
     processSelectedAssets,
-    selectionLimit,
+    selectionCountRemaining,
   ])
 
   return (
