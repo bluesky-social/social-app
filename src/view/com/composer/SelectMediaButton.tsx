@@ -124,7 +124,7 @@ const extensionToMimeType: Record<
 }
 
 /**
- * Attemps to bucket the given asset into one of our known types based on its
+ * Attempts to bucket the given asset into one of our known types based on its
  * `mimeType`. If `mimeType` is not available, we try to infer it through
  * various means.
  */
