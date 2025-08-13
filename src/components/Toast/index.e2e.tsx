@@ -1,6 +1,6 @@
 import {type ToastApi} from '#/components/Toast/types'
 
-export function ToastContainer() {
+export function ToastOutlet() {
   return null
 }
 

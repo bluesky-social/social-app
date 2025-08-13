@@ -74,6 +74,7 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {ToastOutlet} from '#/components/Toast'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -165,6 +166,7 @@ function InnerApp() {
                                                               <TestCtrls />
                                                               <Shell />
                                                               <NuxDialogs />
+                                                              <ToastOutlet />
                                                             </IntentDialogProvider>
                                                           </GlobalGestureEventsProvider>
                                                         </GestureHandlerRootView>

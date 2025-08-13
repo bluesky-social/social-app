@@ -18178,6 +18178,16 @@ sonic-boom@^3.7.0:
   dependencies:
     atomic-sleep "^1.0.0"
 
+sonner-native@^0.21.0:
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/sonner-native/-/sonner-native-0.21.0.tgz#b7968f8a7fdcdbc3b13b478455d63b24a45db829"
+  integrity sha512-pIdyMd722xuDukIvCZCmWh9Jy5FV+m9uKYl3oAzonYE+91eX5556vYrIik5MisDlBniSXaWqC9CnPoS6DKo2Lg==
+
+sonner@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/sonner/-/sonner-2.0.7.tgz#810c1487a67ec3370126e0f400dfb9edddc3e4f6"
+  integrity sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==
+
 source-list-map@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.1.tgz#3993bd873bfc48479cca9ea3a547835c7c154b34"
