@@ -824,7 +824,7 @@ let ComposerPost = React.memo(function ComposerPost({
         if (isNative) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          toast.show(_(msg`Unsupported video type`), {
+          toast.show(_(msg`Unsupported video type: ${mimeType}`), {
             type: 'error',
           })
           return
