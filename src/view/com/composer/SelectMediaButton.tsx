@@ -185,12 +185,6 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
     type = 'image'
   }
 
-  // console.log({
-  //   asset,
-  //   type,
-  //   mimeType,
-  // })
-
   /*
    * If we weren't able to find a valid type, we don't support this asset.
    */
