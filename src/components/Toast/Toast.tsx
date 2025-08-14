@@ -92,7 +92,7 @@ export function ToastText({children}: {children: React.ReactNode}) {
       selectable={false}
       style={[
         a.text_md,
-        a.font_bold,
+        a.font_medium,
         a.leading_snug,
         a.pointer_events_none,
         {
