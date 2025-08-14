@@ -395,7 +395,13 @@ export function SelectMediaButton({
             msg`Selecting multiple media types is not supported.`,
           ),
           [SelectedAssetError.MaxImages]: _(
-            msg`You can select up to ${MAX_IMAGES} total images.`,
+            msg({
+              message: `You can select up to ${plural(MAX_IMAGES, {
+                other: '# images',
+              })} in total.`,
+              comment: `Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.`,
+            }),
+          ),
           ),
           [SelectedAssetError.MaxVideos]: _(
             msg`You can only select one video at a time.`,
