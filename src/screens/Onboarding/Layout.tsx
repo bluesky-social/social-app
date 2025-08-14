@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
@@ -12,6 +12,7 @@ import {
   flatten,
   native,
   type TextStyleProp,
+  tokens,
   useBreakpoints,
   useTheme,
   web,
@@ -45,6 +46,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
 
   const paddingTop = gtMobile ? a.py_5xl : a.py_lg
   const dialogLabel = _(msg`Set up your account`)
+
+  const [footerHeight, setFooterHeight] = useState(0)
 
   return (
     <View
@@ -109,10 +112,16 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         ref={scrollview}
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
         contentContainerStyle={{borderWidth: 0}}
+        scrollIndicatorInsets={{bottom: footerHeight - insets.bottom}}
         // @ts-ignore web only --prf
         dataSet={{'stable-gutters': 1}}>
         <View
-          style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
+          style={[
+            a.flex_row,
+            a.justify_center,
+            gtMobile ? a.px_5xl : a.px_xl,
+            a.debug,
+          ]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
             <View style={[a.w_full, a.align_center, paddingTop]}>
               <View
@@ -124,7 +133,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                 ]}>
                 {Array(state.totalSteps)
                   .fill(0)
-                  .map((_, i) => (
+                  .map((__, i) => (
                     <View
                       key={i}
                       style={[
@@ -149,12 +158,13 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               {children}
             </View>
 
-            <View style={{height: 400}} />
+            <View style={{height: 100 + footerHeight}} />
           </View>
         </View>
       </ScrollView>
 
       <View
+        onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
         style={[
           // @ts-ignore web only -prf
           isWeb ? a.fixed : a.absolute,
@@ -167,8 +177,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           isWeb
             ? a.py_2xl
             : {
-                paddingTop: a.pt_lg.paddingTop,
-                paddingBottom: insets.bottom + 10,
+                paddingTop: tokens.space.md,
+                paddingBottom: insets.bottom + tokens.space.md,
               },
         ]}>
         <View
