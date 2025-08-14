@@ -199,7 +199,7 @@ function SavedFeedsInner({
 
         <View style={[a.px_lg, a.py_xl]}>
           <Text
-            style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_normal]}>
+            style={[a.text_sm, t.atoms.text_contrast_medium, a.leading_snug]}>
             <Trans>
               Feeds are custom algorithms that users build with a little coding
               expertise.{' '}
@@ -207,7 +207,7 @@ function SavedFeedsInner({
                 to="https://github.com/bluesky-social/feed-generator"
                 label={_(msg`See this guide`)}
                 disableMismatchWarning
-                style={[a.leading_normal]}>
+                style={[a.leading_snug]}>
                 See this guide
               </InlineLinkText>{' '}
               for more information.
