@@ -1,40 +1,47 @@
-import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
+import {useCallback, useState} from 'react'
+import {LayoutAnimation, View} from 'react-native'
+import {Pressable} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {getEntries} from '#/logger/logDump'
 import {useTickEveryMinute} from '#/state/shell'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {Text} from '#/view/com/util/text/Text'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {ScrollView} from '#/view/com/util/Views'
+import {atoms as a, useTheme} from '#/alf'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottomIcon,
+  ChevronTop_Stroke2_Corner0_Rounded as ChevronTopIcon,
+} from '#/components/icons/Chevron'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Layout from '#/components/Layout'
+import {Text} from '#/components/Typography'
 
 export function LogScreen({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'Log'
 >) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const [expanded, setExpanded] = React.useState<string[]>([])
+  const [expanded, setExpanded] = useState<string[]>([])
   const timeAgo = useGetTimeAgo()
   const tick = useTickEveryMinute()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
   const toggler = (id: string) => () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     if (expanded.includes(id)) {
       setExpanded(expanded.filter(v => v !== id))
     } else {
@@ -44,73 +51,78 @@ export function LogScreen({}: NativeStackScreenProps<
 
   return (
     <Layout.Screen>
-      <ViewHeader title="Log" />
-      <ScrollView style={s.flex1}>
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>System log</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content>
         {getEntries()
           .slice(0)
           .map(entry => {
             return (
               <View key={`entry-${entry.id}`}>
-                <TouchableOpacity
-                  style={[styles.entry, pal.border, pal.view]}
+                <Pressable
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.py_md,
+                    a.px_sm,
+                    a.border_b,
+                    t.atoms.border_contrast_low,
+                    t.atoms.bg,
+                    a.gap_sm,
+                  ]}
                   onPress={toggler(entry.id)}
                   accessibilityLabel={_(msg`View debug entry`)}
                   accessibilityHint={_(
                     msg`Opens additional details for a debug entry`,
                   )}>
-                  {entry.level === 'debug' ? (
-                    <FontAwesomeIcon icon="info" />
+                  {entry.level === 'warn' || entry.level === 'error' ? (
+                    <WarningIcon size="sm" fill={t.palette.negative_500} />
                   ) : (
-                    <FontAwesomeIcon icon="exclamation" style={s.red3} />
+                    <CircleInfoIcon size="sm" />
                   )}
-                  <Text type="sm" style={[styles.summary, pal.text]}>
-                    {String(entry.message)}
-                  </Text>
-                  {entry.metadata && Object.keys(entry.metadata).length ? (
-                    <FontAwesomeIcon
-                      icon={
-                        expanded.includes(entry.id) ? 'angle-up' : 'angle-down'
-                      }
-                      style={s.mr5}
-                    />
-                  ) : undefined}
-                  <Text type="sm" style={[styles.ts, pal.textLight]}>
+                  <Text style={[a.flex_1]}>{String(entry.message)}</Text>
+                  {entry.metadata &&
+                    Object.keys(entry.metadata).length > 0 &&
+                    (expanded.includes(entry.id) ? (
+                      <ChevronTopIcon
+                        size="sm"
+                        style={[t.atoms.text_contrast_low]}
+                      />
+                    ) : (
+                      <ChevronBottomIcon
+                        size="sm"
+                        style={[t.atoms.text_contrast_low]}
+                      />
+                    ))}
+                  <Text style={[{minWidth: 40}, t.atoms.text_contrast_medium]}>
                     {timeAgo(entry.timestamp, tick)}
                   </Text>
-                </TouchableOpacity>
-                {expanded.includes(entry.id) ? (
-                  <View style={[pal.view, s.pl10, s.pr10, s.pb10]}>
-                    <View style={[pal.btn, styles.details]}>
-                      <Text type="mono" style={pal.text}>
-                        {JSON.stringify(entry.metadata, null, 2)}
-                      </Text>
+                </Pressable>
+                {expanded.includes(entry.id) && (
+                  <View
+                    style={[
+                      t.atoms.bg_contrast_25,
+                      a.rounded_xs,
+                      a.p_sm,
+                      a.border_b,
+                      t.atoms.border_contrast_low,
+                    ]}>
+                    <View style={[a.px_sm, a.py_xs]}>
+                      <Text>{JSON.stringify(entry.metadata, null, 2)}</Text>
                     </View>
                   </View>
-                ) : undefined}
+                )}
               </View>
             )
           })}
-        <View style={s.footerSpacer} />
-      </ScrollView>
+      </Layout.Content>
     </Layout.Screen>
   )
 }
-
-const styles = StyleSheet.create({
-  entry: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 6,
-  },
-  summary: {
-    flex: 1,
-  },
-  ts: {
-    width: 40,
-  },
-  details: {
-    paddingVertical: 10,
-    paddingHorizontal: 6,
-  },
-})
