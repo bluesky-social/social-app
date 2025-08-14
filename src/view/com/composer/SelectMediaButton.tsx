@@ -5,7 +5,7 @@ import {
   launchImageLibraryAsync,
   UIImagePickerPreferredAssetRepresentationMode,
 } from 'expo-image-picker'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {VIDEO_MAX_DURATION_MS} from '#/lib/constants'
@@ -401,7 +401,6 @@ export function SelectMediaButton({
               })} in total.`,
               comment: `Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.`,
             }),
-          ),
           ),
           [SelectedAssetError.MaxVideos]: _(
             msg`You can only select one video at a time.`,
