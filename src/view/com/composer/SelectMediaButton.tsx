@@ -1,4 +1,5 @@
 import {useCallback} from 'react'
+import {Keyboard} from 'react-native'
 import {
   type ImagePickerAsset,
   launchImageLibraryAsync,
@@ -176,7 +177,7 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
    * Distill this down into a type "class".
    */
   let type: AssetType | undefined
-  if (isWeb && mimeType === 'image/gif') {
+  if (mimeType === 'image/gif') {
     type = 'gif'
   } else if (mimeType?.startsWith('video/')) {
     type = 'video'
@@ -434,6 +435,10 @@ export function SelectMediaButton({
         })
         return
       }
+    }
+
+    if (Keyboard.isVisible()) {
+      Keyboard.dismiss()
     }
 
     const {assets, canceled} = await sheetWrapper(
