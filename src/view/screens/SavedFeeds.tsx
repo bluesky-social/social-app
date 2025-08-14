@@ -1,8 +1,7 @@
 import React from 'react'
-import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 import {type AppBskyActorDefs} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -16,7 +15,6 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {
   useOverwriteSavedFeedsMutation,
@@ -32,8 +30,14 @@ import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {
+  ArrowBottom_Stroke2_Corner0_Rounded as ArrowDownIcon,
+  ArrowTop_Stroke2_Corner0_Rounded as ArrowUpIcon,
+} from '#/components/icons/Arrow'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
+import {Pin_Filled_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text as NewText} from '#/components/Typography'
@@ -137,7 +141,7 @@ function SavedFeedsInner({
             <View
               style={[
                 pal.border,
-                isMobile && s.flex1,
+                isMobile && a.flex_1,
                 pal.viewLight,
                 styles.empty,
               ]}>
@@ -177,7 +181,7 @@ function SavedFeedsInner({
             <View
               style={[
                 pal.border,
-                isMobile && s.flex1,
+                isMobile && a.flex_1,
                 pal.viewLight,
                 styles.empty,
               ]}>
@@ -302,88 +306,49 @@ function ListItem({
           hideTopBorder={true}
         />
       )}
-      {isPinned ? (
-        <>
-          <Pressable
-            accessibilityRole="button"
-            onPress={onPressUp}
-            hitSlop={5}
-            style={state => ({
-              backgroundColor: pal.viewLight.backgroundColor,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-              borderRadius: 4,
-              marginRight: 8,
-              opacity: state.hovered || state.pressed ? 0.5 : 1,
-            })}
-            testID={`feed-${feed.type}-moveUp`}>
-            <FontAwesomeIcon
-              icon="arrow-up"
-              size={14}
-              style={[pal.textLight]}
-            />
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={onPressDown}
-            hitSlop={5}
-            style={state => ({
-              backgroundColor: pal.viewLight.backgroundColor,
-              paddingHorizontal: 12,
-              paddingVertical: 10,
-              borderRadius: 4,
-              marginRight: 8,
-              opacity: state.hovered || state.pressed ? 0.5 : 1,
-            })}
-            testID={`feed-${feed.type}-moveDown`}>
-            <FontAwesomeIcon
-              icon="arrow-down"
-              size={14}
-              style={[pal.textLight]}
-            />
-          </Pressable>
-        </>
-      ) : (
-        <Pressable
-          testID={`feed-${feedUri}-toggleSave`}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Remove from my feeds`)}
-          accessibilityHint=""
-          onPress={onPressRemove}
-          hitSlop={5}
-          style={state => ({
-            marginRight: 8,
-            paddingHorizontal: 12,
-            paddingVertical: 10,
-            borderRadius: 4,
-            opacity: state.hovered || state.focused ? 0.5 : 1,
-          })}>
-          <FontAwesomeIcon
-            icon={['far', 'trash-can']}
-            size={19}
-            color={pal.colors.icon}
-          />
-        </Pressable>
-      )}
-      <View style={{paddingRight: 16}}>
-        <Pressable
-          accessibilityRole="button"
-          hitSlop={5}
+      <View style={[a.pr_lg, a.flex_row, a.align_center, a.gap_sm]}>
+        {isPinned ? (
+          <>
+            <Button
+              testID={`feed-${feed.type}-moveUp`}
+              label={_(msg`Move feed up`)}
+              onPress={onPressUp}
+              size="small"
+              color="secondary"
+              shape="square">
+              <ButtonIcon icon={ArrowUpIcon} />
+            </Button>
+            <Button
+              testID={`feed-${feed.type}-moveDown`}
+              label={_(msg`Move feed down`)}
+              onPress={onPressDown}
+              size="small"
+              color="secondary"
+              shape="square">
+              <ButtonIcon icon={ArrowDownIcon} />
+            </Button>
+          </>
+        ) : (
+          <Button
+            testID={`feed-${feedUri}-toggleSave`}
+            label={_(msg`Remove from my feeds`)}
+            onPress={onPressRemove}
+            size="small"
+            color="secondary"
+            variant="ghost"
+            shape="square">
+            <ButtonIcon icon={TrashIcon} />
+          </Button>
+        )}
+        <Button
+          testID={`feed-${feed.type}-togglePin`}
+          label={isPinned ? _(msg`Unpin feed`) : _(msg`Pin feed`)}
           onPress={onTogglePinned}
-          style={state => ({
-            backgroundColor: pal.viewLight.backgroundColor,
-            paddingHorizontal: 12,
-            paddingVertical: 10,
-            borderRadius: 4,
-            opacity: state.hovered || state.focused ? 0.5 : 1,
-          })}
-          testID={`feed-${feed.type}-togglePin`}>
-          <FontAwesomeIcon
-            icon="thumb-tack"
-            size={14}
-            color={isPinned ? colors.blue3 : pal.colors.icon}
-          />
-        </Pressable>
+          size="small"
+          color={isPinned ? 'primary_subtle' : 'secondary'}
+          shape="square">
+          <ButtonIcon icon={PinIcon} />
+        </Button>
       </View>
     </Animated.View>
   )
