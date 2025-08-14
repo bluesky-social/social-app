@@ -437,7 +437,7 @@ export function SelectMediaButton({
       }
     }
 
-    if (Keyboard.isVisible()) {
+    if (isNative && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
 
