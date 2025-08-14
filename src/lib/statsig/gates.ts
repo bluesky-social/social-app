@@ -7,6 +7,7 @@ export type Gate =
   | 'explore_show_suggested_feeds'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
+  | 'onboarding_suggested_accounts'
   | 'post_follow_profile_suggested_accounts'
   | 'post_threads_v2_unspecced'
   | 'remove_show_latest_button'

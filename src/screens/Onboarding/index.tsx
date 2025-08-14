@@ -1,21 +1,29 @@
-import React from 'react'
+import {useMemo, useReducer} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
 import {Context, initialState, reducer} from '#/screens/Onboarding/state'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {Portal} from '#/components/Portal'
+import {StepSuggestedAccounts} from './StepSuggestedAccounts'
 
 export function Onboarding() {
   const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(reducer, {
+  const gate = useGate()
+  const showSuggestedAccounts = gate('onboarding_suggested_accounts')
+  const [state, dispatch] = useReducer(reducer, {
     ...initialState,
+    totalSteps: showSuggestedAccounts ? 4 : 3,
+    experiments: {
+      onboarding_suggested_accounts: showSuggestedAccounts,
+    },
   })
 
-  const interestsDisplayNames = React.useMemo(() => {
+  const interestsDisplayNames = useMemo(() => {
     return {
       news: _(msg`News`),
       journalism: _(msg`Journalism`),
@@ -46,13 +54,16 @@ export function Onboarding() {
     <Portal>
       <OnboardingControls.Provider>
         <Context.Provider
-          value={React.useMemo(
+          value={useMemo(
             () => ({state, dispatch, interestsDisplayNames}),
             [state, dispatch, interestsDisplayNames],
           )}>
           <Layout>
             {state.activeStep === 'profile' && <StepProfile />}
             {state.activeStep === 'interests' && <StepInterests />}
+            {state.activeStep === 'suggested-accounts' && (
+              <StepSuggestedAccounts />
+            )}
             {state.activeStep === 'finished' && <StepFinished />}
           </Layout>
         </Context.Provider>
