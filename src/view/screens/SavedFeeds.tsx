@@ -2,12 +2,14 @@ import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 import {type AppBskyActorDefs} from '@atproto/api'
+import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
   type CommonNavigatorParams,
@@ -157,7 +159,14 @@ function SavedFeedsInner({
 
         {noFollowingFeed && (
           <View style={[t.atoms.border_contrast_low, a.border_b]}>
-            <NoFollowingFeed />
+            <NoFollowingFeed
+              onAddFeed={() =>
+                setCurrentFeeds(feeds => [
+                  ...feeds,
+                  {...TIMELINE_SAVED_FEED, id: TID.next().toString()},
+                ])
+              }
+            />
           </View>
         )}
 
