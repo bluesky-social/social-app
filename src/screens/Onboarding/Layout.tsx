@@ -11,7 +11,7 @@ import {
   atoms as a,
   flatten,
   native,
-  TextStyleProp,
+  type TextStyleProp,
   useBreakpoints,
   useTheme,
   web,
