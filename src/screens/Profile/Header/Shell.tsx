@@ -1,5 +1,5 @@
 import {memo, useCallback, useEffect, useMemo} from 'react'
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {TouchableWithoutFeedback, View} from 'react-native'
 import Animated, {
   measure,
   type MeasuredDimensions,
@@ -26,6 +26,7 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -156,7 +157,8 @@ let ProfileHeaderShell = ({
                 hitSlop={BACK_HITSLOP}
                 label={_(msg`Back`)}
                 style={[
-                  styles.backBtnWrapper,
+                  a.absolute,
+                  a.pointer,
                   {
                     top: platform({
                       web: 10,
@@ -171,8 +173,14 @@ let ProfileHeaderShell = ({
                 {({hovered}) => (
                   <View
                     style={[
-                      styles.backBtn,
+                      a.align_center,
+                      a.justify_center,
                       a.rounded_sm,
+                      {
+                        width: 31,
+                        height: 31,
+                        backgroundColor: transparentifyColor('#000', 0.5),
+                      },
                       hovered && {
                         backgroundColor: '#000',
                       },
@@ -213,7 +221,7 @@ let ProfileHeaderShell = ({
         </View>
       )}
 
-      <GrowableAvatar style={styles.aviPosition}>
+      <GrowableAvatar style={[a.absolute, {top: 104, left: 10}]}>
         <TouchableWithoutFeedback
           testID="profileHeaderAviButton"
           onPress={onPressAvi}
@@ -225,13 +233,14 @@ let ProfileHeaderShell = ({
               t.atoms.bg,
               a.rounded_full,
               {
+                width: 94,
+                height: 94,
                 borderWidth: live.isActive ? 3 : 2,
                 borderColor: live.isActive
                   ? t.palette.negative_500
                   : t.atoms.bg.backgroundColor,
               },
-              styles.avi,
-              profile.associated?.labeler && styles.aviLabeler,
+              profile.associated?.labeler && a.rounded_md,
             ]}>
             <Animated.View ref={aviRef} collapsable={false}>
               <UserAvatar
@@ -265,31 +274,6 @@ let ProfileHeaderShell = ({
     </View>
   )
 }
+
 ProfileHeaderShell = memo(ProfileHeaderShell)
 export {ProfileHeaderShell}
-
-const styles = StyleSheet.create({
-  backBtnWrapper: {
-    position: 'absolute',
-    cursor: 'pointer',
-  },
-  backBtn: {
-    width: 31,
-    height: 31,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  aviPosition: {
-    position: 'absolute',
-    top: 104,
-    left: 10,
-  },
-  avi: {
-    width: 94,
-    height: 94,
-  },
-  aviLabeler: {
-    borderRadius: 10,
-  },
-})
