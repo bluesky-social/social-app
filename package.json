@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.106.0",
+  "version": "1.107.0",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "prepare": "is-ci || husky install",
-    "postinstall": "patch-package && yarn intl:compile",
+    "postinstall": "patch-package && yarn intl:compile-if-needed",
     "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
     "android:prod": "expo run:android --variant release",
@@ -58,6 +58,7 @@
     "intl:extract": "lingui extract --clean --locale en",
     "intl:extract:all": "lingui extract --clean",
     "intl:compile": "lingui compile",
+    "intl:compile-if-needed": "is-ci || [ -f src/locale/locales/en/messages.js ] || yarn intl:compile",
     "intl:pull": "crowdin download translations --verbose -b main",
     "intl:push": "crowdin push translations --verbose -b main",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
@@ -146,6 +147,7 @@
     "expo-image-crop-tool": "^0.1.8",
     "expo-image-manipulator": "~13.1.7",
     "expo-image-picker": "~16.1.4",
+    "expo-intent-launcher": "^12.1.5",
     "expo-linear-gradient": "~14.1.5",
     "expo-linking": "~7.1.5",
     "expo-localization": "~16.1.5",
@@ -212,6 +214,8 @@
     "react-remove-scroll-bar": "^2.3.8",
     "react-responsive": "^9.0.2",
     "react-textarea-autosize": "^8.5.3",
+    "sonner": "^2.0.7",
+    "sonner-native": "^0.21.0",
     "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",

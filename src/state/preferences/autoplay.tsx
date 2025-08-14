@@ -8,7 +8,9 @@ type SetContext = (v: boolean) => void
 const stateContext = React.createContext<StateContext>(
   Boolean(persisted.defaults.disableAutoplay),
 )
+stateContext.displayName = 'AutoplayStateContext'
 const setContext = React.createContext<SetContext>((_: boolean) => {})
+setContext.displayName = 'AutoplaySetContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [state, setState] = React.useState(

@@ -1,12 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
+  type AppBskyActorDefs,
   type AppBskyActorProfile,
   type AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   type Un$Typed,
 } from '@atproto/api'
-import {type SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -108,7 +108,7 @@ export function StepFinished() {
           await agent.setInterestsPref({tags: selectedInterests})
 
           // Default feeds that every user should have pinned when landing in the app
-          const feedsToSave: SavedFeed[] = [
+          const feedsToSave: AppBskyActorDefs.SavedFeed[] = [
             {
               ...DISCOVER_SAVED_FEED,
               id: TID.nextStr(),

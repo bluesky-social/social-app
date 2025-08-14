@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {Keyboard} from 'react-native'
 
-import {useEmail} from '#/lib/hooks/useEmail'
+import {useEmail} from '#/state/email-verification'
 import {useRequireAuth, useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {

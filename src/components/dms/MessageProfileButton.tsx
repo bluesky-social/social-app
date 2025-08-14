@@ -73,7 +73,8 @@ export function MessageProfileButton({
             a.align_center,
             t.atoms.bg_contrast_25,
             a.rounded_full,
-            {width: 34, height: 34},
+            // Matches size of button below to avoid layout shift
+            {width: 33, height: 33},
           ]}>
           <Message style={[t.atoms.text, {opacity: 0.3}]} size="md" />
         </View>

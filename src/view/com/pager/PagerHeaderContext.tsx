@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import {SharedValue} from 'react-native-reanimated'
+import {type SharedValue} from 'react-native-reanimated'
 
 import {isNative} from '#/platform/detection'
 
@@ -7,6 +7,7 @@ export const PagerHeaderContext = React.createContext<{
   scrollY: SharedValue<number>
   headerHeight: number
 } | null>(null)
+PagerHeaderContext.displayName = 'PagerHeaderContext'
 
 /**
  * Passes information about the scroll position and header height down via

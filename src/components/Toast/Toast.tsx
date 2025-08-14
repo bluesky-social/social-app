@@ -13,6 +13,11 @@ type ContextType = {
   type: ToastType
 }
 
+export type ToastComponentProps = {
+  type?: ToastType
+  content: React.ReactNode
+}
+
 export const ICONS = {
   default: CircleCheck,
   success: CircleCheck,
@@ -24,14 +29,9 @@ export const ICONS = {
 const Context = createContext<ContextType>({
   type: 'default',
 })
+Context.displayName = 'ToastContext'
 
-export function Toast({
-  type,
-  content,
-}: {
-  type: ToastType
-  content: React.ReactNode
-}) {
+export function Toast({type = 'default', content}: ToastComponentProps) {
   const {fonts} = useAlf()
   const t = useTheme()
   const styles = useToastStyles({type})
@@ -89,10 +89,12 @@ export function ToastText({children}: {children: React.ReactNode}) {
   const {textColor} = useToastStyles({type})
   return (
     <Text
+      selectable={false}
       style={[
         a.text_md,
         a.font_bold,
         a.leading_snug,
+        a.pointer_events_none,
         {
           color: textColor,
         },

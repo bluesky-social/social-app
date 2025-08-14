@@ -46,6 +46,7 @@ const Context = createContext<{
   onFocus: () => {},
   onBlur: () => {},
 })
+Context.displayName = 'TextFieldContext'
 
 export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
 

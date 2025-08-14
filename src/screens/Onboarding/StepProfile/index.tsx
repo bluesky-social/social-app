@@ -59,6 +59,7 @@ interface IAvatarContext {
 }
 
 const AvatarContext = React.createContext<IAvatarContext>({} as IAvatarContext)
+AvatarContext.displayName = 'AvatarContext'
 export const useAvatar = () => React.useContext(AvatarContext)
 
 const randomColor =

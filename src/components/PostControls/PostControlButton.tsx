@@ -13,6 +13,7 @@ const PostControlContext = createContext<{
   active?: boolean
   color?: {color: string}
 }>({})
+PostControlContext.displayName = 'PostControlContext'
 
 // Base button style, which the the other ones extend
 export function PostControlButton({

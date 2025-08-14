@@ -15,6 +15,7 @@ const Context = React.createContext<{
   setActiveView: (viewId: string) => void
   sendViewPosition: (viewId: string, y: number) => void
 } | null>(null)
+Context.displayName = 'ActiveVideoWebContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
   if (!isWeb) {

@@ -12,7 +12,7 @@ import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {isAndroid, isIOS} from '#/platform/detection'
-import {useDialogStateControlContext} from '#/state/dialogs'
+import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
@@ -181,7 +181,7 @@ function ShellInner() {
 }
 
 export const Shell: React.FC = function ShellImpl() {
-  const {fullyExpandedCount} = useDialogStateControlContext()
+  const fullyExpandedCount = useDialogFullyExpandedCountContext()
   const t = useTheme()
   useIntentHandler()
 

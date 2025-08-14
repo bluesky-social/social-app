@@ -145,7 +145,7 @@ let RepostButtonDialogInner = ({
       <View style={a.gap_xl}>
         <View style={a.gap_xs}>
           <Button
-            style={[a.justify_start, a.px_md]}
+            style={[a.justify_start, a.px_md, a.gap_sm]}
             label={
               isReposted
                 ? _(msg`Remove repost`)
@@ -167,7 +167,7 @@ let RepostButtonDialogInner = ({
           <Button
             disabled={embeddingDisabled}
             testID="quoteBtn"
-            style={[a.justify_start, a.px_md]}
+            style={[a.justify_start, a.px_md, a.gap_sm]}
             label={
               embeddingDisabled
                 ? _(msg`Quote posts disabled`)
