@@ -60,7 +60,6 @@ enum SelectedAssetError {
   MaxVideos = 'MaxVideos',
   VideoTooLong = 'VideoTooLong',
   MaxGIFs = 'MaxGIFs',
-  NoGifsOnNative = 'NoGifsOnNative',
 }
 
 /**
@@ -177,7 +176,7 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
    * Distill this down into a type "class".
    */
   let type: AssetType | undefined
-  if (mimeType === 'image/gif') {
+  if (isWeb && mimeType === 'image/gif') {
     type = 'gif'
   } else if (mimeType?.startsWith('video/')) {
     type = 'video'
@@ -288,13 +287,6 @@ async function processImagePickerAssets(
     if (type === 'image') {
       if (!isSupportedImageMimeType(mimeType)) {
         errors.add(SelectedAssetError.Unsupported)
-        continue
-      }
-    }
-
-    if (type === 'gif') {
-      if (isNative) {
-        errors.add(SelectedAssetError.NoGifsOnNative)
         continue
       }
     }
@@ -412,9 +404,6 @@ export function SelectMediaButton({
           ),
           [SelectedAssetError.MaxGIFs]: _(
             msg`You can only select one GIF at a time.`,
-          ),
-          [SelectedAssetError.NoGifsOnNative]: _(
-            msg`GIFs are only supported on web at this time.`,
           ),
         }[error]
       })
