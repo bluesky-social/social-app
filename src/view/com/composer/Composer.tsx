@@ -820,7 +820,10 @@ let ComposerPost = React.memo(function ComposerPost({
 
   const onPhotoPasted = useCallback(
     async (uri: string) => {
-      if (uri.startsWith('data:video/') || uri.startsWith('data:image/gif')) {
+      if (
+        uri.startsWith('data:video/') ||
+        (isWeb && uri.startsWith('data:image/gif'))
+      ) {
         if (isNative) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
