@@ -21,26 +21,33 @@ const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
 export function SuggestedLanguage({
   text,
-  fallback,
+  replyToLanguage,
 }: {
   text: string
-  fallback?: string
+  replyToLanguage?: string
 }) {
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
-  >(fallback)
+  >(text.length === 0 ? replyToLanguage : undefined)
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const t = useTheme()
   const {_} = useLingui()
 
   useEffect(() => {
+    // For replies, suggest the language of the post being replied to if no text
+    // has been typed yet
+    if (replyToLanguage && text.length === 0) {
+      setSuggestedLanguage(replyToLanguage)
+      return
+    }
+
     const textTrimmed = text.trim()
 
     // Don't run the language model on small posts, the results are likely
     // to be inaccurate anyway.
     if (textTrimmed.length < 40) {
-      setSuggestedLanguage(fallback)
+      setSuggestedLanguage(undefined)
       return
     }
 
@@ -49,7 +56,7 @@ export function SuggestedLanguage({
     })
 
     return () => cancelIdle(idle)
-  }, [text, fallback])
+  }, [text, replyToLanguage])
 
   if (
     suggestedLanguage &&
