@@ -5,29 +5,25 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useOnboardingDispatch} from '#/state/shell'
-import {
-  DescriptionText,
-  OnboardingControls,
-  TitleText,
-} from '#/screens/Onboarding/Layout'
+import {OnboardingControls} from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {SuggestedAccountsTabBar} from '#/screens/Search/modules/ExploreSuggestedAccounts'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {IconCircle} from '#/components/IconCircle'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwise} from '#/components/icons/ArrowRotateCounterClockwise'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {EmojiSad_Stroke2_Corner0_Rounded as EmojiSad} from '#/components/icons/Emoji'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
-  const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
   const {dispatch} = useContext(Context)
   const [saving, setSaving] = useState(false)
   const onboardDispatch = useOnboardingDispatch()
+
+  const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
 
   const saveInterests = useCallback(async () => {
     setSaving(true)
@@ -48,45 +44,16 @@ export function StepSuggestedAccounts() {
 
   const isError = false
 
-  const title = isError ? (
-    <Trans>Oh no! Something went wrong.</Trans>
-  ) : (
-    <Trans>Suggested Accounts</Trans>
-  )
-  const description = isError ? (
-    <Trans>
-      We weren't able to connect. Please try again to continue setting up your
-      account. If it continues to fail, you can skip this flow.
-    </Trans>
-  ) : (
-    <Trans>We'll use this to help customize your experience.</Trans>
-  )
-
   return (
     <View style={[a.align_start]} testID="onboardingInterests">
-      <IconCircle
-        icon={isError ? EmojiSad : Hashtag}
-        style={[
-          a.mb_2xl,
-          isError
-            ? {
-                backgroundColor: t.palette.negative_50,
-              }
-            : {},
-        ]}
-        iconStyle={[
-          isError
-            ? {
-                color: t.palette.negative_900,
-              }
-            : {},
-        ]}
+      <Text style={[a.font_heavy, a.text_3xl]}>
+        <Trans>Suggested Accounts</Trans>
+      </Text>
+
+      <SuggestedAccountsTabBar
+        selectedInterest={selectedInterest}
+        onSelectInterest={setSelectedInterest}
       />
-
-      <TitleText>{title}</TitleText>
-      <DescriptionText>{description}</DescriptionText>
-
-      <View style={[a.w_full, a.pt_2xl]} />
 
       <OnboardingControls.Portal>
         {isError ? (
