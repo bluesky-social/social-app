@@ -62,7 +62,7 @@ import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdate
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as ActiveVideoProvider} from '#/components/Post/Embed/VideoEmbed/ActiveVideoWebContext'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
-import {ToastContainer} from '#/components/Toast'
+import {ToastOutlet} from '#/components/Toast'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottomBarBorder'
 
@@ -142,6 +142,7 @@ function InnerApp() {
                                                           <IntentDialogProvider>
                                                             <Shell />
                                                             <NuxDialogs />
+                                                            <ToastOutlet />
                                                           </IntentDialogProvider>
                                                         </HideBottomBarBorderProvider>
                                                       </EmailVerificationProvider>
@@ -163,7 +164,6 @@ function InnerApp() {
                       </StatsigProvider>
                     </PolicyUpdateOverlayProvider>
                   </QueryProvider>
-                  <ToastContainer />
                 </React.Fragment>
               </ActiveVideoProvider>
             </VideoVolumeProvider>

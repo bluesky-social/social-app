@@ -1,9 +1,16 @@
-import {type ToastApi} from '#/components/Toast/types'
-
-export function ToastContainer() {
+export function ToastOutlet() {
   return null
 }
 
-export const toast: ToastApi = {
-  show() {},
-}
+export const api = () => {}
+api.success = () => {}
+api.wiggle = () => {}
+api.error = () => {}
+api.warning = () => {}
+api.info = () => {}
+api.promise = () => {}
+api.custom = () => {}
+api.loading = () => {}
+api.dismiss = () => {}
+
+export function show() {}

@@ -214,6 +214,8 @@
     "react-remove-scroll-bar": "^2.3.8",
     "react-responsive": "^9.0.2",
     "react-textarea-autosize": "^8.5.3",
+    "sonner": "^2.0.7",
+    "sonner-native": "^0.21.0",
     "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
