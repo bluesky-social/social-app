@@ -182,7 +182,7 @@ let ProfileHeaderShell = ({
                         backgroundColor: transparentifyColor('#000', 0.5),
                       },
                       hovered && {
-                        backgroundColor: '#000',
+                        backgroundColor: transparentifyColor('#000', 0.75),
                       },
                     ]}>
                     <ArrowLeftIcon size="lg" fill="white" />
