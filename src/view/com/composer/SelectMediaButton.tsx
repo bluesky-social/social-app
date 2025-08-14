@@ -185,6 +185,12 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
     type = 'image'
   }
 
+  console.log({
+    asset,
+    type,
+    mimeType,
+  })
+
   /*
    * If we weren't able to find a valid type, we don't support this asset.
    */
@@ -301,53 +307,55 @@ async function processImagePickerAssets(
     })
   }
 
-  if (selectableAssetType === 'image') {
-    if (supportedAssets.length > selectionCountRemaining) {
-      errors.add(SelectedAssetError.MaxImages)
-      supportedAssets = supportedAssets.slice(0, selectionCountRemaining)
-    }
-  } else if (selectableAssetType === 'video') {
-    if (supportedAssets.length > 1) {
-      errors.add(SelectedAssetError.MaxVideos)
-      supportedAssets = supportedAssets.slice(0, 1)
-    }
+  if (supportedAssets.length > 0) {
+    if (selectableAssetType === 'image') {
+      if (supportedAssets.length > selectionCountRemaining) {
+        errors.add(SelectedAssetError.MaxImages)
+        supportedAssets = supportedAssets.slice(0, selectionCountRemaining)
+      }
+    } else if (selectableAssetType === 'video') {
+      if (supportedAssets.length > 1) {
+        errors.add(SelectedAssetError.MaxVideos)
+        supportedAssets = supportedAssets.slice(0, 1)
+      }
 
-    const selectedVideo = supportedAssets[0]
+      const selectedVideo = supportedAssets[0]
 
-    if (typeof selectedVideo.duration !== 'number') {
-      try {
-        const metadata = await getAdditionalVideoMetadata(selectedVideo)
-        selectedVideo.duration = metadata.duration
-        selectedVideo.width = metadata.width
-        selectedVideo.height = metadata.height
-      } catch (e: any) {
-        logger.error(`processSelectedAssets: failed to get video metadata`, {
-          safeMessage: e.message,
-        })
-        errors.add(SelectedAssetError.Unsupported)
+      if (typeof selectedVideo.duration !== 'number') {
+        try {
+          const metadata = await getAdditionalVideoMetadata(selectedVideo)
+          selectedVideo.duration = metadata.duration
+          selectedVideo.width = metadata.width
+          selectedVideo.height = metadata.height
+        } catch (e: any) {
+          logger.error(`processSelectedAssets: failed to get video metadata`, {
+            safeMessage: e.message,
+          })
+          errors.add(SelectedAssetError.Unsupported)
+          supportedAssets = []
+        }
+      } else {
+        /*
+         * The `duration` is in seconds on web, but in milliseconds on
+         * native. We normalize to milliseconds.
+         */
+        if (isWeb) {
+          selectedVideo.duration = selectedVideo.duration * 1000
+        }
+      }
+
+      if (
+        selectedVideo.duration &&
+        selectedVideo.duration > VIDEO_MAX_DURATION_MS
+      ) {
+        errors.add(SelectedAssetError.VideoTooLong)
         supportedAssets = []
       }
-    } else {
-      /*
-       * The `duration` is in seconds on web, but in milliseconds on
-       * native. We normalize to milliseconds.
-       */
-      if (isWeb) {
-        selectedVideo.duration = selectedVideo.duration * 1000
+    } else if (selectableAssetType === 'gif') {
+      if (supportedAssets.length > 1) {
+        errors.add(SelectedAssetError.MaxGIFs)
+        supportedAssets = supportedAssets.slice(0, 1)
       }
-    }
-
-    if (
-      selectedVideo.duration &&
-      selectedVideo.duration > VIDEO_MAX_DURATION_MS
-    ) {
-      errors.add(SelectedAssetError.VideoTooLong)
-      supportedAssets = []
-    }
-  } else if (selectableAssetType === 'gif') {
-    if (supportedAssets.length > 1) {
-      errors.add(SelectedAssetError.MaxGIFs)
-      supportedAssets = supportedAssets.slice(0, 1)
     }
   }
 
