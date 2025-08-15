@@ -1,12 +1,12 @@
 import {
   AppBskyFeedDefs,
   AppBskyGraphDefs,
+  AtUri,
+  BskyAgent,
   ComAtprotoRepoStrongRef,
 } from '@atproto/api'
-import {AtUri} from '@atproto/api'
-import {BskyAgent} from '@atproto/api'
 
-import {POST_IMG_MAX} from '#/lib/constants'
+import {DEFAULT_SERVICE, POST_IMG_MAX} from '#/lib/constants'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
@@ -22,8 +22,7 @@ import {
   isBskyStartUrl,
   isShortLink,
 } from '#/lib/strings/url-helpers'
-import {ComposerImage} from '#/state/gallery'
-import {createComposerImage} from '#/state/gallery'
+import {ComposerImage, createComposerImage} from '#/state/gallery'
 import {Gif} from '#/state/queries/tenor'
 import {createGIFDescription} from '../gif-alt-text'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
@@ -211,6 +210,48 @@ async function resolveExternal(
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
   }
+}
+
+interface ServiceEndpoint {
+  id: string
+  type: string
+  serviceEndpoint: string
+}
+
+interface DIDDocument {
+  id: string
+  service?: ServiceEndpoint[]
+}
+
+export async function resolveServiceURL(
+  agent: BskyAgent,
+  handle: string,
+): Promise<string> {
+  // There's three possibilities here:
+  // 1. The service URL is in the handle - e.g. *.example.com wildcard in DNS
+  // 2. The DID can be fetched from DNS and then looked up on plc directory (did:plc)
+  // 3. The service URL can be fetched from the .well-known file at the handle's URL (did:web)
+  console.log('here')
+  const {data} = await agent.resolveHandle({handle: handle})
+  const did = data.did
+
+  let didDoc: DIDDocument
+  if (did.startsWith('did:plc')) {
+    const response = await fetch(`https://plc.directory/${did}`)
+    didDoc = await response.json()
+  } else if (did.startsWith('did:web')) {
+    const response = await fetch(`https://${handle}/.well-known/did.json`)
+    didDoc = await response.json()
+  } else {
+    throw new Error('Unsupported DID method')
+  }
+  // Step 3: Extract PDS endpoint
+  const pdsService = didDoc.service?.find(
+    s => s.id === '#atproto_pds' || s.type === 'AtprotoPersonalDataServer',
+  )
+  console.log(pdsService)
+
+  return pdsService?.serviceEndpoint || DEFAULT_SERVICE
 }
 
 async function imageToThumb(
