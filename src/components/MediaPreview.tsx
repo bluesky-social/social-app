@@ -1,8 +1,8 @@
-import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
+import type React from 'react'
 
 import {isTenorGifUri} from '#/lib/strings/embed-player'
 import {atoms as a, useTheme} from '#/alf'
@@ -92,12 +92,11 @@ export function ImageItem({
       <Image
         key={thumbnail}
         source={{uri: thumbnail}}
+        alt={alt}
         style={[a.flex_1, a.rounded_xs, t.atoms.bg_contrast_25]}
         contentFit="cover"
         accessible={true}
         accessibilityIgnoresInvertColors
-        accessibilityHint={alt}
-        accessibilityLabel=""
       />
       <MediaInsetBorder style={[a.rounded_xs]} />
       {children}
