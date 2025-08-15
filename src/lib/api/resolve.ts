@@ -250,7 +250,7 @@ export async function resolveServiceURL(
   return pdsService?.serviceEndpoint || DEFAULT_SERVICE
 }
 
-async function imageToThumb(
+export async function imageToThumb(
   imageUri: string,
 ): Promise<ComposerImage | undefined> {
   try {
