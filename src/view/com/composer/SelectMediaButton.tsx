@@ -207,12 +207,10 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
 function dataURItoBlob(uri: string, mimeType: string) {
   const [, data] = uri.split(',')
   const binary = atob(data)
-  // Convert to array of bytes
   const array = new Uint8Array(binary.length)
   for (let i = 0; i < binary.length; i++) {
     array[i] = binary.charCodeAt(i)
   }
-  // Create and return the Blob
   return new Blob([array], {type: mimeType})
 }
 
@@ -237,15 +235,6 @@ async function getMetadata(
     }
 > {
   const mime = mimeType || extractDataUriMime(uri)
-  const blob = dataURItoBlob(uri, mime)
-
-  if (blob.size > VIDEO_MAX_SIZE) {
-    return {
-      error: GetMetadataError.FileTooLarge,
-      asset: undefined,
-    }
-  }
-
   const ext = mimeToExt(mime)
 
   if (!ext) {
@@ -255,15 +244,23 @@ async function getMetadata(
     }
   }
 
+  const blob = dataURItoBlob(uri, mime)
+  if (blob.size > VIDEO_MAX_SIZE) {
+    return {
+      error: GetMetadataError.FileTooLarge,
+      asset: undefined,
+    }
+  }
+
   const file = new File([blob], `tmp.${ext}`, {
     type: mime,
   })
-
-  if (!file)
+  if (!file) {
     return {
       error: GetMetadataError.FileCreationFailure,
       asset: undefined,
     }
+  }
 
   try {
     const asset = await getVideoMetadata(file)
