@@ -250,6 +250,7 @@ export function ProfileGrid({
   const {gtMobile} = useBreakpoints()
   const isLoading = isSuggestionsLoading || !moderationOpts
   const maxLength = gtMobile ? 3 : viewContext === 'profileHeader' ? 12 : 6
+  const minLength = gtMobile ? 3 : 4
 
   const content = isLoading ? (
     Array(maxLength)
@@ -355,7 +356,7 @@ export function ProfileGrid({
     </>
   )
 
-  if (error || (!isLoading && profiles.length < 4)) {
+  if (error || (!isLoading && profiles.length < minLength)) {
     logger.debug(`Not enough profiles to show suggested follows`)
     return null
   }
