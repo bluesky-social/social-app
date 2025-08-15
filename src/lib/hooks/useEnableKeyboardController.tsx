@@ -12,8 +12,6 @@ import {
 } from 'react-native-keyboard-controller'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {IS_DEV} from '#/env'
-
 const KeyboardControllerRefCountContext = createContext<{
   incrementRefCount: () => void
   decrementRefCount: () => void
@@ -21,6 +19,8 @@ const KeyboardControllerRefCountContext = createContext<{
   incrementRefCount: () => {},
   decrementRefCount: () => {},
 })
+KeyboardControllerRefCountContext.displayName =
+  'KeyboardControllerRefCountContext'
 
 export function KeyboardControllerProvider({
   children,
@@ -28,10 +28,7 @@ export function KeyboardControllerProvider({
   children: React.ReactNode
 }) {
   return (
-    <KeyboardProvider
-      enabled={false}
-      // I don't think this is necessary, but Chesterton's fence and all that -sfn
-      statusBarTranslucent={true}>
+    <KeyboardProvider enabled={false}>
       <KeyboardControllerProviderInner>
         {children}
       </KeyboardControllerProviderInner>
@@ -57,7 +54,7 @@ function KeyboardControllerProviderInner({
         refCount.current--
         setEnabled(refCount.current > 0)
 
-        if (IS_DEV && refCount.current < 0) {
+        if (__DEV__ && refCount.current < 0) {
           console.error('KeyboardController ref count < 0')
         }
       },

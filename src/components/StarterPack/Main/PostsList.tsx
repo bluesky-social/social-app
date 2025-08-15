@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
 import {FeedDescriptor} from '#/state/queries/post-feed'
-import {Feed} from '#/view/com/posts/Feed'
+import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ListRef} from '#/view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
@@ -38,7 +38,7 @@ export const PostsList = React.forwardRef<SectionRef, ProfilesListProps>(
 
     return (
       <View>
-        <Feed
+        <PostFeed
           feed={feed}
           pollInterval={60e3}
           scrollElRef={scrollElRef}

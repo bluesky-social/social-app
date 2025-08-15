@@ -1,6 +1,6 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {AppNux, Nux} from '#/state/queries/nuxs/definitions'
+import {type AppNux, type Nux} from '#/state/queries/nuxs/definitions'
 import {parseAppNux, serializeAppNux} from '#/state/queries/nuxs/util'
 import {
   preferencesQueryKey,
@@ -10,49 +10,92 @@ import {useAgent} from '#/state/session'
 
 export {Nux} from '#/state/queries/nuxs/definitions'
 
-export function useNuxs() {
-  const {data, ...rest} = usePreferencesQuery()
+export function useNuxs():
+  | {
+      nuxs: AppNux[]
+      status: 'ready'
+    }
+  | {
+      nuxs: undefined
+      status: 'loading' | 'error'
+    } {
+  const {data, isSuccess, isError} = usePreferencesQuery()
+  const status = isSuccess ? 'ready' : isError ? 'error' : 'loading'
 
-  if (data && rest.isSuccess) {
-    const nuxs = data.bskyAppState.nuxs
+  if (status === 'ready') {
+    const nuxs = data?.bskyAppState?.nuxs
       ?.map(parseAppNux)
       ?.filter(Boolean) as AppNux[]
 
     if (nuxs) {
       return {
         nuxs,
-        ...rest,
+        status,
+      }
+    } else {
+      return {
+        nuxs: [],
+        status,
       }
     }
   }
 
+  // if (__DEV__) {
+  //   const queryClient = useQueryClient()
+  //   const agent = useAgent()
+
+  //   // @ts-ignore
+  //   window.clearNux = async (ids: string[]) => {
+  //     await agent.bskyAppRemoveNuxs(ids)
+  //     // triggers a refetch
+  //     await queryClient.invalidateQueries({
+  //       queryKey: preferencesQueryKey,
+  //     })
+  //   }
+  // }
+
   return {
     nuxs: undefined,
-    ...rest,
+    status,
   }
 }
 
-export function useNux<T extends Nux>(id: T) {
-  const {nuxs, ...rest} = useNuxs()
+export function useNux<T extends Nux>(
+  id: T,
+):
+  | {
+      nux: Extract<AppNux, {id: T}> | undefined
+      status: 'ready'
+    }
+  | {
+      nux: undefined
+      status: 'loading' | 'error'
+    } {
+  const {nuxs, status} = useNuxs()
 
-  if (nuxs && rest.isSuccess) {
+  if (status === 'ready') {
     const nux = nuxs.find(nux => nux.id === id)
 
     if (nux) {
       return {
         nux: nux as Extract<AppNux, {id: T}>,
-        ...rest,
+        status,
+      }
+    } else {
+      return {
+        nux: undefined,
+        status,
       }
     }
   }
 
   return {
     nux: undefined,
-    ...rest,
+    status,
   }
 }
 
-export function useUpsertNuxMutation() {
+export function useSaveNux() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
@@ -68,7 +111,7 @@ export function useUpsertNuxMutation() {
   })
 }
 
-export function useRemoveNuxsMutation() {
+export function useResetNuxs() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 

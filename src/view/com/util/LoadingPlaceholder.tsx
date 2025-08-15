@@ -1,9 +1,10 @@
+import {useMemo} from 'react'
 import {
-  DimensionValue,
-  StyleProp,
+  type DimensionValue,
+  type StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -23,7 +24,7 @@ export function LoadingPlaceholder({
   style,
 }: {
   width: DimensionValue
-  height: DimensionValue
+  height: DimensionValue | undefined
   style?: StyleProp<ViewStyle>
 }) {
   const theme = useTheme()
@@ -232,8 +233,7 @@ export function FeedLoadingPlaceholder({
     <View
       style={[
         {
-          paddingHorizontal: 12,
-          paddingVertical: 18,
+          padding: 16,
           borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
         },
         pal.border,
@@ -243,7 +243,7 @@ export function FeedLoadingPlaceholder({
         <LoadingPlaceholder
           width={36}
           height={36}
-          style={[styles.avatar, {borderRadius: 6}]}
+          style={[styles.avatar, {borderRadius: 8}]}
         />
         <View style={[s.flex1]}>
           <LoadingPlaceholder width={100} height={8} style={[s.mt5, s.mb10]} />
@@ -251,12 +251,7 @@ export function FeedLoadingPlaceholder({
         </View>
       </View>
       {showLowerPlaceholder && (
-        <View style={{paddingHorizontal: 5, marginTop: 10}}>
-          <LoadingPlaceholder
-            width={260}
-            height={8}
-            style={{marginVertical: 12}}
-          />
+        <View style={{marginTop: 12}}>
           <LoadingPlaceholder width={120} height={8} />
         </View>
       )}
@@ -278,6 +273,47 @@ export function FeedFeedLoadingPlaceholder() {
       <FeedLoadingPlaceholder />
       <FeedLoadingPlaceholder />
       <FeedLoadingPlaceholder />
+    </>
+  )
+}
+
+export function ChatListItemLoadingPlaceholder({
+  style,
+}: {
+  style?: StyleProp<ViewStyle>
+}) {
+  const t = useTheme_NEW()
+  const random = useMemo(() => Math.random(), [])
+  return (
+    <View style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, t.atoms.bg, style]}>
+      <LoadingPlaceholder width={52} height={52} style={a.rounded_full} />
+      <View>
+        <LoadingPlaceholder width={140} height={12} style={a.mt_xs} />
+        <LoadingPlaceholder width={120} height={8} style={a.mt_sm} />
+        <LoadingPlaceholder
+          width={80 + random * 100}
+          height={8}
+          style={a.mt_sm}
+        />
+      </View>
+    </View>
+  )
+}
+
+export function ChatListLoadingPlaceholder() {
+  return (
+    <>
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
+      <ChatListItemLoadingPlaceholder />
     </>
   )
 }
@@ -310,8 +346,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     borderRadius: 999,
-    marginRight: 10,
-    marginLeft: 8,
+    marginRight: 12,
   },
   notification: {
     flexDirection: 'row',

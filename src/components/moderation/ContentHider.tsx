@@ -1,6 +1,6 @@
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {ModerationUI} from '@atproto/api'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,20 +23,23 @@ export function ContentHider({
   modui,
   ignoreMute,
   style,
+  activeStyle,
   childContainerStyle,
   children,
-}: React.PropsWithChildren<{
+}: {
   testID?: string
   modui: ModerationUI | undefined
   ignoreMute?: boolean
   style?: StyleProp<ViewStyle>
+  activeStyle?: StyleProp<ViewStyle>
   childContainerStyle?: StyleProp<ViewStyle>
-}>) {
+  children?: React.ReactNode | ((props: {active: boolean}) => React.ReactNode)
+}) {
   const blur = modui?.blurs[0]
   if (!blur || (ignoreMute && isJustAMute(modui))) {
     return (
       <View testID={testID} style={style}>
-        {children}
+        {typeof children === 'function' ? children({active: false}) : children}
       </View>
     )
   }
@@ -44,9 +47,9 @@ export function ContentHider({
     <ContentHiderActive
       testID={testID}
       modui={modui}
-      style={style}
+      style={[style, activeStyle]}
       childContainerStyle={childContainerStyle}>
-      {children}
+      {typeof children === 'function' ? children({active: true}) : children}
     </ContentHiderActive>
   )
 }
@@ -146,10 +149,10 @@ function ContentHiderActive({
         label={desc.name}
         accessibilityHint={
           modui.noOverride
-            ? _(msg`Learn more about the moderation applied to this content.`)
+            ? _(msg`Learn more about the moderation applied to this content`)
             : override
-            ? _(msg`Hide the content`)
-            : _(msg`Show the content`)
+              ? _(msg`Hides the content`)
+              : _(msg`Shows the content`)
         }>
         {state => (
           <View

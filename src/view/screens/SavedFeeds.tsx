@@ -1,39 +1,42 @@
 import React from 'react'
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {useNavigation} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useHaptics} from '#/lib/haptics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {
   useOverwriteSavedFeedsMutation,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {TextLink} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
+import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {Text as NewText} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 export function SavedFeeds({}: Props) {
@@ -51,7 +54,7 @@ function SavedFeedsInner({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile, isTabletOrDesktop, isDesktop} = useWebMediaQueries()
+  const {isMobile, isDesktop} = useWebMediaQueries()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {mutateAsync: overwriteSavedFeeds, isPending: isOverwritePending} =
     useOverwriteSavedFeedsMutation()
@@ -80,144 +83,140 @@ function SavedFeedsInner({
   const onSaveChanges = React.useCallback(async () => {
     try {
       await overwriteSavedFeeds(currentFeeds)
-      Toast.show(_(msg`Feeds updated!`))
-      navigation.navigate('Feeds')
+      Toast.show(_(msg({message: 'Feeds updated!', context: 'toast'})))
+      if (navigation.canGoBack()) {
+        navigation.goBack()
+      } else {
+        navigation.navigate('Feeds')
+      }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [_, overwriteSavedFeeds, currentFeeds, navigation])
 
-  const renderHeaderBtn = React.useCallback(() => {
-    return (
-      <Button
-        size="small"
-        variant={hasUnsavedChanges ? 'solid' : 'solid'}
-        color={hasUnsavedChanges ? 'primary' : 'secondary'}
-        onPress={onSaveChanges}
-        label={_(msg`Save changes`)}
-        disabled={isOverwritePending || !hasUnsavedChanges}
-        style={[isDesktop && a.mt_sm]}
-        testID="saveChangesBtn">
-        <ButtonText style={[isDesktop && a.text_md]}>
-          {isDesktop ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}
-        </ButtonText>
-        {isOverwritePending && <ButtonIcon icon={Loader} />}
-      </Button>
-    )
-  }, [_, isDesktop, onSaveChanges, hasUnsavedChanges, isOverwritePending])
-
   return (
     <Layout.Screen>
-      <CenteredView
-        style={[a.util_screen_outer]}
-        sideBorders={isTabletOrDesktop}>
-        <ViewHeader
-          title={_(msg`Edit My Feeds`)}
-          showOnDesktop
-          showBorder
-          renderButton={renderHeaderBtn}
-        />
-        <ScrollView style={[a.flex_1]} contentContainerStyle={[a.border_0]}>
-          {noSavedFeedsOfAnyType && (
-            <View style={[pal.border, a.border_b]}>
-              <NoSavedFeedsOfAnyType />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content align="left">
+          <Layout.Header.TitleText>
+            <Trans>Feeds</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Button
+          testID="saveChangesBtn"
+          size="small"
+          variant={hasUnsavedChanges ? 'solid' : 'solid'}
+          color={hasUnsavedChanges ? 'primary' : 'secondary'}
+          onPress={onSaveChanges}
+          label={_(msg`Save changes`)}
+          disabled={isOverwritePending || !hasUnsavedChanges}>
+          <ButtonIcon icon={isOverwritePending ? Loader : SaveIcon} />
+          <ButtonText>
+            {isDesktop ? <Trans>Save changes</Trans> : <Trans>Save</Trans>}
+          </ButtonText>
+        </Button>
+      </Layout.Header.Outer>
+
+      <Layout.Content>
+        {noSavedFeedsOfAnyType && (
+          <View style={[pal.border, a.border_b]}>
+            <NoSavedFeedsOfAnyType />
+          </View>
+        )}
+
+        <View style={[pal.text, pal.border, styles.title]}>
+          <Text type="title" style={pal.text}>
+            <Trans>Pinned Feeds</Trans>
+          </Text>
+        </View>
+
+        {preferences ? (
+          !pinnedFeeds.length ? (
+            <View
+              style={[
+                pal.border,
+                isMobile && s.flex1,
+                pal.viewLight,
+                styles.empty,
+              ]}>
+              <Text type="lg" style={[pal.text]}>
+                <Trans>You don't have any pinned feeds.</Trans>
+              </Text>
             </View>
-          )}
-
-          <View style={[pal.text, pal.border, styles.title]}>
-            <Text type="title" style={pal.text}>
-              <Trans>Pinned Feeds</Trans>
-            </Text>
-          </View>
-
-          {preferences ? (
-            !pinnedFeeds.length ? (
-              <View
-                style={[
-                  pal.border,
-                  isMobile && s.flex1,
-                  pal.viewLight,
-                  styles.empty,
-                ]}>
-                <Text type="lg" style={[pal.text]}>
-                  <Trans>You don't have any pinned feeds.</Trans>
-                </Text>
-              </View>
-            ) : (
-              pinnedFeeds.map(f => (
-                <ListItem
-                  key={f.id}
-                  feed={f}
-                  isPinned
-                  currentFeeds={currentFeeds}
-                  setCurrentFeeds={setCurrentFeeds}
-                  preferences={preferences}
-                />
-              ))
-            )
           ) : (
-            <ActivityIndicator style={{marginTop: 20}} />
-          )}
+            pinnedFeeds.map(f => (
+              <ListItem
+                key={f.id}
+                feed={f}
+                isPinned
+                currentFeeds={currentFeeds}
+                setCurrentFeeds={setCurrentFeeds}
+                preferences={preferences}
+              />
+            ))
+          )
+        ) : (
+          <ActivityIndicator style={{marginTop: 20}} />
+        )}
 
-          {noFollowingFeed && (
-            <View style={[pal.border, a.border_b]}>
-              <NoFollowingFeed />
+        {noFollowingFeed && (
+          <View style={[pal.border, a.border_b]}>
+            <NoFollowingFeed />
+          </View>
+        )}
+
+        <View style={[pal.text, pal.border, styles.title]}>
+          <Text type="title" style={pal.text}>
+            <Trans>Saved Feeds</Trans>
+          </Text>
+        </View>
+        {preferences ? (
+          !unpinnedFeeds.length ? (
+            <View
+              style={[
+                pal.border,
+                isMobile && s.flex1,
+                pal.viewLight,
+                styles.empty,
+              ]}>
+              <Text type="lg" style={[pal.text]}>
+                <Trans>You don't have any saved feeds.</Trans>
+              </Text>
             </View>
-          )}
-
-          <View style={[pal.text, pal.border, styles.title]}>
-            <Text type="title" style={pal.text}>
-              <Trans>Saved Feeds</Trans>
-            </Text>
-          </View>
-          {preferences ? (
-            !unpinnedFeeds.length ? (
-              <View
-                style={[
-                  pal.border,
-                  isMobile && s.flex1,
-                  pal.viewLight,
-                  styles.empty,
-                ]}>
-                <Text type="lg" style={[pal.text]}>
-                  <Trans>You don't have any saved feeds.</Trans>
-                </Text>
-              </View>
-            ) : (
-              unpinnedFeeds.map(f => (
-                <ListItem
-                  key={f.id}
-                  feed={f}
-                  isPinned={false}
-                  currentFeeds={currentFeeds}
-                  setCurrentFeeds={setCurrentFeeds}
-                  preferences={preferences}
-                />
-              ))
-            )
           ) : (
-            <ActivityIndicator style={{marginTop: 20}} />
-          )}
+            unpinnedFeeds.map(f => (
+              <ListItem
+                key={f.id}
+                feed={f}
+                isPinned={false}
+                currentFeeds={currentFeeds}
+                setCurrentFeeds={setCurrentFeeds}
+                preferences={preferences}
+              />
+            ))
+          )
+        ) : (
+          <ActivityIndicator style={{marginTop: 20}} />
+        )}
 
-          <View style={styles.footerText}>
-            <Text type="sm" style={pal.textLight}>
-              <Trans>
-                Feeds are custom algorithms that users build with a little
-                coding expertise.{' '}
-                <TextLink
-                  type="sm"
-                  style={pal.link}
-                  href="https://github.com/bluesky-social/feed-generator"
-                  text={_(msg`See this guide`)}
-                />{' '}
-                for more information.
-              </Trans>
-            </Text>
-          </View>
-          <View style={{height: 100}} />
-        </ScrollView>
-      </CenteredView>
+        <View style={styles.footerText}>
+          <Text type="sm" style={pal.textLight}>
+            <Trans>
+              Feeds are custom algorithms that users build with a little coding
+              expertise.{' '}
+              <TextLink
+                type="sm"
+                style={pal.link}
+                href="https://github.com/bluesky-social/feed-generator"
+                text={_(msg`See this guide`)}
+              />{' '}
+              for more information.
+            </Trans>
+          </Text>
+        </View>
+      </Layout.Content>
     </Layout.Screen>
   )
 }
@@ -298,7 +297,7 @@ function ListItem({
         <FeedSourceCard
           key={feedUri}
           feedUri={feedUri}
-          style={[isPinned && {paddingRight: 8}]}
+          style={[isPinned && a.pr_sm]}
           showMinimalPlaceholder
           hideTopBorder={true}
         />
@@ -393,26 +392,17 @@ function ListItem({
 function FollowingFeedCard() {
   const t = useTheme()
   return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.flex_1,
-        {
-          paddingHorizontal: 18,
-          paddingVertical: 20,
-        },
-      ]}>
+    <View style={[a.flex_row, a.align_center, a.flex_1, a.p_lg]}>
       <View
         style={[
           a.align_center,
           a.justify_center,
           a.rounded_sm,
+          a.mr_md,
           {
             width: 36,
             height: 36,
             backgroundColor: t.palette.primary_500,
-            marginRight: 10,
           },
         ]}>
         <FilterTimeline
@@ -425,11 +415,10 @@ function FollowingFeedCard() {
           fill={t.palette.white}
         />
       </View>
-      <View
-        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
-        <Text type="lg-medium" style={[t.atoms.text]} numberOfLines={1}>
-          <Trans>Following</Trans>
-        </Text>
+      <View style={[a.flex_1, a.flex_row, a.gap_sm, a.align_center]}>
+        <NewText style={[a.text_sm, a.font_bold, a.leading_snug]}>
+          <Trans context="feed-name">Following</Trans>
+        </NewText>
       </View>
     </View>
   )
@@ -456,7 +445,6 @@ const styles = StyleSheet.create({
   },
   footerText: {
     paddingHorizontal: 26,
-    paddingTop: 22,
-    paddingBottom: 100,
+    paddingVertical: 22,
   },
 })

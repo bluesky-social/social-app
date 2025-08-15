@@ -1,12 +1,9 @@
-import {AppBskyActorDefs} from '@atproto/api'
-
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import type * as bsky from '#/types/bsky'
 
 export function createSanitizedDisplayName(
-  profile:
-    | AppBskyActorDefs.ProfileViewBasic
-    | AppBskyActorDefs.ProfileViewDetailed,
+  profile: bsky.profile.AnyProfileView,
   noAt = false,
 ) {
   if (profile.displayName != null && profile.displayName !== '') {

@@ -1,22 +1,33 @@
-import React from 'react'
+import {createContext, useContext, useMemo, useRef} from 'react'
 import {
-  AccessibilityProps,
+  type AccessibilityProps,
   StyleSheet,
   TextInput,
-  TextInputProps,
-  TextStyle,
+  type TextInputProps,
+  type TextStyle,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
-import {android, atoms as a, TextStyleProp, useTheme, web} from '#/alf'
+import {
+  android,
+  applyFonts,
+  atoms as a,
+  ios,
+  platform,
+  type TextStyleProp,
+  tokens,
+  useAlf,
+  useTheme,
+  web,
+} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
-const Context = React.createContext<{
+const Context = createContext<{
   inputRef: React.RefObject<TextInput> | null
   isInvalid: boolean
   hovered: boolean
@@ -35,11 +46,12 @@ const Context = React.createContext<{
   onFocus: () => {},
   onBlur: () => {},
 })
+Context.displayName = 'TextFieldContext'
 
 export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
 
 export function Root({children, isInvalid = false}: RootProps) {
-  const inputRef = React.useRef<TextInput>(null)
+  const inputRef = useRef<TextInput>(null)
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -47,7 +59,7 @@ export function Root({children, isInvalid = false}: RootProps) {
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       inputRef,
       hovered,
@@ -87,7 +99,7 @@ export function Root({children, isInvalid = false}: RootProps) {
 
 export function useSharedInputStyles() {
   const t = useTheme()
-  return React.useMemo(() => {
+  return useMemo(() => {
     const hover: ViewStyle[] = [
       {
         borderColor: t.palette.contrast_100,
@@ -148,7 +160,8 @@ export function createInput(Component: typeof TextInput) {
     ...rest
   }: InputProps) {
     const t = useTheme()
-    const ctx = React.useContext(Context)
+    const {fonts} = useAlf()
+    const ctx = useContext(Context)
     const withinRoot = Boolean(ctx.inputRef)
 
     const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
@@ -171,10 +184,50 @@ export function createInput(Component: typeof TextInput) {
 
     const refs = mergeRefs([ctx.inputRef, inputRef!].filter(Boolean))
 
+    const flattened = StyleSheet.flatten([
+      a.relative,
+      a.z_20,
+      a.flex_1,
+      a.text_md,
+      t.atoms.text,
+      a.px_xs,
+      {
+        // paddingVertical doesn't work w/multiline - esb
+        lineHeight: a.text_md.fontSize * 1.1875,
+        textAlignVertical: rest.multiline ? 'top' : undefined,
+        minHeight: rest.multiline ? 80 : undefined,
+        minWidth: 0,
+      },
+      ios({paddingTop: 12, paddingBottom: 13}),
+      // Needs to be sm on Paper, md on Fabric for some godforsaken reason -sfn
+      android(a.py_sm),
+      // fix for autofill styles covering border
+      web({
+        paddingTop: 10,
+        paddingBottom: 11,
+        marginTop: 2,
+        marginBottom: 2,
+      }),
+      style,
+    ])
+
+    applyFonts(flattened, fonts.family)
+
+    // should always be defined on `typography`
+    // @ts-ignore
+    if (flattened.fontSize) {
+      // @ts-ignore
+      flattened.fontSize = Math.round(
+        // @ts-ignore
+        flattened.fontSize * fonts.scaleMultiplier,
+      )
+    }
+
     return (
       <>
         <Component
           accessibilityHint={undefined}
+          hitSlop={HITSLOP_20}
           {...rest}
           accessibilityLabel={label}
           ref={refs}
@@ -191,36 +244,7 @@ export function createInput(Component: typeof TextInput) {
           placeholder={placeholder || label}
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          hitSlop={HITSLOP_20}
-          style={[
-            a.relative,
-            a.z_20,
-            a.flex_1,
-            a.text_md,
-            t.atoms.text,
-            a.px_xs,
-            {
-              // paddingVertical doesn't work w/multiline - esb
-              paddingTop: 12,
-              paddingBottom: 13,
-              lineHeight: a.text_md.fontSize * 1.1875,
-              textAlignVertical: rest.multiline ? 'top' : undefined,
-              minHeight: rest.multiline ? 80 : undefined,
-              minWidth: 0,
-            },
-            // fix for autofill styles covering border
-            web({
-              paddingTop: 10,
-              paddingBottom: 11,
-              marginTop: 2,
-              marginBottom: 2,
-            }),
-            android({
-              paddingTop: 8,
-              paddingBottom: 8,
-            }),
-            style,
-          ]}
+          style={flattened}
         />
 
         <View
@@ -262,8 +286,8 @@ export function LabelText({
 
 export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
   const t = useTheme()
-  const ctx = React.useContext(Context)
-  const {hover, focus, errorHover, errorFocus} = React.useMemo(() => {
+  const ctx = useContext(Context)
+  const {hover, focus, errorHover, errorFocus} = useMemo(() => {
     const hover: TextStyle[] = [
       {
         color: t.palette.contrast_800,
@@ -321,7 +345,7 @@ export function SuffixText({
   }
 >) {
   const t = useTheme()
-  const ctx = React.useContext(Context)
+  const ctx = useContext(Context)
   return (
     <Text
       accessibilityLabel={label}
@@ -332,20 +356,76 @@ export function SuffixText({
         a.pr_sm,
         a.text_md,
         t.atoms.text_contrast_medium,
-        {
-          pointerEvents: 'none',
-        },
-        web({
-          marginTop: -2,
-        }),
-        ctx.hovered || ctx.focused
-          ? {
-              color: t.palette.contrast_800,
-            }
-          : {},
+        a.pointer_events_none,
+        web([{marginTop: -2}, a.leading_snug]),
+        (ctx.hovered || ctx.focused) && {color: t.palette.contrast_800},
         style,
       ]}>
       {children}
     </Text>
+  )
+}
+
+export function GhostText({
+  children,
+  value,
+}: {
+  children: string
+  value: string
+}) {
+  const t = useTheme()
+  // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
+  return (
+    <View
+      style={[
+        a.pointer_events_none,
+        a.absolute,
+        a.z_10,
+        {
+          paddingLeft: platform({
+            native:
+              // input padding
+              tokens.space.md +
+              // icon
+              tokens.space.xl +
+              // icon padding
+              tokens.space.xs +
+              // text input padding
+              tokens.space.xs,
+            web:
+              // icon
+              tokens.space.xl +
+              // icon padding
+              tokens.space.xs +
+              // text input padding
+              tokens.space.xs,
+          }),
+        },
+        web(a.pr_md),
+        a.overflow_hidden,
+        a.max_w_full,
+      ]}
+      aria-hidden={true}
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants">
+      <Text
+        style={[
+          {color: 'transparent'},
+          a.text_md,
+          {lineHeight: a.text_md.fontSize * 1.1875},
+          a.w_full,
+        ]}
+        numberOfLines={1}>
+        {children}
+        <Text
+          style={[
+            t.atoms.text_contrast_low,
+            a.text_md,
+            {lineHeight: a.text_md.fontSize * 1.1875},
+          ]}>
+          {value}
+        </Text>
+      </Text>
+    </View>
   )
 }

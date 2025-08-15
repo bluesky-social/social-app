@@ -28,6 +28,7 @@ const accountSchema = z.object({
    */
   status: z.string().optional(),
   pdsUrl: z.string().optional(),
+  isSelfHosted: z.boolean().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 
@@ -124,6 +125,8 @@ const schema = z.object({
   subtitlesEnabled: z.boolean().optional(),
   /** @deprecated */
   mutedThreads: z.array(z.string()),
+  trendingDisabled: z.boolean().optional(),
+  trendingVideoDisabled: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -169,6 +172,8 @@ export const defaults: Schema = {
   kawaii: false,
   hasCheckedForStarterPack: false,
   subtitlesEnabled: true,
+  trendingDisabled: false,
+  trendingVideoDisabled: false,
 }
 
 export function tryParse(rawData: string): Schema | undefined {

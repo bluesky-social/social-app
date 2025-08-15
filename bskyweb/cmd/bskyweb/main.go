@@ -94,6 +94,20 @@ func run(args []string) {
 					Value:    "",
 					EnvVars:  []string{"STATIC_CDN_HOST"},
 				},
+				&cli.BoolFlag{
+					Name:     "bsky-canonical-instance",
+					Usage:    "Enable if this is the canonical deployment (bsky.app)",
+					Value:    false,
+					Required: false,
+					EnvVars:  []string{"BSKY_CANONICAL_INSTANCE"},
+				},
+				&cli.BoolFlag{
+					Name:     "robots-disallow-all",
+					Usage:    "Crawling is allowed by default. Enable this flag to Disallow all",
+					Value:    false,
+					Required: false,
+					EnvVars:  []string{"ROBOTS_DISALLOW_ALL"},
+				},
 			},
 		},
 	}

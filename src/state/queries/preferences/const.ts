@@ -1,7 +1,7 @@
 import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {
-  ThreadViewPreferences,
-  UsePreferencesQueryResponse,
+  type ThreadViewPreferences,
+  type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
 
 export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs'] =
@@ -38,5 +38,12 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
     queuedNudges: [],
     activeProgressGuide: undefined,
     nuxs: [],
+  },
+  postInteractionSettings: {
+    threadgateAllowRules: undefined,
+    postgateEmbeddingRules: [],
+  },
+  verificationPrefs: {
+    hideBadges: false,
   },
 }

@@ -1,9 +1,15 @@
 import React from 'react'
-import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  type View,
+  type ViewStyle,
+} from 'react-native'
+import {type IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
+import {DropdownMenu} from 'radix-ui'
+import {type MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -57,6 +63,9 @@ type Props = {
   triggerStyle?: ViewStyle
 }
 
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export function NativeDropdown({
   items,
   children,
@@ -70,6 +79,10 @@ export function NativeDropdown({
   const menuRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
+    if (!open) {
+      return
+    }
+
     function clickHandler(e: MouseEvent) {
       const t = e.target
 
@@ -253,7 +266,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     columnGap: 20,
-    // @ts-ignore -web
     cursor: 'pointer',
     paddingTop: 8,
     paddingBottom: 8,
@@ -262,6 +274,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontFamily:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif',
+    // @ts-expect-error web only
     outline: 0,
     border: 0,
   },

@@ -1,22 +1,24 @@
-import React, {PropsWithChildren, useMemo, useRef} from 'react'
+import {type PropsWithChildren} from 'react'
+import {useMemo, useRef} from 'react'
 import {
   Dimensions,
-  GestureResponderEvent,
-  Insets,
-  StyleProp,
+  type GestureResponderEvent,
+  type Insets,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import Animated, {FadeIn, FadeInDown, FadeInUp} from 'react-native-reanimated'
 import RootSiblings from 'react-native-root-siblings'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {type IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -26,7 +28,7 @@ import {isWeb} from '#/platform/detection'
 import {native} from '#/alf'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {Text} from '../text/Text'
-import {Button, ButtonType} from './Button'
+import {Button, type ButtonType} from './Button'
 
 const ESTIMATED_BTN_HEIGHT = 50
 const ESTIMATED_SEP_HEIGHT = 16
@@ -70,6 +72,9 @@ interface DropdownButtonProps {
   accessibilityHint?: string
 }
 
+/**
+ * @deprecated use Menu from `#/components/Menu.tsx` instead
+ */
 export function DropdownButton({
   testID,
   type = 'bare',
@@ -87,7 +92,7 @@ export function DropdownButton({
 }: PropsWithChildren<DropdownButtonProps>) {
   const {_} = useLingui()
 
-  const ref1 = useRef<TouchableOpacity>(null)
+  const ref1 = useRef<View>(null)
   const ref2 = useRef<View>(null)
 
   const onPress = (e: GestureResponderEvent) => {
@@ -293,7 +298,9 @@ const DropdownItems = ({
                 onPress={() => onPressItem(index)}
                 accessibilityRole="button"
                 accessibilityLabel={item.label}
-                accessibilityHint={_(msg`Option ${index + 1} of ${numItems}`)}>
+                accessibilityHint={_(
+                  msg`Selects option ${index + 1} of ${numItems}`,
+                )}>
                 {item.icon && (
                   <FontAwesomeIcon
                     style={styles.icon}

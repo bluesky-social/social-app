@@ -2,10 +2,10 @@ import React from 'react'
 import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPostgate,
   AtUri,
-  BskyAgent,
+  type BskyAgent,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
@@ -21,6 +21,7 @@ import {
   POSTGATE_COLLECTION,
 } from '#/state/queries/postgate/util'
 import {useAgent} from '#/state/session'
+import * as bsky from '#/types/bsky'
 
 export async function getPostgateRecord({
   agent,
@@ -60,7 +61,10 @@ export async function getPostgateRecord({
         }),
     )
 
-    if (data.value && AppBskyFeedPostgate.isRecord(data.value)) {
+    if (
+      data.value &&
+      bsky.validate(data.value, AppBskyFeedPostgate.validateRecord)
+    ) {
       return data.value
     } else {
       return undefined
@@ -135,7 +139,7 @@ export function usePostgateQuery({postUri}: {postUri: string}) {
     staleTime: STALE.SECONDS.THIRTY,
     queryKey: createPostgateQueryKey(postUri),
     async queryFn() {
-      return (await getPostgateRecord({agent, postUri})) ?? null
+      return await getPostgateRecord({agent, postUri}).then(res => res ?? null)
     },
   })
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
+import {type ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
 
 export type Lightbox = {
   id: string
@@ -15,6 +15,7 @@ const LightboxContext = React.createContext<{
 }>({
   activeLightbox: null,
 })
+LightboxContext.displayName = 'LightboxContext'
 
 const LightboxControlContext = React.createContext<{
   openLightbox: (lightbox: Omit<Lightbox, 'id'>) => void
@@ -23,6 +24,7 @@ const LightboxControlContext = React.createContext<{
   openLightbox: () => {},
   closeLightbox: () => false,
 })
+LightboxControlContext.displayName = 'LightboxControlContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeLightbox, setActiveLightbox] = React.useState<Lightbox | null>(

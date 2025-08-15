@@ -1,19 +1,22 @@
-import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
-  AppBskyGraphDefs,
-  AppBskyGraphGetList,
-  AppBskyGraphList,
+  type $Typed,
+  type AppBskyGraphDefs,
+  type AppBskyGraphGetList,
+  type AppBskyGraphList,
   AtUri,
-  BskyAgent,
-  Facet,
+  type BskyAgent,
+  type ComAtprotoRepoApplyWrites,
+  type Facet,
+  type Un$Typed,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
+import {type ImageMeta} from '#/state/gallery'
 import {STALE} from '#/state/queries'
-import {useAgent, useSession} from '../session'
+import {useAgent, useSession} from '#/state/session'
 import {invalidate as invalidateMyLists} from './my-lists'
 import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 
@@ -44,7 +47,7 @@ export interface ListCreateMutateParams {
   name: string
   description: string
   descriptionFacets: Facet[] | undefined
-  avatar: RNImage | null | undefined
+  avatar: ImageMeta | null | undefined
 }
 export function useListCreateMutation() {
   const {currentAccount} = useSession()
@@ -60,7 +63,7 @@ export function useListCreateMutation() {
         avatar,
       }) {
         if (!currentAccount) {
-          throw new Error('Not logged in')
+          throw new Error('Not signed in')
         }
         if (
           purpose !== 'app.bsky.graph.defs#curatelist' &&
@@ -68,7 +71,7 @@ export function useListCreateMutation() {
         ) {
           throw new Error('Invalid list purpose: must be curatelist or modlist')
         }
-        const record: AppBskyGraphList.Record = {
+        const record: Un$Typed<AppBskyGraphList.Record> = {
           purpose,
           name,
           description,
@@ -112,7 +115,7 @@ export interface ListMetadataMutateParams {
   name: string
   description: string
   descriptionFacets: Facet[] | undefined
-  avatar: RNImage | null | undefined
+  avatar: ImageMeta | null | undefined
 }
 export function useListMetadataMutation() {
   const {currentAccount} = useSession()
@@ -126,7 +129,7 @@ export function useListMetadataMutation() {
     async mutationFn({uri, name, description, descriptionFacets, avatar}) {
       const {hostname, rkey} = new AtUri(uri)
       if (!currentAccount) {
-        throw new Error('Not logged in')
+        throw new Error('Not signed in')
       }
       if (currentAccount.did !== hostname) {
         throw new Error('You do not own this list')
@@ -212,7 +215,9 @@ export function useListDeleteMutation() {
       }
 
       // batch delete the list and listitem records
-      const createDel = (uri: string) => {
+      const createDel = (
+        uri: string,
+      ): $Typed<ComAtprotoRepoApplyWrites.Delete> => {
         const urip = new AtUri(uri)
         return {
           $type: 'com.atproto.repo.applyWrites#delete',

@@ -1,7 +1,10 @@
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
@@ -46,7 +49,15 @@ export function FollowingFeedPreferencesScreen({}: Props) {
 
   return (
     <Layout.Screen testID="followingFeedPreferencesScreen">
-      <Layout.Header title={_(msg`Following Feed Preferences`)} />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Following Feed Preferences</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
           <SettingsList.Item>

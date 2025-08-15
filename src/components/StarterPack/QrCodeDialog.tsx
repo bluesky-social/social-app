@@ -4,7 +4,7 @@ import type ViewShot from 'react-native-view-shot'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
 import {createAssetAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,9 +15,10 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {DialogControlProps} from '#/components/Dialog'
+import {type DialogControlProps} from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
+import * as bsky from '#/types/bsky'
 
 export function QrCodeDialog({
   starterPack,
@@ -54,7 +55,7 @@ export function QrCodeDialog({
       if (isNative) {
         const res = await requestMediaLibraryPermissionsAsync()
 
-        if (!res) {
+        if (!res.granted) {
           Toast.show(
             _(
               msg`You must grant access to your photo library to save a QR code`,
@@ -77,7 +78,12 @@ export function QrCodeDialog({
       } else {
         setIsProcessing(true)
 
-        if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+        if (
+          !bsky.validate(
+            starterPack.record,
+            AppBskyGraphStarterpack.validateRecord,
+          )
+        ) {
           return
         }
 
@@ -149,6 +155,7 @@ export function QrCodeDialog({
 
   return (
     <Dialog.Outer control={control}>
+      <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Create a QR code for a starter pack`)}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
@@ -191,6 +198,7 @@ export function QrCodeDialog({
             )}
           </React.Suspense>
         </View>
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )

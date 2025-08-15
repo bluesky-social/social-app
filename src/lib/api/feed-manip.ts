@@ -1,14 +1,15 @@
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
 } from '@atproto/api'
 
+import * as bsky from '#/types/bsky'
 import {isPostInLanguage} from '../../locale/helpers'
 import {FALLBACK_MARKER_POST} from './feed/home'
-import {ReasonFeedSource} from './feed/types'
+import {type ReasonFeedSource} from './feed/types'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
@@ -40,7 +41,9 @@ export class FeedViewPostsSlice {
   isIncompleteThread: boolean
   isFallbackMarker: boolean
   isOrphan: boolean
+  isThreadMuted: boolean
   rootUri: string
+  feedPostUri: string
 
   constructor(feedPost: FeedViewPost) {
     const {post, reply, reason} = feedPost
@@ -48,6 +51,8 @@ export class FeedViewPostsSlice {
     this.isIncompleteThread = false
     this.isFallbackMarker = false
     this.isOrphan = false
+    this.isThreadMuted = post.viewer?.threadMuted ?? false
+    this.feedPostUri = post.uri
     if (AppBskyFeedDefs.isPostView(reply?.root)) {
       this.rootUri = reply.root.uri
     } else {
@@ -55,7 +60,9 @@ export class FeedViewPostsSlice {
     }
     this._feedPost = feedPost
     this._reactKey = `slice-${post.uri}-${
-      feedPost.reason?.indexedAt || post.indexedAt
+      feedPost.reason && 'indexedAt' in feedPost.reason
+        ? feedPost.reason.indexedAt
+        : post.indexedAt
     }`
     if (feedPost.post.uri === FALLBACK_MARKER_POST.post.uri) {
       this.isFallbackMarker = true
@@ -63,7 +70,7 @@ export class FeedViewPostsSlice {
     }
     if (
       !AppBskyFeedPost.isRecord(post.record) ||
-      !AppBskyFeedPost.validateRecord(post.record).success
+      !bsky.validate(post.record, AppBskyFeedPost.validateRecord)
     ) {
       return
     }
@@ -95,7 +102,7 @@ export class FeedViewPostsSlice {
     if (
       !AppBskyFeedDefs.isPostView(parent) ||
       !AppBskyFeedPost.isRecord(parent.record) ||
-      !AppBskyFeedPost.validateRecord(parent.record).success
+      !bsky.validate(parent.record, AppBskyFeedPost.validateRecord)
     ) {
       this.isOrphan = true
       return
@@ -137,7 +144,7 @@ export class FeedViewPostsSlice {
     if (
       !AppBskyFeedDefs.isPostView(root) ||
       !AppBskyFeedPost.isRecord(root.record) ||
-      !AppBskyFeedPost.validateRecord(root.record).success
+      !bsky.validate(root.record, AppBskyFeedPost.validateRecord)
     ) {
       this.isOrphan = true
       return
@@ -180,6 +187,10 @@ export class FeedViewPostsSlice {
 
   get feedContext() {
     return this._feedPost.feedContext
+  }
+
+  get reqId() {
+    return this._feedPost.reqId
   }
 
   get isRepost() {
@@ -345,6 +356,20 @@ export class FeedTuner {
   ) {
     for (let i = 0; i < slices.length; i++) {
       if (slices[i].isOrphan) {
+        slices.splice(i, 1)
+        i--
+      }
+    }
+    return slices
+  }
+
+  static removeMutedThreads(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    _dryRun: boolean,
+  ) {
+    for (let i = 0; i < slices.length; i++) {
+      if (slices[i].isThreadMuted) {
         slices.splice(i, 1)
         i--
       }

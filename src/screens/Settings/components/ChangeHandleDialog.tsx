@@ -10,17 +10,19 @@ import Animated, {
   SlideOutLeft,
   SlideOutRight,
 } from 'react-native-reanimated'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
+import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
@@ -29,13 +31,17 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
+import {
+  ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon,
+  ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon,
+} from '#/components/icons/Arrow'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useSimpleVerificationState} from '#/components/verification'
 import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({
@@ -148,6 +154,10 @@ function ProvidedHandlePage({
   const control = Dialog.useDialogContext()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
+  const profile = useCurrentAccountProfile()
+  const verification = useSimpleVerificationState({
+    profile,
+  })
 
   const {
     mutate: changeHandle,
@@ -168,13 +178,11 @@ function ProvidedHandlePage({
   const host = serviceInfo.availableUserDomains[0]
 
   const validation = useMemo(
-    () => validateHandle(subdomain, host),
+    () => validateServiceHandle(subdomain, host),
     [subdomain, host],
   )
 
-  const isTooLong = subdomain.length > 18
   const isInvalid =
-    isTooLong ||
     !validation.handleChars ||
     !validation.hyphenStartOrEnd ||
     !validation.totalLength
@@ -195,6 +203,19 @@ function ProvidedHandlePage({
         <Animated.View
           layout={native(LinearTransition)}
           style={[a.flex_1, a.gap_md]}>
+          {verification.isVerified && verification.role === 'default' && (
+            <Admonition type="error">
+              <Trans>
+                You are verified. You will lose your verification status if you
+                change your handle.{' '}
+                <InlineLinkText
+                  label={_(msg`Learn more`)}
+                  to={urls.website.blog.initialVerificationAnnouncement}>
+                  <Trans>Learn more.</Trans>
+                </InlineLinkText>
+              </Trans>
+            </Admonition>
+          )}
           <View>
             <TextField.LabelText>
               <Trans>New handle</Trans>
@@ -227,10 +248,10 @@ function ProvidedHandlePage({
             label={_(msg`Save new handle`)}
             variant="solid"
             size="large"
-            color={validation.overall && !isTooLong ? 'primary' : 'secondary'}
-            disabled={!validation.overall && !isTooLong}
+            color={validation.overall ? 'primary' : 'secondary'}
+            disabled={!validation.overall}
             onPress={() => {
-              if (validation.overall && !isTooLong) {
+              if (validation.overall) {
                 changeHandle({handle: createFullHandle(subdomain, host)})
               }
             }}>
@@ -245,15 +266,14 @@ function ProvidedHandlePage({
           <Text style={[a.leading_snug]}>
             <Trans>
               If you have your own domain, you can use that as your handle. This
-              lets you self-verify your identity –{' '}
+              lets you self-verify your identity.{' '}
               <InlineLinkText
                 label={_(msg`learn more`)}
                 to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
                 style={[a.font_bold]}
                 disableMismatchWarning>
-                learn more
+                Learn more here.
               </InlineLinkText>
-              .
             </Trans>
           </Text>
           <Button
@@ -265,7 +285,7 @@ function ProvidedHandlePage({
             <ButtonText>
               <Trans>I have my own domain</Trans>
             </ButtonText>
-            <ButtonIcon icon={ArrowRightIcon} />
+            <ButtonIcon icon={ArrowRightIcon} position="right" />
           </Button>
         </Animated.View>
       </View>
@@ -488,17 +508,29 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
         </Animated.View>
       )}
       <Animated.View layout={native(LinearTransition)}>
+        {currentAccount?.handle?.endsWith('.bsky.social') && (
+          <Admonition type="info" style={[a.mb_md]}>
+            <Trans>
+              Your current handle{' '}
+              <Text style={[a.font_bold]}>
+                {sanitizeHandle(currentAccount?.handle || '', '@')}
+              </Text>{' '}
+              will automatically remain reserved for you. You can switch back to
+              it at any time from this account.
+            </Trans>
+          </Admonition>
+        )}
         <Button
           label={
             isVerified
               ? _(msg`Update to ${domain}`)
               : dnsPanel
-              ? _(msg`Verify DNS Record`)
-              : _(msg`Verify Text File`)
+                ? _(msg`Verify DNS Record`)
+                : _(msg`Verify Text File`)
           }
           variant="solid"
           size="large"
-          color={domain.trim().length > 0 ? 'primary' : 'secondary'}
+          color="primary"
           disabled={domain.trim().length === 0}
           onPress={() => {
             if (isVerified) {
@@ -521,14 +553,17 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             </ButtonText>
           )}
         </Button>
-      </Animated.View>
-      <Animated.View layout={native(LinearTransition)}>
+
         <Button
           label={_(msg`Use default provider`)}
-          accessibilityHint={_(msg`Go back to previous page`)}
+          accessibilityHint={_(msg`Returns to previous page`)}
           onPress={goToServiceHandle}
-          style={[a.p_0, a.justify_start]}>
-          <ButtonText style={[{color: t.palette.primary_500}, a.text_left]}>
+          variant="outline"
+          color="secondary"
+          size="large"
+          style={[a.mt_sm]}>
+          <ButtonIcon icon={ArrowLeftIcon} position="left" />
+          <ButtonText>
             <Trans>Nevermind, create a handle for me</Trans>
           </ButtonText>
         </Button>

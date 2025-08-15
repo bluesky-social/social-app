@@ -1,26 +1,23 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {
-  Nux,
-  useNuxs,
-  useRemoveNuxsMutation,
-  useUpsertNuxMutation,
-} from '#/state/queries/nuxs'
+import {STALE} from '#/state/queries'
+import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
+import {ActivitySubscriptionsNUX} from '#/components/dialogs/nuxs/ActivitySubscriptions'
 /*
  * NUXs
  */
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-import {IS_DEV} from '#/env'
+import {isExistingUserAsOf} from '#/components/dialogs/nuxs/utils'
 
 type Context = {
   activeNux: Nux | undefined
@@ -35,12 +32,23 @@ const queuedNuxs: {
     currentProfile: AppBskyActorDefs.ProfileViewDetailed
     preferences: UsePreferencesQueryResponse
   }) => boolean
-}[] = []
+}[] = [
+  {
+    id: Nux.ActivitySubscriptions,
+    enabled: ({currentProfile}) => {
+      return isExistingUserAsOf(
+        '2025-07-07T00:00:00.000Z',
+        currentProfile.createdAt,
+      )
+    },
+  },
+]
 
 const Context = React.createContext<Context>({
   activeNux: undefined,
   dismissActiveNux: () => {},
 })
+Context.displayName = 'NuxDialogContext'
 
 export function useNuxDialogContext() {
   return React.useContext(Context)
@@ -49,7 +57,10 @@ export function useNuxDialogContext() {
 export function NuxDialogs() {
   const {currentAccount} = useSession()
   const {data: preferences} = usePreferencesQuery()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const {data: profile} = useProfileQuery({
+    did: currentAccount?.did,
+    staleTime: STALE.INFINITY, // createdAt isn't gonna change
+  })
   const onboardingActive = useOnboardingState().isActive
 
   const isLoading =
@@ -85,8 +96,8 @@ function Inner({
     return isSnoozed()
   })
   const [activeNux, setActiveNux] = React.useState<Nux | undefined>()
-  const {mutateAsync: upsertNux} = useUpsertNuxMutation()
-  const {mutate: removeNuxs} = useRemoveNuxsMutation()
+  const {mutateAsync: saveNux} = useSaveNux()
+  const {mutate: resetNuxs} = useResetNuxs()
 
   const snoozeNuxDialog = React.useCallback(() => {
     snooze()
@@ -98,17 +109,17 @@ function Inner({
     setActiveNux(undefined)
   }, [activeNux, setActiveNux])
 
-  if (IS_DEV && typeof window !== 'undefined') {
+  if (__DEV__ && typeof window !== 'undefined') {
     // @ts-ignore
     window.clearNuxDialog = (id: Nux) => {
-      if (!IS_DEV || !id) return
-      removeNuxs([id])
+      if (!__DEV__ || !id) return
+      resetNuxs([id])
       unsnooze()
     }
   }
 
   React.useEffect(() => {
-    if (snoozed) return
+    if (snoozed) return // comment this out to test
     if (!nuxs) return
 
     for (const {id, enabled} of queuedNuxs) {
@@ -116,7 +127,7 @@ function Inner({
 
       // check if completed first
       if (nux && nux.completed) {
-        continue
+        continue // comment this out to test
       }
 
       // then check gate (track exposure)
@@ -136,7 +147,7 @@ function Inner({
       snoozeNuxDialog()
 
       // immediately update remote data (affects next reload)
-      upsertNux({
+      saveNux({
         id,
         completed: true,
         data: undefined,
@@ -152,7 +163,7 @@ function Inner({
     nuxs,
     snoozed,
     snoozeNuxDialog,
-    upsertNux,
+    saveNux,
     gate,
     currentAccount,
     currentProfile,
@@ -169,6 +180,7 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
+      {activeNux === Nux.ActivitySubscriptions && <ActivitySubscriptionsNUX />}
     </Context.Provider>
   )
 }

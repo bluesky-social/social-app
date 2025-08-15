@@ -1,27 +1,27 @@
 import React, {useImperativeHandle} from 'react'
 import {
   FlatList,
-  FlatListProps,
-  StyleProp,
+  type FlatListProps,
+  type StyleProp,
   TouchableWithoutFeedback,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {DismissableLayer} from '@radix-ui/react-dismissable-layer'
-import {useFocusGuards} from '@radix-ui/react-focus-guards'
-import {FocusScope} from '@radix-ui/react-focus-scope'
+import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
+import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
+import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Context} from '#/components/Dialog/context'
 import {
-  DialogControlProps,
-  DialogInnerProps,
-  DialogOuterProps,
+  type DialogControlProps,
+  type DialogInnerProps,
+  type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Portal} from '#/components/Portal'
@@ -39,6 +39,7 @@ export function Outer({
   children,
   control,
   onClose,
+  webOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
@@ -94,6 +95,7 @@ export function Outer({
       nativeSnapPoint: 0,
       disableDrag: false,
       setDisableDrag: () => {},
+      isWithinDialog: true,
     }),
     [close],
   )
@@ -103,6 +105,7 @@ export function Outer({
       {isOpen && (
         <Portal>
           <Context.Provider value={context}>
+            <RemoveScrollBar />
             <TouchableWithoutFeedback
               accessibilityHint={undefined}
               accessibilityLabel={_(msg`Close active dialog`)}
@@ -112,20 +115,26 @@ export function Outer({
                   web(a.fixed),
                   a.inset_0,
                   a.z_10,
+                  a.px_xl,
+                  webOptions?.alignCenter ? a.justify_center : undefined,
                   a.align_center,
-                  gtMobile ? a.p_lg : a.p_md,
-                  {overflowY: 'auto'},
+                  {
+                    overflowY: 'auto',
+                    paddingVertical: gtMobile ? '10vh' : a.pt_xl.paddingTop,
+                  },
                 ]}>
                 <Backdrop />
+                {/**
+                 * This is needed to prevent centered dialogs from overflowing
+                 * above the screen, and provides a "natural" centering so that
+                 * stacked dialogs appear relatively aligned.
+                 */}
                 <View
                   style={[
                     a.w_full,
                     a.z_20,
-                    a.justify_center,
                     a.align_center,
-                    {
-                      minHeight: web('calc(90vh - 36px)') || undefined,
-                    },
+                    web({minHeight: '60vh', position: 'static'}),
                   ]}>
                   {children}
                 </View>
@@ -150,16 +159,17 @@ export function Inner({
   const t = useTheme()
   const {close} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
-  useFocusGuards()
+  const {reduceMotionEnabled} = useA11y()
+  FocusGuards.useFocusGuards()
   return (
-    <FocusScope loop asChild trapped>
+    <FocusScope.FocusScope loop asChild trapped>
       <View
         role="dialog"
         aria-role="dialog"
         aria-label={label}
         aria-labelledby={accessibilityLabelledBy}
         aria-describedby={accessibilityDescribedBy}
-        // @ts-ignore web only -prf
+        // @ts-expect-error web only -prf
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
@@ -175,12 +185,11 @@ export function Inner({
             shadowColor: t.palette.black,
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
-            // @ts-ignore web only
-            animation: 'fadeIn ease-out 0.1s',
           },
-          flatten(style),
+          !reduceMotionEnabled && a.zoom_fade_in,
+          style,
         ])}>
-        <DismissableLayer
+        <DismissableLayer.DismissableLayer
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
           onDismiss={close}
@@ -189,9 +198,9 @@ export function Inner({
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
             {children}
           </View>
-        </DismissableLayer>
+        </DismissableLayer.DismissableLayer>
       </View>
-    </FocusScope>
+    </FocusScope.FocusScope>
   )
 }
 
@@ -214,8 +223,8 @@ export const InnerFlatList = React.forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        // @ts-ignore web only -sfn
-        {maxHeight: 'calc(-36px + 100vh)'},
+        // 100 minus 10vh of paddingVertical
+        web({maxHeight: '80vh'}),
         webInnerStyle,
       ]}
       contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
@@ -260,20 +269,15 @@ export function Handle() {
 
 function Backdrop() {
   const t = useTheme()
+  const {reduceMotionEnabled} = useA11y()
   return (
-    <View
-      style={{
-        opacity: 0.8,
-      }}>
+    <View style={{opacity: 0.8}}>
       <View
         style={[
           a.fixed,
           a.inset_0,
-          {
-            backgroundColor: t.palette.black,
-            // @ts-ignore web only
-            animation: 'fadeIn ease-out 0.15s',
-          },
+          {backgroundColor: t.palette.black},
+          !reduceMotionEnabled && a.fade_in,
         ]}
       />
     </View>

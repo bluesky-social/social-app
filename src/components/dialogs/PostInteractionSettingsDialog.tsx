@@ -1,6 +1,10 @@
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPostgate, AtUri} from '@atproto/api'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {
+  type AppBskyFeedDefs,
+  type AppBskyFeedPostgate,
+  AtUri,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -22,7 +26,7 @@ import {
 import {
   createThreadgateViewQueryKey,
   getThreadgateView,
-  ThreadgateAllowUISetting,
+  type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
   useSetThreadgateAllowMutation,
   useThreadgateViewQuery,
@@ -40,6 +44,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export type PostInteractionSettingsFormProps = {
+  canSave?: boolean
   onSave: () => void
   isSaving?: boolean
 
@@ -58,17 +63,51 @@ export function PostInteractionSettingsControlledDialog({
 }: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
 }) {
+  const t = useTheme()
   const {_} = useLingui()
+
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Edit post interaction settings`)}
         style={[{maxWidth: 500}, a.w_full]}>
-        <PostInteractionSettingsForm {...rest} />
+        <View style={[a.gap_md]}>
+          <Header />
+          <PostInteractionSettingsForm {...rest} />
+          <Text
+            style={[
+              a.pt_sm,
+              a.text_sm,
+              a.leading_snug,
+              t.atoms.text_contrast_medium,
+            ]}>
+            <Trans>
+              You can set default interaction settings in{' '}
+              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                Settings &rarr; Moderation &rarr; Interaction settings
+              </Text>
+              .
+            </Trans>
+          </Text>
+        </View>
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
+  )
+}
+
+export function Header() {
+  return (
+    <View style={[a.gap_md, a.pb_sm]}>
+      <Text style={[a.text_2xl, a.font_bold]}>
+        <Trans>Post interaction settings</Trans>
+      </Text>
+      <Text style={[a.text_md, a.pb_xs]}>
+        <Trans>Customize who can interact with this post.</Trans>
+      </Text>
+      <Divider />
+    </View>
   )
 }
 
@@ -174,7 +213,7 @@ export function PostInteractionSettingsDialogControlledInner(
       props.control.close()
     } catch (e: any) {
       logger.error(`Failed to save post interaction settings`, {
-        context: 'PostInteractionSettingsDialogControlledInner',
+        source: 'PostInteractionSettingsDialogControlledInner',
         safeMessage: e.message,
       })
       Toast.show(
@@ -203,26 +242,31 @@ export function PostInteractionSettingsDialogControlledInner(
     <Dialog.ScrollableInner
       label={_(msg`Edit post interaction settings`)}
       style={[{maxWidth: 500}, a.w_full]}>
-      {isLoading ? (
-        <View style={[a.flex_1, a.py_4xl, a.align_center, a.justify_center]}>
-          <Loader size="xl" />
-        </View>
-      ) : (
-        <PostInteractionSettingsForm
-          replySettingsDisabled={!isThreadgateOwnedByViewer}
-          isSaving={isSaving}
-          onSave={onSave}
-          postgate={postgateValue}
-          onChangePostgate={setEditedPostgate}
-          threadgateAllowUISettings={allowUIValue}
-          onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
-        />
-      )}
+      <View style={[a.gap_md]}>
+        <Header />
+
+        {isLoading ? (
+          <View style={[a.flex_1, a.py_4xl, a.align_center, a.justify_center]}>
+            <Loader size="xl" />
+          </View>
+        ) : (
+          <PostInteractionSettingsForm
+            replySettingsDisabled={!isThreadgateOwnedByViewer}
+            isSaving={isSaving}
+            onSave={onSave}
+            postgate={postgateValue}
+            onChangePostgate={setEditedPostgate}
+            threadgateAllowUISettings={allowUIValue}
+            onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
+          />
+        )}
+      </View>
     </Dialog.ScrollableInner>
   )
 }
 
 export function PostInteractionSettingsForm({
+  canSave = true,
   onSave,
   isSaving,
   postgate,
@@ -283,17 +327,7 @@ export function PostInteractionSettingsForm({
   return (
     <View>
       <View style={[a.flex_1, a.gap_md]}>
-        <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>Post interaction settings</Trans>
-        </Text>
-
         <View style={[a.gap_lg]}>
-          <Text style={[a.text_md]}>
-            <Trans>Customize who can interact with this post.</Trans>
-          </Text>
-
-          <Divider />
-
           <View style={[a.gap_sm]}>
             <Text style={[a.font_bold, a.text_lg]}>
               <Trans>Quote settings</Trans>
@@ -311,7 +345,7 @@ export function PostInteractionSettingsForm({
               onChange={onChangeQuotesEnabled}
               style={[a.justify_between, a.pt_xs]}>
               <Text style={[t.atoms.text_contrast_medium]}>
-                <Trans>Quote posts enabled</Trans>
+                <Trans>Allow quote posts</Trans>
               </Text>
               <Toggle.Switch />
             </Toggle.Item>
@@ -400,13 +434,23 @@ export function PostInteractionSettingsForm({
                     disabled={replySettingsDisabled}
                   />
                   <Selectable
-                    label={_(msg`Followed users`)}
+                    label={_(msg`Users you follow`)}
                     isSelected={
                       !!threadgateAllowUISettings.find(
                         v => v.type === 'following',
                       )
                     }
                     onPress={() => onPressAudience({type: 'following'})}
+                    disabled={replySettingsDisabled}
+                  />
+                  <Selectable
+                    label={_(msg`Your followers`)}
+                    isSelected={
+                      !!threadgateAllowUISettings.find(
+                        v => v.type === 'followers',
+                      )
+                    }
+                    onPress={() => onPressAudience({type: 'followers'})}
                     disabled={replySettingsDisabled}
                   />
                   {lists && lists.length > 0
@@ -435,6 +479,7 @@ export function PostInteractionSettingsForm({
       </View>
 
       <Button
+        disabled={!canSave || isSaving}
         label={_(msg`Save`)}
         onPress={onSave}
         color="primary"
@@ -517,7 +562,8 @@ export function usePrefetchPostInteractionSettings({
       await Promise.all([
         queryClient.prefetchQuery({
           queryKey: createPostgateQueryKey(postUri),
-          queryFn: () => getPostgateRecord({agent, postUri}),
+          queryFn: () =>
+            getPostgateRecord({agent, postUri}).then(res => res ?? null),
           staleTime: STALE.SECONDS.THIRTY,
         }),
         queryClient.prefetchQuery({

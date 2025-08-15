@@ -3,7 +3,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
+import {
+  type AvatarColor,
+  type Emoji,
+} from '#/screens/Onboarding/StepProfile/types'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -72,6 +75,19 @@ export type ApiResponseMap = {
   }
 }
 
+// most popular selected interests
+export const popularInterests = [
+  'art',
+  'gaming',
+  'sports',
+  'comics',
+  'music',
+  'politics',
+  'photography',
+  'science',
+  'news',
+]
+
 export function useInterestsDisplayNames() {
   const {_} = useLingui()
 
@@ -134,6 +150,7 @@ export const Context = React.createContext<{
   state: {...initialState},
   dispatch: () => {},
 })
+Context.displayName = 'OnboardingContext'
 
 export function reducer(
   s: OnboardingState,

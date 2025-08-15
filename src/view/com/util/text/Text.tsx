@@ -1,18 +1,17 @@
 import React from 'react'
-import {StyleSheet, TextProps} from 'react-native'
+import {StyleSheet, type TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
 import {lh, s} from '#/lib/styles'
-import {TypographyVariant, useTheme} from '#/lib/ThemeContext'
+import {type TypographyVariant, useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {applyFonts, useAlf} from '#/alf'
 import {
   childHasEmoji,
   renderChildrenWithEmoji,
-  StringChild,
+  type StringChild,
 } from '#/alf/typography'
-import {IS_DEV} from '#/env'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
   type?: TypographyVariant
@@ -33,7 +32,7 @@ export type CustomTextProps = Omit<TextProps, 'children'> & {
 
 export {Text_DEPRECATED as Text}
 /**
- * @deprecated use Text from Typography instead.
+ * @deprecated use Text from `#/components/Typography.tsx` instead
  */
 function Text_DEPRECATED({
   type = 'md',
@@ -49,7 +48,7 @@ function Text_DEPRECATED({
   const theme = useTheme()
   const {fonts} = useAlf()
 
-  if (IS_DEV) {
+  if (__DEV__) {
     if (!emoji && childHasEmoji(children)) {
       logger.warn(
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,

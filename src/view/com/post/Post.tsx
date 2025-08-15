@@ -1,43 +1,42 @@
-import React, {useMemo, useState} from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {useCallback, useMemo, useState} from 'react'
+import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  ModerationDecision,
+  moderatePost,
+  type ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {makeProfileLink} from '#/lib/routes/links'
 import {countLines} from '#/lib/strings/helpers'
-import {colors, s} from '#/lib/styles'
-import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {colors} from '#/lib/styles'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {precacheProfile} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
-import {AviFollowButton} from '#/view/com/posts/AviFollowButton'
+import {unstableCacheProfileView} from '#/state/queries/profile'
+import {Link} from '#/view/com/util/Link'
+import {PostMeta} from '#/view/com/util/PostMeta'
+import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
-import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
+import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
+import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
-import {ContentHider} from '../../../components/moderation/ContentHider'
-import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
-import {PostAlerts} from '../../../components/moderation/PostAlerts'
-import {Link, TextLink} from '../util/Link'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds, PostEmbedViewContext} from '../util/post-embeds'
-import {PostMeta} from '../util/PostMeta'
-import {Text} from '../util/text/Text'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserInfoText} from '../util/UserInfoText'
+import * as bsky from '#/types/bsky'
 
 export function Post({
   post,
@@ -53,8 +52,7 @@ export function Post({
   const moderationOpts = useModerationOpts()
   const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
-      AppBskyFeedPost.isRecord(post.record) &&
-      AppBskyFeedPost.validateRecord(post.record).success
+      bsky.validate(post.record, AppBskyFeedPost.validateRecord)
         ? post.record
         : undefined,
     [post],
@@ -112,8 +110,7 @@ function PostInner({
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {_} = useLingui()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -125,7 +122,7 @@ function PostInner({
     replyAuthorDid = urip.hostname
   }
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -138,18 +135,15 @@ function PostInner({
     })
   }, [openComposer, post, record, moderation])
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
 
-  const onBeforePress = React.useCallback(() => {
-    precacheProfile(queryClient, post.author)
+  const onBeforePress = useCallback(() => {
+    unstableCacheProfileView(queryClient, post.author)
   }, [queryClient, post.author])
 
-  const {currentAccount} = useSession()
-  const isMe = replyAuthorDid === currentAccount?.did
-
-  const [hover, setHover] = React.useState(false)
+  const [hover, setHover] = useState(false)
   return (
     <Link
       href={itemHref}
@@ -170,14 +164,12 @@ function PostInner({
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <AviFollowButton author={post.author} moderation={moderation}>
-            <PreviewableUserAvatar
-              size={42}
-              profile={post.author}
-              moderation={moderation.ui('avatar')}
-              type={post.author.associated?.labeler ? 'labeler' : 'user'}
-            />
-          </AviFollowButton>
+          <PreviewableUserAvatar
+            size={42}
+            profile={post.author}
+            moderation={moderation.ui('avatar')}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
+          />
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
@@ -187,34 +179,7 @@ function PostInner({
             postHref={itemHref}
           />
           {replyAuthorDid !== '' && (
-            <View style={[s.flexRow, s.mb2, s.alignCenter]}>
-              <FontAwesomeIcon
-                icon="reply"
-                size={9}
-                style={[pal.textLight, s.mr5]}
-              />
-              <Text
-                type="sm"
-                style={[pal.textLight, s.mr2]}
-                lineHeight={1.2}
-                numberOfLines={1}>
-                {isMe ? (
-                  <Trans context="description">Reply to you</Trans>
-                ) : (
-                  <Trans context="description">
-                    Reply to{' '}
-                    <ProfileHoverCard inline did={replyAuthorDid}>
-                      <UserInfoText
-                        type="sm"
-                        did={replyAuthorDid}
-                        attr="displayName"
-                        style={[pal.textLight]}
-                      />
-                    </ProfileHoverCard>
-                  </Trans>
-                )}
-              </Text>
-            </View>
+            <PostRepliedTo parentAuthor={replyAuthorDid} />
           )}
           <LabelsOnMyPost post={post} />
           <ContentHider
@@ -226,7 +191,7 @@ function PostInner({
               style={[a.py_xs]}
             />
             {richText.text ? (
-              <View style={styles.postTextContainer}>
+              <View>
                 <RichText
                   enableTags
                   testID="postText"
@@ -234,26 +199,25 @@ function PostInner({
                   numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={[a.flex_1, a.text_md]}
                   authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
                 />
+                {limitLines && (
+                  <ShowMoreTextButton
+                    style={[a.text_md]}
+                    onPress={onPressShowMore}
+                  />
+                )}
               </View>
             ) : undefined}
-            {limitLines ? (
-              <TextLink
-                text={_(msg`Show More`)}
-                style={pal.link}
-                onPress={onPressShowMore}
-                href="#"
-              />
-            ) : undefined}
             {post.embed ? (
-              <PostEmbeds
+              <Embed
                 embed={post.embed}
                 moderation={moderation}
                 viewContext={PostEmbedViewContext.Feed}
               />
             ) : null}
           </ContentHider>
-          <PostCtrls
+          <PostControls
             post={post}
             record={record}
             richText={richText}
@@ -287,12 +251,6 @@ const styles = StyleSheet.create({
   },
   alert: {
     marginBottom: 6,
-  },
-  postTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    overflow: 'hidden',
   },
   replyLine: {
     position: 'absolute',

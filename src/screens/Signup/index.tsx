@@ -1,11 +1,14 @@
-import React from 'react'
-import {View} from 'react-native'
+import {useEffect, useReducer, useState} from 'react'
+import {AppState, type AppStateStatus, View} from 'react-native'
+import ReactNativeDeviceAttest from 'react-native-device-attest'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
+import {logger} from '#/logger'
+import {isAndroid} from '#/platform/detection'
 import {useServiceQuery} from '#/state/queries/service'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {useActiveStarterPack} from '#/state/shell/starter-pack'
@@ -26,11 +29,13 @@ import {Divider} from '#/components/Divider'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {GCP_PROJECT_ID} from '#/env'
+import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {_} = useLingui()
   const t = useTheme()
-  const [state, dispatch] = React.useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState)
   const {gtMobile} = useBreakpoints()
   const submit = useSubmitSignup()
 
@@ -43,7 +48,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     uri: activeStarterPack?.uri,
   })
 
-  const [isFetchedAtMount] = React.useState(starterPack != null)
+  const [isFetchedAtMount] = useState(starterPack != null)
   const showStarterPackCard =
     activeStarterPack?.uri && !isFetchingStarterPack && starterPack
 
@@ -54,7 +59,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     refetch,
   } = useServiceQuery(state.serviceUrl)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isFetching) {
       dispatch({type: 'setIsLoading', value: true})
     } else if (!isFetching) {
@@ -62,7 +67,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     }
   }, [isFetching])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isError) {
       dispatch({type: 'setServiceDescription', value: undefined})
       dispatch({
@@ -77,7 +82,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     }
   }, [_, serviceInfo, isError])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (state.pendingSubmit) {
       if (!state.pendingSubmit.mutableProcessed) {
         state.pendingSubmit.mutableProcessed = true
@@ -85,6 +90,30 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       }
     }
   }, [state, dispatch, submit])
+
+  // Track app backgrounding during signup
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      'change',
+      (nextAppState: AppStateStatus) => {
+        if (nextAppState === 'background') {
+          dispatch({type: 'incrementBackgroundCount'})
+        }
+      },
+    )
+
+    return () => subscription.remove()
+  }, [])
+
+  // On Android, warmup the Play Integrity API on the signup screen so it is ready by the time we get to the gate screen.
+  useEffect(() => {
+    if (!isAndroid) {
+      return
+    }
+    ReactNativeDeviceAttest.warmupIntegrity(GCP_PROJECT_ID).catch(err =>
+      logger.error(err),
+    )
+  }, [])
 
   return (
     <SignupContext.Provider value={{state, dispatch}}>
@@ -95,7 +124,10 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         scrollable>
         <View testID="createAccount" style={a.flex_1}>
           {showStarterPackCard &&
-          AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
+          bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+            starterPack.record,
+            AppBskyGraphStarterpack.isRecord,
+          ) ? (
             <Animated.View entering={!isFetchedAtMount ? FadeIn : undefined}>
               <LinearGradientBackground
                 style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
@@ -125,8 +157,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               a.pt_2xl,
               !gtMobile && {paddingBottom: 100},
             ]}>
-            <View style={[a.gap_sm, a.pb_3xl]}>
-              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+            <View style={[a.gap_sm, a.pb_sm]}>
+              <Text
+                style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
                 <Trans>
                   Step {state.activeStep + 1} of{' '}
                   {state.serviceDescription &&
@@ -135,11 +168,11 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     : '3'}
                 </Trans>
               </Text>
-              <Text style={[a.text_3xl, a.font_bold]}>
+              <Text style={[a.text_3xl, a.font_heavy]}>
                 {state.activeStep === SignupStep.INFO ? (
                   <Trans>Your account</Trans>
                 ) : state.activeStep === SignupStep.HANDLE ? (
-                  <Trans>Your user handle</Trans>
+                  <Trans>Choose your username</Trans>
                 ) : (
                   <Trans>Complete the challenge</Trans>
                 )}
@@ -166,10 +199,14 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             <Divider />
 
             <View
-              style={[a.w_full, a.py_lg, a.flex_row, a.gap_lg, a.align_center]}>
+              style={[a.w_full, a.py_lg, a.flex_row, a.gap_md, a.align_center]}>
               <AppLanguageDropdown />
               <Text
-                style={[t.atoms.text_contrast_medium, !gtMobile && a.text_md]}>
+                style={[
+                  a.flex_1,
+                  t.atoms.text_contrast_medium,
+                  !gtMobile && a.text_md,
+                ]}>
                 <Trans>Having trouble?</Trans>{' '}
                 <InlineLinkText
                   label={_(msg`Contact support`)}

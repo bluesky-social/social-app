@@ -25,9 +25,7 @@ import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from
 import {Text} from '#/components/Typography'
 import {ReportDialogProps} from './types'
 
-export function SelectReportOptionView({
-  ...props
-}: {
+export function SelectReportOptionView(props: {
   params: ReportDialogProps['params']
   labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
   onSelectReportOption: (reportOption: ReportOption) => void

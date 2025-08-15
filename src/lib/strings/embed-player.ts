@@ -11,8 +11,8 @@ const IFRAME_HOST = isWeb
     ? 'http://localhost:8100'
     : 'https://bsky.app'
   : __DEV__ && !process.env.JEST_WORKER_ID
-  ? 'http://localhost:8100'
-  : 'https://bsky.app'
+    ? 'http://localhost:8100'
+    : 'https://bsky.app'
 
 export const embedPlayerSources = [
   'youtube',
@@ -566,5 +566,14 @@ export function parseTenorGif(urlp: URL):
     success: true,
     playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
     dimensions,
+  }
+}
+
+export function isTenorGifUri(url: URL | string) {
+  try {
+    return parseTenorGif(typeof url === 'string' ? new URL(url) : url).success
+  } catch {
+    // Invalid URL
+    return false
   }
 }

@@ -18,7 +18,6 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "openGalleryBtn"
 - tapOn: "Content warnings"
-- tapOn: "Content warnings"
 - tapOn: "Porn"
 - tapOn:
     label: "Tap on confirm"

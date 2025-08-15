@@ -1,36 +1,35 @@
 import React from 'react'
-import {ListRenderItemInfo, Pressable, View} from 'react-native'
-import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {type ListRenderItemInfo, View} from 'react-native'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {enforceLen} from '#/lib/strings/helpers'
-import {isNative, isWeb} from '#/platform/detection'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {List} from '#/view/com/util/List'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
+import {atoms as a, web} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
-const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
+const renderItem = ({item}: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
   return <Post post={item} />
 }
 
-const keyExtractor = (item: PostView, index: number) => {
+const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
   return `${item.uri}-${index}`
 }
 
@@ -64,7 +63,6 @@ export default function HashtagScreen({
 
   const [activeTab, setActiveTab] = React.useState(0)
   const setMinimalShellMode = useSetMinimalShellMode()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -75,10 +73,9 @@ export default function HashtagScreen({
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(index > 0)
       setActiveTab(index)
     },
-    [setDrawerSwipeDisabled, setMinimalShellMode],
+    [setMinimalShellMode],
   )
 
   const sections = React.useMemo(() => {
@@ -110,46 +107,36 @@ export default function HashtagScreen({
 
   return (
     <Layout.Screen>
-      <CenteredView sideBorders={true}>
-        <ViewHeader
-          showOnDesktop
-          title={headerTitle}
-          subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
-          canGoBack
-          renderButton={
-            isNative
-              ? () => (
-                  <Pressable
-                    accessibilityRole="button"
-                    onPress={onShare}
-                    hitSlop={HITSLOP_10}>
-                    <ArrowOutOfBox_Stroke2_Corner0_Rounded
-                      size="lg"
-                      onPress={onShare}
-                    />
-                  </Pressable>
-                )
-              : undefined
-          }
-        />
-      </CenteredView>
       <Pager
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <CenteredView
-            sideBorders={true}
-            // @ts-ignore web only
-            style={
-              isWeb
-                ? {
-                    position: isWeb ? 'sticky' : '',
-                    top: 0,
-                    zIndex: 1,
-                  }
-                : undefined
-            }>
+          <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
+            <Layout.Header.Outer noBottomBorder>
+              <Layout.Header.BackButton />
+              <Layout.Header.Content>
+                <Layout.Header.TitleText>{headerTitle}</Layout.Header.TitleText>
+                {author && (
+                  <Layout.Header.SubtitleText>
+                    {_(msg`From @${sanitizedAuthor}`)}
+                  </Layout.Header.SubtitleText>
+                )}
+              </Layout.Header.Content>
+              <Layout.Header.Slot>
+                <Button
+                  label={_(msg`Share`)}
+                  size="small"
+                  variant="ghost"
+                  color="primary"
+                  shape="round"
+                  onPress={onShare}
+                  hitSlop={HITSLOP_10}
+                  style={[{right: -3}]}>
+                  <ButtonIcon icon={Share} size="md" />
+                </Button>
+              </Layout.Header.Slot>
+            </Layout.Header.Outer>
             <TabBar items={sections.map(section => section.title)} {...props} />
-          </CenteredView>
+          </Layout.Center>
         )}
         initialPage={0}>
         {sections.map((section, i) => (

@@ -63,6 +63,8 @@ func serve(cctx *cli.Context) error {
 	corsOrigins := cctx.StringSlice("cors-allowed-origins")
 	staticCDNHost := cctx.String("static-cdn-host")
 	staticCDNHost = strings.TrimSuffix(staticCDNHost, "/")
+	canonicalInstance := cctx.Bool("bsky-canonical-instance")
+	robotsDisallowAll := cctx.Bool("robots-disallow-all")
 
 	// Echo
 	e := echo.New()
@@ -204,25 +206,41 @@ func serve(cctx *cli.Context) error {
 		return http.FS(fsys)
 	}())
 
-	e.GET("/robots.txt", echo.WrapHandler(staticHandler))
-	e.GET("/ips-v4", echo.WrapHandler(staticHandler))
-	e.GET("/ips-v6", echo.WrapHandler(staticHandler))
-	e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
-	e.GET("/security.txt", func(c echo.Context) error {
-		return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
-	})
+	// enable some special endpoints for the "canonical" deployment (bsky.app). not having these enabled should *not* impact regular operation
+	if canonicalInstance {
+		e.GET("/ips-v4", echo.WrapHandler(staticHandler))
+		e.GET("/ips-v6", echo.WrapHandler(staticHandler))
+		e.GET("/security.txt", func(c echo.Context) error {
+			return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
+		})
+		e.GET("/.well-known/*", echo.WrapHandler(staticHandler))
+	}
+
+	// default to permissive, but Disallow all if flag set
+	if robotsDisallowAll {
+		e.File("/robots.txt", "static/robots-disallow-all.txt")
+	} else {
+		e.GET("/robots.txt", echo.WrapHandler(staticHandler))
+	}
+
 	e.GET("/iframe/youtube.html", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			path := c.Request().URL.Path
-			maxAge := 1 * (60 * 60) // default is 1 hour
+			c.Response().Before(func() {
+				if c.Response().Status >= 300 {
+					return
+				}
 
-			// all assets in /static/js, /static/css, /static/media are content-hashed and can be cached for a long time
-			if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/css/") || strings.HasPrefix(path, "/static/media/") {
-				maxAge = 365 * (60 * 60 * 24) // 1 year
-			}
+				path := c.Request().URL.Path
+				maxAge := 1 * (60 * 60) // default is 1 hour
 
-			c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
+				// all assets in /static/js, /static/css, /static/media are content-hashed and can be cached for a long time
+				if strings.HasPrefix(path, "/static/js/") || strings.HasPrefix(path, "/static/css/") || strings.HasPrefix(path, "/static/media/") {
+					maxAge = 365 * (60 * 60 * 24) // 1 year
+				}
+
+				c.Response().Header().Set("Cache-Control", fmt.Sprintf("public, max-age=%d", maxAge))
+			})
 			return next(c)
 		}
 	})
@@ -235,15 +253,18 @@ func serve(cctx *cli.Context) error {
 
 	// generic routes
 	e.GET("/hashtag/:tag", server.WebGeneric)
+	e.GET("/topic/:topic", server.WebGeneric)
 	e.GET("/search", server.WebGeneric)
 	e.GET("/feeds", server.WebGeneric)
 	e.GET("/notifications", server.WebGeneric)
 	e.GET("/notifications/settings", server.WebGeneric)
+	e.GET("/notifications/activity", server.WebGeneric)
 	e.GET("/lists", server.WebGeneric)
 	e.GET("/moderation", server.WebGeneric)
 	e.GET("/moderation/modlists", server.WebGeneric)
 	e.GET("/moderation/muted-accounts", server.WebGeneric)
 	e.GET("/moderation/blocked-accounts", server.WebGeneric)
+	e.GET("/moderation/verification-settings", server.WebGeneric)
 	e.GET("/settings", server.WebGeneric)
 	e.GET("/settings/language", server.WebGeneric)
 	e.GET("/settings/app-passwords", server.WebGeneric)
@@ -255,8 +276,21 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/appearance", server.WebGeneric)
 	e.GET("/settings/account", server.WebGeneric)
 	e.GET("/settings/privacy-and-security", server.WebGeneric)
+	e.GET("/settings/privacy-and-security/activity", server.WebGeneric)
 	e.GET("/settings/content-and-media", server.WebGeneric)
+	e.GET("/settings/interests", server.WebGeneric)
 	e.GET("/settings/about", server.WebGeneric)
+	e.GET("/settings/notifications", server.WebGeneric)
+	e.GET("/settings/notifications/replies", server.WebGeneric)
+	e.GET("/settings/notifications/mentions", server.WebGeneric)
+	e.GET("/settings/notifications/quotes", server.WebGeneric)
+	e.GET("/settings/notifications/likes", server.WebGeneric)
+	e.GET("/settings/notifications/reposts", server.WebGeneric)
+	e.GET("/settings/notifications/new-followers", server.WebGeneric)
+	e.GET("/settings/notifications/likes-on-reposts", server.WebGeneric)
+	e.GET("/settings/notifications/reposts-on-reposts", server.WebGeneric)
+	e.GET("/settings/notifications/activity", server.WebGeneric)
+	e.GET("/settings/notifications/miscellaneous", server.WebGeneric)
 	e.GET("/settings/app-icon", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
 	e.GET("/sys/debug-mod", server.WebGeneric)
@@ -268,6 +302,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/support/copyright", server.WebGeneric)
 	e.GET("/intent/compose", server.WebGeneric)
 	e.GET("/intent/verify-email", server.WebGeneric)
+	e.GET("/intent/age-assurance", server.WebGeneric)
 	e.GET("/messages", server.WebGeneric)
 	e.GET("/messages/:conversation", server.WebGeneric)
 
@@ -276,6 +311,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/follows", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/followers", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/known-followers", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/search", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/lists/:rkey", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/feed/:rkey", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/feed/:rkey/liked-by", server.WebGeneric)
@@ -568,9 +604,12 @@ type IPCCRequest struct {
 	IP string `json:"ip"`
 }
 type IPCCResponse struct {
-	CC string `json:"countryCode"`
+	CC               string `json:"countryCode"`
+	AgeRestrictedGeo bool   `json:"isAgeRestrictedGeo,omitempty"`
 }
 
+// IP address data is powered by IPinfo
+// https://ipinfo.io
 func (srv *Server) WebIpCC(c echo.Context) error {
 	realIP := c.RealIP()
 	addr, err := netip.ParseAddr(realIP)

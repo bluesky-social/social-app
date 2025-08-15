@@ -1,12 +1,13 @@
-import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {createContext, useContext} from 'react'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button as BaseButton, type ButtonProps} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Eye_Stroke2_Corner0_Rounded as InfoIcon} from '#/components/icons/Eye'
 import {Leaf_Stroke2_Corner0_Rounded as TipIcon} from '#/components/icons/Leaf'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
-import {Text as BaseText, TextProps} from '#/components/Typography'
+import {Text as BaseText, type TextProps} from '#/components/Typography'
 
 export const colors = {
   warning: {
@@ -19,13 +20,14 @@ type Context = {
   type: 'info' | 'tip' | 'warning' | 'error'
 }
 
-const Context = React.createContext<Context>({
+const Context = createContext<Context>({
   type: 'info',
 })
+Context.displayName = 'AdmonitionContext'
 
 export function Icon() {
   const t = useTheme()
-  const {type} = React.useContext(Context)
+  const {type} = useContext(Context)
   const Icon = {
     info: InfoIcon,
     tip: TipIcon,
@@ -49,22 +51,29 @@ export function Text({
   return (
     <BaseText
       {...rest}
-      style={[
-        a.flex_1,
-        a.text_sm,
-        a.leading_snug,
-        {
-          paddingTop: 1,
-        },
-        style,
-      ]}>
+      style={[a.flex_1, a.text_sm, a.leading_snug, a.pr_md, style]}>
       {children}
     </BaseText>
   )
 }
 
+export function Button({
+  children,
+  ...props
+}: Omit<ButtonProps, 'size' | 'variant' | 'color'>) {
+  return (
+    <BaseButton size="tiny" variant="outline" color="secondary" {...props}>
+      {children}
+    </BaseButton>
+  )
+}
+
 export function Row({children}: {children: React.ReactNode}) {
-  return <View style={[a.flex_row, a.gap_sm]}>{children}</View>
+  return (
+    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+      {children}
+    </View>
+  )
 }
 
 export function Outer({

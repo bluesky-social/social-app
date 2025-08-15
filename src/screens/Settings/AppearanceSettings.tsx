@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {useCallback} from 'react'
 import Animated, {
   FadeInUp,
   FadeOutUp,
@@ -8,27 +8,31 @@ import Animated, {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
-import {useSession} from '#/state/session'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
-import {Logo} from '#/view/icons/Logo'
+import {SettingsListItem as AppIconSettingsListItem} from '#/screens/Settings/AppIconSettings/SettingsListItem'
 import {atoms as a, native, useAlf, useTheme} from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
 import {Phone_Stroke2_Corner0_Rounded as PhoneIcon} from '#/components/icons/Phone'
 import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/TextSize'
 import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
+import {IS_INTERNAL} from '#/env'
 import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
 export function AppearanceSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {fonts} = useAlf()
+  const gate = useGate()
 
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
@@ -74,12 +78,18 @@ export function AppearanceSettingsScreen({}: Props) {
     [fonts],
   )
 
-  const {currentAccount} = useSession()
-
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
       <Layout.Screen testID="preferencesThreadsScreen">
-        <Layout.Header title={_(msg`Appearance`)} />
+        <Layout.Header.Outer>
+          <Layout.Header.BackButton />
+          <Layout.Header.Content>
+            <Layout.Header.TitleText>
+              <Trans>Appearance</Trans>
+            </Layout.Header.TitleText>
+          </Layout.Header.Content>
+          <Layout.Header.Slot />
+        </Layout.Header.Outer>
         <Layout.Content>
           <SettingsList.Container>
             <AppearanceToggleButtonGroup
@@ -170,18 +180,10 @@ export function AppearanceSettingsScreen({}: Props) {
                 onChange={onChangeFontScale}
               />
 
-              {isNative && DISCOVER_DEBUG_DIDS[currentAccount?.did ?? ''] && (
+              {isNative && IS_INTERNAL && gate('debug_subscriptions') && (
                 <>
                   <SettingsList.Divider />
-
-                  <SettingsList.LinkItem
-                    to="/settings/app-icon"
-                    label={_(msg`App Icon`)}>
-                    <SettingsList.ItemIcon icon={Logo} />
-                    <SettingsList.ItemText>
-                      <Trans>App Icon</Trans>
-                    </SettingsList.ItemText>
-                  </SettingsList.LinkItem>
+                  <AppIconSettingsListItem />
                 </>
               )}
             </Animated.View>

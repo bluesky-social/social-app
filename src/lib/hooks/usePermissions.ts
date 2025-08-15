@@ -1,5 +1,5 @@
 import {Linking} from 'react-native'
-import {Camera} from 'expo-camera/legacy' // TODO: Migrate to the new one.
+import {useCameraPermissions as useExpoCameraPermissions} from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
 
 import {isWeb} from '#/platform/detection'
@@ -78,7 +78,7 @@ export function useVideoLibraryPermission() {
 }
 
 export function useCameraPermission() {
-  const [res, requestPermission] = Camera.useCameraPermissions()
+  const [res, requestPermission] = useExpoCameraPermissions()
 
   const requestCameraAccessIfNeeded = async () => {
     if (res?.granted) {

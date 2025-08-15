@@ -1,9 +1,6 @@
+import 'react-native-url-polyfill/auto'
 import 'fast-text-encoding'
-// @ts-ignore no decl -prf
-import findLast from 'array.prototype.findlast'
 export {}
-
-findLast.shim()
 
 /**
 https://github.com/MaxArt2501/base64-js
@@ -44,12 +41,12 @@ globalThis.atob = (str: string): string => {
       r1 === 64
         ? String.fromCharCode((bitmap >> 16) & 255)
         : r2 === 64
-        ? String.fromCharCode((bitmap >> 16) & 255, (bitmap >> 8) & 255)
-        : String.fromCharCode(
-            (bitmap >> 16) & 255,
-            (bitmap >> 8) & 255,
-            bitmap & 255,
-          )
+          ? String.fromCharCode((bitmap >> 16) & 255, (bitmap >> 8) & 255)
+          : String.fromCharCode(
+              (bitmap >> 16) & 255,
+              (bitmap >> 8) & 255,
+              bitmap & 255,
+            )
   }
   return result
 }

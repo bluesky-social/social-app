@@ -6,10 +6,11 @@ import {
   childHasEmoji,
   normalizeTextStyles,
   renderChildrenWithEmoji,
-  TextProps,
+  type TextProps,
 } from '#/alf/typography'
-import {IS_DEV} from '#/env'
+
 export type {TextProps}
+export {Text as Span} from 'react-native'
 
 /**
  * Our main text component. Use this most of the time.
@@ -31,7 +32,7 @@ export function Text({
     flags,
   })
 
-  if (IS_DEV) {
+  if (__DEV__) {
     if (!emoji && childHasEmoji(children)) {
       logger.warn(
         `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,

@@ -2,18 +2,18 @@ import {useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Admonition} from '#/components/Admonition'
+import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
@@ -23,7 +23,21 @@ import {useBackgroundNotificationPreferences} from '../../../modules/expo-backgr
 type AllowIncoming = 'all' | 'none' | 'following'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>
-export function MessagesSettingsScreen({}: Props) {
+
+export function MessagesSettingsScreen(props: Props) {
+  const {_} = useLingui()
+  const aaCopy = useAgeAssuranceCopy()
+
+  return (
+    <AgeRestrictedScreen
+      screenTitle={_(msg`Chat Settings`)}
+      infoText={aaCopy.chatsInfoText}>
+      <MessagesSettingsScreenInner {...props} />
+    </AgeRestrictedScreen>
+  )
+}
+
+export function MessagesSettingsScreenInner({}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({
@@ -57,8 +71,16 @@ export function MessagesSettingsScreen({}: Props) {
 
   return (
     <Layout.Screen testID="messagesSettingsScreen">
-      <ScrollView stickyHeaderIndices={[0]}>
-        <ViewHeader title={_(msg`Chat Settings`)} showOnDesktop showBorder />
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Chat Settings</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content>
         <View style={[a.p_lg, a.gap_md]}>
           <Text style={[a.text_lg, a.font_bold]}>
             <Trans>Allow new messages from</Trans>
@@ -142,7 +164,7 @@ export function MessagesSettingsScreen({}: Props) {
             </>
           )}
         </View>
-      </ScrollView>
+      </Layout.Content>
     </Layout.Screen>
   )
 }

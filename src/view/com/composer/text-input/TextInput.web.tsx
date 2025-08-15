@@ -12,14 +12,15 @@ import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {Fragment, Node, Slice} from '@tiptap/pm/model'
-import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
+import {EditorContent, type JSONContent, useEditor} from '@tiptap/react'
+import Graphemer from 'graphemer'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {blobToDataUri, isUriImage} from '#/lib/media/util'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {
-  LinkFacetMatch,
+  type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
 import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
@@ -28,7 +29,7 @@ import {normalizeTextStyles} from '#/alf/typography'
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
-import {Emoji} from './web/EmojiPicker.web'
+import {type Emoji} from './web/EmojiPicker'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
@@ -214,14 +215,34 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             }
           }
         },
-        handleKeyDown: (_, event) => {
+        handleKeyDown: (view, event) => {
           if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {
             textInputWebEmitter.emit('publish')
             return true
           }
+          if (event.code === 'Backspace') {
+            const isNotSelection = view.state.selection.empty
+            if (isNotSelection) {
+              const cursorPosition = view.state.selection.$anchor.pos
+              const textBefore = view.state.doc.textBetween(0, cursorPosition)
+              const graphemes = new Graphemer().splitGraphemes(textBefore)
+
+              if (graphemes.length > 0) {
+                const lastGrapheme = graphemes[graphemes.length - 1]
+                const deleteFrom = cursorPosition - lastGrapheme.length
+                editor?.commands.deleteRange({
+                  from: deleteFrom,
+                  to: cursorPosition,
+                })
+                return true
+              }
+            }
+          }
         },
       },
-      content: generateJSON(richtext.text.toString(), extensions),
+      content: generateJSON(richtext.text.toString(), extensions, {
+        preserveWhitespace: 'full',
+      }),
       autofocus: 'end',
       editable: true,
       injectCSS: true,

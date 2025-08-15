@@ -1,27 +1,28 @@
-import React from 'react'
+import {Fragment, useCallback} from 'react'
 import {Linking, View} from 'react-native'
-import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {LABELS} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
+import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
-import {ScrollView} from '#/view/com/util/Views'
-import {atoms as a, useBreakpoints, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
+import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
@@ -30,13 +31,16 @@ import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
+import {type Props as SVGIconProps} from '#/components/icons/common'
+import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import * as LabelingService from '#/components/LabelingServiceCard'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
+import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
@@ -75,35 +79,31 @@ function ErrorState({error}: {error: string}) {
 export function ModerationScreen(
   _props: NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>,
 ) {
-  const t = useTheme()
   const {_} = useLingui()
   const {
     isLoading: isPreferencesLoading,
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
-  const {gtMobile} = useBreakpoints()
-  const {height} = useSafeAreaFrame()
+  const {isReady: isAgeInfoReady} = useAgeAssurance()
 
-  const isLoading = isPreferencesLoading
+  const isLoading = isPreferencesLoading || !isAgeInfoReady
   const error = preferencesError
 
   return (
     <Layout.Screen testID="moderationScreen">
-      <CenteredView
-        testID="moderationScreen"
-        style={[
-          t.atoms.border_contrast_low,
-          t.atoms.bg,
-          {minHeight: height},
-          ...(gtMobile ? [a.border_l, a.border_r] : []),
-        ]}>
-        <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
-
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Moderation</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      <Layout.Content>
         {isLoading ? (
-          <View style={[a.w_full, a.align_center, a.pt_2xl]}>
-            <Loader size="xl" fill={t.atoms.text.color} />
-          </View>
+          <ListMaybePlaceholder isLoading={true} sideBorders={false} />
         ) : error || !preferences ? (
           <ErrorState
             error={
@@ -114,7 +114,7 @@ export function ModerationScreen(
         ) : (
           <ModerationScreenInner preferences={preferences} />
         )}
-      </CenteredView>
+      </Layout.Content>
     </Layout.Screen>
   )
 }
@@ -167,9 +167,10 @@ export function ModerationScreenInner({
     data: labelers,
     error: labelersError,
   } = useMyLabelersQuery()
+  const {declaredAge, isDeclaredUnderage, isAgeRestricted} = useAgeAssurance()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
@@ -180,10 +181,8 @@ export function ModerationScreenInner({
     (optimisticAdultContent && optimisticAdultContent.enabled) ||
     (!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled)
   )
-  const ageNotSet = !preferences.userAge
-  const isUnderage = (preferences.userAge || 0) < 18
 
-  const onToggleAdultContentEnabled = React.useCallback(
+  const onToggleAdultContentEnabled = useCallback(
     async (selected: boolean) => {
       try {
         await setAdultContentPref({
@@ -201,13 +200,7 @@ export function ModerationScreenInner({
   const disabledOnIOS = isIOS && !adultContentEnabled
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        a.border_0,
-        a.pt_2xl,
-        a.px_lg,
-        gtMobile && a.px_2xl,
-      ]}>
+    <View style={[a.pt_2xl, a.px_lg, gtMobile && a.px_2xl]}>
       <Text
         style={[a.text_md, a.font_bold, a.pb_md, t.atoms.text_contrast_high]}>
         <Trans>Moderation tools</Trans>
@@ -220,6 +213,21 @@ export function ModerationScreenInner({
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
         ]}>
+        <Link
+          label={_(msg`View your default post interaction settings`)}
+          testID="interactionSettingsBtn"
+          to="/moderation/interaction-settings">
+          {state => (
+            <SubItem
+              title={_(msg`Interaction settings`)}
+              icon={EditBig}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
+        <Divider />
         <Button
           testID="mutedWordsBtn"
           label={_(msg`Open muted words and tags settings`)}
@@ -279,119 +287,161 @@ export function ModerationScreenInner({
             />
           )}
         </Link>
+        <Divider />
+        <Link
+          label={_(msg`Manage verification settings`)}
+          testID="verificationSettingsBtn"
+          to="/moderation/verification-settings">
+          {state => (
+            <SubItem
+              title={_(msg`Verification settings`)}
+              icon={CircleCheck}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
       </View>
 
-      <Text
-        style={[
-          a.pt_2xl,
-          a.pb_md,
-          a.text_md,
-          a.font_bold,
-          t.atoms.text_contrast_high,
-        ]}>
-        <Trans>Content filters</Trans>
-      </Text>
+      {declaredAge === undefined && (
+        <>
+          <Text
+            style={[
+              a.pt_2xl,
+              a.pb_md,
+              a.text_md,
+              a.font_bold,
+              t.atoms.text_contrast_high,
+            ]}>
+            <Trans>Content filters</Trans>
+          </Text>
 
-      <View style={[a.gap_md]}>
-        {ageNotSet && (
-          <>
-            <Button
-              label={_(msg`Confirm your birthdate`)}
-              size="small"
-              variant="solid"
-              color="secondary"
-              onPress={() => {
-                birthdateDialogControl.open()
-              }}
-              style={[a.justify_between, a.rounded_md, a.px_lg, a.py_lg]}>
-              <ButtonText>
-                <Trans>Confirm your age:</Trans>
-              </ButtonText>
-              <ButtonText>
-                <Trans>Set birthdate</Trans>
-              </ButtonText>
-            </Button>
+          <Button
+            label={_(msg`Confirm your birthdate`)}
+            size="small"
+            variant="solid"
+            color="secondary"
+            onPress={() => {
+              birthdateDialogControl.open()
+            }}
+            style={[a.justify_between, a.rounded_md, a.px_lg, a.py_lg]}>
+            <ButtonText>
+              <Trans>Confirm your age:</Trans>
+            </ButtonText>
+            <ButtonText>
+              <Trans>Set birthdate</Trans>
+            </ButtonText>
+          </Button>
 
-            <BirthDateSettingsDialog control={birthdateDialogControl} />
-          </>
-        )}
-        <View
-          style={[
-            a.w_full,
-            a.rounded_md,
-            a.overflow_hidden,
-            t.atoms.bg_contrast_25,
-          ]}>
-          {!ageNotSet && !isUnderage && (
-            <>
-              <View
-                style={[
-                  a.py_lg,
-                  a.px_lg,
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_between,
-                  disabledOnIOS && {opacity: 0.5},
-                ]}>
-                <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
-                  <Trans>Enable adult content</Trans>
-                </Text>
-                <Toggle.Item
-                  label={_(msg`Toggle to enable or disable adult content`)}
-                  disabled={disabledOnIOS}
-                  name="adultContent"
-                  value={adultContentEnabled}
-                  onChange={onToggleAdultContentEnabled}>
-                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                    <Text style={[t.atoms.text_contrast_medium]}>
-                      {adultContentEnabled ? (
-                        <Trans>Enabled</Trans>
-                      ) : (
-                        <Trans>Disabled</Trans>
-                      )}
+          <BirthDateSettingsDialog control={birthdateDialogControl} />
+        </>
+      )}
+
+      {!isDeclaredUnderage && (
+        <>
+          <Text
+            style={[
+              a.pt_2xl,
+              a.pb_md,
+              a.text_md,
+              a.font_bold,
+              t.atoms.text_contrast_high,
+            ]}>
+            <Trans>Content filters</Trans>
+          </Text>
+
+          <AgeAssuranceAdmonition style={[a.pb_md]}>
+            <Trans>
+              You must complete age assurance in order to access the settings
+              below.
+            </Trans>
+          </AgeAssuranceAdmonition>
+
+          <View style={[a.gap_md]}>
+            <View
+              style={[
+                a.w_full,
+                a.rounded_md,
+                a.overflow_hidden,
+                t.atoms.bg_contrast_25,
+              ]}>
+              {!isDeclaredUnderage && (
+                <>
+                  <View
+                    style={[
+                      a.py_lg,
+                      a.px_lg,
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_between,
+                      disabledOnIOS && {opacity: 0.5},
+                    ]}>
+                    <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+                      <Trans>Enable adult content</Trans>
                     </Text>
-                    <Toggle.Switch />
+                    <Toggle.Item
+                      label={_(msg`Toggle to enable or disable adult content`)}
+                      disabled={disabledOnIOS || isAgeRestricted}
+                      name="adultContent"
+                      value={adultContentEnabled}
+                      onChange={onToggleAdultContentEnabled}>
+                      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                        <Text style={[t.atoms.text_contrast_medium]}>
+                          {adultContentEnabled ? (
+                            <Trans>Enabled</Trans>
+                          ) : (
+                            <Trans>Disabled</Trans>
+                          )}
+                        </Text>
+                        <Toggle.Switch />
+                      </View>
+                    </Toggle.Item>
                   </View>
-                </Toggle.Item>
-              </View>
-              {disabledOnIOS && (
-                <View style={[a.pb_lg, a.px_lg]}>
-                  <Text>
-                    <Trans>
-                      Adult content can only be enabled via the Web at{' '}
-                      <InlineLinkText
-                        label={_(msg`The Bluesky web application`)}
-                        to=""
-                        onPress={evt => {
-                          evt.preventDefault()
-                          Linking.openURL('https://bsky.app/')
-                          return false
-                        }}>
-                        bsky.app
-                      </InlineLinkText>
-                      .
-                    </Trans>
-                  </Text>
-                </View>
+                  {disabledOnIOS && (
+                    <View style={[a.pb_lg, a.px_lg]}>
+                      <Text>
+                        <Trans>
+                          Adult content can only be enabled via the Web at{' '}
+                          <InlineLinkText
+                            label={_(msg`The Bluesky web application`)}
+                            to=""
+                            onPress={evt => {
+                              evt.preventDefault()
+                              Linking.openURL('https://bsky.app/')
+                              return false
+                            }}>
+                            bsky.app
+                          </InlineLinkText>
+                          .
+                        </Trans>
+                      </Text>
+                    </View>
+                  )}
+
+                  {adultContentEnabled && (
+                    <>
+                      <Divider />
+                      <GlobalLabelPreference labelDefinition={LABELS.porn} />
+                      <Divider />
+                      <GlobalLabelPreference labelDefinition={LABELS.sexual} />
+                      <Divider />
+                      <GlobalLabelPreference
+                        labelDefinition={LABELS['graphic-media']}
+                      />
+                      <Divider />
+                      <GlobalLabelPreference
+                        disabled={isDeclaredUnderage || isAgeRestricted}
+                        labelDefinition={LABELS.nudity}
+                      />
+                    </>
+                  )}
+                </>
               )}
-              <Divider />
-            </>
-          )}
-          {!isUnderage && adultContentEnabled && (
-            <>
-              <GlobalLabelPreference labelDefinition={LABELS.porn} />
-              <Divider />
-              <GlobalLabelPreference labelDefinition={LABELS.sexual} />
-              <Divider />
-              <GlobalLabelPreference
-                labelDefinition={LABELS['graphic-media']}
-              />
-              <Divider />
-            </>
-          )}
-          <GlobalLabelPreference labelDefinition={LABELS.nudity} />
-        </View>
-      </View>
+            </View>
+          </View>
+        </>
+      )}
 
       <Text
         style={[
@@ -420,7 +470,7 @@ export function ModerationScreenInner({
         <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
           {labelers.map((labeler, i) => {
             return (
-              <React.Fragment key={labeler.creator.did}>
+              <Fragment key={labeler.creator.did}>
                 {i !== 0 && <Divider />}
                 <LabelingService.Link labeler={labeler}>
                   {state => (
@@ -457,12 +507,12 @@ export function ModerationScreenInner({
                     </LabelingService.Outer>
                   )}
                 </LabelingService.Link>
-              </React.Fragment>
+              </Fragment>
             )
           })}
         </View>
       )}
-      <View style={{height: 200}} />
-    </ScrollView>
+      <View style={{height: 150}} />
+    </View>
   )
 }

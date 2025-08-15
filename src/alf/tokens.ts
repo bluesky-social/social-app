@@ -44,6 +44,7 @@ export const borderRadius = {
   xs: 4,
   sm: 8,
   md: 12,
+  lg: 16,
   full: 999,
 } as const
 
@@ -52,6 +53,7 @@ export const borderRadius = {
  */
 export const fontWeight = {
   normal: '400',
+  medium: '500',
   bold: '600',
   heavy: '800',
 } as const

@@ -1,27 +1,40 @@
 import React, {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
+  $Typed,
+  AppBskyActorDefs,
   ChatBskyConvoDefs,
   ComAtprotoModerationCreateReport,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {StackActions, useNavigation} from '@react-navigation/native'
 import {useMutation} from '@tanstack/react-query'
 
 import {ReportOption} from '#/lib/moderation/useReportOptions'
+import {NavigationProp} from '#/lib/routes/types'
+import {isNative} from '#/platform/detection'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
+import {
+  useProfileBlockMutationQueue,
+  useProfileQuery,
+} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Button, ButtonIcon, ButtonText} from '../Button'
-import {Divider} from '../Divider'
-import {ChevronLeft_Stroke2_Corner0_Rounded as Chevron} from '../icons/Chevron'
-import {Loader} from '../Loader'
-import {SelectReportOptionView} from '../ReportDialog/SelectReportOptionView'
-import {RichText} from '../RichText'
-import {Text} from '../Typography'
+import {Divider} from '#/components/Divider'
+import * as Toggle from '#/components/forms/Toggle'
+import {ChevronLeft_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
+import {PaperPlane_Stroke2_Corner0_Rounded as SendIcon} from '#/components/icons/PaperPlane'
+import {Loader} from '#/components/Loader'
+import {SelectReportOptionView} from '#/components/ReportDialog/SelectReportOptionView'
+import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
 import {MessageItemMetadata} from './MessageItem'
 
 type ReportDialogParams = {
@@ -33,16 +46,18 @@ type ReportDialogParams = {
 let ReportDialog = ({
   control,
   params,
+  currentScreen,
 }: {
   control: Dialog.DialogControlProps
   params: ReportDialogParams
+  currentScreen: 'list' | 'conversation'
 }): React.ReactNode => {
   const {_} = useLingui()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Report this message`)}>
-        <DialogInner params={params} />
+        <DialogInner params={params} currentScreen={currentScreen} />
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
@@ -51,14 +66,44 @@ let ReportDialog = ({
 ReportDialog = memo(ReportDialog)
 export {ReportDialog}
 
-function DialogInner({params}: {params: ReportDialogParams}) {
+function DialogInner({
+  params,
+  currentScreen,
+}: {
+  params: ReportDialogParams
+  currentScreen: 'list' | 'conversation'
+}) {
+  const {data: profile, isError} = useProfileQuery({
+    did: params.message.sender.did,
+  })
   const [reportOption, setReportOption] = useState<ReportOption | null>(null)
+  const [done, setDone] = useState(false)
+  const control = Dialog.useDialogContext()
 
-  return reportOption ? (
+  return done ? (
+    profile ? (
+      <DoneStep
+        convoId={params.convoId}
+        currentScreen={currentScreen}
+        profile={profile}
+      />
+    ) : (
+      <View style={[a.w_full, a.py_5xl, a.align_center]}>
+        <Loader />
+      </View>
+    )
+  ) : reportOption ? (
     <SubmitStep
       params={params}
       reportOption={reportOption}
       goBack={() => setReportOption(null)}
+      onComplete={() => {
+        if (isError) {
+          control.close()
+        } else {
+          setDone(true)
+        }
+      }}
     />
   ) : (
     <ReasonStep params={params} setReportOption={setReportOption} />
@@ -89,16 +134,17 @@ function SubmitStep({
   params,
   reportOption,
   goBack,
+  onComplete,
 }: {
   params: ReportDialogParams
   reportOption: ReportOption
   goBack: () => void
+  onComplete: () => void
 }) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const [details, setDetails] = useState('')
-  const control = Dialog.useDialogContext()
   const agent = useAgent()
 
   const {
@@ -109,26 +155,23 @@ function SubmitStep({
     mutationFn: async () => {
       if (params.type === 'convoMessage') {
         const {convoId, message} = params
+        const subject: $Typed<ChatBskyConvoDefs.MessageRef> = {
+          $type: 'chat.bsky.convo.defs#messageRef',
+          messageId: message.id,
+          convoId,
+          did: message.sender.did,
+        }
 
         const report = {
           reasonType: reportOption.reason,
-          subject: {
-            $type: 'chat.bsky.convo.defs#messageRef',
-            messageId: message.id,
-            convoId,
-            did: message.sender.did,
-          } satisfies ChatBskyConvoDefs.MessageRef,
+          subject,
           reason: details,
         } satisfies ComAtprotoModerationCreateReport.InputSchema
 
         await agent.createModerationReport(report)
       }
     },
-    onSuccess: () => {
-      control.close(() => {
-        Toast.show(_(msg`Thank you. Your report has been sent.`))
-      })
-    },
+    onSuccess: onComplete,
   })
 
   const copy = useMemo(() => {
@@ -181,13 +224,12 @@ function SubmitStep({
         <View style={[a.relative, a.w_full]}>
           <Dialog.Input
             multiline
-            value={details}
+            defaultValue={details}
             onChangeText={setDetails}
-            label="Text field"
+            label={_(msg`Text field`)}
             style={{paddingRight: 60}}
-            numberOfLines={6}
+            numberOfLines={5}
           />
-
           <View
             style={[
               a.absolute,
@@ -231,7 +273,122 @@ function SubmitStep({
           <ButtonText>
             <Trans>Send report</Trans>
           </ButtonText>
-          {submitting && <ButtonIcon icon={Loader} />}
+          <ButtonIcon icon={submitting ? Loader : SendIcon} />
+        </Button>
+      </View>
+    </View>
+  )
+}
+
+function DoneStep({
+  convoId,
+  currentScreen,
+  profile,
+}: {
+  convoId: string
+  currentScreen: 'list' | 'conversation'
+  profile: AppBskyActorDefs.ProfileViewDetailed
+}) {
+  const {_} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
+  const control = Dialog.useDialogContext()
+  const {gtMobile} = useBreakpoints()
+  const t = useTheme()
+  const [actions, setActions] = useState<string[]>(['block', 'leave'])
+  const shadow = useProfileShadow(profile)
+  const [queueBlock] = useProfileBlockMutationQueue(shadow)
+
+  const {mutate: leaveConvo} = useLeaveConvo(convoId, {
+    onMutate: () => {
+      if (currentScreen === 'conversation') {
+        navigation.dispatch(
+          StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
+        )
+      }
+    },
+    onError: () => {
+      Toast.show(_(msg`Could not leave chat`), 'xmark')
+    },
+  })
+
+  let btnText = _(msg`Done`)
+  let toastMsg: string | undefined
+  if (actions.includes('leave') && actions.includes('block')) {
+    btnText = _(msg`Block and Delete`)
+    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
+  } else if (actions.includes('leave')) {
+    btnText = _(msg`Delete Conversation`)
+    toastMsg = _(msg({message: 'Conversation deleted', context: 'toast'}))
+  } else if (actions.includes('block')) {
+    btnText = _(msg`Block User`)
+    toastMsg = _(msg({message: 'User blocked', context: 'toast'}))
+  }
+
+  const onPressPrimaryAction = () => {
+    control.close(() => {
+      if (actions.includes('block')) {
+        queueBlock()
+      }
+      if (actions.includes('leave')) {
+        leaveConvo()
+      }
+      if (toastMsg) {
+        Toast.show(toastMsg, 'check')
+      }
+    })
+  }
+
+  return (
+    <View style={a.gap_2xl}>
+      <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
+        <Text style={[a.text_2xl, a.font_bold]}>
+          <Trans>Report submitted</Trans>
+        </Text>
+        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+          <Trans>Our moderation team has received your report.</Trans>
+        </Text>
+      </View>
+      <Toggle.Group
+        label={_(msg`Block and/or delete this conversation`)}
+        values={actions}
+        onChange={setActions}>
+        <View style={[a.gap_md]}>
+          <Toggle.Item name="block" label={_(msg`Block user`)}>
+            <Toggle.Checkbox />
+            <Toggle.LabelText style={[a.text_md]}>
+              <Trans>Block user</Trans>
+            </Toggle.LabelText>
+          </Toggle.Item>
+          <Toggle.Item name="leave" label={_(msg`Delete conversation`)}>
+            <Toggle.Checkbox />
+            <Toggle.LabelText style={[a.text_md]}>
+              <Trans>Delete conversation</Trans>
+            </Toggle.LabelText>
+          </Toggle.Item>
+        </View>
+      </Toggle.Group>
+
+      <View style={[a.gap_md, web([a.flex_row_reverse])]}>
+        <Button
+          label={btnText}
+          onPress={onPressPrimaryAction}
+          size="large"
+          variant="solid"
+          color={actions.length > 0 ? 'negative' : 'primary'}>
+          <ButtonText>{btnText}</ButtonText>
+        </Button>
+        <Button
+          label={_(msg`Close`)}
+          onPress={() => control.close()}
+          size={platform({native: 'small', web: 'large'})}
+          variant={platform({
+            native: 'ghost',
+            web: 'solid',
+          })}
+          color="secondary">
+          <ButtonText>
+            <Trans>Close</Trans>
+          </ButtonText>
         </Button>
       </View>
     </View>

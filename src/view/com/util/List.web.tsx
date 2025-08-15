@@ -1,13 +1,17 @@
 import React, {isValidElement, memo, startTransition, useRef} from 'react'
-import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
-import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import {
+  type FlatListProps,
+  StyleSheet,
+  View,
+  type ViewProps,
+} from 'react-native'
+import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
+import * as Layout from '#/components/Layout'
 
 export type ListMethods = any // TODO: Better types.
 export type ListProps<ItemT> = Omit<
@@ -24,6 +28,9 @@ export type ListProps<ItemT> = Omit<
   desktopFixedHeight?: number | boolean
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
+  /**
+   * @deprecated Should be using Layout components
+   */
   sideBorders?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
@@ -56,20 +63,11 @@ function ListImpl<ItemT>(
     renderItem,
     extraData,
     style,
-    sideBorders = true,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
 ) {
   const contextScrollHandlers = useScrollHandlers()
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
-  if (!isMobile) {
-    contentContainerStyle = addStyle(
-      contentContainerStyle,
-      styles.containerScroll,
-    )
-  }
 
   const isEmpty = !data || data.length === 0
 
@@ -212,7 +210,7 @@ function ListImpl<ItemT>(
             behavior: animated ? 'smooth' : 'instant',
           })
         },
-      } as any), // TODO: Better types.
+      }) as any, // TODO: Better types.
     [getScrollableNode],
   )
 
@@ -326,53 +324,53 @@ function ListImpl<ItemT>(
           styles.parentTreeVisibilityDetector
         }
       />
-      <View
-        ref={containerRef}
-        style={[
-          !isMobile && sideBorders && styles.sideBorders,
-          contentContainerStyle,
-          desktopFixedHeight ? styles.minHeightViewport : null,
-          pal.border,
-        ]}>
-        <Visibility
-          root={disableFullWindowScroll ? nativeRef : null}
-          onVisibleChange={handleAboveTheFoldVisibleChange}
-          style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
-        />
-        {onStartReached && !isEmpty && (
-          <EdgeVisibility
+      <Layout.Center>
+        <View
+          ref={containerRef}
+          style={[
+            contentContainerStyle,
+            desktopFixedHeight ? styles.minHeightViewport : null,
+          ]}>
+          <Visibility
             root={disableFullWindowScroll ? nativeRef : null}
-            onVisibleChange={onHeadVisibilityChange}
-            topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
-            containerRef={containerRef}
+            onVisibleChange={handleAboveTheFoldVisibleChange}
+            style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
           />
-        )}
-        {headerComponent}
-        {isEmpty
-          ? emptyComponent
-          : (data as Array<ItemT>)?.map((item, index) => {
-              const key = keyExtractor!(item, index)
-              return (
-                <Row<ItemT>
-                  key={key}
-                  item={item}
-                  index={index}
-                  renderItem={renderItem}
-                  extraData={extraData}
-                  onItemSeen={onItemSeen}
-                />
-              )
-            })}
-        {onEndReached && !isEmpty && (
-          <EdgeVisibility
-            root={disableFullWindowScroll ? nativeRef : null}
-            onVisibleChange={onTailVisibilityChange}
-            bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
-            containerRef={containerRef}
-          />
-        )}
-        {footerComponent}
-      </View>
+          {onStartReached && !isEmpty && (
+            <EdgeVisibility
+              root={disableFullWindowScroll ? nativeRef : null}
+              onVisibleChange={onHeadVisibilityChange}
+              topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
+              containerRef={containerRef}
+            />
+          )}
+          {headerComponent}
+          {isEmpty
+            ? emptyComponent
+            : (data as Array<ItemT>)?.map((item, index) => {
+                const key = keyExtractor!(item, index)
+                return (
+                  <Row<ItemT>
+                    key={key}
+                    item={item}
+                    index={index}
+                    renderItem={renderItem}
+                    extraData={extraData}
+                    onItemSeen={onItemSeen}
+                  />
+                )
+              })}
+          {onEndReached && !isEmpty && (
+            <EdgeVisibility
+              root={disableFullWindowScroll ? nativeRef : null}
+              onVisibleChange={onTailVisibilityChange}
+              bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
+              containerRef={containerRef}
+            />
+          )}
+          {footerComponent}
+        </View>
+      </Layout.Center>
     </View>
   )
 }
@@ -558,16 +556,6 @@ export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
 // https://stackoverflow.com/questions/7944460/detect-safari-browser
 
 const styles = StyleSheet.create({
-  sideBorders: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-  },
-  containerScroll: {
-    width: '100%',
-    maxWidth: 600,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-  },
   minHeightViewport: {
     // @ts-ignore web only
     minHeight: '100vh',
