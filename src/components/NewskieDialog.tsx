@@ -37,17 +37,13 @@ export function NewskieDialog({
   const createdAt = profile.createdAt as string | undefined
 
   const profileName = React.useMemo(() => {
-    const name = profile.displayName || profile.handle
-
-    if (isMe) {
-      return _(msg`You`)
-    }
-
-    if (!moderationOpts) return name
+    if (!moderationOpts) return profile.displayName || profile.handle
     const moderation = moderateProfile(profile, moderationOpts)
-
-    return sanitizeDisplayName(name, moderation.ui('displayName'))
-  }, [_, isMe, moderationOpts, profile])
+    return sanitizeDisplayName(
+      profile.displayName || profile.handle,
+      moderation.ui('displayName'),
+    )
+  }, [moderationOpts, profile])
 
   const [now] = React.useState(() => Date.now())
   const daysOld = React.useMemo(() => {
@@ -56,6 +52,28 @@ export function NewskieDialog({
   }, [createdAt, now])
 
   if (!createdAt || daysOld > 7) return null
+
+  const getJoinMessage = () => {
+    const timeAgoString = timeAgo(createdAt, now, {format: 'long'})
+
+    if (isMe) {
+      if (profile.joinedViaStarterPack) {
+        return _(
+          msg`You joined Bluesky using a starter pack ${timeAgoString} ago`,
+        )
+      } else {
+        return _(msg`You joined Bluesky ${timeAgoString} ago`)
+      }
+    } else {
+      if (profile.joinedViaStarterPack) {
+        return _(
+          msg`${profileName} joined Bluesky using a starter pack ${timeAgoString} ago`,
+        )
+      } else {
+        return _(msg`${profileName} joined Bluesky ${timeAgoString} ago`)
+      }
+    }
+  }
 
   return (
     <View style={[a.pr_2xs]}>
@@ -107,17 +125,7 @@ export function NewskieDialog({
               </Text>
             </View>
             <Text style={[a.text_md, a.text_center, a.leading_snug]}>
-              {profile.joinedViaStarterPack ? (
-                <Trans>
-                  {profileName} joined Bluesky using a starter pack{' '}
-                  {timeAgo(createdAt, now, {format: 'long'})} ago
-                </Trans>
-              ) : (
-                <Trans>
-                  {profileName} joined Bluesky{' '}
-                  {timeAgo(createdAt, now, {format: 'long'})} ago
-                </Trans>
-              )}
+              {getJoinMessage()}
             </Text>
             {profile.joinedViaStarterPack ? (
               <StarterPackCard.Link
