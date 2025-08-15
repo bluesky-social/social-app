@@ -1,9 +1,9 @@
 import {useCallback, useState} from 'react'
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
   moderatePost,
-  ModerationDecision,
+  type ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -128,8 +128,7 @@ export function PostQuotes({uri}: {uri: string}) {
           isFetchingNextPage={isFetchingNextPage}
           error={cleanError(error)}
           onRetry={fetchNextPage}
-          showEndMessage
-          endMessageText={_(msg`That's all, folks!`)}
+          hasNextPage={hasNextPage}
         />
       }
       // @ts-ignore our .web version only -prf
