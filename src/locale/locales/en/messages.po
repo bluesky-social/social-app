@@ -2685,11 +2685,6 @@ msgstr ""
 msgid "Dismiss interests"
 msgstr ""
 
-#. Accessibility label for dismissing a toast notification
-#: src/components/Toast/index.web.tsx:82
-msgid "Dismiss message"
-msgstr ""
-
 #: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
 msgstr ""
@@ -3810,7 +3805,7 @@ msgstr ""
 msgid "From @{sanitizedAuthor}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:330
+#: src/view/com/posts/PostFeedItem.tsx:326
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
@@ -6111,7 +6106,7 @@ msgstr ""
 msgid "Pin to your profile"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:411
+#: src/view/com/posts/PostFeedItem.tsx:407
 msgid "Pinned"
 msgstr ""
 
@@ -6878,6 +6873,26 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr ""
 
+#: src/components/Post/PostRepliedTo.tsx:39
+msgctxt "description"
+msgid "Replied to <0><1/></0>"
+msgstr ""
+
+#: src/components/Post/PostRepliedTo.tsx:28
+msgctxt "description"
+msgid "Replied to a blocked post"
+msgstr ""
+
+#: src/components/Post/PostRepliedTo.tsx:30
+msgctxt "description"
+msgid "Replied to a post"
+msgstr ""
+
+#: src/components/Post/PostRepliedTo.tsx:36
+msgctxt "description"
+msgid "Replied to you"
+msgstr ""
+
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:267
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:279
 #: src/lib/hooks/useNotificationHandler.ts:140
@@ -6931,28 +6946,6 @@ msgstr ""
 #: src/screens/PostThread/components/HeaderDropdown.tsx:69
 #: src/view/com/post-thread/PostThread.tsx:675
 msgid "Reply sorting"
-msgstr ""
-
-#: src/view/com/post/Post.tsx:204
-#: src/view/com/posts/PostFeedItem.tsx:602
-msgctxt "description"
-msgid "Reply to <0><1/></0>"
-msgstr ""
-
-#: src/view/com/posts/PostFeedItem.tsx:593
-msgctxt "description"
-msgid "Reply to a blocked post"
-msgstr ""
-
-#: src/view/com/posts/PostFeedItem.tsx:595
-msgctxt "description"
-msgid "Reply to a post"
-msgstr ""
-
-#: src/view/com/post/Post.tsx:202
-#: src/view/com/posts/PostFeedItem.tsx:599
-msgctxt "description"
-msgid "Reply to you"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:335
@@ -7080,16 +7073,16 @@ msgstr ""
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:351
+#: src/view/com/posts/PostFeedItem.tsx:347
 msgid "Reposted by {0}"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:370
+#: src/view/com/posts/PostFeedItem.tsx:366
 msgid "Reposted by <0><1/></0>"
 msgstr ""
 
-#: src/view/com/posts/PostFeedItem.tsx:349
-#: src/view/com/posts/PostFeedItem.tsx:368
+#: src/view/com/posts/PostFeedItem.tsx:345
+#: src/view/com/posts/PostFeedItem.tsx:364
 msgid "Reposted by you"
 msgstr ""
 
@@ -8105,7 +8098,7 @@ msgstr ""
 msgid "Something wrong? Let us know."
 msgstr ""
 
-#: src/App.native.tsx:125
+#: src/App.native.tsx:126
 #: src/App.web.tsx:102
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
@@ -9632,7 +9625,7 @@ msgstr ""
 msgid "Videos must be less than 3 minutes long"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:211
+#: src/screens/Profile/Header/Shell.tsx:229
 msgid "View {0}'s avatar"
 msgstr ""
 
