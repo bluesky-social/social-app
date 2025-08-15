@@ -227,10 +227,6 @@ export async function resolveServiceURL(
   agent: BskyAgent,
   handle: string,
 ): Promise<string> {
-  // There's three possibilities here:
-  // 1. The service URL is in the handle - e.g. *.example.com wildcard in DNS
-  // 2. The DID can be fetched from DNS and then looked up on plc directory (did:plc)
-  // 3. The service URL can be fetched from the .well-known file at the handle's URL (did:web)
   console.log('here')
   const {data} = await agent.resolveHandle({handle: handle})
   const did = data.did
