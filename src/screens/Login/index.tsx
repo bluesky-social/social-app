@@ -130,11 +130,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           setError={setError}
           onAttemptFailed={onAttemptFailed}
           onAttemptSuccess={onAttemptSuccess}
-<<<<<<< HEAD
           // setServiceUrl={setServiceUrl}
-=======
-          setServiceUrl={setServiceUrl}
->>>>>>> main
           onPressBack={() =>
             accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
           }
