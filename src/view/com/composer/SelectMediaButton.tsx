@@ -8,7 +8,7 @@ import {
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {VIDEO_MAX_DURATION_MS} from '#/lib/constants'
+import {VIDEO_MAX_DURATION_MS, VIDEO_MAX_SIZE} from '#/lib/constants'
 import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
@@ -60,6 +60,7 @@ enum SelectedAssetError {
   MaxImages = 'MaxImages',
   MaxVideos = 'MaxVideos',
   VideoTooLong = 'VideoTooLong',
+  FileTooBig = 'FileTooBig',
   MaxGIFs = 'MaxGIFs',
 }
 
@@ -185,12 +186,6 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
     type = 'image'
   }
 
-  console.log({
-    asset,
-    type,
-    mimeType,
-  })
-
   /*
    * If we weren't able to find a valid type, we don't support this asset.
    */
@@ -209,22 +204,82 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
   }
 }
 
-/*
- * WEB ONLY. On web, certain file formats (like `.mov`) don't give us a
- * duration or dimensions, so we need to load the file manually to extract
- * this.
- */
-async function getAdditionalVideoMetadata(asset: ValidatedImagePickerAsset) {
-  if (isNative) return asset
-  const file = await fetch(asset.uri)
-    .then(res => res.blob())
-    .then(
-      blob =>
-        new File([blob], `tmp.${mimeToExt(asset.mimeType)}`, {
-          type: asset.mimeType,
-        }),
-    )
-  return await getVideoMetadata(file)
+function dataURItoBlob(uri: string, mimeType: string) {
+  const [, data] = uri.split(',')
+  const binary = atob(data)
+  // Convert to array of bytes
+  const array = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) {
+    array[i] = binary.charCodeAt(i)
+  }
+  // Create and return the Blob
+  return new Blob([array], {type: mimeType})
+}
+
+export enum GetMetadataError {
+  FileTooLarge = 'FileTooLarge',
+  UnknownExtension = 'UnknownExtension',
+  FileCreationFailure = 'FileCreationFailure',
+  MetadataExtractionFailure = 'MetadataExtractionFailure',
+}
+
+async function getMetadata(
+  uri: string,
+  mimeType?: string,
+): Promise<
+  | {
+      error: GetMetadataError
+      asset: undefined
+    }
+  | {
+      error: undefined
+      asset: ImagePickerAsset
+    }
+> {
+  const mime = mimeType || extractDataUriMime(uri)
+  const blob = dataURItoBlob(uri, mime)
+
+  if (blob.size > VIDEO_MAX_SIZE) {
+    return {
+      error: GetMetadataError.FileTooLarge,
+      asset: undefined,
+    }
+  }
+
+  const ext = mimeToExt(mime)
+
+  if (!ext) {
+    return {
+      error: GetMetadataError.UnknownExtension,
+      asset: undefined,
+    }
+  }
+
+  const file = new File([blob], `tmp.${ext}`, {
+    type: mime,
+  })
+
+  if (!file)
+    return {
+      error: GetMetadataError.FileCreationFailure,
+      asset: undefined,
+    }
+
+  try {
+    const asset = await getVideoMetadata(file)
+    return {
+      error: undefined,
+      asset,
+    }
+  } catch (e) {
+    logger.error(`getMetadata: failed to get file metadata`, {
+      safeMessage: e instanceof Error ? e.message : String(e),
+    })
+    return {
+      error: GetMetadataError.MetadataExtractionFailure,
+      asset: undefined,
+    }
+  }
 }
 
 /**
@@ -322,17 +377,30 @@ async function processImagePickerAssets(
       const selectedVideo = supportedAssets[0]
 
       if (typeof selectedVideo.duration !== 'number') {
-        try {
-          const metadata = await getAdditionalVideoMetadata(selectedVideo)
-          selectedVideo.duration = metadata.duration
-          selectedVideo.width = metadata.width
-          selectedVideo.height = metadata.height
-        } catch (e: any) {
-          logger.error(`processSelectedAssets: failed to get video metadata`, {
-            safeMessage: e.message,
-          })
-          errors.add(SelectedAssetError.Unsupported)
-          supportedAssets = []
+        /*
+         * We can only do this on web
+         */
+        if (isWeb) {
+          const {error, asset} = await getMetadata(
+            selectedVideo.uri,
+            selectedVideo.mimeType,
+          )
+          if (error) {
+            switch (error) {
+              case GetMetadataError.FileTooLarge:
+                errors.add(SelectedAssetError.FileTooBig)
+                supportedAssets = []
+                break
+              default:
+                errors.add(SelectedAssetError.Unsupported)
+                supportedAssets = []
+                break
+            }
+          } else {
+            selectedVideo.duration = asset.duration
+            selectedVideo.width = asset.width
+            selectedVideo.height = asset.height
+          }
         }
       } else {
         /*
@@ -382,6 +450,12 @@ export function SelectMediaButton({
 
   const processSelectedAssets = useCallback(
     async (rawAssets: ImagePickerAsset[]) => {
+      // const {uri, ...rest} = rawAssets[0] || {}
+      // alert(JSON.stringify({
+      //   uri: uri.slice(0, 40),
+      //   ...rest
+      // }, null, 2))
+      // return
       const {
         type,
         assets,
@@ -418,6 +492,9 @@ export function SelectMediaButton({
           ),
           [SelectedAssetError.MaxGIFs]: _(
             msg`You can only select one GIF at a time.`,
+          ),
+          [SelectedAssetError.FileTooBig]: _(
+            msg`This file is too large. Maximum size is 100mb.`,
           ),
         }[error]
       })
@@ -470,6 +547,12 @@ export function SelectMediaButton({
     if (canceled) return
 
     await processSelectedAssets(assets)
+    // if (isNative) {
+    // } else if (isWeb) {
+    //   const {assets, canceled} = await pickVideo()
+
+    //   await processSelectedAssets(assets)
+    // }
   }, [
     _,
     requestPhotoAccessIfNeeded,
