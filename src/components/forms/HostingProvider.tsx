@@ -1,9 +1,8 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {ActivityIndicator, Keyboard, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {DEFAULT_SERVICE} from '#/lib/constants'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {ServerInputDialog} from '#/view/com/auth/server-input'
 import {atoms as a, tokens, useTheme} from '#/alf'
@@ -18,11 +17,13 @@ export function HostingProvider({
   onSelectServiceUrl,
   onOpenDialog,
   minimal,
+  isDetectingProvider,
 }: {
   serviceUrl: string
   onSelectServiceUrl: (provider: string) => void
   onOpenDialog?: () => void
   minimal?: boolean
+  isDetectingProvider?: boolean
 }) {
   const serverInputControl = useDialogControl()
   const t = useTheme()
@@ -33,11 +34,6 @@ export function HostingProvider({
     serverInputControl.open()
     onOpenDialog?.()
   }, [onOpenDialog, serverInputControl])
-
-  const niceService =
-    serviceUrl === DEFAULT_SERVICE
-      ? toNiceDomain(DEFAULT_SERVICE) + ' (Automatic)'
-      : toNiceDomain(serviceUrl)
 
   return (
     <>
@@ -51,7 +47,7 @@ export function HostingProvider({
             <Trans>You are creating an account on</Trans>
           </Text>
           <Button
-            label={niceService}
+            label={toNiceDomain(serviceUrl)}
             accessibilityHint={_(msg`Changes hosting provider`)}
             onPress={onPressSelectService}
             variant="ghost"
@@ -62,14 +58,20 @@ export function HostingProvider({
               {marginHorizontal: tokens.space.xs * -1},
               {paddingVertical: 0},
             ]}>
-            <ButtonText style={[a.text_sm]}>{niceService}</ButtonText>
-            <ButtonIcon icon={PencilIcon} />
+            <ButtonText style={[a.text_sm]}>
+              {toNiceDomain(serviceUrl)}
+            </ButtonText>
+            {isDetectingProvider ? (
+              <ActivityIndicator size={16} />
+            ) : (
+              <ButtonIcon icon={PencilIcon} />
+            )}
           </Button>
         </View>
       ) : (
         <Button
           testID="selectServiceButton"
-          label={niceService}
+          label={toNiceDomain(serviceUrl)}
           accessibilityHint={_(msg`Changes hosting provider`)}
           variant="solid"
           color="secondary"
@@ -98,7 +100,7 @@ export function HostingProvider({
                     }
                   />
                 </View>
-                <Text style={[a.text_md]}>{niceService}</Text>
+                <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
                 <View
                   style={[
                     a.rounded_sm,
@@ -107,14 +109,25 @@ export function HostingProvider({
                       : t.atoms.bg_contrast_100,
                     {marginLeft: 'auto', padding: 6},
                   ]}>
-                  <PencilIcon
-                    size="sm"
-                    style={{
-                      color: interacted
-                        ? t.palette.contrast_800
-                        : t.palette.contrast_500,
-                    }}
-                  />
+                  {isDetectingProvider ? (
+                    <ActivityIndicator
+                      size={16}
+                      color={
+                        interacted
+                          ? t.palette.contrast_800
+                          : t.palette.contrast_500
+                      }
+                    />
+                  ) : (
+                    <PencilIcon
+                      size="sm"
+                      style={{
+                        color: interacted
+                          ? t.palette.contrast_800
+                          : t.palette.contrast_500,
+                      }}
+                    />
+                  )}
                 </View>
               </>
             )

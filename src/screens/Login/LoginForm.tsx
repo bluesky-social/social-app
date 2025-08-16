@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -68,10 +68,12 @@ export const LoginForm = ({
     useState<boolean>(false)
   const [isAuthFactorTokenValueEmpty, setIsAuthFactorTokenValueEmpty] =
     useState<boolean>(true)
+  const [isDetectingProvider, setIsDetectingProvider] = useState<boolean>(false)
   const identifierValueRef = useRef<string>(initialHandle || '')
   const passwordValueRef = useRef<string>('')
   const authFactorTokenValueRef = useRef<string>('')
   const passwordRef = useRef<TextInput>(null)
+  const providerDetectionTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const {_} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -80,6 +82,64 @@ export const LoginForm = ({
 
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
+  }, [])
+
+  const detectProviderFromHandle = useCallback(
+    async (handle: string) => {
+      if (!handle || handle.length < 3) return
+
+      // Check if it's an email address (contains @ - emails should not trigger provider detection)
+      const isEmail = handle.includes('@')
+      if (isEmail) return // Don't detect provider for email addresses
+
+      // Check if it looks like a valid handle (domain format with .)
+      const isValidHandle = handle.includes('.') && handle.length > 5
+      if (!isValidHandle) return
+
+      // Check that the domain isn't a bluesky domain.
+      const isBlueskyDomain = handle.endsWith('bsky.social')
+      if (isBlueskyDomain) return
+
+      setIsDetectingProvider(true)
+
+      try {
+        const agent = new BskyAgent({service: 'https://bsky.social'})
+        const detectedServiceUrl = await resolveServiceURL(agent, handle)
+        setServiceUrl(detectedServiceUrl)
+      } catch (e) {
+        // If provider cannot be identified, revert to DEFAULT_SERVICE
+        setServiceUrl(DEFAULT_SERVICE)
+      } finally {
+        setIsDetectingProvider(false)
+      }
+    },
+    [setServiceUrl],
+  )
+
+  const onHandleChange = useCallback(
+    (value: string) => {
+      identifierValueRef.current = value
+
+      // Clear previous timeout
+      if (providerDetectionTimeoutRef.current) {
+        clearTimeout(providerDetectionTimeoutRef.current)
+      }
+
+      // Set up debounced provider detection
+      providerDetectionTimeoutRef.current = setTimeout(() => {
+        detectProviderFromHandle(value.toLowerCase().trim())
+      }, 1000) // 1 second delay
+    },
+    [detectProviderFromHandle],
+  )
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (providerDetectionTimeoutRef.current) {
+        clearTimeout(providerDetectionTimeoutRef.current)
+      }
+    }
   }, [])
 
   const onPressNext = async () => {
@@ -125,13 +185,6 @@ export const LoginForm = ({
             serviceDescription.availableUserDomains[0],
           )
         }
-      }
-
-      if (serviceUrl === DEFAULT_SERVICE) {
-        const agent = new BskyAgent({service: 'https://bsky.social'})
-        serviceUrl = await resolveServiceURL(agent, fullIdent)
-        console.log('Service URL:', serviceUrl)
-        setServiceUrl(serviceUrl)
       }
 
       // TODO remove double login
@@ -196,6 +249,7 @@ export const LoginForm = ({
           serviceUrl={serviceUrl}
           onSelectServiceUrl={setServiceUrl}
           onOpenDialog={onPressSelectService}
+          isDetectingProvider={isDetectingProvider}
         />
       </View>
       <View>
@@ -215,9 +269,7 @@ export const LoginForm = ({
               returnKeyType="next"
               textContentType="username"
               defaultValue={initialHandle || ''}
-              onChangeText={v => {
-                identifierValueRef.current = v
-              }}
+              onChangeText={onHandleChange}
               onSubmitEditing={() => {
                 passwordRef.current?.focus()
               }}
@@ -354,7 +406,8 @@ export const LoginForm = ({
             variant="solid"
             color="primary"
             size="large"
-            onPress={onPressNext}>
+            onPress={onPressNext}
+            disabled={isDetectingProvider}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
