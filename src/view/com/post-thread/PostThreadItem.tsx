@@ -299,6 +299,7 @@ let PostThreadItemLoaded = ({
         author: post.author,
         embed: post.embed,
         moderation,
+        langs: record.langs,
       },
       onPost: onPostReply,
       onPostSuccess: onPostSuccess,

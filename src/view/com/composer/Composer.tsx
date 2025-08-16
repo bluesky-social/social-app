@@ -621,7 +621,11 @@ export const ComposePost = ({
 
   const footer = (
     <>
-      <SuggestedLanguage text={activePost.richtext.text} />
+      <SuggestedLanguage
+        text={activePost.richtext.text}
+        // NOTE(@elijaharita): currently just choosing the first language if any exists
+        replyToLanguage={replyTo?.langs?.[0]}
+      />
       <ComposerPills
         isReply={!!replyTo}
         post={activePost}

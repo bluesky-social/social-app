@@ -131,6 +131,7 @@ function PostInner({
         author: post.author,
         embed: post.embed,
         moderation,
+        langs: record.langs,
       },
     })
   }, [openComposer, post, record, moderation])

@@ -220,7 +220,11 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             textInputWebEmitter.emit('publish')
             return true
           }
-          if (event.code === 'Backspace') {
+
+          if (
+            event.code === 'Backspace' &&
+            !(event.metaKey || event.altKey || event.ctrlKey)
+          ) {
             const isNotSelection = view.state.selection.empty
             if (isNotSelection) {
               const cursorPosition = view.state.selection.$anchor.pos
