@@ -431,7 +431,7 @@ export function Explore({
     i.push({
       type: 'header',
       key: 'suggested-feeds-header',
-      title: _(msg`Discover Feeds`),
+      title: _(msg`Discover New Feeds`),
       icon: ListSparkle,
       searchButton: {
         label: _(msg`Search for more feeds`),
