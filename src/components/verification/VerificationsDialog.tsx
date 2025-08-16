@@ -147,7 +147,12 @@ function Inner({
         <Link
           overridePresentation
           to={urls.website.blog.initialVerificationAnnouncement}
-          label={_(msg`Learn more about verification on Bluesky`)}
+          label={_(
+            msg({
+              message: `Learn more about verification on Bluesky`,
+              context: `english-only-resource`,
+            }),
+          )}
           size="small"
           variant="solid"
           color="secondary"
@@ -162,7 +167,7 @@ function Inner({
             )
           }}>
           <ButtonText>
-            <Trans>Learn more</Trans>
+            <Trans context="english-only-resource">Learn more</Trans>
           </ButtonText>
         </Link>
       </View>
