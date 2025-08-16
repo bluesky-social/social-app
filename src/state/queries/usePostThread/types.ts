@@ -151,8 +151,8 @@ export type TraversalMetadata = {
    */
   isLastChild: boolean
   /**
-   * Indicates if the post is the left/lower-most branch of the reply tree.
-   * Value corresponds to the depth at which this branch started.
+   * Indicates if the post is the left-most AND lower-most branch of the reply
+   * tree. Value corresponds to the depth at which this branch started.
    */
   isPartOfLastBranchFromDepth?: number
   /**

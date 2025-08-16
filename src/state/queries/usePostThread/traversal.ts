@@ -307,9 +307,16 @@ export function sortAndAnnotateThreadItems(
               metadata.isPartOfLastBranchFromDepth = metadata.depth
 
               /**
-               * If the parent is part of the last branch of the sub-tree, so is the child.
+               * If the parent is part of the last branch of the sub-tree, so
+               * is the child. However, if the child is also a last sibling,
+               * then we need to start tracking `isPartOfLastBranchFromDepth`
+               * from this point onwards, always updating it to the depth of
+               * the last sibling as we go down.
                */
-              if (metadata.parentMetadata.isPartOfLastBranchFromDepth) {
+              if (
+                !metadata.isLastSibling &&
+                metadata.parentMetadata.isPartOfLastBranchFromDepth
+              ) {
                 metadata.isPartOfLastBranchFromDepth =
                   metadata.parentMetadata.isPartOfLastBranchFromDepth
               }
