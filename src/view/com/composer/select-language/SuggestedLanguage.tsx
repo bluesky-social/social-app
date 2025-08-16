@@ -19,16 +19,29 @@ import {Text} from '#/components/Typography'
 const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
 const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
-export function SuggestedLanguage({text}: {text: string}) {
+export function SuggestedLanguage({
+  text,
+  replyToLanguage,
+}: {
+  text: string
+  replyToLanguage?: string
+}) {
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
-  >()
+  >(text.length === 0 ? replyToLanguage : undefined)
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const t = useTheme()
   const {_} = useLingui()
 
   useEffect(() => {
+    // For replies, suggest the language of the post being replied to if no text
+    // has been typed yet
+    if (replyToLanguage && text.length === 0) {
+      setSuggestedLanguage(replyToLanguage)
+      return
+    }
+
     const textTrimmed = text.trim()
 
     // Don't run the language model on small posts, the results are likely
@@ -43,7 +56,7 @@ export function SuggestedLanguage({text}: {text: string}) {
     })
 
     return () => cancelIdle(idle)
-  }, [text])
+  }, [text, replyToLanguage])
 
   if (
     suggestedLanguage &&
