@@ -69,6 +69,8 @@ export const LoginForm = ({
   const [isAuthFactorTokenValueEmpty, setIsAuthFactorTokenValueEmpty] =
     useState<boolean>(true)
   const [isDetectingProvider, setIsDetectingProvider] = useState<boolean>(false)
+  const [hasManuallySelectedProvider, setHasManuallySelectedProvider] =
+    useState<boolean>(false)
   const identifierValueRef = useRef<string>(initialHandle || '')
   const passwordValueRef = useRef<string>('')
   const authFactorTokenValueRef = useRef<string>('')
@@ -83,6 +85,14 @@ export const LoginForm = ({
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
   }, [])
+
+  const onManuallySelectServiceUrl = useCallback(
+    (url: string) => {
+      setServiceUrl(url)
+      setHasManuallySelectedProvider(true)
+    },
+    [setServiceUrl],
+  )
 
   const detectProviderFromHandle = useCallback(
     async (handle: string) => {
@@ -100,6 +110,9 @@ export const LoginForm = ({
       const isBlueskyDomain = handle.endsWith('bsky.social')
       if (isBlueskyDomain) return
 
+      // Ignore if the user has manually selected a custom host in this session to prevent unexpected behavior.
+      if (hasManuallySelectedProvider) return
+
       setIsDetectingProvider(true)
 
       try {
@@ -113,7 +126,7 @@ export const LoginForm = ({
         setIsDetectingProvider(false)
       }
     },
-    [setServiceUrl],
+    [hasManuallySelectedProvider, setServiceUrl],
   )
 
   const onHandleChange = useCallback(
@@ -247,7 +260,7 @@ export const LoginForm = ({
         </TextField.LabelText>
         <HostingProvider
           serviceUrl={serviceUrl}
-          onSelectServiceUrl={setServiceUrl}
+          onSelectServiceUrl={onManuallySelectServiceUrl}
           onOpenDialog={onPressSelectService}
           isDetectingProvider={isDetectingProvider}
         />
