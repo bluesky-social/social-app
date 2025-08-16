@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react'
+import React, {useRef, useState} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -25,7 +25,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
-// import {HostingProvider} from '#/components/forms/HostingProvider'
+import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
@@ -42,7 +42,7 @@ export const LoginForm = ({
   serviceDescription,
   initialHandle,
   setError,
-  // setServiceUrl,
+  setServiceUrl,
   onPressRetryConnect,
   onPressBack,
   onPressForgotPassword,
@@ -54,7 +54,7 @@ export const LoginForm = ({
   serviceDescription: ServiceDescription | undefined
   initialHandle: string
   setError: (v: string) => void
-  // setServiceUrl: (v: string) => void
+  setServiceUrl: (v: string) => void
   onPressRetryConnect: () => void
   onPressBack: () => void
   onPressForgotPassword: () => void
@@ -77,9 +77,9 @@ export const LoginForm = ({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
-  // const onPressSelectService = React.useCallback(() => {
-  //   Keyboard.dismiss()
-  // }, [])
+  const onPressSelectService = React.useCallback(() => {
+    Keyboard.dismiss()
+  }, [])
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -128,6 +128,7 @@ export const LoginForm = ({
 
       const agent = new BskyAgent({service: 'https://bsky.social'})
       serviceUrl = await resolveServiceURL(agent, fullIdent)
+      setServiceUrl(serviceUrl)
 
       // TODO remove double login
       await login(
@@ -183,8 +184,7 @@ export const LoginForm = ({
 
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
-      {/* Removed hosting provider view w/automatic handle resolution for 3rd party PDSes. */}
-      {/*<View>
+      <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>
         </TextField.LabelText>
@@ -193,7 +193,7 @@ export const LoginForm = ({
           onSelectServiceUrl={setServiceUrl}
           onOpenDialog={onPressSelectService}
         />
-      </View>*/}
+      </View>
       <View>
         <TextField.LabelText>
           <Trans>Account</Trans>
