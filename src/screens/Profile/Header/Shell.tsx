@@ -211,7 +211,7 @@ let ProfileHeaderShell = ({
 
       {!isPlaceholderProfile && (
         <View
-          style={[a.px_lg, a.py_xs]}
+          style={[a.px_lg, a.pt_xs, a.pb_sm]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <LabelsOnMe type="account" labels={profile.labels} />
