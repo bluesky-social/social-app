@@ -13,7 +13,7 @@ import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
-import {extractDataUriMime} from '#/lib/media/util'
+import {extractDataUriMime, getDataUriSize} from '#/lib/media/util'
 import {mimeToExt} from '#/lib/media/video/util'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -141,7 +141,7 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
       mimeType: undefined
     } {
   /*
-   * Try to use the `mimeType` reported by Expo's library first.
+   * Try to use the `mimeType` reported by `expo-image-picker` first.
    */
   let mimeType = asset.mimeType
 
@@ -204,16 +204,6 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
   }
 }
 
-function dataURItoBlob(uri: string, mimeType: string) {
-  const [, data] = uri.split(',')
-  const binary = atob(data)
-  const array = new Uint8Array(binary.length)
-  for (let i = 0; i < binary.length; i++) {
-    array[i] = binary.charCodeAt(i)
-  }
-  return new Blob([array], {type: mimeType})
-}
-
 export enum GetMetadataError {
   FileTooLarge = 'FileTooLarge',
   UnknownExtension = 'UnknownExtension',
@@ -244,17 +234,31 @@ async function getMetadata(
     }
   }
 
-  const blob = dataURItoBlob(uri, mime)
-  if (blob.size > VIDEO_MAX_SIZE) {
+  const [, data] = uri.split(',')
+  const size = (data.length * 3) / 4
+  if (size > VIDEO_MAX_SIZE) {
     return {
       error: GetMetadataError.FileTooLarge,
       asset: undefined,
     }
   }
 
-  const file = new File([blob], `tmp.${ext}`, {
+  const binary = atob(data)
+  if (binary.length > VIDEO_MAX_SIZE) {
+    return {
+      error: GetMetadataError.FileTooLarge,
+      asset: undefined,
+    }
+  }
+
+  const array = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) {
+    array[i] = binary.charCodeAt(i)
+  }
+  const file = new File([array], `tmp.${ext}`, {
     type: mime,
   })
+
   if (!file) {
     return {
       error: GetMetadataError.FileCreationFailure,
@@ -312,6 +316,31 @@ async function processImagePickerAssets(
   let supportedAssets: ValidatedImagePickerAsset[] = []
 
   for (const asset of assets) {
+    /*
+     * Some browsers won't even load massive files e.g. Arc
+     */
+    if (!asset.uri) {
+      errors.add(SelectedAssetError.FileTooBig)
+      continue
+    }
+
+    /*
+     * If the file _did_ load, great, we can just check the size here.
+     */
+    if (asset.file && asset.file.size > VIDEO_MAX_SIZE) {
+      errors.add(SelectedAssetError.FileTooBig)
+      continue
+    }
+
+    /*
+     * In other cases e.g. Safari, we don't even get a `file`, so we want to
+     * approximate the size and fail early if we can.
+     */
+    if (getDataUriSize(asset.uri) > VIDEO_MAX_SIZE) {
+      errors.add(SelectedAssetError.FileTooBig)
+      continue
+    }
+
     const {success, type, mimeType} = classifyImagePickerAsset(asset)
 
     if (!success) {
@@ -447,12 +476,6 @@ export function SelectMediaButton({
 
   const processSelectedAssets = useCallback(
     async (rawAssets: ImagePickerAsset[]) => {
-      // const {uri, ...rest} = rawAssets[0] || {}
-      // alert(JSON.stringify({
-      //   uri: uri.slice(0, 40),
-      //   ...rest
-      // }, null, 2))
-      // return
       const {
         type,
         assets,
@@ -538,18 +561,13 @@ export function SelectMediaButton({
         selectionLimit: isIOS ? selectionCountRemaining : undefined,
         preferredAssetRepresentationMode:
           UIImagePickerPreferredAssetRepresentationMode.Current,
+        videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
       }),
     )
 
     if (canceled) return
 
     await processSelectedAssets(assets)
-    // if (isNative) {
-    // } else if (isWeb) {
-    //   const {assets, canceled} = await pickVideo()
-
-    //   await processSelectedAssets(assets)
-    // }
   }, [
     _,
     requestPhotoAccessIfNeeded,
