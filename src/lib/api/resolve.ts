@@ -246,7 +246,6 @@ export async function resolveServiceURL(
   const pdsService = didDoc.service?.find(
     s => s.id === '#atproto_pds' || s.type === 'AtprotoPersonalDataServer',
   )
-  console.log(pdsService)
 
   return pdsService?.serviceEndpoint || DEFAULT_SERVICE
 }

@@ -3,6 +3,7 @@ import {Keyboard, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {ServerInputDialog} from '#/view/com/auth/server-input'
 import {atoms as a, tokens, useTheme} from '#/alf'
@@ -33,6 +34,11 @@ export function HostingProvider({
     onOpenDialog?.()
   }, [onOpenDialog, serverInputControl])
 
+  const niceService =
+    serviceUrl === DEFAULT_SERVICE
+      ? toNiceDomain(DEFAULT_SERVICE) + ' (Automatic)'
+      : toNiceDomain(serviceUrl)
+
   return (
     <>
       <ServerInputDialog
@@ -45,7 +51,7 @@ export function HostingProvider({
             <Trans>You are creating an account on</Trans>
           </Text>
           <Button
-            label={toNiceDomain(serviceUrl)}
+            label={niceService}
             accessibilityHint={_(msg`Changes hosting provider`)}
             onPress={onPressSelectService}
             variant="ghost"
@@ -56,16 +62,14 @@ export function HostingProvider({
               {marginHorizontal: tokens.space.xs * -1},
               {paddingVertical: 0},
             ]}>
-            <ButtonText style={[a.text_sm]}>
-              {toNiceDomain(serviceUrl)}
-            </ButtonText>
+            <ButtonText style={[a.text_sm]}>{niceService}</ButtonText>
             <ButtonIcon icon={PencilIcon} />
           </Button>
         </View>
       ) : (
         <Button
           testID="selectServiceButton"
-          label={toNiceDomain(serviceUrl)}
+          label={niceService}
           accessibilityHint={_(msg`Changes hosting provider`)}
           variant="solid"
           color="secondary"
@@ -94,7 +98,7 @@ export function HostingProvider({
                     }
                   />
                 </View>
-                <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
+                <Text style={[a.text_md]}>{niceService}</Text>
                 <View
                   style={[
                     a.rounded_sm,

@@ -15,6 +15,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {resolveServiceURL} from '#/lib/api/resolve'
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
@@ -126,9 +127,12 @@ export const LoginForm = ({
         }
       }
 
-      const agent = new BskyAgent({service: 'https://bsky.social'})
-      serviceUrl = await resolveServiceURL(agent, fullIdent)
-      setServiceUrl(serviceUrl)
+      if (serviceUrl === DEFAULT_SERVICE) {
+        const agent = new BskyAgent({service: 'https://bsky.social'})
+        serviceUrl = await resolveServiceURL(agent, fullIdent)
+        console.log('Service URL:', serviceUrl)
+        setServiceUrl(serviceUrl)
+      }
 
       // TODO remove double login
       await login(
