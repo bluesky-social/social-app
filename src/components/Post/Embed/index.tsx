@@ -87,14 +87,18 @@ function MediaEmbed({
   switch (embed.type) {
     case 'images': {
       return (
-        <ContentHider modui={rest.moderation?.ui('contentMedia')}>
+        <ContentHider
+          modui={rest.moderation?.ui('contentMedia')}
+          activeStyle={[a.mt_sm]}>
           <ImageEmbed embed={embed} {...rest} />
         </ContentHider>
       )
     }
     case 'link': {
       return (
-        <ContentHider modui={rest.moderation?.ui('contentMedia')}>
+        <ContentHider
+          modui={rest.moderation?.ui('contentMedia')}
+          activeStyle={[a.mt_sm]}>
           <ExternalEmbed
             link={embed.view.external}
             onOpen={rest.onOpen}
@@ -105,7 +109,9 @@ function MediaEmbed({
     }
     case 'video': {
       return (
-        <ContentHider modui={rest.moderation?.ui('contentMedia')}>
+        <ContentHider
+          modui={rest.moderation?.ui('contentMedia')}
+          activeStyle={[a.mt_sm]}>
           <VideoEmbed embed={embed.view} />
         </ContentHider>
       )
