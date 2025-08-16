@@ -50,6 +50,7 @@ module.exports = function (_config) {
           usesNonExemptEncryption: false,
         },
         infoPlist: {
+          CADisableMinimumFrameDurationOnPhone: true,
           UIBackgroundModes: ['remote-notification'],
           NSCameraUsageDescription:
             'Used for profile pictures, posts, and other kinds of content.',
