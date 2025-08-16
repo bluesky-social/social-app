@@ -36,7 +36,8 @@ import {
   type Params,
   parseSearchQuery,
 } from '#/screens/Search/utils'
-import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, native, tokens, useBreakpoints, useTheme, web} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonText} from '#/components/Button'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
@@ -289,7 +290,19 @@ export function SearchScreenShell({
             top: 0,
           }),
         ]}>
-        <Layout.Center style={t.atoms.bg}>
+        <Layout.Center
+          style={[
+            a.border_b,
+            t.atoms.border_contrast_low,
+            native(t.atoms.bg),
+            web({
+              backgroundColor: transparentifyColor(
+                t.atoms.bg.backgroundColor,
+                0.8,
+              ),
+              backdropFilter: 'blur(12px)',
+            }),
+          ]}>
           {showHeader && (
             <View
               // HACK: shift up search input. we can't remove the top padding

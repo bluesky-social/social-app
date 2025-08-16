@@ -18,6 +18,7 @@ import {
   useTheme,
   web,
 } from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
@@ -56,7 +57,19 @@ export function Outer({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        sticky && web([a.sticky, {top: 0}, a.z_10, t.atoms.bg]),
+        sticky &&
+          web([
+            a.sticky,
+            a.z_10,
+            {
+              top: 0,
+              backgroundColor: transparentifyColor(
+                t.atoms.bg.backgroundColor,
+                0.8,
+              ),
+              backdropFilter: 'blur(12px)',
+            },
+          ]),
         gutters,
         platform({
           native: [a.pb_xs, {minHeight: 48}],
