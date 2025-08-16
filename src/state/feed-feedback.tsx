@@ -10,9 +10,20 @@ import {AppState, type AppStateStatus} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
-import {FEEDBACK_FEEDS, STAGING_FEEDS} from '#/lib/constants'
+import {
+  ALL_FEEDBACK_INTERACTIONS,
+  DIRECT_FEEDBACK_INTERACTIONS,
+  FEEDBACK_FEEDS,
+  type FeedbackInteraction,
+  isFeedbackInteraction,
+} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {Logger} from '#/logger'
+import {
+  type FeedSourceFeedInfo,
+  type FeedSourceInfo,
+  isFeedSourceFeedInfo,
+} from '#/state/queries/feed'
 import {
   type FeedDescriptor,
   type FeedPostSliceItem,
@@ -27,6 +38,7 @@ export type StateContext = {
   onItemSeen: (item: any) => void
   sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
   feedDescriptor: FeedDescriptor | undefined
+  feedSourceInfo: FeedSourceInfo | undefined
 }
 
 const stateContext = createContext<StateContext>({
@@ -34,15 +46,25 @@ const stateContext = createContext<StateContext>({
   onItemSeen: (_item: any) => {},
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
   feedDescriptor: undefined,
+  feedSourceInfo: undefined,
 })
 stateContext.displayName = 'FeedFeedbackContext'
 
 export function useFeedFeedback(
-  feed: FeedDescriptor | undefined,
+  feedSourceInfo: FeedSourceInfo | undefined,
   hasSession: boolean,
 ) {
   const agent = useAgent()
-  const enabled = isDiscoverFeed(feed) && hasSession
+
+  const feed =
+    !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo)
+      ? feedSourceInfo
+      : undefined
+
+  const isDiscover = isDiscoverFeed(feed?.feedDescriptor)
+  const acceptsInteractions = isDiscover || (feed?.acceptsInteractions ?? false)
+  const enabled = !!feed && acceptsInteractions && hasSession
+  const enabledInteractions = getEnabledInteractions(enabled, feed, isDiscover)
 
   const queue = useRef<Set<string>>(new Set())
   const history = useRef<
@@ -65,19 +87,26 @@ export function useFeedFeedback(
     const interactions = Array.from(queue.current).map(toInteraction)
     queue.current.clear()
 
-    let proxyDid = 'did:web:discover.bsky.app'
-    if (STAGING_FEEDS.includes(feed ?? '')) {
-      proxyDid = 'did:web:algo.pop2.bsky.app'
+    const interactionsToSend = interactions.filter(
+      interaction =>
+        interaction.event &&
+        isFeedbackInteraction(interaction.event) &&
+        enabledInteractions.includes(interaction.event),
+    )
+
+    if (interactionsToSend.length === 0) {
+      return
     }
+
+    const proxyDid = feed?.view?.did
 
     // Send to the feed
     agent.app.bsky.feed
       .sendInteractions(
-        {interactions},
+        {interactions: interactionsToSend},
         {
           encoding: 'application/json',
           headers: {
-            // TODO when we start sending to other feeds, we need to grab their DID -prf
             'atproto-proxy': `${proxyDid}#bsky_fg`,
           },
         },
@@ -90,10 +119,13 @@ export function useFeedFeedback(
     if (aggregatedStats.current === null) {
       aggregatedStats.current = createAggregatedStats()
     }
-    sendOrAggregateInteractionsForStats(aggregatedStats.current, interactions)
+    sendOrAggregateInteractionsForStats(
+      aggregatedStats.current,
+      interactionsToSend,
+    )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, feed])
+  }, [agent, throttledFlushAggregatedStats, feed, enabledInteractions])
 
   const sendToFeed = useMemo(
     () =>
@@ -165,7 +197,8 @@ export function useFeedFeedback(
       // call on various events
       // queues the event to be sent with the throttled sendToFeed call
       sendInteraction,
-      feedDescriptor: feed,
+      feedDescriptor: feed?.feedDescriptor,
+      feedSourceInfo: typeof feed === 'object' ? feed : undefined,
     }
   }, [enabled, onItemSeen, sendInteraction, feed])
 }
@@ -183,6 +216,17 @@ export function useFeedFeedbackContext() {
 // -prf
 function isDiscoverFeed(feed?: FeedDescriptor) {
   return !!feed && FEEDBACK_FEEDS.includes(feed)
+}
+
+function getEnabledInteractions(
+  enabled: boolean,
+  feed: FeedSourceFeedInfo | undefined,
+  isDiscover: boolean,
+): readonly FeedbackInteraction[] {
+  if (!enabled || !feed) {
+    return []
+  }
+  return isDiscover ? ALL_FEEDBACK_INTERACTIONS : DIRECT_FEEDBACK_INTERACTIONS
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
