@@ -1,14 +1,16 @@
-import React, {useRef} from 'react'
+import React, {useCallback, useMemo, useRef} from 'react'
 import {KeyboardAvoidingView} from 'react-native'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import debounce from 'lodash.debounce'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {resolvePdsServiceUrl} from '#/state/queries/resolve-identity'
 import {useServiceQuery} from '#/state/queries/service'
-import {type SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import {useLoggedOutView} from '#/state/shell/logged-out'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {ForgotPasswordForm} from '#/screens/Login/ForgotPasswordForm'
@@ -32,12 +34,14 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   const failedAttemptCountRef = useRef(0)
   const startTimeRef = useRef(Date.now())
 
+  const agent = useAgent()
   const {accounts} = useSession()
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const requestedAccount = accounts.find(
     acc => acc.did === requestedAccountSwitchTo,
   )
 
+  const [isResolvingService, setIsResolvingService] = React.useState(false)
   const [error, setError] = React.useState<string>('')
   const [serviceUrl, setServiceUrl] = React.useState<string>(
     requestedAccount?.service || DEFAULT_SERVICE,
@@ -88,6 +92,39 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     }
   }, [serviceError, serviceUrl, _])
 
+  const resolveIdentity = useCallback(
+    async (identifier: string) => {
+      setIsResolvingService(true)
+
+      try {
+        const getDid = async () => {
+          if (identifier.startsWith('did')) return identifier
+          else
+            return (
+              await agent.resolveHandle({
+                handle: identifier,
+              })
+            ).data.did
+        }
+
+        const did = (await getDid()) as `did:${string}`
+        const pdsUrl = await resolvePdsServiceUrl(did)
+
+        setServiceUrl(pdsUrl)
+      } catch (err) {
+        logger.error(`Service auto-resolution failed: ${err}`)
+      } finally {
+        setIsResolvingService(false)
+      }
+    },
+    [agent],
+  )
+
+  const debouncedResolveService = useMemo(
+    () => debounce(resolveIdentity, 800),
+    [resolveIdentity],
+  )
+
   const onPressForgotPassword = () => {
     setCurrentForm(Forms.ForgotPassword)
     logEvent('signin:forgotPasswordPressed', {})
@@ -122,21 +159,23 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
       title = _(msg`Sign in`)
       description = _(msg`Enter your username and password`)
       content = (
-        <LoginForm
-          error={error}
-          serviceUrl={serviceUrl}
-          serviceDescription={serviceDescription}
-          initialHandle={initialHandle}
-          setError={setError}
-          onAttemptFailed={onAttemptFailed}
-          onAttemptSuccess={onAttemptSuccess}
-          setServiceUrl={setServiceUrl}
-          onPressBack={() =>
-            accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
-          }
-          onPressForgotPassword={onPressForgotPassword}
-          onPressRetryConnect={refetchService}
-        />
+          <LoginForm
+            error={error}
+            serviceUrl={serviceUrl}
+            serviceDescription={serviceDescription}
+            initialHandle={initialHandle}
+            setError={setError}
+            onAttemptFailed={onAttemptFailed}
+            onAttemptSuccess={onAttemptSuccess}
+            setServiceUrl={setServiceUrl}
+            onPressBack={() =>
+              accounts.length ? gotoForm(Forms.ChooseAccount) : handlePressBack()
+            }
+            onPressForgotPassword={onPressForgotPassword}
+            onPressRetryConnect={refetchService}
+            debouncedResolveService={debouncedResolveService}
+            isResolvingService={isResolvingService}
+          />
       )
       break
     case Forms.ChooseAccount:
