@@ -1,11 +1,11 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
+import {StyleSheet, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {colors, gradients, s} from '#/lib/styles'
+import {atoms as a, tokens} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 
 export const ConfirmLanguagesButton = ({
   onPress,
@@ -27,38 +27,25 @@ export const ConfirmLanguagesButton = ({
           borderTopWidth: 1,
         },
       ]}>
-      <Pressable
+      <Button
         testID="confirmContentLanguagesBtn"
         onPress={onPress}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Confirm content language settings`)}
-        accessibilityHint="">
-        <LinearGradient
-          colors={[gradients.blueLight.start, gradients.blueLight.end]}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[styles.btn]}>
-          <Text style={[s.white, s.bold, s.f18]}>
-            <Trans>Done{extraText}</Trans>
-          </Text>
-        </LinearGradient>
-      </Pressable>
+        color="primary"
+        size="large"
+        variant="solid"
+        label={_(msg`Confirm content language settings`)}
+        style={[a.w_full]}>
+        <ButtonText>
+          <Trans>Done{extraText}</Trans>
+        </ButtonText>
+      </Button>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   btnContainer: {
-    paddingTop: 10,
-    paddingHorizontal: 10,
-  },
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    borderRadius: 32,
-    padding: 14,
-    backgroundColor: colors.gray1,
+    paddingTop: tokens.space.lg,
+    paddingHorizontal: tokens.space.lg,
   },
 })
