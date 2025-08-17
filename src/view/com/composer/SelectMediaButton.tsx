@@ -14,11 +14,8 @@ import {
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import {extractDataUriMime} from '#/lib/media/util'
-import {mimeToExt} from '#/lib/media/video/util'
-import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
-import {getVideoMetadata} from '#/view/com/composer/videos/pickVideo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
@@ -204,85 +201,6 @@ function classifyImagePickerAsset(asset: ImagePickerAsset):
   }
 }
 
-export enum GetMetadataError {
-  FileTooLarge = 'FileTooLarge',
-  UnknownExtension = 'UnknownExtension',
-  FileCreationFailure = 'FileCreationFailure',
-  MetadataExtractionFailure = 'MetadataExtractionFailure',
-}
-
-async function getMetadata(
-  uri: string,
-  mimeType?: string,
-): Promise<
-  | {
-      error: GetMetadataError
-      asset: undefined
-    }
-  | {
-      error: undefined
-      asset: ImagePickerAsset
-    }
-> {
-  const mime = mimeType || extractDataUriMime(uri)
-  const ext = mimeToExt(mime)
-
-  if (!ext) {
-    return {
-      error: GetMetadataError.UnknownExtension,
-      asset: undefined,
-    }
-  }
-
-  const [, data] = uri.split(',')
-  const size = (data.length * 3) / 4
-  if (size > VIDEO_MAX_SIZE) {
-    return {
-      error: GetMetadataError.FileTooLarge,
-      asset: undefined,
-    }
-  }
-
-  const binary = atob(data)
-  if (binary.length > VIDEO_MAX_SIZE) {
-    return {
-      error: GetMetadataError.FileTooLarge,
-      asset: undefined,
-    }
-  }
-
-  const array = new Uint8Array(binary.length)
-  for (let i = 0; i < binary.length; i++) {
-    array[i] = binary.charCodeAt(i)
-  }
-  const file = new File([array], `tmp.${ext}`, {
-    type: mime,
-  })
-
-  if (!file) {
-    return {
-      error: GetMetadataError.FileCreationFailure,
-      asset: undefined,
-    }
-  }
-
-  try {
-    const asset = await getVideoMetadata(file)
-    return {
-      error: undefined,
-      asset,
-    }
-  } catch (e) {
-    logger.error(`getMetadata: failed to get file metadata`, {
-      safeMessage: e instanceof Error ? e.message : String(e),
-    })
-    return {
-      error: GetMetadataError.MetadataExtractionFailure,
-      asset: undefined,
-    }
-  }
-}
-
 /**
  * Takes in raw assets from `expo-image-picker` and applies validation. Returns
  * the dominant `AssetType`, any valid assets, and any errors encountered along
@@ -406,47 +324,9 @@ async function processImagePickerAssets(
         supportedAssets = supportedAssets.slice(0, 1)
       }
 
-      const selectedVideo = supportedAssets[0]
-
-      if (typeof selectedVideo.duration !== 'number') {
-        /*
-         * We can only do this on web
-         */
-        if (isWeb) {
-          const {error, asset} = await getMetadata(
-            selectedVideo.uri,
-            selectedVideo.mimeType,
-          )
-          if (error) {
-            switch (error) {
-              case GetMetadataError.FileTooLarge:
-                errors.add(SelectedAssetError.FileTooBig)
-                supportedAssets = []
-                break
-              default:
-                errors.add(SelectedAssetError.Unsupported)
-                supportedAssets = []
-                break
-            }
-          } else {
-            selectedVideo.duration = asset.duration
-            selectedVideo.width = asset.width
-            selectedVideo.height = asset.height
-          }
-        }
-      } else {
-        /*
-         * The `duration` is in seconds on web, but in milliseconds on
-         * native. We normalize to milliseconds.
-         */
-        if (isWeb) {
-          selectedVideo.duration = selectedVideo.duration * 1000
-        }
-      }
-
       if (
-        selectedVideo.duration &&
-        selectedVideo.duration > VIDEO_MAX_DURATION_MS
+        supportedAssets[0].duration &&
+        supportedAssets[0].duration > VIDEO_MAX_DURATION_MS
       ) {
         errors.add(SelectedAssetError.VideoTooLong)
         supportedAssets = []
