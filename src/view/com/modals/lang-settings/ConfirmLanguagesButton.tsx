@@ -1,10 +1,9 @@
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 
 export const ConfirmLanguagesButton = ({
@@ -14,25 +13,23 @@ export const ConfirmLanguagesButton = ({
   onPress: () => void
   extraText?: string
 }) => {
-  const pal = usePalette('default')
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
+  const t = useTheme()
+
   return (
     <View
       style={[
-        styles.btnContainer,
-        pal.borderDark,
-        isMobile && {
-          paddingBottom: 40,
-          borderTopWidth: 1,
-        },
+        a.pt_lg,
+        a.px_lg,
+        t.atoms.border_contrast_low,
+        isMobile && [a.pb_2xl, a.border_t],
       ]}>
       <Button
         testID="confirmContentLanguagesBtn"
         onPress={onPress}
         color="primary"
         size="large"
-        variant="solid"
         label={_(msg`Confirm content language settings`)}
         style={[a.w_full]}>
         <ButtonText>
@@ -42,10 +39,3 @@ export const ConfirmLanguagesButton = ({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  btnContainer: {
-    paddingTop: tokens.space.lg,
-    paddingHorizontal: tokens.space.lg,
-  },
-})
