@@ -92,7 +92,7 @@ const SUPPORTED_IMAGE_MIME_TYPES = (
     'image/png',
     'image/svg+xml',
     'image/webp',
-    isIOS && 'image/heic',
+    isNative && 'image/heic',
   ] as const
 ).filter(Boolean)
 type SupportedImageMimeType = Exclude<
