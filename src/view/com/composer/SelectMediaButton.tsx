@@ -13,7 +13,7 @@ import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
-import {extractDataUriMime, getDataUriSize} from '#/lib/media/util'
+import {extractDataUriMime} from '#/lib/media/util'
 import {mimeToExt} from '#/lib/media/video/util'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -316,31 +316,6 @@ async function processImagePickerAssets(
   let supportedAssets: ValidatedImagePickerAsset[] = []
 
   for (const asset of assets) {
-    /*
-     * Some browsers won't even load massive files e.g. Arc
-     */
-    if (!asset.uri) {
-      errors.add(SelectedAssetError.FileTooBig)
-      continue
-    }
-
-    /*
-     * If the file _did_ load, great, we can just check the size here.
-     */
-    if (asset.file && asset.file.size > VIDEO_MAX_SIZE) {
-      errors.add(SelectedAssetError.FileTooBig)
-      continue
-    }
-
-    /*
-     * In other cases e.g. Safari, we don't even get a `file`, so we want to
-     * approximate the size and fail early if we can.
-     */
-    if (getDataUriSize(asset.uri) > VIDEO_MAX_SIZE) {
-      errors.add(SelectedAssetError.FileTooBig)
-      continue
-    }
-
     const {success, type, mimeType} = classifyImagePickerAsset(asset)
 
     if (!success) {
@@ -370,11 +345,33 @@ async function processImagePickerAssets(
         errors.add(SelectedAssetError.Unsupported)
         continue
       }
+
+      /*
+       * Filesize appears to be stable across all platforms, so we can use it
+       * to filter out large files on web. On native, we compress these anyway,
+       * so we only check on web.
+       */
+      if (isWeb && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+        errors.add(SelectedAssetError.FileTooBig)
+        continue
+      }
     }
 
     if (type === 'image') {
       if (!isSupportedImageMimeType(mimeType)) {
         errors.add(SelectedAssetError.Unsupported)
+        continue
+      }
+    }
+
+    if (type === 'gif') {
+      /*
+       * Filesize appears to be stable across all platforms, so we can use it
+       * to filter out large files on web. On native, we compress GIFs as
+       * videos anyway, so we only check on web.
+       */
+      if (isWeb && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+        errors.add(SelectedAssetError.FileTooBig)
         continue
       }
     }
@@ -385,6 +382,15 @@ async function processImagePickerAssets(
     supportedAssets.push({
       mimeType,
       ...asset,
+      /*
+       * In `expo-image-picker` >= v17, `uri` is now a `blob:` URL, not a
+       * data-uri. Our handling elsewhere in the app (for web) relies on the
+       * base64 data-uri, so we construct it here for web only.
+       */
+      uri:
+        isWeb && asset.base64
+          ? `data:${mimeType};base64,${asset.base64}`
+          : asset.uri,
     })
   }
 
@@ -514,7 +520,7 @@ export function SelectMediaButton({
             msg`You can only select one GIF at a time.`,
           ),
           [SelectedAssetError.FileTooBig]: _(
-            msg`This file is too large. Maximum size is 100mb.`,
+            msg`One or more of your selected files is too large. Maximum size is 100MB.`,
           ),
         }[error]
       })
@@ -558,6 +564,7 @@ export function SelectMediaButton({
         quality: 1,
         allowsMultipleSelection: true,
         legacy: true,
+        base64: isWeb,
         selectionLimit: isIOS ? selectionCountRemaining : undefined,
         preferredAssetRepresentationMode:
           UIImagePickerPreferredAssetRepresentationMode.Current,
