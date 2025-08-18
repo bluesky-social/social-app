@@ -193,6 +193,7 @@ function ProfileCard() {
           </Menu.Trigger>
           <SwitchMenuItems
             accounts={otherAccounts}
+            currentAccount={currentAccount}
             signOutPromptControl={signOutPromptControl}
           />
         </Menu.Root>
@@ -218,6 +219,7 @@ function ProfileCard() {
 
 function SwitchMenuItems({
   accounts,
+  currentAccount,
   signOutPromptControl,
 }: {
   accounts:
@@ -226,16 +228,55 @@ function SwitchMenuItems({
         profile?: AppBskyActorDefs.ProfileViewDetailed
       }[]
     | undefined
+  currentAccount:
+    | {
+        did: string
+        handle: string
+      }
+    | undefined
   signOutPromptControl: DialogControlProps
 }) {
   const {_} = useLingui()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
+  const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/'
+  const [pathName] = useMemo(() => router.matchPath(profileLink), [profileLink])
+  const currentRouteInfo = useNavigationState(state => {
+    if (!state) {
+      return {name: 'Home'}
+    }
+    return getCurrentRoute(state)
+  })
+  let isCurrent =
+    currentRouteInfo.name === 'Profile'
+      ? isTab(currentRouteInfo.name, pathName) &&
+        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+          currentAccount?.handle
+      : isTab(currentRouteInfo.name, pathName)
+  const navigation = useNavigation()
 
   const onAddAnotherAccount = () => {
     setShowLoggedOut(true)
     closeEverything()
   }
+
+  const onProfilePress = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) {
+        return
+      }
+      e.preventDefault()
+      if (isCurrent) {
+        emitSoftReset()
+      } else {
+        const [screen, params] = router.matchPath(profileLink)
+        // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
+        navigation.navigate(screen, params, {pop: true})
+      }
+    },
+    [navigation, profileLink, isCurrent],
+  )
+
   return (
     <Menu.Outer>
       {accounts && accounts.length > 0 && (
@@ -255,6 +296,16 @@ function SwitchMenuItems({
           <Menu.Divider />
         </>
       )}
+      <Menu.Item
+        label={_(msg`Go to profile`)}
+        // @ts-expect-error the function signature differs on web -prf
+        onPress={onProfilePress}
+        href={profileLink}>
+        <Menu.ItemIcon icon={UserCircle} />
+        <Menu.ItemText>
+          <Trans>Go to profile</Trans>
+        </Menu.ItemText>
+      </Menu.Item>
       <Menu.Item
         label={_(msg`Add another account`)}
         onPress={onAddAnotherAccount}>
