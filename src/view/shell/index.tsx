@@ -13,6 +13,7 @@ import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
+import {useGeolocation} from '#/state/geolocation'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
@@ -26,6 +27,7 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
+import {BlockedGeoOverlay} from '#/components/BlockedGeoOverlay'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
@@ -180,9 +182,11 @@ function ShellInner() {
   )
 }
 
-export const Shell: React.FC = function ShellImpl() {
-  const fullyExpandedCount = useDialogFullyExpandedCountContext()
+export function Shell() {
   const t = useTheme()
+  const {geolocation} = useGeolocation()
+  const fullyExpandedCount = useDialogFullyExpandedCountContext()
+
   useIntentHandler()
 
   useEffect(() => {
@@ -200,9 +204,13 @@ export const Shell: React.FC = function ShellImpl() {
           navigationBar: t.name !== 'light' ? 'light' : 'dark',
         }}
       />
-      <RoutesContainer>
-        <ShellInner />
-      </RoutesContainer>
+      {geolocation?.isAgeBlockedGeo ? (
+        <BlockedGeoOverlay />
+      ) : (
+        <RoutesContainer>
+          <ShellInner />
+        </RoutesContainer>
+      )}
     </View>
   )
 }
