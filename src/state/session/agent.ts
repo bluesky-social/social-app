@@ -1,8 +1,17 @@
-import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {
+  Agent as BaseAgent,
+  type AtpSessionData,
+  type AtpSessionEvent,
+  BskyAgent,
+} from '@atproto/api'
+import {type FetchHandler} from '@atproto/api/dist/agent'
+import {type SessionManager} from '@atproto/api/dist/session-manager'
 import {TID} from '@atproto/common-web'
+import {type FetchHandlerOptions} from '@atproto/xrpc'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
+  BLUESKY_PROXY_HEADER,
   BSKY_SERVICE,
   DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
@@ -19,12 +28,15 @@ import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
-  return new BskyAppAgent({service: PUBLIC_BSKY_SERVICE})
+
+  const agent = new BskyAppAgent({service: PUBLIC_BSKY_SERVICE})
+  agent.setHeader('atproto-proxy', BLUESKY_PROXY_HEADER)
+  return agent
 }
 
 export async function createAgentAndResume(
@@ -61,6 +73,8 @@ export async function createAgentAndResume(
     }
   }
 
+  agent.setHeader('atproto-proxy', BLUESKY_PROXY_HEADER)
+
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
@@ -93,6 +107,9 @@ export async function createAgentAndLogin(
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
+
+  agent.setHeader('atproto-proxy', BLUESKY_PROXY_HEADER)
+
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
@@ -180,6 +197,8 @@ export async function createAgentAndCreateAccount(
     logger.error(e, {message: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
+  agent.setHeader('atproto-proxy', BLUESKY_PROXY_HEADER)
+
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
@@ -231,6 +250,18 @@ export function sessionAccountToSession(
      */
     active: account.active ?? true,
     status: account.status,
+  }
+}
+
+export class Agent extends BaseAgent {
+  constructor(
+    proxyHeader: string | null,
+    options: SessionManager | FetchHandler | FetchHandlerOptions,
+  ) {
+    super(options)
+    if (proxyHeader) {
+      this.setHeader('atproto-proxy', proxyHeader)
+    }
   }
 }
 
