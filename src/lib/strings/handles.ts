@@ -25,16 +25,24 @@ export function isInvalidHandle(handle: string): boolean {
   return handle === 'handle.invalid'
 }
 
-export function sanitizeHandle(handle: string, prefix = ''): string {
+export function sanitizeHandle(
+  handle: string,
+  prefix = '',
+  forceLeftToRight = true,
+): string {
+  const lowercasedWithPrefix = `${prefix}${handle.toLocaleLowerCase()}`
   return isInvalidHandle(handle)
     ? '⚠Invalid Handle'
-    : forceLTR(`${prefix}${handle.toLocaleLowerCase()}`)
+    : forceLeftToRight
+      ? forceLTR(lowercasedWithPrefix)
+      : lowercasedWithPrefix
 }
 
 export interface IsValidHandle {
   handleChars: boolean
   hyphenStartOrEnd: boolean
-  frontLength: boolean
+  frontLengthNotTooShort: boolean
+  frontLengthNotTooLong: boolean
   totalLength: boolean
   overall: boolean
 }
@@ -50,7 +58,8 @@ export function validateServiceHandle(
     handleChars:
       !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
     hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
-    frontLength: str.length >= 3 && str.length <= MAX_SERVICE_HANDLE_LENGTH,
+    frontLengthNotTooShort: str.length >= 3,
+    frontLengthNotTooLong: str.length <= MAX_SERVICE_HANDLE_LENGTH,
     totalLength: fullHandle.length <= 253,
   }
 

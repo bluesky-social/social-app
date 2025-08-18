@@ -45,7 +45,7 @@ const CHILDREN_CHUNK_SIZE = 50
 export function PostThread({uri}: {uri: string}) {
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
-  const initialNumToRender = useInitialNumToRender() // TODO
+  const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const anchorPostSource = useUnstablePostSource(uri)
   const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
@@ -54,13 +54,16 @@ export function PostThread({uri}: {uri: string}) {
    * One query to rule them all
    */
   const thread = usePostThread({anchor: uri})
-  const anchor = useMemo(() => {
+  const {anchor, hasParents} = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    let hasParents = false
     for (const item of thread.data.items) {
       if (item.type === 'threadPost' && item.depth === 0) {
-        return item
+        return {anchor: item, hasParents}
       }
+      hasParents = true
     }
-    return
+    return {hasParents}
   }, [thread.data.items])
 
   const {openComposer} = useOpenComposer()
@@ -88,6 +91,7 @@ export function PostThread({uri}: {uri: string}) {
         author: post.author,
         embed: post.embed,
         moderation: anchor.moderation,
+        langs: post.record.langs,
       },
       onPostSuccess: optimisticOnPostReply,
     })
@@ -481,6 +485,8 @@ export function PostThread({uri}: {uri: string}) {
     ],
   )
 
+  const defaultListFooterHeight = hasParents ? windowHeight - 200 : undefined
+
   return (
     <>
       <Layout.Header.Outer headerRef={headerRef}>
@@ -517,7 +523,7 @@ export function PostThread({uri}: {uri: string}) {
           })}
           onStartReached={onStartReached}
           onEndReached={onEndReached}
-          onEndReachedThreshold={2}
+          onEndReachedThreshold={4}
           onStartReachedThreshold={1}
           /**
            * NATIVE ONLY
@@ -525,6 +531,7 @@ export function PostThread({uri}: {uri: string}) {
            */
           maintainVisibleContentPosition={{minIndexForVisible: 0}}
           desktopFixedHeight
+          sideBorders={false}
           ListFooterComponent={
             <ListFooter
               /*
@@ -537,15 +544,27 @@ export function PostThread({uri}: {uri: string}) {
                * back to the top of the screen when handling scroll.
                */
               height={platform({
-                web: windowHeight - 200,
-                default: deferParents ? windowHeight * 2 : windowHeight - 200,
+                web: defaultListFooterHeight,
+                default: deferParents
+                  ? windowHeight * 2
+                  : defaultListFooterHeight,
               })}
               style={isTombstoneView ? {borderTopWidth: 0} : undefined}
             />
           }
           initialNumToRender={initialNumToRender}
-          windowSize={11}
-          sideBorders={false}
+          /**
+           * Default: 21
+           */
+          windowSize={7}
+          /**
+           * Default: 10
+           */
+          maxToRenderPerBatch={5}
+          /**
+           * Default: 50
+           */
+          updateCellsBatchingPeriod={100}
         />
       )}
 

@@ -16,7 +16,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {List, type ListRef} from '#/view/com/util/List'
+import {List, type ListProps, type ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {NotificationFeedItem} from './NotificationFeedItem'
@@ -39,7 +39,7 @@ export function NotificationFeed({
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
-  ListHeaderComponent?: () => JSX.Element
+  ListHeaderComponent?: ListProps['ListHeaderComponent']
   refreshNotifications: () => Promise<void>
 }) {
   const initialNumToRender = useInitialNumToRender()
@@ -59,7 +59,13 @@ export function NotificationFeed({
     enabled: enabled && !!moderationOpts,
     filter,
   })
-  const isEmpty = !isFetching && !data?.pages[0]?.items.length
+  // previously, this was `!isFetching && !data?.pages[0]?.items.length`
+  // however, if the first page had no items (can happen in the mentions tab!)
+  // it would flicker the empty state whenever it was loading.
+  // therefore, we need to find if *any* page has items. in 99.9% of cases,
+  // the `.find()` won't need to go any further than the first page -sfn
+  const isEmpty =
+    !isFetching && !data?.pages.find(page => page.items.length > 0)
 
   const items = React.useMemo(() => {
     let arr: any[] = []

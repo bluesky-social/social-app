@@ -372,16 +372,21 @@ export function sortAndAnnotateThreadItems(
           /*
            * Tree-view only.
            *
-           * If there's an upcoming parent read more, this branch is part of the
-           * last branch of the sub-tree, and the item itself is the last child,
-           * insert the parent "read more".
+           * If there's an upcoming parent read more, this branch is part of a
+           * branch of the sub-tree that is deeper than the
+           * `upcomingParentReadMore`, and the item following the current item
+           * is either undefined or less-or-equal-to the depth of the
+           * `upcomingParentReadMore`, then we know it's time to drop in the
+           * parent read more.
            */
           if (
             view === 'tree' &&
             metadata.upcomingParentReadMore &&
-            metadata.isPartOfLastBranchFromDepth ===
+            metadata.isPartOfLastBranchFromDepth &&
+            metadata.isPartOfLastBranchFromDepth >=
               metadata.upcomingParentReadMore.depth &&
-            metadata.isLastChild
+            (metadata.nextItemDepth === undefined ||
+              metadata.nextItemDepth <= metadata.upcomingParentReadMore.depth)
           ) {
             subset.splice(
               i + 1,
@@ -444,7 +449,7 @@ export function buildThread({
     const anchorPost = items.at(0)
     const hasAnchorFromCache = anchorPost && anchorPost.type === 'threadPost'
     const skeletonReplies = hasAnchorFromCache
-      ? anchorPost.value.post.replyCount ?? 4
+      ? (anchorPost.value.post.replyCount ?? 4)
       : 4
 
     if (!items.length) {

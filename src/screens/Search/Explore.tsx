@@ -342,11 +342,11 @@ export function Explore({
   ])
 
   const topBorder = useMemo(
-    () => ({type: 'topBorder', key: 'top-border'} as const),
+    () => ({type: 'topBorder', key: 'top-border'}) as const,
     [],
   )
   const trendingTopicsModule = useMemo(
-    () => ({type: 'trendingTopics', key: 'trending-topics'} as const),
+    () => ({type: 'trendingTopics', key: 'trending-topics'}) as const,
     [],
   )
   const suggestedFollowsModule = useMemo(() => {
@@ -917,11 +917,7 @@ export function Explore({
         case 'preview:header': {
           return (
             <ModuleHeader.Container
-              style={[
-                a.pt_xs,
-                t.atoms.border_contrast_low,
-                native(a.border_b),
-              ]}>
+              style={[a.pt_xs, t.atoms.border_contrast_low, a.border_b]}>
               {/* Very non-scientific way to avoid small gap on scroll */}
               <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
               <ModuleHeader.FeedLink feed={item.feed}>

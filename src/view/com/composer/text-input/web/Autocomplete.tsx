@@ -209,8 +209,8 @@ function AutocompleteProfileCard({
         itemIndex === 0
           ? styles.firstMention
           : itemIndex === totalItems - 1
-          ? styles.lastMention
-          : undefined,
+            ? styles.lastMention
+            : undefined,
       ]}
       onPress={onPress}
       accessibilityRole="button">

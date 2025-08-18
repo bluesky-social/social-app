@@ -10,9 +10,11 @@ type ApiContext = {
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.invites,
 )
+stateContext.displayName = 'InvitesStateContext'
 const apiContext = React.createContext<ApiContext>({
   setInviteCopied(_: string) {},
 })
+apiContext.displayName = 'InvitesApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(persisted.get('invites'))

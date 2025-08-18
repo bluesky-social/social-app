@@ -99,10 +99,10 @@ export function useLink({
     return typeof to === 'string'
       ? convertBskyAppUrlIfNeeded(sanitizeUrl(to))
       : to.screen
-      ? router.matchName(to.screen)?.build(to.params)
-      : to.href
-      ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
-      : undefined
+        ? router.matchName(to.screen)?.build(to.params)
+        : to.href
+          ? convertBskyAppUrlIfNeeded(sanitizeUrl(to.href))
+          : undefined
   }, [to])
 
   if (!href) {
@@ -192,7 +192,7 @@ export function useLink({
               navigation.dispatch(StackActions.replace(screen, params))
             } else if (action === 'navigate') {
               // @ts-expect-error not typed
-              navigation.navigate(screen, params)
+              navigation.navigate(screen, params, {pop: true})
             } else {
               throw Error('Unsupported navigator action.')
             }

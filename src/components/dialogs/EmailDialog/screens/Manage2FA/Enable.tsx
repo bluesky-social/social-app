@@ -116,8 +116,8 @@ export function Enable() {
               state.status === 'pending'
                 ? Loader
                 : state.status === 'success'
-                ? Check
-                : ShieldIcon
+                  ? Check
+                  : ShieldIcon
             }
           />
         </Button>

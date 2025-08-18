@@ -20,6 +20,7 @@ import {Settings} from './Settings'
 import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
 import {Theming} from './Theming'
+import {Toasts} from './Toasts'
 import {Typography} from './Typography'
 
 export function Storybook() {
@@ -51,7 +52,6 @@ function StorybookInner() {
           <>
             <View style={[a.flex_row, a.align_start, a.gap_md]}>
               <Button
-                variant="outline"
                 color="primary"
                 size="small"
                 label='Set theme to "system"'
@@ -59,7 +59,6 @@ function StorybookInner() {
                 <ButtonText>System</ButtonText>
               </Button>
               <Button
-                variant="solid"
                 color="secondary"
                 size="small"
                 label='Set theme to "light"'
@@ -67,7 +66,6 @@ function StorybookInner() {
                 <ButtonText>Light</ButtonText>
               </Button>
               <Button
-                variant="solid"
                 color="secondary"
                 size="small"
                 label='Set theme to "dim"'
@@ -78,7 +76,6 @@ function StorybookInner() {
                 <ButtonText>Dim</ButtonText>
               </Button>
               <Button
-                variant="solid"
                 color="secondary"
                 size="small"
                 label='Set theme to "dark"'
@@ -91,7 +88,6 @@ function StorybookInner() {
             </View>
 
             <Button
-              variant="solid"
               color="primary"
               size="small"
               onPress={() => navigation.navigate('SharedPreferencesTester')}
@@ -110,8 +106,9 @@ function StorybookInner() {
               <Theming />
             </ThemeProvider>
 
-            <Forms />
+            <Toasts />
             <Buttons />
+            <Forms />
             <Typography />
             <Spacing />
             <Shadows />
@@ -125,7 +122,6 @@ function StorybookInner() {
             <Settings />
 
             <Button
-              variant="solid"
               color="primary"
               size="large"
               label="Switch to Contained List"
@@ -136,7 +132,6 @@ function StorybookInner() {
         ) : (
           <>
             <Button
-              variant="solid"
               color="primary"
               size="large"
               label="Switch to Storybook"

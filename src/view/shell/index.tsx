@@ -12,7 +12,7 @@ import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {isAndroid, isIOS} from '#/platform/detection'
-import {useDialogStateControlContext} from '#/state/dialogs'
+import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
@@ -25,11 +25,16 @@ import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
+import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
+import {
+  Outlet as PolicyUpdateOverlayPortalOutlet,
+  usePolicyUpdateContext,
+} from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
@@ -44,6 +49,7 @@ function ShellInner() {
   const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
   const insets = useSafeAreaInsets()
+  const {state: policyUpdateState} = usePolicyUpdateContext()
 
   const renderDrawerContent = useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = useCallback(
@@ -150,22 +156,32 @@ function ShellInner() {
           </Drawer>
         </ErrorBoundary>
       </View>
+
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
+      <AgeAssuranceRedirectDialog />
       <InAppBrowserConsentDialog />
       <LinkWarningDialog />
       <Lightbox />
-      <PortalOutlet />
-      <BottomSheetOutlet />
+
+      {/* Until policy update has been completed by the user, don't render anything that is portaled */}
+      {policyUpdateState.completed && (
+        <>
+          <PortalOutlet />
+          <BottomSheetOutlet />
+        </>
+      )}
+
+      <PolicyUpdateOverlayPortalOutlet />
     </>
   )
 }
 
 export const Shell: React.FC = function ShellImpl() {
-  const {fullyExpandedCount} = useDialogStateControlContext()
+  const fullyExpandedCount = useDialogFullyExpandedCountContext()
   const t = useTheme()
   useIntentHandler()
 

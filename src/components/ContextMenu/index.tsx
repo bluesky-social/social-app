@@ -190,7 +190,7 @@ export function Root({children}: {children: React.ReactNode}) {
           if (item) playHaptic('Light')
           setHoveredMenuItem(item)
         },
-      } satisfies ContextType),
+      }) satisfies ContextType,
     [
       measurement,
       setMeasurement,
@@ -710,8 +710,8 @@ export function Item({
       const xOffset = position
         ? position.x
         : align === 'left'
-        ? measurement.x
-        : measurement.x + measurement.width - layout.width
+          ? measurement.x
+          : measurement.x + measurement.width - layout.width
 
       registerHoverable(
         id,

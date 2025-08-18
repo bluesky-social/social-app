@@ -1,8 +1,11 @@
-import React from 'react'
 import {View} from 'react-native'
-import {InterpretedLabelValueDefinition, LabelPreference} from '@atproto/api'
+import {
+  type InterpretedLabelValueDefinition,
+  type LabelPreference,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {useLabelBehaviorDescription} from '#/lib/moderation/useLabelBehaviorDescription'
@@ -65,6 +68,7 @@ export function Buttons({
   ignoreLabel,
   warnLabel,
   hideLabel,
+  disabled,
 }: {
   name: string
   values: ToggleButton.GroupProps['values']
@@ -72,12 +76,14 @@ export function Buttons({
   ignoreLabel?: string
   warnLabel?: string
   hideLabel?: string
+  disabled?: boolean
 }) {
   const {_} = useLingui()
 
   return (
     <View style={[{minHeight: 35}, a.w_full]}>
       <ToggleButton.Group
+        disabled={disabled}
         label={_(
           msg`Configure content filtering setting for category: ${name}`,
         )}
@@ -143,22 +149,21 @@ export function GlobalLabelPreference({
         name={labelStrings.name}
         description={labelStrings.description}
       />
-      {!disabled && (
-        <Buttons
-          name={labelStrings.name.toLowerCase()}
-          values={[pref]}
-          onChange={values => {
-            mutate({
-              label: identifier,
-              visibility: values[0] as LabelPreference,
-              labelerDid: undefined,
-            })
-          }}
-          ignoreLabel={labelOptions.ignore}
-          warnLabel={labelOptions.warn}
-          hideLabel={labelOptions.hide}
-        />
-      )}
+      <Buttons
+        name={labelStrings.name.toLowerCase()}
+        values={[pref]}
+        onChange={values => {
+          mutate({
+            label: identifier,
+            visibility: values[0] as LabelPreference,
+            labelerDid: undefined,
+          })
+        }}
+        ignoreLabel={labelOptions.ignore}
+        warnLabel={labelOptions.warn}
+        hideLabel={labelOptions.hide}
+        disabled={disabled}
+      />
     </Outer>
   )
 }

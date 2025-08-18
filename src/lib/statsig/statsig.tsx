@@ -1,17 +1,17 @@
 import React from 'react'
 import {Platform} from 'react-native'
-import {AppState, AppStateStatus} from 'react-native'
+import {AppState, type AppStateStatus} from 'react-native'
 import {Statsig, StatsigProvider} from 'statsig-react-native-expo'
 
-import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from '#/lib/app-info'
 import {logger} from '#/logger'
-import {MetricEvents} from '#/logger/metrics'
+import {type MetricEvents} from '#/logger/metrics'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
+import * as env from '#/env'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
-import {Gate} from './gates'
+import {type Gate} from './gates'
 
 const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
 
@@ -25,6 +25,7 @@ type StatsigUser = {
     // This is the place where we can add our own stuff.
     // Fields here have to be non-optional to be visible in the UI.
     platform: 'ios' | 'android' | 'web'
+    appVersion: string
     bundleIdentifier: string
     bundleDate: number
     refSrc: string
@@ -47,10 +48,9 @@ export type {MetricEvents as LogEvents}
 function createStatsigOptions(prefetchUsers: StatsigUser[]) {
   return {
     environment: {
-      tier:
-        process.env.NODE_ENV === 'development'
-          ? 'development'
-          : IS_TESTFLIGHT
+      tier: env.IS_DEV
+        ? 'development'
+        : env.IS_TESTFLIGHT
           ? 'staging'
           : 'production',
     },
@@ -147,6 +147,7 @@ function toStringRecord<E extends keyof MetricEvents>(
 // and it's been difficult to get it to behave in a predictable way.
 // Our own cache ensures consistent evaluation within a single session.
 const GateCache = React.createContext<Map<string, boolean> | null>(null)
+GateCache.displayName = 'StatsigGateCacheContext'
 
 type GateOptions = {
   dangerouslyDisableExposureLogging?: boolean
@@ -210,8 +211,9 @@ function toStatsigUser(did: string | undefined): StatsigUser {
       refSrc,
       refUrl,
       platform: Platform.OS as 'ios' | 'android' | 'web',
-      bundleIdentifier: BUNDLE_IDENTIFIER,
-      bundleDate: BUNDLE_DATE,
+      appVersion: env.RELEASE_VERSION,
+      bundleIdentifier: env.BUNDLE_IDENTIFIER,
+      bundleDate: env.BUNDLE_DATE,
       appLanguage: languagePrefs.appLanguage,
       contentLanguages: languagePrefs.contentLanguages,
     },

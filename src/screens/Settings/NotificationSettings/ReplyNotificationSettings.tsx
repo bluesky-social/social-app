@@ -53,11 +53,7 @@ export function ReplyNotificationSettingsScreen({}: Props) {
               </Admonition>
             </View>
           ) : (
-            <PreferenceControls
-              name="reply"
-              preference={preferences?.reply}
-              allowDisableInApp={false}
-            />
+            <PreferenceControls name="reply" preference={preferences?.reply} />
           )}
         </SettingsList.Container>
       </Layout.Content>

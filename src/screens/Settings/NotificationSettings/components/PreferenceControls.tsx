@@ -5,7 +5,7 @@ import {type FilterablePreference} from '@atproto/api/dist/client/types/app/bsky
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {useNotificationSettingsUpdateMutation} from '#/state/queries/notifications/settings'
 import {atoms as a, platform, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
@@ -28,10 +28,6 @@ export function PreferenceControls({
   preference?: AppBskyNotificationDefs.Preference | FilterablePreference
   allowDisableInApp?: boolean
 }) {
-  const gate = useGate()
-
-  if (!gate('reengagement_features')) return null
-
   if (!preference)
     return (
       <View style={[a.w_full, a.pt_5xl, a.align_center]}>
@@ -78,6 +74,12 @@ export function Inner({
       push: change.includes('push'),
     } satisfies typeof preference
 
+    logger.metric('activityPreference:changeChannels', {
+      name,
+      push: newPreference.push,
+      list: newPreference.list,
+    })
+
     mutate({
       [name]: newPreference,
       ...Object.fromEntries(syncOthers.map(key => [key, newPreference])),
@@ -92,6 +94,8 @@ export function Inner({
       ...preference,
       include: change,
     } satisfies typeof preference
+
+    logger.metric('activityPreference:changeFilter', {name, value: change})
 
     mutate({
       [name]: newPreference,
@@ -114,7 +118,7 @@ export function Inner({
               a.py_xs,
               platform({
                 native: [a.justify_between],
-                web: [a.flex_row_reverse, a.gap_md],
+                web: [a.flex_row_reverse, a.gap_sm],
               }),
             ]}>
             <Toggle.LabelText
@@ -131,7 +135,7 @@ export function Inner({
                 a.py_xs,
                 platform({
                   native: [a.justify_between],
-                  web: [a.flex_row_reverse, a.gap_md],
+                  web: [a.flex_row_reverse, a.gap_sm],
                 }),
               ]}>
               <Toggle.LabelText
@@ -159,11 +163,7 @@ export function Inner({
               <Toggle.Item
                 label={_(msg`Everyone`)}
                 name="all"
-                style={[
-                  a.flex_row,
-                  a.py_xs,
-                  platform({native: [a.gap_sm], web: [a.gap_md]}),
-                ]}>
+                style={[a.flex_row, a.py_xs, a.gap_sm]}>
                 <Toggle.Radio />
                 <Toggle.LabelText
                   style={[
@@ -177,11 +177,7 @@ export function Inner({
               <Toggle.Item
                 label={_(msg`People I follow`)}
                 name="follows"
-                style={[
-                  a.flex_row,
-                  a.py_xs,
-                  platform({native: [a.gap_sm], web: [a.gap_md]}),
-                ]}>
+                style={[a.flex_row, a.py_xs, a.gap_sm]}>
                 <Toggle.Radio />
                 <Toggle.LabelText
                   style={[

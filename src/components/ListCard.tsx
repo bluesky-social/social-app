@@ -1,10 +1,10 @@
 import React from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyGraphDefs,
+  type AppBskyGraphDefs,
   AtUri,
   moderateUserList,
-  ModerationUI,
+  type ModerationUI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -22,10 +22,10 @@ import {
   Outer,
   SaveButton,
 } from '#/components/FeedCard'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 /*
  * This component is based on `FeedCard` and is tightly coupled with that
@@ -50,7 +50,9 @@ type Props = {
   showPinButton?: boolean
 }
 
-export function Default(props: Props) {
+export function Default(
+  props: Props & Omit<LinkProps, 'to' | 'label' | 'children'>,
+) {
   const {view, showPinButton} = props
   const moderationOpts = useModerationOpts()
   const moderation = moderationOpts

@@ -17,10 +17,15 @@ import {Lightbox} from '#/view/com/lightbox/Lightbox'
 import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
+import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
+import {
+  Outlet as PolicyUpdateOverlayPortalOutlet,
+  usePolicyUpdateContext,
+} from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {FlatNavigator, RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer.web'
@@ -36,6 +41,7 @@ function ShellInner() {
   const {_} = useLingui()
   const showDrawer = !isDesktop && isDrawerOpen
   const [showDrawerDelayedExit, setShowDrawerDelayedExit] = useState(showDrawer)
+  const {state: policyUpdateState} = usePolicyUpdateContext()
 
   useLayoutEffect(() => {
     if (showDrawer !== showDrawerDelayedExit) {
@@ -70,9 +76,16 @@ function ShellInner() {
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
+      <AgeAssuranceRedirectDialog />
       <LinkWarningDialog />
       <Lightbox />
-      <PortalOutlet />
+
+      {/* Until policy update has been completed by the user, don't render anything that is portaled */}
+      {policyUpdateState.completed && (
+        <>
+          <PortalOutlet />
+        </>
+      )}
 
       {showDrawerDelayedExit && (
         <>
@@ -111,6 +124,8 @@ function ShellInner() {
           </TouchableWithoutFeedback>
         </>
       )}
+
+      <PolicyUpdateOverlayPortalOutlet />
     </>
   )
 }

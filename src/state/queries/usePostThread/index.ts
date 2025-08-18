@@ -52,8 +52,8 @@ export function usePostThread({anchor}: {anchor?: string}) {
     return view === 'linear'
       ? LINEAR_VIEW_BELOW
       : isWeb && gtPhone
-      ? TREE_VIEW_BELOW_DESKTOP
-      : TREE_VIEW_BELOW
+        ? TREE_VIEW_BELOW_DESKTOP
+        : TREE_VIEW_BELOW
   }, [view, gtPhone])
 
   const postThreadQueryKey = createPostThreadQueryKey({

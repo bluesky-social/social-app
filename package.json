@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.104.0",
+  "version": "1.107.0",
   "private": true,
   "engines": {
     "node": ">=20"
@@ -12,14 +12,15 @@
         "buildFromSource": [
           "expo-notifications",
           "expo-haptics",
-          "expo-media-library"
+          "expo-media-library",
+          "expo-image-picker"
         ]
       }
     }
   },
   "scripts": {
     "prepare": "is-ci || husky install",
-    "postinstall": "patch-package && yarn intl:compile",
+    "postinstall": "patch-package && yarn intl:compile-if-needed",
     "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
     "android:prod": "expo run:android --variant release",
@@ -57,12 +58,12 @@
     "intl:extract": "lingui extract --clean --locale en",
     "intl:extract:all": "lingui extract --clean",
     "intl:compile": "lingui compile",
+    "intl:compile-if-needed": "is-ci || [ -f src/locale/locales/en/messages.js ] || yarn intl:compile",
     "intl:pull": "crowdin download translations --verbose -b main",
     "intl:push": "crowdin push translations --verbose -b main",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
     "update-extensions": "bash scripts/updateExtensions.sh",
-    "export-ios": "npx expo export --platform ios --dump-sourcemap && yarn upload-native-sourcemaps",
-    "export-android": "npx expo export --platform android --dump-sourcemap && yarn upload-native-sourcemaps",
+    "export": "npx expo export --dump-sourcemap && yarn upload-native-sourcemaps",
     "upload-native-sourcemaps": "npx sentry-expo-upload-sourcemaps dist",
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
     "generate-webpack-stats-file": "EXPO_PUBLIC_GENERATE_STATS=1 yarn build-web",
@@ -70,7 +71,7 @@
     "icons:optimize": "svgo -f ./assets/icons"
   },
   "dependencies": {
-    "@atproto/api": "^0.15.16",
+    "@atproto/api": "^0.16.2",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -86,7 +87,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.2",
-    "@haileyok/bluesky-video": "0.3.1",
+    "@haileyok/bluesky-video": "0.3.2",
     "@ipld/dag-cbor": "^9.2.0",
     "@lingui/react": "^4.14.1",
     "@mattermost/react-native-paste-input": "mattermost/react-native-paste-input",
@@ -142,10 +143,11 @@
     "expo-file-system": "~18.1.10",
     "expo-font": "~13.3.1",
     "expo-haptics": "~14.1.4",
-    "expo-image": "~2.2.1",
+    "expo-image": "^2.4.0",
     "expo-image-crop-tool": "^0.1.8",
     "expo-image-manipulator": "~13.1.7",
     "expo-image-picker": "~16.1.4",
+    "expo-intent-launcher": "^12.1.5",
     "expo-linear-gradient": "~14.1.5",
     "expo-linking": "~7.1.5",
     "expo-localization": "~16.1.5",
@@ -186,6 +188,7 @@
     "react-native": "^0.79.3",
     "react-native-compressor": "^1.11.0",
     "react-native-date-picker": "^5.0.12",
+    "react-native-device-attest": "^0.1.6",
     "react-native-drawer-layout": "^4.1.8",
     "react-native-edge-to-edge": "^1.6.0",
     "react-native-gesture-handler": "2.25.0",
@@ -193,7 +196,7 @@
     "react-native-ios-context-menu": "^1.15.3",
     "react-native-keyboard-controller": "^1.17.5",
     "react-native-mmkv": "^2.12.2",
-    "react-native-pager-view": "^6.7.1",
+    "react-native-pager-view": "6.8.0",
     "react-native-progress": "bluesky-social/react-native-progress",
     "react-native-qrcode-styled": "^0.3.3",
     "react-native-reanimated": "~3.17.5",
@@ -211,6 +214,8 @@
     "react-remove-scroll-bar": "^2.3.8",
     "react-responsive": "^9.0.2",
     "react-textarea-autosize": "^8.5.3",
+    "sonner": "^2.0.7",
+    "sonner-native": "^0.21.0",
     "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
@@ -219,7 +224,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.3.144",
+    "@atproto/dev-env": "^0.3.160",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/runtime": "^7.26.0",
@@ -266,7 +271,7 @@
     "lint-staged": "^13.2.3",
     "lockfile-lint": "^4.14.0",
     "metro-react-native-babel-preset": "^0.77.0",
-    "prettier": "^2.8.3",
+    "prettier": "^3.6.0",
     "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
     "svgo": "^3.3.2",

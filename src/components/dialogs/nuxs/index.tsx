@@ -3,6 +3,7 @@ import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {STALE} from '#/state/queries'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {
   usePreferencesQuery,
@@ -11,12 +12,12 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
-import {InitialVerificationAnnouncement} from '#/components/dialogs/nuxs/InitialVerificationAnnouncement'
+import {ActivitySubscriptionsNUX} from '#/components/dialogs/nuxs/ActivitySubscriptions'
 /*
  * NUXs
  */
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-import {isDaysOld} from '#/components/dialogs/nuxs/utils'
+import {isExistingUserAsOf} from '#/components/dialogs/nuxs/utils'
 
 type Context = {
   activeNux: Nux | undefined
@@ -33,9 +34,12 @@ const queuedNuxs: {
   }) => boolean
 }[] = [
   {
-    id: Nux.InitialVerificationAnnouncement,
+    id: Nux.ActivitySubscriptions,
     enabled: ({currentProfile}) => {
-      return isDaysOld(2, currentProfile.createdAt)
+      return isExistingUserAsOf(
+        '2025-07-07T00:00:00.000Z',
+        currentProfile.createdAt,
+      )
     },
   },
 ]
@@ -44,6 +48,7 @@ const Context = React.createContext<Context>({
   activeNux: undefined,
   dismissActiveNux: () => {},
 })
+Context.displayName = 'NuxDialogContext'
 
 export function useNuxDialogContext() {
   return React.useContext(Context)
@@ -52,7 +57,10 @@ export function useNuxDialogContext() {
 export function NuxDialogs() {
   const {currentAccount} = useSession()
   const {data: preferences} = usePreferencesQuery()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const {data: profile} = useProfileQuery({
+    did: currentAccount?.did,
+    staleTime: STALE.INFINITY, // createdAt isn't gonna change
+  })
   const onboardingActive = useOnboardingState().isActive
 
   const isLoading =
@@ -111,7 +119,7 @@ function Inner({
   }
 
   React.useEffect(() => {
-    if (snoozed) return
+    if (snoozed) return // comment this out to test
     if (!nuxs) return
 
     for (const {id, enabled} of queuedNuxs) {
@@ -119,7 +127,7 @@ function Inner({
 
       // check if completed first
       if (nux && nux.completed) {
-        continue
+        continue // comment this out to test
       }
 
       // then check gate (track exposure)
@@ -172,9 +180,7 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.InitialVerificationAnnouncement && (
-        <InitialVerificationAnnouncement />
-      )}
+      {activeNux === Nux.ActivitySubscriptions && <ActivitySubscriptionsNUX />}
     </Context.Provider>
   )
 }

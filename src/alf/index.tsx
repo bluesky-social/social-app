@@ -8,9 +8,9 @@ import {
   setFontScale as persistFontScale,
 } from '#/alf/fonts'
 import {createThemes, defaultTheme} from '#/alf/themes'
-import {Theme, ThemeName} from '#/alf/types'
+import {type Theme, type ThemeName} from '#/alf/types'
 import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
-import {Device} from '#/storage'
+import {type Device} from '#/storage'
 
 export {atoms} from '#/alf/atoms'
 export * from '#/alf/breakpoints'
@@ -61,6 +61,7 @@ export const Context = React.createContext<Alf>({
   },
   flags: {},
 })
+Context.displayName = 'AlfContext'
 
 export function ThemeProvider({
   children,

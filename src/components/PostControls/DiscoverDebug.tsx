@@ -2,13 +2,13 @@ import {Pressable} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {t} from '@lingui/macro'
 
-import {IS_INTERNAL} from '#/lib/app-info'
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useGate} from '#/lib/statsig/statsig'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {IS_INTERNAL} from '#/env'
 
 export function DiscoverDebug({
   feedContext,
@@ -32,8 +32,7 @@ export function DiscoverDebug({
         hitSlop={10}
         style={[
           a.absolute,
-          a.bottom_0,
-          {zIndex: 1000},
+          {zIndex: 1000, maxWidth: 65, bottom: -4},
           gtMobile ? a.right_0 : a.left_0,
         ]}
         onPress={e => {
@@ -42,6 +41,7 @@ export function DiscoverDebug({
           Toast.show(t`Copied to clipboard`, 'clipboard-check')
         }}>
         <Text
+          numberOfLines={1}
           style={{
             color: theme.palette.contrast_400,
             fontSize: 7,

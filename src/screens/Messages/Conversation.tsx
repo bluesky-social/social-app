@@ -15,7 +15,6 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useEmail} from '#/lib/hooks/useEmail'
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
@@ -24,6 +23,7 @@ import {
 } from '#/lib/routes/types'
 import {isWeb} from '#/platform/detection'
 import {type Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
+import {useEmail} from '#/state/email-verification'
 import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
@@ -32,6 +32,8 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {MessagesList} from '#/screens/Messages/components/MessagesList'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
+import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -46,7 +48,20 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'MessagesConversation'
 >
-export function MessagesConversationScreen({route}: Props) {
+
+export function MessagesConversationScreen(props: Props) {
+  const {_} = useLingui()
+  const aaCopy = useAgeAssuranceCopy()
+  return (
+    <AgeRestrictedScreen
+      screenTitle={_(msg`Conversation`)}
+      infoText={aaCopy.chatsInfoText}>
+      <MessagesConversationScreenInner {...props} />
+    </AgeRestrictedScreen>
+  )
+}
+
+export function MessagesConversationScreenInner({route}: Props) {
   const {gtMobile} = useBreakpoints()
   const setMinimalShellMode = useSetMinimalShellMode()
 

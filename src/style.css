@@ -328,8 +328,64 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
 
 /* #/components/Select/index.web.tsx */
 .radix-select-content {
-  box-shadow: 0px 6px 24px -10px rgba(22, 23, 24, 0.25),
+  box-shadow:
+    0px 6px 24px -10px rgba(22, 23, 24, 0.25),
     0px 6px 12px -12px rgba(22, 23, 24, 0.15);
   min-width: var(--radix-select-trigger-width);
   max-height: var(--radix-select-content-available-height);
+}
+
+/*
+ * #/components/Tooltip/index.web.tsx
+ */
+.radix-popover-content {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.17, 0.73, 0.14, 1);
+  will-change: transform, opacity;
+}
+.radix-popover-content[data-state='open'][data-side='top'] {
+  animation-name: radixPopoverSlideUpAndFade;
+}
+.radix-popover-content[data-state='open'][data-side='bottom'] {
+  animation-name: radixPopoverSlideDownAndFade;
+}
+@keyframes radixPopoverSlideUpAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes radixPopoverSlideDownAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*
+ * #/components/Toast/index.web.tsx
+ */
+@keyframes toastFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes toastFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }

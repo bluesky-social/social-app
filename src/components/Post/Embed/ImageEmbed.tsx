@@ -77,9 +77,9 @@ export function ImageEmbed({
               rest.viewContext === PostEmbedViewContext.ThreadHighlighted
                 ? 'none'
                 : rest.viewContext ===
-                  PostEmbedViewContext.FeedEmbedRecordWithMedia
-                ? 'square'
-                : 'constrained'
+                    PostEmbedViewContext.FeedEmbedRecordWithMedia
+                  ? 'square'
+                  : 'constrained'
             }
             image={image}
             onPress={(containerRef, dims) => onPress(0, [containerRef], [dims])}

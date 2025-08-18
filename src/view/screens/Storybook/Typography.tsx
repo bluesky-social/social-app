@@ -20,6 +20,21 @@ export function Typography() {
       <Text style={[a.text_xs]}>atoms.text_xs</Text>
       <Text style={[a.text_2xs]}>atoms.text_2xs</Text>
 
+      <Text style={[a.text_xl]}>This is regular text</Text>
+      <Text style={[a.text_xl, a.italic]}>This is regular italic text</Text>
+      <Text style={[a.text_xl, a.font_medium]}>This is medium text</Text>
+      <Text style={[a.text_xl, a.font_medium, a.italic]}>
+        This is medium italic text
+      </Text>
+      <Text style={[a.text_xl, a.font_bold]}>This is bold text</Text>
+      <Text style={[a.text_xl, a.font_bold, a.italic]}>
+        This is bold italic text
+      </Text>
+      <Text style={[a.text_xl, a.font_heavy]}>This is heavy text</Text>
+      <Text style={[a.text_xl, a.font_heavy, a.italic]}>
+        This is heavy italic text
+      </Text>
+
       <RichText
         // TODO: This only supports already resolved facets.
         // Resolving them on read is bad anyway.

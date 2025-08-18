@@ -96,10 +96,11 @@ export const TextInput = forwardRef(function TextInputImpl(
       newRt.detectFacetsWithoutResolution()
       setRichText(newRt)
 
-      const prefix = getMentionAt(
-        newText,
-        textInputSelection.current?.start || 0,
-      )
+      // NOTE: BinaryFiddler
+      // onChangeText happens before onSelectionChange, cursorPos is out of bound if the user deletes characters,
+      const cursorPos = textInputSelection.current?.start ?? 0
+      const prefix = getMentionAt(newText, Math.min(cursorPos, newText.length))
+
       if (prefix) {
         setAutocompletePrefix(prefix.value)
       } else if (autocompletePrefix) {
@@ -186,7 +187,7 @@ export const TextInput = forwardRef(function TextInputImpl(
 
   const inputTextStyle = React.useMemo(() => {
     const style = normalizeTextStyles(
-      [a.text_xl, a.leading_snug, t.atoms.text],
+      [a.text_lg, a.leading_snug, t.atoms.text],
       {
         fontScale: fonts.scaleMultiplier,
         fontFamily: fonts.family,
@@ -249,6 +250,9 @@ export const TextInput = forwardRef(function TextInputImpl(
         multiline
         scrollEnabled={false}
         numberOfLines={2}
+        // Note: should be the default value, but as of v1.104
+        // it switched to "none" on Android
+        autoCapitalize="sentences"
         {...props}
         style={[
           inputTextStyle,

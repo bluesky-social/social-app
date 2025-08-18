@@ -1,9 +1,15 @@
-import React from 'react'
-import {Keyboard, Platform, StyleProp, View, ViewStyle} from 'react-native'
+import {Fragment, useMemo} from 'react'
 import {
-  AppBskyFeedDefs,
+  Keyboard,
+  Platform,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import {
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyGraphDefs,
+  type AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -13,11 +19,11 @@ import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
 import {isNative} from '#/platform/detection'
 import {
-  ThreadgateAllowUISetting,
+  type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
-import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {atoms as a, useTheme, web} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {
@@ -55,7 +61,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
     ) && post.record.reply?.root
       ? post.record.reply.root.uri
       : post.uri
-  const settings = React.useMemo(() => {
+  const settings = useMemo(() => {
     return threadgateViewToAllowUISetting(post.threadgate)
   }, [post.threadgate])
 
@@ -70,8 +76,8 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const description = anyoneCanReply
     ? _(msg`Everybody can reply`)
     : noOneCanReply
-    ? _(msg`Replies disabled`)
-    : _(msg`Some people can reply`)
+      ? _(msg`Replies disabled`)
+      : _(msg`Some people can reply`)
 
   const onPressOpen = () => {
     if (isNative && Keyboard.isVisible()) {
@@ -154,7 +160,9 @@ function Icon({
   width?: number
   settings: ThreadgateAllowUISetting[]
 }) {
-  const isEverybody = settings.length === 0
+  const isEverybody =
+    settings.length === 0 ||
+    settings.every(setting => setting.type === 'everybody')
   const isNobody = !!settings.find(gate => gate.type === 'nobody')
   const IconComponent = isEverybody ? Earth : isNobody ? CircleBanSign : Group
   return <IconComponent fill={color} width={width} />
@@ -172,12 +180,13 @@ function WhoCanReplyDialog({
   embeddingDisabled: boolean
 }) {
   const {_} = useLingui()
+
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Dialog: adjust who can interact with this post`)}
-        style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
+        style={web({maxWidth: 400})}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_xl, a.pb_sm]}>
             <Trans>Who can interact with this post?</Trans>
@@ -188,6 +197,20 @@ function WhoCanReplyDialog({
             embeddingDisabled={embeddingDisabled}
           />
         </View>
+        {isNative && (
+          <Button
+            label={_(msg`Close`)}
+            onPress={() => control.close()}
+            size="small"
+            variant="solid"
+            color="secondary"
+            style={[a.mt_5xl]}>
+            <ButtonText>
+              <Trans>Close</Trans>
+            </ButtonText>
+          </Button>
+        )}
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
@@ -226,10 +249,10 @@ function Rules({
           <Trans>
             Only{' '}
             {settings.map((rule, i) => (
-              <React.Fragment key={`rule-${i}`}>
+              <Fragment key={`rule-${i}`}>
                 <Rule rule={rule} post={post} lists={post.threadgate!.lists} />
                 <Separator i={i} length={settings.length} />
-              </React.Fragment>
+              </Fragment>
             ))}{' '}
             can reply.
           </Trans>

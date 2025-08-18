@@ -518,8 +518,8 @@ export const ComposePost = ({
       thread.posts.length > 1
         ? _(msg`Your posts have been published`)
         : replyTo
-        ? _(msg`Your reply has been published`)
-        : _(msg`Your post has been published`),
+          ? _(msg`Your reply has been published`)
+          : _(msg`Your post has been published`),
     )
   }, [
     _,
@@ -621,7 +621,11 @@ export const ComposePost = ({
 
   const footer = (
     <>
-      <SuggestedLanguage text={activePost.richtext.text} />
+      <SuggestedLanguage
+        text={activePost.richtext.text}
+        // NOTE(@elijaharita): currently just choosing the first language if any exists
+        replyToLanguage={replyTo?.langs?.[0]}
+      />
       <ComposerPills
         isReply={!!replyTo}
         post={activePost}
@@ -699,6 +703,7 @@ export const ComposePost = ({
                   dispatch={composerDispatch}
                   textInput={post.id === activePost.id ? textInput : null}
                   isFirstPost={index === 0}
+                  isLastPost={index === thread.posts.length - 1}
                   isPartOfThread={thread.posts.length > 1}
                   isReply={index > 0 || !!replyTo}
                   isActive={post.id === activePost.id}
@@ -738,6 +743,7 @@ let ComposerPost = React.memo(function ComposerPost({
   isActive,
   isReply,
   isFirstPost,
+  isLastPost,
   isPartOfThread,
   canRemovePost,
   canRemoveQuote,
@@ -752,6 +758,7 @@ let ComposerPost = React.memo(function ComposerPost({
   isActive: boolean
   isReply: boolean
   isFirstPost: boolean
+  isLastPost: boolean
   isPartOfThread: boolean
   canRemovePost: boolean
   canRemoveQuote: boolean
@@ -830,13 +837,15 @@ let ComposerPost = React.memo(function ComposerPost({
     <View
       style={[
         a.mx_lg,
+        a.mb_sm,
+        !isActive && isLastPost && a.mb_lg,
         !isActive && styles.inactivePost,
         isTextOnly && isNative && a.flex_grow,
       ]}>
       <View style={[a.flex_row, isNative && a.flex_1]}>
         <UserAvatar
           avatar={currentProfile?.avatar}
-          size={50}
+          size={42}
           type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
           style={[a.mt_xs]}
         />
@@ -1000,20 +1009,20 @@ function ComposerTopBar({
                       }),
                     )
                 : isThread
-                ? _(
-                    msg({
-                      message: 'Publish posts',
-                      comment:
-                        'Accessibility label for button to publish multiple posts in a thread',
-                    }),
-                  )
-                : _(
-                    msg({
-                      message: 'Publish post',
-                      comment:
-                        'Accessibility label for button to publish a single post',
-                    }),
-                  )
+                  ? _(
+                      msg({
+                        message: 'Publish posts',
+                        comment:
+                          'Accessibility label for button to publish multiple posts in a thread',
+                      }),
+                    )
+                  : _(
+                      msg({
+                        message: 'Publish post',
+                        comment:
+                          'Accessibility label for button to publish a single post',
+                      }),
+                    )
             }
             variant="solid"
             color="primary"

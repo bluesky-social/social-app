@@ -10,6 +10,7 @@ import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
+import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
@@ -130,7 +131,7 @@ export class Convo {
 
   getSnapshot(): ConvoState {
     if (!this.snapshot) this.snapshot = this.generateSnapshot()
-    // logger.debug('Convo: snapshotted', {})
+    // logger.debug('snapshotted', {})
     return this.snapshot
   }
 
@@ -392,7 +393,7 @@ export class Convo {
         break
     }
 
-    logger.debug(`Convo: dispatch '${action.event}'`, {
+    logger.debug(`dispatch '${action.event}'`, {
       id: this.id,
       prev: prevStatus,
       next: this.status,
@@ -467,13 +468,13 @@ export class Convo {
        * Some validation prior to `Ready` status
        */
       if (!this.convo) {
-        throw new Error('Convo: could not find convo')
+        throw new Error('could not find convo')
       }
       if (!this.sender) {
-        throw new Error('Convo: could not find sender in convo')
+        throw new Error('could not find sender in convo')
       }
       if (!this.recipients) {
-        throw new Error('Convo: could not find recipients in convo')
+        throw new Error('could not find recipients in convo')
       }
 
       const userIsDisabled = Boolean(this.sender.chatDisabled)
@@ -484,7 +485,11 @@ export class Convo {
         this.dispatch({event: ConvoDispatchEvent.Ready})
       }
     } catch (e: any) {
-      logger.error(e, {message: 'Convo: setup failed'})
+      if (!isNetworkError(e)) {
+        logger.error('setup failed', {
+          safeMessage: e.message,
+        })
+      }
 
       this.dispatch({
         event: ConvoDispatchEvent.Error,
@@ -589,7 +594,11 @@ export class Convo {
       this.sender = sender || this.sender
       this.recipients = recipients || this.recipients
     } catch (e: any) {
-      logger.error(e, {message: `Convo: failed to refresh convo`})
+      if (!isNetworkError(e)) {
+        logger.error(`failed to refresh convo`, {
+          safeMessage: e.message,
+        })
+      }
     }
   }
 
@@ -599,7 +608,7 @@ export class Convo {
       }
     | undefined
   async fetchMessageHistory() {
-    logger.debug('Convo: fetch message history', {})
+    logger.debug('fetch message history', {})
 
     /*
      * If oldestRev is null, we've fetched all history.
@@ -653,7 +662,11 @@ export class Convo {
         }
       }
     } catch (e: any) {
-      logger.error('Convo: failed to fetch message history')
+      if (!isNetworkError(e)) {
+        logger.error('failed to fetch message history', {
+          safeMessage: e.message,
+        })
+      }
 
       this.fetchMessageHistoryError = {
         retry: () => {
@@ -802,7 +815,7 @@ export class Convo {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim() && !message.embed) return
 
-    logger.debug('Convo: send message', {})
+    logger.debug('send message', {})
 
     const tempId = nanoid()
 
@@ -836,7 +849,7 @@ export class Convo {
 
   async processPendingMessages() {
     logger.debug(
-      `Convo: processing messages (${this.pendingMessages.size} remaining)`,
+      `processing messages (${this.pendingMessages.size} remaining)`,
       {},
     )
 
@@ -881,7 +894,6 @@ export class Convo {
       // continue queue processing
       await this.processPendingMessages()
     } catch (e: any) {
-      logger.error(e, {message: `Convo: failed to send message`})
       this.handleSendMessageFailure(e)
       this.isProcessingPendingMessages = false
     }
@@ -914,21 +926,23 @@ export class Convo {
           case 'recipient has disabled incoming messages':
             break
           default:
-            logger.warn(
-              `Convo handleSendMessageFailure could not handle error`,
-              {
+            if (!isNetworkError(e)) {
+              logger.warn(`handleSendMessageFailure could not handle error`, {
                 status: e.status,
                 message: e.message,
-              },
-            )
+              })
+            }
             break
         }
       }
     } else {
       this.pendingMessageFailure = 'unrecoverable'
-      logger.error(e, {
-        message: `Convo handleSendMessageFailure received unknown error`,
-      })
+
+      if (!isNetworkError(e)) {
+        logger.error(`handleSendMessageFailure received unknown error`, {
+          safeMessage: e.message,
+        })
+      }
     }
 
     this.commit()
@@ -944,7 +958,7 @@ export class Convo {
     this.commit()
 
     logger.debug(
-      `Convo: batch retrying ${this.pendingMessages.size} pending messages`,
+      `batch retrying ${this.pendingMessages.size} pending messages`,
       {},
     )
 
@@ -977,18 +991,14 @@ export class Convo {
 
       this.commit()
 
-      logger.debug(
-        `Convo: sent ${this.pendingMessages.size} pending messages`,
-        {},
-      )
+      logger.debug(`sent ${this.pendingMessages.size} pending messages`, {})
     } catch (e: any) {
-      logger.error(e, {message: `Convo: failed to batch retry messages`})
       this.handleSendMessageFailure(e)
     }
   }
 
   async deleteMessage(messageId: string) {
-    logger.debug('Convo: delete message', {})
+    logger.debug('delete message', {})
 
     this.deletedMessages.add(messageId)
     this.commit()
@@ -1004,7 +1014,11 @@ export class Convo {
         )
       })
     } catch (e: any) {
-      logger.error(e, {message: `Convo: failed to delete message`})
+      if (!isNetworkError(e)) {
+        logger.error(`failed to delete message`, {
+          safeMessage: e.message,
+        })
+      }
       this.deletedMessages.delete(messageId)
       this.commit()
       throw e
@@ -1232,7 +1246,7 @@ export class Convo {
     }
 
     try {
-      logger.info(`Adding reaction ${emoji} to message ${messageId}`)
+      logger.debug(`Adding reaction ${emoji} to message ${messageId}`)
       const {data} = await this.agent.chat.bsky.convo.addReaction(
         {messageId, value: emoji, convoId: this.convoId},
         {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
@@ -1297,7 +1311,7 @@ export class Convo {
     }
 
     try {
-      logger.info(`Removing reaction ${emoji} from message ${messageId}`)
+      logger.debug(`Removing reaction ${emoji} from message ${messageId}`)
       await this.agent.chat.bsky.convo.removeReaction(
         {messageId, value: emoji, convoId: this.convoId},
         {encoding: 'application/json', headers: DM_SERVICE_HEADERS},

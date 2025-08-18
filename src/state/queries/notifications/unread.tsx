@@ -14,7 +14,7 @@ import {useAgent, useSession} from '#/state/session'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
-import {CachedFeedPage, FeedPage} from './types'
+import {type CachedFeedPage, type FeedPage} from './types'
 import {fetchPage} from './util'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
@@ -35,12 +35,14 @@ interface ApiContext {
 }
 
 const stateContext = React.createContext<StateContext>('')
+stateContext.displayName = 'NotificationsUnreadStateContext'
 
 const apiContext = React.createContext<ApiContext>({
   async markAllRead() {},
   async checkUnread() {},
   getCachedUnreadPage: () => undefined,
 })
+apiContext.displayName = 'NotificationsUnreadApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
@@ -94,8 +96,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           data.event === '30+'
             ? 30
             : data.event === ''
-            ? 0
-            : parseInt(data.event, 10) || 1,
+              ? 0
+              : parseInt(data.event, 10) || 1,
       }
       setNumUnread(data.event)
     }
@@ -164,8 +166,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             unreadCount >= 30
               ? '30+'
               : unreadCount === 0
-              ? ''
-              : String(unreadCount)
+                ? ''
+                : String(unreadCount)
 
           // track last sync
           const now = new Date()
