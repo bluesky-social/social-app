@@ -1,8 +1,10 @@
 import {
   Agent as BaseAgent,
+  type AtprotoServiceType,
   type AtpSessionData,
   type AtpSessionEvent,
   BskyAgent,
+  type Did,
 } from '@atproto/api'
 import {type FetchHandler} from '@atproto/api/dist/agent'
 import {type SessionManager} from '@atproto/api/dist/session-manager'
@@ -31,11 +33,13 @@ import {
 import {type SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
 
+export type ProxyHeaderValue = `${Did}#${AtprotoServiceType}`
+
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
 
   const agent = new BskyAppAgent({service: PUBLIC_BSKY_SERVICE})
-  agent.setHeader('atproto-proxy', BLUESKY_PROXY_HEADER)
+  agent.configureProxy(BLUESKY_PROXY_HEADER)
   return agent
 }
 
@@ -73,7 +77,7 @@ export async function createAgentAndResume(
     }
   }
 
-  agent.setHeader('atproto-proxy', BLUESKY_PROXY_HEADER)
+  agent.configureProxy(BLUESKY_PROXY_HEADER)
 
   return agent.prepare(gates, moderation, onSessionChange)
 }
@@ -108,7 +112,7 @@ export async function createAgentAndLogin(
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
 
-  agent.setHeader('atproto-proxy', BLUESKY_PROXY_HEADER)
+  agent.configureProxy(BLUESKY_PROXY_HEADER)
 
   return agent.prepare(gates, moderation, onSessionChange)
 }
@@ -197,7 +201,7 @@ export async function createAgentAndCreateAccount(
     logger.error(e, {message: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
-  agent.setHeader('atproto-proxy', BLUESKY_PROXY_HEADER)
+  agent.configureProxy(BLUESKY_PROXY_HEADER)
 
   return agent.prepare(gates, moderation, onSessionChange)
 }
@@ -260,7 +264,7 @@ export class Agent extends BaseAgent {
   ) {
     super(options)
     if (proxyHeader) {
-      this.setHeader('atproto-proxy', proxyHeader)
+      this.configureProxy(proxyHeader)
     }
   }
 }

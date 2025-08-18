@@ -1,6 +1,7 @@
 import {type Insets, Platform} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 
+import {type ProxyHeaderValue} from '#/state/session/agent'
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID} from '#/env'
 
 export const LOCAL_DEV_SERVICE =
@@ -211,7 +212,7 @@ export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
 
-export const BLUESKY_PROXY_HEADER = `${BLUESKY_PROXY_DID}#bsky_appview`
+export const BLUESKY_PROXY_HEADER: ProxyHeaderValue = `${BLUESKY_PROXY_DID}#bsky_appview`
 
 export const BLUESKY_SERVICE_HEADERS = {
   'atproto-proxy': BLUESKY_PROXY_HEADER,
