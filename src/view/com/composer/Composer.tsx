@@ -104,7 +104,7 @@ import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
 import {SelectPhotoBtn} from '#/view/com/composer/photos/SelectPhotoBtn'
-import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
+import {SelectPostLanguagesBtn} from '#/view/com/composer/select-language/SelectPostLanguagesDialog'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
@@ -1350,7 +1350,7 @@ function ComposerFooter({
             />
           </Button>
         )}
-        <SelectLangBtn />
+        <SelectPostLanguagesBtn />
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}
