@@ -89,6 +89,7 @@ const SUPPORTED_IMAGE_MIME_TYPES = (
     'image/png',
     'image/svg+xml',
     'image/webp',
+    'image/avif',
     isNative && 'image/heic',
   ] as const
 ).filter(Boolean)
@@ -324,11 +325,20 @@ async function processImagePickerAssets(
         supportedAssets = supportedAssets.slice(0, 1)
       }
 
-      if (
-        supportedAssets[0].duration &&
-        supportedAssets[0].duration > VIDEO_MAX_DURATION_MS
-      ) {
-        errors.add(SelectedAssetError.VideoTooLong)
+      if (supportedAssets[0].duration) {
+        if (isWeb) {
+          /*
+           * Web reports duration as seconds
+           */
+          supportedAssets[0].duration = supportedAssets[0].duration * 1000
+        }
+
+        if (supportedAssets[0].duration > VIDEO_MAX_DURATION_MS) {
+          errors.add(SelectedAssetError.VideoTooLong)
+          supportedAssets = []
+        }
+      } else {
+        errors.add(SelectedAssetError.Unsupported)
         supportedAssets = []
       }
     } else if (selectableAssetType === 'gif') {
