@@ -21,7 +21,7 @@ export const ConfirmLanguagesButton = ({
     <View
       style={[
         a.pt_lg,
-        a.px_lg,
+        a.px_0,
         t.atoms.border_contrast_low,
         isMobile && [a.pb_2xl, a.border_t],
       ]}>
