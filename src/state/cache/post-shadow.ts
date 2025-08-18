@@ -24,12 +24,13 @@ export interface PostShadow {
   isDeleted: boolean
   embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined
   pinned: boolean
+  optimisticReplyCount: number | undefined
 }
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
 
 const emitter = new EventEmitter()
-const shadows: WeakMap<
+export const shadows: WeakMap<
   AppBskyFeedDefs.PostView,
   Partial<PostShadow>
 > = new WeakMap()
@@ -95,6 +96,11 @@ function mergeShadow(
     repostCount = Math.max(0, repostCount)
   }
 
+  let replyCount = post.replyCount ?? 0
+  if ('optimisticReplyCount' in shadow) {
+    replyCount = shadow.optimisticReplyCount ?? replyCount
+  }
+
   let embed: typeof post.embed
   if ('embed' in shadow) {
     if (
@@ -112,6 +118,7 @@ function mergeShadow(
     embed: embed || post.embed,
     likeCount: likeCount,
     repostCount: repostCount,
+    replyCount: replyCount,
     viewer: {
       ...(post.viewer || {}),
       like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,

@@ -9,6 +9,7 @@ import {
 } from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 
+import {shadows, updatePostShadow} from '#/state/cache/post-shadow'
 import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
@@ -85,10 +86,13 @@ export function createCacheMutator({
           /*
            * Update parent data
            */
-          parent.value.post = {
-            ...parent.value.post,
-            replyCount: (parent.value.post.replyCount || 0) + 1,
-          }
+          const shadow = shadows.get(parent.value.post)
+          const prevOptimisticCount = shadow?.optimisticReplyCount || 0
+          const prevReplyCount = parent.value.post.replyCount || 0
+          updatePostShadow(queryClient, parent.value.post.uri, {
+            // prefer optimistic count, if we already have some
+            optimisticReplyCount: (prevOptimisticCount || prevReplyCount) + 1,
+          })
 
           const opDid = getRootPostAtUri(parent.value.post)?.host
           const nextPreexistingItem = thread.at(i + 1)
