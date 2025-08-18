@@ -30,10 +30,18 @@ export interface PostShadow {
 export const POST_TOMBSTONE = Symbol('PostTombstone')
 
 const emitter = new EventEmitter()
-export const shadows: WeakMap<
+const shadows: WeakMap<
   AppBskyFeedDefs.PostView,
   Partial<PostShadow>
 > = new WeakMap()
+
+/**
+ * Use with caution! This function returns the raw shadow data for a post.
+ * Prefer using `usePostShadow`.
+ */
+export function dangerousGetPostShadow(post: AppBskyFeedDefs.PostView) {
+  return shadows.get(post)
+}
 
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,

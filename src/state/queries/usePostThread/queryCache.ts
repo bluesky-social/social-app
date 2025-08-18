@@ -9,7 +9,10 @@ import {
 } from '@atproto/api'
 import {type QueryClient} from '@tanstack/react-query'
 
-import {shadows, updatePostShadow} from '#/state/cache/post-shadow'
+import {
+  dangerousGetPostShadow,
+  updatePostShadow,
+} from '#/state/cache/post-shadow'
 import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
@@ -86,7 +89,7 @@ export function createCacheMutator({
           /*
            * Update parent data
            */
-          const shadow = shadows.get(parent.value.post)
+          const shadow = dangerousGetPostShadow(parent.value.post)
           const prevOptimisticCount = shadow?.optimisticReplyCount || 0
           const prevReplyCount = parent.value.post.replyCount || 0
           updatePostShadow(queryClient, parent.value.post.uri, {
