@@ -47,7 +47,12 @@ export function SelectPostLanguagesBtn() {
         onPress={onPressMore}
         size="small"
         hitSlop={LANG_DROPDOWN_HITSLOP}
-        label={_(msg`Post language selection`)}
+        label={_(
+          msg({
+            message: `Post language selection`,
+            comment: `Accessibility label for button that opens dialog to choose post language settings`,
+          }),
+        )}
         accessibilityHint={_(msg`Opens post language settings`)}
         style={[a.mx_md]}>
         {postLanguagesPref.length > 0 ? (
@@ -78,7 +83,6 @@ function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <PostLanguagesSettingsDialogInner onClose={control.close} />
-      <Dialog.Close />
     </Dialog.Outer>
   )
 }
@@ -134,76 +138,79 @@ export function PostLanguagesSettingsDialogInner({
     <Dialog.ScrollableInner
       accessibilityLabelledBy="dialog-title"
       accessibilityDescribedBy="dialog-description">
-      <View
-        testID="postLanguagesDialog"
-        style={[
-          t.atoms.bg,
-          a.flex_1,
-          a.px_sm,
-          isMobile ? [a.pt_xl] : [a.pt_lg, {maxHeight: deviceHeight * 0.7}],
-        ]}>
-        <Text
-          nativeID="dialog-title"
+      <View style={[a.relative, a.flex_1]}>
+        <View
+          testID="postLanguagesDialog"
           style={[
-            t.atoms.text,
-            a.text_left,
-            a.font_bold,
-            a.text_2xl,
-            a.mb_sm,
-            a.px_0,
+            t.atoms.bg,
+            a.flex_1,
+            a.px_sm,
+            isMobile ? [a.pt_xl] : [a.pt_lg, {maxHeight: deviceHeight * 0.7}],
           ]}>
-          <Trans>Post Languages</Trans>
-        </Text>
-
-        <Text
-          nativeID="dialog-description"
-          style={[
-            t.atoms.text,
-            a.text_left,
-            a.px_0,
-            a.mb_sm,
-            a.pb_lg,
-            a.text_md,
-          ]}>
-          <Trans>Which languages are used in this post?</Trans>
-        </Text>
-
-        <View style={[a.flex_1, {maxHeight: isMobile ? '72%' : '75%'}]}>
-          <ScrollView
+          <Text
+            nativeID="dialog-title"
             style={[
-              a.flex_1,
+              t.atoms.text,
+              a.text_left,
+              a.font_bold,
+              a.text_2xl,
+              a.mb_sm,
               a.px_0,
-              a.gap_sm,
-              {maxHeight: deviceHeight * 0.8},
             ]}>
-            <Toggle.Group
-              onChange={setToggleList}
-              values={toggleList}
-              label={'languageSelection'}
-              maxSelections={3}>
-              {languages.map(lang => (
-                <Toggle.Item
-                  key={lang.code2}
-                  name={lang.code2}
-                  label={languageName(lang, langPrefs.appLanguage)}
-                  style={[
-                    t.atoms.border_contrast_low,
-                    a.border_t,
-                    a.rounded_0,
-                    a.px_0,
-                    a.py_md,
-                  ]}>
-                  <Toggle.LabelText style={[a.flex_1]}>
-                    {languageName(lang, langPrefs.appLanguage)}
-                  </Toggle.LabelText>
-                  <Toggle.Switch />
-                </Toggle.Item>
-              ))}
-            </Toggle.Group>
-            <View style={[{height: isMobile ? 60 : 0}]} />
-          </ScrollView>
+            <Trans>Post Languages</Trans>
+          </Text>
+
+          <Text
+            nativeID="dialog-description"
+            style={[
+              t.atoms.text,
+              a.text_left,
+              a.px_0,
+              a.mb_sm,
+              a.pb_lg,
+              a.text_md,
+            ]}>
+            <Trans>Which languages are used in this post?</Trans>
+          </Text>
+
+          <View style={[a.flex_1, {maxHeight: isMobile ? '72%' : '75%'}]}>
+            <ScrollView
+              style={[
+                a.flex_1,
+                a.px_0,
+                a.gap_sm,
+                {maxHeight: deviceHeight * 0.8},
+              ]}>
+              <Toggle.Group
+                onChange={setToggleList}
+                values={toggleList}
+                label={'languageSelection'}
+                maxSelections={3}>
+                {languages.map(lang => (
+                  <Toggle.Item
+                    key={lang.code2}
+                    name={lang.code2}
+                    label={languageName(lang, langPrefs.appLanguage)}
+                    style={[
+                      t.atoms.border_contrast_low,
+                      a.border_t,
+                      a.rounded_0,
+                      a.px_0,
+                      a.py_md,
+                    ]}>
+                    <Toggle.LabelText style={[a.flex_1]}>
+                      {languageName(lang, langPrefs.appLanguage)}
+                    </Toggle.LabelText>
+                    <Toggle.Switch />
+                  </Toggle.Item>
+                ))}
+              </Toggle.Group>
+              <View style={[{height: isMobile ? 60 : 0}]} />
+            </ScrollView>
+          </View>
+          <ConfirmLanguagesButton onPress={onPressDone} />
         </View>
-        <ConfirmLanguagesButton onPress={onPressDone} />
+        <Dialog.Close />
       </View>
     </Dialog.ScrollableInner>
   )
