@@ -486,12 +486,9 @@ export function SelectMediaButton({
       )}
       accessibilityHint={_(
         msg({
-          message: `Opens device gallery to select up to ${plural(
-            MAX_IMAGES,
-            {
-              other: '# images',
-            },
-          )}, or a single video or GIF.`,
+          message: `Opens device gallery to select up to ${plural(MAX_IMAGES, {
+            other: '# images',
+          })}, or a single video or GIF.`,
           comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
         }),
       )}
