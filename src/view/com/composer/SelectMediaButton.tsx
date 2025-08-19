@@ -481,7 +481,7 @@ export function SelectMediaButton({
       label={_(
         msg({
           message: `Add media to post`,
-          comment: `Accessibility label for button in composer to add photos or a video to a post`,
+          comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,
         }),
       )}
       accessibilityHint={_(
