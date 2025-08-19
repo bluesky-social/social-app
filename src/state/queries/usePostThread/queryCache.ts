@@ -90,11 +90,25 @@ export function createCacheMutator({
            * Update parent data
            */
           const shadow = dangerousGetPostShadow(parent.value.post)
-          const prevOptimisticCount = shadow?.optimisticReplyCount || 0
-          const prevReplyCount = parent.value.post.replyCount || 0
+          const prevOptimisticCount = shadow?.optimisticReplyCount
+          const prevReplyCount = parent.value.post.replyCount
+          // prefer optimistic count, if we already have some
+          const currentReplyCount =
+            (prevOptimisticCount ?? prevReplyCount ?? 0) + 1
+
+          /*
+           * We must update the value in the query cache in order for thread
+           * traversal to properly compute required metadata.
+           */
+          parent.value.post.replyCount = currentReplyCount
+
+          /**
+           * Additionally, we need to update the post shadow to keep track of
+           * these new values, since mutating the post object above does not
+           * cause a re-render.
+           */
           updatePostShadow(queryClient, parent.value.post.uri, {
-            // prefer optimistic count, if we already have some
-            optimisticReplyCount: (prevOptimisticCount || prevReplyCount) + 1,
+            optimisticReplyCount: currentReplyCount,
           })
 
           const opDid = getRootPostAtUri(parent.value.post)?.host
