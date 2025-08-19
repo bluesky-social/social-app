@@ -153,7 +153,7 @@ msgstr ""
 msgid "{0} joined this week"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:202
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:204
 msgid "{0} of {1}"
 msgstr ""
 
@@ -687,7 +687,7 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:780
+#: src/view/com/composer/Composer.tsx:793
 msgid "Add another post"
 msgstr ""
 
@@ -705,6 +705,11 @@ msgstr ""
 msgid "Add emoji reaction"
 msgstr ""
 
+#. Accessibility label for button in composer to add photos or a video to a post
+#: src/view/com/composer/SelectMediaButton.tsx:482
+msgid "Add media to post"
+msgstr ""
+
 #: src/components/moderation/ReportDialog/index.tsx:403
 #: src/components/moderation/ReportDialog/index.tsx:407
 msgid "Add more details (optional)"
@@ -718,7 +723,7 @@ msgstr ""
 msgid "Add muted words and tags"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1344
+#: src/view/com/composer/Composer.tsx:1426
 msgid "Add new post"
 msgstr ""
 
@@ -788,7 +793,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:404
+#: src/screens/Moderation/index.tsx:423
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
 msgstr ""
 
@@ -801,7 +806,7 @@ msgstr ""
 msgid "Adult Content labels"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:454
+#: src/screens/Moderation/index.tsx:473
 msgid "Advanced"
 msgstr ""
 
@@ -888,7 +893,7 @@ msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:54
 #: src/view/com/composer/GifAltText.tsx:154
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:118
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:117
 #: src/view/com/composer/videos/SubtitleDialog.tsx:40
 #: src/view/com/composer/videos/SubtitleDialog.tsx:55
 #: src/view/com/composer/videos/SubtitleDialog.tsx:101
@@ -905,7 +910,7 @@ msgid "Alt text describes images for blind and low-vision users, and helps give 
 msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:179
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:139
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:138
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
@@ -917,7 +922,7 @@ msgstr ""
 msgid "An error has occurred"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:420
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:422
 msgid "An error occurred"
 msgstr ""
 
@@ -943,10 +948,6 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 msgid "An error occurred while saving the QR code!"
-msgstr ""
-
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:63
-msgid "An error occurred while selecting the video"
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:352
@@ -1164,11 +1165,11 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:729
+#: src/view/com/composer/Composer.tsx:741
 msgid "Are you sure you'd like to discard this draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:914
+#: src/view/com/composer/Composer.tsx:932
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1337,7 +1338,7 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:282
+#: src/screens/Moderation/index.tsx:301
 msgid "Blocked accounts"
 msgstr ""
 
@@ -1557,8 +1558,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:289
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:969
-#: src/view/com/composer/Composer.tsx:980
+#: src/view/com/composer/Composer.tsx:987
+#: src/view/com/composer/Composer.tsx:998
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:52
 #: src/view/com/modals/ChangePassword.tsx:279
@@ -1922,7 +1923,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:977
+#: src/view/com/composer/Composer.tsx:995
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -1980,7 +1981,7 @@ msgstr ""
 msgid "Compose new post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:878
+#: src/view/com/composer/Composer.tsx:896
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -1988,7 +1989,7 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1738
+#: src/view/com/composer/Composer.tsx:1820
 msgid "Compressing video..."
 msgstr ""
 
@@ -2015,11 +2016,11 @@ msgstr ""
 msgid "Confirm delete account"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:330
+#: src/screens/Moderation/index.tsx:349
 msgid "Confirm your age:"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:321
+#: src/screens/Moderation/index.tsx:340
 msgid "Confirm your birthdate"
 msgstr ""
 
@@ -2072,8 +2073,8 @@ msgstr ""
 msgid "Content Blocked"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:317
-#: src/screens/Moderation/index.tsx:351
+#: src/screens/Moderation/index.tsx:336
+#: src/screens/Moderation/index.tsx:370
 msgid "Content filters"
 msgstr ""
 
@@ -2518,7 +2519,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:678
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:680
-#: src/view/com/composer/Composer.tsx:888
+#: src/view/com/composer/Composer.tsx:906
 msgid "Delete post"
 msgstr ""
 
@@ -2566,7 +2567,7 @@ msgid "Description"
 msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:150
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:114
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:113
 msgid "Descriptive alt text"
 msgstr ""
 
@@ -2620,7 +2621,7 @@ msgstr ""
 msgid "Disable haptic feedback"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:386
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:388
 msgid "Disable subtitles"
 msgstr ""
 
@@ -2629,13 +2630,13 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
 #: src/screens/Messages/Settings.tsx:155
 #: src/screens/Messages/Settings.tsx:158
-#: src/screens/Moderation/index.tsx:394
+#: src/screens/Moderation/index.tsx:413
 msgid "Disabled"
 msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:89
-#: src/view/com/composer/Composer.tsx:731
-#: src/view/com/composer/Composer.tsx:921
+#: src/view/com/composer/Composer.tsx:743
+#: src/view/com/composer/Composer.tsx:939
 msgid "Discard"
 msgstr ""
 
@@ -2643,11 +2644,11 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:728
+#: src/view/com/composer/Composer.tsx:740
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:913
+#: src/view/com/composer/Composer.tsx:931
 msgid "Discard post?"
 msgstr ""
 
@@ -2673,7 +2674,7 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1662
+#: src/view/com/composer/Composer.tsx:1744
 msgid "Dismiss error"
 msgstr ""
 
@@ -3002,7 +3003,7 @@ msgstr ""
 msgid "Enable {0} only"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:381
+#: src/screens/Moderation/index.tsx:400
 msgid "Enable adult content"
 msgstr ""
 
@@ -3028,7 +3029,7 @@ msgstr ""
 msgid "Enable push notifications"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:387
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:389
 msgid "Enable subtitles"
 msgstr ""
 
@@ -3048,7 +3049,7 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:146
 #: src/screens/Messages/Settings.tsx:149
-#: src/screens/Moderation/index.tsx:392
+#: src/screens/Moderation/index.tsx:411
 msgid "Enabled"
 msgstr ""
 
@@ -3074,7 +3075,7 @@ msgstr ""
 msgid "Enter code"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:405
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:407
 msgid "Enter fullscreen"
 msgstr ""
 
@@ -3119,7 +3120,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1747
+#: src/view/com/composer/Composer.tsx:1829
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr ""
@@ -3194,7 +3195,7 @@ msgstr ""
 msgid "Excludes users you follow"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:404
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:406
 msgid "Exit fullscreen"
 msgstr ""
 
@@ -3810,10 +3811,6 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
 
-#: src/view/com/composer/photos/SelectPhotoBtn.tsx:50
-msgid "Gallery"
-msgstr ""
-
 #: src/components/StarterPack/ProfileStarterPacks.tsx:307
 msgid "Generate a starter pack"
 msgstr ""
@@ -3967,6 +3964,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:89
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:75
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:84
+#: src/screens/Moderation/index.tsx:214
 msgid "Go to account settings"
 msgstr ""
 
@@ -4176,7 +4174,7 @@ msgstr ""
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:59
+#: src/screens/Moderation/index.tsx:60
 msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
 msgstr ""
 
@@ -4382,7 +4380,7 @@ msgstr ""
 msgid "Interaction limited"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:222
+#: src/screens/Moderation/index.tsx:241
 msgid "Interaction settings"
 msgstr ""
 
@@ -4451,7 +4449,7 @@ msgstr ""
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1681
+#: src/view/com/composer/Composer.tsx:1763
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -4927,7 +4925,7 @@ msgstr ""
 msgid "Manage saved feeds"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:292
+#: src/screens/Moderation/index.tsx:311
 msgid "Manage verification settings"
 msgstr ""
 
@@ -5045,7 +5043,7 @@ msgid "Misleading Post"
 msgstr ""
 
 #: src/Navigation.tsx:176
-#: src/screens/Moderation/index.tsx:99
+#: src/screens/Moderation/index.tsx:100
 #: src/screens/Settings/Settings.tsx:188
 #: src/screens/Settings/Settings.tsx:191
 msgid "Moderation"
@@ -5079,7 +5077,7 @@ msgctxt "toast"
 msgid "Moderation list updated"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:252
+#: src/screens/Moderation/index.tsx:271
 msgid "Moderation lists"
 msgstr ""
 
@@ -5096,7 +5094,7 @@ msgstr ""
 msgid "Moderation states"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:206
+#: src/screens/Moderation/index.tsx:225
 msgid "Moderation tools"
 msgstr ""
 
@@ -5211,7 +5209,7 @@ msgstr ""
 msgid "Mute words & tags"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:267
+#: src/screens/Moderation/index.tsx:286
 msgid "Muted accounts"
 msgstr ""
 
@@ -5228,7 +5226,7 @@ msgstr ""
 msgid "Muted by \"{0}\""
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:237
+#: src/screens/Moderation/index.tsx:256
 msgid "Muted words & tags"
 msgstr ""
 
@@ -5722,15 +5720,23 @@ msgstr ""
 msgid "Onboarding reset"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:347
+#: src/view/com/composer/Composer.tsx:355
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:344
+#: src/view/com/composer/Composer.tsx:352
 msgid "One or more images is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:354
+#: src/view/com/composer/SelectMediaButton.tsx:390
+msgid "One or more of your selected files are not supported."
+msgstr ""
+
+#: src/view/com/composer/SelectMediaButton.tsx:413
+msgid "One or more of your selected files is too large. Maximum size is 100 MB."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:362
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -5748,7 +5754,7 @@ msgstr ""
 msgid "Only followers who I follow"
 msgstr ""
 
-#: src/lib/media/picker.shared.ts:32
+#: src/lib/media/picker.shared.ts:28
 msgid "Only image files are supported"
 msgstr ""
 
@@ -5787,7 +5793,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1329
+#: src/view/com/composer/Composer.tsx:1411
 msgid "Open emoji picker"
 msgstr ""
 
@@ -5816,7 +5822,7 @@ msgstr ""
 msgid "Open moderation debug page"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:233
+#: src/screens/Moderation/index.tsx:252
 msgid "Open muted words and tags settings"
 msgstr ""
 
@@ -5886,11 +5892,17 @@ msgstr ""
 msgid "Opens composer"
 msgstr ""
 
-#: src/view/com/composer/photos/SelectPhotoBtn.tsx:51
-msgid "Opens device photo gallery"
+#. Accessibility hint on web for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
+#: src/view/com/composer/SelectMediaButton.tsx:501
+msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1330
+#. Accessibility hint on native for button in composer to add images or a video to a post. Maximum number of images that can be selected is currently 4 but may change.
+#: src/view/com/composer/SelectMediaButton.tsx:490
+msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:1412
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -5931,10 +5943,6 @@ msgstr ""
 #: src/view/com/notifications/NotificationFeedItem.tsx:906
 #: src/view/com/util/UserAvatar.tsx:594
 msgid "Opens this profile"
-msgstr ""
-
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:75
-msgid "Opens video picker"
 msgstr ""
 
 #: src/components/dms/ReportDialog.tsx:221
@@ -6310,12 +6318,12 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1040
+#: src/view/com/composer/Composer.tsx:1058
 msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1038
+#: src/view/com/composer/Composer.tsx:1056
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -6490,7 +6498,7 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1744
+#: src/view/com/composer/Composer.tsx:1826
 msgid "Processing video..."
 msgstr ""
 
@@ -6529,22 +6537,22 @@ msgid "Public, sharable lists which can be used to drive feeds."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1020
+#: src/view/com/composer/Composer.tsx:1038
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1013
+#: src/view/com/composer/Composer.tsx:1031
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:998
+#: src/view/com/composer/Composer.tsx:1016
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1005
+#: src/view/com/composer/Composer.tsx:1023
 msgid "Publish reply"
 msgstr ""
 
@@ -6911,7 +6919,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1036
+#: src/view/com/composer/Composer.tsx:1054
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -7239,8 +7247,8 @@ msgstr ""
 #: src/view/com/composer/GifAltText.tsx:202
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:62
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:75
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:153
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:163
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:152
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:162
 #: src/view/com/modals/CreateOrEditList.tsx:315
 #: src/view/screens/SavedFeeds.tsx:117
 msgid "Save"
@@ -7440,7 +7448,7 @@ msgstr ""
 msgid "See this guide"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:195
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:197
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
 msgstr ""
 
@@ -7539,10 +7547,6 @@ msgstr ""
 msgid "Select the moderation service(s) to report to"
 msgstr ""
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:74
-msgid "Select video"
-msgstr ""
-
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
 msgstr ""
@@ -7570,6 +7574,10 @@ msgstr ""
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:110
 msgid "Select your preferred notification channels"
+msgstr ""
+
+#: src/view/com/composer/SelectMediaButton.tsx:393
+msgid "Selecting multiple media types is not supported."
 msgstr ""
 
 #: src/view/com/util/forms/DropdownButton.tsx:302
@@ -7649,7 +7657,7 @@ msgstr ""
 msgid "Set app icon to {0}"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:333
+#: src/screens/Moderation/index.tsx:352
 msgid "Set birthdate"
 msgstr ""
 
@@ -8077,7 +8085,7 @@ msgid "Something went wrong, please try again"
 msgstr ""
 
 #: src/components/ReportDialog/index.tsx:54
-#: src/screens/Moderation/index.tsx:111
+#: src/screens/Moderation/index.tsx:112
 #: src/screens/Profile/Sections/Labels.tsx:184
 msgid "Something went wrong, please try again."
 msgstr ""
@@ -8482,7 +8490,7 @@ msgstr ""
 msgid "The author of this thread has hidden this reply."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:407
+#: src/screens/Moderation/index.tsx:426
 msgid "The Bluesky web application"
 msgstr ""
 
@@ -8840,7 +8848,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:463
+#: src/view/com/composer/Composer.tsx:471
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -8974,7 +8982,7 @@ msgstr ""
 msgid "Toggle dropdown"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:384
+#: src/screens/Moderation/index.tsx:403
 msgid "Toggle to enable or disable adult content"
 msgstr ""
 
@@ -9256,12 +9264,8 @@ msgstr ""
 msgid "Unsubscribed from list"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:818
-msgid "Unsupported video type"
-msgstr ""
-
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:48
-msgid "Unsupported video type: {0}"
+#: src/view/com/composer/Composer.tsx:834
+msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:77
@@ -9346,7 +9350,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1741
+#: src/view/com/composer/Composer.tsx:1823
 msgid "Uploading video..."
 msgstr ""
 
@@ -9482,7 +9486,7 @@ msgstr ""
 msgid "Verification failed, please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:297
+#: src/screens/Moderation/index.tsx:316
 msgid "Verification settings"
 msgstr ""
 
@@ -9608,7 +9612,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1751
+#: src/view/com/composer/Composer.tsx:1833
 msgid "Video uploaded"
 msgstr ""
 
@@ -9620,9 +9624,8 @@ msgstr ""
 msgid "Videos"
 msgstr ""
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:42
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:55
-msgid "Videos must be less than 3 minutes long"
+#: src/view/com/composer/SelectMediaButton.tsx:407
+msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
 #: src/screens/Profile/Header/Shell.tsx:229
@@ -9707,11 +9710,11 @@ msgstr ""
 msgid "View video"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:277
+#: src/screens/Moderation/index.tsx:296
 msgid "View your blocked accounts"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:217
+#: src/screens/Moderation/index.tsx:236
 msgid "View your default post interaction settings"
 msgstr ""
 
@@ -9720,11 +9723,11 @@ msgstr ""
 msgid "View your feeds and explore more"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:247
+#: src/screens/Moderation/index.tsx:266
 msgid "View your moderation lists"
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:262
+#: src/screens/Moderation/index.tsx:281
 msgid "View your muted accounts"
 msgstr ""
 
@@ -9829,7 +9832,7 @@ msgstr ""
 msgid "We were unable to load your birth date preferences. Please try again."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:464
+#: src/screens/Moderation/index.tsx:483
 msgid "We were unable to load your configured labelers at this time."
 msgstr ""
 
@@ -9894,7 +9897,7 @@ msgstr ""
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:460
+#: src/view/com/composer/Composer.tsx:468
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -9945,7 +9948,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:781
+#: src/view/com/composer/Composer.tsx:794
 msgid "What's up?"
 msgstr ""
 
@@ -10027,11 +10030,11 @@ msgstr ""
 msgid "Write a message"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:876
+#: src/view/com/composer/Composer.tsx:894
 msgid "Write post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:779
+#: src/view/com/composer/Composer.tsx:792
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:90
 msgid "Write your reply"
 msgstr ""
@@ -10170,8 +10173,21 @@ msgstr ""
 msgid "You can now sign in with your new password."
 msgstr ""
 
+#: src/view/com/composer/SelectMediaButton.tsx:410
+msgid "You can only select one GIF at a time."
+msgstr ""
+
+#: src/view/com/composer/SelectMediaButton.tsx:404
+msgid "You can only select one video at a time."
+msgstr ""
+
 #: src/screens/Deactivated.tsx:133
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
+msgstr ""
+
+#. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
+#: src/view/com/composer/SelectMediaButton.tsx:396
+msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:85
@@ -10316,10 +10332,6 @@ msgstr ""
 msgid "You may only add up to 3 feeds"
 msgstr ""
 
-#: src/lib/media/picker.shared.ts:25
-msgid "You may only select up to 4 images"
-msgstr ""
-
 #: src/screens/Signup/StepInfo/Policies.tsx:136
 msgid "You must be 13 years of age or older to create an account."
 msgstr ""
@@ -10328,7 +10340,7 @@ msgstr ""
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
-#: src/screens/Moderation/index.tsx:355
+#: src/screens/Moderation/index.tsx:374
 msgid "You must complete age assurance in order to access the settings below."
 msgstr ""
 
@@ -10347,6 +10359,10 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated.tsx:27
 #: src/screens/PostThread/components/ThreadItemPostNoUnauthenticated.tsx:47
 msgid "You must sign in to view this post."
+msgstr ""
+
+#: src/view/com/composer/SelectMediaButton.tsx:439
+msgid "You need to allow access to your media library."
 msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/index.tsx:23
@@ -10524,6 +10540,10 @@ msgstr ""
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr ""
 
+#: src/screens/Moderation/index.tsx:208
+msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your bithdate in your <0>account settings</0>."
+msgstr ""
+
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:253
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:257
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:258
@@ -10586,11 +10606,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:522
+#: src/view/com/composer/Composer.tsx:530
 msgid "Your post has been published"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:519
+#: src/view/com/composer/Composer.tsx:527
 msgid "Your posts have been published"
 msgstr ""
 
@@ -10606,7 +10626,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:521
+#: src/view/com/composer/Composer.tsx:529
 msgid "Your reply has been published"
 msgstr ""
 
