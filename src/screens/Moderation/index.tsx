@@ -211,7 +211,7 @@ export function ModerationScreenInner({
               your{' '}
               <InlineLinkText
                 to="/settings/account"
-                label={_(msg`Account Settings`)}>
+                label={_(msg`Go to account settings`)}>
                 account settings
               </InlineLinkText>
               .
