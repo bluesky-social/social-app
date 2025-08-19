@@ -248,8 +248,12 @@ export function ProfileGrid({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
+
   const isLoading = isSuggestionsLoading || !moderationOpts
-  const maxLength = gtMobile ? 3 : viewContext === 'profileHeader' ? 12 : 6
+  const isProfileHeaderContext = viewContext === 'profileHeader'
+  const isFeedContext = viewContext === 'feed'
+
+  const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6
   const minLength = gtMobile ? 3 : 4
 
   const content = isLoading ? (
@@ -278,10 +282,9 @@ export function ProfileGrid({
           profile={profile}
           onPress={() => {
             logEvent('suggestedUser:press', {
-              logContext:
-                viewContext === 'feed'
-                  ? 'InterstitialDiscover'
-                  : 'InterstitialProfile',
+              logContext: isFeedContext
+                ? 'InterstitialDiscover'
+                : 'InterstitialProfile',
               recId,
               position: index,
             })
@@ -338,10 +341,9 @@ export function ProfileGrid({
                   style={[a.rounded_sm]}
                   onFollow={() => {
                     logEvent('suggestedUser:follow', {
-                      logContext:
-                        viewContext === 'feed'
-                          ? 'InterstitialDiscover'
-                          : 'InterstitialProfile',
+                      logContext: isFeedContext
+                        ? 'InterstitialDiscover'
+                        : 'InterstitialProfile',
                       location: 'Card',
                       recId,
                       position: index,
@@ -364,7 +366,7 @@ export function ProfileGrid({
   return (
     <View
       style={[
-        viewContext !== 'profileHeader' && a.border_t,
+        !isProfileHeaderContext && a.border_t,
         t.atoms.border_contrast_low,
         t.atoms.bg_contrast_25,
       ]}>
@@ -377,13 +379,13 @@ export function ProfileGrid({
           a.justify_between,
         ]}>
         <Text style={[a.text_sm, a.font_bold, t.atoms.text]}>
-          {viewContext === 'feed' ? (
+          {isFeedContext ? (
             <Trans>Suggested for you</Trans>
           ) : (
             <Trans>Similar accounts</Trans>
           )}
         </Text>
-        {viewContext !== 'profileHeader' && (
+        {!isProfileHeaderContext && (
           <InlineLinkText
             label={_(msg`See more suggested profiles on the Explore page`)}
             to="/search">
@@ -408,9 +410,7 @@ export function ProfileGrid({
             <View style={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}>
               {content}
 
-              {viewContext !== 'profileHeader' && (
-                <SeeMoreSuggestedProfilesCard />
-              )}
+              {!isProfileHeaderContext && <SeeMoreSuggestedProfilesCard />}
             </View>
           </ScrollView>
         </BlockDrawerGesture>
