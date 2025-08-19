@@ -15,7 +15,7 @@ const PostControlContext = createContext<{
 }>({})
 PostControlContext.displayName = 'PostControlContext'
 
-// Base button style, which the the other ones extend
+// Base button style, which the other ones extend
 export function PostControlButton({
   ref,
   onPress,
