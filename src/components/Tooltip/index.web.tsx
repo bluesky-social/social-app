@@ -20,6 +20,7 @@ const TooltipContext = createContext<TooltipContextType>({
   position: 'bottom',
   onVisibleChange: () => {},
 })
+TooltipContext.displayName = 'TooltipContext'
 
 export function Outer({
   children,

@@ -23,6 +23,7 @@ type Context = {
 const Context = createContext<Context>({
   type: 'info',
 })
+Context.displayName = 'AdmonitionContext'
 
 export function Icon() {
   const t = useTheme()

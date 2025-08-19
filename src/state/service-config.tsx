@@ -16,8 +16,12 @@ type LiveNowContext = {
 const TrendingContext = createContext<TrendingContext>({
   enabled: false,
 })
+TrendingContext.displayName = 'TrendingContext'
 
 const LiveNowContext = createContext<LiveNowContext | null>(null)
+LiveNowContext.displayName = 'LiveNowContext'
+
+const CheckEmailConfirmedContext = createContext<boolean | null>(null)
 
 export function Provider({children}: {children: React.ReactNode}) {
   const langPrefs = useLanguagePrefs()
@@ -59,10 +63,16 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   const liveNow = useMemo<LiveNowContext>(() => config?.liveNow ?? [], [config])
 
+  // probably true, so default to true when loading
+  // if the call fails, the query will set it to false for us
+  const checkEmailConfirmed = config?.checkEmailConfirmed ?? true
+
   return (
     <TrendingContext.Provider value={trending}>
       <LiveNowContext.Provider value={liveNow}>
-        {children}
+        <CheckEmailConfirmedContext.Provider value={checkEmailConfirmed}>
+          {children}
+        </CheckEmailConfirmedContext.Provider>
       </LiveNowContext.Provider>
     </TrendingContext.Provider>
   )
@@ -76,7 +86,7 @@ export function useLiveNowConfig() {
   const ctx = useContext(LiveNowContext)
   if (!ctx) {
     throw new Error(
-      'useLiveNowConfig must be used within a LiveNowConfigProvider',
+      'useLiveNowConfig must be used within a ServiceConfigManager',
     )
   }
   return ctx
@@ -85,4 +95,14 @@ export function useLiveNowConfig() {
 export function useCanGoLive(did?: string) {
   const config = useLiveNowConfig()
   return !!config.find(cfg => cfg.did === did)
+}
+
+export function useCheckEmailConfirmed() {
+  const ctx = useContext(CheckEmailConfirmedContext)
+  if (ctx === null) {
+    throw new Error(
+      'useCheckEmailConfirmed must be used within a ServiceConfigManager',
+    )
+  }
+  return ctx
 }

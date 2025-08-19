@@ -1,11 +1,14 @@
 import {useEffect, useReducer, useState} from 'react'
 import {AppState, type AppStateStatus, View} from 'react-native'
+import ReactNativeDeviceAttest from 'react-native-device-attest'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
+import {logger} from '#/logger'
+import {isAndroid} from '#/platform/detection'
 import {useServiceQuery} from '#/state/queries/service'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {useActiveStarterPack} from '#/state/shell/starter-pack'
@@ -26,6 +29,7 @@ import {Divider} from '#/components/Divider'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {GCP_PROJECT_ID} from '#/env'
 import * as bsky from '#/types/bsky'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
@@ -101,6 +105,16 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     return () => subscription.remove()
   }, [])
 
+  // On Android, warmup the Play Integrity API on the signup screen so it is ready by the time we get to the gate screen.
+  useEffect(() => {
+    if (!isAndroid) {
+      return
+    }
+    ReactNativeDeviceAttest.warmupIntegrity(GCP_PROJECT_ID).catch(err =>
+      logger.error(err),
+    )
+  }, [])
+
   return (
     <SignupContext.Provider value={{state, dispatch}}>
       <LoggedOutLayout
@@ -143,8 +157,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               a.pt_2xl,
               !gtMobile && {paddingBottom: 100},
             ]}>
-            <View style={[a.gap_sm, a.pb_3xl]}>
-              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+            <View style={[a.gap_sm, a.pb_sm]}>
+              <Text
+                style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
                 <Trans>
                   Step {state.activeStep + 1} of{' '}
                   {state.serviceDescription &&
@@ -153,7 +168,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     : '3'}
                 </Trans>
               </Text>
-              <Text style={[a.text_3xl, a.font_bold]}>
+              <Text style={[a.text_3xl, a.font_heavy]}>
                 {state.activeStep === SignupStep.INFO ? (
                   <Trans>Your account</Trans>
                 ) : state.activeStep === SignupStep.HANDLE ? (

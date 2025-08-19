@@ -2,13 +2,15 @@ import React from 'react'
 
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {type FeedDescriptor} from '#/state/queries/post-feed'
 
 type StateContext = FeedDescriptor | null
 type SetContext = (v: FeedDescriptor) => void
 
 const stateContext = React.createContext<StateContext>(null)
+stateContext.displayName = 'SelectedFeedStateContext'
 const setContext = React.createContext<SetContext>((_: string) => {})
+setContext.displayName = 'SelectedFeedSetContext'
 
 function getInitialFeed(): FeedDescriptor | null {
   if (isWeb) {

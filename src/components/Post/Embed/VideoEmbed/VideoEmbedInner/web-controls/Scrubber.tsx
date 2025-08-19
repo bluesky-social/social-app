@@ -146,6 +146,8 @@ export function Scrubber({
   const progress = scrubberActive ? seekPosition : currentTime
   const progressPercent = (progress / duration) * 100
 
+  if (duration < 3) return null
+
   return (
     <View
       testID="scrubber"

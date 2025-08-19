@@ -65,6 +65,7 @@ const ModalContext = React.createContext<{
   isModalActive: false,
   activeModals: [],
 })
+ModalContext.displayName = 'ModalContext'
 
 const ModalControlContext = React.createContext<{
   openModal: (modal: Modal) => void
@@ -75,6 +76,7 @@ const ModalControlContext = React.createContext<{
   closeModal: () => false,
   closeAllModals: () => false,
 })
+ModalControlContext.displayName = 'ModalControlContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeModals, setActiveModals] = React.useState<Modal[]>([])

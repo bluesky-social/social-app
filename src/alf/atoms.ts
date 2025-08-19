@@ -332,6 +332,9 @@ export const atoms = {
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
   },
+  font_medium: {
+    fontWeight: tokens.fontWeight.medium,
+  },
   font_bold: {
     fontWeight: tokens.fontWeight.bold,
   },
@@ -979,6 +982,12 @@ export const atoms = {
   hidden: {
     display: 'none',
   },
+  inline: web({
+    display: 'inline',
+  }),
+  block: web({
+    display: 'block',
+  }),
 
   /*
    * Transition

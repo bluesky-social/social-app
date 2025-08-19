@@ -154,6 +154,7 @@ type Context = {
 const context = React.createContext<Context>({
   geolocation: DEFAULT_GEOLOCATION,
 })
+context.displayName = 'GeolocationContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [geolocation, setGeolocation] = React.useState(() => {

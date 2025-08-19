@@ -35,12 +35,14 @@ interface ApiContext {
 }
 
 const stateContext = React.createContext<StateContext>('')
+stateContext.displayName = 'NotificationsUnreadStateContext'
 
 const apiContext = React.createContext<ApiContext>({
   async markAllRead() {},
   async checkUnread() {},
   getCachedUnreadPage: () => undefined,
 })
+apiContext.displayName = 'NotificationsUnreadApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
