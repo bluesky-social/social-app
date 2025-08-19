@@ -256,107 +256,105 @@ export function ProfileGrid({
   const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6
   const minLength = gtMobile ? 3 : 4
 
-  const content = isLoading ? (
-    Array(maxLength)
-      .fill(0)
-      .map((_, i) => (
-        <View
-          key={i}
-          style={[
-            a.flex_1,
-            gtMobile &&
-              web([
-                a.flex_0,
-                a.flex_grow,
-                {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-              ]),
-          ]}>
-          <SuggestedFollowPlaceholder />
-        </View>
-      ))
-  ) : error || !profiles.length ? null : (
-    <>
-      {profiles.slice(0, maxLength).map((profile, index) => (
-        <ProfileCard.Link
-          key={profile.did}
-          profile={profile}
-          onPress={() => {
-            logEvent('suggestedUser:press', {
-              logContext: isFeedContext
-                ? 'InterstitialDiscover'
-                : 'InterstitialProfile',
-              recId,
-              position: index,
-            })
-          }}
-          style={[
-            a.flex_1,
-            gtMobile &&
-              web([
-                a.flex_0,
-                a.flex_grow,
-                {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-              ]),
-          ]}>
-          {({hovered, pressed}) => (
-            <CardOuter
-              style={[(hovered || pressed) && t.atoms.border_contrast_high]}>
-              <ProfileCard.Outer>
-                <View
-                  style={[
-                    a.flex_col,
-                    a.align_center,
-                    a.gap_sm,
-                    a.pb_sm,
-                    a.mb_auto,
-                  ]}>
-                  <ProfileCard.Avatar
-                    profile={profile}
-                    moderationOpts={moderationOpts}
-                    disabledPreview
-                    size={88}
-                  />
-                  <View style={[a.flex_col, a.align_center, a.max_w_full]}>
-                    <ProfileCard.Name
+  const content = isLoading
+    ? Array(maxLength)
+        .fill(0)
+        .map((_, i) => (
+          <View
+            key={i}
+            style={[
+              a.flex_1,
+              gtMobile &&
+                web([
+                  a.flex_0,
+                  a.flex_grow,
+                  {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
+                ]),
+            ]}>
+            <SuggestedFollowPlaceholder />
+          </View>
+        ))
+    : error || !profiles.length
+      ? null
+      : profiles.slice(0, maxLength).map((profile, index) => (
+          <ProfileCard.Link
+            key={profile.did}
+            profile={profile}
+            onPress={() => {
+              logEvent('suggestedUser:press', {
+                logContext: isFeedContext
+                  ? 'InterstitialDiscover'
+                  : 'InterstitialProfile',
+                recId,
+                position: index,
+              })
+            }}
+            style={[
+              a.flex_1,
+              gtMobile &&
+                web([
+                  a.flex_0,
+                  a.flex_grow,
+                  {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
+                ]),
+            ]}>
+            {({hovered, pressed}) => (
+              <CardOuter
+                style={[(hovered || pressed) && t.atoms.border_contrast_high]}>
+                <ProfileCard.Outer>
+                  <View
+                    style={[
+                      a.flex_col,
+                      a.align_center,
+                      a.gap_sm,
+                      a.pb_sm,
+                      a.mb_auto,
+                    ]}>
+                    <ProfileCard.Avatar
                       profile={profile}
                       moderationOpts={moderationOpts}
+                      disabledPreview
+                      size={88}
                     />
-                    <ProfileCard.Description
-                      profile={profile}
-                      numberOfLines={2}
-                      style={[
-                        t.atoms.text_contrast_medium,
-                        a.text_center,
-                        a.text_xs,
-                      ]}
-                    />
+                    <View style={[a.flex_col, a.align_center, a.max_w_full]}>
+                      <ProfileCard.Name
+                        profile={profile}
+                        moderationOpts={moderationOpts}
+                      />
+                      <ProfileCard.Description
+                        profile={profile}
+                        numberOfLines={2}
+                        style={[
+                          t.atoms.text_contrast_medium,
+                          a.text_center,
+                          a.text_xs,
+                        ]}
+                      />
+                    </View>
                   </View>
-                </View>
 
-                <ProfileCard.FollowButton
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                  logContext="FeedInterstitial"
-                  withIcon={false}
-                  style={[a.rounded_sm]}
-                  onFollow={() => {
-                    logEvent('suggestedUser:follow', {
-                      logContext: isFeedContext
-                        ? 'InterstitialDiscover'
-                        : 'InterstitialProfile',
-                      location: 'Card',
-                      recId,
-                      position: index,
-                    })
-                  }}
-                />
-              </ProfileCard.Outer>
-            </CardOuter>
-          )}
-        </ProfileCard.Link>
-      ))}
-    </>
-  )
+                  <ProfileCard.FollowButton
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                    logContext="FeedInterstitial"
+                    withIcon={false}
+                    style={[a.rounded_sm]}
+                    onFollow={() => {
+                      logEvent('suggestedUser:follow', {
+                        logContext: isFeedContext
+                          ? 'InterstitialDiscover'
+                          : 'InterstitialProfile',
+                        location: 'Card',
+                        recId,
+                        position: index,
+                      })
+                    }}
+                  />
+                </ProfileCard.Outer>
+              </CardOuter>
+            )}
+          </ProfileCard.Link>
+        ))
 
   if (error || (!isLoading && profiles.length < minLength)) {
     logger.debug(`Not enough profiles to show suggested follows`)
