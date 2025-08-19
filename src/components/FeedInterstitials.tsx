@@ -406,13 +406,12 @@ export function ProfileGrid({
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
+            contentContainerStyle={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}
             snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
             decelerationRate="fast">
-            <View style={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}>
-              {content}
+            {content}
 
-              {!isProfileHeaderContext && <SeeMoreSuggestedProfilesCard />}
-            </View>
+            {!isProfileHeaderContext && <SeeMoreSuggestedProfilesCard />}
           </ScrollView>
         </BlockDrawerGesture>
       )}
