@@ -452,13 +452,10 @@ let ProfileMenu = ({
         </Menu.Outer>
       </Menu.Root>
 
-      {currentAccount && (
-        <StarterPackDialog
-          control={addToStarterPacksDialogControl}
-          accountDid={currentAccount.did}
-          targetDid={profile.did}
-        />
-      )}
+      <StarterPackDialog
+        control={addToStarterPacksDialogControl}
+        targetDid={profile.did}
+      />
 
       <ReportDialog
         control={reportDialogControl}

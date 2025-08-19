@@ -26,6 +26,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 import {PlusLarge_Stroke2_Corner0_Rounded} from '../icons/Plus'
@@ -153,6 +154,7 @@ function StarterPackList({
     data,
     refetch,
     isError,
+    isLoading,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
@@ -209,6 +211,14 @@ function StarterPackList({
     [_, onStartWizard],
   )
 
+  if (isLoading) {
+    return (
+      <View style={[a.align_center, a.p_xl]}>
+        <Loader size="xl" />
+      </View>
+    )
+  }
+
   return (
     <List
       data={membershipItems}
@@ -242,40 +252,52 @@ function StarterPackItem({
   const starterPack = starterPackWithMembership.starterPack
   const isInPack = !!starterPackWithMembership.listItem
 
-  const {mutate: addMembership, isPending: isAddingPending} =
-    useListMembershipAddMutation({
-      onSuccess: () => {
-        Toast.show(_(msg`Added to starter pack`))
+  const [isPendingRefresh, setIsPendingRefresh] = React.useState(false)
+
+  const {mutate: addMembership} = useListMembershipAddMutation({
+    onSuccess: () => {
+      Toast.show(_(msg`Added to starter pack`))
+      // Use a timeout to wait for the appview to update, matching the pattern
+      // in list-memberships.ts
+      setTimeout(() => {
         invalidateActorStarterPacksWithMembershipQuery({
           queryClient,
           did: targetDid,
         })
-      },
-      onError: () => {
-        Toast.show(_(msg`Failed to add to starter pack`), 'xmark')
-      },
-    })
+        setIsPendingRefresh(false)
+      }, 1e3)
+    },
+    onError: () => {
+      Toast.show(_(msg`Failed to add to starter pack`), 'xmark')
+      setIsPendingRefresh(false)
+    },
+  })
 
-  const {mutate: removeMembership, isPending: isRemovingPending} =
-    useListMembershipRemoveMutation({
-      onSuccess: () => {
-        Toast.show(_(msg`Removed from starter pack`))
+  const {mutate: removeMembership} = useListMembershipRemoveMutation({
+    onSuccess: () => {
+      Toast.show(_(msg`Removed from starter pack`))
+      // Use a timeout to wait for the appview to update, matching the pattern
+      // in list-memberships.ts
+      setTimeout(() => {
         invalidateActorStarterPacksWithMembershipQuery({
           queryClient,
           did: targetDid,
         })
-      },
-      onError: () => {
-        Toast.show(_(msg`Failed to remove from starter pack`), 'xmark')
-      },
-    })
-
-  const isMutating = isAddingPending || isRemovingPending
+        setIsPendingRefresh(false)
+      }, 1e3)
+    },
+    onError: () => {
+      Toast.show(_(msg`Failed to remove from starter pack`), 'xmark')
+      setIsPendingRefresh(false)
+    },
+  })
 
   const handleToggleMembership = () => {
-    if (!starterPack.list?.uri || isMutating) return
+    if (!starterPack.list?.uri || isPendingRefresh) return
 
     const listUri = starterPack.list.uri
+
+    setIsPendingRefresh(true)
 
     if (!isInPack) {
       addMembership({
@@ -285,6 +307,7 @@ function StarterPackItem({
     } else {
       if (!starterPackWithMembership.listItem?.uri) {
         console.error('Cannot remove: missing membership URI')
+        setIsPendingRefresh(false)
         return
       }
       removeMembership({
@@ -354,7 +377,7 @@ function StarterPackItem({
         label={isInPack ? _(msg`Remove`) : _(msg`Add`)}
         color={isInPack ? 'secondary' : 'primary'}
         size="tiny"
-        disabled={isMutating}
+        disabled={isPendingRefresh}
         onPress={handleToggleMembership}>
         <ButtonText>
           {isInPack ? <Trans>Remove</Trans> : <Trans>Add</Trans>}

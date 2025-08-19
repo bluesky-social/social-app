@@ -231,12 +231,10 @@ function WizardInner({
     Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)])
     dispatch({type: 'SetProcessing', processing: false})
 
-    // If launched from ProfileMenu dialog, notify the dialog and go back
     if (fromDialog) {
       navigation.goBack()
       onSuccess?.()
     } else {
-      // Original behavior for other entry points
       navigation.replace('StarterPack', {
         name: profile!.handle,
         rkey,
@@ -246,19 +244,13 @@ function WizardInner({
   }
 
   const onSuccessEdit = () => {
-    // If launched from ProfileMenu dialog, go back to stay on profile page
-    if (fromDialog) {
+    if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
-      // Original behavior for other entry points
-      if (navigation.canGoBack()) {
-        navigation.goBack()
-      } else {
-        navigation.replace('StarterPack', {
-          name: profile!.handle,
-          rkey: parsed!.rkey,
-        })
-      }
+      navigation.replace('StarterPack', {
+        name: currentAccount!.handle,
+        rkey: parsed!.rkey,
+      })
     }
   }
 
