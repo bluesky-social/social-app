@@ -13,7 +13,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import {isWeb} from '#/platform/detection'
+import {isIOS, isWeb} from '#/platform/detection'
 
 type AccordionAnimationProps = React.PropsWithChildren<{
   isExpanded: boolean
@@ -65,7 +65,8 @@ function MobileAccordion({
     <Animated.View
       style={style}
       entering={FadeInUp.duration(duration)}
-      exiting={FadeOutUp.duration(duration / 2)}>
+      exiting={FadeOutUp.duration(duration / 2)}
+      pointerEvents={isIOS ? 'auto' : 'box-none'}>
       {children}
     </Animated.View>
   )

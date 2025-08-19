@@ -8,6 +8,7 @@ import {useNavigation} from '@react-navigation/native'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
@@ -367,7 +368,8 @@ export function ProfileGrid({
         !isProfileHeaderContext && a.border_t,
         t.atoms.border_contrast_low,
         t.atoms.bg_contrast_25,
-      ]}>
+      ]}
+      pointerEvents={isIOS ? 'auto' : 'box-none'}>
       <View
         style={[
           a.px_lg,
@@ -375,7 +377,8 @@ export function ProfileGrid({
           a.flex_row,
           a.align_center,
           a.justify_between,
-        ]}>
+        ]}
+        pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <Text style={[a.text_sm, a.font_bold, t.atoms.text]}>
           {isFeedContext ? (
             <Trans>Suggested for you</Trans>
