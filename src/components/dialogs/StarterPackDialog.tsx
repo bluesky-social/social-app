@@ -35,16 +35,6 @@ import {TimesLarge_Stroke2_Corner0_Rounded} from '../icons/Times'
 type StarterPackWithMembership =
   AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership
 
-let dialogCallbacks: {
-  onSuccess?: () => void
-} = {}
-
-export function notifyDialogSuccess() {
-  if (dialogCallbacks.onSuccess) {
-    dialogCallbacks.onSuccess()
-  }
-}
-
 export type StarterPackDialogProps = {
   control: Dialog.DialogControlProps
   targetDid: string
@@ -60,19 +50,16 @@ export function StarterPackDialog({
   const navigation = useNavigation<NavigationProp>()
   const requireEmailVerification = useRequireEmailVerification()
 
-  React.useEffect(() => {
-    dialogCallbacks.onSuccess = () => {
-      if (!control.isOpen) {
-        control.open()
-      }
-    }
-  }, [control])
-
   const navToWizard = React.useCallback(() => {
     control.close()
     navigation.navigate('StarterPackWizard', {
       fromDialog: true,
       targetDid: targetDid,
+      onSuccess: () => {
+        if (!control.isOpen) {
+          control.open()
+        }
+      },
     })
   }, [navigation, control, targetDid])
 

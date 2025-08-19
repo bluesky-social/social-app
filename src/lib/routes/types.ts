@@ -79,7 +79,11 @@ export type CommonNavigatorParams = {
   Start: {name: string; rkey: string}
   StarterPack: {name: string; rkey: string; new?: boolean}
   StarterPackShort: {code: string}
-  StarterPackWizard: {fromDialog?: boolean; targetDid?: string}
+  StarterPackWizard: {
+    fromDialog?: boolean
+    targetDid?: string
+    onSuccess?: () => void
+  }
   StarterPackEdit: {rkey?: string}
   VideoFeed: VideoFeedSourceContext
 }

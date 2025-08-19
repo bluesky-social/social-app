@@ -54,7 +54,6 @@ import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {notifyDialogSuccess} from '#/components/dialogs/StarterPackDialog'
 import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -73,6 +72,7 @@ export function Wizard({
   const rkey = 'rkey' in params ? params.rkey : undefined
   const fromDialog = 'fromDialog' in params ? params.fromDialog : false
   const targetDid = 'targetDid' in params ? params.targetDid : undefined
+  const onSuccess = 'onSuccess' in params ? params.onSuccess : undefined
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
@@ -144,6 +144,7 @@ export function Wizard({
           profile={profile}
           moderationOpts={moderationOpts}
           fromDialog={fromDialog}
+          onSuccess={onSuccess}
         />
       </Provider>
     </Layout.Screen>
@@ -156,12 +157,14 @@ function WizardInner({
   profile,
   moderationOpts,
   fromDialog,
+  onSuccess,
 }: {
   currentStarterPack?: AppBskyGraphDefs.StarterPackView
   currentListItems?: AppBskyGraphDefs.ListItemView[]
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   fromDialog?: boolean
+  onSuccess?: () => void
 }) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -231,7 +234,7 @@ function WizardInner({
     // If launched from ProfileMenu dialog, notify the dialog and go back
     if (fromDialog) {
       navigation.goBack()
-      notifyDialogSuccess()
+      onSuccess?.()
     } else {
       // Original behavior for other entry points
       navigation.replace('StarterPack', {
@@ -366,11 +369,7 @@ function WizardInner({
       </Container>
 
       {state.currentStep !== 'Details' && (
-        <Footer
-          onNext={onNext}
-          nextBtnText={currUiStrings.nextBtn}
-          profile={profile}
-        />
+        <Footer onNext={onNext} nextBtnText={currUiStrings.nextBtn} />
       )}
       <WizardEditListDialog
         control={editDialogControl}
