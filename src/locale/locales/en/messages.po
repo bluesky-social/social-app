@@ -1905,7 +1905,7 @@ msgstr ""
 msgid "Close image"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:109
+#: src/view/com/lightbox/Lightbox.web.tsx:110
 msgid "Close image viewer"
 msgstr ""
 
@@ -3207,11 +3207,11 @@ msgstr ""
 msgid "Exits image cropping process"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:110
+#: src/view/com/lightbox/Lightbox.web.tsx:111
 msgid "Exits image view"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:184
+#: src/view/com/lightbox/Lightbox.web.tsx:185
 msgid "Expand alt text"
 msgstr ""
 
@@ -4234,7 +4234,7 @@ msgstr ""
 msgid "I understand"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:186
+#: src/view/com/lightbox/Lightbox.web.tsx:187
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr ""
 
@@ -5444,7 +5444,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:169
+#: src/view/com/lightbox/Lightbox.web.tsx:170
 msgid "Next image"
 msgstr ""
 
@@ -6451,7 +6451,7 @@ msgstr ""
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.web.tsx:150
+#: src/view/com/lightbox/Lightbox.web.tsx:151
 msgid "Previous image"
 msgstr ""
 
