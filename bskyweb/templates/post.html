@@ -33,6 +33,9 @@
   {# Don't use avatar image in cards; usually looks bad #}
   <meta name="twitter:card" content="summary">
   {% endif %}
+  {%- if videoUrl %}
+  <meta property="og:video" content="{{ videoUrl }}">
+  {% endif -%}
   <meta name="twitter:label1" content="Posted At">
   <meta name="twitter:value1" content="{{ postView.IndexedAt }}">
   <meta name="article:published_time" content="{{ postView.IndexedAt }}">
