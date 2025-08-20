@@ -7,9 +7,10 @@ import * as EmailValidator from 'email-validator'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {android, atoms as a, useBreakpoints, web} from '#/alf'
+import {android, atoms as a, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -43,7 +44,6 @@ function Inner() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const agent = useAgent()
-  const {gtMobile} = useBreakpoints()
   const control = Dialog.useDialogContext()
 
   const [stage, setStage] = useState(Stages.RequestCode)
@@ -242,7 +242,7 @@ function Inner() {
                   <Trans>Already have a code?</Trans>
                 </ButtonText>
               </Button>
-              {!gtMobile && (
+              {isNative && (
                 <Button
                   label={_(msg`Cancel`)}
                   color="secondary"
