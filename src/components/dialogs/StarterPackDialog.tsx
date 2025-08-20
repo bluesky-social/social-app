@@ -4,7 +4,7 @@ import {
   type AppBskyGraphGetStarterPacksWithMembership,
   AppBskyGraphStarterpack,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -20,7 +20,6 @@ import {
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
 import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -28,6 +27,7 @@ import {Divider} from '#/components/Divider'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
+import {AvatarStack} from '../AvatarStack'
 import {PlusLarge_Stroke2_Corner0_Rounded} from '../icons/Plus'
 import {StarterPack} from '../icons/StarterPack'
 import {TimesLarge_Stroke2_Corner0_Rounded} from '../icons/Times'
@@ -107,7 +107,9 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
           size="small"
           onPress={onStartWizard}>
           <ButtonText>
-            <Trans>Create</Trans>
+            <Trans comment="Text on button to create a new starter pack">
+              Create
+            </Trans>
           </ButtonText>
           <ButtonIcon icon={PlusLarge_Stroke2_Corner0_Rounded} />
         </Button>
@@ -200,7 +202,9 @@ function StarterPackList({
               size="small"
               onPress={onStartWizard}>
               <ButtonText>
-                <Trans>Create</Trans>
+                <Trans comment="Text on button to create a new starter pack">
+                  Create
+                </Trans>
               </ButtonText>
               <ButtonIcon icon={PlusLarge_Stroke2_Corner0_Rounded} />
             </Button>
@@ -347,22 +351,12 @@ function StarterPackItem({
           {starterPack.listItemsSample &&
             starterPack.listItemsSample.length > 0 && (
               <>
-                {starterPack.listItemsSample?.slice(0, 4).map((p, index) => (
-                  <UserAvatar
-                    key={p.subject.did}
-                    avatar={p.subject.avatar}
-                    size={32}
-                    type={'user'}
-                    style={[
-                      {
-                        zIndex: 1 - index,
-                        marginLeft: index > 0 ? -2 : 0,
-                        borderWidth: 0.5,
-                        borderColor: t.atoms.bg.backgroundColor,
-                      },
-                    ]}
-                  />
-                ))}
+                <AvatarStack
+                  size={32}
+                  profiles={starterPack.listItemsSample
+                    ?.slice(0, 4)
+                    .map(p => p.subject)}
+                />
 
                 {starterPack.list?.listItemCount &&
                   starterPack.list.listItemCount > 4 && (
@@ -372,7 +366,12 @@ function StarterPackItem({
                         t.atoms.text_contrast_medium,
                         a.ml_xs,
                       ]}>
-                      {`+${starterPack.list.listItemCount - 4} more`}
+                      <Trans>
+                        <Plural
+                          value={starterPack.list.listItemCount - 4}
+                          other="+# more"
+                        />
+                      </Trans>
                     </Text>
                   )}
               </>
