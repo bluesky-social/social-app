@@ -96,7 +96,7 @@ function Inner() {
           ),
         )
       } else {
-        logger.error('Failed to request password reset', {error: e})
+        logger.error('Failed to request password reset', {safeMessage: e})
         setError(cleanError(e))
       }
     } finally {
@@ -141,7 +141,7 @@ function Inner() {
           ),
         )
       } else {
-        logger.error('Failed to set new password', {error: e})
+        logger.error('Failed to set new password', {safeMessage: e})
         setError(cleanError(e))
       }
     } finally {
