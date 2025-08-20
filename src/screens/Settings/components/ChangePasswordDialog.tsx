@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
@@ -9,7 +9,7 @@ import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {atoms as a, useBreakpoints, web} from '#/alf'
+import {android, atoms as a, useBreakpoints, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -27,8 +27,12 @@ export function ChangePasswordDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
+  const {height} = useWindowDimensions()
+
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer
+      control={control}
+      nativeOptions={android({minHeight: height / 2})}>
       <Dialog.Handle />
       <Inner />
     </Dialog.Outer>
@@ -156,7 +160,7 @@ function Inner() {
   return (
     <Dialog.ScrollableInner
       label={_(msg`Change password dialog`)}
-      style={web({maxWidth: 450})}>
+      style={web({maxWidth: 400})}>
       <Dialog.Close />
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
@@ -212,25 +216,11 @@ function Inner() {
           </View>
         )}
 
-        <View style={[a.gap_sm, gtMobile && [a.flex_row_reverse, a.ml_auto]]}>
+        <View style={[a.gap_sm]}>
           {stage === Stages.RequestCode ? (
             <>
-              {!gtMobile && (
-                <Button
-                  label={_(msg`Already have a code?`)}
-                  onPress={() => setStage(Stages.ChangePassword)}
-                  size="large"
-                  color="primary"
-                  variant="ghost"
-                  disabled={isProcessing}>
-                  <ButtonText>
-                    <Trans>Already have a code?</Trans>
-                  </ButtonText>
-                </Button>
-              )}
               <Button
                 label={_(msg`Request code`)}
-                variant="solid"
                 color="primary"
                 size="large"
                 disabled={isProcessing}
@@ -240,22 +230,19 @@ function Inner() {
                 </ButtonText>
                 {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
-              {gtMobile ? (
-                <Button
-                  label={_(msg`Already have a code?`)}
-                  onPress={() => setStage(Stages.ChangePassword)}
-                  size="large"
-                  color="secondary"
-                  variant="solid"
-                  disabled={isProcessing}>
-                  <ButtonText>
-                    <Trans>Already have a code?</Trans>
-                  </ButtonText>
-                </Button>
-              ) : (
+              <Button
+                label={_(msg`Already have a code?`)}
+                onPress={() => setStage(Stages.ChangePassword)}
+                size="large"
+                color="primary_subtle"
+                disabled={isProcessing}>
+                <ButtonText>
+                  <Trans>Already have a code?</Trans>
+                </ButtonText>
+              </Button>
+              {!gtMobile && (
                 <Button
                   label={_(msg`Cancel`)}
-                  variant="solid"
                   color="secondary"
                   size="large"
                   disabled={isProcessing}
@@ -270,7 +257,6 @@ function Inner() {
             <>
               <Button
                 label={_(msg`Change password`)}
-                variant="solid"
                 color="primary"
                 size="large"
                 disabled={isProcessing}
@@ -282,7 +268,6 @@ function Inner() {
               </Button>
               <Button
                 label={_(msg`Back`)}
-                variant="solid"
                 color="secondary"
                 size="large"
                 disabled={isProcessing}
@@ -298,7 +283,6 @@ function Inner() {
           ) : stage === Stages.Done ? (
             <Button
               label={_(msg`Close`)}
-              variant="solid"
               color="primary"
               size="large"
               onPress={() => control.close()}>
