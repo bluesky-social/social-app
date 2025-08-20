@@ -19,7 +19,6 @@ import {
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
-import {List} from '#/view/com/util/List'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -72,38 +71,15 @@ export function StarterPackDialog({
     ],
   })
 
-  const onClose = React.useCallback(() => {
-    control.close()
-  }, [control])
-
-  const t = useTheme()
-
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <Dialog.Inner label={_(msg`Add to starter packs`)} style={[a.w_full]}>
-        <View>
-          <View
-            style={[
-              {justifyContent: 'space-between', flexDirection: 'row'},
-              a.my_lg,
-            ]}>
-            <Text style={[a.text_lg, a.font_bold]}>
-              <Trans>Add to starter packs</Trans>
-            </Text>
-            <TimesLarge_Stroke2_Corner0_Rounded
-              onPress={onClose}
-              fill={t.atoms.text_contrast_medium.color}
-            />
-          </View>
-
-          <StarterPackList
-            onStartWizard={wrappedNavToWizard}
-            targetDid={targetDid}
-            enabled={enabled}
-          />
-        </View>
-      </Dialog.Inner>
+      <StarterPackList
+        control={control}
+        onStartWizard={wrappedNavToWizard}
+        targetDid={targetDid}
+        enabled={enabled}
+      />
     </Dialog.Outer>
   )
 }
@@ -113,8 +89,7 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
   const t = useTheme()
 
   return (
-    <View
-      style={[a.align_center, a.gap_2xl, {paddingTop: 64, paddingBottom: 64}]}>
+    <View style={[a.gap_2xl, {paddingTop: 64}]}>
       <View style={[a.gap_xs, a.align_center]}>
         <StarterPack
           width={48}
@@ -125,30 +100,35 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
         </Text>
       </View>
 
-      <Button
-        label={_(msg`Create starter pack`)}
-        color="secondary_inverted"
-        size="small"
-        onPress={onStartWizard}>
-        <ButtonText>
-          <Trans>Create</Trans>
-        </ButtonText>
-        <ButtonIcon icon={PlusLarge_Stroke2_Corner0_Rounded} />
-      </Button>
+      <View style={[a.align_center]}>
+        <Button
+          label={_(msg`Create starter pack`)}
+          color="secondary_inverted"
+          size="small"
+          onPress={onStartWizard}>
+          <ButtonText>
+            <Trans>Create</Trans>
+          </ButtonText>
+          <ButtonIcon icon={PlusLarge_Stroke2_Corner0_Rounded} />
+        </Button>
+      </View>
     </View>
   )
 }
 
 function StarterPackList({
+  control,
   onStartWizard,
   targetDid,
   enabled,
 }: {
+  control: Dialog.DialogControlProps
   onStartWizard: () => void
   targetDid: string
   enabled?: boolean
 }) {
   const {_} = useLingui()
+  const t = useTheme()
 
   const {
     data,
@@ -187,54 +167,81 @@ function StarterPackList({
     [targetDid],
   )
 
-  const ListHeaderComponent = React.useCallback(
-    () => (
-      <>
-        <View style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
-          <Text style={[a.text_md, a.font_bold]}>
-            <Trans>New starter pack</Trans>
-          </Text>
-          <Button
-            label={_(msg`Create starter pack`)}
-            color="secondary_inverted"
-            size="small"
-            onPress={onStartWizard}>
-            <ButtonText>
-              <Trans>Create</Trans>
-            </ButtonText>
-            <ButtonIcon icon={PlusLarge_Stroke2_Corner0_Rounded} />
-          </Button>
-        </View>
-        <Divider />
-      </>
-    ),
-    [_, onStartWizard],
+  const onClose = React.useCallback(() => {
+    control.close()
+  }, [control])
+
+  const listHeader = (
+    <>
+      <View
+        style={[
+          {justifyContent: 'space-between', flexDirection: 'row'},
+          a.my_lg,
+          a.align_center,
+        ]}>
+        <Text style={[a.text_lg, a.font_bold]}>
+          <Trans>Add to starter packs</Trans>
+        </Text>
+        <TimesLarge_Stroke2_Corner0_Rounded
+          onPress={onClose}
+          fill={t.atoms.text_contrast_medium.color}
+        />
+      </View>
+      {membershipItems.length > 0 && (
+        <>
+          <View
+            style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
+            <Text style={[a.text_md, a.font_bold]}>
+              <Trans>New starter pack</Trans>
+            </Text>
+            <Button
+              label={_(msg`Create starter pack`)}
+              color="secondary_inverted"
+              size="small"
+              onPress={onStartWizard}>
+              <ButtonText>
+                <Trans>Create</Trans>
+              </ButtonText>
+              <ButtonIcon icon={PlusLarge_Stroke2_Corner0_Rounded} />
+            </Button>
+          </View>
+          <Divider />
+        </>
+      )}
+    </>
   )
 
   if (isLoading) {
     return (
-      <View style={[a.align_center, a.p_xl]}>
-        <Loader size="xl" />
-      </View>
+      <>
+        <Dialog.Close />
+        <Dialog.ScrollableInner
+          contentContainerStyle={[a.align_center, a.p_xl]}
+          label={_(msg`Add to starter packs`)}>
+          <Loader size="xl" />
+        </Dialog.ScrollableInner>
+      </>
     )
   }
 
   return (
-    <List
-      data={membershipItems}
-      renderItem={renderItem}
-      keyExtractor={(item: StarterPackWithMembership, index: number) =>
-        item.starterPack.uri || index.toString()
-      }
-      refreshing={false}
-      onRefresh={_onRefresh}
-      onEndReached={_onEndReached}
-      onEndReachedThreshold={0.1}
-      ListHeaderComponent={
-        membershipItems.length > 0 ? ListHeaderComponent : null
-      }
-      ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
-    />
+    <>
+      <Dialog.Close />
+      <Dialog.InnerFlatList
+        data={membershipItems}
+        renderItem={renderItem}
+        keyExtractor={(item: StarterPackWithMembership, index: number) =>
+          item.starterPack.uri || index.toString()
+        }
+        refreshing={false}
+        onRefresh={_onRefresh}
+        onEndReached={_onEndReached}
+        onEndReachedThreshold={0.1}
+        ListHeaderComponent={listHeader}
+        ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
+        contentContainerStyle={[a.px_2xl, a.pt_lg]}
+      />
+    </>
   )
 }
 
