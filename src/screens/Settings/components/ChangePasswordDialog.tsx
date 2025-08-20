@@ -89,7 +89,6 @@ function Inner() {
       })
       setStage(Stages.ChangePassword)
     } catch (e: any) {
-      logger.warn('Failed to request password reset', {error: e})
       if (isNetworkError(e)) {
         setError(
           _(
@@ -97,6 +96,7 @@ function Inner() {
           ),
         )
       } else {
+        logger.error('Failed to request password reset', {error: e})
         setError(cleanError(e))
       }
     } finally {
@@ -134,7 +134,6 @@ function Inner() {
       })
       setStage(Stages.Done)
     } catch (e: any) {
-      logger.warn('Failed to set new password', {error: e})
       if (isNetworkError(e)) {
         setError(
           _(
@@ -142,6 +141,7 @@ function Inner() {
           ),
         )
       } else {
+        logger.error('Failed to set new password', {error: e})
         setError(cleanError(e))
       }
     } finally {
