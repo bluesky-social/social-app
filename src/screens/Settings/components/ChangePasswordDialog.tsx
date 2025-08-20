@@ -163,7 +163,6 @@ function Inner() {
     <Dialog.ScrollableInner
       label={_(msg`Change password dialog`)}
       style={web({maxWidth: 400})}>
-      <Dialog.Close />
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_heavy, a.text_2xl]}>
@@ -295,6 +294,7 @@ function Inner() {
           ) : null}
         </View>
       </View>
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
