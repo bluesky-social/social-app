@@ -140,6 +140,8 @@ function Inner() {
             msg`Unable to contact your service. Please check your internet connection and try again.`,
           ),
         )
+      } else if (e?.toString().includes('Token is invalid')) {
+        setError(_(msg`This confirmation code is not valid. Please try again.`))
       } else {
         logger.error('Failed to set new password', {safeMessage: e})
         setError(cleanError(e))
