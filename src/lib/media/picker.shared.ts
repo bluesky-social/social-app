@@ -17,16 +17,12 @@ export async function openPicker(opts?: ImagePickerOptions) {
     exif: false,
     mediaTypes: ['images'],
     quality: 1,
+    selectionLimit: 1,
     ...opts,
     legacy: true,
   })
 
-  if (response.assets && response.assets.length > 4) {
-    Toast.show(t`You may only select up to 4 images`, 'exclamation-circle')
-  }
-
   return (response.assets ?? [])
-    .slice(0, 4)
     .filter(asset => {
       if (asset.mimeType?.startsWith('image/')) return true
       Toast.show(t`Only image files are supported`, 'exclamation-circle')
