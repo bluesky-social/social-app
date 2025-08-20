@@ -207,7 +207,7 @@ export function ModerationScreenInner({
           <Admonition type="tip" style={[a.pb_md]}>
             <Trans>
               Your declared age is under 18. Some settings below may be
-              disabled. If this was a mistake, you may edit your bithdate in
+              disabled. If this was a mistake, you may edit your birthdate in
               your{' '}
               <InlineLinkText
                 to="/settings/account"
