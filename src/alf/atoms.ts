@@ -363,6 +363,14 @@ export const atoms = {
   border_r_0: {
     borderRightWidth: 0,
   },
+  border_x_0: {
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+  },
+  border_y_0: {
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+  },
   border: {
     borderWidth: StyleSheet.hairlineWidth,
   },
@@ -377,6 +385,14 @@ export const atoms = {
   },
   border_r: {
     borderRightWidth: StyleSheet.hairlineWidth,
+  },
+  border_x: {
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
+  },
+  border_y: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   border_transparent: {
     borderColor: 'transparent',
