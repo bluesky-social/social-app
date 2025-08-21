@@ -6651,7 +6651,7 @@ msgid "Reactivate your account"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemReadMore.tsx:92
-msgid "Read {0} more {1, plural, one {reply} other {replies}}"
+msgid "Read {0, plural, one {# more reply} other {# more replies}}"
 msgstr ""
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
@@ -10541,7 +10541,7 @@ msgid "Your current handle <0>{0}</0> will automatically remain reserved for you
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:208
-msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your bithdate in your <0>account settings</0>."
+msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your birthdate in your <0>account settings</0>."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:253
