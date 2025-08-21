@@ -43,6 +43,7 @@ export function useSuggestedUsers({
         isLoading: searched.isLoading,
         error: searched.error,
         isRefetching: searched.isRefetching,
+        refetch: searched.refetch,
       }
     } else {
       return {
@@ -50,6 +51,7 @@ export function useSuggestedUsers({
         isLoading: curated.isLoading,
         error: curated.error,
         isRefetching: curated.isRefetching,
+        refetch: curated.refetch,
       }
     }
   }, [curated, searched, search])

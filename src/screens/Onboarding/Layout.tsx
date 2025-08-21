@@ -23,7 +23,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
 
-const COL_WIDTH = 420
+const ONBOARDING_COL_WIDTH = 420
 
 export const OnboardingControls = createPortalGroup()
 
@@ -92,7 +92,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               top: paddingTop.paddingTop + insets.top - 1,
             },
           ]}>
-          <View style={[a.w_full, a.align_start, {maxWidth: COL_WIDTH}]}>
+          <View
+            style={[a.w_full, a.align_start, {maxWidth: ONBOARDING_COL_WIDTH}]}>
             <Button
               key={state.activeStep} // remove focus state on nav
               color="secondary"
@@ -113,16 +114,11 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
         contentContainerStyle={{borderWidth: 0}}
         scrollIndicatorInsets={{bottom: footerHeight - insets.bottom}}
-        // @ts-ignore web only --prf
+        // @ts-expect-error web only --prf
         dataSet={{'stable-gutters': 1}}>
         <View
-          style={[
-            a.flex_row,
-            a.justify_center,
-            gtMobile ? a.px_5xl : a.px_xl,
-            a.debug,
-          ]}>
-          <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
+          style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
+          <View style={[a.flex_1, {maxWidth: ONBOARDING_COL_WIDTH}]}>
             <View style={[a.w_full, a.align_center, paddingTop]}>
               <View
                 style={[
@@ -166,7 +162,6 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       <View
         onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
         style={[
-          // @ts-ignore web only -prf
           isWeb ? a.fixed : a.absolute,
           {bottom: 0, left: 0, right: 0},
           t.atoms.bg,
@@ -184,7 +179,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         <View
           style={[
             a.w_full,
-            {maxWidth: COL_WIDTH},
+            {maxWidth: ONBOARDING_COL_WIDTH},
             gtMobile && [a.flex_row, a.justify_between, a.align_center],
           ]}>
           {gtMobile &&
