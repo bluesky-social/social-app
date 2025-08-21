@@ -19,7 +19,7 @@ import {
 } from '#/alf'
 import {leading} from '#/alf/typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
+import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
 
@@ -95,14 +95,14 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           <View style={[a.w_full, a.align_start, {maxWidth: COL_WIDTH}]}>
             <Button
               key={state.activeStep} // remove focus state on nav
-              variant="ghost"
               color="secondary"
+              variant="ghost"
+              shape="square"
               size="small"
-              shape="round"
               label={_(msg`Go back to previous step`)}
               style={[a.absolute]}
               onPress={() => dispatch({type: 'prev'})}>
-              <ButtonIcon icon={ChevronLeft} />
+              <ButtonIcon icon={ArrowLeft} size="lg" />
             </Button>
           </View>
         </View>
@@ -185,22 +185,22 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           style={[
             a.w_full,
             {maxWidth: COL_WIDTH},
-            gtMobile && [a.flex_row, a.justify_between],
+            gtMobile && [a.flex_row, a.justify_between, a.align_center],
           ]}>
           {gtMobile &&
             (state.hasPrev ? (
               <Button
                 key={state.activeStep} // remove focus state on nav
-                variant="solid"
                 color="secondary"
-                size="large"
-                shape="round"
+                variant="ghost"
+                shape="square"
+                size="small"
                 label={_(msg`Go back to previous step`)}
                 onPress={() => dispatch({type: 'prev'})}>
-                <ButtonIcon icon={ChevronLeft} />
+                <ButtonIcon icon={ArrowLeft} size="lg" />
               </Button>
             ) : (
-              <View style={{height: 54}} />
+              <View style={{height: 33}} />
             ))}
           <OnboardingControls.Outlet />
         </View>
