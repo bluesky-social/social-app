@@ -93,6 +93,10 @@ export type MetricEvents = {
   'onboarding:suggestedAccounts:tabPressed': {
     tab: string
   }
+  'onboarding:suggestedAccounts:followAllPressed': {
+    tab: string
+    numAccounts: number
+  }
   'onboarding:suggestedAccounts:nextPressed': {
     selectedAccountsLength: number
     skipped: boolean
