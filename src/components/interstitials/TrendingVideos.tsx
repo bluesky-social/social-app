@@ -219,19 +219,13 @@ function ViewMoreCard() {
             <Text style={[a.text_md]}>
               <Trans>View more</Trans>
             </Text>
-            <View
-              style={[
-                a.align_center,
-                a.justify_center,
-                a.rounded_full,
-                {
-                  width: 34,
-                  height: 34,
-                  backgroundColor: t.palette.primary_500,
-                },
-              ]}>
+            <Button
+              color="primary"
+              size="small"
+              shape="round"
+              label={_(msg`View more trending videos`)}>
               <ButtonIcon icon={ChevronRight} />
-            </View>
+            </Button>
           </View>
         )}
       </Link>
