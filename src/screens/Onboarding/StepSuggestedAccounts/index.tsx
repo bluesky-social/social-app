@@ -109,6 +109,12 @@ export function StepSuggestedAccounts() {
       .map(user => user.did) ?? []
 
   const {mutate: followAll, isPending: isFollowingAll} = useMutation({
+    onMutate: () => {
+      logger.metric('onboarding:suggestedAccounts:followAllPressed', {
+        tab: selectedInterest ?? 'all',
+        numAccounts: followableDids.length,
+      })
+    },
     mutationFn: async () => {
       for (const did of followableDids) {
         updateProfileShadow(queryClient, did, {
