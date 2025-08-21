@@ -302,7 +302,7 @@ function SuggestedProfileCard({
             profile={profile}
             moderationOpts={moderationOpts}
             withIcon={false}
-            logContext="ExploreSuggestedAccounts"
+            logContext="OnboardingSuggestedAccounts"
             onFollow={() => {
               logger.metric(
                 'suggestedUser:follow',
