@@ -751,6 +751,7 @@ export function Explore({
                 selectedInterest={selectedInterest}
                 onSelectInterest={setSelectedInterest}
                 hideDefaultTab={item.hideDefaultTab}
+                logContext="Explore"
               />
             </View>
           )
