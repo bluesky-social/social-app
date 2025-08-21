@@ -11,7 +11,6 @@ import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isWeb} from '#/platform/detection'
-import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
 import {
   type WizardAction,

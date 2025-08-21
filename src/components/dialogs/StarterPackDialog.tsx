@@ -30,7 +30,7 @@ import * as bsky from '#/types/bsky'
 import {AvatarStack} from '../AvatarStack'
 import {PlusLarge_Stroke2_Corner0_Rounded} from '../icons/Plus'
 import {StarterPack} from '../icons/StarterPack'
-import {TimesLarge_Stroke2_Corner0_Rounded} from '../icons/Times'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '../icons/Times'
 
 type StarterPackWithMembership =
   AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership
@@ -130,8 +130,6 @@ function StarterPackList({
   enabled?: boolean
 }) {
   const {_} = useLingui()
-  const t = useTheme()
-
   const {
     data,
     refetch,
@@ -184,10 +182,9 @@ function StarterPackList({
         <Text style={[a.text_lg, a.font_bold]}>
           <Trans>Add to starter packs</Trans>
         </Text>
-        <TimesLarge_Stroke2_Corner0_Rounded
-          onPress={onClose}
-          fill={t.atoms.text_contrast_medium.color}
-        />
+        <Button label={_(msg`Close`)} onPress={onClose}>
+          <ButtonIcon icon={XIcon} />
+        </Button>
       </View>
       {membershipItems.length > 0 && (
         <>
@@ -215,27 +212,23 @@ function StarterPackList({
     </>
   )
 
-  if (isLoading) {
-    return (
-      <>
-        <Dialog.Close />
-        <Dialog.ScrollableInner
-          contentContainerStyle={[a.align_center, a.p_xl]}
-          label={_(msg`Add to starter packs`)}>
-          <Loader size="xl" />
-        </Dialog.ScrollableInner>
-      </>
-    )
-  }
-
   return (
     <>
-      <Dialog.Close />
       <Dialog.InnerFlatList
-        data={membershipItems}
-        renderItem={renderItem}
-        keyExtractor={(item: StarterPackWithMembership, index: number) =>
-          item.starterPack.uri || index.toString()
+        data={isLoading ? [{}] : membershipItems}
+        renderItem={
+          isLoading
+            ? () => (
+                <View style={[a.align_center, a.py_2xl]}>
+                  <Loader size="xl" />
+                </View>
+              )
+            : renderItem
+        }
+        keyExtractor={
+          isLoading
+            ? () => 'starter_pack_dialog_loader'
+            : (item: StarterPackWithMembership) => item.starterPack.uri
         }
         refreshing={false}
         onRefresh={_onRefresh}
