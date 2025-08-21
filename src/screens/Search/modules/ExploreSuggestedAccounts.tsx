@@ -60,6 +60,7 @@ export function SuggestedAccountsTabBar({
   selectedInterest,
   onSelectInterest,
   hideDefaultTab,
+  defaultTabLabel,
   priorityInterests,
   leftPadding = tokens.space.md,
   logContext = 'Explore',
@@ -68,6 +69,7 @@ export function SuggestedAccountsTabBar({
   onSelectInterest: (interest: string | null) => void
   priorityInterests?: string[]
   hideDefaultTab?: boolean
+  defaultTabLabel?: string
   leftPadding?: number
   logContext?: 'Explore' | 'Onboarding'
 }) {
@@ -108,7 +110,7 @@ export function SuggestedAccountsTabBar({
           hideDefaultTab
             ? interestsDisplayNames
             : {
-                all: _(msg`For You`),
+                all: defaultTabLabel || _(msg`For You`),
                 ...interestsDisplayNames,
               }
         }
