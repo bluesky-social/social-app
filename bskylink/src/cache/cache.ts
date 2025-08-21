@@ -2,8 +2,7 @@ import {ToolsOzoneSafelinkDefs} from '@atproto/api'
 
 import {type ServiceConfig} from '../config.js'
 import {redirectLogger} from '../logger.js'
-import {OzoneAgent} from './ozoneAgent.js'
-let cacheCursor: string | undefined
+import {OzoneAgent} from './safelinkClient.js'
 
 export class EventCache {
   private rules = new Map<string, ToolsOzoneSafelinkDefs.Event>()
@@ -16,134 +15,6 @@ export class EventCache {
 
   async getConfig(): Promise<ServiceConfig | undefined> {
     return this.cfg
-  }
-
-  insert(key: string, evt: ToolsOzoneSafelinkDefs.Event) {
-    const existing = this.rules.get(key)
-    if (!existing || new Date(evt.createdAt) > new Date(existing.createdAt)) {
-      this.rules.set(key, evt)
-    }
-  }
-
-  smartUpdateDomain(event: ToolsOzoneSafelinkDefs.Event) {
-    let domain: string
-    try {
-      domain = new URL(event.url).hostname
-    } catch (error) {
-      redirectLogger.error(
-        `[EventCache:smartUpdateDomain] Invalid URL: ${event.url}, error: ${error}`,
-      )
-      throw new Error(
-        `[EventCache:smartUpdateDomain] Error parsing domain from URL: ${error}`,
-      )
-    }
-    event.url = domain
-
-    try {
-      redirectLogger.info(
-        `[EventCache] smartUpdateDomain called for domain: ${domain}, action: ${event.action}`,
-      )
-
-      if (event.action) {
-        this.insert(domain, event)
-        redirectLogger.info(
-          `[EventCache] rule updated or inserted for: ${domain}`,
-        )
-        return
-      }
-    } catch (error) {
-      redirectLogger.error(
-        `[EventCache:smartUpdateDomain] Error updating rule for domain: ${domain}, error: ${error}`,
-      )
-      throw new Error(
-        `[EventCache:smartUpdateDomain] Error processing domain event: ${error}`,
-      )
-    }
-  }
-
-  smartUpdateUrl(event: ToolsOzoneSafelinkDefs.Event) {
-    let url: string
-    try {
-      url = new URL(event.url).toString()
-    } catch (error) {
-      redirectLogger.error(
-        `[EventCache:smartUpdateUrl] Invalid URL: ${event.url}, error: ${error}`,
-      )
-      throw new Error(`[EventCache:smartUpdateUrl] Error parsing URL: ${error}`)
-    }
-    event.url = url
-
-    try {
-      redirectLogger.info(
-        `[EventCache] smartUpdateUrl called for url: ${url}, action: ${event.action}`,
-      )
-
-      if (event.action) {
-        this.insert(url, event)
-        redirectLogger.info(
-          `[EventCache] rule updated or inserted for url: ${url}`,
-        )
-        return
-      }
-    } catch (error) {
-      redirectLogger.error(
-        `[EventCache:smartUpdateUrl] Error updating rule for url: ${url}, error: ${error}`,
-      )
-      throw new Error(
-        `[EventCache:smartUpdateUrl] Error processing url event: ${error}`,
-      )
-    }
-  }
-
-  smartUpdate(event: ToolsOzoneSafelinkDefs.Event) {
-    if (event.pattern === ToolsOzoneSafelinkDefs.DOMAIN) {
-      redirectLogger.info(
-        `[EventCache] smartUpdate called for domain event: ${event.url}, performing ${event.action}`,
-      )
-      return this.smartUpdateDomain(event)
-    }
-    if (event.pattern === ToolsOzoneSafelinkDefs.URL) {
-      redirectLogger.info(
-        `[EventCache] smartUpdate called for url event: ${event.url}`,
-      )
-      return this.smartUpdateUrl(event)
-    }
-    throw new Error('[EventCache] Unknown event pattern')
-  }
-
-  /**
-   * Attempts to retrieve an event for the given URL.
-   * Checks in order: domain, domain+path, then full URL.
-   */
-  smartGet(url: string): ToolsOzoneSafelinkDefs.Event | undefined {
-    const parsedUrl = new URL(url)
-    const domain = parsedUrl.hostname
-    const domainAndPath = domain + parsedUrl.pathname
-
-    const byDomain = this.rules.get(domain)
-    if (byDomain) {
-      return byDomain
-    }
-
-    const byDomainAndPath = this.rules.get(domainAndPath)
-    if (byDomainAndPath) {
-      return byDomainAndPath
-    }
-
-    return this.rules.get(url)
-  }
-
-  delete(event: ToolsOzoneSafelinkDefs.Event) {
-    this.rules.delete(event.url)
-  }
-
-  get(url: string): ToolsOzoneSafelinkDefs.Event | undefined {
-    const event = this.rules.get(url)
-    return event
-  }
-
-  list(): ToolsOzoneSafelinkDefs.Event[] {
-    return Array.from(this.rules.values())
   }
 
   // Adaptive polling: slow down if no new events, speed up if updates found

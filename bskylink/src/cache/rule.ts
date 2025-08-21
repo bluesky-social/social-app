@@ -1,22 +1,6 @@
-export type RuleEventType = '#addRule' | '#updateRule' | '#removeRule'
-export type RulePatternType = '#domain' | '#url'
-export type RuleActionType = '#block' | '#warn' | '#whitelist'
-export type RuleReasonType = '#csam' | '#spam' | '#phishing' | '#none'
+import {SafelinkRule} from '../db/schema'
 
-export interface Rule {
-  id: number
-  eventType: RuleEventType
-  url: string
-  pattern: RulePatternType
-  action: RuleActionType
-  reason: RuleReasonType
-  createdBy: string // DID format
-  createdAt: string // ISO datetime string
-  comment?: string
-}
-
-// Example Rule object
-export const exampleRule: Rule = {
+export const exampleRule: SafelinkRule = {
   id: 1,
   eventType: '#addRule',
   url: 'https://malicious.example.com/phishing',

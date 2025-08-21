@@ -1,6 +1,5 @@
 import assert from 'node:assert'
 
-import {ToolsOzoneSafelinkDefs} from '@atproto/api'
 import {DAY, SECOND} from '@atproto/common'
 import {type Express} from 'express'
 import {type Hole} from 'uhtml'
@@ -52,20 +51,14 @@ export default function (ctx: AppContext, app: Express) {
       let hole: Hole | undefined
 
       if (ctx.cfg.service.safelinkEnabled) {
-        const rulePresent: ToolsOzoneSafelinkDefs.Event | undefined =
-          ctx.cfg.eventCache.smartGet(link)
+        const rule = await ctx.safelinkClient.tryFindRule(link)
 
-        if (rulePresent) {
-          switch (rulePresent.action) {
-            case ToolsOzoneSafelinkDefs.WHITELIST:
-              redirectLogger.info(
-                `Whitelist rule matched for ${rulePresent.url}`,
-              )
+        if (rule !== 'ok') {
+          switch (rule.action) {
+            case '#whitelist':
+              redirectLogger.info(`Whitelist rule matched for ${rule.url}`)
               break
-            case ToolsOzoneSafelinkDefs.REMOVERULE:
-              redirectLogger.info(`Remove rule matched for ${rulePresent.url}`)
-              break
-            case ToolsOzoneSafelinkDefs.BLOCK:
+            case '#block':
               hole = linkWarningLayout(
                 'Blocked Link Warning',
                 linkWarningContents(req, {
@@ -74,9 +67,9 @@ export default function (ctx: AppContext, app: Express) {
                 }),
               )
               res.setHeader('Cache-Control', 'no-store')
-              redirectLogger.info(`Block rule matched for ${rulePresent.url}`)
+              redirectLogger.info(`Block rule matched for ${rule.url}`)
               break
-            case ToolsOzoneSafelinkDefs.WARN:
+            case '#warn':
               hole = linkWarningLayout(
                 'Malicious Link Warning',
                 linkWarningContents(req, {
@@ -85,15 +78,13 @@ export default function (ctx: AppContext, app: Express) {
                 }),
               )
               res.setHeader('Cache-Control', 'no-store')
-              redirectLogger.info(`Warn rule matched for ${rulePresent.url}`)
+              redirectLogger.info(`Warn rule matched for ${rule.url}`)
               break
             default:
               redirectLogger.warn(
-                `${rulePresent.action} rule (an unknown rule) matched for ${rulePresent.url}`,
+                `${rule.action} rule (an unknown rule) matched for ${rule.url}`,
               )
           }
-        } else {
-          redirectLogger.info(`No rule present for ${rulePresent.url}`)
         }
       }
 
