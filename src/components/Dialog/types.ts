@@ -1,15 +1,15 @@
-import React from 'react'
-import type {
-  AccessibilityProps,
-  GestureResponderEvent,
-  ScrollViewProps,
+import {
+  type AccessibilityProps,
+  type GestureResponderEvent,
+  type ScrollViewProps,
+  type StyleProp,
+  type ViewStyle,
 } from 'react-native'
-import {ViewStyle} from 'react-native'
-import {StyleProp} from 'react-native'
+import type React from 'react'
 
-import {ViewStyleProp} from '#/alf'
-import {BottomSheetViewProps} from '../../../modules/bottom-sheet'
-import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
+import {type ViewStyleProp} from '#/alf'
+import {type BottomSheetViewProps} from '../../../modules/bottom-sheet'
+import {type BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 type A11yProps = Required<AccessibilityProps>
 
@@ -64,6 +64,7 @@ export type DialogOuterProps = {
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {
     alignCenter?: boolean
+    onBackgroundPress?: (e: GestureResponderEvent) => void
   }
   testID?: string
 }
