@@ -74,6 +74,7 @@ export function StepSuggestedAccounts() {
   } = useSuggestedUsers({
     category: selectedInterest || (useFullExperience ? null : interests[0]),
     search: !useFullExperience,
+    overrideInterests: state.interestsStepResults.selectedInterests,
   })
 
   const isError = !!error

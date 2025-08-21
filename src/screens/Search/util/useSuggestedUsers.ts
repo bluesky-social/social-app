@@ -11,6 +11,7 @@ import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 export function useSuggestedUsers({
   category = null,
   search = false,
+  overrideInterests,
 }: {
   category?: string | null
   /**
@@ -18,11 +19,17 @@ export function useSuggestedUsers({
    * based on the user's "app language setting
    */
   search?: boolean
+  /**
+   * In onboarding, interests haven't been saved to prefs yet, so we need to
+   * pass them down through here
+   */
+  overrideInterests?: string[]
 }) {
   const interestsDisplayNames = useInterestsDisplayNames()
   const curated = useGetSuggestedUsersQuery({
     enabled: !search,
     category,
+    overrideInterests,
   })
   const searched = useActorSearchPaginated({
     enabled: !!search,
