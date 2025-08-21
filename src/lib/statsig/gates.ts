@@ -8,6 +8,7 @@ export type Gate =
   | 'handle_suggestions'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
+  | 'post_follow_profile_suggested_accounts'
   | 'post_threads_v2_unspecced'
   | 'remove_show_latest_button'
   | 'test_gate_1'
