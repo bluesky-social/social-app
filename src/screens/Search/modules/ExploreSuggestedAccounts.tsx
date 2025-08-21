@@ -12,7 +12,7 @@ import {
   popularInterests,
   useInterestsDisplayNames,
 } from '#/screens/Onboarding/state'
-import {useTheme} from '#/alf'
+import {tokens, useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -55,14 +55,21 @@ export function useLoadEnoughProfiles({
   }
 }
 
+// TODO: Move to own file -sfn
 export function SuggestedAccountsTabBar({
   selectedInterest,
   onSelectInterest,
   hideDefaultTab,
+  priorityInterests,
+  leftPadding = tokens.space.md,
+  logContext = 'Explore',
 }: {
   selectedInterest: string | null
   onSelectInterest: (interest: string | null) => void
+  priorityInterests?: string[]
   hideDefaultTab?: boolean
+  leftPadding?: number
+  logContext?: 'Explore' | 'Onboarding'
 }) {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
@@ -71,6 +78,8 @@ export function SuggestedAccountsTabBar({
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
     .sort(boostInterests(personalizedInterests))
+    .sort(boostInterests(priorityInterests))
+
   return (
     <BlockDrawerGesture>
       <Tabs
@@ -79,11 +88,19 @@ export function SuggestedAccountsTabBar({
           selectedInterest || (hideDefaultTab ? interests[0] : 'all')
         }
         onSelectTab={tab => {
-          logger.metric(
-            'explore:suggestedAccounts:tabPressed',
-            {tab: tab},
-            {statsig: true},
-          )
+          if (logContext === 'Explore') {
+            logger.metric(
+              'explore:suggestedAccounts:tabPressed',
+              {tab: tab},
+              {statsig: true},
+            )
+          } else {
+            logger.metric(
+              'onboarding:suggestedAccounts:tabPressed',
+              {tab: tab},
+              {statsig: true},
+            )
+          }
           onSelectInterest(tab === 'all' ? null : tab)
         }}
         hasSearchText={false}
@@ -99,7 +116,7 @@ export function SuggestedAccountsTabBar({
         contentContainerStyle={[
           {
             // visual alignment
-            paddingLeft: a.px_md.paddingLeft,
+            paddingLeft: leftPadding,
           },
         ]}
       />

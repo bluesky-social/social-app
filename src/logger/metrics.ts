@@ -90,6 +90,9 @@ export type MetricEvents = {
     selectedInterests: string[]
     selectedInterestsLength: number
   }
+  'onboarding:suggestedAccounts:tabPressed': {
+    tab: string
+  }
   'onboarding:suggestedAccounts:nextPressed': {
     selectedAccountsLength: number
     skipped: boolean
@@ -249,6 +252,7 @@ export type MetricEvents = {
       | 'InterstitialDiscover'
       | 'InterstitialProfile'
       | 'Profile'
+      | 'Onboarding'
     location: 'Card' | 'Profile'
     recId?: number
     position: number
