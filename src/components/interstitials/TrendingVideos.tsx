@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import {useCallback, useEffect, useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
 import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -55,7 +55,7 @@ export function TrendingVideos() {
   const {setTrendingVideoDisabled} = useTrendingSettingsApi()
   const trendingPrompt = Prompt.usePromptControl()
 
-  const onConfirmHide = React.useCallback(() => {
+  const onConfirmHide = useCallback(() => {
     setTrendingVideoDisabled(true)
     logEvent('trendingVideos:hide', {context: 'interstitial:discover'})
   }, [setTrendingVideoDisabled])
@@ -147,9 +147,7 @@ function VideoCards({
 }: {
   data: Exclude<ReturnType<typeof usePostFeedQuery>['data'], undefined>
 }) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     return data.pages
       .flatMap(page => page.slices)
       .map(slice => slice.items[0])
@@ -157,10 +155,6 @@ function VideoCards({
       .filter(item => AppBskyEmbedVideo.isView(item.post.embed))
       .slice(0, 8)
   }, [data])
-  const href = React.useMemo(() => {
-    const urip = new AtUri(VIDEO_FEED_URI)
-    return makeCustomFeedLink(urip.host, urip.rkey, undefined, 'discover')
-  }, [])
 
   return (
     <>
@@ -183,50 +177,64 @@ function VideoCards({
         </View>
       ))}
 
-      <View style={[{width: CARD_WIDTH * 2}]}>
-        <Link
-          to={href}
-          label={_(msg`View more`)}
-          style={[
-            a.justify_center,
-            a.align_center,
-            a.flex_1,
-            a.rounded_lg,
-            a.border,
-            t.atoms.border_contrast_low,
-            t.atoms.bg,
-            t.atoms.shadow_sm,
-          ]}>
-          {({pressed}) => (
+      <ViewMoreCard />
+    </>
+  )
+}
+
+function ViewMoreCard() {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  const href = useMemo(() => {
+    const urip = new AtUri(VIDEO_FEED_URI)
+    return makeCustomFeedLink(urip.host, urip.rkey, undefined, 'discover')
+  }, [])
+
+  return (
+    <View style={[{width: CARD_WIDTH * 2}]}>
+      <Link
+        to={href}
+        label={_(msg`View more`)}
+        style={[
+          a.justify_center,
+          a.align_center,
+          a.flex_1,
+          a.rounded_lg,
+          a.border,
+          t.atoms.border_contrast_low,
+          t.atoms.bg,
+          t.atoms.shadow_sm,
+        ]}>
+        {({pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.gap_md,
+              {
+                opacity: pressed ? 0.6 : 1,
+              },
+            ]}>
+            <Text style={[a.text_md]}>
+              <Trans>View more</Trans>
+            </Text>
             <View
               style={[
-                a.flex_row,
                 a.align_center,
-                a.gap_md,
+                a.justify_center,
+                a.rounded_full,
                 {
-                  opacity: pressed ? 0.6 : 1,
+                  width: 34,
+                  height: 34,
+                  backgroundColor: t.palette.primary_500,
                 },
               ]}>
-              <Text style={[a.text_md]}>
-                <Trans>View more</Trans>
-              </Text>
-              <View
-                style={[
-                  a.align_center,
-                  a.justify_center,
-                  a.rounded_full,
-                  {
-                    width: 34,
-                    height: 34,
-                    backgroundColor: t.palette.primary_500,
-                  },
-                ]}>
-                <ButtonIcon icon={ChevronRight} />
-              </View>
+              <ButtonIcon icon={ChevronRight} />
             </View>
-          )}
-        </Link>
-      </View>
-    </>
+          </View>
+        )}
+      </Link>
+    </View>
   )
 }
