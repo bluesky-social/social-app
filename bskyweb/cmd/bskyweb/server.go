@@ -609,8 +609,7 @@ type IPCCResponse struct {
 	AgeBlockedGeo    bool   `json:"isAgeBlockedGeo,omitempty"`
 }
 
-// IP address data is powered by IPinfo
-// https://ipinfo.io
+// This product includes GeoLite2 Data created by MaxMind, available from https://www.maxmind.com.
 func (srv *Server) WebIpCC(c echo.Context) error {
 	realIP := c.RealIP()
 	addr, err := netip.ParseAddr(realIP)
