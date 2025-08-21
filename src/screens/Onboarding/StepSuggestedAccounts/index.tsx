@@ -8,6 +8,7 @@ import * as bcp47Match from 'bcp-47-match'
 
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -140,22 +141,28 @@ export function StepSuggestedAccounts() {
   return (
     <View style={[a.align_start]} testID="onboardingInterests">
       <Text style={[a.font_heavy, a.text_3xl]}>
-        <Trans>Suggested Accounts</Trans>
+        <Trans>Suggested for you</Trans>
       </Text>
 
       <View
         style={[
           a.overflow_hidden,
-          a.mt_sm,
-          !gtMobile ? {marginHorizontal: tokens.space.xl * -1} : a.max_w_full,
+          a.mt_lg,
+          isWeb ? a.max_w_full : {marginHorizontal: tokens.space.xl * -1},
           a.flex_1,
           a.justify_start,
         ]}>
         <SuggestedAccountsTabBar
           selectedInterest={selectedInterest}
           onSelectInterest={setSelectedInterest}
+          defaultTabLabel={_(
+            msg({
+              message: 'All',
+              comment: 'the default tab in the interests tab bar',
+            }),
+          )}
           priorityInterests={state.interestsStepResults.selectedInterests}
-          leftPadding={gtMobile ? 0 : tokens.space.xl}
+          leftPadding={isWeb ? 0 : tokens.space.xl}
         />
 
         {isLoading || !moderationOpts ? (
@@ -183,8 +190,9 @@ export function StepSuggestedAccounts() {
             style={[
               a.flex_1,
               a.mt_md,
-              a.border_b,
+              a.border_y,
               t.atoms.border_contrast_low,
+              isWeb && [a.border_x, a.rounded_sm, a.overflow_hidden],
             ]}>
             {suggestedUsers?.actors.map((user, index) => (
               <SuggestedProfileCard
@@ -256,12 +264,10 @@ export function StepSuggestedAccounts() {
 function SuggestedProfileCard({
   profile,
   moderationOpts,
-  recId,
   position,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  recId?: number
   position: number
 }) {
   const t = useTheme()
@@ -272,8 +278,8 @@ function SuggestedProfileCard({
         logger.metric(
           'suggestedUser:press',
           {
-            logContext: 'Explore',
-            recId,
+            logContext: 'Onboarding',
+            recId: undefined,
             position,
           },
           {statsig: true},
@@ -288,7 +294,7 @@ function SuggestedProfileCard({
               a.w_full,
               a.py_lg,
               a.px_xl,
-              a.border_t,
+              position !== 0 && a.border_t,
               t.atoms.border_contrast_low,
             ]}>
             <ProfileCard.Outer>
@@ -310,9 +316,9 @@ function SuggestedProfileCard({
                     logger.metric(
                       'suggestedUser:follow',
                       {
-                        logContext: 'Explore',
+                        logContext: 'Onboarding',
                         location: 'Card',
-                        recId,
+                        recId: undefined,
                         position,
                       },
                       {statsig: true},
@@ -320,7 +326,7 @@ function SuggestedProfileCard({
                   }}
                 />
               </ProfileCard.Header>
-              <ProfileCard.Description profile={profile} numberOfLines={2} />
+              <ProfileCard.Description profile={profile} numberOfLines={3} />
             </ProfileCard.Outer>
           </View>
         </>
