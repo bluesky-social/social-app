@@ -29,7 +29,6 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/compon
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {boostInterests} from '#/components/ProgressGuide/FollowDialog'
-import {SubtleHover} from '#/components/SubtleHover'
 import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -278,65 +277,47 @@ function SuggestedProfileCard({
 }) {
   const t = useTheme()
   return (
-    <ProfileCard.Link
-      profile={profile}
-      onPress={() => {
-        logger.metric(
-          'suggestedUser:press',
-          {
-            logContext: 'Onboarding',
-            recId: undefined,
-            position,
-          },
-          {statsig: true},
-        )
-      }}>
-      {s => (
-        <>
-          <SubtleHover hover={s.hovered || s.pressed} />
-          <View
-            style={[
-              a.flex_1,
-              a.w_full,
-              a.py_lg,
-              a.px_xl,
-              position !== 0 && a.border_t,
-              t.atoms.border_contrast_low,
-            ]}>
-            <ProfileCard.Outer>
-              <ProfileCard.Header>
-                <ProfileCard.Avatar
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                />
-                <ProfileCard.NameAndHandle
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                />
-                <ProfileCard.FollowButton
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                  withIcon={false}
-                  logContext="ExploreSuggestedAccounts"
-                  onFollow={() => {
-                    logger.metric(
-                      'suggestedUser:follow',
-                      {
-                        logContext: 'Onboarding',
-                        location: 'Card',
-                        recId: undefined,
-                        position,
-                      },
-                      {statsig: true},
-                    )
-                  }}
-                />
-              </ProfileCard.Header>
-              <ProfileCard.Description profile={profile} numberOfLines={3} />
-            </ProfileCard.Outer>
-          </View>
-        </>
-      )}
-    </ProfileCard.Link>
+    <View
+      style={[
+        a.flex_1,
+        a.w_full,
+        a.py_lg,
+        a.px_xl,
+        position !== 0 && a.border_t,
+        t.atoms.border_contrast_low,
+      ]}>
+      <ProfileCard.Outer>
+        <ProfileCard.Header>
+          <ProfileCard.Avatar
+            profile={profile}
+            moderationOpts={moderationOpts}
+            disabledPreview
+          />
+          <ProfileCard.NameAndHandle
+            profile={profile}
+            moderationOpts={moderationOpts}
+          />
+          <ProfileCard.FollowButton
+            profile={profile}
+            moderationOpts={moderationOpts}
+            withIcon={false}
+            logContext="ExploreSuggestedAccounts"
+            onFollow={() => {
+              logger.metric(
+                'suggestedUser:follow',
+                {
+                  logContext: 'Onboarding',
+                  location: 'Card',
+                  recId: undefined,
+                  position,
+                },
+                {statsig: true},
+              )
+            }}
+          />
+        </ProfileCard.Header>
+        <ProfileCard.Description profile={profile} numberOfLines={3} />
+      </ProfileCard.Outer>
+    </View>
   )
 }
