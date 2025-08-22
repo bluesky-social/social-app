@@ -1,40 +1,31 @@
 import React, {useCallback, useMemo} from 'react'
-import {
-  type GestureResponderEvent,
-  type StyleProp,
-  type TextStyle,
-  View,
-} from 'react-native'
+import { type GestureResponderEvent, type StyleProp, type TextStyle, View,  } from 'react-native'
 import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
-import {
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  ChatBskyConvoDefs as ChatGndrConvoDefs,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { AppGndrEmbedRecord, ChatBskyConvoDefs as ChatGndrConvoDefs, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { type I18n } from '@lingui/core'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {isNative} from '#/platform/detection'
-import {useConvoActive} from '#/state/messages/convo'
-import {type ConvoItem} from '#/state/messages/convo/types'
-import {useSession} from '#/state/session'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {atoms as a, native, useTheme} from '#/alf'
-import {isOnlyEmoji} from '#/alf/typography'
-import {ActionsWrapper} from '#/components/dms/ActionsWrapper'
-import {InlineLinkText} from '#/components/Link'
-import {RichText} from '#/components/RichText'
-import {Text} from '#/components/Typography'
-import {DateDivider} from './DateDivider'
-import {MessageItemEmbed} from './MessageItemEmbed'
-import {localDateString} from './util'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { isNative } from '#/platform/detection'
+import { useConvoActive } from '#/state/messages/convo'
+import { type ConvoItem } from '#/state/messages/convo/types'
+import { useSession } from '#/state/session'
+import { TimeElapsed } from '#/view/com/util/TimeElapsed'
+import { atoms as a, native, useTheme } from '#/alf'
+import { isOnlyEmoji } from '#/alf/typography'
+import { ActionsWrapper } from '#/components/dms/ActionsWrapper'
+import { InlineLinkText } from '#/components/Link'
+import { RichText } from '#/components/RichText'
+import { Text } from '#/components/Typography'
+import { DateDivider } from './DateDivider'
+import { MessageItemEmbed } from './MessageItemEmbed'
+import { localDateString } from './util'
 
 let MessageItem = ({
   item,

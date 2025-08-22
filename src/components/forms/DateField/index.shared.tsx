@@ -1,11 +1,11 @@
-import {Pressable, View} from 'react-native'
-import {useLingui} from '@lingui/react'
+import { Pressable, View } from 'react-native'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a, native, useTheme, web} from '#/alf'
+import { atoms as a, native, useTheme, web } from '#/alf'
 import * as TextField from '#/components/forms/TextField'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
-import {Text} from '#/components/Typography'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { CalendarDays_Stroke2_Corner0_Rounded as CalendarDays } from '#/components/icons/CalendarDays'
+import { Text } from '#/components/Typography'
 
 // looks like a TextField.Input, but is just a button. It'll do something different on each platform on press
 // iOS: open a dialog with an inline date picker

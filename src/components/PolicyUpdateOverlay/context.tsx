@@ -1,10 +1,7 @@
-import {createContext, type ReactNode, useContext} from 'react'
+import { createContext, type ReactNode, useContext } from 'react'
 
-import {Provider as PortalProvider} from '#/components/PolicyUpdateOverlay/Portal'
-import {
-  type PolicyUpdateState,
-  usePolicyUpdateState,
-} from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
+import { Provider as PortalProvider } from '#/components/PolicyUpdateOverlay/Portal'
+import { type PolicyUpdateState, usePolicyUpdateState,  } from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
 
 const Context = createContext<PolicyUpdateState>({
   completed: true,

@@ -1,5 +1,5 @@
-import {useEffect, useRef} from 'react'
-import {useAnimatedScrollHandler as useAnimatedScrollHandler_BUGGY} from 'react-native-reanimated'
+import { useEffect, useRef } from 'react'
+import { useAnimatedScrollHandler as useAnimatedScrollHandler_BUGGY } from 'react-native-reanimated'
 
 export const useAnimatedScrollHandler: typeof useAnimatedScrollHandler_BUGGY = (
   config,

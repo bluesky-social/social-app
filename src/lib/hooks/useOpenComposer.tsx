@@ -1,8 +1,8 @@
-import {useMemo} from 'react'
-import {Trans} from '@lingui/macro'
+import { useMemo } from 'react'
+import { Trans } from '@lingui/macro'
 
-import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
-import {useOpenComposer as rootUseOpenComposer} from '#/state/shell/composer'
+import { useRequireEmailVerification } from '#/lib/hooks/useRequireEmailVerification'
+import { useOpenComposer as rootUseOpenComposer } from '#/state/shell/composer'
 
 export function useOpenComposer() {
   const {openComposer} = rootUseOpenComposer()

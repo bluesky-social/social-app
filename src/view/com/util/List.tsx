@@ -1,20 +1,16 @@
 import React, {memo} from 'react'
-import {RefreshControl, type ViewToken} from 'react-native'
-import {
-  type FlatListPropsWithLayout,
-  runOnJS,
-  useSharedValue,
-} from 'react-native-reanimated'
-import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
+import { RefreshControl, type ViewToken } from 'react-native'
+import { type FlatListPropsWithLayout, runOnJS, useSharedValue,  } from 'react-native-reanimated'
+import { updateActiveVideoViewAsync } from '@haileyok/bluesky-video'
 
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {useDedupe} from '#/lib/hooks/useDedupe'
-import {useScrollHandlers} from '#/lib/ScrollContext'
-import {addStyle} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
-import {useLightbox} from '#/state/lightbox'
-import {useTheme} from '#/alf'
-import {FlatList_INTERNAL} from './Views'
+import { useAnimatedScrollHandler } from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import { useDedupe } from '#/lib/hooks/useDedupe'
+import { useScrollHandlers } from '#/lib/ScrollContext'
+import { addStyle } from '#/lib/styles'
+import { isIOS } from '#/platform/detection'
+import { useLightbox } from '#/state/lightbox'
+import { useTheme } from '#/alf'
+import { FlatList_INTERNAL } from './Views'
 
 export type ListMethods = FlatList_INTERNAL
 export type ListProps<ItemT = any> = Omit<

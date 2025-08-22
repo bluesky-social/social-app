@@ -1,25 +1,20 @@
-import {useCallback, useMemo, useState} from 'react'
-import {LayoutAnimation, Pressable, View} from 'react-native'
-import {Image} from 'expo-image'
-import {
-  AppBskyEmbedImages as AppGndrEmbedImages,
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
-  AppBskyFeedPost as AppGndrFeedPost,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useMemo, useState } from 'react'
+import { LayoutAnimation, Pressable, View } from 'react-native'
+import { Image } from 'expo-image'
+import { AppGndrEmbedImages, AppGndrEmbedRecord, AppGndrEmbedRecordWithMedia, AppGndrFeedPost,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {type ComposerOptsPostRef} from '#/state/shell/composer'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, web} from '#/alf'
-import {QuoteEmbed} from '#/components/Post/Embed'
-import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
-import {parseEmbed} from '#/types/gndr/post'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { type ComposerOptsPostRef } from '#/state/shell/composer'
+import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, useTheme, web } from '#/alf'
+import { QuoteEmbed } from '#/components/Post/Embed'
+import { Text } from '#/components/Typography'
+import { useSimpleVerificationState } from '#/components/verification'
+import { VerificationCheck } from '#/components/verification/VerificationCheck'
+import { parseEmbed } from '#/types/gndr/post'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const t = useTheme()
@@ -54,7 +49,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   }, [embed])
   const parsedQuoteEmbed = quoteEmbed
     ? parseEmbed({
-        $type: 'app.bsky.embedrecord#view',
+        $type: 'app.gndr.embedrecord#view',
         ...quoteEmbed,
       })
     : null

@@ -1,13 +1,13 @@
-import {ScrollView, StyleSheet, View} from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import type React from 'react'
 
-import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
-import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isWeb} from '#/platform/detection'
-import {atoms as a} from '#/alf'
-import {Text} from '../text/Text'
+import { useColorSchemeStyle } from '#/lib/hooks/useColorSchemeStyle'
+import { useIsKeyboardVisible } from '#/lib/hooks/useIsKeyboardVisible'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { isWeb } from '#/platform/detection'
+import { atoms as a } from '#/alf'
+import { Text } from '../text/Text'
 
 export const LoggedOutLayout = ({
   leadin,

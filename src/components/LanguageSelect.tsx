@@ -1,9 +1,9 @@
 import React from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {sanitizeAppLanguageSetting} from '#/locale/helpers'
-import {APP_LANGUAGES} from '#/locale/languages'
+import { sanitizeAppLanguageSetting } from '#/locale/helpers'
+import { APP_LANGUAGES } from '#/locale/languages'
 import * as Select from '#/components/Select'
 
 export function LanguageSelect({

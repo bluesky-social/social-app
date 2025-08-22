@@ -1,15 +1,15 @@
-import {View} from 'react-native'
-import {type ImagePickerAsset} from 'expo-image-picker'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type ImagePickerAsset } from 'expo-image-picker'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {type CompressedVideo} from '#/lib/media/video/types'
-import {clamp} from '#/lib/numbers'
-import {useAutoplayDisabled} from '#/state/preferences'
-import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
+import { type CompressedVideo } from '#/lib/media/video/types'
+import { clamp } from '#/lib/numbers'
+import { useAutoplayDisabled } from '#/state/preferences'
+import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
-import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import { atoms as a } from '#/alf'
+import { PlayButtonIcon } from '#/components/video/PlayButtonIcon'
 
 export function VideoPreview({
   asset,

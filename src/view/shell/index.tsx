@@ -1,46 +1,38 @@
-import {useCallback, useEffect, useState} from 'react'
-import {BackHandler, useWindowDimensions, View} from 'react-native'
-import {Drawer} from 'react-native-drawer-layout'
-import {SystemBars} from 'react-native-edge-to-edge'
-import {Gesture} from 'react-native-gesture-handler'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useNavigation, useNavigationState} from '@react-navigation/native'
+import { useCallback, useEffect, useState } from 'react'
+import { BackHandler, useWindowDimensions, View } from 'react-native'
+import { Drawer } from 'react-native-drawer-layout'
+import { SystemBars } from 'react-native-edge-to-edge'
+import { Gesture } from 'react-native-gesture-handler'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useNavigation } from '@react-navigation/native'
 
-import {useDedupe} from '#/lib/hooks/useDedupe'
-import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
-import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
-import {useNotificationsRegistration} from '#/lib/notifications/notifications'
-import {isStateAtTabRoot} from '#/lib/routes/helpers'
-import {isAndroid, isIOS} from '#/platform/detection'
-import {useDialogStateControlContext} from '#/state/dialogs'
-import {useSession} from '#/state/session'
-import {
-  useIsDrawerOpen,
-  useIsDrawerSwipeDisabled,
-  useSetDrawerOpen,
-} from '#/state/shell'
-import {useCloseAnyActiveElement} from '#/state/util'
-import {Lightbox} from '#/view/com/lightbox/Lightbox'
-import {ModalsContainer} from '#/view/com/modals/Modal'
-import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {atoms as a, select, useTheme} from '#/alf'
-import {setSystemUITheme} from '#/alf/util/systemUI'
-import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
-import {EmailDialog} from '#/components/dialogs/EmailDialog'
-import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
-import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
-import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
-import {SigninDialog} from '#/components/dialogs/Signin'
-import {
-  Outlet as PolicyUpdateOverlayPortalOutlet,
-  usePolicyUpdateStateContext,
-} from '#/components/PolicyUpdateOverlay'
-import {Outlet as PortalOutlet} from '#/components/Portal'
-import {RoutesContainer, TabsNavigator} from '#/Navigation'
-import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
-import {updateActiveViewAsync} from '../../../modules/expo-gander-swiss-army/src/VisibilityView'
-import {Composer} from './Composer'
-import {DrawerContent} from './Drawer'
+import { useDedupe } from '#/lib/hooks/useDedupe'
+import { useIntentHandler } from '#/lib/hooks/useIntentHandler'
+import { useNotificationsHandler } from '#/lib/hooks/useNotificationHandler'
+import { useNotificationsRegistration } from '#/lib/notifications/notifications'
+import { isAndroid, isIOS } from '#/platform/detection'
+import { useDialogStateControlContext } from '#/state/dialogs'
+import { useSession } from '#/state/session'
+import { useIsDrawerOpen, useIsDrawerSwipeDisabled, useSetDrawerOpen,  } from '#/state/shell'
+import { useCloseAnyActiveElement } from '#/state/util'
+import { Lightbox } from '#/view/com/lightbox/Lightbox'
+import { ModalsContainer } from '#/view/com/modals/Modal'
+import { ErrorBoundary } from '#/view/com/util/ErrorBoundary'
+import { atoms as a, select, useTheme } from '#/alf'
+import { setSystemUITheme } from '#/alf/util/systemUI'
+import { AgeAssuranceRedirectDialog } from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
+import { EmailDialog } from '#/components/dialogs/EmailDialog'
+import { InAppBrowserConsentDialog } from '#/components/dialogs/InAppBrowserConsent'
+import { LinkWarningDialog } from '#/components/dialogs/LinkWarning'
+import { MutedWordsDialog } from '#/components/dialogs/MutedWords'
+import { SigninDialog } from '#/components/dialogs/Signin'
+import { Outlet as PolicyUpdateOverlayPortalOutlet, usePolicyUpdateStateContext,  } from '#/components/PolicyUpdateOverlay'
+import { Outlet as PortalOutlet } from '#/components/Portal'
+import { RoutesContainer, TabsNavigator } from '#/Navigation'
+import { BottomSheetOutlet } from '../../../modules/bottom-sheet'
+import { updateActiveViewAsync } from '../../../modules/expo-gander-swiss-army/src/VisibilityView'
+import { Composer } from './Composer'
+import { DrawerContent } from './Drawer'
 
 function ShellInner() {
   const t = useTheme()
@@ -60,13 +52,6 @@ function ShellInner() {
     () => setIsDrawerOpen(false),
     [setIsDrawerOpen],
   )
-  let canGoBack = false;
-  try {
-    canGoBack = useNavigationState(state => state.index > 0);
-  } catch {
-    canGoBack = false;
-  }
-  // const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession} = useSession()
   const closeAnyActiveElement = useCloseAnyActiveElement()
 
@@ -92,6 +77,7 @@ function ShellInner() {
   // The `state` event should only fire whenever we push or pop to a screen, and should not fire consecutively quickly.
   // To be certain though, we will also dedupe these calls.
   const navigation = useNavigation()
+  const canGoBack = navigation.canGoBack()
   const dedupe = useDedupe(1000)
   useEffect(() => {
     if (!isAndroid) return

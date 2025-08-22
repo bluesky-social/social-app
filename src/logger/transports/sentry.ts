@@ -1,7 +1,7 @@
-import {isNetworkError} from '#/lib/strings/errors'
-import {Sentry} from '#/logger/sentry/lib'
-import {LogLevel, type Transport} from '#/logger/types'
-import {prepareMetadata} from '#/logger/util'
+import { isNetworkError } from '#/lib/strings/errors'
+import { Sentry } from '#/logger/sentry/lib'
+import { LogLevel, type Transport } from '#/logger/types'
+import { prepareMetadata } from '#/logger/util'
 
 export const sentryTransport: Transport = (
   level,

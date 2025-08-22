@@ -1,8 +1,8 @@
 import React from 'react'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import { STALE } from '#/state/queries'
+import { useAgent } from '#/state/session'
 
 const handleQueryKeyRoot = 'handle'
 const fetchHandleQueryKey = (handleOrDid: string) => [

@@ -1,71 +1,42 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {
-  ActivityIndicator,
-  AppState,
-  Dimensions,
-  LayoutAnimation,
-  type ListRenderItemInfo,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  AppBskyEmbedVideo as AppGndrEmbedVideo,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ActivityIndicator, AppState, Dimensions, LayoutAnimation, type ListRenderItemInfo, type StyleProp, StyleSheet, View, type ViewStyle,  } from 'react-native'
+import { type AppGndrActorDefs, AppGndrEmbedVideo, type AppGndrFeedDefs,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {isStatusStillActive, validateStatus} from '#/lib/actor-status'
-import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logEvent} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
-import {listenPostCreated} from '#/state/events'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {useTrendingSettings} from '#/state/preferences/trending'
-import {STALE} from '#/state/queries'
-import {
-  type AuthorFilter,
-  type FeedDescriptor,
-  type FeedParams,
-  type FeedPostSlice,
-  type FeedPostSliceItem,
-  pollLatest,
-  RQKEY,
-  usePostFeedQuery,
-} from '#/state/queries/post-feed'
-import {useLiveNowConfig} from '#/state/service-config'
-import {useSession} from '#/state/session'
-import {useProgressGuide} from '#/state/shell/progress-guide'
-import {useSelectedFeed} from '#/state/shell/selected-feed'
-import {List, type ListRef} from '#/view/com/util/List'
-import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
-import {
-  AgeAssuranceDismissibleFeedBanner,
-  useInternalState as useAgeAssuranceBannerState,
-} from '#/components/ageAssurance/AgeAssuranceDismissibleFeedBanner'
-import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
-import {
-  PostFeedVideoGridRow,
-  PostFeedVideoGridRowPlaceholder,
-} from '#/components/feeds/PostFeedVideoGridRow'
-import {TrendingInterstitial} from '#/components/interstitials/Trending'
-import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
-import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
-import {FeedShutdownMsg} from './FeedShutdownMsg'
-import {PostFeedErrorMessage} from './PostFeedErrorMessage'
-import {PostFeedItem} from './PostFeedItem'
-import {ShowLessFollowup} from './ShowLessFollowup'
-import {ViewFullThread} from './ViewFullThread'
+import { isStatusStillActive, validateStatus } from '#/lib/actor-status'
+import { DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS } from '#/lib/constants'
+import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { logEvent } from '#/lib/statsig/statsig'
+import { logger } from '#/logger'
+import { isIOS, isNative, isWeb } from '#/platform/detection'
+import { listenPostCreated } from '#/state/events'
+import { useFeedFeedbackContext } from '#/state/feed-feedback'
+import { useTrendingSettings } from '#/state/preferences/trending'
+import { STALE } from '#/state/queries'
+import { type AuthorFilter, type FeedDescriptor, type FeedParams, type FeedPostSlice, type FeedPostSliceItem, pollLatest, RQKEY, usePostFeedQuery,  } from '#/state/queries/post-feed'
+import { useLiveNowConfig } from '#/state/service-config'
+import { useSession } from '#/state/session'
+import { useProgressGuide } from '#/state/shell/progress-guide'
+import { useSelectedFeed } from '#/state/shell/selected-feed'
+import { List, type ListRef } from '#/view/com/util/List'
+import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn'
+import { type VideoFeedSourceContext } from '#/screens/VideoFeed/types'
+import { useBreakpoints, useLayoutBreakpoints } from '#/alf'
+import { AgeAssuranceDismissibleFeedBanner, useInternalState as useAgeAssuranceBannerState,  } from '#/components/ageAssurance/AgeAssuranceDismissibleFeedBanner'
+import { ProgressGuide, SuggestedFollows } from '#/components/FeedInterstitials'
+import { PostFeedVideoGridRow, PostFeedVideoGridRowPlaceholder,  } from '#/components/feeds/PostFeedVideoGridRow'
+import { TrendingInterstitial } from '#/components/interstitials/Trending'
+import { TrendingVideos as TrendingVideosInterstitial } from '#/components/interstitials/TrendingVideos'
+import { DiscoverFallbackHeader } from './DiscoverFallbackHeader'
+import { FeedShutdownMsg } from './FeedShutdownMsg'
+import { PostFeedErrorMessage } from './PostFeedErrorMessage'
+import { PostFeedItem } from './PostFeedItem'
+import { ShowLessFollowup } from './ShowLessFollowup'
+import { ViewFullThread } from './ViewFullThread'
 
 type FeedRow =
   | {

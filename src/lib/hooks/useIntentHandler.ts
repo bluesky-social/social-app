@@ -1,19 +1,16 @@
 import React from 'react'
-import {Alert} from 'react-native'
+import { Alert } from 'react-native'
 import * as Linking from 'expo-linking'
 
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {useSession} from '#/state/session'
-import {useCloseAllActiveElements} from '#/state/util'
-import {
-  parseAgeAssuranceRedirectDialogState,
-  useAgeAssuranceRedirectDialogControl,
-} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
-import {useIntentDialogs} from '#/components/intents/IntentDialogs'
-import {Referrer} from '../../../modules/expo-gander-swiss-army'
-import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { logger } from '#/logger'
+import { isNative } from '#/platform/detection'
+import { useSession } from '#/state/session'
+import { useCloseAllActiveElements } from '#/state/util'
+import { parseAgeAssuranceRedirectDialogState, useAgeAssuranceRedirectDialogControl,  } from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
+import { useIntentDialogs } from '#/components/intents/IntentDialogs'
+import { Referrer } from '../../../modules/expo-gander-swiss-army'
+import { useApplyPullRequestOTAUpdate } from './useOTAUpdates'
 
 type IntentType = 'compose' | 'verify-email' | 'age-assurance' | 'apply-ota'
 

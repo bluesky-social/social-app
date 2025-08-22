@@ -1,6 +1,6 @@
-import {type ReactNode} from 'react'
+import { type ReactNode } from 'react'
 
-import {type DialogControlProps} from '#/components/Dialog'
+import { type DialogControlProps } from '#/components/Dialog'
 
 export type EmailDialogProps = {
   control: DialogControlProps

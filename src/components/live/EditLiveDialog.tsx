@@ -1,33 +1,25 @@
-import {useMemo, useState} from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  AppBskyActorStatus as AppGndrActorStatus,
-  type AppBskyEmbedExternal as AppGndrEmbedExternal,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {differenceInMinutes} from 'date-fns'
+import { useMemo, useState } from 'react'
+import { View } from 'react-native'
+import { AppBskyActorStatus as AppGndrActorStatus, type AppGndrActorDefs, type AppGndrEmbedExternal,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { differenceInMinutes } from 'date-fns'
 
-import {cleanError} from '#/lib/strings/errors'
-import {definitelyUrl} from '#/lib/strings/url-helpers'
-import {useTickEveryMinute} from '#/state/shell'
-import {atoms as a, platform, useTheme, web} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { cleanError } from '#/lib/strings/errors'
+import { definitelyUrl } from '#/lib/strings/url-helpers'
+import { useTickEveryMinute } from '#/state/shell'
+import { atoms as a, platform, useTheme, web } from '#/alf'
+import { Admonition } from '#/components/Admonition'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import {Clock_Stroke2_Corner0_Rounded as ClockIcon} from '#/components/icons/Clock'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
-import {LinkPreview} from './LinkPreview'
-import {
-  useLiveLinkMetaQuery,
-  useRemoveLiveStatusMutation,
-  useUpsertLiveStatusMutation,
-} from './queries'
-import {displayDuration, useDebouncedValue} from './utils'
+import { Clock_Stroke2_Corner0_Rounded as ClockIcon } from '#/components/icons/Clock'
+import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
+import { LinkPreview } from './LinkPreview'
+import { useLiveLinkMetaQuery, useRemoveLiveStatusMutation, useUpsertLiveStatusMutation,  } from './queries'
+import { displayDuration, useDebouncedValue } from './utils'
 
 export function EditLiveDialog({
   control,

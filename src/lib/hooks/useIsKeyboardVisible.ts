@@ -1,7 +1,7 @@
-import {useEffect, useState} from 'react'
-import {Keyboard} from 'react-native'
+import { useEffect, useState } from 'react'
+import { Keyboard } from 'react-native'
 
-import {isIOS} from '#/platform/detection'
+import { isIOS } from '#/platform/detection'
 
 export function useIsKeyboardVisible({
   iosUseWillEvents,

@@ -1,23 +1,20 @@
-import {useCallback, useMemo} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useMemo } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {APP_LANGUAGES, LANGUAGES} from '#/lib/../locale/languages'
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
-import {useModalControls} from '#/state/modals'
-import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import {atoms as a, useTheme, web} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import { APP_LANGUAGES, LANGUAGES } from '#/lib/../locale/languages'
+import { type CommonNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { languageName, sanitizeAppLanguageSetting } from '#/locale/helpers'
+import { useModalControls } from '#/state/modals'
+import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences'
+import { atoms as a, useTheme, web } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check'
+import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus'
 import * as Layout from '#/components/Layout'
 import * as Select from '#/components/Select'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 import * as SettingsList from './components/SettingsList'
 
 const DEDUPED_LANGUAGES = LANGUAGES.filter(

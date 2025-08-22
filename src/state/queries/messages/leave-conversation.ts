@@ -1,18 +1,11 @@
-import {useMemo} from 'react'
-import {
-  type ChatBskyConvoLeaveConvo as ChatGndrConvoLeaveConvo,
-  type ChatBskyConvoListConvos as ChatGndrConvoListConvos,
-} from '@atproto/api'
-import {
-  useMutation,
-  useMutationState,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { useMemo } from 'react'
+import { type ChatBskyConvoLeaveConvo as ChatGndrConvoLeaveConvo, type ChatBskyConvoListConvos as ChatGndrConvoListConvos,  } from '@gander-social-atproto/api'
+import { useMutation, useMutationState, useQueryClient,  } from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useAgent} from '#/state/session'
-import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
+import { logger } from '#/logger'
+import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
+import { useAgent } from '#/state/session'
+import { RQKEY_ROOT as CONVO_LIST_KEY } from './list-conversations'
 
 const RQKEY_ROOT = 'leave-convo'
 export function RQKEY(convoId: string | undefined) {

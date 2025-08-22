@@ -1,11 +1,6 @@
-import {type AppBskyActorDefs as AppGndrActorDefs, nuxSchema} from '@atproto/api'
+import { type AppGndrActorDefs, nuxSchema } from '@gander-social-atproto/api'
 
-import {
-  type AppNux,
-  type Nux,
-  nuxNames,
-  NuxSchemas,
-} from '#/state/queries/nuxs/definitions'
+import { type AppNux, type Nux, nuxNames, NuxSchemas,  } from '#/state/queries/nuxs/definitions'
 
 export function parseAppNux(nux: AppGndrActorDefs.Nux): AppNux | undefined {
   if (!nuxNames.has(nux.id as Nux)) return

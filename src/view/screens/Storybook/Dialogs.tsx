@@ -1,14 +1,14 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {useDialogStateControlContext} from '#/state/dialogs'
-import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { useDialogStateControlContext } from '#/state/dialogs'
+import { atoms as a } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
-import {H3, P, Text} from '#/components/Typography'
-import {PlatformInfo} from '../../../../modules/expo-gander-swiss-army'
+import { H3, P, Text } from '#/components/Typography'
+import { PlatformInfo } from '../../../../modules/expo-gander-swiss-army'
 
 export function Dialogs() {
   const scrollable = Dialog.useDialogControl()

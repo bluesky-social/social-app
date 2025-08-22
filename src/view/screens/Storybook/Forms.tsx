@@ -1,14 +1,14 @@
 import React from 'react'
-import {type TextInput, View} from 'react-native'
+import { type TextInput, View } from 'react-native'
 
-import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {DateField, LabelText} from '#/components/forms/DateField'
+import { atoms as a } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { DateField, LabelText } from '#/components/forms/DateField'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
-import {H1, H3} from '#/components/Typography'
+import { Globe_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe'
+import { H1, H3 } from '#/components/Typography'
 
 export function Forms() {
   const [toggleGroupAValues, setToggleGroupAValues] = React.useState(['a'])

@@ -1,15 +1,7 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyGraphGetKnownFollowers as AppGndrGraphGetKnownFollowers,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrGraphGetKnownFollowers,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery,  } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import { useAgent } from '#/state/session'
 
 const PAGE_SIZE = 50
 type RQPageParam = string | undefined
@@ -28,7 +20,7 @@ export function useProfileKnownFollowersQuery(did: string | undefined) {
   >({
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getKnownFollowers({
+      const res = await agent.app.gndr.graph.getKnownFollowers({
         actor: did!,
         limit: PAGE_SIZE,
         cursor: pageParam,

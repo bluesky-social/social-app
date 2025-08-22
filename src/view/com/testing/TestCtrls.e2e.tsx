@@ -1,11 +1,11 @@
-import {LogBox, Pressable, View} from 'react-native'
-import {useQueryClient} from '@tanstack/react-query'
+import { LogBox, Pressable, View } from 'react-native'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useModalControls} from '#/state/modals'
-import {useSessionApi} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useOnboardingDispatch} from '#/state/shell/onboarding'
-import {navigate} from '../../../Navigation'
+import { useModalControls } from '#/state/modals'
+import { useSessionApi } from '#/state/session'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { useOnboardingDispatch } from '#/state/shell/onboarding'
+import { navigate } from '../../../Navigation'
 
 LogBox.ignoreAllLogs()
 

@@ -1,14 +1,10 @@
-import {useCallback} from 'react'
-import {Keyboard} from 'react-native'
+import { useCallback } from 'react'
+import { Keyboard } from 'react-native'
 
-import {useEmail} from '#/lib/hooks/useEmail'
-import {useRequireAuth, useSession} from '#/state/session'
-import {useCloseAllActiveElements} from '#/state/util'
-import {
-  EmailDialogScreenID,
-  type Screen,
-  useEmailDialogControl,
-} from '#/components/dialogs/EmailDialog'
+import { useEmail } from '#/lib/hooks/useEmail'
+import { useRequireAuth, useSession } from '#/state/session'
+import { useCloseAllActiveElements } from '#/state/util'
+import { EmailDialogScreenID, type Screen, useEmailDialogControl,  } from '#/components/dialogs/EmailDialog'
 
 export function useRequireEmailVerification() {
   const {currentAccount} = useSession()

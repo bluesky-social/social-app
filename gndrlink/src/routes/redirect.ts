@@ -1,11 +1,11 @@
 import assert from 'node:assert'
 
-import {DAY, SECOND} from '@atproto/common'
+import { DAY, SECOND } from '@gander-social-atproto/common'
 import escapeHTML from 'escape-html'
-import {type Express} from 'express'
+import { type Express } from 'express'
 
-import {type AppContext} from '../context.js'
-import {handler} from './util.js'
+import { type AppContext } from '../context.js'
+import { handler } from './util.js'
 
 const INTERNAL_IP_REGEX = new RegExp(
   '(^127.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$)|(^10.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.1[6-9]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.2[0-9]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.3[0-1]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^192.168.[0-9]{1,3}.[0-9]{1,3}$)|^localhost',

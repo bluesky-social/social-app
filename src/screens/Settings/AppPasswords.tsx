@@ -1,5 +1,5 @@
-import {useCallback} from 'react'
-import {View} from 'react-native'
+import { useCallback } from 'react'
+import { View } from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -7,33 +7,30 @@ import Animated, {
   LinearTransition,
   StretchOutY,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import { type ComAtprotoServerListAppPasswords } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 
-import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {cleanError} from '#/lib/strings/errors'
-import {isWeb} from '#/platform/detection'
-import {
-  useAppPasswordDeleteMutation,
-  useAppPasswordsQuery,
-} from '#/state/queries/app-passwords'
-import {EmptyState} from '#/view/com/util/EmptyState'
-import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
+import { type CommonNavigatorParams } from '#/lib/routes/types'
+import { cleanError } from '#/lib/strings/errors'
+import { isWeb } from '#/platform/detection'
+import { useAppPasswordDeleteMutation, useAppPasswordsQuery,  } from '#/state/queries/app-passwords'
+import { EmptyState } from '#/view/com/util/EmptyState'
+import { ErrorScreen } from '#/view/com/util/error/ErrorScreen'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
-import {Admonition, colors} from '#/components/Admonition'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
-import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
+import { atoms as a, useTheme } from '#/alf'
+import { Admonition, colors } from '#/components/Admonition'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { useDialogControl } from '#/components/Dialog'
+import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus'
+import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash'
+import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning'
 import * as Layout from '#/components/Layout'
-import {Loader} from '#/components/Loader'
+import { Loader } from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
-import {Text} from '#/components/Typography'
-import {AddAppPasswordDialog} from './components/AddAppPasswordDialog'
+import { Text } from '#/components/Typography'
+import { AddAppPasswordDialog } from './components/AddAppPasswordDialog'
 import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>

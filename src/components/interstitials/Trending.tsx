@@ -1,24 +1,21 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { ScrollView, View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {
-  useTrendingSettings,
-  useTrendingSettingsApi,
-} from '#/state/preferences/trending'
-import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
-import {useTrendingConfig} from '#/state/service-config'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, useGutters, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
+import { logEvent } from '#/lib/statsig/statsig'
+import { useTrendingSettings, useTrendingSettingsApi,  } from '#/state/preferences/trending'
+import { useTrendingTopics } from '#/state/queries/trending/useTrendingTopics'
+import { useTrendingConfig } from '#/state/service-config'
+import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture'
+import { atoms as a, useGutters, useTheme } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
+import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times'
+import { Trending2_Stroke2_Corner2_Rounded as Graph } from '#/components/icons/Trending'
 import * as Prompt from '#/components/Prompt'
-import {TrendingTopicLink} from '#/components/TrendingTopics'
-import {Text} from '#/components/Typography'
+import { TrendingTopicLink } from '#/components/TrendingTopics'
+import { Text } from '#/components/Typography'
 
 export function TrendingInterstitial() {
   const {enabled} = useTrendingConfig()

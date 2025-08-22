@@ -1,10 +1,7 @@
-import {requireNativeView} from 'expo'
+import { requireNativeView } from 'expo'
 import type * as React from 'react'
 
-import {
-  type EmojiPickerNativeViewProps,
-  type EmojiPickerViewProps,
-} from './EmojiPickerModule.types'
+import { type EmojiPickerNativeViewProps, type EmojiPickerViewProps,  } from './EmojiPickerModule.types'
 
 const NativeView: React.ComponentType<EmojiPickerNativeViewProps> =
   requireNativeView('EmojiPicker')

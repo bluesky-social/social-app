@@ -1,80 +1,56 @@
-import {useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
-import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation, useNavigationState} from '@react-navigation/native'
+import { useCallback, useMemo, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { type AppGndrActorDefs } from '@gander-social-atproto/api'
+import { msg, plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation, useNavigationState } from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
-import {makeProfileLink} from '#/lib/routes/links'
-import {
-  type CommonNavigatorParams,
-  type NavigationProp,
-} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
-import {emitSoftReset} from '#/state/events'
-import {useHomeBadge} from '#/state/home-badge'
-import {useFetchHandle} from '#/state/queries/handle'
-import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useProfilesQuery} from '#/state/queries/profile'
-import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {PressableWithHover} from '#/view/com/util/PressableWithHover'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useLayoutBreakpoints, useTheme, web} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {type DialogControlProps} from '#/components/Dialog'
-import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
-import {
-  Bell_Filled_Corner0_Rounded as BellFilled,
-  Bell_Stroke2_Corner0_Rounded as Bell,
-} from '#/components/icons/Bell'
-import {
-  BulletList_Filled_Corner0_Rounded as ListFilled,
-  BulletList_Stroke2_Corner0_Rounded as List,
-} from '#/components/icons/BulletList'
-import {DotGrid_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
-import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
-import {
-  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
-  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
-} from '#/components/icons/Hashtag'
-import {
-  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
-  HomeOpen_Stoke2_Corner0_Rounded as Home,
-} from '#/components/icons/HomeOpen'
-import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
-import {
-  Message_Stroke2_Corner0_Rounded as Message,
-  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
-} from '#/components/icons/Message'
-import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
-import {
-  SettingsGear2_Filled_Corner0_Rounded as SettingsFilled,
-  SettingsGear2_Stroke2_Corner0_Rounded as Settings,
-} from '#/components/icons/SettingsGear2'
-import {
-  UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
-  UserCircle_Stroke2_Corner0_Rounded as UserCircle,
-} from '#/components/icons/UserCircle'
-import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
+import { useActorStatus } from '#/lib/actor-status'
+import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { getCurrentRoute, isTab } from '#/lib/routes/helpers'
+import { makeProfileLink } from '#/lib/routes/links'
+import { type CommonNavigatorParams, type NavigationProp,  } from '#/lib/routes/types'
+import { useGate } from '#/lib/statsig/statsig'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { isInvalidHandle, sanitizeHandle } from '#/lib/strings/handles'
+import { emitSoftReset } from '#/state/events'
+import { useHomeBadge } from '#/state/home-badge'
+import { useFetchHandle } from '#/state/queries/handle'
+import { useUnreadMessageCount } from '#/state/queries/messages/list-conversations'
+import { useUnreadNotifications } from '#/state/queries/notifications/unread'
+import { useProfilesQuery } from '#/state/queries/profile'
+import { type SessionAccount, useSession, useSessionApi } from '#/state/session'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { useCloseAllActiveElements } from '#/state/util'
+import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { PressableWithHover } from '#/view/com/util/PressableWithHover'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { NavSignupCard } from '#/view/shell/NavSignupCard'
+import { atoms as a, tokens, useLayoutBreakpoints, useTheme, web } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { type DialogControlProps } from '#/components/Dialog'
+import { ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon } from '#/components/icons/ArrowBoxLeft'
+import { Bell_Filled_Corner0_Rounded as BellFilled, Bell_Stroke2_Corner0_Rounded as Bell,  } from '#/components/icons/Bell'
+import { BulletList_Filled_Corner0_Rounded as ListFilled, BulletList_Stroke2_Corner0_Rounded as List,  } from '#/components/icons/BulletList'
+import { DotGrid_Stroke2_Corner0_Rounded as EllipsisIcon } from '#/components/icons/DotGrid'
+import { EditBig_Stroke2_Corner0_Rounded as EditBig } from '#/components/icons/EditBig'
+import { Hashtag_Filled_Corner0_Rounded as HashtagFilled, Hashtag_Stroke2_Corner0_Rounded as Hashtag,  } from '#/components/icons/Hashtag'
+import { HomeOpen_Filled_Corner0_Rounded as HomeFilled, HomeOpen_Stoke2_Corner0_Rounded as Home,  } from '#/components/icons/HomeOpen'
+import { MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled } from '#/components/icons/MagnifyingGlass'
+import { MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass } from '#/components/icons/MagnifyingGlass2'
+import { Message_Stroke2_Corner0_Rounded as Message, Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,  } from '#/components/icons/Message'
+import { PlusLarge_Stroke2_Corner0_Rounded as PlusIcon } from '#/components/icons/Plus'
+import { SettingsGear2_Filled_Corner0_Rounded as SettingsFilled, SettingsGear2_Stroke2_Corner0_Rounded as Settings,  } from '#/components/icons/SettingsGear2'
+import { UserCircle_Filled_Corner0_Rounded as UserCircleFilled, UserCircle_Stroke2_Corner0_Rounded as UserCircle,  } from '#/components/icons/UserCircle'
+import { CENTER_COLUMN_OFFSET } from '#/components/Layout'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
-import {Text} from '#/components/Typography'
-import {PlatformInfo} from '../../../../modules/expo-gander-swiss-army'
-import {router} from '../../../routes'
+import { Text } from '#/components/Typography'
+import { PlatformInfo } from '../../../../modules/expo-gander-swiss-army'
+import { router } from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
 

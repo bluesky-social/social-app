@@ -1,26 +1,16 @@
-import {Image as RNImage} from 'react-native'
+import { Image as RNImage } from 'react-native'
 import uuid from 'react-native-uuid'
-import {
-  cacheDirectory,
-  copyAsync,
-  createDownloadResumable,
-  deleteAsync,
-  EncodingType,
-  getInfoAsync,
-  makeDirectoryAsync,
-  StorageAccessFramework,
-  writeAsStringAsync,
-} from 'expo-file-system'
-import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+import { cacheDirectory, copyAsync, createDownloadResumable, deleteAsync, EncodingType, getInfoAsync, makeDirectoryAsync, StorageAccessFramework, writeAsStringAsync,  } from 'expo-file-system'
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import {Buffer} from 'buffer'
+import { Buffer } from 'buffer'
 
-import {POST_IMG_MAX} from '#/lib/constants'
-import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
-import {type PickerImage} from './picker.shared'
-import {type Dimensions} from './types'
+import { POST_IMG_MAX } from '#/lib/constants'
+import { logger } from '#/logger'
+import { isAndroid, isIOS } from '#/platform/detection'
+import { type PickerImage } from './picker.shared'
+import { type Dimensions } from './types'
 
 export async function compressIfNeeded(
   img: PickerImage,

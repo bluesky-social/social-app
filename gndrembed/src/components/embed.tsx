@@ -1,24 +1,13 @@
-import {
-  AppBskyEmbedExternal as AppGndrEmbedExternal,
-  AppBskyEmbedImages as AppGndrEmbedImages,
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
-  AppBskyEmbedVideo as AppGndrEmbedVideo,
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AppBskyGraphDefs as AppGndrGraphDefs,
-  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
-  AppBskyLabelerDefs as AppGndrLabelerDefs,
-} from '@atproto/api'
-import {ComponentChildren, h} from 'preact'
-import {useMemo} from 'preact/hooks'
+import { AppGndrEmbedExternal, AppGndrEmbedImages, AppGndrEmbedRecord, AppGndrEmbedRecordWithMedia, AppGndrEmbedVideo, AppGndrFeedDefs, AppGndrFeedPost, AppGndrGraphDefs, AppGndrGraphStarterpack, AppGndrLabelerDefs,  } from '@gander-social-atproto/api'
+import { ComponentChildren, h } from 'preact'
+import { useMemo } from 'preact/hooks'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
 import playIcon from '../../assets/play_filled_corner2_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
-import {CONTENT_LABELS, labelsToInfo} from '../labels'
-import {getRkey} from '../utils'
-import {Link} from './link'
+import { CONTENT_LABELS, labelsToInfo } from '../labels'
+import { getRkey } from '../utils'
+import { Link } from './link'
 
 export function Embed({
   content,
@@ -186,7 +175,7 @@ export function Embed({
           />
           <Embed
             content={{
-              $type: 'app.bsky.embed.record#view',
+              $type: 'app.gndr.embed.record#view',
               record: content.record.record,
             }}
             labels={content.record.record.labels}

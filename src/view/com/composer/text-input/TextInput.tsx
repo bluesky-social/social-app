@@ -6,33 +6,24 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import {
-  type NativeSyntheticEvent,
-  Text as RNText,
-  type TextInput as RNTextInput,
-  type TextInputSelectionChangeEventData,
-  View,
-} from 'react-native'
-import {AppBskyRichtextFacet as AppGndrRichtextFacet, RichText} from '@atproto/api'
+import { type NativeSyntheticEvent, Text as RNText, type TextInput as RNTextInput, type TextInputSelectionChangeEventData, View,  } from 'react-native'
+import { AppGndrRichtextFacet, RichText } from '@gander-social-atproto/api'
 import PasteInput, {
   type PastedFile,
   type PasteInputRef, // @ts-expect-error no types when installing from github
 } from '@mattermost/react-native-paste-input'
 
-import {POST_IMG_MAX} from '#/lib/constants'
-import {downloadAndResize} from '#/lib/media/manip'
-import {isUriImage} from '#/lib/media/util'
-import {cleanError} from '#/lib/strings/errors'
-import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
-import {useTheme} from '#/lib/ThemeContext'
-import {isAndroid, isNative} from '#/platform/detection'
-import {
-  type LinkFacetMatch,
-  suggestLinkCardUri,
-} from '#/view/com/composer/text-input/text-input-util'
-import {atoms as a, useAlf} from '#/alf'
-import {normalizeTextStyles} from '#/alf/typography'
-import {Autocomplete} from './mobile/Autocomplete'
+import { POST_IMG_MAX } from '#/lib/constants'
+import { downloadAndResize } from '#/lib/media/manip'
+import { isUriImage } from '#/lib/media/util'
+import { cleanError } from '#/lib/strings/errors'
+import { getMentionAt, insertMentionAt } from '#/lib/strings/mention-manip'
+import { useTheme } from '#/lib/ThemeContext'
+import { isAndroid, isNative } from '#/platform/detection'
+import { type LinkFacetMatch, suggestLinkCardUri,  } from '#/view/com/composer/text-input/text-input-util'
+import { atoms as a, useAlf } from '#/alf'
+import { normalizeTextStyles } from '#/alf/typography'
+import { Autocomplete } from './mobile/Autocomplete'
 
 export interface TextInputRef {
   focus: () => void

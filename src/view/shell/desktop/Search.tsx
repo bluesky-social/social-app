@@ -1,24 +1,18 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {StackActions, useNavigation} from '@react-navigation/native'
+import { ActivityIndicator, StyleSheet, TouchableOpacity, View, type ViewStyle,  } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { StackActions, useNavigation } from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {type NavigationProp} from '#/lib/routes/types'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {Link} from '#/view/com/util/Link'
-import {Text} from '#/view/com/util/text/Text'
-import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
-import {atoms as a} from '#/alf'
-import {SearchInput} from '#/components/forms/SearchInput'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { type NavigationProp } from '#/lib/routes/types'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete'
+import { Link } from '#/view/com/util/Link'
+import { Text } from '#/view/com/util/text/Text'
+import { SearchProfileCard } from '#/screens/Search/components/SearchProfileCard'
+import { atoms as a } from '#/alf'
+import { SearchInput } from '#/components/forms/SearchInput'
 
 let SearchLinkCard = ({
   label,

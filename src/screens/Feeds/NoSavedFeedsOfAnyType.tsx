@@ -1,15 +1,15 @@
 import React from 'react'
-import {View} from 'react-native'
-import {TID} from '@atproto/common-web'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { TID } from '@gander-social-atproto/common-web'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {RECOMMENDED_SAVED_FEEDS} from '#/lib/constants'
-import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {Text} from '#/components/Typography'
+import { RECOMMENDED_SAVED_FEEDS } from '#/lib/constants'
+import { useOverwriteSavedFeedsMutation } from '#/state/queries/preferences'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus'
+import { Text } from '#/components/Typography'
 
 /**
  * Explicitly named, since the CTA in this component will overwrite all saved

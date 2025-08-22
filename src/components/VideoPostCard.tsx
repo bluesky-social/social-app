@@ -1,32 +1,26 @@
-import {useMemo} from 'react'
-import {View} from 'react-native'
-import {Image} from 'expo-image'
-import {LinearGradient} from 'expo-linear-gradient'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  AppBskyEmbedVideo as AppGndrEmbedVideo,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  type ModerationDecision,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useMemo } from 'react'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
+import { LinearGradient } from 'expo-linear-gradient'
+import { type AppGndrActorDefs, AppGndrEmbedVideo, type AppGndrFeedDefs, AppGndrFeedPost, type ModerationDecision,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {formatCount} from '#/view/com/util/numeric/format'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {atoms as a, useTheme} from '#/alf'
-import {BLUE_HUE} from '#/alf/util/colorGeneration'
-import {select} from '#/alf/util/themeSelector'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
-import {Heart2_Stroke2_Corner0_Rounded as Heart} from '#/components/icons/Heart2'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
-import {Link} from '#/components/Link'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { formatCount } from '#/view/com/util/numeric/format'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { type VideoFeedSourceContext } from '#/screens/VideoFeed/types'
+import { atoms as a, useTheme } from '#/alf'
+import { BLUE_HUE } from '#/alf/util/colorGeneration'
+import { select } from '#/alf/util/themeSelector'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { EyeSlash_Stroke2_Corner0_Rounded as Eye } from '#/components/icons/EyeSlash'
+import { Heart2_Stroke2_Corner0_Rounded as Heart } from '#/components/icons/Heart2'
+import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost'
+import { Link } from '#/components/Link'
+import { MediaInsetBorder } from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {

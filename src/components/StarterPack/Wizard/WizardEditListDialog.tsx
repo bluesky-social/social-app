@@ -1,30 +1,21 @@
-import {useRef} from 'react'
-import {type ListRenderItemInfo} from 'react-native'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type ModerationOpts,
-} from '@atproto/api'
-import {type GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useRef } from 'react'
+import { type ListRenderItemInfo } from 'react-native'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { type GeneratorView } from '@gander-social-atproto/api/dist/client/types/app.gndr.feed/defs'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {isWeb} from '#/platform/detection'
-import {useSession} from '#/state/session'
-import {type ListMethods} from '#/view/com/util/List'
-import {
-  type WizardAction,
-  type WizardState,
-} from '#/screens/StarterPack/Wizard/State'
-import {atoms as a, native, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender'
+import { isWeb } from '#/platform/detection'
+import { useSession } from '#/state/session'
+import { type ListMethods } from '#/view/com/util/List'
+import { type WizardAction, type WizardState,  } from '#/screens/StarterPack/Wizard/State'
+import { atoms as a, native, useTheme, web } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {
-  WizardFeedCard,
-  WizardProfileCard,
-} from '#/components/StarterPack/Wizard/WizardListCard'
-import {Text} from '#/components/Typography'
+import { WizardFeedCard, WizardProfileCard,  } from '#/components/StarterPack/Wizard/WizardListCard'
+import { Text } from '#/components/Typography'
 
 function keyExtractor(
   item: AppGndrActorDefs.ProfileViewBasic | GeneratorView,

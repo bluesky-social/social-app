@@ -1,14 +1,14 @@
-import {useCallback, useRef} from 'react'
-import {Keyboard} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useRef } from 'react'
+import { Keyboard } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {type Gif} from '#/state/queries/tenor'
-import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
-import {GifSelectDialog} from '#/components/dialogs/GifSelect'
-import {GifSquare_Stroke2_Corner0_Rounded as GifIcon} from '#/components/icons/Gif'
+import { logEvent } from '#/lib/statsig/statsig'
+import { type Gif } from '#/state/queries/tenor'
+import { atoms as a, useTheme } from '#/alf'
+import { Button } from '#/components/Button'
+import { GifSelectDialog } from '#/components/dialogs/GifSelect'
+import { GifSquare_Stroke2_Corner0_Rounded as GifIcon } from '#/components/icons/Gif'
 
 type Props = {
   onClose?: () => void

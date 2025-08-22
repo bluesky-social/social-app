@@ -10,15 +10,15 @@
     "install-fonts": "node --loader ts-node/esm scripts/install-fonts.ts"
   },
   "dependencies": {
-    "@atproto/api": "0.16.2",
-    "@atproto/common": "^0.4.0",
     "@resvg/resvg-js": "^2.6.2",
     "express": "^4.19.2",
     "http-terminator": "^3.2.0",
     "pino": "^9.2.0",
     "react": "^18.3.1",
     "satori": "^0.10.13",
-    "twemoji": "^14.0.2"
+    "twemoji": "^14.0.2",
+    "@gander-social-atproto/api": "^0.16.1",
+    "@gander-social-atproto/common": "0.5.3"
   },
   "devDependencies": {
     "@types/node": "^20.14.3",

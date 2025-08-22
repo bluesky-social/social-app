@@ -1,28 +1,21 @@
 import React from 'react'
-import {
-  Pressable,
-  type StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Pressable, type StyleProp, StyleSheet, TouchableOpacity, View, type ViewStyle,  } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {HITSLOP_20} from '#/lib/constants'
-import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
-import {isWeb} from '#/platform/detection'
-import {useAutoplayDisabled} from '#/state/preferences'
-import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {atoms as a, useTheme} from '#/alf'
-import {Fill} from '#/components/Fill'
-import {Loader} from '#/components/Loader'
+import { HITSLOP_20 } from '#/lib/constants'
+import { type EmbedPlayerParams } from '#/lib/strings/embed-player'
+import { isWeb } from '#/platform/detection'
+import { useAutoplayDisabled } from '#/state/preferences'
+import { useLargeAltBadgeEnabled } from '#/state/preferences/large-alt-badge'
+import { atoms as a, useTheme } from '#/alf'
+import { Fill } from '#/components/Fill'
+import { Loader } from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
-import {Text} from '#/components/Typography'
-import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {GifView} from '../../../../../modules/expo-gander-gif-view'
-import {type GifViewStateChangeEvent} from '../../../../../modules/expo-gander-gif-view/src/GifView.types'
+import { Text } from '#/components/Typography'
+import { PlayButtonIcon } from '#/components/video/PlayButtonIcon'
+import { GifView } from '../../../../../modules/expo-gander-gif-view'
+import { type GifViewStateChangeEvent } from '../../../../../modules/expo-gander-gif-view/src/GifView.types'
 
 function PlaybackControls({
   onPress,

@@ -1,26 +1,12 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyActorGetSuggestions as AppGndrActorGetSuggestions,
-  type AppGndrGraphGetSuggestedFollowsByActor,
-  moderateProfile,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-  useQuery,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrActorGetSuggestions, type AppGndrGraphGetSuggestedFollowsByActor, moderateProfile,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery, useQuery,  } from '@tanstack/react-query'
 
-import {
-  aggregateUserInterests,
-  createGndrTopicsHeader,
-} from '#/lib/api/feed/utils'
-import {getContentLanguages} from '#/state/preferences/languages'
-import {STALE} from '#/state/queries'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent, useSession} from '#/state/session'
-import {useModerationOpts} from '../preferences/moderation-opts'
+import { aggregateUserInterests, createGndrTopicsHeader,  } from '#/lib/api/feed/utils'
+import { getContentLanguages } from '#/state/preferences/languages'
+import { STALE } from '#/state/queries'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { useAgent, useSession } from '#/state/session'
+import { useModerationOpts } from '../preferences/moderation-opts'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
 const suggestedFollowsQueryKey = (options?: SuggestedFollowsOptions) => [
@@ -59,7 +45,7 @@ export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
         options?.subsequentPageLimit && pageParam
           ? options.subsequentPageLimit
           : limit
-      const res = await agent.app.bsky.actor.getSuggestions(
+      const res = await agent.app.gndr.actor.getSuggestions(
         {
           limit: maybeDifferentLimit,
           cursor: pageParam,
@@ -114,7 +100,7 @@ export function useSuggestedFollowsByActorQuery({
   return useQuery({
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
-      const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
+      const res = await agent.app.gndr.graph.getSuggestedFollowsByActor({
         actor: did,
       })
       const suggestions = res.data.isFallback

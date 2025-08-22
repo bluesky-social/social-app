@@ -1,90 +1,64 @@
 import React, {useCallback, useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
-import {useAnimatedRef} from 'react-native-reanimated'
-import {
-  AppBskyGraphDefs as AppGndrGraphDefs,
-  AtUri,
-  moderateUserList,
-  type ModerationOpts,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
-import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import { StyleSheet, View } from 'react-native'
+import { useAnimatedRef } from 'react-native-reanimated'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { AppGndrGraphDefs, AtUri, moderateUserList, type ModerationOpts, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useFocusEffect, useIsFocused } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useHaptics} from '#/lib/haptics'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {ComposeIcon2} from '#/lib/icons'
-import {makeListLink} from '#/lib/routes/links'
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {type NavigationProp} from '#/lib/routes/types'
-import {shareUrl} from '#/lib/sharing'
-import {cleanError} from '#/lib/strings/errors'
-import {toShareUrl} from '#/lib/strings/url-helpers'
-import {s} from '#/lib/styles'
-import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
-import {listenSoftReset} from '#/state/events'
-import {useModalControls} from '#/state/modals'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {
-  useListBlockMutation,
-  useListDeleteMutation,
-  useListMuteMutation,
-  useListQuery,
-} from '#/state/queries/list'
-import {type FeedDescriptor} from '#/state/queries/post-feed'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {
-  useAddSavedFeedsMutation,
-  usePreferencesQuery,
-  type UsePreferencesQueryResponse,
-  useRemoveFeedMutation,
-  useUpdateSavedFeedsMutation,
-} from '#/state/queries/preferences'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {truncateAndInvalidate} from '#/state/queries/util'
-import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {ListMembers} from '#/view/com/lists/ListMembers'
-import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
-import {PostFeed} from '#/view/com/posts/PostFeed'
-import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
-import {EmptyState} from '#/view/com/util/EmptyState'
-import {FAB} from '#/view/com/util/fab/FAB'
-import {Button} from '#/view/com/util/forms/Button'
-import {
-  type DropdownItem,
-  NativeDropdown,
-} from '#/view/com/util/forms/NativeDropdown'
-import {type ListRef} from '#/view/com/util/List'
-import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {LoadingScreen} from '#/view/com/util/LoadingScreen'
-import {Text} from '#/view/com/util/text/Text'
+import { useHaptics } from '#/lib/haptics'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useSetTitle } from '#/lib/hooks/useSetTitle'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { ComposeIcon2 } from '#/lib/icons'
+import { makeListLink } from '#/lib/routes/links'
+import { type CommonNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { type NavigationProp } from '#/lib/routes/types'
+import { shareUrl } from '#/lib/sharing'
+import { cleanError } from '#/lib/strings/errors'
+import { toShareUrl } from '#/lib/strings/url-helpers'
+import { s } from '#/lib/styles'
+import { logger } from '#/logger'
+import { isNative, isWeb } from '#/platform/detection'
+import { listenSoftReset } from '#/state/events'
+import { useModalControls } from '#/state/modals'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useListBlockMutation, useListDeleteMutation, useListMuteMutation, useListQuery,  } from '#/state/queries/list'
+import { type FeedDescriptor } from '#/state/queries/post-feed'
+import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed'
+import { useAddSavedFeedsMutation, usePreferencesQuery, type UsePreferencesQueryResponse, useRemoveFeedMutation, useUpdateSavedFeedsMutation,  } from '#/state/queries/preferences'
+import { useResolveUriQuery } from '#/state/queries/resolve-uri'
+import { truncateAndInvalidate } from '#/state/queries/util'
+import { useSession } from '#/state/session'
+import { useSetMinimalShellMode } from '#/state/shell'
+import { ListMembers } from '#/view/com/lists/ListMembers'
+import { PagerWithHeader } from '#/view/com/pager/PagerWithHeader'
+import { PostFeed } from '#/view/com/posts/PostFeed'
+import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader'
+import { EmptyState } from '#/view/com/util/EmptyState'
+import { FAB } from '#/view/com/util/fab/FAB'
+import { Button } from '#/view/com/util/forms/Button'
+import { type DropdownItem, NativeDropdown,  } from '#/view/com/util/forms/NativeDropdown'
+import { type ListRef } from '#/view/com/util/List'
+import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn'
+import { LoadingScreen } from '#/view/com/util/LoadingScreen'
+import { Text } from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
-import {atoms as a} from '#/alf'
-import {Button as NewButton, ButtonIcon, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {ListAddRemoveUsersDialog} from '#/components/dialogs/lists/ListAddRemoveUsersDialog'
-import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import { ListHiddenScreen } from '#/screens/List/ListHiddenScreen'
+import { atoms as a } from '#/alf'
+import { Button as NewButton, ButtonIcon, ButtonText } from '#/components/Button'
+import { useDialogControl } from '#/components/Dialog'
+import { ListAddRemoveUsersDialog } from '#/components/dialogs/lists/ListAddRemoveUsersDialog'
+import { PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person'
 import * as Layout from '#/components/Layout'
 import * as Hider from '#/components/moderation/Hider'
-import {
-  ReportDialog,
-  useReportDialogControl,
-} from '#/components/moderation/ReportDialog'
+import { ReportDialog, useReportDialogControl,  } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {RichText} from '#/components/RichText'
+import { RichText } from '#/components/RichText'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -103,7 +77,7 @@ function ProfileListScreenInner(props: Props) {
   const {_} = useLingui()
   const {name: handleOrDid, rkey} = props.route.params
   const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
-    AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
+    AtUri.make(handleOrDid, 'app.gndr.graph.list', rkey).toString(),
   )
   const {data: preferences} = usePreferencesQuery()
   const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
@@ -318,8 +292,8 @@ function Header({
   const listMuteMutation = useListMuteMutation()
   const listBlockMutation = useListBlockMutation()
   const listDeleteMutation = useListDeleteMutation()
-  const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
-  const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
+  const isCurateList = list.purpose === 'app.gndr.graph.defs#curatelist'
+  const isModList = list.purpose === 'app.gndr.graph.defs#modlist'
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isOwner = list.creator.did === currentAccount?.did
@@ -704,7 +678,7 @@ function Header({
           control={reportDialogControl}
           subject={{
             ...list,
-            $type: 'app.bsky.graph.defs#listView',
+            $type: 'app.gndr.graph.defs#listView',
           }}
         />
         {isCurateList ? (

@@ -1,15 +1,15 @@
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
-import {logger} from '#/state/ageAssurance/util'
-import {atoms as a, select, useTheme, type ViewStyleProp} from '#/alf'
-import {useDialogControl} from '#/components/ageAssurance/AgeAssuranceInitDialog'
+import { useAgeAssurance } from '#/state/ageAssurance/useAgeAssurance'
+import { logger } from '#/state/ageAssurance/util'
+import { atoms as a, select, useTheme, type ViewStyleProp } from '#/alf'
+import { useDialogControl } from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import type * as Dialog from '#/components/Dialog'
-import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
-import {InlineLinkText} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { ShieldCheck_Stroke2_Corner0_Rounded as Shield } from '#/components/icons/Shield'
+import { InlineLinkText } from '#/components/Link'
+import { Text } from '#/components/Typography'
 
 export function AgeAssuranceAdmonition({
   children,

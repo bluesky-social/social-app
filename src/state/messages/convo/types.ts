@@ -1,11 +1,6 @@
-import {
-  type BskyAgent as GndrAgent,
-  type ChatBskyActorDefs as ChatGndrActorDefs,
-  type ChatBskyConvoDefs as ChatGndrConvoDefs,
-  type ChatBskyConvoSendMessage as ChatGndrConvoSendMessage,
-} from '@atproto/api'
+import { type ChatBskyActorDefs as ChatGndrActorDefs, type ChatBskyConvoDefs as ChatGndrConvoDefs, type ChatBskyConvoSendMessage as ChatGndrConvoSendMessage, type GndrAgent,  } from '@gander-social-atproto/api'
 
-import {type MessagesEventBus} from '#/state/messages/events/agent'
+import { type MessagesEventBus } from '#/state/messages/events/agent'
 
 export type ConvoParams = {
   convoId: string

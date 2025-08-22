@@ -1,11 +1,7 @@
-import {
-  type Agent,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedGetPosts as AppGndrFeedGetPosts,
-} from '@atproto/api'
+import { type Agent, type AppGndrFeedDefs, type AppGndrFeedGetPosts,  } from '@gander-social-atproto/api'
 
-import {logger} from '#/logger'
-import {type FeedAPI, type FeedAPIResponse} from './types'
+import { logger } from '#/logger'
+import { type FeedAPI, type FeedAPIResponse } from './types'
 
 export class PostListFeedAPI implements FeedAPI {
   agent: Agent
@@ -36,7 +32,7 @@ export class PostListFeedAPI implements FeedAPI {
   }
 
   async fetch({}: {}): Promise<FeedAPIResponse> {
-    const res = await this.agent.app.bsky.feed.getPosts({
+    const res = await this.agent.app.gndr.feed.getPosts({
       ...this.params,
     })
     if (res.success) {

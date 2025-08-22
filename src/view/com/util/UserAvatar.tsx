@@ -1,58 +1,41 @@
 import React, {memo, useCallback, useMemo, useState} from 'react'
-import {
-  Image,
-  Pressable,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import { Image, Pressable, type StyleProp, StyleSheet, View, type ViewStyle,  } from 'react-native'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
-import {type ModerationUI} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { type ModerationUI } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {isTouchDevice} from '#/lib/browser'
-import {useHaptics} from '#/lib/haptics'
-import {
-  useCameraPermission,
-  usePhotoLibraryPermission,
-} from '#/lib/hooks/usePermissions'
-import {compressIfNeeded} from '#/lib/media/manip'
-import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
-import {type PickerImage} from '#/lib/media/picker.shared'
-import {makeProfileLink} from '#/lib/routes/links'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
-import {
-  type ComposerImage,
-  compressImage,
-  createComposerImage,
-} from '#/state/gallery'
-import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
-import {EditImageDialog} from '#/view/com/composer/photos/EditImageDialog'
-import {HighPriorityImage} from '#/view/com/util/images/Image'
-import {atoms as a, tokens, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {
-  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon,
-  Camera_Stroke2_Corner0_Rounded as CameraIcon,
-} from '#/components/icons/Camera'
-import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
-import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {Link} from '#/components/Link'
-import {LiveIndicator} from '#/components/live/LiveIndicator'
-import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import { useActorStatus } from '#/lib/actor-status'
+import { isTouchDevice } from '#/lib/browser'
+import { useHaptics } from '#/lib/haptics'
+import { useCameraPermission, usePhotoLibraryPermission,  } from '#/lib/hooks/usePermissions'
+import { compressIfNeeded } from '#/lib/media/manip'
+import { openCamera, openCropper, openPicker } from '#/lib/media/picker'
+import { type PickerImage } from '#/lib/media/picker.shared'
+import { makeProfileLink } from '#/lib/routes/links'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { logger } from '#/logger'
+import { isAndroid, isNative, isWeb } from '#/platform/detection'
+import { type ComposerImage, compressImage, createComposerImage,  } from '#/state/gallery'
+import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache'
+import { EditImageDialog } from '#/view/com/composer/photos/EditImageDialog'
+import { HighPriorityImage } from '#/view/com/util/images/Image'
+import { atoms as a, tokens, useTheme } from '#/alf'
+import { Button } from '#/components/Button'
+import { useDialogControl } from '#/components/Dialog'
+import { useSheetWrapper } from '#/components/Dialog/sheet-wrapper'
+import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon, Camera_Stroke2_Corner0_Rounded as CameraIcon,  } from '#/components/icons/Camera'
+import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive'
+import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash'
+import { Link } from '#/components/Link'
+import { LiveIndicator } from '#/components/live/LiveIndicator'
+import { LiveStatusDialog } from '#/components/live/LiveStatusDialog'
+import { MediaInsetBorder } from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
-import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import { ProfileHoverCard } from '#/components/ProfileHoverCard'
 import type * as gndr from '#/types/gndr'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'

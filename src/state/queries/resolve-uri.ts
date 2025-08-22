@@ -1,13 +1,9 @@
-import {AtUri} from '@atproto/api'
-import {
-  type QueryClient,
-  useQuery,
-  type UseQueryResult,
-} from '@tanstack/react-query'
+import { AtUri } from '@gander-social-atproto/api'
+import { type QueryClient, useQuery, type UseQueryResult,  } from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
-import {useUnstableProfileViewCache} from './profile'
+import { STALE } from '#/state/queries'
+import { useAgent } from '#/state/session'
+import { useUnstableProfileViewCache } from './profile'
 
 const RQKEY_ROOT = 'resolved-did'
 export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle]

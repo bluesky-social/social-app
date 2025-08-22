@@ -1,23 +1,20 @@
 import React from 'react'
-import {View} from 'react-native'
-import {Image} from 'expo-image'
-import {AppBskyGraphStarterpack as AppGndrGraphStarterpack, AtUri} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
+import { AppGndrGraphStarterpack, AtUri } from '@gander-social-atproto/api'
+import { msg, Plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
-import {precacheResolvedUri} from '#/state/queries/resolve-uri'
-import {precacheStarterPack} from '#/state/queries/starter-packs'
-import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
-import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
-import {
-  Link as BaseLink,
-  type LinkProps as BaseLinkProps,
-} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { getStarterPackOgCard } from '#/lib/strings/starter-pack'
+import { precacheResolvedUri } from '#/state/queries/resolve-uri'
+import { precacheStarterPack } from '#/state/queries/starter-packs'
+import { useSession } from '#/state/session'
+import { atoms as a, useTheme } from '#/alf'
+import { StarterPack as StarterPackIcon } from '#/components/icons/StarterPack'
+import { Link as BaseLink, type LinkProps as BaseLinkProps,  } from '#/components/Link'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
 
 export function Default({

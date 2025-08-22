@@ -1,11 +1,11 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {HITSLOP_10} from '#/lib/constants'
-import {logger} from '#/logger'
-import {type ThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
-import {Button, ButtonIcon} from '#/components/Button'
-import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
+import { HITSLOP_10 } from '#/lib/constants'
+import { logger } from '#/logger'
+import { type ThreadPreferences } from '#/state/queries/preferences/useThreadPreferences'
+import { Button, ButtonIcon } from '#/components/Button'
+import { SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider } from '#/components/icons/SettingsSlider'
 import * as Menu from '#/components/Menu'
 
 export function HeaderDropdown({

@@ -1,4 +1,4 @@
-import {isValidDomain} from './url-helpers'
+import { isValidDomain } from './url-helpers'
 
 interface DetectedLink {
   link: string

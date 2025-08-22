@@ -1,24 +1,13 @@
-import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type ComAtprotoLabelDefs,
-} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
+import { type AppGndrFeedDefs, type ComAtprotoLabelDefs,  } from '@gander-social-atproto/api'
+import { msg, Plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useSession} from '#/state/session'
-import {atoms as a} from '#/alf'
-import {
-  Button,
-  ButtonIcon,
-  type ButtonSize,
-  ButtonText,
-} from '#/components/Button'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {
-  LabelsOnMeDialog,
-  useLabelsOnMeDialogControl,
-} from '#/components/moderation/LabelsOnMeDialog'
+import { useSession } from '#/state/session'
+import { atoms as a } from '#/alf'
+import { Button, ButtonIcon, type ButtonSize, ButtonText,  } from '#/components/Button'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
+import { LabelsOnMeDialog, useLabelsOnMeDialogControl,  } from '#/components/moderation/LabelsOnMeDialog'
 
 export function LabelsOnMe({
   type,

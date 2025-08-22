@@ -1,4 +1,4 @@
-import {createSinglePathSVG} from './TEMPLATE'
+import { createSinglePathSVG } from './TEMPLATE'
 
 export const FlipVertical_Stroke2_Corner0_Rounded = createSinglePathSVG({
   path: 'M3 4a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v5h-2V5H5v4H3V4Zm20 9H1v-2h22v2Zm-2.293 7.707A1 1 0 0 1 20 21h-1v-2h2v1a1 1 0 0 1-.293.707ZM17 19v2h-2v-2h2Zm-4 0v2h-2v-2h2Zm-4 0v2H7v-2h2Zm-4 0v2H4a1 1 0 0 1-1-1v-1h2Zm0-2H3v-2h2v2Zm14-2v2h2v-2h-2Z',

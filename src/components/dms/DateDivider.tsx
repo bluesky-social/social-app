@@ -1,12 +1,12 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {subDays} from 'date-fns'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { subDays } from 'date-fns'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '../Typography'
-import {localDateString} from './util'
+import { atoms as a, useTheme } from '#/alf'
+import { Text } from '../Typography'
+import { localDateString } from './util'
 
 const timeFormatter = new Intl.DateTimeFormat(undefined, {
   hour: 'numeric',

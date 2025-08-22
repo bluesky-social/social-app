@@ -1,8 +1,8 @@
-import {useEffect, useId, useState} from 'react'
-import {type AppBskyFeedDefs as AppGndrFeedDefs, AtUri} from '@atproto/api'
+import { useEffect, useId, useState } from 'react'
+import { type AppGndrFeedDefs, AtUri } from '@gander-social-atproto/api'
 
-import {Logger} from '#/logger'
-import {type FeedDescriptor} from '#/state/queries/post-feed'
+import { Logger } from '#/logger'
+import { type FeedDescriptor } from '#/state/queries/post-feed'
 
 /**
  * Separate logger for better debugging

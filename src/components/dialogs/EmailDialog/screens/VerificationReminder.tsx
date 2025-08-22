@@ -1,18 +1,15 @@
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {useDialogContext} from '#/components/Dialog'
-import {
-  ScreenID,
-  type ScreenProps,
-} from '#/components/dialogs/EmailDialog/types'
-import {Divider} from '#/components/Divider'
-import {GradientFill} from '#/components/GradientFill'
-import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
-import {Text} from '#/components/Typography'
+import { atoms as a, platform, tokens, useBreakpoints, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { useDialogContext } from '#/components/Dialog'
+import { ScreenID, type ScreenProps,  } from '#/components/dialogs/EmailDialog/types'
+import { Divider } from '#/components/Divider'
+import { GradientFill } from '#/components/GradientFill'
+import { ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon } from '#/components/icons/Shield'
+import { Text } from '#/components/Typography'
 
 export function VerificationReminder({
   showScreen,

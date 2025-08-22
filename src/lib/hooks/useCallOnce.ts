@@ -1,4 +1,4 @@
-import {useCallback} from 'react'
+import { useCallback } from 'react'
 
 export enum OnceKey {
   PreferencesThread = 'preferences:thread',

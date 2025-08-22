@@ -1,14 +1,8 @@
-import {
-  type LayoutChangeEvent,
-  type StyleProp,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import { type LayoutChangeEvent, type StyleProp, type TextStyle, View, type ViewStyle,  } from 'react-native'
 import type React from 'react'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import { atoms as a, useTheme } from '#/alf'
+import { Text } from '#/components/Typography'
 
 export function Header({
   renderLeft,

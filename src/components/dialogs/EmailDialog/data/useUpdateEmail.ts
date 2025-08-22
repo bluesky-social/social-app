@@ -1,7 +1,7 @@
-import {useMutation} from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
-import {useRequestEmailUpdate} from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
+import { useAgent } from '#/state/session'
+import { useRequestEmailUpdate } from '#/components/dialogs/EmailDialog/data/useRequestEmailUpdate'
 
 async function updateEmailAndRefreshSession(
   agent: ReturnType<typeof useAgent>,

@@ -1,8 +1,8 @@
-import {View} from 'react-native'
-import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
+import { View } from 'react-native'
+import { type AppGndrActorDefs } from '@gander-social-atproto/api'
 
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {atoms as a, useTheme} from '#/alf'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { atoms as a, useTheme } from '#/alf'
 import * as ProfileCard from '#/components/ProfileCard'
 
 export function ProfileCardWithFollowBtn({

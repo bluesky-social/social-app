@@ -1,8 +1,8 @@
-import {type ComponentPropsWithRef} from 'react'
-import {ScrollView} from 'react-native'
+import { type ComponentPropsWithRef } from 'react'
+import { ScrollView } from 'react-native'
 
-import {useDraggableScroll} from '#/lib/hooks/useDraggableScrollView'
-import {atoms as a, web} from '#/alf'
+import { useDraggableScroll } from '#/lib/hooks/useDraggableScrollView'
+import { atoms as a, web } from '#/alf'
 
 export function DraggableScrollView({
   ref,

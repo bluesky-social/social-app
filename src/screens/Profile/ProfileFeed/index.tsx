@@ -1,50 +1,41 @@
 import React, {useCallback, useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
-import {useAnimatedRef} from 'react-native-reanimated'
-import {AppBskyFeedDefs as AppGndrFeedDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useIsFocused, useNavigation} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useQueryClient} from '@tanstack/react-query'
+import { StyleSheet, View } from 'react-native'
+import { useAnimatedRef } from 'react-native-reanimated'
+import { AppGndrFeedDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {VIDEO_FEED_URIS} from '#/lib/constants'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {ComposeIcon2} from '#/lib/icons'
-import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {type NavigationProp} from '#/lib/routes/types'
-import {makeRecordUri} from '#/lib/strings/url-helpers'
-import {s} from '#/lib/styles'
-import {isNative} from '#/platform/detection'
-import {listenSoftReset} from '#/state/events'
-import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
-import {
-  type FeedSourceFeedInfo,
-  useFeedSourceInfoQuery,
-} from '#/state/queries/feed'
-import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {
-  usePreferencesQuery,
-  type UsePreferencesQueryResponse,
-} from '#/state/queries/preferences'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {truncateAndInvalidate} from '#/state/queries/util'
-import {useSession} from '#/state/session'
-import {PostFeed} from '#/view/com/posts/PostFeed'
-import {EmptyState} from '#/view/com/util/EmptyState'
-import {FAB} from '#/view/com/util/fab/FAB'
-import {Button} from '#/view/com/util/forms/Button'
-import {type ListRef} from '#/view/com/util/List'
-import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {Text} from '#/view/com/util/text/Text'
-import {
-  ProfileFeedHeader,
-  ProfileFeedHeaderSkeleton,
-} from '#/screens/Profile/components/ProfileFeedHeader'
+import { VIDEO_FEED_URIS } from '#/lib/constants'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useSetTitle } from '#/lib/hooks/useSetTitle'
+import { ComposeIcon2 } from '#/lib/icons'
+import { type CommonNavigatorParams } from '#/lib/routes/types'
+import { type NavigationProp } from '#/lib/routes/types'
+import { makeRecordUri } from '#/lib/strings/url-helpers'
+import { s } from '#/lib/styles'
+import { isNative } from '#/platform/detection'
+import { listenSoftReset } from '#/state/events'
+import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback'
+import { type FeedSourceFeedInfo, useFeedSourceInfoQuery,  } from '#/state/queries/feed'
+import { type FeedDescriptor, type FeedParams } from '#/state/queries/post-feed'
+import { RQKEY as FEED_RQKEY } from '#/state/queries/post-feed'
+import { usePreferencesQuery, type UsePreferencesQueryResponse,  } from '#/state/queries/preferences'
+import { useResolveUriQuery } from '#/state/queries/resolve-uri'
+import { truncateAndInvalidate } from '#/state/queries/util'
+import { useSession } from '#/state/session'
+import { PostFeed } from '#/view/com/posts/PostFeed'
+import { EmptyState } from '#/view/com/util/EmptyState'
+import { FAB } from '#/view/com/util/fab/FAB'
+import { Button } from '#/view/com/util/forms/Button'
+import { type ListRef } from '#/view/com/util/List'
+import { LoadLatestBtn } from '#/view/com/util/load-latest/LoadLatestBtn'
+import { PostFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { Text } from '#/view/com/util/text/Text'
+import { ProfileFeedHeader, ProfileFeedHeaderSkeleton,  } from '#/screens/Profile/components/ProfileFeedHeader'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
@@ -61,7 +52,7 @@ export function ProfileFeedScreen(props: Props) {
   const navigation = useNavigation<NavigationProp>()
 
   const uri = useMemo(
-    () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
+    () => makeRecordUri(handleOrDid, 'app.gndr.feed.generator', rkey),
     [rkey, handleOrDid],
   )
   const {error, data: resolvedUri} = useResolveUriQuery(uri)

@@ -1,15 +1,15 @@
-import {View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation, useNavigationState} from '@react-navigation/native'
+import { View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation, useNavigationState } from '@react-navigation/native'
 
-import {getCurrentRoute} from '#/lib/routes/helpers'
-import {type NavigationProp} from '#/lib/routes/types'
-import {emitSoftReset} from '#/state/events'
-import {usePinnedFeedsInfos} from '#/state/queries/feed'
-import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {atoms as a, useTheme, web} from '#/alf'
-import {createStaticClick, InlineLinkText} from '#/components/Link'
+import { getCurrentRoute } from '#/lib/routes/helpers'
+import { type NavigationProp } from '#/lib/routes/types'
+import { emitSoftReset } from '#/state/events'
+import { usePinnedFeedsInfos } from '#/state/queries/feed'
+import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed'
+import { atoms as a, useTheme, web } from '#/alf'
+import { createStaticClick, InlineLinkText } from '#/components/Link'
 
 export function DesktopFeeds() {
   const t = useTheme()

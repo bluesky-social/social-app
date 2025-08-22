@@ -1,12 +1,4 @@
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedPost as AppGndrFeedPost,
-  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  type AppBskyUnspeccedDefs as AppGndrUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadOtherV2 as AppGndrUnspeccedGetPostThreadOtherV2,
-  type AppGndrUnspeccedGetPostThreadV2,
-  type ModerationDecision,
-} from '@atproto/api'
+import { type AppGndrFeedDefs, type AppGndrFeedPost, type AppGndrFeedThreadgate, type AppGndrUnspeccedDefs, type AppGndrUnspeccedGetPostThreadOtherV2, type AppGndrUnspeccedGetPostThreadV2, type ModerationDecision,  } from '@gander-social-atproto/api'
 
 export type ApiThreadItem =
   | AppGndrUnspeccedGetPostThreadV2.ThreadItem

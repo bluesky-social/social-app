@@ -1,10 +1,10 @@
 import assert from 'node:assert'
 
-import {DAY, SECOND} from '@atproto/common'
-import {type Express} from 'express'
+import { DAY, SECOND } from '@gander-social-atproto/common'
+import { type Express } from 'express'
 
-import {type AppContext} from '../context.js'
-import {handler} from './util.js'
+import { type AppContext } from '../context.js'
+import { handler } from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(

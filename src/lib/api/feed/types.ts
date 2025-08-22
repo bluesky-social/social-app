@@ -1,4 +1,4 @@
-import {type AppBskyFeedDefs as AppGndrFeedDefs} from '@atproto/api'
+import { type AppGndrFeedDefs } from '@gander-social-atproto/api'
 
 export interface FeedAPIResponse {
   cursor?: string

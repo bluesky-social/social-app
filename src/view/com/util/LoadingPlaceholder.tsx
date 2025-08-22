@@ -1,22 +1,13 @@
-import {useMemo} from 'react'
-import {
-  type DimensionValue,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import { useMemo } from 'react'
+import { type DimensionValue, type StyleProp, StyleSheet, View, type ViewStyle,  } from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {s} from '#/lib/styles'
-import {useTheme} from '#/lib/ThemeContext'
-import {atoms as a, useTheme as useTheme_NEW} from '#/alf'
-import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
-import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { s } from '#/lib/styles'
+import { useTheme } from '#/lib/ThemeContext'
+import { atoms as a, useTheme as useTheme_NEW } from '#/alf'
+import { Bubble_Stroke2_Corner2_Rounded as Bubble } from '#/components/icons/Bubble'
+import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled, Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,  } from '#/components/icons/Heart2'
+import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost'
 
 export function LoadingPlaceholder({
   width,

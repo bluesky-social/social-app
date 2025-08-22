@@ -1,11 +1,11 @@
-import {Pressable, View} from 'react-native'
+import { Pressable, View } from 'react-native'
 
-import {show as deprecatedShow} from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {toast} from '#/components/Toast'
-import {Toast} from '#/components/Toast/Toast'
-import {H1} from '#/components/Typography'
+import { show as deprecatedShow } from '#/view/com/util/Toast'
+import { atoms as a } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { toast } from '#/components/Toast'
+import { Toast } from '#/components/Toast/Toast'
+import { H1 } from '#/components/Typography'
 
 export function Toasts() {
   return (

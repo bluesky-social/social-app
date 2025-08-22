@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {isWeb} from '#/platform/detection'
+import { isWeb } from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {type FeedDescriptor} from '#/state/queries/post-feed'
+import { type FeedDescriptor } from '#/state/queries/post-feed'
 
 type StateContext = FeedDescriptor | null
 type SetContext = (v: FeedDescriptor) => void

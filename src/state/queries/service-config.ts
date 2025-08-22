@@ -1,7 +1,7 @@
-import {useQuery} from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import { STALE } from '#/state/queries'
+import { useAgent } from '#/state/session'
 
 type ServiceConfig = {
   checkEmailConfirmed: boolean
@@ -20,7 +20,7 @@ export function useServiceConfigQuery() {
     queryKey: ['service-config'],
     queryFn: async () => {
       try {
-        const {data} = await agent.api.app.bsky.unspecced.getConfig()
+        const {data} = await agent.api.app.gndr.unspecced.getConfig()
         return {
           checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
           // @ts-expect-error not included in types atm

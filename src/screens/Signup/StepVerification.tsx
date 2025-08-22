@@ -1,15 +1,15 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logger} from '#/logger'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {useSignupContext} from '#/screens/Signup/state'
-import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
+import { logger } from '#/logger'
+import { ScreenTransition } from '#/screens/Login/ScreenTransition'
+import { useSignupContext } from '#/screens/Signup/state'
+import { atoms as a } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
 
 export function StepVerification() {
   const {_} = useLingui()

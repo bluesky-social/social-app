@@ -1,7 +1,4 @@
-import {
-  type BackgroundNotificationHandlerPreferences,
-  type ExpoBackgroundNotificationHandlerModule,
-} from './ExpoBackgroundNotificationHandler.types'
+import { type BackgroundNotificationHandlerPreferences, type ExpoBackgroundNotificationHandlerModule,  } from './ExpoBackgroundNotificationHandler.types'
 
 // Stub for web
 export const BackgroundNotificationHandler = {

@@ -1,15 +1,11 @@
-import {Children, createContext, useContext, useMemo} from 'react'
-import {View} from 'react-native'
-import {Popover} from 'radix-ui'
+import { Children, createContext, useContext, useMemo } from 'react'
+import { View } from 'react-native'
+import { Popover } from 'radix-ui'
 
-import {atoms as a, flatten, select, useTheme} from '#/alf'
-import {transparentifyColor} from '#/alf/util/colorGeneration'
-import {
-  ARROW_SIZE,
-  BUBBLE_MAX_WIDTH,
-  MIN_EDGE_SPACE,
-} from '#/components/Tooltip/const'
-import {Text} from '#/components/Typography'
+import { atoms as a, flatten, select, useTheme } from '#/alf'
+import { transparentifyColor } from '#/alf/util/colorGeneration'
+import { ARROW_SIZE, BUBBLE_MAX_WIDTH, MIN_EDGE_SPACE,  } from '#/components/Tooltip/const'
+import { Text } from '#/components/Typography'
 
 type TooltipContextType = {
   position: 'top' | 'bottom'

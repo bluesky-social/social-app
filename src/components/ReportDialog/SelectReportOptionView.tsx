@@ -1,32 +1,21 @@
 import React from 'react'
-import {View} from 'react-native'
-import {type AppBskyLaberDefs as AppGndrLabelerDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AppBskyLaberDefs as AppGndrLabelerDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {
-  type ReportOption,
-  useReportOptions,
-} from '#/lib/moderation/useReportOptions'
-import {Link} from '#/components/Link'
-import {DMCA_LINK} from '#/components/ReportDialog/const'
+import { type ReportOption, useReportOptions,  } from '#/lib/moderation/useReportOptions'
+import { Link } from '#/components/Link'
+import { DMCA_LINK } from '#/components/ReportDialog/const'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {
-  Button,
-  ButtonIcon,
-  ButtonText,
-  useButtonContext,
-} from '#/components/Button'
-import {Divider} from '#/components/Divider'
-import {
-  ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft,
-  ChevronRight_Stroke2_Corner0_Rounded as ChevronRight,
-} from '#/components/icons/Chevron'
-import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
-import {Text} from '#/components/Typography'
-import {type ReportDialogProps} from './types'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText, useButtonContext,  } from '#/components/Button'
+import { Divider } from '#/components/Divider'
+import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft, ChevronRight_Stroke2_Corner0_Rounded as ChevronRight,  } from '#/components/icons/Chevron'
+import { SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight } from '#/components/icons/SquareArrowTopRight'
+import { Text } from '#/components/Typography'
+import { type ReportDialogProps } from './types'
 
 export function SelectReportOptionView(props: {
   params: ReportDialogProps['params']

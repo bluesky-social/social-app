@@ -1,13 +1,13 @@
-import {useMemo} from 'react'
-import {TouchableWithoutFeedback} from 'react-native'
+import { useMemo } from 'react'
+import { TouchableWithoutFeedback } from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {type BottomSheetBackdropProps} from '@discord/bottom-sheet/src'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { type BottomSheetBackdropProps } from '@discord/bottom-sheet/src'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type React from 'react'
 
 export function createCustomBackdrop(

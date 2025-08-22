@@ -1,10 +1,7 @@
 import React from 'react'
-import {
-  type AppBskyLabelerDefs as AppGndrLabelerDefs,
-  type InterpretedLabelValueDefinition,
-} from '@atproto/api'
+import { type AppGndrLabelerDefs, type InterpretedLabelValueDefinition,  } from '@gander-social-atproto/api'
 
-import {useLabelDefinitionsQuery} from '../queries/preferences'
+import { useLabelDefinitionsQuery } from '../queries/preferences'
 
 interface StateContext {
   labelDefs: Record<string, InterpretedLabelValueDefinition[]>

@@ -1,10 +1,5 @@
-import {useCallback} from 'react'
-import {
-  type LayoutChangeEvent,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { useCallback } from 'react'
+import { type LayoutChangeEvent, ScrollView, StyleSheet, View,  } from 'react-native'
 import Animated, {
   interpolate,
   runOnJS,
@@ -17,10 +12,10 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 
-import {PressableWithHover} from '#/view/com/util/PressableWithHover'
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import { PressableWithHover } from '#/view/com/util/PressableWithHover'
+import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture'
+import { atoms as a, useTheme } from '#/alf'
+import { Text } from '#/components/Typography'
 
 export interface TabBarProps {
   testID?: string

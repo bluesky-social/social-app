@@ -1,6 +1,6 @@
-import {useEffect, useState} from 'react'
-import {type I18n} from '@lingui/core'
-import {plural} from '@lingui/macro'
+import { useEffect, useState } from 'react'
+import { type I18n } from '@lingui/core'
+import { plural } from '@lingui/macro'
 
 export function displayDuration(i18n: I18n, durationInMinutes: number) {
   const roundedDurationInMinutes = Math.round(durationInMinutes)

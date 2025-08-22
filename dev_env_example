@@ -1,0 +1,56 @@
+# The env the app is running in e.g. development, testflight, production
+EXPO_PUBLIC_ENV=development
+
+# This is the semver release version of the app, pulled from package.json
+EXPO_PUBLIC_RELEASE_VERSION=
+
+# This is the commit hash that the current bundle was made from.
+EXPO_PUBLIC_BUNDLE_IDENTIFIER=
+
+# Should be formatted YYMMDDHH so that it increases for each build.
+EXPO_PUBLIC_BUNDLE_DATE=0
+
+# The log level for the app's logger transports
+EXPO_PUBLIC_LOG_LEVEL=debug
+
+# Enable debug logs for specific logger instances
+EXPO_PUBLIC_LOG_DEBUG=session
+
+# Chat service DID
+EXPO_PUBLIC_CHAT_PROXY_DID=
+
+#
+#
+# Gander specific values
+#
+#
+
+# Sentry DSN for telemetry
+EXPO_PUBLIC_SENTRY_DSN=
+
+# Bitdrift API key. If undefined, Bitdrift will be disabled.
+EXPO_PUBLIC_BITDRIFT_API_KEY=
+
+# Environment dependent URLs -- ensure you verify these for your local env or use the variables from staging if you are not running the backend locally.
+ATPROTO_PDS_URL=http://localhost:2583
+ATPROTO_APPVIEW_URL=http://localhost:2584
+
+API_URL=http://localhost:3000
+APP_URL=http://localhost:3001
+APPVIEW_URL=http://localhost:3002
+EMBED_SERVICE_URL=http://localhost:3003
+OGCARD_SERVICE_URL=http://localhost:3004
+GO_SERVICE_URL=http://localhost:3005
+PROFILE_URL=http://localhost:3001/profile
+DEEP_LINK_PREFIX=http://localhost:3006
+SOCIAL_URL=http://localhost:3007
+VIDEO_SERVICE_URL=http://localhost:3008
+GIF_SERVICE_URL=http://localhost:3009
+PUBLIC_APPVIEW_URL=http://localhost:3002
+PUBLIC_APPVIEW_DID=did:web:localhost:3002
+PUBLIC_STAGING_APPVIEW_DID=did:web:localhost:3002
+DEV_ENV_APPVIEW_URL=http://localhost:2584
+WEBLINK_TOS_URL=http://localhost:3010/tos
+WEBLINK_PRIVACY_URL=http://localhost:3010/privacy
+WEBLINK_COMMUNITY_URL=http://localhost:3010/community
+WEBLINK_COMMUNITY_DEPRECATED_URL=http://localhost:3010/community-deprecated

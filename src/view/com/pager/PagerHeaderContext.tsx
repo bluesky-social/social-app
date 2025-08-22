@@ -1,7 +1,7 @@
 import React, {useContext} from 'react'
-import {type SharedValue} from 'react-native-reanimated'
+import { type SharedValue } from 'react-native-reanimated'
 
-import {isNative} from '#/platform/detection'
+import { isNative } from '#/platform/detection'
 
 export const PagerHeaderContext = React.createContext<{
   scrollY: SharedValue<number>

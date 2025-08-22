@@ -1,26 +1,23 @@
 import React from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  moderateProfile,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {differenceInSeconds} from 'date-fns'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, moderateProfile,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { differenceInSeconds } from 'date-fns'
 
-import {HITSLOP_10} from '#/lib/constants'
-import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {isNative} from '#/platform/detection'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { HITSLOP_10 } from '#/lib/constants'
+import { useGetTimeAgo } from '#/lib/hooks/useTimeAgo'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { isNative } from '#/platform/detection'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useSession } from '#/state/session'
+import { atoms as a, useTheme, web } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useDialogControl} from '#/components/Dialog'
-import {Newskie} from '#/components/icons/Newskie'
+import { useDialogControl } from '#/components/Dialog'
+import { Newskie } from '#/components/icons/Newskie'
 import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 
 export function NewskieDialog({
   profile,

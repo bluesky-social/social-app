@@ -1,9 +1,9 @@
-import {type AppBskyGraphDefs as AppGndrGraphDefs} from '@atproto/api'
-import {type QueryClient, useQuery} from '@tanstack/react-query'
+import { type AppGndrGraphDefs } from '@gander-social-atproto/api'
+import { type QueryClient, useQuery } from '@tanstack/react-query'
 
-import {accumulate} from '#/lib/async/accumulate'
-import {STALE} from '#/state/queries'
-import {useAgent, useSession} from '#/state/session'
+import { accumulate } from '#/lib/async/accumulate'
+import { STALE } from '#/state/queries'
+import { useAgent, useSession } from '#/state/session'
 
 export type MyListsFilter =
   | 'all'
@@ -24,7 +24,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
       let lists: AppGndrGraphDefs.ListView[] = []
       const promises = [
         accumulate(cursor =>
-          agent.app.bsky.graph
+          agent.app.gndr.graph
             .getLists({
               actor: currentAccount!.did,
               cursor,
@@ -39,7 +39,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
       if (filter === 'all-including-subscribed' || filter === 'mod') {
         promises.push(
           accumulate(cursor =>
-            agent.app.bsky.graph
+            agent.app.gndr.graph
               .getListMutes({
                 cursor,
                 limit: 50,
@@ -52,7 +52,7 @@ export function useMyListsQuery(filter: MyListsFilter) {
         )
         promises.push(
           accumulate(cursor =>
-            agent.app.bsky.graph
+            agent.app.gndr.graph
               .getListBlocks({
                 cursor,
                 limit: 50,
@@ -69,13 +69,13 @@ export function useMyListsQuery(filter: MyListsFilter) {
         for (let list of res) {
           if (
             filter === 'curate' &&
-            list.purpose !== 'app.bsky.graph.defs#curatelist'
+            list.purpose !== 'app.gndr.graph.defs#curatelist'
           ) {
             continue
           }
           if (
             filter === 'mod' &&
-            list.purpose !== 'app.bsky.graph.defs#modlist'
+            list.purpose !== 'app.gndr.graph.defs#modlist'
           ) {
             continue
           }

@@ -1,15 +1,15 @@
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useWizardState} from '#/screens/StarterPack/Wizard/State'
-import {atoms as a, useTheme} from '#/alf'
+import { useProfileQuery } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
+import { useWizardState } from '#/screens/StarterPack/Wizard/State'
+import { atoms as a, useTheme } from '#/alf'
 import * as TextField from '#/components/forms/TextField'
-import {StarterPack} from '#/components/icons/StarterPack'
-import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
-import {Text} from '#/components/Typography'
+import { StarterPack } from '#/components/icons/StarterPack'
+import { ScreenTransition } from '#/components/StarterPack/Wizard/ScreenTransition'
+import { Text } from '#/components/Typography'
 
 export function StepDetails() {
   const {_} = useLingui()

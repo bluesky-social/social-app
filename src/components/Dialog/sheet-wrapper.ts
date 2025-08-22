@@ -1,7 +1,7 @@
-import {useCallback} from 'react'
-import {SystemBars} from 'react-native-edge-to-edge'
+import { useCallback } from 'react'
+import { SystemBars } from 'react-native-edge-to-edge'
 
-import {isIOS} from '#/platform/detection'
+import { isIOS } from '#/platform/detection'
 
 /**
  * If we're calling a system API like the image picker that opens a sheet

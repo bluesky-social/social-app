@@ -1,11 +1,11 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {atoms as a, useTheme} from '#/alf'
-import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight} from '#/components/icons/Arrow'
-import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
-import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
-import {Loader} from '#/components/Loader'
-import {H1} from '#/components/Typography'
+import { atoms as a, useTheme } from '#/alf'
+import { ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight } from '#/components/icons/Arrow'
+import { CalendarDays_Stroke2_Corner0_Rounded as CalendarDays } from '#/components/icons/CalendarDays'
+import { Globe_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe'
+import { Loader } from '#/components/Loader'
+import { H1 } from '#/components/Typography'
 
 export function Icons() {
   const t = useTheme()

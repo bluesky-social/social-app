@@ -1,4 +1,4 @@
-import {Platform} from 'react-native'
+import { Platform } from 'react-native'
 import type React from 'react'
 
 const onMouseUp = (e: React.MouseEvent & {target: HTMLElement}) => {

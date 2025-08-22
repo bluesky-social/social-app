@@ -1,13 +1,13 @@
 import React from 'react'
-import {View} from 'react-native'
-import {useReducedMotion} from 'react-native-reanimated'
-import {i18n} from '@lingui/core'
+import { View } from 'react-native'
+import { useReducedMotion } from 'react-native-reanimated'
+import { i18n } from '@lingui/core'
 
-import {decideShouldRoll} from '#/lib/custom-animations/util'
-import {s} from '#/lib/styles'
-import {formatCount} from '#/view/com/util/numeric/format'
-import {Text} from '#/view/com/util/text/Text'
-import {atoms as a, useTheme} from '#/alf'
+import { decideShouldRoll } from '#/lib/custom-animations/util'
+import { s } from '#/lib/styles'
+import { formatCount } from '#/view/com/util/numeric/format'
+import { Text } from '#/view/com/util/text/Text'
+import { atoms as a, useTheme } from '#/alf'
 
 const animationConfig = {
   duration: 400,

@@ -1,19 +1,8 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyNotificationDeclaration as AppGndrNotificationDeclaration,
-  type AppBskyNotificationListActivitySubscriptions as AppGndrNotificationListActivitySubscriptions,
-} from '@atproto/api'
-import {t} from '@lingui/macro'
-import {
-  type InfiniteData,
-  type QueryClient,
-  useInfiniteQuery,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrNotificationDeclaration, type AppGndrNotificationListActivitySubscriptions,  } from '@gander-social-atproto/api'
+import { t } from '@lingui/macro'
+import { type InfiniteData, type QueryClient, useInfiniteQuery, useMutation, useQuery, useQueryClient,  } from '@tanstack/react-query'
 
-import {useAgent, useSession} from '#/state/session'
+import { useAgent, useSession } from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 
 export const RQKEY_getActivitySubscriptions = ['activity-subscriptions']
@@ -26,7 +15,7 @@ export function useActivitySubscriptionsQuery() {
     queryKey: RQKEY_getActivitySubscriptions,
     queryFn: async ({pageParam}) => {
       const response =
-        await agent.app.bsky.notification.listActivitySubscriptions({
+        await agent.app.gndr.notification.listActivitySubscriptions({
           cursor: pageParam,
         })
       return response.data
@@ -43,7 +32,7 @@ export function useNotificationDeclarationQuery() {
     queryKey: RQKEY_getNotificationDeclaration,
     queryFn: async () => {
       try {
-        const response = await agent.app.bsky.notification.declaration.get({
+        const response = await agent.app.gndr.notification.declaration.get({
           repo: currentAccount!.did,
           rkey: 'self',
         })
@@ -55,7 +44,7 @@ export function useNotificationDeclarationQuery() {
         ) {
           return {
             value: {
-              $type: 'app.bsky.notification.declaration',
+              $type: 'app.gndr.notification.declaration',
               allowSubscriptions: 'followers',
             } satisfies AppGndrNotificationDeclaration.Record,
           }
@@ -73,7 +62,7 @@ export function useNotificationDeclarationMutation() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (record: AppGndrNotificationDeclaration.Record) => {
-      const response = await agent.app.bsky.notification.declaration.put(
+      const response = await agent.app.gndr.notification.declaration.put(
         {
           repo: currentAccount!.did,
           rkey: 'self',

@@ -1,17 +1,14 @@
-import {useRef, useState} from 'react'
-import {AppState, type AppStateStatus} from 'react-native'
+import { useRef, useState } from 'react'
+import { AppState, type AppStateStatus } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
-import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query'
-import {
-  PersistQueryClientProvider,
-  type PersistQueryClientProviderProps,
-} from '@tanstack/react-query-persist-client'
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import { focusManager, onlineManager, QueryClient } from '@tanstack/react-query'
+import { PersistQueryClientProvider, type PersistQueryClientProviderProps,  } from '@tanstack/react-query-persist-client'
 import type React from 'react'
 
-import {isNative} from '#/platform/detection'
-import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
-import {API_URL} from './constants'
+import { isNative } from '#/platform/detection'
+import { listenNetworkConfirmed, listenNetworkLost } from '#/state/events'
+import { API_URL } from './constants'
 
 // any query keys in this array will be persisted to AsyncStorage
 export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'

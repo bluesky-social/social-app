@@ -1,27 +1,13 @@
-import {
-  Children,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import { Children, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,  } from 'react'
+import { useWindowDimensions, View } from 'react-native'
 import Animated, {Easing, ZoomIn} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import {atoms as a, select, useTheme} from '#/alf'
-import {useOnGesture} from '#/components/hooks/useOnGesture'
-import {Portal} from '#/components/Portal'
-import {
-  ARROW_HALF_SIZE,
-  ARROW_SIZE,
-  BUBBLE_MAX_WIDTH,
-  MIN_EDGE_SPACE,
-} from '#/components/Tooltip/const'
-import {Text} from '#/components/Typography'
+import { atoms as a, select, useTheme } from '#/alf'
+import { useOnGesture } from '#/components/hooks/useOnGesture'
+import { Portal } from '#/components/Portal'
+import { ARROW_HALF_SIZE, ARROW_SIZE, BUBBLE_MAX_WIDTH, MIN_EDGE_SPACE,  } from '#/components/Tooltip/const'
+import { Text } from '#/components/Typography'
 
 /**
  * These are native specific values, not shared with web

@@ -1,8 +1,8 @@
-import {useMemo} from 'react'
-import {useNavigation} from '@react-navigation/core'
+import { useMemo } from 'react'
+import { useNavigation } from '@react-navigation/core'
 
-import {useDedupe} from '#/lib/hooks/useDedupe'
-import {type NavigationProp} from '#/lib/routes/types'
+import { useDedupe } from '#/lib/hooks/useDedupe'
+import { type NavigationProp } from '#/lib/routes/types'
 
 export type DebouncedNavigationProp = Pick<
   NavigationProp,

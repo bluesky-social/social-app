@@ -1,14 +1,14 @@
-import {type AppBskyVideoDefs as AppGndrVideoDefs} from '@atproto/api'
-import {type BskyAgent as GndrAgent} from '@atproto/api'
-import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
-import {nanoid} from 'nanoid/non-secure'
+import { type AppGndrVideoDefs } from '@gander-social-atproto/api'
+import { type GndrAgent } from '@gander-social-atproto/api'
+import { type I18n } from '@lingui/core'
+import { msg } from '@lingui/macro'
+import { nanoid } from 'nanoid/non-secure'
 
-import {AbortError} from '#/lib/async/cancelable'
-import {ServerError} from '#/lib/media/video/errors'
-import {type CompressedVideo} from '#/lib/media/video/types'
-import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
-import {createVideoEndpointUrl, mimeToExt} from './util'
+import { AbortError } from '#/lib/async/cancelable'
+import { ServerError } from '#/lib/media/video/errors'
+import { type CompressedVideo } from '#/lib/media/video/types'
+import { getServiceAuthToken, getVideoUploadLimits } from './upload.shared'
+import { createVideoEndpointUrl, mimeToExt } from './util'
 
 export async function uploadVideo({
   video,
@@ -30,7 +30,7 @@ export async function uploadVideo({
   }
   await getVideoUploadLimits(agent, _)
 
-  const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
+  const uri = createVideoEndpointUrl('/xrpc/app.gndr.video.uploadVideo', {
     did,
     name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
   })

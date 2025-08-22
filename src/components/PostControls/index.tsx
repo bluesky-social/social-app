@@ -1,41 +1,26 @@
-import {memo, useState} from 'react'
-import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedPost as AppGndrFeedPost,
-  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg, plural} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { memo, useState } from 'react'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
+import { type AppGndrFeedDefs, type AppGndrFeedPost, type AppGndrFeedThreadgate, type RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, plural } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {CountWheel} from '#/lib/custom-animations/CountWheel'
-import {AnimatedLikeIcon} from '#/lib/custom-animations/LikeIcon'
-import {useHaptics} from '#/lib/haptics'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {type Shadow} from '#/state/cache/types'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {
-  usePostLikeMutationQueue,
-  usePostRepostMutationQueue,
-} from '#/state/queries/post'
-import {useRequireAuth} from '#/state/session'
-import {
-  ProgressGuideAction,
-  useProgressGuideControls,
-} from '#/state/shell/progress-guide'
-import {formatCount} from '#/view/com/util/numeric/format'
+import { CountWheel } from '#/lib/custom-animations/CountWheel'
+import { AnimatedLikeIcon } from '#/lib/custom-animations/LikeIcon'
+import { useHaptics } from '#/lib/haptics'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { type Shadow } from '#/state/cache/types'
+import { useFeedFeedbackContext } from '#/state/feed-feedback'
+import { usePostLikeMutationQueue, usePostRepostMutationQueue,  } from '#/state/queries/post'
+import { useRequireAuth } from '#/state/session'
+import { ProgressGuideAction, useProgressGuideControls,  } from '#/state/shell/progress-guide'
+import { formatCount } from '#/view/com/util/numeric/format'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints} from '#/alf'
-import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
-import {
-  PostControlButton,
-  PostControlButtonIcon,
-  PostControlButtonText,
-} from './PostControlButton'
-import {PostMenuButton} from './PostMenu'
-import {RepostButton} from './RepostButton'
-import {ShareMenuButton} from './ShareMenu'
+import { atoms as a, useBreakpoints } from '#/alf'
+import { Bubble_Stroke2_Corner2_Rounded as Bubble } from '#/components/icons/Bubble'
+import { PostControlButton, PostControlButtonIcon, PostControlButtonText,  } from './PostControlButton'
+import { PostMenuButton } from './PostMenu'
+import { RepostButton } from './RepostButton'
+import { ShareMenuButton } from './ShareMenu'
 
 let PostControls = ({
   big,
@@ -110,7 +95,7 @@ let PostControls = ({
         playHaptic('Light')
         sendInteraction({
           item: post.uri,
-          event: 'app.bsky.feed.defs#interactionLike',
+          event: 'app.gndr.feed.defs#interactionLike',
           feedContext,
           reqId,
         })
@@ -139,7 +124,7 @@ let PostControls = ({
       if (!post.viewer?.repost) {
         sendInteraction({
           item: post.uri,
-          event: 'app.bsky.feed.defs#interactionRepost',
+          event: 'app.gndr.feed.defs#interactionRepost',
           feedContext,
           reqId,
         })
@@ -165,7 +150,7 @@ let PostControls = ({
 
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#interactionQuote',
+      event: 'app.gndr.feed.defs#interactionQuote',
       feedContext,
       reqId,
     })
@@ -178,7 +163,7 @@ let PostControls = ({
   const onShare = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#interactionShare',
+      event: 'app.gndr.feed.defs#interactionShare',
       feedContext,
       reqId,
     })

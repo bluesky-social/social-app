@@ -1,4 +1,4 @@
-import {device, useStorage} from '#/storage'
+import { device, useStorage } from '#/storage'
 
 export function useDevMode() {
   const [devMode = false, setDevMode] = useStorage(device, ['devMode'])

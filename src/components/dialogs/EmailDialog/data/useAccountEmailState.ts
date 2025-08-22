@@ -1,8 +1,8 @@
-import {useEffect, useMemo, useState} from 'react'
-import {useQuery} from '@tanstack/react-query'
+import { useEffect, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 
-import {useAgent, useSessionApi} from '#/state/session'
-import {emitEmailVerified} from '#/components/dialogs/EmailDialog/events'
+import { useAgent, useSessionApi } from '#/state/session'
+import { emitEmailVerified } from '#/components/dialogs/EmailDialog/events'
 
 export type AccountEmailState = {
   isEmailVerified: boolean

@@ -1,4 +1,4 @@
-import {createMultiPathSVG} from './TEMPLATE'
+import { createMultiPathSVG } from './TEMPLATE'
 
 export const HandLine = createMultiPathSVG({
   paths: [

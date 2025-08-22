@@ -1,4 +1,4 @@
-import {h} from 'preact'
+import { h } from 'preact'
 
 export function Link({
   href,

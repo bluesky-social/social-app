@@ -1,14 +1,14 @@
-import {Pressable} from 'react-native'
+import { Pressable } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {t} from '@lingui/macro'
+import { t } from '@lingui/macro'
 
-import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
-import {useGate} from '#/lib/statsig/statsig'
-import {useSession} from '#/state/session'
+import { DISCOVER_DEBUG_DIDS } from '#/lib/constants'
+import { useGate } from '#/lib/statsig/statsig'
+import { useSession } from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
-import {IS_INTERNAL} from '#/env'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Text } from '#/components/Typography'
+import { IS_INTERNAL } from '#/env'
 
 export function DiscoverDebug({
   feedContext,

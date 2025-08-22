@@ -1,5 +1,5 @@
-import {NotImplementedError} from '../NotImplemented'
-import {type AudioCategory} from './types'
+import { NotImplementedError } from '../NotImplemented'
+import { type AudioCategory } from './types'
 
 export function getIsReducedMotionEnabled(): boolean {
   throw new NotImplementedError()

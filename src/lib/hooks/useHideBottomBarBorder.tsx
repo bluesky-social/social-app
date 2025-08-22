@@ -1,5 +1,5 @@
-import {createContext, useCallback, useContext, useState} from 'react'
-import {useFocusEffect} from '@react-navigation/native'
+import { createContext, useCallback, useContext, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 
 type HideBottomBarBorderSetter = () => () => void
 

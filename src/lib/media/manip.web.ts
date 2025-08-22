@@ -1,8 +1,8 @@
 /// <reference lib="dom" />
 
-import {type PickerImage} from './picker.shared'
-import {type Dimensions} from './types'
-import {blobToDataUri, getDataUriSize} from './util'
+import { type PickerImage } from './picker.shared'
+import { type Dimensions } from './types'
+import { blobToDataUri, getDataUriSize } from './util'
 
 export async function compressIfNeeded(
   img: PickerImage,

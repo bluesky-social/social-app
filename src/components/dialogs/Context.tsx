@@ -1,8 +1,8 @@
-import {createContext, useContext, useMemo, useState} from 'react'
+import { createContext, useContext, useMemo, useState } from 'react'
 
-import {type AgeAssuranceRedirectDialogState} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
+import { type AgeAssuranceRedirectDialogState } from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import * as Dialog from '#/components/Dialog'
-import {type Screen} from '#/components/dialogs/EmailDialog/types'
+import { type Screen } from '#/components/dialogs/EmailDialog/types'
 
 type Control = Dialog.DialogControlProps
 

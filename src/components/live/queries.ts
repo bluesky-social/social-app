@@ -1,23 +1,18 @@
-import {
-  type $Typed,
-  type AppBskyActorStatus as AppGndrActorStatus,
-  type AppBskyEmbedExternal as AppGndrEmbedExternal,
-  ComAtprotoRepoPutRecord,
-} from '@atproto/api'
-import {retry} from '@atproto/common-web'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import { type $Typed, type AppBskyActorStatus as AppGndrActorStatus, type AppGndrEmbedExternal, ComAtprotoRepoPutRecord,  } from '@gander-social-atproto/api'
+import { retry } from '@gander-social-atproto/common-web'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import {uploadBlob} from '#/lib/api'
-import {imageToThumb} from '#/lib/api/resolve'
-import {getLinkMeta, type LinkMeta} from '#/lib/link-meta/link-meta'
-import {logger} from '#/logger'
-import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {useLiveNowConfig} from '#/state/service-config'
-import {useAgent, useSession} from '#/state/session'
+import { uploadBlob } from '#/lib/api'
+import { imageToThumb } from '#/lib/api/resolve'
+import { getLinkMeta, type LinkMeta } from '#/lib/link-meta/link-meta'
+import { logger } from '#/logger'
+import { updateProfileShadow } from '#/state/cache/profile-shadow'
+import { useLiveNowConfig } from '#/state/service-config'
+import { useAgent, useSession } from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {useDialogContext} from '#/components/Dialog'
+import { useDialogContext } from '#/components/Dialog'
 
 export function useLiveLinkMetaQuery(url: string | null) {
   const liveNowConfig = useLiveNowConfig()
@@ -85,9 +80,9 @@ export function useUpsertLiveStatusMutation(
         }
 
         embed = {
-          $type: 'app.bsky.embedexternal',
+          $type: 'app.gndr.embedexternal',
           external: {
-            $type: 'app.bsky.embedexternal#external',
+            $type: 'app.gndr.embedexternal#external',
             title: linkMeta.title ?? '',
             description: linkMeta.description ?? '',
             uri: linkMeta.url,
@@ -97,16 +92,16 @@ export function useUpsertLiveStatusMutation(
       }
 
       const record = {
-        $type: 'app.bsky.actor.status',
+        $type: 'app.gndr.actor.status',
         createdAt: createdAt ?? new Date().toISOString(),
-        status: 'app.bsky.actor.status#live',
+        status: 'app.gndr.actor.status#live',
         durationMinutes: duration,
         embed,
       } satisfies AppGndrActorStatus.Record
 
       const upsert = async () => {
         const repo = currentAccount.did
-        const collection = 'app.bsky.actor.status'
+        const collection = 'app.gndr.actor.status'
 
         const existing = await agent.com.atproto.repo
           .getRecord({repo, collection, rkey: 'self'})
@@ -162,17 +157,17 @@ export function useUpsertLiveStatusMutation(
 
         updateProfileShadow(queryClient, currentAccount.did, {
           status: {
-            $type: 'app.bsky.actor.defs#statusView',
-            status: 'app.bsky.actor.status#live',
+            $type: 'app.gndr.actor.defs#statusView',
+            status: 'app.gndr.actor.status#live',
             isActive: true,
             expiresAt: expiresAt.toISOString(),
             embed:
               record.embed && image
                 ? {
-                    $type: 'app.bsky.embedexternal#view',
+                    $type: 'app.gndr.embedexternal#view',
                     external: {
                       ...record.embed.external,
-                      $type: 'app.bsky.embedexternal#viewExternal',
+                      $type: 'app.gndr.embedexternal#viewExternal',
                       thumb: image,
                     },
                   }
@@ -196,7 +191,7 @@ export function useRemoveLiveStatusMutation() {
     mutationFn: async () => {
       if (!currentAccount) throw new Error('Not logged in')
 
-      await agent.app.bsky.actor.status.delete({
+      await agent.app.gndr.actor.status.delete({
         repo: currentAccount.did,
         rkey: 'self',
       })

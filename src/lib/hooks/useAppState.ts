@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react'
-import {AppState} from 'react-native'
+import { useEffect, useState } from 'react'
+import { AppState } from 'react-native'
 
 export function useAppState() {
   const [state, setState] = useState(AppState.currentState)

@@ -1,14 +1,11 @@
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type ModerationDecision,
-} from '@atproto/api'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, type ModerationDecision,  } from '@gander-social-atproto/api'
 
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {type Shadow} from '#/state/cache/types'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { type Shadow } from '#/state/cache/types'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Text } from '#/components/Typography'
 
 export function ProfileHeaderDisplayName({
   profile,

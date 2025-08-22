@@ -1,11 +1,11 @@
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type React from 'react'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {Text as TypoText} from '#/components/Typography'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { Text as TypoText } from '#/components/Typography'
 
 export function Container({children}: {children: React.ReactNode}) {
   const t = useTheme()

@@ -9,9 +9,9 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import {LayoutAnimation, PixelRatio, StyleSheet, View} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
-import {Gesture} from 'react-native-gesture-handler'
+import { LayoutAnimation, PixelRatio, StyleSheet, View } from 'react-native'
+import { SystemBars } from 'react-native-edge-to-edge'
+import { Gesture } from 'react-native-gesture-handler'
 import PagerView from 'react-native-pager-view'
 import Animated, {
   type AnimatedRef,
@@ -29,26 +29,22 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
-import {
-  SafeAreaView,
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
+import { SafeAreaView, useSafeAreaFrame, useSafeAreaInsets,  } from 'react-native-safe-area-context'
 import * as ScreenOrientation from 'expo-screen-orientation'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { Trans } from '@lingui/macro'
 
-import {type Dimensions} from '#/lib/media/types'
-import {colors, s} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
-import {type Lightbox} from '#/state/lightbox'
-import {Button} from '#/view/com/util/forms/Button'
-import {Text} from '#/view/com/util/text/Text'
-import {ScrollView} from '#/view/com/util/Views'
-import {useTheme} from '#/alf'
-import {setSystemUITheme} from '#/alf/util/systemUI'
-import {PlatformInfo} from '../../../../../modules/expo-gander-swiss-army'
-import {type ImageSource, type Transform} from './@types'
+import { type Dimensions } from '#/lib/media/types'
+import { colors, s } from '#/lib/styles'
+import { isIOS } from '#/platform/detection'
+import { type Lightbox } from '#/state/lightbox'
+import { Button } from '#/view/com/util/forms/Button'
+import { Text } from '#/view/com/util/text/Text'
+import { ScrollView } from '#/view/com/util/Views'
+import { useTheme } from '#/alf'
+import { setSystemUITheme } from '#/alf/util/systemUI'
+import { PlatformInfo } from '../../../../../modules/expo-gander-swiss-army'
+import { type ImageSource, type Transform } from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 

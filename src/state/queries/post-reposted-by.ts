@@ -1,15 +1,7 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyFeedGetRepostedBy as AppGndrFeedGetRepostedBy,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrFeedGetRepostedBy,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery,  } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import { useAgent } from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined

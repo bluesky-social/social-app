@@ -1,15 +1,15 @@
 import '../index.css'
 
-import {AppBskyFeedDefs as AppGndrFeedDefs, AtpAgent} from '@atproto/api'
-import {h, render} from 'preact'
+import { AppGndrFeedDefs, AtpAgent } from '@gander-social-atproto/api'
+import { h, render } from 'preact'
 
 import logo from '../../assets/logo.svg'
-import {applyTheme, initSystemColorMode} from '../color-mode'
-import {Container} from '../components/container'
-import {Link} from '../components/link'
-import {Post} from '../components/post'
+import { applyTheme, initSystemColorMode } from '../color-mode'
+import { Container } from '../components/container'
+import { Link } from '../components/link'
+import { Post } from '../components/post'
 import { API_URL } from '../constants'
-import {getRkey} from '../utils'
+import { getRkey } from '../utils'
 
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')

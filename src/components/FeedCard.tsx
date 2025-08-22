@@ -1,41 +1,27 @@
 import React from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyGraphDefs as AppGndrGraphDefs,
-  AtUri,
-  RichText as RichTextApi,
-} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { type GestureResponderEvent, View } from 'react-native'
+import { type AppGndrFeedDefs, type AppGndrGraphDefs, AtUri, RichText as RichTextApi,  } from '@gander-social-atproto/api'
+import { msg, Plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {precacheFeedFromGeneratorView} from '#/state/queries/feed'
-import {
-  useAddSavedFeedsMutation,
-  usePreferencesQuery,
-  useRemoveFeedMutation,
-} from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { logger } from '#/logger'
+import { precacheFeedFromGeneratorView } from '#/state/queries/feed'
+import { useAddSavedFeedsMutation, usePreferencesQuery, useRemoveFeedMutation,  } from '#/state/queries/preferences'
+import { useSession } from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
-import {
-  Button,
-  ButtonIcon,
-  type ButtonProps,
-  ButtonText,
-} from '#/components/Button'
-import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
-import {Link as InternalLink, type LinkProps} from '#/components/Link'
-import {Loader} from '#/components/Loader'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon, type ButtonProps, ButtonText,  } from '#/components/Button'
+import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin'
+import { Link as InternalLink, type LinkProps } from '#/components/Link'
+import { Loader } from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
-import {RichText, type RichTextProps} from '#/components/RichText'
-import {Text} from '#/components/Typography'
+import { RichText, type RichTextProps } from '#/components/RichText'
+import { Text } from '#/components/Typography'
 import type * as gndr from '#/types/gndr'
-import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from './icons/Trash'
+import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from './icons/Trash'
 
 type Props = {
   view: AppGndrFeedDefs.GeneratorView
@@ -254,7 +240,7 @@ function SaveButtonInner({
     useRemoveFeedMutation()
 
   const uri = view.uri
-  const type = view.uri.includes('app.bsky.feed.generator') ? 'feed' : 'list'
+  const type = view.uri.includes('app.gndr.feed.generator') ? 'feed' : 'list'
 
   const savedFeedConfig = React.useMemo(() => {
     return preferences?.savedFeeds?.find(

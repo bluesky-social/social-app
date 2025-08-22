@@ -1,7 +1,7 @@
-import {interpolate, useAnimatedStyle} from 'react-native-reanimated'
+import { interpolate, useAnimatedStyle } from 'react-native-reanimated'
 
-import {useMinimalShellMode} from '#/state/shell/minimal-mode'
-import {useShellLayout} from '#/state/shell/shell-layout'
+import { useMinimalShellMode } from '#/state/shell/minimal-mode'
+import { useShellLayout } from '#/state/shell/shell-layout'
 
 // Keep these separated so that we only pay for useAnimatedStyle that gets used.
 

@@ -1,15 +1,8 @@
-import {
-  type AppGndrFeedGetActorFeeds,
-  moderateFeedGenerator,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryKey,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { type AppGndrFeedGetActorFeeds, moderateFeedGenerator,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryKey, useInfiniteQuery,  } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
-import {useModerationOpts} from '../preferences/moderation-opts'
+import { useAgent } from '#/state/session'
+import { useModerationOpts } from '../preferences/moderation-opts'
 
 const PAGE_SIZE = 50
 type RQPageParam = string | undefined
@@ -34,7 +27,7 @@ export function useProfileFeedgensQuery(
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.feed.getActorFeeds({
+      const res = await agent.app.gndr.feed.getActorFeeds({
         actor: did,
         limit: PAGE_SIZE,
         cursor: pageParam,

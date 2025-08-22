@@ -1,4 +1,4 @@
-import {logger} from '#/logger'
+import { logger } from '#/logger'
 
 export async function resolveShortLink(shortLink: string) {
   const controller = new AbortController()

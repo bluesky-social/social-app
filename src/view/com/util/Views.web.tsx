@@ -13,22 +13,15 @@
  */
 
 import React from 'react'
-import {
-  type FlatList,
-  type FlatListProps,
-  type ScrollViewProps,
-  StyleSheet,
-  View,
-  type ViewProps,
-} from 'react-native'
+import { type FlatList, type FlatListProps, type ScrollViewProps, StyleSheet, View, type ViewProps,  } from 'react-native'
 import Animated from 'react-native-reanimated'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {addStyle} from '#/lib/styles'
-import {useLayoutBreakpoints} from '#/alf'
-import {useDialogContext} from '#/components/Dialog'
-import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { addStyle } from '#/lib/styles'
+import { useLayoutBreakpoints } from '#/alf'
+import { useDialogContext } from '#/components/Dialog'
+import { CENTER_COLUMN_OFFSET } from '#/components/Layout'
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number

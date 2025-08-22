@@ -1,8 +1,8 @@
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
 import type React from 'react'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Text } from '#/components/Typography'
 
 export function FormContainer({
   testID,

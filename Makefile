@@ -1,4 +1,3 @@
-
 SHELL = /bin/bash
 .SHELLFLAGS = -o pipefail -c
 
@@ -32,8 +31,37 @@ lint: ## Run style checks and verify syntax
 
 .PHONY: deps
 deps: ## Installs dependent libs using 'yarn install'
-	yarn install --frozen-lockfile
-	cd gndrembed && yarn install --frozen-lockfile
+	yarn install --frozen-lockfile --recursive
+	cd gndrembed && yarn install --frozen-lockfile --recursive
+
+.PHONY: deps-switch-upstream-gander
+deps-switch-upstream-gander: ## Switch upstream for all dependencies to the latest version
+	# The scripts swap the upstream to the gander version of the api
+	node scripts/switch-upstream.js gander
+	# Remove all node_modules and yarn.lock and build files to ensure a clean install
+	rm -rf node_modules yarn.lock ios android web-build
+	# Install dependencies for the main project
+	yarn install --no-frozen-lockfile --recursive
+	# Install dependencies for the gndrembed project
+	cd gndrembed && rm -rf node_modules yarn.lock && yarn install --no-frozen-lockfile --recursive
+	# Run linting to ensure code quality
+	rm -f .eslintcache
+	yarn run lint --fix
+
+.PHONY: deps-switch-upstream-atproto
+deps-switch-upstream-atproto: ## Switch upstream for all dependencies to the latest version
+	# The scripts swap the upstream to the atproto version of the api
+	node scripts/switch-upstream.js atproto
+	# Remove all node_modules and yarn.lock and build files to ensure a clean install
+	rm -rf node_modules yarn.lock ios android web-build
+
+	# Install dependencies for the main project
+	yarn install --no-frozen-lockfile --recursive
+	# Install dependencies for the gndrembed project
+	cd gndrembed && rm -rf node_modules yarn.lock && yarn install --no-frozen-lockfile --recursive
+	# Run linting to ensure code quality
+	rm -f .eslintcache
+	yarn run lint --fix
 
 .PHONY: nvm-setup
 nvm-setup: ## Use NVM to install and activate node+yarn

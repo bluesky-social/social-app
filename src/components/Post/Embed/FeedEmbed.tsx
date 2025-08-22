@@ -1,12 +1,12 @@
-import {useMemo} from 'react'
-import {moderateFeedGenerator} from '@atproto/api'
+import { useMemo } from 'react'
+import { moderateFeedGenerator } from '@gander-social-atproto/api'
 
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {atoms as a, useTheme} from '#/alf'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { atoms as a, useTheme } from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
-import {ContentHider} from '#/components/moderation/ContentHider'
-import {type EmbedType} from '#/types/gndr/post'
-import {type CommonProps} from './types'
+import { ContentHider } from '#/components/moderation/ContentHider'
+import { type EmbedType } from '#/types/gndr/post'
+import { type CommonProps } from './types'
 
 export function FeedEmbed({
   embed,

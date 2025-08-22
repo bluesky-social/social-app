@@ -16,34 +16,18 @@
  * 3. Don't call this query's `refetch()` if you're trying to sync latest; call `checkUnread()` instead.
  */
 
-import {useCallback, useEffect, useMemo, useRef} from 'react'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AtUri,
-  moderatePost,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { type AppGndrActorDefs, AppGndrFeedDefs, AppGndrFeedPost, AtUri, moderatePost,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery, useQueryClient,  } from '@tanstack/react-query'
 
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
-import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
-import {
-  didOrHandleUriMatches,
-  embedViewRecordToPostView,
-  getEmbeddedPost,
-} from '../util'
-import {type FeedPage} from './types'
-import {useUnreadNotificationsApi} from './unread'
-import {fetchPage} from './util'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { STALE } from '#/state/queries'
+import { useAgent } from '#/state/session'
+import { useThreadgateHiddenReplyUris } from '#/state/threadgate-hidden-replies'
+import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost,  } from '../util'
+import { type FeedPage } from './types'
+import { useUnreadNotificationsApi } from './unread'
+import { fetchPage } from './util'
 
 export type {FeedNotification, FeedPage, NotificationType} from './types'
 

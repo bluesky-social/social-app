@@ -1,9 +1,9 @@
-import {type TextInputProps, View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { type TextInputProps, View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 import * as TextField from '#/components/forms/TextField'
-import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
+import { Shield_Stroke2_Corner0_Rounded as Shield } from '#/components/icons/Shield'
 
 export function normalizeCode(value: string) {
   const normalized = value.toUpperCase().replace(/[^A-Z2-7]/g, '')

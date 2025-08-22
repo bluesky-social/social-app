@@ -1,7 +1,7 @@
-import {type ErrorRequestHandler, type Request, type RequestHandler, type Response} from 'express'
+import { type ErrorRequestHandler, type Request, type RequestHandler, type Response } from 'express'
 
-import {type AppContext} from '../context.js'
-import {httpLogger} from '../logger.js'
+import { type AppContext } from '../context.js'
+import { httpLogger } from '../logger.js'
 
 export type Handler = (req: Request, res: Response) => Awaited<void>
 

@@ -1,27 +1,22 @@
 import React, {memo, useState} from 'react'
-import {type LayoutChangeEvent, StyleSheet, View} from 'react-native'
+import { type LayoutChangeEvent, StyleSheet, View } from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyLabelerDefs as AppGndrLabelerDefs,
-  type ModerationOpts,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
-import {useIsFocused} from '@react-navigation/native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { type AppGndrActorDefs, type AppGndrLabelerDefs, type ModerationOpts, type RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { useIsFocused } from '@react-navigation/native'
 
-import {isNative} from '#/platform/detection'
-import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
-import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useTheme} from '#/alf'
-import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
-import {ProfileHeaderStandard} from './ProfileHeaderStandard'
+import { isNative } from '#/platform/detection'
+import { useSetLightStatusBar } from '#/state/shell/light-status-bar'
+import { usePagerHeaderContext } from '#/view/com/pager/PagerHeaderContext'
+import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { atoms as a, useTheme } from '#/alf'
+import { ProfileHeaderLabeler } from './ProfileHeaderLabeler'
+import { ProfileHeaderStandard } from './ProfileHeaderStandard'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const t = useTheme()

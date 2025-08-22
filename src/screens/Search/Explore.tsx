@@ -1,81 +1,56 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
-import {View, type ViewabilityConfig} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyGraphDefs as AppGndrGraphDefs,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { View, type ViewabilityConfig } from 'react-native'
+import { type AppGndrActorDefs, type AppGndrFeedDefs, type AppGndrGraphDefs,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
-import {cleanError} from '#/lib/strings/errors'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {type MetricEvents} from '#/logger/metrics'
-import {useLanguagePrefs} from '#/state/preferences/languages'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {RQKEY_ROOT_PAGINATED as useActorSearchPaginatedQueryKeyRoot} from '#/state/queries/actor-search'
-import {
-  type FeedPreviewItem,
-  useFeedPreviews,
-} from '#/state/queries/explore-feed-previews'
-import {useGetPopularFeedsQuery} from '#/state/queries/feed'
-import {Nux, useNux} from '#/state/queries/nuxs'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {
-  createGetSuggestedFeedsQueryKey,
-  useGetSuggestedFeedsQuery,
-} from '#/state/queries/trending/useGetSuggestedFeedsQuery'
-import {getSuggestedUsersQueryKeyRoot} from '#/state/queries/trending/useGetSuggestedUsersQuery'
-import {createGetTrendsQueryKey} from '#/state/queries/trending/useGetTrendsQuery'
-import {
-  createSuggestedStarterPacksQueryKey,
-  useSuggestedStarterPacksQuery,
-} from '#/state/queries/useSuggestedStarterPacksQuery'
-import {isThreadChildAt, isThreadParentAt} from '#/view/com/posts/PostFeed'
-import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
-import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
-import {List} from '#/view/com/util/List'
-import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
-import {
-  StarterPackCard,
-  StarterPackCardSkeleton,
-} from '#/screens/Search/components/StarterPackCard'
-import {ExploreInterestsCard} from '#/screens/Search/modules/ExploreInterestsCard'
-import {ExploreRecommendations} from '#/screens/Search/modules/ExploreRecommendations'
-import {ExploreTrendingTopics} from '#/screens/Search/modules/ExploreTrendingTopics'
-import {ExploreTrendingVideos} from '#/screens/Search/modules/ExploreTrendingVideos'
-import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
-import {atoms as a, native, platform, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {Button} from '#/components/Button'
+import { cleanError } from '#/lib/strings/errors'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { logger } from '#/logger'
+import { type MetricEvents } from '#/logger/metrics'
+import { useLanguagePrefs } from '#/state/preferences/languages'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { RQKEY_ROOT_PAGINATED as useActorSearchPaginatedQueryKeyRoot } from '#/state/queries/actor-search'
+import { type FeedPreviewItem, useFeedPreviews,  } from '#/state/queries/explore-feed-previews'
+import { useGetPopularFeedsQuery } from '#/state/queries/feed'
+import { Nux, useNux } from '#/state/queries/nuxs'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { createGetSuggestedFeedsQueryKey, useGetSuggestedFeedsQuery,  } from '#/state/queries/trending/useGetSuggestedFeedsQuery'
+import { getSuggestedUsersQueryKeyRoot } from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import { createGetTrendsQueryKey } from '#/state/queries/trending/useGetTrendsQuery'
+import { createSuggestedStarterPacksQueryKey, useSuggestedStarterPacksQuery,  } from '#/state/queries/useSuggestedStarterPacksQuery'
+import { isThreadChildAt, isThreadParentAt } from '#/view/com/posts/PostFeed'
+import { PostFeedItem } from '#/view/com/posts/PostFeedItem'
+import { ViewFullThread } from '#/view/com/posts/ViewFullThread'
+import { List } from '#/view/com/util/List'
+import { FeedFeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn'
+import { popularInterests, useInterestsDisplayNames,  } from '#/screens/Onboarding/state'
+import { StarterPackCard, StarterPackCardSkeleton,  } from '#/screens/Search/components/StarterPackCard'
+import { ExploreInterestsCard } from '#/screens/Search/modules/ExploreInterestsCard'
+import { ExploreRecommendations } from '#/screens/Search/modules/ExploreRecommendations'
+import { ExploreTrendingTopics } from '#/screens/Search/modules/ExploreTrendingTopics'
+import { ExploreTrendingVideos } from '#/screens/Search/modules/ExploreTrendingVideos'
+import { useSuggestedUsers } from '#/screens/Search/util/useSuggestedUsers'
+import { atoms as a, native, platform, useTheme } from '#/alf'
+import { Admonition } from '#/components/Admonition'
+import { Button } from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {
-  type Props as IcoProps,
-  type Props as SVGIconProps,
-} from '#/components/icons/common'
-import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
-import {StarterPack} from '#/components/icons/StarterPack'
-import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
-import {Loader} from '#/components/Loader'
+import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon } from '#/components/icons/Chevron'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
+import { type Props as IcoProps, type Props as SVGIconProps,  } from '#/components/icons/common'
+import { ListSparkle_Stroke2_Corner0_Rounded as ListSparkle } from '#/components/icons/ListSparkle'
+import { StarterPack } from '#/components/icons/StarterPack'
+import { UserCircle_Stroke2_Corner0_Rounded as Person } from '#/components/icons/UserCircle'
+import { Loader } from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
-import {boostInterests} from '#/components/ProgressGuide/FollowDialog'
-import {SubtleHover} from '#/components/SubtleHover'
-import {Text} from '#/components/Typography'
+import { boostInterests } from '#/components/ProgressGuide/FollowDialog'
+import { SubtleHover } from '#/components/SubtleHover'
+import { Text } from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
-import {
-  SuggestedAccountsTabBar,
-  SuggestedProfileCard,
-} from './modules/ExploreSuggestedAccounts'
+import { SuggestedAccountsTabBar, SuggestedProfileCard,  } from './modules/ExploreSuggestedAccounts'
 
 function LoadMore({item}: {item: ExploreScreenItems & {type: 'loadMore'}}) {
   const t = useTheme()

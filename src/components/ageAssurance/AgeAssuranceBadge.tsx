@@ -1,9 +1,9 @@
-import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import { View } from 'react-native'
+import { Trans } from '@lingui/macro'
 
-import {atoms as a, select, useTheme} from '#/alf'
-import {ShieldCheck_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
-import {Text} from '#/components/Typography'
+import { atoms as a, select, useTheme } from '#/alf'
+import { ShieldCheck_Stroke2_Corner0_Rounded as Shield } from '#/components/icons/Shield'
+import { Text } from '#/components/Typography'
 
 export function AgeAssuranceBadge() {
   const t = useTheme()

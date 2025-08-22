@@ -1,6 +1,6 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
-import {type LayoutChangeEvent, View} from 'react-native'
-import {useKeyboardHandler} from 'react-native-keyboard-controller'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { type LayoutChangeEvent, View } from 'react-native'
+import { useKeyboardHandler } from 'react-native-keyboard-controller'
 import Animated, {
   runOnJS,
   scrollTo,
@@ -8,52 +8,33 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
-import {
-  type $Typed,
-  type AppBskyEmbedRecord as AppGndrEmbedRecord,
-  AppBskyRichtextFacet as AppGndrRichtextFacet,
-  RichText,
-} from '@atproto/api'
+import { type ReanimatedScrollEvent } from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import { type $Typed, type AppGndrEmbedRecord, AppGndrRichtextFacet, RichText,  } from '@gander-social-atproto/api'
 
-import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorder'
-import {ScrollProvider} from '#/lib/ScrollContext'
-import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
-import {
-  convertGndrAppUrlIfNeeded,
-  isGndrPostUrl,
-} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {isWeb} from '#/platform/detection'
-import {
-  type ActiveConvoStates,
-  isConvoActive,
-  useConvoActive,
-} from '#/state/messages/convo'
-import {
-  type ConvoItem,
-  type ConvoState,
-  ConvoStatus,
-} from '#/state/messages/convo/types'
-import {useGetPost} from '#/state/queries/post'
-import {useAgent} from '#/state/session'
-import {useShellLayout} from '#/state/shell/shell-layout'
-import {
-  EmojiPicker,
-  type EmojiPickerState,
-} from '#/view/com/composer/text-input/web/EmojiPicker'
-import {List, type ListMethods} from '#/view/com/util/List'
-import {ChatDisabled} from '#/screens/Messages/components/ChatDisabled'
-import {MessageInput} from '#/screens/Messages/components/MessageInput'
-import {MessageListError} from '#/screens/Messages/components/MessageListError'
-import {ChatEmptyPill} from '#/components/dms/ChatEmptyPill'
-import {MessageItem} from '#/components/dms/MessageItem'
-import {NewMessagesPill} from '#/components/dms/NewMessagesPill'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
-import {ChatStatusInfo} from './ChatStatusInfo'
-import {MessageInputEmbed, useMessageEmbed} from './MessageInputEmbed'
+import { useHideBottomBarBorderForScreen } from '#/lib/hooks/useHideBottomBarBorder'
+import { ScrollProvider } from '#/lib/ScrollContext'
+import { shortenLinks, stripInvalidMentions } from '#/lib/strings/rich-text-manip'
+import { convertGndrAppUrlIfNeeded, isGndrPostUrl,  } from '#/lib/strings/url-helpers'
+import { logger } from '#/logger'
+import { isNative } from '#/platform/detection'
+import { isWeb } from '#/platform/detection'
+import { type ActiveConvoStates, isConvoActive, useConvoActive,  } from '#/state/messages/convo'
+import { type ConvoItem, type ConvoState, ConvoStatus,  } from '#/state/messages/convo/types'
+import { useGetPost } from '#/state/queries/post'
+import { useAgent } from '#/state/session'
+import { useShellLayout } from '#/state/shell/shell-layout'
+import { EmojiPicker, type EmojiPickerState,  } from '#/view/com/composer/text-input/web/EmojiPicker'
+import { List, type ListMethods } from '#/view/com/util/List'
+import { ChatDisabled } from '#/screens/Messages/components/ChatDisabled'
+import { MessageInput } from '#/screens/Messages/components/MessageInput'
+import { MessageListError } from '#/screens/Messages/components/MessageListError'
+import { ChatEmptyPill } from '#/components/dms/ChatEmptyPill'
+import { MessageItem } from '#/components/dms/MessageItem'
+import { NewMessagesPill } from '#/components/dms/NewMessagesPill'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
+import { ChatStatusInfo } from './ChatStatusInfo'
+import { MessageInputEmbed, useMessageEmbed } from './MessageInputEmbed'
 
 function MaybeLoader({isLoading}: {isLoading: boolean}) {
   return (
@@ -322,7 +303,7 @@ export function MessagesList({
           const post = await getPost({uri: embedUri})
           if (post) {
             embed = {
-              $type: 'app.bsky.embed.record',
+              $type: 'app.gndr.embed.record',
               record: {
                 uri: post.uri,
                 cid: post.cid,

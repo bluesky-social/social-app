@@ -1,25 +1,22 @@
 import React from 'react'
-import {View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
-import {logEvent} from '#/lib/statsig/statsig'
-import {
-  useLoggedOutView,
-  useLoggedOutViewControls,
-} from '#/state/shell/logged-out'
-import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
-import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {Login} from '#/screens/Login'
-import {Signup} from '#/screens/Signup'
-import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
-import {Welcome} from '#/screens/Welcome'
-import {atoms as a, native, tokens, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
-import {SplashScreen} from './SplashScreen'
+import { PressableScale } from '#/lib/custom-animations/PressableScale'
+import { logEvent } from '#/lib/statsig/statsig'
+import { useLoggedOutView, useLoggedOutViewControls,  } from '#/state/shell/logged-out'
+import { useSetMinimalShellMode } from '#/state/shell/minimal-mode'
+import { ErrorBoundary } from '#/view/com/util/ErrorBoundary'
+import { Login } from '#/screens/Login'
+import { Signup } from '#/screens/Signup'
+import { LandingScreen } from '#/screens/StarterPack/StarterPackLandingScreen'
+import { Welcome } from '#/screens/Welcome'
+import { atoms as a, native, tokens, useTheme } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
+import { TimesLarge_Stroke2_Corner0_Rounded as XIcon } from '#/components/icons/Times'
+import { SplashScreen } from './SplashScreen'
 
 enum ScreenState {
   S_LoginOrCreateAccount,

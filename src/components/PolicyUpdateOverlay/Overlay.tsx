@@ -1,17 +1,14 @@
-import {type ReactNode} from 'react'
-import {ScrollView, View} from 'react-native'
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
-import {LinearGradient} from 'expo-linear-gradient'
+import { type ReactNode } from 'react'
+import { ScrollView, View } from 'react-native'
+import { useSafeAreaFrame, useSafeAreaInsets,  } from 'react-native-safe-area-context'
+import { LinearGradient } from 'expo-linear-gradient'
 
-import {isAndroid, isNative} from '#/platform/detection'
-import {useA11y} from '#/state/a11y'
-import {atoms as a, flatten, useBreakpoints, useTheme, web} from '#/alf'
-import {transparentifyColor} from '#/alf/util/colorGeneration'
-import {FocusScope} from '#/components/FocusScope'
-import {LockScroll} from '#/components/LockScroll'
+import { isAndroid, isNative } from '#/platform/detection'
+import { useA11y } from '#/state/a11y'
+import { atoms as a, flatten, useBreakpoints, useTheme, web } from '#/alf'
+import { transparentifyColor } from '#/alf/util/colorGeneration'
+import { FocusScope } from '#/components/FocusScope'
+import { LockScroll } from '#/components/LockScroll'
 
 const GUTTER = 24
 

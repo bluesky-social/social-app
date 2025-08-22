@@ -1,4 +1,4 @@
-import {BskyAgent as GndrAgent} from '@atproto/api'
+import {BskyAgent as GndrAgent} from '@gander-social-atproto/api'
 import {describe, expect, it, jest} from '@jest/globals'
 
 import {agentToSessionAccountOrThrow} from '../agent'

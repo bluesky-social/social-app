@@ -1,6 +1,6 @@
-import {useMutation} from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
-import {useAgent, useSession} from '#/state/session'
+import { useAgent, useSession } from '#/state/session'
 
 export function useManageEmail2FA() {
   const agent = useAgent()

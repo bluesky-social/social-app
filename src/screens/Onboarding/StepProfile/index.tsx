@@ -1,44 +1,33 @@
 import React from 'react'
-import {View} from 'react-native'
-import {Image as ExpoImage} from 'expo-image'
-import {
-  type ImagePickerOptions,
-  launchImageLibraryAsync,
-  MediaTypeOptions,
-} from 'expo-image-picker'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { Image as ExpoImage } from 'expo-image'
+import { type ImagePickerOptions, launchImageLibraryAsync, MediaTypeOptions,  } from 'expo-image-picker'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
-import {compressIfNeeded} from '#/lib/media/manip'
-import {openCropper} from '#/lib/media/picker'
-import {getDataUriSize} from '#/lib/media/util'
-import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
-import {isNative, isWeb} from '#/platform/detection'
-import {
-  DescriptionText,
-  OnboardingControls,
-  TitleText,
-} from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
-import {AvatarCircle} from '#/screens/Onboarding/StepProfile/AvatarCircle'
-import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
-import {AvatarCreatorItems} from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
-import {
-  PlaceholderCanvas,
-  type PlaceholderCanvasRef,
-} from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { usePhotoLibraryPermission } from '#/lib/hooks/usePermissions'
+import { compressIfNeeded } from '#/lib/media/manip'
+import { openCropper } from '#/lib/media/picker'
+import { getDataUriSize } from '#/lib/media/util'
+import { useRequestNotificationsPermission } from '#/lib/notifications/notifications'
+import { logEvent, useGate } from '#/lib/statsig/statsig'
+import { isNative, isWeb } from '#/platform/detection'
+import { DescriptionText, OnboardingControls, TitleText,  } from '#/screens/Onboarding/Layout'
+import { Context } from '#/screens/Onboarding/state'
+import { AvatarCircle } from '#/screens/Onboarding/StepProfile/AvatarCircle'
+import { AvatarCreatorCircle } from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
+import { AvatarCreatorItems } from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
+import { PlaceholderCanvas, type PlaceholderCanvasRef,  } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {IconCircle} from '#/components/IconCircle'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {CircleInfo_Stroke2_Corner0_Rounded} from '#/components/icons/CircleInfo'
-import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
-import {Text} from '#/components/Typography'
-import {type AvatarColor, avatarColors, type Emoji, emojiItems} from './types'
+import { useSheetWrapper } from '#/components/Dialog/sheet-wrapper'
+import { IconCircle } from '#/components/IconCircle'
+import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron'
+import { CircleInfo_Stroke2_Corner0_Rounded } from '#/components/icons/CircleInfo'
+import { StreamingLive_Stroke2_Corner0_Rounded as StreamingLive } from '#/components/icons/StreamingLive'
+import { Text } from '#/components/Typography'
+import { type AvatarColor, avatarColors, type Emoji, emojiItems } from './types'
 
 export interface Avatar {
   image?: {

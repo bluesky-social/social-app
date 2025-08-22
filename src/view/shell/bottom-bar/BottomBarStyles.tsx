@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 
-import {colors} from '#/lib/styles'
-import {atoms as a} from '#/alf'
+import { colors } from '#/lib/styles'
+import { atoms as a } from '#/alf'
 
 export const styles = StyleSheet.create({
   bottomBar: {

@@ -1,5 +1,5 @@
-import {simpleAreDatesEqual} from '#/lib/strings/time'
-import {device} from '#/storage'
+import { simpleAreDatesEqual } from '#/lib/strings/time'
+import { device } from '#/storage'
 
 export function snooze() {
   device.set(['lastNuxDialog'], new Date().toISOString())

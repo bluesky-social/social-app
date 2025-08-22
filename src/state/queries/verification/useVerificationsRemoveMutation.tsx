@@ -1,14 +1,10 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppGndrActorGetProfile,
-  AtUri,
-} from '@atproto/api'
-import {useMutation} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrActorGetProfile, AtUri,  } from '@gander-social-atproto/api'
+import { useMutation } from '@tanstack/react-query'
 
-import {until} from '#/lib/async/until'
-import {logger} from '#/logger'
-import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
-import {useAgent, useSession} from '#/state/session'
+import { until } from '#/lib/async/until'
+import { logger } from '#/logger'
+import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache'
+import { useAgent, useSession } from '#/state/session'
 import type * as gndr from '#/types/gndr'
 
 export function useVerificationsRemoveMutation() {
@@ -32,7 +28,7 @@ export function useVerificationsRemoveMutation() {
 
       await Promise.all(
         uris.map(uri => {
-          return agent.app.bsky.graph.verification.delete({
+          return agent.app.gndr.graph.verification.delete({
             repo: currentAccount.did,
             rkey: new AtUri(uri).rkey,
           })

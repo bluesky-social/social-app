@@ -1,77 +1,62 @@
 import React from 'react'
-import {View} from 'react-native'
-import {Image} from 'expo-image'
-import {
-  AppBskyGraphDefs as AppGndrGraphDefs,
-  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
-  AtUri,
-  type ModerationOpts,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useQueryClient} from '@tanstack/react-query'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { AppGndrGraphDefs, AppGndrGraphStarterpack, AtUri, type ModerationOpts, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, Plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/native'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {batchedUpdates} from '#/lib/batchedUpdates'
-import {HITSLOP_20} from '#/lib/constants'
-import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
-import {makeProfileLink, makeStarterPackLink} from '#/lib/routes/links'
-import {
-  type CommonNavigatorParams,
-  type NavigationProp,
-} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
-import {cleanError} from '#/lib/strings/errors'
-import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {getAllListMembers} from '#/state/queries/list-members'
-import {useResolvedStarterPackShortLink} from '#/state/queries/resolve-short-link'
-import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useShortenLink} from '#/state/queries/shorten-link'
-import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
-import {useStarterPackQuery} from '#/state/queries/starter-packs'
-import {useAgent, useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {
-  ProgressGuideAction,
-  useProgressGuideControls,
-} from '#/state/shell/progress-guide'
-import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
-import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
-import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
+import { batchedUpdates } from '#/lib/batchedUpdates'
+import { HITSLOP_20 } from '#/lib/constants'
+import { isBlockedOrBlocking, isMuted } from '#/lib/moderation/blocked-and-muted'
+import { makeProfileLink, makeStarterPackLink } from '#/lib/routes/links'
+import { type CommonNavigatorParams, type NavigationProp,  } from '#/lib/routes/types'
+import { logEvent } from '#/lib/statsig/statsig'
+import { cleanError } from '#/lib/strings/errors'
+import { getStarterPackOgCard } from '#/lib/strings/starter-pack'
+import { logger } from '#/logger'
+import { isWeb } from '#/platform/detection'
+import { updateProfileShadow } from '#/state/cache/profile-shadow'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { getAllListMembers } from '#/state/queries/list-members'
+import { useResolvedStarterPackShortLink } from '#/state/queries/resolve-short-link'
+import { useResolveDidQuery } from '#/state/queries/resolve-uri'
+import { useShortenLink } from '#/state/queries/shorten-link'
+import { useDeleteStarterPackMutation } from '#/state/queries/starter-packs'
+import { useStarterPackQuery } from '#/state/queries/starter-packs'
+import { useAgent, useSession } from '#/state/session'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { ProgressGuideAction, useProgressGuideControls,  } from '#/state/shell/progress-guide'
+import { useSetActiveStarterPack } from '#/state/shell/starter-pack'
+import { PagerWithHeader } from '#/view/com/pager/PagerWithHeader'
+import { ProfileSubpageHeader } from '#/view/com/profile/ProfileSubpageHeader'
 import * as Toast from '#/view/com/util/Toast'
-import {bulkWriteFollows} from '#/screens/Onboarding/util'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
-import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
-import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import { bulkWriteFollows } from '#/screens/Onboarding/util'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { useDialogControl } from '#/components/Dialog'
+import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon } from '#/components/icons/ArrowOutOfBox'
+import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
+import { DotGrid_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid'
+import { Pencil_Stroke2_Corner0_Rounded as Pencil } from '#/components/icons/Pencil'
+import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
-import {ListMaybePlaceholder} from '#/components/Lists'
-import {Loader} from '#/components/Loader'
+import { ListMaybePlaceholder } from '#/components/Lists'
+import { Loader } from '#/components/Loader'
 import * as Menu from '#/components/Menu'
-import {
-  ReportDialog,
-  useReportDialogControl,
-} from '#/components/moderation/ReportDialog'
+import { ReportDialog, useReportDialogControl,  } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {RichText} from '#/components/RichText'
-import {FeedsList} from '#/components/StarterPack/Main/FeedsList'
-import {PostsList} from '#/components/StarterPack/Main/PostsList'
-import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
-import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
-import {ShareDialog} from '#/components/StarterPack/ShareDialog'
-import {Text} from '#/components/Typography'
+import { RichText } from '#/components/RichText'
+import { FeedsList } from '#/components/StarterPack/Main/FeedsList'
+import { PostsList } from '#/components/StarterPack/Main/PostsList'
+import { ProfilesList } from '#/components/StarterPack/Main/ProfilesList'
+import { QrCodeDialog } from '#/components/StarterPack/QrCodeDialog'
+import { ShareDialog } from '#/components/StarterPack/ShareDialog'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
 
 type StarterPackScreeProps = NativeStackScreenProps<
@@ -417,7 +402,7 @@ function Header({
         isOwner={isOwn}
         avatar={undefined}
         creator={creator}
-        purpose="app.bsky.graph.defs#referencelist"
+        purpose="app.gndr.graph.defs#referencelist"
         avatarType="starter-pack">
         {hasSession ? (
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
@@ -644,7 +629,7 @@ function OverflowMenu({
           control={reportDialogControl}
           subject={{
             ...starterPack,
-            $type: 'app.bsky.graph.defs#starterPackView',
+            $type: 'app.gndr.graph.defs#starterPackView',
           }}
         />
       )}

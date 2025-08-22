@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import { Pressable, View } from 'react-native'
 import Animated, {
   measure,
   type MeasuredDimensions,
@@ -7,23 +7,23 @@ import Animated, {
   runOnUI,
   useAnimatedRef,
 } from 'react-native-reanimated'
-import {type AppGndrGraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import { type AppGndrGraphDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {makeProfileLink} from '#/lib/routes/links'
-import {type NavigationProp} from '#/lib/routes/types'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {emitSoftReset} from '#/state/events'
-import {useLightboxControls} from '#/state/lightbox'
-import {TextLink} from '#/view/com/util/Link'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {Text} from '#/view/com/util/text/Text'
-import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
-import {StarterPack} from '#/components/icons/StarterPack'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { makeProfileLink } from '#/lib/routes/links'
+import { type NavigationProp } from '#/lib/routes/types'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { emitSoftReset } from '#/state/events'
+import { useLightboxControls } from '#/state/lightbox'
+import { TextLink } from '#/view/com/util/Link'
+import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { Text } from '#/view/com/util/text/Text'
+import { UserAvatar, type UserAvatarType } from '#/view/com/util/UserAvatar'
+import { StarterPack } from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
 
 export function ProfileSubpageHeader({
@@ -153,7 +153,7 @@ export function ProfileSubpageHeader({
             <LoadingPlaceholder width={50} height={8} />
           ) : (
             <Text type="lg" style={[pal.textLight]} numberOfLines={1}>
-              {purpose === 'app.bsky.graph.defs#curatelist' ? (
+              {purpose === 'app.gndr.graph.defs#curatelist' ? (
                 isOwner ? (
                   <Trans>List by you</Trans>
                 ) : (
@@ -166,7 +166,7 @@ export function ProfileSubpageHeader({
                     />
                   </Trans>
                 )
-              ) : purpose === 'app.bsky.graph.defs#modlist' ? (
+              ) : purpose === 'app.gndr.graph.defs#modlist' ? (
                 isOwner ? (
                   <Trans>Moderation list by you</Trans>
                 ) : (
@@ -179,7 +179,7 @@ export function ProfileSubpageHeader({
                     />
                   </Trans>
                 )
-              ) : purpose === 'app.bsky.graph.defs#referencelist' ? (
+              ) : purpose === 'app.gndr.graph.defs#referencelist' ? (
                 isOwner ? (
                   <Trans>Starter pack by you</Trans>
                 ) : (

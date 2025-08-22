@@ -1,16 +1,16 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
-import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { AtUri } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {makeProfileLink} from '#/lib/routes/links'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { makeProfileLink } from '#/lib/routes/links'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { SubtleWebHover } from '#/components/SubtleWebHover'
+import { Link } from '../util/Link'
+import { Text } from '../util/text/Text'
 
 export function ViewFullThread({uri}: {uri: string}) {
   const {

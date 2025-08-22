@@ -1,30 +1,18 @@
-import {useCallback, useMemo} from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyGraphDefs as AppGndrGraphDefs,
-  type ModerationOpts,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useMemo } from 'react'
+import { View } from 'react-native'
+import { type AppGndrGraphDefs, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {cleanError} from '#/lib/strings/errors'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {
-  getMembership,
-  type ListMembersip,
-  useDangerousListMembershipsQuery,
-  useListMembershipAddMutation,
-  useListMembershipRemoveMutation,
-} from '#/state/queries/list-memberships'
+import { cleanError } from '#/lib/strings/errors'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { getMembership, type ListMembersip, useDangerousListMembershipsQuery, useListMembershipAddMutation, useListMembershipRemoveMutation,  } from '#/state/queries/list-memberships'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { atoms as a } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {
-  type ProfileItem,
-  SearchablePeopleList,
-} from '#/components/dialogs/SearchablePeopleList'
-import {Loader} from '#/components/Loader'
+import { type ProfileItem, SearchablePeopleList,  } from '#/components/dialogs/SearchablePeopleList'
+import { Loader } from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import type * as gndr from '#/types/gndr'
 

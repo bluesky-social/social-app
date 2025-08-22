@@ -1,6 +1,6 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
+import { atoms as a, useTheme, type ViewStyleProp } from '#/alf'
 
 export function Divider({style}: ViewStyleProp) {
   const t = useTheme()

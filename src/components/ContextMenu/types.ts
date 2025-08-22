@@ -1,17 +1,9 @@
-import {
-  type AccessibilityRole,
-  type GestureResponderEvent,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native'
-import {type SharedValue} from 'react-native-reanimated'
+import { type AccessibilityRole, type GestureResponderEvent, type StyleProp, type ViewStyle,  } from 'react-native'
+import { type SharedValue } from 'react-native-reanimated'
 import type React from 'react'
 
 import type * as Dialog from '#/components/Dialog'
-import {
-  type ItemProps as MenuItemProps,
-  type RadixPassThroughTriggerProps,
-} from '#/components/Menu/types'
+import { type ItemProps as MenuItemProps, type RadixPassThroughTriggerProps,  } from '#/components/Menu/types'
 
 export type {
   GroupProps,

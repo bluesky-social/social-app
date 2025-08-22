@@ -1,6 +1,6 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs as AppGndrActorDefs} from '@gander-social-atproto/api'
 import {Trans} from '@lingui/macro'
 import {ReactRenderer} from '@tiptap/react'
 import {

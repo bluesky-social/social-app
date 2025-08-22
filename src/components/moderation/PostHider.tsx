@@ -1,31 +1,18 @@
 import React, {type ComponentProps} from 'react'
-import {
-  Pressable,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type ModerationCause,
-  type ModerationUI,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { Pressable, type StyleProp, StyleSheet, View, type ViewStyle,  } from 'react-native'
+import { type AppGndrActorDefs, type ModerationCause, type ModerationUI,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-import {addStyle} from '#/lib/styles'
-import {precacheProfile} from '#/state/queries/profile'
-// import {Link} from '#/components/Link' TODO this imposes some styles that screw things up
-import {Link} from '#/view/com/util/Link'
-import {atoms as a, useTheme} from '#/alf'
-import {
-  ModerationDetailsDialog,
-  useModerationDetailsDialogControl,
-} from '#/components/moderation/ModerationDetailsDialog'
-import {Text} from '#/components/Typography'
+import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription'
+import { addStyle } from '#/lib/styles'
+import { precacheProfile } from '#/state/queries/profile'
+// import { Link } from '#/components/Link' TODO this imposes some styles that screw things up
+import { Link } from '#/view/com/util/Link'
+import { atoms as a, useTheme } from '#/alf'
+import { ModerationDetailsDialog, useModerationDetailsDialogControl,  } from '#/components/moderation/ModerationDetailsDialog'
+import { Text } from '#/components/Typography'
 
 interface Props extends ComponentProps<typeof Link> {
   disabled: boolean

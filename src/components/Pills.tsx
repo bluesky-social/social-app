@@ -1,20 +1,14 @@
 import React from 'react'
-import {View} from 'react-native'
-import {
-  GNDR_LABELER_DID,
-  type ModerationCause,
-} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import { View } from 'react-native'
+import { GNDR_LABELER_DID, type ModerationCause,  } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
 
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
-import {Button} from '#/components/Button'
-import {
-  ModerationDetailsDialog,
-  useModerationDetailsDialogControl,
-} from '#/components/moderation/ModerationDetailsDialog'
-import {Text} from '#/components/Typography'
+import { useModerationCauseDescription } from '#/lib/moderation/useModerationCauseDescription'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, useTheme, type ViewStyleProp } from '#/alf'
+import { Button } from '#/components/Button'
+import { ModerationDetailsDialog, useModerationDetailsDialogControl,  } from '#/components/moderation/ModerationDetailsDialog'
+import { Text } from '#/components/Typography'
 
 export type AppModerationCause =
   | ModerationCause

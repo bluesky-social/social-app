@@ -1,15 +1,9 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-} from '@atproto/api'
+import { type AppGndrActorDefs, AppGndrEmbedRecord, AppGndrEmbedRecordWithMedia, AppGndrFeedDefs, AppGndrFeedPost,  } from '@gander-social-atproto/api'
 
 import * as gndr from '#/types/gndr'
-import {isPostInLanguage} from '../../locale/helpers'
-import {FALLBACK_MARKER_POST} from './feed/home'
-import {type ReasonFeedSource} from './feed/types'
+import { isPostInLanguage } from '../../locale/helpers'
+import { FALLBACK_MARKER_POST } from './feed/home'
+import { type ReasonFeedSource } from './feed/types'
 
 type FeedViewPost = AppGndrFeedDefs.FeedViewPost
 

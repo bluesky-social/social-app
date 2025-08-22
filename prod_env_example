@@ -1,0 +1,202 @@
+# The env the app is running in e.g. development, testflight, production
+EXPO_PUBLIC_ENV=development
+
+# This is the semver release version of the app, pulled from package.json
+EXPO_PUBLIC_RELEASE_VERSION=
+
+# This is the commit hash that the current bundle was made from.
+EXPO_PUBLIC_BUNDLE_IDENTIFIER=
+
+# Should be formatted YYMMDDHH so that it increases for each build.
+EXPO_PUBLIC_BUNDLE_DATE=0
+
+# The log level for the app's logger transports
+EXPO_PUBLIC_LOG_LEVEL=debug
+
+# Enable debug logs for specific logger instances
+EXPO_PUBLIC_LOG_DEBUG=session
+
+# Chat service DID
+EXPO_PUBLIC_CHAT_PROXY_DID=
+
+#
+#
+# Gander specific values
+#
+#
+
+# Sentry DSN for telemetry
+EXPO_PUBLIC_SENTRY_DSN=
+
+# Bitdrift API key. If undefined, Bitdrift will be disabled.
+EXPO_PUBLIC_BITDRIFT_API_KEY=
+
+# Environment dependent URLs
+ATPROTO_PDS_URL=http://localhost:2583
+ATPROTO_APPVIEW_URL=http://localhost:2584
+API_URL=https://public.api.bsky.app
+APP_URL=https://bsky.app
+APPVIEW_URL=https://api.bsky.app
+EMBED_SERVICE_URL=https://embed.gndr.app
+OGCARD_SERVICE_URL=https://ogcard.cdn.gndr.app
+GO_SERVICE_URL=https://go.gndr.app
+PROFILE_URL=https://gndr.app/profile
+DEEP_LINK_PREFIX=https://bsky.app
+SOCIAL_URL=https://gndr.social
+VIDEO_SERVICE_URL=https://video.gndr.app
+GIF_SERVICE_URL=https://gifs.gndr.app
+PUBLIC_APPVIEW_URL=https://api.bsky.app
+PUBLIC_APPVIEW_DID=did:web:api.bsky.app
+PUBLIC_STAGING_APPVIEW_DID=did:web:api.bsky.app
+DEV_ENV_APPVIEW_URL=http://localhost:2584
+WEBLINK_TOS_URL=https://bsky.social/about/support/tos
+WEBLINK_PRIVACY_URL=https://bksy.social/about/support/privacy-policy
+WEBLINK_COMMUNITY_URL=https://bsky.social/about/support/community-guidelines
+WEBLINK_COMMUNITY_DEPRECATED_URL=https://bsky.social/about/support/community-guidelines-deprecated
+
+
+sudo chown -R www-data:www-data /var/www/html
+find /var/www/html -type f -exec chmod 664 {} \;
+find /var/www/html -type d -exec chmod 775 {} \;
+
+
+
+
+
+
+
+
+
+server {
+    listen 80;
+
+    server_name modcanada.ca;
+    root /var/www/freescout/public;
+    index index.php index.html index.htm;
+
+    error_log /var/www/freescout/storage/logs/web-server.log;
+
+
+    # Max. attachment size.
+    # It must be also set in PHP.ini via "upload_max_filesize" and "post_max_size" directives.
+    client_max_body_size 20M;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+    # Uncomment this location if you want to improve attachments downloading speed.
+    # Also make sure to set APP_DOWNLOAD_ATTACHMENTS_VIA=nginx in the .env file.
+    #location ^~ /storage/app/attachment/ {
+    #    internal;
+    #    alias /var/www/html/storage/app/attachment/;
+    #}
+    location ~* ^/storage/attachment/ {
+        expires 1M;
+        access_log off;
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    location ~* ^/(?:css|js)/.*\.(?:css|js)$ {
+        expires 2d;
+        access_log off;
+        add_header Cache-Control "public, must-revalidate";
+    }
+    # The list should be in sync with /storage/app/public/uploads/.htaccess and /config/app.php
+    location ~* ^/storage/.*\.((?!(jpg|jpeg|jfif|pjpeg|pjp|apng|bmp|gif|ico|cur|png|tif|tiff|webp|pdf|txt|diff|patch|json|mp3|wav|ogg|wma)).)*$ {
+        add_header Content-disposition "attachment; filename=$2";
+        default_type application/octet-stream;
+    }
+    location ~* ^/(?:css|fonts|img|installer|js|modules|[^\\\]+\..*)$ {
+        expires 1M;
+        access_log off;
+        add_header Cache-Control "public";
+    }
+    location ~ /\. {
+        deny  all;
+    }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/modcanada.ca/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/modcanada.ca/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = modcanada.ca) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    listen [::]:80;
+
+    server_name modcanada.ca;
+    return 404; # managed by Certbot
+
+
+}
+
+sudo mv ./freescout.conf ./modcanada.ca
+
+
+
+
+
+
+
+
+
+
+
+server {
+    listen 80;
+
+    server_name modcanada.ca;
+    root /var/www/freescout/public;
+    index index.php index.html index.htm;
+
+    error_log /var/www/freescout/storage/logs/web-server.log;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/run/php/php8.1-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+    # Uncomment this location if you want to improve attachments downloading speed.
+    # Also make sure to set APP_DOWNLOAD_ATTACHMENTS_VIA=nginx in the .env file.
+    #location ^~ /storage/app/attachment/ {
+        #    internal;
+        #    alias /var/www/freescout/storage/app/attachment/;
+    #}
+    location ~* ^/storage/attachment/ {
+        expires 1M;
+        access_log off;
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    location ~* ^/(?:css|js)/.*\.(?:css|js)$ {
+        expires 2d;
+        access_log off;
+        add_header Cache-Control "public, must-revalidate";
+    }
+    location ~* ^/(?:css|fonts|img|installer|js|modules|[^\\\]+\..*)$ {
+        expires 1M;
+        access_log off;
+        add_header Cache-Control "public";
+    }
+    location ~ /\. {
+        deny  all;
+    }
+}

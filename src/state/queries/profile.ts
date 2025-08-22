@@ -1,46 +1,25 @@
-import {useCallback} from 'react'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyActorGetProfile as AppGndrActorGetProfile,
-  type AppBskyActorGetProfiles as AppGndrActorGetProfiles,
-  type AppBskyActorProfile as AppGndrActorProfile,
-  AtUri,
-  type BskyAgent as GndrAgent,
-  type ComAtprotoRepoUploadBlob,
-  type Un$Typed,
-} from '@atproto/api'
-import {
-  keepPreviousData,
-  type QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { useCallback } from 'react'
+import { type AppGndrActorDefs, type AppGndrActorGetProfile, type AppGndrActorGetProfiles, type AppGndrActorProfile, AtUri, type ComAtprotoRepoUploadBlob, type GndrAgent, type Un$Typed,  } from '@gander-social-atproto/api'
+import { keepPreviousData, type QueryClient, useMutation, useQuery, useQueryClient,  } from '@tanstack/react-query'
 
-import {uploadBlob} from '#/lib/api'
-import {until} from '#/lib/async/until'
-import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {logEvent, type LogEvents, toClout} from '#/lib/statsig/statsig'
-import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {type Shadow} from '#/state/cache/types'
-import {type ImageMeta} from '#/state/gallery'
-import {STALE} from '#/state/queries'
-import {resetProfilePostsQueries} from '#/state/queries/post-feed'
-import {
-  unstableCacheProfileView,
-  useUnstableProfileViewCache,
-} from '#/state/queries/unstable-profile-cache'
-import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
-import {useAgent, useSession} from '#/state/session'
+import { uploadBlob } from '#/lib/api'
+import { until } from '#/lib/async/until'
+import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue'
+import { logEvent, type LogEvents, toClout } from '#/lib/statsig/statsig'
+import { updateProfileShadow } from '#/state/cache/profile-shadow'
+import { type Shadow } from '#/state/cache/types'
+import { type ImageMeta } from '#/state/gallery'
+import { STALE } from '#/state/queries'
+import { resetProfilePostsQueries } from '#/state/queries/post-feed'
+import { unstableCacheProfileView, useUnstableProfileViewCache,  } from '#/state/queries/unstable-profile-cache'
+import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache'
+import { useAgent, useSession } from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import type * as gndr from '#/types/gndr'
-import {
-  ProgressGuideAction,
-  useProgressGuideControls,
-} from '../shell/progress-guide'
-import {RQKEY_ROOT as RQKEY_LIST_CONVOS} from './messages/list-conversations'
-import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
-import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
+import { ProgressGuideAction, useProgressGuideControls,  } from '../shell/progress-guide'
+import { RQKEY_ROOT as RQKEY_LIST_CONVOS } from './messages/list-conversations'
+import { RQKEY as RQKEY_MY_BLOCKED } from './my-blocked-accounts'
+import { RQKEY as RQKEY_MY_MUTED } from './my-muted-accounts'
 
 export * from '#/state/queries/unstable-profile-cache'
 /**
@@ -277,7 +256,7 @@ export function useProfileFollowMutationQueue(
       })
 
       if (finalFollowingUri) {
-        agent.app.bsky.graph
+        agent.app.gndr.graph
           .getSuggestedFollowsByActor({
             actor: did,
           })
@@ -494,7 +473,7 @@ function useProfileBlockMutation() {
       if (!currentAccount) {
         throw new Error('Not signed in')
       }
-      return await agent.app.bsky.graph.block.create(
+      return await agent.app.gndr.graph.block.create(
         {repo: currentAccount.did},
         {subject: did, createdAt: new Date().toISOString()},
       )
@@ -516,7 +495,7 @@ function useProfileUnblockMutation() {
         throw new Error('Not signed in')
       }
       const {rkey} = new AtUri(blockUri)
-      await agent.app.bsky.graph.block.delete({
+      await agent.app.gndr.graph.block.delete({
         repo: currentAccount.did,
         rkey,
       })
@@ -536,7 +515,7 @@ async function whenAppViewReady(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.actor.getProfile({actor}),
+    () => agent.app.gndr.actor.getProfile({actor}),
   )
 }
 

@@ -1,8 +1,8 @@
 import React from 'react'
-import {type StyleProp, type ViewStyle} from 'react-native'
-import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
+import { type StyleProp, type ViewStyle } from 'react-native'
+import { requireNativeModule, requireNativeViewManager } from 'expo-modules-core'
 
-import {type VisibilityViewProps} from './types'
+import { type VisibilityViewProps } from './types'
 const NativeView: React.ComponentType<{
   onChangeStatus: (e: {nativeEvent: {isActive: boolean}}) => void
   children: React.ReactNode

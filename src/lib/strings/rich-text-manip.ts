@@ -1,10 +1,6 @@
-import {
-  AppBskyRichtextFacet as AppGndrRichtextFacet,
-  type RichText,
-  UnicodeString,
-} from '@atproto/api'
+import { AppGndrRichtextFacet, type RichText, UnicodeString,  } from '@gander-social-atproto/api'
 
-import {toShortUrl} from './url-helpers'
+import { toShortUrl } from './url-helpers'
 
 export function shortenLinks(rt: RichText): RichText {
   if (!rt.facets?.length) {

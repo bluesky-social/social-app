@@ -1,21 +1,9 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  type GestureResponderEvent,
-  type NativeSyntheticEvent,
-  type NativeTouchEvent,
-  Pressable,
-  type PressableStateCallbackType,
-  type StyleProp,
-  StyleSheet,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import { ActivityIndicator, type GestureResponderEvent, type NativeSyntheticEvent, type NativeTouchEvent, Pressable, type PressableStateCallbackType, type StyleProp, StyleSheet, type TextStyle, View, type ViewStyle,  } from 'react-native'
 
-import {choose} from '#/lib/functions'
-import {useTheme} from '#/lib/ThemeContext'
-import {Text} from '../text/Text'
+import { choose } from '#/lib/functions'
+import { useTheme } from '#/lib/ThemeContext'
+import { Text } from '../text/Text'
 
 export type ButtonType =
   | 'primary'

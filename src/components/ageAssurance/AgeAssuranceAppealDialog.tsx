@@ -1,22 +1,19 @@
 import React from 'react'
-import {View} from 'react-native'
-import {
-  BSKY_LABELER_DID as GNDR_LABELER_DID,
-  ComAtprotoModerationDefs,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
+import { View } from 'react-native'
+import { ComAtprotoModerationDefs, GNDR_LABELER_DID,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useMutation } from '@tanstack/react-query'
 
-import {logger} from '#/state/ageAssurance/util'
-import {useAgent, useSession} from '#/state/session'
+import { logger } from '#/state/ageAssurance/util'
+import { useAgent, useSession } from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, web} from '#/alf'
-import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { atoms as a, useBreakpoints, web } from '#/alf'
+import { AgeAssuranceBadge } from '#/components/ageAssurance/AgeAssuranceBadge'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
 
 export function AgeAssuranceAppealDialog({
   control,

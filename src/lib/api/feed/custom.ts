@@ -1,16 +1,8 @@
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedGetFeed as GetCustomFeed,
-  BskyAgent as GndrAgent,
-  jsonStringToLex,
-} from '@atproto/api'
+import { type AppBskyFeedGetFeed as GetCustomFeed, type AppGndrFeedDefs, GndrAgent, jsonStringToLex,  } from '@gander-social-atproto/api'
 
-import {
-  getAppLanguageAsContentLanguage,
-  getContentLanguages,
-} from '#/state/preferences/languages'
-import {type FeedAPI, type FeedAPIResponse} from './types'
-import {createGndrTopicsHeader, isGanderOwnedFeed} from './utils'
+import { getAppLanguageAsContentLanguage, getContentLanguages,  } from '#/state/preferences/languages'
+import { type FeedAPI, type FeedAPIResponse } from './types'
+import { createGndrTopicsHeader, isGanderOwnedFeed } from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
   agent: GndrAgent
@@ -33,7 +25,7 @@ export class CustomFeedAPI implements FeedAPI {
 
   async peekLatest(): Promise<AppGndrFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await this.agent.app.bsky.feed.getFeed(
+    const res = await this.agent.app.gndr.feed.getFeed(
       {
         ...this.params,
         limit: 1,
@@ -55,7 +47,7 @@ export class CustomFeedAPI implements FeedAPI {
     const isGanderOwned = isGanderOwnedFeed(this.params.feed)
 
     const res = agent.did
-      ? await this.agent.app.bsky.feed.getFeed(
+      ? await this.agent.app.gndr.feed.getFeed(
           {
             ...this.params,
             cursor,
@@ -120,7 +112,7 @@ async function loggedOutFetch({
 
   // manually construct fetch call so we can add the `lang` cache-busting param
   let res = await fetch(
-    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
+    `https://api.bsky.app/xrpc/app.gndr.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}&lang=${contentLangs}`,
     {
@@ -140,7 +132,7 @@ async function loggedOutFetch({
 
   // no data, try again with language headers removed
   res = await fetch(
-    `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
+    `https://api.bsky.app/xrpc/app.gndr.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}`,
     {method: 'GET', headers: {'Accept-Language': '', ...labelersHeader}},

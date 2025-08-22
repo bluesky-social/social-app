@@ -1,15 +1,15 @@
 import React from 'react'
-import {View} from 'react-native'
-import {type ImagePickerAsset} from 'expo-image-picker'
-import {GanderVideoView} from '@haileyok/bluesky-video'
+import { View } from 'react-native'
+import { type ImagePickerAsset } from 'expo-image-picker'
+import { GanderVideoView } from '@haileyok/bluesky-video'
 
-import {type CompressedVideo} from '#/lib/media/video/types'
-import {clamp} from '#/lib/numbers'
-import {useAutoplayDisabled} from '#/state/preferences'
-import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
-import {atoms as a, useTheme} from '#/alf'
-import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
-import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
+import { type CompressedVideo } from '#/lib/media/video/types'
+import { clamp } from '#/lib/numbers'
+import { useAutoplayDisabled } from '#/state/preferences'
+import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn'
+import { atoms as a, useTheme } from '#/alf'
+import { PlayButtonIcon } from '#/components/video/PlayButtonIcon'
+import { VideoTranscodeBackdrop } from './VideoTranscodeBackdrop'
 
 export function VideoPreview({
   asset,

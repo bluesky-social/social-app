@@ -1,25 +1,14 @@
-import {
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedGetPostThread as AppGndrFeedGetPostThread,
-  AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  AtUri,
-  type BskyAgent as GndrAgent,
-} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import { AppGndrFeedDefs, type AppGndrFeedGetPostThread, AppGndrFeedThreadgate, AtUri, type GndrAgent,  } from '@gander-social-atproto/api'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import {networkRetry, retry} from '#/lib/async/retry'
-import {until} from '#/lib/async/until'
-import {STALE} from '#/state/queries'
-import {RQKEY_ROOT as postThreadQueryKeyRoot} from '#/state/queries/post-thread'
-import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
-import {
-  createThreadgateRecord,
-  mergeThreadgateRecords,
-  threadgateAllowUISettingToAllowRecordValue,
-  threadgateViewToAllowUISetting,
-} from '#/state/queries/threadgate/util'
-import {useAgent} from '#/state/session'
-import {useThreadgateHiddenReplyUrisAPI} from '#/state/threadgate-hidden-replies'
+import { networkRetry, retry } from '#/lib/async/retry'
+import { until } from '#/lib/async/until'
+import { STALE } from '#/state/queries'
+import { RQKEY_ROOT as postThreadQueryKeyRoot } from '#/state/queries/post-thread'
+import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate/types'
+import { createThreadgateRecord, mergeThreadgateRecords, threadgateAllowUISettingToAllowRecordValue, threadgateViewToAllowUISetting,  } from '#/state/queries/threadgate/util'
+import { useAgent } from '#/state/session'
+import { useThreadgateHiddenReplyUrisAPI } from '#/state/threadgate-hidden-replies'
 import * as gndr from '#/types/gndr'
 
 export * from '#/state/queries/threadgate/types'
@@ -89,7 +78,7 @@ export async function getThreadgateView({
   agent: GndrAgent
   postUri: string
 }) {
-  const {data} = await agent.app.bsky.feed.getPostThread({
+  const {data} = await agent.app.gndr.feed.getPostThread({
     uri: postUri!,
     depth: 0,
   })
@@ -134,7 +123,7 @@ export async function getThreadgateRecord({
       () =>
         agent.api.com.atproto.repo.getRecord({
           repo: urip.host,
-          collection: 'app.bsky.feed.threadgate',
+          collection: 'app.gndr.feed.threadgate',
           rkey: urip.rkey,
         }),
     )
@@ -180,7 +169,7 @@ export async function writeThreadgateRecord({
   await networkRetry(2, () =>
     agent.api.com.atproto.repo.putRecord({
       repo: agent.session!.did,
-      collection: 'app.bsky.feed.threadgate',
+      collection: 'app.gndr.feed.threadgate',
       rkey: postUrip.rkey,
       record,
     }),
@@ -280,7 +269,7 @@ export function useSetThreadgateAllowMutation() {
           return false
         },
         () => {
-          return agent.app.bsky.feed.getPostThread({
+          return agent.app.gndr.feed.getPostThread({
             uri: postUri,
             depth: 0,
           })

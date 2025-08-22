@@ -1,19 +1,13 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {type Avatar} from '#/screens/Onboarding/StepProfile/index'
-import {
-  type AvatarColor,
-  avatarColors,
-  emojiItems,
-  type EmojiName,
-  emojiNames,
-} from '#/screens/Onboarding/StepProfile/types'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {Text} from '#/components/Typography'
+import { type Avatar } from '#/screens/Onboarding/StepProfile/index'
+import { type AvatarColor, avatarColors, emojiItems, type EmojiName, emojiNames,  } from '#/screens/Onboarding/StepProfile/types'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
+import { Text } from '#/components/Typography'
 
 const ACTIVE_BORDER_WIDTH = 3
 const ACTIVE_BORDER_STYLES = {

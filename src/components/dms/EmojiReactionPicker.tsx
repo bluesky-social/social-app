@@ -1,24 +1,18 @@
-import {useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
-import {type ChatGndrConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useMemo, useState } from 'react'
+import { useWindowDimensions, View } from 'react-native'
+import { type ChatGndrConvoDefs } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useSession} from '#/state/session'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import { useSession } from '#/state/session'
+import { atoms as a, tokens, useTheme } from '#/alf'
 import * as ContextMenu from '#/components/ContextMenu'
-import {
-  useContextMenuContext,
-  useContextMenuMenuContext,
-} from '#/components/ContextMenu/context'
-import {
-  EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyesIcon,
-  EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon,
-} from '#/components/icons/Emoji'
-import {type TriggerProps} from '#/components/Menu/types'
-import {Text} from '#/components/Typography'
-import {EmojiPopup} from './EmojiPopup'
-import {hasAlreadyReacted, hasReachedReactionLimit} from './util'
+import { useContextMenuContext, useContextMenuMenuContext,  } from '#/components/ContextMenu/context'
+import { EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyesIcon, EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmileIcon,  } from '#/components/icons/Emoji'
+import { type TriggerProps } from '#/components/Menu/types'
+import { Text } from '#/components/Typography'
+import { EmojiPopup } from './EmojiPopup'
+import { hasAlreadyReacted, hasReachedReactionLimit } from './util'
 
 export function EmojiReactionPicker({
   message,

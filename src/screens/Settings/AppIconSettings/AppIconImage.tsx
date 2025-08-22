@@ -1,7 +1,7 @@
-import {Image} from 'expo-image'
+import { Image } from 'expo-image'
 
-import {type AppIconSet} from '#/screens/Settings/AppIconSettings/types'
-import {atoms as a, platform, useTheme} from '#/alf'
+import { type AppIconSet } from '#/screens/Settings/AppIconSettings/types'
+import { atoms as a, platform, useTheme } from '#/alf'
 
 export function AppIconImage({
   icon,

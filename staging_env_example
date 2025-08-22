@@ -1,0 +1,55 @@
+# The env the app is running in e.g. development, testflight, production
+EXPO_PUBLIC_ENV=staging
+
+# This is the semver release version of the app, pulled from package.json
+EXPO_PUBLIC_RELEASE_VERSION=
+
+# This is the commit hash that the current bundle was made from.
+EXPO_PUBLIC_BUNDLE_IDENTIFIER=
+
+# Should be formatted YYMMDDHH so that it increases for each build.
+EXPO_PUBLIC_BUNDLE_DATE=0
+
+# The log level for the app's logger transports
+EXPO_PUBLIC_LOG_LEVEL=debug
+
+# Enable debug logs for specific logger instances
+EXPO_PUBLIC_LOG_DEBUG=session
+
+# Chat service DID
+EXPO_PUBLIC_CHAT_PROXY_DID=
+
+#
+#
+# Gander specific values
+#
+#
+
+# Sentry DSN for telemetry
+EXPO_PUBLIC_SENTRY_DSN=
+
+# Bitdrift API key. If undefined, Bitdrift will be disabled.
+EXPO_PUBLIC_BITDRIFT_API_KEY=
+
+# Environment dependent URLs
+ATPROTO_PDS_URL=http://localhost:2583
+ATPROTO_APPVIEW_URL=http://localhost:2584
+API_URL=https://api.gndr.modcanada.ca
+APP_URL=https://gndr.modcanada.ca
+APPVIEW_URL=https://api.gndr.modcanada.ca
+EMBED_SERVICE_URL=https://embed.gndr.modcanada.ca
+OGCARD_SERVICE_URL=https://ogcard.cdn.gndr.modcanada.ca
+GO_SERVICE_URL=https://go.gndr.modcanada.ca
+PROFILE_URL=https://gndr.modcanada.ca/profile
+DEEP_LINK_PREFIX=https://gndr.modcanada.ca
+SOCIAL_URL=https://gndr.modcanada.ca
+VIDEO_SERVICE_URL=https://video.gndr.modcanada.ca
+GIF_SERVICE_URL=https://gifs.gndr.modcanada.ca
+PUBLIC_APPVIEW_URL=https://api.gndr.modcanada.ca
+PUBLIC_APPVIEW_DID=did:web:api.gndr.modcanada.ca
+PUBLIC_STAGING_APPVIEW_DID=did:web:api.gndr.modcanada.ca
+DEV_ENV_APPVIEW_URL=http://localhost:2584
+WEBLINK_TOS_URL=https://gndr.modcanada.ca/about/support/tos
+WEBLINK_PRIVACY_URL=https://gndr.modcanada.ca/about/support/privacy-policy
+WEBLINK_COMMUNITY_URL=https://gndr.modcanada.ca/about/support/community-guidelines
+WEBLINK_COMMUNITY_DEPRECATED_URL=https://gndr.modcanada.ca/about/support/community-guidelines-deprecated

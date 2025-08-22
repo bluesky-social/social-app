@@ -1,22 +1,17 @@
-import {useCallback, useState} from 'react'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  moderatePost,
-  type ModerationDecision,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useState } from 'react'
+import { type AppGndrFeedDefs, AppGndrFeedPost, moderatePost, type ModerationDecision,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {cleanError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {usePostQuotesQuery} from '#/state/queries/post-quotes'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {Post} from '#/view/com/post/Post'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {List} from '../util/List'
+import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender'
+import { cleanError } from '#/lib/strings/errors'
+import { logger } from '#/logger'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { usePostQuotesQuery } from '#/state/queries/post-quotes'
+import { useResolveUriQuery } from '#/state/queries/resolve-uri'
+import { Post } from '#/view/com/post/Post'
+import { ListFooter, ListMaybePlaceholder } from '#/components/Lists'
+import { List } from '../util/List'
 
 function renderItem({
   item,

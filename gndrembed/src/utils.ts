@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/api'
+import { AtUri } from '@gander-social-atproto/api'
 
 export function niceDate(date: number | string | Date) {
   const d = new Date(date)

@@ -1,4 +1,4 @@
-import {View, type ViewStyle} from 'react-native'
+import { View, type ViewStyle } from 'react-native'
 import type React from 'react'
 
 /**

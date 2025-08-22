@@ -1,8 +1,8 @@
-import {useMemo} from 'react'
+import { useMemo } from 'react'
 
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
-import {logger} from '#/state/ageAssurance/util'
-import {usePreferencesQuery} from '#/state/queries/preferences'
+import { useAgeAssuranceContext } from '#/state/ageAssurance'
+import { logger } from '#/state/ageAssurance/util'
+import { usePreferencesQuery } from '#/state/queries/preferences'
 
 type AgeAssurance = ReturnType<typeof useAgeAssuranceContext> & {
   /**

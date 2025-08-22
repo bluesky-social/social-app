@@ -1,12 +1,7 @@
-import {
-  Platform,
-  type StyleProp,
-  StyleSheet,
-  type ViewStyle,
-} from 'react-native'
+import { Platform, type StyleProp, StyleSheet, type ViewStyle,  } from 'react-native'
 
 import * as tokens from '#/alf/tokens'
-import {ios, native, platform, web} from '#/alf/util/platform'
+import { ios, native, platform, web } from '#/alf/util/platform'
 import * as Layout from '#/components/Layout'
 
 export const atoms = {

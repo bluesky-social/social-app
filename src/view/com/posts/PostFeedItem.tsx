@@ -1,65 +1,47 @@
-import {memo, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  AtUri,
-  type ModerationDecision,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { memo, useCallback, useMemo, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
+import { type AppGndrActorDefs, AppGndrFeedDefs, AppGndrFeedPost, AppGndrFeedThreadgate, AtUri, type ModerationDecision, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
-import {MAX_POST_LINES} from '#/lib/constants'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {makeProfileLink} from '#/lib/routes/links'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {countLines} from '#/lib/strings/helpers'
-import {s} from '#/lib/styles'
-import {
-  POST_TOMBSTONE,
-  type Shadow,
-  usePostShadow,
-} from '#/state/cache/post-shadow'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {unstableCacheProfileView} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {
-  buildPostSourceKey,
-  setUnstablePostSource,
-} from '#/state/unstable-post-source'
-import {FeedNameText} from '#/view/com/util/FeedInfoText'
-import {Link, TextLinkOnWebOnly} from '#/view/com/util/Link'
-import {PostMeta} from '#/view/com/util/PostMeta'
-import {Text} from '#/view/com/util/text/Text'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a} from '#/alf'
-import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
-import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
-import {ContentHider} from '#/components/moderation/ContentHider'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {type AppModerationCause} from '#/components/Pills'
-import {Embed} from '#/components/Post/Embed'
-import {PostEmbedViewContext} from '#/components/Post/Embed/types'
-import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
-import {PostControls} from '#/components/PostControls'
-import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
-import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {RichText} from '#/components/RichText'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import { useActorStatus } from '#/lib/actor-status'
+import { isReasonFeedSource, type ReasonFeedSource } from '#/lib/api/feed/types'
+import { MAX_POST_LINES } from '#/lib/constants'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { makeProfileLink } from '#/lib/routes/links'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { countLines } from '#/lib/strings/helpers'
+import { s } from '#/lib/styles'
+import { POST_TOMBSTONE, type Shadow, usePostShadow,  } from '#/state/cache/post-shadow'
+import { useFeedFeedbackContext } from '#/state/feed-feedback'
+import { unstableCacheProfileView } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
+import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies'
+import { buildPostSourceKey, setUnstablePostSource,  } from '#/state/unstable-post-source'
+import { FeedNameText } from '#/view/com/util/FeedInfoText'
+import { Link, TextLinkOnWebOnly } from '#/view/com/util/Link'
+import { PostMeta } from '#/view/com/util/PostMeta'
+import { Text } from '#/view/com/util/text/Text'
+import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a } from '#/alf'
+import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin'
+import { Repost_Stroke2_Corner2_Rounded as RepostIcon } from '#/components/icons/Repost'
+import { ContentHider } from '#/components/moderation/ContentHider'
+import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe'
+import { PostAlerts } from '#/components/moderation/PostAlerts'
+import { type AppModerationCause } from '#/components/Pills'
+import { Embed } from '#/components/Post/Embed'
+import { PostEmbedViewContext } from '#/components/Post/Embed/types'
+import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton'
+import { PostControls } from '#/components/PostControls'
+import { DiscoverDebug } from '#/components/PostControls/DiscoverDebug'
+import { ProfileHoverCard } from '#/components/ProfileHoverCard'
+import { RichText } from '#/components/RichText'
+import { SubtleWebHover } from '#/components/SubtleWebHover'
 import * as gndr from '#/types/gndr'
 
 interface FeedItemProps {
@@ -185,7 +167,7 @@ let FeedItemInner = ({
   const onPressReply = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#interactionReply',
+      event: 'app.gndr.feed.defs#interactionReply',
       feedContext,
       reqId,
     })
@@ -204,7 +186,7 @@ let FeedItemInner = ({
   const onOpenAuthor = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughAuthor',
+      event: 'app.gndr.feed.defs#clickthroughAuthor',
       feedContext,
       reqId,
     })
@@ -213,7 +195,7 @@ let FeedItemInner = ({
   const onOpenReposter = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughReposter',
+      event: 'app.gndr.feed.defs#clickthroughReposter',
       feedContext,
       reqId,
     })
@@ -222,7 +204,7 @@ let FeedItemInner = ({
   const onOpenEmbed = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughEmbed',
+      event: 'app.gndr.feed.defs#clickthroughEmbed',
       feedContext,
       reqId,
     })
@@ -231,7 +213,7 @@ let FeedItemInner = ({
   const onBeforePress = () => {
     sendInteraction({
       item: post.uri,
-      event: 'app.bsky.feed.defs#clickthroughItem',
+      event: 'app.gndr.feed.defs#clickthroughItem',
       feedContext,
       reqId,
     })

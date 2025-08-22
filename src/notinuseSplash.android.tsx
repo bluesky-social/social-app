@@ -1,4 +1,4 @@
-// import {useEffect} from 'react'
+// import { useEffect } from 'react'
 // import * as SplashScreen from 'expo-splash-screen'
 
 // type Props = {

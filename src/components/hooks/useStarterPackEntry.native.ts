@@ -1,13 +1,10 @@
 import React from 'react'
 
-import {
-  createStarterPackLinkFromAndroidReferrer,
-  httpStarterPackUriToAtUri,
-} from '#/lib/strings/starter-pack'
-import {isAndroid} from '#/platform/detection'
-import {useHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
-import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
-import {Referrer, SharedPrefs} from '../../../modules/expo-gander-swiss-army'
+import { createStarterPackLinkFromAndroidReferrer, httpStarterPackUriToAtUri,  } from '#/lib/strings/starter-pack'
+import { isAndroid } from '#/platform/detection'
+import { useHasCheckedForStarterPack } from '#/state/preferences/used-starter-packs'
+import { useSetActiveStarterPack } from '#/state/shell/starter-pack'
+import { Referrer, SharedPrefs } from '../../../modules/expo-gander-swiss-army'
 
 export function useStarterPackEntry() {
   const [ready, setReady] = React.useState(false)

@@ -1,17 +1,14 @@
 import React from 'react'
-import {View} from 'react-native'
-import {type $Typed, ComAtprotoLabelDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type $Typed, ComAtprotoLabelDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {
-  useProfileQuery,
-  useProfileUpdateMutation,
-} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import { useProfileQuery, useProfileUpdateMutation,  } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
+import { atoms as a, useTheme } from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
 
 export function PwiOptOut() {

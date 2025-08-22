@@ -1,42 +1,25 @@
-import {Fragment, useMemo} from 'react'
-import {
-  Keyboard,
-  Platform,
-  type StyleProp,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  type AppBskyGraphDefs as AppGndrGraphDefs,
-  AtUri,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Fragment, useMemo } from 'react'
+import { Keyboard, Platform, type StyleProp, View, type ViewStyle,  } from 'react-native'
+import { type AppGndrFeedDefs, AppGndrFeedPost, type AppGndrGraphDefs, AtUri,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {HITSLOP_10} from '#/lib/constants'
-import {makeListLink, makeProfileLink} from '#/lib/routes/links'
-import {isNative} from '#/platform/detection'
-import {
-  type ThreadgateAllowUISetting,
-  threadgateViewToAllowUISetting,
-} from '#/state/queries/threadgate'
-import {atoms as a, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { HITSLOP_10 } from '#/lib/constants'
+import { makeListLink, makeProfileLink } from '#/lib/routes/links'
+import { isNative } from '#/platform/detection'
+import { type ThreadgateAllowUISetting, threadgateViewToAllowUISetting,  } from '#/state/queries/threadgate'
+import { atoms as a, useTheme, web } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useDialogControl} from '#/components/Dialog'
-import {
-  PostInteractionSettingsDialog,
-  usePrefetchPostInteractionSettings,
-} from '#/components/dialogs/PostInteractionSettingsDialog'
-import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
-import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
-import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
-import {InlineLinkText} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { useDialogControl } from '#/components/Dialog'
+import { PostInteractionSettingsDialog, usePrefetchPostInteractionSettings,  } from '#/components/dialogs/PostInteractionSettingsDialog'
+import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign'
+import { Earth_Stroke2_Corner0_Rounded as Earth } from '#/components/icons/Globe'
+import { Group3_Stroke2_Corner0_Rounded as Group } from '#/components/icons/Group'
+import { InlineLinkText } from '#/components/Link'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
-import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
+import { PencilLine_Stroke2_Corner0_Rounded as PencilLine } from './icons/Pencil'
 
 interface WhoCanReplyProps {
   post: AppGndrFeedDefs.PostView

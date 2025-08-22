@@ -1,18 +1,15 @@
-import {useCallback, useEffect} from 'react'
-import {Platform} from 'react-native'
+import { useCallback, useEffect } from 'react'
+import { Platform } from 'react-native'
 import * as Notifications from 'expo-notifications'
-import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {
-  type AppBskyNotificationRegisterPush as AppGndrNotificationRegisterPush,
-  type AtpAgent,
-} from '@atproto/api'
+import { getBadgeCountAsync, setBadgeCountAsync } from 'expo-notifications'
+import { type AppBskyNotificationRegisterPush as AppGndrNotificationRegisterPush, type AtpAgent,  } from '@gander-social-atproto/api'
 import debounce from 'lodash.debounce'
 
-import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
-import {logger as notyLogger} from '#/lib/notifications/util'
-import {isNative} from '#/platform/detection'
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
-import {type SessionAccount, useAgent, useSession} from '#/state/session'
+import { PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID } from '#/lib/constants'
+import { logger as notyLogger } from '#/lib/notifications/util'
+import { isNative } from '#/platform/detection'
+import { useAgeAssuranceContext } from '#/state/ageAssurance'
+import { type SessionAccount, useAgent, useSession } from '#/state/session'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
 
 /**
@@ -45,7 +42,7 @@ async function _registerPushToken({
 
     notyLogger.debug(`registerPushToken: registering`, {...payload})
 
-    await agent.app.bsky.notification.registerPush(payload)
+    await agent.app.gndr.notification.registerPush(payload)
 
     notyLogger.debug(`registerPushToken: success`)
   } catch (error) {

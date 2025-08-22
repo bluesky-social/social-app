@@ -1,6 +1,6 @@
-import {ActivityIndicator, View} from 'react-native'
+import { ActivityIndicator, View } from 'react-native'
 
-import {s} from '#/lib/styles'
+import { s } from '#/lib/styles'
 import * as Layout from '#/components/Layout'
 
 /**

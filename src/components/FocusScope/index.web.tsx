@@ -1,5 +1,5 @@
-import {type ReactNode} from 'react'
-import {FocusScope as RadixFocusScope} from 'radix-ui/internal'
+import { type ReactNode } from 'react'
+import { FocusScope as RadixFocusScope } from 'radix-ui/internal'
 
 /*
  * The web version of the FocusScope component is a proper implementation, we

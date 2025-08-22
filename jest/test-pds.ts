@@ -1,4 +1,4 @@
-import {AtUri, GndrAgent} from '@atproto/api'
+import {AtUri, GndrAgent} from '@gander-social-atproto/api'
 import {type TestGndr, TestNetwork} from '@atproto/dev-env'
 import fs from 'fs'
 import net from 'net'

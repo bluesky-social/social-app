@@ -1,10 +1,10 @@
-import {readdirSync, readFileSync} from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import * as path from 'node:path'
-import {fileURLToPath} from 'node:url'
+import { fileURLToPath } from 'node:url'
 
-import {AtpAgent} from '@atproto/api'
+import { AtpAgent } from '@gander-social-atproto/api'
 
-import {type Config} from './config.js'
+import { type Config } from './config.js'
 
 const __DIRNAME = path.dirname(fileURLToPath(import.meta.url))
 

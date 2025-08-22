@@ -1,10 +1,10 @@
-import {type AppGndrActorGetProfile} from '@atproto/api'
-import {useMutation} from '@tanstack/react-query'
+import { type AppGndrActorGetProfile } from '@gander-social-atproto/api'
+import { useMutation } from '@tanstack/react-query'
 
-import {until} from '#/lib/async/until'
-import {logger} from '#/logger'
-import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
-import {useAgent, useSession} from '#/state/session'
+import { until } from '#/lib/async/until'
+import { logger } from '#/logger'
+import { useUpdateProfileVerificationCache } from '#/state/queries/verification/useUpdateProfileVerificationCache'
+import { useAgent, useSession } from '#/state/session'
 import type * as gndr from '#/types/gndr'
 
 export function useVerificationCreateMutation() {
@@ -18,7 +18,7 @@ export function useVerificationCreateMutation() {
         throw new Error('User not logged in')
       }
 
-      const {uri} = await agent.app.bsky.graph.verification.create(
+      const {uri} = await agent.app.gndr.graph.verification.create(
         {repo: currentAccount.did},
         {
           subject: profile.did,

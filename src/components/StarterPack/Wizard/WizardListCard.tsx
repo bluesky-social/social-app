@@ -1,30 +1,20 @@
-import {Keyboard, View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  moderateFeedGenerator,
-  moderateProfile,
-  type ModerationOpts,
-  type ModerationUI,
-} from '@atproto/api'
-import {type GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Keyboard, View } from 'react-native'
+import { type AppGndrActorDefs, type AppGndrFeedDefs, moderateFeedGenerator, moderateProfile, type ModerationOpts, type ModerationUI,  } from '@gander-social-atproto/api'
+import { type GeneratorView } from '@gander-social-atproto/api/dist/client/types/app.gndr.feed/defs'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {useSession} from '#/state/session'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {
-  type WizardAction,
-  type WizardState,
-} from '#/screens/StarterPack/Wizard/State'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE } from '#/lib/constants'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { useSession } from '#/state/session'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { type WizardAction, type WizardState,  } from '#/screens/StarterPack/Wizard/State'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
-import {Checkbox} from '#/components/forms/Toggle'
-import {Text} from '#/components/Typography'
+import { Checkbox } from '#/components/forms/Toggle'
+import { Text } from '#/components/Typography'
 import type * as gndr from '#/types/gndr'
 
 function WizardListCard({

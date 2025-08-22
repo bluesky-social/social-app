@@ -1,6 +1,6 @@
-import {useMutation} from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import { useAgent } from '#/state/session'
 
 export function useLikeMutation() {
   const agent = useAgent()

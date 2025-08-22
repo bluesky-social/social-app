@@ -1,18 +1,13 @@
-import {
-  type StyleProp,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import { type StyleProp, type TextStyle, View, type ViewStyle,  } from 'react-native'
 // @ts-ignore no type definition -prf
 import ProgressCircle from 'react-native-progress/Circle'
 // @ts-ignore no type definition -prf
 import ProgressPie from 'react-native-progress/Pie'
 
-import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {atoms as a} from '#/alf'
-import {Text} from '../../util/text/Text'
+import { MAX_GRAPHEME_LENGTH } from '#/lib/constants'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { atoms as a } from '#/alf'
+import { Text } from '../../util/text/Text'
 
 export function CharProgress({
   count,

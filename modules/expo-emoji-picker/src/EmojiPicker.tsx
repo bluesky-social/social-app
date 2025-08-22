@@ -1,4 +1,4 @@
-import {type EmojiPickerViewProps} from './EmojiPickerModule.types'
+import { type EmojiPickerViewProps } from './EmojiPickerModule.types'
 import EmojiPickerNativeView from './EmojiPickerView'
 
 const EmojiPicker = ({children, onEmojiSelected}: EmojiPickerViewProps) => {

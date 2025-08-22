@@ -1,4 +1,4 @@
-import { Text as RNText,type TextProps as RNTextProps } from 'react-native';
+import { Text as RNText, type TextProps as RNTextProps } from 'react-native';
 
 export type CustomTextProps = RNTextProps & {
   type?: string;

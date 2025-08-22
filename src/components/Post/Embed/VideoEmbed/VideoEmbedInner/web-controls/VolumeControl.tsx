@@ -1,16 +1,16 @@
-import {useCallback} from 'react'
-import {View} from 'react-native'
+import { useCallback } from 'react'
+import { View } from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type React from 'react'
 
-import {isSafari, isTouchDevice} from '#/lib/browser'
-import {atoms as a} from '#/alf'
-import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {useVideoVolumeState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
-import {ControlButton} from './ControlButton'
+import { isSafari, isTouchDevice } from '#/lib/browser'
+import { atoms as a } from '#/alf'
+import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute'
+import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/components/icons/Speaker'
+import { useVideoVolumeState } from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import { ControlButton } from './ControlButton'
 
 export function VolumeControl({
   muted,

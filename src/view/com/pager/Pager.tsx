@@ -1,13 +1,7 @@
-import {
-  useCallback,
-  useContext,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react'
-import {View} from 'react-native'
-import {DrawerGestureContext} from 'react-native-drawer-layout'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import { useCallback, useContext, useImperativeHandle, useRef, useState,  } from 'react'
+import { View } from 'react-native'
+import { DrawerGestureContext } from 'react-native-drawer-layout'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import PagerView, {
   type PagerViewOnPageScrollEventData,
   type PagerViewOnPageSelectedEvent,
@@ -21,10 +15,10 @@ import Animated, {
   useHandler,
   useSharedValue,
 } from 'react-native-reanimated'
-import {useFocusEffect} from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
 
-import {useSetDrawerSwipeDisabled} from '#/state/shell'
-import {atoms as a, native} from '#/alf'
+import { useSetDrawerSwipeDisabled } from '#/state/shell'
+import { atoms as a, native } from '#/alf'
 
 export type PageSelectedEvent = PagerViewOnPageSelectedEvent
 

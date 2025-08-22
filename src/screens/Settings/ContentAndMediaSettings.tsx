@@ -1,30 +1,24 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 
-import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
-import {isNative} from '#/platform/detection'
-import {useAutoplayDisabled, useSetAutoplayDisabled} from '#/state/preferences'
-import {
-  useInAppBrowser,
-  useSetInAppBrowser,
-} from '#/state/preferences/in-app-browser'
-import {
-  useTrendingSettings,
-  useTrendingSettingsApi,
-} from '#/state/preferences/trending'
-import {useTrendingConfig} from '#/state/service-config'
+import { type CommonNavigatorParams } from '#/lib/routes/types'
+import { logEvent } from '#/lib/statsig/statsig'
+import { isNative } from '#/platform/detection'
+import { useAutoplayDisabled, useSetAutoplayDisabled } from '#/state/preferences'
+import { useInAppBrowser, useSetInAppBrowser,  } from '#/state/preferences/in-app-browser'
+import { useTrendingSettings, useTrendingSettingsApi,  } from '#/state/preferences/trending'
+import { useTrendingConfig } from '#/state/service-config'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import * as Toggle from '#/components/forms/Toggle'
-import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Hashtag_Stroke2_Corner0_Rounded as HashtagIcon} from '#/components/icons/Hashtag'
-import {Home_Stroke2_Corner2_Rounded as HomeIcon} from '#/components/icons/Home'
-import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
-import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
-import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
-import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
+import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
+import { Hashtag_Stroke2_Corner0_Rounded as HashtagIcon } from '#/components/icons/Hashtag'
+import { Home_Stroke2_Corner2_Rounded as HomeIcon } from '#/components/icons/Home'
+import { Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon } from '#/components/icons/Macintosh'
+import { Play_Stroke2_Corner2_Rounded as PlayIcon } from '#/components/icons/Play'
+import { Trending2_Stroke2_Corner2_Rounded as Graph } from '#/components/icons/Trending'
+import { Window_Stroke2_Corner2_Rounded as WindowIcon } from '#/components/icons/Window'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<

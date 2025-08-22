@@ -1,10 +1,10 @@
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Loader} from '#/components/Loader'
+import { atoms as a } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { Loader } from '#/components/Loader'
 
 export interface BackNextButtonsProps {
   hideNext?: boolean

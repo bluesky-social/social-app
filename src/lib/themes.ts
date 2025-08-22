@@ -1,10 +1,10 @@
-import {Platform} from 'react-native'
+import { Platform } from 'react-native'
 
-import {tokens} from '#/alf'
-import {darkPalette, dimPalette, lightPalette} from '#/alf/themes'
-import {fontWeight} from '#/alf/tokens'
-import {colors} from './styles'
-import {type Theme} from './ThemeContext'
+import { tokens } from '#/alf'
+import { darkPalette, dimPalette, lightPalette } from '#/alf/themes'
+import { fontWeight } from '#/alf/tokens'
+import { colors } from './styles'
+import { type Theme } from './ThemeContext'
 
 export const defaultTheme: Theme = {
   colorScheme: 'light',

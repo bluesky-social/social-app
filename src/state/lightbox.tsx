@@ -1,8 +1,8 @@
 import React from 'react'
-import {nanoid} from 'nanoid/non-secure'
+import { nanoid } from 'nanoid/non-secure'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {type ImageSource} from '#/view/com/lightbox/ImageViewing/@types'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { type ImageSource } from '#/view/com/lightbox/ImageViewing/@types'
 
 export type Lightbox = {
   id: string

@@ -1,4 +1,4 @@
-import {envInt, envList, envStr} from '@atproto/common'
+import { envInt, envList, envStr } from '@gander-social-atproto/common'
 
 export type Config = {
   service: ServiceConfig
@@ -10,6 +10,8 @@ export type ServiceConfig = {
   version?: string
   hostnames: string[]
   appHostname: string
+  appleTeamId?: string
+  appleBundleId?: string
 }
 
 export type DbConfig = {

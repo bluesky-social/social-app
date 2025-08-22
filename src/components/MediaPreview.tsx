@@ -1,14 +1,14 @@
-import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
-import {Image} from 'expo-image'
-import {type AppGndrFeedDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native'
+import { Image } from 'expo-image'
+import { type AppGndrFeedDefs } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
 import type React from 'react'
 
-import {isTenorGifUri} from '#/lib/strings/embed-player'
-import {atoms as a, useTheme} from '#/alf'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {Text} from '#/components/Typography'
-import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import { isTenorGifUri } from '#/lib/strings/embed-player'
+import { atoms as a, useTheme } from '#/alf'
+import { MediaInsetBorder } from '#/components/MediaInsetBorder'
+import { Text } from '#/components/Typography'
+import { PlayButtonIcon } from '#/components/video/PlayButtonIcon'
 import * as gndr from '#/types/gndr'
 
 /**

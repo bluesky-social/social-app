@@ -1,18 +1,14 @@
-import {useCallback} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {
-  type EmbedPlayerSource,
-  embedPlayerSources,
-  externalEmbedLabels,
-} from '#/lib/strings/embed-player'
-import {useSetExternalEmbedPref} from '#/state/preferences'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import { type EmbedPlayerSource, embedPlayerSources, externalEmbedLabels,  } from '#/lib/strings/embed-player'
+import { useSetExternalEmbedPref } from '#/state/preferences'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {Button, ButtonText} from '../Button'
-import {Text} from '../Typography'
+import { Button, ButtonText } from '../Button'
+import { Text } from '../Typography'
 
 export function EmbedConsentDialog({
   control,

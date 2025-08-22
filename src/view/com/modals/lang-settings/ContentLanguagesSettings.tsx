@@ -1,21 +1,18 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import { StyleSheet, View } from 'react-native'
+import { Trans } from '@lingui/macro'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {deviceLanguageCodes} from '#/locale/deviceLocales'
-import {languageName} from '#/locale/helpers'
-import {useModalControls} from '#/state/modals'
-import {
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-} from '#/state/preferences/languages'
-import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
-import {Text} from '../../util/text/Text'
-import {ScrollView} from '../util'
-import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
-import {LanguageToggle} from './LanguageToggle'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { deviceLanguageCodes } from '#/locale/deviceLocales'
+import { languageName } from '#/locale/helpers'
+import { useModalControls } from '#/state/modals'
+import { useLanguagePrefs, useLanguagePrefsApi,  } from '#/state/preferences/languages'
+import { LANGUAGES, LANGUAGES_MAP_CODE2 } from '../../../../locale/languages'
+import { Text } from '../../util/text/Text'
+import { ScrollView } from '../util'
+import { ConfirmLanguagesButton } from './ConfirmLanguagesButton'
+import { LanguageToggle } from './LanguageToggle'
 
 export const snapPoints = ['100%']
 

@@ -1,8 +1,8 @@
-import {type Express} from 'express'
+import { type Express } from 'express'
 
-import {type AppContext} from '../context.js'
-import {default as health} from './health.js'
-import {default as starterPack} from './starter-pack.js'
+import { type AppContext } from '../context.js'
+import { default as health } from './health.js'
+import { default as starterPack } from './starter-pack.js'
 
 export * from './util.js'
 

@@ -1,4 +1,4 @@
-import {init} from '@sentry/react-native'
+import { init } from '@sentry/react-native'
 
 import * as env from '#/env'
 

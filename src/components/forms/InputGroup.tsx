@@ -1,7 +1,7 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {atoms, useTheme} from '#/alf'
+import { atoms, useTheme } from '#/alf'
 
 /**
  * NOT FINISHED, just here as a reference

@@ -2,11 +2,11 @@ import events from 'node:events'
 import type http from 'node:http'
 
 import express from 'express'
-import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
+import { createHttpTerminator, type HttpTerminator } from 'http-terminator'
 
-import {type Config} from './config.js'
-import {AppContext} from './context.js'
-import {default as routes, errorHandler} from './routes/index.js'
+import { type Config } from './config.js'
+import { AppContext } from './context.js'
+import { default as routes, errorHandler } from './routes/index.js'
 
 export * from './config.js'
 export * from './logger.js'

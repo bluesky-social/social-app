@@ -1,8 +1,8 @@
 import React from 'react'
-import {requireNativeModule} from 'expo'
-import {requireNativeViewManager} from 'expo-modules-core'
+import { requireNativeModule } from 'expo'
+import { requireNativeViewManager } from 'expo-modules-core'
 
-import {type GifViewProps} from './GifView.types'
+import { type GifViewProps } from './GifView.types'
 
 const NativeModule = requireNativeModule('ExpoGanderGifView')
 const NativeView: React.ComponentType<

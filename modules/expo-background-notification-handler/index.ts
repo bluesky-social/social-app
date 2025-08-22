@@ -1,2 +1,2 @@
-import {BackgroundNotificationHandler} from './src/ExpoBackgroundNotificationHandlerModule'
+import { BackgroundNotificationHandler } from './src/ExpoBackgroundNotificationHandlerModule'
 export default BackgroundNotificationHandler

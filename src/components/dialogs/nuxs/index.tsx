@@ -1,22 +1,19 @@
 import React from 'react'
-import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
+import { type AppGndrActorDefs } from '@gander-social-atproto/api'
 
-import {useGate} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
-import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
-import {
-  usePreferencesQuery,
-  type UsePreferencesQueryResponse,
-} from '#/state/queries/preferences'
-import {useProfileQuery} from '#/state/queries/profile'
-import {type SessionAccount, useSession} from '#/state/session'
-import {useOnboardingState} from '#/state/shell'
-import {ActivitySubscriptionsNUX} from '#/components/dialogs/nuxs/ActivitySubscriptions'
+import { useGate } from '#/lib/statsig/statsig'
+import { logger } from '#/logger'
+import { Nux, useNuxs, useResetNuxs, useSaveNux } from '#/state/queries/nuxs'
+import { usePreferencesQuery, type UsePreferencesQueryResponse,  } from '#/state/queries/preferences'
+import { useProfileQuery } from '#/state/queries/profile'
+import { type SessionAccount, useSession } from '#/state/session'
+import { useOnboardingState } from '#/state/shell'
+import { ActivitySubscriptionsNUX } from '#/components/dialogs/nuxs/ActivitySubscriptions'
 /*
  * NUXs
  */
-import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-import {isExistingUserAsOf} from '#/components/dialogs/nuxs/utils'
+import { isSnoozed, snooze, unsnooze } from '#/components/dialogs/nuxs/snoozing'
+import { isExistingUserAsOf } from '#/components/dialogs/nuxs/utils'
 
 type Context = {
   activeNux: Nux | undefined

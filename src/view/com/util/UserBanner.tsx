@@ -1,35 +1,25 @@
-import {useCallback, useState} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
-import {Image} from 'expo-image'
-import {type ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useState } from 'react'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { Image } from 'expo-image'
+import { type ModerationUI } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {
-  useCameraPermission,
-  usePhotoLibraryPermission,
-} from '#/lib/hooks/usePermissions'
-import {compressIfNeeded} from '#/lib/media/manip'
-import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
-import {type PickerImage} from '#/lib/media/picker.shared'
-import {logger} from '#/logger'
-import {isAndroid, isNative} from '#/platform/detection'
-import {
-  type ComposerImage,
-  compressImage,
-  createComposerImage,
-} from '#/state/gallery'
-import {EditImageDialog} from '#/view/com/composer/photos/EditImageDialog'
-import {EventStopper} from '#/view/com/util/EventStopper'
-import {atoms as a, tokens, useTheme} from '#/alf'
-import {useDialogControl} from '#/components/Dialog'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {
-  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon,
-  Camera_Stroke2_Corner0_Rounded as CameraIcon,
-} from '#/components/icons/Camera'
-import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
-import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
+import { useCameraPermission, usePhotoLibraryPermission,  } from '#/lib/hooks/usePermissions'
+import { compressIfNeeded } from '#/lib/media/manip'
+import { openCamera, openCropper, openPicker } from '#/lib/media/picker'
+import { type PickerImage } from '#/lib/media/picker.shared'
+import { logger } from '#/logger'
+import { isAndroid, isNative } from '#/platform/detection'
+import { type ComposerImage, compressImage, createComposerImage,  } from '#/state/gallery'
+import { EditImageDialog } from '#/view/com/composer/photos/EditImageDialog'
+import { EventStopper } from '#/view/com/util/EventStopper'
+import { atoms as a, tokens, useTheme } from '#/alf'
+import { useDialogControl } from '#/components/Dialog'
+import { useSheetWrapper } from '#/components/Dialog/sheet-wrapper'
+import { Camera_Filled_Stroke2_Corner0_Rounded as CameraFilledIcon, Camera_Stroke2_Corner0_Rounded as CameraIcon,  } from '#/components/icons/Camera'
+import { StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon } from '#/components/icons/StreamingLive'
+import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash'
 import * as Menu from '#/components/Menu'
 
 export function UserBanner({

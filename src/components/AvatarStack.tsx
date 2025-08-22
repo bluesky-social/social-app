@@ -1,11 +1,11 @@
-import {View} from 'react-native'
-import {moderateProfile} from '@atproto/api'
+import { View } from 'react-native'
+import { moderateProfile } from '@gander-social-atproto/api'
 
-import {logger} from '#/logger'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useProfilesQuery} from '#/state/queries/profile'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import { logger } from '#/logger'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useProfilesQuery } from '#/state/queries/profile'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, useTheme } from '#/alf'
 import type * as gndr from '#/types/gndr'
 
 export function AvatarStack({

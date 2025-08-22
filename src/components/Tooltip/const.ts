@@ -1,4 +1,4 @@
-import {atoms as a} from '#/alf'
+import { atoms as a } from '#/alf'
 
 export const BUBBLE_MAX_WIDTH = 240
 export const ARROW_SIZE = 12

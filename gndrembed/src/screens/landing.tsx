@@ -1,25 +1,16 @@
 import '../index.css'
 
-import {
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AtpAgent,
-  AtUri,
-} from '@atproto/api'
-import {h, render} from 'preact'
-import {useEffect, useMemo, useRef, useState} from 'preact/hooks'
+import { AppGndrFeedDefs, AppGndrFeedPost, AtpAgent, AtUri,  } from '@gander-social-atproto/api'
+import { h, render } from 'preact'
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 
 import arrowBottom from '../../assets/arrowBottom_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
-import {
-  assertColorModeValues,
-  ColorModeValues,
-  initSystemColorMode,
-} from '../color-mode'
-import {Container} from '../components/container'
-import {Link} from '../components/link'
-import {Post} from '../components/post'
-import {niceDate} from '../utils'
+import { assertColorModeValues, ColorModeValues, initSystemColorMode,  } from '../color-mode'
+import { Container } from '../components/container'
+import { Link } from '../components/link'
+import { Post } from '../components/post'
+import { niceDate } from '../utils'
 
 const DEFAULT_POST = 'https://gndr.app/profile/emilyliu.me/post/3jzn6g7ixgq2y'
 const DEFAULT_URI =

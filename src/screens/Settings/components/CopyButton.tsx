@@ -1,16 +1,16 @@
-import {useCallback, useEffect, useState} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
+import { useCallback, useEffect, useState } from 'react'
+import { type GestureResponderEvent, View } from 'react-native'
 import Animated, {
   FadeOutUp,
   useReducedMotion,
   ZoomIn,
 } from 'react-native-reanimated'
 import * as Clipboard from 'expo-clipboard'
-import {Trans} from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Button, type ButtonProps} from '#/components/Button'
-import {Text} from '#/components/Typography'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, type ButtonProps } from '#/components/Button'
+import { Text } from '#/components/Typography'
 
 export function CopyButton({
   style,

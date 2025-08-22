@@ -1,15 +1,15 @@
-import {type ReactElement} from 'react'
-import {View} from 'react-native'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { type ReactElement } from 'react'
+import { View } from 'react-native'
+import { type ComAtprotoServerDescribeServer } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {webLinks} from '#/lib/constants'
-import {useGate} from '#/lib/statsig/statsig'
-import {atoms as a, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {InlineLinkText} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { webLinks } from '#/lib/constants'
+import { useGate } from '#/lib/statsig/statsig'
+import { atoms as a, useTheme } from '#/alf'
+import { Admonition } from '#/components/Admonition'
+import { InlineLinkText } from '#/components/Link'
+import { Text } from '#/components/Typography'
 
 function CommunityGuidelinesNotice({}: {}) {
   const {_} = useLingui()

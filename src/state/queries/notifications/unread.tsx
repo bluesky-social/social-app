@@ -3,19 +3,19 @@
  */
 
 import React, {useRef} from 'react'
-import {AppState} from 'react-native'
-import {useQueryClient} from '@tanstack/react-query'
+import { AppState } from 'react-native'
+import { useQueryClient } from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
-import {resetBadgeCount} from '#/lib/notifications/notifications'
-import {logger} from '#/logger'
-import {useAgent, useSession} from '#/state/session'
-import {useModerationOpts} from '../../preferences/moderation-opts'
-import {truncateAndInvalidate} from '../util'
-import {RQKEY as RQKEY_NOTIFS} from './feed'
-import {type CachedFeedPage, type FeedPage} from './types'
-import {fetchPage} from './util'
+import { resetBadgeCount } from '#/lib/notifications/notifications'
+import { logger } from '#/logger'
+import { useAgent, useSession } from '#/state/session'
+import { useModerationOpts } from '../../preferences/moderation-opts'
+import { truncateAndInvalidate } from '../util'
+import { RQKEY as RQKEY_NOTIFS } from './feed'
+import { type CachedFeedPage, type FeedPage } from './types'
+import { fetchPage } from './util'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 

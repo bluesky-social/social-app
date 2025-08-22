@@ -1,5 +1,5 @@
 import React from 'react'
-import {type AppGndrFeedThreadgate} from '@atproto/api'
+import { type AppGndrFeedThreadgate } from '@gander-social-atproto/api'
 
 type StateContext = {
   uris: Set<string>

@@ -1,4 +1,4 @@
-import {type ViewProps} from 'react-native'
+import { type ViewProps } from 'react-native'
 
 export type EmojiSelectionListener = (event: {
   nativeEvent: SelectionEvent

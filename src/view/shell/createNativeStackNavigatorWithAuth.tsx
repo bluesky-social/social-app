@@ -1,49 +1,28 @@
 import * as React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 // Based on @react-navigation/native-stack/src/navigators/createNativeStackNavigator.ts
 // MIT License
 // Copyright (c) 2017 React Navigation Contributors
-import {
-  createNavigatorFactory,
-  type EventArg,
-  type NavigatorTypeBagBase,
-  type ParamListBase,
-  type StackActionHelpers,
-  StackActions,
-  type StackNavigationState,
-  StackRouter,
-  type StackRouterOptions,
-  type StaticConfig,
-  type TypedNavigator,
-  useNavigationBuilder,
-} from '@react-navigation/native'
-import {NativeStackView} from '@react-navigation/native-stack'
-import {
-  type NativeStackNavigationEventMap,
-  type NativeStackNavigationOptions,
-  type NativeStackNavigationProp,
-  type NativeStackNavigatorProps,
-} from '@react-navigation/native-stack'
+import { createNavigatorFactory, type EventArg, type NavigatorTypeBagBase, type ParamListBase, type StackActionHelpers, StackActions, type StackNavigationState, StackRouter, type StackRouterOptions, type StaticConfig, type TypedNavigator, useNavigationBuilder,  } from '@react-navigation/native'
+import { NativeStackView } from '@react-navigation/native-stack'
+import { type NativeStackNavigationEventMap, type NativeStackNavigationOptions, type NativeStackNavigationProp, type NativeStackNavigatorProps,  } from '@react-navigation/native-stack'
 
-import {PWI_ENABLED} from '#/lib/build-flags'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {isNative, isWeb} from '#/platform/detection'
-import {useSession} from '#/state/session'
-import {useOnboardingState} from '#/state/shell'
-import {
-  useLoggedOutView,
-  useLoggedOutViewControls,
-} from '#/state/shell/logged-out'
-import {LoggedOut} from '#/view/com/auth/LoggedOut'
-import {Deactivated} from '#/screens/Deactivated'
-import {Onboarding} from '#/screens/Onboarding'
-import {SignupQueued} from '#/screens/SignupQueued'
-import {Takendown} from '#/screens/Takendown'
-import {atoms as a, useLayoutBreakpoints} from '#/alf'
-import {PolicyUpdateOverlay} from '#/components/PolicyUpdateOverlay'
-import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
-import {DesktopLeftNav} from './desktop/LeftNav'
-import {DesktopRightNav} from './desktop/RightNav'
+import { PWI_ENABLED } from '#/lib/build-flags'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { isNative, isWeb } from '#/platform/detection'
+import { useSession } from '#/state/session'
+import { useOnboardingState } from '#/state/shell'
+import { useLoggedOutView, useLoggedOutViewControls,  } from '#/state/shell/logged-out'
+import { LoggedOut } from '#/view/com/auth/LoggedOut'
+import { Deactivated } from '#/screens/Deactivated'
+import { Onboarding } from '#/screens/Onboarding'
+import { SignupQueued } from '#/screens/SignupQueued'
+import { Takendown } from '#/screens/Takendown'
+import { atoms as a, useLayoutBreakpoints } from '#/alf'
+import { PolicyUpdateOverlay } from '#/components/PolicyUpdateOverlay'
+import { BottomBarWeb } from './bottom-bar/BottomBarWeb'
+import { DesktopLeftNav } from './desktop/LeftNav'
+import { DesktopRightNav } from './desktop/RightNav'
 
 type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
   requireAuth?: boolean

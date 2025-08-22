@@ -1,4 +1,4 @@
-import {BUNDLE_IDENTIFIER, RELEASE_VERSION} from '#/env/common'
+import { BUNDLE_IDENTIFIER, RELEASE_VERSION } from '#/env/common'
 
 export * from '#/env/common'
 

@@ -6,23 +6,8 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import {
-  BackHandler,
-  Keyboard,
-  type LayoutChangeEvent,
-  Pressable,
-  type StyleProp,
-  useWindowDimensions,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {
-  Gesture,
-  GestureDetector,
-  type GestureStateChangeEvent,
-  type GestureUpdateEvent,
-  type PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler'
+import { BackHandler, Keyboard, type LayoutChangeEvent, Pressable, type StyleProp, useWindowDimensions, View, type ViewStyle,  } from 'react-native'
+import { Gesture, GestureDetector, type GestureStateChangeEvent, type GestureUpdateEvent, type PanGestureHandlerEventPayload,  } from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
@@ -34,44 +19,26 @@ import Animated, {
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
-import {captureRef} from 'react-native-view-shot'
-import {Image, type ImageErrorEventData} from 'expo-image'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useIsFocused} from '@react-navigation/native'
+import { useSafeAreaFrame, useSafeAreaInsets,  } from 'react-native-safe-area-context'
+import { captureRef } from 'react-native-view-shot'
+import { Image, type ImageErrorEventData } from 'expo-image'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useIsFocused } from '@react-navigation/native'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {HITSLOP_10} from '#/lib/constants'
-import {useHaptics} from '#/lib/haptics'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logger} from '#/logger'
-import {isAndroid, isIOS} from '#/platform/detection'
-import {atoms as a, platform, tokens, useTheme} from '#/alf'
-import {
-  Context,
-  ItemContext,
-  MenuContext,
-  useContextMenuContext,
-  useContextMenuItemContext,
-  useContextMenuMenuContext,
-} from '#/components/ContextMenu/context'
-import {
-  type AuxiliaryViewProps,
-  type ContextType,
-  type ItemIconProps,
-  type ItemProps,
-  type ItemTextProps,
-  type Measurement,
-  type TriggerProps,
-} from '#/components/ContextMenu/types'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {createPortalGroup} from '#/components/Portal'
-import {Text} from '#/components/Typography'
-import {Backdrop} from './Backdrop'
+import { HITSLOP_10 } from '#/lib/constants'
+import { useHaptics } from '#/lib/haptics'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { logger } from '#/logger'
+import { isAndroid, isIOS } from '#/platform/detection'
+import { atoms as a, platform, tokens, useTheme } from '#/alf'
+import { Context, ItemContext, MenuContext, useContextMenuContext, useContextMenuItemContext, useContextMenuMenuContext,  } from '#/components/ContextMenu/context'
+import { type AuxiliaryViewProps, type ContextType, type ItemIconProps, type ItemProps, type ItemTextProps, type Measurement, type TriggerProps,  } from '#/components/ContextMenu/types'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { createPortalGroup } from '#/components/Portal'
+import { Text } from '#/components/Typography'
+import { Backdrop } from './Backdrop'
 
 export {
   type DialogControlProps as ContextMenuControlProps,

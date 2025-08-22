@@ -1,26 +1,14 @@
 import React from 'react'
-import {
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPostgate as AppGndrFeedPostgate,
-  AtUri,
-  type BskyAgent as GndrAgent,
-} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import { AppGndrEmbedRecord, AppGndrEmbedRecordWithMedia, type AppGndrFeedDefs, AppGndrFeedPostgate, AtUri, type GndrAgent,  } from '@gander-social-atproto/api'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import {networkRetry, retry} from '#/lib/async/retry'
-import {logger} from '#/logger'
-import {updatePostShadow} from '#/state/cache/post-shadow'
-import {STALE} from '#/state/queries'
-import {useGetPosts} from '#/state/queries/post'
-import {
-  createMaybeDetachedQuoteEmbed,
-  createPostgateRecord,
-  mergePostgateRecords,
-  POSTGATE_COLLECTION,
-} from '#/state/queries/postgate/util'
-import {useAgent} from '#/state/session'
+import { networkRetry, retry } from '#/lib/async/retry'
+import { logger } from '#/logger'
+import { updatePostShadow } from '#/state/cache/post-shadow'
+import { STALE } from '#/state/queries'
+import { useGetPosts } from '#/state/queries/post'
+import { createMaybeDetachedQuoteEmbed, createPostgateRecord, mergePostgateRecords, POSTGATE_COLLECTION,  } from '#/state/queries/postgate/util'
+import { useAgent } from '#/state/session'
 import * as gndr from '#/types/gndr'
 
 export async function getPostgateRecord({
@@ -277,7 +265,7 @@ export function useToggleQuotepostEnabledMutation() {
         if (prev) {
           if (action === 'disable') {
             return mergePostgateRecords(prev, {
-              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+              embeddingRules: [{$type: 'app.gndr.feed.postgate#disableRule'}],
             })
           } else if (action === 'enable') {
             return {
@@ -289,7 +277,7 @@ export function useToggleQuotepostEnabledMutation() {
           if (action === 'disable') {
             return createPostgateRecord({
               post: postUri,
-              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+              embeddingRules: [{$type: 'app.gndr.feed.postgate#disableRule'}],
             })
           }
         }

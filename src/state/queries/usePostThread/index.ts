@@ -1,35 +1,18 @@
-import {useCallback, useMemo, useState} from 'react'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import { useCallback, useMemo, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
-import {isWeb} from '#/platform/detection'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
-import {
-  LINEAR_VIEW_BELOW,
-  LINEAR_VIEW_BF,
-  TREE_VIEW_BELOW,
-  TREE_VIEW_BELOW_DESKTOP,
-  TREE_VIEW_BF,
-} from '#/state/queries/usePostThread/const'
-import {
-  createCacheMutator,
-  getThreadPlaceholder,
-} from '#/state/queries/usePostThread/queryCache'
-import {
-  buildThread,
-  sortAndAnnotateThreadItems,
-} from '#/state/queries/usePostThread/traversal'
-import {
-  createPostThreadOtherQueryKey,
-  createPostThreadQueryKey,
-  type ThreadItem,
-  type UsePostThreadQueryResult,
-} from '#/state/queries/usePostThread/types'
-import {getThreadgateRecord} from '#/state/queries/usePostThread/utils'
+import { isWeb } from '#/platform/detection'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useThreadPreferences } from '#/state/queries/preferences/useThreadPreferences'
+import { LINEAR_VIEW_BELOW, LINEAR_VIEW_BF, TREE_VIEW_BELOW, TREE_VIEW_BELOW_DESKTOP, TREE_VIEW_BF,  } from '#/state/queries/usePostThread/const'
+import { createCacheMutator, getThreadPlaceholder,  } from '#/state/queries/usePostThread/queryCache'
+import { buildThread, sortAndAnnotateThreadItems,  } from '#/state/queries/usePostThread/traversal'
+import { createPostThreadOtherQueryKey, createPostThreadQueryKey, type ThreadItem, type UsePostThreadQueryResult,  } from '#/state/queries/usePostThread/types'
+import { getThreadgateRecord } from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
-import {useAgent, useSession} from '#/state/session'
-import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {useBreakpoints} from '#/alf'
+import { useAgent, useSession } from '#/state/session'
+import { useMergeThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies'
+import { useBreakpoints } from '#/alf'
 
 export * from '#/state/queries/usePostThread/types'
 
@@ -71,7 +54,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
     queryKey: postThreadQueryKey,
     async queryFn(ctx) {
-      const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
+      const {data} = await agent.app.gndr.unspecced.getPostThreadV2({
         anchor: anchor!,
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
@@ -162,7 +145,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: additionalQueryEnabled,
     queryKey: postThreadOtherQueryKey,
     async queryFn() {
-      const {data} = await agent.app.bsky.unspecced.getPostThreadOtherV2({
+      const {data} = await agent.app.gndr.unspecced.getPostThreadOtherV2({
         anchor: anchor!,
         prioritizeFollowedUsers,
       })

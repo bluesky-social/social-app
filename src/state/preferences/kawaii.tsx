@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {isWeb} from '#/platform/detection'
+import { isWeb } from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['kawaii']

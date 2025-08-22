@@ -1,29 +1,23 @@
-import {memo, useMemo, useState} from 'react'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedPost as AppGndrFeedPost,
-  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  AtUri,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { memo, useMemo, useState } from 'react'
+import { type AppGndrFeedDefs, type AppGndrFeedPost, type AppGndrFeedThreadgate, AtUri, type RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type React from 'react'
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {shareUrl} from '#/lib/sharing'
-import {useGate} from '#/lib/statsig/statsig'
-import {toShareUrl} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
-import {type Shadow} from '#/state/cache/post-shadow'
-import {EventStopper} from '#/view/com/util/EventStopper'
-import {native} from '#/alf'
-import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
-import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/ArrowShareRight'
-import {useMenuControl} from '#/components/Menu'
+import { makeProfileLink } from '#/lib/routes/links'
+import { shareUrl } from '#/lib/sharing'
+import { useGate } from '#/lib/statsig/statsig'
+import { toShareUrl } from '#/lib/strings/url-helpers'
+import { logger } from '#/logger'
+import { type Shadow } from '#/state/cache/post-shadow'
+import { EventStopper } from '#/view/com/util/EventStopper'
+import { native } from '#/alf'
+import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon } from '#/components/icons/ArrowOutOfBox'
+import { ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon } from '#/components/icons/ArrowShareRight'
+import { useMenuControl } from '#/components/Menu'
 import * as Menu from '#/components/Menu'
-import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
-import {ShareMenuItems} from './ShareMenuItems'
+import { PostControlButton, PostControlButtonIcon } from '../PostControlButton'
+import { ShareMenuItems } from './ShareMenuItems'
 
 let ShareMenuButton = ({
   testID,

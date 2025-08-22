@@ -1,19 +1,15 @@
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useRequireAuth} from '#/state/session'
-import {useSession} from '#/state/session'
-import {EventStopper} from '#/view/com/util/EventStopper'
-import {formatCount} from '#/view/com/util/numeric/format'
-import {useTheme} from '#/alf'
-import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import { useRequireAuth } from '#/state/session'
+import { useSession } from '#/state/session'
+import { EventStopper } from '#/view/com/util/EventStopper'
+import { formatCount } from '#/view/com/util/numeric/format'
+import { useTheme } from '#/alf'
+import { CloseQuote_Stroke2_Corner1_Rounded as Quote } from '#/components/icons/Quote'
+import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost'
 import * as Menu from '#/components/Menu'
-import {
-  PostControlButton,
-  PostControlButtonIcon,
-  PostControlButtonText,
-} from './PostControlButton'
+import { PostControlButton, PostControlButtonIcon, PostControlButtonText,  } from './PostControlButton'
 
 interface Props {
   isReposted: boolean

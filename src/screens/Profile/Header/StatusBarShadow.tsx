@@ -2,12 +2,12 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {LinearGradient} from 'expo-linear-gradient'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { LinearGradient } from 'expo-linear-gradient'
 
-import {isIOS} from '#/platform/detection'
-import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
-import {atoms as a} from '#/alf'
+import { isIOS } from '#/platform/detection'
+import { usePagerHeaderContext } from '#/view/com/pager/PagerHeaderContext'
+import { atoms as a } from '#/alf'
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 

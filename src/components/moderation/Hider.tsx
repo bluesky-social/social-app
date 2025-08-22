@@ -1,14 +1,8 @@
 import React from 'react'
-import {type ModerationUI} from '@atproto/api'
+import { type ModerationUI } from '@gander-social-atproto/api'
 
-import {
-  type ModerationCauseDescription,
-  useModerationCauseDescription,
-} from '#/lib/moderation/useModerationCauseDescription'
-import {
-  ModerationDetailsDialog,
-  useModerationDetailsDialogControl,
-} from '#/components/moderation/ModerationDetailsDialog'
+import { type ModerationCauseDescription, useModerationCauseDescription,  } from '#/lib/moderation/useModerationCauseDescription'
+import { ModerationDetailsDialog, useModerationDetailsDialogControl,  } from '#/components/moderation/ModerationDetailsDialog'
 
 type Context = {
   isContentVisible: boolean

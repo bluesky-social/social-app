@@ -1,26 +1,21 @@
-import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
-import {findNodeHandle, type ListRenderItemInfo, View} from 'react-native'
-import {
-  type AppBskyLabelerDefs as AppGndrLabelerDefs,
-  type InterpretedLabelValueDefinition,
-  interpretLabelValueDefinitions,
-  type ModerationOpts,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useEffect, useImperativeHandle, useMemo } from 'react'
+import { findNodeHandle, type ListRenderItemInfo, View } from 'react-native'
+import { type AppGndrLabelerDefs, type InterpretedLabelValueDefinition, interpretLabelValueDefinitions, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
-import {isIOS, isNative} from '#/platform/detection'
-import {List, type ListRef} from '#/view/com/util/List'
-import {atoms as a, ios, tokens, useTheme} from '#/alf'
-import {Divider} from '#/components/Divider'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {ListFooter} from '#/components/Lists'
-import {Loader} from '#/components/Loader'
-import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
-import {Text} from '#/components/Typography'
-import {ErrorState} from '../ErrorState'
-import {type SectionRef} from './types'
+import { isLabelerSubscribed, lookupLabelValueDefinition } from '#/lib/moderation'
+import { isIOS, isNative } from '#/platform/detection'
+import { List, type ListRef } from '#/view/com/util/List'
+import { atoms as a, ios, tokens, useTheme } from '#/alf'
+import { Divider } from '#/components/Divider'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
+import { ListFooter } from '#/components/Lists'
+import { Loader } from '#/components/Loader'
+import { LabelerLabelPreference } from '#/components/moderation/LabelPreference'
+import { Text } from '#/components/Typography'
+import { ErrorState } from '../ErrorState'
+import { type SectionRef } from './types'
 
 interface LabelsSectionProps {
   ref: React.Ref<SectionRef>

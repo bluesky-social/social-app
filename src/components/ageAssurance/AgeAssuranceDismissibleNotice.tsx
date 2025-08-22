@@ -1,15 +1,15 @@
-import {View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
-import {logger} from '#/state/ageAssurance/util'
-import {Nux, useNux, useSaveNux} from '#/state/queries/nuxs'
-import {atoms as a, type ViewStyleProp} from '#/alf'
-import {AgeAssuranceAdmonition} from '#/components/ageAssurance/AgeAssuranceAdmonition'
-import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import { useAgeAssurance } from '#/state/ageAssurance/useAgeAssurance'
+import { logger } from '#/state/ageAssurance/util'
+import { Nux, useNux, useSaveNux } from '#/state/queries/nuxs'
+import { atoms as a, type ViewStyleProp } from '#/alf'
+import { AgeAssuranceAdmonition } from '#/components/ageAssurance/AgeAssuranceAdmonition'
+import { useAgeAssuranceCopy } from '#/components/ageAssurance/useAgeAssuranceCopy'
+import { Button, ButtonIcon } from '#/components/Button'
+import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times'
 
 export function AgeAssuranceDismissibleNotice({style}: ViewStyleProp & {}) {
   const {_} = useLingui()

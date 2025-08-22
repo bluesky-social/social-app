@@ -1,6 +1,6 @@
-import {useMemo} from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useMemo } from 'react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export function useAgeAssuranceCopy() {
   const {_} = useLingui()

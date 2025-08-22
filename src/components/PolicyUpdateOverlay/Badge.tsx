@@ -1,9 +1,9 @@
-import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import { View } from 'react-native'
+import { Trans } from '@lingui/macro'
 
-import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import { Logo } from '#/view/icons/Logo'
+import { atoms as a, useTheme } from '#/alf'
+import { Text } from '#/components/Typography'
 
 export function Badge() {
   const t = useTheme()

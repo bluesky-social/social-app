@@ -1,16 +1,16 @@
-import {useCallback} from 'react'
-import {View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback } from 'react'
+import { View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {type ActiveConvoStates} from '#/state/messages/convo'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
-import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {KnownFollowers} from '#/components/KnownFollowers'
-import {usePromptControl} from '#/components/Prompt'
-import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
+import { type ActiveConvoStates } from '#/state/messages/convo'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useSession } from '#/state/session'
+import { atoms as a, useTheme } from '#/alf'
+import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt'
+import { KnownFollowers } from '#/components/KnownFollowers'
+import { usePromptControl } from '#/components/Prompt'
+import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons'
 
 export function ChatStatusInfo({convoState}: {convoState: ActiveConvoStates}) {
   const t = useTheme()

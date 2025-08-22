@@ -1,24 +1,18 @@
-import {View} from 'react-native'
-import {type AppBskyNotificationDeclaration as AppGndrNotificationDeclaration} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AppGndrNotificationDeclaration } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {
-  type AllNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {
-  useNotificationDeclarationMutation,
-  useNotificationDeclarationQuery,
-} from '#/state/queries/activity-subscriptions'
-import {atoms as a, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
+import { type AllNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { useNotificationDeclarationMutation, useNotificationDeclarationQuery,  } from '#/state/queries/activity-subscriptions'
+import { atoms as a, useTheme } from '#/alf'
+import { Admonition } from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
-import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
+import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging'
 import * as Layout from '#/components/Layout'
-import {Loader} from '#/components/Loader'
+import { Loader } from '#/components/Loader'
 import * as SettingsList from './components/SettingsList'
-import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
+import { ItemTextWithSubtitle } from './NotificationSettings/components/ItemTextWithSubtitle'
 
 type Props = NativeStackScreenProps<
   AllNavigatorParams,
@@ -93,7 +87,7 @@ export function Inner({
 
   const onChangeFilter = ([declaration]: string[]) => {
     mutate({
-      $type: 'app.bsky.notification.declaration',
+      $type: 'app.gndr.notification.declaration',
       allowSubscriptions: declaration,
     })
   }

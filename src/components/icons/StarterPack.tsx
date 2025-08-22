@@ -1,4 +1,4 @@
-import {createMultiPathSVG} from './TEMPLATE'
+import { createMultiPathSVG } from './TEMPLATE'
 
 export const StarterPack = createMultiPathSVG({
   paths: [

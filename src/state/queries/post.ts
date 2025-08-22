@@ -1,20 +1,16 @@
-import {useCallback} from 'react'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AtUri,
-} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import { useCallback } from 'react'
+import { type AppGndrActorDefs, type AppGndrFeedDefs, AtUri,  } from '@gander-social-atproto/api'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
-import {type LogEvents, toClout} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
-import {updatePostShadow} from '#/state/cache/post-shadow'
-import {type Shadow} from '#/state/cache/types'
-import {useAgent, useSession} from '#/state/session'
+import { useToggleMutationQueue } from '#/lib/hooks/useToggleMutationQueue'
+import { type LogEvents, toClout } from '#/lib/statsig/statsig'
+import { logger } from '#/logger'
+import { updatePostShadow } from '#/state/cache/post-shadow'
+import { type Shadow } from '#/state/cache/types'
+import { useAgent, useSession } from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
-import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
-import {findProfileQueryData} from './profile'
+import { useIsThreadMuted, useSetThreadMute } from '../cache/thread-mutes'
+import { findProfileQueryData } from './profile'
 
 const RQKEY_ROOT = 'post'
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
@@ -376,7 +372,7 @@ function useThreadMuteMutation() {
   >({
     mutationFn: ({uri}) => {
       logger.metric('post:mute', {})
-      return agent.api.app.bsky.graph.muteThread({root: uri})
+      return agent.api.app.gndr.graph.muteThread({root: uri})
     },
   })
 }
@@ -386,7 +382,7 @@ function useThreadUnmuteMutation() {
   return useMutation<{}, Error, {uri: string}>({
     mutationFn: ({uri}) => {
       logger.metric('post:unmute', {})
-      return agent.api.app.bsky.graph.unmuteThread({root: uri})
+      return agent.api.app.gndr.graph.unmuteThread({root: uri})
     },
   })
 }

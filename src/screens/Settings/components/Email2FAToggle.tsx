@@ -1,14 +1,11 @@
 import React from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useSession} from '#/state/session'
-import {useDialogControl} from '#/components/Dialog'
-import {
-  EmailDialogScreenID,
-  useEmailDialogControl,
-} from '#/components/dialogs/EmailDialog'
-import {DisableEmail2FADialog} from './DisableEmail2FADialog'
+import { useSession } from '#/state/session'
+import { useDialogControl } from '#/components/Dialog'
+import { EmailDialogScreenID, useEmailDialogControl,  } from '#/components/dialogs/EmailDialog'
+import { DisableEmail2FADialog } from './DisableEmail2FADialog'
 import * as SettingsList from './SettingsList'
 
 export function Email2FAToggle() {

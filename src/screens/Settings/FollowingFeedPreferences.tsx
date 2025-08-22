@@ -1,21 +1,15 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {
-  usePreferencesQuery,
-  useSetFeedViewPreferencesMutation,
-} from '#/state/queries/preferences'
-import {atoms as a} from '#/alf'
-import {Admonition} from '#/components/Admonition'
+import { type CommonNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { usePreferencesQuery, useSetFeedViewPreferencesMutation,  } from '#/state/queries/preferences'
+import { atoms as a } from '#/alf'
+import { Admonition } from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
-import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
-import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
-import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
+import { Beaker_Stroke2_Corner2_Rounded as BeakerIcon } from '#/components/icons/Beaker'
+import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble'
+import { CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon } from '#/components/icons/Quote'
+import { Repost_Stroke2_Corner2_Rounded as RepostIcon } from '#/components/icons/Repost'
 import * as Layout from '#/components/Layout'
 import * as SettingsList from './components/SettingsList'
 

@@ -1,10 +1,10 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a} from '#/alf'
-import {Text} from '#/components/Typography'
+import { atoms as a } from '#/alf'
+import { Text } from '#/components/Typography'
 
 // RedWarning icon component
 function RedWarningIcon() {

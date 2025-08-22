@@ -1,21 +1,15 @@
-import {InteractionManager, View} from 'react-native'
-import {
-  type AnimatedRef,
-  measure,
-  type MeasuredDimensions,
-  runOnJS,
-  runOnUI,
-} from 'react-native-reanimated'
-import {Image} from 'expo-image'
+import { InteractionManager, View } from 'react-native'
+import { type AnimatedRef, measure, type MeasuredDimensions, runOnJS, runOnUI,  } from 'react-native-reanimated'
+import { Image } from 'expo-image'
 
-import {useLightboxControls} from '#/state/lightbox'
-import {type Dimensions} from '#/view/com/lightbox/ImageViewing/@types'
-import {AutoSizedImage} from '#/view/com/util/images/AutoSizedImage'
-import {ImageLayoutGrid} from '#/view/com/util/images/ImageLayoutGrid'
-import {atoms as a} from '#/alf'
-import {PostEmbedViewContext} from '#/components/Post/Embed/types'
-import {type EmbedType} from '#/types/gndr/post'
-import {type CommonProps} from './types'
+import { useLightboxControls } from '#/state/lightbox'
+import { type Dimensions } from '#/view/com/lightbox/ImageViewing/@types'
+import { AutoSizedImage } from '#/view/com/util/images/AutoSizedImage'
+import { ImageLayoutGrid } from '#/view/com/util/images/ImageLayoutGrid'
+import { atoms as a } from '#/alf'
+import { PostEmbedViewContext } from '#/components/Post/Embed/types'
+import { type EmbedType } from '#/types/gndr/post'
+import { type CommonProps } from './types'
 
 export function ImageEmbed({
   embed,

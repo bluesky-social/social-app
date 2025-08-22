@@ -1,7 +1,7 @@
-import {ComponentChildren, h} from 'preact'
-import {useEffect, useRef} from 'preact/hooks'
+import { ComponentChildren, h } from 'preact'
+import { useEffect, useRef } from 'preact/hooks'
 
-import {Link} from './link'
+import { Link } from './link'
 
 export function Container({
   children,

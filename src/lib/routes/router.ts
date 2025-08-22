@@ -1,4 +1,4 @@
-import {type Route, type RouteParams} from './types'
+import { type Route, type RouteParams } from './types'
 
 export class Router<T extends Record<string, any>> {
   routes: [string, Route][] = []

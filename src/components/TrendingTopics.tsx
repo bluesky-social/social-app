@@ -1,20 +1,20 @@
 import React from 'react'
-import {View} from 'react-native'
-import {type AtUri} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AtUri } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {PressableScale} from '#/lib/custom-animations/PressableScale'
-// import {makeProfileLink} from '#/lib/routes/links'
-// import {feedUriToHref} from '#/lib/strings/url-helpers'
-// import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-// import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
-// import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
-import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
-import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
-import {Link as InternalLink, type LinkProps} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { PressableScale } from '#/lib/custom-animations/PressableScale'
+// import { makeProfileLink } from '#/lib/routes/links'
+// import { feedUriToHref } from '#/lib/strings/url-helpers'
+// import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag'
+// import { CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote } from '#/components/icons/Quote'
+// import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { type TrendingTopic } from '#/state/queries/trending/useTrendingTopics'
+import { atoms as a, native, useTheme, type ViewStyleProp } from '#/alf'
+import { StarterPack as StarterPackIcon } from '#/components/icons/StarterPack'
+import { Link as InternalLink, type LinkProps } from '#/components/Link'
+import { Text } from '#/components/Typography'
 
 export function TrendingTopic({
   topic: raw,
@@ -205,7 +205,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
     } else {
       const urip = new AtUri(link)
       switch (urip.collection) {
-        case 'app.bsky.actor.profile': {
+        case 'app.gndr.actor.profile': {
           return {
             type: 'profile',
             label: _(msg`View ${displayName}'s profile`),
@@ -214,7 +214,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
             url: makeProfileLink({did: urip.host, handle: urip.host}),
           }
         }
-        case 'app.bsky.feed.generator': {
+        case 'app.gndr.feed.generator': {
           return {
             type: 'feed',
             label: _(msg`Browse the ${displayName} feed`),

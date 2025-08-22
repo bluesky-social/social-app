@@ -1,12 +1,12 @@
-import {StyleSheet, Text, View} from 'react-native'
-import {useVideoPlayer, type VideoSource, VideoView} from 'expo-video'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { StyleSheet, Text, View } from 'react-native'
+import { useVideoPlayer, type VideoSource, VideoView } from 'expo-video'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {colors} from '#/lib/styles'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {HandLine} from '#/components/icons/HandLine'
+import { colors } from '#/lib/styles'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { HandLine } from '#/components/icons/HandLine'
 
 const onboardingContent = [
   {

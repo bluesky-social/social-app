@@ -1,7 +1,7 @@
-import {useMemo} from 'react'
-import {ComAtprotoModerationDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useMemo } from 'react'
+import { ComAtprotoModerationDefs } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export interface ReportOption {
   reason: string

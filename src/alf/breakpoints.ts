@@ -1,5 +1,5 @@
-import {useMemo} from 'react'
-import {useMediaQuery} from 'react-responsive'
+import { useMemo } from 'react'
+import { useMediaQuery } from 'react-responsive'
 
 export type Breakpoint = 'gtPhone' | 'gtMobile' | 'gtTablet'
 

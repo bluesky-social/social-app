@@ -1,18 +1,15 @@
-import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import { View } from 'react-native'
+import { Trans } from '@lingui/macro'
 
-import {
-  type AllNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
-import {atoms as a} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
+import { type AllNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings'
+import { atoms as a } from '#/alf'
+import { Admonition } from '#/components/Admonition'
+import { Repost_Stroke2_Corner2_Rounded as RepostIcon } from '#/components/icons/Repost'
 import * as Layout from '#/components/Layout'
 import * as SettingsList from '../components/SettingsList'
-import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
-import {PreferenceControls} from './components/PreferenceControls'
+import { ItemTextWithSubtitle } from './components/ItemTextWithSubtitle'
+import { PreferenceControls } from './components/PreferenceControls'
 
 type Props = NativeStackScreenProps<
   AllNavigatorParams,

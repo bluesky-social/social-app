@@ -1,38 +1,26 @@
-import {type PropsWithChildren} from 'react'
-import {useMemo, useRef} from 'react'
-import {
-  Dimensions,
-  type GestureResponderEvent,
-  type Insets,
-  Platform,
-  type StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import { type PropsWithChildren } from 'react'
+import { useMemo, useRef } from 'react'
+import { Dimensions, type GestureResponderEvent, type Insets, Platform, type StyleProp, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, useWindowDimensions, View, type ViewStyle,  } from 'react-native'
 import Animated, {FadeIn, FadeInDown, FadeInUp} from 'react-native-reanimated'
 const RootSiblings =
   Platform.OS !== 'web'
     ? require('react-native-root-siblings').default
     : undefined
-import {type IconProp} from '@fortawesome/fontawesome-svg-core'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { type IconProp } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type React from 'react'
 
-import {HITSLOP_10} from '#/lib/constants'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {colors} from '#/lib/styles'
-import {useTheme} from '#/lib/ThemeContext'
-import {isWeb} from '#/platform/detection'
-import {native} from '#/alf'
-import {FullWindowOverlay} from '#/components/FullWindowOverlay'
-import {Text} from '../text/Text'
-import {Button, type ButtonType} from './Button'
+import { HITSLOP_10 } from '#/lib/constants'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { colors } from '#/lib/styles'
+import { useTheme } from '#/lib/ThemeContext'
+import { isWeb } from '#/platform/detection'
+import { native } from '#/alf'
+import { FullWindowOverlay } from '#/components/FullWindowOverlay'
+import { Text } from '../text/Text'
+import { Button, type ButtonType } from './Button'
 
 const ESTIMATED_BTN_HEIGHT = 50
 const ESTIMATED_SEP_HEIGHT = 16

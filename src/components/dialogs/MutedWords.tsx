@@ -1,40 +1,26 @@
 import React from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  sanitizeMutedWordValue,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, sanitizeMutedWordValue,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {
-  usePreferencesQuery,
-  useRemoveMutedWordMutation,
-  useUpsertMutedWordsMutation,
-} from '#/state/queries/preferences'
-import {
-  atoms as a,
-  native,
-  useBreakpoints,
-  useTheme,
-  type ViewStyleProp,
-  web,
-} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { logger } from '#/logger'
+import { isNative } from '#/platform/detection'
+import { usePreferencesQuery, useRemoveMutedWordMutation, useUpsertMutedWordsMutation,  } from '#/state/queries/preferences'
+import { atoms as a, native, useBreakpoints, useTheme, type ViewStyleProp, web,  } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {Divider} from '#/components/Divider'
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context'
+import { Divider } from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
-import {useFormatDistance} from '#/components/hooks/dates'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/PageText'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Loader} from '#/components/Loader'
+import { useFormatDistance } from '#/components/hooks/dates'
+import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag'
+import { PageText_Stroke2_Corner0_Rounded as PageText } from '#/components/icons/PageText'
+import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus'
+import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times'
+import { Loader } from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 

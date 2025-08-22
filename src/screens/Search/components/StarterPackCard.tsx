@@ -1,26 +1,22 @@
 import React from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyGraphDefs as AppGndrGraphDefs,
-  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
-  moderateProfile,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AppGndrGraphDefs, AppGndrGraphStarterpack, moderateProfile,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {ButtonText} from '#/components/Button'
-import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {Link} from '#/components/Link'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
-import {SubtleHover} from '#/components/SubtleHover'
-import {Text} from '#/components/Typography'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useSession } from '#/state/session'
+import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, useBreakpoints, useTheme, web } from '#/alf'
+import { ButtonText } from '#/components/Button'
+import { PlusSmall_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus'
+import { Link } from '#/components/Link'
+import { MediaInsetBorder } from '#/components/MediaInsetBorder'
+import { useStarterPackLink } from '#/components/StarterPack/StarterPackCard'
+import { SubtleHover } from '#/components/SubtleHover'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
 
 export function StarterPackCard({

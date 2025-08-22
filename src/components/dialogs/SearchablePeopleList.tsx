@@ -1,34 +1,27 @@
-import {
-  Fragment,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import {TextInput, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Fragment, useCallback, useLayoutEffect, useMemo, useRef, useState,  } from 'react'
+import { TextInput, View } from 'react-native'
+import { moderateProfile, type ModerationOpts } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {isWeb} from '#/platform/detection'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {useListConvosQuery} from '#/state/queries/messages/list-conversations'
-import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
-import {useSession} from '#/state/session'
-import {type ListMethods} from '#/view/com/util/List'
-import {android, atoms as a, native, useTheme, web} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { isWeb } from '#/platform/detection'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete'
+import { useListConvosQuery } from '#/state/queries/messages/list-conversations'
+import { useProfileFollowsQuery } from '#/state/queries/profile-follows'
+import { useSession } from '#/state/session'
+import { type ListMethods } from '#/view/com/util/List'
+import { android, atoms as a, native, useTheme, web } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {canBeMessaged} from '#/components/dms/util'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import { canBeMessaged } from '#/components/dms/util'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { MagnifyingGlass2_Stroke2_Corner0_Rounded as Search } from '#/components/icons/MagnifyingGlass2'
+import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 import type * as gndr from '#/types/gndr'
 
 export type ProfileItem = {

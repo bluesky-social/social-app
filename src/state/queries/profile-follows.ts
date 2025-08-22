@@ -1,16 +1,8 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppGndrGraphGetFollows,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrGraphGetFollows,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery,  } from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import { STALE } from '#/state/queries'
+import { useAgent } from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -40,7 +32,7 @@ export function useProfileFollowsQuery(
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(did || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getFollows({
+      const res = await agent.app.gndr.graph.getFollows({
         actor: did || '',
         limit: limit || PAGE_SIZE,
         cursor: pageParam,

@@ -1,12 +1,12 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 
-import {type AllNavigatorParams} from '#/lib/routes/types'
-import {PostFeed} from '#/view/com/posts/PostFeed'
-import {EmptyState} from '#/view/com/util/EmptyState'
+import { type AllNavigatorParams } from '#/lib/routes/types'
+import { PostFeed } from '#/view/com/posts/PostFeed'
+import { EmptyState } from '#/view/com/util/EmptyState'
 import * as Layout from '#/components/Layout'
-import {ListFooter} from '#/components/Lists'
+import { ListFooter } from '#/components/Lists'
 
 type Props = NativeStackScreenProps<
   AllNavigatorParams,

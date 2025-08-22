@@ -1,15 +1,15 @@
-import {useMemo} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useMemo } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useCleanError} from '#/lib/hooks/useCleanError'
-import {OUTER_SPACE} from '#/screens/PostThread/const'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import { useCleanError } from '#/lib/hooks/useCleanError'
+import { OUTER_SPACE } from '#/screens/PostThread/const'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon } from '#/components/icons/ArrowRotateCounterClockwise'
 import * as Layout from '#/components/Layout'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 
 export function ThreadError({
   error,

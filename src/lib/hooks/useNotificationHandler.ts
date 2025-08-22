@@ -1,24 +1,24 @@
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 import * as Notifications from 'expo-notifications'
-import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {CommonActions, useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import { AtUri } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { CommonActions, useNavigation } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {logger as notyLogger} from '#/lib/notifications/util'
-import {type NavigationProp} from '#/lib/routes/types'
-import {isAndroid, isIOS} from '#/platform/detection'
-import {useCurrentConvoId} from '#/state/messages/current-convo-id'
-import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
-import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
-import {truncateAndInvalidate} from '#/state/queries/util'
-import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
-import {resetToTab} from '#/Navigation'
-import {router} from '#/routes'
+import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher'
+import { logger as notyLogger } from '#/lib/notifications/util'
+import { type NavigationProp } from '#/lib/routes/types'
+import { isAndroid, isIOS } from '#/platform/detection'
+import { useCurrentConvoId } from '#/state/messages/current-convo-id'
+import { RQKEY as RQKEY_NOTIFS } from '#/state/queries/notifications/feed'
+import { invalidateCachedUnreadPage } from '#/state/queries/notifications/unread'
+import { truncateAndInvalidate } from '#/state/queries/util'
+import { useSession } from '#/state/session'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { useCloseAllActiveElements } from '#/state/util'
+import { resetToTab } from '#/Navigation'
+import { router } from '#/routes'
 
 export type NotificationReason =
   | 'like'
@@ -407,7 +407,7 @@ export function notificationToURL(payload: NotificationPayload): string | null {
     case 'like-via-repost':
     case 'repost-via-repost': {
       const urip = new AtUri(payload.subject)
-      if (urip.collection === 'app.bsky.feed.post') {
+      if (urip.collection === 'app.gndr.feed.post') {
         return `/profile/${urip.host}/post/${urip.rkey}`
       } else {
         return '/notifications'
@@ -418,7 +418,7 @@ export function notificationToURL(payload: NotificationPayload): string | null {
     case 'mention':
     case 'subscribed-post': {
       const urip = new AtUri(payload.uri)
-      if (urip.collection === 'app.bsky.feed.post') {
+      if (urip.collection === 'app.gndr.feed.post') {
         return `/profile/${urip.host}/post/${urip.rkey}`
       } else {
         return '/notifications'

@@ -1,14 +1,14 @@
-import {View} from 'react-native'
-import {type ChatBskyConvoDefs as ChatGndrConvoDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import { View } from 'react-native'
+import { type ChatBskyConvoDefs as ChatGndrConvoDefs } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
 
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSession} from '#/state/session'
-import {atoms as a, tokens} from '#/alf'
-import {KnownFollowers} from '#/components/KnownFollowers'
-import {Text} from '#/components/Typography'
-import {ChatListItem} from './ChatListItem'
-import {AcceptChatButton, DeleteChatButton, RejectMenu} from './RequestButtons'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useSession } from '#/state/session'
+import { atoms as a, tokens } from '#/alf'
+import { KnownFollowers } from '#/components/KnownFollowers'
+import { Text } from '#/components/Typography'
+import { ChatListItem } from './ChatListItem'
+import { AcceptChatButton, DeleteChatButton, RejectMenu } from './RequestButtons'
 
 export function RequestListItem({convo}: {convo: ChatGndrConvoDefs.ConvoView}) {
   const {currentAccount} = useSession()

@@ -1,75 +1,59 @@
-import {memo, useCallback, useMemo, useState} from 'react'
-import {
-  type GestureResponderEvent,
-  StyleSheet,
-  Text as RNText,
-  View,
-} from 'react-native'
-import {
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  AtUri,
-  type ModerationDecision,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { memo, useCallback, useMemo, useState } from 'react'
+import { type GestureResponderEvent, StyleSheet, Text as RNText, View,  } from 'react-native'
+import { AppGndrFeedDefs, AppGndrFeedPost, type AppGndrFeedThreadgate, AtUri, type ModerationDecision, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, Plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {MAX_POST_LINES} from '#/lib/constants'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {makeProfileLink} from '#/lib/routes/links'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {countLines} from '#/lib/strings/helpers'
-import {niceDate} from '#/lib/strings/time'
-import {s} from '#/lib/styles'
-import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
-import {logger} from '#/logger'
-import {
-  POST_TOMBSTONE,
-  type Shadow,
-  usePostShadow,
-} from '#/state/cache/post-shadow'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
-import {useLanguagePrefs} from '#/state/preferences'
-import {type ThreadPost} from '#/state/queries/post-thread'
-import {useSession} from '#/state/session'
-import {type OnPostSuccessData} from '#/state/shell/composer'
-import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {type PostSource} from '#/state/unstable-post-source'
-import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
-import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {Link} from '#/view/com/util/Link'
-import {formatCount} from '#/view/com/util/numeric/format'
-import {PostMeta} from '#/view/com/util/PostMeta'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
-import {colors} from '#/components/Admonition'
-import {Button} from '#/components/Button'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
-import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {InlineLinkText} from '#/components/Link'
-import {ContentHider} from '#/components/moderation/ContentHider'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {PostHider} from '#/components/moderation/PostHider'
-import {type AppModerationCause} from '#/components/Pills'
-import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
-import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
-import {PostControls} from '#/components/PostControls'
+import { useActorStatus } from '#/lib/actor-status'
+import { MAX_POST_LINES } from '#/lib/constants'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { useOpenLink } from '#/lib/hooks/useOpenLink'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { makeProfileLink } from '#/lib/routes/links'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { countLines } from '#/lib/strings/helpers'
+import { niceDate } from '#/lib/strings/time'
+import { s } from '#/lib/styles'
+import { getTranslatorLink, isPostInLanguage } from '#/locale/helpers'
+import { logger } from '#/logger'
+import { POST_TOMBSTONE, type Shadow, usePostShadow,  } from '#/state/cache/post-shadow'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { FeedFeedbackProvider, useFeedFeedback } from '#/state/feed-feedback'
+import { useLanguagePrefs } from '#/state/preferences'
+import { type ThreadPost } from '#/state/queries/post-thread'
+import { useSession } from '#/state/session'
+import { type OnPostSuccessData } from '#/state/shell/composer'
+import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies'
+import { type PostSource } from '#/state/unstable-post-source'
+import { PostThreadFollowBtn } from '#/view/com/post-thread/PostThreadFollowBtn'
+import { ErrorMessage } from '#/view/com/util/error/ErrorMessage'
+import { Link } from '#/view/com/util/Link'
+import { formatCount } from '#/view/com/util/numeric/format'
+import { PostMeta } from '#/view/com/util/PostMeta'
+import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, useTheme } from '#/alf'
+import { colors } from '#/components/Admonition'
+import { Button } from '#/components/Button'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon } from '#/components/icons/CalendarClock'
+import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon } from '#/components/icons/Chevron'
+import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash'
+import { InlineLinkText } from '#/components/Link'
+import { ContentHider } from '#/components/moderation/ContentHider'
+import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe'
+import { PostAlerts } from '#/components/moderation/PostAlerts'
+import { PostHider } from '#/components/moderation/PostHider'
+import { type AppModerationCause } from '#/components/Pills'
+import { Embed, PostEmbedViewContext } from '#/components/Post/Embed'
+import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton'
+import { PostControls } from '#/components/PostControls'
 import * as Prompt from '#/components/Prompt'
-import {RichText} from '#/components/RichText'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
-import {Text} from '#/components/Typography'
-import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
-import {WhoCanReply} from '#/components/WhoCanReply'
+import { RichText } from '#/components/RichText'
+import { SubtleWebHover } from '#/components/SubtleWebHover'
+import { Text } from '#/components/Typography'
+import { VerificationCheckButton } from '#/components/verification/VerificationCheckButton'
+import { WhoCanReply } from '#/components/WhoCanReply'
 import * as gndr from '#/types/gndr'
 
 export function PostThreadItem({
@@ -268,7 +252,7 @@ let PostThreadItemLoaded = ({
   }, [post.uri, post.author])
   const quotesTitle = _(msg`Quotes of this post`)
   const onlyFollowersCanReply = !!threadgateRecord?.allow?.find(
-    rule => rule.$type === 'app.bsky.feed.threadgate#followerRule',
+    rule => rule.$type === 'app.gndr.feed.threadgate#followerRule',
   )
   const showFollowButton =
     currentAccount?.did !== post.author.did && !onlyFollowersCanReply
@@ -290,7 +274,7 @@ let PostThreadItemLoaded = ({
     if (anchorPostSource && isHighlightedPost) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
+        event: 'app.gndr.feed.defs#interactionReply',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })
@@ -313,7 +297,7 @@ let PostThreadItemLoaded = ({
     if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughAuthor',
+        event: 'app.gndr.feed.defs#clickthroughAuthor',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })
@@ -324,7 +308,7 @@ let PostThreadItemLoaded = ({
     if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughEmbed',
+        event: 'app.gndr.feed.defs#clickthroughEmbed',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })

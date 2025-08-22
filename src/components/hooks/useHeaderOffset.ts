@@ -1,6 +1,6 @@
-import {useWindowDimensions} from 'react-native'
+import { useWindowDimensions } from 'react-native'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
 
 export function useHeaderOffset() {
   const {isDesktop, isTablet} = useWebMediaQueries()

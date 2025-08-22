@@ -1,7 +1,7 @@
-import {Platform} from 'react-native'
+import { Platform } from 'react-native'
 
-import {NotImplementedError} from '../NotImplemented'
-import {type GooglePlayReferrerInfo, type ReferrerInfo} from './types'
+import { NotImplementedError } from '../NotImplemented'
+import { type GooglePlayReferrerInfo, type ReferrerInfo } from './types'
 
 export function getGooglePlayReferrerInfoAsync(): Promise<GooglePlayReferrerInfo> {
   throw new NotImplementedError()

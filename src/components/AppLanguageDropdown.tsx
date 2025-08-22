@@ -1,15 +1,15 @@
 import React from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {sanitizeAppLanguageSetting} from '#/locale/helpers'
-import {APP_LANGUAGES} from '#/locale/languages'
-import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import {resetPostsFeedQueries} from '#/state/queries/post-feed'
-import {atoms as a, platform, useTheme} from '#/alf'
+import { sanitizeAppLanguageSetting } from '#/locale/helpers'
+import { APP_LANGUAGES } from '#/locale/languages'
+import { useLanguagePrefs, useLanguagePrefsApi } from '#/state/preferences'
+import { resetPostsFeedQueries } from '#/state/queries/post-feed'
+import { atoms as a, platform, useTheme } from '#/alf'
 import * as Select from '#/components/Select'
-import {Button} from './Button'
+import { Button } from './Button'
 
 export function AppLanguageDropdown() {
   const t = useTheme()

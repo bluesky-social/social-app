@@ -1,34 +1,20 @@
-import {createContext, useCallback, useContext} from 'react'
-import {type GestureResponderEvent, Keyboard, View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import { createContext, useCallback, useContext } from 'react'
+import { type GestureResponderEvent, Keyboard, View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/native'
 
-import {HITSLOP_30} from '#/lib/constants'
-import {type NavigationProp} from '#/lib/routes/types'
-import {isIOS} from '#/platform/detection'
-import {useSetDrawerOpen} from '#/state/shell'
-import {
-  atoms as a,
-  platform,
-  type TextStyleProp,
-  useBreakpoints,
-  useGutters,
-  useLayoutBreakpoints,
-  useTheme,
-  web,
-} from '#/alf'
-import {Button, ButtonIcon, type ButtonProps} from '#/components/Button'
-import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
-import {
-  BUTTON_VISUAL_ALIGNMENT_OFFSET,
-  CENTER_COLUMN_OFFSET,
-  HEADER_SLOT_SIZE,
-  SCROLLBAR_OFFSET,
-} from '#/components/Layout/const'
-import {ScrollbarOffsetContext} from '#/components/Layout/context'
-import {Text} from '#/components/Typography'
+import { HITSLOP_30 } from '#/lib/constants'
+import { type NavigationProp } from '#/lib/routes/types'
+import { isIOS } from '#/platform/detection'
+import { useSetDrawerOpen } from '#/state/shell'
+import { atoms as a, platform, type TextStyleProp, useBreakpoints, useGutters, useLayoutBreakpoints, useTheme, web,  } from '#/alf'
+import { Button, ButtonIcon, type ButtonProps } from '#/components/Button'
+import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft } from '#/components/icons/Arrow'
+import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu'
+import { BUTTON_VISUAL_ALIGNMENT_OFFSET, CENTER_COLUMN_OFFSET, HEADER_SLOT_SIZE, SCROLLBAR_OFFSET,  } from '#/components/Layout/const'
+import { ScrollbarOffsetContext } from '#/components/Layout/context'
+import { Text } from '#/components/Typography'
 
 export function Outer({
   children,

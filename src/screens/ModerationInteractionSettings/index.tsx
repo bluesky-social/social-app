@@ -1,26 +1,20 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import deepEqual from 'lodash.isequal'
 
-import {logger} from '#/logger'
-import {usePostInteractionSettingsMutation} from '#/state/queries/post-interaction-settings'
-import {createPostgateRecord} from '#/state/queries/postgate/util'
-import {
-  usePreferencesQuery,
-  type UsePreferencesQueryResponse,
-} from '#/state/queries/preferences'
-import {
-  threadgateAllowUISettingToAllowRecordValue,
-  threadgateRecordToAllowUISetting,
-} from '#/state/queries/threadgate'
+import { logger } from '#/logger'
+import { usePostInteractionSettingsMutation } from '#/state/queries/post-interaction-settings'
+import { createPostgateRecord } from '#/state/queries/postgate/util'
+import { usePreferencesQuery, type UsePreferencesQueryResponse,  } from '#/state/queries/preferences'
+import { threadgateAllowUISettingToAllowRecordValue, threadgateRecordToAllowUISetting,  } from '#/state/queries/threadgate'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useGutters} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {PostInteractionSettingsForm} from '#/components/dialogs/PostInteractionSettingsDialog'
+import { atoms as a, useGutters } from '#/alf'
+import { Admonition } from '#/components/Admonition'
+import { PostInteractionSettingsForm } from '#/components/dialogs/PostInteractionSettingsDialog'
 import * as Layout from '#/components/Layout'
-import {Loader} from '#/components/Loader'
+import { Loader } from '#/components/Loader'
 
 export function Screen() {
   const gutters = useGutters(['base'])
@@ -66,7 +60,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
 
   const allowUI = React.useMemo(() => {
     return threadgateRecordToAllowUISetting({
-      $type: 'app.bsky.feed.threadgate',
+      $type: 'app.gndr.feed.threadgate',
       post: '',
       createdAt: new Date().toString(),
       allow: preferences.postInteractionSettings.threadgateAllowRules,

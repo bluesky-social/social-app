@@ -81,7 +81,7 @@ msgstr "{0, plural, other {#초}}"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:225
 #: src/view/shell/bottom-bar/BottomBar.tsx:257
-#: src/view/shell/Drawer.tsx:487
+#: src/view/shell/Drawer.tsx:494
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr "읽지 않은 항목 {0, plural, other {#개}}"
 
@@ -1642,7 +1642,7 @@ msgstr "변경 사항을 저장했습니다"
 #: src/Navigation.tsx:548
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
 #: src/view/shell/desktop/LeftNav.tsx:554
-#: src/view/shell/Drawer.tsx:455
+#: src/view/shell/Drawer.tsx:462
 msgid "Chat"
 msgstr "대화"
 
@@ -2304,7 +2304,7 @@ msgstr "스타터 팩 만들기"
 msgid "Create a starter pack for me"
 msgstr "나를 위한 스타터 팩 만들기"
 
-#: src/view/com/auth/SplashScreen.tsx:51
+#: src/view/com/auth/SplashScreen.tsx:52
 #: src/view/com/auth/SplashScreen.web.tsx:117
 #: src/view/shell/bottom-bar/BottomBar.tsx:345
 #: src/view/shell/bottom-bar/BottomBar.tsx:350
@@ -2338,7 +2338,7 @@ msgstr "대신 아바타 만들기"
 msgid "Create another"
 msgstr "다른 스타터 팩 만들기"
 
-#: src/view/com/auth/SplashScreen.tsx:43
+#: src/view/com/auth/SplashScreen.tsx:44
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
 msgstr "새 계정 만들기"
@@ -3282,7 +3282,7 @@ msgstr "노골적인 성적 이미지."
 #: src/Navigation.tsx:750
 #: src/screens/Search/Shell.tsx:307
 #: src/view/shell/desktop/LeftNav.tsx:636
-#: src/view/shell/Drawer.tsx:403
+#: src/view/shell/Drawer.tsx:410
 msgid "Explore"
 msgstr "탐색"
 
@@ -3529,7 +3529,7 @@ msgstr "사용할 수 없는 피드"
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/desktop/RightNav.tsx:103
-#: src/view/shell/Drawer.tsx:357
+#: src/view/shell/Drawer.tsx:364
 msgid "Feedback"
 msgstr "피드백"
 
@@ -3546,7 +3546,7 @@ msgstr "피드백을 보냈습니다!"
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:104
 #: src/view/shell/desktop/LeftNav.tsx:674
-#: src/view/shell/Drawer.tsx:519
+#: src/view/shell/Drawer.tsx:526
 msgid "Feeds"
 msgstr "피드"
 
@@ -3901,7 +3901,7 @@ msgstr "스타터 팩 만들기"
 msgid "Generates and displays a new verification code"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:361
+#: src/view/shell/Drawer.tsx:368
 msgid "Get help"
 msgstr "도움말"
 
@@ -4131,7 +4131,7 @@ msgstr "코드가 있나요? <0>이곳을 클릭하세요.</0>"
 #: src/screens/Settings/Settings.tsx:243
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
-#: src/view/shell/Drawer.tsx:370
+#: src/view/shell/Drawer.tsx:377
 msgid "Help"
 msgstr "도움말"
 
@@ -4285,7 +4285,7 @@ msgstr "잠깐! 동영상에 대한 접근 권한이 점차적으로 제공되�
 #: src/Navigation.tsx:765
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
 #: src/view/shell/desktop/LeftNav.tsx:618
-#: src/view/shell/Drawer.tsx:429
+#: src/view/shell/Drawer.tsx:436
 msgid "Home"
 msgstr "홈"
 
@@ -4925,7 +4925,7 @@ msgstr "리스트를 언뮤트했습니다"
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
 #: src/view/shell/desktop/LeftNav.tsx:692
-#: src/view/shell/Drawer.tsx:534
+#: src/view/shell/Drawer.tsx:541
 msgid "Lists"
 msgstr "리스트"
 
@@ -4986,7 +4986,7 @@ msgid "Logo by @sawaratsuki.gndr.social"
 msgstr "@sawaratsuki.gndr.social 님의 로고"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
+#: src/view/shell/Drawer.tsx:679
 msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
 msgstr "<0>@sawaratsuki.gndr.social</0> 님의 로고"
 
@@ -5772,7 +5772,7 @@ msgstr "알림음"
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:655
-#: src/view/shell/Drawer.tsx:482
+#: src/view/shell/Drawer.tsx:489
 msgid "Notifications"
 msgstr "알림"
 
@@ -6030,18 +6030,12 @@ msgstr ""
 msgid "Opens emoji picker"
 msgstr "이모티콘 선택기를 엽니다"
 
-#: src/view/com/auth/SplashScreen.tsx:45
-msgid "Opens flow to create a new Bluesky account"
-msgstr ""
-
+#: src/view/com/auth/SplashScreen.tsx:46
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Gander account"
 msgstr "새 Gander 계정을 만드는 화면을 엽니다"
 
-#: src/view/com/auth/SplashScreen.tsx:59
-msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr ""
-
+#: src/view/com/auth/SplashScreen.tsx:60
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Gander account"
 msgstr "존재하는 Gander 계정에 로그인하는 화면을 엽니다"
@@ -6636,8 +6630,8 @@ msgstr "개인정보 및 보안 설정"
 #: src/screens/Settings/AboutSettings.tsx:92
 #: src/screens/Settings/AboutSettings.tsx:95
 #: src/view/screens/PrivacyPolicy.tsx:34
-#: src/view/shell/Drawer.tsx:667
-#: src/view/shell/Drawer.tsx:668
+#: src/view/shell/Drawer.tsx:674
+#: src/view/shell/Drawer.tsx:675
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
 
@@ -6658,7 +6652,7 @@ msgstr "프로필"
 #: src/view/shell/bottom-bar/BottomBar.tsx:316
 #: src/view/shell/desktop/LeftNav.tsx:710
 #: src/view/shell/Drawer.tsx:76
-#: src/view/shell/Drawer.tsx:559
+#: src/view/shell/Drawer.tsx:566
 msgid "Profile"
 msgstr "프로필"
 
@@ -7765,7 +7759,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "이메일 보내기"
 
-#: src/view/shell/Drawer.tsx:350
+#: src/view/shell/Drawer.tsx:357
 msgid "Send feedback"
 msgstr "피드백 보내기"
 
@@ -7841,7 +7835,7 @@ msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 #: src/Navigation.tsx:212
 #: src/screens/Settings/Settings.tsx:102
 #: src/view/shell/desktop/LeftNav.tsx:728
-#: src/view/shell/Drawer.tsx:572
+#: src/view/shell/Drawer.tsx:579
 msgid "Settings"
 msgstr "설정"
 
@@ -8127,8 +8121,8 @@ msgstr ""
 #: src/screens/Login/index.tsx:140
 #: src/screens/Login/index.tsx:163
 #: src/screens/Search/SearchResults.tsx:258
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.tsx:65
+#: src/view/com/auth/SplashScreen.tsx:58
+#: src/view/com/auth/SplashScreen.tsx:66
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
 #: src/view/shell/bottom-bar/BottomBar.tsx:355
@@ -8621,8 +8615,8 @@ msgstr "이용약관"
 #: src/screens/Settings/AboutSettings.tsx:84
 #: src/screens/Settings/AboutSettings.tsx:87
 #: src/view/screens/TermsOfService.tsx:34
-#: src/view/shell/Drawer.tsx:660
-#: src/view/shell/Drawer.tsx:662
+#: src/view/shell/Drawer.tsx:667
+#: src/view/shell/Drawer.tsx:669
 msgid "Terms of Service"
 msgstr "서비스 이용약관"
 
@@ -10159,7 +10153,7 @@ msgstr "어떤 주제에 관심이 있으신가요?"
 msgid "What do you want to call your starter pack?"
 msgstr "스타터 팩의 이름을 무엇으로 할까요?"
 
-#: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/auth/SplashScreen.tsx:35
 #: src/view/com/auth/SplashScreen.web.tsx:99
 #: src/view/com/composer/Composer.tsx:777
 msgid "What's up?"

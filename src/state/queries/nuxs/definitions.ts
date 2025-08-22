@@ -1,6 +1,6 @@
 import type zod from 'zod'
 
-import {type BaseNux} from '#/state/queries/nuxs/types'
+import { type BaseNux } from '#/state/queries/nuxs/types'
 
 export enum Nux {
   NeueTypography = 'NeueTypography',

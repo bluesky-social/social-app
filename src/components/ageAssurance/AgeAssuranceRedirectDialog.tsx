@@ -1,23 +1,23 @@
-import {useEffect, useRef, useState} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useEffect, useRef, useState } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {retry} from '#/lib/async/retry'
-import {wait} from '#/lib/async/wait'
-import {isNative} from '#/platform/detection'
-import {useAgeAssuranceAPIContext} from '#/state/ageAssurance'
-import {logger} from '#/state/ageAssurance/util'
-import {useAgent} from '#/state/session'
-import {atoms as a, useTheme, web} from '#/alf'
-import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
-import {Button, ButtonText} from '#/components/Button'
+import { retry } from '#/lib/async/retry'
+import { wait } from '#/lib/async/wait'
+import { isNative } from '#/platform/detection'
+import { useAgeAssuranceAPIContext } from '#/state/ageAssurance'
+import { logger } from '#/state/ageAssurance/util'
+import { useAgent } from '#/state/session'
+import { atoms as a, useTheme, web } from '#/alf'
+import { AgeAssuranceBadge } from '#/components/ageAssurance/AgeAssuranceBadge'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {CheckThick_Stroke2_Corner0_Rounded as SuccessIcon} from '#/components/icons/Check'
-import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context'
+import { CheckThick_Stroke2_Corner0_Rounded as SuccessIcon } from '#/components/icons/Check'
+import { CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon } from '#/components/icons/CircleInfo'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
 
 export type AgeAssuranceRedirectDialogState = {
   result: 'success' | 'unknown'
@@ -106,7 +106,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           if (!agent.session) return
           if (unmounted.current) return
 
-          const {data} = await agent.app.bsky.unspecced.getAgeAssuranceState()
+          const {data} = await agent.app.gndr.unspecced.getAgeAssuranceState()
 
           if (data.status !== 'assured') {
             throw new Error(

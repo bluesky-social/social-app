@@ -1,11 +1,11 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {isIOS} from '#/platform/detection'
-import {atoms as a} from '#/alf'
-import {FullWindowOverlay} from '#/components/FullWindowOverlay'
-import {usePolicyUpdateStateContext} from '#/components/PolicyUpdateOverlay/context'
-import {Portal} from '#/components/PolicyUpdateOverlay/Portal'
-import {Content} from '#/components/PolicyUpdateOverlay/updates/202508'
+import { isIOS } from '#/platform/detection'
+import { atoms as a } from '#/alf'
+import { FullWindowOverlay } from '#/components/FullWindowOverlay'
+import { usePolicyUpdateStateContext } from '#/components/PolicyUpdateOverlay/context'
+import { Portal } from '#/components/PolicyUpdateOverlay/Portal'
+import { Content } from '#/components/PolicyUpdateOverlay/updates/202508'
 
 export {Provider} from '#/components/PolicyUpdateOverlay/context'
 export {usePolicyUpdateStateContext} from '#/components/PolicyUpdateOverlay/context'

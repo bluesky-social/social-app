@@ -1,5 +1,5 @@
 import ExpoImageCropTool, {type OpenCropperOptions} from 'expo-image-crop-tool'
-import {type ImagePickerOptions, launchCameraAsync} from 'expo-image-picker'
+import { type ImagePickerOptions, launchCameraAsync } from 'expo-image-picker'
 
 export {openPicker, type PickerImage as RNImage} from './picker.shared'
 

@@ -1,21 +1,16 @@
-import {
-  type $Typed,
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyGraphGetStarterPack as AppGndrGraphGetStarterPack,
-  type BskyAgent as GndrAgent,
-  type ComAtprotoRepoApplyWrites,
-  type Facet,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
+import { type $Typed, type AppGndrActorDefs, type AppGndrGraphGetStarterPack, type ComAtprotoRepoApplyWrites, type Facet, type GndrAgent,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useMutation } from '@tanstack/react-query'
 
-import {until} from '#/lib/async/until'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {enforceLen} from '#/lib/strings/helpers'
-import {useAgent} from '#/state/session'
+import { until } from '#/lib/async/until'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { enforceLen } from '#/lib/strings/helpers'
+import { useAgent } from '#/state/session'
 import type * as gndr from '#/types/gndr'
+import { getAppNS } from './api/appNS'
+import { getAppType } from './api/appPrefix'
 
 export const createStarterPackList = async ({
   name,
@@ -30,9 +25,7 @@ export const createStarterPackList = async ({
   profiles: gndr.profile.AnyProfileView[]
   agent: GndrAgent
 }): Promise<{uri: string; cid: string}> => {
-  if (profiles.length === 0) throw new Error('No profiles given')
-
-  const list = await agent.app.bsky.graph.list.create(
+  const list = await getAppNS(agent).graph.list.create(
     {repo: agent.session!.did},
     {
       name,
@@ -40,7 +33,7 @@ export const createStarterPackList = async ({
       descriptionFacets,
       avatar: undefined,
       createdAt: new Date().toISOString(),
-      purpose: 'app.bsky.graph.defs#referencelist',
+      purpose: 'app.gndr.graph.defs#referencelist',
     },
   )
   if (!list) throw new Error('List creation failed')
@@ -77,18 +70,18 @@ export function useGenerateStarterPackMutation({
       await Promise.all([
         (async () => {
           profile = (
-            await agent.app.bsky.actor.getProfile({
+            await getAppNS(agent).actor.getProfile({
               actor: agent.session!.did,
             })
           ).data
         })(),
         (async () => {
           profiles = (
-            await agent.app.bsky.actor.searchActors({
+            await getAppNS(agent).actor.searchActors({
               q: encodeURIComponent('*'),
               limit: 49,
             })
-          ).data.actors.filter(p => p.viewer?.following)
+          ).data.actors.filter((p: any) => p.viewer?.following)
         })(),
       ])
 
@@ -116,7 +109,7 @@ export function useGenerateStarterPackMutation({
         agent,
       })
 
-      return await agent.app.bsky.graph.starterpack.create(
+      return await getAppNS(agent).graph.starterpack.create(
         {
           repo: agent.session!.did,
         },
@@ -148,9 +141,9 @@ function createListItem({
 }): $Typed<ComAtprotoRepoApplyWrites.Create> {
   return {
     $type: 'com.atproto.repo.applyWrites#create',
-    collection: 'app.bsky.graph.listitem',
+    collection: getAppType('graph.listitem') as 'app.gndr.graph.listitem' | 'app.bksy.graph.listitem',
     value: {
-      $type: 'app.bsky.graph.listitem',
+      $type: getAppType('graph.listitem') as 'app.gndr.graph.listitem' | 'app.bksy.graph.listitem',
       subject: did,
       list: listUri,
       createdAt: new Date().toISOString(),
@@ -167,6 +160,6 @@ async function whenAppViewReady(
     5, // 5 tries
     1e3, // 1s delay between tries
     fn,
-    () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
+    () => getAppNS(agent).graph.getStarterPack({starterPack: uri}),
   )
 }

@@ -1,9 +1,6 @@
-import {
-  type AppBskyLabelerDefs as AppGndrLabelerDefs,
-  ComAtprotoModerationDefs,
-} from '@atproto/api'
+import { type AppGndrLabelerDefs, ComAtprotoModerationDefs,  } from '@gander-social-atproto/api'
 
-import {type ReportOption} from './utils/useReportOptions'
+import { type ReportOption } from './utils/useReportOptions'
 
 export type ReportState = {
   selectedOption?: ReportOption

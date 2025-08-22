@@ -1,12 +1,12 @@
-import {useMemo} from 'react'
-import {moderateUserList} from '@atproto/api'
+import { useMemo } from 'react'
+import { moderateUserList } from '@gander-social-atproto/api'
 
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {atoms as a, useTheme} from '#/alf'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { atoms as a, useTheme } from '#/alf'
 import * as ListCard from '#/components/ListCard'
-import {ContentHider} from '#/components/moderation/ContentHider'
-import {type EmbedType} from '#/types/gndr/post'
-import {type CommonProps} from './types'
+import { ContentHider } from '#/components/moderation/ContentHider'
+import { type EmbedType } from '#/types/gndr/post'
+import { type CommonProps } from './types'
 
 export function ListEmbed({
   embed,

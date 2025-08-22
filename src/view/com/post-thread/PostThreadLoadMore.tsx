@@ -1,13 +1,13 @@
 import * as React from 'react'
-import {View} from 'react-native'
-import {type AppBskyFeedDefs as AppGndrFeedDefs, AtUri} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import { View } from 'react-native'
+import { type AppGndrFeedDefs, AtUri } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
-import {Link} from '../util/Link'
-import {UserAvatar} from '../util/UserAvatar'
+import { makeProfileLink } from '#/lib/routes/links'
+import { atoms as a, useTheme } from '#/alf'
+import { Text } from '#/components/Typography'
+import { Link } from '../util/Link'
+import { UserAvatar } from '../util/UserAvatar'
 
 export function PostThreadLoadMore({post}: {post: AppGndrFeedDefs.PostView}) {
   const t = useTheme()

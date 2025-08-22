@@ -1,13 +1,13 @@
 import React from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
-import {Context, initialState, reducer} from '#/screens/Onboarding/state'
-import {StepFinished} from '#/screens/Onboarding/StepFinished'
-import {StepInterests} from '#/screens/Onboarding/StepInterests'
-import {StepProfile} from '#/screens/Onboarding/StepProfile'
-import {Portal} from '#/components/Portal'
+import { Layout, OnboardingControls } from '#/screens/Onboarding/Layout'
+import { Context, initialState, reducer } from '#/screens/Onboarding/state'
+import { StepFinished } from '#/screens/Onboarding/StepFinished'
+import { StepInterests } from '#/screens/Onboarding/StepInterests'
+import { StepProfile } from '#/screens/Onboarding/StepProfile'
+import { Portal } from '#/components/Portal'
 
 export function Onboarding() {
   const {_} = useLingui()

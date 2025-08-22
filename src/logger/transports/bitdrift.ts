@@ -1,6 +1,6 @@
-import {debug, error, info, warn} from '#/logger/bitdrift/lib'
-import {LogLevel, type Transport} from '#/logger/types'
-import {prepareMetadata} from '#/logger/util'
+import { debug, error, info, warn } from '#/logger/bitdrift/lib'
+import { LogLevel, type Transport } from '#/logger/types'
+import { prepareMetadata } from '#/logger/util'
 
 const logFunctions = {
   [LogLevel.Debug]: debug,

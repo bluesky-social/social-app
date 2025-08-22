@@ -1,10 +1,10 @@
-import {type StyleProp, type ViewStyle} from 'react-native'
-import {View} from 'react-native'
-import {msg, plural} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { type StyleProp, type ViewStyle } from 'react-native'
+import { View } from 'react-native'
+import { msg, plural } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import { atoms as a, useTheme } from '#/alf'
+import { Text } from '#/components/Typography'
 
 /**
  * Absolutely positioned time indicator showing how many seconds are remaining

@@ -1,10 +1,10 @@
-import {View} from 'react-native'
-import {type ChatGndrConvoDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type ChatGndrConvoDefs } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a} from '#/alf'
-import {MessageContextMenu} from '#/components/dms/MessageContextMenu'
+import { atoms as a } from '#/alf'
+import { MessageContextMenu } from '#/components/dms/MessageContextMenu'
 
 export function ActionsWrapper({
   message,

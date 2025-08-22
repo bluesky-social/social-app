@@ -1,4 +1,4 @@
-import {createSinglePathSVG} from './TEMPLATE'
+import { createSinglePathSVG } from './TEMPLATE'
 
 export const ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded =
   createSinglePathSVG({

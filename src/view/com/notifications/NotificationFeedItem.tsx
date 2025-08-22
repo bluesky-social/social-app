@@ -1,75 +1,50 @@
-import {
-  memo,
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
-import {
-  Animated,
-  type GestureResponderEvent,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AppGndrGraphFollow,
-  moderateProfile,
-  type ModerationDecision,
-  type ModerationOpts,
-} from '@atproto/api'
-import {AtUri} from '@atproto/api'
-import {TID} from '@atprotocommon-web'
-import {msg, Plural, plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import { memo, type ReactElement, useCallback, useEffect, useMemo, useState,  } from 'react'
+import { Animated, type GestureResponderEvent, Pressable, StyleSheet, TouchableOpacity, View,  } from 'react-native'
+import { TID } from '@atprotocommon-web'
+import { type AppGndrActorDefs, type AppGndrFeedDefs, AppGndrFeedPost, AppGndrGraphFollow, moderateProfile, type ModerationDecision, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { AtUri } from '@gander-social-atproto/api'
+import { msg, Plural, plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {MAX_POST_LINES} from '#/lib/constants'
-import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {makeProfileLink} from '#/lib/routes/links'
-import {type NavigationProp} from '#/lib/routes/types'
-import {forceLTR} from '#/lib/strings/bidi'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {niceDate} from '#/lib/strings/time'
-import {s} from '#/lib/styles'
-import {logger} from '#/logger'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {type FeedNotification} from '#/state/queries/notifications/feed'
-import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
-import {useAgent} from '#/state/session'
-import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
-import {Post} from '#/view/com/post/Post'
-import {formatCount} from '#/view/com/util/numeric/format'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, platform, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
-} from '#/components/icons/Chevron'
-import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/components/icons/Heart2'
-import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
-import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
-import {StarterPack} from '#/components/icons/StarterPack'
-import {VerifiedCheck} from '#/components/icons/VerifiedCheck'
-import {InlineLinkText, Link} from '#/components/Link'
+import { MAX_POST_LINES } from '#/lib/constants'
+import { useAnimatedValue } from '#/lib/hooks/useAnimatedValue'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { makeProfileLink } from '#/lib/routes/links'
+import { type NavigationProp } from '#/lib/routes/types'
+import { forceLTR } from '#/lib/strings/bidi'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { niceDate } from '#/lib/strings/time'
+import { s } from '#/lib/styles'
+import { logger } from '#/logger'
+import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
+import { type FeedNotification } from '#/state/queries/notifications/feed'
+import { unstableCacheProfileView } from '#/state/queries/unstable-profile-cache'
+import { useAgent } from '#/state/session'
+import { FeedSourceCard } from '#/view/com/feeds/FeedSourceCard'
+import { Post } from '#/view/com/post/Post'
+import { formatCount } from '#/view/com/util/numeric/format'
+import { TimeElapsed } from '#/view/com/util/TimeElapsed'
+import { PreviewableUserAvatar, UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, platform, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { BellRinging_Filled_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging'
+import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon, ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,  } from '#/components/icons/Chevron'
+import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled } from '#/components/icons/Heart2'
+import { PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon } from '#/components/icons/Person'
+import { Repost_Stroke2_Corner2_Rounded as RepostIcon } from '#/components/icons/Repost'
+import { StarterPack } from '#/components/icons/StarterPack'
+import { VerifiedCheck } from '#/components/icons/VerifiedCheck'
+import { InlineLinkText, Link } from '#/components/Link'
 import * as MediaPreview from '#/components/MediaPreview'
-import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
-import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import { ProfileHoverCard } from '#/components/ProfileHoverCard'
+import { Notification as StarterPackCard } from '#/components/StarterPack/StarterPackCard'
+import { SubtleWebHover } from '#/components/SubtleWebHover'
+import { Text } from '#/components/Typography'
+import { useSimpleVerificationState } from '#/components/verification'
+import { VerificationCheck } from '#/components/verification/VerificationCheck'
 import * as gndr from '#/types/gndr'
 
 const MAX_AUTHORS = 5

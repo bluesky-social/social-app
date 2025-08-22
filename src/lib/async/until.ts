@@ -1,4 +1,4 @@
-import {timeout} from './timeout'
+import { timeout } from './timeout'
 
 export async function until<T>(
   retries: number,

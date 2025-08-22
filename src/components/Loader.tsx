@@ -7,9 +7,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import {atoms as a, flatten, useTheme} from '#/alf'
-import {type Props, useCommonSVGProps} from '#/components/icons/common'
-import {Loader_Stroke2_Corner0_Rounded as Icon} from '#/components/icons/Loader'
+import { atoms as a, flatten, useTheme } from '#/alf'
+import { type Props, useCommonSVGProps } from '#/components/icons/common'
+import { Loader_Stroke2_Corner0_Rounded as Icon } from '#/components/icons/Loader'
 
 export function Loader(props: Props) {
   const t = useTheme()

@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import { t } from '@lingui/macro'
 
 export function cleanError(str: any): string {
   if (!str) {

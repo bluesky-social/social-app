@@ -1,88 +1,59 @@
-import {memo, useMemo} from 'react'
-import {
-  Platform,
-  type PressableProps,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native'
+import { memo, useMemo } from 'react'
+import { Platform, type PressableProps, type StyleProp, type ViewStyle,  } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  AtUri,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import { type AppGndrFeedDefs, AppGndrFeedPost, type AppGndrFeedThreadgate, AtUri, type RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/native'
 
-import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {getCurrentRoute} from '#/lib/routes/helpers'
-import {makeProfileLink} from '#/lib/routes/links'
-import {
-  type CommonNavigatorParams,
-  type NavigationProp,
-} from '#/lib/routes/types'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
-import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {toShareUrl} from '#/lib/strings/url-helpers'
-import {getTranslatorLink} from '#/locale/helpers'
-import {logger} from '#/logger'
-import {type Shadow} from '#/state/cache/post-shadow'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {useLanguagePrefs} from '#/state/preferences'
-import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
-import {usePinnedPostMutation} from '#/state/queries/pinned-post'
-import {
-  usePostDeleteMutation,
-  useThreadMuteMutationQueue,
-} from '#/state/queries/post'
-import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
-import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
-import {
-  useProfileBlockMutationQueue,
-  useProfileMuteMutationQueue,
-} from '#/state/queries/profile'
-import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
-import {useRequireAuth, useSession} from '#/state/session'
-import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import { DISCOVER_DEBUG_DIDS } from '#/lib/constants'
+import { useOpenLink } from '#/lib/hooks/useOpenLink'
+import { getCurrentRoute } from '#/lib/routes/helpers'
+import { makeProfileLink } from '#/lib/routes/links'
+import { type CommonNavigatorParams, type NavigationProp,  } from '#/lib/routes/types'
+import { logEvent, useGate } from '#/lib/statsig/statsig'
+import { richTextToString } from '#/lib/strings/rich-text-helpers'
+import { toShareUrl } from '#/lib/strings/url-helpers'
+import { getTranslatorLink } from '#/locale/helpers'
+import { logger } from '#/logger'
+import { type Shadow } from '#/state/cache/post-shadow'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { useFeedFeedbackContext } from '#/state/feed-feedback'
+import { useLanguagePrefs } from '#/state/preferences'
+import { useHiddenPosts, useHiddenPostsApi } from '#/state/preferences'
+import { usePinnedPostMutation } from '#/state/queries/pinned-post'
+import { usePostDeleteMutation, useThreadMuteMutationQueue,  } from '#/state/queries/post'
+import { useToggleQuoteDetachmentMutation } from '#/state/queries/postgate'
+import { getMaybeDetachedQuoteEmbed } from '#/state/queries/postgate/util'
+import { useProfileBlockMutationQueue, useProfileMuteMutationQueue,  } from '#/state/queries/profile'
+import { useToggleReplyVisibilityMutation } from '#/state/queries/threadgate'
+import { useRequireAuth, useSession } from '#/state/session'
+import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies'
 import * as Toast from '#/view/com/util/Toast'
-import {useDialogControl} from '#/components/Dialog'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {
-  PostInteractionSettingsDialog,
-  usePrefetchPostInteractionSettings,
-} from '#/components/dialogs/PostInteractionSettingsDialog'
-import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
-import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
-import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {
-  EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
-  EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
-} from '#/components/icons/Emoji'
-import {Eye_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/Eye'
-import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
-import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
-import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
-import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
-import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
-import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
-import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
-import {Loader} from '#/components/Loader'
+import { useDialogControl } from '#/components/Dialog'
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context'
+import { PostInteractionSettingsDialog, usePrefetchPostInteractionSettings,  } from '#/components/dialogs/PostInteractionSettingsDialog'
+import { Atom_Stroke2_Corner0_Rounded as AtomIcon } from '#/components/icons/Atom'
+import { BubbleQuestion_Stroke2_Corner0_Rounded as Translate } from '#/components/icons/Bubble'
+import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard'
+import { EmojiSad_Stroke2_Corner0_Rounded as EmojiSad, EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,  } from '#/components/icons/Emoji'
+import { Eye_Stroke2_Corner0_Rounded as Eye } from '#/components/icons/Eye'
+import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash'
+import { Filter_Stroke2_Corner0_Rounded as Filter } from '#/components/icons/Filter'
+import { Mute_Stroke2_Corner0_Rounded as MuteIcon } from '#/components/icons/Mute'
+import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute'
+import { PersonX_Stroke2_Corner0_Rounded as PersonX } from '#/components/icons/Person'
+import { Pin_Stroke2_Corner0_Rounded as PinIcon } from '#/components/icons/Pin'
+import { SettingsGear2_Stroke2_Corner0_Rounded as Gear } from '#/components/icons/SettingsGear2'
+import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon } from '#/components/icons/Speaker'
+import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker'
+import { Trash_Stroke2_Corner0_Rounded as Trash } from '#/components/icons/Trash'
+import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning'
+import { Loader } from '#/components/Loader'
 import * as Menu from '#/components/Menu'
-import {
-  ReportDialog,
-  useReportDialogControl,
-} from '#/components/moderation/ReportDialog'
+import { ReportDialog, useReportDialogControl,  } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {IS_INTERNAL} from '#/env'
+import { IS_INTERNAL } from '#/env'
 import * as gndr from '#/types/gndr'
 
 let PostMenuItems = ({
@@ -265,7 +236,7 @@ let PostMenuItems = ({
 
   const onPressShowMore = () => {
     feedFeedback.sendInteraction({
-      event: 'app.bsky.feed.defs#requestMore',
+      event: 'app.gndr.feed.defs#requestMore',
       item: postUri,
       feedContext: postFeedContext,
       reqId: postReqId,
@@ -275,7 +246,7 @@ let PostMenuItems = ({
 
   const onPressShowLess = () => {
     feedFeedback.sendInteraction({
-      event: 'app.bsky.feed.defs#requestLess',
+      event: 'app.gndr.feed.defs#requestLess',
       item: postUri,
       feedContext: postFeedContext,
       reqId: postReqId,
@@ -716,7 +687,7 @@ let PostMenuItems = ({
         control={reportDialogControl}
         subject={{
           ...post,
-          $type: 'app.bsky.feed.defs#postView',
+          $type: 'app.gndr.feed.defs#postView',
         }}
       />
 

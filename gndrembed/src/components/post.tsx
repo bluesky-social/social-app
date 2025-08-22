@@ -1,20 +1,15 @@
-import {
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AppBskyRichtextFacet as AppGndrRichtextFacet,
-  RichText,
-} from '@atproto/api'
-import {h} from 'preact'
+import { AppGndrFeedDefs, AppGndrFeedPost, AppGndrRichtextFacet, RichText,  } from '@gander-social-atproto/api'
+import { h } from 'preact'
 
 import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'
 import likeIcon from '../../assets/heart2_filled_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
 import repostIcon from '../../assets/repost_stroke2_corner2_rounded.svg'
-import {CONTENT_LABELS} from '../labels'
-import {getRkey, niceDate, prettyNumber} from '../utils'
-import {Container} from './container'
-import {Embed} from './embed'
-import {Link} from './link'
+import { CONTENT_LABELS } from '../labels'
+import { getRkey, niceDate, prettyNumber } from '../utils'
+import { Container } from './container'
+import { Embed } from './embed'
+import { Link } from './link'
 
 interface Props {
   thread: AppGndrFeedDefs.ThreadViewPost

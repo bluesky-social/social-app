@@ -1,15 +1,15 @@
-import {View} from 'react-native'
-import {type AppBskyLaberDefs as AppGndrLabelerDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AppBskyLaberDefs as AppGndrLabelerDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {getLabelingServiceTitle} from '#/lib/moderation'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, useButtonContext} from '#/components/Button'
-import {Divider} from '#/components/Divider'
+import { getLabelingServiceTitle } from '#/lib/moderation'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Button, useButtonContext } from '#/components/Button'
+import { Divider } from '#/components/Divider'
 import * as LabelingServiceCard from '#/components/LabelingServiceCard'
-import {Text} from '#/components/Typography'
-import {type ReportDialogProps} from './types'
+import { Text } from '#/components/Typography'
+import { type ReportDialogProps } from './types'
 
 export function SelectLabelerView({
   ...props

@@ -2,15 +2,15 @@
  * Note: relies on styles in #/styles.css
  */
 
-import {useEffect, useState} from 'react'
-import {AccessibilityInfo, Pressable, View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useEffect, useState } from 'react'
+import { AccessibilityInfo, Pressable, View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a, useBreakpoints} from '#/alf'
-import {DEFAULT_TOAST_DURATION} from '#/components/Toast/const'
-import {Toast} from '#/components/Toast/Toast'
-import {type ToastApi, type ToastType} from '#/components/Toast/types'
+import { atoms as a, useBreakpoints } from '#/alf'
+import { DEFAULT_TOAST_DURATION } from '#/components/Toast/const'
+import { Toast } from '#/components/Toast/Toast'
+import { type ToastApi, type ToastType } from '#/components/Toast/types'
 
 const TOAST_ANIMATION_STYLES = {
   entering: {

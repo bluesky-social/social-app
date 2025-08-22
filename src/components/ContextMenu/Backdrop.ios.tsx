@@ -1,4 +1,4 @@
-import {Pressable} from 'react-native'
+import { Pressable } from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
@@ -6,12 +6,12 @@ import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {BlurView} from 'expo-blur'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { BlurView } from 'expo-blur'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a, useTheme} from '#/alf'
-import {useContextMenuContext} from './context'
+import { atoms as a, useTheme } from '#/alf'
+import { useContextMenuContext } from './context'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 

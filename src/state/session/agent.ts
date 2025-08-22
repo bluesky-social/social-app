@@ -1,30 +1,17 @@
-import {
-  type AtpSessionData,
-  type AtpSessionEvent,
-  BskyAgent as GndrAgent,
-} from '@atproto/api'
-import {TID} from '@atproto/common-web'
+import { type AtpSessionData, type AtpSessionEvent, GndrAgent,  } from '@gander-social-atproto/api'
+import { TID } from '@gander-social-atproto/common-web'
 
-import {networkRetry} from '#/lib/async/retry'
-import {
-  DISCOVER_SAVED_FEED,
-  GNDR_SERVICE,
-  IS_PROD_SERVICE,
-  PUBLIC_GNDR_SERVICE,
-  TIMELINE_SAVED_FEED,
-} from '#/lib/constants'
-import {tryFetchGates} from '#/lib/statsig/statsig'
-import {getAge} from '#/lib/strings/time'
-import {logger} from '#/logger'
-import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
-import {emitNetworkConfirmed, emitNetworkLost} from '../events'
-import {addSessionErrorLog} from './logging'
-import {
-  configureModerationForAccount,
-  configureModerationForGuest,
-} from './moderation'
-import {type SessionAccount} from './types'
-import {isSessionExpired, isSignupQueued} from './util'
+import { networkRetry } from '#/lib/async/retry'
+import { DISCOVER_SAVED_FEED, GNDR_SERVICE, IS_PROD_SERVICE, PUBLIC_GNDR_SERVICE, TIMELINE_SAVED_FEED,  } from '#/lib/constants'
+import { tryFetchGates } from '#/lib/statsig/statsig'
+import { getAge } from '#/lib/strings/time'
+import { logger } from '#/logger'
+import { snoozeEmailConfirmationPrompt } from '#/state/shell/reminders'
+import { emitNetworkConfirmed, emitNetworkLost } from '../events'
+import { addSessionErrorLog } from './logging'
+import { configureModerationForAccount, configureModerationForGuest,  } from './moderation'
+import { type SessionAccount } from './types'
+import { isSessionExpired, isSignupQueued } from './util'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests

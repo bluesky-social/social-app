@@ -1,11 +1,5 @@
-import {memo, useCallback, useEffect, useRef, useState} from 'react'
-import {
-  type LayoutChangeEvent,
-  type NativeScrollEvent,
-  type ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { type LayoutChangeEvent, type NativeScrollEvent, type ScrollView, StyleSheet, View,  } from 'react-native'
 import Animated, {
   type AnimatedRef,
   runOnUI,
@@ -16,18 +10,14 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {ScrollProvider} from '#/lib/ScrollContext'
-import {isIOS} from '#/platform/detection'
-import {
-  Pager,
-  type PagerRef,
-  type RenderTabBarFnProps,
-} from '#/view/com/pager/Pager'
-import {useTheme} from '#/alf'
-import {type ListMethods} from '../util/List'
-import {PagerHeaderProvider} from './PagerHeaderContext'
-import {TabBar} from './TabBar'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { ScrollProvider } from '#/lib/ScrollContext'
+import { isIOS } from '#/platform/detection'
+import { Pager, type PagerRef, type RenderTabBarFnProps,  } from '#/view/com/pager/Pager'
+import { useTheme } from '#/alf'
+import { type ListMethods } from '../util/List'
+import { PagerHeaderProvider } from './PagerHeaderContext'
+import { TabBar } from './TabBar'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number

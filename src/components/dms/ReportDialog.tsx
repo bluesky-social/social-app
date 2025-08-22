@@ -1,42 +1,33 @@
-import {memo, useMemo, useState} from 'react'
-import {View} from 'react-native'
-import {
-  type $Typed,
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type ChatBskyConvoDefs as ChatGndrConvoDefs,
-  type ComAtprotoModerationCreateReport,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {StackActions, useNavigation} from '@react-navigation/native'
-import {useMutation} from '@tanstack/react-query'
+import { memo, useMemo, useState } from 'react'
+import { View } from 'react-native'
+import { type $Typed, type AppGndrActorDefs, type ChatBskyConvoDefs as ChatGndrConvoDefs, type ComAtprotoModerationCreateReport, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { StackActions, useNavigation } from '@react-navigation/native'
+import { useMutation } from '@tanstack/react-query'
 import type React from 'react'
 
-import {type ReportOption} from '#/lib/moderation/useReportOptions'
-import {type NavigationProp} from '#/lib/routes/types'
-import {isNative} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
-import {
-  useProfileBlockMutationQueue,
-  useProfileQuery,
-} from '#/state/queries/profile'
-import {useAgent} from '#/state/session'
-import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
+import { type ReportOption } from '#/lib/moderation/useReportOptions'
+import { type NavigationProp } from '#/lib/routes/types'
+import { isNative } from '#/platform/detection'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { useLeaveConvo } from '#/state/queries/messages/leave-conversation'
+import { useProfileBlockMutationQueue, useProfileQuery,  } from '#/state/queries/profile'
+import { useAgent } from '#/state/session'
+import { CharProgress } from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, platform, useBreakpoints, useTheme, web} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { atoms as a, platform, useBreakpoints, useTheme, web } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Divider} from '#/components/Divider'
+import { Divider } from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
-import {ChevronLeft_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
-import {PaperPlane_Stroke2_Corner0_Rounded as SendIcon} from '#/components/icons/PaperPlane'
-import {Loader} from '#/components/Loader'
-import {SelectReportOptionView} from '#/components/ReportDialog/SelectReportOptionView'
-import {RichText} from '#/components/RichText'
-import {Text} from '#/components/Typography'
-import {MessageItemMetadata} from './MessageItem'
+import { ChevronLeft_Stroke2_Corner0_Rounded as Chevron } from '#/components/icons/Chevron'
+import { PaperPlane_Stroke2_Corner0_Rounded as SendIcon } from '#/components/icons/PaperPlane'
+import { Loader } from '#/components/Loader'
+import { SelectReportOptionView } from '#/components/ReportDialog/SelectReportOptionView'
+import { RichText } from '#/components/RichText'
+import { Text } from '#/components/Typography'
+import { MessageItemMetadata } from './MessageItem'
 
 type ReportDialogParams = {
   type: 'convoMessage'

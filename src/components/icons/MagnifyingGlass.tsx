@@ -1,4 +1,4 @@
-import {createSinglePathSVG} from './TEMPLATE'
+import { createSinglePathSVG } from './TEMPLATE'
 
 export const MagnifyingGlass_Filled_Stroke2_Corner0_Rounded =
   createSinglePathSVG({

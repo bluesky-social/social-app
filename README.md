@@ -73,3 +73,40 @@ See [./LICENSE](./LICENSE) for the full license.
 ## P.S.
 
 We ❤️ you and all of the ways you support us. Thank you for making Gander a great place!
+
+## Upstream Package Switching
+
+This project supports switching between upstream package sources for all AT Protocol-related packages (e.g. `@atproto`, `@atproto-labs`, `@gander-social-atproto`, `@gander-atproto-nest`).
+
+### How to Change the Upstream Source
+
+1. **Set the upstream source in your `.env` file:**
+   - Add or update the following line:
+     ```
+     BUILD_UPSTREAM_SOURCE=bluesky
+     ```
+     - Use `bluesky` for the official upstream (`@atproto`, `@atproto-labs`).
+     - Use `gander` for the Gander upstream (`@gander-social-atproto`, `@gander-atproto-nest`).
+   - If not set, the default is `bluesky` (see `src/lib/constants.ts`).
+
+2. **Run the import update script:**
+   - From the project root, run:
+     ```
+     node scripts/switch-upstream.js [atproto|gander]
+     ```
+   - This will scan all source files and update import statements and package.json dependencies to use the correct upstream packages.
+
+3. **(Optional) Add to your build/start process:**
+   - To run automatically, add this to your `package.json` scripts:
+     ```json
+     "scripts": {
+       "switch-upstream": "node scripts/switch-upstream.js [atproto|gander]",
+       "start": "npm run switch-upstream && ..."
+     }
+     ```
+
+### Notes
+- The script will update all `.ts`, `.tsx`, `.js`, and `.jsx` files in main source folders.
+- It will not touch generated files, test/mocks, or `node_modules`.
+- You can run the script manually any time you change the upstream source.
+- The default upstream is set in `src/lib/constants.ts` and can be overridden by your `.env` file.

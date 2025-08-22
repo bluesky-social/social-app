@@ -1,16 +1,13 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 import Animated, {
   Keyframe,
   LayoutAnimationConfig,
   useReducedMotion,
 } from 'react-native-reanimated'
 
-import {s} from '#/lib/styles'
-import {useTheme} from '#/alf'
-import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2'
+import { s } from '#/lib/styles'
+import { useTheme } from '#/alf'
+import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled, Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,  } from '#/components/icons/Heart2'
 
 const keyframe = new Keyframe({
   0: {

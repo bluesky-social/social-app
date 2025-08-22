@@ -1,14 +1,9 @@
-import {type AppBskyNotificationDefs as AppGndrNotificationDefs} from '@atproto/api'
-import {t} from '@lingui/macro'
-import {
-  type QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { type AppGndrNotificationDefs } from '@gander-social-atproto/api'
+import { t } from '@lingui/macro'
+import { type QueryClient, useMutation, useQuery, useQueryClient,  } from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import { logger } from '#/logger'
+import { useAgent } from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 
 const RQKEY_ROOT = 'notification-settings'
@@ -22,7 +17,7 @@ export function useNotificationSettingsQuery({
   return useQuery({
     queryKey: RQKEY,
     queryFn: async () => {
-      const response = await agent.app.bsky.notification.getPreferences()
+      const response = await agent.app.gndr.notification.getPreferences()
       return response.data.preferences
     },
     enabled,
@@ -37,7 +32,7 @@ export function useNotificationSettingsUpdateMutation() {
       update: Partial<AppGndrNotificationDefs.Preferences>,
     ) => {
       const response =
-        await agent.app.bsky.notification.putPreferencesV2(update)
+        await agent.app.gndr.notification.putPreferencesV2(update)
       return response.data.preferences
     },
     onMutate: update => {

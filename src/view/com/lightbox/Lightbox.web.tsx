@@ -1,27 +1,15 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {
-  Image,
-  type ImageStyle,
-  Pressable,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {RemoveScrollBar} from 'react-remove-scroll-bar'
+import { Image, type ImageStyle, Pressable, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View, type ViewStyle,  } from 'react-native'
+import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { RemoveScrollBar } from 'react-remove-scroll-bar'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {colors, s} from '#/lib/styles'
-import {useLightbox, useLightboxControls} from '#/state/lightbox'
-import {Text} from '../util/text/Text'
-import {type ImageSource} from './ImageViewing/@types'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { colors, s } from '#/lib/styles'
+import { useLightbox, useLightboxControls } from '#/state/lightbox'
+import { Text } from '../util/text/Text'
+import { type ImageSource } from './ImageViewing/@types'
 import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 export function Lightbox() {

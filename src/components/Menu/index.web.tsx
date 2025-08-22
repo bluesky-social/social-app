@@ -1,36 +1,17 @@
-import {forwardRef, useCallback, useId, useMemo, useState} from 'react'
-import {
-  Pressable,
-  type StyleProp,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {DropdownMenu} from 'radix-ui'
+import { forwardRef, useCallback, useId, useMemo, useState } from 'react'
+import { Pressable, type StyleProp, type TextStyle, View, type ViewStyle,  } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { DropdownMenu } from 'radix-ui'
 
-import {useA11y} from '#/state/a11y'
-import {atoms as a, flatten, useTheme, web} from '#/alf'
+import { useA11y } from '#/state/a11y'
+import { atoms as a, flatten, useTheme, web } from '#/alf'
 import type * as Dialog from '#/components/Dialog'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {
-  Context,
-  ItemContext,
-  useMenuContext,
-  useMenuItemContext,
-} from '#/components/Menu/context'
-import {
-  type ContextType,
-  type GroupProps,
-  type ItemIconProps,
-  type ItemProps,
-  type ItemTextProps,
-  type RadixPassThroughTriggerProps,
-  type TriggerProps,
-} from '#/components/Menu/types'
-import {Portal} from '#/components/Portal'
-import {Text} from '#/components/Typography'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { Context, ItemContext, useMenuContext, useMenuItemContext,  } from '#/components/Menu/context'
+import { type ContextType, type GroupProps, type ItemIconProps, type ItemProps, type ItemTextProps, type RadixPassThroughTriggerProps, type TriggerProps,  } from '#/components/Menu/types'
+import { Portal } from '#/components/Portal'
+import { Text } from '#/components/Typography'
 
 export {useMenuContext}
 

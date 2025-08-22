@@ -1,11 +1,11 @@
-import {AtUri} from '@atproto/api'
+import { AtUri } from '@gander-social-atproto/api'
 import psl from 'psl'
 import TLDs from 'tlds'
 
-import {GNDR_SERVICE} from '#/lib/constants'
-import {isInvalidHandle} from '#/lib/strings/handles'
-import {startUriToStarterPackUri} from '#/lib/strings/starter-pack'
-import {logger} from '#/logger'
+import { GNDR_SERVICE } from '#/lib/constants'
+import { isInvalidHandle } from '#/lib/strings/handles'
+import { startUriToStarterPackUri } from '#/lib/strings/starter-pack'
+import { logger } from '#/logger'
 
 export const GNDR_APP_HOST = 'https://gndr.app'
 const GNDR_TRUSTED_HOSTS = [

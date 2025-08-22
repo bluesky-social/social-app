@@ -6,9 +6,9 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import {useWindowDimensions} from 'react-native'
+import { useWindowDimensions } from 'react-native'
 
-import {isNative, isWeb} from '#/platform/detection'
+import { isNative, isWeb } from '#/platform/detection'
 
 const Context = React.createContext<{
   activeViewId: string | null

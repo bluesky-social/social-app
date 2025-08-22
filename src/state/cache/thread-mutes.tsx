@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 
 import * as persisted from '#/state/persisted'
-import {useAgent, useSession} from '../session'
+import { useAgent, useSession } from '../session'
 
 type StateContext = Map<string, boolean>
 type SetStateContext = (uri: string, value: boolean) => void
@@ -81,7 +81,7 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
 
           setThreadMute(root, true)
 
-          await agent.api.app.bsky.graph
+          await agent.api.app.gndr.graph
             .muteThread({root})
             // not a big deal if this fails, since the post might have been deleted
             .catch(console.error)

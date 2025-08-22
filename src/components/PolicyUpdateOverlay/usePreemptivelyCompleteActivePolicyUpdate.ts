@@ -1,8 +1,8 @@
-import {useCallback} from 'react'
+import { useCallback } from 'react'
 
-import {ACTIVE_UPDATE_ID} from '#/components/PolicyUpdateOverlay/config'
-import {logger} from '#/components/PolicyUpdateOverlay/logger'
-import {device, useStorage} from '#/storage'
+import { ACTIVE_UPDATE_ID } from '#/components/PolicyUpdateOverlay/config'
+import { logger } from '#/components/PolicyUpdateOverlay/logger'
+import { device, useStorage } from '#/storage'
 
 /*
  * Marks the active policy update as completed in device storage.

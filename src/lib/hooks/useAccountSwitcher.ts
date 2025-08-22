@@ -1,14 +1,14 @@
-import {useCallback, useState} from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useState } from 'react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {type SessionAccount, useSessionApi} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import { logger } from '#/logger'
+import { isWeb } from '#/platform/detection'
+import { type SessionAccount, useSessionApi } from '#/state/session'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
-import {logEvent} from '../statsig/statsig'
-import {type LogEvents} from '../statsig/statsig'
+import { logEvent } from '../statsig/statsig'
+import { type LogEvents } from '../statsig/statsig'
 
 export function useAccountSwitcher() {
   const [pendingDid, setPendingDid] = useState<string | null>(null)

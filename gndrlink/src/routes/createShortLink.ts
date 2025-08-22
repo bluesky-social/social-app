@@ -1,12 +1,12 @@
 import assert from 'node:assert'
 
 import bodyParser from 'body-parser'
-import {type Express, type Request} from 'express'
+import { type Express, type Request } from 'express'
 
-import {type AppContext} from '../context.js'
-import {LinkType} from '../db/schema.js'
-import {randomId} from '../util.js'
-import {handler} from './util.js'
+import { type AppContext } from '../context.js'
+import { LinkType } from '../db/schema.js'
+import { randomId } from '../util.js'
+import { handler } from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.post(

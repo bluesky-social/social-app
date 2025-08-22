@@ -1,6 +1,6 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
 import * as Skele from '#/components/Skeleton'
 
 export function ThreadItemReplyComposerSkeleton() {

@@ -1,20 +1,16 @@
 import assert from 'node:assert'
 
 import React from 'react'
-import {type AppBskyGraphDefs as AppGndrGraphDefs, AtUri} from '@atproto/api'
+import { type AppGndrGraphDefs, AtUri } from '@gander-social-atproto/api'
 import resvg from '@resvg/resvg-js'
-import {type Express} from 'express'
+import { type Express } from 'express'
 import satori from 'satori'
 
-import {
-  StarterPack,
-  STARTERPACK_HEIGHT,
-  STARTERPACK_WIDTH,
-} from '../components/StarterPack.js'
-import {type AppContext} from '../context.js'
-import {httpLogger} from '../logger.js'
-import {loadEmojiAsSvg} from '../util.js'
-import {handler, originVerifyMiddleware} from './util.js'
+import { StarterPack, STARTERPACK_HEIGHT, STARTERPACK_WIDTH,  } from '../components/StarterPack.js'
+import { type AppContext } from '../context.js'
+import { httpLogger } from '../logger.js'
+import { loadEmojiAsSvg } from '../util.js'
+import { handler, originVerifyMiddleware } from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(

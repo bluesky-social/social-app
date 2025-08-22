@@ -1,10 +1,6 @@
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedGetActorLikes as GetActorLikes,
-  type BskyAgent as GndrAgent,
-} from '@atproto/api'
+import { type AppBskyFeedGetActorLikes as GetActorLikes, type AppGndrFeedDefs, type GndrAgent,  } from '@gander-social-atproto/api'
 
-import {type FeedAPI, type FeedAPIResponse} from './types'
+import { type FeedAPI, type FeedAPIResponse } from './types'
 
 export class LikesFeedAPI implements FeedAPI {
   agent: GndrAgent

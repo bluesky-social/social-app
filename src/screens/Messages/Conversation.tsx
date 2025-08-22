@@ -1,48 +1,33 @@
 import React, {useCallback, useEffect} from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  moderateProfile,
-  type ModerationDecision,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {
-  type RouteProp,
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, moderateProfile, type ModerationDecision,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { type RouteProp, useFocusEffect, useNavigation, useRoute,  } from '@react-navigation/native'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 
-import {useEmail} from '#/lib/hooks/useEmail'
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {
-  type CommonNavigatorParams,
-  type NavigationProp,
-} from '#/lib/routes/types'
-import {isWeb} from '#/platform/detection'
-import {type Shadow, useMaybeProfileShadow} from '#/state/cache/profile-shadow'
-import {ConvoProvider, isConvoActive, useConvo} from '#/state/messages/convo'
-import {ConvoStatus} from '#/state/messages/convo/types'
-import {useCurrentConvoId} from '#/state/messages/current-convo-id'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {MessagesList} from '#/screens/Messages/components/MessagesList'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
-import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
-import {
-  EmailDialogScreenID,
-  useEmailDialogControl,
-} from '#/components/dialogs/EmailDialog'
-import {MessagesListBlockedFooter} from '#/components/dms/MessagesListBlockedFooter'
-import {MessagesListHeader} from '#/components/dms/MessagesListHeader'
-import {Error} from '#/components/Error'
+import { useEmail } from '#/lib/hooks/useEmail'
+import { useEnableKeyboardControllerScreen } from '#/lib/hooks/useEnableKeyboardController'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { type CommonNavigatorParams, type NavigationProp,  } from '#/lib/routes/types'
+import { isWeb } from '#/platform/detection'
+import { type Shadow, useMaybeProfileShadow } from '#/state/cache/profile-shadow'
+import { ConvoProvider, isConvoActive, useConvo } from '#/state/messages/convo'
+import { ConvoStatus } from '#/state/messages/convo/types'
+import { useCurrentConvoId } from '#/state/messages/current-convo-id'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useProfileQuery } from '#/state/queries/profile'
+import { useSetMinimalShellMode } from '#/state/shell'
+import { MessagesList } from '#/screens/Messages/components/MessagesList'
+import { atoms as a, useBreakpoints, useTheme, web } from '#/alf'
+import { AgeRestrictedScreen } from '#/components/ageAssurance/AgeRestrictedScreen'
+import { useAgeAssuranceCopy } from '#/components/ageAssurance/useAgeAssuranceCopy'
+import { EmailDialogScreenID, useEmailDialogControl,  } from '#/components/dialogs/EmailDialog'
+import { MessagesListBlockedFooter } from '#/components/dms/MessagesListBlockedFooter'
+import { MessagesListHeader } from '#/components/dms/MessagesListHeader'
+import { Error } from '#/components/Error'
 import * as Layout from '#/components/Layout'
-import {Loader} from '#/components/Loader'
+import { Loader } from '#/components/Loader'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,

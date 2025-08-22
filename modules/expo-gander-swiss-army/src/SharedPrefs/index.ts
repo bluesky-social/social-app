@@ -1,4 +1,4 @@
-import {NotImplementedError} from '../NotImplemented'
+import { NotImplementedError } from '../NotImplemented'
 
 export function setValue(
   key: string,

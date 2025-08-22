@@ -1,38 +1,25 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
-import {LayoutAnimation, View} from 'react-native'
-import {
-  AppBskyFeedPost as AppGndrFeedPost,
-  AppBskyRichtextFacet as AppGndrRichtextFacet,
-  AtUri,
-  moderatePost,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { LayoutAnimation, View } from 'react-native'
+import { AppGndrFeedPost, AppGndrRichtextFacet, AtUri, moderatePost, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { type RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {
-  type CommonNavigatorParams,
-  type NavigationProp,
-} from '#/lib/routes/types'
-import {
-  convertGndrAppUrlIfNeeded,
-  isGndrPostUrl,
-  makeRecordUri,
-} from '#/lib/strings/url-helpers'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {usePostQuery} from '#/state/queries/post'
-import {PostMeta} from '#/view/com/util/PostMeta'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Loader} from '#/components/Loader'
+import { makeProfileLink } from '#/lib/routes/links'
+import { type CommonNavigatorParams, type NavigationProp,  } from '#/lib/routes/types'
+import { convertGndrAppUrlIfNeeded, isGndrPostUrl, makeRecordUri,  } from '#/lib/strings/url-helpers'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { usePostQuery } from '#/state/queries/post'
+import { PostMeta } from '#/view/com/util/PostMeta'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
+import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times'
+import { Loader } from '#/components/Loader'
 import * as MediaPreview from '#/components/MediaPreview'
-import {ContentHider} from '#/components/moderation/ContentHider'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {RichText} from '#/components/RichText'
-import {Text} from '#/components/Typography'
+import { ContentHider } from '#/components/moderation/ContentHider'
+import { PostAlerts } from '#/components/moderation/PostAlerts'
+import { RichText } from '#/components/RichText'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
 
 export function useMessageEmbed() {
@@ -61,7 +48,7 @@ export function useMessageEmbed() {
 
         const url = convertGndrAppUrlIfNeeded(embedUrl)
         const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
-        const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
+        const uri = makeRecordUri(user, 'app.gndr.feed.post', rkey)
 
         setEmbed(uri)
       },

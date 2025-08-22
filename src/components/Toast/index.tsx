@@ -1,10 +1,6 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
-import {AccessibilityInfo, Platform} from 'react-native'
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { AccessibilityInfo, Platform } from 'react-native'
+import { Gesture, GestureDetector, GestureHandlerRootView,  } from 'react-native-gesture-handler'
 import Animated, {
   Easing,
   runOnJS,
@@ -20,13 +16,13 @@ const RootSiblings =
   Platform.OS !== 'web'
     ? require('react-native-root-siblings').default
     : undefined
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {atoms as a} from '#/alf'
-import {DEFAULT_TOAST_DURATION} from '#/components/Toast/const'
-import {Toast} from '#/components/Toast/Toast'
-import {type ToastApi, type ToastType} from '#/components/Toast/types'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { atoms as a } from '#/alf'
+import { DEFAULT_TOAST_DURATION } from '#/components/Toast/const'
+import { Toast } from '#/components/Toast/Toast'
+import { type ToastApi, type ToastType } from '#/components/Toast/types'
 
 const TOAST_ANIMATION_DURATION = 300
 

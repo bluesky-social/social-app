@@ -1,6 +1,6 @@
 import React from 'react'
-import {type ColorValue, Dimensions, StyleSheet, View} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import { type ColorValue, Dimensions, StyleSheet, View } from 'react-native'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
@@ -15,7 +15,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import {useHaptics} from '#/lib/haptics'
+import { useHaptics } from '#/lib/haptics'
 
 interface GestureAction {
   color: ColorValue

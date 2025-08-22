@@ -1,22 +1,8 @@
 /* eslint-disable no-labels */
-import {
-  AppBskyUnspeccedDefs as AppGndrUnspeccedDefs,
-  type ModerationOpts,
-} from '@atproto/api'
+import { AppGndrUnspeccedDefs, type ModerationOpts,  } from '@gander-social-atproto/api'
 
-import {
-  type ApiThreadItem,
-  type PostThreadParams,
-  type ThreadItem,
-  type TraversalMetadata,
-} from '#/state/queries/usePostThread/types'
-import {
-  getPostRecord,
-  getThreadPostNoUnauthenticatedUI,
-  getThreadPostUI,
-  getTraversalMetadata,
-  storeTraversalMetadata,
-} from '#/state/queries/usePostThread/utils'
+import { type ApiThreadItem, type PostThreadParams, type ThreadItem, type TraversalMetadata,  } from '#/state/queries/usePostThread/types'
+import { getPostRecord, getThreadPostNoUnauthenticatedUI, getThreadPostUI, getTraversalMetadata, storeTraversalMetadata,  } from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
 
 export function sortAndAnnotateThreadItems(

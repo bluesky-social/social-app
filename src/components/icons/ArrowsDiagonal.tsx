@@ -1,4 +1,4 @@
-import {createSinglePathSVG} from './TEMPLATE'
+import { createSinglePathSVG } from './TEMPLATE'
 
 export const ArrowsDiagonalOut_Stroke2_Corner0_Rounded = createSinglePathSVG({
   path: 'M14 5a1 1 0 1 1 0-2h6a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0V6.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L17.586 5H14ZM4 13a1 1 0 0 1 1 1v3.586l4.293-4.293a1 1 0 0 1 1.414 1.414L6.414 19H10a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1Z',

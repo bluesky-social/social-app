@@ -1,38 +1,27 @@
-import {useCallback} from 'react'
-import {
-  type ChatBskyActorDefs as ChatGndrActorDefs,
-  ChatBskyConvoDefs as ChatGndrConvoDefs,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {StackActions, useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import { useCallback } from 'react'
+import { type ChatBskyActorDefs as ChatGndrActorDefs, ChatBskyConvoDefs as ChatGndrConvoDefs,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { StackActions, useNavigation } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useEmail} from '#/lib/hooks/useEmail'
-import {type NavigationProp} from '#/lib/routes/types'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useAcceptConversation} from '#/state/queries/messages/accept-conversation'
-import {precacheConvoQuery} from '#/state/queries/messages/conversation'
-import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
-import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import { useEmail } from '#/lib/hooks/useEmail'
+import { type NavigationProp } from '#/lib/routes/types'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { useAcceptConversation } from '#/state/queries/messages/accept-conversation'
+import { precacheConvoQuery } from '#/state/queries/messages/conversation'
+import { useLeaveConvo } from '#/state/queries/messages/leave-conversation'
+import { useProfileBlockMutationQueue } from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
-import {
-  Button,
-  ButtonIcon,
-  type ButtonProps,
-  ButtonText,
-} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {
-  EmailDialogScreenID,
-  useEmailDialogControl,
-} from '#/components/dialogs/EmailDialog'
-import {ReportDialog} from '#/components/dms/ReportDialog'
-import {CircleX_Stroke2_Corner0_Rounded} from '#/components/icons/CircleX'
-import {Flag_Stroke2_Corner0_Rounded as FlagIcon} from '#/components/icons/Flag'
-import {PersonX_Stroke2_Corner0_Rounded as PersonXIcon} from '#/components/icons/Person'
-import {Loader} from '#/components/Loader'
+import { atoms as a } from '#/alf'
+import { Button, ButtonIcon, type ButtonProps, ButtonText,  } from '#/components/Button'
+import { useDialogControl } from '#/components/Dialog'
+import { EmailDialogScreenID, useEmailDialogControl,  } from '#/components/dialogs/EmailDialog'
+import { ReportDialog } from '#/components/dms/ReportDialog'
+import { CircleX_Stroke2_Corner0_Rounded } from '#/components/icons/CircleX'
+import { Flag_Stroke2_Corner0_Rounded as FlagIcon } from '#/components/icons/Flag'
+import { PersonX_Stroke2_Corner0_Rounded as PersonXIcon } from '#/components/icons/Person'
+import { Loader } from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 
 export function RejectMenu({

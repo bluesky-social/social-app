@@ -1,40 +1,26 @@
-import {useCallback, useMemo, useState} from 'react'
-import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
-import {
-  type AppBskyGraphDefs as AppGndrGraphDefs,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useMemo, useState } from 'react'
+import { ActivityIndicator, KeyboardAvoidingView, ScrollView, StyleSheet, TextInput, TouchableOpacity, View,  } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
+import { type AppGndrGraphDefs, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {cleanError, isNetworkError} from '#/lib/strings/errors'
-import {enforceLen} from '#/lib/strings/helpers'
-import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
-import {colors, gradients, s} from '#/lib/styles'
-import {useTheme} from '#/lib/ThemeContext'
-import {type ImageMeta} from '#/state/gallery'
-import {useModalControls} from '#/state/modals'
-import {
-  useListCreateMutation,
-  useListMetadataMutation,
-} from '#/state/queries/list'
-import {useAgent} from '#/state/session'
-import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {Text} from '#/view/com/util/text/Text'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { cleanError, isNetworkError } from '#/lib/strings/errors'
+import { enforceLen } from '#/lib/strings/helpers'
+import { richTextToString } from '#/lib/strings/rich-text-helpers'
+import { shortenLinks, stripInvalidMentions } from '#/lib/strings/rich-text-manip'
+import { colors, gradients, s } from '#/lib/styles'
+import { useTheme } from '#/lib/ThemeContext'
+import { type ImageMeta } from '#/state/gallery'
+import { useModalControls } from '#/state/modals'
+import { useListCreateMutation, useListMetadataMutation,  } from '#/state/queries/list'
+import { useAgent } from '#/state/session'
+import { ErrorMessage } from '#/view/com/util/error/ErrorMessage'
+import { Text } from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
+import { EditableUserAvatar } from '#/view/com/util/UserAvatar'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -67,9 +53,9 @@ export function Component({
     if (purpose) {
       return purpose
     }
-    return 'app.bsky.graph.defs#curatelist'
+    return 'app.gndr.graph.defs#curatelist'
   }, [list, purpose])
-  const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
+  const isCurateList = activePurpose === 'app.gndr.graph.defs#curatelist'
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [name, setName] = useState<string>(list?.name || '')

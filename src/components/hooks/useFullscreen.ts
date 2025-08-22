@@ -1,13 +1,7 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from 'react'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore,  } from 'react'
 
-import {isFirefox, isSafari} from '#/lib/browser'
-import {isWeb} from '#/platform/detection'
+import { isFirefox, isSafari } from '#/lib/browser'
+import { isWeb } from '#/platform/detection'
 
 function fullscreenSubscribe(onChange: () => void) {
   document.addEventListener('fullscreenchange', onChange)

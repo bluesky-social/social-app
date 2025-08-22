@@ -1,6 +1,6 @@
-import {nativeBuildVersion} from 'expo-application'
+import { nativeBuildVersion } from 'expo-application'
 
-import {BUNDLE_IDENTIFIER, IS_TESTFLIGHT, RELEASE_VERSION} from '#/env/common'
+import { BUNDLE_IDENTIFIER, IS_TESTFLIGHT, RELEASE_VERSION } from '#/env/common'
 
 export * from '#/env/common'
 

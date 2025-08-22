@@ -1,22 +1,22 @@
-import {useCallback, useState} from 'react'
-import {ActivityIndicator, Keyboard, View} from 'react-native'
-import {BskyAgent} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useState } from 'react'
+import { ActivityIndicator, Keyboard, View } from 'react-native'
+import { GndrAgent } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {cleanError, isNetworkError} from '#/lib/strings/errors'
-import {checkAndFormatResetCode} from '#/lib/strings/password'
-import {logger} from '#/logger'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { logEvent } from '#/lib/statsig/statsig'
+import { cleanError, isNetworkError } from '#/lib/strings/errors'
+import { checkAndFormatResetCode } from '#/lib/strings/password'
+import { logger } from '#/logger'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {FormError} from '#/components/forms/FormError'
+import { FormError } from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
-import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
-import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
-import {Text} from '#/components/Typography'
-import {PasswordValidation} from '../Signup/StepInfo/PasswordValidation'
+import { ChevronRight_Stroke2_Corner0_Rounded as Chevron } from '#/components/icons/Chevron'
+import { TimesLarge_Stroke2_Corner0_Rounded as Times } from '#/components/icons/Times'
+import { Text } from '#/components/Typography'
+import { PasswordValidation } from '../Signup/StepInfo/PasswordValidation'
 
 export function ResetPasswordDialog({
   control,
@@ -77,7 +77,7 @@ export function ResetPasswordDialog({
     setIsProcessing(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
+      const agent = new GndrAgent({service: serviceUrl})
       await agent.com.atproto.server.resetPassword({
         token: formattedCode,
         password,
@@ -108,7 +108,7 @@ export function ResetPasswordDialog({
     setResending(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
+      const agent = new GndrAgent({service: serviceUrl})
       await agent.com.atproto.server.requestPasswordReset({email})
       setResending(false)
       Keyboard.dismiss()

@@ -1,24 +1,16 @@
-import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  type AppBskyVideoDefs as AppGndrVideoDefs,
-  type BlobRef,
-  type BskyAgent as GndrAgent,
-} from '@atproto/api'
-import {type JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
-import {type I18n} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import { type ImagePickerAsset } from 'expo-image-picker'
+import { type AppGndrVideoDefs, type BlobRef, type GndrAgent,  } from '@gander-social-atproto/api'
+import { type JobStatus } from '@gander-social-atproto/api/dist/client/types/app.gndr.video/defs'
+import { type I18n } from '@lingui/core'
+import { msg } from '@lingui/macro'
 
-import {AbortError} from '#/lib/async/cancelable'
-import {compressVideo} from '#/lib/media/video/compress'
-import {
-  ServerError,
-  UploadLimitError,
-  VideoTooLargeError,
-} from '#/lib/media/video/errors'
-import {type CompressedVideo} from '#/lib/media/video/types'
-import {uploadVideo} from '#/lib/media/video/upload'
-import {createVideoAgent} from '#/lib/media/video/util'
-import {logger} from '#/logger'
+import { AbortError } from '#/lib/async/cancelable'
+import { compressVideo } from '#/lib/media/video/compress'
+import { ServerError, UploadLimitError, VideoTooLargeError,  } from '#/lib/media/video/errors'
+import { type CompressedVideo } from '#/lib/media/video/types'
+import { uploadVideo } from '#/lib/media/video/upload'
+import { createVideoAgent } from '#/lib/media/video/util'
+import { logger } from '#/logger'
 
 type CaptionsTrack = {lang: string; file: File}
 
@@ -335,7 +327,7 @@ export async function processVideo(
     let status: JobStatus | undefined
     let blob: BlobRef | undefined
     try {
-      const response = await videoAgent.app.bsky.video.getJobStatus({jobId})
+      const response = await videoAgent.app.gndr.video.getJobStatus({jobId})
       status = response.data.jobStatus
       pollFailures = 0
 

@@ -1,17 +1,14 @@
 import React from 'react'
-import {type TextStyle} from 'react-native'
-import {
-  AppBskyRichtextFacet as AppGndrRichtextFacet,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import { type TextStyle } from 'react-native'
+import { AppGndrRichtextFacet, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
 
-import {toShortUrl} from '#/lib/strings/url-helpers'
-import {atoms as a, flatten, type TextStyleProp} from '#/alf'
-import {isOnlyEmoji} from '#/alf/typography'
-import {InlineLinkText, type LinkProps} from '#/components/Link'
-import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {RichTextTag} from '#/components/RichTextTag'
-import {Text, type TextProps} from '#/components/Typography'
+import { toShortUrl } from '#/lib/strings/url-helpers'
+import { atoms as a, flatten, type TextStyleProp } from '#/alf'
+import { isOnlyEmoji } from '#/alf/typography'
+import { InlineLinkText, type LinkProps } from '#/components/Link'
+import { ProfileHoverCard } from '#/components/ProfileHoverCard'
+import { RichTextTag } from '#/components/RichTextTag'
+import { Text, type TextProps } from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
 

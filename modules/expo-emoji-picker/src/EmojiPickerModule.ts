@@ -1,4 +1,4 @@
-import {NativeModule, requireNativeModule} from 'expo'
+import { NativeModule, requireNativeModule } from 'expo'
 
 declare class EmojiPickerModule extends NativeModule {}
 

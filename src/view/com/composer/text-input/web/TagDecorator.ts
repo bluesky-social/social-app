@@ -14,7 +14,7 @@
  * the facet-set.
  */
 
-import {TAG_REGEX, TRAILING_PUNCTUATION_REGEX} from '@atproto/api'
+import {TAG_REGEX, TRAILING_PUNCTUATION_REGEX} from '@gander-social-atproto/api'
 import {Mark} from '@tiptap/core'
 import {type Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Plugin, PluginKey} from '@tiptap/pm/state'

@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/api'
+import { AtUri } from '@gander-social-atproto/api'
 
 import type * as gndr from '#/types/gndr'
 
@@ -20,7 +20,7 @@ export function createStarterPackLinkFromAndroidReferrer(
     if (contentParts[0] !== 'starterpack') return null
     if (contentParts.length !== 3) return null
 
-    return `at://${contentParts[1]}/app.bsky.graph.starterpack/${contentParts[2]}`
+    return `at://${contentParts[1]}/app.gndr.graph.starterpack/${contentParts[2]}`
   } catch (e) {
     return null
   }
@@ -35,7 +35,7 @@ export function parseStarterPackUri(uri?: string): {
   try {
     if (uri.startsWith('at://')) {
       const atUri = new AtUri(uri)
-      if (atUri.collection !== 'app.bsky.graph.starterpack') return null
+      if (atUri.collection !== 'app.gndr.graph.starterpack') return null
       if (atUri.rkey) {
         return {
           name: atUri.hostname,
@@ -77,7 +77,7 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 
   if (httpUri.startsWith('at://')) return httpUri
 
-  return `at://${parsed.name}/app.bsky.graph.starterpack/${parsed.rkey}`
+  return `at://${parsed.name}/app.gndr.graph.starterpack/${parsed.rkey}`
 }
 
 export function getStarterPackOgCard(
@@ -99,7 +99,7 @@ export function createStarterPackUri({
   did: string
   rkey: string
 }): string {
-  return new AtUri(`at://${did}/app.bsky.graph.starterpack/${rkey}`).toString()
+  return new AtUri(`at://${did}/app.gndr.graph.starterpack/${rkey}`).toString()
 }
 
 export function startUriToStarterPackUri(uri: string) {

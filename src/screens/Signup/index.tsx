@@ -1,30 +1,24 @@
-import {useEffect, useReducer, useState} from 'react'
-import {AppState, type AppStateStatus, View} from 'react-native'
+import { useEffect, useReducer, useState } from 'react'
+import { AppState, type AppStateStatus, View } from 'react-native'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import Svg, {Path} from 'react-native-svg'
-import {AppBskyGraphStarterpack as AppGndrGraphStarterpack} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { AppGndrGraphStarterpack } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useServiceQuery} from '#/state/queries/service'
-import {useStarterPackQuery} from '#/state/queries/starter-packs'
-import {useActiveStarterPack} from '#/state/shell/starter-pack'
-import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
-import {
-  initialState,
-  reducer,
-  SignupContext,
-  SignupStep,
-  useSubmitSignup,
-} from '#/screens/Signup/state'
-import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
-import {StepGandle} from '#/screens/Signup/StepGandle'
-import {StepInfo} from '#/screens/Signup/StepInfo'
-import {StepVerification} from '#/screens/Signup/StepVerification'
-import {atoms as a, useBreakpoints} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {LinearGradientBackground} from '#/components/LinearGradientBackground'
-import {Text} from '#/components/Typography'
+import { useServiceQuery } from '#/state/queries/service'
+import { useStarterPackQuery } from '#/state/queries/starter-packs'
+import { useActiveStarterPack } from '#/state/shell/starter-pack'
+import { LoggedOutLayout } from '#/view/com/util/layouts/LoggedOutLayout'
+import { initialState, reducer, SignupContext, SignupStep, useSubmitSignup,  } from '#/screens/Signup/state'
+import { StepCaptcha } from '#/screens/Signup/StepCaptcha'
+import { StepGandle } from '#/screens/Signup/StepGandle'
+import { StepInfo } from '#/screens/Signup/StepInfo'
+import { StepVerification } from '#/screens/Signup/StepVerification'
+import { atoms as a, useBreakpoints } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { LinearGradientBackground } from '#/components/LinearGradientBackground'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {

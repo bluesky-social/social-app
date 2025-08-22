@@ -1,9 +1,6 @@
-import {
-  AppBskyRichtextFacet as AppGndrRichtextFacet,
-  type RichText,
-} from '@atproto/api'
+import { AppGndrRichtextFacet, type RichText,  } from '@gander-social-atproto/api'
 
-import {linkRequiresWarning} from './url-helpers'
+import { linkRequiresWarning } from './url-helpers'
 
 export function richTextToString(rt: RichText, loose: boolean): string {
   const {text, facets} = rt

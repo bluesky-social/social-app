@@ -1,18 +1,8 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyActorSearchActors as AppGndrActorSearchActors,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  keepPreviousData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-  useQuery,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrActorSearchActors,  } from '@gander-social-atproto/api'
+import { type InfiniteData, keepPreviousData, type QueryClient, type QueryKey, useInfiniteQuery, useQuery,  } from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import { STALE } from '#/state/queries'
+import { useAgent } from '#/state/session'
 
 const RQKEY_ROOT = 'actor-search'
 export const RQKEY = (query: string) => [RQKEY_ROOT, query]

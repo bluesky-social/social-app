@@ -1,16 +1,10 @@
-import {
-  type ChatBskyConvoAcceptConvo as ChatGndrConvoAcceptConvo,
-  type ChatBskyConvoListConvos as ChatGndrConvoListConvos,
-} from '@atproto/api'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import { type ChatBskyConvoAcceptConvo as ChatGndrConvoAcceptConvo, type ChatBskyConvoListConvos as ChatGndrConvoListConvos,  } from '@gander-social-atproto/api'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
-import {DM_SERVICE_HEADERS} from './const'
-import {
-  RQKEY as CONVO_LIST_KEY,
-  RQKEY_ROOT as CONVO_LIST_ROOT_KEY,
-} from './list-conversations'
+import { logger } from '#/logger'
+import { useAgent } from '#/state/session'
+import { DM_SERVICE_HEADERS } from './const'
+import { RQKEY as CONVO_LIST_KEY, RQKEY_ROOT as CONVO_LIST_ROOT_KEY,  } from './list-conversations'
 
 export function useAcceptConversation(
   convoId: string,

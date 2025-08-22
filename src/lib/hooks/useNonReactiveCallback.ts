@@ -1,4 +1,4 @@
-import {useCallback, useInsertionEffect, useRef} from 'react'
+import { useCallback, useInsertionEffect, useRef } from 'react'
 
 // This should be used sparingly. It erases reactivity, i.e. when the inputs
 // change, the function itself will remain the same. This means that if you

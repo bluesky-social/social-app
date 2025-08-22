@@ -1,7 +1,7 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {FABInner, type FABProps} from './FABInner'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { FABInner, type FABProps } from './FABInner'
 
 export const FAB = (_opts: FABProps) => {
   const {isDesktop} = useWebMediaQueries()

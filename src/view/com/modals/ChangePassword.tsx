@@ -1,30 +1,24 @@
-import {useState} from 'react'
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useState } from 'react'
+import { ActivityIndicator, SafeAreaView, StyleSheet, TouchableOpacity, View,  } from 'react-native'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {cleanError, isNetworkError} from '#/lib/strings/errors'
-import {checkAndFormatResetCode} from '#/lib/strings/password'
-import {colors, s} from '#/lib/styles'
-import {logger} from '#/logger'
-import {isAndroid, isWeb} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
-import {useAgent, useSession} from '#/state/session'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Button} from '../util/forms/Button'
-import {Text} from '../util/text/Text'
-import {ScrollView} from './util'
-import {TextInput} from './util'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { cleanError, isNetworkError } from '#/lib/strings/errors'
+import { checkAndFormatResetCode } from '#/lib/strings/password'
+import { colors, s } from '#/lib/styles'
+import { logger } from '#/logger'
+import { isAndroid, isWeb } from '#/platform/detection'
+import { useModalControls } from '#/state/modals'
+import { useAgent, useSession } from '#/state/session'
+import { ErrorMessage } from '../util/error/ErrorMessage'
+import { Button } from '../util/forms/Button'
+import { Text } from '../util/text/Text'
+import { ScrollView } from './util'
+import { TextInput } from './util'
 
 enum Stages {
   RequestCode,

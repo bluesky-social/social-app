@@ -1,17 +1,14 @@
-import {useMemo} from 'react'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useMemo } from 'react'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {languageName} from '#/locale/helpers'
-import {APP_LANGUAGES, LANGUAGES} from '#/locale/languages'
-import {useLanguagePrefs} from '#/state/preferences'
-import {atoms as a, native, platform, tokens} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-  ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon,
-} from '#/components/icons/Chevron'
-import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Globe'
+import { languageName } from '#/locale/helpers'
+import { APP_LANGUAGES, LANGUAGES } from '#/locale/languages'
+import { useLanguagePrefs } from '#/state/preferences'
+import { atoms as a, native, platform, tokens } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon, ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon,  } from '#/components/icons/Chevron'
+import { Earth_Stroke2_Corner0_Rounded as EarthIcon } from '#/components/icons/Globe'
 import * as Menu from '#/components/Menu'
 
 export function SearchLanguageDropdown({

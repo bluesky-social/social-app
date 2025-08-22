@@ -1,9 +1,9 @@
-import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import { View } from 'react-native'
+import { Trans } from '@lingui/macro'
 
-import {atoms as a, useTheme} from '#/alf'
-import {CircleCheck_Stroke2_Corner0_Rounded} from '#/components/icons/CircleCheck'
-import {Text} from '#/components/Typography'
+import { atoms as a, useTheme } from '#/alf'
+import { CircleCheck_Stroke2_Corner0_Rounded } from '#/components/icons/CircleCheck'
+import { Text } from '#/components/Typography'
 
 export function ShowLessFollowup() {
   const t = useTheme()

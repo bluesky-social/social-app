@@ -1,29 +1,19 @@
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
-import {
-  usePreferencesQuery,
-  useSetThreadViewPreferencesMutation,
-} from '#/state/queries/preferences'
-import {
-  normalizeSort,
-  normalizeView,
-  useThreadPreferences,
-} from '#/state/queries/preferences/useThreadPreferences'
-import {atoms as a, useTheme} from '#/alf'
+import { type CommonNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { useGate } from '#/lib/statsig/statsig'
+import { usePreferencesQuery, useSetThreadViewPreferencesMutation,  } from '#/state/queries/preferences'
+import { normalizeSort, normalizeView, useThreadPreferences,  } from '#/state/queries/preferences/useThreadPreferences'
+import { atoms as a, useTheme } from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
-import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
-import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
-import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
-import {Tree_Stroke2_Corner0_Rounded as TreeIcon} from '#/components/icons/Tree'
+import { Beaker_Stroke2_Corner2_Rounded as BeakerIcon } from '#/components/icons/Beaker'
+import { Bubbles_Stroke2_Corner2_Rounded as BubblesIcon } from '#/components/icons/Bubble'
+import { PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon } from '#/components/icons/Person'
+import { Tree_Stroke2_Corner0_Rounded as TreeIcon } from '#/components/icons/Tree'
 import * as Layout from '#/components/Layout'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 import * as SettingsList from './components/SettingsList'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>

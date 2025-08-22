@@ -1,28 +1,21 @@
-import {memo, useEffect, useMemo, useState} from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyFeedPost as AppGndrFeedPost,
-  AtUri,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { memo, useEffect, useMemo, useState } from 'react'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, type AppGndrFeedPost, AtUri,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {EMBED_SCRIPT} from '#/lib/constants'
-import {niceDate} from '#/lib/strings/time'
-import {toShareUrl} from '#/lib/strings/url-helpers'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { EMBED_SCRIPT } from '#/lib/constants'
+import { niceDate } from '#/lib/strings/time'
+import { toShareUrl } from '#/lib/strings/url-helpers'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottomIcon,
-  ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
-} from '#/components/icons/Chevron'
-import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
-import {Text} from '#/components/Typography'
+import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check'
+import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottomIcon, ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,  } from '#/components/icons/Chevron'
+import { CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon } from '#/components/icons/CodeBrackets'
+import { Text } from '#/components/Typography'
 
 export type ColorModeValues = 'system' | 'light' | 'dark'
 

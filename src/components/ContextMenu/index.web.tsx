@@ -1,4 +1,4 @@
-import {type AuxiliaryViewProps} from './types'
+import { type AuxiliaryViewProps } from './types'
 
 export * from '#/components/Menu'
 

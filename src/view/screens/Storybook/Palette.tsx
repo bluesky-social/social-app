@@ -1,6 +1,6 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {atoms as a, useTheme} from '#/alf'
+import { atoms as a, useTheme } from '#/alf'
 
 export function Palette() {
   const t = useTheme()

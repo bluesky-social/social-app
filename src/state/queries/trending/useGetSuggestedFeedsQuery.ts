@@ -1,13 +1,10 @@
-import {useQuery} from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
-import {
-  aggregateUserInterests,
-  createGndrTopicsHeader,
-} from '#/lib/api/feed/utils'
-import {getContentLanguages} from '#/state/preferences/languages'
-import {STALE} from '#/state/queries'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import { aggregateUserInterests, createGndrTopicsHeader,  } from '#/lib/api/feed/utils'
+import { getContentLanguages } from '#/state/preferences/languages'
+import { STALE } from '#/state/queries'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { useAgent } from '#/state/session'
 
 export const DEFAULT_LIMIT = 15
 
@@ -24,7 +21,7 @@ export function useGetSuggestedFeedsQuery({enabled}: {enabled?: boolean}) {
     queryKey: createGetSuggestedFeedsQueryKey(),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const {data} = await agent.app.bsky.unspecced.getSuggestedFeeds(
+      const {data} = await agent.app.gndr.unspecced.getSuggestedFeeds(
         {
           limit: DEFAULT_LIMIT,
         },

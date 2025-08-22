@@ -1,21 +1,18 @@
 import React, {useCallback} from 'react'
-import {LayoutAnimation} from 'react-native'
-import {
-  ComAtprotoServerCreateAccount,
-  type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { LayoutAnimation } from 'react-native'
+import { ComAtprotoServerCreateAccount, type ComAtprotoServerDescribeServer,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 
-import {DEFAULT_SERVICE} from '#/lib/constants'
-import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle} from '#/lib/strings/handles'
-import {getAge} from '#/lib/strings/time'
-import {logger} from '#/logger'
-import {useSessionApi} from '#/state/session'
-import {useOnboardingDispatch} from '#/state/shell'
-import {usePreemptivelyCompleteActivePolicyUpdate} from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
+import { DEFAULT_SERVICE } from '#/lib/constants'
+import { cleanError } from '#/lib/strings/errors'
+import { createFullHandle } from '#/lib/strings/handles'
+import { getAge } from '#/lib/strings/time'
+import { logger } from '#/logger'
+import { useSessionApi } from '#/state/session'
+import { useOnboardingDispatch } from '#/state/shell'
+import { usePreemptivelyCompleteActivePolicyUpdate } from '#/components/PolicyUpdateOverlay/usePreemptivelyCompleteActivePolicyUpdate'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 

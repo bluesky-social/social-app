@@ -1,9 +1,9 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 import * as Progress from 'react-native-progress'
 
-import {atoms as a, useTheme} from '#/alf'
-import {AnimatedCheck} from '../anim/AnimatedCheck'
-import {Text} from '../Typography'
+import { atoms as a, useTheme } from '#/alf'
+import { AnimatedCheck } from '../anim/AnimatedCheck'
+import { Text } from '../Typography'
 
 export function ProgressGuideTask({
   current,

@@ -1,15 +1,15 @@
-import {useCallback} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {type SessionAccount, useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {atoms as a} from '#/alf'
+import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher'
+import { type SessionAccount, useSession } from '#/state/session'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { atoms as a } from '#/alf'
 import * as Dialog from '#/components/Dialog'
-import {AccountList} from '../AccountList'
-import {Text} from '../Typography'
+import { AccountList } from '../AccountList'
+import { Text } from '../Typography'
 
 export function SwitchAccountDialog({
   control,

@@ -1,106 +1,64 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {
-  LayoutAnimation,
-  type ListRenderItem,
-  Pressable,
-  ScrollView,
-  View,
-  type ViewabilityConfig,
-  type ViewToken,
-} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
-import {
-  Gesture,
-  GestureDetector,
-  type NativeGesture,
-} from 'react-native-gesture-handler'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { LayoutAnimation, type ListRenderItem, Pressable, ScrollView, View, type ViewabilityConfig, type ViewToken,  } from 'react-native'
+import { SystemBars } from 'react-native-edge-to-edge'
+import { Gesture, GestureDetector, type NativeGesture,  } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
-import {useEvent} from 'expo'
-import {useEventListener} from 'expo'
-import {Image, type ImageStyle} from 'expo-image'
-import {LinearGradient} from 'expo-linear-gradient'
-import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
-import {
-  AppBskyEmbedVideo as AppGndrEmbedVideo,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AtUri,
-  type ModerationDecision,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {
-  type RouteProp,
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import { useSafeAreaFrame, useSafeAreaInsets,  } from 'react-native-safe-area-context'
+import { useEvent } from 'expo'
+import { useEventListener } from 'expo'
+import { Image, type ImageStyle } from 'expo-image'
+import { LinearGradient } from 'expo-linear-gradient'
+import { createVideoPlayer, type VideoPlayer, VideoView } from 'expo-video'
+import { AppGndrEmbedVideo, type AppGndrFeedDefs, AppGndrFeedPost, AtUri, type ModerationDecision, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { type RouteProp, useFocusEffect, useIsFocused, useNavigation, useRoute,  } from '@react-navigation/native'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 
-import {HITSLOP_20} from '#/lib/constants'
-import {useHaptics} from '#/lib/haptics'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {
-  type CommonNavigatorParams,
-  type NavigationProp,
-} from '#/lib/routes/types'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {cleanError} from '#/lib/strings/errors'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {isAndroid} from '#/platform/detection'
-import {useA11y} from '#/state/a11y'
-import {
-  POST_TOMBSTONE,
-  type Shadow,
-  usePostShadow,
-} from '#/state/cache/post-shadow'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {
-  FeedFeedbackProvider,
-  useFeedFeedbackContext,
-} from '#/state/feed-feedback'
-import {useFeedFeedback} from '#/state/feed-feedback'
-import {usePostLikeMutationQueue} from '#/state/queries/post'
-import {
-  type AuthorFilter,
-  type FeedPostSliceItem,
-  usePostFeedQuery,
-} from '#/state/queries/post-feed'
-import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
-import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
-import {List} from '#/view/com/util/List'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {Header} from '#/screens/VideoFeed/components/Header'
-import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
-import {setSystemUITheme} from '#/alf/util/systemUI'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Divider} from '#/components/Divider'
-import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {EyeSlash_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/EyeSlash'
-import {Leaf_Stroke2_Corner0_Rounded as LeafIcon} from '#/components/icons/Leaf'
+import { HITSLOP_20 } from '#/lib/constants'
+import { useHaptics } from '#/lib/haptics'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { type CommonNavigatorParams, type NavigationProp,  } from '#/lib/routes/types'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { cleanError } from '#/lib/strings/errors'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { isAndroid } from '#/platform/detection'
+import { useA11y } from '#/state/a11y'
+import { POST_TOMBSTONE, type Shadow, usePostShadow,  } from '#/state/cache/post-shadow'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { FeedFeedbackProvider, useFeedFeedbackContext,  } from '#/state/feed-feedback'
+import { useFeedFeedback } from '#/state/feed-feedback'
+import { usePostLikeMutationQueue } from '#/state/queries/post'
+import { type AuthorFilter, type FeedPostSliceItem, usePostFeedQuery,  } from '#/state/queries/post-feed'
+import { useProfileFollowMutationQueue } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
+import { useSetMinimalShellMode } from '#/state/shell'
+import { useSetLightStatusBar } from '#/state/shell/light-status-bar'
+import { PostThreadComposePrompt } from '#/view/com/post-thread/PostThreadComposePrompt'
+import { List } from '#/view/com/util/List'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { Header } from '#/screens/VideoFeed/components/Header'
+import { atoms as a, ios, platform, ThemeProvider, useTheme } from '#/alf'
+import { setSystemUITheme } from '#/alf/util/systemUI'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { Divider } from '#/components/Divider'
+import { ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon } from '#/components/icons/Arrow'
+import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check'
+import { EyeSlash_Stroke2_Corner0_Rounded as Eye } from '#/components/icons/EyeSlash'
+import { Leaf_Stroke2_Corner0_Rounded as LeafIcon } from '#/components/icons/Leaf'
 import * as Layout from '#/components/Layout'
-import {Link} from '#/components/Link'
-import {ListFooter} from '#/components/Lists'
+import { Link } from '#/components/Link'
+import { ListFooter } from '#/components/Lists'
 import * as Hider from '#/components/moderation/Hider'
-import {PostControls} from '#/components/PostControls'
-import {RichText} from '#/components/RichText'
-import {Text} from '#/components/Typography'
+import { PostControls } from '#/components/PostControls'
+import { RichText } from '#/components/RichText'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
-import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
+import { Scrubber, VIDEO_PLAYER_BOTTOM_INSET } from './components/Scrubber'
 
 function createThreeVideoPlayers(
   sources?: [string, string, string],
@@ -494,7 +452,7 @@ let VideoItem = ({
     if (active) {
       sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#interactionSeen',
+        event: 'app.gndr.feed.defs#interactionSeen',
         feedContext,
         reqId,
       })
@@ -1056,7 +1014,7 @@ function PlayPauseTapArea({
       queueLike()
       sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#interactionLike',
+        event: 'app.gndr.feed.defs#interactionLike',
         feedContext,
         reqId,
       })

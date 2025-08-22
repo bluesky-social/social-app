@@ -1,5 +1,5 @@
 import React from 'react'
-import {Keyboard} from 'react-native'
+import { Keyboard } from 'react-native'
 
 export function useOnKeyboardDidShow(cb: () => unknown) {
   React.useEffect(() => {

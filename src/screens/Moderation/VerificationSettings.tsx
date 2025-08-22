@@ -1,22 +1,19 @@
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {urls} from '#/lib/constants'
-import {logger} from '#/logger'
-import {
-  usePreferencesQuery,
-  type UsePreferencesQueryResponse,
-} from '#/state/queries/preferences'
-import {useSetVerificationPrefsMutation} from '#/state/queries/preferences'
+import { urls } from '#/lib/constants'
+import { logger } from '#/logger'
+import { usePreferencesQuery, type UsePreferencesQueryResponse,  } from '#/state/queries/preferences'
+import { useSetVerificationPrefsMutation } from '#/state/queries/preferences'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a, useGutters} from '#/alf'
-import {Admonition} from '#/components/Admonition'
+import { atoms as a, useGutters } from '#/alf'
+import { Admonition } from '#/components/Admonition'
 import * as Toggle from '#/components/forms/Toggle'
-import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
+import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheck } from '#/components/icons/CircleCheck'
 import * as Layout from '#/components/Layout'
-import {InlineLinkText} from '#/components/Link'
-import {Loader} from '#/components/Loader'
+import { InlineLinkText } from '#/components/Link'
+import { Loader } from '#/components/Loader'
 
 export function Screen() {
   const {_} = useLingui()

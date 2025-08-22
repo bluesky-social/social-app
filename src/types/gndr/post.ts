@@ -1,14 +1,4 @@
-import {
-  type $Typed,
-  AppBskyEmbedExternal as AppGndrEmbedExternal,
-  AppBskyEmbedImages as AppGndrEmbedImages,
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
-  AppBskyEmbedVideo as AppGndrEmbedVideo,
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyGraphDefs as AppGndrGraphDefs,
-  AppBskyLabelerDefs as AppGndrLabelerDefs,
-} from '@atproto/api'
+import { type $Typed, AppGndrEmbedExternal, AppGndrEmbedImages, AppGndrEmbedRecord, AppGndrEmbedRecordWithMedia, AppGndrEmbedVideo, AppGndrFeedDefs, AppGndrGraphDefs, AppGndrLabelerDefs,  } from '@gander-social-atproto/api'
 
 export type Embed =
   | {

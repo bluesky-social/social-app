@@ -1,26 +1,13 @@
-import {
-  type BskyAgent as GndrAgent,
-  type ChatBskyConvoGetLog as ChatGndrConvoGetLog,
-} from '@atproto/api'
+import { type ChatBskyConvoGetLog as ChatGndrConvoGetLog, type GndrAgent,  } from '@gander-social-atproto/api'
 import EventEmitter from 'eventemitter3'
-import {nanoid} from 'nanoid/non-secure'
+import { nanoid } from 'nanoid/non-secure'
 
-import {networkRetry} from '#/lib/async/retry'
-import {isNetworkError} from '#/lib/strings/errors'
-import {Logger} from '#/logger'
-import {
-  BACKGROUND_POLL_INTERVAL,
-  DEFAULT_POLL_INTERVAL,
-} from '#/state/messages/events/const'
-import {
-  type MessagesEventBusDispatch,
-  MessagesEventBusDispatchEvent,
-  MessagesEventBusErrorCode,
-  type MessagesEventBusEvent,
-  type MessagesEventBusParams,
-  MessagesEventBusStatus,
-} from '#/state/messages/events/types'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import { networkRetry } from '#/lib/async/retry'
+import { isNetworkError } from '#/lib/strings/errors'
+import { Logger } from '#/logger'
+import { BACKGROUND_POLL_INTERVAL, DEFAULT_POLL_INTERVAL,  } from '#/state/messages/events/const'
+import { type MessagesEventBusDispatch, MessagesEventBusDispatchEvent, MessagesEventBusErrorCode, type MessagesEventBusEvent, type MessagesEventBusParams, MessagesEventBusStatus,  } from '#/state/messages/events/types'
+import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
 
 const logger = Logger.create(Logger.Context.DMsAgent)
 

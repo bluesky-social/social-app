@@ -1,35 +1,17 @@
-import {cloneElement, Fragment, isValidElement, useMemo} from 'react'
-import {
-  Pressable,
-  type StyleProp,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { cloneElement, Fragment, isValidElement, useMemo } from 'react'
+import { Pressable, type StyleProp, type TextStyle, View, type ViewStyle,  } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {isAndroid, isIOS, isNative} from '#/platform/detection'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { isAndroid, isIOS, isNative } from '#/platform/detection'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {
-  Context,
-  ItemContext,
-  useMenuContext,
-  useMenuItemContext,
-} from '#/components/Menu/context'
-import {
-  type ContextType,
-  type GroupProps,
-  type ItemIconProps,
-  type ItemProps,
-  type ItemTextProps,
-  type TriggerProps,
-} from '#/components/Menu/types'
-import {Text} from '#/components/Typography'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { Context, ItemContext, useMenuContext, useMenuItemContext,  } from '#/components/Menu/context'
+import { type ContextType, type GroupProps, type ItemIconProps, type ItemProps, type ItemTextProps, type TriggerProps,  } from '#/components/Menu/types'
+import { Text } from '#/components/Typography'
 
 export {
   type DialogControlProps as MenuControlProps,

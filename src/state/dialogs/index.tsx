@@ -1,9 +1,9 @@
 import React from 'react'
 
-import {isWeb} from '#/platform/detection'
-import {type DialogControlRefProps} from '#/components/Dialog'
-import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
-import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet'
+import { isWeb } from '#/platform/detection'
+import { type DialogControlRefProps } from '#/components/Dialog'
+import { Provider as GlobalDialogsProvider } from '#/components/dialogs/Context'
+import { BottomSheetNativeComponent } from '../../../modules/bottom-sheet'
 
 interface IDialogContext {
   /**

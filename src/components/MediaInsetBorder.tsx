@@ -1,7 +1,7 @@
 import type React from 'react'
 
-import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
-import {Fill} from '#/components/Fill'
+import { atoms as a, useTheme, type ViewStyleProp } from '#/alf'
+import { Fill } from '#/components/Fill'
 
 /**
  * Applies and thin border within a bounding box. Used to contrast media from

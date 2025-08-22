@@ -8,47 +8,11 @@
  */
 
 import React from 'react'
-import {formatDistance, type Locale} from 'date-fns'
-import {
-  ca,
-  cy,
-  da,
-  de,
-  el,
-  enGB,
-  eo,
-  es,
-  eu,
-  fi,
-  fr,
-  fy,
-  gd,
-  gl,
-  hi,
-  hu,
-  id,
-  it,
-  ja,
-  km,
-  ko,
-  nl,
-  pl,
-  pt,
-  ptBR,
-  ro,
-  ru,
-  sv,
-  th,
-  tr,
-  uk,
-  vi,
-  zhCN,
-  zhHK,
-  zhTW,
-} from 'date-fns/locale'
+import { formatDistance, type Locale } from 'date-fns'
+import { ca, cy, da, de, el, enGB, eo, es, eu, fi, fr, fy, gd, gl, hi, hu, id, it, ja, km, ko, nl, pl, pt, ptBR, ro, ru, sv, th, tr, uk, vi, zhCN, zhHK, zhTW,  } from 'date-fns/locale'
 
-import {type AppLanguage} from '#/locale/languages'
-import {useLanguagePrefs} from '#/state/preferences'
+import { type AppLanguage } from '#/locale/languages'
+import { useLanguagePrefs } from '#/state/preferences'
 
 /**
  * {@link AppLanguage}

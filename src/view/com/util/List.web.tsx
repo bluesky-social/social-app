@@ -1,16 +1,11 @@
 import React, {isValidElement, memo, startTransition, useRef} from 'react'
-import {
-  type FlatListProps,
-  StyleSheet,
-  View,
-  type ViewProps,
-} from 'react-native'
-import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import { type FlatListProps, StyleSheet, View, type ViewProps,  } from 'react-native'
+import { type ReanimatedScrollEvent } from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 
-import {batchedUpdates} from '#/lib/batchedUpdates'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useScrollHandlers} from '#/lib/ScrollContext'
-import {addStyle} from '#/lib/styles'
+import { batchedUpdates } from '#/lib/batchedUpdates'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { useScrollHandlers } from '#/lib/ScrollContext'
+import { addStyle } from '#/lib/styles'
 import * as Layout from '#/components/Layout'
 
 export type ListMethods = any // TODO: Better types.

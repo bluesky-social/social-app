@@ -1,66 +1,48 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {Image} from 'expo-image'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyGraphDefs as AppGndrGraphDefs,
-  AtUri,
-  type ModerationOpts,
-} from '@atproto/api'
-import {type GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
+import { Keyboard, View } from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Image } from 'expo-image'
+import { type AppGndrActorDefs, type AppGndrGraphDefs, AtUri, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { type GeneratorView } from '@gander-social-atproto/api/dist/client/types/app.gndr.feed/defs'
+import { msg, Plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { type NativeStackScreenProps } from '@react-navigation/native-stack'
 
-import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
-import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
-import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {
-  type CommonNavigatorParams,
-  type NavigationProp,
-} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {enforceLen} from '#/lib/strings/helpers'
-import {
-  getStarterPackOgCard,
-  parseStarterPackUri,
-} from '#/lib/strings/starter-pack'
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAllListMembersQuery} from '#/state/queries/list-members'
-import {useProfileQuery} from '#/state/queries/profile'
-import {
-  useCreateStarterPackMutation,
-  useEditStarterPackMutation,
-  useStarterPackQuery,
-} from '#/state/queries/starter-packs'
-import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
+import { STARTER_PACK_MAX_SIZE } from '#/lib/constants'
+import { useEnableKeyboardControllerScreen } from '#/lib/hooks/useEnableKeyboardController'
+import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name'
+import { type CommonNavigatorParams, type NavigationProp,  } from '#/lib/routes/types'
+import { logEvent } from '#/lib/statsig/statsig'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { enforceLen } from '#/lib/strings/helpers'
+import { getStarterPackOgCard, parseStarterPackUri,  } from '#/lib/strings/starter-pack'
+import { logger } from '#/logger'
+import { isNative } from '#/platform/detection'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useAllListMembersQuery } from '#/state/queries/list-members'
+import { useProfileQuery } from '#/state/queries/profile'
+import { useCreateStarterPackMutation, useEditStarterPackMutation, useStarterPackQuery,  } from '#/state/queries/starter-packs'
+import { useSession } from '#/state/session'
+import { useSetMinimalShellMode } from '#/state/shell'
 import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {
-  useWizardState,
-  type WizardStep,
-} from '#/screens/StarterPack/Wizard/State'
-import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
-import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
-import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
-import {atoms as a, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { useWizardState, type WizardStep,  } from '#/screens/StarterPack/Wizard/State'
+import { StepDetails } from '#/screens/StarterPack/Wizard/StepDetails'
+import { StepFeeds } from '#/screens/StarterPack/Wizard/StepFeeds'
+import { StepProfiles } from '#/screens/StarterPack/Wizard/StepProfiles'
+import { atoms as a, useTheme, web } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { useDialogControl } from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
-import {ListMaybePlaceholder} from '#/components/Lists'
-import {Loader} from '#/components/Loader'
-import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
-import {Text} from '#/components/Typography'
+import { ListMaybePlaceholder } from '#/components/Lists'
+import { Loader } from '#/components/Loader'
+import { WizardEditListDialog } from '#/components/StarterPack/Wizard/WizardEditListDialog'
+import { Text } from '#/components/Typography'
 import type * as gndr from '#/types/gndr'
-import {Provider} from './State'
+import { Provider } from './State'
 
 export function Wizard({
   route,

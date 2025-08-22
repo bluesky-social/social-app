@@ -1,30 +1,22 @@
 import React, {useMemo} from 'react'
-import {type GestureResponderEvent} from 'react-native'
-import {sanitizeUrl} from '@braintree/sanitize-url'
-import {
-  type LinkProps as RNLinkProps,
-  StackActions,
-} from '@react-navigation/native'
+import { type GestureResponderEvent } from 'react-native'
+import { sanitizeUrl } from '@braintree/sanitize-url'
+import { type LinkProps as RNLinkProps, StackActions,  } from '@react-navigation/native'
 
-import {GNDR_DOWNLOAD_URL} from '#/lib/constants'
-import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
-import {shareUrl} from '#/lib/sharing'
-import {
-  convertGndrAppUrlIfNeeded,
-  isExternalUrl,
-  isGndrDownloadUrl,
-  linkRequiresWarning,
-} from '#/lib/strings/url-helpers'
-import {isNative, isWeb} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
-import {atoms as a, flatten, type TextStyleProp, useTheme, web} from '#/alf'
-import {Button, type ButtonProps} from '#/components/Button'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Text, type TextProps} from '#/components/Typography'
-import {router} from '#/routes'
-import {useGlobalDialogsControlContext} from './dialogs/Context'
+import { GNDR_DOWNLOAD_URL } from '#/lib/constants'
+import { useNavigationDeduped } from '#/lib/hooks/useNavigationDeduped'
+import { useOpenLink } from '#/lib/hooks/useOpenLink'
+import { type AllNavigatorParams, type RouteParams } from '#/lib/routes/types'
+import { shareUrl } from '#/lib/sharing'
+import { convertGndrAppUrlIfNeeded, isExternalUrl, isGndrDownloadUrl, linkRequiresWarning,  } from '#/lib/strings/url-helpers'
+import { isNative, isWeb } from '#/platform/detection'
+import { useModalControls } from '#/state/modals'
+import { atoms as a, flatten, type TextStyleProp, useTheme, web } from '#/alf'
+import { Button, type ButtonProps } from '#/components/Button'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { Text, type TextProps } from '#/components/Typography'
+import { router } from '#/routes'
+import { useGlobalDialogsControlContext } from './dialogs/Context'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.

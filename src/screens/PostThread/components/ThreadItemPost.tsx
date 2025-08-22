@@ -1,48 +1,35 @@
-import {memo, type ReactNode, useCallback, useMemo, useState} from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  AtUri,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import { memo, type ReactNode, useCallback, useMemo, useState } from 'react'
+import { View } from 'react-native'
+import { type AppGndrFeedDefs, type AppGndrFeedThreadgate, AtUri, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {MAX_POST_LINES} from '#/lib/constants'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {makeProfileLink} from '#/lib/routes/links'
-import {countLines} from '#/lib/strings/helpers'
-import {
-  POST_TOMBSTONE,
-  type Shadow,
-  usePostShadow,
-} from '#/state/cache/post-shadow'
-import {type ThreadItem} from '#/state/queries/usePostThread/types'
-import {useSession} from '#/state/session'
-import {type OnPostSuccessData} from '#/state/shell/composer'
-import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {PostMeta} from '#/view/com/util/PostMeta'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {
-  LINEAR_AVI_WIDTH,
-  OUTER_SPACE,
-  REPLY_LINE_WIDTH,
-} from '#/screens/PostThread/const'
-import {atoms as a, useTheme} from '#/alf'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {PostHider} from '#/components/moderation/PostHider'
-import {type AppModerationCause} from '#/components/Pills'
-import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
-import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
-import {PostControls} from '#/components/PostControls'
-import {RichText} from '#/components/RichText'
+import { useActorStatus } from '#/lib/actor-status'
+import { MAX_POST_LINES } from '#/lib/constants'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { makeProfileLink } from '#/lib/routes/links'
+import { countLines } from '#/lib/strings/helpers'
+import { POST_TOMBSTONE, type Shadow, usePostShadow,  } from '#/state/cache/post-shadow'
+import { type ThreadItem } from '#/state/queries/usePostThread/types'
+import { useSession } from '#/state/session'
+import { type OnPostSuccessData } from '#/state/shell/composer'
+import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies'
+import { PostMeta } from '#/view/com/util/PostMeta'
+import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar'
+import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH,  } from '#/screens/PostThread/const'
+import { atoms as a, useTheme } from '#/alf'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { Trash_Stroke2_Corner0_Rounded as TrashIcon } from '#/components/icons/Trash'
+import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe'
+import { PostAlerts } from '#/components/moderation/PostAlerts'
+import { PostHider } from '#/components/moderation/PostHider'
+import { type AppModerationCause } from '#/components/Pills'
+import { Embed, PostEmbedViewContext } from '#/components/Post/Embed'
+import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton'
+import { PostControls } from '#/components/PostControls'
+import { RichText } from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
-import {Text} from '#/components/Typography'
+import { SubtleWebHover } from '#/components/SubtleWebHover'
+import { Text } from '#/components/Typography'
 
 export type ThreadItemPostProps = {
   item: Extract<ThreadItem, {type: 'threadPost'}>

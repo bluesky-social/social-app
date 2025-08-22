@@ -1,15 +1,12 @@
-import {useCallback} from 'react'
-import {useFocusEffect} from '@react-navigation/native'
+import { useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
-import {makeRecordUri} from '#/lib/strings/url-helpers'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {PostThread as PostThreadComponent} from '#/view/com/post-thread/PostThread'
-import {PostThread} from '#/screens/PostThread'
+import { type CommonNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { useGate } from '#/lib/statsig/statsig'
+import { makeRecordUri } from '#/lib/strings/url-helpers'
+import { useSetMinimalShellMode } from '#/state/shell'
+import { PostThread as PostThreadComponent } from '#/view/com/post-thread/PostThread'
+import { PostThread } from '#/screens/PostThread'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
@@ -18,7 +15,7 @@ export function PostThreadScreen({route}: Props) {
   const gate = useGate()
 
   const {name, rkey} = route.params
-  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+  const uri = makeRecordUri(name, 'app.gndr.feed.post', rkey)
 
   useFocusEffect(
     useCallback(() => {

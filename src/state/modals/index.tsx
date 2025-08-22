@@ -1,7 +1,7 @@
 import React from 'react'
-import {type AppBskyGraphDefs as AppGndrGraphDefs} from '@atproto/api'
+import { type AppGndrGraphDefs } from '@gander-social-atproto/api'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
 
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'

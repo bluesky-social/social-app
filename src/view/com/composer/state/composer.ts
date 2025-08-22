@@ -1,36 +1,19 @@
-import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  type AppBskyFeedPostgate as AppGndrFeedPostgate,
-  AppBskyRichtextFacet as AppGndrRichtextFacet,
-  type BskyPreferences as GndrPreferences,
-  RichText,
-} from '@atproto/api'
-import {nanoid} from 'nanoid/non-secure'
+import { type ImagePickerAsset } from 'expo-image-picker'
+import { type AppGndrFeedPostgate, AppGndrRichtextFacet, type GndrPreferences, RichText,  } from '@gander-social-atproto/api'
+import { nanoid } from 'nanoid/non-secure'
 
-import {type SelfLabel} from '#/lib/moderation'
-import {insertMentionAt} from '#/lib/strings/mention-manip'
-import {shortenLinks} from '#/lib/strings/rich-text-manip'
-import {
-  isGndrPostUrl,
-  postUriToRelativePath,
-  toGndrAppUrl,
-} from '#/lib/strings/url-helpers'
-import {type ComposerImage, createInitialImages} from '#/state/gallery'
-import {createPostgateRecord} from '#/state/queries/postgate/util'
-import {type Gif} from '#/state/queries/tenor'
-import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate'
-import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {type ComposerOpts} from '#/state/shell/composer'
-import {
-  type LinkFacetMatch,
-  suggestLinkCardUri,
-} from '#/view/com/composer/text-input/text-input-util'
-import {
-  createVideoState,
-  type VideoAction,
-  videoReducer,
-  type VideoState,
-} from './video'
+import { type SelfLabel } from '#/lib/moderation'
+import { insertMentionAt } from '#/lib/strings/mention-manip'
+import { shortenLinks } from '#/lib/strings/rich-text-manip'
+import { isGndrPostUrl, postUriToRelativePath, toGndrAppUrl,  } from '#/lib/strings/url-helpers'
+import { type ComposerImage, createInitialImages } from '#/state/gallery'
+import { createPostgateRecord } from '#/state/queries/postgate/util'
+import { type Gif } from '#/state/queries/tenor'
+import { threadgateRecordToAllowUISetting } from '#/state/queries/threadgate'
+import { type ThreadgateAllowUISetting } from '#/state/queries/threadgate'
+import { type ComposerOpts } from '#/state/shell/composer'
+import { type LinkFacetMatch, suggestLinkCardUri,  } from '#/view/com/composer/text-input/text-input-util'
+import { createVideoState, type VideoAction, videoReducer, type VideoState,  } from './video'
 
 type ImagesMedia = {
   type: 'images'
@@ -610,7 +593,7 @@ export function createComposerState({
         embeddingRules: initInteractionSettings?.postgateEmbeddingRules || [],
       }),
       threadgate: threadgateRecordToAllowUISetting({
-        $type: 'app.bsky.feed.threadgate',
+        $type: 'app.gndr.feed.threadgate',
         post: '',
         createdAt: new Date().toString(),
         allow: initInteractionSettings?.threadgateAllowRules,

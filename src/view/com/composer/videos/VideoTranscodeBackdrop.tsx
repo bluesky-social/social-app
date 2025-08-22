@@ -1,9 +1,9 @@
-import {clearCache, createVideoThumbnail} from 'react-native-compressor'
+import { clearCache, createVideoThumbnail } from 'react-native-compressor'
 import Animated, {FadeIn} from 'react-native-reanimated'
-import {Image} from 'expo-image'
-import {type QueryClient, useQuery} from '@tanstack/react-query'
+import { Image } from 'expo-image'
+import { type QueryClient, useQuery } from '@tanstack/react-query'
 
-import {atoms as a} from '#/alf'
+import { atoms as a } from '#/alf'
 
 export const RQKEY = 'video-thumbnail'
 

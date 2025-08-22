@@ -1,24 +1,21 @@
 import React from 'react'
-import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import { type AppGndrActorDefs } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useFocusEffect } from '@react-navigation/native'
 
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {cleanError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
-import {useProfileKnownFollowersQuery} from '#/state/queries/known-followers'
-import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
-import {List} from '#/view/com/util/List'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
+import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender'
+import { type CommonNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { cleanError } from '#/lib/strings/errors'
+import { logger } from '#/logger'
+import { useProfileKnownFollowersQuery } from '#/state/queries/known-followers'
+import { useResolveDidQuery } from '#/state/queries/resolve-uri'
+import { useSetMinimalShellMode } from '#/state/shell'
+import { ProfileCardWithFollowBtn } from '#/view/com/profile/ProfileCard'
+import { List } from '#/view/com/util/List'
+import { ViewHeader } from '#/view/com/util/ViewHeader'
 import * as Layout from '#/components/Layout'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import { ListFooter, ListMaybePlaceholder } from '#/components/Lists'
 
 function renderItem({
   item,

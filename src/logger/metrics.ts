@@ -1,5 +1,5 @@
-import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
-import {type FeedDescriptor} from '#/state/queries/post-feed'
+import { type NotificationReason } from '#/lib/hooks/useNotificationHandler'
+import { type FeedDescriptor } from '#/state/queries/post-feed'
 
 export type MetricEvents = {
   // App events

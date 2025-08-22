@@ -1,23 +1,8 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedGetQuotes as AppGndrFeedGetQuotes,
-  AtUri,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, AppGndrEmbedRecord, type AppGndrFeedDefs, type AppGndrFeedGetQuotes, AtUri,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery,  } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
-import {
-  didOrHandleUriMatches,
-  embedViewRecordToPostView,
-  getEmbeddedPost,
-} from './util'
+import { useAgent } from '#/state/session'
+import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost,  } from './util'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -36,7 +21,7 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.api.app.bsky.feed.getQuotes({
+      const res = await agent.api.app.gndr.feed.getQuotes({
         uri: resolvedUri || '',
         limit: PAGE_SIZE,
         cursor: pageParam,

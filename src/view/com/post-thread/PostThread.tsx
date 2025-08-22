@@ -1,54 +1,41 @@
 import React, {memo, useRef, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
-import {runOnJS, useAnimatedStyle} from 'react-native-reanimated'
+import { useWindowDimensions, View } from 'react-native'
+import { runOnJS, useAnimatedStyle } from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
-import {
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  moderatePost,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { AppGndrFeedDefs, type AppGndrFeedThreadgate, moderatePost,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {HITSLOP_10} from '#/lib/constants'
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {ScrollProvider} from '#/lib/ScrollContext'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {cleanError} from '#/lib/strings/errors'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
-import {useFeedFeedback} from '#/state/feed-feedback'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {
-  fillThreadModerationCache,
-  sortThread,
-  type ThreadBlocked,
-  type ThreadModerationCache,
-  type ThreadNode,
-  type ThreadNotFound,
-  type ThreadPost,
-  usePostThreadQuery,
-} from '#/state/queries/post-thread'
-import {useSetThreadViewPreferencesMutation} from '#/state/queries/preferences'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useSession} from '#/state/session'
-import {useShellLayout} from '#/state/shell/shell-layout'
-import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {useUnstablePostSource} from '#/state/unstable-post-source'
-import {List, type ListMethods} from '#/view/com/util/List'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider} from '#/components/icons/SettingsSlider'
-import {Header} from '#/components/Layout'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import { HITSLOP_10 } from '#/lib/constants'
+import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { useSetTitle } from '#/lib/hooks/useSetTitle'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { ScrollProvider } from '#/lib/ScrollContext'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { cleanError } from '#/lib/strings/errors'
+import { isAndroid, isNative, isWeb } from '#/platform/detection'
+import { useFeedFeedback } from '#/state/feed-feedback'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { fillThreadModerationCache, sortThread, type ThreadBlocked, type ThreadModerationCache, type ThreadNode, type ThreadNotFound, type ThreadPost, usePostThreadQuery,  } from '#/state/queries/post-thread'
+import { useSetThreadViewPreferencesMutation } from '#/state/queries/preferences'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { useSession } from '#/state/session'
+import { useShellLayout } from '#/state/shell/shell-layout'
+import { useMergedThreadgateHiddenReplies } from '#/state/threadgate-hidden-replies'
+import { useUnstablePostSource } from '#/state/unstable-post-source'
+import { List, type ListMethods } from '#/view/com/util/List'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
+import { SettingsSliderVertical_Stroke2_Corner0_Rounded as SettingsSlider } from '#/components/icons/SettingsSlider'
+import { Header } from '#/components/Layout'
+import { ListFooter, ListMaybePlaceholder } from '#/components/Lists'
 import * as Menu from '#/components/Menu'
-import {Text} from '#/components/Typography'
-import {PostThreadComposePrompt} from './PostThreadComposePrompt'
-import {PostThreadItem} from './PostThreadItem'
-import {PostThreadLoadMore} from './PostThreadLoadMore'
-import {PostThreadShowHiddenReplies} from './PostThreadShowHiddenReplies'
+import { Text } from '#/components/Typography'
+import { PostThreadComposePrompt } from './PostThreadComposePrompt'
+import { PostThreadItem } from './PostThreadItem'
+import { PostThreadLoadMore } from './PostThreadLoadMore'
+import { PostThreadShowHiddenReplies } from './PostThreadShowHiddenReplies'
 
 // FlatList maintainVisibleContentPosition breaks if too many items
 // are prepended. This seems to be an optimal number based on *shrug*.
@@ -407,7 +394,7 @@ export function PostThread({uri}: {uri: string}) {
     if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: thread.post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
+        event: 'app.gndr.feed.defs#interactionReply',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })

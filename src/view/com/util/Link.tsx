@@ -1,39 +1,22 @@
-import {memo, useCallback, useMemo} from 'react'
-import {
-  type GestureResponderEvent,
-  Platform,
-  Pressable,
-  type StyleProp,
-  type TextProps,
-  type TextStyle,
-  type TouchableOpacity,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {sanitizeUrl} from '@braintree/sanitize-url'
-import {StackActions} from '@react-navigation/native'
+import { memo, useCallback, useMemo } from 'react'
+import { type GestureResponderEvent, Platform, Pressable, type StyleProp, type TextProps, type TextStyle, type TouchableOpacity, View, type ViewStyle,  } from 'react-native'
+import { sanitizeUrl } from '@braintree/sanitize-url'
+import { StackActions } from '@react-navigation/native'
 
-import {
-  type DebouncedNavigationProp,
-  useNavigationDeduped,
-} from '#/lib/hooks/useNavigationDeduped'
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {getTabState, TabState} from '#/lib/routes/helpers'
-import {
-  convertGndrAppUrlIfNeeded,
-  isExternalUrl,
-  linkRequiresWarning,
-} from '#/lib/strings/url-helpers'
-import {type TypographyVariant} from '#/lib/ThemeContext'
-import {isAndroid, isWeb} from '#/platform/detection'
-import {emitSoftReset} from '#/state/events'
-import {useModalControls} from '#/state/modals'
-import {WebAuxClickWrapper} from '#/view/com/util/WebAuxClickWrapper'
-import {useTheme} from '#/alf'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {router} from '../../../routes'
-import {PressableWithHover} from './PressableWithHover'
-import {Text} from './text/Text'
+import { type DebouncedNavigationProp, useNavigationDeduped,  } from '#/lib/hooks/useNavigationDeduped'
+import { useOpenLink } from '#/lib/hooks/useOpenLink'
+import { getTabState, TabState } from '#/lib/routes/helpers'
+import { convertGndrAppUrlIfNeeded, isExternalUrl, linkRequiresWarning,  } from '#/lib/strings/url-helpers'
+import { type TypographyVariant } from '#/lib/ThemeContext'
+import { isAndroid, isWeb } from '#/platform/detection'
+import { emitSoftReset } from '#/state/events'
+import { useModalControls } from '#/state/modals'
+import { WebAuxClickWrapper } from '#/view/com/util/WebAuxClickWrapper'
+import { useTheme } from '#/alf'
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context'
+import { router } from '../../../routes'
+import { PressableWithHover } from './PressableWithHover'
+import { Text } from './text/Text'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>

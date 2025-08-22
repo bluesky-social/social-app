@@ -1,34 +1,23 @@
 import React, {useCallback} from 'react'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from 'react-native'
-import {type AppGndrGraphDefs as GraphDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { ActivityIndicator, StyleSheet, useWindowDimensions, View,  } from 'react-native'
+import { type AppGndrGraphDefs as GraphDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {cleanError} from '#/lib/strings/errors'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {s} from '#/lib/styles'
-import {isAndroid, isMobileWeb, isWeb} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
-import {
-  getMembership,
-  type ListMembersip,
-  useDangerousListMembershipsQuery,
-  useListMembershipAddMutation,
-  useListMembershipRemoveMutation,
-} from '#/state/queries/list-memberships'
-import {useSession} from '#/state/session'
-import {MyLists} from '../lists/MyLists'
-import {Button} from '../util/forms/Button'
-import {Text} from '../util/text/Text'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { cleanError } from '#/lib/strings/errors'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { s } from '#/lib/styles'
+import { isAndroid, isMobileWeb, isWeb } from '#/platform/detection'
+import { useModalControls } from '#/state/modals'
+import { getMembership, type ListMembersip, useDangerousListMembershipsQuery, useListMembershipAddMutation, useListMembershipRemoveMutation,  } from '#/state/queries/list-memberships'
+import { useSession } from '#/state/session'
+import { MyLists } from '../lists/MyLists'
+import { Button } from '../util/forms/Button'
+import { Text } from '../util/text/Text'
 import * as Toast from '../util/Toast'
-import {UserAvatar} from '../util/UserAvatar'
+import { UserAvatar } from '../util/UserAvatar'
 
 export const snapPoints = ['fullscreen']
 
@@ -207,7 +196,7 @@ function ListItem({
           {sanitizeDisplayName(list.name)}
         </Text>
         <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-          {list.purpose === 'app.bsky.graph.defs#curatelist' &&
+          {list.purpose === 'app.gndr.graph.defs#curatelist' &&
             (list.creator.did === currentAccount?.did ? (
               <Trans>User list by you</Trans>
             ) : (
@@ -215,7 +204,7 @@ function ListItem({
                 User list by {sanitizeHandle(list.creator.handle, '@')}
               </Trans>
             ))}
-          {list.purpose === 'app.bsky.graph.defs#modlist' &&
+          {list.purpose === 'app.gndr.graph.defs#modlist' &&
             (list.creator.did === currentAccount?.did ? (
               <Trans>Moderation list by you</Trans>
             ) : (

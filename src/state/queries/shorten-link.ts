@@ -1,4 +1,4 @@
-import {logger} from '#/logger'
+import { logger } from '#/logger'
 
 export function useShortenLink() {
   return async (inputUrl: string): Promise<{url: string}> => {

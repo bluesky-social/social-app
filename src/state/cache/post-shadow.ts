@@ -1,21 +1,17 @@
-import {useEffect, useMemo, useState} from 'react'
-import {
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  AppBskyEmbedRecordWithMedia as AppGndrEmbedRecordWithMedia,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-} from '@atproto/api'
-import {type QueryClient} from '@tanstack/react-query'
+import { useEffect, useMemo, useState } from 'react'
+import { AppGndrEmbedRecord, AppGndrEmbedRecordWithMedia, type AppGndrFeedDefs,  } from '@gander-social-atproto/api'
+import { type QueryClient } from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
-import {batchedUpdates} from '#/lib/batchedUpdates'
-import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
-import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
-import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
-import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
-import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '#/state/queries/post-thread'
-import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts'
-import {findAllPostsInQueryData as findAllPostsInThreadV2QueryData} from '#/state/queries/usePostThread/queryCache'
-import {castAsShadow, type Shadow} from './types'
+import { batchedUpdates } from '#/lib/batchedUpdates'
+import { findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData } from '#/state/queries/explore-feed-previews'
+import { findAllPostsInQueryData as findAllPostsInNotifsQueryData } from '#/state/queries/notifications/feed'
+import { findAllPostsInQueryData as findAllPostsInFeedQueryData } from '#/state/queries/post-feed'
+import { findAllPostsInQueryData as findAllPostsInQuoteQueryData } from '#/state/queries/post-quotes'
+import { findAllPostsInQueryData as findAllPostsInThreadQueryData } from '#/state/queries/post-thread'
+import { findAllPostsInQueryData as findAllPostsInSearchQueryData } from '#/state/queries/search-posts'
+import { findAllPostsInQueryData as findAllPostsInThreadV2QueryData } from '#/state/queries/usePostThread/queryCache'
+import { castAsShadow, type Shadow } from './types'
 export type {Shadow} from './types'
 
 export interface PostShadow {

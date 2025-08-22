@@ -1,15 +1,9 @@
-import {
-  Children,
-  useCallback,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react'
-import {View} from 'react-native'
-import {flushSync} from 'react-dom'
+import { Children, useCallback, useImperativeHandle, useRef, useState,  } from 'react'
+import { View } from 'react-native'
+import { flushSync } from 'react-dom'
 
-import {s} from '#/lib/styles'
-import {atoms as a} from '#/alf'
+import { s } from '#/lib/styles'
+import { atoms as a } from '#/alf'
 
 export interface PagerRef {
   setPage: (index: number) => void

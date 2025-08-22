@@ -1,4 +1,4 @@
-import {createSinglePathSVG} from './TEMPLATE'
+import { createSinglePathSVG } from './TEMPLATE'
 
 /*
  * This icon is off-menu, not part of the icon set

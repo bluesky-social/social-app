@@ -1,15 +1,15 @@
-import {useState} from 'react'
-import {View} from 'react-native'
-import {Image} from 'expo-image'
-import {Trans} from '@lingui/macro'
+import { useState } from 'react'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
+import { Trans } from '@lingui/macro'
 
-import {type LinkMeta} from '#/lib/link-meta/link-meta'
-import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useTheme} from '#/alf'
-import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
-import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
-import {Text} from '#/components/Typography'
+import { type LinkMeta } from '#/lib/link-meta/link-meta'
+import { toNiceDomain } from '#/lib/strings/url-helpers'
+import { LoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { atoms as a, useTheme } from '#/alf'
+import { Globe_Stroke2_Corner0_Rounded as GlobeIcon } from '#/components/icons/Globe'
+import { Image_Stroke2_Corner0_Rounded as ImageIcon } from '#/components/icons/Image'
+import { Text } from '#/components/Typography'
 
 export function LinkPreview({
   linkMeta,

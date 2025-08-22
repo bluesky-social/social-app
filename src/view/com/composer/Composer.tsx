@@ -7,18 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import {
-  ActivityIndicator,
-  BackHandler,
-  Keyboard,
-  KeyboardAvoidingView,
-  type LayoutChangeEvent,
-  ScrollView,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import { ActivityIndicator, BackHandler, Keyboard, KeyboardAvoidingView, type LayoutChangeEvent, ScrollView, type StyleProp, StyleSheet, View, type ViewStyle,  } from 'react-native'
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
@@ -40,113 +29,79 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type ImagePickerAsset} from 'expo-image-picker'
-import {
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedGetPostThread as AppGndrFeedGetPostThread,
-  AppBskyUnspeccedDefs as AppGndrUnspeccedDefs,
-  type BskyAgent as GndrAgent,
-  type RichText,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { type ImagePickerAsset } from 'expo-image-picker'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { AppGndrFeedDefs, type AppGndrFeedGetPostThread, AppGndrUnspeccedDefs, type GndrAgent, type RichText,  } from '@gander-social-atproto/api'
+import { msg, plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
-import {EmbeddingDisabledError} from '#/lib/api/resolve'
-import {retry} from '#/lib/async/retry'
-import {until} from '#/lib/async/until'
-import {
-  MAX_GRAPHEME_LENGTH,
-  SUPPORTED_MIME_TYPES,
-  type SupportedMimeTypes,
-} from '#/lib/constants'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {useAppState} from '#/lib/hooks/useAppState'
-import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {mimeToExt} from '#/lib/media/video/util'
-import {logEvent} from '#/lib/statsig/statsig'
-import {cleanError} from '#/lib/strings/errors'
-import {colors} from '#/lib/styles'
-import {logger} from '#/logger'
-import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
-import {useDialogStateControlContext} from '#/state/dialogs'
-import {emitPostCreated} from '#/state/events'
-import {type ComposerImage, pasteImage} from '#/state/gallery'
-import {useModalControls} from '#/state/modals'
-import {useRequireAltTextEnabled} from '#/state/preferences'
-import {
-  toPostLanguages,
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-} from '#/state/preferences/languages'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useProfileQuery} from '#/state/queries/profile'
-import {type Gif} from '#/state/queries/tenor'
-import {useAgent, useSession} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
-import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
-import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
-import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
-import {
-  ExternalEmbedGif,
-  ExternalEmbedLink,
-} from '#/view/com/composer/ExternalEmbed'
-import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
-import {GifAltTextDialog} from '#/view/com/composer/GifAltText'
-import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
-import {Gallery} from '#/view/com/composer/photos/Gallery'
-import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
-import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
-import {SelectPhotoBtn} from '#/view/com/composer/photos/SelectPhotoBtn'
-import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
-import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
+import { EmbeddingDisabledError } from '#/lib/api/resolve'
+import { retry } from '#/lib/async/retry'
+import { until } from '#/lib/async/until'
+import { MAX_GRAPHEME_LENGTH, SUPPORTED_MIME_TYPES, type SupportedMimeTypes,  } from '#/lib/constants'
+import { useAnimatedScrollHandler } from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import { useAppState } from '#/lib/hooks/useAppState'
+import { useIsKeyboardVisible } from '#/lib/hooks/useIsKeyboardVisible'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { mimeToExt } from '#/lib/media/video/util'
+import { logEvent } from '#/lib/statsig/statsig'
+import { cleanError } from '#/lib/strings/errors'
+import { colors } from '#/lib/styles'
+import { logger } from '#/logger'
+import { isAndroid, isIOS, isNative, isWeb } from '#/platform/detection'
+import { useDialogStateControlContext } from '#/state/dialogs'
+import { emitPostCreated } from '#/state/events'
+import { type ComposerImage, pasteImage } from '#/state/gallery'
+import { useModalControls } from '#/state/modals'
+import { useRequireAltTextEnabled } from '#/state/preferences'
+import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi,  } from '#/state/preferences/languages'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { useProfileQuery } from '#/state/queries/profile'
+import { type Gif } from '#/state/queries/tenor'
+import { useAgent, useSession } from '#/state/session'
+import { useComposerControls } from '#/state/shell/composer'
+import { type ComposerOpts, type OnPostSuccessData } from '#/state/shell/composer'
+import { CharProgress } from '#/view/com/composer/char-progress/CharProgress'
+import { ComposerReplyTo } from '#/view/com/composer/ComposerReplyTo'
+import { ExternalEmbedGif, ExternalEmbedLink,  } from '#/view/com/composer/ExternalEmbed'
+import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn'
+import { GifAltTextDialog } from '#/view/com/composer/GifAltText'
+import { LabelsBtn } from '#/view/com/composer/labels/LabelsBtn'
+import { Gallery } from '#/view/com/composer/photos/Gallery'
+import { OpenCameraBtn } from '#/view/com/composer/photos/OpenCameraBtn'
+import { SelectGifBtn } from '#/view/com/composer/photos/SelectGifBtn'
+import { SelectPhotoBtn } from '#/view/com/composer/photos/SelectPhotoBtn'
+import { SelectLangBtn } from '#/view/com/composer/select-language/SelectLangBtn'
+import { SuggestedLanguage } from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
-import {
-  TextInput,
-  type TextInputRef,
-} from '#/view/com/composer/text-input/TextInput'
-import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
-import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
-import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
-import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
-import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
-import {Text} from '#/view/com/util/text/Text'
+import { TextInput, type TextInputRef,  } from '#/view/com/composer/text-input/TextInput'
+import { ThreadgateBtn } from '#/view/com/composer/threadgate/ThreadgateBtn'
+import { SelectVideoBtn } from '#/view/com/composer/videos/SelectVideoBtn'
+import { SubtitleDialogBtn } from '#/view/com/composer/videos/SubtitleDialog'
+import { VideoPreview } from '#/view/com/composer/videos/VideoPreview'
+import { VideoTranscodeProgress } from '#/view/com/composer/videos/VideoTranscodeProgress'
+import { Text } from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, native, useTheme, web} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, native, useTheme, web } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
+import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile } from '#/components/icons/Emoji'
+import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times'
+import { LazyQuoteEmbed } from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
-import {Text as NewText} from '#/components/Typography'
-import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
-import {
-  type ComposerAction,
-  composerReducer,
-  createComposerState,
-  type EmbedDraft,
-  MAX_IMAGES,
-  type PostAction,
-  type PostDraft,
-  type ThreadDraft,
-} from './state/composer'
-import {
-  NO_VIDEO,
-  type NoVideoState,
-  processVideo,
-  type VideoState,
-} from './state/video'
-import {getVideoMetadata} from './videos/pickVideo'
-import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
+import { Text as NewText } from '#/components/Typography'
+import { BottomSheetPortalProvider } from '../../../../modules/bottom-sheet'
+import { type ComposerAction, composerReducer, createComposerState, type EmbedDraft, MAX_IMAGES, type PostAction, type PostDraft, type ThreadDraft,  } from './state/composer'
+import { NO_VIDEO, type NoVideoState, processVideo, type VideoState,  } from './state/video'
+import { getVideoMetadata } from './videos/pickVideo'
+import { clearThumbnailCache } from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -418,7 +373,7 @@ export const ComposePost = ({
             5,
             _e => true,
             async () => {
-              const res = await agent.app.bsky.unspecced.getPostThreadV2({
+              const res = await agent.app.gndr.unspecced.getPostThreadV2({
                 anchor: postUri!,
                 above: false,
                 below: thread.posts.length - 1,
@@ -1519,7 +1474,7 @@ async function whenAppViewReady(
     1e3, // 1s delay between tries
     fn,
     () =>
-      agent.app.bsky.feed.getPostThread({
+      agent.app.gndr.feed.getPostThread({
         uri,
         depth: 0,
       }),

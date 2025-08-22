@@ -1,13 +1,13 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 // @ts-expect-error no type definition
 import ProgressPie from 'react-native-progress/Pie'
-import {type ImagePickerAsset} from 'expo-image-picker'
+import { type ImagePickerAsset } from 'expo-image-picker'
 
-import {clamp} from '#/lib/numbers'
-import {isWeb} from '#/platform/detection'
-import {atoms as a, useTheme} from '#/alf'
-import {ExternalEmbedRemoveBtn} from '../ExternalEmbedRemoveBtn'
-import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
+import { clamp } from '#/lib/numbers'
+import { isWeb } from '#/platform/detection'
+import { atoms as a, useTheme } from '#/alf'
+import { ExternalEmbedRemoveBtn } from '../ExternalEmbedRemoveBtn'
+import { VideoTranscodeBackdrop } from './VideoTranscodeBackdrop'
 
 export function VideoTranscodeProgress({
   asset,

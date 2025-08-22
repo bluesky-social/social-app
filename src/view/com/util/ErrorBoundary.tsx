@@ -1,11 +1,11 @@
-import {Component, type ErrorInfo, type ReactNode} from 'react'
-import {type StyleProp, type ViewStyle} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Component, type ErrorInfo, type ReactNode } from 'react'
+import { type StyleProp, type ViewStyle } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logger} from '#/logger'
-import {ErrorScreen} from './error/ErrorScreen'
-import {CenteredView} from './Views'
+import { logger } from '#/logger'
+import { ErrorScreen } from './error/ErrorScreen'
+import { CenteredView } from './Views'
 
 interface Props {
   children?: ReactNode

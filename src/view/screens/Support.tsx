@@ -1,20 +1,17 @@
 import React from 'react'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useFocusEffect } from '@react-navigation/native'
 
-import {HELP_DESK_URL} from '#/lib/constants'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {TextLink} from '#/view/com/util/Link'
-import {Text} from '#/view/com/util/text/Text'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
+import { HELP_DESK_URL } from '#/lib/constants'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { type CommonNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { s } from '#/lib/styles'
+import { useSetMinimalShellMode } from '#/state/shell'
+import { TextLink } from '#/view/com/util/Link'
+import { Text } from '#/view/com/util/text/Text'
+import { ViewHeader } from '#/view/com/util/ViewHeader'
+import { CenteredView } from '#/view/com/util/Views'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Support'>

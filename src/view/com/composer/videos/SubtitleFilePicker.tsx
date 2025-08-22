@@ -1,14 +1,14 @@
-import {useRef} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useRef } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type React from 'react'
 
-import {logger} from '#/logger'
+import { logger } from '#/logger'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {CC_Stroke2_Corner0_Rounded as CCIcon} from '#/components/icons/CC'
+import { atoms as a } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { CC_Stroke2_Corner0_Rounded as CCIcon } from '#/components/icons/CC'
 
 export function SubtitleFilePicker({
   onSelectFile,

@@ -1,42 +1,28 @@
-import {useMemo, useState} from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyNotificationDefs as  AppGndrNotificationDefs,
-  type AppBskyNotificationListActivitySubscriptions as AppGndrNotificationListActivitySubscriptions,
-  type ModerationOpts,
-  type Un$Typed,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {
-  type InfiniteData,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query'
+import { useMemo, useState } from 'react'
+import { View } from 'react-native'
+import { type AppGndrNotificationDefs, type AppGndrNotificationListActivitySubscriptions, type ModerationOpts, type Un$Typed,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { type InfiniteData, useMutation, useQueryClient,  } from '@tanstack/react-query'
 
-import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {cleanError} from '#/lib/strings/errors'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {RQKEY_getActivitySubscriptions} from '#/state/queries/activity-subscriptions'
-import {useAgent} from '#/state/session'
+import { createSanitizedDisplayName } from '#/lib/moderation/create-sanitized-display-name'
+import { cleanError } from '#/lib/strings/errors'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { logger } from '#/logger'
+import { isWeb } from '#/platform/detection'
+import { updateProfileShadow } from '#/state/cache/profile-shadow'
+import { RQKEY_getActivitySubscriptions } from '#/state/queries/activity-subscriptions'
+import { useAgent } from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {platform, useTheme, web} from '#/alf'
-import {atoms as a} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {
-  Button,
-  ButtonIcon,
-  type ButtonProps,
-  ButtonText,
-} from '#/components/Button'
+import { platform, useTheme, web } from '#/alf'
+import { atoms as a } from '#/alf'
+import { Admonition } from '#/components/Admonition'
+import { Button, ButtonIcon, type ButtonProps, ButtonText,  } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
-import {Loader} from '#/components/Loader'
+import { Loader } from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 import type * as gndr from '#/types/gndr'
 
 export function SubscribeProfileDialog({
@@ -121,7 +107,7 @@ function DialogInner({
     mutationFn: async (
       activitySubscription: Un$Typed<AppGndrNotificationDefs.ActivitySubscription>,
     ) => {
-      await agent.app.bsky.notification.putActivitySubscription({
+      await agent.app.gndr.notification.putActivitySubscription({
         subject: profile.did,
         activitySubscription,
       })

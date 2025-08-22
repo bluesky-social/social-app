@@ -1,25 +1,9 @@
-import {
-  Children,
-  cloneElement,
-  isValidElement,
-  type ReactElement,
-  type ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
-import {
-  AccessibilityInfo,
-  findNodeHandle,
-  Pressable,
-  Text,
-  View,
-} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Children, cloneElement, isValidElement, type ReactElement, type ReactNode, useCallback, useEffect, useMemo, useRef,  } from 'react'
+import { AccessibilityInfo, findNodeHandle, Pressable, Text, View,  } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useA11y} from '#/state/a11y'
+import { useA11y } from '#/state/a11y'
 
 /**
  * Conditionally wraps children in a `FocusTrap` component based on whether

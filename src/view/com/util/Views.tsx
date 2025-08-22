@@ -1,8 +1,8 @@
-import {forwardRef} from 'react'
-import {type FlatListComponent} from 'react-native'
-import {View, type ViewProps} from 'react-native'
+import { forwardRef } from 'react'
+import { type FlatListComponent } from 'react-native'
+import { View, type ViewProps } from 'react-native'
 import Animated from 'react-native-reanimated'
-import {type FlatListPropsWithLayout} from 'react-native-reanimated'
+import { type FlatListPropsWithLayout } from 'react-native-reanimated'
 
 // If you explode these into functions, don't forget to forwardRef!
 

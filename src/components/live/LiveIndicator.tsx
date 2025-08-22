@@ -1,8 +1,8 @@
-import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {Trans} from '@lingui/macro'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
+import { Trans } from '@lingui/macro'
 
-import {atoms as a, tokens, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import { atoms as a, tokens, useTheme } from '#/alf'
+import { Text } from '#/components/Typography'
 
 export function LiveIndicator({
   size = 'small',

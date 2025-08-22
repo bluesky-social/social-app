@@ -1,5 +1,5 @@
-import {useEffect, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import { useEffect, useMemo, useState } from 'react'
+import { useWindowDimensions, View } from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -8,23 +8,23 @@ import Animated, {
   SlideInRight,
   SlideOutLeft,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
+import { type ComAtprotoServerCreateAppPassword } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useMutation } from '@tanstack/react-query'
 
-import {isWeb} from '#/platform/detection'
-import {useAppPasswordCreateMutation} from '#/state/queries/app-passwords'
-import {atoms as a, native, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { isWeb } from '#/platform/detection'
+import { useAppPasswordCreateMutation } from '#/state/queries/app-passwords'
+import { atoms as a, native, useTheme } from '#/alf'
+import { Admonition } from '#/components/Admonition'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextInput from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
-import {Text} from '#/components/Typography'
-import {CopyButton} from './CopyButton'
+import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron'
+import { SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon } from '#/components/icons/SquareBehindSquare4'
+import { Text } from '#/components/Typography'
+import { CopyButton } from './CopyButton'
 
 export function AddAppPasswordDialog({
   control,

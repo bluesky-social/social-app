@@ -1,4 +1,4 @@
-import {type Config} from './config.js'
+import { type Config } from './config.js'
 import Database from './db/index.js'
 
 export type AppContextOptions = {

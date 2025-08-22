@@ -1,38 +1,29 @@
-import {useEffect} from 'react'
-import {Linking, View} from 'react-native'
+import { useEffect } from 'react'
+import { Linking, View } from 'react-native'
 import * as Notification from 'expo-notifications'
-import {type AppBskyNotificationDefs as AppGndrNotificationDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQuery, useQueryClient} from '@tanstack/react-query'
+import { type AppGndrNotificationDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/hooks/useAppState'
-import {
-  type AllNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {isAndroid, isIOS, isWeb} from '#/platform/detection'
-import {useNotificationSettingsQuery} from '#/state/queries/notifications/settings'
-import {atoms as a} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
-import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
-import {Bubble_Stroke2_Corner2_Rounded as BubbleIcon} from '#/components/icons/Bubble'
-import {Haptic_Stroke2_Corner2_Rounded as HapticIcon} from '#/components/icons/Haptic'
-import {
-  Heart2_Stroke2_Corner0_Rounded as HeartIcon,
-  LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon,
-} from '#/components/icons/Heart2'
-import {PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon} from '#/components/icons/Person'
-import {CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon} from '#/components/icons/Quote'
-import {
-  Repost_Stroke2_Corner2_Rounded as RepostIcon,
-  RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
-} from '#/components/icons/Repost'
-import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
+import { useAppState } from '#/lib/hooks/useAppState'
+import { type AllNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { isAndroid, isIOS, isWeb } from '#/platform/detection'
+import { useNotificationSettingsQuery } from '#/state/queries/notifications/settings'
+import { atoms as a } from '#/alf'
+import { Admonition } from '#/components/Admonition'
+import { At_Stroke2_Corner2_Rounded as AtIcon } from '#/components/icons/At'
+import { BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon } from '#/components/icons/BellRinging'
+import { Bubble_Stroke2_Corner2_Rounded as BubbleIcon } from '#/components/icons/Bubble'
+import { Haptic_Stroke2_Corner2_Rounded as HapticIcon } from '#/components/icons/Haptic'
+import { Heart2_Stroke2_Corner0_Rounded as HeartIcon, LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon,  } from '#/components/icons/Heart2'
+import { PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon } from '#/components/icons/Person'
+import { CloseQuote_Stroke2_Corner0_Rounded as CloseQuoteIcon } from '#/components/icons/Quote'
+import { Repost_Stroke2_Corner2_Rounded as RepostIcon, RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,  } from '#/components/icons/Repost'
+import { Shapes_Stroke2_Corner0_Rounded as ShapesIcon } from '#/components/icons/Shapes'
 import * as Layout from '#/components/Layout'
 import * as SettingsList from '../components/SettingsList'
-import {ItemTextWithSubtitle} from './components/ItemTextWithSubtitle'
+import { ItemTextWithSubtitle } from './components/ItemTextWithSubtitle'
 
 const RQKEY = ['notification-permissions']
 

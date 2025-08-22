@@ -1,9 +1,6 @@
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 
-import {
-  type GlobalGestureEvents,
-  useGlobalGestureEvents,
-} from '#/state/global-gesture-events'
+import { type GlobalGestureEvents, useGlobalGestureEvents,  } from '#/state/global-gesture-events'
 
 /**
  * Listen for global gesture events. Callback should be wrapped with

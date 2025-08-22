@@ -1,16 +1,10 @@
 import React, {useMemo} from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {
-  ProgressGuideToast,
-  type ProgressGuideToastRef,
-} from '#/components/ProgressGuide/Toast'
-import {
-  usePreferencesQuery,
-  useSetActiveProgressGuideMutation,
-} from '../queries/preferences'
+import { logEvent } from '#/lib/statsig/statsig'
+import { ProgressGuideToast, type ProgressGuideToastRef,  } from '#/components/ProgressGuide/Toast'
+import { usePreferencesQuery, useSetActiveProgressGuideMutation,  } from '../queries/preferences'
 
 export enum ProgressGuideAction {
   Like = 'like',

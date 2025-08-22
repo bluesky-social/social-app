@@ -1,15 +1,8 @@
-import {
-  type AppBskyGraphGetLists as AppGndrGraphGetLists,
-  moderateUserList,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryKey,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { type AppGndrGraphGetLists, moderateUserList,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryKey, useInfiniteQuery,  } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
-import {useModerationOpts} from '../preferences/moderation-opts'
+import { useAgent } from '#/state/session'
+import { useModerationOpts } from '../preferences/moderation-opts'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -30,7 +23,7 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getLists({
+      const res = await agent.app.gndr.graph.getLists({
         actor: did,
         limit: PAGE_SIZE,
         cursor: pageParam,

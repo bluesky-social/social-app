@@ -1,41 +1,31 @@
 import React, {useCallback} from 'react'
-import {Keyboard, Pressable, View} from 'react-native'
-import {
-  type ChatBskyConvoDefs as ChatGndrConvoDefs,
-  type ModerationCause,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import { Keyboard, Pressable, View } from 'react-native'
+import { type ChatBskyConvoDefs as ChatGndrConvoDefs, type ModerationCause,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/native'
 
-import {type NavigationProp} from '#/lib/routes/types'
-import {type Shadow} from '#/state/cache/types'
-import {
-  useConvoQuery,
-  useMarkAsReadMutation,
-} from '#/state/queries/messages/conversation'
-import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
-import {useProfileBlockMutationQueue} from '#/state/queries/profile'
+import { type NavigationProp } from '#/lib/routes/types'
+import { type Shadow } from '#/state/cache/types'
+import { useConvoQuery, useMarkAsReadMutation,  } from '#/state/queries/messages/conversation'
+import { useMuteConvo } from '#/state/queries/messages/mute-conversation'
+import { useProfileBlockMutationQueue } from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
-import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
-import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
-import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
-import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
-import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {
-  Person_Stroke2_Corner0_Rounded as Person,
-  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
-  PersonX_Stroke2_Corner0_Rounded as PersonX,
-} from '#/components/icons/Person'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import { atoms as a, useTheme, type ViewStyleProp } from '#/alf'
+import { BlockedByListDialog } from '#/components/dms/BlockedByListDialog'
+import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt'
+import { ReportConversationPrompt } from '#/components/dms/ReportConversationPrompt'
+import { ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft } from '#/components/icons/ArrowBoxLeft'
+import { DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid'
+import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag'
+import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute'
+import { Person_Stroke2_Corner0_Rounded as Person, PersonCheck_Stroke2_Corner0_Rounded as PersonCheck, PersonX_Stroke2_Corner0_Rounded as PersonX,  } from '#/components/icons/Person'
+import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import type * as gndr from '#/types/gndr'
-import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
-import {ReportDialog} from './ReportDialog'
+import { Bubble_Stroke2_Corner2_Rounded as Bubble } from '../icons/Bubble'
+import { ReportDialog } from './ReportDialog'
 
 let ConvoMenu = ({
   convo,

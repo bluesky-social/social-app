@@ -1,4 +1,4 @@
-import {AppBskyFeedDefs as AppGndrFeedDefs} from '@atproto/api'
+import { AppGndrFeedDefs } from '@gander-social-atproto/api'
 
 export const CONTENT_LABELS = ['porn', 'sexual', 'nudity', 'graphic-media']
 

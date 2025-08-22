@@ -1,27 +1,19 @@
 import React, {useCallback} from 'react'
-import {type ListRenderItemInfo, View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyGraphGetList as AppGndrGraphGetList,
-  AtUri,
-  type ModerationOpts,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type UseInfiniteQueryResult,
-} from '@tanstack/react-query'
+import { type ListRenderItemInfo, View } from 'react-native'
+import { type AppGndrActorDefs, type AppGndrGraphGetList, AtUri, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type UseInfiniteQueryResult,  } from '@tanstack/react-query'
 
-import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
-import {isNative, isWeb} from '#/platform/detection'
-import {useAllListMembersQuery} from '#/state/queries/list-members'
-import {useSession} from '#/state/session'
-import {List, type ListRef} from '#/view/com/util/List'
-import {type SectionRef} from '#/screens/Profile/Sections/types'
-import {atoms as a, useTheme} from '#/alf'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {Default as ProfileCard} from '#/components/ProfileCard'
+import { useBottomBarOffset } from '#/lib/hooks/useBottomBarOffset'
+import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender'
+import { isBlockedOrBlocking } from '#/lib/moderation/blocked-and-muted'
+import { isNative, isWeb } from '#/platform/detection'
+import { useAllListMembersQuery } from '#/state/queries/list-members'
+import { useSession } from '#/state/session'
+import { List, type ListRef } from '#/view/com/util/List'
+import { type SectionRef } from '#/screens/Profile/Sections/types'
+import { atoms as a, useTheme } from '#/alf'
+import { ListFooter, ListMaybePlaceholder } from '#/components/Lists'
+import { Default as ProfileCard } from '#/components/ProfileCard'
 
 function keyExtractor(item: AppGndrActorDefs.ProfileViewBasic, index: number) {
   return `${item.did}-${index}`

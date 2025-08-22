@@ -1,4 +1,4 @@
-import {useFonts} from 'expo-font'
+import { useFonts } from 'expo-font'
 
 /*
  * IMPORTANT: This is unused. Expo statically extracts these fonts.

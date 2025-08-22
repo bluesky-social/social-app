@@ -1,15 +1,15 @@
-import {Pressable} from 'react-native'
+import { Pressable } from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
   type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a, useTheme} from '#/alf'
-import {useContextMenuContext} from './context'
+import { atoms as a, useTheme } from '#/alf'
+import { useContextMenuContext } from './context'
 
 export function Backdrop({
   animation,

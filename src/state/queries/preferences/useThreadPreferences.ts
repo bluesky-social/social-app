@@ -1,15 +1,12 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
-import {type AppBskyUnspeccedGetPostThreadV2 as AppGndrUnspeccedGetPostThreadV2} from '@atproto/api'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { type AppGndrUnspeccedGetPostThreadV2 } from '@gander-social-atproto/api'
 import debounce from 'lodash.debounce'
 
-import {OnceKey, useCallOnce} from '#/lib/hooks/useCallOnce'
-import {logger} from '#/logger'
-import {
-  usePreferencesQuery,
-  useSetThreadViewPreferencesMutation,
-} from '#/state/queries/preferences'
-import {type ThreadViewPreferences} from '#/state/queries/preferences/types'
-import {type Literal} from '#/types/utils'
+import { OnceKey, useCallOnce } from '#/lib/hooks/useCallOnce'
+import { logger } from '#/logger'
+import { usePreferencesQuery, useSetThreadViewPreferencesMutation,  } from '#/state/queries/preferences'
+import { type ThreadViewPreferences } from '#/state/queries/preferences/types'
+import { type Literal } from '#/types/utils'
 
 export type ThreadSortOption = Literal<
   AppGndrUnspeccedGetPostThreadV2.QueryParams['sort'],

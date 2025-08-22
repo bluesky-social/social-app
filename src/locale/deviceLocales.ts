@@ -1,6 +1,6 @@
-import {getLocales as defaultGetLocales, type Locale} from 'expo-localization'
+import { getLocales as defaultGetLocales, type Locale } from 'expo-localization'
 
-import {dedupArray} from '#/lib/functions'
+import { dedupArray } from '#/lib/functions'
 
 type LocalWithLanguageCode = Locale & {
   languageCode: string

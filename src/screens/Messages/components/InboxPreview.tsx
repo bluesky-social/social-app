@@ -1,14 +1,14 @@
-import {View} from 'react-native'
-import {type ChatBksyActorDefs as ChatGndrActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type ChatBksyActorDefs as ChatGndrActorDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a, useTheme} from '#/alf'
-import {AvatarStack} from '#/components/AvatarStack'
-import {ButtonIcon, ButtonText} from '#/components/Button'
-import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
-import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
-import {Link} from '#/components/Link'
+import { atoms as a, useTheme } from '#/alf'
+import { AvatarStack } from '#/components/AvatarStack'
+import { ButtonIcon, ButtonText } from '#/components/Button'
+import { ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon } from '#/components/icons/Arrow'
+import { Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon } from '#/components/icons/Envelope'
+import { Link } from '#/components/Link'
 
 export function InboxPreview({
   profiles,

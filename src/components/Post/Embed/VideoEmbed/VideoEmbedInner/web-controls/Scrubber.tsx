@@ -1,14 +1,14 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
-import {View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type React from 'react'
 
-import {isFirefox, isTouchDevice} from '#/lib/browser'
-import {clamp} from '#/lib/numbers'
-import {atoms as a, useTheme, web} from '#/alf'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {formatTime} from './utils'
+import { isFirefox, isTouchDevice } from '#/lib/browser'
+import { clamp } from '#/lib/numbers'
+import { atoms as a, useTheme, web } from '#/alf'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { formatTime } from './utils'
 
 export function Scrubber({
   duration,

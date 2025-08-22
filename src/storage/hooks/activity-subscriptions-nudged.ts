@@ -1,4 +1,4 @@
-import {device, useStorage} from '#/storage'
+import { device, useStorage } from '#/storage'
 
 export function useActivitySubscriptionsNudged() {
   const [activitySubscriptionsNudged = false, setActivitySubscriptionsNudged] =

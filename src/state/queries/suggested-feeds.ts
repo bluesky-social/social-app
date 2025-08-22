@@ -1,12 +1,8 @@
-import {type AppBskyFeedGetSuggestedFeeds as AppGndrFeedGetSuggestedFeeds} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryKey,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { type AppGndrFeedGetSuggestedFeeds } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryKey, useInfiniteQuery,  } from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import { STALE } from '#/state/queries'
+import { useAgent } from '#/state/session'
 
 const suggestedFeedsQueryKeyRoot = 'suggestedFeeds'
 export const suggestedFeedsQueryKey = [suggestedFeedsQueryKeyRoot]
@@ -23,7 +19,7 @@ export function useSuggestedFeedsQuery() {
     staleTime: STALE.HOURS.ONE,
     queryKey: suggestedFeedsQueryKey,
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.bsky.feed.getSuggestedFeeds({
+      const res = await agent.app.gndr.feed.getSuggestedFeeds({
         limit: 10,
         cursor: pageParam,
       })

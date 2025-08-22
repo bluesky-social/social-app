@@ -1,8 +1,8 @@
-import {simpleAreDatesEqual} from '#/lib/strings/time'
-import {logger} from '#/logger'
+import { simpleAreDatesEqual } from '#/lib/strings/time'
+import { logger } from '#/logger'
 import * as persisted from '#/state/persisted'
-import {type SessionAccount} from '../session'
-import {isOnboardingActive} from './onboarding'
+import { type SessionAccount } from '../session'
+import { isOnboardingActive } from './onboarding'
 
 export function shouldRequestEmailConfirmation(account: SessionAccount) {
   // ignore logged out

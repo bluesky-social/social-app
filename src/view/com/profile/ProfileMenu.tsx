@@ -1,62 +1,51 @@
 import React, {memo} from 'react'
-import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import { type AppGndrActorDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {HITSLOP_20} from '#/lib/constants'
-import {makeProfileLink} from '#/lib/routes/links'
-import {type NavigationProp} from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
-import {toShareUrl} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {type Shadow} from '#/state/cache/types'
-import {useModalControls} from '#/state/modals'
-import {
-  RQKEY as profileQueryKey,
-  useProfileBlockMutationQueue,
-  useProfileFollowMutationQueue,
-  useProfileMuteMutationQueue,
-} from '#/state/queries/profile'
-import {useCanGoLive} from '#/state/service-config'
-import {useSession} from '#/state/session'
-import {EventStopper} from '#/view/com/util/EventStopper'
+import { useActorStatus } from '#/lib/actor-status'
+import { HITSLOP_20 } from '#/lib/constants'
+import { makeProfileLink } from '#/lib/routes/links'
+import { type NavigationProp } from '#/lib/routes/types'
+import { shareText, shareUrl } from '#/lib/sharing'
+import { toShareUrl } from '#/lib/strings/url-helpers'
+import { logger } from '#/logger'
+import { isWeb } from '#/platform/detection'
+import { type Shadow } from '#/state/cache/types'
+import { useModalControls } from '#/state/modals'
+import { RQKEY as profileQueryKey, useProfileBlockMutationQueue, useProfileFollowMutationQueue, useProfileMuteMutationQueue,  } from '#/state/queries/profile'
+import { useCanGoLive } from '#/state/service-config'
+import { useSession } from '#/state/session'
+import { EventStopper } from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
-import {Button, ButtonIcon} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
-import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
-import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
-import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
-import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
-import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
-import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
-import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
-import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
-import {
-  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
-  PersonX_Stroke2_Corner0_Rounded as PersonX,
-} from '#/components/icons/Person'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
-import {EditLiveDialog} from '#/components/live/EditLiveDialog'
-import {GoLiveDialog} from '#/components/live/GoLiveDialog'
+import { Button, ButtonIcon } from '#/components/Button'
+import { useDialogControl } from '#/components/Dialog'
+import { ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon } from '#/components/icons/ArrowOutOfBox'
+import { ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon } from '#/components/icons/ChainLink'
+import { CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon } from '#/components/icons/CircleCheck'
+import { CircleX_Stroke2_Corner0_Rounded as CircleXIcon } from '#/components/icons/CircleX'
+import { Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon } from '#/components/icons/Clipboard'
+import { DotGrid_Stroke2_Corner0_Rounded as Ellipsis } from '#/components/icons/DotGrid'
+import { Flag_Stroke2_Corner0_Rounded as Flag } from '#/components/icons/Flag'
+import { ListSparkle_Stroke2_Corner0_Rounded as List } from '#/components/icons/ListSparkle'
+import { Live_Stroke2_Corner0_Rounded as LiveIcon } from '#/components/icons/Live'
+import { MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass2'
+import { Mute_Stroke2_Corner0_Rounded as Mute } from '#/components/icons/Mute'
+import { PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus } from '#/components/icons/PeopleRemove2'
+import { PersonCheck_Stroke2_Corner0_Rounded as PersonCheck, PersonX_Stroke2_Corner0_Rounded as PersonX,  } from '#/components/icons/Person'
+import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus'
+import { SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute } from '#/components/icons/Speaker'
+import { EditLiveDialog } from '#/components/live/EditLiveDialog'
+import { GoLiveDialog } from '#/components/live/GoLiveDialog'
 import * as Menu from '#/components/Menu'
-import {
-  ReportDialog,
-  useReportDialogControl,
-} from '#/components/moderation/ReportDialog'
+import { ReportDialog, useReportDialogControl,  } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import {useFullVerificationState} from '#/components/verification'
-import {VerificationCreatePrompt} from '#/components/verification/VerificationCreatePrompt'
-import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
-import {useDevMode} from '#/storage/hooks/dev-mode'
+import { useFullVerificationState } from '#/components/verification'
+import { VerificationCreatePrompt } from '#/components/verification/VerificationCreatePrompt'
+import { VerificationRemovePrompt } from '#/components/verification/VerificationRemovePrompt'
+import { useDevMode } from '#/storage/hooks/dev-mode'
 
 let ProfileMenu = ({
   profile,
@@ -444,7 +433,7 @@ let ProfileMenu = ({
         control={reportDialogControl}
         subject={{
           ...profile,
-          $type: 'app.bsky.actor.defs#profileViewDetailed',
+          $type: 'app.gndr.actor.defs#profileViewDetailed',
         }}
       />
 

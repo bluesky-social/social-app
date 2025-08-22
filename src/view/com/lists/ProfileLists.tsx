@@ -1,27 +1,21 @@
 import React from 'react'
-import {
-  findNodeHandle,
-  type ListRenderItemInfo,
-  type StyleProp,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { findNodeHandle, type ListRenderItemInfo, type StyleProp, View, type ViewStyle,  } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {cleanError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
-import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
-import {EmptyState} from '#/view/com/util/EmptyState'
-import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {List, type ListRef} from '#/view/com/util/List'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {atoms as a, ios, useTheme} from '#/alf'
+import { cleanError } from '#/lib/strings/errors'
+import { logger } from '#/logger'
+import { isIOS, isNative, isWeb } from '#/platform/detection'
+import { RQKEY, useProfileListsQuery } from '#/state/queries/profile-lists'
+import { EmptyState } from '#/view/com/util/EmptyState'
+import { ErrorMessage } from '#/view/com/util/error/ErrorMessage'
+import { List, type ListRef } from '#/view/com/util/List'
+import { FeedLoadingPlaceholder } from '#/view/com/util/LoadingPlaceholder'
+import { LoadMoreRetryBtn } from '#/view/com/util/LoadMoreRetryBtn'
+import { atoms as a, ios, useTheme } from '#/alf'
 import * as ListCard from '#/components/ListCard'
-import {ListFooter} from '#/components/Lists'
+import { ListFooter } from '#/components/Lists'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {createPortalGroup_INTERNAL} from './lib/Portal'
+import { createPortalGroup_INTERNAL } from './lib/Portal'
 
 type PortalContext = React.ElementType<{children: React.ReactNode}>
 

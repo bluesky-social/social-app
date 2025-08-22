@@ -1,28 +1,22 @@
-import {useEffect, useState} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/core'
+import { useEffect, useState } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/core'
 
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
-import {useKawaiiMode} from '#/state/preferences/kawaii'
-import {useSession} from '#/state/session'
-import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
-import {DesktopSearch} from '#/view/shell/desktop/Search'
-import {SidebarTrendingTopics} from '#/view/shell/desktop/SidebarTrendingTopics'
-import {
-  atoms as a,
-  useGutters,
-  useLayoutBreakpoints,
-  useTheme,
-  web,
-} from '#/alf'
-import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
-import {Divider} from '#/components/Divider'
-import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
-import {InlineLinkText} from '#/components/Link'
-import {ProgressGuideList} from '#/components/ProgressGuide/List'
-import {Text} from '#/components/Typography'
+import { FEEDBACK_FORM_URL, HELP_DESK_URL } from '#/lib/constants'
+import { useKawaiiMode } from '#/state/preferences/kawaii'
+import { useSession } from '#/state/session'
+import { DesktopFeeds } from '#/view/shell/desktop/Feeds'
+import { DesktopSearch } from '#/view/shell/desktop/Search'
+import { SidebarTrendingTopics } from '#/view/shell/desktop/SidebarTrendingTopics'
+import { atoms as a, useGutters, useLayoutBreakpoints, useTheme, web,  } from '#/alf'
+import { AppLanguageDropdown } from '#/components/AppLanguageDropdown'
+import { Divider } from '#/components/Divider'
+import { CENTER_COLUMN_OFFSET } from '#/components/Layout'
+import { InlineLinkText } from '#/components/Link'
+import { ProgressGuideList } from '#/components/ProgressGuide/List'
+import { Text } from '#/components/Typography'
 
 function useWebQueryParams() {
   const navigation = useNavigation()

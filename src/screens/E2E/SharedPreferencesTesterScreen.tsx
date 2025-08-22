@@ -1,12 +1,12 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {ScrollView} from '#/view/com/util/Views'
-import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { ScrollView } from '#/view/com/util/Views'
+import { atoms as a } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Layout from '#/components/Layout'
-import {Text} from '#/components/Typography'
-import {SharedPrefs} from '../../../modules/expo-gander-swiss-army'
+import { Text } from '#/components/Typography'
+import { SharedPrefs } from '../../../modules/expo-gander-swiss-army'
 
 export function SharedPreferencesTesterScreen() {
   const [currentTestOutput, setCurrentTestOutput] = React.useState<string>('')

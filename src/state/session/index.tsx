@@ -1,29 +1,19 @@
 import React from 'react'
-import {type AtpSessionEvent, type BskyAgent as GndrAgent} from '@atproto/api'
+import { type AtpSessionEvent, type GndrAgent } from '@gander-social-atproto/api'
 
-import {isWeb} from '#/platform/detection'
+import { isWeb } from '#/platform/detection'
 import * as persisted from '#/state/persisted'
-import {useCloseAllActiveElements} from '#/state/util'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {emitSessionDropped} from '../events'
-import {
-  agentToSessionAccount,
-  createAgentAndCreateAccount,
-  createAgentAndLogin,
-  createAgentAndResume,
-  type GndrAppAgent,
-  sessionAccountToSession,
-} from './agent'
-import {getInitialState, reducer} from './reducer'
+import { useCloseAllActiveElements } from '#/state/util'
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context'
+import { emitSessionDropped } from '../events'
+import { agentToSessionAccount, createAgentAndCreateAccount, createAgentAndLogin, createAgentAndResume, type GndrAppAgent, sessionAccountToSession,  } from './agent'
+import { getInitialState, reducer } from './reducer'
 
 export {isSignupQueued} from './util'
-import {addSessionDebugLog} from './logging'
+import { addSessionDebugLog } from './logging'
 export type {SessionAccount} from '#/state/session/types'
-import {logger} from '#/logger'
-import {
-  type SessionApiContext,
-  type SessionStateContext,
-} from '#/state/session/types'
+import { logger } from '#/logger'
+import { type SessionApiContext, type SessionStateContext,  } from '#/state/session/types'
 
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],

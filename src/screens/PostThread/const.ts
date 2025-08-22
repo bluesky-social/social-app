@@ -1,4 +1,4 @@
-import {tokens} from '#/alf'
+import { tokens } from '#/alf'
 
 export const TREE_INDENT = tokens.space.lg
 export const TREE_AVI_WIDTH = 24

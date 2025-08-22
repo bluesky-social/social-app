@@ -1,4 +1,4 @@
-import {createPortalGroup} from '#/components/Portal'
+import { createPortalGroup } from '#/components/Portal'
 
 const portalGroup = createPortalGroup()
 

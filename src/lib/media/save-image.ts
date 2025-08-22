@@ -1,10 +1,10 @@
-import {useCallback} from 'react'
+import { useCallback } from 'react'
 import * as MediaLibrary from 'expo-media-library'
-import {t} from '@lingui/macro'
+import { t } from '@lingui/macro'
 
-import {isNative} from '#/platform/detection'
+import { isNative } from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
-import {saveImageToMediaLibrary} from './manip'
+import { saveImageToMediaLibrary } from './manip'
 
 /**
  * Same as `saveImageToMediaLibrary`, but also handles permissions and toasts

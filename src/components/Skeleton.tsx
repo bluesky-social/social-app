@@ -1,15 +1,8 @@
-import {type ReactNode} from 'react'
-import {View} from 'react-native'
+import { type ReactNode } from 'react'
+import { View } from 'react-native'
 
-import {
-  atoms as a,
-  flatten,
-  type TextStyleProp,
-  useAlf,
-  useTheme,
-  type ViewStyleProp,
-} from '#/alf'
-import {normalizeTextStyles} from '#/alf/typography'
+import { atoms as a, flatten, type TextStyleProp, useAlf, useTheme, type ViewStyleProp,  } from '#/alf'
+import { normalizeTextStyles } from '#/alf/typography'
 
 type SkeletonProps = {
   blend?: boolean

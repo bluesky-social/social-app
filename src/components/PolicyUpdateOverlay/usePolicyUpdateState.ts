@@ -1,10 +1,10 @@
-import {useMemo} from 'react'
+import { useMemo } from 'react'
 
-import {useNux, useSaveNux} from '#/state/queries/nuxs'
-import {ACTIVE_UPDATE_ID} from '#/components/PolicyUpdateOverlay/config'
-import {logger} from '#/components/PolicyUpdateOverlay/logger'
-import {IS_DEV} from '#/env'
-import {device, useStorage} from '#/storage'
+import { useNux, useSaveNux } from '#/state/queries/nuxs'
+import { ACTIVE_UPDATE_ID } from '#/components/PolicyUpdateOverlay/config'
+import { logger } from '#/components/PolicyUpdateOverlay/logger'
+import { IS_DEV } from '#/env'
+import { device, useStorage } from '#/storage'
 
 export type PolicyUpdateState = {
   completed: boolean

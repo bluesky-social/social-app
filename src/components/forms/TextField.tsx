@@ -1,29 +1,13 @@
 import React from 'react'
-import {
-  type AccessibilityProps,
-  StyleSheet,
-  TextInput,
-  type TextInputProps,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {Trans} from '@lingui/macro'
+import { type AccessibilityProps, StyleSheet, TextInput, type TextInputProps, type TextStyle, View, type ViewStyle,  } from 'react-native'
+import { Trans } from '@lingui/macro'
 
-import {HITSLOP_20} from '#/lib/constants'
-import {mergeRefs} from '#/lib/merge-refs'
-import {
-  android,
-  applyFonts,
-  atoms as a,
-  type TextStyleProp,
-  useAlf,
-  useTheme,
-  web,
-} from '#/alf'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Text} from '#/components/Typography'
+import { HITSLOP_20 } from '#/lib/constants'
+import { mergeRefs } from '#/lib/merge-refs'
+import { android, applyFonts, atoms as a, type TextStyleProp, useAlf, useTheme, web,  } from '#/alf'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { type Props as SVGIconProps } from '#/components/icons/common'
+import { Text } from '#/components/Typography'
 
 const Context = React.createContext<{
   inputRef: React.RefObject<TextInput> | null

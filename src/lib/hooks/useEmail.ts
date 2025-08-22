@@ -1,9 +1,9 @@
-import {STALE} from '#/state/queries'
-import {useServiceConfigQuery} from '#/state/queries/email-verification-required'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {GNDR_SERVICE} from '../constants'
-import {getHostnameFromUrl} from '../strings/url-helpers'
+import { STALE } from '#/state/queries'
+import { useServiceConfigQuery } from '#/state/queries/email-verification-required'
+import { useProfileQuery } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
+import { GNDR_SERVICE } from '../constants'
+import { getHostnameFromUrl } from '../strings/url-helpers'
 
 export function useEmail() {
   const {currentAccount} = useSession()

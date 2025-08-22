@@ -1,11 +1,11 @@
 import React from 'react'
-import {type AppBskyUnspeccedDefs as AppGndrUnspeccedDefs} from '@atproto/api'
-import {hasMutedWord} from '@atproto/api/dist/moderation/mutewords'
-import {useQuery} from '@tanstack/react-query'
+import { type AppGndrUnspeccedDefs } from '@gander-social-atproto/api'
+import { hasMutedWord } from '@gander-social-atproto/api/dist/moderation/mutewords'
+import { useQuery } from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import { STALE } from '#/state/queries'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { useAgent } from '#/state/session'
 
 export type TrendingTopic = AppGndrUnspeccedDefs.TrendingTopic
 
@@ -30,7 +30,7 @@ export function useTrendingTopics() {
     staleTime: STALE.MINUTES.THREE,
     queryKey: trendingTopicsQueryKey,
     async queryFn() {
-      const {data} = await agent.api.app.bsky.unspecced.getTrendingTopics({
+      const {data} = await agent.api.app.gndr.unspecced.getTrendingTopics({
         limit: DEFAULT_LIMIT,
       })
       return {

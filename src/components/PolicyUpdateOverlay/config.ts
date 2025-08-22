@@ -1,4 +1,4 @@
-import {ID} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import { ID } from '#/components/PolicyUpdateOverlay/updates/202508/config'
 
 /**
  * The singulary active update ID. This is configured here to ensure that

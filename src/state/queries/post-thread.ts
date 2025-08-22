@@ -1,41 +1,15 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyEmbedRecord as AppGndrEmbedRecord,
-  AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedGetPostThread as AppGndrFeedGetPostThread,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AtUri,
-  moderatePost,
-  type ModerationDecision,
-  type ModerationOpts,
-} from '@atproto/api'
-import {type QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrEmbedRecord, AppGndrFeedDefs, type AppGndrFeedGetPostThread, AppGndrFeedPost, AtUri, moderatePost, type ModerationDecision, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { type QueryClient, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import {
-  findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData,
-  findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryData,
-} from '#/state/queries/explore-feed-previews'
-import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
-import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {
-  findAllPostsInQueryData as findAllPostsInSearchQueryData,
-  findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
-} from '#/state/queries/search-posts'
-import {useAgent} from '#/state/session'
+import { findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData, findAllProfilesInQueryData as findAllProfilesInExploreFeedPreviewsQueryData,  } from '#/state/queries/explore-feed-previews'
+import { findAllPostsInQueryData as findAllPostsInQuoteQueryData } from '#/state/queries/post-quotes'
+import { type UsePreferencesQueryResponse } from '#/state/queries/preferences/types'
+import { findAllPostsInQueryData as findAllPostsInSearchQueryData, findAllProfilesInQueryData as findAllProfilesInSearchQueryData,  } from '#/state/queries/search-posts'
+import { useAgent } from '#/state/session'
 import * as gndr from '#/types/gndr'
-import {
-  findAllPostsInQueryData as findAllPostsInNotifsQueryData,
-  findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
-} from './notifications/feed'
-import {
-  findAllPostsInQueryData as findAllPostsInFeedQueryData,
-  findAllProfilesInQueryData as findAllProfilesInFeedQueryData,
-} from './post-feed'
-import {
-  didOrHandleUriMatches,
-  embedViewRecordToPostView,
-  getEmbeddedPost,
-} from './util'
+import { findAllPostsInQueryData as findAllPostsInNotifsQueryData, findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,  } from './notifications/feed'
+import { findAllPostsInQueryData as findAllPostsInFeedQueryData, findAllProfilesInQueryData as findAllProfilesInFeedQueryData,  } from './post-feed'
+import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost,  } from './util'
 
 const REPLY_TREE_DEPTH = 10
 export const RQKEY_ROOT = 'post-thread'

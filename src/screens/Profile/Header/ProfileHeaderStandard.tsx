@@ -1,45 +1,34 @@
 import React, {memo, useMemo} from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, moderateProfile, type ModerationOpts, type RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {
-  useProfileBlockMutationQueue,
-  useProfileFollowMutationQueue,
-} from '#/state/queries/profile'
-import {useRequireAuth, useSession} from '#/state/session'
-import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
+import { useActorStatus } from '#/lib/actor-status'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { logger } from '#/logger'
+import { isIOS } from '#/platform/detection'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { useProfileBlockMutationQueue, useProfileFollowMutationQueue,  } from '#/state/queries/profile'
+import { useRequireAuth, useSession } from '#/state/session'
+import { ProfileMenu } from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
-import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
-import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {
-  KnownFollowers,
-  shouldShowKnownFollowers,
-} from '#/components/KnownFollowers'
+import { atoms as a, platform, useBreakpoints, useTheme } from '#/alf'
+import { SubscribeProfileButton } from '#/components/activity-notifications/SubscribeProfileButton'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { useDialogControl } from '#/components/Dialog'
+import { MessageProfileButton } from '#/components/dms/MessageProfileButton'
+import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus'
+import { KnownFollowers, shouldShowKnownFollowers,  } from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
-import {RichText} from '#/components/RichText'
-import {Text} from '#/components/Typography'
-import {VerificationCheckButton} from '#/components/verification/VerificationCheckButton'
-import {EditProfileDialog} from './EditProfileDialog'
-import {ProfileHeaderHandle} from './Handle'
-import {ProfileHeaderMetrics} from './Metrics'
-import {ProfileHeaderShell} from './Shell'
+import { RichText } from '#/components/RichText'
+import { Text } from '#/components/Typography'
+import { VerificationCheckButton } from '#/components/verification/VerificationCheckButton'
+import { EditProfileDialog } from './EditProfileDialog'
+import { ProfileHeaderHandle } from './Handle'
+import { ProfileHeaderMetrics } from './Metrics'
+import { ProfileHeaderShell } from './Shell'
 
 interface Props {
   profile: AppGndrActorDefs.ProfileViewDetailed

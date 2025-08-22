@@ -1,9 +1,9 @@
-import {type ComAtprotoServerDefs} from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
+import { type ComAtprotoServerDefs } from '@gander-social-atproto/api'
+import { useQuery } from '@tanstack/react-query'
 
-import {cleanError} from '#/lib/strings/errors'
-import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import { cleanError } from '#/lib/strings/errors'
+import { STALE } from '#/state/queries'
+import { useAgent } from '#/state/session'
 
 function isInviteAvailable(invite: ComAtprotoServerDefs.InviteCode): boolean {
   return invite.available - invite.uses.length > 0 && !invite.disabled

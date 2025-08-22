@@ -1,46 +1,31 @@
-import {useMemo} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
-import {
-  moderateProfile,
-  type ModerationOpts,
-  RichText as RichTextApi,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useMemo } from 'react'
+import { type GestureResponderEvent, View } from 'react-native'
+import { moderateProfile, type ModerationOpts, RichText as RichTextApi,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {getModerationCauseKey} from '#/lib/moderation'
-import {type LogEvents} from '#/lib/statsig/statsig'
-import {forceLTR} from '#/lib/strings/bidi'
-import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
+import { useActorStatus } from '#/lib/actor-status'
+import { getModerationCauseKey } from '#/lib/moderation'
+import { type LogEvents } from '#/lib/statsig/statsig'
+import { forceLTR } from '#/lib/strings/bidi'
+import { NON_BREAKING_SPACE } from '#/lib/strings/constants'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { useProfileFollowMutationQueue } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
-import {
-  atoms as a,
-  platform,
-  type TextStyleProp,
-  useTheme,
-  type ViewStyleProp,
-} from '#/alf'
-import {
-  Button,
-  ButtonIcon,
-  type ButtonProps,
-  ButtonText,
-} from '#/components/Button'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {Link as InternalLink, type LinkProps} from '#/components/Link'
+import { PreviewableUserAvatar, UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, platform, type TextStyleProp, useTheme, type ViewStyleProp,  } from '#/alf'
+import { Button, ButtonIcon, type ButtonProps, ButtonText,  } from '#/components/Button'
+import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check'
+import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus'
+import { Link as InternalLink, type LinkProps } from '#/components/Link'
 import * as Pills from '#/components/Pills'
-import {RichText} from '#/components/RichText'
-import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import { RichText } from '#/components/RichText'
+import { Text } from '#/components/Typography'
+import { useSimpleVerificationState } from '#/components/verification'
+import { VerificationCheck } from '#/components/verification/VerificationCheck'
 import type * as gndr from '#/types/gndr'
 
 export function Default({

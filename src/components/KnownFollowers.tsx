@@ -1,19 +1,15 @@
 import React from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, moderateProfile, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { msg, Plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
-import {Link, type LinkProps} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { makeProfileLink } from '#/lib/routes/links'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { UserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, useTheme } from '#/alf'
+import { Link, type LinkProps } from '#/components/Link'
+import { Text } from '#/components/Typography'
 import type * as gndr from '#/types/gndr'
 
 const AVI_SIZE = 30

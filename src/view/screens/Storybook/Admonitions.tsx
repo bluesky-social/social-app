@@ -1,9 +1,9 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {atoms as a} from '#/alf'
-import {Admonition} from '#/components/Admonition'
-import {InlineLinkText} from '#/components/Link'
-import {H1} from '#/components/Typography'
+import { atoms as a } from '#/alf'
+import { Admonition } from '#/components/Admonition'
+import { InlineLinkText } from '#/components/Link'
+import { H1 } from '#/components/Typography'
 
 export function Admonitions() {
   return (

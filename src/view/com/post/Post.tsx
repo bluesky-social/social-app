@@ -1,46 +1,35 @@
-import {useCallback, useMemo, useState} from 'react'
-import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AtUri,
-  moderatePost,
-  type ModerationDecision,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
-import {useQueryClient} from '@tanstack/react-query'
+import { useCallback, useMemo, useState } from 'react'
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { type AppGndrFeedDefs, AppGndrFeedPost, AtUri, moderatePost, type ModerationDecision, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {MAX_POST_LINES} from '#/lib/constants'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {makeProfileLink} from '#/lib/routes/links'
-import {countLines} from '#/lib/strings/helpers'
-import {colors, s} from '#/lib/styles'
-import {
-  POST_TOMBSTONE,
-  type Shadow,
-  usePostShadow,
-} from '#/state/cache/post-shadow'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {precacheProfile} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {Link} from '#/view/com/util/Link'
-import {PostMeta} from '#/view/com/util/PostMeta'
-import {Text} from '#/view/com/util/text/Text'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {UserInfoText} from '#/view/com/util/UserInfoText'
-import {atoms as a} from '#/alf'
-import {ContentHider} from '#/components/moderation/ContentHider'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
-import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
-import {PostControls} from '#/components/PostControls'
-import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {RichText} from '#/components/RichText'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import { MAX_POST_LINES } from '#/lib/constants'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { makeProfileLink } from '#/lib/routes/links'
+import { countLines } from '#/lib/strings/helpers'
+import { colors, s } from '#/lib/styles'
+import { POST_TOMBSTONE, type Shadow, usePostShadow,  } from '#/state/cache/post-shadow'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { precacheProfile } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
+import { Link } from '#/view/com/util/Link'
+import { PostMeta } from '#/view/com/util/PostMeta'
+import { Text } from '#/view/com/util/text/Text'
+import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar'
+import { UserInfoText } from '#/view/com/util/UserInfoText'
+import { atoms as a } from '#/alf'
+import { ContentHider } from '#/components/moderation/ContentHider'
+import { LabelsOnMyPost } from '#/components/moderation/LabelsOnMe'
+import { PostAlerts } from '#/components/moderation/PostAlerts'
+import { Embed, PostEmbedViewContext } from '#/components/Post/Embed'
+import { ShowMoreTextButton } from '#/components/Post/ShowMoreTextButton'
+import { PostControls } from '#/components/PostControls'
+import { ProfileHoverCard } from '#/components/ProfileHoverCard'
+import { RichText } from '#/components/RichText'
+import { SubtleWebHover } from '#/components/SubtleWebHover'
 import * as gndr from '#/types/gndr'
 
 export function Post({

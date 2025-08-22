@@ -1,12 +1,9 @@
-import {StyleSheet} from 'react-native'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import { StyleSheet } from 'react-native'
+import { FontAwesomeIcon, type FontAwesomeIconStyle,  } from '@fortawesome/react-native-fontawesome'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {Button} from './forms/Button'
-import {Text} from './text/Text'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { Button } from './forms/Button'
+import { Text } from './text/Text'
 
 export function LoadMoreRetryBtn({
   label,

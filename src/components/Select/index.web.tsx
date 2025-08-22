@@ -1,26 +1,14 @@
-import {createContext, forwardRef, useContext, useMemo} from 'react'
-import {View} from 'react-native'
-import {Select as RadixSelect} from 'radix-ui'
+import { createContext, forwardRef, useContext, useMemo } from 'react'
+import { View } from 'react-native'
+import { Select as RadixSelect } from 'radix-ui'
 
-import {flatten, useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
-} from '#/components/icons/Chevron'
-import {Text} from '#/components/Typography'
-import {
-  type ContentProps,
-  type IconProps,
-  type ItemIndicatorProps,
-  type ItemProps,
-  type RadixPassThroughTriggerProps,
-  type RootProps,
-  type TriggerProps,
-  type ValueProps,
-} from './types'
+import { flatten, useTheme } from '#/alf'
+import { atoms as a } from '#/alf'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { Check_Stroke2_Corner0_Rounded as CheckIcon } from '#/components/icons/Check'
+import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon, ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,  } from '#/components/icons/Chevron'
+import { Text } from '#/components/Typography'
+import { type ContentProps, type IconProps, type ItemIndicatorProps, type ItemProps, type RadixPassThroughTriggerProps, type RootProps, type TriggerProps, type ValueProps,  } from './types'
 
 const SelectedValueContext = createContext<string | undefined | null>(null)
 

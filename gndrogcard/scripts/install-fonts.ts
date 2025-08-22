@@ -1,6 +1,6 @@
-import {writeFile} from 'node:fs/promises'
+import { writeFile } from 'node:fs/promises'
 import * as path from 'node:path'
-import {fileURLToPath} from 'node:url'
+import { fileURLToPath } from 'node:url'
 
 const __DIRNAME = path.dirname(fileURLToPath(import.meta.url))
 

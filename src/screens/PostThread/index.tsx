@@ -1,43 +1,34 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { useWindowDimensions, View } from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
-import {Trans} from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useFeedFeedback} from '#/state/feed-feedback'
-import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
-import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
-import {useSession} from '#/state/session'
-import {type OnPostSuccessData} from '#/state/shell/composer'
-import {useShellLayout} from '#/state/shell/shell-layout'
-import {useUnstablePostSource} from '#/state/unstable-post-source'
-import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
-import {List, type ListMethods} from '#/view/com/util/List'
-import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
-import {ThreadError} from '#/screens/PostThread/components/ThreadError'
-import {
-  ThreadItemAnchor,
-  ThreadItemAnchorSkeleton,
-} from '#/screens/PostThread/components/ThreadItemAnchor'
-import {ThreadItemAnchorNoUnauthenticated} from '#/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated'
-import {
-  ThreadItemPost,
-  ThreadItemPostSkeleton,
-} from '#/screens/PostThread/components/ThreadItemPost'
-import {ThreadItemPostNoUnauthenticated} from '#/screens/PostThread/components/ThreadItemPostNoUnauthenticated'
-import {ThreadItemPostTombstone} from '#/screens/PostThread/components/ThreadItemPostTombstone'
-import {ThreadItemReadMore} from '#/screens/PostThread/components/ThreadItemReadMore'
-import {ThreadItemReadMoreUp} from '#/screens/PostThread/components/ThreadItemReadMoreUp'
-import {ThreadItemReplyComposerSkeleton} from '#/screens/PostThread/components/ThreadItemReplyComposer'
-import {ThreadItemShowOtherReplies} from '#/screens/PostThread/components/ThreadItemShowOtherReplies'
-import {
-  ThreadItemTreePost,
-  ThreadItemTreePostSkeleton,
-} from '#/screens/PostThread/components/ThreadItemTreePost'
-import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
+import { useInitialNumToRender } from '#/lib/hooks/useInitialNumToRender'
+import { useOpenComposer } from '#/lib/hooks/useOpenComposer'
+import { useFeedFeedback } from '#/state/feed-feedback'
+import { type ThreadViewOption } from '#/state/queries/preferences/useThreadPreferences'
+import { type ThreadItem, usePostThread } from '#/state/queries/usePostThread'
+import { useSession } from '#/state/session'
+import { type OnPostSuccessData } from '#/state/shell/composer'
+import { useShellLayout } from '#/state/shell/shell-layout'
+import { useUnstablePostSource } from '#/state/unstable-post-source'
+import { PostThreadComposePrompt } from '#/view/com/post-thread/PostThreadComposePrompt'
+import { List, type ListMethods } from '#/view/com/util/List'
+import { HeaderDropdown } from '#/screens/PostThread/components/HeaderDropdown'
+import { ThreadError } from '#/screens/PostThread/components/ThreadError'
+import { ThreadItemAnchor, ThreadItemAnchorSkeleton,  } from '#/screens/PostThread/components/ThreadItemAnchor'
+import { ThreadItemAnchorNoUnauthenticated } from '#/screens/PostThread/components/ThreadItemAnchorNoUnauthenticated'
+import { ThreadItemPost, ThreadItemPostSkeleton,  } from '#/screens/PostThread/components/ThreadItemPost'
+import { ThreadItemPostNoUnauthenticated } from '#/screens/PostThread/components/ThreadItemPostNoUnauthenticated'
+import { ThreadItemPostTombstone } from '#/screens/PostThread/components/ThreadItemPostTombstone'
+import { ThreadItemReadMore } from '#/screens/PostThread/components/ThreadItemReadMore'
+import { ThreadItemReadMoreUp } from '#/screens/PostThread/components/ThreadItemReadMoreUp'
+import { ThreadItemReplyComposerSkeleton } from '#/screens/PostThread/components/ThreadItemReplyComposer'
+import { ThreadItemShowOtherReplies } from '#/screens/PostThread/components/ThreadItemShowOtherReplies'
+import { ThreadItemTreePost, ThreadItemTreePostSkeleton,  } from '#/screens/PostThread/components/ThreadItemTreePost'
+import { atoms as a, native, platform, useBreakpoints, web } from '#/alf'
 import * as Layout from '#/components/Layout'
-import {ListFooter} from '#/components/Lists'
+import { ListFooter } from '#/components/Lists'
 
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
@@ -98,7 +89,7 @@ export function PostThread({uri}: {uri: string}) {
     if (anchorPostSource) {
       feedFeedback.sendInteraction({
         item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
+        event: 'app.gndr.feed.defs#interactionReply',
         feedContext: anchorPostSource.post.feedContext,
         reqId: anchorPostSource.post.reqId,
       })

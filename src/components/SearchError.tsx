@@ -1,10 +1,10 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {atoms as a, useBreakpoints} from '#/alf'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { atoms as a, useBreakpoints } from '#/alf'
 import * as Layout from '#/components/Layout'
-import {Text} from '#/components/Typography'
-import {TimesLarge_Stroke2_Corner0_Rounded} from './icons/Times'
+import { Text } from '#/components/Typography'
+import { TimesLarge_Stroke2_Corner0_Rounded } from './icons/Times'
 
 export function SearchError({
   title,

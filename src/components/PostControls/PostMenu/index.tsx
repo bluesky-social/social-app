@@ -1,21 +1,16 @@
-import {memo, useMemo, useState} from 'react'
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedPost as AppGndrFeedPost,
-  type AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { memo, useMemo, useState } from 'react'
+import { type AppGndrFeedDefs, type AppGndrFeedPost, type AppGndrFeedThreadgate, type RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type React from 'react'
 
-import {type Shadow} from '#/state/cache/post-shadow'
-import {EventStopper} from '#/view/com/util/EventStopper'
-import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
-import {useMenuControl} from '#/components/Menu'
+import { type Shadow } from '#/state/cache/post-shadow'
+import { EventStopper } from '#/view/com/util/EventStopper'
+import { DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal } from '#/components/icons/DotGrid'
+import { useMenuControl } from '#/components/Menu'
 import * as Menu from '#/components/Menu'
-import {PostControlButton, PostControlButtonIcon} from '../PostControlButton'
-import {PostMenuItems} from './PostMenuItems'
+import { PostControlButton, PostControlButtonIcon } from '../PostControlButton'
+import { PostMenuItems } from './PostMenuItems'
 
 let PostMenuButton = ({
   testID,

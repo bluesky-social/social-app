@@ -1,9 +1,9 @@
-import {type AppBskyFeedDefs as AppGndrFeedDefs, type BskyAgent as GndrAgent} from '@atproto/api'
+import { type AppGndrFeedDefs, type GndrAgent } from '@gander-social-atproto/api'
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
-import {CustomFeedAPI} from './custom'
-import {FollowingFeedAPI} from './following'
-import {type FeedAPI, type FeedAPIResponse} from './types'
+import { PROD_DEFAULT_FEED } from '#/lib/constants'
+import { CustomFeedAPI } from './custom'
+import { FollowingFeedAPI } from './following'
+import { type FeedAPI, type FeedAPIResponse } from './types'
 
 // HACK
 // the feed API does not include any facilities for passing down

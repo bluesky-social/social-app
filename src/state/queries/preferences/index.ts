@@ -1,29 +1,18 @@
-import {useCallback} from 'react'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type GndrFeedViewPreference,
-  type LabelPreference,
-} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import { useCallback } from 'react'
+import { type AppGndrActorDefs, type GndrFeedViewPreference, type LabelPreference,  } from '@gander-social-atproto/api'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
-import {replaceEqualDeep} from '#/lib/functions'
-import {getAge} from '#/lib/strings/time'
-import {logger} from '#/logger'
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
-import {makeAgeRestrictedModerationPrefs} from '#/state/ageAssurance/const'
-import {STALE} from '#/state/queries'
-import {
-  DEFAULT_HOME_FEED_PREFS,
-  DEFAULT_LOGGED_OUT_PREFERENCES,
-  DEFAULT_THREAD_VIEW_PREFS,
-} from '#/state/queries/preferences/const'
-import {
-  type ThreadViewPreferences,
-  type UsePreferencesQueryResponse,
-} from '#/state/queries/preferences/types'
-import {useAgent} from '#/state/session'
-import {saveLabelers} from '#/state/session/agent-config'
+import { PROD_DEFAULT_FEED } from '#/lib/constants'
+import { replaceEqualDeep } from '#/lib/functions'
+import { getAge } from '#/lib/strings/time'
+import { logger } from '#/logger'
+import { useAgeAssuranceContext } from '#/state/ageAssurance'
+import { makeAgeRestrictedModerationPrefs } from '#/state/ageAssurance/const'
+import { STALE } from '#/state/queries'
+import { DEFAULT_HOME_FEED_PREFS, DEFAULT_LOGGED_OUT_PREFERENCES, DEFAULT_THREAD_VIEW_PREFS,  } from '#/state/queries/preferences/const'
+import { type ThreadViewPreferences, type UsePreferencesQueryResponse,  } from '#/state/queries/preferences/types'
+import { useAgent } from '#/state/session'
+import { saveLabelers } from '#/state/session/agent-config'
 
 export * from '#/state/queries/preferences/const'
 export * from '#/state/queries/preferences/moderation'
@@ -97,7 +86,7 @@ export function useClearPreferencesMutation() {
 
   return useMutation({
     mutationFn: async () => {
-      await agent.app.bsky.actor.putPreferences({preferences: []})
+      await agent.app.gndr.actor.putPreferences({preferences: []})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

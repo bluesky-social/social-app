@@ -1,8 +1,8 @@
-import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import { type AppGndrActorDefs } from '@gander-social-atproto/api'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import {preferencesQueryKey} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import { preferencesQueryKey } from '#/state/queries/preferences'
+import { useAgent } from '#/state/session'
 
 export function usePostInteractionSettingsMutation() {
   const qc = useQueryClient()

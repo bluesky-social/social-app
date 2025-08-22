@@ -1,8 +1,8 @@
-import {useMemo} from 'react'
+import { useMemo } from 'react'
 
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
-import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
-import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
+import { useActorSearchPaginated } from '#/state/queries/actor-search'
+import { useGetSuggestedUsersQuery } from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import { useInterestsDisplayNames } from '#/screens/Onboarding/state'
 
 /**
  * Conditional hook, used in case a user is a non-english speaker, in which

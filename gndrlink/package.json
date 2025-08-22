@@ -8,7 +8,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@atproto/common": "^0.4.0",
     "@types/escape-html": "^1.0.4",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -18,7 +17,8 @@
     "kysely": "^0.27.3",
     "pg": "^8.12.0",
     "pino": "^9.2.0",
-    "uint8arrays": "^5.1.0"
+    "uint8arrays": "^5.1.0",
+    "@gander-social-atproto/common": "0.5.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

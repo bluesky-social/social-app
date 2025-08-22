@@ -1,6 +1,6 @@
-import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
+import { useMaybeProfileShadow } from '#/state/cache/profile-shadow'
+import { useProfileQuery } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
 
 export function useCurrentAccountProfile() {
   const {currentAccount} = useSession()

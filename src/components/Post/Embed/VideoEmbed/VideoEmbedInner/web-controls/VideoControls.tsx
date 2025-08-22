@@ -1,38 +1,28 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
-import {Pressable, View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Pressable, View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type Hls from 'hls.js'
 
-import {isTouchDevice} from '#/lib/browser'
-import {clamp} from '#/lib/numbers'
-import {isIPhoneWeb} from '#/platform/detection'
-import {
-  useAutoplayDisabled,
-  useSetSubtitlesEnabled,
-  useSubtitlesEnabled,
-} from '#/state/preferences'
-import {atoms as a, useTheme, web} from '#/alf'
-import {useIsWithinMessage} from '#/components/dms/MessageContext'
-import {useFullscreen} from '#/components/hooks/useFullscreen'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {
-  ArrowsDiagonalIn_Stroke2_Corner0_Rounded as ArrowsInIcon,
-  ArrowsDiagonalOut_Stroke2_Corner0_Rounded as ArrowsOutIcon,
-} from '#/components/icons/ArrowsDiagonal'
-import {
-  CC_Filled_Corner0_Rounded as CCActiveIcon,
-  CC_Stroke2_Corner0_Rounded as CCInactiveIcon,
-} from '#/components/icons/CC'
-import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
-import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
-import {TimeIndicator} from '../TimeIndicator'
-import {ControlButton} from './ControlButton'
-import {Scrubber} from './Scrubber'
-import {formatTime, useVideoElement} from './utils'
-import {VolumeControl} from './VolumeControl'
+import { isTouchDevice } from '#/lib/browser'
+import { clamp } from '#/lib/numbers'
+import { isIPhoneWeb } from '#/platform/detection'
+import { useAutoplayDisabled, useSetSubtitlesEnabled, useSubtitlesEnabled,  } from '#/state/preferences'
+import { atoms as a, useTheme, web } from '#/alf'
+import { useIsWithinMessage } from '#/components/dms/MessageContext'
+import { useFullscreen } from '#/components/hooks/useFullscreen'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { ArrowsDiagonalIn_Stroke2_Corner0_Rounded as ArrowsInIcon, ArrowsDiagonalOut_Stroke2_Corner0_Rounded as ArrowsOutIcon,  } from '#/components/icons/ArrowsDiagonal'
+import { CC_Filled_Corner0_Rounded as CCActiveIcon, CC_Stroke2_Corner0_Rounded as CCInactiveIcon,  } from '#/components/icons/CC'
+import { Pause_Filled_Corner0_Rounded as PauseIcon } from '#/components/icons/Pause'
+import { Play_Filled_Corner0_Rounded as PlayIcon } from '#/components/icons/Play'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
+import { TimeIndicator } from '../TimeIndicator'
+import { ControlButton } from './ControlButton'
+import { Scrubber } from './Scrubber'
+import { formatTime, useVideoElement } from './utils'
+import { VolumeControl } from './VolumeControl'
 
 export function Controls({
   videoRef,

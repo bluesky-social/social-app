@@ -1,32 +1,26 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { ActivityIndicator, SafeAreaView, StyleSheet, TouchableOpacity, View,  } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {cleanError} from '#/lib/strings/errors'
-import {colors, gradients, s} from '#/lib/styles'
-import {useTheme} from '#/lib/ThemeContext'
-import {isAndroid, isWeb} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
-import {atoms as a, useTheme as useNewTheme} from '#/alf'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Text as NewText} from '#/components/Typography'
-import {resetToTab} from '../../../Navigation'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/text/Text'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { cleanError } from '#/lib/strings/errors'
+import { colors, gradients, s } from '#/lib/styles'
+import { useTheme } from '#/lib/ThemeContext'
+import { isAndroid, isWeb } from '#/platform/detection'
+import { useModalControls } from '#/state/modals'
+import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
+import { useAgent, useSession, useSessionApi } from '#/state/session'
+import { atoms as a, useTheme as useNewTheme } from '#/alf'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
+import { Text as NewText } from '#/components/Typography'
+import { resetToTab } from '../../../Navigation'
+import { ErrorMessage } from '../util/error/ErrorMessage'
+import { Text } from '../util/text/Text'
 import * as Toast from '../util/Toast'
-import {ScrollView, TextInput} from './util'
+import { ScrollView, TextInput } from './util'
 
 export const snapPoints = isAndroid ? ['90%'] : ['55%']
 

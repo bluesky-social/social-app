@@ -1,39 +1,17 @@
-import {
-  type AtpAgent,
-  type ChatBskyActorDefs as ChatGndrActorDefs,
-  ChatBskyConvoDefs as ChatGndrConvoDefs,
-  type ChatBskyConvoGetLog as ChatGndrConvoGetLog,
-  type ChatBskyConvoSendMessage as ChatGndrConvoSendMessage,
-} from '@atproto/api'
-import {XRPCError} from '@atproto/xrpc'
+import { type AtpAgent, type ChatBskyActorDefs as ChatGndrActorDefs, ChatBskyConvoDefs as ChatGndrConvoDefs, type ChatBskyConvoGetLog as ChatGndrConvoGetLog, type ChatBskyConvoSendMessage as ChatGndrConvoSendMessage,  } from '@gander-social-atproto/api'
+import { XRPCError } from '@gander-social-atproto/xrpc'
 import EventEmitter from 'eventemitter3'
-import {nanoid} from 'nanoid/non-secure'
+import { nanoid } from 'nanoid/non-secure'
 
-import {networkRetry} from '#/lib/async/retry'
-import {isNetworkError} from '#/lib/strings/errors'
-import {Logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {
-  ACTIVE_POLL_INTERVAL,
-  BACKGROUND_POLL_INTERVAL,
-  INACTIVE_TIMEOUT,
-  NETWORK_FAILURE_STATUSES,
-} from '#/state/messages/convo/const'
-import {
-  type ConvoDispatch,
-  ConvoDispatchEvent,
-  type ConvoError,
-  ConvoErrorCode,
-  type ConvoEvent,
-  type ConvoItem,
-  ConvoItemError,
-  type ConvoParams,
-  type ConvoState,
-  ConvoStatus,
-} from '#/state/messages/convo/types'
-import {type MessagesEventBus} from '#/state/messages/events/agent'
-import {type MessagesEventBusError} from '#/state/messages/events/types'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import { networkRetry } from '#/lib/async/retry'
+import { isNetworkError } from '#/lib/strings/errors'
+import { Logger } from '#/logger'
+import { isNative } from '#/platform/detection'
+import { ACTIVE_POLL_INTERVAL, BACKGROUND_POLL_INTERVAL, INACTIVE_TIMEOUT, NETWORK_FAILURE_STATUSES,  } from '#/state/messages/convo/const'
+import { type ConvoDispatch, ConvoDispatchEvent, type ConvoError, ConvoErrorCode, type ConvoEvent, type ConvoItem, ConvoItemError, type ConvoParams, type ConvoState, ConvoStatus,  } from '#/state/messages/convo/types'
+import { type MessagesEventBus } from '#/state/messages/events/agent'
+import { type MessagesEventBusError } from '#/state/messages/events/types'
+import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 

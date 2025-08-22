@@ -1,13 +1,13 @@
-import {useState} from 'react'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useState } from 'react'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {wait} from '#/lib/async/wait'
-import {atoms as a, type TextStyleProp, useTheme} from '#/alf'
-import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {createStaticClick, InlineLinkText} from '#/components/Link'
-import {Loader} from '#/components/Loader'
-import {Span, Text} from '#/components/Typography'
+import { wait } from '#/lib/async/wait'
+import { atoms as a, type TextStyleProp, useTheme } from '#/alf'
+import { CheckThick_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check'
+import { createStaticClick, InlineLinkText } from '#/components/Link'
+import { Loader } from '#/components/Loader'
+import { Span, Text } from '#/components/Typography'
 
 export function ResendEmailText({
   onPress,

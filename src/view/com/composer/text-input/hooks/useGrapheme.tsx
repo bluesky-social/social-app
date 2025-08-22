@@ -1,4 +1,4 @@
-import {useCallback, useMemo} from 'react'
+import { useCallback, useMemo } from 'react'
 import Graphemer from 'graphemer'
 
 export const useGrapheme = () => {

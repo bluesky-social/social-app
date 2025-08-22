@@ -1,23 +1,12 @@
 import * as React from 'react'
-import {
-  Dimensions,
-  type LayoutChangeEvent,
-  type NativeSyntheticEvent,
-  Platform,
-  type StyleProp,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
+import { Dimensions, type LayoutChangeEvent, type NativeSyntheticEvent, Platform, type StyleProp, View, type ViewStyle,  } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { requireNativeModule, requireNativeViewManager } from 'expo-modules-core'
 
-import {isIOS} from '#/platform/detection'
-import {
-  type BottomSheetState,
-  type BottomSheetViewProps,
-} from './BottomSheet.types'
-import {BottomSheetPortalProvider} from './BottomSheetPortal'
-import {Context as PortalContext} from './BottomSheetPortal'
+import { isIOS } from '#/platform/detection'
+import { type BottomSheetState, type BottomSheetViewProps,  } from './BottomSheet.types'
+import { BottomSheetPortalProvider } from './BottomSheetPortal'
+import { Context as PortalContext } from './BottomSheetPortal'
 
 const screenHeight = Dimensions.get('screen').height
 

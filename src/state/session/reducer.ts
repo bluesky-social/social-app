@@ -1,8 +1,8 @@
-import {type AtpSessionEvent, type BskyAgent as GndrAgent} from '@atproto/api'
+import { type AtpSessionEvent, type GndrAgent } from '@gander-social-atproto/api'
 
-import {createPublicAgent} from './agent'
-import {wrapSessionReducerForLogging} from './logging'
-import {type SessionAccount} from './types'
+import { createPublicAgent } from './agent'
+import { wrapSessionReducerForLogging } from './logging'
+import { type SessionAccount } from './types'
 
 // A hack so that the reducer can't read anything from the agent.
 // From the reducer's point of view, it should be a completely opaque object.

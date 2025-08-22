@@ -1,16 +1,16 @@
-import {useCallback} from 'react'
-import {View} from 'react-native'
-import {Image} from 'expo-image'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback } from 'react'
+import { View } from 'react-native'
+import { Image } from 'expo-image'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
-import {atoms as a, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { isWeb } from '#/platform/detection'
+import { atoms as a, useTheme, web } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useNuxDialogContext} from '#/components/dialogs/nuxs'
-import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
-import {Text} from '#/components/Typography'
+import { useNuxDialogContext } from '#/components/dialogs/nuxs'
+import { Sparkle_Stroke2_Corner0_Rounded as SparkleIcon } from '#/components/icons/Sparkle'
+import { Text } from '#/components/Typography'
 
 export function ActivitySubscriptionsNUX() {
   const t = useTheme()

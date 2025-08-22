@@ -1,47 +1,31 @@
 import React from 'react'
-import {View} from 'react-native'
-import {
-  type $Typed,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AtUri,
-  moderatePost,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {Trans} from '@lingui/macro'
-import {useQueryClient} from '@tanstack/react-query'
+import { View } from 'react-native'
+import { type $Typed, type AppGndrFeedDefs, AppGndrFeedPost, AtUri, moderatePost, RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {makeProfileLink} from '#/lib/routes/links'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {unstableCacheProfileView} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {Link} from '#/view/com/util/Link'
-import {PostMeta} from '#/view/com/util/PostMeta'
-import {atoms as a, useTheme} from '#/alf'
-import {ContentHider} from '#/components/moderation/ContentHider'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {RichText} from '#/components/RichText'
-import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { makeProfileLink } from '#/lib/routes/links'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { unstableCacheProfileView } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
+import { Link } from '#/view/com/util/Link'
+import { PostMeta } from '#/view/com/util/PostMeta'
+import { atoms as a, useTheme } from '#/alf'
+import { ContentHider } from '#/components/moderation/ContentHider'
+import { PostAlerts } from '#/components/moderation/PostAlerts'
+import { RichText } from '#/components/RichText'
+import { Embed as StarterPackCard } from '#/components/StarterPack/StarterPackCard'
+import { SubtleWebHover } from '#/components/SubtleWebHover'
 import * as gndr from '#/types/gndr'
-import {
-  type Embed as TEmbed,
-  type EmbedType,
-  parseEmbed,
-} from '#/types/gndr/post'
-import {ExternalEmbed} from './ExternalEmbed'
-import {ModeratedFeedEmbed} from './FeedEmbed'
-import {ImageEmbed} from './ImageEmbed'
-import {ModeratedListEmbed} from './ListEmbed'
-import {PostPlaceholder as PostPlaceholderText} from './PostPlaceholder'
-import {
-  type CommonProps,
-  type EmbedProps,
-  PostEmbedViewContext,
-  QuoteEmbedViewContext,
-} from './types'
-import {VideoEmbed} from './VideoEmbed'
+import { type Embed as TEmbed, type EmbedType, parseEmbed,  } from '#/types/gndr/post'
+import { ExternalEmbed } from './ExternalEmbed'
+import { ModeratedFeedEmbed } from './FeedEmbed'
+import { ImageEmbed } from './ImageEmbed'
+import { ModeratedListEmbed } from './ListEmbed'
+import { PostPlaceholder as PostPlaceholderText } from './PostPlaceholder'
+import { type CommonProps, type EmbedProps, PostEmbedViewContext, QuoteEmbedViewContext,  } from './types'
+import { VideoEmbed } from './VideoEmbed'
 
 export {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
 
@@ -229,7 +213,7 @@ export function QuoteEmbed({
   const quote = React.useMemo<$Typed<AppGndrFeedDefs.PostView>>(
     () => ({
       ...embed.view,
-      $type: 'app.bsky.feed.defs#postView',
+      $type: 'app.gndr.feed.defs#postView',
       record: embed.view.value,
       embed: embed.view.embeds?.[0],
     }),

@@ -1,14 +1,14 @@
-import {useState} from 'react'
-import {Modal, Pressable, View} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useState } from 'react'
+import { Modal, Pressable, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as CloseIcon} from '#/components/icons/Times'
-import {Text} from '#/components/Typography'
-import {EmojiPicker} from '../../../modules/expo-emoji-picker'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
+import { TimesLarge_Stroke2_Corner0_Rounded as CloseIcon } from '#/components/icons/Times'
+import { Text } from '#/components/Typography'
+import { EmojiPicker } from '../../../modules/expo-emoji-picker'
 
 export function EmojiPopup({
   children,

@@ -1,5 +1,5 @@
-import {createContext, useContext, useMemo} from 'react'
-import {type ScrollHandlers} from 'react-native-reanimated'
+import { createContext, useContext, useMemo } from 'react'
+import { type ScrollHandlers } from 'react-native-reanimated'
 import type React from 'react'
 
 const ScrollContext = createContext<ScrollHandlers<any>>({

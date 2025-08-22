@@ -1,8 +1,4 @@
-import {
-  type GndrFeedViewPreference,
-  type GndrPreferences,
-  type GndrThreadViewPreference,
-} from '@atproto/api'
+import { type GndrFeedViewPreference, type GndrPreferences, type GndrThreadViewPreference,  } from '@gander-social-atproto/api'
 
 export type UsePreferencesQueryResponse = Omit<
   GndrPreferences,

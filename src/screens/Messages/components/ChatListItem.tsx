@@ -1,50 +1,38 @@
 import React, {useCallback, useMemo, useState} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
-import {
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  ChatBskyConvoDefs as ChatGndrConvoDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { type GestureResponderEvent, View } from 'react-native'
+import { AppGndrEmbedRecord, ChatBskyConvoDefs as ChatGndrConvoDefs, moderateProfile, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {GestureActionView} from '#/lib/custom-animations/GestureActionView'
-import {useHaptics} from '#/lib/haptics'
-import {decrementBadgeCount} from '#/lib/notifications/notifications'
-import {logEvent} from '#/lib/statsig/statsig'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {
-  postUriToRelativePath,
-  toGndrAppUrl,
-  toShortUrl,
-} from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {
-  precacheConvoQuery,
-  useMarkAsReadMutation,
-} from '#/state/queries/messages/conversation'
-import {precacheProfile} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {TimeElapsed} from '#/view/com/util/TimeElapsed'
-import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import { GestureActionView } from '#/lib/custom-animations/GestureActionView'
+import { useHaptics } from '#/lib/haptics'
+import { decrementBadgeCount } from '#/lib/notifications/notifications'
+import { logEvent } from '#/lib/statsig/statsig'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { postUriToRelativePath, toGndrAppUrl, toShortUrl,  } from '#/lib/strings/url-helpers'
+import { isNative } from '#/platform/detection'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { precacheConvoQuery, useMarkAsReadMutation,  } from '#/state/queries/messages/conversation'
+import { precacheProfile } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
+import { TimeElapsed } from '#/view/com/util/TimeElapsed'
+import { PreviewableUserAvatar } from '#/view/com/util/UserAvatar'
+import { atoms as a, useBreakpoints, useTheme, web } from '#/alf'
 import * as tokens from '#/alf/tokens'
-import {useDialogControl} from '#/components/Dialog'
-import {ConvoMenu} from '#/components/dms/ConvoMenu'
-import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
-import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/Bell2'
-import {Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen} from '#/components/icons/EnveopeOpen'
-import {Trash_Stroke2_Corner0_Rounded} from '#/components/icons/Trash'
-import {Link} from '#/components/Link'
-import {useMenuControl} from '#/components/Menu'
-import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import { useDialogControl } from '#/components/Dialog'
+import { ConvoMenu } from '#/components/dms/ConvoMenu'
+import { LeaveConvoPrompt } from '#/components/dms/LeaveConvoPrompt'
+import { Bell2Off_Filled_Corner0_Rounded as BellStroke } from '#/components/icons/Bell2'
+import { Envelope_Open_Stroke2_Corner0_Rounded as EnvelopeOpen } from '#/components/icons/EnveopeOpen'
+import { Trash_Stroke2_Corner0_Rounded } from '#/components/icons/Trash'
+import { Link } from '#/components/Link'
+import { useMenuControl } from '#/components/Menu'
+import { PostAlerts } from '#/components/moderation/PostAlerts'
+import { Text } from '#/components/Typography'
+import { useSimpleVerificationState } from '#/components/verification'
+import { VerificationCheck } from '#/components/verification/VerificationCheck'
 import type * as gndr from '#/types/gndr'
 
 export let ChatListItem = ({

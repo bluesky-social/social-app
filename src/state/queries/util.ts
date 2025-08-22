@@ -1,16 +1,5 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  AppBskyEmbedRecord as AppGndrEmbedRecord,
-  AppBskyEmbedRecord as AppGndrEmbedRecordWithMedia,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  type AtUri,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, AppGndrEmbedRecord, AppGndrEmbedRecordWithMedia, type AppGndrFeedDefs, AppGndrFeedPost, type AtUri,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryClient, type QueryKey,  } from '@tanstack/react-query'
 
 import * as gndr from '#/types/gndr'
 

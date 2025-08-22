@@ -1,10 +1,10 @@
-import {type ChatBskyConvoListConvos as ChatGndrConvoListConvos} from '@atproto/api'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import { type ChatBskyConvoListConvos as ChatGndrConvoListConvos } from '@gander-social-atproto/api'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useAgent} from '#/state/session'
-import {RQKEY as CONVO_LIST_KEY} from './list-conversations'
+import { logger } from '#/logger'
+import { DM_SERVICE_HEADERS } from '#/state/queries/messages/const'
+import { useAgent } from '#/state/session'
+import { RQKEY as CONVO_LIST_KEY } from './list-conversations'
 
 export function useUpdateAllRead(
   status: 'accepted' | 'request',

@@ -1,6 +1,6 @@
-import {requireNativeModule} from 'expo'
+import { requireNativeModule } from 'expo'
 
-import {type GooglePlayReferrerInfo, type ReferrerInfo} from './types'
+import { type GooglePlayReferrerInfo, type ReferrerInfo } from './types'
 
 export const NativeModule = requireNativeModule('ExpoGanderReferrer')
 

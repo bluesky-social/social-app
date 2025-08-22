@@ -1,10 +1,10 @@
-import {useMemo} from 'react'
+import { useMemo } from 'react'
 
-import {FeedTuner} from '#/lib/api/feed-manip'
-import {type FeedDescriptor} from '../queries/post-feed'
-import {usePreferencesQuery} from '../queries/preferences'
-import {useSession} from '../session'
-import {useLanguagePrefs} from './languages'
+import { FeedTuner } from '#/lib/api/feed-manip'
+import { type FeedDescriptor } from '../queries/post-feed'
+import { usePreferencesQuery } from '../queries/preferences'
+import { useSession } from '../session'
+import { useLanguagePrefs } from './languages'
 
 export function useFeedTuners(feedDesc: FeedDescriptor) {
   const langPrefs = useLanguagePrefs()

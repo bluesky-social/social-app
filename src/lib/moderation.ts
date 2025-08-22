@@ -1,18 +1,9 @@
 import React from 'react'
-import {
-  type AppBskyLabelerDefs as AppGndrLabelerDefs,
-  BskyAgent as GndrAgent,
-  type ComAtprotoLabelDefs,
-  type InterpretedLabelValueDefinition,
-  LABELS,
-  type ModerationCause,
-  type ModerationOpts,
-  type ModerationUI,
-} from '@atproto/api'
+import { type AppGndrLabelerDefs, type ComAtprotoLabelDefs, GndrAgent, type InterpretedLabelValueDefinition, LABELS, type ModerationCause, type ModerationOpts, type ModerationUI,  } from '@gander-social-atproto/api'
 
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {type AppModerationCause} from '#/components/Pills'
+import { sanitizeDisplayName } from '#/lib/strings/display-names'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { type AppModerationCause } from '#/components/Pills'
 
 export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
 export const OTHER_SELF_LABELS = ['graphic-media']

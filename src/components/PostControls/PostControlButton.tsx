@@ -1,12 +1,12 @@
-import {createContext, useContext, useMemo} from 'react'
-import {type GestureResponderEvent, type View} from 'react-native'
+import { createContext, useContext, useMemo } from 'react'
+import { type GestureResponderEvent, type View } from 'react-native'
 
-import {POST_CTRL_HITSLOP} from '#/lib/constants'
-import {useHaptics} from '#/lib/haptics'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, type ButtonProps} from '#/components/Button'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Text, type TextProps} from '#/components/Typography'
+import { POST_CTRL_HITSLOP } from '#/lib/constants'
+import { useHaptics } from '#/lib/haptics'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, type ButtonProps } from '#/components/Button'
+import { type Props as SVGIconProps } from '#/components/icons/common'
+import { Text, type TextProps } from '#/components/Typography'
 
 const PostControlContext = createContext<{
   big?: boolean

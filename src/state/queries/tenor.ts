@@ -1,9 +1,9 @@
-import {Platform} from 'react-native'
-import {getLocales} from 'expo-localization'
-import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query'
+import { Platform } from 'react-native'
+import { getLocales } from 'expo-localization'
+import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
 
-import {GIF_FEATURED, GIF_SEARCH} from '#/lib/constants'
-import {logger} from '#/logger'
+import { GIF_FEATURED, GIF_SEARCH } from '#/lib/constants'
+import { logger } from '#/logger'
 
 export const RQKEY_ROOT = 'gif-service'
 export const RQKEY_FEATURED = [RQKEY_ROOT, 'featured']

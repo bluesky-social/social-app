@@ -1,45 +1,36 @@
 import React, {memo, useMemo} from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyLabelerDefs as AppGndrLabelerDefs,
-  moderateProfile,
-  type ModerationOpts,
-  type RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg, Plural, plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, type AppGndrLabelerDefs, moderateProfile, type ModerationOpts, type RichText as RichTextAPI,  } from '@gander-social-atproto/api'
+import { msg, Plural, plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {MAX_LABELERS} from '#/lib/constants'
-import {useHaptics} from '#/lib/haptics'
-import {isAppLabeler} from '#/lib/moderation'
-import {logger} from '#/logger'
-import {isIOS} from '#/platform/detection'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {type Shadow} from '#/state/cache/types'
-import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
-import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useRequireAuth, useSession} from '#/state/session'
-import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
+import { MAX_LABELERS } from '#/lib/constants'
+import { useHaptics } from '#/lib/haptics'
+import { isAppLabeler } from '#/lib/moderation'
+import { logger } from '#/logger'
+import { isIOS } from '#/platform/detection'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { type Shadow } from '#/state/cache/types'
+import { useLabelerSubscriptionMutation } from '#/state/queries/labeler'
+import { useLikeMutation, useUnlikeMutation } from '#/state/queries/like'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { useRequireAuth, useSession } from '#/state/session'
+import { ProfileMenu } from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, tokens, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
-import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
-  Heart2_Stroke2_Corner0_Rounded as Heart,
-} from '#/components/icons/Heart2'
-import {Link} from '#/components/Link'
+import { atoms as a, tokens, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { type DialogOuterProps, useDialogControl } from '#/components/Dialog'
+import { Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled, Heart2_Stroke2_Corner0_Rounded as Heart,  } from '#/components/icons/Heart2'
+import { Link } from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
-import {RichText} from '#/components/RichText'
-import {Text} from '#/components/Typography'
-import {ProfileHeaderDisplayName} from './DisplayName'
-import {EditProfileDialog} from './EditProfileDialog'
-import {ProfileHeaderHandle} from './Handle'
-import {ProfileHeaderMetrics} from './Metrics'
-import {ProfileHeaderShell} from './Shell'
+import { RichText } from '#/components/RichText'
+import { Text } from '#/components/Typography'
+import { ProfileHeaderDisplayName } from './DisplayName'
+import { EditProfileDialog } from './EditProfileDialog'
+import { ProfileHeaderHandle } from './Handle'
+import { ProfileHeaderMetrics } from './Metrics'
+import { ProfileHeaderShell } from './Shell'
 
 interface Props {
   profile: AppGndrActorDefs.ProfileViewDetailed

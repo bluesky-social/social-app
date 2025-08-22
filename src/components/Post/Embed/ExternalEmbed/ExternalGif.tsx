@@ -1,22 +1,18 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  type GestureResponderEvent,
-  Pressable,
-} from 'react-native'
-import {Image} from 'expo-image'
-import {type AppGndrEmbedExternal} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { ActivityIndicator, type GestureResponderEvent, Pressable,  } from 'react-native'
+import { Image } from 'expo-image'
+import { type AppGndrEmbedExternal } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
-import {useExternalEmbedsPrefs} from '#/state/preferences'
-import {atoms as a, useTheme} from '#/alf'
-import {useDialogControl} from '#/components/Dialog'
-import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
-import {Fill} from '#/components/Fill'
-import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import { type EmbedPlayerParams } from '#/lib/strings/embed-player'
+import { isIOS, isNative, isWeb } from '#/platform/detection'
+import { useExternalEmbedsPrefs } from '#/state/preferences'
+import { atoms as a, useTheme } from '#/alf'
+import { useDialogControl } from '#/components/Dialog'
+import { EmbedConsentDialog } from '#/components/dialogs/EmbedConsent'
+import { Fill } from '#/components/Fill'
+import { PlayButtonIcon } from '#/components/video/PlayButtonIcon'
 
 export function ExternalGif({
   link,

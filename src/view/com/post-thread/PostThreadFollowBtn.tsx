@@ -1,21 +1,18 @@
 import React from 'react'
-import {type AppBskyActorDefs as AppGndrActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import { type AppGndrActorDefs } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/native'
 
-import {logger} from '#/logger'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {
-  useProfileFollowMutationQueue,
-  useProfileQuery,
-} from '#/state/queries/profile'
-import {useRequireAuth} from '#/state/session'
+import { logger } from '#/logger'
+import { useProfileShadow } from '#/state/cache/profile-shadow'
+import { useProfileFollowMutationQueue, useProfileQuery,  } from '#/state/queries/profile'
+import { useRequireAuth } from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import { atoms as a, useBreakpoints } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check'
+import { PlusLarge_Stroke2_Corner0_Rounded as Plus } from '#/components/icons/Plus'
 
 export function PostThreadFollowBtn({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})

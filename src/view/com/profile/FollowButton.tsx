@@ -1,11 +1,11 @@
-import {type StyleProp, type TextStyle, View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { type StyleProp, type TextStyle, View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {type Shadow} from '#/state/cache/types'
-import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import { type Shadow } from '#/state/cache/types'
+import { useProfileFollowMutationQueue } from '#/state/queries/profile'
 import type * as gndr from '#/types/gndr'
-import {Button, type ButtonType} from '../util/forms/Button'
+import { Button, type ButtonType } from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 
 export function FollowButton({

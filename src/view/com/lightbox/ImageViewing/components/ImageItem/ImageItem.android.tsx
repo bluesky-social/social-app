@@ -1,10 +1,6 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
-import {
-  Gesture,
-  GestureDetector,
-  type PanGesture,
-} from 'react-native-gesture-handler'
+import { ActivityIndicator, StyleSheet } from 'react-native'
+import { Gesture, GestureDetector, type PanGesture,  } from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
   type SharedValue,
@@ -14,22 +10,10 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import {Image} from 'expo-image'
+import { Image } from 'expo-image'
 
-import {
-  type Dimensions as ImageDimensions,
-  type ImageSource,
-  type Transform,
-} from '../../@types'
-import {
-  applyRounding,
-  createTransform,
-  prependPan,
-  prependPinch,
-  prependTransform,
-  readTransform,
-  type TransformMatrix,
-} from '../../transforms'
+import { type Dimensions as ImageDimensions, type ImageSource, type Transform,  } from '../../@types'
+import { applyRounding, createTransform, prependPan, prependPinch, prependTransform, readTransform, type TransformMatrix,  } from '../../transforms'
 
 const MIN_SCREEN_ZOOM = 2
 const MAX_ORIGINAL_IMAGE_ZOOM = 2

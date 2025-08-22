@@ -81,7 +81,7 @@ msgstr "{0, plural, one {# eiliad} other {# eiliad}}"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:225
 #: src/view/shell/bottom-bar/BottomBar.tsx:257
-#: src/view/shell/Drawer.tsx:487
+#: src/view/shell/Drawer.tsx:494
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr "{0, plural, one {# eitem heb ei ddarllen} other {# eitem heb ei ddarllen}}"
 
@@ -1642,7 +1642,7 @@ msgstr "Newidiadau wedi'u cadw"
 #: src/Navigation.tsx:548
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
 #: src/view/shell/desktop/LeftNav.tsx:554
-#: src/view/shell/Drawer.tsx:455
+#: src/view/shell/Drawer.tsx:462
 msgid "Chat"
 msgstr "Sgyrsiau"
 
@@ -2304,7 +2304,7 @@ msgstr "Creu pecyn cychwyn"
 msgid "Create a starter pack for me"
 msgstr "Creu pecyn cychwyn i mi"
 
-#: src/view/com/auth/SplashScreen.tsx:51
+#: src/view/com/auth/SplashScreen.tsx:52
 #: src/view/com/auth/SplashScreen.web.tsx:117
 #: src/view/shell/bottom-bar/BottomBar.tsx:345
 #: src/view/shell/bottom-bar/BottomBar.tsx:350
@@ -2338,7 +2338,7 @@ msgstr "Creu afatar yn lle hynny"
 msgid "Create another"
 msgstr "Creu un arall"
 
-#: src/view/com/auth/SplashScreen.tsx:43
+#: src/view/com/auth/SplashScreen.tsx:44
 #: src/view/com/auth/SplashScreen.web.tsx:109
 msgid "Create new account"
 msgstr "Creu cyfrif newydd"
@@ -3282,7 +3282,7 @@ msgstr "Delweddau di-noethol amlwg."
 #: src/Navigation.tsx:750
 #: src/screens/Search/Shell.tsx:307
 #: src/view/shell/desktop/LeftNav.tsx:636
-#: src/view/shell/Drawer.tsx:403
+#: src/view/shell/Drawer.tsx:410
 msgid "Explore"
 msgstr "Darganfod"
 
@@ -3529,7 +3529,7 @@ msgstr "Dyw'r ffrwd ddim ar gael"
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/desktop/RightNav.tsx:103
-#: src/view/shell/Drawer.tsx:357
+#: src/view/shell/Drawer.tsx:364
 msgid "Feedback"
 msgstr "Adborth"
 
@@ -3546,7 +3546,7 @@ msgstr "Anfonwyd adborth!"
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:104
 #: src/view/shell/desktop/LeftNav.tsx:674
-#: src/view/shell/Drawer.tsx:519
+#: src/view/shell/Drawer.tsx:526
 msgid "Feeds"
 msgstr "Ffrydiau"
 
@@ -3901,7 +3901,7 @@ msgstr "Creu pecyn cychwyn"
 msgid "Generates and displays a new verification code"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:361
+#: src/view/shell/Drawer.tsx:368
 msgid "Get help"
 msgstr "Cael cymorth"
 
@@ -4131,7 +4131,7 @@ msgstr "Oes gennych chi god? <0>Cliciwch yma.</0>"
 #: src/screens/Settings/Settings.tsx:243
 #: src/view/shell/desktop/RightNav.tsx:120
 #: src/view/shell/desktop/RightNav.tsx:121
-#: src/view/shell/Drawer.tsx:370
+#: src/view/shell/Drawer.tsx:377
 msgid "Help"
 msgstr "Cymorth"
 
@@ -4285,7 +4285,7 @@ msgstr "Daliwch ati! Rydyn ni'n rhoi mynediad i fideo yn raddol, ac rydych chi'n
 #: src/Navigation.tsx:765
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
 #: src/view/shell/desktop/LeftNav.tsx:618
-#: src/view/shell/Drawer.tsx:429
+#: src/view/shell/Drawer.tsx:436
 msgid "Home"
 msgstr "Cartref"
 
@@ -4925,7 +4925,7 @@ msgstr "Rhestr heb ei thewi"
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
 #: src/view/shell/desktop/LeftNav.tsx:692
-#: src/view/shell/Drawer.tsx:534
+#: src/view/shell/Drawer.tsx:541
 msgid "Lists"
 msgstr "Rhestrau"
 
@@ -4986,7 +4986,7 @@ msgid "Logo by @sawaratsuki.gndr.social"
 msgstr "Logo gan @sawaratsuki.gndr.social"
 
 #: src/view/shell/desktop/RightNav.tsx:127
-#: src/view/shell/Drawer.tsx:672
+#: src/view/shell/Drawer.tsx:679
 msgid "Logo by <0>@sawaratsuki.gndr.social</0>"
 msgstr "Logo gan <0>@sawaratsuki.gndr.social</0>"
 
@@ -5772,7 +5772,7 @@ msgstr "Seiniau Hysbysu"
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
 #: src/view/shell/desktop/LeftNav.tsx:655
-#: src/view/shell/Drawer.tsx:482
+#: src/view/shell/Drawer.tsx:489
 msgid "Notifications"
 msgstr "Hysbysiadau"
 
@@ -6030,18 +6030,12 @@ msgstr ""
 msgid "Opens emoji picker"
 msgstr "Yn agor y dewisydd emojis"
 
-#: src/view/com/auth/SplashScreen.tsx:45
-msgid "Opens flow to create a new Bluesky account"
-msgstr ""
-
+#: src/view/com/auth/SplashScreen.tsx:46
 #: src/view/com/auth/SplashScreen.web.tsx:111
 msgid "Opens flow to create a new Gander account"
 msgstr "Yn agor llif i greu cyfrif Gander newydd"
 
-#: src/view/com/auth/SplashScreen.tsx:59
-msgid "Opens flow to sign in to your existing Bluesky account"
-msgstr ""
-
+#: src/view/com/auth/SplashScreen.tsx:60
 #: src/view/com/auth/SplashScreen.web.tsx:125
 msgid "Opens flow to sign in to your existing Gander account"
 msgstr "Yn agor llif i fewngofnodi i'ch cyfrif Gander presennol"
@@ -6636,8 +6630,8 @@ msgstr "Gosodiadau Preifatrwydd a Diogelwch"
 #: src/screens/Settings/AboutSettings.tsx:92
 #: src/screens/Settings/AboutSettings.tsx:95
 #: src/view/screens/PrivacyPolicy.tsx:34
-#: src/view/shell/Drawer.tsx:667
-#: src/view/shell/Drawer.tsx:668
+#: src/view/shell/Drawer.tsx:674
+#: src/view/shell/Drawer.tsx:675
 msgid "Privacy Policy"
 msgstr "Polisi Preifatwydd"
 
@@ -6658,7 +6652,7 @@ msgstr "proffil"
 #: src/view/shell/bottom-bar/BottomBar.tsx:316
 #: src/view/shell/desktop/LeftNav.tsx:710
 #: src/view/shell/Drawer.tsx:76
-#: src/view/shell/Drawer.tsx:559
+#: src/view/shell/Drawer.tsx:566
 msgid "Profile"
 msgstr "Proffil"
 
@@ -7765,7 +7759,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "Anfon E-bost"
 
-#: src/view/shell/Drawer.tsx:350
+#: src/view/shell/Drawer.tsx:357
 msgid "Send feedback"
 msgstr "Anfonwch adborth"
 
@@ -7841,7 +7835,7 @@ msgstr "Yn gosod e-bost ar gyfer ailosod cyfrinair"
 #: src/Navigation.tsx:212
 #: src/screens/Settings/Settings.tsx:102
 #: src/view/shell/desktop/LeftNav.tsx:728
-#: src/view/shell/Drawer.tsx:572
+#: src/view/shell/Drawer.tsx:579
 msgid "Settings"
 msgstr "Gosodiadau"
 
@@ -8127,8 +8121,8 @@ msgstr ""
 #: src/screens/Login/index.tsx:140
 #: src/screens/Login/index.tsx:163
 #: src/screens/Search/SearchResults.tsx:258
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.tsx:65
+#: src/view/com/auth/SplashScreen.tsx:58
+#: src/view/com/auth/SplashScreen.tsx:66
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
 #: src/view/shell/bottom-bar/BottomBar.tsx:355
@@ -8621,8 +8615,8 @@ msgstr "Telerau"
 #: src/screens/Settings/AboutSettings.tsx:84
 #: src/screens/Settings/AboutSettings.tsx:87
 #: src/view/screens/TermsOfService.tsx:34
-#: src/view/shell/Drawer.tsx:660
-#: src/view/shell/Drawer.tsx:662
+#: src/view/shell/Drawer.tsx:667
+#: src/view/shell/Drawer.tsx:669
 msgid "Terms of Service"
 msgstr "Telerau Gwasanaeth"
 
@@ -10159,7 +10153,7 @@ msgstr "Beth yw eich diddordebau?"
 msgid "What do you want to call your starter pack?"
 msgstr "Beth ydych chi am ei alw'ch pecyn cychwyn?"
 
-#: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/auth/SplashScreen.tsx:35
 #: src/view/com/auth/SplashScreen.web.tsx:99
 #: src/view/com/composer/Composer.tsx:777
 msgid "What's up?"

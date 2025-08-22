@@ -1,29 +1,23 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { ScrollView, View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
-import {type PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
-import {EmptyState} from '#/view/com/util/EmptyState'
-import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {Button} from '#/view/com/util/forms/Button'
-import {
-  DropdownButton,
-  type DropdownItem,
-} from '#/view/com/util/forms/DropdownButton'
-import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { type CommonNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { s } from '#/lib/styles'
+import { type PaletteColorName, ThemeProvider } from '#/lib/ThemeContext'
+import { EmptyState } from '#/view/com/util/EmptyState'
+import { ErrorMessage } from '#/view/com/util/error/ErrorMessage'
+import { ErrorScreen } from '#/view/com/util/error/ErrorScreen'
+import { Button } from '#/view/com/util/forms/Button'
+import { DropdownButton, type DropdownItem,  } from '#/view/com/util/forms/DropdownButton'
+import { ToggleButton } from '#/view/com/util/forms/ToggleButton'
 import * as LoadingPlaceholder from '#/view/com/util/LoadingPlaceholder'
-import {Text} from '#/view/com/util/text/Text'
+import { Text } from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {ViewSelector} from '#/view/com/util/ViewSelector'
+import { ViewHeader } from '#/view/com/util/ViewHeader'
+import { ViewSelector } from '#/view/com/util/ViewSelector'
 import * as Layout from '#/components/Layout'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']

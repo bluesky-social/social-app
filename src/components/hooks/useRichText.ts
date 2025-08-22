@@ -1,7 +1,7 @@
 import React from 'react'
-import {RichText as RichTextAPI} from '@atproto/api'
+import { RichText as RichTextAPI } from '@gander-social-atproto/api'
 
-import {useAgent} from '#/state/session'
+import { useAgent } from '#/state/session'
 
 export function useRichText(text: string): [RichTextAPI, boolean] {
   const [prevText, setPrevText] = React.useState(text)

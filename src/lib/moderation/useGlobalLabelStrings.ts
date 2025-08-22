@@ -1,6 +1,6 @@
-import {useMemo} from 'react'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useMemo } from 'react'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 export type GlobalLabelStrings = Record<
   string,

@@ -1,27 +1,20 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {
-  useTrendingSettings,
-  useTrendingSettingsApi,
-} from '#/state/preferences/trending'
-import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
-import {useTrendingConfig} from '#/state/service-config'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {Divider} from '#/components/Divider'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
+import { logEvent } from '#/lib/statsig/statsig'
+import { useTrendingSettings, useTrendingSettingsApi,  } from '#/state/preferences/trending'
+import { useTrendingTopics } from '#/state/queries/trending/useTrendingTopics'
+import { useTrendingConfig } from '#/state/service-config'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
+import { Divider } from '#/components/Divider'
+import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times'
+import { Trending2_Stroke2_Corner2_Rounded as Graph } from '#/components/icons/Trending'
 import * as Prompt from '#/components/Prompt'
-import {
-  TrendingTopic,
-  TrendingTopicLink,
-  TrendingTopicSkeleton,
-} from '#/components/TrendingTopics'
-import {Text} from '#/components/Typography'
+import { TrendingTopic, TrendingTopicLink, TrendingTopicSkeleton,  } from '#/components/TrendingTopics'
+import { Text } from '#/components/Typography'
 
 const TRENDING_LIMIT = 6
 

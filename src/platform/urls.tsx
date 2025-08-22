@@ -1,6 +1,6 @@
-import {Linking} from 'react-native'
+import { Linking } from 'react-native'
 
-import {isNative, isWeb} from './detection'
+import { isNative, isWeb } from './detection'
 
 export async function getInitialURL(): Promise<string | undefined> {
   if (isNative) {

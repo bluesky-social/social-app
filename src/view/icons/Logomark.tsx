@@ -1,6 +1,6 @@
 import Svg, {Path, type PathProps, type SvgProps} from 'react-native-svg'
 
-import {usePalette} from '#/lib/hooks/usePalette'
+import { usePalette } from '#/lib/hooks/usePalette'
 
 const ratio = 54 / 61
 

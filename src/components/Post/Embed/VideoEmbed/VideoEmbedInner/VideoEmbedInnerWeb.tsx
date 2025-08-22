@@ -1,15 +1,15 @@
-import {useEffect, useId, useRef, useState} from 'react'
-import {View} from 'react-native'
-import {type AppGndrEmbedVideo} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useEffect, useId, useRef, useState } from 'react'
+import { View } from 'react-native'
+import { type AppGndrEmbedVideo } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type * as HlsTypes from 'hls.js'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {atoms as a} from '#/alf'
-import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { atoms as a } from '#/alf'
+import { MediaInsetBorder } from '#/components/MediaInsetBorder'
 import * as BandwidthEstimate from './bandwidth-estimate'
-import {Controls} from './web-controls/VideoControls'
+import { Controls } from './web-controls/VideoControls'
 
 export function VideoEmbedInnerWeb({
   embed,

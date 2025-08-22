@@ -1,7 +1,7 @@
-import {useMemo} from 'react'
-import {useColorScheme} from 'react-native'
+import { useMemo } from 'react'
+import { useColorScheme } from 'react-native'
 
-import {type EmojiPickerViewProps} from './EmojiPickerModule.types'
+import { type EmojiPickerViewProps } from './EmojiPickerModule.types'
 import EmojiPickerNativeView from './EmojiPickerView'
 
 const EmojiPicker = ({onEmojiSelected}: EmojiPickerViewProps) => {

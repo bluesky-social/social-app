@@ -1,19 +1,8 @@
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyGraphDefs as AppGndrGraphDefs,
-  type AppBskyGraphGetList as AppGndrGraphGetList,
-  type BskyAgent as GndrAgent,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-  useQuery,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrGraphDefs, type AppGndrGraphGetList, type GndrAgent,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery, useQuery,  } from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import { STALE } from '#/state/queries'
+import { useAgent } from '#/state/session'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
@@ -35,7 +24,7 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(uri ?? ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.graph.getList({
+      const res = await agent.app.gndr.graph.getList({
         list: uri!, // the enabled flag will prevent this from running until uri is set
         limit,
         cursor: pageParam,
@@ -67,7 +56,7 @@ export async function getAllListMembers(agent: GndrAgent, uri: string) {
   // We want to cap this at 6 pages, just for anything weird happening with the api
   let i = 0
   while (hasMore && i < 6) {
-    const res = await agent.app.bsky.graph.getList({
+    const res = await agent.app.gndr.graph.getList({
       list: uri,
       limit: 50,
       cursor,

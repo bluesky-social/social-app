@@ -1,49 +1,31 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {
-  ScrollView,
-  type StyleProp,
-  TextInput,
-  useWindowDimensions,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ScrollView, type StyleProp, TextInput, useWindowDimensions, View, type ViewStyle,  } from 'react-native'
+import { type ModerationOpts } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logEvent} from '#/lib/statsig/statsig'
-import {isWeb} from '#/platform/detection'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
-import {useSession} from '#/state/session'
-import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
-import {type ListMethods} from '#/view/com/util/List'
-import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
-import {
-  atoms as a,
-  native,
-  tokens,
-  useBreakpoints,
-  useTheme,
-  type ViewStyleProp,
-  web,
-} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { logEvent } from '#/lib/statsig/statsig'
+import { isWeb } from '#/platform/detection'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useActorSearchPaginated } from '#/state/queries/actor-search'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { useGetSuggestedUsersQuery } from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import { useSession } from '#/state/session'
+import { type Follow10ProgressGuide } from '#/state/shell/progress-guide'
+import { type ListMethods } from '#/view/com/util/List'
+import { popularInterests, useInterestsDisplayNames,  } from '#/screens/Onboarding/state'
+import { atoms as a, native, tokens, useBreakpoints, useTheme, type ViewStyleProp, web,  } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
-import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import { useInteractionState } from '#/components/hooks/useInteractionState'
+import { MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon } from '#/components/icons/MagnifyingGlass2'
+import { PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon } from '#/components/icons/Person'
+import { TimesLarge_Stroke2_Corner0_Rounded as X } from '#/components/icons/Times'
 import * as ProfileCard from '#/components/ProfileCard'
-import {Text} from '#/components/Typography'
+import { Text } from '#/components/Typography'
 import type * as gndr from '#/types/gndr'
-import {ProgressGuideTask} from './Task'
+import { ProgressGuideTask } from './Task'
 
 type Item =
   | {

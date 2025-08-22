@@ -1,18 +1,7 @@
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  AppBskyFeedPost as AppGndrFeedPost,
-  AppBskyFeedThreadgate as AppGndrFeedThreadgate,
-  AppBskyUnspeccedDefs as AppGndrUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadV2 as AppGndrUnspeccedGetPostThreadV2,
-  AtUri,
-} from '@atproto/api'
+import { type AppGndrFeedDefs, AppGndrFeedPost, AppGndrFeedThreadgate, AppGndrUnspeccedDefs, type AppGndrUnspeccedGetPostThreadV2, AtUri,  } from '@gander-social-atproto/api'
 
-import {
-  type ApiThreadItem,
-  type ThreadItem,
-  type TraversalMetadata,
-} from '#/state/queries/usePostThread/types'
-import {isDevMode} from '#/storage/hooks/dev-mode'
+import { type ApiThreadItem, type ThreadItem, type TraversalMetadata,  } from '#/state/queries/usePostThread/types'
+import { isDevMode } from '#/storage/hooks/dev-mode'
 import * as gndr from '#/types/gndr'
 
 export function getThreadgateRecord(

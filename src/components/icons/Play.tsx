@@ -1,4 +1,4 @@
-import {createSinglePathSVG} from './TEMPLATE'
+import { createSinglePathSVG } from './TEMPLATE'
 
 export const Play_Stroke2_Corner0_Rounded = createSinglePathSVG({
   path: 'M5.507 2.13a1 1 0 0 1 1.008.013l15 9a1 1 0 0 1 0 1.714l-15 9A1 1 0 0 1 5 21V3a1 1 0 0 1 .507-.87ZM7 4.766v14.468L19.056 12 7 4.766Z',

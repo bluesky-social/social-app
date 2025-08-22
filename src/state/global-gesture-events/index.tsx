@@ -1,12 +1,6 @@
-import {createContext, useContext, useMemo, useRef, useState} from 'react'
-import {View} from 'react-native'
-import {
-  Gesture,
-  GestureDetector,
-  type GestureStateChangeEvent,
-  type GestureUpdateEvent,
-  type PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler'
+import { createContext, useContext, useMemo, useRef, useState } from 'react'
+import { View } from 'react-native'
+import { Gesture, GestureDetector, type GestureStateChangeEvent, type GestureUpdateEvent, type PanGestureHandlerEventPayload,  } from 'react-native-gesture-handler'
 import EventEmitter from 'eventemitter3'
 
 export type GlobalGestureEvents = {

@@ -1,13 +1,13 @@
-import {Children} from 'react'
-import {type TextProps as RNTextProps} from 'react-native'
-import {type StyleProp, type TextStyle} from 'react-native'
-import {UITextView} from 'react-native-uitextview'
+import { Children } from 'react'
+import { type TextProps as RNTextProps } from 'react-native'
+import { type StyleProp, type TextStyle } from 'react-native'
+import { UITextView } from 'react-native-uitextview'
 import createEmojiRegex from 'emoji-regex'
 import type React from 'react'
 
-import {isNative} from '#/platform/detection'
-import {isIOS} from '#/platform/detection'
-import {type Alf, applyFonts, atoms, flatten} from '#/alf'
+import { isNative } from '#/platform/detection'
+import { isIOS } from '#/platform/detection'
+import { type Alf, applyFonts, atoms, flatten } from '#/alf'
 
 /**
  * Util to calculate lineHeight from a text size atom and a leading atom

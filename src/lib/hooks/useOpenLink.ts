@@ -1,23 +1,16 @@
-import {useCallback} from 'react'
-import {Linking} from 'react-native'
+import { useCallback } from 'react'
+import { Linking } from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {
-  createGndrAppAbsoluteUrl,
-  createProxiedUrl,
-  isGndrAppUrl,
-  isGndrRSSUrl,
-  isRelativeUrl,
-  toNiceDomain,
-} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {useInAppBrowser} from '#/state/preferences/in-app-browser'
-import {useTheme} from '#/alf'
-import {useDialogContext} from '#/components/Dialog'
-import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import { logEvent } from '#/lib/statsig/statsig'
+import { createGndrAppAbsoluteUrl, createProxiedUrl, isGndrAppUrl, isGndrRSSUrl, isRelativeUrl, toNiceDomain,  } from '#/lib/strings/url-helpers'
+import { logger } from '#/logger'
+import { isNative } from '#/platform/detection'
+import { useInAppBrowser } from '#/state/preferences/in-app-browser'
+import { useTheme } from '#/alf'
+import { useDialogContext } from '#/components/Dialog'
+import { useSheetWrapper } from '#/components/Dialog/sheet-wrapper'
+import { useGlobalDialogsControlContext } from '#/components/dialogs/Context'
 
 export function useOpenLink() {
   const enabled = useInAppBrowser()

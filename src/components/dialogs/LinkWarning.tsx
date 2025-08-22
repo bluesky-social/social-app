@@ -1,16 +1,16 @@
-import {useCallback, useMemo} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useMemo } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {shareUrl} from '#/lib/sharing'
-import {isPossiblyAUrl, splitApexDomain} from '#/lib/strings/url-helpers'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { useOpenLink } from '#/lib/hooks/useOpenLink'
+import { shareUrl } from '#/lib/sharing'
+import { isPossiblyAUrl, splitApexDomain } from '#/lib/strings/url-helpers'
+import { atoms as a, useBreakpoints, useTheme, web } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Text} from '#/components/Typography'
-import {useGlobalDialogsControlContext} from './Context'
+import { Text } from '#/components/Typography'
+import { useGlobalDialogsControlContext } from './Context'
 
 export function LinkWarningDialog() {
   const {linkWarningDialogControl} = useGlobalDialogsControlContext()

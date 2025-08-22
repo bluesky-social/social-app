@@ -1,25 +1,22 @@
-import {useMemo} from 'react'
-import {ScrollView, View} from 'react-native'
-import {AppBskyEmbedVideo as AppGndrEmbedVideo, AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import { useMemo } from 'react'
+import { ScrollView, View } from 'react-native'
+import { AppGndrEmbedVideo, AtUri } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useFocusEffect } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {VIDEO_FEED_URI} from '#/lib/constants'
-import {makeCustomFeedLink} from '#/lib/routes/links'
-import {logger} from '#/logger'
-import {RQKEY, usePostFeedQuery} from '#/state/queries/post-feed'
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
-import {ButtonIcon} from '#/components/Button'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {Link} from '#/components/Link'
-import {Text} from '#/components/Typography'
-import {
-  CompactVideoPostCard,
-  CompactVideoPostCardPlaceholder,
-} from '#/components/VideoPostCard'
+import { VIDEO_FEED_URI } from '#/lib/constants'
+import { makeCustomFeedLink } from '#/lib/routes/links'
+import { logger } from '#/logger'
+import { RQKEY, usePostFeedQuery } from '#/state/queries/post-feed'
+import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture'
+import { atoms as a, tokens, useGutters, useTheme } from '#/alf'
+import { ButtonIcon } from '#/components/Button'
+import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron'
+import { Link } from '#/components/Link'
+import { Text } from '#/components/Typography'
+import { CompactVideoPostCard, CompactVideoPostCardPlaceholder,  } from '#/components/VideoPostCard'
 
 const CARD_WIDTH = 100
 

@@ -1,20 +1,7 @@
-import {
-  type $Typed,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedPost as AppGndrFeedPost,
-  type AppGndrUnspeccedDefs,
-  type AppGndrUnspeccedGetPostThreadV2,
-  AtUri,
-  moderatePost,
-  type ModerationOpts,
-} from '@atproto/api'
+import { type $Typed, type AppGndrFeedDefs, type AppGndrFeedPost, type AppGndrUnspeccedDefs, type AppGndrUnspeccedGetPostThreadV2, AtUri, moderatePost, type ModerationOpts,  } from '@gander-social-atproto/api'
 
-import {makeProfileLink} from '#/lib/routes/links'
-import {
-  type ApiThreadItem,
-  type ThreadItem,
-  type TraversalMetadata,
-} from '#/state/queries/usePostThread/types'
+import { makeProfileLink } from '#/lib/routes/links'
+import { type ApiThreadItem, type ThreadItem, type TraversalMetadata,  } from '#/state/queries/usePostThread/types'
 
 export function threadPostNoUnauthenticated({
   uri,
@@ -168,11 +155,11 @@ export function postViewToThreadPlaceholder(
   }
 > {
   return {
-    $type: 'app.bsky.unspecced.getPostThreadV2#threadItem',
+    $type: 'app.gndr.unspecced.getPostThreadV2#threadItem',
     uri: post.uri,
     depth: 0, // reset to 0 for highlighted post
     value: {
-      $type: 'app.bsky.unspecced.defs#threadItemPost',
+      $type: 'app.gndr.unspecced.defs#threadItemPost',
       post,
       opThread: false,
       moreParents: false,

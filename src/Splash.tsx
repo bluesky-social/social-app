@@ -1,11 +1,5 @@
 import React, {useCallback, useEffect} from 'react'
-import {
-  AccessibilityInfo,
-  Image as RNImage,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native'
+import { AccessibilityInfo, Image as RNImage, StyleSheet, useColorScheme, View,  } from 'react-native'
 import Animated, {
   Easing,
   interpolate,
@@ -14,7 +8,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import Svg, {
   ClipPath,
   Defs,
@@ -23,7 +17,7 @@ import Svg, {
   Rect,
   type SvgProps,
 } from 'react-native-svg'
-import {Image} from 'expo-image'
+import { Image } from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 // @ts-ignore

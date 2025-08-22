@@ -1,24 +1,10 @@
 import React from 'react'
-import {
-  type AccessibilityProps,
-  type GestureResponderEvent,
-  type MouseEvent,
-  type NativeSyntheticEvent,
-  Pressable,
-  type PressableProps,
-  type StyleProp,
-  StyleSheet,
-  type TargetedEvent,
-  type TextProps,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import { type AccessibilityProps, type GestureResponderEvent, type MouseEvent, type NativeSyntheticEvent, Pressable, type PressableProps, type StyleProp, StyleSheet, type TargetedEvent, type TextProps, type TextStyle, View, type ViewStyle,  } from 'react-native'
 
-import {colors} from '#/lib/styles'
-import {atoms as a, flatten, select, useTheme} from '#/alf'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Text} from '#/components/Typography'
+import { colors } from '#/lib/styles'
+import { atoms as a, flatten, select, useTheme } from '#/alf'
+import { type Props as SVGIconProps } from '#/components/icons/common'
+import { Text } from '#/components/Typography'
 
 /**
  * The `Button` component, and some extensions of it like `Link` are intended

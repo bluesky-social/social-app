@@ -7,12 +7,8 @@
  */
 
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
-import {
-  Gesture,
-  GestureDetector,
-  type PanGesture,
-} from 'react-native-gesture-handler'
+import { ActivityIndicator, StyleSheet } from 'react-native'
+import { Gesture, GestureDetector, type PanGesture,  } from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
   type SharedValue,
@@ -22,15 +18,11 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import {useSafeAreaFrame} from 'react-native-safe-area-context'
-import {Image} from 'expo-image'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { Image } from 'expo-image'
 
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {
-  type Dimensions as ImageDimensions,
-  type ImageSource,
-  type Transform,
-} from '../../@types'
+import { useAnimatedScrollHandler } from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import { type Dimensions as ImageDimensions, type ImageSource, type Transform,  } from '../../@types'
 
 const MAX_ORIGINAL_IMAGE_ZOOM = 2
 const MIN_SCREEN_ZOOM = 2

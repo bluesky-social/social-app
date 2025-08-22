@@ -1,4 +1,4 @@
-import {type StyleProp, type ViewStyle} from 'react-native'
+import { type StyleProp, type ViewStyle } from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -7,7 +7,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import type React from 'react'
 
-import {isWeb} from '#/platform/detection'
+import { isWeb } from '#/platform/detection'
 
 export function ScreenTransition({
   direction,

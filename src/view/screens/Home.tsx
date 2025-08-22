@@ -1,43 +1,33 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import { ActivityIndicator, StyleSheet } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useOTAUpdates} from '#/lib/hooks/useOTAUpdates'
-import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
-import {
-  type HomeTabNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
-import {isWeb} from '#/platform/detection'
-import {emitSoftReset} from '#/state/events'
-import {
-  type SavedFeedSourceInfo,
-  usePinnedFeedsInfos,
-} from '#/state/queries/feed'
-import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
-import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {FeedPage} from '#/view/com/feeds/FeedPage'
-import {HomeHeader} from '#/view/com/home/HomeHeader'
-import {
-  Pager,
-  type PagerRef,
-  type RenderTabBarFnProps,
-} from '#/view/com/pager/Pager'
-import {CustomFeedEmptyState} from '#/view/com/posts/CustomFeedEmptyState'
-import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
-import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
-import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
+import { PROD_DEFAULT_FEED } from '#/lib/constants'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { useOTAUpdates } from '#/lib/hooks/useOTAUpdates'
+import { useSetTitle } from '#/lib/hooks/useSetTitle'
+import { useRequestNotificationsPermission } from '#/lib/notifications/notifications'
+import { type HomeTabNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { logEvent } from '#/lib/statsig/statsig'
+import { isWeb } from '#/platform/detection'
+import { emitSoftReset } from '#/state/events'
+import { type SavedFeedSourceInfo, usePinnedFeedsInfos,  } from '#/state/queries/feed'
+import { type FeedDescriptor, type FeedParams } from '#/state/queries/post-feed'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { type UsePreferencesQueryResponse } from '#/state/queries/preferences/types'
+import { useSession } from '#/state/session'
+import { useSetMinimalShellMode } from '#/state/shell'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { useSelectedFeed, useSetSelectedFeed } from '#/state/shell/selected-feed'
+import { FeedPage } from '#/view/com/feeds/FeedPage'
+import { HomeHeader } from '#/view/com/home/HomeHeader'
+import { Pager, type PagerRef, type RenderTabBarFnProps,  } from '#/view/com/pager/Pager'
+import { CustomFeedEmptyState } from '#/view/com/posts/CustomFeedEmptyState'
+import { FollowingEmptyState } from '#/view/com/posts/FollowingEmptyState'
+import { FollowingEndOfFeed } from '#/view/com/posts/FollowingEndOfFeed'
+import { NoFeedsPinned } from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
-import {useDemoMode} from '#/storage/hooks/demo-mode'
+import { useDemoMode } from '#/storage/hooks/demo-mode'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {

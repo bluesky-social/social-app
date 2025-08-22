@@ -1,13 +1,8 @@
-import {UITextView} from 'react-native-uitextview'
+import { UITextView } from 'react-native-uitextview'
 
-import {logger} from '#/logger'
-import {atoms, flatten, useAlf, useTheme, web} from '#/alf'
-import {
-  childHasEmoji,
-  normalizeTextStyles,
-  renderChildrenWithEmoji,
-  type TextProps,
-} from '#/alf/typography'
+import { logger } from '#/logger'
+import { atoms, flatten, useAlf, useTheme, web } from '#/alf'
+import { childHasEmoji, normalizeTextStyles, renderChildrenWithEmoji, type TextProps,  } from '#/alf/typography'
 
 export type {TextProps}
 export {Text as Span} from 'react-native'

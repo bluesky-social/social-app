@@ -1,7 +1,4 @@
-import {
-  type BskyAgent as GndrAgent,
-  type ComAtprotoRepoUploadBlob,
-} from '@atproto/api'
+import { type ComAtprotoRepoUploadBlob, type GndrAgent,  } from '@gander-social-atproto/api'
 
 /**
  * @note It is recommended, on web, to use the `file` instance of the file

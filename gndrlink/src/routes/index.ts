@@ -1,12 +1,12 @@
-import {type Express} from 'express'
+import { type Express } from 'express'
 
-import {type AppContext} from '../context.js'
-import {default as createShortLink} from './createShortLink.js'
-import {default as health} from './health.js'
-import {default as redirect} from './redirect.js'
-import {default as root} from './root.js'
-import {default as shortLink} from './shortLink.js'
-import {default as siteAssociation} from './siteAssociation.js'
+import { type AppContext } from '../context.js'
+import { default as createShortLink } from './createShortLink.js'
+import { default as health } from './health.js'
+import { default as redirect } from './redirect.js'
+import { default as root } from './root.js'
+import { default as shortLink } from './shortLink.js'
+import { default as siteAssociation } from './siteAssociation.js'
 
 export * from './util.js'
 

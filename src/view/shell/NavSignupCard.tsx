@@ -1,16 +1,16 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useCloseAllActiveElements} from '#/state/util'
-import {Logo} from '#/view/icons/Logo'
-import {atoms as a} from '#/alf'
-import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
-import {Button, ButtonText} from '#/components/Button'
-import {Link} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { useCloseAllActiveElements } from '#/state/util'
+import { Logo } from '#/view/icons/Logo'
+import { atoms as a } from '#/alf'
+import { AppLanguageDropdown } from '#/components/AppLanguageDropdown'
+import { Button, ButtonText } from '#/components/Button'
+import { Link } from '#/components/Link'
+import { Text } from '#/components/Typography'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()

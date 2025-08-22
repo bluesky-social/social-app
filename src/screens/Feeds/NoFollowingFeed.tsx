@@ -1,13 +1,13 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {TIMELINE_SAVED_FEED} from '#/lib/constants'
-import {useAddSavedFeedsMutation} from '#/state/queries/preferences'
-import {atoms as a, useTheme} from '#/alf'
-import {InlineLinkText} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { TIMELINE_SAVED_FEED } from '#/lib/constants'
+import { useAddSavedFeedsMutation } from '#/state/queries/preferences'
+import { atoms as a, useTheme } from '#/alf'
+import { InlineLinkText } from '#/components/Link'
+import { Text } from '#/components/Typography'
 
 export function NoFollowingFeed() {
   const t = useTheme()

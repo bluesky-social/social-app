@@ -1,12 +1,6 @@
-import {atoms} from '#/alf/atoms'
-import {type Palette, type Theme} from '#/alf/types'
-import {
-  BLUE_HUE,
-  defaultScale,
-  dimScale,
-  GREEN_HUE,
-  RED_HUE,
-} from '#/alf/util/colorGeneration'
+import { atoms } from '#/alf/atoms'
+import { type Palette, type Theme } from '#/alf/types'
+import { BLUE_HUE, defaultScale, dimScale, GREEN_HUE, RED_HUE,  } from '#/alf/util/colorGeneration'
 
 const themes = createThemes({
   hues: {

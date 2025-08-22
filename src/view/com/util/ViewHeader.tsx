@@ -1,4 +1,4 @@
-import {Header} from '#/components/Layout'
+import { Header } from '#/components/Layout'
 
 /**
  * Legacy ViewHeader component. Use Layout.Header going forward.

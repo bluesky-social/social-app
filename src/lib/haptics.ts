@@ -1,9 +1,9 @@
 import React from 'react'
 import * as Device from 'expo-device'
-import {impactAsync, ImpactFeedbackStyle} from 'expo-haptics'
+import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 
-import {isIOS, isWeb} from '#/platform/detection'
-import {useHapticsDisabled} from '#/state/preferences/disable-haptics'
+import { isIOS, isWeb } from '#/platform/detection'
+import { useHapticsDisabled } from '#/state/preferences/disable-haptics'
 import * as Toast from '#/view/com/util/Toast'
 
 export function useHaptics() {

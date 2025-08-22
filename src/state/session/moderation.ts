@@ -1,9 +1,9 @@
-import {BSKY_LABELER_DID as GNDR_LABELER_DID, BskyAgent as GndrAgent} from '@atproto/api'
+import { GNDR_LABELER_DID, GndrAgent } from '@gander-social-atproto/api'
 
-import {IS_TEST_USER} from '#/lib/constants'
-import {configureAdditionalModerationAuthorities} from './additional-moderation-authorities'
-import {readLabelers} from './agent-config'
-import {type SessionAccount} from './types'
+import { IS_TEST_USER } from '#/lib/constants'
+import { configureAdditionalModerationAuthorities } from './additional-moderation-authorities'
+import { readLabelers } from './agent-config'
+import { type SessionAccount } from './types'
 
 export function configureModerationForGuest() {
   // This global mutation is *only* OK because this code is only relevant for testing.

@@ -1,18 +1,18 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 import Animated, {
   Easing,
   LayoutAnimationConfig,
   useReducedMotion,
   withTiming,
 } from 'react-native-reanimated'
-import {i18n} from '@lingui/core'
+import { i18n } from '@lingui/core'
 
-import {decideShouldRoll} from '#/lib/custom-animations/util'
-import {s} from '#/lib/styles'
-import {formatCount} from '#/view/com/util/numeric/format'
-import {Text} from '#/view/com/util/text/Text'
-import {atoms as a, useTheme} from '#/alf'
+import { decideShouldRoll } from '#/lib/custom-animations/util'
+import { s } from '#/lib/styles'
+import { formatCount } from '#/view/com/util/numeric/format'
+import { Text } from '#/view/com/util/text/Text'
+import { atoms as a, useTheme } from '#/alf'
 
 const animationConfig = {
   duration: 400,

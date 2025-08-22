@@ -1,18 +1,14 @@
-import {memo} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { memo } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {type ThreadItem} from '#/state/queries/usePostThread'
-import {
-  LINEAR_AVI_WIDTH,
-  OUTER_SPACE,
-  REPLY_LINE_WIDTH,
-} from '#/screens/PostThread/const'
-import {atoms as a, useTheme} from '#/alf'
-import {ArrowTopCircle_Stroke2_Corner0_Rounded as UpIcon} from '#/components/icons/ArrowTopCircle'
-import {Link} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import { type ThreadItem } from '#/state/queries/usePostThread'
+import { LINEAR_AVI_WIDTH, OUTER_SPACE, REPLY_LINE_WIDTH,  } from '#/screens/PostThread/const'
+import { atoms as a, useTheme } from '#/alf'
+import { ArrowTopCircle_Stroke2_Corner0_Rounded as UpIcon } from '#/components/icons/ArrowTopCircle'
+import { Link } from '#/components/Link'
+import { Text } from '#/components/Typography'
 
 export const ThreadItemReadMoreUp = memo(function ThreadItemReadMoreUp({
   item,

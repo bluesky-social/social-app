@@ -1,5 +1,5 @@
-import {useEffect} from 'react'
-import {SystemBars} from 'react-native-edge-to-edge'
+import { useEffect } from 'react'
+import { SystemBars } from 'react-native-edge-to-edge'
 
 export function useSetLightStatusBar(enabled: boolean) {
   useEffect(() => {

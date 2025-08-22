@@ -1,20 +1,17 @@
 import React from 'react'
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
 
-import {cleanError} from '#/lib/strings/errors'
-import {
-  useResolveGifQuery,
-  useResolveLinkQuery,
-} from '#/state/queries/resolve-link'
-import {type Gif} from '#/state/queries/tenor'
-import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
-import {atoms as a, useTheme} from '#/alf'
-import {Loader} from '#/components/Loader'
-import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
-import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
-import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
-import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
-import {Text} from '#/components/Typography'
+import { cleanError } from '#/lib/strings/errors'
+import { useResolveGifQuery, useResolveLinkQuery,  } from '#/state/queries/resolve-link'
+import { type Gif } from '#/state/queries/tenor'
+import { ExternalEmbedRemoveBtn } from '#/view/com/composer/ExternalEmbedRemoveBtn'
+import { atoms as a, useTheme } from '#/alf'
+import { Loader } from '#/components/Loader'
+import { ExternalEmbed } from '#/components/Post/Embed/ExternalEmbed'
+import { ModeratedFeedEmbed } from '#/components/Post/Embed/FeedEmbed'
+import { ModeratedListEmbed } from '#/components/Post/Embed/ListEmbed'
+import { Embed as StarterPackEmbed } from '#/components/StarterPack/StarterPackCard'
+import { Text } from '#/components/Typography'
 
 export const ExternalEmbedGif = ({
   onRemove,
@@ -97,7 +94,7 @@ export const ExternalEmbedLink = ({
             embed={{
               type: 'feed',
               view: {
-                $type: 'app.bsky.feed.defs#generatorView',
+                $type: 'app.gndr.feed.defs#generatorView',
                 ...data.view,
               },
             }}
@@ -109,7 +106,7 @@ export const ExternalEmbedLink = ({
             embed={{
               type: 'list',
               view: {
-                $type: 'app.bsky.graph.defs#listView',
+                $type: 'app.gndr.graph.defs#listView',
                 ...data.view,
               },
             }}

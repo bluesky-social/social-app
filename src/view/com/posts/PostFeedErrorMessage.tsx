@@ -1,25 +1,21 @@
 import React from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  AppGndrFeedGetAuthorFeed,
-  AtUri,
-} from '@atproto/api'
-import {msg as msgLingui, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, AppGndrFeedGetAuthorFeed, AtUri,  } from '@gander-social-atproto/api'
+import { msg as msgLingui, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useNavigation } from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {type NavigationProp} from '#/lib/routes/types'
-import {cleanError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
-import {type FeedDescriptor} from '#/state/queries/post-feed'
-import {useRemoveFeedMutation} from '#/state/queries/preferences'
+import { usePalette } from '#/lib/hooks/usePalette'
+import { type NavigationProp } from '#/lib/routes/types'
+import { cleanError } from '#/lib/strings/errors'
+import { logger } from '#/logger'
+import { type FeedDescriptor } from '#/state/queries/post-feed'
+import { useRemoveFeedMutation } from '#/state/queries/preferences'
 import * as Prompt from '#/components/Prompt'
-import {EmptyState} from '../util/EmptyState'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Button} from '../util/forms/Button'
-import {Text} from '../util/text/Text'
+import { EmptyState } from '../util/EmptyState'
+import { ErrorMessage } from '../util/error/ErrorMessage'
+import { Button } from '../util/forms/Button'
+import { Text } from '../util/text/Text'
 import * as Toast from '../util/Toast'
 
 export enum KnownError {

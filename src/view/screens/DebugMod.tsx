@@ -1,56 +1,32 @@
 import React from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedPost as AppGndrFeedPost,
-  type ComAtprotoLabelDefs,
-  interpretLabelValueDefinition,
-  type LabelPreference,
-  LABELS,
-  mock,
-  moderatePost,
-  moderateProfile,
-  type ModerationBehavior,
-  type ModerationDecision,
-  type ModerationOpts,
-  RichText,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type AppGndrActorDefs, type AppGndrFeedDefs, type AppGndrFeedPost, type ComAtprotoLabelDefs, interpretLabelValueDefinition, type LabelPreference, LABELS, mock, moderatePost, moderateProfile, type ModerationBehavior, type ModerationDecision, type ModerationOpts, RichText,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
-import {
-  type CommonNavigatorParams,
-  type NativeStackScreenProps,
-} from '#/lib/routes/types'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {moderationOptsOverrideContext} from '#/state/preferences/moderation-opts'
-import {type FeedNotification} from '#/state/queries/notifications/types'
-import {
-  groupNotifications,
-  shouldFilterNotif,
-} from '#/state/queries/notifications/util'
-import {useSession} from '#/state/session'
-import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {ProfileHeaderStandard} from '#/screens/Profile/Header/ProfileHeaderStandard'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Divider} from '#/components/Divider'
+import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings'
+import { type CommonNavigatorParams, type NativeStackScreenProps,  } from '#/lib/routes/types'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { moderationOptsOverrideContext } from '#/state/preferences/moderation-opts'
+import { type FeedNotification } from '#/state/queries/notifications/types'
+import { groupNotifications, shouldFilterNotif,  } from '#/state/queries/notifications/util'
+import { useSession } from '#/state/session'
+import { CenteredView, ScrollView } from '#/view/com/util/Views'
+import { ProfileHeaderStandard } from '#/screens/Profile/Header/ProfileHeaderStandard'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { Divider } from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottom,
-  ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
-} from '#/components/icons/Chevron'
+import { Check_Stroke2_Corner0_Rounded as Check } from '#/components/icons/Check'
+import { ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottom, ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,  } from '#/components/icons/Chevron'
 import * as Layout from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
-import {H1, H3, P, Text} from '#/components/Typography'
-import {ScreenHider} from '../../components/moderation/ScreenHider'
-import {NotificationFeedItem} from '../com/notifications/NotificationFeedItem'
-import {PostThreadItem} from '../com/post-thread/PostThreadItem'
-import {PostFeedItem} from '../com/posts/PostFeedItem'
+import { H1, H3, P, Text } from '#/components/Typography'
+import { ScreenHider } from '../../components/moderation/ScreenHider'
+import { NotificationFeedItem } from '../com/notifications/NotificationFeedItem'
+import { PostThreadItem } from '../com/post-thread/PostThreadItem'
+import { PostFeedItem } from '../com/posts/PostFeedItem'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
   LABELS,
@@ -116,20 +92,20 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                 mock.label({
                   src: isSelfLabel ? did : undefined,
                   val: label[0],
-                  uri: `at://${did}/app.bsky.actor.profile/self`,
+                  uri: `at://${did}/app.gndr.actor.profile/self`,
                 }),
               ]
             : undefined,
       viewer: mock.actorViewerState({
         following: isFollowing
-          ? `at://${currentAccount?.did || ''}/app.bsky.graph.follow/1234`
+          ? `at://${currentAccount?.did || ''}/app.gndr.graph.follow/1234`
           : undefined,
         muted: scenario[0] === 'mute',
         mutedByList: undefined,
         blockedBy: undefined,
         blocking:
           scenario[0] === 'block'
-            ? `at://did:web:alice.test/app.bsky.actor.block/fake`
+            ? `at://did:web:alice.test/app.gndr.actor.block/fake`
             : undefined,
         blockingByList: undefined,
       }),
@@ -154,7 +130,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               mock.label({
                 src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at://${did}/app.bsky.feed.post/fake`,
+                uri: `at://${did}/app.gndr.feed.post/fake`,
               }),
             ]
           : undefined,
@@ -170,14 +146,14 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                       mock.label({
                         src: isSelfLabel ? did : undefined,
                         val: label[0],
-                        uri: `at://${did}/app.bsky.feed.post/fake`,
+                        uri: `at://${did}/app.gndr.feed.post/fake`,
                       }),
                     ]
                   : undefined,
               author: profile,
             })
           : {
-              $type: 'app.bsky.embedimages#view',
+              $type: 'app.gndr.embedimages#view',
               images: [
                 {
                   thumb:
@@ -197,11 +173,11 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         text: "This is the body of the post. It's where the text goes. You get the idea.",
         reply: {
           parent: {
-            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
+            uri: `at://${did}/app.gndr.feed.post/fake-parent`,
             cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
           },
           root: {
-            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
+            uri: `at://${did}/app.gndr.feed.post/fake-parent`,
             cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
           },
         },
@@ -213,7 +189,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               mock.label({
                 src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at://${did}/app.bsky.feed.post/fake`,
+                uri: `at://${did}/app.gndr.feed.post/fake`,
               }),
             ]
           : undefined,

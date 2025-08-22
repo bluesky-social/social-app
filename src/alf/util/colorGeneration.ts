@@ -1,4 +1,4 @@
-import {logger} from '#/logger'
+import { logger } from '#/logger'
 
 export const BLUE_HUE = 211
 export const RED_HUE = 346

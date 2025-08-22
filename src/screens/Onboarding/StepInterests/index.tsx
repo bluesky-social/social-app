@@ -1,35 +1,27 @@
 import React from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQuery} from '@tanstack/react-query'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQuery } from '@tanstack/react-query'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {capitalize} from '#/lib/strings/capitalize'
-import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
-import {useOnboardingDispatch} from '#/state/shell'
-import {
-  DescriptionText,
-  OnboardingControls,
-  TitleText,
-} from '#/screens/Onboarding/Layout'
-import {
-  type ApiResponseMap,
-  Context,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
-import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import { logEvent } from '#/lib/statsig/statsig'
+import { capitalize } from '#/lib/strings/capitalize'
+import { logger } from '#/logger'
+import { useAgent } from '#/state/session'
+import { useOnboardingDispatch } from '#/state/shell'
+import { DescriptionText, OnboardingControls, TitleText,  } from '#/screens/Onboarding/Layout'
+import { type ApiResponseMap, Context, useInterestsDisplayNames,  } from '#/screens/Onboarding/state'
+import { InterestButton } from '#/screens/Onboarding/StepInterests/InterestButton'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
-import {IconCircle} from '#/components/IconCircle'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwise} from '#/components/icons/ArrowRotateCounterClockwise'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {EmojiSad_Stroke2_Corner0_Rounded as EmojiSad} from '#/components/icons/Emoji'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
+import { IconCircle } from '#/components/IconCircle'
+import { ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwise } from '#/components/icons/ArrowRotateCounterClockwise'
+import { ChevronRight_Stroke2_Corner0_Rounded as ChevronRight } from '#/components/icons/Chevron'
+import { EmojiSad_Stroke2_Corner0_Rounded as EmojiSad } from '#/components/icons/Emoji'
+import { Hashtag_Stroke2_Corner0_Rounded as Hashtag } from '#/components/icons/Hashtag'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
 
 export function StepInterests() {
   const {_} = useLingui()
@@ -48,7 +40,7 @@ export function StepInterests() {
     queryKey: ['interests'],
     queryFn: async () => {
       try {
-        const {data} = await agent.app.bsky.unspecced.getTaggedSuggestions()
+        const {data} = await agent.app.gndr.unspecced.getTaggedSuggestions()
         return data.suggestions.reduce(
           (agg, s) => {
             const {tag, subject, subjectType} = s

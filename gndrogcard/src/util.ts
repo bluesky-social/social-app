@@ -1,6 +1,6 @@
 import twemoji from 'twemoji'
 
-import {renderLogger} from './logger.js'
+import { renderLogger } from './logger.js'
 
 const U200D = String.fromCharCode(0x200d)
 const UFE0F_REGEXP = /\uFE0F/g

@@ -1,9 +1,9 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
-import {WebView, type WebViewNavigation} from 'react-native-webview'
-import {type ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
+import { StyleSheet } from 'react-native'
+import { WebView, type WebViewNavigation } from 'react-native-webview'
+import { type ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes'
 
-import {type SignupState} from '#/screens/Signup/state'
+import { type SignupState } from '#/screens/Signup/state'
 
 const ALLOWED_HOSTS = [
   'gndr.social',

@@ -1,21 +1,18 @@
 import React from 'react'
-import {View} from 'react-native'
+import { View } from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
 import type ViewShot from 'react-native-view-shot'
-import {
-  type AppBskyGraphDefs as AppGndrGraphDefs,
-  AppBskyGraphStarterpack as AppGndrGraphStarterpack,
-} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import { type AppGndrGraphDefs, AppGndrGraphStarterpack,  } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
 
-import {isWeb} from '#/platform/detection'
-import {Logo} from '#/view/icons/Logo'
-import {Logotype} from '#/view/icons/Logotype'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
-import {LinearGradientBackground} from '#/components/LinearGradientBackground'
-import {Text} from '#/components/Typography'
+import { isWeb } from '#/platform/detection'
+import { Logo } from '#/view/icons/Logo'
+import { Logotype } from '#/view/icons/Logotype'
+import { useTheme } from '#/alf'
+import { atoms as a } from '#/alf'
+import { LinearGradientBackground } from '#/components/LinearGradientBackground'
+import { Text } from '#/components/Typography'
 import * as gndr from '#/types/gndr'
 
 const LazyViewShot = React.lazy(

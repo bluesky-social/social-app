@@ -1,4 +1,4 @@
-import {withTiming} from 'react-native-reanimated'
+import { withTiming } from 'react-native-reanimated'
 
 export function ScaleAndFadeIn() {
   'worklet'

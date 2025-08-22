@@ -1,14 +1,14 @@
-import {useEffect, useState} from 'react'
-import {TouchableOpacity, View} from 'react-native'
+import { useEffect, useState } from 'react'
+import { TouchableOpacity, View } from 'react-native'
 import Svg, {ClipPath, Defs, G, Path, Rect} from 'react-native-svg'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { atoms as a } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {Divider} from '#/components/Divider'
-import {Text} from '#/components/Typography'
+import { Divider } from '#/components/Divider'
+import { Text } from '#/components/Typography'
 
 // BlackCross icon component
 function BlackCrossIcon() {

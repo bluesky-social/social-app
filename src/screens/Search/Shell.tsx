@@ -1,53 +1,34 @@
-import {
-  memo,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import {
-  type StyleProp,
-  type TextInput,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState,  } from 'react'
+import { type StyleProp, type TextInput, View, type ViewStyle,  } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {HITSLOP_20} from '#/lib/constants'
-import {HITSLOP_10} from '#/lib/constants'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {MagnifyingGlassIcon} from '#/lib/icons'
-import {type NavigationProp} from '#/lib/routes/types'
-import {isWeb} from '#/platform/detection'
-import {listenSoftReset} from '#/state/events'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {
-  unstableCacheProfileView,
-  useProfilesQuery,
-} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {
-  makeSearchQuery,
-  type Params,
-  parseSearchQuery,
-} from '#/screens/Search/utils'
-import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {SearchInput} from '#/components/forms/SearchInput'
+import { HITSLOP_20 } from '#/lib/constants'
+import { HITSLOP_10 } from '#/lib/constants'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { MagnifyingGlassIcon } from '#/lib/icons'
+import { type NavigationProp } from '#/lib/routes/types'
+import { isWeb } from '#/platform/detection'
+import { listenSoftReset } from '#/state/events'
+import { useActorAutocompleteQuery } from '#/state/queries/actor-autocomplete'
+import { unstableCacheProfileView, useProfilesQuery,  } from '#/state/queries/profile'
+import { useSession } from '#/state/session'
+import { useSetMinimalShellMode } from '#/state/shell'
+import { makeSearchQuery, type Params, parseSearchQuery,  } from '#/screens/Search/utils'
+import { atoms as a, tokens, useBreakpoints, useTheme, web } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { SearchInput } from '#/components/forms/SearchInput'
 import * as Layout from '#/components/Layout'
-import {Text} from '#/components/Typography'
-import {account, useStorage} from '#/storage'
+import { Text } from '#/components/Typography'
+import { account, useStorage } from '#/storage'
 import type * as gndr from '#/types/gndr'
-import {AutocompleteResults} from './components/AutocompleteResults'
-import {SearchHistory} from './components/SearchHistory'
-import {SearchLanguageDropdown} from './components/SearchLanguageDropdown'
-import {Explore} from './Explore'
-import {SearchResults} from './SearchResults'
+import { AutocompleteResults } from './components/AutocompleteResults'
+import { SearchHistory } from './components/SearchHistory'
+import { SearchLanguageDropdown } from './components/SearchLanguageDropdown'
+import { Explore } from './Explore'
+import { SearchResults } from './SearchResults'
 
 export function SearchScreenShell({
   queryParam,

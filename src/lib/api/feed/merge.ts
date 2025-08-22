@@ -1,23 +1,15 @@
-import {
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedGetTimeline as AppGndrFeedGetTimeline,
-  type BskyAgent as GndrAgent,
-} from '@atproto/api'
+import { type AppGndrFeedDefs, type AppGndrFeedGetTimeline, type GndrAgent,  } from '@gander-social-atproto/api'
 import shuffle from 'lodash.shuffle'
 
-import {bundleAsync} from '#/lib/async/bundle'
-import {timeout} from '#/lib/async/timeout'
-import {feedUriToHref} from '#/lib/strings/url-helpers'
-import {getContentLanguages} from '#/state/preferences/languages'
-import {type FeedParams} from '#/state/queries/post-feed'
-import {FeedTuner} from '../feed-manip'
-import {type FeedTunerFn} from '../feed-manip'
-import {
-  type FeedAPI,
-  type FeedAPIResponse,
-  type ReasonFeedSource,
-} from './types'
-import {createGndrTopicsHeader, isGanderOwnedFeed} from './utils'
+import { bundleAsync } from '#/lib/async/bundle'
+import { timeout } from '#/lib/async/timeout'
+import { feedUriToHref } from '#/lib/strings/url-helpers'
+import { getContentLanguages } from '#/state/preferences/languages'
+import { type FeedParams } from '#/state/queries/post-feed'
+import { FeedTuner } from '../feed-manip'
+import { type FeedTunerFn } from '../feed-manip'
+import { type FeedAPI, type FeedAPIResponse, type ReasonFeedSource,  } from './types'
+import { createGndrTopicsHeader, isGanderOwnedFeed } from './utils'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
@@ -291,7 +283,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     try {
       const contentLangs = getContentLanguages().join(',')
       const isGanderOwned = isGanderOwnedFeed(this.feedUri)
-      const res = await this.agent.app.bsky.feed.getFeed(
+      const res = await this.agent.app.gndr.feed.getFeed(
         {
           cursor,
           limit,

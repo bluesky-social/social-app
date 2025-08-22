@@ -1,13 +1,10 @@
-import {useEffect, useState} from 'react'
-import {Trans} from '@lingui/macro'
+import { useEffect, useState } from 'react'
+import { Trans } from '@lingui/macro'
 
-import {useAccountEmailState} from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
-import {Disable} from '#/components/dialogs/EmailDialog/screens/Manage2FA/Disable'
-import {Enable} from '#/components/dialogs/EmailDialog/screens/Manage2FA/Enable'
-import {
-  ScreenID,
-  type ScreenProps,
-} from '#/components/dialogs/EmailDialog/types'
+import { useAccountEmailState } from '#/components/dialogs/EmailDialog/data/useAccountEmailState'
+import { Disable } from '#/components/dialogs/EmailDialog/screens/Manage2FA/Disable'
+import { Enable } from '#/components/dialogs/EmailDialog/screens/Manage2FA/Enable'
+import { ScreenID, type ScreenProps,  } from '#/components/dialogs/EmailDialog/types'
 
 export function Manage2FA({showScreen}: ScreenProps<ScreenID.Manage2FA>) {
   const {isEmailVerified, email2FAEnabled} = useAccountEmailState()

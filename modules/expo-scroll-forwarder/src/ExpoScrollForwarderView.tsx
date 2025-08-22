@@ -1,4 +1,4 @@
-import {type ExpoScrollForwarderViewProps} from './ExpoScrollForwarder.types'
+import { type ExpoScrollForwarderViewProps } from './ExpoScrollForwarder.types'
 
 export function ExpoScrollForwarderView({
   children,

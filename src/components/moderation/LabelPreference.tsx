@@ -1,24 +1,18 @@
-import {View} from 'react-native'
-import {
-  type InterpretedLabelValueDefinition,
-  type LabelPreference,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { View } from 'react-native'
+import { type InterpretedLabelValueDefinition, type LabelPreference,  } from '@gander-social-atproto/api'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import type React from 'react'
 
-import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
-import {useLabelBehaviorDescription} from '#/lib/moderation/useLabelBehaviorDescription'
-import {getLabelStrings} from '#/lib/moderation/useLabelInfo'
-import {
-  usePreferencesQuery,
-  usePreferencesSetContentLabelMutation,
-} from '#/state/queries/preferences'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import { useGlobalLabelStrings } from '#/lib/moderation/useGlobalLabelStrings'
+import { useLabelBehaviorDescription } from '#/lib/moderation/useLabelBehaviorDescription'
+import { getLabelStrings } from '#/lib/moderation/useLabelInfo'
+import { usePreferencesQuery, usePreferencesSetContentLabelMutation,  } from '#/state/queries/preferences'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {InlineLinkText} from '#/components/Link'
-import {Text} from '#/components/Typography'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
+import { InlineLinkText } from '#/components/Link'
+import { Text } from '#/components/Typography'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '../icons/CircleInfo'
 
 export function Outer({children}: React.PropsWithChildren<{}>) {
   return (

@@ -1,15 +1,12 @@
-import {View} from 'react-native'
-import {AppGndrEmbedVideo} from '@atproto/api'
+import { View } from 'react-native'
+import { AppGndrEmbedVideo } from '@gander-social-atproto/api'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {type FeedPostSliceItem} from '#/state/queries/post-feed'
-import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {atoms as a, useGutters} from '#/alf'
+import { logEvent } from '#/lib/statsig/statsig'
+import { type FeedPostSliceItem } from '#/state/queries/post-feed'
+import { type VideoFeedSourceContext } from '#/screens/VideoFeed/types'
+import { atoms as a, useGutters } from '#/alf'
 import * as Grid from '#/components/Grid'
-import {
-  VideoPostCard,
-  VideoPostCardPlaceholder,
-} from '#/components/VideoPostCard'
+import { VideoPostCard, VideoPostCardPlaceholder,  } from '#/components/VideoPostCard'
 
 export function PostFeedVideoGridRow({
   items: slices,

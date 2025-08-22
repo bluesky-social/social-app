@@ -1,8 +1,8 @@
 import React from 'react'
 
-import {deviceLocales} from '#/locale/deviceLocales'
-import {useGeolocation} from '#/state/geolocation'
-import {useLanguagePrefs} from '#/state/preferences'
+import { deviceLocales } from '#/locale/deviceLocales'
+import { useGeolocation } from '#/state/geolocation'
+import { useLanguagePrefs } from '#/state/preferences'
 
 /**
  * From react-native-localize

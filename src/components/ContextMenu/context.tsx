@@ -1,10 +1,6 @@
 import React from 'react'
 
-import {
-  type ContextType,
-  type ItemContextType,
-  type MenuContextType,
-} from '#/components/ContextMenu/types'
+import { type ContextType, type ItemContextType, type MenuContextType,  } from '#/components/ContextMenu/types'
 
 export const Context = React.createContext<ContextType | null>(null)
 

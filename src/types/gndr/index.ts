@@ -1,4 +1,4 @@
-import {type ValidationResult} from '@atproto/lexicon'
+import { type ValidationResult } from '@gander-social-atproto/lexicon'
 
 export * as post from '#/types/gndr/post'
 export * as profile from '#/types/gndr/profile'

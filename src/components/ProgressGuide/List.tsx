@@ -1,17 +1,14 @@
-import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {
-  useProgressGuide,
-  useProgressGuideControls,
-} from '#/state/shell/progress-guide'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
-import {Text} from '#/components/Typography'
-import {FollowDialog} from './FollowDialog'
-import {ProgressGuideTask} from './Task'
+import { useProgressGuide, useProgressGuideControls,  } from '#/state/shell/progress-guide'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonIcon } from '#/components/Button'
+import { TimesLarge_Stroke2_Corner0_Rounded as Times } from '#/components/icons/Times'
+import { Text } from '#/components/Typography'
+import { FollowDialog } from './FollowDialog'
+import { ProgressGuideTask } from './Task'
 
 export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   const t = useTheme()

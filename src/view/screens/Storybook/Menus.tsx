@@ -1,10 +1,10 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {atoms as a, useTheme} from '#/alf'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import { atoms as a, useTheme } from '#/alf'
+import { MagnifyingGlass2_Stroke2_Corner0_Rounded as Search } from '#/components/icons/MagnifyingGlass2'
 import * as Menu from '#/components/Menu'
-import {Text} from '#/components/Typography'
-// import {useDialogStateControlContext} from '#/state/dialogs'
+import { Text } from '#/components/Typography'
+// import { useDialogStateControlContext } from '#/state/dialogs'
 
 export function Menus() {
   const t = useTheme()

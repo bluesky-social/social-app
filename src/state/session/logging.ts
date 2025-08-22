@@ -1,14 +1,11 @@
-import {
-  type AtpSessionData,
-  type AtpSessionEvent,
-} from '@atproto/api'
-import {sha256} from 'js-sha256'
-import {Statsig} from 'statsig-react-native-expo'
+import { type AtpSessionData, type AtpSessionEvent,  } from '@gander-social-atproto/api'
+import { sha256 } from 'js-sha256'
+import { Statsig } from 'statsig-react-native-expo'
 
-import {IS_INTERNAL} from '#/env'
-import {type Schema} from '../persisted'
-import {type Action, type State} from './reducer'
-import {type SessionAccount} from './types'
+import { IS_INTERNAL } from '#/env'
+import { type Schema } from '../persisted'
+import { type Action, type State } from './reducer'
+import { type SessionAccount } from './types'
 
 type Reducer = (state: State, action: Action) => State
 

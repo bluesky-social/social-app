@@ -1,15 +1,10 @@
-import {View} from 'react-native'
+import { View } from 'react-native'
 
-import {atoms as a} from '#/alf'
-import {
-  Button,
-  type ButtonColor,
-  ButtonIcon,
-  ButtonText,
-} from '#/components/Button'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
-import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
-import {H1} from '#/components/Typography'
+import { atoms as a } from '#/alf'
+import { Button, type ButtonColor, ButtonIcon, ButtonText,  } from '#/components/Button'
+import { ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft } from '#/components/icons/Chevron'
+import { Globe_Stroke2_Corner0_Rounded as Globe } from '#/components/icons/Globe'
+import { H1 } from '#/components/Typography'
 
 export function Buttons() {
   return (

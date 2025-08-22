@@ -1,9 +1,9 @@
-import {useCallback} from 'react'
-import {useQueryClient} from '@tanstack/react-query'
+import { useCallback } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {updateProfileShadow} from '#/state/cache/profile-shadow'
-import {useAgent} from '#/state/session'
+import { logger } from '#/logger'
+import { updateProfileShadow } from '#/state/cache/profile-shadow'
+import { useAgent } from '#/state/session'
 import type * as gndr from '#/types/gndr'
 
 /**

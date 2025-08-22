@@ -1,18 +1,15 @@
-import {createContext, useContext, useMemo, useState} from 'react'
-import {type AppBskyUnspeccedDefs as AppGndrUnspeccedDefs} from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
+import { createContext, useContext, useMemo, useState } from 'react'
+import { type AppGndrUnspeccedDefs } from '@gander-social-atproto/api'
+import { useQuery } from '@tanstack/react-query'
 
-import {networkRetry} from '#/lib/async/retry'
-import {useGetAndRegisterPushToken} from '#/lib/notifications/notifications'
-import {isNetworkError} from '#/lib/strings/errors'
-import {
-  type AgeAssuranceAPIContextType,
-  type AgeAssuranceContextType,
-} from '#/state/ageAssurance/types'
-import {useIsAgeAssuranceEnabled} from '#/state/ageAssurance/useIsAgeAssuranceEnabled'
-import {logger} from '#/state/ageAssurance/util'
-import {useGeolocation} from '#/state/geolocation'
-import {useAgent} from '#/state/session'
+import { networkRetry } from '#/lib/async/retry'
+import { useGetAndRegisterPushToken } from '#/lib/notifications/notifications'
+import { isNetworkError } from '#/lib/strings/errors'
+import { type AgeAssuranceAPIContextType, type AgeAssuranceContextType,  } from '#/state/ageAssurance/types'
+import { useIsAgeAssuranceEnabled } from '#/state/ageAssurance/useIsAgeAssuranceEnabled'
+import { logger } from '#/state/ageAssurance/util'
+import { useGeolocation } from '#/state/geolocation'
+import { useAgent } from '#/state/session'
 
 export const createAgeAssuranceQueryKey = (did: string) =>
   ['ageAssurance', did] as const
@@ -62,7 +59,7 @@ export function Provider({children}: {children: React.ReactNode}) {
 
       try {
         const {data} = await networkRetry(3, () =>
-          agent.app.bsky.unspecced.getAgeAssuranceState(),
+          agent.app.gndr.unspecced.getAgeAssuranceState(),
         )
         // const {data} = {
         //   data: {

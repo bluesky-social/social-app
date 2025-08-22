@@ -1,22 +1,18 @@
-import {memo, useCallback} from 'react'
-import {View} from 'react-native'
-import {msg, plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { memo, useCallback } from 'react'
+import { View } from 'react-native'
+import { msg, plural, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {useHaptics} from '#/lib/haptics'
-import {useRequireAuth} from '#/state/session'
-import {formatCount} from '#/view/com/util/numeric/format'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import { useHaptics } from '#/lib/haptics'
+import { useRequireAuth } from '#/state/session'
+import { formatCount } from '#/view/com/util/numeric/format'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
-import {Text} from '#/components/Typography'
-import {
-  PostControlButton,
-  PostControlButtonIcon,
-  PostControlButtonText,
-} from './PostControlButton'
+import { CloseQuote_Stroke2_Corner1_Rounded as Quote } from '#/components/icons/Quote'
+import { Repost_Stroke2_Corner2_Rounded as Repost } from '#/components/icons/Repost'
+import { Text } from '#/components/Typography'
+import { PostControlButton, PostControlButtonIcon, PostControlButtonText,  } from './PostControlButton'
 
 interface Props {
   isReposted: boolean

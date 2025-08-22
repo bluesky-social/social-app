@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 import EventEmitter from 'eventemitter3'
 
 const events = new EventEmitter<{

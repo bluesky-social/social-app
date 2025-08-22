@@ -1,12 +1,12 @@
-import {useCallback, useMemo} from 'react'
-import {LayoutAnimation, type TextStyle} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useCallback, useMemo } from 'react'
+import { LayoutAnimation, type TextStyle } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {HITSLOP_10} from '#/lib/constants'
-import {atoms as a, flatten, type TextStyleProp, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
-import {Text} from '#/components/Typography'
+import { HITSLOP_10 } from '#/lib/constants'
+import { atoms as a, flatten, type TextStyleProp, useTheme } from '#/alf'
+import { Button } from '#/components/Button'
+import { Text } from '#/components/Typography'
 
 export function ShowMoreTextButton({
   onPress: onPressProp,

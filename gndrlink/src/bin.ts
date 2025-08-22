@@ -1,4 +1,4 @@
-import {Database, envToCfg, httpLogger, LinkService, readEnv} from './index.js'
+import { Database, envToCfg, httpLogger, LinkService, readEnv } from './index.js'
 
 async function main() {
   const env = readEnv()

@@ -1,13 +1,13 @@
-import {createContext, useContext, useMemo} from 'react'
-import {View} from 'react-native'
+import { createContext, useContext, useMemo } from 'react'
+import { View } from 'react-native'
 
-import {atoms as a, select, useTheme} from '#/alf'
-import {Check_Stroke2_Corner0_Rounded as SuccessIcon} from '#/components/icons/Check'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
-import {type ToastType} from '#/components/Toast/types'
-import {Text} from '#/components/Typography'
+import { atoms as a, select, useTheme } from '#/alf'
+import { Check_Stroke2_Corner0_Rounded as SuccessIcon } from '#/components/icons/Check'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
+import { CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon } from '#/components/icons/CircleInfo'
+import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning'
+import { type ToastType } from '#/components/Toast/types'
+import { Text } from '#/components/Typography'
 
 type ContextType = {
   type: ToastType

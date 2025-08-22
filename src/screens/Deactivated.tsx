@@ -1,31 +1,26 @@
 import React from 'react'
-import {View} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import { View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useFocusEffect } from '@react-navigation/native'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {
-  type SessionAccount,
-  useAgent,
-  useSession,
-  useSessionApi,
-} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useTheme} from '#/alf'
-import {AccountList} from '#/components/AccountList'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Divider} from '#/components/Divider'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import { useAccountSwitcher } from '#/lib/hooks/useAccountSwitcher'
+import { logger } from '#/logger'
+import { isWeb } from '#/platform/detection'
+import { type SessionAccount, useAgent, useSession, useSessionApi,  } from '#/state/session'
+import { useSetMinimalShellMode } from '#/state/shell'
+import { useLoggedOutViewControls } from '#/state/shell/logged-out'
+import { Logo } from '#/view/icons/Logo'
+import { atoms as a, useTheme } from '#/alf'
+import { AccountList } from '#/components/AccountList'
+import { Button, ButtonIcon, ButtonText } from '#/components/Button'
+import { Divider } from '#/components/Divider'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
 import * as Layout from '#/components/Layout'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
+import { Loader } from '#/components/Loader'
+import { Text } from '#/components/Typography'
 
 const COL_WIDTH = 400
 

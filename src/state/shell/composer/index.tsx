@@ -1,19 +1,14 @@
 import React from 'react'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppGndrUnspeccedGetPostThreadV2,
-  type ModerationDecision,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrFeedDefs, type AppGndrUnspeccedGetPostThreadV2, type ModerationDecision,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { useQueryClient } from '@tanstack/react-query'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {postUriToRelativePath, toGndrAppUrl} from '#/lib/strings/url-helpers'
-import {purgeTemporaryImageFiles} from '#/state/gallery'
-import {precacheResolveLinkQuery} from '#/state/queries/resolve-link'
-import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
+import { useNonReactiveCallback } from '#/lib/hooks/useNonReactiveCallback'
+import { postUriToRelativePath, toGndrAppUrl } from '#/lib/strings/url-helpers'
+import { purgeTemporaryImageFiles } from '#/state/gallery'
+import { precacheResolveLinkQuery } from '#/state/queries/resolve-link'
+import { type EmojiPickerPosition } from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
 
 export interface ComposerOptsPostRef {

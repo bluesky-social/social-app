@@ -1,6 +1,6 @@
-import {type ErrorRequestHandler, type Request, type RequestHandler, type Response} from 'express'
+import { type ErrorRequestHandler, type Request, type RequestHandler, type Response } from 'express'
 
-import {httpLogger} from '../logger.js'
+import { httpLogger } from '../logger.js'
 
 export type Handler = (req: Request, res: Response) => Awaited<void>
 

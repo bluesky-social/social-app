@@ -1,27 +1,21 @@
-import {memo, useEffect} from 'react'
-import {View} from 'react-native'
-import {
-  type AppBskyActorSearchActors as AppGndrActorSearchActors,
-  type ModerationOpts,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {type InfiniteData} from '@tanstack/react-query'
+import { memo, useEffect } from 'react'
+import { View } from 'react-native'
+import { type AppGndrActorSearchActors, type ModerationOpts,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import { type InfiniteData } from '@tanstack/react-query'
 
-import {logger} from '#/logger'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
-import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
-import {Button} from '#/components/Button'
+import { logger } from '#/logger'
+import { usePreferencesQuery } from '#/state/queries/preferences'
+import { BlockDrawerGesture } from '#/view/shell/BlockDrawerGesture'
+import { popularInterests, useInterestsDisplayNames,  } from '#/screens/Onboarding/state'
+import { useTheme } from '#/alf'
+import { atoms as a } from '#/alf'
+import { Button } from '#/components/Button'
 import * as ProfileCard from '#/components/ProfileCard'
-import {boostInterests, Tabs} from '#/components/ProgressGuide/FollowDialog'
-import {SubtleHover} from '#/components/SubtleHover'
-import {Text} from '#/components/Typography'
+import { boostInterests, Tabs } from '#/components/ProgressGuide/FollowDialog'
+import { SubtleHover } from '#/components/SubtleHover'
+import { Text } from '#/components/Typography'
 import type * as gndr from '#/types/gndr'
 
 export function useLoadEnoughProfiles({

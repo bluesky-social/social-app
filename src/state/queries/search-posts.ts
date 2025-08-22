@@ -1,25 +1,10 @@
 import React from 'react'
-import {
-  type AppBskyActorDefs as AppGndrActorDefs,
-  type AppBskyFeedDefs as AppGndrFeedDefs,
-  type AppBskyFeedSearchPosts as AppGndrFeedSearchPosts,
-  AtUri,
-  moderatePost,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type QueryClient,
-  type QueryKey,
-  useInfiniteQuery,
-} from '@tanstack/react-query'
+import { type AppGndrActorDefs, type AppGndrFeedDefs, type AppGndrFeedSearchPosts, AtUri, moderatePost,  } from '@gander-social-atproto/api'
+import { type InfiniteData, type QueryClient, type QueryKey, useInfiniteQuery,  } from '@tanstack/react-query'
 
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAgent} from '#/state/session'
-import {
-  didOrHandleUriMatches,
-  embedViewRecordToPostView,
-  getEmbeddedPost,
-} from './util'
+import { useModerationOpts } from '#/state/preferences/moderation-opts'
+import { useAgent } from '#/state/session'
+import { didOrHandleUriMatches, embedViewRecordToPostView, getEmbeddedPost,  } from './util'
 
 const searchPostsQueryKeyRoot = 'search-posts'
 const searchPostsQueryKey = ({query, sort}: {query: string; sort?: string}) => [
@@ -61,7 +46,7 @@ export function useSearchPostsQuery({
   >({
     queryKey: searchPostsQueryKey({query, sort}),
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.bsky.feed.searchPosts({
+      const res = await agent.app.gndr.feed.searchPosts({
         q: query,
         limit: 25,
         cursor: pageParam,

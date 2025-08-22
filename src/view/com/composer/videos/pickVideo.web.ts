@@ -1,6 +1,6 @@
-import {type ImagePickerAsset, type ImagePickerResult} from 'expo-image-picker'
+import { type ImagePickerAsset, type ImagePickerResult } from 'expo-image-picker'
 
-import {SUPPORTED_MIME_TYPES} from '#/lib/constants'
+import { SUPPORTED_MIME_TYPES } from '#/lib/constants'
 
 // mostly copied from expo-image-picker and adapted to support gifs
 // also adds support for reading video metadata

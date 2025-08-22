@@ -1,22 +1,15 @@
-import {View} from 'react-native'
-import {type AppBskyUnspeccedDefs as AppGndrUnspeccedDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import { View } from 'react-native'
+import { type AppGndrUnspeccedDefs } from '@gander-social-atproto/api'
+import { Trans } from '@lingui/macro'
 
-import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
-import {
-  DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
-  useTrendingTopics,
-} from '#/state/queries/trending/useTrendingTopics'
-import {useTrendingConfig} from '#/state/service-config'
-import {atoms as a, useGutters, useTheme} from '#/alf'
-import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
-import {
-  TrendingTopic,
-  TrendingTopicLink,
-  TrendingTopicSkeleton,
-} from '#/components/TrendingTopics'
-import {Text} from '#/components/Typography'
+import { logger } from '#/logger'
+import { isWeb } from '#/platform/detection'
+import { DEFAULT_LIMIT as RECOMMENDATIONS_COUNT, useTrendingTopics,  } from '#/state/queries/trending/useTrendingTopics'
+import { useTrendingConfig } from '#/state/service-config'
+import { atoms as a, useGutters, useTheme } from '#/alf'
+import { Hashtag_Stroke2_Corner0_Rounded } from '#/components/icons/Hashtag'
+import { TrendingTopic, TrendingTopicLink, TrendingTopicSkeleton,  } from '#/components/TrendingTopics'
+import { Text } from '#/components/Typography'
 
 // Note: This module is not currently used and may be removed in the future.
 

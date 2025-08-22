@@ -1,13 +1,13 @@
-import {createContext, useContext} from 'react'
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import { createContext, useContext } from 'react'
+import { type StyleProp, View, type ViewStyle } from 'react-native'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button as BaseButton, type ButtonProps} from '#/components/Button'
-import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
-import {Eye_Stroke2_Corner0_Rounded as InfoIcon} from '#/components/icons/Eye'
-import {Leaf_Stroke2_Corner0_Rounded as TipIcon} from '#/components/icons/Leaf'
-import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
-import {Text as BaseText, type TextProps} from '#/components/Typography'
+import { atoms as a, useBreakpoints, useTheme } from '#/alf'
+import { Button as BaseButton, type ButtonProps } from '#/components/Button'
+import { CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon } from '#/components/icons/CircleInfo'
+import { Eye_Stroke2_Corner0_Rounded as InfoIcon } from '#/components/icons/Eye'
+import { Leaf_Stroke2_Corner0_Rounded as TipIcon } from '#/components/icons/Leaf'
+import { Warning_Stroke2_Corner0_Rounded as WarningIcon } from '#/components/icons/Warning'
+import { Text as BaseText, type TextProps } from '#/components/Typography'
 
 export const colors = {
   warning: {

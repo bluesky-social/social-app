@@ -1,19 +1,15 @@
-import {useEffect, useState} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { useEffect, useState } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import lande from 'lande'
 
-import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
-import {
-  toPostLanguages,
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-} from '#/state/preferences/languages'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
-import {Text} from '#/components/Typography'
+import { code3ToCode2Strict, codeToLanguageName } from '#/locale/helpers'
+import { toPostLanguages, useLanguagePrefs, useLanguagePrefsApi,  } from '#/state/preferences/languages'
+import { atoms as a, useTheme } from '#/alf'
+import { Button, ButtonText } from '#/components/Button'
+import { Earth_Stroke2_Corner2_Rounded as EarthIcon } from '#/components/icons/Globe'
+import { Text } from '#/components/Typography'
 
 // fallbacks for safari
 const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))

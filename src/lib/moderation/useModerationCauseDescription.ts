@@ -1,23 +1,19 @@
 import React from 'react'
-import {
-  BSKY_LABELER_DID as GNDR_LABELER_DID,
-  type ModerationCause,
-  type ModerationCauseSource,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { GNDR_LABELER_DID, type ModerationCause, type ModerationCauseSource,  } from '@gander-social-atproto/api'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {useLabelDefinitions} from '#/state/preferences'
-import {useSession} from '#/state/session'
-import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {type Props as SVGIconProps} from '#/components/icons/common'
-import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
-import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
-import {type AppModerationCause} from '#/components/Pills'
-import {useGlobalLabelStrings} from './useGlobalLabelStrings'
-import {getDefinition, getLabelStrings} from './useLabelInfo'
+import { sanitizeHandle } from '#/lib/strings/handles'
+import { useLabelDefinitions } from '#/state/preferences'
+import { useSession } from '#/state/session'
+import { CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign } from '#/components/icons/CircleBanSign'
+import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo } from '#/components/icons/CircleInfo'
+import { type Props as SVGIconProps } from '#/components/icons/common'
+import { EyeSlash_Stroke2_Corner0_Rounded as EyeSlash } from '#/components/icons/EyeSlash'
+import { Warning_Stroke2_Corner0_Rounded as Warning } from '#/components/icons/Warning'
+import { type AppModerationCause } from '#/components/Pills'
+import { useGlobalLabelStrings } from './useGlobalLabelStrings'
+import { getDefinition, getLabelStrings } from './useLabelInfo'
 
 export interface ModerationCauseDescription {
   icon: React.ComponentType<SVGIconProps>

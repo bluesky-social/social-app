@@ -1,7 +1,7 @@
-import {StackActions, useNavigation} from '@react-navigation/native'
+import { StackActions, useNavigation } from '@react-navigation/native'
 
-import {type NavigationProp} from '#/lib/routes/types'
-import {router} from '#/routes'
+import { type NavigationProp } from '#/lib/routes/types'
+import { router } from '#/routes'
 
 export function useGoBack(onGoBack?: () => unknown) {
   const navigation = useNavigation<NavigationProp>()

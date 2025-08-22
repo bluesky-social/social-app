@@ -1,1 +1,2 @@
-export const NON_BREAKING_SPACE = '\u00A0'
+import { NON_BREAKING_SPACE } from '#/lib/constants.ts'
+export {NON_BREAKING_SPACE}

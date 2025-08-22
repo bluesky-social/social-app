@@ -1,30 +1,24 @@
 import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import { Pressable, StyleSheet, View } from 'react-native'
+import { msg } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 import Graphemer from 'graphemer'
-import {flushSync} from 'react-dom'
+import { flushSync } from 'react-dom'
 import TextareaAutosize from 'react-textarea-autosize'
 
-import {isSafari, isTouchDevice} from '#/lib/browser'
-import {MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {
-  useMessageDraft,
-  useSaveMessageDraft,
-} from '#/state/messages/message-drafts'
-import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
-import {
-  type Emoji,
-  type EmojiPickerPosition,
-} from '#/view/com/composer/text-input/web/EmojiPicker'
+import { isSafari, isTouchDevice } from '#/lib/browser'
+import { MAX_DM_GRAPHEME_LENGTH } from '#/lib/constants'
+import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
+import { useMessageDraft, useSaveMessageDraft,  } from '#/state/messages/message-drafts'
+import { textInputWebEmitter } from '#/view/com/composer/text-input/textInputWebEmitter'
+import { type Emoji, type EmojiPickerPosition,  } from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
-import {useSharedInputStyles} from '#/components/forms/TextField'
-import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
-import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
-import {useExtractEmbedFromFacets} from './MessageInputEmbed'
+import { atoms as a, useTheme } from '#/alf'
+import { Button } from '#/components/Button'
+import { useSharedInputStyles } from '#/components/forms/TextField'
+import { EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile } from '#/components/icons/Emoji'
+import { PaperPlane_Stroke2_Corner0_Rounded as PaperPlane } from '#/components/icons/PaperPlane'
+import { useExtractEmbedFromFacets } from './MessageInputEmbed'
 
 export function MessageInput({
   onSendMessage,

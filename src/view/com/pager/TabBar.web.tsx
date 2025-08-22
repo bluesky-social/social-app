@@ -1,10 +1,10 @@
-import {useCallback, useEffect, useRef} from 'react'
-import {type ScrollView, StyleSheet, View} from 'react-native'
+import { useCallback, useEffect, useRef } from 'react'
+import { type ScrollView, StyleSheet, View } from 'react-native'
 
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
-import {Text} from '#/components/Typography'
-import {PressableWithHover} from '../util/PressableWithHover'
-import {DraggableScrollView} from './DraggableScrollView'
+import { atoms as a, useBreakpoints, useTheme, web } from '#/alf'
+import { Text } from '#/components/Typography'
+import { PressableWithHover } from '../util/PressableWithHover'
+import { DraggableScrollView } from './DraggableScrollView'
 
 export interface TabBarProps {
   testID?: string

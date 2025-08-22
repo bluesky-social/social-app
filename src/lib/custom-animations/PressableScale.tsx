@@ -1,9 +1,4 @@
-import {
-  Pressable,
-  type PressableProps,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native'
+import { Pressable, type PressableProps, type StyleProp, type ViewStyle,  } from 'react-native'
 import Animated, {
   cancelAnimation,
   useAnimatedStyle,
@@ -12,8 +7,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import {isTouchDevice} from '#/lib/browser'
-import {isNative} from '#/platform/detection'
+import { isTouchDevice } from '#/lib/browser'
+import { isNative } from '#/platform/detection'
 
 const DEFAULT_TARGET_SCALE = isNative || isTouchDevice ? 0.98 : 1
 

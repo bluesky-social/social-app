@@ -1,10 +1,10 @@
-import {useEffect} from 'react'
-import {Animated, Easing} from 'react-native'
+import { useEffect } from 'react'
+import { Animated, Easing } from 'react-native'
 
-import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {useComposerState} from '#/state/shell/composer'
-import {atoms as a, useTheme} from '#/alf'
-import {ComposePost} from '../com/composer/Composer'
+import { useAnimatedValue } from '#/lib/hooks/useAnimatedValue'
+import { useComposerState } from '#/state/shell/composer'
+import { atoms as a, useTheme } from '#/alf'
+import { ComposePost } from '../com/composer/Composer'
 
 export function Composer({winHeight}: {winHeight: number}) {
   const state = useComposerState()
