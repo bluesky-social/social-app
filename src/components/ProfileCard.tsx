@@ -513,12 +513,19 @@ export function FollowButtonInner({
       comment: 'User is following this account, click to unfollow',
     }),
   )
-  const followLabel = _(
-    msg({
-      message: profile.viewer?.followedBy ? 'Follow back' : 'Follow',
-      comment: 'User is not following this account, click to follow',
-    }),
-  )
+  const followLabel = profile.viewer?.followedBy
+    ? _(
+        msg({
+          message: 'Follow back',
+          comment: 'User is not following this account, click to follow back',
+        }),
+      )
+    : _(
+        msg({
+          message: 'Follow',
+          comment: 'User is not following this account, click to follow',
+        }),
+      )
 
   if (!profile.viewer) return null
   if (
