@@ -3,7 +3,7 @@ import {Pressable, View} from 'react-native'
 import {show as deprecatedShow} from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import * as toast from '#/components/Toast'
-import {Toast} from '#/components/Toast/Toast'
+import {Default as Toast} from '#/components/Toast/Toast'
 import {H1} from '#/components/Typography'
 
 export function Toasts() {

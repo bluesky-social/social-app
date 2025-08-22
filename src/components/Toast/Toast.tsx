@@ -4,9 +4,10 @@ import {View} from 'react-native'
 import {atoms as a, select, useAlf, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {type ToastType} from '#/components/Toast/types'
-import {Text} from '#/components/Typography'
+import {Text as BaseText} from '#/components/Typography'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '../icons/CircleCheck'
 
 type ContextType = {
@@ -15,7 +16,7 @@ type ContextType = {
 
 export type ToastComponentProps = {
   type?: ToastType
-  content: React.ReactNode
+  content: string
 }
 
 export const ICONS = {
@@ -31,20 +32,24 @@ const Context = createContext<ContextType>({
 })
 Context.displayName = 'ToastContext'
 
-export function Toast({type = 'default', content}: ToastComponentProps) {
-  const {fonts} = useAlf()
+export function Default({type = 'default', content}: ToastComponentProps) {
+  return (
+    <Outer type={type}>
+      <Icon />
+      <Text>{content}</Text>
+    </Outer>
+  )
+}
+
+export function Outer({
+  children,
+  type = 'default',
+}: {
+  children: React.ReactNode
+  type?: ToastType
+}) {
   const t = useTheme()
   const styles = useToastStyles({type})
-  const Icon = ICONS[type]
-  /**
-   * Vibes-based number, adjusts `top` of `View` that wraps the text to
-   * compensate for different type sizes and keep the first line of text
-   * aligned with the icon. - esb
-   */
-  const fontScaleCompensation = useMemo(
-    () => parseInt(fonts.scale) * -1 * 0.65,
-    [fonts.scale],
-  )
 
   return (
     <Context.Provider value={useMemo(() => ({type}), [type])}>
@@ -64,43 +69,54 @@ export function Toast({type = 'default', content}: ToastComponentProps) {
             borderColor: styles.borderColor,
           },
         ]}>
-        <Icon size="md" fill={styles.iconColor} />
-
-        <View
-          style={[
-            a.flex_1,
-            {
-              top: fontScaleCompensation,
-            },
-          ]}>
-          {typeof content === 'string' ? (
-            <ToastText>{content}</ToastText>
-          ) : (
-            content
-          )}
-        </View>
+        {children}
       </View>
     </Context.Provider>
   )
 }
 
-export function ToastText({children}: {children: React.ReactNode}) {
+export function Icon({icon}: {icon?: React.ComponentType<SVGIconProps>}) {
+  const {type} = useContext(Context)
+  const styles = useToastStyles({type})
+  const IconComponent = icon || ICONS[type]
+  return <IconComponent size="md" fill={styles.iconColor} />
+}
+
+export function Text({children}: {children: React.ReactNode}) {
+  const {fonts} = useAlf()
   const {type} = useContext(Context)
   const {textColor} = useToastStyles({type})
+  /**
+   * Vibes-based number, adjusts `top` of `View` that wraps the text to
+   * compensate for different type sizes and keep the first line of text
+   * aligned with the icon. - esb
+   */
+  const fontScaleCompensation = useMemo(
+    () => parseInt(fonts.scale) * -1 * 0.65,
+    [fonts.scale],
+  )
   return (
-    <Text
-      selectable={false}
+    <View
       style={[
-        a.text_md,
-        a.font_medium,
-        a.leading_snug,
-        a.pointer_events_none,
+        a.flex_1,
         {
-          color: textColor,
+          top: fontScaleCompensation,
         },
       ]}>
-      {children}
-    </Text>
+      <BaseText
+        selectable={false}
+        style={[
+          a.text_md,
+          a.font_medium,
+          a.leading_snug,
+          a.pointer_events_none,
+          {
+            color: textColor,
+          },
+        ]}>
+        {children}
+      </BaseText>
+    </View>
   )
 }
 
