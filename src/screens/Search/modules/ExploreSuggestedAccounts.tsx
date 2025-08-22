@@ -14,9 +14,9 @@ import {
 } from '#/screens/Onboarding/state'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
+import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {SubtleHover} from '#/components/SubtleHover'
-import {boostInterests, InterestTabs} from '#/components/Tabs'
 import type * as bsky from '#/types/bsky'
 
 export function useLoadEnoughProfiles({
