@@ -92,100 +92,103 @@ export function InterestTabs({
   const canScrollLeft = scrollX > 0
   const canScrollRight = scrollX < contentWidth - totalWidth
 
-  const holdTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const scrollIntervalRef = useRef<(() => void) | null>(null)
-  const isContinuousScrollingRef = useRef(false)
-  const currentScrollXRef = useRef(0)
+  const cleanupRef = useRef<(() => void) | null>(null)
 
   function scrollLeft() {
-    if (listRef.current && canScrollLeft && !isContinuousScrollingRef.current) {
+    if (didContinuousScrollRef.current) {
+      return
+    }
+    if (listRef.current && canScrollLeft) {
       const newScrollX = Math.max(0, scrollX - 200)
       listRef.current.scrollTo({x: newScrollX, animated: true})
     }
   }
 
   function scrollRight() {
-    if (
-      listRef.current &&
-      canScrollRight &&
-      !isContinuousScrollingRef.current
-    ) {
+    if (didContinuousScrollRef.current) {
+      return
+    }
+    if (listRef.current && canScrollRight) {
       const maxScroll = contentWidth - totalWidth
       const newScrollX = Math.min(maxScroll, scrollX + 200)
       listRef.current.scrollTo({x: newScrollX, animated: true})
     }
   }
 
-  function startHoldTimer(direction: 'left' | 'right') {
-    if (holdTimeoutRef.current) {
-      clearTimeout(holdTimeoutRef.current)
-    }
-    if (scrollIntervalRef.current) {
-      scrollIntervalRef.current()
+  const didContinuousScrollRef = useRef(false)
+
+  function startContinuousScroll(direction: 'left' | 'right') {
+    // Clear any existing continuous scroll
+    if (cleanupRef.current) {
+      cleanupRef.current()
     }
 
-    isContinuousScrollingRef.current = false
+    let holdTimeout: NodeJS.Timeout | null = null
+    let animationFrame: number | null = null
+    let isActive = true
+    didContinuousScrollRef.current = false
 
-    holdTimeoutRef.current = setTimeout(() => {
-      isContinuousScrollingRef.current = true
-      startContinuousScroll(direction)
+    const cleanup = () => {
+      isActive = false
+      if (holdTimeout) clearTimeout(holdTimeout)
+      if (animationFrame) cancelAnimationFrame(animationFrame)
+      cleanupRef.current = null
+      // Reset flag after a delay to prevent onPress from firing
+      setTimeout(() => {
+        didContinuousScrollRef.current = false
+      }, 100)
+    }
+
+    cleanupRef.current = cleanup
+
+    // Start continuous scrolling after hold delay
+    holdTimeout = setTimeout(() => {
+      if (!isActive) return
+
+      didContinuousScrollRef.current = true
+      let currentScrollPosition = scrollX
+
+      const scroll = () => {
+        if (!isActive || !listRef.current) return
+
+        const scrollAmount = 3
+        const maxScroll = contentWidth - totalWidth
+
+        let newScrollX: number
+        let canContinue = false
+
+        if (direction === 'left' && currentScrollPosition > 0) {
+          newScrollX = Math.max(0, currentScrollPosition - scrollAmount)
+          canContinue = newScrollX > 0
+        } else if (direction === 'right' && currentScrollPosition < maxScroll) {
+          newScrollX = Math.min(maxScroll, currentScrollPosition + scrollAmount)
+          canContinue = newScrollX < maxScroll
+        } else {
+          return
+        }
+
+        currentScrollPosition = newScrollX
+        listRef.current.scrollTo({x: newScrollX, animated: false})
+
+        if (canContinue && isActive) {
+          animationFrame = requestAnimationFrame(scroll)
+        }
+      }
+
+      scroll()
     }, 500)
   }
 
-  function startContinuousScroll(direction: 'left' | 'right') {
-    let animationFrame: number
-
-    const scroll = () => {
-      if (!listRef.current) return
-
-      const scrollAmount = 3
-      const currentScroll = currentScrollXRef.current
-      const maxScroll = contentWidth - totalWidth
-
-      if (direction === 'left' && currentScroll > 0) {
-        const newScrollX = Math.max(0, currentScroll - scrollAmount)
-        currentScrollXRef.current = newScrollX
-        listRef.current.scrollTo({x: newScrollX, animated: false})
-        animationFrame = requestAnimationFrame(scroll)
-      } else if (direction === 'right' && currentScroll < maxScroll) {
-        const newScrollX = Math.min(maxScroll, currentScroll + scrollAmount)
-        currentScrollXRef.current = newScrollX
-        listRef.current.scrollTo({x: newScrollX, animated: false})
-        animationFrame = requestAnimationFrame(scroll)
-      } else {
-        stopContinuousScroll()
-      }
-    }
-
-    scrollIntervalRef.current = (() => {
-      cancelAnimationFrame(animationFrame)
-    }) as any
-
-    animationFrame = requestAnimationFrame(scroll)
-  }
-
   function stopContinuousScroll() {
-    if (holdTimeoutRef.current) {
-      clearTimeout(holdTimeoutRef.current)
-      holdTimeoutRef.current = null
+    if (cleanupRef.current) {
+      cleanupRef.current()
     }
-    if (scrollIntervalRef.current) {
-      scrollIntervalRef.current()
-      scrollIntervalRef.current = null
-    }
-    // Reset flag after a brief delay to prevent onPress from firing
-    setTimeout(() => {
-      isContinuousScrollingRef.current = false
-    }, 50)
   }
 
   useEffect(() => {
     return () => {
-      if (holdTimeoutRef.current) {
-        clearTimeout(holdTimeoutRef.current)
-      }
-      if (scrollIntervalRef.current) {
-        scrollIntervalRef.current()
+      if (cleanupRef.current) {
+        cleanupRef.current()
       }
     }
   }, [])
@@ -212,7 +215,6 @@ export function InterestTabs({
         onScroll={evt => {
           const newScrollX = evt.nativeEvent.contentOffset.x
           setScrollX(newScrollX)
-          currentScrollXRef.current = newScrollX
         }}
         scrollEventThrottle={16}>
         {interests.map((interest, i) => {
@@ -248,7 +250,7 @@ export function InterestTabs({
           <Button
             label={_(msg`Scroll left`)}
             onPress={scrollLeft}
-            onPressIn={() => startHoldTimer('left')}
+            onPressIn={() => startContinuousScroll('left')}
             onPressOut={stopContinuousScroll}
             color="secondary"
             size="small"
@@ -282,7 +284,7 @@ export function InterestTabs({
           <Button
             label={_(msg`Scroll right`)}
             onPress={scrollRight}
-            onPressIn={() => startHoldTimer('right')}
+            onPressIn={() => startContinuousScroll('right')}
             onPressOut={stopContinuousScroll}
             color="secondary"
             size="small"
