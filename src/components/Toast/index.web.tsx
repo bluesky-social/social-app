@@ -8,6 +8,7 @@ import {type BaseToastOptions} from '#/components/Toast/types'
 
 export {DURATION} from '#/components/Toast/const'
 export * from '#/components/Toast/Toast'
+export {type ToastType} from '#/components/Toast/types'
 
 /**
  * Toasts are rendered in a global outlet, which is placed at the top of the
