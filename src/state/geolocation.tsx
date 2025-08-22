@@ -25,6 +25,7 @@ const onGeolocationUpdate = (
  */
 export const DEFAULT_GEOLOCATION: Device['geolocation'] = {
   countryCode: undefined,
+  isAgeBlockedGeo: undefined,
   isAgeRestrictedGeo: false,
 }
 
@@ -40,6 +41,7 @@ async function getGeolocation(): Promise<Device['geolocation']> {
   if (json.countryCode) {
     return {
       countryCode: json.countryCode,
+      isAgeBlockedGeo: json.isAgeBlockedGeo ?? false,
       isAgeRestrictedGeo: json.isAgeRestrictedGeo ?? false,
     }
   } else {

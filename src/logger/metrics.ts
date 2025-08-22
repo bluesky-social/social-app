@@ -475,4 +475,9 @@ export type MetricEvents = {
   'ageAssurance:redirectDialogFail': {}
   'ageAssurance:appealDialogOpen': {}
   'ageAssurance:appealDialogSubmit': {}
+
+  /*
+   * Specifically for the `BlockedGeoOverlay`
+   */
+  'blockedGeoOverlay:shown': {}
 }
