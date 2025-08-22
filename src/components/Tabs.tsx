@@ -145,10 +145,6 @@ function Tab({
       <Button
         label={label}
         onPress={() => onSelectTab(index)}
-        onFocus={evt => {
-          console.log(evt)
-          // onFocusTab(index)
-        }}
         // disable focus ring, we handle it
         style={web({outline: 'none'})}>
         {({hovered, pressed, focused}) => (
