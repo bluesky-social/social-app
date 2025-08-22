@@ -1,6 +1,6 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
-  ScrollView,
+  type ScrollView,
   type StyleProp,
   TextInput,
   useWindowDimensions,
@@ -20,6 +20,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
 import {useSession} from '#/state/session'
 import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
+import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {type ListMethods} from '#/view/com/util/List'
 import {
   popularInterests,
@@ -462,7 +463,7 @@ let Tabs = ({
   }
 
   return (
-    <ScrollView
+    <DraggableScrollView
       ref={listRef}
       horizontal
       contentContainerStyle={[a.gap_sm, a.px_lg, contentContainerStyle]}
@@ -490,7 +491,7 @@ let Tabs = ({
           />
         )
       })}
-    </ScrollView>
+    </DraggableScrollView>
   )
 }
 Tabs = memo(Tabs)

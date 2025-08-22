@@ -153,21 +153,21 @@ let Tab = ({
       <Button
         label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
         onPress={() => onSelectTab(index)}>
-        {({hovered, pressed, focused}) => (
+        {({hovered, pressed}) => (
           <View
             style={[
               a.rounded_full,
               a.px_lg,
               a.py_sm,
               a.border,
-              active || hovered || pressed || focused
+              active || hovered || pressed
                 ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_medium]
                 : [t.atoms.bg, t.atoms.border_contrast_low],
             ]}>
             <Text
               style={[
                 a.font_medium,
-                active || hovered || pressed || focused
+                active || hovered || pressed
                   ? t.atoms.text
                   : t.atoms.text_contrast_medium,
               ]}>
