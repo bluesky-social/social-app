@@ -1,5 +1,6 @@
+import React from 'react'
 import {Component, ErrorInfo, ReactNode} from 'react'
-import {StyleProp, ViewStyle} from 'react-native'
+import {StyleProp, ViewStyle, Text} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -33,19 +34,22 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public render() {
-    if (this.state.hasError) {
-      if (this.props.renderError) {
-        return this.props.renderError(this.state.error)
+    const {hasError, error} = this.state
+    const {renderError, children, style} = this.props
+
+    if (hasError) {
+      if (renderError) {
+        return renderError(error)
       }
 
       return (
-        <CenteredView style={[{height: '100%', flex: 1}, this.props.style]}>
-          <TranslatedErrorScreen details={this.state.error.toString()} />
+        <CenteredView style={[{height: '100%', flex: 1}, style]}>
+          <TranslatedErrorScreen details={error.toString()} />
         </CenteredView>
       )
     }
 
-    return this.props.children
+    return children
   }
 }
 
