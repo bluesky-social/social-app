@@ -9,9 +9,15 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {isWeb} from '#/platform/detection'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {atoms as a, tokens, useTheme, web} from '#/alf'
-import {Button} from '#/components/Button'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
+import {Button, ButtonIcon} from '#/components/Button'
+import {
+  ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft,
+  ArrowRight_Stroke2_Corner0_Rounded as ArrowRight,
+} from '#/components/icons/Arrow'
 import {Text} from '#/components/Typography'
 
 /**
@@ -38,8 +44,12 @@ export function InterestTabs({
   contentContainerStyle?: StyleProp<ViewStyle>
   gutterWidth?: number
 }) {
+  const t = useTheme()
+  const {_} = useLingui()
   const listRef = useRef<ScrollView>(null)
   const [totalWidth, setTotalWidth] = useState(0)
+  const [scrollX, setScrollX] = useState(0)
+  const [contentWidth, setContentWidth] = useState(0)
   const pendingTabOffsets = useRef<{x: number; width: number}[]>([])
   const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
 
@@ -79,40 +89,216 @@ export function InterestTabs({
     }
   }
 
-  return (
-    <DraggableScrollView
-      ref={listRef}
-      horizontal
-      contentContainerStyle={[
-        a.gap_sm,
-        {paddingHorizontal: gutterWidth},
-        contentContainerStyle,
-      ]}
-      showsHorizontalScrollIndicator={false}
-      decelerationRate="fast"
-      snapToOffsets={
-        tabOffsets.length === interests.length
-          ? tabOffsets.map(o => o.x - tokens.space.xl)
-          : undefined
+  const canScrollLeft = scrollX > 0
+  const canScrollRight = scrollX < contentWidth - totalWidth
+
+  const holdTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const scrollIntervalRef = useRef<(() => void) | null>(null)
+  const isContinuousScrollingRef = useRef(false)
+  const currentScrollXRef = useRef(0)
+
+  function scrollLeft() {
+    if (listRef.current && canScrollLeft && !isContinuousScrollingRef.current) {
+      const newScrollX = Math.max(0, scrollX - 200)
+      listRef.current.scrollTo({x: newScrollX, animated: true})
+    }
+  }
+
+  function scrollRight() {
+    if (
+      listRef.current &&
+      canScrollRight &&
+      !isContinuousScrollingRef.current
+    ) {
+      const maxScroll = contentWidth - totalWidth
+      const newScrollX = Math.min(maxScroll, scrollX + 200)
+      listRef.current.scrollTo({x: newScrollX, animated: true})
+    }
+  }
+
+  function startHoldTimer(direction: 'left' | 'right') {
+    if (holdTimeoutRef.current) {
+      clearTimeout(holdTimeoutRef.current)
+    }
+    if (scrollIntervalRef.current) {
+      scrollIntervalRef.current()
+    }
+
+    isContinuousScrollingRef.current = false
+
+    holdTimeoutRef.current = setTimeout(() => {
+      isContinuousScrollingRef.current = true
+      startContinuousScroll(direction)
+    }, 500)
+  }
+
+  function startContinuousScroll(direction: 'left' | 'right') {
+    let animationFrame: number
+
+    const scroll = () => {
+      if (!listRef.current) return
+
+      const scrollAmount = 3
+      const currentScroll = currentScrollXRef.current
+      const maxScroll = contentWidth - totalWidth
+
+      if (direction === 'left' && currentScroll > 0) {
+        const newScrollX = Math.max(0, currentScroll - scrollAmount)
+        currentScrollXRef.current = newScrollX
+        listRef.current.scrollTo({x: newScrollX, animated: false})
+        animationFrame = requestAnimationFrame(scroll)
+      } else if (direction === 'right' && currentScroll < maxScroll) {
+        const newScrollX = Math.min(maxScroll, currentScroll + scrollAmount)
+        currentScrollXRef.current = newScrollX
+        listRef.current.scrollTo({x: newScrollX, animated: false})
+        animationFrame = requestAnimationFrame(scroll)
+      } else {
+        stopContinuousScroll()
       }
-      onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
-      scrollEventThrottle={200} // big throttle
-    >
-      {interests.map((interest, i) => {
-        const active = interest === selectedInterest && !disabled
-        return (
-          <TabComponent
-            key={interest}
-            onSelectTab={handleSelectTab}
-            active={active}
-            index={i}
-            interest={interest}
-            interestsDisplayName={interestsDisplayNames[interest]}
-            onLayout={handleTabLayout}
-          />
-        )
-      })}
-    </DraggableScrollView>
+    }
+
+    scrollIntervalRef.current = (() => {
+      cancelAnimationFrame(animationFrame)
+    }) as any
+
+    animationFrame = requestAnimationFrame(scroll)
+  }
+
+  function stopContinuousScroll() {
+    if (holdTimeoutRef.current) {
+      clearTimeout(holdTimeoutRef.current)
+      holdTimeoutRef.current = null
+    }
+    if (scrollIntervalRef.current) {
+      scrollIntervalRef.current()
+      scrollIntervalRef.current = null
+    }
+    // Reset flag after a brief delay to prevent onPress from firing
+    setTimeout(() => {
+      isContinuousScrollingRef.current = false
+    }, 50)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (holdTimeoutRef.current) {
+        clearTimeout(holdTimeoutRef.current)
+      }
+      if (scrollIntervalRef.current) {
+        scrollIntervalRef.current()
+      }
+    }
+  }, [])
+
+  return (
+    <View style={[a.relative]}>
+      <DraggableScrollView
+        ref={listRef}
+        horizontal
+        contentContainerStyle={[
+          a.gap_sm,
+          {paddingHorizontal: gutterWidth},
+          contentContainerStyle,
+        ]}
+        showsHorizontalScrollIndicator={false}
+        decelerationRate="fast"
+        snapToOffsets={
+          tabOffsets.length === interests.length
+            ? tabOffsets.map(o => o.x - tokens.space.xl)
+            : undefined
+        }
+        onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
+        onContentSizeChange={width => setContentWidth(width)}
+        onScroll={evt => {
+          const newScrollX = evt.nativeEvent.contentOffset.x
+          setScrollX(newScrollX)
+          currentScrollXRef.current = newScrollX
+        }}
+        scrollEventThrottle={16}>
+        {interests.map((interest, i) => {
+          const active = interest === selectedInterest && !disabled
+          return (
+            <TabComponent
+              key={interest}
+              onSelectTab={handleSelectTab}
+              active={active}
+              index={i}
+              interest={interest}
+              interestsDisplayName={interestsDisplayNames[interest]}
+              onLayout={handleTabLayout}
+            />
+          )
+        })}
+      </DraggableScrollView>
+      {isWeb && canScrollLeft && (
+        <View
+          style={[
+            a.absolute,
+            a.top_0,
+            a.left_0,
+            a.bottom_0,
+            a.justify_center,
+            {paddingLeft: gutterWidth},
+            a.pr_md,
+            a.z_10,
+            web({
+              background: `linear-gradient(to right,  ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${transparentifyColor(t.atoms.bg.backgroundColor, 0)} 100%)`,
+            }),
+          ]}>
+          <Button
+            label={_(msg`Scroll left`)}
+            onPress={scrollLeft}
+            onPressIn={() => startHoldTimer('left')}
+            onPressOut={stopContinuousScroll}
+            color="secondary"
+            size="small"
+            style={[
+              a.border,
+              t.atoms.border_contrast_low,
+              t.atoms.bg,
+              a.h_full,
+              {aspectRatio: 1},
+              a.rounded_full,
+            ]}>
+            <ButtonIcon icon={ArrowLeft} />
+          </Button>
+        </View>
+      )}
+      {isWeb && canScrollRight && (
+        <View
+          style={[
+            a.absolute,
+            a.top_0,
+            a.right_0,
+            a.bottom_0,
+            a.justify_center,
+            {paddingRight: gutterWidth},
+            a.pl_md,
+            a.z_10,
+            web({
+              background: `linear-gradient(to left, ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${transparentifyColor(t.atoms.bg.backgroundColor, 0)} 100%)`,
+            }),
+          ]}>
+          <Button
+            label={_(msg`Scroll right`)}
+            onPress={scrollRight}
+            onPressIn={() => startHoldTimer('right')}
+            onPressOut={stopContinuousScroll}
+            color="secondary"
+            size="small"
+            style={[
+              a.border,
+              t.atoms.border_contrast_low,
+              t.atoms.bg,
+              a.h_full,
+              {aspectRatio: 1},
+              a.rounded_full,
+            ]}>
+            <ButtonIcon icon={ArrowRight} />
+          </Button>
+        </View>
+      )}
+    </View>
   )
 }
 
