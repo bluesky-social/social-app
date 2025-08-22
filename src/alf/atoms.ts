@@ -70,8 +70,20 @@ export const atoms = {
   overflow_visible: {
     overflow: 'visible',
   },
+  overflow_x_visible: {
+    overflowX: 'visible',
+  },
+  overflow_y_visible: {
+    overflowY: 'visible',
+  },
   overflow_hidden: {
     overflow: 'hidden',
+  },
+  overflow_x_hidden: {
+    overflowX: 'hidden',
+  },
+  overflow_y_hidden: {
+    overflowY: 'hidden',
   },
   /**
    * @platform web
