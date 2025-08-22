@@ -95,7 +95,7 @@ export function InterestTabs({
   const cleanupRef = useRef<(() => void) | null>(null)
 
   function scrollLeft() {
-    if (didContinuousScrollRef.current) {
+    if (isContinuouslyScrollingRef.current) {
       return
     }
     if (listRef.current && canScrollLeft) {
@@ -105,7 +105,7 @@ export function InterestTabs({
   }
 
   function scrollRight() {
-    if (didContinuousScrollRef.current) {
+    if (isContinuouslyScrollingRef.current) {
       return
     }
     if (listRef.current && canScrollRight) {
@@ -115,7 +115,7 @@ export function InterestTabs({
     }
   }
 
-  const didContinuousScrollRef = useRef(false)
+  const isContinuouslyScrollingRef = useRef(false)
 
   function startContinuousScroll(direction: 'left' | 'right') {
     // Clear any existing continuous scroll
@@ -126,7 +126,7 @@ export function InterestTabs({
     let holdTimeout: NodeJS.Timeout | null = null
     let animationFrame: number | null = null
     let isActive = true
-    didContinuousScrollRef.current = false
+    isContinuouslyScrollingRef.current = false
 
     const cleanup = () => {
       isActive = false
@@ -135,7 +135,7 @@ export function InterestTabs({
       cleanupRef.current = null
       // Reset flag after a delay to prevent onPress from firing
       setTimeout(() => {
-        didContinuousScrollRef.current = false
+        isContinuouslyScrollingRef.current = false
       }, 100)
     }
 
@@ -145,7 +145,7 @@ export function InterestTabs({
     holdTimeout = setTimeout(() => {
       if (!isActive) return
 
-      didContinuousScrollRef.current = true
+      isContinuouslyScrollingRef.current = true
       let currentScrollPosition = scrollX
 
       const scroll = () => {
