@@ -70,5 +70,9 @@ export function show(
       ...options,
       duration: options?.duration ?? DURATION,
     })
+  } else {
+    throw new Error(
+      `Toast can be a string or a React element, got ${typeof content}`,
+    )
   }
 }
