@@ -20,7 +20,6 @@ import {
   popularInterests,
   useInterestsDisplayNames,
 } from '#/screens/Onboarding/state'
-import {SuggestedAccountsTabBar} from '#/screens/Search/modules/ExploreSuggestedAccounts'
 import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
@@ -28,7 +27,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
-import {boostInterests} from '#/components/ProgressGuide/FollowDialog'
+import {boostInterests, InterestTabs} from '#/components/Tabs'
 import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -147,7 +146,7 @@ export function StepSuggestedAccounts() {
           a.flex_1,
           a.justify_start,
         ]}>
-        <SuggestedAccountsTabBar
+        <TabBar
           selectedInterest={selectedInterest}
           onSelectInterest={setSelectedInterest}
           defaultTabLabel={_(
@@ -156,8 +155,7 @@ export function StepSuggestedAccounts() {
               comment: 'the default tab in the interests tab bar',
             }),
           )}
-          priorityInterests={state.interestsStepResults.selectedInterests}
-          leftPadding={isWeb ? 0 : tokens.space.xl}
+          selectedInterests={state.interestsStepResults.selectedInterests}
         />
 
         {isLoading || !moderationOpts ? (
@@ -251,6 +249,52 @@ export function StepSuggestedAccounts() {
         )}
       </OnboardingControls.Portal>
     </View>
+  )
+}
+
+function TabBar({
+  selectedInterest,
+  onSelectInterest,
+  selectedInterests,
+  hideDefaultTab,
+  defaultTabLabel,
+}: {
+  selectedInterest: string | null
+  onSelectInterest: (interest: string | null) => void
+  selectedInterests: string[]
+  hideDefaultTab?: boolean
+  defaultTabLabel?: string
+}) {
+  const {_} = useLingui()
+  const interestsDisplayNames = useInterestsDisplayNames()
+  const interests = Object.keys(interestsDisplayNames)
+    .sort(boostInterests(popularInterests))
+    .sort(boostInterests(selectedInterests))
+
+  return (
+    <InterestTabs
+      interests={hideDefaultTab ? interests : ['all', ...interests]}
+      selectedInterest={
+        selectedInterest || (hideDefaultTab ? interests[0] : 'all')
+      }
+      onSelectTab={tab => {
+        logger.metric(
+          'onboarding:suggestedAccounts:tabPressed',
+          {tab: tab},
+          {statsig: true},
+        )
+        onSelectInterest(tab === 'all' ? null : tab)
+      }}
+      interestsDisplayNames={
+        hideDefaultTab
+          ? interestsDisplayNames
+          : {
+              all: defaultTabLabel || _(msg`For You`),
+              ...interestsDisplayNames,
+            }
+      }
+      gutterWidth={isWeb ? 0 : tokens.space.xl}
+    />
   )
 }
 

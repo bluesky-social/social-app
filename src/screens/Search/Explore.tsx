@@ -68,8 +68,8 @@ import {StarterPack} from '#/components/icons/StarterPack'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
-import {boostInterests} from '#/components/ProgressGuide/FollowDialog'
 import {SubtleHover} from '#/components/SubtleHover'
+import {boostInterests} from '#/components/Tabs'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
 import {
@@ -751,7 +751,6 @@ export function Explore({
                 selectedInterest={selectedInterest}
                 onSelectInterest={setSelectedInterest}
                 hideDefaultTab={item.hideDefaultTab}
-                logContext="Explore"
               />
             </View>
           )
