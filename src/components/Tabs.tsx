@@ -15,7 +15,8 @@ import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
 
 /**
- * Tab component that automatically centers the selected tab
+ * Tab component that automatically scrolls the selected tab into view - used for interests
+ * in the Find Follows dialog, Explore screen, etc.
  */
 export function InterestTabs({
   onSelectTab,
@@ -31,7 +32,7 @@ export function InterestTabs({
   interests: string[]
   selectedInterest: string
   interestsDisplayNames: Record<string, string>
-  // still allows changing tab, but removes the active state from the selected tab
+  /** still allows changing tab, but removes the active state from the selected tab */
   disabled?: boolean
   TabComponent?: React.ComponentType<React.ComponentProps<typeof Tab>>
   contentContainerStyle?: StyleProp<ViewStyle>
@@ -132,16 +133,16 @@ function Tab({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const activeText = active ? _(msg` (active)`) : ''
+  const label = active
+    ? _(msg`Select "${interestsDisplayName}" (active)`)
+    : _(msg`Select "${interestsDisplayName}"`)
   return (
     <View
       key={interest}
       onLayout={e =>
         onLayout(index, e.nativeEvent.layout.x, e.nativeEvent.layout.width)
       }>
-      <Button
-        label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
-        onPress={() => onSelectTab(index)}>
+      <Button label={label} onPress={() => onSelectTab(index)}>
         {({hovered, pressed}) => (
           <View
             style={[

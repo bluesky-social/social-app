@@ -423,14 +423,14 @@ let Tab = ({
         onLayout(index, e.nativeEvent.layout.x, e.nativeEvent.layout.width)
       }>
       <Button label={label} onPress={() => onSelectTab(index)}>
-        {({hovered, pressed, focused}) => (
+        {({hovered, pressed}) => (
           <View
             style={[
               a.rounded_full,
               a.px_lg,
               a.py_sm,
               a.border,
-              active || hovered || pressed || focused
+              active || hovered || pressed
                 ? [
                     t.atoms.bg_contrast_25,
                     {borderColor: t.atoms.bg_contrast_25.backgroundColor},
@@ -440,7 +440,7 @@ let Tab = ({
             <Text
               style={[
                 a.font_medium,
-                active || hovered || pressed || focused
+                active || hovered || pressed
                   ? t.atoms.text
                   : t.atoms.text_contrast_medium,
               ]}>
