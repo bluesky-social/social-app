@@ -11,6 +11,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {type NavigationProp} from '#/lib/routes/types'
+import {isWeb} from '#/platform/detection'
 import {
   invalidateActorStarterPacksWithMembershipQuery,
   useActorStarterPacksWithMembershipsQuery,
@@ -30,7 +31,7 @@ import * as bsky from '#/types/bsky'
 import {AvatarStack} from '../AvatarStack'
 import {PlusLarge_Stroke2_Corner0_Rounded} from '../icons/Plus'
 import {StarterPack} from '../icons/StarterPack'
-import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '../icons/Times'
+import {TimesLarge_Stroke2_Corner0_Rounded} from '../icons/Times'
 
 type StarterPackWithMembership =
   AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership
@@ -56,9 +57,11 @@ export function StarterPackDialog({
       fromDialog: true,
       targetDid: targetDid,
       onSuccess: () => {
-        if (!control.isOpen) {
-          control.open()
-        }
+        setTimeout(() => {
+          if (!control.isOpen) {
+            control.open()
+          }
+        }, 0)
       },
     })
   }, [navigation, control, targetDid])
@@ -88,8 +91,9 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
   const {_} = useLingui()
   const t = useTheme()
 
+  isWeb
   return (
-    <View style={[a.gap_2xl, {paddingTop: 64}]}>
+    <View style={[a.gap_2xl, {paddingTop: isWeb ? 100 : 64}]}>
       <View style={[a.gap_xs, a.align_center]}>
         <StarterPack
           width={48}
@@ -130,6 +134,8 @@ function StarterPackList({
   enabled?: boolean
 }) {
   const {_} = useLingui()
+  const t = useTheme()
+
   const {
     data,
     refetch,
@@ -171,19 +177,27 @@ function StarterPackList({
     control.close()
   }, [control])
 
+  const XIcon = React.useMemo(() => {
+    return (
+      <TimesLarge_Stroke2_Corner0_Rounded
+        fill={t.atoms.text_contrast_medium.color}
+      />
+    )
+  }, [t])
+
   const listHeader = (
     <>
       <View
         style={[
           {justifyContent: 'space-between', flexDirection: 'row'},
-          a.my_lg,
+          isWeb ? a.mb_2xl : a.my_lg,
           a.align_center,
         ]}>
         <Text style={[a.text_lg, a.font_bold]}>
           <Trans>Add to starter packs</Trans>
         </Text>
         <Button label={_(msg`Close`)} onPress={onClose}>
-          <ButtonIcon icon={XIcon} />
+          <ButtonIcon icon={() => XIcon} />
         </Button>
       </View>
       {membershipItems.length > 0 && (
@@ -213,32 +227,30 @@ function StarterPackList({
   )
 
   return (
-    <>
-      <Dialog.InnerFlatList
-        data={isLoading ? [{}] : membershipItems}
-        renderItem={
-          isLoading
-            ? () => (
-                <View style={[a.align_center, a.py_2xl]}>
-                  <Loader size="xl" />
-                </View>
-              )
-            : renderItem
-        }
-        keyExtractor={
-          isLoading
-            ? () => 'starter_pack_dialog_loader'
-            : (item: StarterPackWithMembership) => item.starterPack.uri
-        }
-        refreshing={false}
-        onRefresh={_onRefresh}
-        onEndReached={_onEndReached}
-        onEndReachedThreshold={0.1}
-        ListHeaderComponent={listHeader}
-        ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
-        contentContainerStyle={[a.px_2xl, a.pt_lg]}
-      />
-    </>
+    <Dialog.InnerFlatList
+      data={isLoading ? [{}] : membershipItems}
+      renderItem={
+        isLoading
+          ? () => (
+              <View style={[a.align_center, a.py_2xl]}>
+                <Loader size="xl" />
+              </View>
+            )
+          : renderItem
+      }
+      keyExtractor={
+        isLoading
+          ? () => 'starter_pack_dialog_loader'
+          : (item: StarterPackWithMembership) => item.starterPack.uri
+      }
+      refreshing={false}
+      onRefresh={_onRefresh}
+      onEndReached={_onEndReached}
+      onEndReachedThreshold={0.1}
+      ListHeaderComponent={listHeader}
+      ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
+      style={isWeb ? [a.px_md, {minHeight: 500}] : [a.px_2xl, a.pt_lg]}
+    />
   )
 }
 

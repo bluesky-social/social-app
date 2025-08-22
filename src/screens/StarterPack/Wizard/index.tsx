@@ -283,7 +283,6 @@ function WizardInner({
         currentListItems: currentListItems,
       })
     } else {
-      console.log('Creating new starter pack: ', state.profiles)
       createStarterPack({
         name: state.name?.trim() || getDefaultName(),
         description: state.description?.trim(),
