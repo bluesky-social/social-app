@@ -10,7 +10,7 @@ import {useLingui} from '@lingui/react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
 
@@ -134,16 +134,24 @@ function Tab({
   const t = useTheme()
   const {_} = useLingui()
   const label = active
-    ? _(msg`Select "${interestsDisplayName}" (active)`)
-    : _(msg`Select "${interestsDisplayName}"`)
+    ? _(msg`Select "${interestsDisplayName}" category (active)`)
+    : _(msg`Select "${interestsDisplayName}" category`)
   return (
     <View
       key={interest}
       onLayout={e =>
         onLayout(index, e.nativeEvent.layout.x, e.nativeEvent.layout.width)
       }>
-      <Button label={label} onPress={() => onSelectTab(index)}>
-        {({hovered, pressed}) => (
+      <Button
+        label={label}
+        onPress={() => onSelectTab(index)}
+        onFocus={evt => {
+          console.log(evt)
+          // onFocusTab(index)
+        }}
+        // disable focus ring, we handle it
+        style={web({outline: 'none'})}>
+        {({hovered, pressed, focused}) => (
           <View
             style={[
               a.rounded_full,
@@ -152,7 +160,12 @@ function Tab({
               a.border,
               active || hovered || pressed
                 ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_medium]
-                : [t.atoms.bg, t.atoms.border_contrast_low],
+                : focused
+                  ? {
+                      borderColor: t.palette.primary_300,
+                      backgroundColor: t.palette.primary_25,
+                    }
+                  : [t.atoms.bg, t.atoms.border_contrast_low],
             ]}>
             <Text
               style={[
