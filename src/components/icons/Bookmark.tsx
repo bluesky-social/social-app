@@ -1,0 +1,11 @@
+import {createSinglePathSVG} from './TEMPLATE'
+
+// custom, not part of icon library
+export const Bookmark = createSinglePathSVG({
+  path: 'M9.7 16.895a4 4 0 0 1 4.6 0l3.7 2.6V6.5a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v12.995l3.7-2.6Zm10.3 2.6c0 1.62-1.825 2.567-3.15 1.636l-3.7-2.6a2.001 2.001 0 0 0-2.3 0l-3.7 2.6C5.825 22.062 4 21.115 4 19.495V6.5a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v12.995Z',
+})
+
+// custom, not part of icon library
+export const BookmarkFilled = createSinglePathSVG({
+  path: 'M16 2.5a4 4 0 0 1 4 4v12.995c0 1.62-1.825 2.567-3.15 1.636l-3.7-2.6a2.001 2.001 0 0 0-2.3 0l-3.7 2.6C5.825 22.062 4 21.115 4 19.495V6.5a4 4 0 0 1 4-4h8Z',
+})
