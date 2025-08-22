@@ -9,7 +9,7 @@ import {isNative} from '#/platform/detection'
 import {Keyboard, ViewStyle} from 'react-native'
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {languageName} from '#/locale/helpers'
-import {LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
+import {Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {msg} from '@lingui/macro'
 import {Text} from '#/components/Typography'
 import {toPostLanguages, useLanguagePrefs} from '#/state/preferences/languages'
@@ -110,9 +110,9 @@ export function PostLanguagesSettingsDialogInner({
   onClose: () => void
 }) {
   const langPrefs = useLanguagePrefs()
-  const [toggleList, setToggleList] = React.useState<string[]>(
-    langPrefs.postLanguage.split(',') || [langPrefs.primaryLanguage],
-  )
+  const [checkedLanguagesCode2, setCheckedLanguagesCode2] = React.useState<
+    string[]
+  >(langPrefs.postLanguage.split(',') || [langPrefs.primaryLanguage])
   const [search, setSearch] = React.useState('')
   const showSearchCancel = search.length > 0
 
@@ -120,71 +120,43 @@ export function PostLanguagesSettingsDialogInner({
   const t = useTheme()
   const listRef = React.useRef(null)
 
-  // Sorted languages: checked first, then alphabetically
-  // const languages = React.useMemo(() => {
-  //   const langs = LANGUAGES.filter(
-  //     lang =>
-  //       !!lang.code2.trim() &&
-  //       LANGUAGES_MAP_CODE2[lang.code2].code3 === lang.code3,
-  //   )
-  //   langs.sort((langA, langB) => {
-  //     const langAIsChecked =
-  //       toggleList.includes(langA.code2) ||
-  //       deviceLanguageCodes.includes(langA.code2)
-  //     const langBIsChecked =
-  //       toggleList.includes(langB.code2) ||
-  //       deviceLanguageCodes.includes(langB.code2)
-  //     if (langAIsChecked === langBIsChecked) {
-  //       return langA.name.localeCompare(langB.name)
-  //     }
-  //     return langAIsChecked ? -1 : 1
-  //   })
-  //   return langs
-  // }, [toggleList])
+  let displayedAllLanguages: Language[]
+  let displayedCheckedRecent: Language[]
+  let displayedUncheckedRecent: Language[]
 
-  // Get checked (active) languages
-  const checkedLanguages = LANGUAGES.filter(lang =>
-    toggleList.includes(lang.code2),
-  )
+  function mapCode2List(code2List: string[]) {
+    return code2List.map(code2 => LANGUAGES_MAP_CODE2[code2]).filter(Boolean)
+  }
 
-  // Get up to 5 from postLanguageHistory, excluding checked
-  const recentLangCodes = langPrefs.postLanguageHistory?.slice(0, 5) || []
-  const recentLanguages = recentLangCodes
-    .map(code => LANGUAGES_MAP_CODE2[code])
-    .filter(Boolean)
-    .filter(lang => lang.code2 && !toggleList.includes(lang.code2))
+  const recentLanguagesCode2 =
+    Array.from(
+      new Set([...checkedLanguagesCode2, ...langPrefs.postLanguageHistory]),
+    ).slice(0, 5) || []
+  const recentLanguages = mapCode2List(recentLanguagesCode2)
 
-  // Combine checked and recent, max 5 items
-  const recentlyUsedLanguages = [...checkedLanguages, ...recentLanguages].slice(
-    0,
-    5,
-  )
+  const matchesSearch = (lang: Language) =>
+    lang.name.toLowerCase().includes(search.toLowerCase())
 
-  // "All languages" = all, excluding recently used
-  const recentlyUsedCodes = new Set(
-    recentlyUsedLanguages.map(lang => lang.code2),
-  )
+  const isChecked = (lang: Language) =>
+    checkedLanguagesCode2.includes(lang.code2)
 
-  const allLanguages = LANGUAGES.filter(
-    lang =>
-      !!lang.code2.trim() &&
-      LANGUAGES_MAP_CODE2[lang.code2].code3 === lang.code3 &&
-      !recentlyUsedCodes.has(lang.code2),
-  )
+  displayedCheckedRecent = recentLanguages.filter(isChecked)
 
-  const sortedAllLanguages = React.useMemo(
-    () => allLanguages.slice().sort((a, b) => a.name.localeCompare(b.name)),
-    [allLanguages],
-  )
+  if (search) {
+    displayedUncheckedRecent = recentLanguages
+      .filter(lang => !isChecked(lang))
+      .filter(matchesSearch)
 
-  const filteredAllLanguages = React.useMemo(() => {
-    const lowerSearch = search.trim().toLowerCase()
-    return sortedAllLanguages.filter(lang =>
-      languageName(lang, langPrefs.appLanguage)
-        .toLowerCase()
-        .includes(lowerSearch),
+    const unchecked = LANGUAGES.filter(lang => !isChecked(lang))
+
+    displayedAllLanguages = unchecked.filter(matchesSearch)
+  } else {
+    displayedUncheckedRecent = recentLanguages.filter(lang => !isChecked(lang))
+
+    displayedAllLanguages = LANGUAGES.filter(
+      lang => !recentLanguagesCode2.includes(lang.code2),
     )
-  }, [sortedAllLanguages, search, langPrefs.appLanguage])
+  }
 
   const listHeader = (
     <View
@@ -255,20 +227,17 @@ export function PostLanguagesSettingsDialogInner({
     </View>
   )
 
-  const flatListData = React.useMemo(() => {
-    if (search.trim() !== '') {
-      return [
-        {type: 'header', label: 'All languages'},
-        ...filteredAllLanguages.map(lang => ({type: 'item', lang})),
-      ]
-    }
-    return [
-      {type: 'header', label: 'Recently used'},
-      ...recentlyUsedLanguages.map(lang => ({type: 'item', lang})),
-      {type: 'header', label: 'All languages'},
-      ...sortedAllLanguages.map(lang => ({type: 'item', lang})),
-    ]
-  }, [search, filteredAllLanguages, recentlyUsedLanguages, sortedAllLanguages])
+  const flatListData = [
+    {type: 'header', label: 'Recently used'},
+    ...displayedCheckedRecent.map(lang => ({type: 'item', lang})),
+    ...displayedUncheckedRecent.map(lang => ({type: 'item', lang})),
+    {type: 'header', label: 'All languages'},
+    ...displayedAllLanguages.map(lang => ({type: 'item', lang})),
+  ]
+
+  if (flatListData.length > 1000) {
+    alert('oh no')
+  }
 
   return (
     <>
@@ -284,8 +253,8 @@ export function PostLanguagesSettingsDialogInner({
             },
           ]}>
           <Toggle.Group
-            values={toggleList}
-            onChange={setToggleList}
+            values={checkedLanguagesCode2}
+            onChange={setCheckedLanguagesCode2}
             type="checkbox"
             maxSelections={3}
             label="languageSelection">
@@ -337,10 +306,6 @@ export function PostLanguagesSettingsDialogInner({
                   ? `header-${item.label}-${idx}`
                   : item.lang.code2
               }
-              values={toggleList}
-              onChange={setToggleList}
-              type="checkbox"
-              maxSelections={3}
               ListHeaderComponent={listHeader}
               stickyHeaderIndices={[0]}
               contentContainerStyle={[a.gap_0, a.pb_5xl, {paddingBottom: 268}]}
@@ -368,7 +333,7 @@ export function PostLanguagesSettingsDialogInner({
             ]}>
             <ConfirmLanguagesButton
               onPress={() => {
-                let langsString = toggleList.join(',')
+                let langsString = checkedLanguagesCode2.join(',')
                 if (!langsString) {
                   langsString = langPrefs.primaryLanguage
                 }
