@@ -29,6 +29,7 @@ import {FAB} from '../util/fab/FAB'
 import {type ListMethods} from '../util/List'
 import {LoadLatestBtn} from '../util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '../util/MainScrollProvider'
+import {NoSnippetWrapper} from '../util/NoSnippetWrapper'
 
 const POLL_FREQ = 60e3 // 60sec
 
@@ -132,45 +133,49 @@ export function FeedPage({
 
   const shouldPrefetch = isNative && isPageAdjacent
   return (
-    <View testID={testID} {...(isDiscoverFeed && {'data-nosnippet': true})}>
-      <MainScrollProvider>
-        <FeedFeedbackProvider value={feedFeedback}>
-          <PostFeed
-            testID={testID ? `${testID}-feed` : undefined}
-            enabled={isPageFocused || shouldPrefetch}
-            feed={feed}
-            feedParams={feedParams}
-            pollInterval={POLL_FREQ}
-            disablePoll={hasNew || !isPageFocused}
-            scrollElRef={scrollElRef}
-            onScrolledDownChange={setIsScrolledDown}
-            onHasNew={setHasNew}
-            renderEmptyState={renderEmptyState}
-            renderEndOfFeed={renderEndOfFeed}
-            headerOffset={headerOffset}
-            savedFeedConfig={savedFeedConfig}
-            isVideoFeed={isVideoFeed}
+    <NoSnippetWrapper enabled={isDiscoverFeed}>
+      <View testID={testID}>
+        <MainScrollProvider>
+          <FeedFeedbackProvider value={feedFeedback}>
+            <PostFeed
+              testID={testID ? `${testID}-feed` : undefined}
+              enabled={isPageFocused || shouldPrefetch}
+              feed={feed}
+              feedParams={feedParams}
+              pollInterval={POLL_FREQ}
+              disablePoll={hasNew || !isPageFocused}
+              scrollElRef={scrollElRef}
+              onScrolledDownChange={setIsScrolledDown}
+              onHasNew={setHasNew}
+              renderEmptyState={renderEmptyState}
+              renderEndOfFeed={renderEndOfFeed}
+              headerOffset={headerOffset}
+              savedFeedConfig={savedFeedConfig}
+              isVideoFeed={isVideoFeed}
+            />
+          </FeedFeedbackProvider>
+        </MainScrollProvider>
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label={_(msg`Load new posts`)}
+            showIndicator={hasNew}
           />
-        </FeedFeedbackProvider>
-      </MainScrollProvider>
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label={_(msg`Load new posts`)}
-          showIndicator={hasNew}
-        />
-      )}
+        )}
 
-      {hasSession && (
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
-          accessibilityHint=""
-        />
-      )}
-    </View>
+        {hasSession && (
+          <FAB
+            testID="composeFAB"
+            onPress={onPressCompose}
+            icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+            accessibilityRole="button"
+            accessibilityLabel={_(
+              msg({message: `New post`, context: 'action'}),
+            )}
+            accessibilityHint=""
+          />
+        )}
+      </View>
+    </NoSnippetWrapper>
   )
 }
