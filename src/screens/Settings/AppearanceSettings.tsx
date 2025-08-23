@@ -12,7 +12,6 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {isNative} from '#/platform/detection'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SettingsListItem as AppIconSettingsListItem} from '#/screens/Settings/AppIconSettings/SettingsListItem'
@@ -32,7 +31,6 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
 export function AppearanceSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {fonts} = useAlf()
-  const gate = useGate()
 
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
@@ -180,7 +178,7 @@ export function AppearanceSettingsScreen({}: Props) {
                 onChange={onChangeFontScale}
               />
 
-              {isNative && IS_INTERNAL && gate('debug_subscriptions') && (
+              {isNative && IS_INTERNAL && (
                 <>
                   <SettingsList.Divider />
                   <AppIconSettingsListItem />
