@@ -61,12 +61,12 @@ export const fontWeight = {
 export const gradients = {
   primary: {
     values: [
-      [0, '#054CFF'],
-      [0.4, '#1085FE'],
-      [0.6, '#1085FE'],
-      [1, '#59B9FF'],
+      [0, '#464985'],
+      [0.4, '#6060E9'],
+      [0.6, '#6060E9'],
+      [1, '#8686FF'],
     ],
-    hover_value: '#1085FE',
+    hover_value: '#6060E9',
   },
   sky: {
     values: [

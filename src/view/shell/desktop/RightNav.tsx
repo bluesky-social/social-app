@@ -110,13 +110,13 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           </>
         )}
         <InlineLinkText
-          to="https://blacksky.community/about/privacy"
+          to="https://www.blackskyweb.xyz/about/support/privacy-policy"
           label={_(msg`Privacy`)}>
           {_(msg`Privacy`)}
         </InlineLinkText>
         {' • '}
         <InlineLinkText
-          to="https://blacksky.community/about/tos"
+          to="https://www.blackskyweb.xyz/about/support/tos"
           label={_(msg`Terms`)}>
           {_(msg`Terms`)}
         </InlineLinkText>

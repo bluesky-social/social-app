@@ -46,11 +46,11 @@ export function Icons() {
       </View>
 
       <View style={[a.flex_row, a.gap_xl]}>
-        <Globe size="xs" gradient="sky" />
-        <Globe size="sm" gradient="sky" />
-        <Globe size="md" gradient="sky" />
-        <Globe size="lg" gradient="sky" />
-        <Globe size="xl" gradient="sky" />
+        <Globe size="xs" gradient="primary" />
+        <Globe size="sm" gradient="primary" />
+        <Globe size="md" gradient="primary" />
+        <Globe size="lg" gradient="primary" />
+        <Globe size="xl" gradient="primary" />
       </View>
     </View>
   )

@@ -1,4 +1,4 @@
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -50,7 +50,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
               current={guide.numFollows + 1}
               total={10 + 1}
               title={_(msg`Follow 10 accounts`)}
-              subtitle={_(msg`Bluesky is better with friends!`)}
+              subtitle={_(msg`Blacksky is better with friends!`)}
             />
             <FollowDialog guide={guide} />
           </>
@@ -67,7 +67,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
               current={guide.numFollows + 1}
               total={7 + 1}
               title={_(msg`Follow 7 accounts`)}
-              subtitle={_(msg`Bluesky is better with friends!`)}
+              subtitle={_(msg`Blacksky is better with friends!`)}
             />
           </>
         )}

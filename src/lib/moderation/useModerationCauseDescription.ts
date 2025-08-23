@@ -10,6 +10,7 @@ import {useLingui} from '@lingui/react'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useLabelDefinitions} from '#/state/preferences'
 import {useSession} from '#/state/session'
+import {BLACKSKY_LABELER} from '#/state/session/additional-moderation-authorities.ts'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {type Props as SVGIconProps} from '#/components/icons/common'
@@ -140,6 +141,9 @@ export function useModerationCauseDescription(
         if (cause.label.src === BSKY_LABELER_DID) {
           source = 'moderation.bsky.app'
           sourceDisplayName = 'Bluesky Moderation Service'
+        } else if (cause.label.src === BLACKSKY_LABELER) {
+          source = 'blackskyweb.xyz'
+          sourceDisplayName = 'Blacksky Moderation Service'
         } else {
           source = _(msg`an unknown labeler`)
         }

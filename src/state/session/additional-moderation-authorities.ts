@@ -19,6 +19,8 @@ export const IN_LABELER = 'did:plc:srr4rdvgzkbx6t7fxqtt6j5t' // India
  */
 export const EU_LABELER = 'did:plc:z57lz5dhgz2dkjogoysm3vut'
 
+export const BLACKSKY_LABELER = 'did:plc:d2mkddsbmnrgr3domzg5qexf'
+
 const MODERATION_AUTHORITIES: {
   [countryCode: string]: string[]
 } = {
@@ -85,6 +87,7 @@ export function configureAdditionalModerationAuthorities() {
     additionalLabelers = []
   }
 
+  additionalLabelers.push(BLACKSKY_LABELER)
   const appLabelers = Array.from(
     new Set([...BskyAgent.appLabelers, ...additionalLabelers]),
   )

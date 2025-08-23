@@ -199,7 +199,7 @@ export function createThemes({
     positive_300: color.green_300,
     positive_400: color.green_400,
     positive_500: color.green_500,
-    positive_600: color.green_600,
+    positive_600: color.green_700,
     positive_700: color.green_700,
     positive_800: color.green_800,
     positive_900: color.green_900,

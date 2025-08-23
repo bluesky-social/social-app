@@ -79,7 +79,7 @@ function ShareDialogInner({
               <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
                 <Trans>
                   Share this starter pack and help people join your community on
-                  Bluesky.
+                  Blacksky.
                 </Trans>
               </Text>
             </View>

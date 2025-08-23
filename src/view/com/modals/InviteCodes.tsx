@@ -6,10 +6,10 @@ import {
   View,
 } from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
-import {ComAtprotoServerDefs} from '@atproto/api'
+import {type ComAtprotoServerDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -22,7 +22,7 @@ import {isWeb} from '#/platform/detection'
 import {useInvitesAPI, useInvitesState} from '#/state/invites'
 import {useModalControls} from '#/state/modals'
 import {
-  InviteCodesQueryResponse,
+  type InviteCodesQueryResponse,
   useInviteCodesQuery,
 } from '#/state/queries/invites'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -66,7 +66,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
           <Text type="lg" style={[pal.text, styles.emptyText]}>
             <Trans>
               You don't have any invite codes yet! We'll send you some when
-              you've been on Bluesky for a little longer.
+              you've been on Blacksky for a little longer.
             </Trans>
           </Text>
         </View>
