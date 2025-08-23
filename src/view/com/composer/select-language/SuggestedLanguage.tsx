@@ -5,11 +5,7 @@ import {useLingui} from '@lingui/react'
 import lande from 'lande'
 
 import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
-import {
-  toPostLanguages,
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-} from '#/state/preferences/languages'
+import {useLanguagePrefs} from '#/state/preferences/languages'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Earth_Stroke2_Corner2_Rounded as EarthIcon} from '#/components/icons/Globe'
@@ -22,15 +18,18 @@ const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 export function SuggestedLanguage({
   text,
   replyToLanguage,
+  currentLanguages,
+  onChange,
 }: {
   text: string
   replyToLanguage?: string
+  currentLanguages: string[]
+  onChange: (language: string | null) => void
 }) {
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
   >(text.length === 0 ? replyToLanguage : undefined)
   const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useLanguagePrefsApi()
   const t = useTheme()
   const {_} = useLingui()
 
@@ -58,10 +57,7 @@ export function SuggestedLanguage({
     return () => cancelIdle(idle)
   }, [text, replyToLanguage])
 
-  if (
-    suggestedLanguage &&
-    !toPostLanguages(langPrefs.postLanguage).includes(suggestedLanguage)
-  ) {
+  if (suggestedLanguage && !currentLanguages.includes(suggestedLanguage)) {
     const suggestedLanguageName = codeToLanguageName(
       suggestedLanguage,
       langPrefs.appLanguage,
@@ -94,7 +90,7 @@ export function SuggestedLanguage({
           color="secondary"
           size="small"
           variant="solid"
-          onPress={() => setLangPrefs.setPostLanguage(suggestedLanguage)}
+          onPress={() => onChange(suggestedLanguage)}
           label={_(msg`Change post language to ${suggestedLanguageName}`)}>
           <ButtonText>
             <Trans>Yes</Trans>
