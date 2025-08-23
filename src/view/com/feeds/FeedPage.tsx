@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {VIDEO_FEED_URIS} from '#/lib/constants'
+import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
@@ -73,6 +73,10 @@ export function FeedPage({
     return isNative && _isVideoFeed
   }, [feedInfo])
 
+  const isDiscoverFeed = useMemo(() => {
+    return feedInfo.uri === DISCOVER_FEED_URI
+  }, [feedInfo.uri])
+
   useEffect(() => {
     if (isPageFocused) {
       setHomeBadge(hasNew)
@@ -128,7 +132,7 @@ export function FeedPage({
 
   const shouldPrefetch = isNative && isPageAdjacent
   return (
-    <View testID={testID}>
+    <View testID={testID} {...(isDiscoverFeed && {'data-nosnippet': true})}>
       <MainScrollProvider>
         <FeedFeedbackProvider value={feedFeedback}>
           <PostFeed
