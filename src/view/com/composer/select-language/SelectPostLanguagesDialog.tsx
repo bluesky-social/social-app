@@ -14,7 +14,7 @@ import {msg} from '@lingui/macro'
 import {Text} from '#/components/Typography'
 import {toPostLanguages, useLanguagePrefs} from '#/state/preferences/languages'
 import {Trans} from '@lingui/macro'
-import {useCallback} from 'react'
+import {useCallback, useMemo} from 'react'
 import {useLanguagePrefsApi} from '#/state/preferences/languages'
 import {useLingui} from '@lingui/react'
 import {View} from 'react-native'
@@ -109,6 +109,8 @@ export function PostLanguagesSettingsDialogInner({
 }: {
   onClose: () => void
 }) {
+  const allowedLanguages = useMemo(() => LANGUAGES.filter(lang => !!lang.code2), [LANGUAGES]);
+  
   const langPrefs = useLanguagePrefs()
   const [checkedLanguagesCode2, setCheckedLanguagesCode2] = React.useState<
     string[]
@@ -120,43 +122,55 @@ export function PostLanguagesSettingsDialogInner({
   const t = useTheme()
   const listRef = React.useRef(null)
 
-  let displayedAllLanguages: Language[]
-  let displayedCheckedRecent: Language[]
-  let displayedUncheckedRecent: Language[]
+  const displayedLanguages = useMemo(() => {
+    let all: Language[]
+    let checkedRecent: Language[]
+    let uncheckedRecent: Language[]
 
-  function mapCode2List(code2List: string[]) {
-    return code2List.map(code2 => LANGUAGES_MAP_CODE2[code2]).filter(Boolean)
-  }
+    function mapCode2List(code2List: string[]) {
+      return code2List.map(code2 => LANGUAGES_MAP_CODE2[code2]).filter(Boolean)
+    }
 
-  const recentLanguagesCode2 =
-    Array.from(
-      new Set([...checkedLanguagesCode2, ...langPrefs.postLanguageHistory]),
-    ).slice(0, 5) || []
-  const recentLanguages = mapCode2List(recentLanguagesCode2)
+    const recentLanguagesCode2 =
+      Array.from(
+        new Set([...checkedLanguagesCode2, ...langPrefs.postLanguageHistory]),
+      ).slice(0, 5) || []
+    const recentLanguages = mapCode2List(recentLanguagesCode2)
 
-  const matchesSearch = (lang: Language) =>
-    lang.name.toLowerCase().includes(search.toLowerCase())
+    const matchesSearch = (lang: Language) =>
+      lang.name.toLowerCase().includes(search.toLowerCase())
 
-  const isChecked = (lang: Language) =>
-    checkedLanguagesCode2.includes(lang.code2)
+    const isChecked = (lang: Language) =>
+      checkedLanguagesCode2.includes(lang.code2)
 
-  displayedCheckedRecent = recentLanguages.filter(isChecked)
+    const isInRecents = (lang: Language) => recentLanguagesCode2.includes(lang.code2)
 
-  if (search) {
-    displayedUncheckedRecent = recentLanguages
-      .filter(lang => !isChecked(lang))
-      .filter(matchesSearch)
+    checkedRecent = recentLanguages.filter(isChecked)
 
-    const unchecked = LANGUAGES.filter(lang => !isChecked(lang))
+    if (search) {
+      uncheckedRecent = recentLanguages
+        .filter(lang => !isChecked(lang))
+        .filter(matchesSearch)
 
-    displayedAllLanguages = unchecked.filter(matchesSearch)
-  } else {
-    displayedUncheckedRecent = recentLanguages.filter(lang => !isChecked(lang))
+      const unchecked = allowedLanguages.filter(lang => !isChecked(lang))
 
-    displayedAllLanguages = LANGUAGES.filter(
-      lang => !recentLanguagesCode2.includes(lang.code2),
-    )
-  }
+      all = unchecked.filter(matchesSearch).filter(lang => !isInRecents(lang))
+    } else {
+      uncheckedRecent = recentLanguages.filter(
+        lang => !isChecked(lang),
+      )
+
+      all = allowedLanguages.filter(
+        lang => !recentLanguagesCode2.includes(lang.code2),
+      ).filter(lang => !isInRecents(lang))
+    }
+
+    return {
+      all,
+      checkedRecent,
+      uncheckedRecent,
+    }
+  }, [allowedLanguages, search, langPrefs.postLanguageHistory, checkedLanguagesCode2])
 
   const listHeader = (
     <View
@@ -183,6 +197,7 @@ export function PostLanguagesSettingsDialogInner({
               placeholder="Search languages"
               style={[a.pl_xl]}
               maxLength={50}
+              label='Search languages'
             />
             <View
               style={[
@@ -229,15 +244,11 @@ export function PostLanguagesSettingsDialogInner({
 
   const flatListData = [
     {type: 'header', label: 'Recently used'},
-    ...displayedCheckedRecent.map(lang => ({type: 'item', lang})),
-    ...displayedUncheckedRecent.map(lang => ({type: 'item', lang})),
+    ...displayedLanguages.checkedRecent.map(lang => ({type: 'item', lang})),
+    ...displayedLanguages.uncheckedRecent.map(lang => ({type: 'item', lang})),
     {type: 'header', label: 'All languages'},
-    ...displayedAllLanguages.map(lang => ({type: 'item', lang})),
+    ...displayedLanguages.all.map(lang => ({type: 'item', lang})),
   ]
-
-  if (flatListData.length > 1000) {
-    alert('oh no')
-  }
 
   return (
     <>
@@ -301,11 +312,6 @@ export function PostLanguagesSettingsDialogInner({
                   </Toggle.Item>
                 )
               }}
-              keyExtractor={(item, idx) =>
-                item.type === 'header'
-                  ? `header-${item.label}-${idx}`
-                  : item.lang.code2
-              }
               ListHeaderComponent={listHeader}
               stickyHeaderIndices={[0]}
               contentContainerStyle={[a.gap_0, a.pb_5xl, {paddingBottom: 268}]}
