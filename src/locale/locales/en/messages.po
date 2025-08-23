@@ -524,6 +524,10 @@ msgstr ""
 msgid "A new form of verification"
 msgstr ""
 
+#: src/components/BlockedGeoOverlay.tsx:39
+msgid "A new Mississippi law requires us to implement age verification for all users before they can access Bluesky. We think this law creates challenges that go beyond its child safety goals, and creates significant barriers that limit free speech and disproportionately harm smaller platforms and emerging technologies."
+msgstr ""
+
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr ""
@@ -1012,6 +1016,7 @@ msgstr ""
 msgid "Animated GIF"
 msgstr ""
 
+#: src/components/BlockedGeoOverlay.tsx:92
 #: src/components/PolicyUpdateOverlay/Badge.tsx:33
 msgid "Announcement"
 msgstr ""
@@ -1188,6 +1193,10 @@ msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:171
 msgid "Artistic or non-erotic nudity."
+msgstr ""
+
+#: src/components/BlockedGeoOverlay.tsx:42
+msgid "As a small team, we cannot justify building the expensive infrastructure this requirement demands while legal challenges to this law are pending."
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:491
@@ -3627,7 +3636,7 @@ msgid "Flexible"
 msgstr ""
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:517
+#: src/components/ProfileCard.tsx:524
 #: src/components/ProfileHoverCard/index.web.tsx:496
 #: src/components/ProfileHoverCard/index.web.tsx:507
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
@@ -3669,14 +3678,16 @@ msgstr ""
 msgid "Follow all"
 msgstr ""
 
+#. User is not following this account, click to follow back
+#: src/components/ProfileCard.tsx:518
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:129
-msgid "Follow Back"
+msgid "Follow back"
 msgstr ""
 
 #: src/view/com/profile/FollowButton.tsx:81
 msgctxt "action"
-msgid "Follow Back"
+msgid "Follow back"
 msgstr ""
 
 #: src/components/KnownFollowers.tsx:238
@@ -3758,6 +3769,10 @@ msgstr ""
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:105
 msgid "Food"
+msgstr ""
+
+#: src/components/BlockedGeoOverlay.tsx:45
+msgid "For now, we have made the difficult decision to block access to Bluesky in the state of Mississippi."
 msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:125
@@ -6671,6 +6686,7 @@ msgstr ""
 msgid "Read more replies"
 msgstr ""
 
+#: src/components/BlockedGeoOverlay.tsx:29
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:112
 msgid "Read our blog post"
 msgstr ""
@@ -9149,6 +9165,10 @@ msgstr ""
 
 #: src/screens/VideoFeed/index.tsx:832
 msgid "Unfollows the user"
+msgstr ""
+
+#: src/components/BlockedGeoOverlay.tsx:37
+msgid "Unfortunately, Bluesky is unavailable in Mississippi right now."
 msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:372
