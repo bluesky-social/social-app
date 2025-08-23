@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
-import {useAutoplayDisabled} from '#/state/preferences'
+import {useVideoAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
@@ -25,7 +25,7 @@ export function VideoPreview({
   const {_} = useLingui()
   // TODO: figure out how to pause a GIF for reduced motion
   // it's not possible using an img tag -sfn
-  const autoplayDisabled = useAutoplayDisabled()
+  const autoplayDisabled = useVideoAutoplayDisabled()
 
   let aspectRatio = asset.width / asset.height
 
