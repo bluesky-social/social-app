@@ -8,6 +8,7 @@ import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {isNative, isWeb} from '#/platform/detection'
 import {
+  toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
@@ -22,8 +23,12 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Text} from '#/components/Typography'
 
 export function PostLanguageSelectDialog({
+  /** Optionally can be passed to show different values than what is saved in
+   * langPrefs. */
+  currentLanguages,
   control,
 }: {
+  currentLanguages?: string[],
   control: Dialog.DialogControlProps
 }) {
   const {height} = useWindowDimensions()
@@ -40,13 +45,17 @@ export function PostLanguageSelectDialog({
       nativeOptions={{minHeight: height - insets.top}}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
-        <DialogInner />
+        <DialogInner currentLanguages={currentLanguages} />
       </ErrorBoundary>
     </Dialog.Outer>
   )
 }
 
-export function DialogInner() {
+export function DialogInner({
+  currentLanguages,
+}: {
+  currentLanguages?: string[]
+}) {
   const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
 
@@ -63,8 +72,11 @@ export function DialogInner() {
   }, [])
 
   const langPrefs = useLanguagePrefs()
+  const postLanguagesPref =
+    currentLanguages ?? toPostLanguages(langPrefs.postLanguage)
+
   const [checkedLanguagesCode2, setCheckedLanguagesCode2] = useState<string[]>(
-    langPrefs.postLanguage.split(',') || [langPrefs.primaryLanguage],
+    postLanguagesPref || [langPrefs.primaryLanguage],
   )
   const [search, setSearch] = useState('')
 
