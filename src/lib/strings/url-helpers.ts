@@ -12,6 +12,9 @@ const BSKY_TRUSTED_HOSTS = [
   'blacksky\\.community',
   'blacksky\\.app',
   'blackskyweb\\.xyz',
+  'rsky\\.dev',
+  'opencollective\\.com',
+  'github\\.com',
   'bsky\\.app',
   'bsky\\.social',
   'blueskyweb\\.xyz',
@@ -96,8 +99,8 @@ export function toBskyAppUrl(url: string): string {
 export function isBskyAppUrl(url: string): boolean {
   return (
     url.startsWith('https://bsky.app/') ||
-    (url.startsWith('https://blacksky.community/') &&
-      !url.startsWith('https://blacksky.community/about'))
+    url.startsWith('https://blacksky.community/') ||
+    url.startsWith('https://assembly.blacksky.community/')
   )
 }
 

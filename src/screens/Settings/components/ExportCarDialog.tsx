@@ -94,13 +94,12 @@ export function ExportCarDialog({
               a.flex_1,
             ]}>
             <Trans>
-              This feature is in beta. You can read more about repository
-              exports in{' '}
+              You can explore your data exports using{' '}
               <InlineLinkText
-                label={_(msg`View blogpost for more details`)}
-                to="https://docs.bsky.app/blog/repo-export"
+                label={_(msg`Explore your data with rsky-satnav`)}
+                to="https://satnav.rsky.dev"
                 style={[a.text_sm]}>
-                this blogpost
+                our SATNAV tool
               </InlineLinkText>
               .
             </Trans>

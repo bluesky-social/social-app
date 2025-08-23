@@ -94,6 +94,12 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
       {showTrending && <SidebarTrendingTopics />}
 
       <Text style={[a.leading_snug, t.atoms.text_contrast_low]}>
+        <InlineLinkText
+          to="https://opencollective.com/blacksky/contribute/backer-59760/checkout"
+          label={_(msg`Support Us`)}>
+          {_(msg`Support Us`)}
+        </InlineLinkText>
+        {' • '}
         {hasSession && (
           <>
             <InlineLinkText
