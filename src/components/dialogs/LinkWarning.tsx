@@ -64,7 +64,7 @@ function InAppBrowserConsentInner({
       label={
         potentiallyMisleading
           ? _(msg`Potentially misleading link warning`)
-          : _(msg`Leaving Bluesky`)
+          : _(msg`Leaving Blacksky`)
       }>
       <View style={[a.gap_2xl]}>
         <View style={[a.gap_sm]}>
@@ -72,7 +72,7 @@ function InAppBrowserConsentInner({
             {potentiallyMisleading ? (
               <Trans>Potentially misleading link</Trans>
             ) : (
-              <Trans>Leaving Bluesky</Trans>
+              <Trans>Leaving Blacksky</Trans>
             )}
           </Text>
           <Text style={[t.atoms.text_contrast_high, a.text_md, a.leading_snug]}>

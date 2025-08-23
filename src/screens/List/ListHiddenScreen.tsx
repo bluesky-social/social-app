@@ -11,7 +11,7 @@ import {logger} from '#/logger'
 import {RQKEY_ROOT as listQueryRoot} from '#/state/queries/list'
 import {useListBlockMutation, useListMuteMutation} from '#/state/queries/list'
 import {
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
@@ -145,7 +145,7 @@ export function ListHiddenScreen({
             ) : isOwner ? (
               <Trans>
                 This list – created by you – contains possible violations of
-                Bluesky's community guidelines in its name or description.
+                Blacksky's community guidelines in its name or description.
               </Trans>
             ) : (
               <Trans>
@@ -153,8 +153,8 @@ export function ListHiddenScreen({
                 <Text style={[a.font_bold]}>
                   {sanitizeHandle(list.creator.handle, '@')}
                 </Text>{' '}
-                – contains possible violations of Bluesky's community guidelines
-                in its name or description.
+                – contains possible violations of Blacksky's community
+                guidelines in its name or description.
               </Trans>
             )}
           </Text>

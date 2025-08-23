@@ -27,8 +27,8 @@ export function ChatDisabled() {
         </Text>
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
-            Our moderators have reviewed reports and decided to disable your
-            access to chats on Bluesky.
+            Bluesky's moderators have reviewed reports and decided to disable
+            your access to chats.
           </Trans>
         </Text>
         <AppealDialog />

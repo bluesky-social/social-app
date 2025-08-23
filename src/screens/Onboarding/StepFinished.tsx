@@ -530,7 +530,7 @@ function LegacyFinalStep({
         <Trans>You're ready to go!</Trans>
       </TitleText>
       <DescriptionText>
-        <Trans>We hope you have a wonderful time. Remember, Bluesky is:</Trans>
+        <Trans>We hope you have a wonderful time. Remember, Blacksky is:</Trans>
       </DescriptionText>
 
       <View style={[a.pt_5xl, a.gap_3xl]}>

@@ -220,9 +220,9 @@ export function Takendown() {
                     overridePresentation>
                     Bluesky Social Terms of Service
                   </InlineLinkText>
-                  . You have been sent an email outlining the specific violation
-                  and suspension period, if applicable. You can appeal this
-                  decision if you believe it was made in error.
+                  . You should have been sent an email outlining the specific
+                  violation and suspension period, if applicable. You can appeal
+                  this decision if you believe it was made in error.
                 </Trans>
               </P>
             )}

@@ -670,7 +670,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
           <Trans>
             This post claims to have been created on{' '}
             <RNText style={[a.font_bold]}>{niceDate(i18n, createdAt)}</RNText>,
-            but was first seen by Bluesky on{' '}
+            but was first seen by Blacksky on{' '}
             <RNText style={[a.font_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
           </Trans>
         </Prompt.DescriptionText>
@@ -682,7 +682,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
             a.pb_xl,
           ]}>
           <Trans>
-            Bluesky cannot confirm the authenticity of the claimed date.
+            Blacksky cannot confirm the authenticity of the claimed date.
           </Trans>
         </Text>
         <Prompt.Actions>

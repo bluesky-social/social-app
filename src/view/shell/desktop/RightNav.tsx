@@ -1,11 +1,10 @@
 import {useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/core'
 
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
-import {useKawaiiMode} from '#/state/preferences/kawaii'
+import {HELP_DESK_URL} from '#/lib/constants'
 import {useSession} from '#/state/session'
 import {DesktopFeeds} from '#/view/shell/desktop/Feeds'
 import {DesktopSearch} from '#/view/shell/desktop/Search'
@@ -44,8 +43,7 @@ function useWebQueryParams() {
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {hasSession, currentAccount} = useSession()
-  const kawaii = useKawaiiMode()
+  const {hasSession} = useSession()
   const gutters = useGutters(['base', 0, 'base', 'wide'])
   const isSearchScreen = routeName === 'Search'
   const webqueryParams = useWebQueryParams()
@@ -99,10 +97,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         {hasSession && (
           <>
             <InlineLinkText
-              to={FEEDBACK_FORM_URL({
-                email: currentAccount?.email,
-                handle: currentAccount?.handle,
-              })}
+              to="https://assembly.blacksky.community"
               label={_(msg`Feedback`)}>
               {_(msg`Feedback`)}
             </InlineLinkText>
@@ -125,19 +120,6 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           {_(msg`Help`)}
         </InlineLinkText>
       </Text>
-
-      {kawaii && (
-        <Text style={[t.atoms.text_contrast_medium, {marginTop: 12}]}>
-          <Trans>
-            Logo by{' '}
-            <InlineLinkText
-              label={_(msg`Logo by @sawaratsuki.bsky.social`)}
-              to="/profile/sawaratsuki.bsky.social">
-              @sawaratsuki.bsky.social
-            </InlineLinkText>
-          </Trans>
-        </Text>
-      )}
 
       {!hasSession && leftNavMinimal && (
         <View style={[a.w_full, {height: 32}]}>
