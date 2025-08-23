@@ -36,6 +36,6 @@ ENV UV_USE_IO_URING=0
 USER node
 CMD ["node", "--heapsnapshot-signal=SIGUSR2", "--enable-source-maps", "dist/bin.js"]
 
-LABEL org.opencontainers.image.source=https://github.com/bluesky-social/social-app
-LABEL org.opencontainers.image.description="Bsky Card Service"
+LABEL org.opencontainers.image.source=https://github.com/blacksky-algorithms/blacksky.community/
+LABEL org.opencontainers.image.description="Blacksky Card Service"
 LABEL org.opencontainers.image.licenses=UNLICENSED

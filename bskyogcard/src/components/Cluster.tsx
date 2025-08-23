@@ -3,8 +3,6 @@ import type React from 'react'
 export function Cluster(props: React.SVGAttributes<SVGSVGElement>) {
   return (
     <svg
-      width="285"
-      height="243"
       viewBox="0 0 285 243"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

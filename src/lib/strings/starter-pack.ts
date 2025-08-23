@@ -12,7 +12,7 @@ export function createStarterPackLinkFromAndroidReferrer(
     const utmSource = url.searchParams.get('utm_source')
 
     if (!utmContent) return null
-    if (utmSource !== 'bluesky') return null
+    if (utmSource !== 'blacksky') return null
 
     // This should be a string like `starterpack_haileyok.com_rkey`
     const contentParts = utmContent.split('_')
@@ -66,7 +66,7 @@ export function createStarterPackGooglePlayUri(
   rkey: string,
 ): string | null {
   if (!name || !rkey) return null
-  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}`
+  return `https://play.google.com/store/apps/details?id=community.blacksky.app&referrer=utm_source%3Dblacksky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}`
 }
 
 export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
@@ -85,10 +85,10 @@ export function getStarterPackOgCard(
   rkey?: string,
 ) {
   if (typeof didOrStarterPack === 'string') {
-    return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack}/${rkey}`
+    return `https://ogcard.blacksky.community/start/${didOrStarterPack}/${rkey}`
   } else {
     const rkey = new AtUri(didOrStarterPack.uri).rkey
-    return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${rkey}`
+    return `https://ogcard.blacksky.community/start/${didOrStarterPack.creator.did}/${rkey}`
   }
 }
 
