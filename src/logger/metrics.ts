@@ -480,4 +480,6 @@ export type MetricEvents = {
    * Specifically for the `BlockedGeoOverlay`
    */
   'blockedGeoOverlay:shown': {}
+
+  'geo:debug': {}
 }
