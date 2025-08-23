@@ -109,8 +109,11 @@ export function PostLanguagesSettingsDialogInner({
 }: {
   onClose: () => void
 }) {
-  const allowedLanguages = useMemo(() => LANGUAGES.filter(lang => !!lang.code2), [LANGUAGES]);
-  
+  const allowedLanguages = useMemo(
+    () => LANGUAGES.filter(lang => !!lang.code2),
+    [LANGUAGES],
+  )
+
   const langPrefs = useLanguagePrefs()
   const [checkedLanguagesCode2, setCheckedLanguagesCode2] = React.useState<
     string[]
@@ -122,55 +125,67 @@ export function PostLanguagesSettingsDialogInner({
   const t = useTheme()
   const listRef = React.useRef(null)
 
+  // NOTE(@elijaharita): Displayed languages are split into 3 lists for
+  // ordering.
   const displayedLanguages = useMemo(() => {
-    let all: Language[]
-    let checkedRecent: Language[]
-    let uncheckedRecent: Language[]
-
     function mapCode2List(code2List: string[]) {
       return code2List.map(code2 => LANGUAGES_MAP_CODE2[code2]).filter(Boolean)
     }
 
+    // NOTE(@elijaharita): Get recent language codes and map them to language
+    // objects. Both the user account's saved language history and the current
+    // checked languages are displayed here.
     const recentLanguagesCode2 =
       Array.from(
         new Set([...checkedLanguagesCode2, ...langPrefs.postLanguageHistory]),
       ).slice(0, 5) || []
     const recentLanguages = mapCode2List(recentLanguagesCode2)
 
+    // NOTE(@elijaharita): helper functions
     const matchesSearch = (lang: Language) =>
       lang.name.toLowerCase().includes(search.toLowerCase())
-
     const isChecked = (lang: Language) =>
       checkedLanguagesCode2.includes(lang.code2)
+    const isInRecents = (lang: Language) =>
+      recentLanguagesCode2.includes(lang.code2)
 
-    const isInRecents = (lang: Language) => recentLanguagesCode2.includes(lang.code2)
-
-    checkedRecent = recentLanguages.filter(isChecked)
+    const checkedRecent = recentLanguages.filter(isChecked)
 
     if (search) {
-      uncheckedRecent = recentLanguages
+      // NOTE(@elijaharita): if a search is active, we ALWAYS show checked
+      // items, as well as any items that match the search.
+      const uncheckedRecent = recentLanguages
         .filter(lang => !isChecked(lang))
         .filter(matchesSearch)
-
       const unchecked = allowedLanguages.filter(lang => !isChecked(lang))
+      const all = unchecked
+        .filter(matchesSearch)
+        .filter(lang => !isInRecents(lang))
 
-      all = unchecked.filter(matchesSearch).filter(lang => !isInRecents(lang))
+      return {
+        all,
+        checkedRecent,
+        uncheckedRecent,
+      }
     } else {
-      uncheckedRecent = recentLanguages.filter(
-        lang => !isChecked(lang),
-      )
+      // NOTE(@elijaharita): if no search is active, we show everything.
+      const uncheckedRecent = recentLanguages.filter(lang => !isChecked(lang))
+      const all = allowedLanguages
+        .filter(lang => !recentLanguagesCode2.includes(lang.code2))
+        .filter(lang => !isInRecents(lang))
 
-      all = allowedLanguages.filter(
-        lang => !recentLanguagesCode2.includes(lang.code2),
-      ).filter(lang => !isInRecents(lang))
+      return {
+        all,
+        checkedRecent,
+        uncheckedRecent,
+      }
     }
-
-    return {
-      all,
-      checkedRecent,
-      uncheckedRecent,
-    }
-  }, [allowedLanguages, search, langPrefs.postLanguageHistory, checkedLanguagesCode2])
+  }, [
+    allowedLanguages,
+    search,
+    langPrefs.postLanguageHistory,
+    checkedLanguagesCode2,
+  ])
 
   const listHeader = (
     <View
@@ -197,7 +212,7 @@ export function PostLanguagesSettingsDialogInner({
               placeholder="Search languages"
               style={[a.pl_xl]}
               maxLength={50}
-              label='Search languages'
+              label="Search languages"
             />
             <View
               style={[
