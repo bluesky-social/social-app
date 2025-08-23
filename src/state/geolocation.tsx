@@ -6,7 +6,7 @@ import {logger} from '#/logger'
 import {type Device, device} from '#/storage'
 
 const IPCC_URL = `https://bsky.app/ipcc`
-const BAPP_CONFIG_URL = `https://bapp-config.bsky.workers.dev/config`
+const BAPP_CONFIG_URL = `https://ip.bsky.app/config`
 
 const events = new EventEmitter()
 const EVENT = 'geolocation-updated'
