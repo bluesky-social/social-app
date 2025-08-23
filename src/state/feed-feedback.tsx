@@ -17,6 +17,7 @@ import {
   type FeedbackInteraction,
   isFeedbackInteraction,
 } from '#/lib/constants'
+import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {logEvent} from '#/lib/statsig/statsig'
 import {Logger} from '#/logger'
 import {
@@ -48,6 +49,7 @@ const stateContext = createContext<StateContext>({
   feedDescriptor: undefined,
   feedSourceInfo: undefined,
 })
+stateContext.displayName = 'FeedFeedbackContext'
 
 export function useFeedFeedback(
   feedSourceInfo: FeedSourceInfo | undefined,
@@ -111,7 +113,9 @@ export function useFeedFeedback(
         },
       )
       .catch((e: any) => {
-        logger.warn('Failed to send feed interactions', {error: e})
+        if (!isNetworkError(e)) {
+          logger.warn('Failed to send feed interactions', {error: e})
+        }
       })
 
     // Send to Statsig

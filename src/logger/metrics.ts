@@ -67,7 +67,9 @@ export type MetricEvents = {
     activeStep: number
     backgroundCount: number
   }
-  'signup:handleTaken': {}
+  'signup:handleTaken': {typeahead?: boolean}
+  'signup:handleAvailable': {typeahead?: boolean}
+  'signup:handleSuggestionSelected': {method: string}
   'signin:hostingProviderPressed': {
     hostingProviderDidChange: boolean
   }
@@ -473,4 +475,11 @@ export type MetricEvents = {
   'ageAssurance:redirectDialogFail': {}
   'ageAssurance:appealDialogOpen': {}
   'ageAssurance:appealDialogSubmit': {}
+
+  /*
+   * Specifically for the `BlockedGeoOverlay`
+   */
+  'blockedGeoOverlay:shown': {}
+
+  'geo:debug': {}
 }

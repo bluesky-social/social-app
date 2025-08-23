@@ -8,6 +8,7 @@ const Context = React.createContext<{
   volume: number
   setVolume: React.Dispatch<React.SetStateAction<number>>
 } | null>(null)
+Context.displayName = 'VideoVolumeContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [muted, setMuted] = React.useState(true)

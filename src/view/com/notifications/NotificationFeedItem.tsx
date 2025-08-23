@@ -195,47 +195,51 @@ let NotificationFeedItem = ({
     }
     const isHighlighted = highlightUnread && !item.notification.isRead
     return (
-      <Post
-        post={item.subject}
-        style={
-          isHighlighted && {
-            backgroundColor: pal.colors.unreadNotifBg,
-            borderColor: pal.colors.unreadNotifBorder,
+      <View testID={`feedItem-by-${item.notification.author.handle}`}>
+        <Post
+          post={item.subject}
+          style={
+            isHighlighted && {
+              backgroundColor: pal.colors.unreadNotifBg,
+              borderColor: pal.colors.unreadNotifBorder,
+            }
           }
-        }
-        hideTopBorder={hideTopBorder}
-      />
+          hideTopBorder={hideTopBorder}
+        />
+      </View>
     )
   }
 
   const firstAuthorLink = (
-    <InlineLinkText
-      key={firstAuthor.href}
-      style={[t.atoms.text, a.font_bold, a.text_md, a.leading_tight]}
-      to={firstAuthor.href}
-      disableMismatchWarning
-      emoji
-      label={_(msg`Go to ${firstAuthorName}'s profile`)}>
-      {forceLTR(firstAuthorName)}
-      {firstAuthorVerification.showBadge && (
-        <View
-          style={[
-            a.relative,
-            {
-              paddingTop: platform({android: 2}),
-              marginBottom: platform({ios: -7}),
-              top: platform({web: 1}),
-              paddingLeft: 3,
-              paddingRight: 2,
-            },
-          ]}>
-          <VerificationCheck
-            width={14}
-            verifier={firstAuthorVerification.role === 'verifier'}
-          />
-        </View>
-      )}
-    </InlineLinkText>
+    <ProfileHoverCard did={firstAuthor.profile.did} inline>
+      <InlineLinkText
+        key={firstAuthor.href}
+        style={[t.atoms.text, a.font_bold, a.text_md, a.leading_tight]}
+        to={firstAuthor.href}
+        disableMismatchWarning
+        emoji
+        label={_(msg`Go to ${firstAuthorName}'s profile`)}>
+        {forceLTR(firstAuthorName)}
+        {firstAuthorVerification.showBadge && (
+          <View
+            style={[
+              a.relative,
+              {
+                paddingTop: platform({android: 2}),
+                marginBottom: platform({ios: -7}),
+                top: platform({web: 1}),
+                paddingLeft: 3,
+                paddingRight: 2,
+              },
+            ]}>
+            <VerificationCheck
+              width={14}
+              verifier={firstAuthorVerification.role === 'verifier'}
+            />
+          </View>
+        )}
+      </InlineLinkText>
+    </ProfileHoverCard>
   )
   const additionalAuthorsCount = authors.length - 1
   const hasMultipleAuthors = additionalAuthorsCount > 0

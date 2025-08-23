@@ -307,9 +307,16 @@ export function sortAndAnnotateThreadItems(
               metadata.isPartOfLastBranchFromDepth = metadata.depth
 
               /**
-               * If the parent is part of the last branch of the sub-tree, so is the child.
+               * If the parent is part of the last branch of the sub-tree, so
+               * is the child. However, if the child is also a last sibling,
+               * then we need to start tracking `isPartOfLastBranchFromDepth`
+               * from this point onwards, always updating it to the depth of
+               * the last sibling as we go down.
                */
-              if (metadata.parentMetadata.isPartOfLastBranchFromDepth) {
+              if (
+                !metadata.isLastSibling &&
+                metadata.parentMetadata.isPartOfLastBranchFromDepth
+              ) {
                 metadata.isPartOfLastBranchFromDepth =
                   metadata.parentMetadata.isPartOfLastBranchFromDepth
               }
@@ -372,16 +379,21 @@ export function sortAndAnnotateThreadItems(
           /*
            * Tree-view only.
            *
-           * If there's an upcoming parent read more, this branch is part of the
-           * last branch of the sub-tree, and the item itself is the last child,
-           * insert the parent "read more".
+           * If there's an upcoming parent read more, this branch is part of a
+           * branch of the sub-tree that is deeper than the
+           * `upcomingParentReadMore`, and the item following the current item
+           * is either undefined or less-or-equal-to the depth of the
+           * `upcomingParentReadMore`, then we know it's time to drop in the
+           * parent read more.
            */
           if (
             view === 'tree' &&
             metadata.upcomingParentReadMore &&
-            metadata.isPartOfLastBranchFromDepth ===
+            metadata.isPartOfLastBranchFromDepth &&
+            metadata.isPartOfLastBranchFromDepth >=
               metadata.upcomingParentReadMore.depth &&
-            metadata.isLastChild
+            (metadata.nextItemDepth === undefined ||
+              metadata.nextItemDepth <= metadata.upcomingParentReadMore.depth)
           ) {
             subset.splice(
               i + 1,

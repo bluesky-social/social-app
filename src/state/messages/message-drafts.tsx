@@ -6,6 +6,7 @@ const MessageDraftsContext = React.createContext<{
   state: State
   dispatch: React.Dispatch<Actions>
 } | null>(null)
+MessageDraftsContext.displayName = 'MessageDraftsContext'
 
 function useMessageDraftsContext() {
   const ctx = React.useContext(MessageDraftsContext)

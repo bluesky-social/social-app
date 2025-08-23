@@ -246,6 +246,7 @@ interface IContext {
   dispatch: React.Dispatch<SignupAction>
 }
 export const SignupContext = React.createContext<IContext>({} as IContext)
+SignupContext.displayName = 'SignupContext'
 export const useSignupContext = () => React.useContext(SignupContext)
 
 export function useSubmitSignup() {

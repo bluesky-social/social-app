@@ -77,6 +77,7 @@ export function Outer({
 }
 
 const AlignmentContext = createContext<'platform' | 'left'>('platform')
+AlignmentContext.displayName = 'AlignmentContext'
 
 export function Content({
   children,

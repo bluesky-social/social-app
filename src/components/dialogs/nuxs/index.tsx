@@ -3,6 +3,7 @@ import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {STALE} from '#/state/queries'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {
   usePreferencesQuery,
@@ -47,6 +48,7 @@ const Context = React.createContext<Context>({
   activeNux: undefined,
   dismissActiveNux: () => {},
 })
+Context.displayName = 'NuxDialogContext'
 
 export function useNuxDialogContext() {
   return React.useContext(Context)
@@ -55,7 +57,10 @@ export function useNuxDialogContext() {
 export function NuxDialogs() {
   const {currentAccount} = useSession()
   const {data: preferences} = usePreferencesQuery()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const {data: profile} = useProfileQuery({
+    did: currentAccount?.did,
+    staleTime: STALE.INFINITY, // createdAt isn't gonna change
+  })
   const onboardingActive = useOnboardingState().isActive
 
   const isLoading =

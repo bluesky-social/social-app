@@ -94,6 +94,7 @@ export function PostThread({uri}: {uri: string}) {
         author: post.author,
         embed: post.embed,
         moderation: anchor.moderation,
+        langs: post.record.langs,
       },
       onPostSuccess: optimisticOnPostReply,
     })

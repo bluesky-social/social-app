@@ -1,5 +1,9 @@
 import React from 'react'
-import {SharedValue, useSharedValue, withSpring} from 'react-native-reanimated'
+import {
+  type SharedValue,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 
 type StateContext = {
   headerMode: SharedValue<number>
@@ -29,7 +33,9 @@ const stateContext = React.createContext<StateContext>({
     set() {},
   },
 })
+stateContext.displayName = 'MinimalModeStateContext'
 const setContext = React.createContext<SetContext>((_: boolean) => {})
+setContext.displayName = 'MinimalModeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const headerMode = useSharedValue(0)

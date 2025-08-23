@@ -77,9 +77,12 @@ export function usePreferencesQuery() {
       (data: UsePreferencesQueryResponse) => {
         const isUnderage = (data.userAge || 0) < 18
         if (isUnderage || isAgeRestricted) {
-          data.moderationPrefs = makeAgeRestrictedModerationPrefs(
-            data.moderationPrefs,
-          )
+          data = {
+            ...data,
+            moderationPrefs: makeAgeRestrictedModerationPrefs(
+              data.moderationPrefs,
+            ),
+          }
         }
         return data
       },

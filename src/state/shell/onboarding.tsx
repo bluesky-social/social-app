@@ -29,7 +29,9 @@ export type DispatchContext = (action: Action) => void
 const stateContext = React.createContext<StateContext>(
   compute(persisted.defaults.onboarding),
 )
+stateContext.displayName = 'OnboardingStateContext'
 const dispatchContext = React.createContext<DispatchContext>((_: Action) => {})
+dispatchContext.displayName = 'OnboardingDispatchContext'
 
 function reducer(state: StateContext, action: Action): StateContext {
   switch (action.type) {

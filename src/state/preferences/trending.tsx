@@ -22,10 +22,12 @@ const StateContext = React.createContext<StateContext>({
   trendingDisabled: Boolean(persisted.defaults.trendingDisabled),
   trendingVideoDisabled: Boolean(persisted.defaults.trendingVideoDisabled),
 })
+StateContext.displayName = 'TrendingStateContext'
 const ApiContext = React.createContext<ApiContext>({
   setTrendingDisabled() {},
   setTrendingVideoDisabled() {},
 })
+ApiContext.displayName = 'TrendingApiContext'
 
 function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
   const [value, _set] = React.useState(() => {
