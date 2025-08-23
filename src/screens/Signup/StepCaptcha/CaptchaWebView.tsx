@@ -7,9 +7,10 @@ import {type SignupState} from '#/screens/Signup/state'
 const ALLOWED_HOSTS = [
   'bsky.social',
   'bsky.app',
+  'blacksky.app',
+  'blacksky.community',
   'staging.bsky.app',
   'staging.bsky.dev',
-  'app.staging.bsky.dev',
   'js.hcaptcha.com',
   'newassets.hcaptcha.com',
   'api2.hcaptcha.com',
@@ -42,12 +43,12 @@ export function CaptchaWebView({
   }, [])
 
   const redirectHost = useMemo(() => {
-    if (!state?.serviceUrl) return 'bsky.app'
+      if (!state?.serviceUrl) return 'blacksky.community'
 
     return state?.serviceUrl &&
       new URL(state?.serviceUrl).host === 'staging.bsky.dev'
-      ? 'app.staging.bsky.dev'
-      : 'bsky.app'
+        ? 'app.staging.bsky.dev'
+      : 'blacksky.community'
   }, [state?.serviceUrl])
 
   const wasSuccessful = useRef(false)
