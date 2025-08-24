@@ -1114,7 +1114,7 @@ msgid "Appeal this decision"
 msgstr ""
 
 #: src/Navigation.tsx:390
-#: src/screens/Settings/AppearanceSettings.tsx:88
+#: src/screens/Settings/AppearanceSettings.tsx:86
 #: src/screens/Settings/Settings.tsx:212
 #: src/screens/Settings/Settings.tsx:215
 msgid "Appearance"
@@ -1204,7 +1204,7 @@ msgstr ""
 msgid "Assign topic for algo"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:48
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:58
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr ""
@@ -1395,7 +1395,7 @@ msgstr ""
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:165
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:175
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr ""
@@ -1954,7 +1954,7 @@ msgid "Collapses list of users for a given notification"
 msgstr ""
 
 #: src/components/dialogs/Embed.tsx:154
-#: src/screens/Settings/AppearanceSettings.tsx:96
+#: src/screens/Settings/AppearanceSettings.tsx:94
 msgid "Color mode"
 msgstr ""
 
@@ -2414,8 +2414,8 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
-#: src/screens/Settings/AppearanceSettings.tsx:108
-#: src/screens/Settings/AppearanceSettings.tsx:129
+#: src/screens/Settings/AppearanceSettings.tsx:106
+#: src/screens/Settings/AppearanceSettings.tsx:127
 msgid "Dark"
 msgstr ""
 
@@ -2428,7 +2428,7 @@ msgstr ""
 msgid "Dark mode"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:121
+#: src/screens/Settings/AppearanceSettings.tsx:119
 msgid "Dark theme"
 msgstr ""
 
@@ -2450,7 +2450,7 @@ msgstr ""
 msgid "Debug panel"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:171
+#: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
 msgstr ""
 
@@ -2608,7 +2608,7 @@ msgstr ""
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:125
+#: src/screens/Settings/AppearanceSettings.tsx:123
 msgid "Dim"
 msgstr ""
 
@@ -3616,17 +3616,17 @@ msgstr ""
 msgid "Fitness"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:149
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:159
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:117
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:127
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:133
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:143
 msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr ""
@@ -3758,11 +3758,11 @@ msgstr ""
 msgid "Follows You"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:143
+#: src/screens/Settings/AppearanceSettings.tsx:141
 msgid "Font"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:163
+#: src/screens/Settings/AppearanceSettings.tsx:161
 msgid "Font size"
 msgstr ""
 
@@ -3783,7 +3783,7 @@ msgstr ""
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:145
+#: src/screens/Settings/AppearanceSettings.tsx:143
 msgid "For the best experience, we recommend using the theme font."
 msgstr ""
 
@@ -4549,7 +4549,7 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:175
+#: src/screens/Settings/AppearanceSettings.tsx:173
 msgid "Larger"
 msgstr ""
 
@@ -4680,7 +4680,7 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:162
 #: src/components/dialogs/Embed.tsx:164
-#: src/screens/Settings/AppearanceSettings.tsx:104
+#: src/screens/Settings/AppearanceSettings.tsx:102
 msgid "Light"
 msgstr ""
 
@@ -5038,7 +5038,7 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:101
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:111
 msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr ""
@@ -5439,6 +5439,11 @@ msgstr ""
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
+msgstr ""
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:42
+msgctxt "Name of app icon variant"
+msgid "Next"
 msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:137
@@ -8052,7 +8057,7 @@ msgstr ""
 msgid "Skip this flow"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:167
+#: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
 msgstr ""
 
@@ -8310,12 +8315,12 @@ msgstr ""
 msgid "Suggestive"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:72
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:82
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:86
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:96
 msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr ""
@@ -8348,8 +8353,8 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:157
 #: src/components/dialogs/Embed.tsx:159
-#: src/screens/Settings/AppearanceSettings.tsx:100
-#: src/screens/Settings/AppearanceSettings.tsx:150
+#: src/screens/Settings/AppearanceSettings.tsx:98
+#: src/screens/Settings/AppearanceSettings.tsx:148
 msgid "System"
 msgstr ""
 
@@ -8593,7 +8598,7 @@ msgstr ""
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:154
+#: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
 msgstr ""
 
