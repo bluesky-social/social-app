@@ -466,7 +466,7 @@ let PostMenuItems = ({
           <>
             <Menu.Divider />
             <Menu.Group>
-              {isDiscoverFeed(feedFeedback.feedDescriptor) && (
+              {!isDiscoverFeed(feedFeedback.feedDescriptor) && (
                 <Menu.LabelText>{_(msg`Tell feed provider:`)}</Menu.LabelText>
               )}
               <Menu.Item
