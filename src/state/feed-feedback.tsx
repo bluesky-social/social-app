@@ -63,7 +63,7 @@ export function useFeedFeedback(
       : undefined
 
   const isDiscover = isDiscoverFeed(feed?.feedDescriptor)
-  const acceptsInteractions = isDiscover || (feed?.acceptsInteractions ?? false)
+  const acceptsInteractions = Boolean(isDiscover || feed?.acceptsInteractions)
   const enabled = !!feed && acceptsInteractions && hasSession
   const enabledInteractions = getEnabledInteractions(enabled, feed, isDiscover)
 
