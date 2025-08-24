@@ -64,7 +64,7 @@ export function useFeedFeedback(
 
   const isDiscover = isDiscoverFeed(feed?.feedDescriptor)
   const acceptsInteractions = Boolean(isDiscover || feed?.acceptsInteractions)
-  const enabled = !!feed && acceptsInteractions && hasSession
+  const enabled = Boolean(feed) && acceptsInteractions && hasSession
   const enabledInteractions = getEnabledInteractions(enabled, feed, isDiscover)
 
   const queue = useRef<Set<string>>(new Set())
