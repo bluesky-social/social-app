@@ -524,6 +524,10 @@ msgstr ""
 msgid "A new form of verification"
 msgstr ""
 
+#: src/components/BlockedGeoOverlay.tsx:39
+msgid "A new Mississippi law requires us to implement age verification for all users before they can access Bluesky. We think this law creates challenges that go beyond its child safety goals, and creates significant barriers that limit free speech and disproportionately harm smaller platforms and emerging technologies."
+msgstr ""
+
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr ""
@@ -602,7 +606,7 @@ msgstr ""
 msgid "Account removed from quick access"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:128
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:132
 #: src/view/com/profile/ProfileMenu.tsx:148
 msgctxt "toast"
 msgid "Account unblocked"
@@ -1012,6 +1016,7 @@ msgstr ""
 msgid "Animated GIF"
 msgstr ""
 
+#: src/components/BlockedGeoOverlay.tsx:92
 #: src/components/PolicyUpdateOverlay/Badge.tsx:33
 msgid "Announcement"
 msgstr ""
@@ -1109,7 +1114,7 @@ msgid "Appeal this decision"
 msgstr ""
 
 #: src/Navigation.tsx:390
-#: src/screens/Settings/AppearanceSettings.tsx:88
+#: src/screens/Settings/AppearanceSettings.tsx:86
 #: src/screens/Settings/Settings.tsx:212
 #: src/screens/Settings/Settings.tsx:215
 msgid "Appearance"
@@ -1190,12 +1195,16 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
+#: src/components/BlockedGeoOverlay.tsx:42
+msgid "As a small team, we cannot justify building the expensive infrastructure this requirement demands while legal challenges to this law are pending."
+msgstr ""
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:491
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:493
 msgid "Assign topic for algo"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:48
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:58
 msgctxt "Name of app icon variant"
 msgid "Aurora"
 msgstr ""
@@ -1280,7 +1289,7 @@ msgid "Birthday"
 msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:753
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:320
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:328
 #: src/view/com/profile/ProfileMenu.tsx:473
 msgid "Block"
 msgstr ""
@@ -1386,7 +1395,7 @@ msgstr ""
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:165
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:175
 msgctxt "Name of app icon variant"
 msgid "Bluesky Classic™"
 msgstr ""
@@ -1449,20 +1458,20 @@ msgstr ""
 msgid "Books"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:435
+#: src/components/FeedInterstitials.tsx:428
 msgid "Browse more accounts on the Explore page"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:566
+#: src/components/FeedInterstitials.tsx:556
 msgid "Browse more feeds on the Explore page"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:547
-#: src/components/FeedInterstitials.tsx:550
+#: src/components/FeedInterstitials.tsx:537
+#: src/components/FeedInterstitials.tsx:540
 msgid "Browse more suggestions"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:575
+#: src/components/FeedInterstitials.tsx:565
 msgid "Browse more suggestions on the Explore page"
 msgstr ""
 
@@ -1945,7 +1954,7 @@ msgid "Collapses list of users for a given notification"
 msgstr ""
 
 #: src/components/dialogs/Embed.tsx:154
-#: src/screens/Settings/AppearanceSettings.tsx:96
+#: src/screens/Settings/AppearanceSettings.tsx:94
 msgid "Color mode"
 msgstr ""
 
@@ -2405,8 +2414,8 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:167
 #: src/components/dialogs/Embed.tsx:169
-#: src/screens/Settings/AppearanceSettings.tsx:108
-#: src/screens/Settings/AppearanceSettings.tsx:129
+#: src/screens/Settings/AppearanceSettings.tsx:106
+#: src/screens/Settings/AppearanceSettings.tsx:127
 msgid "Dark"
 msgstr ""
 
@@ -2419,7 +2428,7 @@ msgstr ""
 msgid "Dark mode"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:121
+#: src/screens/Settings/AppearanceSettings.tsx:119
 msgid "Dark theme"
 msgstr ""
 
@@ -2441,7 +2450,7 @@ msgstr ""
 msgid "Debug panel"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:171
+#: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
 msgstr ""
 
@@ -2599,7 +2608,7 @@ msgstr ""
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:125
+#: src/screens/Settings/AppearanceSettings.tsx:123
 msgid "Dim"
 msgstr ""
 
@@ -2906,12 +2915,12 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:276
 #: src/screens/Profile/Header/EditProfileDialog.tsx:282
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:183
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:185
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:190
 msgid "Edit profile"
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:186
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:188
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:193
 msgid "Edit Profile"
 msgstr ""
 
@@ -3607,17 +3616,17 @@ msgstr ""
 msgid "Fitness"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:149
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:159
 msgctxt "Name of app icon variant"
 msgid "Flat Black"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:117
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:127
 msgctxt "Name of app icon variant"
 msgid "Flat Blue"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:133
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:143
 msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr ""
@@ -3627,10 +3636,10 @@ msgid "Flexible"
 msgstr ""
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:517
+#: src/components/ProfileCard.tsx:524
 #: src/components/ProfileHoverCard/index.web.tsx:496
 #: src/components/ProfileHoverCard/index.web.tsx:507
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:245
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
 #: src/screens/VideoFeed/index.tsx:851
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:131
 msgid "Follow"
@@ -3641,7 +3650,7 @@ msgctxt "action"
 msgid "Follow"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:230
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:113
 msgid "Follow {0}"
 msgstr ""
@@ -3669,14 +3678,16 @@ msgstr ""
 msgid "Follow all"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:243
+#. User is not following this account, click to follow back
+#: src/components/ProfileCard.tsx:518
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:129
-msgid "Follow Back"
+msgid "Follow back"
 msgstr ""
 
 #: src/view/com/profile/FollowButton.tsx:81
 msgctxt "action"
-msgid "Follow Back"
+msgid "Follow back"
 msgstr ""
 
 #: src/components/KnownFollowers.tsx:238
@@ -3708,7 +3719,7 @@ msgstr ""
 #: src/components/ProfileCard.tsx:511
 #: src/components/ProfileHoverCard/index.web.tsx:495
 #: src/components/ProfileHoverCard/index.web.tsx:506
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:241
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:248
 #: src/screens/VideoFeed/index.tsx:849
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:134
 msgid "Following"
@@ -3721,7 +3732,7 @@ msgid "Following"
 msgstr ""
 
 #: src/components/ProfileCard.tsx:474
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:89
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:92
 msgid "Following {0}"
 msgstr ""
 
@@ -3747,17 +3758,21 @@ msgstr ""
 msgid "Follows You"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:143
+#: src/screens/Settings/AppearanceSettings.tsx:141
 msgid "Font"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:163
+#: src/screens/Settings/AppearanceSettings.tsx:161
 msgid "Font size"
 msgstr ""
 
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:105
 msgid "Food"
+msgstr ""
+
+#: src/components/BlockedGeoOverlay.tsx:45
+msgid "For now, we have made the difficult decision to block access to Bluesky in the state of Mississippi."
 msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:125
@@ -3768,7 +3783,7 @@ msgstr ""
 msgid "For security reasons, you won't be able to view this again. If you lose this app password, you'll need to generate a new one."
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:145
+#: src/screens/Settings/AppearanceSettings.tsx:143
 msgid "For the best experience, we recommend using the theme font."
 msgstr ""
 
@@ -4534,7 +4549,7 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:175
+#: src/screens/Settings/AppearanceSettings.tsx:173
 msgid "Larger"
 msgstr ""
 
@@ -4665,7 +4680,7 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:162
 #: src/components/dialogs/Embed.tsx:164
-#: src/screens/Settings/AppearanceSettings.tsx:104
+#: src/screens/Settings/AppearanceSettings.tsx:102
 msgid "Light"
 msgstr ""
 
@@ -5023,7 +5038,7 @@ msgstr ""
 msgid "Messages"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:101
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:111
 msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr ""
@@ -5426,6 +5441,11 @@ msgstr ""
 msgid "News"
 msgstr ""
 
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:42
+msgctxt "Name of app icon variant"
+msgid "Next"
+msgstr ""
+
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:343
@@ -5479,7 +5499,7 @@ msgid "No likes yet"
 msgstr ""
 
 #: src/components/ProfileCard.tsx:496
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:110
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:114
 msgid "No longer following {0}"
 msgstr ""
 
@@ -6651,7 +6671,7 @@ msgid "Reactivate your account"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadItemReadMore.tsx:92
-msgid "Read {0} more {1, plural, one {reply} other {replies}}"
+msgid "Read {0, plural, one {# more reply} other {# more replies}}"
 msgstr ""
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:158
@@ -6671,6 +6691,7 @@ msgstr ""
 msgid "Read more replies"
 msgstr ""
 
+#: src/components/BlockedGeoOverlay.tsx:29
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:112
 msgid "Read our blog post"
 msgstr ""
@@ -7432,15 +7453,15 @@ msgstr ""
 msgid "See jobs at Bluesky"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:397
+#: src/components/FeedInterstitials.tsx:393
 msgid "See more"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:444
+#: src/components/FeedInterstitials.tsx:437
 msgid "See more accounts you might like"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:395
+#: src/components/FeedInterstitials.tsx:391
 msgid "See more suggested profiles on the Explore page"
 msgstr ""
 
@@ -8023,7 +8044,7 @@ msgstr ""
 msgid "Signed in as @{0}"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:389
+#: src/components/FeedInterstitials.tsx:386
 msgid "Similar accounts"
 msgstr ""
 
@@ -8036,7 +8057,7 @@ msgstr ""
 msgid "Skip this flow"
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:167
+#: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
 msgstr ""
 
@@ -8053,7 +8074,7 @@ msgstr ""
 msgid "Some of your verifications are invalid."
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:529
+#: src/components/FeedInterstitials.tsx:519
 msgid "Some other feeds you might like"
 msgstr ""
 
@@ -8285,7 +8306,7 @@ msgstr ""
 msgid "Suggested Accounts"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:391
+#: src/components/FeedInterstitials.tsx:384
 msgid "Suggested for you"
 msgstr ""
 
@@ -8294,12 +8315,12 @@ msgstr ""
 msgid "Suggestive"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:72
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:82
 msgctxt "Name of app icon variant"
 msgid "Sunrise"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:86
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:96
 msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr ""
@@ -8332,8 +8353,8 @@ msgstr ""
 
 #: src/components/dialogs/Embed.tsx:157
 #: src/components/dialogs/Embed.tsx:159
-#: src/screens/Settings/AppearanceSettings.tsx:100
-#: src/screens/Settings/AppearanceSettings.tsx:150
+#: src/screens/Settings/AppearanceSettings.tsx:98
+#: src/screens/Settings/AppearanceSettings.tsx:148
 msgid "System"
 msgstr ""
 
@@ -8475,7 +8496,7 @@ msgstr ""
 msgid "That's everything!"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:316
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:324
 #: src/view/com/profile/ProfileMenu.tsx:461
 msgid "The account will be able to interact with you after unblocking."
 msgstr ""
@@ -8577,7 +8598,7 @@ msgstr ""
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr ""
 
-#: src/screens/Settings/AppearanceSettings.tsx:154
+#: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
 msgstr ""
 
@@ -8645,9 +8666,9 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:361
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:374
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:119
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:132
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:101
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:123
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:136
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:90
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:101
 #: src/view/com/profile/ProfileMenu.tsx:128
@@ -9095,14 +9116,14 @@ msgstr ""
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:112
 #: src/components/dms/MessagesListBlockedFooter.tsx:119
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:203
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:320
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:208
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:328
 #: src/view/com/profile/ProfileMenu.tsx:473
 #: src/view/screens/ProfileList.tsx:723
 msgid "Unblock"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:208
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:213
 msgctxt "action"
 msgid "Unblock"
 msgstr ""
@@ -9114,7 +9135,7 @@ msgstr ""
 msgid "Unblock account"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:322
 #: src/view/com/profile/ProfileMenu.tsx:455
 msgid "Unblock Account?"
 msgstr ""
@@ -9138,7 +9159,7 @@ msgctxt "action"
 msgid "Unfollow"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:229
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:236
 msgid "Unfollow {0}"
 msgstr ""
 
@@ -9149,6 +9170,10 @@ msgstr ""
 
 #: src/screens/VideoFeed/index.tsx:832
 msgid "Unfollows the user"
+msgstr ""
+
+#: src/components/BlockedGeoOverlay.tsx:37
+msgid "Unfortunately, Bluesky is unavailable in Mississippi right now."
 msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:372
@@ -9674,11 +9699,15 @@ msgstr ""
 msgid "View information about these labels"
 msgstr ""
 
-#: src/components/interstitials/TrendingVideos.tsx:189
-#: src/components/interstitials/TrendingVideos.tsx:211
+#: src/components/interstitials/TrendingVideos.tsx:198
+#: src/components/interstitials/TrendingVideos.tsx:220
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:194
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:213
 msgid "View more"
+msgstr ""
+
+#: src/components/interstitials/TrendingVideos.tsx:226
+msgid "View more trending videos"
 msgstr ""
 
 #: src/components/ProfileHoverCard/index.web.tsx:466
@@ -10541,7 +10570,7 @@ msgid "Your current handle <0>{0}</0> will automatically remain reserved for you
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:208
-msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your bithdate in your <0>account settings</0>."
+msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your birthdate in your <0>account settings</0>."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:253

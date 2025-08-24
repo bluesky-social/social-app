@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {type GestureResponderEvent} from 'react-native'
+import {type GestureResponderEvent, Linking} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {
   type LinkProps as RNLinkProps,
@@ -13,6 +13,7 @@ import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
+  createProxiedUrl,
   isBskyDownloadUrl,
   isExternalUrl,
   linkRequiresWarning,
@@ -387,6 +388,91 @@ export function InlineLinkText({
       role="link"
       onPress={download ? undefined : onPress}
       onLongPress={onLongPress}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
+      accessibilityRole="link"
+      href={href}
+      {...web({
+        hrefAttrs: {
+          target: download ? undefined : isExternal ? 'blank' : undefined,
+          rel: isExternal ? 'noopener noreferrer' : undefined,
+          download,
+        },
+        dataSet: {
+          // default to no underline, apply this ourselves
+          noUnderline: '1',
+        },
+      })}>
+      {children}
+    </Text>
+  )
+}
+
+/**
+ * A barebones version of `InlineLinkText`, for use outside a
+ * `react-navigation` context.
+ */
+export function SimpleInlineLinkText({
+  children,
+  to,
+  style,
+  download,
+  selectable,
+  label,
+  disableUnderline,
+  shouldProxy,
+  ...rest
+}: Omit<
+  InlineLinkProps,
+  | 'to'
+  | 'action'
+  | 'disableMismatchWarning'
+  | 'overridePresentation'
+  | 'onPress'
+  | 'onLongPress'
+  | 'shareOnLongPress'
+> & {
+  to: string
+}) {
+  const t = useTheme()
+  const {
+    state: hovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
+  const flattenedStyle = flatten(style) || {}
+  const isExternal = isExternalUrl(to)
+
+  let href = to
+  if (shouldProxy) {
+    href = createProxiedUrl(href)
+  }
+
+  const onPress = () => {
+    Linking.openURL(href)
+  }
+
+  return (
+    <Text
+      selectable={selectable}
+      accessibilityHint=""
+      accessibilityLabel={label}
+      {...rest}
+      style={[
+        {color: t.palette.primary_500},
+        hovered &&
+          !disableUnderline && {
+            ...web({
+              outline: 0,
+              textDecorationLine: 'underline',
+              textDecorationColor:
+                flattenedStyle.color ?? t.palette.primary_500,
+            }),
+          },
+        flattenedStyle,
+      ]}
+      role="link"
+      onPress={onPress}
       onMouseEnter={onHoverIn}
       onMouseLeave={onHoverOut}
       accessibilityRole="link"
