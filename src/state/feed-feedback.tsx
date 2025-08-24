@@ -58,7 +58,7 @@ export function useFeedFeedback(
   const agent = useAgent()
 
   const feed =
-    !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo)
+    Boolean(feedSourceInfo) && isFeedSourceFeedInfo(feedSourceInfo)
       ? feedSourceInfo
       : undefined
 
