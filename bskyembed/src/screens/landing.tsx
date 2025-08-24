@@ -18,11 +18,11 @@ import * as bsky from '../types/bsky'
 import {niceDate} from '../util/nice-date'
 
 const DEFAULT_POST =
-  'https://bsky.app/profile/did:plc:vjug55kidv6sye7ykr5faxxn/post/3jzn6g7ixgq2y'
+  'https://blacksky.community/profile/did:plc:w4xbfzo7kqfes5zb7r6qv3rw/post/3lvbehkyyvc2f'
 const DEFAULT_URI =
-  'at://did:plc:vjug55kidv6sye7ykr5faxxn/app.bsky.feed.post/3jzn6g7ixgq2y'
+  'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.post/3lvbehkyyvc2f'
 
-export const EMBED_SERVICE = 'https://embed.bsky.app'
+export const EMBED_SERVICE = 'https://embed.blacksky.community'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 
 const root = document.getElementById('app')

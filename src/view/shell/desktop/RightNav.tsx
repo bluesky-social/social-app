@@ -104,8 +104,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           <>
             <InlineLinkText
               to="https://assembly.blacksky.community"
-              label={_(msg`Feedback`)}>
-              {_(msg`Feedback`)}
+              label={_(msg`Discussion`)}>
+              {_(msg`Discussion`)}
             </InlineLinkText>
             {' • '}
           </>

@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {useActorStatus} from '#/lib/actor-status'
-import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
+import {HELP_DESK_URL} from '#/lib/constants'
 import {type PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {getTabState, TabState} from '#/lib/routes/helpers'
@@ -243,17 +243,18 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     setDrawerOpen(false)
   }, [navigation, setDrawerOpen])
 
-  const onPressFeedback = React.useCallback(() => {
-    Linking.openURL(
-      FEEDBACK_FORM_URL({
-        email: currentAccount?.email,
-        handle: currentAccount?.handle,
-      }),
-    )
-  }, [currentAccount])
+  const onPressDiscuss = React.useCallback(() => {
+    Linking.openURL('https://assembly.blacksky.community')
+  }, [])
 
   const onPressHelp = React.useCallback(() => {
     Linking.openURL(HELP_DESK_URL)
+  }, [])
+
+  const onPressContribute = React.useCallback(() => {
+    Linking.openURL(
+      'https://opencollective.com/blacksky/contribute/backer-59760/checkout',
+    )
   }, [])
 
   // rendering
@@ -324,8 +325,9 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
       </ScrollView>
 
       <DrawerFooter
-        onPressFeedback={onPressFeedback}
+        onPressDiscuss={onPressDiscuss}
         onPressHelp={onPressHelp}
+        onPressContribute={onPressContribute}
       />
     </View>
   )
@@ -334,11 +336,13 @@ DrawerContent = React.memo(DrawerContent)
 export {DrawerContent}
 
 let DrawerFooter = ({
-  onPressFeedback,
+  onPressDiscuss,
   onPressHelp,
+  onPressContribute,
 }: {
-  onPressFeedback: () => void
+  onPressDiscuss: () => void
   onPressHelp: () => void
+  onPressContribute: () => void
 }): React.ReactNode => {
   const {_} = useLingui()
   const insets = useSafeAreaInsets()
@@ -358,14 +362,14 @@ let DrawerFooter = ({
         },
       ]}>
       <Button
-        label={_(msg`Send feedback`)}
+        label={_(msg`Begin Discussion`)}
         size="small"
         variant="solid"
         color="secondary"
-        onPress={onPressFeedback}>
+        onPress={onPressDiscuss}>
         <ButtonIcon icon={Message} position="left" />
         <ButtonText>
-          <Trans>Feedback</Trans>
+          <Trans>Discussion</Trans>
         </ButtonText>
       </Button>
       <Button
@@ -379,6 +383,19 @@ let DrawerFooter = ({
         }}>
         <ButtonText>
           <Trans>Help</Trans>
+        </ButtonText>
+      </Button>
+      <Button
+        label={_(msg`Support Us`)}
+        size="small"
+        variant="outline"
+        color="secondary"
+        onPress={onPressContribute}
+        style={{
+          backgroundColor: 'transparent',
+        }}>
+        <ButtonText>
+          <Trans>Support Us</Trans>
         </ButtonText>
       </Button>
     </View>

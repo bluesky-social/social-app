@@ -34,6 +34,7 @@ export class Database {
 
   static postgres(opts: PgOptions): Database {
     const {schema, url, txLockNonce} = opts
+    const needsSSL = url.includes('sslmode=require')
     const pool =
       opts.pool ??
       new Pg.Pool({
@@ -41,6 +42,12 @@ export class Database {
         max: opts.poolSize,
         maxUses: opts.poolMaxUses,
         idleTimeoutMillis: opts.poolIdleTimeoutMs,
+        // Add SSL configuration for DigitalOcean
+        ...(needsSSL && {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        }),
       })
 
     // Select count(*) and other pg bigints as js integer

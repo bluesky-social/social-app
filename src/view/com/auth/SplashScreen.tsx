@@ -9,6 +9,7 @@ import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
+import {InlineLinkText} from '#/components/Link.tsx'
 import {Text} from '#/components/Typography'
 import {CenteredView} from '../util/Views'
 
@@ -70,6 +71,24 @@ export const SplashScreen = ({
               <Trans>Sign in</Trans>
             </ButtonText>
           </Button>
+          <Text
+            style={[
+              t.atoms.text_contrast_medium,
+              a.text_sm,
+              a.leading_snug,
+              a.flex_1,
+            ]}>
+            <Trans>
+              Migrating from Bluesky? Use{' '}
+              <InlineLinkText
+                label={_(msg`Migrate your account with tektite.cc`)}
+                to="https://tektite.cc"
+                style={[a.text_sm]}>
+                Tektite.cc{' '}
+              </InlineLinkText>
+              to move your followers, posts, and media to Blacksky.
+            </Trans>
+          </Text>
         </View>
         <View
           style={[
