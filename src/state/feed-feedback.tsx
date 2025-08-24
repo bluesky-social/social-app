@@ -58,13 +58,15 @@ export function useFeedFeedback(
   const agent = useAgent()
 
   const feed =
-    Boolean(feedSourceInfo) && isFeedSourceFeedInfo(feedSourceInfo)
+    !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo)
       ? feedSourceInfo
       : undefined
 
   const isDiscover = isDiscoverFeed(feed?.feedDescriptor)
   const acceptsInteractions = Boolean(isDiscover || feed?.acceptsInteractions)
-  const enabled = Boolean(feed) && acceptsInteractions && hasSession
+  const proxyDid = feed?.view?.did
+  const enabled =
+    Boolean(feed) && Boolean(proxyDid) && acceptsInteractions && hasSession
   const enabledInteractions = getEnabledInteractions(enabled, feed, isDiscover)
 
   const queue = useRef<Set<string>>(new Set())
@@ -99,8 +101,6 @@ export function useFeedFeedback(
       return
     }
 
-    const proxyDid = feed?.view?.did
-
     // Send to the feed
     agent.app.bsky.feed
       .sendInteractions(
@@ -128,7 +128,7 @@ export function useFeedFeedback(
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, feed, enabledInteractions])
+  }, [agent, throttledFlushAggregatedStats, proxyDid, enabledInteractions])
 
   const sendToFeed = useMemo(
     () =>
@@ -217,7 +217,7 @@ export function useFeedFeedbackContext() {
 // take advantage of the feed feedback API. Until that's in
 // place, we're hardcoding it to the discover feed.
 // -prf
-function isDiscoverFeed(feed?: FeedDescriptor) {
+export function isDiscoverFeed(feed?: FeedDescriptor) {
   return !!feed && FEEDBACK_FEEDS.includes(feed)
 }
 
