@@ -284,7 +284,7 @@ let PostControls = ({
           a.flex_1,
           big ? a.gap_sm : a.gap_xs,
         ]}>
-        <BookmarkButton post={post} big={big} record={record} />
+        <BookmarkButton post={post} big={big} />
         <ShareMenuButton
           testID="postShareBtn"
           post={post}

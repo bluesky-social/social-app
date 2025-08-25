@@ -102,12 +102,20 @@ export function PostControlButton({
 
 export function PostControlButtonIcon({
   icon: Comp,
-}: {
+  style,
+  ...rest
+}: SVGIconProps & {
   icon: React.ComponentType<SVGIconProps>
 }) {
   const {big, color} = useContext(PostControlContext)
 
-  return <Comp style={[color, a.pointer_events_none]} width={big ? 22 : 18} />
+  return (
+    <Comp
+      style={[color, a.pointer_events_none, style]}
+      {...rest}
+      width={big ? 22 : 18}
+    />
+  )
 }
 
 export function PostControlButtonText({style, ...props}: TextProps) {
