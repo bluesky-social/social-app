@@ -410,7 +410,7 @@ export function SelectMediaButton({
             msg`You can only select one GIF at a time.`,
           ),
           [SelectedAssetError.FileTooBig]: _(
-            msg`One or more of your selected files is too large. Maximum size is 100 MB.`,
+            msg`One or more of your selected files are too large. Maximum size is 100 MB.`,
           ),
         }[error]
       })
@@ -481,34 +481,17 @@ export function SelectMediaButton({
       label={_(
         msg({
           message: `Add media to post`,
-          comment: `Accessibility label for button in composer to add photos or a video to a post`,
+          comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,
         }),
       )}
-      accessibilityHint={
-        isNative
-          ? _(
-              msg({
-                message: `Opens device gallery to select up to ${plural(
-                  MAX_IMAGES,
-                  {
-                    other: '# images',
-                  },
-                )}, or a single video.`,
-                comment: `Accessibility hint on native for button in composer to add images or a video to a post. Maximum number of images that can be selected is currently 4 but may change.`,
-              }),
-            )
-          : _(
-              msg({
-                message: `Opens device gallery to select up to ${plural(
-                  MAX_IMAGES,
-                  {
-                    other: '# images',
-                  },
-                )}, or a single video or GIF.`,
-                comment: `Accessibility hint on web for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
-              }),
-            )
-      }
+      accessibilityHint={_(
+        msg({
+          message: `Opens device gallery to select up to ${plural(MAX_IMAGES, {
+            other: '# images',
+          })}, or a single video or GIF.`,
+          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
+        }),
+      )}
       style={a.p_sm}
       variant="ghost"
       shape="round"
