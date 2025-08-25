@@ -3,6 +3,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {updatePostShadow} from '#/state/cache/post-shadow'
+import {bookmarksQueryKeyRoot} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {useAgent} from '#/state/session'
 
 type MutationArgs =
@@ -27,6 +28,9 @@ export function useBookmarkMutation() {
           uri: args.uri,
         })
       }
+    },
+    onSuccess() {
+      qc.invalidateQueries({queryKey: [bookmarksQueryKeyRoot]})
     },
     onError(e, args) {
       if (args.action === 'create') {
