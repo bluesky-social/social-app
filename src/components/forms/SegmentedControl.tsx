@@ -155,14 +155,7 @@ export function Item({
         onPress={onPress}
         role={ctx.type === 'tabs' ? 'tab' : 'radio'}
         accessibilityState={{selected: active}}
-        style={[
-          a.flex_1,
-          a.bg_transparent,
-          {borderRadius: 10},
-          a.curve_continuous,
-          a.px_sm,
-          style,
-        ]}>
+        style={[a.flex_1, a.bg_transparent, a.px_sm, style]}>
         {({pressed, hovered, focused}) => (
           <InternalItemContext.Provider
             value={{active, pressed, hovered, focused}}>
@@ -187,7 +180,7 @@ export function ItemText({style, ...props}: ButtonTextProps) {
       style={[
         a.text_center,
         a.text_md,
-        a.py_md,
+        {paddingVertical: 10},
         a.px_xs,
         ctx.active
           ? t.atoms.text
