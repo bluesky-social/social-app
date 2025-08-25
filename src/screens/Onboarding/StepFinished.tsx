@@ -1,5 +1,6 @@
-import React from 'react'
+import {useCallback, useContext, useState} from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {
   type AppBskyActorDefs,
   type AppBskyActorProfile,
@@ -22,6 +23,7 @@ import {
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {preferencesQueryKey} from '#/state/queries/preferences'
@@ -38,9 +40,9 @@ import {
   OnboardingControls,
   TitleText,
 } from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {Context, type OnboardingState} from '#/screens/Onboarding/state'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -53,10 +55,9 @@ import * as bsky from '#/types/bsky'
 
 export function StepFinished() {
   const {_} = useLingui()
-  const t = useTheme()
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch} = useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
-  const [saving, setSaving] = React.useState(false)
+  const [saving, setSaving] = useState(false)
   const queryClient = useQueryClient()
   const agent = useAgent()
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -66,7 +67,7 @@ export function StepFinished() {
   const {startProgressGuide} = useProgressGuideControls()
   const gate = useGate()
 
-  const finishOnboarding = React.useCallback(async () => {
+  const finishOnboarding = useCallback(async () => {
     setSaving(true)
 
     let starterPack: AppBskyGraphDefs.StarterPackView | undefined
@@ -245,6 +246,186 @@ export function StepFinished() {
     gate,
   ])
 
+  return state.experiments?.onboarding_value_prop ? (
+    <ValueProposition
+      finishOnboarding={finishOnboarding}
+      saving={saving}
+      state={state}
+    />
+  ) : (
+    <LegacyFinalStep
+      finishOnboarding={finishOnboarding}
+      saving={saving}
+      state={state}
+    />
+  )
+}
+
+const PROP_1 = {
+  light: require('../../../assets/images/onboarding/value_prop_1_light.webp'),
+  dim: require('../../../assets/images/onboarding/value_prop_1_dim.webp'),
+  dark: require('../../../assets/images/onboarding/value_prop_1_dark.webp'),
+} as const
+
+const PROP_2 = {
+  light: require('../../../assets/images/onboarding/value_prop_2_light.webp'),
+  dim: require('../../../assets/images/onboarding/value_prop_2_dim.webp'),
+  dark: require('../../../assets/images/onboarding/value_prop_2_dark.webp'),
+} as const
+
+const PROP_3 = {
+  light: require('../../../assets/images/onboarding/value_prop_3_light.webp'),
+  dim: require('../../../assets/images/onboarding/value_prop_3_dim.webp'),
+  dark: require('../../../assets/images/onboarding/value_prop_3_dark.webp'),
+} as const
+
+function ValueProposition({
+  finishOnboarding,
+  saving,
+  state,
+}: {
+  finishOnboarding: () => void
+  saving: boolean
+  state: OnboardingState
+}) {
+  const [subStep, setSubStep] = useState<0 | 1 | 2>(0)
+  const t = useTheme()
+  const {_} = useLingui()
+
+  const image = [PROP_1[t.name], PROP_2[t.name], PROP_3[t.name]][subStep]
+
+  const onPress = () => {
+    if (subStep === 2) {
+      finishOnboarding()
+    } else if (subStep === 1) {
+      setSubStep(2)
+    } else if (subStep === 0) {
+      setSubStep(1)
+    }
+  }
+
+  const {title, description} = [
+    {
+      title: _(msg`Free your feed`),
+      description: _(
+        msg`No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you.`,
+      ),
+    },
+    {
+      title: _(msg`Find your people`),
+      description: _(
+        msg`Ditch the trolls and clickbait. Find real people and conversations that matter to you.`,
+      ),
+    },
+    {
+      title: _(msg`Forget the noise`),
+      description: _(
+        msg`No ads, no tracking, no engagement traps. Bluesky respects your time and attention.`,
+      ),
+    },
+  ][subStep]
+
+  return (
+    <View>
+      <View
+        style={[
+          a.relative,
+          a.align_center,
+          a.justify_center,
+          isNative && {marginHorizontal: tokens.space.xl * -1},
+        ]}>
+        <Image
+          source={image}
+          style={[a.w_full, {aspectRatio: 1}]}
+          // I guess we do need it to blend into the background
+          accessibilityIgnoresInvertColors={false}
+        />
+        {subStep === 1 && (
+          <Image
+            source={state.profileStepResults.imageUri}
+            style={[
+              a.z_10,
+              a.absolute,
+              a.rounded_full,
+              {width: `${(80 / 393) * 100}%`, height: `${(80 / 393) * 100}%`},
+            ]}
+            accessibilityIgnoresInvertColors
+          />
+        )}
+      </View>
+
+      <View style={[a.mt_4xl, a.gap_2xl, a.align_center]}>
+        <View style={[a.flex_row, a.gap_sm]}>
+          <Dot active={subStep === 0} />
+          <Dot active={subStep === 1} />
+          <Dot active={subStep === 2} />
+        </View>
+
+        <View style={[a.gap_sm]}>
+          <Text style={[a.font_heavy, a.text_3xl, a.text_center]}>{title}</Text>
+          <Text
+            style={[
+              t.atoms.text_contrast_medium,
+              a.text_md,
+              a.leading_snug,
+              a.text_center,
+            ]}>
+            {description}
+          </Text>
+        </View>
+      </View>
+
+      <OnboardingControls.Portal>
+        <Button
+          disabled={saving}
+          key={state.activeStep} // remove focus state on nav
+          color="primary"
+          size="large"
+          label={
+            subStep === 2
+              ? _(msg`Complete onboarding and start using your account`)
+              : _(msg`Next`)
+          }
+          onPress={onPress}>
+          <ButtonText>
+            {saving ? <Trans>Finalizing</Trans> : <Trans>Next</Trans>}
+          </ButtonText>
+          {saving && <ButtonIcon icon={Loader} position="right" />}
+        </Button>
+      </OnboardingControls.Portal>
+    </View>
+  )
+}
+
+function Dot({active}: {active: boolean}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <View
+      style={[
+        a.rounded_full,
+        {width: 8, height: 8},
+        active
+          ? {backgroundColor: t.palette.primary_500}
+          : t.atoms.bg_contrast_50,
+      ]}
+    />
+  )
+}
+
+function LegacyFinalStep({
+  finishOnboarding,
+  saving,
+  state,
+}: {
+  finishOnboarding: () => void
+  saving: boolean
+  state: OnboardingState
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
   return (
     <View style={[a.align_start]}>
       <IconCircle icon={Check} style={[a.mb_2xl]} />
@@ -305,7 +486,6 @@ export function StepFinished() {
         <Button
           disabled={saving}
           key={state.activeStep} // remove focus state on nav
-          variant="solid"
           color="primary"
           size="large"
           label={_(msg`Complete onboarding and start using your account`)}

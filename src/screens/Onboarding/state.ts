@@ -37,6 +37,7 @@ export type OnboardingState = {
 
   experiments?: {
     onboarding_suggested_accounts?: boolean
+    onboarding_value_prop?: boolean
   }
 }
 
