@@ -296,11 +296,13 @@ function ValueProposition({
 
   const onPress = () => {
     if (subStep === 2) {
-      finishOnboarding()
+      finishOnboarding() // has its own metrics
     } else if (subStep === 1) {
       setSubStep(2)
+      logger.metric('onboarding:valueProp:stepTwo:nextPressed', {})
     } else if (subStep === 0) {
       setSubStep(1)
+      logger.metric('onboarding:valueProp:stepOne:nextPressed', {})
     }
   }
 

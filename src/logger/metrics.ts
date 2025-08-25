@@ -125,6 +125,8 @@ export type MetricEvents = {
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
   }
+  'onboarding:valueProp:stepOne:nextPressed': {}
+  'onboarding:valueProp:stepTwo:nextPressed': {}
   'home:feedDisplayed': {
     feedUrl: string
     feedType: string
