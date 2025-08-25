@@ -4513,7 +4513,7 @@ msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:234
 msgid "Labeled by {0}."
-msgstr "Merkinnnyt {0}."
+msgstr "Merkinnyt {0}."
 
 #: src/components/moderation/ContentHider.tsx:232
 msgid "Labeled by the author."
