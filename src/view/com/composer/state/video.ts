@@ -1,6 +1,5 @@
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {type AppBskyVideoDefs, type BlobRef, type BskyAgent} from '@atproto/api'
-import {type JobStatus} from '@atproto/api/dist/client/types/app/bsky/video/defs'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 
@@ -328,7 +327,7 @@ export async function processVideo(
     }
 
     const videoAgent = createVideoAgent()
-    let status: JobStatus | undefined
+    let status: AppBskyVideoDefs.JobStatus | undefined
     let blob: BlobRef | undefined
     try {
       const response = await videoAgent.app.bsky.video.getJobStatus({jobId})

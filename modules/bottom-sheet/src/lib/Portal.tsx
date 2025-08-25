@@ -18,6 +18,7 @@ export function createPortalGroup_INTERNAL() {
     append: () => {},
     remove: () => {},
   })
+  Context.displayName = 'BottomSheetPortalContext'
 
   function Provider(props: React.PropsWithChildren<{}>) {
     const map = React.useRef<ComponentMap>({})

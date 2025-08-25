@@ -14,10 +14,12 @@ type ApiContext = {
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.hiddenPosts,
 )
+stateContext.displayName = 'HiddenPostsStateContext'
 const apiContext = React.createContext<ApiContext>({
   hidePost: () => {},
   unhidePost: () => {},
 })
+apiContext.displayName = 'HiddenPostsApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(persisted.get('hiddenPosts'))

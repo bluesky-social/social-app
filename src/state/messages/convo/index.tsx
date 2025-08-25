@@ -26,6 +26,7 @@ import {useAgent} from '#/state/session'
 export * from '#/state/messages/convo/util'
 
 const ChatContext = React.createContext<ConvoState | null>(null)
+ChatContext.displayName = 'ChatContext'
 
 export function useConvo() {
   const ctx = useContext(ChatContext)

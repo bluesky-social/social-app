@@ -211,7 +211,9 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
               <Trans>Verify your email</Trans>
             )
           ) : (
-            <Trans>Verify email code</Trans>
+            <Trans comment="Dialog title when a user is verifying their email address by entering a code they have been sent">
+              Verify email code
+            </Trans>
           )}
         </Text>
 
@@ -345,7 +347,13 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
           {state.error && <Admonition type="error">{state.error}</Admonition>}
 
           <Button
-            label={_(msg`Verify code`)}
+            label={_(
+              msg({
+                message: `Verify code`,
+                context: `action`,
+                comment: `Button text and accessibility label for action to verify the user's email address using the code entered`,
+              }),
+            )}
             size="large"
             variant="solid"
             color="primary"
@@ -356,7 +364,11 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
               state.mutationStatus === 'pending'
             }>
             <ButtonText>
-              <Trans>Verify code</Trans>
+              <Trans
+                context="action"
+                comment="Button text and accessibility label for action to verify the user's email address using the code entered">
+                Verify code
+              </Trans>
             </ButtonText>
             {state.mutationStatus === 'pending' && <ButtonIcon icon={Loader} />}
           </Button>

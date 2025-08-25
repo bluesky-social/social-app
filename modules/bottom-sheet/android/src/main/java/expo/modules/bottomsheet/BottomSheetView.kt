@@ -19,7 +19,6 @@ import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
 
-
 class BottomSheetView(
   context: Context,
   appContext: AppContext,
@@ -31,12 +30,14 @@ class BottomSheetView(
   private lateinit var dialogRootViewGroup: DialogRootViewGroup
   private var eventDispatcher: EventDispatcher? = null
 
-  private val rawScreenHeight = context.resources.displayMetrics.heightPixels.toFloat()
+  private val rawScreenHeight =
+    context.resources.displayMetrics.heightPixels
+      .toFloat()
   private val safeScreenHeight = (rawScreenHeight - getNavigationBarHeight()).toFloat()
 
   private fun getNavigationBarHeight(): Int {
-      val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-      return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
+    val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+    return if (resourceId > 0) resources.getDimensionPixelSize(resourceId) else 0
   }
 
   private val onAttemptDismiss by EventDispatcher()
@@ -45,7 +46,7 @@ class BottomSheetView(
 
   // Props
   var disableDrag = false
-    set (value) {
+    set(value) {
       field = value
       this.setDraggable(!value)
     }
@@ -157,8 +158,8 @@ class BottomSheetView(
 
   // Presentation
 
-  private fun getHalfExpandedRatio(contentHeight: Float): Float {
-    return when {
+  private fun getHalfExpandedRatio(contentHeight: Float): Float =
+    when {
       // Full height sheets
       contentHeight >= safeScreenHeight -> 0.99f
       // Medium height sheets (>50% but <100%)
@@ -168,7 +169,6 @@ class BottomSheetView(
       else ->
         this.clampRatio(this.getTargetHeight() / rawScreenHeight)
     }
-  }
 
   private fun present() {
     if (this.isOpen || this.isOpening || this.isClosing) return

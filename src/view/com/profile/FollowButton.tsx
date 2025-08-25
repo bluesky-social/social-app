@@ -1,11 +1,11 @@
-import {StyleProp, TextStyle, View} from 'react-native'
+import {type StyleProp, type TextStyle, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {Shadow} from '#/state/cache/types'
+import {type Shadow} from '#/state/cache/types'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import * as bsky from '#/types/bsky'
-import {Button, ButtonType} from '../util/forms/Button'
+import type * as bsky from '#/types/bsky'
+import {Button, type ButtonType} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 
 export function FollowButton({
@@ -78,7 +78,7 @@ export function FollowButton({
         type={unfollowedType}
         labelStyle={labelStyle}
         onPress={onPressFollow}
-        label={_(msg({message: 'Follow Back', context: 'action'}))}
+        label={_(msg({message: 'Follow back', context: 'action'}))}
       />
     )
   }

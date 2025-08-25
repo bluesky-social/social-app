@@ -43,7 +43,7 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
           let payload = try? JSONDecoder().decode(WebViewActionPayload.self, from: data) else {
       return
     }
-    
+
     switch payload.action {
     case .present:
       self.presentAppStoreOverlay()
@@ -65,18 +65,18 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
     guard let url = navigationAction.request.url else {
       return .allow
     }
-    
+
     // Store the previous one to compare later, but only set starterPackUrl when we find the right one
     prevUrl = url
     // pathComponents starts with "/" as the first component, then each path name. so...
     // ["/", "start", "name", "rkey"]
-    if isStarterPackUrl(url){
+    if isStarterPackUrl(url) {
       self.starterPackUrl = url
     }
-    
+
     return .allow
   }
-  
+
   func isStarterPackUrl(_ url: URL) -> Bool {
     var host: String?
     if #available(iOS 16.0, *) {
@@ -84,11 +84,11 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
     } else {
       host = url.host
     }
-    
+
     switch host {
     case "bsky.app":
       if url.pathComponents.count == 4,
-         (url.pathComponents[1] == "start" || url.pathComponents[1] == "starter-pack") {
+         url.pathComponents[1] == "start" || url.pathComponents[1] == "starter-pack" {
         return true
       }
       return false

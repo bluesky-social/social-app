@@ -3,7 +3,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
+import {
+  type AvatarColor,
+  type Emoji,
+} from '#/screens/Onboarding/StepProfile/types'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -147,6 +150,7 @@ export const Context = React.createContext<{
   state: {...initialState},
   dispatch: () => {},
 })
+Context.displayName = 'OnboardingContext'
 
 export function reducer(
   s: OnboardingState,

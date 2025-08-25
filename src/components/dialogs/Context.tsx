@@ -27,6 +27,7 @@ type ControlsContext = {
 }
 
 const ControlsContext = createContext<ControlsContext | null>(null)
+ControlsContext.displayName = 'GlobalDialogControlsContext'
 
 export function useGlobalDialogsControlContext() {
   const ctx = useContext(ControlsContext)

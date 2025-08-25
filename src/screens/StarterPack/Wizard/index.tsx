@@ -4,21 +4,24 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 import {
-  AppBskyActorDefs,
-  AppBskyGraphDefs,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
   AtUri,
-  ModerationOpts,
+  type ModerationOpts,
 } from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {useEnableKeyboardControllerScreen} from '#/lib/hooks/useEnableKeyboardController'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
-import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -41,19 +44,22 @@ import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
+import {
+  useWizardState,
+  type WizardStep,
+} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
 import {StepFeeds} from '#/screens/StarterPack/Wizard/StepFeeds'
 import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 import {Provider} from './State'
 
 export function Wizard({
@@ -279,6 +285,17 @@ function WizardInner({
     )
   }
 
+  const items =
+    state.currentStep === 'Profiles'
+      ? [profile, ...state.profiles]
+      : state.feeds
+
+  const isEditEnabled =
+    (state.currentStep === 'Profiles' && items.length > 1) ||
+    (state.currentStep === 'Feeds' && items.length > 0)
+
+  const editDialogControl = useDialogControl()
+
   return (
     <Layout.Center style={[a.flex_1]}>
       <Layout.Header.Outer>
@@ -292,12 +309,24 @@ function WizardInner({
             }
           }}
         />
-        <Layout.Header.Content>
+        <Layout.Header.Content align="left">
           <Layout.Header.TitleText>
             {currUiStrings.header}
           </Layout.Header.TitleText>
         </Layout.Header.Content>
-        <Layout.Header.Slot />
+        {isEditEnabled ? (
+          <Button
+            label={_(msg`Edit`)}
+            color="secondary"
+            size="small"
+            onPress={editDialogControl.open}>
+            <ButtonText>
+              <Trans>Edit</Trans>
+            </ButtonText>
+          </Button>
+        ) : (
+          <Layout.Header.Slot />
+        )}
       </Layout.Header.Outer>
 
       <Container>
@@ -314,10 +343,16 @@ function WizardInner({
         <Footer
           onNext={onNext}
           nextBtnText={currUiStrings.nextBtn}
-          moderationOpts={moderationOpts}
           profile={profile}
         />
       )}
+      <WizardEditListDialog
+        control={editDialogControl}
+        state={state}
+        dispatch={dispatch}
+        moderationOpts={moderationOpts}
+        profile={profile}
+      />
     </Layout.Center>
   )
 }
@@ -357,28 +392,20 @@ function Container({children}: {children: React.ReactNode}) {
 function Footer({
   onNext,
   nextBtnText,
-  moderationOpts,
   profile,
 }: {
   onNext: () => void
   nextBtnText: string
-  moderationOpts: ModerationOpts
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
-  const {_} = useLingui()
   const t = useTheme()
-  const [state, dispatch] = useWizardState()
-  const editDialogControl = useDialogControl()
+  const [state] = useWizardState()
   const {bottom: bottomInset} = useSafeAreaInsets()
 
   const items =
     state.currentStep === 'Profiles'
       ? [profile, ...state.profiles]
       : state.feeds
-
-  const isEditEnabled =
-    (state.currentStep === 'Profiles' && items.length > 1) ||
-    (state.currentStep === 'Feeds' && items.length > 0)
 
   const minimumItems = state.currentStep === 'Profiles' ? 8 : 0
 
@@ -416,14 +443,26 @@ function Footer({
         </View>
       )}
 
-      <View style={[a.flex_row, a.gap_xs]}>
+      <View style={[a.flex_row]}>
         {items.slice(0, 6).map((p, index) => (
-          <UserAvatar
+          <View
             key={index}
-            avatar={p.avatar}
-            size={32}
-            type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
-          />
+            style={[
+              a.rounded_full,
+              {
+                borderWidth: 0.5,
+                borderColor: t.atoms.bg.backgroundColor,
+              },
+              state.currentStep === 'Profiles'
+                ? {zIndex: 1 - index, marginLeft: index > 0 ? -8 : 0}
+                : {marginRight: 4},
+            ]}>
+            <UserAvatar
+              avatar={p.avatar}
+              size={32}
+              type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
+            />
+          </View>
         ))}
       </View>
 
@@ -523,61 +562,38 @@ function Footer({
 
       <View
         style={[
-          a.flex_row,
           a.w_full,
-          a.justify_between,
           a.align_center,
+          a.gap_2xl,
           isNative ? a.mt_sm : a.mt_md,
         ]}>
-        {isEditEnabled ? (
-          <Button
-            label={_(msg`Edit`)}
-            variant="solid"
-            color="secondary"
-            size="small"
-            style={{width: 70}}
-            onPress={editDialogControl.open}>
-            <ButtonText>
-              <Trans>Edit</Trans>
-            </ButtonText>
-          </Button>
-        ) : (
-          <View style={{width: 70, height: 35}} />
+        {state.currentStep === 'Profiles' && items.length < 8 && (
+          <Text style={[a.font_bold, textStyles, t.atoms.text_contrast_medium]}>
+            <Trans>Add {8 - items.length} more to continue</Trans>
+          </Text>
         )}
-        {state.currentStep === 'Profiles' && items.length < 8 ? (
-          <>
-            <Text
-              style={[a.font_bold, textStyles, t.atoms.text_contrast_medium]}>
-              <Trans>Add {8 - items.length} more to continue</Trans>
-            </Text>
-            <View style={{width: 70}} />
-          </>
-        ) : (
-          <Button
-            label={nextBtnText}
-            variant="solid"
-            color="primary"
-            size="small"
-            onPress={onNext}
-            disabled={!state.canNext || state.processing}>
-            <ButtonText>{nextBtnText}</ButtonText>
-            {state.processing && <Loader size="xs" style={{color: 'white'}} />}
-          </Button>
-        )}
+        <Button
+          label={nextBtnText}
+          style={[a.w_full, a.py_md, a.px_2xl]}
+          color="primary"
+          size="large"
+          onPress={onNext}
+          disabled={
+            !state.canNext ||
+            state.processing ||
+            (state.currentStep === 'Profiles' && items.length < 8)
+          }>
+          <ButtonText>{nextBtnText}</ButtonText>
+          {state.processing && <ButtonIcon icon={Loader} />}
+        </Button>
       </View>
-
-      <WizardEditListDialog
-        control={editDialogControl}
-        state={state}
-        dispatch={dispatch}
-        moderationOpts={moderationOpts}
-        profile={profile}
-      />
     </View>
   )
 }
 
-function getName(item: bsky.profile.AnyProfileView | GeneratorView) {
+function getName(
+  item: bsky.profile.AnyProfileView | AppBskyFeedDefs.GeneratorView,
+) {
   if (typeof item.displayName === 'string') {
     return enforceLen(sanitizeDisplayName(item.displayName), 28, true)
   } else if ('handle' in item && typeof item.handle === 'string') {

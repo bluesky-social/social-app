@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -126,7 +126,7 @@ function PostThreadFollowBtnLoaded({
       <ButtonText>
         {!isFollowing ? (
           isFollowedBy ? (
-            <Trans>Follow Back</Trans>
+            <Trans>Follow back</Trans>
           ) : (
             <Trans>Follow</Trans>
           )

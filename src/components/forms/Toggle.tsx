@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View, ViewStyle} from 'react-native'
+import {Pressable, View, type ViewStyle} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -8,9 +8,9 @@ import {
   atoms as a,
   flatten,
   native,
-  TextStyleProp,
+  type TextStyleProp,
   useTheme,
-  ViewStyleProp,
+  type ViewStyleProp,
 } from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
@@ -35,6 +35,7 @@ const ItemContext = React.createContext<ItemState>({
   pressed: false,
   focused: false,
 })
+ItemContext.displayName = 'ToggleItemContext'
 
 const GroupContext = React.createContext<{
   values: string[]
@@ -49,6 +50,7 @@ const GroupContext = React.createContext<{
   maxSelectionsReached: false,
   setFieldValue: () => {},
 })
+GroupContext.displayName = 'ToggleGroupContext'
 
 export type GroupProps = React.PropsWithChildren<{
   type?: 'radio' | 'checkbox'

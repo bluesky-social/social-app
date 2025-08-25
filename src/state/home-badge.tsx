@@ -4,7 +4,9 @@ type StateContext = boolean
 type ApiContext = (hasNew: boolean) => void
 
 const stateContext = React.createContext<StateContext>(false)
+stateContext.displayName = 'HomeBadgeStateContext'
 const apiContext = React.createContext<ApiContext>((_: boolean) => {})
+apiContext.displayName = 'HomeBadgeApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(false)

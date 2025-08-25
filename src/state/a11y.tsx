@@ -8,6 +8,7 @@ const Context = React.createContext({
   reduceMotionEnabled: false,
   screenReaderEnabled: false,
 })
+Context.displayName = 'A11yContext'
 
 export function useA11y() {
   return React.useContext(Context)

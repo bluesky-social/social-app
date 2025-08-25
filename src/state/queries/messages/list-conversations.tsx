@@ -62,6 +62,7 @@ const ListConvosContext = createContext<{
   accepted: ChatBskyConvoDefs.ConvoView[]
   request: ChatBskyConvoDefs.ConvoView[]
 } | null>(null)
+ListConvosContext.displayName = 'ListConvosContext'
 
 export function useListConvos() {
   const ctx = useContext(ListConvosContext)

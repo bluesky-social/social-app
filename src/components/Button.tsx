@@ -37,7 +37,8 @@ export type ButtonColor =
   | 'secondary'
   | 'secondary_inverted'
   | 'negative'
-  | 'negative_secondary'
+  | 'primary_subtle'
+  | 'negative_subtle'
 export type ButtonSize = 'tiny' | 'small' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
@@ -108,6 +109,7 @@ const Context = React.createContext<VariantProps & ButtonState>({
   pressed: false,
   disabled: false,
 })
+Context.displayName = 'ButtonContext'
 
 export function useButtonContext() {
   return React.useContext(Context)
@@ -233,19 +235,15 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_700,
-                dim: t.palette.primary_300,
-                dark: t.palette.primary_300,
-              }),
+              backgroundColor: t.palette.primary_200,
             })
           }
         } else if (color === 'secondary') {
           if (!disabled) {
             baseStyles.push(t.atoms.bg_contrast_25)
-            hoverStyles.push(t.atoms.bg_contrast_50)
+            hoverStyles.push(t.atoms.bg_contrast_100)
           } else {
-            baseStyles.push(t.atoms.bg_contrast_100)
+            baseStyles.push(t.atoms.bg_contrast_50)
           }
         } else if (color === 'secondary_inverted') {
           if (!disabled) {
@@ -253,7 +251,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
               backgroundColor: t.palette.contrast_900,
             })
             hoverStyles.push({
-              backgroundColor: t.palette.contrast_950,
+              backgroundColor: t.palette.contrast_975,
             })
           } else {
             baseStyles.push({
@@ -270,14 +268,35 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
+              backgroundColor: t.palette.negative_700,
+            })
+          }
+        } else if (color === 'primary_subtle') {
+          if (!disabled) {
+            baseStyles.push({
               backgroundColor: select(t.name, {
-                light: t.palette.negative_700,
-                dim: t.palette.negative_300,
-                dark: t.palette.negative_300,
+                light: t.palette.primary_50,
+                dim: t.palette.primary_100,
+                dark: t.palette.primary_100,
+              }),
+            })
+            hoverStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.primary_100,
+                dim: t.palette.primary_200,
+                dark: t.palette.primary_200,
+              }),
+            })
+          } else {
+            baseStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.primary_25,
+                dim: t.palette.primary_50,
+                dark: t.palette.primary_50,
               }),
             })
           }
-        } else if (color === 'negative_secondary') {
+        } else if (color === 'negative_subtle') {
           if (!disabled) {
             baseStyles.push({
               backgroundColor: select(t.name, {
@@ -296,7 +315,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           } else {
             baseStyles.push({
               backgroundColor: select(t.name, {
-                light: t.palette.negative_100,
+                light: t.palette.negative_25,
                 dim: t.palette.negative_50,
                 dark: t.palette.negative_50,
               }),
@@ -407,7 +426,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
               })
             }
           }
-        } else if (color === 'negative_secondary') {
+        } else if (color === 'negative_subtle') {
           if (variant === 'outline') {
             baseStyles.push(a.border, t.atoms.bg, {
               borderWidth: 1,
@@ -442,44 +461,48 @@ export const Button = React.forwardRef<View, ButtonProps>(
       if (shape === 'default') {
         if (size === 'large') {
           baseStyles.push({
-            paddingVertical: 13,
-            paddingHorizontal: 20,
-            borderRadius: 8,
-            gap: 8,
+            paddingVertical: 12,
+            paddingHorizontal: 25,
+            borderRadius: 10,
+            gap: 3,
           })
         } else if (size === 'small') {
           baseStyles.push({
-            paddingVertical: 9,
-            paddingHorizontal: 12,
-            borderRadius: 6,
-            gap: 6,
+            paddingVertical: 8,
+            paddingHorizontal: 13,
+            borderRadius: 8,
+            gap: 3,
           })
         } else if (size === 'tiny') {
           baseStyles.push({
-            paddingVertical: 4,
-            paddingHorizontal: 8,
-            borderRadius: 4,
-            gap: 4,
+            paddingVertical: 5,
+            paddingHorizontal: 9,
+            borderRadius: 6,
+            gap: 2,
           })
         }
       } else if (shape === 'round' || shape === 'square') {
+        /*
+         * These sizes match the actual rendered size on screen, based on
+         * Chrome's web inspector
+         */
         if (size === 'large') {
           if (shape === 'round') {
-            baseStyles.push({height: 46, width: 46})
+            baseStyles.push({height: 44, width: 44})
           } else {
             baseStyles.push({height: 44, width: 44})
           }
         } else if (size === 'small') {
           if (shape === 'round') {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({height: 33, width: 33})
           } else {
-            baseStyles.push({height: 34, width: 34})
+            baseStyles.push({height: 33, width: 33})
           }
         } else if (size === 'tiny') {
           if (shape === 'round') {
-            baseStyles.push({height: 22, width: 22})
+            baseStyles.push({height: 25, width: 25})
           } else {
-            baseStyles.push({height: 21, width: 21})
+            baseStyles.push({height: 25, width: 25})
           }
         }
 
@@ -487,7 +510,9 @@ export const Button = React.forwardRef<View, ButtonProps>(
           baseStyles.push(a.rounded_full)
         } else if (shape === 'square') {
           if (size === 'tiny') {
-            baseStyles.push(a.rounded_xs)
+            baseStyles.push({
+              borderRadius: 6,
+            })
           } else {
             baseStyles.push(a.rounded_sm)
           }
@@ -531,6 +556,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.flex_row,
           a.align_center,
           a.justify_center,
+          a.curve_continuous,
           flattenedBaseStyles,
           ...(state.hovered || state.pressed
             ? [hoverStyles, flatten(hoverStyleProp)]
@@ -567,51 +593,70 @@ export function useSharedButtonTextStyles() {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.white,
+              dim: t.atoms.text_inverted.color,
+              dark: t.atoms.text_inverted.color,
+            }),
+          })
         }
       } else if (color === 'secondary') {
         if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_700,
-          })
+          baseStyles.push(t.atoms.text_contrast_medium)
         } else {
           baseStyles.push({
-            color: t.palette.contrast_400,
+            color: t.palette.contrast_300,
           })
         }
       } else if (color === 'secondary_inverted') {
         if (!disabled) {
-          baseStyles.push({
-            color: t.palette.contrast_50,
-          })
+          baseStyles.push(t.atoms.text_inverted)
         } else {
           baseStyles.push({
-            color: t.palette.contrast_400,
+            color: t.palette.contrast_300,
           })
         }
       } else if (color === 'negative') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
-          baseStyles.push({color: t.palette.white, opacity: 0.5})
+          baseStyles.push({color: t.palette.negative_300})
         }
-      } else if (color === 'negative_secondary') {
+      } else if (color === 'primary_subtle') {
         if (!disabled) {
           baseStyles.push({
             color: select(t.name, {
-              light: t.palette.negative_500,
-              dim: t.palette.negative_950,
-              dark: t.palette.negative_900,
+              light: t.palette.primary_600,
+              dim: t.palette.primary_800,
+              dark: t.palette.primary_800,
             }),
           })
         } else {
           baseStyles.push({
             color: select(t.name, {
-              light: t.palette.negative_500,
-              dim: t.palette.negative_700,
-              dark: t.palette.negative_700,
+              light: t.palette.primary_200,
+              dim: t.palette.primary_200,
+              dark: t.palette.primary_200,
             }),
-            opacity: 0.5,
+          })
+        }
+      } else if (color === 'negative_subtle') {
+        if (!disabled) {
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.negative_600,
+              dim: t.palette.negative_800,
+              dark: t.palette.negative_800,
+            }),
+          })
+        } else {
+          baseStyles.push({
+            color: select(t.name, {
+              light: t.palette.negative_200,
+              dim: t.palette.negative_200,
+              dark: t.palette.negative_200,
+            }),
           })
         }
       }
@@ -693,7 +738,7 @@ export function useSharedButtonTextStyles() {
             baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
           }
         }
-      } else if (color === 'negative_secondary') {
+      } else if (color === 'negative_subtle') {
         if (variant === 'outline') {
           if (!disabled) {
             baseStyles.push({color: t.palette.negative_400})
@@ -714,11 +759,11 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_tight)
+      baseStyles.push(a.text_md, a.leading_snug, a.font_medium)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_tight)
+      baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_tight)
+      baseStyles.push(a.text_xs, a.leading_snug, a.font_medium)
     }
 
     return StyleSheet.flatten(baseStyles)
@@ -729,7 +774,7 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
+    <Text {...rest} style={[a.text_center, textStyles, style]}>
       {children}
     </Text>
   )
@@ -737,14 +782,16 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
 
 export function ButtonIcon({
   icon: Comp,
-  position,
   size,
 }: {
   icon: React.ComponentType<SVGIconProps>
+  /**
+   * @deprecated no longer needed
+   */
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size: buttonSize, disabled} = useButtonContext()
+  const {size: buttonSize} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
   const {iconSize, iconContainerSize} = React.useMemo(() => {
     /**
@@ -753,7 +800,7 @@ export function ButtonIcon({
     const iconSizeShorthand =
       size ??
       (({
-        large: 'sm',
+        large: 'md',
         small: 'sm',
         tiny: 'xs',
       }[buttonSize || 'small'] || 'sm') as Exclude<
@@ -768,7 +815,7 @@ export function ButtonIcon({
     const iconSize = {
       xs: 12,
       sm: 16,
-      md: 20,
+      md: 18,
       lg: 24,
       xl: 28,
       '2xl': 32,
@@ -779,9 +826,9 @@ export function ButtonIcon({
      * don't increase button size
      */
     const iconContainerSize = {
-      large: 18,
-      small: 16,
-      tiny: 13,
+      large: 20,
+      small: 17,
+      tiny: 15,
     }[buttonSize || 'small']
 
     return {
@@ -797,9 +844,6 @@ export function ButtonIcon({
         {
           width: iconContainerSize,
           height: iconContainerSize,
-          opacity: disabled ? 0.7 : 1,
-          marginLeft: position === 'left' ? -2 : 0,
-          marginRight: position === 'right' ? -2 : 0,
         },
       ]}>
       <View

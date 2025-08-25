@@ -8,9 +8,11 @@ type SetContext = (v: persisted.Schema['useInAppBrowser']) => void
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.useInAppBrowser,
 )
+stateContext.displayName = 'InAppBrowserStateContext'
 const setContext = React.createContext<SetContext>(
   (_: persisted.Schema['useInAppBrowser']) => {},
 )
+setContext.displayName = 'InAppBrowserSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(persisted.get('useInAppBrowser'))

@@ -1,6 +1,7 @@
 import React from 'react'
 
 const MessageContext = React.createContext(false)
+MessageContext.displayName = 'MessageContext'
 
 export function MessageContextProvider({
   children,

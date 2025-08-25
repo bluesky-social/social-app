@@ -34,10 +34,12 @@ type ContextType = {
 } & Pick<RootProps, 'value' | 'onValueChange' | 'disabled'>
 
 const Context = createContext<ContextType | null>(null)
+Context.displayName = 'SelectContext'
 
 const ValueTextContext = createContext<
   [any, React.Dispatch<React.SetStateAction<any>>]
 >([undefined, () => {}])
+ValueTextContext.displayName = 'ValueTextContext'
 
 function useSelectContext() {
   const ctx = useContext(Context)
@@ -229,6 +231,7 @@ const ItemContext = createContext<{
   focused: false,
   pressed: false,
 })
+ItemContext.displayName = 'SelectItemContext'
 
 export function useItemContext() {
   return useContext(ItemContext)

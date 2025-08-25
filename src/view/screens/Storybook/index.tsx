@@ -87,8 +87,6 @@ function StorybookInner() {
               </Button>
             </View>
 
-            <Toasts />
-
             <Button
               color="primary"
               size="small"
@@ -108,8 +106,9 @@ function StorybookInner() {
               <Theming />
             </ThemeProvider>
 
-            <Forms />
+            <Toasts />
             <Buttons />
+            <Forms />
             <Typography />
             <Spacing />
             <Shadows />

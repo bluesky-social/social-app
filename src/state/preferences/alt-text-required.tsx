@@ -8,9 +8,11 @@ type SetContext = (v: persisted.Schema['requireAltTextEnabled']) => void
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.requireAltTextEnabled,
 )
+stateContext.displayName = 'AltTextRequiredStateContext'
 const setContext = React.createContext<SetContext>(
   (_: persisted.Schema['requireAltTextEnabled']) => {},
 )
+setContext.displayName = 'AltTextRequiredSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(

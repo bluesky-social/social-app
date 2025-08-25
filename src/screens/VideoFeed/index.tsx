@@ -753,6 +753,7 @@ function Overlay({
         text: record?.text || '',
         author: post.author,
         embed: post.embed,
+        langs: record?.langs,
       },
     })
   }, [openComposer, post, record])

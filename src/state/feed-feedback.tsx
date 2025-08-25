@@ -11,6 +11,7 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
 import {FEEDBACK_FEEDS, STAGING_FEEDS} from '#/lib/constants'
+import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {logEvent} from '#/lib/statsig/statsig'
 import {Logger} from '#/logger'
 import {
@@ -35,6 +36,7 @@ const stateContext = createContext<StateContext>({
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
   feedDescriptor: undefined,
 })
+stateContext.displayName = 'FeedFeedbackContext'
 
 export function useFeedFeedback(
   feed: FeedDescriptor | undefined,
@@ -82,7 +84,9 @@ export function useFeedFeedback(
         },
       )
       .catch((e: any) => {
-        logger.warn('Failed to send feed interactions', {error: e})
+        if (!isNetworkError(e)) {
+          logger.warn('Failed to send feed interactions', {error: e})
+        }
       })
 
     // Send to Statsig

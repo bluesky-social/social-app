@@ -420,6 +420,7 @@ export function PostThread({uri}: {uri: string}) {
         author: thread.post.author,
         embed: thread.post.embed,
         moderation: threadModerationCache.get(thread),
+        langs: thread.record.langs,
       },
       onPost: onPostReply,
     })

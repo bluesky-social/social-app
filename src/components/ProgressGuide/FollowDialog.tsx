@@ -539,7 +539,7 @@ let Tab = ({
             ]}>
             <Text
               style={[
-                /* TODO: medium weight */
+                a.font_medium,
                 active || hovered || pressed || focused
                   ? t.atoms.text
                   : t.atoms.text_contrast_medium,

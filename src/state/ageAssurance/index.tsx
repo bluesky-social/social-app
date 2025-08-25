@@ -28,11 +28,13 @@ const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   lastInitiatedAt: undefined,
   isAgeRestricted: false,
 })
+AgeAssuranceContext.displayName = 'AgeAssuranceContext'
 
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
   // @ts-ignore can't be bothered to type this
   refetch: () => Promise.resolve(),
 })
+AgeAssuranceAPIContext.displayName = 'AgeAssuranceAPIContext'
 
 /**
  * Low-level provider for fetching age assurance state on app load. Do not add
