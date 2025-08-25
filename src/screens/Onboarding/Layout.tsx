@@ -20,12 +20,14 @@ import {
 import {leading} from '#/alf/typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
+import {HEADER_SLOT_SIZE} from '#/components/Layout'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
 
 const ONBOARDING_COL_WIDTH = 420
 
 export const OnboardingControls = createPortalGroup()
+export const OnboardingHeaderSlot = createPortalGroup()
 
 export function Layout({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
@@ -65,46 +67,67 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         t.atoms.bg,
       ]}>
       {__DEV__ && (
-        <View style={[a.absolute, a.p_xl, a.z_10, {right: 0, top: insets.top}]}>
-          <Button
-            variant="ghost"
-            color="negative"
-            size="small"
-            onPress={() => onboardDispatch({type: 'skip'})}
-            // DEV ONLY
-            label="Clear onboarding state">
-            <ButtonText>Clear</ButtonText>
-          </Button>
-        </View>
+        <Button
+          variant="ghost"
+          color="negative"
+          size="tiny"
+          onPress={() => onboardDispatch({type: 'skip'})}
+          // DEV ONLY
+          label="Clear onboarding state"
+          style={[
+            a.absolute,
+            a.z_10,
+            {
+              left: '50%',
+              top: insets.top + 2,
+              transform: [{translateX: '-50%'}],
+            },
+          ]}>
+          <ButtonText>[DEV] Clear</ButtonText>
+        </Button>
       )}
 
-      {!gtMobile && state.hasPrev && (
+      {!gtMobile && (
         <View
+          pointerEvents="box-none"
           style={[
             web(a.fixed),
             native(a.absolute),
+            a.left_0,
+            a.right_0,
             a.flex_row,
             a.w_full,
             a.justify_center,
             a.z_20,
             a.px_xl,
-            {
-              top: paddingTop.paddingTop + insets.top - 1,
-            },
+            {top: paddingTop.paddingTop + insets.top - 1},
           ]}>
           <View
-            style={[a.w_full, a.align_start, {maxWidth: ONBOARDING_COL_WIDTH}]}>
-            <Button
-              key={state.activeStep} // remove focus state on nav
-              color="secondary"
-              variant="ghost"
-              shape="square"
-              size="small"
-              label={_(msg`Go back to previous step`)}
-              style={[a.absolute]}
-              onPress={() => dispatch({type: 'prev'})}>
-              <ButtonIcon icon={ArrowLeft} size="lg" />
-            </Button>
+            pointerEvents="box-none"
+            style={[
+              a.w_full,
+              a.align_start,
+              a.flex_row,
+              a.justify_between,
+              {maxWidth: ONBOARDING_COL_WIDTH},
+            ]}>
+            {state.hasPrev ? (
+              <Button
+                key={state.activeStep} // remove focus state on nav
+                color="secondary"
+                variant="ghost"
+                shape="square"
+                size="small"
+                label={_(msg`Go back to previous step`)}
+                onPress={() => dispatch({type: 'prev'})}
+                style={[a.bg_transparent]}>
+                <ButtonIcon icon={ArrowLeft} size="lg" />
+              </Button>
+            ) : (
+              <View />
+            )}
+
+            <OnboardingHeaderSlot.Outlet />
           </View>
         </View>
       )}
@@ -125,7 +148,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                   a.flex_row,
                   a.gap_sm,
                   a.w_full,
-                  {paddingTop: 17, maxWidth: '60%'},
+                  a.align_center,
+                  {height: HEADER_SLOT_SIZE, maxWidth: '60%'},
                 ]}>
                 {Array(state.totalSteps)
                   .fill(0)
@@ -149,10 +173,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               </View>
             </View>
 
-            <View
-              style={[a.w_full, a.mb_5xl, {paddingTop: gtMobile ? 20 : 40}]}>
-              {children}
-            </View>
+            <View style={[a.w_full, a.mb_5xl, a.pt_md]}>{children}</View>
 
             <View style={{height: 100 + footerHeight}} />
           </View>
