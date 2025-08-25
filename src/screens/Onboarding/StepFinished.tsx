@@ -44,11 +44,12 @@ import {
 import {
   DescriptionText,
   OnboardingControls,
+  OnboardingHeaderSlot,
   TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context, type OnboardingState} from '#/screens/Onboarding/state'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
-import {atoms as a, native, tokens, useTheme} from '#/alf'
+import {atoms as a, native, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -297,6 +298,7 @@ function ValueProposition({
   const [subStep, setSubStep] = useState<0 | 1 | 2>(0)
   const t = useTheme()
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
 
   const image = [PROP_1[t.name], PROP_2[t.name], PROP_3[t.name]][subStep]
 
@@ -344,6 +346,26 @@ function ValueProposition({
 
   return (
     <>
+      {!gtMobile && (
+        <OnboardingHeaderSlot.Portal>
+          <Button
+            disabled={saving}
+            variant="ghost"
+            color="secondary"
+            size="small"
+            label={_(msg`Skip introduction and start using your account`)}
+            onPress={() => {
+              logger.metric('onboarding:valueProp:skipPressed', {})
+              finishOnboarding()
+            }}
+            style={[a.bg_transparent]}>
+            <ButtonText>
+              <Trans>Skip</Trans>
+            </ButtonText>
+          </Button>
+        </OnboardingHeaderSlot.Portal>
+      )}
+
       <LayoutAnimationConfig skipEntering skipExiting>
         <Animated.View
           key={subStep}
@@ -410,22 +432,36 @@ function ValueProposition({
       </LayoutAnimationConfig>
 
       <OnboardingControls.Portal>
-        <Button
-          disabled={saving}
-          key={state.activeStep} // remove focus state on nav
-          color="primary"
-          size="large"
-          label={
-            subStep === 2
-              ? _(msg`Complete onboarding and start using your account`)
-              : _(msg`Next`)
-          }
-          onPress={onPress}>
-          <ButtonText>
-            {saving ? <Trans>Finalizing</Trans> : <Trans>Next</Trans>}
-          </ButtonText>
-          {saving && <ButtonIcon icon={Loader} position="right" />}
-        </Button>
+        <View style={gtMobile && [a.gap_md, a.flex_row]}>
+          {gtMobile && (
+            <Button
+              disabled={saving}
+              color="secondary"
+              size="large"
+              label={_(msg`Skip introduction and start using your account`)}
+              onPress={() => finishOnboarding()}>
+              <ButtonText>
+                <Trans>Skip</Trans>
+              </ButtonText>
+            </Button>
+          )}
+          <Button
+            disabled={saving}
+            key={state.activeStep} // remove focus state on nav
+            color="primary"
+            size="large"
+            label={
+              subStep === 2
+                ? _(msg`Complete onboarding and start using your account`)
+                : _(msg`Next`)
+            }
+            onPress={onPress}>
+            <ButtonText>
+              {saving ? <Trans>Finalizing</Trans> : <Trans>Next</Trans>}
+            </ButtonText>
+            {saving && <ButtonIcon icon={Loader} />}
+          </Button>
+        </View>
       </OnboardingControls.Portal>
     </>
   )

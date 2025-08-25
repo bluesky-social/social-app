@@ -127,6 +127,7 @@ export type MetricEvents = {
   }
   'onboarding:valueProp:stepOne:nextPressed': {}
   'onboarding:valueProp:stepTwo:nextPressed': {}
+  'onboarding:valueProp:skipPressed': {}
   'home:feedDisplayed': {
     feedUrl: string
     feedType: string
