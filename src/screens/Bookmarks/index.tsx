@@ -31,6 +31,7 @@ import {CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon} from '#/componen
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import * as Skele from '#/components/Skeleton'
+import * as toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Bookmarks'>
@@ -114,7 +115,6 @@ function BookmarksInner() {
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || error) return
     try {
-      console.log('Fetching more bookmarks...')
       await fetchNextPage()
     } catch {}
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
@@ -220,10 +220,11 @@ function BookmarkNotFound({
     try {
       setRemoved(true)
       await bookmark({action: 'delete', uri: post.uri})
-    } catch (e) {
+    } catch (e: any) {
       const {raw, clean} = cleanError(e)
-      console.log(clean || raw || e)
-      // TODO toast
+      toast.show(clean || raw || e, {
+        type: 'error',
+      })
     }
   }, [post.uri, bookmark, cleanError])
 
@@ -260,7 +261,7 @@ function BookmarkNotFound({
         </Text>
       </View>
       <Button
-        label={_(msg`Remove this post from your bookmarks`)}
+        label={_(msg`Remove from saved posts`)}
         size="tiny"
         color="secondary"
         onPress={remove}>

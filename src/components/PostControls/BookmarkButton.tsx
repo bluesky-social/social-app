@@ -9,6 +9,7 @@ import {type Shadow} from '#/state/cache/post-shadow'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useTheme} from '#/alf'
 import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
+import * as toast from '#/components/Toast'
 import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 
 export const BookmarkButton = memo(function BookmarkButton({
@@ -33,21 +34,24 @@ export const BookmarkButton = memo(function BookmarkButton({
           action: 'delete',
           uri,
         })
-        // TODO toast
+        toast.show(_(msg`Removed from saved posts`))
       } else {
         await bookmark({
           action: 'create',
           uri,
           cid,
         })
-        // TODO toast
+        toast.show(_(msg`Post saved`), {
+          type: 'success',
+        })
       }
-    } catch (e) {
+    } catch (e: any) {
       const {raw, clean} = cleanError(e)
-      console.log(clean || raw || e)
-      // TODO toast
+      toast.show(clean || raw || e, {
+        type: 'error',
+      })
     }
-  }, [uri, cid, isBookmarked, bookmark, cleanError])
+  }, [_, uri, cid, isBookmarked, bookmark, cleanError])
 
   return (
     <PostControlButton
@@ -55,8 +59,8 @@ export const BookmarkButton = memo(function BookmarkButton({
       big={big}
       label={
         isBookmarked
-          ? _(msg`Remove this post from your bookmarks`)
-          : _(msg`Save this post to your bookmarks`)
+          ? _(msg`Remove from saved posts`)
+          : _(msg`Add to saved posts`)
       }
       onPress={onHandlePress}>
       <PostControlButtonIcon
