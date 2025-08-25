@@ -304,11 +304,14 @@ function ValueProposition({
     }
   }
 
-  const {title, description} = [
+  const {title, description, alt} = [
     {
       title: _(msg`Free your feed`),
       description: _(
         msg`No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you.`,
+      ),
+      alt: _(
+        msg`A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens`,
       ),
     },
     {
@@ -316,11 +319,17 @@ function ValueProposition({
       description: _(
         msg`Ditch the trolls and clickbait. Find real people and conversations that matter to you.`,
       ),
+      alt: _(
+        msg`Your profile picture surrounded by concentric circles of other users' profile pictures`,
+      ),
     },
     {
       title: _(msg`Forget the noise`),
       description: _(
         msg`No ads, no tracking, no engagement traps. Bluesky respects your time and attention.`,
+      ),
+      alt: _(
+        msg`An illustration of several Bluesky posts alongside repost, like, and comment icons`,
       ),
     },
   ][subStep]
@@ -337,8 +346,8 @@ function ValueProposition({
         <Image
           source={image}
           style={[a.w_full, {aspectRatio: 1}]}
-          // I guess we do need it to blend into the background
-          accessibilityIgnoresInvertColors={false}
+          alt={alt}
+          accessibilityIgnoresInvertColors={false} // I guess we do need it to blend into the background
         />
         {subStep === 1 && (
           <Image
@@ -350,6 +359,7 @@ function ValueProposition({
               {width: `${(80 / 393) * 100}%`, height: `${(80 / 393) * 100}%`},
             ]}
             accessibilityIgnoresInvertColors
+            alt={_(msg`Your profile picture`)}
           />
         )}
       </View>
