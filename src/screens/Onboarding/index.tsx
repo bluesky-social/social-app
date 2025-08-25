@@ -14,12 +14,14 @@ import {StepSuggestedAccounts} from './StepSuggestedAccounts'
 export function Onboarding() {
   const {_} = useLingui()
   const gate = useGate()
+  const showValueProp = gate('onboarding_value_prop')
   const showSuggestedAccounts = gate('onboarding_suggested_accounts')
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     totalSteps: showSuggestedAccounts ? 4 : 3,
     experiments: {
       onboarding_suggested_accounts: showSuggestedAccounts,
+      onboarding_value_prop: showValueProp,
     },
   })
 
