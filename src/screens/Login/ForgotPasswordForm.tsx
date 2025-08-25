@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import {ActivityIndicator, Keyboard, View} from 'react-native'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
-import {BskyAgent} from '@atproto/api'
+import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
@@ -9,6 +8,7 @@ import * as EmailValidator from 'email-validator'
 import {isNetworkError} from '#/lib/strings/errors'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {Agent} from '#/state/session/agent'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
@@ -55,7 +55,7 @@ export const ForgotPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
+      const agent = new Agent(null, {service: serviceUrl})
       await agent.com.atproto.server.requestPasswordReset({email})
       onEmailSent()
     } catch (e: any) {

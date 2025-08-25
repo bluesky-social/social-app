@@ -13,10 +13,10 @@ import {
 } from '@tanstack/react-query'
 import throttle from 'lodash.throttle'
 
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent, useSession} from '#/state/session'
 import {useLeftConvos} from './leave-conversation'
 

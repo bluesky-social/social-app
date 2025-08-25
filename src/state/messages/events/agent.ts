@@ -3,6 +3,7 @@ import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
 import {
@@ -17,7 +18,6 @@ import {
   type MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 const logger = Logger.create(Logger.Context.DMsAgent)
 

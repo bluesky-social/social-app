@@ -1,4 +1,4 @@
-import {Agent, ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
+import {ComAtprotoTempCheckHandleAvailability} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {
@@ -10,6 +10,7 @@ import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useDebouncedValue} from '#/components/live/utils'
 import * as bsky from '#/types/bsky'
+import {Agent} from '../session/agent'
 
 export const RQKEY_handleAvailability = (
   handle: string,
@@ -74,7 +75,7 @@ export async function checkHandleAvailability(
   },
 ) {
   if (serviceDid === BSKY_SERVICE_DID) {
-    const agent = new Agent({service: BSKY_SERVICE})
+    const agent = new Agent(null, {service: BSKY_SERVICE})
     // entryway has a special API for handle availability
     const {data} = await agent.com.atproto.temp.checkHandleAvailability({
       handle,
@@ -109,7 +110,7 @@ export async function checkHandleAvailability(
     }
   } else {
     // 3rd party PDSes won't have this API so just try and resolve the handle
-    const agent = new Agent({service: PUBLIC_BSKY_SERVICE})
+    const agent = new Agent(null, {service: PUBLIC_BSKY_SERVICE})
     try {
       const res = await agent.resolveHandle({
         handle,
