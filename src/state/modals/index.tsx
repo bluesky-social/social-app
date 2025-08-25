@@ -35,10 +35,6 @@ export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
 
-export interface PostLanguagesSettingsModal {
-  name: 'post-languages-settings'
-}
-
 export interface ChangePasswordModal {
   name: 'change-password'
 }
@@ -53,7 +49,6 @@ export type Modal =
 
   // Curation
   | ContentLanguagesSettingsModal
-  | PostLanguagesSettingsModal
 
   // Lists
   | CreateOrEditListModal
