@@ -15,7 +15,7 @@
   <meta property="profile:username" content="{{ profileView.Handle }}">
   {%- if requestURI %}
   <meta property="og:url" content="{{ requestURI }}">
-  <link rel="canonical" href="{{ requestURI }}" />
+  <link rel="canonical" href="{{ requestURI|canonical }}" />
   {% endif -%}
   {%- if profileView.DisplayName %}
   <meta property="og:title" content="{{ profileView.DisplayName }} (@{{ profileView.Handle }})">
