@@ -1,6 +1,7 @@
 import {type AppBskyBookmarkGetBookmarks} from '@atproto/api'
 import {
   type InfiniteData,
+  type QueryClient,
   type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
@@ -30,4 +31,20 @@ export function useBookmarksQuery() {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+}
+
+export async function truncateAndInvalidate(qc: QueryClient) {
+  qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.OutputSchema>>(
+    {queryKey: [bookmarksQueryKeyRoot]},
+    data => {
+      if (data) {
+        return {
+          pageParams: data.pageParams.slice(0, 1),
+          pages: data.pages.slice(0, 1),
+        }
+      }
+      return data
+    },
+  )
+  return qc.invalidateQueries({queryKey: [bookmarksQueryKeyRoot]})
 }
