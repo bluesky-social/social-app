@@ -23,6 +23,7 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {Post} from '#/view/com/post/Post'
 import {List} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {EmptyState} from '#/screens/Bookmarks/components/EmptyState'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BookmarkFilled} from '#/components/icons/Bookmark'
@@ -63,6 +64,10 @@ type ListItem =
   | {
       type: 'loading'
       key: 'loading'
+    }
+  | {
+      type: 'empty'
+      key: 'empty'
     }
   | {
       type: 'bookmark'
@@ -124,33 +129,40 @@ function BookmarksInner() {
     } else {
       const bookmarks = data.pages.flatMap(p => p.bookmarks)
 
-      for (const bookmark of bookmarks) {
-        if (AppBskyFeedDefs.isBlockedPost(bookmark.item)) return null
-        if (AppBskyFeedDefs.isNotFoundPost(bookmark.item)) {
-          i.push({
-            type: 'bookmarkNotFound',
-            key: bookmark.item.uri,
-            bookmark: {
-              ...bookmark,
-              item: bookmark.item as $Typed<AppBskyFeedDefs.NotFoundPost>,
-            },
-          })
+      if (bookmarks.length > 0) {
+        for (const bookmark of bookmarks) {
+          if (AppBskyFeedDefs.isBlockedPost(bookmark.item)) {
+          }
+          if (AppBskyFeedDefs.isNotFoundPost(bookmark.item)) {
+            i.push({
+              type: 'bookmarkNotFound',
+              key: bookmark.item.uri,
+              bookmark: {
+                ...bookmark,
+                item: bookmark.item as $Typed<AppBskyFeedDefs.NotFoundPost>,
+              },
+            })
+          }
+          if (AppBskyFeedDefs.isPostView(bookmark.item)) {
+            i.push({
+              type: 'bookmark',
+              key: bookmark.item.uri,
+              bookmark: {
+                ...bookmark,
+                item: bookmark.item as $Typed<AppBskyFeedDefs.PostView>,
+              },
+            })
+          }
         }
-        if (AppBskyFeedDefs.isPostView(bookmark.item)) {
-          i.push({
-            type: 'bookmark',
-            key: bookmark.item.uri,
-            bookmark: {
-              ...bookmark,
-              item: bookmark.item as $Typed<AppBskyFeedDefs.PostView>,
-            },
-          })
-        }
+      } else {
+        i.push({type: 'empty', key: 'empty'})
       }
     }
 
     return i
   }, [isLoading, error, data])
+
+  const isEmpty = items.length === 1 && items[0]?.type === 'empty'
 
   return (
     <List
@@ -166,6 +178,7 @@ function BookmarksInner() {
           isFetchingNextPage={isFetchingNextPage}
           error={cleanedError}
           onRetry={fetchNextPage}
+          style={[isEmpty && a.border_t_0]}
         />
       }
       initialNumToRender={initialNumToRender}
@@ -264,6 +277,9 @@ function renderItem({item, index}: {item: ListItem; index: number}) {
   switch (item.type) {
     case 'loading': {
       return <PostFeedLoadingPlaceholder />
+    }
+    case 'empty': {
+      return <EmptyState />
     }
     case 'bookmark': {
       return (
