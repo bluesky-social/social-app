@@ -16,6 +16,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {isIOS} from '#/platform/detection'
+import {POST_TOMBSTONE, usePostShadow} from '#/state/cache/post-shadow'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -176,6 +177,19 @@ function BookmarksInner() {
   )
 }
 
+function BookmarkPost({
+  hideTopBorder,
+  post: originalPost,
+}: {
+  hideTopBorder: boolean
+  post: $Typed<AppBskyFeedDefs.PostView>
+}) {
+  const post = usePostShadow(originalPost)
+  if (post === POST_TOMBSTONE) return null
+  if (!post.viewer?.bookmarked) return null
+  return <Post post={post} hideTopBorder={hideTopBorder} />
+}
+
 function BookmarkNotFound({
   hideTopBorder,
   post,
@@ -187,9 +201,11 @@ function BookmarkNotFound({
   const {_} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
+  const [removed, setRemoved] = useState(false)
 
   const remove = useCallback(async () => {
     try {
+      setRemoved(true)
       await bookmark({action: 'delete', uri: post.uri})
     } catch (e) {
       const {raw, clean} = cleanError(e)
@@ -197,6 +213,8 @@ function BookmarkNotFound({
       // TODO toast
     }
   }, [post.uri, bookmark, cleanError])
+
+  if (removed) return null
 
   return (
     <View
@@ -248,7 +266,9 @@ function renderItem({item, index}: {item: ListItem; index: number}) {
       return <PostFeedLoadingPlaceholder />
     }
     case 'bookmark': {
-      return <Post post={item.bookmark.item} hideTopBorder={index === 0} />
+      return (
+        <BookmarkPost post={item.bookmark.item} hideTopBorder={index === 0} />
+      )
     }
     case 'bookmarkNotFound': {
       return (

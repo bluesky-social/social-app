@@ -1,13 +1,11 @@
-import {type AppBskyBookmarkGetBookmarks, AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyBookmarkGetBookmarks} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {dangerousGetPostShadow} from '#/state/cache/post-shadow'
 import {useAgent} from '#/state/session'
-import * as bsky from '#/types/bsky'
 
 export const bookmarksQueryKeyRoot = 'bookmarks'
 export const createBookmarksQueryKey = () => [bookmarksQueryKeyRoot]
@@ -31,27 +29,5 @@ export function useBookmarksQuery() {
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
-    select: data => {
-      return {
-        ...data,
-        pages: data.pages.map(page => {
-          return {
-            ...page,
-            bookmarks: page.bookmarks.filter(b => {
-              if (
-                bsky.dangerousIsType<AppBskyFeedDefs.PostView>(
-                  b.item,
-                  AppBskyFeedDefs.isPostView,
-                )
-              ) {
-                const shadow = dangerousGetPostShadow(b.item)
-                if (shadow && !shadow.bookmarked) return false
-              }
-              return true
-            }),
-          }
-        }),
-      }
-    },
   })
 }
