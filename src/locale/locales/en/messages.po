@@ -3899,7 +3899,7 @@ msgstr ""
 msgid "Getting started"
 msgstr ""
 
-#: src/components/MediaPreview.tsx:116
+#: src/components/MediaPreview.tsx:114
 msgid "GIF"
 msgstr ""
 
@@ -5441,11 +5441,6 @@ msgstr ""
 msgid "News"
 msgstr ""
 
-#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:42
-msgctxt "Name of app icon variant"
-msgid "Next"
-msgstr ""
-
 #: src/screens/Login/ForgotPasswordForm.tsx:137
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/LoginForm.tsx:343
@@ -5461,6 +5456,11 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:383
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:267
+msgid "Next"
+msgstr ""
+
+#: src/screens/Settings/AppIconSettings/useAppIconSets.ts:42
+msgctxt "Name of app icon variant"
 msgid "Next"
 msgstr ""
 
