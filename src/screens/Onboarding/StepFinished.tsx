@@ -1,5 +1,11 @@
 import {useCallback, useContext, useState} from 'react'
 import {View} from 'react-native'
+import Animated, {
+  Easing,
+  LayoutAnimationConfig,
+  SlideInRight,
+  SlideOutLeft,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {
   type AppBskyActorDefs,
@@ -42,7 +48,7 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {Context, type OnboardingState} from '#/screens/Onboarding/state'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, native, tokens, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -337,55 +343,71 @@ function ValueProposition({
   ][subStep]
 
   return (
-    <View>
-      <View
-        style={[
-          a.relative,
-          a.align_center,
-          a.justify_center,
-          isNative && {marginHorizontal: tokens.space.xl * -1},
-        ]}>
-        <Image
-          source={image}
-          style={[a.w_full, {aspectRatio: 1}]}
-          alt={alt}
-          accessibilityIgnoresInvertColors={false} // I guess we do need it to blend into the background
-        />
-        {subStep === 1 && (
-          <Image
-            source={state.profileStepResults.imageUri}
+    <>
+      <LayoutAnimationConfig skipEntering skipExiting>
+        <Animated.View
+          key={subStep}
+          entering={native(
+            SlideInRight.easing(Easing.out(Easing.exp)).duration(500),
+          )}
+          exiting={native(
+            SlideOutLeft.easing(Easing.out(Easing.exp)).duration(500),
+          )}>
+          <View
             style={[
-              a.z_10,
-              a.absolute,
-              a.rounded_full,
-              {width: `${(80 / 393) * 100}%`, height: `${(80 / 393) * 100}%`},
-            ]}
-            accessibilityIgnoresInvertColors
-            alt={_(msg`Your profile picture`)}
-          />
-        )}
-      </View>
-
-      <View style={[a.mt_4xl, a.gap_2xl, a.align_center]}>
-        <View style={[a.flex_row, a.gap_sm]}>
-          <Dot active={subStep === 0} />
-          <Dot active={subStep === 1} />
-          <Dot active={subStep === 2} />
-        </View>
-
-        <View style={[a.gap_sm]}>
-          <Text style={[a.font_heavy, a.text_3xl, a.text_center]}>{title}</Text>
-          <Text
-            style={[
-              t.atoms.text_contrast_medium,
-              a.text_md,
-              a.leading_snug,
-              a.text_center,
+              a.relative,
+              a.align_center,
+              a.justify_center,
+              isNative && {marginHorizontal: tokens.space.xl * -1},
             ]}>
-            {description}
-          </Text>
-        </View>
-      </View>
+            <Image
+              source={image}
+              style={[a.w_full, {aspectRatio: 1}]}
+              alt={alt}
+              accessibilityIgnoresInvertColors={false} // I guess we do need it to blend into the background
+            />
+            {subStep === 1 && (
+              <Image
+                source={state.profileStepResults.imageUri}
+                style={[
+                  a.z_10,
+                  a.absolute,
+                  a.rounded_full,
+                  {
+                    width: `${(80 / 393) * 100}%`,
+                    height: `${(80 / 393) * 100}%`,
+                  },
+                ]}
+                accessibilityIgnoresInvertColors
+                alt={_(msg`Your profile picture`)}
+              />
+            )}
+          </View>
+
+          <View style={[a.mt_4xl, a.gap_2xl, a.align_center]}>
+            <View style={[a.flex_row, a.gap_sm]}>
+              <Dot active={subStep === 0} />
+              <Dot active={subStep === 1} />
+              <Dot active={subStep === 2} />
+            </View>
+
+            <View style={[a.gap_sm]}>
+              <Text style={[a.font_heavy, a.text_3xl, a.text_center]}>
+                {title}
+              </Text>
+              <Text
+                style={[
+                  t.atoms.text_contrast_medium,
+                  a.text_md,
+                  a.leading_snug,
+                  a.text_center,
+                ]}>
+                {description}
+              </Text>
+            </View>
+          </View>
+        </Animated.View>
+      </LayoutAnimationConfig>
 
       <OnboardingControls.Portal>
         <Button
@@ -405,7 +427,7 @@ function ValueProposition({
           {saving && <ButtonIcon icon={Loader} position="right" />}
         </Button>
       </OnboardingControls.Portal>
-    </View>
+    </>
   )
 }
 
