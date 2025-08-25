@@ -1,15 +1,15 @@
-import {atoms as a, useTheme, web, useBreakpoints} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {codeToLanguageName} from '../../../../locale/helpers'
 import {ConfirmLanguagesButton} from '../../modals/lang-settings/ConfirmLanguagesButton'
-import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {ErrorBoundary} from '../../util/ErrorBoundary'
 import {ErrorScreen} from '../../util/error/ErrorScreen'
 import {isNative} from '#/platform/detection'
-import {Keyboard, ViewStyle} from 'react-native'
+import {Keyboard} from 'react-native'
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
-import {languageName} from '#/locale/helpers'
 import {Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
+import {languageName} from '#/locale/helpers'
+import {MagnifyingGlassIcon} from '#/lib/icons'
 import {msg} from '@lingui/macro'
 import {Text} from '#/components/Typography'
 import {toPostLanguages, useLanguagePrefs} from '#/state/preferences/languages'
@@ -18,13 +18,10 @@ import {useCallback, useMemo} from 'react'
 import {useLanguagePrefsApi} from '#/state/preferences/languages'
 import {useLingui} from '@lingui/react'
 import {View} from 'react-native'
-import {MagnifyingGlassIcon} from '#/lib/icons'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import React from 'react'
-import {StyleProp} from 'react-native'
-import {Palette} from '#/view/screens/Storybook/Palette'
 
 const HEADER_HEIGHT = 72
 const SEARCH_HEIGHT = 48
@@ -189,10 +186,12 @@ export function PostLanguagesSettingsDialogInner({
 
   const listHeader = (
     <View
-      style={{
-        paddingBottom: 8,
-        backgroundColor: t.palette.white,
-      }}>
+      style={[
+        {
+          paddingBottom: 8,
+          backgroundColor: t.atoms.bg.backgroundColor,
+        },
+      ]}>
       <Text
         nativeID="dialog-title"
         style={[t.atoms.text, a.text_left, a.font_bold, a.text_xl, a.mb_sm]}>
@@ -334,7 +333,6 @@ export function PostLanguagesSettingsDialogInner({
                 web({width: WEB_DIALOG_WIDTH, maxWidth: WEB_DIALOG_WIDTH}),
                 web(a.h_full_vh),
               ]}
-              // keyboardDismissMode="on-drag"
             />
           </Toggle.Group>
           <View
@@ -347,9 +345,11 @@ export function PostLanguagesSettingsDialogInner({
               a.pb_2xl,
               a.z_10,
               {
-                backgroundColor: t.palette.white,
-                borderBottomLeftRadius: a.rounded_lg.borderRadius,
-                borderBottomRightRadius: a.rounded_lg.borderRadius,
+                backgroundColor: t.atoms.bg.backgroundColor,
+                borderBottomLeftRadius: a.rounded_md.borderRadius,
+                borderBottomRightRadius: a.rounded_md.borderRadius,
+                borderWidth: 1,
+                borderColor: t.atoms.border_contrast_low.borderColor,
               },
             ]}>
             <ConfirmLanguagesButton
