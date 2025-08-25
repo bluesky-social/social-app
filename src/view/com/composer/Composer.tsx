@@ -40,7 +40,6 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
-import {RootSiblingParent} from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
@@ -663,88 +662,84 @@ export const ComposePost = ({
   const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
-      <RootSiblingParent>
-        <KeyboardAvoidingView
-          testID="composePostView"
-          behavior={isIOS ? 'padding' : 'height'}
-          keyboardVerticalOffset={keyboardVerticalOffset}
-          style={a.flex_1}>
-          <View
-            style={[a.flex_1, viewStyles]}
-            aria-modal
-            accessibilityViewIsModal>
-            <RootSiblingParent>
-              <ComposerTopBar
-                canPost={canPost}
-                isReply={!!replyTo}
-                isPublishQueued={publishOnUpload}
-                isPublishing={isPublishing}
-                isThread={thread.posts.length > 1}
-                publishingStage={publishingStage}
-                topBarAnimatedStyle={topBarAnimatedStyle}
-                onCancel={onPressCancel}
-                onPublish={onPressPublish}>
-                {missingAltError && <AltTextReminder error={missingAltError} />}
-                <ErrorBanner
-                  error={error}
-                  videoState={erroredVideo}
-                  clearError={() => setError('')}
-                  clearVideo={
-                    erroredVideoPostId
-                      ? () => clearVideo(erroredVideoPostId)
-                      : () => {}
-                  }
+      <KeyboardAvoidingView
+        testID="composePostView"
+        behavior={isIOS ? 'padding' : 'height'}
+        keyboardVerticalOffset={keyboardVerticalOffset}
+        style={a.flex_1}>
+        <View
+          style={[a.flex_1, viewStyles]}
+          aria-modal
+          accessibilityViewIsModal>
+          <ComposerTopBar
+            canPost={canPost}
+            isReply={!!replyTo}
+            isPublishQueued={publishOnUpload}
+            isPublishing={isPublishing}
+            isThread={thread.posts.length > 1}
+            publishingStage={publishingStage}
+            topBarAnimatedStyle={topBarAnimatedStyle}
+            onCancel={onPressCancel}
+            onPublish={onPressPublish}>
+            {missingAltError && <AltTextReminder error={missingAltError} />}
+            <ErrorBanner
+              error={error}
+              videoState={erroredVideo}
+              clearError={() => setError('')}
+              clearVideo={
+                erroredVideoPostId
+                  ? () => clearVideo(erroredVideoPostId)
+                  : () => {}
+              }
+            />
+          </ComposerTopBar>
+
+          <Animated.ScrollView
+            ref={scrollViewRef}
+            layout={native(LinearTransition)}
+            onScroll={scrollHandler}
+            contentContainerStyle={a.flex_grow}
+            style={a.flex_1}
+            keyboardShouldPersistTaps="always"
+            onContentSizeChange={onScrollViewContentSizeChange}
+            onLayout={onScrollViewLayout}>
+            {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
+            {thread.posts.map((post, index) => (
+              <React.Fragment key={post.id}>
+                <ComposerPost
+                  post={post}
+                  dispatch={composerDispatch}
+                  textInput={post.id === activePost.id ? textInput : null}
+                  isFirstPost={index === 0}
+                  isLastPost={index === thread.posts.length - 1}
+                  isPartOfThread={thread.posts.length > 1}
+                  isReply={index > 0 || !!replyTo}
+                  isActive={post.id === activePost.id}
+                  canRemovePost={thread.posts.length > 1}
+                  canRemoveQuote={index > 0 || !initQuote}
+                  onSelectVideo={selectVideo}
+                  onClearVideo={clearVideo}
+                  onPublish={onComposerPostPublish}
+                  onError={setError}
                 />
-              </ComposerTopBar>
+                {isWebFooterSticky && post.id === activePost.id && (
+                  <View style={styles.stickyFooterWeb}>{footer}</View>
+                )}
+              </React.Fragment>
+            ))}
+          </Animated.ScrollView>
+          {!isWebFooterSticky && footer}
+        </View>
 
-              <Animated.ScrollView
-                ref={scrollViewRef}
-                layout={native(LinearTransition)}
-                onScroll={scrollHandler}
-                contentContainerStyle={a.flex_grow}
-                style={a.flex_1}
-                keyboardShouldPersistTaps="always"
-                onContentSizeChange={onScrollViewContentSizeChange}
-                onLayout={onScrollViewLayout}>
-                {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-                {thread.posts.map((post, index) => (
-                  <React.Fragment key={post.id}>
-                    <ComposerPost
-                      post={post}
-                      dispatch={composerDispatch}
-                      textInput={post.id === activePost.id ? textInput : null}
-                      isFirstPost={index === 0}
-                      isLastPost={index === thread.posts.length - 1}
-                      isPartOfThread={thread.posts.length > 1}
-                      isReply={index > 0 || !!replyTo}
-                      isActive={post.id === activePost.id}
-                      canRemovePost={thread.posts.length > 1}
-                      canRemoveQuote={index > 0 || !initQuote}
-                      onSelectVideo={selectVideo}
-                      onClearVideo={clearVideo}
-                      onPublish={onComposerPostPublish}
-                      onError={setError}
-                    />
-                    {isWebFooterSticky && post.id === activePost.id && (
-                      <View style={styles.stickyFooterWeb}>{footer}</View>
-                    )}
-                  </React.Fragment>
-                ))}
-              </Animated.ScrollView>
-              {!isWebFooterSticky && footer}
-            </RootSiblingParent>
-          </View>
-
-          <Prompt.Basic
-            control={discardPromptControl}
-            title={_(msg`Discard draft?`)}
-            description={_(msg`Are you sure you'd like to discard this draft?`)}
-            onConfirm={onClose}
-            confirmButtonCta={_(msg`Discard`)}
-            confirmButtonColor="negative"
-          />
-        </KeyboardAvoidingView>
-      </RootSiblingParent>
+        <Prompt.Basic
+          control={discardPromptControl}
+          title={_(msg`Discard draft?`)}
+          description={_(msg`Are you sure you'd like to discard this draft?`)}
+          onConfirm={onClose}
+          confirmButtonCta={_(msg`Discard`)}
+          confirmButtonColor="negative"
+        />
+      </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
   )
 }
