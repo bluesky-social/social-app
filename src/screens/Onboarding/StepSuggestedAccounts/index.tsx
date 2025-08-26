@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
+import {wait} from '#/lib/async/wait'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -25,6 +26,7 @@ import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
@@ -106,7 +108,7 @@ export function StepSuggestedAccounts() {
           followingUri: 'pending',
         })
       }
-      const uris = await bulkWriteFollows(agent, followableDids)
+      const uris = await wait(1e3, bulkWriteFollows(agent, followableDids))
       for (const did of followableDids) {
         const uri = uris.get(did)
         updateProfileShadow(queryClient, did, {
@@ -232,7 +234,7 @@ export function StepSuggestedAccounts() {
               <ButtonText>
                 <Trans>Follow all</Trans>
               </ButtonText>
-              {isFollowingAll && <ButtonIcon icon={Loader} />}
+              <ButtonIcon icon={isFollowingAll ? Loader : PlusIcon} />
             </Button>
             <Button
               disabled={isFollowingAll}
