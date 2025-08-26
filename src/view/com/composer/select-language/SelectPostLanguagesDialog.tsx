@@ -65,6 +65,7 @@ export function SelectPostLanguagesBtn() {
               {color: t.palette.primary_500},
               a.font_bold,
               a.text_sm,
+              a.leading_snug,
               {maxWidth: 100},
             ]}
             numberOfLines={1}>
@@ -275,12 +276,14 @@ export function PostLanguagesSettingsDialogInner({
   const isDisplayedLanguagesEmpty = displayedLanguages.all.length === 0
 
   const flatListData = [
-    ...(isCheckedRecentEmpty ? [{type: 'header', label: 'Recently used'}] : []),
+    ...(isCheckedRecentEmpty
+      ? [{type: 'header', label: _(msg`Recently used`)}]
+      : []),
     ...displayedLanguages.checkedRecent.map(lang => ({type: 'item', lang})),
     ...displayedLanguages.uncheckedRecent.map(lang => ({type: 'item', lang})),
     ...(isDisplayedLanguagesEmpty
       ? []
-      : [{type: 'header', label: 'All languages'}]),
+      : [{type: 'header', label: _(msg`All languages`)}]),
     ...displayedLanguages.all.map(lang => ({type: 'item', lang})),
   ]
 
