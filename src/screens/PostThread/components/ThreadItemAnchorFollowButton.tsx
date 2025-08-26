@@ -17,7 +17,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 
-export function PostThreadFollowBtn({did}: {did: string}) {
+export function ThreadItemAnchorFollowButton({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
 
   // We will never hit this - the profile will always be cached or loaded above

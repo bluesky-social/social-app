@@ -80,9 +80,9 @@ import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
-import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
 import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
@@ -883,7 +883,7 @@ function Overlay({
               player={player}
               seekingAnimationSV={seekingAnimationSV}
               scrollGesture={scrollGesture}>
-              <PostThreadComposePrompt
+              <ThreadComposePrompt
                 onPressCompose={onPressReply}
                 style={[a.pt_md, a.pb_sm]}
               />

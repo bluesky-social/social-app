@@ -12,9 +12,9 @@ import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnstablePostSource} from '#/state/unstable-post-source'
-import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
+import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
 import {ThreadError} from '#/screens/PostThread/components/ThreadError'
 import {
   ThreadItemAnchor,
@@ -455,7 +455,7 @@ export function PostThread({uri}: {uri: string}) {
         return (
           <View>
             {gtMobile && (
-              <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />
+              <ThreadComposePrompt onPressCompose={onReplyToAnchor} />
             )}
           </View>
         )
@@ -586,7 +586,7 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
 
   return (
     <Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
-      <PostThreadComposePrompt onPressCompose={onPressReply} />
+      <ThreadComposePrompt onPressCompose={onPressReply} />
     </Animated.View>
   )
 }

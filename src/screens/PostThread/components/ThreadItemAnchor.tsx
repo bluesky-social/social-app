@@ -32,9 +32,9 @@ import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
-import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
@@ -367,7 +367,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           </Link>
           {showFollowButton && (
             <View collapsable={false}>
-              <PostThreadFollowBtn did={post.author.did} />
+              <ThreadItemAnchorFollowButton did={post.author.did} />
             </View>
           )}
         </View>
