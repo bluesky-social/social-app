@@ -24,15 +24,18 @@
   {%- if postText %}
   <meta name="description" content="{{ postText }}">
   <meta property="og:description" content="{{ postText }}">
+  <meta property="twitter:description" content="{{ postText }}">
   {% endif -%}
   {%- if imgThumbUrls %}
   {% for imgThumbUrl in imgThumbUrls %}
   <meta property="og:image" content="{{ imgThumbUrl }}">
+  <meta property="twitter:image" content="{{ imgThumbUrl }}">
   {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
   {%- elif postView.Author.Avatar %}
-  {# Don't use avatar image in cards; usually looks bad #}
   <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="{{ postView.Author.Avatar }}">
+  <meta property="twitter:image" content="{{ postView.Author.Avatar }}">
   {% endif %}
   <meta name="twitter:label1" content="Posted At">
   <meta name="twitter:value1" content="{{ postView.IndexedAt }}">
