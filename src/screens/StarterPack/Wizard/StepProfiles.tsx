@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useMemo, useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
@@ -39,13 +39,40 @@ export function StepProfiles({
   } = useActorSearchPaginated({
     query: encodeURIComponent('*'),
   })
-  const topFollowers = topPages?.pages
-    .flatMap(p => p.actors)
-    .filter(p => !p.associated?.labeler)
+
+  // Dedup DID's when combining pages
+  const topFollowers = useMemo(() => {
+    if (!topPages?.pages) return []
+    const seen = new Set<string>()
+    return topPages.pages
+      .flatMap(p => p.actors)
+      .filter(p => !p.associated?.labeler)
+      .filter(p => {
+        if (!seen.has(p.did)) {
+          seen.add(p.did)
+          return true
+        }
+        return false
+      })
+  }, [topPages?.pages])
 
   const {data: resultsUnfiltered, isFetching: isFetchingResults} =
     useActorAutocompleteQuery(query, true, 12)
-  const results = resultsUnfiltered?.filter(p => !p.associated?.labeler)
+
+  // Dedup results by DID
+  const results = useMemo(() => {
+    if (!resultsUnfiltered) return []
+    const seen = new Set<string>()
+    return resultsUnfiltered
+      .filter(p => !p.associated?.labeler)
+      .filter(p => {
+        if (!seen.has(p.did)) {
+          seen.add(p.did)
+          return true
+        }
+        return false
+      })
+  }, [resultsUnfiltered])
 
   const isLoading = isLoadingTopPages || isFetchingResults
 
