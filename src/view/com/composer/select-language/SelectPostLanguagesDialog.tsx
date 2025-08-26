@@ -1,9 +1,10 @@
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {codeToLanguageName} from '../../../../locale/helpers'
 import {ConfirmLanguagesButton} from '../../modals/lang-settings/ConfirmLanguagesButton'
 import {ErrorBoundary} from '../../util/ErrorBoundary'
 import {ErrorScreen} from '../../util/error/ErrorScreen'
+import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {isNative} from '#/platform/detection'
 import {Keyboard} from 'react-native'
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
@@ -23,9 +24,8 @@ import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import React from 'react'
 
-const HEADER_HEIGHT = 72
-const SEARCH_HEIGHT = 48
 const WEB_DIALOG_WIDTH = 600
+const MOBILE_DIALOG_WIDTH = '90%'
 
 export function SelectPostLanguagesBtn() {
   const {_} = useLingui()
@@ -83,20 +83,24 @@ export function SelectPostLanguagesBtn() {
 }
 
 function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
+  const {gtMobile} = useBreakpoints()
+
   return (
-    <Dialog.Outer
-      control={control}
-      style={[
-        a.rounded_2xs,
-        web({
-          width: WEB_DIALOG_WIDTH,
-          maxWidth: WEB_DIALOG_WIDTH,
-          margin: 'auto',
-          alignSelf: 'center',
-        }),
-      ]}>
-      <Dialog.Handle />
-      <PostLanguagesSettingsDialogInner onClose={control.close} />
+    <Dialog.Outer control={control}>
+      <View
+        style={[
+          a.rounded_2xs,
+          web({
+            maxWidth: gtMobile ? MOBILE_DIALOG_WIDTH : WEB_DIALOG_WIDTH,
+            width: gtMobile ? MOBILE_DIALOG_WIDTH : WEB_DIALOG_WIDTH,
+
+            margin: 'auto',
+            alignSelf: 'center',
+          }),
+        ]}>
+        <Dialog.Handle />
+        <PostLanguagesSettingsDialogInner onClose={control.close} />
+      </View>
     </Dialog.Outer>
   )
 }
@@ -191,6 +195,7 @@ export function PostLanguagesSettingsDialogInner({
           paddingBottom: 8,
           backgroundColor: t.atoms.bg.backgroundColor,
         },
+        isNative && a.pt_2xl,
       ]}>
       <Text
         nativeID="dialog-title"
@@ -216,22 +221,23 @@ export function PostLanguagesSettingsDialogInner({
             <View
               style={[
                 a.absolute,
-                a.left_md,
                 a.top_0,
                 a.bottom_0,
                 a.justify_center,
                 a.pl_0,
                 a.z_10,
+                isNative && a.pl_sm,
                 {pointerEvents: 'none'},
               ]}>
               <MagnifyingGlassIcon
                 strokeWidth={3}
                 size={16}
+                color={
+                  search.length > 0
+                    ? t.palette.primary_500
+                    : t.atoms.text_contrast_low.color
+                }
                 style={{
-                  color:
-                    search.length > 0
-                      ? t.palette.primary_500
-                      : t.atoms.text_contrast_low.color,
                   marginLeft: 'auto',
                   marginRight: 'auto',
                 }}
@@ -256,25 +262,41 @@ export function PostLanguagesSettingsDialogInner({
     </View>
   )
 
+  const isCheckedRecentEmpty =
+    displayedLanguages.checkedRecent.length > 0 ||
+    displayedLanguages.uncheckedRecent.length > 0
+
+  const isDisplayedLanguagesEmpty = displayedLanguages.all.length === 0
+
   const flatListData = [
-    {type: 'header', label: 'Recently used'},
+    ...(isCheckedRecentEmpty ? [{type: 'header', label: 'Recently used'}] : []),
     ...displayedLanguages.checkedRecent.map(lang => ({type: 'item', lang})),
     ...displayedLanguages.uncheckedRecent.map(lang => ({type: 'item', lang})),
-    {type: 'header', label: 'All languages'},
+    ...(isDisplayedLanguagesEmpty
+      ? []
+      : [{type: 'header', label: 'All languages'}]),
     ...displayedLanguages.all.map(lang => ({type: 'item', lang})),
   ]
+
+  const {gtMobile} = useBreakpoints()
 
   return (
     <>
       <Dialog.Close />
+
       <ErrorBoundary
         renderError={error => <DialogError details={String(error)} />}>
         <View
           style={[
-            a.flex_1,
-            web({width: WEB_DIALOG_WIDTH, maxWidth: WEB_DIALOG_WIDTH}),
-            {
+            web({
+              width: gtMobile ? WEB_DIALOG_WIDTH : MOBILE_DIALOG_WIDTH,
+              maxWidth: gtMobile ? WEB_DIALOG_WIDTH : MOBILE_DIALOG_WIDTH,
               position: a.relative,
+            }),
+            web(a.flex_1),
+            isNative && {
+              flexGrow: 1,
+              minHeight: '100%',
             },
           ]}>
           <Toggle.Group
@@ -328,11 +350,8 @@ export function PostLanguagesSettingsDialogInner({
               }}
               ListHeaderComponent={listHeader}
               stickyHeaderIndices={[0]}
-              contentContainerStyle={[a.gap_0, a.pb_5xl, {paddingBottom: 268}]}
-              style={[
-                web({width: WEB_DIALOG_WIDTH, maxWidth: WEB_DIALOG_WIDTH}),
-                web(a.h_full_vh),
-              ]}
+              contentContainerStyle={[a.gap_0, web({paddingBottom: 320})]}
+              style={[web(a.h_full_vh), isNative && a.px_lg]}
             />
           </Toggle.Group>
           <View
@@ -341,7 +360,7 @@ export function PostLanguagesSettingsDialogInner({
               a.left_0,
               a.right_0,
               a.bottom_0,
-              a.px_2xl,
+              isNative ? a.px_md : a.px_2xl,
               a.pb_2xl,
               a.z_10,
               {
