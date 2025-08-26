@@ -90,6 +90,13 @@ export type MetricEvents = {
     selectedInterests: string[]
     selectedInterestsLength: number
   }
+  'onboarding:suggestedAccounts:tabPressed': {
+    tab: string
+  }
+  'onboarding:suggestedAccounts:followAllPressed': {
+    tab: string
+    numAccounts: number
+  }
   'onboarding:suggestedAccounts:nextPressed': {
     selectedAccountsLength: number
     skipped: boolean
@@ -242,6 +249,7 @@ export type MetricEvents = {
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
+      | 'OnboardingSuggestedAccounts'
   }
   'suggestedUser:follow': {
     logContext:
@@ -249,12 +257,17 @@ export type MetricEvents = {
       | 'InterstitialDiscover'
       | 'InterstitialProfile'
       | 'Profile'
+      | 'Onboarding'
     location: 'Card' | 'Profile'
     recId?: number
     position: number
   }
   'suggestedUser:press': {
-    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'Onboarding'
     recId?: number
     position: number
   }
@@ -280,6 +293,7 @@ export type MetricEvents = {
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
+      | 'OnboardingSuggestedAccounts'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'

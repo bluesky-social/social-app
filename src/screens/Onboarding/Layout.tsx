@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
@@ -11,18 +11,19 @@ import {
   atoms as a,
   flatten,
   native,
-  TextStyleProp,
+  type TextStyleProp,
+  tokens,
   useBreakpoints,
   useTheme,
   web,
 } from '#/alf'
 import {leading} from '#/alf/typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
+import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
 
-const COL_WIDTH = 420
+const ONBOARDING_COL_WIDTH = 420
 
 export const OnboardingControls = createPortalGroup()
 
@@ -45,6 +46,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
 
   const paddingTop = gtMobile ? a.py_5xl : a.py_lg
   const dialogLabel = _(msg`Set up your account`)
+
+  const [footerHeight, setFooterHeight] = useState(0)
 
   return (
     <View
@@ -89,17 +92,18 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               top: paddingTop.paddingTop + insets.top - 1,
             },
           ]}>
-          <View style={[a.w_full, a.align_start, {maxWidth: COL_WIDTH}]}>
+          <View
+            style={[a.w_full, a.align_start, {maxWidth: ONBOARDING_COL_WIDTH}]}>
             <Button
               key={state.activeStep} // remove focus state on nav
-              variant="ghost"
               color="secondary"
+              variant="ghost"
+              shape="square"
               size="small"
-              shape="round"
               label={_(msg`Go back to previous step`)}
               style={[a.absolute]}
               onPress={() => dispatch({type: 'prev'})}>
-              <ButtonIcon icon={ChevronLeft} />
+              <ButtonIcon icon={ArrowLeft} size="lg" />
             </Button>
           </View>
         </View>
@@ -109,11 +113,12 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         ref={scrollview}
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
         contentContainerStyle={{borderWidth: 0}}
-        // @ts-ignore web only --prf
+        scrollIndicatorInsets={{bottom: footerHeight - insets.bottom}}
+        // @ts-expect-error web only --prf
         dataSet={{'stable-gutters': 1}}>
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
-          <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
+          <View style={[a.flex_1, {maxWidth: ONBOARDING_COL_WIDTH}]}>
             <View style={[a.w_full, a.align_center, paddingTop]}>
               <View
                 style={[
@@ -124,7 +129,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                 ]}>
                 {Array(state.totalSteps)
                   .fill(0)
-                  .map((_, i) => (
+                  .map((__, i) => (
                     <View
                       key={i}
                       style={[
@@ -149,14 +154,14 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               {children}
             </View>
 
-            <View style={{height: 400}} />
+            <View style={{height: 100 + footerHeight}} />
           </View>
         </View>
       </ScrollView>
 
       <View
+        onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
         style={[
-          // @ts-ignore web only -prf
           isWeb ? a.fixed : a.absolute,
           {bottom: 0, left: 0, right: 0},
           t.atoms.bg,
@@ -167,30 +172,30 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           isWeb
             ? a.py_2xl
             : {
-                paddingTop: a.pt_lg.paddingTop,
-                paddingBottom: insets.bottom + 10,
+                paddingTop: tokens.space.md,
+                paddingBottom: insets.bottom + tokens.space.md,
               },
         ]}>
         <View
           style={[
             a.w_full,
-            {maxWidth: COL_WIDTH},
-            gtMobile && [a.flex_row, a.justify_between],
+            {maxWidth: ONBOARDING_COL_WIDTH},
+            gtMobile && [a.flex_row, a.justify_between, a.align_center],
           ]}>
           {gtMobile &&
             (state.hasPrev ? (
               <Button
                 key={state.activeStep} // remove focus state on nav
-                variant="solid"
                 color="secondary"
-                size="large"
-                shape="round"
+                variant="ghost"
+                shape="square"
+                size="small"
                 label={_(msg`Go back to previous step`)}
                 onPress={() => dispatch({type: 'prev'})}>
-                <ButtonIcon icon={ChevronLeft} />
+                <ButtonIcon icon={ArrowLeft} size="lg" />
               </Button>
             ) : (
-              <View style={{height: 54}} />
+              <View style={{height: 33}} />
             ))}
           <OnboardingControls.Outlet />
         </View>
