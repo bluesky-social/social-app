@@ -49,7 +49,14 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {Context, type OnboardingState} from '#/screens/Onboarding/state'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
-import {atoms as a, native, tokens, useBreakpoints, useTheme} from '#/alf'
+import {
+  atoms as a,
+  native,
+  platform,
+  tokens,
+  useBreakpoints,
+  useTheme,
+} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -269,9 +276,18 @@ export function StepFinished() {
 }
 
 const PROP_1 = {
-  light: require('../../../assets/images/onboarding/value_prop_1_light.webp'),
-  dim: require('../../../assets/images/onboarding/value_prop_1_dim.webp'),
-  dark: require('../../../assets/images/onboarding/value_prop_1_dark.webp'),
+  light: platform({
+    native: require('../../../assets/images/onboarding/value_prop_1_light.webp'),
+    web: require('../../../assets/images/onboarding/value_prop_1_light_borderless.webp'),
+  }),
+  dim: platform({
+    native: require('../../../assets/images/onboarding/value_prop_1_dim.webp'),
+    web: require('../../../assets/images/onboarding/value_prop_1_dim_borderless.webp'),
+  }),
+  dark: platform({
+    native: require('../../../assets/images/onboarding/value_prop_1_dark.webp'),
+    web: require('../../../assets/images/onboarding/value_prop_1_dark_borderless.webp'),
+  }),
 } as const
 
 const PROP_2 = {
