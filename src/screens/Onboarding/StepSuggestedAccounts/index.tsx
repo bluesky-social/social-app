@@ -23,6 +23,7 @@ import {
 import {SuggestedAccountsTabBar} from '#/screens/Search/modules/ExploreSuggestedAccounts'
 import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
 import {Loader} from '#/components/Loader'
@@ -172,12 +173,11 @@ export function StepSuggestedAccounts() {
           </View>
         ) : isError ? (
           <View style={[a.flex_1, a.px_xl, a.pt_5xl]}>
-            <Text
-              style={[a.text_center, a.text_md, t.atoms.text_contrast_medium]}>
+            <Admonition type="error">
               <Trans>
                 An error occurred while fetching suggested accounts.
               </Trans>
-            </Text>
+            </Admonition>
           </View>
         ) : (
           <View
