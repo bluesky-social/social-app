@@ -397,6 +397,7 @@ function ValueProposition({
               a.align_center,
               a.justify_center,
               isNative && {marginHorizontal: tokens.space.xl * -1},
+              a.pointer_events_none,
             ]}>
             <Image
               source={image}
