@@ -190,6 +190,15 @@ export function tryParse(rawData: string): Schema | undefined {
   if (!objData) {
     return undefined
   }
+  if (objData.disableAutoplay !== undefined) {
+    if (objData.disableVideoAutoplay === undefined) {
+      objData.disableVideoAutoplay = objData.disableAutoplay
+    }
+    if (objData.disableGifAutoplay === undefined) {
+      objData.disableGifAutoplay = objData.disableAutoplay
+    }
+    delete (objData as any).disableAutoplay
+  }
   const parsed = schema.safeParse(objData)
   if (parsed.success) {
     return objData
