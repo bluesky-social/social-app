@@ -1,5 +1,6 @@
 import {View, type ViewStyle} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {type Gate} from '#/lib/statsig/gates'
 import {useGate} from '#/lib/statsig/statsig'
@@ -21,6 +22,7 @@ export function LoggedOutCTA({style, gateName}: LoggedOutCTAProps) {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const gate = useGate()
   const t = useTheme()
+  const {_} = useLingui()
 
   // Only show for logged-out users on web
   if (hasSession || !isWeb) {
@@ -66,7 +68,7 @@ export function LoggedOutCTA({style, gateName}: LoggedOutCTAProps) {
           onPress={() => {
             requestSwitchToAccount({requestedAccount: 'new'})
           }}
-          label="Create account"
+          label={_(msg`Create account`)}
           size="small"
           variant="solid"
           color="primary">
