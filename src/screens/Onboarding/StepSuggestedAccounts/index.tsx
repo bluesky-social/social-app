@@ -54,7 +54,6 @@ export function StepSuggestedAccounts() {
   /*
    * Special language handling copied wholesale from the Explore screen
    */
-  // FIGURE OUT BEFORE MERGE: IS THIS POPULATED BEFORE FIRST ONBOARDING
   const {contentLanguages} = useLanguagePrefs()
   const useFullExperience = useMemo(() => {
     if (contentLanguages.length === 0) return true
