@@ -67,7 +67,7 @@ export function show(
   if (typeof content === 'string') {
     sonner.custom(
       <ToastConfigProvider id={id}>
-        <DefaultToast content={content} type={type} />
+        <Default content={content} type={type} />
       </ToastConfigProvider>,
       {
         ...options,
