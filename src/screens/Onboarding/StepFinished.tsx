@@ -336,7 +336,7 @@ function ValueProposition({
     {
       title: _(msg`Forget the noise`),
       description: _(
-        msg`No ads, no tracking, no engagement traps. Bluesky respects your time and attention.`,
+        msg`No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention.`,
       ),
       alt: _(
         msg`An illustration of several Bluesky posts alongside repost, like, and comment icons`,
