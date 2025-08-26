@@ -322,7 +322,13 @@ function Tab({
   const t = useTheme()
   const {_} = useLingui()
   const label = active
-    ? _(msg`Select "${interestsDisplayName}" category (active)`)
+    ? _(
+        msg({
+          message: `"${interestsDisplayName}" category (active)`,
+          comment:
+            'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.',
+        }),
+      )
     : _(msg`Select "${interestsDisplayName}" category`)
   return (
     <View
