@@ -194,10 +194,9 @@ export function InterestTabs({
   }, [])
 
   return (
-    <View style={[a.relative]}>
+    <View style={[a.relative, a.flex_row]}>
       <DraggableScrollView
         ref={listRef}
-        horizontal
         contentContainerStyle={[
           a.gap_sm,
           {paddingHorizontal: gutterWidth},
