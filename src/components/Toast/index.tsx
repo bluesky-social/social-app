@@ -6,15 +6,15 @@ import {toast as sonner, Toaster} from 'sonner-native'
 import {atoms as a} from '#/alf'
 import {DURATION} from '#/components/Toast/const'
 import {
-  Default as DefaultToast,
+  Icon as ToastIcon,
   Outer as BaseOuter,
-  type ToastComponentProps,
+  Text as ToastText,
   ToastConfigProvider,
 } from '#/components/Toast/Toast'
 import {type BaseToastOptions} from '#/components/Toast/types'
 
 export {DURATION} from '#/components/Toast/const'
-export {Action, Icon, Text} from '#/components/Toast/Toast'
+export {Action, Icon, Text, ToastConfigProvider} from '#/components/Toast/Toast'
 export {type ToastType} from '#/components/Toast/types'
 
 /**
@@ -25,27 +25,10 @@ export function ToastOutlet() {
   return <Toaster pauseWhenPageIsHidden gap={a.gap_sm.gap} />
 }
 
-/**
- * The toast UI component
- */
-export function Default({type, content}: ToastComponentProps) {
+export function Outer({children}: {children: React.ReactNode}) {
   return (
     <View style={[a.px_xl, a.w_full]}>
-      <DefaultToast content={content} type={type} />
-    </View>
-  )
-}
-
-export function Outer({
-  children,
-  type = 'default',
-}: {
-  children: React.ReactNode
-  type?: ToastComponentProps['type']
-}) {
-  return (
-    <View style={[a.px_xl, a.w_full]}>
-      <BaseOuter type={type}>{children}</BaseOuter>
+      <BaseOuter>{children}</BaseOuter>
     </View>
   )
 }
@@ -60,14 +43,17 @@ export const api = sonner
  */
 export function show(
   content: React.ReactNode,
-  {type, ...options}: BaseToastOptions = {},
+  {type = 'default', ...options}: BaseToastOptions = {},
 ) {
   const id = nanoid()
 
   if (typeof content === 'string') {
     sonner.custom(
-      <ToastConfigProvider id={id}>
-        <Default content={content} type={type} />
+      <ToastConfigProvider id={id} type={type}>
+        <Outer>
+          <ToastIcon />
+          <ToastText>{content}</ToastText>
+        </Outer>
       </ToastConfigProvider>,
       {
         ...options,
@@ -77,7 +63,9 @@ export function show(
     )
   } else if (React.isValidElement(content)) {
     sonner.custom(
-      <ToastConfigProvider id={id}>{content}</ToastConfigProvider>,
+      <ToastConfigProvider id={id} type={type}>
+        {content}
+      </ToastConfigProvider>,
       {
         ...options,
         id,

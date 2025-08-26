@@ -5,7 +5,9 @@ import {toast as sonner, Toaster} from 'sonner'
 import {atoms as a} from '#/alf'
 import {DURATION} from '#/components/Toast/const'
 import {
-  Default as DefaultToast,
+  Icon as ToastIcon,
+  Outer as ToastOuter,
+  Text as ToastText,
   ToastConfigProvider,
 } from '#/components/Toast/Toast'
 import {type BaseToastOptions} from '#/components/Toast/types'
@@ -39,14 +41,17 @@ export const api = sonner
  */
 export function show(
   content: React.ReactNode,
-  {type, ...options}: BaseToastOptions = {},
+  {type = 'default', ...options}: BaseToastOptions = {},
 ) {
   const id = nanoid()
 
   if (typeof content === 'string') {
     sonner(
-      <ToastConfigProvider id={id}>
-        <DefaultToast content={content} type={type} />
+      <ToastConfigProvider id={id} type={type}>
+        <ToastOuter>
+          <ToastIcon />
+          <ToastText>{content}</ToastText>
+        </ToastOuter>
       </ToastConfigProvider>,
       {
         ...options,
@@ -56,12 +61,17 @@ export function show(
       },
     )
   } else if (React.isValidElement(content)) {
-    sonner(<ToastConfigProvider id={id}>{content}</ToastConfigProvider>, {
-      ...options,
-      unstyled: true, // required on web
-      id,
-      duration: options?.duration ?? DURATION,
-    })
+    sonner(
+      <ToastConfigProvider id={id} type={type}>
+        {content}
+      </ToastConfigProvider>,
+      {
+        ...options,
+        unstyled: true, // required on web
+        id,
+        duration: options?.duration ?? DURATION,
+      },
+    )
   } else {
     throw new Error(
       `Toast can be a string or a React element, got ${typeof content}`,

@@ -4,12 +4,28 @@ import {show as deprecatedShow} from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import * as Toast from '#/components/Toast'
-import {Default} from '#/components/Toast/Toast'
 import {H1} from '#/components/Typography'
 
-function ToastWithAction({type = 'default'}: {type?: Toast.ToastType}) {
+function DefaultToast({
+  content,
+  type = 'default',
+}: {
+  content: string
+  type?: Toast.ToastType
+}) {
   return (
-    <Toast.Outer type={type}>
+    <Toast.ToastConfigProvider id="default-toast" type={type}>
+      <Toast.Outer>
+        <Toast.Icon icon={GlobeIcon} />
+        <Toast.Text>{content}</Toast.Text>
+      </Toast.Outer>
+    </Toast.ToastConfigProvider>
+  )
+}
+
+function ToastWithAction() {
+  return (
+    <Toast.Outer>
       <Toast.Icon icon={GlobeIcon} />
       <Toast.Text>This toast has an action button</Toast.Text>
       <Toast.Action
@@ -21,9 +37,9 @@ function ToastWithAction({type = 'default'}: {type?: Toast.ToastType}) {
   )
 }
 
-function LongToastWithAction({type = 'default'}: {type?: Toast.ToastType}) {
+function LongToastWithAction() {
   return (
-    <Toast.Outer type={type}>
+    <Toast.Outer>
       <Toast.Icon icon={GlobeIcon} />
       <Toast.Text>
         This is a longer message to test how the toast handles multiple lines of
@@ -44,33 +60,25 @@ export function Toasts() {
       <H1>Toast Examples</H1>
 
       <View style={[a.gap_md]}>
-        <View style={[a.gap_md, {marginHorizontal: a.px_xl.paddingLeft * -1}]}>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => Toast.show(<ToastWithAction />)}>
-            <ToastWithAction />
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => Toast.show(<LongToastWithAction />)}>
-            <LongToastWithAction />
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => Toast.show(<ToastWithAction type="success" />)}>
-            <ToastWithAction type="success" />
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => Toast.show(<ToastWithAction type="error" />)}>
-            <ToastWithAction type="error" />
-          </Pressable>
-        </View>
-
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => Toast.show(<ToastWithAction />, {type: 'success'})}>
+          <ToastWithAction />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => Toast.show(<ToastWithAction />, {type: 'error'})}>
+          <ToastWithAction />
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => Toast.show(<LongToastWithAction />)}>
+          <LongToastWithAction />
+        </Pressable>
         <Pressable
           accessibilityRole="button"
           onPress={() => Toast.show(`Hey I'm a toast!`)}>
-          <Default content="Hey I'm a toast!" />
+          <DefaultToast content="Hey I'm a toast!" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -79,7 +87,7 @@ export function Toasts() {
               duration: 6e3,
             })
           }>
-          <Default content="This toast will disappear after 6 seconds" />
+          <DefaultToast content="This toast will disappear after 6 seconds" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -88,7 +96,7 @@ export function Toasts() {
               `This is a longer message to test how the toast handles multiple lines of text content.`,
             )
           }>
-          <Default content="This is a longer message to test how the toast handles multiple lines of text content." />
+          <DefaultToast content="This is a longer message to test how the toast handles multiple lines of text content." />
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -97,7 +105,7 @@ export function Toasts() {
               type: 'success',
             })
           }>
-          <Default content="Success! Yayyyyyyy :)" type="success" />
+          <DefaultToast content="Success! Yayyyyyyy :)" type="success" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -106,7 +114,7 @@ export function Toasts() {
               type: 'info',
             })
           }>
-          <Default content="I'm providing info!" type="info" />
+          <DefaultToast content="I'm providing info!" type="info" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -115,7 +123,7 @@ export function Toasts() {
               type: 'warning',
             })
           }>
-          <Default content="This is a warning toast" type="warning" />
+          <DefaultToast content="This is a warning toast" type="warning" />
         </Pressable>
         <Pressable
           accessibilityRole="button"
@@ -124,7 +132,7 @@ export function Toasts() {
               type: 'error',
             })
           }>
-          <Default content="This is an error toast :(" type="error" />
+          <DefaultToast content="This is an error toast :(" type="error" />
         </Pressable>
 
         <Pressable
@@ -135,7 +143,7 @@ export function Toasts() {
               'exclamation-circle',
             )
           }>
-          <Default
+          <DefaultToast
             content="This is a test of the deprecated API"
             type="warning"
           />
