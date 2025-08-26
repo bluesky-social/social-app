@@ -415,7 +415,13 @@ let Tab = ({
   const {_} = useLingui()
   const label = active
     ? _(msg`Search for "${interestsDisplayName}" (active)`)
-    : _(msg`Search for "${interestsDisplayName}"`)
+    : _(
+        msg({
+          message: `Search for "${interestsDisplayName}`,
+          comment:
+            'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.',
+        }),
+      )
   return (
     <View
       key={interest}
