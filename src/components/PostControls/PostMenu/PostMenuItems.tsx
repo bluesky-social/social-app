@@ -32,7 +32,7 @@ import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {isDiscoverFeed, useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
@@ -466,9 +466,6 @@ let PostMenuItems = ({
           <>
             <Menu.Divider />
             <Menu.Group>
-              {!isDiscoverFeed(feedFeedback.feedDescriptor) && (
-                <Menu.LabelText>{_(msg`Tell feed provider:`)}</Menu.LabelText>
-              )}
               <Menu.Item
                 testID="postDropdownShowMoreBtn"
                 label={_(msg`Show more like this`)}
