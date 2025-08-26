@@ -318,6 +318,7 @@ export function PostLanguagesSettingsDialogInner({
 
                 return (
                   <Text
+                    key={index}
                     style={[
                       a.px_0,
                       a.py_md,
@@ -367,15 +368,18 @@ export function PostLanguagesSettingsDialogInner({
             isNative ? a.px_md : a.px_2xl,
             a.pb_2xl,
             a.z_10,
+            t.atoms.bg,
+            a.pt_xl,
+            isNative && a.pb_5xl,
+            a.border_t,
+            t.atoms.border_contrast_low,
             {
-              backgroundColor: t.atoms.bg.backgroundColor,
               borderBottomLeftRadius: a.rounded_md.borderRadius,
               borderBottomRightRadius: a.rounded_md.borderRadius,
-              borderWidth: 1,
-              borderColor: t.atoms.border_contrast_low.borderColor,
             },
           ]}>
-          <ConfirmLanguagesButton
+          <Button
+            label={_(msg`Close dialog`)}
             onPress={() => {
               let langsString = checkedLanguagesCode2.join(',')
               if (!langsString) {
@@ -384,7 +388,12 @@ export function PostLanguagesSettingsDialogInner({
               setLangPrefs.setPostLanguage(langsString)
               onClose()
             }}
-          />
+            color="primary"
+            size="large">
+            <ButtonText>
+              <Trans>Done</Trans>
+            </ButtonText>
+          </Button>
         </View>
       </View>
     </>
