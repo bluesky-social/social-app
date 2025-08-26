@@ -7,13 +7,13 @@ import {
   type ButtonProps,
   type UninheritableButtonProps,
 } from '#/components/Button'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '#/components/icons/CircleCheck'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {type ToastType} from '#/components/Toast/types'
 import {Text as BaseText} from '#/components/Typography'
-import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheck} from '../icons/CircleCheck'
 
 type ContextType = {
   type: ToastType
