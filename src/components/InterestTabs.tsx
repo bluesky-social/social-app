@@ -336,6 +336,7 @@ function Tab({
             'Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.',
         }),
       )
+
   return (
     <View
       key={interest}
