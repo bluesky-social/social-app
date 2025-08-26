@@ -12,13 +12,11 @@ import {
   popularInterests,
   useInterestsDisplayNames,
 } from '#/screens/Onboarding/state'
-import {tokens, useTheme} from '#/alf'
+import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
-import {Button} from '#/components/Button'
+import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
-import {boostInterests, Tabs} from '#/components/ProgressGuide/FollowDialog'
 import {SubtleHover} from '#/components/SubtleHover'
-import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
 
 export function useLoadEnoughProfiles({
@@ -55,23 +53,16 @@ export function useLoadEnoughProfiles({
   }
 }
 
-// TODO: Move to own file -sfn
 export function SuggestedAccountsTabBar({
   selectedInterest,
   onSelectInterest,
   hideDefaultTab,
   defaultTabLabel,
-  priorityInterests,
-  leftPadding = tokens.space.md,
-  logContext = 'Explore',
 }: {
   selectedInterest: string | null
   onSelectInterest: (interest: string | null) => void
-  priorityInterests?: string[]
   hideDefaultTab?: boolean
   defaultTabLabel?: string
-  leftPadding?: number
-  logContext?: 'Explore' | 'Onboarding'
 }) {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
@@ -80,32 +71,22 @@ export function SuggestedAccountsTabBar({
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
     .sort(boostInterests(personalizedInterests))
-    .sort(boostInterests(priorityInterests))
 
   return (
     <BlockDrawerGesture>
-      <Tabs
+      <InterestTabs
         interests={hideDefaultTab ? interests : ['all', ...interests]}
         selectedInterest={
           selectedInterest || (hideDefaultTab ? interests[0] : 'all')
         }
         onSelectTab={tab => {
-          if (logContext === 'Explore') {
-            logger.metric(
-              'explore:suggestedAccounts:tabPressed',
-              {tab: tab},
-              {statsig: true},
-            )
-          } else {
-            logger.metric(
-              'onboarding:suggestedAccounts:tabPressed',
-              {tab: tab},
-              {statsig: true},
-            )
-          }
+          logger.metric(
+            'explore:suggestedAccounts:tabPressed',
+            {tab: tab},
+            {statsig: true},
+          )
           onSelectInterest(tab === 'all' ? null : tab)
         }}
-        hasSearchText={false}
         interestsDisplayNames={
           hideDefaultTab
             ? interestsDisplayNames
@@ -114,72 +95,10 @@ export function SuggestedAccountsTabBar({
                 ...interestsDisplayNames,
               }
         }
-        TabComponent={Tab}
-        contentContainerStyle={[
-          {
-            // visual alignment
-            paddingLeft: leftPadding,
-          },
-        ]}
       />
     </BlockDrawerGesture>
   )
 }
-
-let Tab = ({
-  onSelectTab,
-  interest,
-  active,
-  index,
-  interestsDisplayName,
-  onLayout,
-}: {
-  onSelectTab: (index: number) => void
-  interest: string
-  active: boolean
-  index: number
-  interestsDisplayName: string
-  onLayout: (index: number, x: number, width: number) => void
-}): React.ReactNode => {
-  const t = useTheme()
-  const {_} = useLingui()
-  const activeText = active ? _(msg` (active)`) : ''
-  return (
-    <View
-      key={interest}
-      onLayout={e =>
-        onLayout(index, e.nativeEvent.layout.x, e.nativeEvent.layout.width)
-      }>
-      <Button
-        label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
-        onPress={() => onSelectTab(index)}>
-        {({hovered, pressed, focused}) => (
-          <View
-            style={[
-              a.rounded_full,
-              a.px_lg,
-              a.py_sm,
-              a.border,
-              active || hovered || pressed || focused
-                ? [t.atoms.bg_contrast_25, t.atoms.border_contrast_medium]
-                : [t.atoms.bg, t.atoms.border_contrast_low],
-            ]}>
-            <Text
-              style={[
-                a.font_medium,
-                active || hovered || pressed || focused
-                  ? t.atoms.text
-                  : t.atoms.text_contrast_medium,
-              ]}>
-              {interestsDisplayName}
-            </Text>
-          </View>
-        )}
-      </Button>
-    </View>
-  )
-}
-Tab = memo(Tab)
 
 /**
  * Profile card for suggested accounts. Note: border is on the bottom edge
