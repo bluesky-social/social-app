@@ -2,7 +2,7 @@ import {useCallback, useMemo} from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -19,13 +19,19 @@ import {
 } from '#/state/preferences/languages'
 import {
   DropdownButton,
-  DropdownItem,
-  DropdownItemButton,
+  type DropdownItem,
+  type DropdownItemButton,
 } from '#/view/com/util/forms/DropdownButton'
 import {Text} from '#/view/com/util/text/Text'
 import {codeToLanguageName} from '../../../../locale/helpers'
 
-export function SelectLangBtn() {
+export function SelectLangBtn({
+  /** NOTE(@elijaharita): optionally can be passed to show different values than
+   * what is saved in langPrefs. */
+  currentLanguages,
+}: {
+  currentLanguages?: string[]
+}) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openModal} = useModalControls()
@@ -41,7 +47,8 @@ export function SelectLangBtn() {
     openModal({name: 'post-languages-settings'})
   }, [openModal])
 
-  const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
+  const postLanguagesPref =
+    currentLanguages ?? toPostLanguages(langPrefs.postLanguage)
   const items: DropdownItem[] = useMemo(() => {
     let arr: DropdownItemButton[] = []
 

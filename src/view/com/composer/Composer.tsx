@@ -85,6 +85,7 @@ import {
 import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
+  fromPostLanguages,
   toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
@@ -193,6 +194,19 @@ export const ComposePost = ({
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
+  const [acceptedLanguageSuggestion, setAcceptedLanguageSuggestion] = useState<
+    string | null
+  >(null)
+
+  // NOTE(@elijaharita): if a temporary language suggestion has been accepted,
+  // show that as the post language instead of the one from langPrefs.
+  const currentLanguages = useMemo(
+    () =>
+      acceptedLanguageSuggestion
+        ? [acceptedLanguageSuggestion]
+        : toPostLanguages(langPrefs.postLanguage),
+    [acceptedLanguageSuggestion, langPrefs.postLanguage],
+  )
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
@@ -409,7 +423,7 @@ export const ComposePost = ({
           thread,
           replyTo: replyTo?.uri,
           onStateChange: setPublishingStage,
-          langs: toPostLanguages(langPrefs.postLanguage),
+          langs: currentLanguages,
         })
       ).uris[0]
 
@@ -485,7 +499,7 @@ export const ComposePost = ({
             isPartOfThread: thread.posts.length > 1,
             hasLink: !!post.embed.link,
             hasQuote: !!post.embed.quote,
-            langs: langPrefs.postLanguage,
+            langs: fromPostLanguages(currentLanguages),
             logContext: 'Composer',
           })
           index++
@@ -535,7 +549,7 @@ export const ComposePost = ({
     thread,
     canPost,
     isPublishing,
-    langPrefs.postLanguage,
+    currentLanguages,
     onClose,
     onPost,
     onPostSuccess,
@@ -633,6 +647,8 @@ export const ComposePost = ({
         text={activePost.richtext.text}
         // NOTE(@elijaharita): currently just choosing the first language if any exists
         replyToLanguage={replyTo?.langs?.[0]}
+        currentLanguages={currentLanguages}
+        onChange={setAcceptedLanguageSuggestion}
       />
       <ComposerPills
         isReply={!!replyTo}
@@ -655,6 +671,7 @@ export const ComposePost = ({
             type: 'add_post',
           })
         }}
+        currentLanguages={currentLanguages}
       />
     </>
   )
@@ -1266,6 +1283,7 @@ function ComposerFooter({
   onEmojiButtonPress,
   onSelectVideo,
   onAddPost,
+  currentLanguages,
 }: {
   post: PostDraft
   dispatch: (action: PostAction) => void
@@ -1274,6 +1292,7 @@ function ComposerFooter({
   onError: (error: string) => void
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onAddPost: () => void
+  currentLanguages: string[]
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -1431,7 +1450,7 @@ function ComposerFooter({
             />
           </Button>
         )}
-        <SelectLangBtn />
+        <SelectLangBtn currentLanguages={currentLanguages} />
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}
