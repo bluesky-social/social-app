@@ -131,7 +131,7 @@ export function StepSuggestedAccounts() {
       return followableDids
     },
     onSuccess: newlyFollowed => {
-      toast.show(_(msg`Done!`), {type: 'success'})
+      toast.show(_(msg`Followed all accounts!`), {type: 'success'})
       setFollowedUsers(followed => [...followed, ...newlyFollowed])
     },
     onError: () => {
