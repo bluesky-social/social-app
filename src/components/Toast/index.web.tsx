@@ -1,9 +1,13 @@
 import React from 'react'
+import {nanoid} from 'nanoid/non-secure'
 import {toast as sonner, Toaster} from 'sonner'
 
 import {atoms as a} from '#/alf'
 import {DURATION} from '#/components/Toast/const'
-import {Default as DefaultToast} from '#/components/Toast/Toast'
+import {
+  Default as DefaultToast,
+  ToastConfigProvider,
+} from '#/components/Toast/Toast'
 import {type BaseToastOptions} from '#/components/Toast/types'
 
 export {DURATION} from '#/components/Toast/const'
@@ -37,16 +41,25 @@ export function show(
   content: React.ReactNode,
   {type, ...options}: BaseToastOptions = {},
 ) {
+  const id = nanoid()
+
   if (typeof content === 'string') {
-    sonner(<DefaultToast content={content} type={type} />, {
-      unstyled: true, // required on web
-      ...options,
-      duration: options?.duration ?? DURATION,
-    })
+    sonner(
+      <ToastConfigProvider id={id}>
+        <DefaultToast content={content} type={type} />
+      </ToastConfigProvider>,
+      {
+        ...options,
+        unstyled: true, // required on web
+        id,
+        duration: options?.duration ?? DURATION,
+      },
+    )
   } else if (React.isValidElement(content)) {
-    sonner(content, {
-      unstyled: true, // required on web
+    sonner(<ToastConfigProvider id={id}>{content}</ToastConfigProvider>, {
       ...options,
+      unstyled: true, // required on web
+      id,
       duration: options?.duration ?? DURATION,
     })
   } else {

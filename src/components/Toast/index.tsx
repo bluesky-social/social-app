@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import {nanoid} from 'nanoid/non-secure'
 import {toast as sonner, Toaster} from 'sonner-native'
 
 import {atoms as a} from '#/alf'
@@ -8,6 +9,7 @@ import {
   Default as DefaultToast,
   Outer as BaseOuter,
   type ToastComponentProps,
+  ToastConfigProvider,
 } from '#/components/Toast/Toast'
 import {type BaseToastOptions} from '#/components/Toast/types'
 
@@ -60,16 +62,28 @@ export function show(
   content: React.ReactNode,
   {type, ...options}: BaseToastOptions = {},
 ) {
+  const id = nanoid()
+
   if (typeof content === 'string') {
-    sonner.custom(<Default content={content} type={type} />, {
-      ...options,
-      duration: options?.duration ?? DURATION,
-    })
+    sonner.custom(
+      <ToastConfigProvider id={id}>
+        <DefaultToast content={content} type={type} />
+      </ToastConfigProvider>,
+      {
+        ...options,
+        id,
+        duration: options?.duration ?? DURATION,
+      },
+    )
   } else if (React.isValidElement(content)) {
-    sonner.custom(content, {
-      ...options,
-      duration: options?.duration ?? DURATION,
-    })
+    sonner.custom(
+      <ToastConfigProvider id={id}>{content}</ToastConfigProvider>,
+      {
+        ...options,
+        id,
+        duration: options?.duration ?? DURATION,
+      },
+    )
   } else {
     throw new Error(
       `Toast can be a string or a React element, got ${typeof content}`,

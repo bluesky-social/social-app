@@ -12,7 +12,9 @@ function ToastWithAction({type = 'default'}: {type?: Toast.ToastType}) {
     <Toast.Outer type={type}>
       <Toast.Icon icon={GlobeIcon} />
       <Toast.Text>This toast has an action button</Toast.Text>
-      <Toast.Action label="Action" onPress={() => alert('Action clicked!')}>
+      <Toast.Action
+        label="Action"
+        onPress={() => console.log('Action clicked!')}>
         Action
       </Toast.Action>
     </Toast.Outer>
@@ -27,7 +29,9 @@ function LongToastWithAction({type = 'default'}: {type?: Toast.ToastType}) {
         This is a longer message to test how the toast handles multiple lines of
         text content.
       </Toast.Text>
-      <Toast.Action label="Action" onPress={() => alert('Action clicked!')}>
+      <Toast.Action
+        label="Action"
+        onPress={() => console.log('Action clicked!')}>
         Action
       </Toast.Action>
     </Toast.Outer>
