@@ -414,7 +414,13 @@ let Tab = ({
   const t = useTheme()
   const {_} = useLingui()
   const label = active
-    ? _(msg`Search for "${interestsDisplayName}" (active)`)
+    ? _(
+        msg({
+          message: `Search for "${interestsDisplayName}" (active)`,
+          comment:
+            'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.',
+        }),
+      )
     : _(
         msg({
           message: `Search for "${interestsDisplayName}`,
