@@ -90,8 +90,6 @@ export const STAGING_FEEDS = [
   `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ]
 
-export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
-
 export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,

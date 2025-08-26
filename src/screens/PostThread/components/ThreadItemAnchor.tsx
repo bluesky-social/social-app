@@ -180,7 +180,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
-  const feedFeedback = useFeedFeedback(postSource?.feed, hasSession)
+  const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
 
   const post = postShadow
   const record = item.value.post.record

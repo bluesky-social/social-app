@@ -70,6 +70,7 @@ import {
   useFeedFeedbackContext,
 } from '#/state/feed-feedback'
 import {useFeedFeedback} from '#/state/feed-feedback'
+import {useFeedInfo} from '#/state/queries/feed'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
   type AuthorFilter,
@@ -199,7 +200,9 @@ function Feed() {
         throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
     }
   }, [params])
-  const feedFeedback = useFeedFeedback(feedDesc, hasSession)
+  const feedUri = params.type === 'feedgen' ? params.uri : undefined
+  const {data: feedInfo} = useFeedInfo(feedUri)
+  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
     usePostFeedQuery(
       feedDesc,
