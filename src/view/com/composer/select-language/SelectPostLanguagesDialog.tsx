@@ -23,6 +23,7 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import * as Toggle from '#/components/forms/Toggle'
 import React from 'react'
+import {SearchInput} from '#/components/forms/SearchInput'
 
 const WEB_DIALOG_WIDTH = 600
 const MOBILE_DIALOG_WIDTH = '90%'
@@ -216,41 +217,13 @@ export function PostLanguagesSettingsDialogInner({
       </Text>
       <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs, a.pb_0]}>
         <View style={[a.flex_1, a.relative]}>
-          <TextField.Root>
-            <TextField.Input
-              value={search}
-              onChangeText={setSearch}
-              placeholder={_(msg`Search languages`)}
-              style={[a.pl_xl]}
-              maxLength={50}
-              label={_(msg`Search languages`)}
-            />
-            <View
-              style={[
-                a.absolute,
-                a.top_0,
-                a.bottom_0,
-                a.justify_center,
-                a.pl_0,
-                a.z_10,
-                isNative && a.pl_sm,
-                {pointerEvents: 'none'},
-              ]}>
-              <MagnifyingGlassIcon
-                strokeWidth={3}
-                size={16}
-                color={
-                  search.length > 0
-                    ? t.palette.primary_500
-                    : t.atoms.text_contrast_low.color
-                }
-                style={{
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                }}
-              />
-            </View>
-          </TextField.Root>
+          <SearchInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder={_(msg`Search languages`)}
+            label={_(msg`Search languages`)}
+            maxLength={50}
+          />
         </View>
         {showSearchCancel && (
           <Button
