@@ -1,4 +1,4 @@
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {codeToLanguageName} from '../../../../locale/helpers'
 import {ConfirmLanguagesButton} from '../../modals/lang-settings/ConfirmLanguagesButton'
@@ -284,7 +284,7 @@ export function PostLanguagesSettingsDialogInner({
           onChange={setCheckedLanguagesCode2}
           type="checkbox"
           maxSelections={3}
-          label={_(msg`Select Languages`)}>
+          label={_(msg`Select languages`)}>
           <Dialog.InnerFlatList
             ref={listRef}
             data={flatListData}
@@ -342,14 +342,15 @@ export function PostLanguagesSettingsDialogInner({
             a.right_0,
             a.bottom_0,
             isNative ? a.px_md : a.px_2xl,
-            a.pb_2xl,
+
             a.z_10,
             t.atoms.bg,
             a.pt_xl,
-            isNative && a.pb_5xl,
+
             a.border_t,
             t.atoms.border_contrast_low,
             {
+              paddingBottom: isNative ? 48 : tokens.space._2xl,
               borderBottomLeftRadius: a.rounded_md.borderRadius,
               borderBottomRightRadius: a.rounded_md.borderRadius,
             },
