@@ -216,17 +216,20 @@ function BookmarkNotFound({
   const cleanError = useCleanError()
   const [removed, setRemoved] = useState(false)
 
-  const remove = useCallback(async () => {
+  const remove = async () => {
     try {
       setRemoved(true)
       await bookmark({action: 'delete', uri: post.uri})
+      toast.show(_(msg`Removed from saved posts`), {
+        type: 'error',
+      })
     } catch (e: any) {
       const {raw, clean} = cleanError(e)
       toast.show(clean || raw || e, {
         type: 'error',
       })
     }
-  }, [post.uri, bookmark, cleanError])
+  }
 
   if (removed) return null
 
