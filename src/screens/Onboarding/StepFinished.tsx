@@ -59,6 +59,7 @@ import {
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
@@ -474,9 +475,17 @@ function ValueProposition({
             }
             onPress={onPress}>
             <ButtonText>
-              {saving ? <Trans>Finalizing</Trans> : <Trans>Next</Trans>}
+              {saving ? (
+                <Trans>Finalizing</Trans>
+              ) : subStep === 2 ? (
+                <Trans>Let's go!</Trans>
+              ) : (
+                <Trans>Next</Trans>
+              )}
             </ButtonText>
-            {saving && <ButtonIcon icon={Loader} />}
+            {subStep === 2 && (
+              <ButtonIcon icon={saving ? Loader : ArrowRight} />
+            )}
           </Button>
         </View>
       </OnboardingControls.Portal>
