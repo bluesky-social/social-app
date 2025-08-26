@@ -85,6 +85,11 @@ export function SelectPostLanguagesBtn() {
 function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
   const {gtMobile} = useBreakpoints()
 
+  const renderErrorBoundary = useCallback(
+    (error: any) => <DialogError details={String(error)} />,
+    [],
+  )
+
   return (
     <Dialog.Outer control={control}>
       <View
@@ -93,13 +98,12 @@ function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
           web({
             maxWidth: gtMobile ? MOBILE_DIALOG_WIDTH : WEB_DIALOG_WIDTH,
             width: gtMobile ? MOBILE_DIALOG_WIDTH : WEB_DIALOG_WIDTH,
-
-            margin: 'auto',
-            alignSelf: 'center',
           }),
         ]}>
         <Dialog.Handle />
-        <PostLanguagesSettingsDialogInner onClose={control.close} />
+        <ErrorBoundary renderError={renderErrorBoundary}>
+          <PostLanguagesSettingsDialogInner onClose={control.close} />
+        </ErrorBoundary>
       </View>
     </Dialog.Outer>
   )
@@ -124,6 +128,7 @@ export function PostLanguagesSettingsDialogInner({
 
   const setLangPrefs = useLanguagePrefsApi()
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const listRef = React.useRef(null)
 
   // NOTE(@elijaharita): Displayed languages are split into 3 lists for
@@ -278,112 +283,109 @@ export function PostLanguagesSettingsDialogInner({
     ...displayedLanguages.all.map(lang => ({type: 'item', lang})),
   ]
 
-  const {gtMobile} = useBreakpoints()
-
   return (
     <>
-      <Dialog.Close />
+      <View
+        style={[
+          web({
+            width: gtMobile ? WEB_DIALOG_WIDTH : MOBILE_DIALOG_WIDTH,
+            maxWidth: gtMobile ? WEB_DIALOG_WIDTH : MOBILE_DIALOG_WIDTH,
+            position: a.relative,
+            margin: 'auto',
+            alignSelf: 'center',
+          }),
+          web(a.flex_1),
+          isNative && {
+            flexGrow: 1,
+            minHeight: '100%',
+          },
+        ]}>
+        {gtMobile && <Dialog.Close />}
 
-      <ErrorBoundary
-        renderError={error => <DialogError details={String(error)} />}>
-        <View
-          style={[
-            web({
-              width: gtMobile ? WEB_DIALOG_WIDTH : MOBILE_DIALOG_WIDTH,
-              maxWidth: gtMobile ? WEB_DIALOG_WIDTH : MOBILE_DIALOG_WIDTH,
-              position: a.relative,
-            }),
-            web(a.flex_1),
-            isNative && {
-              flexGrow: 1,
-              minHeight: '100%',
-            },
-          ]}>
-          <Toggle.Group
-            values={checkedLanguagesCode2}
-            onChange={setCheckedLanguagesCode2}
-            type="checkbox"
-            maxSelections={3}
-            label="languageSelection">
-            <Dialog.InnerFlatList
-              ref={listRef}
-              data={flatListData}
-              renderItem={({item, index}) => {
-                if (item.type === 'header') {
-                  const isAllLanguages = item.label === 'All languages'
-
-                  return (
-                    <Text
-                      style={[
-                        a.px_0,
-                        a.py_md,
-                        a.font_bold,
-                        a.text_xs,
-                        t.atoms.text_contrast_low,
-                        a.pt_2xl,
-                        isAllLanguages ? a.pt_2xl : a.pt_xl,
-                      ]}>
-                      <Trans>{item.label}</Trans>
-                    </Text>
-                  )
-                }
-                const lang = item.lang
+        <Toggle.Group
+          values={checkedLanguagesCode2}
+          onChange={setCheckedLanguagesCode2}
+          type="checkbox"
+          maxSelections={3}
+          label="languageSelection">
+          <Dialog.InnerFlatList
+            ref={listRef}
+            data={flatListData}
+            renderItem={({item, index}) => {
+              if (item.type === 'header') {
+                const isAllLanguages = item.label === 'All languages'
 
                 return (
-                  <Toggle.Item
-                    key={lang.code2}
-                    name={lang.code2}
-                    label={languageName(lang, langPrefs.appLanguage)}
+                  <Text
                     style={[
-                      t.atoms.border_contrast_low,
-                      a.border_b,
-                      a.rounded_0,
                       a.px_0,
                       a.py_md,
+                      a.font_bold,
+                      a.text_xs,
+                      t.atoms.text_contrast_low,
+                      a.pt_2xl,
+                      isAllLanguages ? a.pt_2xl : a.pt_xl,
                     ]}>
-                    <Toggle.LabelText style={[a.flex_1]}>
-                      {languageName(lang, langPrefs.appLanguage)}
-                    </Toggle.LabelText>
-                    <Toggle.Checkbox />
-                  </Toggle.Item>
+                    <Trans>{item.label}</Trans>
+                  </Text>
                 )
-              }}
-              ListHeaderComponent={listHeader}
-              stickyHeaderIndices={[0]}
-              contentContainerStyle={[a.gap_0, web({paddingBottom: 320})]}
-              style={[web(a.h_full_vh), isNative && a.px_lg]}
-            />
-          </Toggle.Group>
-          <View
-            style={[
-              a.absolute,
-              a.left_0,
-              a.right_0,
-              a.bottom_0,
-              isNative ? a.px_md : a.px_2xl,
-              a.pb_2xl,
-              a.z_10,
-              {
-                backgroundColor: t.atoms.bg.backgroundColor,
-                borderBottomLeftRadius: a.rounded_md.borderRadius,
-                borderBottomRightRadius: a.rounded_md.borderRadius,
-                borderWidth: 1,
-                borderColor: t.atoms.border_contrast_low.borderColor,
-              },
-            ]}>
-            <ConfirmLanguagesButton
-              onPress={() => {
-                let langsString = checkedLanguagesCode2.join(',')
-                if (!langsString) {
-                  langsString = langPrefs.primaryLanguage
-                }
-                setLangPrefs.setPostLanguage(langsString)
-                onClose()
-              }}
-            />
-          </View>
+              }
+              const lang = item.lang
+
+              return (
+                <Toggle.Item
+                  key={lang.code2}
+                  name={lang.code2}
+                  label={languageName(lang, langPrefs.appLanguage)}
+                  style={[
+                    t.atoms.border_contrast_low,
+                    a.border_b,
+                    a.rounded_0,
+                    a.px_0,
+                    a.py_md,
+                  ]}>
+                  <Toggle.LabelText style={[a.flex_1]}>
+                    {languageName(lang, langPrefs.appLanguage)}
+                  </Toggle.LabelText>
+                  <Toggle.Checkbox />
+                </Toggle.Item>
+              )
+            }}
+            ListHeaderComponent={listHeader}
+            stickyHeaderIndices={[0]}
+            contentContainerStyle={[a.gap_0, web({paddingBottom: 320})]}
+            style={[web(a.h_full_vh), isNative && a.px_lg]}
+          />
+        </Toggle.Group>
+        <View
+          style={[
+            a.absolute,
+            a.left_0,
+            a.right_0,
+            a.bottom_0,
+            isNative ? a.px_md : a.px_2xl,
+            a.pb_2xl,
+            a.z_10,
+            {
+              backgroundColor: t.atoms.bg.backgroundColor,
+              borderBottomLeftRadius: a.rounded_md.borderRadius,
+              borderBottomRightRadius: a.rounded_md.borderRadius,
+              borderWidth: 1,
+              borderColor: t.atoms.border_contrast_low.borderColor,
+            },
+          ]}>
+          <ConfirmLanguagesButton
+            onPress={() => {
+              let langsString = checkedLanguagesCode2.join(',')
+              if (!langsString) {
+                langsString = langPrefs.primaryLanguage
+              }
+              setLangPrefs.setPostLanguage(langsString)
+              onClose()
+            }}
+          />
         </View>
-      </ErrorBoundary>
+      </View>
     </>
   )
 }
