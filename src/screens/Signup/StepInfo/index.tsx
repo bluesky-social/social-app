@@ -19,7 +19,9 @@ import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {InlineLinkText} from '#/components/Link.tsx'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import {BackNextButtons} from '../BackNextButtons'
 
 function sanitizeDate(date: Date): Date {
@@ -186,6 +188,21 @@ export function StepInfo({
                     )}
                   />
                 </TextField.Root>
+                {state.serviceUrl?.includes('blacksky.app') && (
+                  <Text style={[a.pb_sm, a.leading_snug, a.text_sm]}>
+                    <Trans>
+                      Email{' '}
+                      <InlineLinkText
+                        to="mailto:support@blacksky.app?subject=Invite Code Request"
+                        label={_(msg`support@blacksky.app`)}
+                        style={[a.text_sm, a.leading_snug]}
+                        numberOfLines={1}>
+                        {_(msg`support@blacksky.app`)}
+                      </InlineLinkText>{' '}
+                      for an invite code
+                    </Trans>
+                  </Text>
+                )}
               </View>
             )}
             <View>

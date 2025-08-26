@@ -120,7 +120,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       <LoggedOutLayout
         leadin=""
         title={_(msg`Create Account`)}
-        description={_(msg`Welcome to the cookout!`)}
+        description={_(msg`We're so excited to have you join us!`)}
         scrollable>
         <View testID="createAccount" style={a.flex_1}>
           {showStarterPackCard &&

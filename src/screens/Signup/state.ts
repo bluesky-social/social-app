@@ -70,6 +70,7 @@ export type SignupAction =
   | {type: 'setStep'; value: SignupStep}
   | {type: 'setServiceUrl'; value: string}
   | {type: 'setServiceDescription'; value: ServiceDescription | undefined}
+  | {type: 'setUserDomain'; value: string} // ADD THIS NEW ACTION TYPE
   | {type: 'setEmail'; value: string}
   | {type: 'setPassword'; value: string}
   | {type: 'setDateOfBirth'; value: Date}
@@ -154,11 +155,30 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
 
       next.serviceDescription = a.value
-      next.userDomain = a.value?.availableUserDomains[0] ?? ''
+      if (!next.userDomain && a.value?.availableUserDomains?.[0]) {
+        next.userDomain = a.value.availableUserDomains[0]
+      }
       next.isLoading = false
       break
     }
+    case 'setUserDomain': {
+      // ADD THIS NEW CASE
+      next.userDomain = a.value
 
+      // Log domain selection for analytics if different from default
+      if (s.userDomain && s.userDomain !== a.value) {
+        logger.metric(
+          'signup:domainChanged',
+          {
+            fromDomain: s.userDomain,
+            toDomain: a.value,
+            activeStep: s.activeStep,
+          },
+          {statsig: true},
+        )
+      }
+      break
+    }
     case 'setEmail': {
       next.email = a.value
       break
@@ -306,6 +326,19 @@ export function useSubmitSignup() {
       dispatch({type: 'setIsLoading', value: true})
 
       try {
+        // Log the selected domain for analytics
+        logger.metric(
+          'signup:submit',
+          {
+            selectedDomain: state.userDomain,
+            isDefaultDomain:
+              state.userDomain ===
+              state.serviceDescription?.availableUserDomains?.[0],
+            signupDuration: Date.now() - state.signupStartTime,
+          },
+          {statsig: true},
+        )
+
         await createAccount(
           {
             service: state.serviceUrl,
@@ -323,12 +356,13 @@ export function useSubmitSignup() {
               0,
             ),
             backgroundCount: state.backgroundCount,
+            selectedDomain: state.userDomain, // Include domain in metrics
           },
         )
 
         /*
          * Must happen last so that if the user has multiple tabs open and
-         * createAccount fails, one tab is not stuck in onboarding — Eric
+         * createAccount fails, one tab is not stuck in onboarding — Eric
          */
         onboardingDispatch({type: 'start'})
       } catch (e: any) {
@@ -359,6 +393,7 @@ export function useSubmitSignup() {
         logger.error('Signup Flow Error', {
           errorMessage: error,
           registrationHandle: state.handle,
+          selectedDomain: state.userDomain, // Include domain in error logs
         })
       } finally {
         dispatch({type: 'setIsLoading', value: false})

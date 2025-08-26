@@ -6,6 +6,7 @@ export type Gate =
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'
   | 'explore_show_suggested_feeds'
+  | 'handle_suggestions'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
   | 'onboarding_suggested_accounts'

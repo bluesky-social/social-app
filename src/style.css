@@ -30,6 +30,9 @@ html.theme--light {
   --background: #f8faf9;
   --backgroundLight: hsl(240, 20%, 95%);
   background-color: #f8faf9;
+  ::selection {
+    background: #d2fc51;
+  }
 }
 html.theme--dark {
   color-scheme: dark;
@@ -37,6 +40,9 @@ html.theme--dark {
   --text: #f8faf9;
   --background: #070c0c;
   --backgroundLight: hsl(240, 20%, 20%);
+  ::selection {
+    background: #464985;
+  }
 }
 html.theme--dim {
   color-scheme: dark;
@@ -44,6 +50,9 @@ html.theme--dim {
   --text: #f8faf9;
   --background: #161e27;
   --backgroundLight: hsl(240, 20%, 10%);
+  ::selection {
+    background: #464985;
+  }
 }
 
 /* Buttons and inputs have a font set by UA, so we'll have to reset that */
