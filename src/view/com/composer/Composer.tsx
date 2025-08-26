@@ -126,7 +126,6 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -527,8 +526,8 @@ export const ComposePost = ({
     }
     onClose()
     Toast.show(
-      <Toast.Outer type="success">
-        <Toast.Icon icon={CircleCheckIcon} />
+      <Toast.Outer>
+        <Toast.Icon />
         <Toast.Text>
           {thread.posts.length > 1
             ? _(msg`Your posts were sent`)
@@ -543,7 +542,9 @@ export const ComposePost = ({
               const {host: name, rkey} = new AtUri(postUri)
               navigation.navigate('PostThread', {name, rkey})
             }}>
-            View
+            <Trans context="Action to view the post the user just created">
+              View
+            </Trans>
           </Toast.Action>
         )}
       </Toast.Outer>,

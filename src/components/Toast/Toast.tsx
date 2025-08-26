@@ -16,19 +16,6 @@ import {dismiss} from '#/components/Toast/sonner'
 import {type ToastType} from '#/components/Toast/types'
 import {Text as BaseText} from '#/components/Typography'
 
-type ToastConfigContextType = {
-  id: string
-}
-
-type ToastThemeContextType = {
-  type: ToastType
-}
-
-export type ToastComponentProps = {
-  type?: ToastType
-  content: string
-}
-
 export const ICONS = {
   default: CircleCheck,
   success: CircleCheck,
@@ -37,81 +24,67 @@ export const ICONS = {
   info: CircleInfo,
 }
 
-const ToastConfigContext = createContext<ToastConfigContextType>({
+const ToastConfigContext = createContext<{
+  id: string
+  type: ToastType
+}>({
   id: '',
+  type: 'default',
 })
 ToastConfigContext.displayName = 'ToastConfigContext'
 
 export function ToastConfigProvider({
   children,
   id,
+  type,
 }: {
   children: React.ReactNode
   id: string
+  type: ToastType
 }) {
   return (
-    <ToastConfigContext.Provider value={useMemo(() => ({id}), [id])}>
+    <ToastConfigContext.Provider
+      value={useMemo(() => ({id, type}), [id, type])}>
       {children}
     </ToastConfigContext.Provider>
   )
 }
 
-const ToastThemeContext = createContext<ToastThemeContextType>({
-  type: 'default',
-})
-ToastThemeContext.displayName = 'ToastThemeContext'
-
-export function Default({type = 'default', content}: ToastComponentProps) {
-  return (
-    <Outer type={type}>
-      <Icon />
-      <Text>{content}</Text>
-    </Outer>
-  )
-}
-
-export function Outer({
-  children,
-  type = 'default',
-}: {
-  children: React.ReactNode
-  type?: ToastType
-}) {
+export function Outer({children}: {children: React.ReactNode}) {
   const t = useTheme()
+  const {type} = useContext(ToastConfigContext)
   const styles = useToastStyles({type})
 
   return (
-    <ToastThemeContext.Provider value={useMemo(() => ({type}), [type])}>
-      <View
-        style={[
-          a.flex_1,
-          a.p_lg,
-          a.rounded_md,
-          a.border,
-          a.flex_row,
-          a.gap_sm,
-          t.atoms.shadow_sm,
-          {
-            paddingVertical: 14, // 16 seems too big
-            backgroundColor: styles.backgroundColor,
-            borderColor: styles.borderColor,
-          },
-        ]}>
-        {children}
-      </View>
-    </ToastThemeContext.Provider>
+    <View
+      style={[
+        a.flex_1,
+        a.p_lg,
+        a.rounded_md,
+        a.border,
+        a.flex_row,
+        a.gap_sm,
+        t.atoms.shadow_sm,
+        {
+          paddingVertical: 14, // 16 seems too big
+          backgroundColor: styles.backgroundColor,
+          borderColor: styles.borderColor,
+        },
+      ]}>
+      {children}
+    </View>
   )
 }
 
 export function Icon({icon}: {icon?: React.ComponentType<SVGIconProps>}) {
-  const {type} = useContext(ToastThemeContext)
+  const {type} = useContext(ToastConfigContext)
   const styles = useToastStyles({type})
   const IconComponent = icon || ICONS[type]
   return <IconComponent size="md" fill={styles.iconColor} />
 }
 
 export function Text({children}: {children: React.ReactNode}) {
-  const {type} = useContext(ToastThemeContext)
+  const {type} = useContext(ToastConfigContext)
   const {textColor} = useToastStyles({type})
   const {fontScaleCompensation} = useToastFontScaleCompensation()
   return (
@@ -142,12 +115,12 @@ export function Text({children}: {children: React.ReactNode}) {
 
 export function Action(
   props: Omit<ButtonProps, UninheritableButtonProps | 'children'> & {
-    children: string
+    children: React.ReactNode
   },
 ) {
   const t = useTheme()
   const {fontScaleCompensation} = useToastFontScaleCompensation()
-  const {type} = useContext(ToastThemeContext)
+  const {type} = useContext(ToastConfigContext)
   const {id} = useContext(ToastConfigContext)
   const styles = useMemo(() => {
     const base = {
