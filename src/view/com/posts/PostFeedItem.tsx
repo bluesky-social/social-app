@@ -176,7 +176,7 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
+  const {sendInteraction, feedSourceInfo} = useFeedFeedbackContext()
 
   const onPressReply = () => {
     sendInteraction({
@@ -234,7 +234,7 @@ let FeedItemInner = ({
     })
     unstableCacheProfileView(queryClient, post.author)
     setUnstablePostSource(buildPostSourceKey(post.uri, post.author.handle), {
-      feed: feedDescriptor,
+      feedSourceInfo,
       post: {
         post,
         reason: AppBskyFeedDefs.isReasonRepost(reason) ? reason : undefined,

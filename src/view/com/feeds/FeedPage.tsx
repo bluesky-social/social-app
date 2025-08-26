@@ -17,7 +17,7 @@ import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
-import {type SavedFeedSourceInfo} from '#/state/queries/feed'
+import {type FeedSourceInfo} from '#/state/queries/feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -51,7 +51,7 @@ export function FeedPage({
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
-  feedInfo: SavedFeedSourceInfo
+  feedInfo: FeedSourceInfo
 }) {
   const {hasSession} = useSession()
   const {_} = useLingui()
@@ -61,7 +61,7 @@ export function FeedPage({
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
   const headerOffset = useHeaderOffset()
-  const feedFeedback = useFeedFeedback(feed, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
   const [hasNew, setHasNew] = useState(false)
   const setHomeBadge = useSetHomeBadge()
