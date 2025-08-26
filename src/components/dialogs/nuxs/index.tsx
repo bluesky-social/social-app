@@ -12,12 +12,11 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
-import {ActivitySubscriptionsNUX} from '#/components/dialogs/nuxs/ActivitySubscriptions'
+import {BookmarksAnnouncement} from '#/components/dialogs/nuxs/BookmarksAnnouncement'
 /*
  * NUXs
  */
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
-import {isExistingUserAsOf} from '#/components/dialogs/nuxs/utils'
 
 type Context = {
   activeNux: Nux | undefined
@@ -34,13 +33,7 @@ const queuedNuxs: {
   }) => boolean
 }[] = [
   {
-    id: Nux.ActivitySubscriptions,
-    enabled: ({currentProfile}) => {
-      return isExistingUserAsOf(
-        '2025-07-07T00:00:00.000Z',
-        currentProfile.createdAt,
-      )
-    },
+    id: Nux.BookmarksAnnouncement,
   },
 ]
 
@@ -180,7 +173,7 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
-      {activeNux === Nux.ActivitySubscriptions && <ActivitySubscriptionsNUX />}
+      {activeNux === Nux.BookmarksAnnouncement && <BookmarksAnnouncement />}
     </Context.Provider>
   )
 }
