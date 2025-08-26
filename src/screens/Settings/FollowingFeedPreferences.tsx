@@ -27,24 +27,16 @@ export function FollowingFeedPreferencesScreen({}: Props) {
   const {_} = useLingui()
 
   const {data: preferences} = usePreferencesQuery()
-  const {mutate: setFeedViewPref, variables} =
-    useSetFeedViewPreferencesMutation()
+  const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
 
-  const showReplies = !(
-    variables?.hideReplies ?? preferences?.feedViewPrefs?.hideReplies
-  )
+  const showReplies = !preferences?.feedViewPrefs?.hideReplies
 
-  const showReposts = !(
-    variables?.hideReposts ?? preferences?.feedViewPrefs?.hideReposts
-  )
+  const showReposts = !preferences?.feedViewPrefs?.hideReposts
 
-  const showQuotePosts = !(
-    variables?.hideQuotePosts ?? preferences?.feedViewPrefs?.hideQuotePosts
-  )
+  const showQuotePosts = !preferences?.feedViewPrefs?.hideQuotePosts
 
   const mergeFeedEnabled = Boolean(
-    variables?.lab_mergeFeedEnabled ??
-      preferences?.feedViewPrefs?.lab_mergeFeedEnabled,
+    preferences?.feedViewPrefs?.lab_mergeFeedEnabled,
   )
 
   return (
