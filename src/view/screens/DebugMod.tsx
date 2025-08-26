@@ -521,10 +521,10 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                   <MockPostFeedItem post={post} moderation={postModeration} />
 
                   <Heading title="Post" subtitle="viewed directly" />
-                  <MockPostThreadItemV2 post={post} moderationOpts={modOpts} />
+                  <MockPostThreadItem post={post} moderationOpts={modOpts} />
 
                   <Heading title="Post" subtitle="reply in thread" />
-                  <MockPostThreadItemV2
+                  <MockPostThreadItem
                     post={post}
                     moderationOpts={modOpts}
                     isReply
@@ -837,7 +837,7 @@ function MockPostFeedItem({
   )
 }
 
-function MockPostThreadItemV2({
+function MockPostThreadItem({
   post,
   moderationOpts,
   isReply,
