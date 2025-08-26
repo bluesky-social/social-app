@@ -542,7 +542,9 @@ export const ComposePost = ({
               const {host: name, rkey} = new AtUri(postUri)
               navigation.navigate('PostThread', {name, rkey})
             }}>
-            View
+            <Trans context="Action to view the post the user just created">
+              View
+            </Trans>
           </Toast.Action>
         )}
       </Toast.Outer>,

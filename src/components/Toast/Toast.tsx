@@ -115,7 +115,7 @@ export function Text({children}: {children: React.ReactNode}) {
 
 export function Action(
   props: Omit<ButtonProps, UninheritableButtonProps | 'children'> & {
-    children: string
+    children: React.ReactNode
   },
 ) {
   const t = useTheme()
