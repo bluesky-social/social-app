@@ -128,6 +128,7 @@ export function PostLanguagesSettingsDialogInner({
 
   const setLangPrefs = useLanguagePrefsApi()
   const t = useTheme()
+  const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const listRef = React.useRef(null)
 
@@ -218,10 +219,10 @@ export function PostLanguagesSettingsDialogInner({
             <TextField.Input
               value={search}
               onChangeText={setSearch}
-              placeholder="Search languages"
+              placeholder={_(msg`Search languages`)}
               style={[a.pl_xl]}
               maxLength={50}
-              label="Search languages"
+              label={_(msg`Search languages`)}
             />
             <View
               style={[
@@ -252,7 +253,7 @@ export function PostLanguagesSettingsDialogInner({
         </View>
         {showSearchCancel && (
           <Button
-            label="Cancel"
+            label={_(msg`Cancel`)}
             size="small"
             variant="ghost"
             color="secondary"
@@ -307,7 +308,7 @@ export function PostLanguagesSettingsDialogInner({
           onChange={setCheckedLanguagesCode2}
           type="checkbox"
           maxSelections={3}
-          label="languageSelection">
+          label={_(msg`Select Languages`)}>
           <Dialog.InnerFlatList
             ref={listRef}
             data={flatListData}
@@ -326,7 +327,7 @@ export function PostLanguagesSettingsDialogInner({
                       a.pt_2xl,
                       isAllLanguages ? a.pt_2xl : a.pt_xl,
                     ]}>
-                    <Trans>{item.label}</Trans>
+                    {item.label}
                   </Text>
                 )
               }
