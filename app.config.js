@@ -303,6 +303,11 @@ module.exports = function (_config) {
               android: './assets/app-icons/android_icon_default_dark.png',
               prerendered: true,
             },
+            next: {
+              ios: './assets/app-icons/icon_default_next.png',
+              android: './assets/app-icons/icon_default_next.png',
+              prerendered: true,
+            },
 
             /**
              * Bluesky+ core set

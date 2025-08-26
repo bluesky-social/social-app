@@ -84,6 +84,10 @@ export function augmentSearchQuery(query: string, {did}: {did?: string}) {
     return query
   }
 
+  // replace “smart quotes” with normal ones
+  // iOS keyboard will add fancy unicode quotes, but only normal ones work
+  query = query.replaceAll(/[“”]/g, '"')
+
   // We don't want to replace substrings that are being "quoted" because those
   // are exact string matches, so what we'll do here is to split them apart
 

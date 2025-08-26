@@ -5134,13 +5134,12 @@
   resolved "https://registry.yarnpkg.com/@miblanchard/react-native-slider/-/react-native-slider-2.6.0.tgz#9f78c805d637ffaff0e3e7429932d2995a67edc9"
   integrity sha512-o7hk/f/8vkqh6QNR5L52m+ws846fQeD/qNCC9CCSRdBqjq66KiCgbxzlhRzKM/gbtxcvMYMIEEJ1yes5cr6I3A==
 
-"@mozzius/expo-dynamic-app-icon@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@mozzius/expo-dynamic-app-icon/-/expo-dynamic-app-icon-1.5.0.tgz#c5f88c309965b6d6b89cfd5e2c00faa7bda736af"
-  integrity sha512-yE2yEPO+HQmOqsX7cECh7/vu/LXnqhHGsVm3UiVi/3gaK8u5hAkPTNzZ0Qu6vnMwjPnY+uFbN6X+6Aj9c9yjMQ==
+"@mozzius/expo-dynamic-app-icon@^1.7.1":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@mozzius/expo-dynamic-app-icon/-/expo-dynamic-app-icon-1.7.1.tgz#20a6475af256ab93112bbaac1c2f3dd052562d16"
+  integrity sha512-zDcY11B3tsQ9WsPTcszUCa6SpygfYz1e4p8PGn/4XhwYbOHJ53sEnGVQ1YlwzQ87SeWPlqrfzY6SUr9GpNq2Kg==
   dependencies:
     "@expo/image-utils" "^0.6.3"
-    expo-modules-core "^2.1.1"
     xcode "^3.0.1"
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
@@ -11377,13 +11376,6 @@ expo-modules-core@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-2.4.0.tgz#3081d62fadff913090cc5abfe46d9ec6b0e75789"
   integrity sha512-Ko5eHBdvuMykjw9P9C9PF54/wBSsGOxaOjx92I5BwgKvEmUwN3UrXFV4CXzlLVbLfSYUQaLcB220xmPfgvT7Fg==
-  dependencies:
-    invariant "^2.2.4"
-
-expo-modules-core@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/expo-modules-core/-/expo-modules-core-2.1.1.tgz#970af4cfd70c8aa6fc0096dd0a6578aa003a479f"
-  integrity sha512-yQzYCLR2mre4BNMXuqkeJ0oSNgmGEMI6BcmIzeNZbC2NFEjiaDpKvlV9bclYCtyVhUEVNbJcEPYMr6c1Y4eR4w==
   dependencies:
     invariant "^2.2.4"
 
