@@ -133,7 +133,9 @@ export function StepSuggestedAccounts() {
   return (
     <View style={[a.align_start]} testID="onboardingInterests">
       <Text style={[a.font_heavy, a.text_3xl]}>
-        <Trans>Suggested for you</Trans>
+        <Trans comment="Accounts suggested to the user for them to follow">
+          Suggested for you
+        </Trans>
       </Text>
 
       <View
