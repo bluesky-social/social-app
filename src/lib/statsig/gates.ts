@@ -1,6 +1,8 @@
 export type Gate =
   // Keep this alphabetic please.
   | 'alt_share_icon'
+  | 'cta_above_post_heading'
+  | 'cta_above_post_replies'
   | 'debug_show_feedcontext'
   | 'debug_subscriptions'
   | 'disable_onboarding_policy_update_notice'
