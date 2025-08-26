@@ -27,6 +27,7 @@ import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {StarterPackDialog} from '#/components/dialogs/StarterPackDialog'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
@@ -45,6 +46,7 @@ import {
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import {StarterPack} from '#/components/icons/StarterPack'
 import {EditLiveDialog} from '#/components/live/EditLiveDialog'
 import {GoLiveDialog} from '#/components/live/GoLiveDialog'
 import * as Menu from '#/components/Menu'
@@ -88,6 +90,7 @@ let ProfileMenu = ({
   const blockPromptControl = Prompt.usePromptControl()
   const loggedOutWarningPromptControl = Prompt.usePromptControl()
   const goLiveDialogControl = useDialogControl()
+  const addToStarterPacksDialogControl = useDialogControl()
 
   const showLoggedOutWarning = React.useMemo(() => {
     return (
@@ -301,6 +304,15 @@ let ProfileMenu = ({
                   </>
                 )}
                 <Menu.Item
+                  testID="profileHeaderDropdownStarterPackAddRemoveBtn"
+                  label={_(msg`Add to starter packs`)}
+                  onPress={addToStarterPacksDialogControl.open}>
+                  <Menu.ItemText>
+                    <Trans>Add to starter packs</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={StarterPack} />
+                </Menu.Item>
+                <Menu.Item
                   testID="profileHeaderDropdownListAddRemoveBtn"
                   label={_(msg`Add to lists`)}
                   onPress={onPressAddRemoveLists}>
@@ -439,6 +451,11 @@ let ProfileMenu = ({
           ) : null}
         </Menu.Outer>
       </Menu.Root>
+
+      <StarterPackDialog
+        control={addToStarterPacksDialogControl}
+        targetDid={profile.did}
+      />
 
       <ReportDialog
         control={reportDialogControl}
