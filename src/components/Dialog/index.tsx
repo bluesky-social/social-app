@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import {
   KeyboardAwareScrollView,
-  useKeyboardHandler,
+  type KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-controller'
 import {runOnJS} from 'react-native-reanimated'
 import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
@@ -20,6 +20,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {logger} from '#/logger'
 import {isAndroid, isIOS} from '#/platform/detection'
@@ -197,78 +198,74 @@ export function Inner({children, style, header}: DialogInnerProps) {
   )
 }
 
-export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
-  function ScrollableInner(
-    {children, contentContainerStyle, header, ...props},
-    ref,
-  ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
-    const insets = useSafeAreaInsets()
+export const ScrollableInner = React.forwardRef<
+  ScrollView,
+  DialogInnerProps &
+    Pick<
+      KeyboardAwareScrollViewProps,
+      'bottomOffset' | 'enabled' | 'extraKeyboardSpace'
+    >
+>(function ScrollableInner(
+  {children, contentContainerStyle, header, ...props},
+  ref,
+) {
+  const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+  const insets = useSafeAreaInsets()
 
-    useEnableKeyboardController(isIOS)
+  useEnableKeyboardController(isIOS)
 
-    const [keyboardHeight, setKeyboardHeight] = React.useState(0)
+  const keyboardIsVisible = useIsKeyboardVisible({iosUseWillEvents: true})
 
-    useKeyboardHandler(
-      {
-        onEnd: e => {
-          'worklet'
-          runOnJS(setKeyboardHeight)(e.height)
-        },
-      },
-      [],
-    )
-
-    let paddingBottom = 0
-    if (isIOS) {
-      paddingBottom += keyboardHeight / 4
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.bottom + tokens.space.md
-      }
-      paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
-    } else {
-      paddingBottom += keyboardHeight
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.top
-      }
-      paddingBottom +=
-        Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
+  let paddingBottom = 0
+  if (isIOS) {
+    if (keyboardIsVisible) {
+      paddingBottom += insets.bottom
     }
-
-    const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (!isAndroid) {
-        return
-      }
-      const {contentOffset} = e.nativeEvent
-      if (contentOffset.y > 0 && !disableDrag) {
-        setDisableDrag(true)
-      } else if (contentOffset.y <= 1 && disableDrag) {
-        setDisableDrag(false)
-      }
+    if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
+      paddingBottom += insets.bottom + tokens.space.md
     }
+    paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
+  } else {
+    if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
+      paddingBottom += insets.top
+    }
+    paddingBottom +=
+      Math.max(insets.bottom, tokens.space._5xl) + tokens.space._2xl
+  }
 
-    return (
-      <KeyboardAwareScrollView
-        contentContainerStyle={[
-          a.pt_2xl,
-          a.px_xl,
-          {paddingBottom},
-          contentContainerStyle,
-        ]}
-        ref={ref}
-        {...props}
-        bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
-        bottomOffset={30}
-        scrollEventThrottle={50}
-        onScroll={isAndroid ? onScroll : undefined}
-        keyboardShouldPersistTaps="handled"
-        stickyHeaderIndices={header ? [0] : undefined}>
-        {header}
-        {children}
-      </KeyboardAwareScrollView>
-    )
-  },
-)
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!isAndroid) {
+      return
+    }
+    const {contentOffset} = e.nativeEvent
+    if (contentOffset.y > 0 && !disableDrag) {
+      setDisableDrag(true)
+    } else if (contentOffset.y <= 1 && disableDrag) {
+      setDisableDrag(false)
+    }
+  }
+
+  return (
+    <KeyboardAwareScrollView
+      contentContainerStyle={[
+        a.pt_2xl,
+        a.px_xl,
+        {paddingBottom},
+        contentContainerStyle,
+      ]}
+      ref={ref}
+      bottomOffset={30}
+      {...props}
+      bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
+      scrollEventThrottle={50}
+      onScroll={isAndroid ? onScroll : undefined}
+      keyboardShouldPersistTaps="handled"
+      stickyHeaderIndices={header ? [0] : undefined}>
+      {header}
+      {children}
+    </KeyboardAwareScrollView>
+  )
+})
 
 export const InnerFlatList = React.forwardRef<
   ListMethods,

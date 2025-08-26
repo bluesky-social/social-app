@@ -29,10 +29,12 @@ export const ImageAltTextDialog = ({
   onChange,
 }: Props): React.ReactNode => {
   const [altText, setAltText] = React.useState(image.alt)
+  const {height} = useWindowDimensions()
 
   return (
     <Dialog.Outer
       control={control}
+      nativeOptions={{minHeight: height}}
       onClose={() => {
         onChange({
           ...image,
@@ -85,7 +87,13 @@ const ImageAltTextInner = ({
   }, [image, windim])
 
   return (
-    <Dialog.ScrollableInner label={_(msg`Add alt text`)}>
+    <Dialog.ScrollableInner
+      label={_(msg`Add alt text`)}
+      // make sure that the save button is visible when the dialog is opened.
+      // the keyboardawarescrollview will scroll to make the text input visible
+      // on mount, and the text input is autofocusing. adding extra bottomOffset
+      // makes sure that input is scrolled far enough to show the save button -sfn
+      bottomOffset={100}>
       <Dialog.Close />
 
       <View>
