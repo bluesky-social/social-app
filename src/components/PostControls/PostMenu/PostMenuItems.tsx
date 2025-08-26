@@ -266,7 +266,9 @@ let PostMenuItems = ({
       feedContext: postFeedContext,
       reqId: postReqId,
     })
-    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
+    Toast.show(
+      _(msg({message: 'Feedback sent to feed operator', context: 'toast'})),
+    )
   }
 
   const onPressShowLess = () => {
@@ -282,7 +284,9 @@ let PostMenuItems = ({
         feedContext: postFeedContext,
       })
     } else {
-      Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
+      Toast.show(
+        _(msg({message: 'Feedback sent to feed operator', context: 'toast'})),
+      )
     }
   }
 
