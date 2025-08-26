@@ -7,10 +7,10 @@ import (
 )
 
 func init() {
-	pongo2.RegisterFilter("canonical", filterCanonical)
+	pongo2.RegisterFilter("canonicalize_url", filterCanonicalizeURL)
 }
 
-func filterCanonical(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+func filterCanonicalizeURL(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
 	urlStr := in.String()
 
 	parsedURL, err := url.Parse(urlStr)

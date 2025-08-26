@@ -6,7 +6,7 @@ import (
 	"github.com/flosch/pongo2/v6"
 )
 
-func TestCanonicalFilter(t *testing.T) {
+func TestCanonicalizeURLFilter(t *testing.T) {
 	tests := []struct {
 		name     string
 		input    string
@@ -47,14 +47,14 @@ func TestCanonicalFilter(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			inputValue := pongo2.AsValue(tt.input)
-			result, err := filterCanonical(inputValue, nil)
+			result, err := filterCanonicalizeURL(inputValue, nil)
 			if err != nil {
-				t.Errorf("filterCanonical() error = %v", err)
+				t.Errorf("filterCanonicalizeURL() error = %v", err)
 				return
 			}
 
 			if result.String() != tt.expected {
-				t.Errorf("filterCanonical() = %v, want %v", result.String(), tt.expected)
+				t.Errorf("filterCanonicalizeURL() = %v, want %v", result.String(), tt.expected)
 			}
 		})
 	}
