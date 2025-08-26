@@ -46,12 +46,14 @@ import {
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
   AppBskyUnspeccedDefs,
+  AtUri,
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
@@ -70,6 +72,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
+import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
@@ -123,12 +126,13 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
-import * as toast from '#/components/Toast'
+import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
@@ -188,6 +192,7 @@ export const ComposePost = ({
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
+  const navigation = useNavigation<NavigationProp>()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
@@ -521,12 +526,27 @@ export const ComposePost = ({
       onPostSuccess?.(postSuccessData)
     }
     onClose()
-    toast.show(
-      thread.posts.length > 1
-        ? _(msg`Your posts have been published`)
-        : replyTo
-          ? _(msg`Your reply has been published`)
-          : _(msg`Your post has been published`),
+    Toast.show(
+      <Toast.Outer type="success">
+        <Toast.Icon icon={CircleCheckIcon} />
+        <Toast.Text>
+          {thread.posts.length > 1
+            ? _(msg`Your posts were sent`)
+            : replyTo
+              ? _(msg`Your reply was sent`)
+              : _(msg`Your post was sent`)}
+        </Toast.Text>
+        {postUri && (
+          <Toast.Action
+            label={_(msg`View post`)}
+            onPress={() => {
+              const {host: name, rkey} = new AtUri(postUri)
+              navigation.navigate('PostThread', {name, rkey})
+            }}>
+            View
+          </Toast.Action>
+        )}
+      </Toast.Outer>,
       {type: 'success'},
     )
   }, [
@@ -543,6 +563,7 @@ export const ComposePost = ({
     replyTo,
     setLangPrefs,
     queryClient,
+    navigation,
   ])
 
   // Preserves the referential identity passed to each post item.
@@ -826,7 +847,7 @@ let ComposerPost = React.memo(function ComposerPost({
         if (isNative) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          toast.show(_(msg`Unsupported video type: ${mimeType}`), {
+          Toast.show(_(msg`Unsupported video type: ${mimeType}`), {
             type: 'error',
           })
           return
@@ -1362,7 +1383,7 @@ function ComposerFooter({
       }
 
       errors.map(error => {
-        toast.show(error, {
+        Toast.show(error, {
           type: 'warning',
         })
       })
