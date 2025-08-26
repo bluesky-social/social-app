@@ -11,10 +11,15 @@ import likeIcon from '../../assets/heart2_filled_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
 import repostIcon from '../../assets/repost_stroke2_corner2_rounded.svg'
 import {CONTENT_LABELS} from '../labels'
-import {getRkey, niceDate, prettyNumber} from '../utils'
+import * as bsky from '../types/bsky'
+import {niceDate} from '../util/nice-date'
+import {prettyNumber} from '../util/pretty-number'
+import {getRkey} from '../util/rkey'
+import {getVerificationState} from '../util/verification-state'
 import {Container} from './container'
 import {Embed} from './embed'
 import {Link} from './link'
+import {VerificationCheck} from './verification-check'
 
 interface Props {
   thread: AppBskyFeedDefs.ThreadViewPost
@@ -28,16 +33,25 @@ export function Post({thread}: Props) {
   )
 
   let record: AppBskyFeedPost.Record | null = null
-  if (AppBskyFeedPost.isRecord(post.record)) {
+  if (
+    bsky.dangerousIsType<AppBskyFeedPost.Record>(
+      post.record,
+      AppBskyFeedPost.isRecord,
+    )
+  ) {
     record = post.record
   }
+
+  const verification = getVerificationState({profile: post.author})
 
   const href = `/profile/${post.author.did}/post/${getRkey(post)}`
   return (
     <Container href={href}>
       <div className="flex-1 flex-col flex gap-2" lang={record?.langs?.[0]}>
-        <div className="flex gap-2.5 items-center cursor-pointer">
-          <Link href={`/profile/${post.author.did}`} className="rounded-full">
+        <div className="flex gap-2.5 items-center cursor-pointer w-full max-w-full">
+          <Link
+            href={`/profile/${post.author.did}`}
+            className="rounded-full shrink-0">
             <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-300 dark:bg-slate-700 shrink-0">
               <img
                 src={post.author.avatar}
@@ -45,19 +59,27 @@ export function Post({thread}: Props) {
               />
             </div>
           </Link>
-          <div>
+          <div className="flex flex-1 flex-col min-w-0">
+            <div className="flex flex-1 items-center">
+              <Link
+                href={`/profile/${post.author.did}`}
+                className="block font-bold text-[17px] leading-5 line-clamp-1 hover:underline underline-offset-2 text-ellipsis decoration-2">
+                {post.author.displayName?.trim() || post.author.handle}
+              </Link>
+              {verification.isVerified && (
+                <VerificationCheck
+                  className="pl-[3px] mt-px shrink-0"
+                  verifier={verification.role === 'verifier'}
+                  size={15}
+                />
+              )}
+            </div>
             <Link
               href={`/profile/${post.author.did}`}
-              className="font-bold text-[17px] leading-5 line-clamp-1 hover:underline underline-offset-2 decoration-2">
-              <p>{post.author.displayName}</p>
-            </Link>
-            <Link
-              href={`/profile/${post.author.did}`}
-              className="text-[15px] text-textLight dark:text-textDimmed hover:underline line-clamp-1">
-              <p>@{post.author.handle}</p>
+              className="block text-[15px] text-textLight dark:text-textDimmed hover:underline line-clamp-1">
+              @{post.author.handle}
             </Link>
           </div>
-          <div className="flex-1" />
           <Link
             href={href}
             className="transition-transform hover:scale-110 shrink-0 self-start">
@@ -133,7 +155,7 @@ function PostContent({record}: {record: AppBskyFeedPost.Record | null}) {
         <Link
           key={counter}
           href={segment.link.uri}
-          className="text-blue-400 hover:underline"
+          className="text-blue-500 hover:underline"
           disableTracking={
             !segment.link.uri.startsWith('https://bsky.app') &&
             !segment.link.uri.startsWith('https://go.bsky.app')

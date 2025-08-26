@@ -49,7 +49,7 @@ export function Container({
         }
       }}>
       {href && <Link href={href} />}
-      <div className="flex-1 px-4 pt-3 pb-2.5">{children}</div>
+      <div className="flex-1 px-4 pt-3 pb-2.5 max-w-full">{children}</div>
     </div>
   )
 }
