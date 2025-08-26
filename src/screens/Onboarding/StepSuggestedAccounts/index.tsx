@@ -25,7 +25,6 @@ import {useSuggestedUsers} from '#/screens/Search/util/useSuggestedUsers'
 import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {boostInterests} from '#/components/ProgressGuide/FollowDialog'
@@ -44,7 +43,6 @@ export function StepSuggestedAccounts() {
   const queryClient = useQueryClient()
 
   const {state, dispatch} = useContext(Context)
-  const [saving, setSaving] = useState(false)
   const onboardDispatch = useOnboardingDispatch()
 
   const [selectedInterest, setSelectedInterest] = useState<string | null>(null)
@@ -78,18 +76,6 @@ export function StepSuggestedAccounts() {
   })
 
   const isError = !!error
-
-  const saveInterests = useCallback(async () => {
-    setSaving(true)
-
-    try {
-      setSaving(false)
-      dispatch({type: 'next'})
-    } catch (e: any) {
-      logger.info(`onboading: error saving interests`)
-      logger.error(e)
-    }
-  }, [setSaving, dispatch])
 
   const skipOnboarding = useCallback(() => {
     onboardDispatch({type: 'finish'})
@@ -239,7 +225,7 @@ export function StepSuggestedAccounts() {
         ) : (
           <View style={[a.gap_md, gtMobile ? a.flex_row : a.flex_col]}>
             <Button
-              disabled={saving || !canFollowAll}
+              disabled={!canFollowAll}
               color="secondary"
               size="large"
               label={_(msg`Follow all accounts`)}
@@ -250,15 +236,14 @@ export function StepSuggestedAccounts() {
               {isFollowingAll && <ButtonIcon icon={Loader} />}
             </Button>
             <Button
-              disabled={saving}
+              disabled={isFollowingAll}
               color="primary"
               size="large"
               label={_(msg`Continue to next step`)}
-              onPress={saveInterests}>
+              onPress={() => dispatch({type: 'next'})}>
               <ButtonText>
                 <Trans>Continue</Trans>
               </ButtonText>
-              <ButtonIcon icon={saving ? Loader : ChevronRightIcon} />
             </Button>
           </View>
         )}
