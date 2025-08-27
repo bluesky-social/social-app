@@ -12,9 +12,13 @@ import {
 import {
   KeyboardAwareScrollView,
   useKeyboardHandler,
+  useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller'
-import {runOnJS} from 'react-native-reanimated'
-import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+import Animated, {
+  runOnJS,
+  type ScrollEvent,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -275,12 +279,13 @@ export const InnerFlatList = React.forwardRef<
   ListProps<any> & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
+    footer?: React.ReactNode
   }
->(function InnerFlatList({style, ...props}, ref) {
+>(function InnerFlatList({footer, ...props}, ref) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
 
-  const onScroll = (e: ReanimatedScrollEvent) => {
+  const onScroll = (e: ScrollEvent) => {
     'worklet'
     if (!isAndroid) {
       return
@@ -301,11 +306,42 @@ export const InnerFlatList = React.forwardRef<
         ListFooterComponent={<View style={{height: insets.bottom + 100}} />}
         ref={ref}
         {...props}
-        style={[style]}
       />
+      {footer}
     </ScrollProvider>
   )
 })
+
+export function FlatListFooter({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  const {bottom} = useSafeAreaInsets()
+  const {height} = useReanimatedKeyboardAnimation()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{translateY: Math.min(0, height.get() + bottom - 10)}],
+    }
+  })
+
+  return (
+    <Animated.View
+      style={[
+        a.absolute,
+        a.bottom_0,
+        a.w_full,
+        a.z_10,
+        a.border_t,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        a.px_lg,
+        a.pt_md,
+        {paddingBottom: tokens.space.md + bottom},
+        animatedStyle,
+      ]}>
+      {children}
+    </Animated.View>
+  )
+}
 
 export function Handle({difference = false}: {difference?: boolean}) {
   const t = useTheme()

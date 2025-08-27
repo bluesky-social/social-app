@@ -218,9 +218,17 @@ export const InnerFlatList = React.forwardRef<
   FlatListProps<any> & {label: string} & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
+    footer?: React.ReactNode
   }
 >(function InnerFlatList(
-  {label, style, webInnerStyle, webInnerContentContainerStyle, ...props},
+  {
+    label,
+    style,
+    webInnerStyle,
+    webInnerContentContainerStyle,
+    footer,
+    ...props
+  },
   ref,
 ) {
   const {gtMobile} = useBreakpoints()
@@ -239,9 +247,31 @@ export const InnerFlatList = React.forwardRef<
         style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
         {...props}
       />
+      {footer}
     </Inner>
   )
 })
+
+export function FlatListFooter({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.absolute,
+        a.bottom_0,
+        a.w_full,
+        a.z_10,
+        t.atoms.bg,
+        a.border_t,
+        t.atoms.border_contrast_low,
+        a.px_lg,
+        a.py_md,
+      ]}>
+      {children}
+    </View>
+  )
+}
 
 export function Close() {
   const {_} = useLingui()
