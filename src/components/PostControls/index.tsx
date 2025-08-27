@@ -27,7 +27,7 @@ import {
 import {formatCount} from '#/view/com/util/numeric/format'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
-import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
+import {Reply as Bubble} from '#/components/icons/Reply'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
