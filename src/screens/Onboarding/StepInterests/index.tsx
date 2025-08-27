@@ -160,7 +160,16 @@ export function StepInterests() {
 
       <View style={[a.w_full, a.pt_2xl]}>
         {isLoading ? (
-          <Loader size="xl" />
+          <View
+            style={[
+              a.flex_1,
+              a.mt_md,
+              a.align_center,
+              a.justify_center,
+              {minHeight: 400},
+            ]}>
+            <Loader size="xl" />
+          </View>
         ) : isError || !data ? (
           <View
             style={[
