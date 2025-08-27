@@ -33,6 +33,9 @@ export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
 
+// 100 minus 10vh of paddingVertical
+export const WEB_DIALOG_HEIGHT = '80vh'
+
 const stopPropagation = (e: any) => e.stopPropagation()
 const preventDefault = (e: any) => e.preventDefault()
 
@@ -227,8 +230,7 @@ export const InnerFlatList = React.forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        // 100 minus 10vh of paddingVertical
-        web({maxHeight: '80vh'}),
+        web({maxHeight: WEB_DIALOG_HEIGHT}),
         webInnerStyle,
       ]}
       contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
