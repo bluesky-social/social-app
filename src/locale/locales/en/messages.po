@@ -13,9 +13,9 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/ProgressGuide/FollowDialog.tsx:516
-#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:127
-msgid "(active)"
+#. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
+#: src/components/InterestTabs.tsx:325
+msgid "\"{interestsDisplayName}\" category (active)"
 msgstr ""
 
 #: src/screens/Messages/components/ChatListItem.tsx:160
@@ -120,7 +120,7 @@ msgstr ""
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:374
+#: src/components/dialogs/StarterPackDialog.tsx:370
 msgid "{0, plural, other {+# more}}"
 msgstr ""
 
@@ -517,6 +517,10 @@ msgstr ""
 msgid "7 days"
 msgstr ""
 
+#: src/screens/Onboarding/StepFinished.tsx:341
+msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
+msgstr ""
+
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/screens/Messages/components/ChatListItem.tsx:210
 msgid "a message"
@@ -641,8 +645,8 @@ msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:388
-#: src/components/dialogs/StarterPackDialog.tsx:394
+#: src/components/dialogs/StarterPackDialog.tsx:384
+#: src/components/dialogs/StarterPackDialog.tsx:390
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr ""
@@ -773,7 +777,7 @@ msgstr ""
 msgid "Add to lists"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:197
+#: src/components/dialogs/StarterPackDialog.tsx:187
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -788,7 +792,7 @@ msgstr ""
 msgid "Added to list"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:275
+#: src/components/dialogs/StarterPackDialog.tsx:271
 msgid "Added to starter pack"
 msgstr ""
 
@@ -849,6 +853,8 @@ msgstr ""
 msgid "alice@example.com"
 msgstr ""
 
+#. the default tab in the interests tab bar
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:154
 #: src/view/screens/Notifications.tsx:88
 msgid "All"
 msgstr ""
@@ -860,6 +866,7 @@ msgstr ""
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:64
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:99
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:101
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:280
 msgid "All languages"
 msgstr ""
 
@@ -938,6 +945,7 @@ msgid "An email has been sent to {0}. It includes a confirmation code which you 
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:264
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:362
 msgid "An error has occurred"
 msgstr ""
 
@@ -947,6 +955,10 @@ msgstr ""
 
 #: src/view/com/composer/state/video.ts:399
 msgid "An error occurred while compressing the video."
+msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
+msgid "An error occurred while fetching suggested accounts."
 msgstr ""
 
 #: src/state/queries/explore-feed-previews.tsx:173
@@ -976,6 +988,10 @@ msgstr ""
 
 #: src/view/com/composer/state/video.ts:440
 msgid "An error occurred while uploading the video."
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:359
+msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
 msgstr ""
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:84
@@ -1009,7 +1025,7 @@ msgstr ""
 msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:185
+#: src/screens/Onboarding/StepInterests/index.tsx:194
 msgid "an unknown error occurred"
 msgstr ""
 
@@ -1022,8 +1038,8 @@ msgstr ""
 msgid "and"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:29
-#: src/screens/Onboarding/state.ts:97
+#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr ""
 
@@ -1198,8 +1214,8 @@ msgstr ""
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:23
-#: src/screens/Onboarding/state.ts:98
+#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr ""
 
@@ -1466,8 +1482,8 @@ msgstr ""
 msgid "Blur images and filter from feeds"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:30
-#: src/screens/Onboarding/state.ts:99
+#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr ""
 
@@ -1785,7 +1801,11 @@ msgstr ""
 msgid "Choose People"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:298
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:226
+msgid "Choose Post Languages"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:575
 msgid "Choose the algorithms that power your custom feeds."
 msgstr ""
 
@@ -1858,7 +1878,7 @@ msgstr ""
 msgid "Click to retry failed message"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:32
+#: src/screens/Onboarding/index.tsx:46
 msgid "Climate"
 msgstr ""
 
@@ -1876,7 +1896,7 @@ msgstr ""
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:199
+#: src/components/dialogs/StarterPackDialog.tsx:190
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -1885,7 +1905,7 @@ msgstr ""
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
-#: src/components/ProgressGuide/FollowDialog.tsx:386
+#: src/components/ProgressGuide/FollowDialog.tsx:379
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
@@ -1894,13 +1914,14 @@ msgstr ""
 #: src/components/WhoCanReply.tsx:209
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:286
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:291
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:377
 #: src/view/com/feeds/MissingFeed.tsx:208
 #: src/view/com/feeds/MissingFeed.tsx:215
 msgid "Close"
 msgstr ""
 
-#: src/components/Dialog/index.web.tsx:115
-#: src/components/Dialog/index.web.tsx:263
+#: src/components/Dialog/index.web.tsx:118
+#: src/components/Dialog/index.web.tsx:295
 msgid "Close active dialog"
 msgstr ""
 
@@ -1917,6 +1938,9 @@ msgstr ""
 #: src/components/dialogs/GifSelect.tsx:274
 #: src/components/verification/VerificationsDialog.tsx:136
 #: src/components/verification/VerifierDialog.tsx:136
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:246
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:340
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:372
 msgid "Close dialog"
 msgstr ""
 
@@ -1985,13 +2009,13 @@ msgstr ""
 msgid "Color theme"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:38
-#: src/screens/Onboarding/state.ts:100
+#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:24
-#: src/screens/Onboarding/state.ts:101
+#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr ""
 
@@ -2001,7 +2025,8 @@ msgstr ""
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:311
+#: src/screens/Onboarding/StepFinished.tsx:473
+#: src/screens/Onboarding/StepFinished.tsx:587
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
@@ -2143,8 +2168,9 @@ msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:244
+#: src/screens/Onboarding/StepInterests/index.tsx:253
 #: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr ""
 
@@ -2160,8 +2186,9 @@ msgstr ""
 msgid "Continue thread..."
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:241
+#: src/screens/Onboarding/StepInterests/index.tsx:250
 #: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
 msgstr ""
@@ -2180,7 +2207,7 @@ msgstr ""
 msgid "Conversation deleted"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:55
 msgid "Cooking"
 msgstr ""
 
@@ -2346,8 +2373,8 @@ msgstr ""
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:114
-#: src/components/dialogs/StarterPackDialog.tsx:216
+#: src/components/dialogs/StarterPackDialog.tsx:113
+#: src/components/dialogs/StarterPackDialog.tsx:212
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr ""
@@ -2412,8 +2439,8 @@ msgstr ""
 msgid "Create report for {0}"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:109
-#: src/components/dialogs/StarterPackDialog.tsx:211
+#: src/components/dialogs/StarterPackDialog.tsx:108
+#: src/components/dialogs/StarterPackDialog.tsx:207
 msgid "Create starter pack"
 msgstr ""
 
@@ -2425,8 +2452,8 @@ msgstr ""
 msgid "Creator has been blocked"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:26
-#: src/screens/Onboarding/state.ts:102
+#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr ""
 
@@ -2443,7 +2470,7 @@ msgstr ""
 msgid "Customize who can interact with this post."
 msgstr ""
 
-#: src/screens/Onboarding/Layout.tsx:56
+#: src/screens/Onboarding/Layout.tsx:61
 msgid "Customizes your Bluesky experience"
 msgstr ""
 
@@ -2459,7 +2486,7 @@ msgctxt "Name of app icon variant"
 msgid "Dark"
 msgstr ""
 
-#: src/view/screens/Debug.tsx:69
+#: src/view/screens/Debug.tsx:68
 msgid "Dark mode"
 msgstr ""
 
@@ -2481,7 +2508,7 @@ msgstr ""
 msgid "Debug Moderation"
 msgstr ""
 
-#: src/view/screens/Debug.tsx:89
+#: src/view/screens/Debug.tsx:88
 msgid "Debug panel"
 msgstr ""
 
@@ -2707,7 +2734,7 @@ msgstr ""
 msgid "Discover New Feeds"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:321
+#: src/components/Dialog/index.tsx:370
 msgid "Dismiss"
 msgstr ""
 
@@ -2736,6 +2763,10 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
 #: src/screens/Profile/Header/EditProfileDialog.tsx:367
 msgid "Display name"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:347
+msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:392
@@ -2787,6 +2818,7 @@ msgstr ""
 #: src/view/com/auth/server-input/index.tsx:233
 #: src/view/com/composer/labels/LabelsBtn.tsx:223
 #: src/view/com/composer/labels/LabelsBtn.tsx:230
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:345
 #: src/view/com/composer/videos/SubtitleDialog.tsx:168
 #: src/view/com/composer/videos/SubtitleDialog.tsx:178
 #: src/view/com/modals/CropImage.web.tsx:112
@@ -2809,7 +2841,7 @@ msgstr ""
 msgid "Double tap or long press the message to add a reaction"
 msgstr ""
 
-#: src/components/Dialog/index.tsx:322
+#: src/components/Dialog/index.tsx:371
 msgid "Double tap to close the dialog"
 msgstr ""
 
@@ -2968,8 +3000,8 @@ msgstr ""
 msgid "Edit your starter pack"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:31
-#: src/screens/Onboarding/state.ts:104
+#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr ""
 
@@ -3179,7 +3211,7 @@ msgstr ""
 msgid "Error receiving captcha response."
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:183
+#: src/screens/Onboarding/StepInterests/index.tsx:192
 msgid "Error:"
 msgstr ""
 
@@ -3345,7 +3377,7 @@ msgstr ""
 msgid "Failed to add emoji reaction"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:287
+#: src/components/dialogs/StarterPackDialog.tsx:283
 msgid "Failed to add to starter pack"
 msgstr ""
 
@@ -3386,6 +3418,10 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:722
 msgid "Failed to delete starter pack"
+msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:126
+msgid "Failed to follow all suggested accounts, please try again"
 msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:270
@@ -3451,7 +3487,7 @@ msgstr ""
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:306
+#: src/components/dialogs/StarterPackDialog.tsx:302
 msgid "Failed to remove from starter pack"
 msgstr ""
 
@@ -3620,7 +3656,8 @@ msgstr ""
 msgid "Filter who you receive notifications from"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:314
+#: src/screens/Onboarding/StepFinished.tsx:479
+#: src/screens/Onboarding/StepFinished.tsx:590
 msgid "Finalizing"
 msgstr ""
 
@@ -3630,9 +3667,9 @@ msgstr ""
 msgid "Find accounts to follow"
 msgstr ""
 
-#: src/components/ProgressGuide/FollowDialog.tsx:77
-#: src/components/ProgressGuide/FollowDialog.tsx:87
-#: src/components/ProgressGuide/FollowDialog.tsx:374
+#: src/components/ProgressGuide/FollowDialog.tsx:69
+#: src/components/ProgressGuide/FollowDialog.tsx:79
+#: src/components/ProgressGuide/FollowDialog.tsx:367
 msgid "Find people to follow"
 msgstr ""
 
@@ -3640,11 +3677,15 @@ msgstr ""
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
+#: src/screens/Onboarding/StepFinished.tsx:345
+msgid "Find your people"
+msgstr ""
+
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Finish"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:49
 msgid "Fitness"
 msgstr ""
 
@@ -3663,7 +3704,7 @@ msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:294
+#: src/screens/Onboarding/StepFinished.tsx:571
 msgid "Flexible"
 msgstr ""
 
@@ -3705,9 +3746,14 @@ msgstr ""
 msgid "Follow account"
 msgstr ""
 
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:235
 #: src/screens/StarterPack/StarterPackScreen.tsx:438
 #: src/screens/StarterPack/StarterPackScreen.tsx:446
 msgid "Follow all"
+msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:232
+msgid "Follow all accounts"
 msgstr ""
 
 #. User is not following this account, click to follow back
@@ -3720,6 +3766,10 @@ msgstr ""
 #: src/view/com/profile/FollowButton.tsx:81
 msgctxt "action"
 msgid "Follow back"
+msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:121
+msgid "Followed all accounts!"
 msgstr ""
 
 #: src/components/KnownFollowers.tsx:238
@@ -3798,8 +3848,8 @@ msgstr ""
 msgid "Font size"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:40
-#: src/screens/Onboarding/state.ts:105
+#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr ""
 
@@ -3819,12 +3869,17 @@ msgstr ""
 msgid "For the best experience, we recommend using the theme font."
 msgstr ""
 
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:293
 #: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:94
 msgid "For You"
 msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:354
+msgid "Forget the noise"
 msgstr ""
 
 #: src/screens/Login/index.tsx:153
@@ -3838,6 +3893,10 @@ msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:259
 msgid "Forgot?"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:336
+msgid "Free your feed"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:54
@@ -3974,8 +4033,8 @@ msgstr ""
 #: src/components/dms/ReportDialog.tsx:192
 #: src/components/ReportDialog/SelectReportOptionView.tsx:78
 #: src/components/ReportDialog/SubmitView.tsx:110
-#: src/screens/Onboarding/Layout.tsx:99
-#: src/screens/Onboarding/Layout.tsx:188
+#: src/screens/Onboarding/Layout.tsx:121
+#: src/screens/Onboarding/Layout.tsx:214
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr ""
@@ -4512,8 +4571,8 @@ msgstr ""
 msgid "Join the conversation"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:21
-#: src/screens/Onboarding/state.ts:107
+#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr ""
 
@@ -4560,10 +4619,6 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:74
 msgid "Labels on your content"
-msgstr ""
-
-#: src/view/com/composer/select-language/SelectLangBtn.tsx:107
-msgid "Language selection"
 msgstr ""
 
 #: src/Navigation.tsx:217
@@ -4701,7 +4756,8 @@ msgstr ""
 msgid "Let's get your password reset!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:314
+#: src/screens/Onboarding/StepFinished.tsx:481
+#: src/screens/Onboarding/StepFinished.tsx:590
 msgid "Let's go!"
 msgstr ""
 
@@ -5153,11 +5209,11 @@ msgstr ""
 msgid "More options"
 msgstr ""
 
-#: src/screens/Onboarding/state.ts:108
+#: src/screens/Onboarding/state.ts:113
 msgid "Movies"
 msgstr ""
 
-#: src/screens/Onboarding/state.ts:109
+#: src/screens/Onboarding/state.ts:114
 msgid "Music"
 msgstr ""
 
@@ -5287,8 +5343,8 @@ msgstr ""
 msgid "Name or Description Violates Community Standards"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:22
-#: src/screens/Onboarding/state.ts:110
+#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr ""
 
@@ -5319,7 +5375,7 @@ msgstr ""
 msgid "Need to report a copyright violation?"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:282
+#: src/screens/Onboarding/StepFinished.tsx:559
 msgid "Never lose access to your followers or data."
 msgstr ""
 
@@ -5422,7 +5478,7 @@ msgstr ""
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:208
+#: src/components/dialogs/StarterPackDialog.tsx:204
 msgid "New starter pack"
 msgstr ""
 
@@ -5441,8 +5497,8 @@ msgstr ""
 msgid "Newest replies first"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:20
-#: src/screens/Onboarding/state.ts:111
+#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
 msgstr ""
@@ -5453,6 +5509,8 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
+#: src/screens/Onboarding/StepFinished.tsx:474
+#: src/screens/Onboarding/StepFinished.tsx:483
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -5470,6 +5528,10 @@ msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:170
 msgid "Next image"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:356
+msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
 msgstr ""
 
 #: src/screens/Settings/AppPasswords.tsx:108
@@ -5511,6 +5573,10 @@ msgstr ""
 msgid "No messages yet"
 msgstr ""
 
+#: src/screens/Onboarding/StepFinished.tsx:338
+msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
+msgstr ""
+
 #: src/view/com/notifications/NotificationFeed.tsx:122
 msgid "No notifications yet!"
 msgstr ""
@@ -5549,7 +5615,7 @@ msgid "No result"
 msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:223
-#: src/components/ProgressGuide/FollowDialog.tsx:212
+#: src/components/ProgressGuide/FollowDialog.tsx:204
 msgid "No results"
 msgstr ""
 
@@ -5703,6 +5769,7 @@ msgid "Off"
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:267
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:365
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
 msgstr ""
@@ -5794,7 +5861,7 @@ msgstr ""
 msgid "Oops!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:278
+#: src/screens/Onboarding/StepFinished.tsx:555
 msgid "Open"
 msgstr ""
 
@@ -5875,10 +5942,6 @@ msgstr ""
 msgid "Open system log"
 msgstr ""
 
-#: src/view/com/util/forms/DropdownButton.tsx:167
-msgid "Opens {numItems} options"
-msgstr ""
-
 #: src/view/com/composer/labels/LabelsBtn.tsx:62
 msgid "Opens a dialog to add a content warning to your post"
 msgstr ""
@@ -5954,6 +6017,10 @@ msgstr ""
 msgid "Opens password reset form"
 msgstr ""
 
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:58
+msgid "Opens post language settings"
+msgstr ""
+
 #: src/view/com/notifications/NotificationFeedItem.tsx:906
 #: src/view/com/util/UserAvatar.tsx:594
 msgid "Opens this profile"
@@ -6004,10 +6071,6 @@ msgstr ""
 
 #: src/components/AccountList.tsx:88
 msgid "Other account"
-msgstr ""
-
-#: src/view/com/composer/select-language/SelectLangBtn.tsx:93
-msgid "Other..."
 msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:50
@@ -6093,12 +6156,12 @@ msgstr ""
 msgid "Person toggle"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:28
-#: src/screens/Onboarding/state.ts:112
+#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr ""
 
-#: src/screens/Onboarding/state.ts:113
+#: src/screens/Onboarding/state.ts:118
 msgid "Photography"
 msgstr ""
 
@@ -6320,8 +6383,8 @@ msgstr ""
 msgid "Please write your message below:"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:34
-#: src/screens/Onboarding/state.ts:114
+#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
 msgstr ""
@@ -6391,12 +6454,9 @@ msgstr ""
 msgid "Post Interaction Settings"
 msgstr ""
 
-#: src/view/com/composer/select-language/SelectLangBtn.tsx:89
-msgid "Post language"
-msgstr ""
-
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:77
-msgid "Post Languages"
+#. Accessibility label for button that opens dialog to choose post language settings
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:53
+msgid "Post language selection"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadError.tsx:32
@@ -6529,7 +6589,7 @@ msgctxt "toast"
 msgid "Profile updated"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:264
+#: src/screens/Onboarding/StepFinished.tsx:541
 msgid "Public"
 msgstr ""
 
@@ -6708,6 +6768,10 @@ msgstr ""
 msgid "Recent Searches"
 msgstr ""
 
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:274
+msgid "Recently used"
+msgstr ""
+
 #: src/screens/Search/modules/ExploreRecommendations.tsx:54
 msgid "Recommended"
 msgstr ""
@@ -6732,8 +6796,8 @@ msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:388
-#: src/components/dialogs/StarterPackDialog.tsx:394
+#: src/components/dialogs/StarterPackDialog.tsx:384
+#: src/components/dialogs/StarterPackDialog.tsx:390
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6866,7 +6930,7 @@ msgstr ""
 msgid "Removed from saved feeds"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:294
+#: src/components/dialogs/StarterPackDialog.tsx:290
 msgid "Removed from starter pack"
 msgstr ""
 
@@ -7195,8 +7259,10 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:280
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:218
-#: src/screens/Onboarding/StepInterests/index.tsx:217
-#: src/screens/Onboarding/StepInterests/index.tsx:220
+#: src/screens/Onboarding/StepInterests/index.tsx:226
+#: src/screens/Onboarding/StepInterests/index.tsx:229
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:209
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:212
 #: src/screens/PostThread/components/ThreadError.tsx:75
 #: src/screens/PostThread/components/ThreadError.tsx:81
 #: src/screens/Signup/BackNextButtons.tsx:53
@@ -7310,9 +7376,17 @@ msgstr ""
 msgid "Say hello!"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:33
-#: src/screens/Onboarding/state.ts:115
+#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/state.ts:120
 msgid "Science"
+msgstr ""
+
+#: src/components/InterestTabs.tsx:250
+msgid "Scroll left"
+msgstr ""
+
+#: src/components/InterestTabs.tsx:284
+msgid "Scroll right"
 msgstr ""
 
 #: src/view/screens/ProfileList.tsx:996
@@ -7333,7 +7407,7 @@ msgstr ""
 msgid "Search @{0}'s posts"
 msgstr ""
 
-#: src/components/ProgressGuide/FollowDialog.tsx:683
+#: src/components/ProgressGuide/FollowDialog.tsx:595
 msgid "Search by name or interest"
 msgstr ""
 
@@ -7341,9 +7415,14 @@ msgstr ""
 msgid "Search feeds"
 msgstr ""
 
-#: src/components/ProgressGuide/FollowDialog.tsx:524
-#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:135
-msgid "Search for \"{interestsDisplayName}\"{activeText}"
+#. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.
+#: src/components/ProgressGuide/FollowDialog.tsx:425
+msgid "Search for \"{interestsDisplayName}"
+msgstr ""
+
+#. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
+#: src/components/ProgressGuide/FollowDialog.tsx:418
+msgid "Search for \"{interestsDisplayName}\" (active)"
 msgstr ""
 
 #: src/view/shell/desktop/Search.tsx:131
@@ -7378,6 +7457,11 @@ msgstr ""
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:257
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:258
+msgid "Search languages"
+msgstr ""
+
 #: src/screens/Profile/ProfileSearch.tsx:36
 msgid "Search my posts"
 msgstr ""
@@ -7388,7 +7472,7 @@ msgid "Search posts"
 msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:534
-#: src/components/ProgressGuide/FollowDialog.tsx:702
+#: src/components/ProgressGuide/FollowDialog.tsx:614
 msgid "Search profiles"
 msgstr ""
 
@@ -7401,7 +7485,7 @@ msgid "Search..."
 msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:535
-#: src/components/ProgressGuide/FollowDialog.tsx:703
+#: src/components/ProgressGuide/FollowDialog.tsx:615
 msgid "Searches for profiles"
 msgstr ""
 
@@ -7444,6 +7528,11 @@ msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/Scrubber.tsx:197
 msgid "Seek slider. Use the arrow keys to seek forwards and backwards, and space to play/pause"
+msgstr ""
+
+#. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.
+#: src/components/InterestTabs.tsx:332
+msgid "Select \"{interestsDisplayName}\" category"
 msgstr ""
 
 #. Accessibility label for a username suggestion in the account creation flow
@@ -7513,6 +7602,7 @@ msgid "Select language..."
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:178
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:290
 msgid "Select languages"
 msgstr ""
 
@@ -7541,6 +7631,10 @@ msgstr ""
 msgid "Select the moderation service(s) to report to"
 msgstr ""
 
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:236
+msgid "Select up to 3 languages used in this post"
+msgstr ""
+
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
 msgstr ""
@@ -7557,7 +7651,7 @@ msgstr ""
 msgid "Select your date of birth"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:192
+#: src/screens/Onboarding/StepInterests/index.tsx:201
 #: src/screens/Settings/InterestsSettings.tsx:161
 msgid "Select your interests from the options below"
 msgstr ""
@@ -7572,10 +7666,6 @@ msgstr ""
 
 #: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "Selecting multiple media types is not supported."
-msgstr ""
-
-#: src/view/com/util/forms/DropdownButton.tsx:302
-msgid "Selects option {0} of {numItems}"
 msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:38
@@ -7659,7 +7749,7 @@ msgstr ""
 msgid "Set new password"
 msgstr ""
 
-#: src/screens/Onboarding/Layout.tsx:47
+#: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
 msgstr ""
 
@@ -8006,12 +8096,21 @@ msgstr ""
 msgid "Similar accounts"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:231
+#: src/screens/Onboarding/StepFinished.tsx:380
+#: src/screens/Onboarding/StepFinished.tsx:462
+#: src/screens/Onboarding/StepInterests/index.tsx:240
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:222
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Skip"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:228
+#: src/screens/Onboarding/StepFinished.tsx:373
+#: src/screens/Onboarding/StepFinished.tsx:459
+msgid "Skip introduction and start using your account"
+msgstr ""
+
+#: src/screens/Onboarding/StepInterests/index.tsx:237
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
 msgid "Skip this flow"
 msgstr ""
 
@@ -8023,8 +8122,8 @@ msgstr ""
 msgid "Snoozes the reminder"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:37
-#: src/screens/Onboarding/state.ts:103
+#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr ""
 
@@ -8119,8 +8218,8 @@ msgstr ""
 msgid "Spam; excessive mentions or replies"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:27
-#: src/screens/Onboarding/state.ts:116
+#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
 msgstr ""
@@ -8261,7 +8360,9 @@ msgstr ""
 msgid "Suggested Accounts"
 msgstr ""
 
+#. Accounts suggested to the user for them to follow
 #: src/components/FeedInterstitials.tsx:385
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:137
 msgid "Suggested for you"
 msgstr ""
 
@@ -8358,8 +8459,8 @@ msgstr ""
 msgid "Teach our algorithm what you like"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:36
-#: src/screens/Onboarding/state.ts:117
+#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr ""
 
@@ -8647,6 +8748,7 @@ msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:269
+#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:367
 #: src/view/com/util/ErrorBoundary.tsx:59
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
@@ -8944,10 +9046,6 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/view/com/util/forms/DropdownButton.tsx:263
-msgid "Toggle dropdown"
-msgstr ""
-
 #: src/screens/Moderation/index.tsx:403
 msgid "Toggle to enable or disable adult content"
 msgstr ""
@@ -9004,7 +9102,7 @@ msgctxt "action"
 msgid "Try again"
 msgstr ""
 
-#: src/screens/Onboarding/state.ts:118
+#: src/screens/Onboarding/state.ts:123
 msgid "TV"
 msgstr ""
 
@@ -9561,8 +9659,8 @@ msgstr ""
 msgid "Video from {0}: {text}"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:39
-#: src/screens/Onboarding/state.ts:106
+#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
 msgstr ""
@@ -9792,7 +9890,7 @@ msgstr ""
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:256
+#: src/screens/Onboarding/StepFinished.tsx:533
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr ""
 
@@ -9857,7 +9955,7 @@ msgid "We're having issues initializing the age assurance process for your accou
 msgstr ""
 
 #: src/components/dialogs/SearchablePeopleList.tsx:107
-#: src/components/ProgressGuide/FollowDialog.tsx:172
+#: src/components/ProgressGuide/FollowDialog.tsx:164
 msgid "We're having network issues, try again"
 msgstr ""
 
@@ -9940,10 +10038,6 @@ msgstr ""
 msgid "When you tap on a check, you’ll see which organizations have granted verification."
 msgstr ""
 
-#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:80
-msgid "Which languages are used in this post?"
-msgstr ""
-
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:79
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr ""
@@ -10023,8 +10117,8 @@ msgstr ""
 msgid "Write your reply"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:25
-#: src/screens/Onboarding/state.ts:119
+#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr ""
 
@@ -10258,7 +10352,7 @@ msgstr ""
 msgid "You have no lists."
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:103
+#: src/components/dialogs/StarterPackDialog.tsx:102
 msgid "You have no starter packs."
 msgstr ""
 
@@ -10429,7 +10523,7 @@ msgstr ""
 msgid "You're in line"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:253
+#: src/screens/Onboarding/StepFinished.tsx:530
 msgid "You're ready to go!"
 msgstr ""
 
@@ -10597,12 +10691,20 @@ msgstr ""
 msgid "Your posts were sent"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:268
+#: src/screens/Onboarding/StepFinished.tsx:545
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:290
 msgid "Your preferred language"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:422
+msgid "Your profile picture"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:350
+msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
 msgstr ""
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
