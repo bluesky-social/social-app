@@ -161,7 +161,7 @@ function DropdownContent({
   menuRef,
 }: {
   items: DropdownItem[]
-  menuRef: React.RefObject<HTMLDivElement>
+  menuRef: React.RefObject<HTMLDivElement | null>
 }) {
   const pal = usePalette('default')
   const theme = useTheme()

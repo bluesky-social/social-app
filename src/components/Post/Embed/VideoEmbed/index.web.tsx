@@ -37,7 +37,7 @@ export function VideoEmbed({
     useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
-  const lastKnownTime = useRef<number | undefined>()
+  const lastKnownTime = useRef<number | undefined>(undefined)
 
   useEffect(() => {
     if (!ref.current) return
