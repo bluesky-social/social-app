@@ -13,9 +13,11 @@ async function main() {
 
   const link = await LinkService.create(cfg)
 
-  if (cfg.service.safelinkEnabled) {
-    cfg.eventCache.adaptiveFetchAndUpdate()
+  if (link.ctx.cfg.service.safelinkEnabled) {
+    link.ctx.safelinkClient.runFetchEvents()
   }
+
+  console.log('here')
 
   await link.start()
   httpLogger.info('link service is running')

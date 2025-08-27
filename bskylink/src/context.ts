@@ -1,5 +1,5 @@
 import {SafelinkClient} from './cache/safelinkClient.js'
-import {Config} from './config.js'
+import {type Config} from './config.js'
 import Database from './db/index.js'
 
 export type AppContextOptions = {
@@ -16,7 +16,10 @@ export class AppContext {
   constructor(private opts: AppContextOptions) {
     this.cfg = this.opts.cfg
     this.db = this.opts.db
-    this.safelinkClient = new SafelinkClient({db: this.opts.db})
+    this.safelinkClient = new SafelinkClient({
+      cfg: this.opts.cfg.service,
+      db: this.opts.db,
+    })
   }
 
   static async fromConfig(cfg: Config, overrides?: Partial<AppContextOptions>) {

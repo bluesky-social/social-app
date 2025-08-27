@@ -1,8 +1,9 @@
-import {Selectable} from 'kysely'
+import {type GeneratedAlways, type Selectable} from 'kysely'
 
 export type DbSchema = {
   link: Link
   safelink_rule: SafelinkRule
+  safelink_cursor: SafelinkCursor
 }
 
 export interface Link {
@@ -15,10 +16,19 @@ export enum LinkType {
   StarterPack = 1,
 }
 
-export type RuleEventType = '#addRule' | '#updateRule' | '#removeRule'
-export type RulePatternType = '#domain' | '#url'
-export type RuleActionType = '#block' | '#warn' | '#whitelist'
-export type RuleReasonType = '#csam' | '#spam' | '#phishing' | '#none'
+export type RuleEventType =
+  | 'addRule'
+  | 'updateRule'
+  | 'removeRule'
+  | (string & {})
+export type RulePatternType = 'domain' | 'url' | (string & {})
+export type RuleActionType = 'block' | 'warn' | 'whitelist' | (string & {})
+export type RuleReasonType =
+  | 'csam'
+  | 'spam'
+  | 'phishing'
+  | 'none'
+  | (string & {})
 
 export interface SafelinkRule {
   id: number
@@ -32,5 +42,12 @@ export interface SafelinkRule {
   comment?: string
 }
 
+export interface SafelinkCursor {
+  id: GeneratedAlways<number>
+  cursor: string
+  createdAt: Date
+}
+
 export type LinkEntry = Selectable<Link>
-export type RuleEntry = Selectable<SafelinkRule>
+export type SafelinkRuleEntry = Selectable<SafelinkRule>
+export type SafelinkCursorEntry = Selectable<SafelinkCursor>

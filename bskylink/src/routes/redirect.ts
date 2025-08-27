@@ -2,7 +2,6 @@ import assert from 'node:assert'
 
 import {DAY, SECOND} from '@atproto/common'
 import {type Express} from 'express'
-import {type Hole} from 'uhtml'
 
 import {type AppContext} from '../context.js'
 import {linkRedirectContents} from '../html/linkRedirectContents.js'
@@ -48,18 +47,17 @@ export default function (ctx: AppContext, app: Express) {
       res.status(200)
       res.type('html')
 
-      let hole: Hole | undefined
+      let html: string | undefined
 
       if (ctx.cfg.service.safelinkEnabled) {
         const rule = await ctx.safelinkClient.tryFindRule(link)
-
         if (rule !== 'ok') {
           switch (rule.action) {
-            case '#whitelist':
+            case 'whitelist':
               redirectLogger.info(`Whitelist rule matched for ${rule.url}`)
               break
-            case '#block':
-              hole = linkWarningLayout(
+            case 'block':
+              html = linkWarningLayout(
                 'Blocked Link Warning',
                 linkWarningContents(req, {
                   type: 'block',
@@ -69,8 +67,8 @@ export default function (ctx: AppContext, app: Express) {
               res.setHeader('Cache-Control', 'no-store')
               redirectLogger.info(`Block rule matched for ${rule.url}`)
               break
-            case '#warn':
-              hole = linkWarningLayout(
+            case 'warn':
+              html = linkWarningLayout(
                 'Malicious Link Warning',
                 linkWarningContents(req, {
                   type: 'warn',
@@ -88,12 +86,12 @@ export default function (ctx: AppContext, app: Express) {
         }
       }
 
-      // If there is no hole defined yet, we will create a redirect hole
-      if (!hole) {
-        hole = linkRedirectContents(url.href)
+      // If there is no html defined yet, we will create a redirect html
+      if (!html) {
+        html = linkRedirectContents(url.href)
       }
 
-      return res.end(String(hole))
+      return res.end(html)
     }),
   )
 }

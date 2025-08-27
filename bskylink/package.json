@@ -20,7 +20,6 @@
     "lru-cache": "^11.1.0",
     "pg": "^8.12.0",
     "pino": "^9.2.0",
-    "uhtml": "^4.7.1",
     "uint8arrays": "^5.1.0"
   },
   "devDependencies": {

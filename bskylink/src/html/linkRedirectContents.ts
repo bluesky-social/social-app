@@ -1,8 +1,7 @@
 import escapeHTML from 'escape-html'
-import {type Hole, html} from 'uhtml'
 
-export function linkRedirectContents(link: string): Hole {
-  return html`
+export function linkRedirectContents(link: string): string {
+  return `
     <html>
       <head>
         <meta http-equiv="refresh" content="0; URL='${escapeHTML(link)}'" />

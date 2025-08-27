@@ -1,11 +1,7 @@
 import {envBool, envInt, envList, envStr} from '@atproto/common'
 
-// import { type EventCache, eventCache } from '../cache/cache.js'
-import {EventCache} from './cache/cache.js'
-
 export type Config = {
   service: ServiceConfig
-  eventCache: EventCache
   db: DbConfig
 }
 
@@ -96,11 +92,8 @@ export const envToCfg = (env: Environment): Config => {
     },
   }
 
-  const eventCache = new EventCache(serviceCfg)
-
   return {
     service: serviceCfg,
-    eventCache: eventCache,
     db: dbCfg,
   }
 }

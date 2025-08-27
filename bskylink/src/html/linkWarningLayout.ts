@@ -1,11 +1,10 @@
 import escapeHTML from 'escape-html'
-import {type Hole, html} from 'uhtml'
 
 export function linkWarningLayout(
   title: string,
-  containerContents: Hole,
-): Hole {
-  return html`
+  containerContents: string,
+): string {
+  return `
     <!DOCTYPE html>
     <html>
       <head>
@@ -23,7 +22,6 @@ export function linkWarningLayout(
             padding: 0;
             box-sizing: border-box;
           }
-
           body {
             font-family:
               -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial,
@@ -35,25 +33,21 @@ export function linkWarningLayout(
             justify-content: center;
             padding: 20px;
           }
-
           .container {
             width: 100%;
             max-width: 400px;
             text-align: center;
           }
-
           .warning-icon {
             font-size: 48px;
             margin-bottom: 16px;
           }
-
           h1 {
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 12px;
             color: #000000;
           }
-
           .warning-text {
             font-size: 15px;
             color: #536471;
@@ -61,7 +55,6 @@ export function linkWarningLayout(
             margin-bottom: 24px;
             padding: 0 20px;
           }
-
           .blocked-site {
             background-color: #f7f9fa;
             border-radius: 12px;
@@ -70,7 +63,6 @@ export function linkWarningLayout(
             text-align: left;
             word-break: break-all;
           }
-
           .site-name {
             font-size: 16px;
             font-weight: 500;
@@ -80,7 +72,6 @@ export function linkWarningLayout(
             display: block;
             text-align: center;
           }
-
           .site-url {
             font-size: 14px;
             color: #536471;
@@ -88,7 +79,6 @@ export function linkWarningLayout(
             display: block;
             text-align: center;
           }
-
           .button {
             border: none;
             border-radius: 24px;
@@ -100,23 +90,18 @@ export function linkWarningLayout(
             max-width: 280px;
             transition: background-color 0.2s;
           }
-
           .primary {
             background-color: #1d9bf0;
             color: white;
           }
-
           .secondary {
           }
-
           .back-button:hover {
             background-color: #1a8cd8;
           }
-
           .back-button:active {
             background-color: #1681c4;
           }
-
           @media (max-width: 480px) {
             .warning-text {
               padding: 0 10px;
