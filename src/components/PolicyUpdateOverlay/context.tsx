@@ -12,6 +12,7 @@ import {
   type PolicyUpdateState,
   usePolicyUpdateState,
 } from '#/components/PolicyUpdateOverlay/usePolicyUpdateState'
+import {ENV} from '#/env'
 
 const Context = createContext<{
   state: PolicyUpdateState
@@ -43,10 +44,10 @@ export function usePolicyUpdateContext() {
 export function Provider({children}: {children?: ReactNode}) {
   const {hasSession} = useSession()
   const [isReadyToShowOverlay, setIsReadyToShowOverlay] = useState(false)
+  console.log({ENV})
   const state = usePolicyUpdateState({
     // only enable the policy update overlay in non-test environments
-    enabled:
-      isReadyToShowOverlay && hasSession && process.env.NODE_ENV !== 'test',
+    enabled: isReadyToShowOverlay && hasSession && ENV !== 'e2e',
   })
 
   const ctx = useMemo(
