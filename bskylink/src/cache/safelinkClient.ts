@@ -18,7 +18,7 @@ export class SafelinkClient {
 
   private ozoneAgent: OzoneAgent
 
-  private cursor: string
+  private cursor?: string
 
   constructor({cfg, db}: {cfg: ServiceConfig; db: Database}) {
     this.domainCache = new LRUCache<string, SafelinkRule | 'ok'>({
@@ -36,8 +36,6 @@ export class SafelinkClient {
       cfg.ozoneAgentHandle!,
       cfg.ozoneAgentPass!,
     )
-
-    this.cursor = ''
   }
 
   public async tryFindRule(link: string): Promise<SafelinkRule | 'ok'> {
