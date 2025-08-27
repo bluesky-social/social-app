@@ -112,7 +112,7 @@ function EditImageInner({
   aspectRatio,
 }: Required<Pick<EditImageDialogProps, 'image'>> &
   Omit<EditImageDialogProps, 'control' | 'image'> & {
-    saveRef: React.RefObject<{save: () => Promise<void>}>
+    saveRef: React.RefObject<{save: () => Promise<void>} | null>
   }) {
   const t = useTheme()
   const [isDragging, setIsDragging] = useState(false)

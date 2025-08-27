@@ -72,7 +72,7 @@ export const Policies = ({
     )
   }
 
-  let els: ReactElement
+  let els: ReactElement<any>
   if (tos && pp) {
     els = (
       <Trans>

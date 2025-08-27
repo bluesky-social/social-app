@@ -119,7 +119,8 @@ export function Root({children}: {children: React.ReactNode}) {
   const hoverablesSV = useSharedValue<
     Record<string, {id: string; rect: Measurement}>
   >({})
-  const syncHoverablesThrottleRef = useRef<ReturnType<typeof setTimeout>>()
+  const syncHoverablesThrottleRef =
+    useRef<ReturnType<typeof setTimeout>>(undefined)
   const [hoveredMenuItem, setHoveredMenuItem] = useState<string | null>(null)
 
   const onHoverableTouchUp = useCallback((id: string) => {

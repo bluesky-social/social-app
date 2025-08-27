@@ -1,4 +1,4 @@
-import {useCallback, useRef} from 'react'
+import {type JSX, useCallback, useRef} from 'react'
 import {Linking} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
