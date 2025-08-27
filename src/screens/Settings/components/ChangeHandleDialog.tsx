@@ -209,9 +209,14 @@ function ProvidedHandlePage({
                 You are verified. You will lose your verification status if you
                 change your handle.{' '}
                 <InlineLinkText
-                  label={_(msg`Learn more`)}
+                  label={_(
+                    msg({
+                      message: `Learn more`,
+                      context: `english-only-resource`,
+                    }),
+                  )}
                   to={urls.website.blog.initialVerificationAnnouncement}>
-                  <Trans>Learn more.</Trans>
+                  <Trans context="english-only-resource">Learn more.</Trans>
                 </InlineLinkText>
               </Trans>
             </Admonition>
@@ -268,7 +273,12 @@ function ProvidedHandlePage({
               If you have your own domain, you can use that as your handle. This
               lets you self-verify your identity.{' '}
               <InlineLinkText
-                label={_(msg`learn more`)}
+                label={_(
+                  msg({
+                    message: `Learn more`,
+                    context: `english-only-resource`,
+                  }),
+                )}
                 to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
                 style={[a.font_bold]}
                 disableMismatchWarning>
