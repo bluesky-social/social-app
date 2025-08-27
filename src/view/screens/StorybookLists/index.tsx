@@ -1,13 +1,10 @@
-import React from 'react'
 import {View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
+import {runOnJS} from 'react-native-reanimated'
 
-import {type NavigationProp} from '#/lib/routes/types'
-import {useSetThemePrefs} from '#/state/shell'
-import {ListContained} from '#/view/screens/Storybook/ListContained'
-import {atoms as a, ThemeProvider} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
+import {List, ListScrollProvider, useListScrollHandler} from '#/components/List'
+import {Text} from '#/components/Typography'
 
 export function StorybookLists() {
   return (
@@ -20,12 +17,43 @@ export function StorybookLists() {
         <Layout.Header.Slot />
       </Layout.Header.Outer>
       <Layout.Content keyboardShouldPersistTaps="handled">
-        <StorybookInner />
+        <Inner />
       </Layout.Content>
     </Layout.Screen>
   )
 }
 
-function StorybookInner() {
-  return null
+const items = Array.from({length: 100}).map((_, i) => ({
+  key: `item-${i + 1}`,
+  title: `Item ${i + 1}`,
+}))
+
+type Item = {
+  key: string
+  title: string
+}
+
+const log = (msg: any) => console.log(msg)
+
+export function Inner() {
+  const onScrollWorklet = useListScrollHandler(e => {
+    'worklet'
+    runOnJS(log)(`Scroll Y: ${e.contentOffset.y}`)
+  }, [])
+
+  return (
+    <View style={[a.h_full_vh]}>
+      <ListScrollProvider onScroll={onScrollWorklet}>
+        <List<Item>
+          data={items}
+          renderItem={({item}) => (
+            <View style={[a.p_md, a.border_b]}>
+              <Text>{item.title}</Text>
+            </View>
+          )}
+          style={[a.debug]}
+        />
+      </ListScrollProvider>
+    </View>
+  )
 }
