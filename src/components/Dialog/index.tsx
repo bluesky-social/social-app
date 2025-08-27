@@ -260,6 +260,7 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
           contentContainerStyle,
         ]}
         ref={ref}
+        showsVerticalScrollIndicator={isAndroid ? false : undefined}
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}
@@ -305,6 +306,7 @@ export const InnerFlatList = React.forwardRef<
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         ListFooterComponent={<View style={{height: insets.bottom + 100}} />}
         ref={ref}
+        showsVerticalScrollIndicator={isAndroid ? false : undefined}
         {...props}
         style={[a.h_full, style]}
       />
