@@ -4,6 +4,7 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
 const {sentryWebpackPlugin} = require('@sentry/webpack-plugin')
 const {version} = require('./package.json')
+const path = require('path')
 
 const GENERATE_STATS = process.env.EXPO_PUBLIC_GENERATE_STATS === '1'
 const OPEN_ANALYZER = process.env.EXPO_PUBLIC_OPEN_ANALYZER === '1'
@@ -24,6 +25,32 @@ module.exports = async function (env, argv) {
     'react-native$': 'react-native-web',
     'react-native-webview': 'react-native-web-webview',
   })
+  // Remove source-map-loader (causing noisy missing TS source warnings in some RN deps)
+  function pruneSourceMapLoader(rules) {
+    if (!Array.isArray(rules)) return
+    for (let i = rules.length - 1; i >= 0; i--) {
+      const r = rules[i]
+      if (r && r.loader && /source-map-loader/.test(r.loader)) {
+        rules.splice(i, 1)
+        continue
+      }
+      if (r && Array.isArray(r.use)) {
+        r.use = r.use.filter(u => !(u.loader && /source-map-loader/.test(u.loader)))
+      }
+      if (r && r.oneOf) pruneSourceMapLoader(r.oneOf)
+      if (r && r.rules) pruneSourceMapLoader(r.rules)
+    }
+  }
+  pruneSourceMapLoader(config.module.rules)
+
+  // Ignore the specific missing source map warnings from react-native-root-siblings
+  const ignoreRe = /react-native-root-siblings\/src\/.*\.tsx/i
+  config.ignoreWarnings = (config.ignoreWarnings || []).concat(warn => {
+    if (typeof warn === 'string') return false
+    const msg = warn.message || ''
+    return msg.includes('Failed to parse source map') && ignoreRe.test(msg)
+  })
+
   config.module.rules = [
     ...(config.module.rules || []),
     reactNativeWebWebviewConfiguration,

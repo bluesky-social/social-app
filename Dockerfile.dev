@@ -1,0 +1,31 @@
+FROM node:20-alpine AS development
+
+WORKDIR /app
+
+RUN apk add --no-cache git python3 make g++ bash
+
+RUN corepack enable && corepack prepare yarn@3.8.2 --activate
+
+# Copy minimal files needed for dependency install
+COPY package.json package.json
+COPY patches ./patches
+
+# Patch packageManager field (ignore if absent)
+RUN sed -i 's/"packageManager": "yarn@1.22.22"/"packageManager": "yarn@3.8.2"/' package.json || true
+
+# Yarn 3 config
+RUN printf "nodeLinker: node-modules\nchecksumBehavior: update\n" > .yarnrc.yml
+
+# Install dependencies with retries
+RUN (yarn install --mode=update-lockfile --inline-builds || yarn install --mode=update-lockfile --inline-builds --network-timeout 600000 --cache-folder .yarn-cache || \
+     (echo 'Retrying with reduced concurrency' && YARN_NODE_LINKER=node-modules yarn install --mode=update-lockfile --inline-builds --network-concurrency 1))
+
+ENV NODE_ENV=development \
+    BROWSER=none \
+    FORCE_COLOR=1
+
+EXPOSE 3004
+
+# Source is bind-mounted in dev; no COPY of src.
+CMD ["sh", "-c", "yarn web --port 3004 --host 0.0.0.0"]
+

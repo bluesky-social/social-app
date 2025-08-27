@@ -3,7 +3,7 @@ import { type AppGndrActorDefs } from '@gander-social-atproto/api'
 
 export const NON_BREAKING_SPACE = '\u00A0'
 
-export const LOCAL_API_URL = 'http://localhost:3000'
+export const LOCAL_API_URL = 'http://localhost:2583'
 export const PUBLIC_API_URL =
   process.env.PUBLIC_API_URL || 'https://public.api.bsky.app'
 

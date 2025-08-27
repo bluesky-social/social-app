@@ -13,7 +13,7 @@
     "@vitejs/plugin-legacy": "^5.3.2",
     "preact": "^10.4.8",
     "terser": "^5.30.3",
-    "@gander-social-atproto/api": "^0.16.1"
+    "@gander-social-atproto/api": "^0.16.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.19",

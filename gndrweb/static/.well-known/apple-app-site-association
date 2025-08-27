@@ -2,7 +2,7 @@
   "applinks": {
     "details": [
       {
-        "appID": "B3LX46C5HS.xyz.ganderweb.app",
+        "appID": "xxxx.xxxx.xxxx.xxxx",
         "paths": [
           "*"
         ]
@@ -10,6 +10,6 @@
     ]
   },
   "appclips": {
-    "apps": ["B3LX46C5HS.xyz.ganderweb.app.AppClip"]
+    "apps": ["xxxx.xxxx.xxxx.app.AppClip"]
   }
 }

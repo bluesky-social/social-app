@@ -17,8 +17,8 @@
     "react": "^18.3.1",
     "satori": "^0.10.13",
     "twemoji": "^14.0.2",
-    "@gander-social-atproto/api": "^0.16.1",
-    "@gander-social-atproto/common": "0.5.3"
+    "@gander-social-atproto/api": "^0.16.5",
+    "@gander-social-atproto/common": "0.5.4"
   },
   "devDependencies": {
     "@types/node": "^20.14.3",
