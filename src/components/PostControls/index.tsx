@@ -196,7 +196,7 @@ let PostControls = ({
       <View style={[a.flex_row, a.justify_between, a.flex_1]}>
         <View
           style={[
-            big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
+            {marginLeft: big ? -2 : -6},
             replyDisabled ? {opacity: 0.5} : undefined,
           ]}>
           <PostControlButton
@@ -225,65 +225,57 @@ let PostControls = ({
             )}
           </PostControlButton>
         </View>
-        <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-          <RepostButton
-            isReposted={!!post.viewer?.repost}
-            repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
-            onRepost={onRepost}
-            onQuote={onQuote}
+        <RepostButton
+          isReposted={!!post.viewer?.repost}
+          repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
+          onRepost={onRepost}
+          onQuote={onQuote}
+          big={big}
+          embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+        />
+        <PostControlButton
+          testID="likeBtn"
+          big={big}
+          onPress={() => requireAuth(() => onPressToggleLike())}
+          label={
+            post.viewer?.like
+              ? _(
+                  msg({
+                    message: `Unlike (${plural(post.likeCount || 0, {
+                      one: '# like',
+                      other: '# likes',
+                    })})`,
+                    comment:
+                      'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
+                  }),
+                )
+              : _(
+                  msg({
+                    message: `Like (${plural(post.likeCount || 0, {
+                      one: '# like',
+                      other: '# likes',
+                    })})`,
+                    comment:
+                      'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
+                  }),
+                )
+          }>
+          <AnimatedLikeIcon
+            isLiked={Boolean(post.viewer?.like)}
             big={big}
-            embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+            hasBeenToggled={hasLikeIconBeenToggled}
           />
-        </View>
-        <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-          <PostControlButton
-            testID="likeBtn"
+          <CountWheel
+            likeCount={post.likeCount ?? 0}
             big={big}
-            onPress={() => requireAuth(() => onPressToggleLike())}
-            label={
-              post.viewer?.like
-                ? _(
-                    msg({
-                      message: `Unlike (${plural(post.likeCount || 0, {
-                        one: '# like',
-                        other: '# likes',
-                      })})`,
-                      comment:
-                        'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
-                    }),
-                  )
-                : _(
-                    msg({
-                      message: `Like (${plural(post.likeCount || 0, {
-                        one: '# like',
-                        other: '# likes',
-                      })})`,
-                      comment:
-                        'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
-                    }),
-                  )
-            }>
-            <AnimatedLikeIcon
-              isLiked={Boolean(post.viewer?.like)}
-              big={big}
-              hasBeenToggled={hasLikeIconBeenToggled}
-            />
-            <CountWheel
-              likeCount={post.likeCount ?? 0}
-              big={big}
-              isLiked={Boolean(post.viewer?.like)}
-              hasBeenToggled={hasLikeIconBeenToggled}
-            />
-          </PostControlButton>
-        </View>
+            isLiked={Boolean(post.viewer?.like)}
+            hasBeenToggled={hasLikeIconBeenToggled}
+          />
+        </PostControlButton>
+        {/* Spacer! */}
+        <View />
       </View>
-      <View
-        style={[
-          a.flex_row,
-          a.justify_end,
-          a.flex_1,
-          big ? a.gap_sm : a.gap_xs,
-        ]}>
+      <View style={[a.flex_row, a.justify_end, big && a.gap_sm]}>
         <BookmarkButton post={post} big={big} />
         <ShareMenuButton
           testID="postShareBtn"
