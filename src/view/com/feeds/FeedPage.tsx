@@ -76,10 +76,6 @@ export function FeedPage({
     return isNative && _isVideoFeed
   }, [feedInfo])
 
-  const isDiscoverFeed = useMemo(() => {
-    return feedInfo.uri === DISCOVER_FEED_URI
-  }, [feedInfo.uri])
-
   useEffect(() => {
     if (isPageFocused) {
       setHomeBadge(hasNew)
@@ -134,6 +130,7 @@ export function FeedPage({
   }, [scrollToTop, feed, queryClient])
 
   const shouldPrefetch = isNative && isPageAdjacent
+  const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI
   return (
     <View
       testID={testID}
