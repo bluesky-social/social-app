@@ -116,7 +116,6 @@ export function PostLanguagesSettingsDialogInner() {
     langPrefs.postLanguage.split(',') || [langPrefs.primaryLanguage],
   )
   const [search, setSearch] = useState('')
-  const showSearchCancel = search.length > 0
 
   const setLangPrefs = useLanguagePrefsApi()
   const t = useTheme()
@@ -235,28 +234,14 @@ export function PostLanguagesSettingsDialogInner() {
       </View>
 
       <View style={[a.w_full, a.flex_row, a.align_stretch, a.gap_xs, a.pb_0]}>
-        <View style={[a.flex_1, a.relative]}>
-          <SearchInput
-            value={search}
-            onChangeText={setSearch}
-            placeholder={_(msg`Search languages`)}
-            label={_(msg`Search languages`)}
-            maxLength={50}
-          />
-        </View>
-        {showSearchCancel && (
-          <Button
-            label={_(msg`Cancel`)}
-            size="small"
-            variant="ghost"
-            color="secondary"
-            style={[a.px_sm]}
-            onPress={() => setSearch('')}>
-            <ButtonText>
-              <Trans>Cancel</Trans>
-            </ButtonText>
-          </Button>
-        )}
+        <SearchInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder={_(msg`Search languages`)}
+          label={_(msg`Search languages`)}
+          maxLength={50}
+          onClearText={() => setSearch('')}
+        />
       </View>
     </View>
   )
