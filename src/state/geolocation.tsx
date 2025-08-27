@@ -5,6 +5,9 @@ import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {type Device, device} from '#/storage'
 
+const IPCC_URL = `https://bsky.app/ipcc`
+const BAPP_CONFIG_URL = `https://ip.bsky.app/config`
+
 const events = new EventEmitter()
 const EVENT = 'geolocation-updated'
 const emitGeolocationUpdate = (geolocation: Device['geolocation']) => {
@@ -25,11 +28,22 @@ const onGeolocationUpdate = (
  */
 export const DEFAULT_GEOLOCATION: Device['geolocation'] = {
   countryCode: undefined,
+  isAgeBlockedGeo: undefined,
   isAgeRestrictedGeo: false,
 }
 
-async function getGeolocation(): Promise<Device['geolocation']> {
-  const res = await fetch(`https://bsky.app/ipcc`)
+function sanitizeGeolocation(
+  geolocation: Device['geolocation'],
+): Device['geolocation'] {
+  return {
+    countryCode: geolocation?.countryCode ?? undefined,
+    isAgeBlockedGeo: geolocation?.isAgeBlockedGeo ?? false,
+    isAgeRestrictedGeo: geolocation?.isAgeRestrictedGeo ?? false,
+  }
+}
+
+async function getGeolocation(url: string): Promise<Device['geolocation']> {
+  const res = await fetch(url)
 
   if (!res.ok) {
     throw new Error(`geolocation: lookup failed ${res.status}`)
@@ -40,11 +54,39 @@ async function getGeolocation(): Promise<Device['geolocation']> {
   if (json.countryCode) {
     return {
       countryCode: json.countryCode,
+      isAgeBlockedGeo: json.isAgeBlockedGeo ?? false,
       isAgeRestrictedGeo: json.isAgeRestrictedGeo ?? false,
+      // @ts-ignore
+      regionCode: json.regionCode ?? undefined,
     }
   } else {
     return undefined
   }
+}
+
+async function compareWithIPCC(bapp: Device['geolocation']) {
+  try {
+    const ipcc = await getGeolocation(IPCC_URL)
+
+    if (!ipcc || !bapp) return
+
+    logger.metric(
+      'geo:debug',
+      {
+        bappCountryCode: bapp.countryCode,
+        // @ts-ignore
+        bappRegionCode: bapp.regionCode,
+        bappIsAgeBlockedGeo: bapp.isAgeBlockedGeo,
+        bappIsAgeRestrictedGeo: bapp.isAgeRestrictedGeo,
+        ipccCountryCode: ipcc.countryCode,
+        ipccIsAgeBlockedGeo: ipcc.isAgeBlockedGeo,
+        ipccIsAgeRestrictedGeo: ipcc.isAgeRestrictedGeo,
+      },
+      {
+        statsig: false,
+      },
+    )
+  } catch {}
 }
 
 /**
@@ -79,11 +121,12 @@ export function beginResolveGeolocation() {
 
     try {
       // Try once, fail fast
-      const geolocation = await getGeolocation()
+      const geolocation = await getGeolocation(BAPP_CONFIG_URL)
       if (geolocation) {
-        device.set(['geolocation'], geolocation)
+        device.set(['geolocation'], sanitizeGeolocation(geolocation))
         emitGeolocationUpdate(geolocation)
         logger.debug(`geolocation: success`, {geolocation})
+        compareWithIPCC(geolocation)
       } else {
         // endpoint should throw on all failures, this is insurance
         throw new Error(`geolocation: nothing returned from initial request`)
@@ -99,13 +142,14 @@ export function beginResolveGeolocation() {
       device.set(['geolocation'], DEFAULT_GEOLOCATION)
 
       // retry 3 times, but don't await, proceed with default
-      networkRetry(3, getGeolocation)
+      networkRetry(3, () => getGeolocation(BAPP_CONFIG_URL))
         .then(geolocation => {
           if (geolocation) {
-            device.set(['geolocation'], geolocation)
+            device.set(['geolocation'], sanitizeGeolocation(geolocation))
             emitGeolocationUpdate(geolocation)
             logger.debug(`geolocation: success`, {geolocation})
             success = true
+            compareWithIPCC(geolocation)
           } else {
             // endpoint should throw on all failures, this is insurance
             throw new Error(`geolocation: nothing returned from retries`)

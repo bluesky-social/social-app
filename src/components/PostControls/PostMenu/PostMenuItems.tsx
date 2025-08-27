@@ -266,7 +266,9 @@ let PostMenuItems = ({
       feedContext: postFeedContext,
       reqId: postReqId,
     })
-    Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
+    Toast.show(
+      _(msg({message: 'Feedback sent to feed operator', context: 'toast'})),
+    )
   }
 
   const onPressShowLess = () => {
@@ -282,7 +284,9 @@ let PostMenuItems = ({
         feedContext: postFeedContext,
       })
     } else {
-      Toast.show(_(msg({message: 'Feedback sent!', context: 'toast'})))
+      Toast.show(
+        _(msg({message: 'Feedback sent to feed operator', context: 'toast'})),
+      )
     }
   }
 
@@ -486,13 +490,16 @@ let PostMenuItems = ({
         )}
 
         {isDiscoverDebugUser && (
-          <Menu.Item
-            testID="postDropdownReportMisclassificationBtn"
-            label={_(msg`Assign topic for algo`)}
-            onPress={onReportMisclassification}>
-            <Menu.ItemText>{_(msg`Assign topic for algo`)}</Menu.ItemText>
-            <Menu.ItemIcon icon={AtomIcon} position="right" />
-          </Menu.Item>
+          <>
+            <Menu.Divider />
+            <Menu.Item
+              testID="postDropdownReportMisclassificationBtn"
+              label={_(msg`Assign topic for algo`)}
+              onPress={onReportMisclassification}>
+              <Menu.ItemText>{_(msg`Assign topic for algo`)}</Menu.ItemText>
+              <Menu.ItemIcon icon={AtomIcon} position="right" />
+            </Menu.Item>
+          </>
         )}
 
         {hasSession && (

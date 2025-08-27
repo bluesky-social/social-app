@@ -93,8 +93,6 @@ export const STAGING_FEEDS = [
   `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ]
 
-export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
-
 export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,
@@ -184,6 +182,10 @@ export const VIDEO_SERVICE = 'https://video.bsky.app'
 export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
 
 export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
+/**
+ * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
+ * ISO megabytes.
+ */
 export const VIDEO_MAX_SIZE = 1000 * 1000 * 100 // 100mb
 
 export const SUPPORTED_MIME_TYPES = [

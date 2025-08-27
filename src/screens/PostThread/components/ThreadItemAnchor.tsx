@@ -32,20 +32,21 @@ import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
-import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {InlineLinkText, Link} from '#/components/Link'
+import {LoggedOutCTA} from '#/components/LoggedOutCTA'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
@@ -178,7 +179,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const {_, i18n} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(postSource?.feed, hasSession)
+  const {gtTablet} = useBreakpoints()
+  const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
 
   const post = postShadow
   const record = item.value.post.record
@@ -311,6 +313,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           },
           isRoot && [a.pt_lg],
         ]}>
+        {/* Show CTA for logged-out visitors - hide on desktop and check gate */}
+        {!gtTablet && <LoggedOutCTA gateName="cta_above_post_heading" />}
         <View style={[a.flex_row, a.gap_md, a.pb_md]}>
           <View collapsable={false}>
             <PreviewableUserAvatar
@@ -367,7 +371,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           </Link>
           {showFollowButton && (
             <View collapsable={false}>
-              <PostThreadFollowBtn did={post.author.did} />
+              <ThreadItemAnchorFollowButton did={post.author.did} />
             </View>
           )}
         </View>
