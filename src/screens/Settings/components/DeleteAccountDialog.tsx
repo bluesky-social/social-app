@@ -182,7 +182,7 @@ function Inner({
           <View style={[a.gap_md]}>
             <View>
               <TextField.LabelText>
-                <Trans>Confirmation Code</Trans>
+                <Trans>Confirmation code</Trans>
               </TextField.LabelText>
               <TextField.Root>
                 <TextField.Input
@@ -241,7 +241,7 @@ function Inner({
                 disabled={isProcessing}
                 onPress={onPressSendEmail}>
                 <ButtonText>
-                  <Trans>Send Email</Trans>
+                  <Trans>Send email</Trans>
                 </ButtonText>
                 {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
