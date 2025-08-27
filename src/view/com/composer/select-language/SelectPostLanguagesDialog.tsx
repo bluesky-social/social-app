@@ -104,6 +104,7 @@ function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
 
 export function PostLanguagesSettingsDialogInner() {
   const control = Dialog.useDialogContext()
+  const [headerHeight, setHeaderHeight] = useState(0)
 
   const allowedLanguages = useMemo(() => {
     const uniqueLanguagesMap = LANGUAGES.filter(lang => !!lang.code2).reduce(
@@ -200,7 +201,9 @@ export function PostLanguagesSettingsDialogInner() {
   ])
 
   const listHeader = (
-    <View style={[a.pb_xs, t.atoms.bg, isNative && a.pt_2xl]}>
+    <View
+      style={[a.pb_xs, t.atoms.bg, isNative && a.pt_2xl]}
+      onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}>
       <View style={[a.flex_row, a.w_full, a.justify_between]}>
         <View>
           <Text
@@ -284,6 +287,7 @@ export function PostLanguagesSettingsDialogInner() {
         stickyHeaderIndices={[0]}
         contentContainerStyle={[a.gap_0]}
         style={[isNative && a.px_lg, web({paddingBottom: 120})]}
+        scrollIndicatorInsets={{top: headerHeight}}
         renderItem={({item, index}) => {
           if (item.type === 'header') {
             return (
