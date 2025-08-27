@@ -259,7 +259,7 @@ export function sessionAccountToSession(
 
 export class Agent extends BaseAgent {
   constructor(
-    proxyHeader: string | null,
+    proxyHeader: ProxyHeaderValue | null,
     options: SessionManager | FetchHandler | FetchHandlerOptions,
   ) {
     super(options)
