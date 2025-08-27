@@ -10,7 +10,6 @@ import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {isFirefox} from '#/lib/browser'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
