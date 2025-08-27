@@ -10,7 +10,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {Repost_Stroke2_Corner3_Rounded as Repost} from '#/components/icons/Repost'
 import {Text} from '#/components/Typography'
 import {
   PostControlButton,
