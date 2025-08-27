@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {languageName} from '#/locale/helpers'
-import {Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
+import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {isNative} from '#/platform/detection'
 import {
   toPostLanguages,
