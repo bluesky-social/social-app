@@ -281,7 +281,7 @@ export const InnerFlatList = React.forwardRef<
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
     footer?: React.ReactNode
   }
->(function InnerFlatList({footer, ...props}, ref) {
+>(function InnerFlatList({footer, style, ...props}, ref) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
 
@@ -306,6 +306,7 @@ export const InnerFlatList = React.forwardRef<
         ListFooterComponent={<View style={{height: insets.bottom + 100}} />}
         ref={ref}
         {...props}
+        style={[a.h_full, style]}
       />
       {footer}
     </ScrollProvider>

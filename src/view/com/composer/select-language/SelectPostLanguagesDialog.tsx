@@ -1,5 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
-import {Keyboard, View} from 'react-native'
+import {Keyboard, useWindowDimensions, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -81,13 +82,18 @@ export function SelectPostLanguagesBtn() {
 }
 
 function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
+  const {height} = useWindowDimensions()
+  const insets = useSafeAreaInsets()
+
   const renderErrorBoundary = useCallback(
     (error: any) => <DialogError details={String(error)} />,
     [],
   )
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer
+      control={control}
+      nativeOptions={{minHeight: height - insets.top}}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
         <PostLanguagesSettingsDialogInner />
