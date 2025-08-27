@@ -23,9 +23,12 @@ export function InputGroup(props: React.PropsWithChildren<{}>) {
             {React.cloneElement(child, {
               // @ts-ignore
               style: [
+                // @ts-ignore
                 ...(Array.isArray(child.props?.style)
-                  ? child.props.style
-                  : [child.props.style || {}]),
+                  ? // @ts-ignore
+                    child.props.style
+                  : // @ts-ignore
+                    [child.props.style || {}]),
                 {
                   borderTopLeftRadius: i > 0 ? 0 : undefined,
                   borderTopRightRadius: i > 0 ? 0 : undefined,

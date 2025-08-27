@@ -127,7 +127,7 @@ export function useOTAUpdates() {
   const appState = React.useRef<AppStateStatus>('active')
   const lastMinimize = React.useRef(0)
   const ranInitialCheck = React.useRef(false)
-  const timeout = React.useRef<NodeJS.Timeout>()
+  const timeout = React.useRef<NodeJS.Timeout>(undefined)
   const {currentlyRunning, isUpdatePending} = useUpdates()
   const currentChannel = currentlyRunning?.channel
 
