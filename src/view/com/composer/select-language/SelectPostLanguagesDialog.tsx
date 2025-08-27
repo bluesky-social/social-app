@@ -57,23 +57,31 @@ export function SelectPostLanguagesBtn() {
         )}
         accessibilityHint={_(msg`Opens post language settings`)}
         style={[a.mx_md]}>
-        {postLanguagesPref.length > 0 ? (
-          <Text
-            style={[
-              {color: t.palette.primary_500},
-              a.font_bold,
-              a.text_sm,
-              a.leading_snug,
-              {maxWidth: 100},
-            ]}
-            numberOfLines={1}>
-            {postLanguagesPref
-              .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
-              .join(', ')}
-          </Text>
-        ) : (
-          <GlobeIcon size="xs" style={[{color: t.palette.primary_500}]} />
-        )}
+        {({pressed, hovered, focused}) => {
+          const color =
+            pressed || hovered || focused
+              ? t.palette.primary_300
+              : t.palette.primary_500
+          if (postLanguagesPref.length > 0) {
+            return (
+              <Text
+                style={[
+                  {color},
+                  a.font_bold,
+                  a.text_sm,
+                  a.leading_snug,
+                  {maxWidth: 100},
+                ]}
+                numberOfLines={1}>
+                {postLanguagesPref
+                  .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
+                  .join(', ')}
+              </Text>
+            )
+          } else {
+            return <GlobeIcon size="xs" style={{color}} />
+          }
+        }}
       </Button>
 
       <LanguageDialog control={control} />
