@@ -30,7 +30,7 @@ import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, ios, platform, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -286,6 +286,8 @@ export const InnerFlatList = React.forwardRef<
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
 
+  useEnableKeyboardController(isIOS)
+
   const onScroll = (e: ScrollEvent) => {
     'worklet'
     if (!isAndroid) {
@@ -317,10 +319,11 @@ export const InnerFlatList = React.forwardRef<
 
 export function FlatListFooter({children}: {children: React.ReactNode}) {
   const t = useTheme()
-  const {bottom} = useSafeAreaInsets()
+  const {top, bottom} = useSafeAreaInsets()
   const {height} = useReanimatedKeyboardAnimation()
 
   const animatedStyle = useAnimatedStyle(() => {
+    if (!isIOS) return {}
     return {
       transform: [{translateY: Math.min(0, height.get() + bottom - 10)}],
     }
@@ -338,8 +341,15 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
         t.atoms.border_contrast_low,
         a.px_lg,
         a.pt_md,
-        {paddingBottom: tokens.space.md + bottom},
-        animatedStyle,
+        {
+          paddingBottom: platform({
+            ios: tokens.space.md + bottom,
+            android: tokens.space.md + bottom + top,
+          }),
+        },
+        // TODO: had to admit defeat here, but we should
+        // try and get this to work for Android as well -sfn
+        ios(animatedStyle),
       ]}>
       {children}
     </Animated.View>
