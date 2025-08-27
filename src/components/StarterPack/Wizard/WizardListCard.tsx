@@ -1,13 +1,12 @@
 import {Keyboard, View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
   moderateFeedGenerator,
   moderateProfile,
-  ModerationOpts,
-  ModerationUI,
+  type ModerationOpts,
+  type ModerationUI,
 } from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,13 +15,16 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
+import {
+  type WizardAction,
+  type WizardState,
+} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 function WizardListCard({
   type,
@@ -129,10 +131,13 @@ export function WizardProfileCard({
 }) {
   const {currentAccount} = useSession()
 
-  const isMe = profile.did === currentAccount?.did
-  const included = isMe || state.profiles.some(p => p.did === profile.did)
+  // Determine the "main" profile for this starter pack - either targetDid or current account
+  const targetProfileDid = state.targetDid || currentAccount?.did
+  const isTarget = profile.did === targetProfileDid
+  const included = isTarget || state.profiles.some(p => p.did === profile.did)
   const disabled =
-    isMe || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE - 1)
+    isTarget ||
+    (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE - 1)
   const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)
@@ -142,7 +147,7 @@ export function WizardProfileCard({
     if (disabled) return
 
     Keyboard.dismiss()
-    if (profile.did === currentAccount?.did) return
+    if (profile.did === targetProfileDid) return
 
     if (!included) {
       dispatch({type: 'AddProfile', profile})
@@ -174,7 +179,7 @@ export function WizardFeedCard({
   moderationOpts,
 }: {
   btnType: 'checkbox' | 'remove'
-  generator: GeneratorView
+  generator: AppBskyFeedDefs.GeneratorView
   state: WizardState
   dispatch: (action: WizardAction) => void
   moderationOpts: ModerationOpts

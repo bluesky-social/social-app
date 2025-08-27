@@ -9,7 +9,6 @@ import Animated, {
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {
   createFullHandle,
   MAX_SERVICE_HANDLE_LENGTH,
@@ -28,14 +27,12 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
-import {IS_INTERNAL} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
 import {HandleSuggestions} from './HandleSuggestions'
 
 export function StepHandle() {
   const {_} = useLingui()
   const t = useTheme()
-  const gate = useGate()
   const {state, dispatch} = useSignupContext()
   const [draftValue, setDraftValue] = useState(state.handle)
   const isNextLoading = useThrottledValue(state.isLoading, 500)
@@ -193,8 +190,7 @@ export function StepHandle() {
                   </RequirementText>
                 </Requirement>
                 {isHandleAvailable.suggestions &&
-                  isHandleAvailable.suggestions.length > 0 &&
-                  (gate('handle_suggestions') || IS_INTERNAL) && (
+                  isHandleAvailable.suggestions.length > 0 && (
                     <HandleSuggestions
                       suggestions={isHandleAvailable.suggestions}
                       onSelect={suggestion => {

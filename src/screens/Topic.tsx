@@ -1,6 +1,6 @@
 import React from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import {type PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -24,11 +24,11 @@ import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/componen
 import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
-const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
+const renderItem = ({item}: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
   return <Post post={item} />
 }
 
-const keyExtractor = (item: PostView, index: number) => {
+const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
   return `${item.uri}-${index}`
 }
 

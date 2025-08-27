@@ -180,7 +180,7 @@ function CreateAnother() {
         color="secondary"
         size="small"
         style={[a.self_center]}
-        onPress={() => navigation.navigate('StarterPackWizard')}>
+        onPress={() => navigation.navigate('StarterPackWizard', {})}>
         <ButtonText>
           <Trans>Create another</Trans>
         </ButtonText>
@@ -238,7 +238,7 @@ function Empty() {
     ],
   })
   const navToWizard = useCallback(() => {
-    navigation.navigate('StarterPackWizard')
+    navigation.navigate('StarterPackWizard', {})
   }, [navigation])
   const wrappedNavToWizard = requireEmailVerification(navToWizard, {
     instructions: [
@@ -322,7 +322,7 @@ function Empty() {
             color="secondary"
             cta={_(msg`Let me choose`)}
             onPress={() => {
-              navigation.navigate('StarterPackWizard')
+              navigation.navigate('StarterPackWizard', {})
             }}
           />
         </Prompt.Actions>

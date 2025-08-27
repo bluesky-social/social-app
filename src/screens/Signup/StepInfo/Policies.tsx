@@ -33,7 +33,7 @@ function CommunityGuidelinesNotice({}: {}) {
             to={webLinks.community}>
             updated version of our Community Guidelines
           </InlineLinkText>{' '}
-          will take effect on October 13th.
+          will take effect on October 15th.
         </Trans>
       </Admonition>
     </View>

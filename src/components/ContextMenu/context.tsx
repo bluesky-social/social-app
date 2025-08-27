@@ -7,10 +7,13 @@ import {
 } from '#/components/ContextMenu/types'
 
 export const Context = React.createContext<ContextType | null>(null)
+Context.displayName = 'ContextMenuContext'
 
 export const MenuContext = React.createContext<MenuContextType | null>(null)
+MenuContext.displayName = 'ContextMenuMenuContext'
 
 export const ItemContext = React.createContext<ItemContextType | null>(null)
+ItemContext.displayName = 'ContextMenuItemContext'
 
 export function useContextMenuContext() {
   const context = React.useContext(Context)

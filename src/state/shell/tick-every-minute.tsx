@@ -3,6 +3,7 @@ import React from 'react'
 type StateContext = number
 
 const stateContext = React.createContext<StateContext>(0)
+stateContext.displayName = 'TickEveryMinuteContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [tick, setTick] = React.useState(Date.now())

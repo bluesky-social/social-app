@@ -7,6 +7,7 @@ const CurrentConvoIdContext = React.createContext<{
   currentConvoId: undefined,
   setCurrentConvoId: () => {},
 })
+CurrentConvoIdContext.displayName = 'CurrentConvoIdContext'
 
 export function useCurrentConvoId() {
   const ctx = React.useContext(CurrentConvoIdContext)

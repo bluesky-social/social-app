@@ -18,6 +18,7 @@ const ItemContext = createContext({
   destructive: false,
   withinGroup: false,
 })
+ItemContext.displayName = 'SettingsListItemContext'
 
 const Portal = createPortalGroup()
 

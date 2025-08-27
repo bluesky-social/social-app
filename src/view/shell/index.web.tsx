@@ -5,11 +5,10 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
-import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
-import {colors} from '#/lib/styles'
+import {useGeolocation} from '#/state/geolocation'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -18,6 +17,7 @@ import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
+import {BlockedGeoOverlay} from '#/components/BlockedGeoOverlay'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
@@ -130,24 +130,23 @@ function ShellInner() {
   )
 }
 
-export const Shell: React.FC = function ShellImpl() {
-  const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+export function Shell() {
+  const t = useTheme()
+  const {geolocation} = useGeolocation()
   return (
-    <View style={[a.util_screen_outer, pageBg]}>
-      <RoutesContainer>
-        <ShellInner />
-      </RoutesContainer>
+    <View style={[a.util_screen_outer, t.atoms.bg]}>
+      {geolocation?.isAgeBlockedGeo ? (
+        <BlockedGeoOverlay />
+      ) : (
+        <RoutesContainer>
+          <ShellInner />
+        </RoutesContainer>
+      )}
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  bgLight: {
-    backgroundColor: colors.white,
-  },
-  bgDark: {
-    backgroundColor: colors.black, // TODO
-  },
   drawerMask: {
     ...a.fixed,
     width: '100%',

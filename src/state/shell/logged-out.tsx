@@ -39,12 +39,14 @@ const StateContext = React.createContext<State>({
   showLoggedOut: false,
   requestedAccountSwitchTo: undefined,
 })
+StateContext.displayName = 'LoggedOutStateContext'
 
 const ControlsContext = React.createContext<Controls>({
   setShowLoggedOut: () => {},
   requestSwitchToAccount: () => {},
   clearRequestedAccount: () => {},
 })
+ControlsContext.displayName = 'LoggedOutControlsContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const activeStarterPack = useActiveStarterPack()

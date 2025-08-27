@@ -8,7 +8,6 @@ import {urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {type ImageMeta} from '#/state/gallery'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -23,6 +22,7 @@ import * as TextField from '#/components/forms/TextField'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
+import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
@@ -43,20 +43,6 @@ export function EditProfileDialog({
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
 
-  // 'You might lose unsaved changes' warning
-  useEffect(() => {
-    if (isWeb && dirty) {
-      const abortController = new AbortController()
-      const {signal} = abortController
-      window.addEventListener('beforeunload', evt => evt.preventDefault(), {
-        signal,
-      })
-      return () => {
-        abortController.abort()
-      }
-    }
-  }, [dirty])
-
   const onPressCancel = useCallback(() => {
     if (dirty) {
       cancelControl.open()
@@ -71,6 +57,15 @@ export function EditProfileDialog({
       nativeOptions={{
         preventDismiss: dirty,
         minHeight: SCREEN_HEIGHT,
+      }}
+      webOptions={{
+        onBackgroundPress: () => {
+          if (dirty) {
+            cancelControl.open()
+          } else {
+            control.close()
+          }
+        },
       }}
       testID="editProfileModal">
       <DialogInner
@@ -329,22 +324,18 @@ function DialogInner({
             />
           </TextField.Root>
           {displayNameTooLong && (
-            <TextField.SuffixText
+            <Text
               style={[
                 a.text_sm,
                 a.mt_xs,
                 a.font_bold,
                 {color: t.palette.negative_400},
-              ]}
-              label={_(msg`Display name is too long`)}>
-              <Trans>
-                Display name is too long.{' '}
-                <Plural
-                  value={DISPLAY_NAME_MAX_GRAPHEMES}
-                  other="The maximum number of characters is #."
-                />
-              </Trans>
-            </TextField.SuffixText>
+              ]}>
+              <Plural
+                value={DISPLAY_NAME_MAX_GRAPHEMES}
+                other="Display name is too long. The maximum number of characters is #."
+              />
+            </Text>
           )}
         </View>
 
@@ -379,22 +370,18 @@ function DialogInner({
             />
           </TextField.Root>
           {descriptionTooLong && (
-            <TextField.SuffixText
+            <Text
               style={[
                 a.text_sm,
                 a.mt_xs,
                 a.font_bold,
                 {color: t.palette.negative_400},
-              ]}
-              label={_(msg`Description is too long`)}>
-              <Trans>
-                Description is too long.{' '}
-                <Plural
-                  value={DESCRIPTION_MAX_GRAPHEMES}
-                  other="The maximum number of characters is #."
-                />
-              </Trans>
-            </TextField.SuffixText>
+              ]}>
+              <Plural
+                value={DESCRIPTION_MAX_GRAPHEMES}
+                other="Description is too long. The maximum number of characters is #."
+              />
+            </Text>
           )}
         </View>
       </View>

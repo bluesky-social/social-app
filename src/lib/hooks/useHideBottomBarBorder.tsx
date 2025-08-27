@@ -4,8 +4,11 @@ import {useFocusEffect} from '@react-navigation/native'
 type HideBottomBarBorderSetter = () => () => void
 
 const HideBottomBarBorderContext = createContext<boolean>(false)
+HideBottomBarBorderContext.displayName = 'HideBottomBarBorderContext'
 const HideBottomBarBorderSetterContext =
   createContext<HideBottomBarBorderSetter | null>(null)
+HideBottomBarBorderSetterContext.displayName =
+  'HideBottomBarBorderSetterContext'
 
 export function useHideBottomBarBorderSetter() {
   const hideBottomBarBorder = useContext(HideBottomBarBorderSetterContext)

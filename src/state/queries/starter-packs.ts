@@ -1,16 +1,15 @@
 import {
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyGraphDefs,
-  AppBskyGraphGetStarterPack,
+  type AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
-  AppBskyRichtextFacet,
+  type AppBskyRichtextFacet,
   AtUri,
-  BskyAgent,
+  type BskyAgent,
   RichText,
 } from '@atproto/api'
-import {StarterPackView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {
-  QueryClient,
+  type QueryClient,
   useMutation,
   useQuery,
   useQueryClient,
@@ -59,7 +58,7 @@ export function useStarterPackQuery({
 }) {
   const agent = useAgent()
 
-  return useQuery<StarterPackView>({
+  return useQuery<AppBskyGraphDefs.StarterPackView>({
     queryKey: RQKEY(uri ? {uri} : {did, rkey}),
     queryFn: async () => {
       if (!uri) {

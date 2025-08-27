@@ -14,7 +14,7 @@ import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
 
-export function PostThreadComposePrompt({
+export function ThreadComposePrompt({
   onPressCompose,
   style,
 }: {

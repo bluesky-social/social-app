@@ -28,6 +28,7 @@ export function createPortalGroup() {
     append: () => {},
     remove: () => {},
   })
+  Context.displayName = 'PortalContext'
 
   function Provider(props: React.PropsWithChildren<{}>) {
     const map = useRef<ComponentMap>({})

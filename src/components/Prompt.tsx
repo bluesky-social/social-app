@@ -27,6 +27,7 @@ const Context = React.createContext<{
   titleId: '',
   descriptionId: '',
 })
+Context.displayName = 'PromptContext'
 
 export function Outer({
   children,

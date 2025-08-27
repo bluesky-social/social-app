@@ -2,6 +2,7 @@ import React, {useImperativeHandle} from 'react'
 import {
   FlatList,
   type FlatListProps,
+  type GestureResponderEvent,
   type StyleProp,
   TouchableWithoutFeedback,
   View,
@@ -75,9 +76,12 @@ export function Outer({
     [control.id, onClose, setDialogIsOpen],
   )
 
-  const handleBackgroundPress = React.useCallback(async () => {
-    close()
-  }, [close])
+  const handleBackgroundPress = React.useCallback(
+    async (e: GestureResponderEvent) => {
+      webOptions?.onBackgroundPress ? webOptions.onBackgroundPress(e) : close()
+    },
+    [webOptions, close],
+  )
 
   useImperativeHandle(
     control.ref,
@@ -193,7 +197,7 @@ export function Inner({
           onInteractOutside={preventDefault}
           onFocusOutside={preventDefault}
           onDismiss={close}
-          style={{display: 'flex', flexDirection: 'column'}}>
+          style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
           {header}
           <View style={[gtMobile ? a.p_2xl : a.p_xl, contentContainerStyle]}>
             {children}
@@ -227,10 +231,10 @@ export const InnerFlatList = React.forwardRef<
         web({maxHeight: '80vh'}),
         webInnerStyle,
       ]}
-      contentContainerStyle={[a.px_0, webInnerContentContainerStyle]}>
+      contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
       <FlatList
         ref={ref}
-        style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
+        style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
         {...props}
       />
     </Inner>

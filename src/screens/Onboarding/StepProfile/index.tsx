@@ -59,6 +59,7 @@ interface IAvatarContext {
 }
 
 const AvatarContext = React.createContext<IAvatarContext>({} as IAvatarContext)
+AvatarContext.displayName = 'AvatarContext'
 export const useAvatar = () => React.useContext(AvatarContext)
 
 const randomColor =
@@ -265,7 +266,7 @@ export function StepProfile() {
         </View>
 
         <OnboardingControls.Portal>
-          <View style={[a.gap_md, gtMobile && {flexDirection: 'row-reverse'}]}>
+          <View style={[a.gap_md, gtMobile && a.flex_row_reverse]}>
             <Button
               variant="solid"
               color="primary"

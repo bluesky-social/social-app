@@ -1,13 +1,16 @@
 import {useMemo} from 'react'
-import {ChatBskyConvoLeaveConvo, ChatBskyConvoListConvos} from '@atproto/api'
+import {
+  type ChatBskyConvoLeaveConvo,
+  type ChatBskyConvoListConvos,
+} from '@atproto/api'
 import {
   useMutation,
   useMutationState,
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {useAgent} from '#/state/session'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
 

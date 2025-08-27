@@ -8,9 +8,11 @@ type SetContext = (v: persisted.Schema['largeAltBadgeEnabled']) => void
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.largeAltBadgeEnabled,
 )
+stateContext.displayName = 'LargeAltBadgeStateContext'
 const setContext = React.createContext<SetContext>(
   (_: persisted.Schema['largeAltBadgeEnabled']) => {},
 )
+setContext.displayName = 'LargeAltBadgeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(

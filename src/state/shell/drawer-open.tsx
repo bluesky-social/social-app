@@ -4,7 +4,9 @@ type StateContext = boolean
 type SetContext = (v: boolean) => void
 
 const stateContext = React.createContext<StateContext>(false)
+stateContext.displayName = 'DrawerOpenStateContext'
 const setContext = React.createContext<SetContext>((_: boolean) => {})
+setContext.displayName = 'DrawerOpenSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(false)

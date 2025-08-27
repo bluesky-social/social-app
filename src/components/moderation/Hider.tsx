@@ -1,8 +1,8 @@
 import React from 'react'
-import {ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@atproto/api'
 
 import {
-  ModerationCauseDescription,
+  type ModerationCauseDescription,
   useModerationCauseDescription,
 } from '#/lib/moderation/useModerationCauseDescription'
 import {
@@ -22,6 +22,7 @@ type Context = {
 }
 
 const Context = React.createContext<Context>({} as Context)
+Context.displayName = 'HiderContext'
 
 export const useHider = () => React.useContext(Context)
 

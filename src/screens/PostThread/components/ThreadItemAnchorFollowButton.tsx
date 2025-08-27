@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -17,7 +17,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 
-export function PostThreadFollowBtn({did}: {did: string}) {
+export function ThreadItemAnchorFollowButton({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
 
   // We will never hit this - the profile will always be cached or loaded above
@@ -126,7 +126,7 @@ function PostThreadFollowBtnLoaded({
       <ButtonText>
         {!isFollowing ? (
           isFollowedBy ? (
-            <Trans>Follow Back</Trans>
+            <Trans>Follow back</Trans>
           ) : (
             <Trans>Follow</Trans>
           )

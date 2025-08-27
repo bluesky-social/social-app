@@ -1,5 +1,11 @@
 import React, {useCallback} from 'react'
-import {Dimensions, type StyleProp, View, type ViewStyle} from 'react-native'
+import {
+  Dimensions,
+  type GestureResponderEvent,
+  type StyleProp,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -119,7 +125,8 @@ export function ListMembers({
   }, [fetchNextPage])
 
   const onPressEditMembership = React.useCallback(
-    (profile: bsky.profile.AnyProfileView) => {
+    (e: GestureResponderEvent, profile: bsky.profile.AnyProfileView) => {
+      e.preventDefault()
       openModal({
         name: 'user-add-remove-lists',
         subject: profile.did,
@@ -178,7 +185,7 @@ export function ListMembers({
                   <Button
                     testID={`user-${profile.handle}-editBtn`}
                     label={_(msg({message: 'Edit', context: 'action'}))}
-                    onPress={() => onPressEditMembership(profile)}
+                    onPress={e => onPressEditMembership(e, profile)}
                     size="small"
                     variant="solid"
                     color="secondary">

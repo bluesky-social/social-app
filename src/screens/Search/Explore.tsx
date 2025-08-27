@@ -66,9 +66,9 @@ import {
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
+import {boostInterests} from '#/components/InterestTabs'
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
-import {boostInterests} from '#/components/ProgressGuide/FollowDialog'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
@@ -431,7 +431,7 @@ export function Explore({
     i.push({
       type: 'header',
       key: 'suggested-feeds-header',
-      title: _(msg`Discover Feeds`),
+      title: _(msg`Discover New Feeds`),
       icon: ListSparkle,
       searchButton: {
         label: _(msg`Search for more feeds`),
@@ -917,11 +917,7 @@ export function Explore({
         case 'preview:header': {
           return (
             <ModuleHeader.Container
-              style={[
-                a.pt_xs,
-                t.atoms.border_contrast_low,
-                native(a.border_b),
-              ]}>
+              style={[a.pt_xs, t.atoms.border_contrast_low, a.border_b]}>
               {/* Very non-scientific way to avoid small gap on scroll */}
               <View style={[a.absolute, a.inset_0, t.atoms.bg, {top: -2}]} />
               <ModuleHeader.FeedLink feed={item.feed}>

@@ -7,6 +7,7 @@ import {useAgent, useSession} from '#/state/session'
 const MessagesEventBusContext = React.createContext<MessagesEventBus | null>(
   null,
 )
+MessagesEventBusContext.displayName = 'MessagesEventBusContext'
 
 export function useMessagesEventBus() {
   const ctx = React.useContext(MessagesEventBusContext)

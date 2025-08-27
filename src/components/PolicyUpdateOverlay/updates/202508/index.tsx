@@ -46,7 +46,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
     },
     blog: {
       overridePresentation: false,
-      to: `https://bsky.social/about/blog/08-11-2025-updated-terms-and-policies`,
+      to: `https://bsky.social/about/blog/08-14-2025-updated-terms-and-policies`,
       label: _(msg`Our blog post`),
     },
   }
@@ -58,7 +58,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
 
   const label = isAndroid
     ? _(
-        msg`We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 12th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 13th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post.`,
+        msg`We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post.`,
       )
     : _(msg`We're updating our policies`)
 
@@ -75,13 +75,13 @@ export function Content({state}: {state: PolicyUpdateState}) {
             <Text style={[a.leading_snug, a.text_md]}>
               <Trans>
                 We’re updating our Terms of Service, Privacy Policy, and
-                Copyright Policy, effective September 12th, 2025.
+                Copyright Policy, effective September 15th, 2025.
               </Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
               <Trans>
                 We're also updating our Community Guidelines, and we want your
-                input! These new guidelines will take effect on October 13th,
+                input! These new guidelines will take effect on October 15th,
                 2025.
               </Trans>
             </Text>
@@ -132,7 +132,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
                 <InlineLinkText {...links.copyright} style={linkStyle}>
                   Copyright Policy
                 </InlineLinkText>
-                , effective September 12th, 2025.
+                , effective September 15th, 2025.
               </Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
@@ -142,7 +142,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
                   Community Guidelines
                 </InlineLinkText>
                 , and we want your input! These new guidelines will take effect
-                on October 13th, 2025.
+                on October 15th, 2025.
               </Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>

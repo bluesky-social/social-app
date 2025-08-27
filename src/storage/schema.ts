@@ -10,6 +10,7 @@ export type Device = {
   geolocation?: {
     countryCode: string | undefined
     isAgeRestrictedGeo: boolean | undefined
+    isAgeBlockedGeo: boolean | undefined
   }
   trendingBetaEnabled: boolean
   devMode: boolean
