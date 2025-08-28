@@ -11,7 +11,10 @@ import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
+import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
+import {useDedupe} from '#/lib/hooks/useDedupe'
+import {isIOS, isNative} from '#/platform/detection'
 import {useLightbox} from '#/state/lightbox'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useListScrollContext} from '#/components/List/ListScrollProvider'
@@ -21,15 +24,44 @@ export {
   useListScrollHandler,
 } from '#/components/List/ListScrollProvider'
 
-/**
- * Cleaned up FlatList without some problematic props.
- *
- *   - `contentOffset` - Use `headerOffset` or `footerOffset`
- */
 type ListProps<Item extends {key: string}> = Omit<
   FlatListProps<Item>,
-  'contentOffset'
+  | 'onScroll'
+  | 'onScrollBeginDrag'
+  | 'onScrollEndDrag'
+  | 'onMomentumScrollBegin'
+  | 'onMomentumScrollEnd'
+  | 'refreshControl'
+  | 'contentOffset'
 > & {
+  /**
+   * @deprecated use `ListScrollProvider` handler instead
+   */
+  onScroll?: FlatListProps<Item>['onScroll']
+  /**
+   * @deprecated use `ListScrollProvider` handler instead
+   */
+  onScrollBeginDrag?: FlatListProps<Item>['onScrollBeginDrag']
+  /**
+   * @deprecated use `ListScrollProvider` handler instead
+   */
+  onScrollEndDrag?: FlatListProps<Item>['onScrollEndDrag']
+  /**
+   * @deprecated use `ListScrollProvider` handler instead
+   */
+  onMomentumScrollBegin?: FlatListProps<Item>['onMomentumScrollBegin']
+  /**
+   * @deprecated use `ListScrollProvider` handler instead
+   */
+  onMomentumScrollEnd?: FlatListProps<Item>['onMomentumScrollEnd']
+  /**
+   * @deprecated pass `refreshing` and `onRefresh` instead to enable
+   */
+  refreshControl?: FlatListProps<Item>['refreshControl']
+  /**
+   * @deprecated use `headerOffset` instead
+   */
+  contentOffset?: FlatListProps<Item>['contentOffset']
   /**
    * Wrapper around `onViewableItemsChanged` that calls back with individual
    * items IF they `item.isViewable` is true.
@@ -58,6 +90,7 @@ export const List = forwardRef(function List<Item extends {key: string}>(
 ) {
   const t = useTheme()
   const {activeLightbox} = useLightbox()
+  const debounce400 = useDedupe(400)
   const isScrolledDown = useSharedValue(false)
   const scrollHandlers = useListScrollContext()
   const onScroll = useAnimatedScrollHandler({
@@ -72,22 +105,27 @@ export const List = forwardRef(function List<Item extends {key: string}>(
           runOnJS(props.onScrolledDownChange)(didScrollDown)
         }
       }
+
+      if (isIOS) runOnJS(debounce400)(updateActiveVideoViewAsync)
     },
     onBeginDrag(e, ctx) {
       scrollHandlers.onScrollBeginDrag?.(e, ctx)
     },
     onEndDrag(e, ctx) {
       scrollHandlers.onScrollEndDrag?.(e, ctx)
-    },
-    onMomentumBegin(e, ctx) {
-      scrollHandlers.onMomentumScrollBegin?.(e, ctx)
+      if (isNative) runOnJS(updateActiveVideoViewAsync)()
     },
     /*
      * Note: adding onMomentumBegin here makes simulator scroll lag on Android.
      * So either don't add it, or figure out why. - sfn
+     * TODO
      */
+    onMomentumBegin(e, ctx) {
+      scrollHandlers.onMomentumScrollBegin?.(e, ctx)
+    },
     onMomentumEnd(e, ctx) {
       scrollHandlers.onMomentumScrollEnd?.(e, ctx)
+      if (isNative) runOnJS(updateActiveVideoViewAsync)()
     },
   })
 
