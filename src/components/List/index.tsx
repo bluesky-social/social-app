@@ -24,6 +24,9 @@ export {
   useListScrollHandler,
 } from '#/components/List/ListScrollProvider'
 
+export type ListRef<Item extends {key: string}> =
+  React.MutableRefObject<FlatList<Item> | null>
+
 type ListProps<Item extends {key: string}> = Omit<
   FlatListProps<Item>,
   | 'onScroll'

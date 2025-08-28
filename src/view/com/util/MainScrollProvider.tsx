@@ -3,10 +3,10 @@ import {type NativeScrollEvent} from 'react-native'
 import {interpolate, useSharedValue, withSpring} from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
 
-import {ScrollProvider} from '#/lib/ScrollContext'
 import {isNative, isWeb} from '#/platform/detection'
 import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {ListScrollProvider} from '#/components/List'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
 
@@ -165,13 +165,13 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   )
 
   return (
-    <ScrollProvider
-      onBeginDrag={onBeginDrag}
-      onEndDrag={onEndDrag}
+    <ListScrollProvider
+      onScrollBeginDrag={onBeginDrag}
+      onScrollEndDrag={onEndDrag}
       onScroll={onScroll}
-      onMomentumEnd={onMomentumEnd}>
+      onMomentumScrollEnd={onMomentumEnd}>
       {children}
-    </ScrollProvider>
+    </ListScrollProvider>
   )
 }
 
