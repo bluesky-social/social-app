@@ -1,5 +1,5 @@
-import {forwardRef} from 'react'
-import {type FlatList, type FlatListProps} from 'react-native'
+import {forwardRef, useMemo} from 'react'
+import {type FlatList, type FlatListProps, type ViewToken} from 'react-native'
 import Animated, {
   type FlatListPropsWithLayout,
   useAnimatedScrollHandler,
@@ -18,7 +18,9 @@ export {
  *
  *   - `contentOffset` - Doesn't work, use padding on `contentContainerStyle` instead.
  */
-type ListProps<Item> = Omit<FlatListProps<Item>, 'contentOffset'>
+type ListProps<Item> = Omit<FlatListProps<Item>, 'contentOffset'> & {
+  onItemSeen?: (item: Item) => void
+}
 
 export const List = forwardRef(function List<Item>(
   props: ListProps<Item>,
@@ -47,9 +49,39 @@ export const List = forwardRef(function List<Item>(
     },
   })
 
+  const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
+    const onItemSeen = props.onItemSeen
+    if (!onItemSeen) return [undefined, undefined]
+    return [
+      (info: {
+        viewableItems: Array<ViewToken<Item>>
+        changed: Array<ViewToken<Item>>
+      }) => {
+        for (const item of info.changed) {
+          if (item.isViewable) {
+            onItemSeen(item.item)
+          }
+        }
+      },
+      {
+        itemVisiblePercentThreshold: 40,
+        minimumViewTime: 0.5e3,
+      },
+    ]
+  }, [props.onItemSeen])
+
   return (
     <Animated.FlatList<Item>
       ref={ref}
+      viewabilityConfig={viewabilityConfig}
+      onViewableItemsChanged={onViewableItemsChanged}
+      /**
+       * iOS automatically adds in the safe area to the scroll indicator
+       * insets, even though the overwhelming majority of our ScrollViews do
+       * not stretch from edge to edge.
+       * @see https://github.com/bluesky-social/social-app/pull/7131
+       */
+      automaticallyAdjustsScrollIndicatorInsets={false}
       {...(props as FlatListPropsWithLayout<Item>)}
       style={[
         /*
