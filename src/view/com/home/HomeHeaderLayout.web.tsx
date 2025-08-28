@@ -1,7 +1,7 @@
-import React from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
@@ -66,7 +66,7 @@ function HomeHeaderLayoutDesktopAndTablet({
       )}
       {tabBarAnchor}
       <Layout.Center
-        style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, {top: 0}]}
+        style={[a.sticky, a.z_10, a.align_center, {top: 0}]}
         onLayout={e => {
           headerHeight.set(e.nativeEvent.layout.height)
         }}>

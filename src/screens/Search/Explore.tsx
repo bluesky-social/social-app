@@ -14,6 +14,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {type MetricEvents} from '#/logger/metrics'
+import {isWeb} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {RQKEY_ROOT_PAGINATED as useActorSearchPaginatedQueryKeyRoot} from '#/state/queries/actor-search'
@@ -713,7 +714,7 @@ export function Explore({
     ({item, index}: {item: ExploreScreenItems; index: number}) => {
       switch (item.type) {
         case 'topBorder':
-          return (
+          return isWeb ? null : (
             <View style={[a.w_full, t.atoms.border_contrast_low, a.border_t]} />
           )
         case 'header': {
