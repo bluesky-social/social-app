@@ -1,19 +1,18 @@
 import React from 'react'
-import {View} from 'react-native'
+import {type FlatList, View} from 'react-native'
 
-import {ScrollProvider} from '#/lib/ScrollContext'
-import {List, type ListMethods} from '#/view/com/util/List'
 import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
+import {List, ListScrollProvider} from '#/components/List'
 import {Text} from '#/components/Typography'
 
 export function ListContained() {
   const [animated, setAnimated] = React.useState(false)
-  const ref = React.useRef<ListMethods>(null)
+  const ref = React.useRef<FlatList>(null)
 
   const data = React.useMemo(() => {
     return Array.from({length: 100}, (_, i) => ({
-      id: i,
+      key: i + '',
       text: `Message ${i}`,
     }))
   }, [])
@@ -21,7 +20,7 @@ export function ListContained() {
   return (
     <>
       <View style={{width: '100%', height: 300}}>
-        <ScrollProvider
+        <ListScrollProvider
           onScroll={e => {
             'worklet'
             console.log(
@@ -33,6 +32,7 @@ export function ListContained() {
             )
           }}>
           <List
+            ref={ref}
             data={data}
             renderItem={item => {
               return (
@@ -46,8 +46,8 @@ export function ListContained() {
                 </View>
               )
             }}
-            keyExtractor={item => item.id.toString()}
-            disableFullWindowScroll={true}
+            keyExtractor={item => item.key.toString()}
+            // disableFullWindowScroll={true}
             style={{flex: 1}}
             onStartReached={() => {
               console.log('Start Reached')
@@ -56,10 +56,9 @@ export function ListContained() {
               console.log('End Reached (threshold of 2)')
             }}
             onEndReachedThreshold={2}
-            ref={ref}
             disableVirtualization={true}
           />
-        </ScrollProvider>
+        </ListScrollProvider>
       </View>
 
       <View style={{flexDirection: 'row', gap: 10, alignItems: 'center'}}>
