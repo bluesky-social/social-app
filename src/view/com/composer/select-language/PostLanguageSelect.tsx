@@ -17,7 +17,11 @@ import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {PostLanguageSelectDialog} from './PostLanguageSelectDialog'
 
-export function PostLanguageSelect() {
+export function PostLanguageSelect({
+  currentLanguages,
+}: {
+  currentLanguages?: string[]
+}) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
@@ -34,7 +38,10 @@ export function PostLanguageSelect() {
     return (
       <>
         <LanguageBtn onPress={languageDialogControl.open} />
-        <PostLanguageSelectDialog control={languageDialogControl} />
+        <PostLanguageSelectDialog
+          control={languageDialogControl}
+          currentLanguages={currentLanguages}
+        />
       </>
     )
   }
