@@ -212,6 +212,12 @@ export const ComposePost = ({
     [acceptedLanguageSuggestion, langPrefs.postLanguage],
   )
 
+  // This effect clears the temporary language suggestion if the post language
+  // is manually changed, so the user doesn't get stuck with the suggestion.
+  useEffect(() => {
+    setAcceptedLanguageSuggestion(null)
+  }, [langPrefs.postLanguage])
+
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
     {
@@ -1472,7 +1478,7 @@ function ComposerFooter({
             />
           </Button>
         )}
-        <SelectPostLanguagesBtn />
+        <SelectPostLanguagesBtn currentLanguages={currentLanguages} />
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}
