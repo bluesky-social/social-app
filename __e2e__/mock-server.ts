@@ -1,7 +1,7 @@
 import {createServer as createHTTPServer} from 'node:http'
 import {parse} from 'node:url'
 
-import {createServer, TestPDS} from '../jest/test-pds'
+import {createServer, type TestPDS} from '../jest/test-pds'
 
 async function main() {
   let server: TestPDS
@@ -509,7 +509,16 @@ async function main() {
         }
       }
       console.log('Ready')
-      return res.writeHead(200).end(server.pdsUrl)
+      return res
+        .writeHead(200, {
+          'content-type': 'application/json',
+        })
+        .end(
+          JSON.stringify({
+            pdsUrl: server.pdsUrl,
+            appviewDid: server.appviewDid,
+          }),
+        )
     } catch (e) {
       console.error('Error!', e)
       return res.writeHead(500).end()
