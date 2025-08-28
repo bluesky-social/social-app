@@ -3,14 +3,14 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: "?users&follows&posts"
+      SERVER_PATH: "?users&follows&posts"
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
 - extendedWaitUntil:
     visible:
-        id: "viewHeaderHomeFeedPrefsBtn"
+      id: "viewHeaderHomeFeedPrefsBtn"
 
 - tapOn:
     label: "Create a curate list"
@@ -149,7 +149,7 @@ appId: xyz.blueskyweb.app
 
 - tapOn:
     id: "bottomBarSearchBtn"
-- tapOn: "Search for posts, users, or feeds"
+- tapOn: "Search for posts, users[,]? or feeds"
 - inputText: "bob"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"
