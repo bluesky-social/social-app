@@ -381,7 +381,7 @@ function ListItem({
           <FontAwesomeIcon
             icon="thumb-tack"
             size={14}
-            color={isPinned ? colors.blue3 : pal.colors.icon}
+            color={isPinned ? colors.brand3 : pal.colors.icon}
           />
         </Pressable>
       </View>
