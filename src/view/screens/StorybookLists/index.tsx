@@ -38,7 +38,7 @@ const log = (msg: any) => console.log(msg)
 export function Inner() {
   const onScrollWorklet = useListScrollHandler(e => {
     'worklet'
-    runOnJS(log)(`Scroll Y: ${e.contentOffset.y}`)
+    runOnJS(log)(`scroll ${e.contentOffset.y}`)
   }, [])
 
   return (
@@ -48,6 +48,9 @@ export function Inner() {
           data={items}
           headerOffset={100}
           footerOffset={100}
+          onScrolledDownChange={scrolledDown => {
+            console.log(`Scrolled down: ${scrolledDown}`)
+          }}
           renderItem={({item}) => (
             <View style={[a.p_md, a.border_b]}>
               <Text>{item.title}</Text>

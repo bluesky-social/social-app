@@ -7,7 +7,9 @@ import {
 } from 'react-native'
 import Animated, {
   type FlatListPropsWithLayout,
+  runOnJS,
   useAnimatedScrollHandler,
+  useSharedValue,
 } from 'react-native-reanimated'
 
 import {useLightbox} from '#/state/lightbox'
@@ -40,6 +42,11 @@ type ListProps<Item> = Omit<FlatListProps<Item>, 'contentOffset'> & {
    * footers. Also applies insets to the scroll indicators.
    */
   footerOffset?: number
+  /**
+   * Configures the point at which `onScrolledDownChange` is called.
+   */
+  didScrollDownThreshold?: number
+  onScrolledDownChange?: (isScrolledDown: boolean) => void
 }
 
 export const List = forwardRef(function List<Item>(
@@ -48,10 +55,20 @@ export const List = forwardRef(function List<Item>(
 ) {
   const t = useTheme()
   const {activeLightbox} = useLightbox()
+  const isScrolledDown = useSharedValue(false)
   const scrollHandlers = useListScrollContext()
   const onScroll = useAnimatedScrollHandler({
     onScroll(e, ctx) {
       scrollHandlers.onScroll?.(e, ctx)
+
+      const didScrollDown =
+        e.contentOffset.y > (props.didScrollDownThreshold ?? 200)
+      if (isScrolledDown.get() !== didScrollDown) {
+        isScrolledDown.set(didScrollDown)
+        if (props.onScrolledDownChange) {
+          runOnJS(props.onScrolledDownChange)(didScrollDown)
+        }
+      }
     },
     onBeginDrag(e, ctx) {
       scrollHandlers.onScrollBeginDrag?.(e, ctx)
