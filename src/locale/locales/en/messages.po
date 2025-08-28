@@ -216,7 +216,7 @@ msgstr ""
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:380
+#: src/screens/Profile/Header/EditProfileDialog.tsx:385
 msgid "{DESCRIPTION_MAX_GRAPHEMES, plural, other {Description is too long. The maximum number of characters is #.}}"
 msgstr ""
 
@@ -764,7 +764,7 @@ msgstr ""
 msgid "Add the default feed of only people you follow"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:406
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:416
 msgid "Add the following DNS record to your domain:"
 msgstr ""
 
@@ -1317,7 +1317,7 @@ msgstr ""
 msgid "Begin the age assurance process by completing the fields below."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:103
+#: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/screens/Settings/AccountSettings.tsx:142
 msgid "Birthday"
 msgstr ""
@@ -1785,7 +1785,7 @@ msgstr ""
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:389
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:399
 msgid "Choose domain verification method"
 msgstr ""
 
@@ -1909,7 +1909,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:124
 #: src/components/verification/VerificationsDialog.tsx:144
-#: src/components/verification/VerifierDialog.tsx:144
+#: src/components/verification/VerifierDialog.tsx:149
 #: src/components/WhoCanReply.tsx:202
 #: src/components/WhoCanReply.tsx:209
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:286
@@ -1937,7 +1937,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:230
 #: src/components/dialogs/GifSelect.tsx:274
 #: src/components/verification/VerificationsDialog.tsx:136
-#: src/components/verification/VerifierDialog.tsx:136
+#: src/components/verification/VerifierDialog.tsx:141
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:246
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:340
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:372
@@ -2261,13 +2261,13 @@ msgstr ""
 msgid "Copy code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:491
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:501
 #: src/view/com/profile/ProfileMenu.tsx:442
 #: src/view/com/profile/ProfileMenu.tsx:445
 msgid "Copy DID"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:424
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:434
 msgid "Copy host"
 msgstr ""
 
@@ -2319,7 +2319,7 @@ msgstr ""
 msgid "Copy QR code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:445
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:455
 msgid "Copy TXT record value"
 msgstr ""
 
@@ -2627,7 +2627,7 @@ msgstr ""
 msgid "Deleted list"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:360
+#: src/screens/Profile/Header/EditProfileDialog.tsx:365
 #: src/view/com/modals/CreateOrEditList.tsx:278
 #: src/view/com/modals/CreateOrEditList.tsx:299
 msgid "Description"
@@ -2761,7 +2761,7 @@ msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:315
 #: src/screens/Profile/Header/EditProfileDialog.tsx:321
-#: src/screens/Profile/Header/EditProfileDialog.tsx:367
+#: src/screens/Profile/Header/EditProfileDialog.tsx:372
 msgid "Display name"
 msgstr ""
 
@@ -2769,8 +2769,8 @@ msgstr ""
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:392
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:394
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:402
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:404
 msgid "DNS Panel"
 msgstr ""
 
@@ -2782,7 +2782,7 @@ msgstr ""
 msgid "Does not include nudity."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:507
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:517
 msgid "Domain verified!"
 msgstr ""
 
@@ -2803,8 +2803,8 @@ msgstr ""
 msgid "Don't worry! All existing messages and settings are saved and will be available after you verify you're an adult."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:115
-#: src/components/dialogs/BirthDateSettings.tsx:121
+#: src/components/dialogs/BirthDateSettings.tsx:149
+#: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dms/ReportDialog.tsx:314
 #: src/components/forms/DateField/index.tsx:103
 #: src/components/forms/DateField/index.tsx:109
@@ -2866,7 +2866,7 @@ msgstr ""
 msgid "Duration:"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:230
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:235
 msgid "e.g. alice"
 msgstr ""
 
@@ -2874,7 +2874,7 @@ msgstr ""
 msgid "e.g. Alice Lastname"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:376
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:386
 msgid "e.g. alice.com"
 msgstr ""
 
@@ -3149,7 +3149,7 @@ msgstr ""
 msgid "Enter fullscreen"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:370
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:380
 msgid "Enter the domain you want to use"
 msgstr ""
 
@@ -3161,7 +3161,7 @@ msgstr ""
 msgid "Enter the username or email address you used when you created your account"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:104
+#: src/components/dialogs/BirthDateSettings.tsx:116
 msgid "Enter your birth date"
 msgstr ""
 
@@ -3381,7 +3381,7 @@ msgstr ""
 msgid "Failed to add to starter pack"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:587
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:597
 msgid "Failed to change handle. Please try again."
 msgstr ""
 
@@ -3558,7 +3558,7 @@ msgstr ""
 msgid "Failed to verify email, please try again."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:360
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:370
 msgid "Failed to verify handle. Please try again."
 msgstr ""
 
@@ -4109,16 +4109,16 @@ msgstr ""
 msgid "Handle"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:591
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:601
 msgid "Handle already taken. Please try a different one."
 msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:195
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:344
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:354
 msgid "Handle changed!"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:595
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:605
 msgid "Handle too long. Please try a shorter one."
 msgstr ""
 
@@ -4251,8 +4251,8 @@ msgstr ""
 msgid "Hide user list"
 msgstr ""
 
-#: src/screens/Moderation/VerificationSettings.tsx:85
-#: src/screens/Moderation/VerificationSettings.tsx:94
+#: src/screens/Moderation/VerificationSettings.tsx:90
+#: src/screens/Moderation/VerificationSettings.tsx:99
 msgid "Hide verification badges"
 msgstr ""
 
@@ -4301,7 +4301,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:417
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:427
 msgid "Host:"
 msgstr ""
 
@@ -4324,8 +4324,8 @@ msgstr ""
 msgid "I have a code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:280
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:286
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:290
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:296
 msgid "I have my own domain"
 msgstr ""
 
@@ -4346,7 +4346,7 @@ msgstr ""
 msgid "If you delete this list, you won't be able to recover it."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:267
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:272
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr ""
 
@@ -4493,7 +4493,7 @@ msgstr ""
 msgid "Invalid 2FA confirmation code."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:597
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:607
 msgid "Invalid handle. Please try a different one."
 msgstr ""
 
@@ -4649,15 +4649,13 @@ msgstr ""
 msgid "Latest"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:271
-msgid "learn more"
-msgstr ""
-
-#: src/components/verification/VerificationsDialog.tsx:165
-#: src/components/verification/VerifierDialog.tsx:132
-#: src/screens/Moderation/VerificationSettings.tsx:47
-#: src/screens/Profile/Header/EditProfileDialog.tsx:350
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:212
+#: src/components/verification/VerificationsDialog.tsx:170
+#: src/components/verification/VerifierDialog.tsx:137
+#: src/screens/Moderation/VerificationSettings.tsx:48
+#: src/screens/Profile/Header/EditProfileDialog.tsx:351
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:213
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:277
+msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr ""
 
@@ -4678,11 +4676,8 @@ msgid "Learn more about self hosting your PDS."
 msgstr ""
 
 #: src/components/moderation/ContentHider.tsx:152
-msgid "Learn more about the moderation applied to this content"
-msgstr ""
-
 #: src/components/moderation/ContentHider.tsx:218
-msgid "Learn more about the moderation applied to this content."
+msgid "Learn more about the moderation applied to this content"
 msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:149
@@ -4698,8 +4693,9 @@ msgstr ""
 msgid "Learn more about this warning"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:150
-#: src/components/verification/VerifierDialog.tsx:117
+#: src/components/verification/VerificationsDialog.tsx:151
+#: src/components/verification/VerifierDialog.tsx:118
+msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
 
@@ -4957,7 +4953,7 @@ msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:224
 #: src/screens/Profile/Sections/Feed.tsx:98
-#: src/view/com/feeds/FeedPage.tsx:155
+#: src/view/com/feeds/FeedPage.tsx:162
 #: src/view/screens/ProfileList.tsx:878
 msgid "Load new posts"
 msgstr ""
@@ -5315,8 +5311,8 @@ msgstr ""
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:35
 #: src/components/dialogs/BirthDateSettings.tsx:38
+#: src/components/dialogs/BirthDateSettings.tsx:42
 msgid "My Birthday"
 msgstr ""
 
@@ -5379,7 +5375,7 @@ msgstr ""
 msgid "Never lose access to your followers or data."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:567
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:577
 msgid "Nevermind, create a handle for me"
 msgstr ""
 
@@ -5426,9 +5422,9 @@ msgstr ""
 msgid "New followers"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:221
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:229
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:375
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:226
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:234
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:385
 msgid "New handle"
 msgstr ""
 
@@ -5460,7 +5456,7 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:166
+#: src/view/com/feeds/FeedPage.tsx:173
 msgctxt "action"
 msgid "New post"
 msgstr ""
@@ -5538,8 +5534,8 @@ msgstr ""
 msgid "No app passwords yet"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:397
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:399
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:407
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:409
 msgid "No DNS Panel"
 msgstr ""
 
@@ -6690,7 +6686,7 @@ msgstr ""
 msgid "Quotes of this post"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:600
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:610
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
 
@@ -6903,7 +6899,7 @@ msgid "Remove user from list"
 msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:46
-#: src/components/verification/VerificationsDialog.tsx:247
+#: src/components/verification/VerificationsDialog.tsx:252
 #: src/view/com/profile/ProfileMenu.tsx:348
 #: src/view/com/profile/ProfileMenu.tsx:351
 msgid "Remove verification"
@@ -7286,7 +7282,7 @@ msgid "Returns to home page"
 msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:93
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:559
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:569
 #: src/screens/VideoFeed/index.tsx:1146
 #: src/view/screens/NotFound.tsx:60
 #: src/view/screens/ProfileList.tsx:1039
@@ -7297,7 +7293,7 @@ msgstr ""
 msgid "Returns to the previous step"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:121
+#: src/components/dialogs/BirthDateSettings.tsx:156
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:483
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:489
 #: src/components/live/EditLiveDialog.tsx:216
@@ -7305,7 +7301,7 @@ msgstr ""
 #: src/components/StarterPack/QrCodeDialog.tsx:192
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:262
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:267
 #: src/view/com/composer/GifAltText.tsx:193
 #: src/view/com/composer/GifAltText.tsx:202
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:62
@@ -7323,7 +7319,7 @@ msgctxt "action"
 msgid "Save"
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:115
+#: src/components/dialogs/BirthDateSettings.tsx:149
 msgid "Save birthday"
 msgstr ""
 
@@ -7343,7 +7339,7 @@ msgstr ""
 msgid "Save image crop"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:248
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:253
 msgid "Save new handle"
 msgstr ""
 
@@ -7417,7 +7413,7 @@ msgstr ""
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.
 #: src/components/ProgressGuide/FollowDialog.tsx:425
-msgid "Search for \"{interestsDisplayName}"
+msgid "Search for \"{interestsDisplayName}\""
 msgstr ""
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
@@ -8468,7 +8464,7 @@ msgstr ""
 msgid "Tell a joke!"
 msgstr ""
 
-#: src/screens/Profile/Header/EditProfileDialog.tsx:368
+#: src/screens/Profile/Header/EditProfileDialog.tsx:373
 msgid "Tell us a bit about yourself"
 msgstr ""
 
@@ -8481,6 +8477,7 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
+#: src/components/dialogs/BirthDateSettings.tsx:135
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:30
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:97
 #: src/Navigation.tsx:335
@@ -8528,7 +8525,7 @@ msgstr ""
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:487
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:497
 msgid "That contains the following:"
 msgstr ""
 
@@ -8566,6 +8563,10 @@ msgstr ""
 #: src/components/moderation/ModerationDetailsDialog.tsx:119
 #: src/lib/moderation/useModerationCauseDescription.ts:128
 msgid "The author of this thread has hidden this reply."
+msgstr ""
+
+#: src/components/dialogs/BirthDateSettings.tsx:122
+msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:426
@@ -8864,12 +8865,12 @@ msgstr ""
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:593
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:603
 msgid "This handle is reserved. Please try a different one."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:41
-msgid "This information is not shared with other users."
+#: src/components/dialogs/BirthDateSettings.tsx:45
+msgid "This information is private and not shared with other users."
 msgstr ""
 
 #: src/components/live/EditLiveDialog.tsx:189
@@ -8941,7 +8942,7 @@ msgstr ""
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:456
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:466
 msgid "This should create a domain record at:"
 msgstr ""
 
@@ -9114,7 +9115,7 @@ msgstr ""
 msgid "Type your message here"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:432
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:442
 msgid "Type:"
 msgstr ""
 
@@ -9224,7 +9225,7 @@ msgstr ""
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:206
+#: src/components/verification/VerificationsDialog.tsx:211
 msgid "Unknown verifier"
 msgstr ""
 
@@ -9360,8 +9361,8 @@ msgstr ""
 msgid "Update email"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:526
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:547
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:536
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:557
 msgid "Update to {domain}"
 msgstr ""
 
@@ -9387,7 +9388,7 @@ msgstr ""
 msgid "Upload a photo instead"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:472
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:482
 msgid "Upload a text file to:"
 msgstr ""
 
@@ -9427,7 +9428,7 @@ msgstr ""
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:558
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:568
 msgid "Use default provider"
 msgstr ""
 
@@ -9547,7 +9548,7 @@ msgstr ""
 msgid "Users you follow"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:438
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:448
 msgid "Value:"
 msgstr ""
 
@@ -9591,8 +9592,8 @@ msgctxt "action"
 msgid "Verify code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:528
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:549
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:538
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:559
 msgid "Verify DNS Record"
 msgstr ""
 
@@ -9610,8 +9611,8 @@ msgstr ""
 msgid "Verify now"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:529
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:551
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:539
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:561
 msgid "Verify Text File"
 msgstr ""
 
@@ -9910,7 +9911,7 @@ msgstr ""
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr ""
 
-#: src/components/dialogs/BirthDateSettings.tsx:52
+#: src/components/dialogs/BirthDateSettings.tsx:57
 msgid "We were unable to load your birth date preferences. Please try again."
 msgstr ""
 
@@ -10122,7 +10123,7 @@ msgstr ""
 msgid "Writers"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:356
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:366
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr ""
 
@@ -10413,6 +10414,10 @@ msgstr ""
 msgid "You must be 13 years of age or older to create an account."
 msgstr ""
 
+#: src/components/dialogs/BirthDateSettings.tsx:131
+msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
+msgstr ""
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
@@ -10613,7 +10618,7 @@ msgstr ""
 msgid "Your choice will be remembered for future links. You can change it at any time in settings."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:513
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:523
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr ""
 
@@ -10650,7 +10655,7 @@ msgstr ""
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:240
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:245
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr ""
 
