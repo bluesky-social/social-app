@@ -6,16 +6,27 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {useDeviceGeolocationApi} from '#/state/geolocation'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRequestDialog'
+import {Divider} from '#/components/Divider'
 import {Full as Logo, Mark} from '#/components/icons/Logo'
+import {PinLocation_Stroke2_Corner0_Rounded as LocationIcon} from '#/components/icons/PinLocation'
 import {SimpleInlineLinkText as InlineLinkText} from '#/components/Link'
+import {Outlet as PortalOutlet} from '#/components/Portal'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 
 export function BlockedGeoOverlay() {
   const t = useTheme()
   const {_} = useLingui()
   const {gtPhone} = useBreakpoints()
   const insets = useSafeAreaInsets()
+  const geoDialog = Dialog.useDialogControl()
+  const {setDeviceGeolocation} = useDeviceGeolocationApi()
 
   useEffect(() => {
     // just counting overall hits here
@@ -51,59 +62,133 @@ export function BlockedGeoOverlay() {
   ]
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        a.px_2xl,
-        {
-          paddingTop: isWeb ? a.p_5xl.padding : insets.top + a.p_2xl.padding,
-          paddingBottom: 100,
-        },
-      ]}>
-      <View
-        style={[
-          a.mx_auto,
-          web({
-            maxWidth: 440,
-            paddingTop: gtPhone ? '8vh' : undefined,
-          }),
+    <>
+      <ScrollView
+        contentContainerStyle={[
+          a.px_2xl,
+          {
+            paddingTop: isWeb ? a.p_5xl.padding : insets.top + a.p_2xl.padding,
+            paddingBottom: 100,
+          },
         ]}>
-        <View style={[a.align_start]}>
-          <View
-            style={[
-              a.pl_md,
-              a.pr_lg,
-              a.py_sm,
-              a.rounded_full,
-              a.flex_row,
-              a.align_center,
-              a.gap_xs,
-              {
-                backgroundColor: t.palette.primary_25,
-              },
-            ]}>
-            <Mark fill={t.palette.primary_600} width={14} />
-            <Text
+        <View
+          style={[
+            a.mx_auto,
+            web({
+              maxWidth: 380,
+              paddingTop: gtPhone ? '8vh' : undefined,
+            }),
+          ]}>
+          <View style={[a.align_start]}>
+            <View
               style={[
-                a.font_bold,
+                a.pl_md,
+                a.pr_lg,
+                a.py_sm,
+                a.rounded_full,
+                a.flex_row,
+                a.align_center,
+                a.gap_xs,
                 {
-                  color: t.palette.primary_600,
+                  backgroundColor: t.palette.primary_25,
                 },
               ]}>
-              <Trans>Announcement</Trans>
-            </Text>
+              <Mark fill={t.palette.primary_600} width={14} />
+              <Text
+                style={[
+                  a.font_bold,
+                  {
+                    color: t.palette.primary_600,
+                  },
+                ]}>
+                <Trans>Announcement</Trans>
+              </Text>
+            </View>
+          </View>
+
+          <View style={[a.gap_lg, {paddingTop: 32}]}>
+            {blocks.map((block, index) => (
+              <Text key={index} style={[textStyles]}>
+                {block}
+              </Text>
+            ))}
+          </View>
+
+          {!isWeb && (
+            <>
+              <View style={[a.pt_2xl]}>
+                <Divider />
+              </View>
+
+              <View style={[a.mt_xl, a.align_start]}>
+                <Text
+                  style={[a.text_lg, a.font_heavy, a.leading_snug, a.pb_xs]}>
+                  <Trans>Not in Mississippi?</Trans>
+                </Text>
+                <Text
+                  style={[
+                    a.text_sm,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                    a.pb_md,
+                  ]}>
+                  <Trans>
+                    Confirm your location with GPS. Your location data is not
+                    tracked and does not leave your device.
+                  </Trans>
+                </Text>
+                <Button
+                  label={_(msg`Confirm your location`)}
+                  onPress={() => geoDialog.open()}
+                  size="small"
+                  color="primary_subtle">
+                  <ButtonIcon icon={LocationIcon} />
+                  <ButtonText>
+                    <Trans>Confirm your location</Trans>
+                  </ButtonText>
+                </Button>
+              </View>
+
+              <DeviceLocationRequestDialog
+                control={geoDialog}
+                onLocationAcquired={props => {
+                  if (props.geolocationStatus.isAgeBlockedGeo) {
+                    props.disableDialogAction()
+                    props.setDialogError(
+                      _(
+                        msg`We're sorry, but based on your device's location, you are currently located in a region we cannot provide access at this time.`,
+                      ),
+                    )
+                  } else {
+                    props.closeDialog(() => {
+                      // set this after close!
+                      setDeviceGeolocation({
+                        countryCode: props.geolocationStatus.countryCode,
+                        regionCode: props.geolocationStatus.regionCode,
+                      })
+                      Toast.show(_(msg`Thanks! You're all set.`), {
+                        type: 'success',
+                      })
+                    })
+                  }
+                }}
+              />
+            </>
+          )}
+
+          <View style={[{paddingTop: 48}]}>
+            <Logo width={120} textFill={t.atoms.text.color} />
           </View>
         </View>
+      </ScrollView>
 
-        <View style={[a.gap_lg, {paddingTop: 32, paddingBottom: 48}]}>
-          {blocks.map((block, index) => (
-            <Text key={index} style={[textStyles]}>
-              {block}
-            </Text>
-          ))}
-        </View>
-
-        <Logo width={120} textFill={t.atoms.text.color} />
-      </View>
-    </ScrollView>
+      {/*
+       * While this blocking overlay is up, other dialogs in the shell
+       * are not mounted, so it _should_ be safe to use these here
+       * without fear of other modals showing up.
+       */}
+      <BottomSheetOutlet />
+      <PortalOutlet />
+    </>
   )
 }

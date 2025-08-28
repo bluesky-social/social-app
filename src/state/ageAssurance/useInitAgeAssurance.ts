@@ -14,7 +14,7 @@ import {
 import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
 import {createAgeAssuranceQueryKey} from '#/state/ageAssurance'
-import {useGeolocation} from '#/state/geolocation'
+import {useGeolocationStatus} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 
 let APPVIEW = PUBLIC_APPVIEW
@@ -36,7 +36,7 @@ let APPVIEW_DID = PUBLIC_APPVIEW_DID
 export function useInitAgeAssurance() {
   const qc = useQueryClient()
   const agent = useAgent()
-  const {geolocation} = useGeolocation()
+  const {status: geolocation} = useGeolocationStatus()
   return useMutation({
     async mutationFn(
       props: Omit<AppBskyUnspeccedInitAgeAssurance.InputSchema, 'countryCode'>,
