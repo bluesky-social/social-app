@@ -17,6 +17,9 @@ appId: xyz.blueskyweb.app
 - inputText: "Post with an image"
 - tapOn:
     id: "openMediaBtn"
+- extendedWaitUntil:
+    visible:
+      id: "selectedPhotosView"
 - tapOn: "Content warnings"
 - tapOn: "Porn"
 - tapOn:

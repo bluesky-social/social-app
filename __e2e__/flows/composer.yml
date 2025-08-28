@@ -22,6 +22,9 @@ appId: xyz.blueskyweb.app
 - inputText: "Post with an image"
 - tapOn:
     id: "openMediaBtn"
+- extendedWaitUntil:
+    visible:
+      id: "selectedPhotosView"
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
@@ -47,6 +50,9 @@ appId: xyz.blueskyweb.app
 - inputText: "Reply with an image"
 - tapOn:
     id: "openMediaBtn"
+- extendedWaitUntil:
+    visible:
+      id: "selectedPhotosView"
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
@@ -74,6 +80,9 @@ appId: xyz.blueskyweb.app
 - inputText: "QP with an image"
 - tapOn:
     id: "openMediaBtn"
+- extendedWaitUntil:
+    visible:
+      id: "selectedPhotosView"
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
