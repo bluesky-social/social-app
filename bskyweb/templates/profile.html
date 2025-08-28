@@ -56,20 +56,20 @@
   {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
-    "dateCreated": "{{ profileView.CreatedAt|escapejs }}",
+    "dateCreated": "{{ profileView.CreatedAt }}",
     "mainEntity": {
       "@type": "Person",
-      "name": "{{ profileView.DisplayName|escapejs }}",
-      "alternateName": "@{{ profileView.Handle|escapejs }}",
-      "identifier": "{{ profileView.Did|escapejs }}",
-      "description": "{{ profileView.Description|escapejs }}",
-      "image": "{{ profileView.Avatar|escapejs }}",
+      "name": "{{ profileView.DisplayName }}",
+      "alternateName": "@{{ profileView.Handle }}",
+      "identifier": "{{ profileView.Did }}",
+      "description": "{{ profileView.Description }}",
+      "image": "{{ profileView.Avatar }}",
       "interactionStatistic": [
         {
           "@type": "InteractionCounter",
           "interactionType": "https://schema.org/FollowAction",
           "userInteractionCount": {{ profileView.FollowersCount }}
-        },
+        }
       ],
       "agentInteractionStatistic": [
         {
@@ -81,7 +81,7 @@
           "@type": "InteractionCounter",
           "interactionType": "https://schema.org/WriteAction",
           "userInteractionCount": {{ profileView.PostsCount }}
-        },
+        }
       ]
     }
   }

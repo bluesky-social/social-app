@@ -62,16 +62,16 @@
       "@type": "DiscussionForumPosting",
       "author": {
         "@type": "Person",
-        "name": "{{ postView.Author.DisplayName|escapejs }}",
-        "url": "https://bsky.app/@{{ postView.Author.Handle|escapejs }}"
+        "name": "{{ postView.Author.DisplayName }}",
+        "url": "https://bsky.app/profile/{{ postView.Author.Handle }}"
       },
       {%- if postText %}
-      "text": "{{ postText|escapejs }}",
+      "text": "{{ postText }}",
       {% endif %}
       {%- if imageThumbUrls %}
-      "image": "{{ imageThumbUrls[0]|escapejs }}",
+      "image": "{{ imageThumbUrls[0] }}",
       {% endif %}
-      "datePublished": "{{ postView.IndexedAt|escapejs }}",
+      "datePublished": "{{ postView.IndexedAt }}",
       "interactionStatistic": [
         {
           "@type": "InteractionCounter",
