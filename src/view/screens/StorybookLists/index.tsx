@@ -46,6 +46,8 @@ export function Inner() {
       <ListScrollProvider onScroll={onScrollWorklet}>
         <List<Item>
           data={items}
+          headerOffset={100}
+          footerOffset={100}
           renderItem={({item}) => (
             <View style={[a.p_md, a.border_b]}>
               <Text>{item.title}</Text>
