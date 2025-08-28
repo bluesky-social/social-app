@@ -22,12 +22,12 @@ appId: xyz.blueskyweb.app
 - waitForAnimationToEnd
 - tapOn: "Done"
 - waitForAnimationToEnd
-- tapOn: "Continue to next step"
+- tapOn:
+    id: "onboardingContinue"
 - assertVisible: "What are your interests?"
 - tapOn:
-    label: "Tap on continue"
-    point: "50%,92%"
+    id: "onboardingContinue"
 - assertVisible: "You're ready to go!"
 - tapOn:
-    label: "Tap on Lets go"
-    point: "50%,92%"
+    id: "onboardingFinish"
+- assertVisible: "Following"
