@@ -13,24 +13,24 @@ import {
   type TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppBskyRichtextFacet, RichText, UnicodeString} from '@atproto/api'
 import PasteInput, {
   type PastedFile,
   type PasteInputRef, // @ts-expect-error no types when installing from github
 } from '@mattermost/react-native-paste-input'
+import Graphemer from 'graphemer'
 
-import {POST_IMG_MAX} from '#/lib/constants'
+import {MAX_GRAPHEME_LENGTH, POST_IMG_MAX} from '#/lib/constants'
 import {downloadAndResize} from '#/lib/media/manip'
 import {isUriImage} from '#/lib/media/util'
 import {cleanError} from '#/lib/strings/errors'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
-import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isNative} from '#/platform/detection'
 import {
   type LinkFacetMatch,
   suggestLinkCardUri,
 } from '#/view/com/composer/text-input/text-input-util'
-import {atoms as a, useAlf} from '#/alf'
+import {atoms as a, platform, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
 import {Autocomplete} from './mobile/Autocomplete'
 
@@ -74,7 +74,6 @@ export const TextInput = forwardRef(function TextInputImpl(
   const {theme: t, fonts} = useAlf()
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
-  const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
   const prevLength = React.useRef(richtext.length)
 
@@ -214,10 +213,43 @@ export const TextInput = forwardRef(function TextInputImpl(
     return style
   }, [t, fonts])
 
+  const splitter = useMemo(() => new Graphemer(), [])
   const textDecorated = useMemo(() => {
+    let excess
+    let rt = richtext
+    if (richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
+      rt = richtext.clone()
+      const split = splitter.splitGraphemes(richtext.text)
+      const validText = split.slice(0, MAX_GRAPHEME_LENGTH).join('')
+      const validUnicode = new UnicodeString(validText)
+      const excessText = split.slice(MAX_GRAPHEME_LENGTH).join('')
+      rt.delete(validUnicode.utf8.byteLength, richtext.length)
+      excess = (
+        <RNText
+          key="excess"
+          style={[
+            t.atoms.text,
+            inputTextStyle,
+            {marginTop: -1},
+            a.underline,
+            platform({
+              ios: {
+                backgroundColor: t.palette.negative_50,
+                textDecorationColor: t.palette.negative_500,
+              },
+              // android both doesn't support textDecorationColor,
+              // and setting a background color renders the cursor invisible.
+              // next best thing is to just set the text color to red -sfn
+              android: {color: t.palette.negative_500},
+            }),
+          ]}>
+          {excessText}
+        </RNText>
+      )
+    }
     let i = 0
 
-    return Array.from(richtext.segments()).map(segment => {
+    const segments = Array.from(rt.segments()).map(segment => {
       return (
         <RNText
           key={i++}
@@ -232,7 +264,13 @@ export const TextInput = forwardRef(function TextInputImpl(
         </RNText>
       )
     })
-  }, [t, richtext, inputTextStyle])
+
+    if (excess) {
+      segments.push(excess)
+    }
+
+    return segments
+  }, [t, richtext, inputTextStyle, splitter])
 
   return (
     <View style={[a.flex_1, a.pl_md, hasRightPadding && a.pr_4xl]}>
@@ -244,7 +282,7 @@ export const TextInput = forwardRef(function TextInputImpl(
         onSelectionChange={onSelectionChange}
         placeholder={placeholder}
         placeholderTextColor={t.atoms.text_contrast_medium.color}
-        keyboardAppearance={theme.colorScheme}
+        keyboardAppearance={t.scheme}
         autoFocus={true}
         allowFontScaling
         multiline
