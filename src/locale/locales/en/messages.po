@@ -1458,7 +1458,7 @@ msgstr ""
 msgid "Books"
 msgstr ""
 
-#: src/components/FeedInterstitials.tsx:435
+#: src/components/FeedInterstitials.tsx:428
 msgid "Browse more accounts on the Explore page"
 msgstr ""
 
@@ -2697,10 +2697,6 @@ msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:89
 msgid "Dismiss this section"
-msgstr ""
-
-#: src/components/Toast/index.web.tsx:81
-msgid "Dismiss toast"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:69
