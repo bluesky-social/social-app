@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {List as OldList} from '#/view/com/util/List'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -78,7 +79,7 @@ export function Inner() {
           />
         </ListScrollProvider>
       ) : (
-        <ListScrollProvider onScroll={onScrollWorklet}>
+        <ScrollProvider onScroll={onScrollWorklet}>
           <OldList
             data={items}
             keyExtractor={item => item.key}
@@ -93,7 +94,7 @@ export function Inner() {
             )}
             style={[a.debug]}
           />
-        </ListScrollProvider>
+        </ScrollProvider>
       )}
     </View>
   )
