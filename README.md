@@ -5,7 +5,7 @@ It’s the **primary client for the Blacksky community**, maintained *by and for
 We track upstream releases closely but layer on features and policies that reflect Blacksky’s
 values of safety, autonomy, and collective ownership.
 
-> 🗳 **Have feedback?** Join the open conversation on Polis: <https://pol.is/6vmnfmi5ps>
+> 🗳 **Have feedback?** Join the open conversation on Blacksky People’s Assembly: <https://assembly.blacksky.community/8bbfunvvau>
 
 ---
 

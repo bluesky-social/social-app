@@ -103,7 +103,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
         {hasSession && (
           <>
             <InlineLinkText
-              to="https://assembly.blacksky.community"
+              to="https://assembly.blacksky.community/8bbfunvvau"
               label={_(msg`Discussion`)}>
               {_(msg`Discussion`)}
             </InlineLinkText>

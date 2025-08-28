@@ -100,8 +100,7 @@ export function toBskyAppUrl(url: string): string {
 export function isBskyAppUrl(url: string): boolean {
   return (
     url.startsWith('https://bsky.app/') ||
-    url.startsWith('https://blacksky.community/') ||
-    url.startsWith('https://assembly.blacksky.community/')
+    url.startsWith('https://blacksky.community/')
   )
 }
 

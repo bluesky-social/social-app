@@ -244,7 +244,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   }, [navigation, setDrawerOpen])
 
   const onPressDiscuss = React.useCallback(() => {
-    Linking.openURL('https://assembly.blacksky.community')
+    Linking.openURL('https://assembly.blacksky.community/8bbfunvvau')
   }, [])
 
   const onPressHelp = React.useCallback(() => {
