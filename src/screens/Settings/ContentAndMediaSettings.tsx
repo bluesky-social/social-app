@@ -11,6 +11,10 @@ import {
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
 import {
+  useSetSimilarAccountsDisabled,
+  useSimilarAccountsDisabled,
+} from '#/state/preferences/similar-accounts'
+import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
@@ -35,6 +39,8 @@ export function ContentAndMediaSettingsScreen({}: Props) {
   const {_} = useLingui()
   const autoplayDisabledPref = useAutoplayDisabled()
   const setAutoplayDisabledPref = useSetAutoplayDisabled()
+  const similarAccountsDisabledPref = useSimilarAccountsDisabled()
+  const setSimilarAccountsDisabledPref = useSetSimilarAccountsDisabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
   const {enabled: trendingEnabled} = useTrendingConfig()
@@ -171,6 +177,20 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               </Toggle.Item>
             </>
           )}
+          <SettingsList.Divider />
+          <Toggle.Item
+            name="disable_similar_accounts"
+            label={_(msg`Similar Accounts`)}
+            value={!similarAccountsDisabledPref}
+            onChange={value => setSimilarAccountsDisabledPref(!value)}>
+            <SettingsList.Item>
+              <SettingsList.ItemIcon icon={PlayIcon} />
+              <SettingsList.ItemText>
+                <Trans>Similar Accounts Box</Trans>
+              </SettingsList.ItemText>
+              <Toggle.Platform />
+            </SettingsList.Item>
+          </Toggle.Item>
         </SettingsList.Container>
       </Layout.Content>
     </Layout.Screen>
