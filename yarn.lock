@@ -11339,10 +11339,10 @@ expo-image-manipulator@~13.1.7:
   dependencies:
     expo-image-loader "~5.1.0"
 
-expo-image-picker@^17.0.2:
-  version "17.0.2"
-  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-17.0.2.tgz#79af7192b2947e54686d0ece6ccbb5f6a178a809"
-  integrity sha512-O74FIrc37KB4ZxC/BMUL3fEZwdmIB60As0q5XczRlzPvWismBl7GG3pPy+o5SGUI2jcepTvQAa2PcNcMbUZNYg==
+expo-image-picker@17.0.4:
+  version "17.0.4"
+  resolved "https://registry.yarnpkg.com/expo-image-picker/-/expo-image-picker-17.0.4.tgz#a251949d0c1f5508fac4cd32bdc2fd835a13e204"
+  integrity sha512-hBFtxAKbQRfOVjf1WdEXMfRJyDXi/YKqv26pVK4wiPZ2F3nFClGKW0OL6w52pyZ7z9hhVGCi5WrWy4CwyVxOEg==
   dependencies:
     expo-image-loader "~6.0.0"
 
