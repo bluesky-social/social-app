@@ -26,6 +26,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {Hashtag_Stroke2_Corner0_Rounded as HashtagIcon} from '#/components/icons/Hashtag'
 import {Home_Stroke2_Corner2_Rounded as HomeIcon} from '#/components/icons/Home'
 import {Macintosh_Stroke2_Corner2_Rounded as MacintoshIcon} from '#/components/icons/Macintosh'
+import {PersonPlus_Stroke2_Corner2_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Play_Stroke2_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Trending2_Stroke2_Corner2_Rounded as Graph} from '#/components/icons/Trending'
 import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/Window'
@@ -184,7 +185,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
             value={!similarAccountsDisabledPref}
             onChange={value => setSimilarAccountsDisabledPref(!value)}>
             <SettingsList.Item>
-              <SettingsList.ItemIcon icon={PlayIcon} />
+              <SettingsList.ItemIcon icon={PersonPlusIcon} />
               <SettingsList.ItemText>
                 <Trans>Similar Accounts Box</Trans>
               </SettingsList.ItemText>
