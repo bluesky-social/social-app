@@ -117,7 +117,7 @@ function BirthdayInner({
         />
       </View>
 
-      {isUnder18 && (
+      {isUnder18 && hasChanged && (
         <Admonition type="info">
           <Trans>
             The birthdate you've entered means you are under 18 years old.
