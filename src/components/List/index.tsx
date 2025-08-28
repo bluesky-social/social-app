@@ -5,6 +5,7 @@ import Animated, {
   useAnimatedScrollHandler,
 } from 'react-native-reanimated'
 
+import {useLightbox} from '#/state/lightbox'
 import {atoms as a, useTheme, web} from '#/alf'
 import {useListScrollContext} from '#/components/List/ListScrollProvider'
 
@@ -41,6 +42,7 @@ export const List = forwardRef(function List<Item>(
   ref: React.Ref<FlatList<Item>>,
 ) {
   const t = useTheme()
+  const {activeLightbox} = useLightbox()
   const scrollHandlers = useListScrollContext()
   const onScroll = useAnimatedScrollHandler({
     onScroll(e, ctx) {
@@ -126,6 +128,7 @@ export const List = forwardRef(function List<Item>(
       contentOffset={
         props.headerOffset ? {x: 0, y: props.headerOffset * -1} : undefined
       }
+      scrollsToTop={!activeLightbox}
       {...(props as FlatListPropsWithLayout<Item>)}
       style={[
         /*
