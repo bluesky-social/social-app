@@ -3,13 +3,16 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: "?users&follows"
+      SERVER_PATH: "?users&follows"
 - runFlow:
     file: ../setupApp.yml
 
 # Login, create a thread, and log out
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - assertVisible:
     id: "composeFAB"
 - tapOn:
@@ -18,9 +21,14 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "composerPublishBtn"
 
-# Login, reply to the thread, and log out
+# Login, reply to the thread, and log out]
+- tapOn:
+    id: "e2eSignOut"
 - tapOn:
     id: "e2eSignInBob"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "replyBtn"
 - inputText: "Reply 1"
@@ -29,7 +37,12 @@ appId: xyz.blueskyweb.app
 
 # Login, confirm notification exists, mute thread, and log out
 - tapOn:
+    id: "e2eSignOut"
+- tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "bottomBarNotificationsBtn"
 - assertVisible:
@@ -39,12 +52,17 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "postDropdownBtn"
     childOf:
-        id: "postThreadItem-by-bob.test"
+      id: "postThreadItem-by-bob.test"
 - tapOn: "Mute thread"
 
 # Login, reply to the thread twice, and log out
 - tapOn:
+    id: "e2eSignOut"
+- tapOn:
     id: "e2eSignInBob"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "bottomBarProfileBtn"
 - tapOn:
@@ -63,7 +81,12 @@ appId: xyz.blueskyweb.app
 
 # Login, confirm notifications dont exist, unmute the thread, confirm notifications exist
 - tapOn:
+    id: "e2eSignOut"
+- tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "bottomBarNotificationsBtn"
 - assertNotVisible:
@@ -77,7 +100,7 @@ appId: xyz.blueskyweb.app
     id: "bottomBarNotificationsBtn"
 - swipe:
     from:
-        id: "notifsFeed"
+      id: "notifsFeed"
     direction: DOWN
 - assertVisible:
     id: "feedItem-by-bob.test"
