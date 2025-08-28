@@ -168,7 +168,10 @@ export function StepHandle() {
               </TextField.GhostText>
             )}
             {isHandleAvailable?.available && (
-              <CheckIcon style={[{color: t.palette.positive_600}, a.z_20]} />
+              <CheckIcon
+                testID="handleAvailableCheck"
+                style={[{color: t.palette.positive_600}, a.z_20]}
+              />
             )}
           </TextField.Root>
         </View>
