@@ -1,11 +1,14 @@
 import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
+  UIImagePickerPreferredAssetRepresentationMode,
 } from 'expo-image-picker'
 import {t} from '@lingui/macro'
 
+import {isIOS, isWeb} from '#/platform/detection'
 import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/view/com/util/Toast'
+import {VIDEO_MAX_DURATION_MS} from '../constants'
 import {getDataUriSize} from './util'
 
 export type PickerImage = ImageMeta & {
@@ -35,4 +38,23 @@ export async function openPicker(opts?: ImagePickerOptions) {
       path: image.uri,
       size: getDataUriSize(image.uri),
     }))
+}
+
+export async function openUnifiedPicker({
+  selectionCountRemaining,
+}: {
+  selectionCountRemaining: number
+}) {
+  return await launchImageLibraryAsync({
+    exif: false,
+    mediaTypes: ['images', 'videos'],
+    quality: 1,
+    allowsMultipleSelection: true,
+    legacy: true,
+    base64: isWeb,
+    selectionLimit: isIOS ? selectionCountRemaining : undefined,
+    preferredAssetRepresentationMode:
+      UIImagePickerPreferredAssetRepresentationMode.Current,
+    videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
+  })
 }

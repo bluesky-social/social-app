@@ -16,7 +16,7 @@ appId: xyz.blueskyweb.app
     id: "composeFAB"
 - inputText: "Post with an image"
 - tapOn:
-    id: "openGalleryBtn"
+    id: "openMediaBtn"
 - tapOn: "Content warnings"
 - tapOn: "Porn"
 - tapOn:
