@@ -26,7 +26,10 @@ export {
  *
  *   - `contentOffset` - Use `headerOffset` or `footerOffset`
  */
-type ListProps<Item> = Omit<FlatListProps<Item>, 'contentOffset'> & {
+type ListProps<Item extends {key: string}> = Omit<
+  FlatListProps<Item>,
+  'contentOffset'
+> & {
   /**
    * Wrapper around `onViewableItemsChanged` that calls back with individual
    * items IF they `item.isViewable` is true.
@@ -49,7 +52,7 @@ type ListProps<Item> = Omit<FlatListProps<Item>, 'contentOffset'> & {
   onScrolledDownChange?: (isScrolledDown: boolean) => void
 }
 
-export const List = forwardRef(function List<Item>(
+export const List = forwardRef(function List<Item extends {key: string}>(
   props: ListProps<Item>,
   ref: React.Ref<FlatList<Item>>,
 ) {
@@ -126,6 +129,7 @@ export const List = forwardRef(function List<Item>(
   return (
     <Animated.FlatList
       ref={ref}
+      keyExtractor={props.keyExtractor || (i => i.key)}
       viewabilityConfig={viewabilityConfig}
       onViewableItemsChanged={onViewableItemsChanged}
       /**
@@ -151,14 +155,6 @@ export const List = forwardRef(function List<Item>(
         right: 1,
       }}
       /**
-       * iOS-only, should match `scrollIndicatorInsets`
-       * @see https://reactnative.dev/docs/scrollview#contentinset-ios
-       */
-      contentInset={{
-        top: props.headerOffset ?? 0,
-        bottom: props.footerOffset ?? 0,
-      }}
-      /**
        * Native only. On web, we use padding on `style` instead.
        */
       contentOffset={
@@ -168,21 +164,21 @@ export const List = forwardRef(function List<Item>(
       refreshControl={refreshControl}
       {...(props as FlatListPropsWithLayout<Item>)}
       style={[
-        /*
-         * On web, the List should always fill its container, otherwise
-         * `onScroll` will not work due to the entire page scrolling.
-         */
+        {
+          paddingTop: props.headerOffset,
+          paddingBottom: props.footerOffset,
+        },
         web([
+          /*
+           * On web, the List should always fill its container, otherwise
+           * `onScroll` will not work due to the entire page scrolling.
+           */
           a.h_full,
-          {
-            paddingTop: props.headerOffset,
-            paddingBottom: props.footerOffset,
-          },
         ]),
       ]}
       onScroll={onScroll}
     />
   )
-}) as <Item>(
+}) as <Item extends {key: string}>(
   props: ListProps<Item> & {ref?: React.Ref<FlatList<Item>>},
 ) => React.ReactElement
