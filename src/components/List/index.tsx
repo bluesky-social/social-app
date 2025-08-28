@@ -1,5 +1,10 @@
 import {forwardRef, useMemo} from 'react'
-import {type FlatList, type FlatListProps, type ViewToken} from 'react-native'
+import {
+  type FlatList,
+  type FlatListProps,
+  RefreshControl,
+  type ViewToken,
+} from 'react-native'
 import Animated, {
   type FlatListPropsWithLayout,
   useAnimatedScrollHandler,
@@ -87,6 +92,20 @@ export const List = forwardRef(function List<Item>(
     ]
   }, [props.onItemSeen])
 
+  let refreshControl
+  if (props.refreshing !== undefined || props.onRefresh !== undefined) {
+    refreshControl = (
+      <RefreshControl
+        key={t.atoms.text.color}
+        refreshing={props.refreshing ?? false}
+        onRefresh={props.onRefresh ?? undefined}
+        tintColor={t.atoms.text.color}
+        titleColor={t.atoms.text.color}
+        progressViewOffset={props.progressViewOffset ?? props.headerOffset}
+      />
+    )
+  }
+
   return (
     <Animated.FlatList
       ref={ref}
@@ -129,6 +148,7 @@ export const List = forwardRef(function List<Item>(
         props.headerOffset ? {x: 0, y: props.headerOffset * -1} : undefined
       }
       scrollsToTop={!activeLightbox}
+      refreshControl={refreshControl}
       {...(props as FlatListPropsWithLayout<Item>)}
       style={[
         /*
