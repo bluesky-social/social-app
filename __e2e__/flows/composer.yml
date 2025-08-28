@@ -3,13 +3,17 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: ?users
+      SERVER_PATH: ?users
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
+
 - assertVisible:
-      id: "composeFAB"
+    id: "composeFAB"
 - tapOn:
     id: "composeFAB"
 - inputText: "Post text only"

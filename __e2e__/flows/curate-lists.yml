@@ -8,6 +8,9 @@ appId: xyz.blueskyweb.app
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+        id: "viewHeaderHomeFeedPrefsBtn"
 
 - tapOn:
     label: "Create a curate list"
