@@ -219,10 +219,10 @@ export function MoreOptionsMenu({
           ) : (
             <Menu.Group>
               <Menu.Item
-                label={_(msg`Repost list`)}
+                label={_(msg`Report list`)}
                 onPress={reportDialogControl.open}>
                 <Menu.ItemText>
-                  <Trans>Repost list</Trans>
+                  <Trans>Report list</Trans>
                 </Menu.ItemText>
                 <Menu.ItemIcon position="right" icon={WarningIcon} />
               </Menu.Item>
