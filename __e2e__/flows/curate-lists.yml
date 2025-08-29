@@ -78,9 +78,8 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "confirmBtn"
 
-- tapOn:
-    label: "Create a new curatelist"
-    id: "e2eGotoLists"
+- assertVisible:
+    id: "newUserListBtn"
 - tapOn:
     id: "newUserListBtn"
 - assertVisible:
