@@ -3,6 +3,7 @@ import {
   findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -65,6 +66,7 @@ export function ProfileStarterPacks({
 }: ProfileFeedgensProps) {
   const t = useTheme()
   const bottomBarOffset = useBottomBarOffset(100)
+  const {height} = useWindowDimensions()
   const [isPTRing, setIsPTRing] = useState(false)
   const {
     data,
@@ -135,7 +137,10 @@ export function ProfileStarterPacks({
         refreshing={isPTRing}
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
-        contentContainerStyle={{paddingBottom: headerOffset + bottomBarOffset}}
+        contentContainerStyle={{
+          minHeight: height + headerOffset,
+          paddingBottom: bottomBarOffset,
+        }}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}

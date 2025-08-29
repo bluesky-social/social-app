@@ -9,6 +9,7 @@ import {
   findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -61,6 +62,7 @@ export function ProfileLists({
 }: ProfileListsProps) {
   const t = useTheme()
   const {_} = useLingui()
+  const {height} = useWindowDimensions()
   const [isPTRing, setIsPTRing] = useState(false)
   const opts = useMemo(() => ({enabled}), [enabled])
   const {
@@ -222,6 +224,7 @@ export function ProfileLists({
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}
+        contentContainerStyle={{minHeight: height + headerOffset}}
       />
     </View>
   )

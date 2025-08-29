@@ -9,6 +9,7 @@ import {
   findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -63,6 +64,7 @@ export function ProfileFeedgens({
   const {_} = useLingui()
   const t = useTheme()
   const [isPTRing, setIsPTRing] = useState(false)
+  const {height} = useWindowDimensions()
   const opts = useMemo(() => ({enabled}), [enabled])
   const {
     data,
@@ -227,6 +229,7 @@ export function ProfileFeedgens({
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}
+        contentContainerStyle={{minHeight: height + headerOffset}}
       />
     </View>
   )
