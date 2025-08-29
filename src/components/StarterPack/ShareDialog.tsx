@@ -13,7 +13,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Dialog from '#/components/Dialog'
-import {ChainLink_Stroke2_Corner0_Rounded} from '#/components/icons/ChainLink'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {Download_Stroke2_Corner0_Rounded as DownloadIcon} from '#/components/icons/Download'
 import {QrCode_Stroke2_Corner0_Rounded as QrCodeIcon} from '#/components/icons/QrCode'
 import {Loader} from '#/components/Loader'
@@ -114,7 +114,7 @@ function ShareDialogInner({
                 color="primary_subtle"
                 size="large"
                 onPress={onShareLink}>
-                <ButtonIcon icon={ChainLink_Stroke2_Corner0_Rounded} />
+                <ButtonIcon icon={ChainLinkIcon} />
                 <ButtonText>
                   {isWeb ? <Trans>Copy Link</Trans> : <Trans>Share link</Trans>}
                 </ButtonText>
