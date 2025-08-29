@@ -52,7 +52,7 @@ export function ExportCarDialog({
   }, [_, control, agent])
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
