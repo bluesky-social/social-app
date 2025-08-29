@@ -8,14 +8,16 @@ import {type AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {atoms as a, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {FloppyDisk_Stroke2_Corner0_Rounded as FloppyDiskIcon} from '#/components/icons/FloppyDisk'
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
 import * as bsky from '#/types/bsky'
@@ -101,7 +103,7 @@ export function QrCodeDialog({
         link.click()
       }
 
-      logEvent('starterPack:share', {
+      logger.metric('starterPack:share', {
         starterPack: starterPack.uri,
         shareType: 'qrcode',
         qrShareType: 'save',
@@ -126,7 +128,7 @@ export function QrCodeDialog({
         navigator.clipboard.write([item])
       })
 
-      logEvent('starterPack:share', {
+      logger.metric('starterPack:share', {
         starterPack: starterPack.uri,
         shareType: 'qrcode',
         qrShareType: 'copy',
@@ -142,7 +144,7 @@ export function QrCodeDialog({
       control.close(() => {
         Sharing.shareAsync(uri, {mimeType: 'image/png', UTI: 'image/png'}).then(
           () => {
-            logEvent('starterPack:share', {
+            logger.metric('starterPack:share', {
               starterPack: starterPack.uri,
               shareType: 'qrcode',
               qrShareType: 'share',
@@ -171,23 +173,27 @@ export function QrCodeDialog({
                   </View>
                 ) : (
                   <View
-                    style={[a.w_full, a.gap_md, isWeb && [a.flex_row_reverse]]}>
+                    style={[
+                      a.w_full,
+                      a.gap_md,
+                      web([a.flex_row, a.justify_center, a.flex_wrap]),
+                    ]}>
                     <Button
                       label={_(msg`Copy QR code`)}
-                      variant="solid"
-                      color="secondary"
-                      size="small"
+                      color="primary_subtle"
+                      size="large"
                       onPress={isWeb ? onCopyPress : onSharePress}>
+                      <ButtonIcon icon={isWeb ? ChainLinkIcon : ShareIcon} />
                       <ButtonText>
                         {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
                       </ButtonText>
                     </Button>
                     <Button
                       label={_(msg`Save QR code`)}
-                      variant="solid"
                       color="secondary"
-                      size="small"
+                      size="large"
                       onPress={onSavePress}>
+                      <ButtonIcon icon={FloppyDiskIcon} />
                       <ButtonText>
                         <Trans>Save</Trans>
                       </ButtonText>
