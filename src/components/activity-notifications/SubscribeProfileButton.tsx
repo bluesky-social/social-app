@@ -18,9 +18,11 @@ import {SubscribeProfileDialog} from './SubscribeProfileDialog'
 export function SubscribeProfileButton({
   profile,
   moderationOpts,
+  disableHint,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  disableHint?: boolean
 }) {
   const {_} = useLingui()
   const requireEmailVerification = useRequireEmailVerification()
@@ -69,7 +71,7 @@ export function SubscribeProfileButton({
   return (
     <>
       <Tooltip.Outer
-        visible={showTooltip}
+        visible={showTooltip && !disableHint}
         onVisibleChange={onDismissTooltip}
         position="bottom">
         <Tooltip.Target>
