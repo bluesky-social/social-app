@@ -67,6 +67,7 @@ import {ProfileFeedLikedByScreen} from '#/view/screens/ProfileFeedLikedBy'
 import {ProfileListScreen} from '#/view/screens/ProfileList'
 import {SavedFeeds} from '#/view/screens/SavedFeeds'
 import {Storybook} from '#/view/screens/Storybook'
+import {StorybookLists} from '#/view/screens/StorybookLists'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
@@ -303,6 +304,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Debug"
         getComponent={() => Storybook}
         options={{title: title(msg`Storybook`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="StorybookLists"
+        getComponent={() => StorybookLists}
+        options={{title: title(msg`Storybook Lists`), requireAuth: true}}
       />
       <Stack.Screen
         name="DebugMod"

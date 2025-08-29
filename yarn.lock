@@ -5053,6 +5053,13 @@
   resolved "https://registry.yarnpkg.com/@js-sdsl/ordered-map/-/ordered-map-4.4.2.tgz#9299f82874bab9e4c7f9c48d865becbfe8d6907c"
   integrity sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw==
 
+"@legendapp/list@^2.0.0-beta.4":
+  version "2.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@legendapp/list/-/list-2.0.0-beta.4.tgz#8ee1804ce60ebca700e4d117be2b5c611479698c"
+  integrity sha512-gQmQH+2FJB3vNZGSuwTJnTXjPJYDcaykvFvC/TJI+phK0JLPs5YPGLYQQtdb9kFAut9iYdnNHuKlPJcVUAuZgg==
+  dependencies:
+    use-sync-external-store "^1.5.0"
+
 "@leichtgewicht/ip-codec@^2.0.1":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
