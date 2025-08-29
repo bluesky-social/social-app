@@ -1,4 +1,10 @@
-import React from 'react'
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 import {
   findNodeHandle,
   type ListRenderItemInfo,
@@ -34,6 +40,7 @@ interface SectionRef {
 }
 
 interface ProfileFeedgensProps {
+  ref?: React.Ref<SectionRef>
   did: string
   scrollElRef: ListRef
   headerOffset: number
@@ -43,17 +50,20 @@ interface ProfileFeedgensProps {
   setScrollViewTag: (tag: number | null) => void
 }
 
-export const ProfileFeedgens = React.forwardRef<
-  SectionRef,
-  ProfileFeedgensProps
->(function ProfileFeedgensImpl(
-  {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
+export function ProfileFeedgens({
   ref,
-) {
+  did,
+  scrollElRef,
+  headerOffset,
+  enabled,
+  style,
+  testID,
+  setScrollViewTag,
+}: ProfileFeedgensProps) {
   const {_} = useLingui()
   const t = useTheme()
-  const [isPTRing, setIsPTRing] = React.useState(false)
-  const opts = React.useMemo(() => ({enabled}), [enabled])
+  const [isPTRing, setIsPTRing] = useState(false)
+  const opts = useMemo(() => ({enabled}), [enabled])
   const {
     data,
     isPending,
@@ -67,7 +77,7 @@ export const ProfileFeedgens = React.forwardRef<
   const isEmpty = !isPending && !data?.pages[0]?.feeds.length
   const {data: preferences} = usePreferencesQuery()
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let items: any[] = []
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
@@ -91,7 +101,7 @@ export const ProfileFeedgens = React.forwardRef<
 
   const queryClient = useQueryClient()
 
-  const onScrollToTop = React.useCallback(() => {
+  const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
       animated: isNative,
       offset: -headerOffset,
@@ -99,11 +109,11 @@ export const ProfileFeedgens = React.forwardRef<
     queryClient.invalidateQueries({queryKey: RQKEY(did)})
   }, [scrollElRef, queryClient, headerOffset, did])
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
   }))
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -113,7 +123,7 @@ export const ProfileFeedgens = React.forwardRef<
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
 
     try {
@@ -123,14 +133,14 @@ export const ProfileFeedgens = React.forwardRef<
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  const onPressRetryLoadMore = React.useCallback(() => {
+  const onPressRetryLoadMore = useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
 
   // rendering
   // =
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY) {
         return (
@@ -174,14 +184,14 @@ export const ProfileFeedgens = React.forwardRef<
     [_, t, error, refetch, onPressRetryLoadMore, preferences],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isIOS && enabled && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [enabled, scrollElRef, setScrollViewTag])
 
-  const ProfileFeedgensFooter = React.useCallback(() => {
+  const ProfileFeedgensFooter = useCallback(() => {
     if (isEmpty) return null
     return (
       <ListFooter
@@ -220,7 +230,7 @@ export const ProfileFeedgens = React.forwardRef<
       />
     </View>
   )
-})
+}
 
 function keyExtractor(item: any) {
   return item._reactKey || item.uri

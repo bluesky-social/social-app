@@ -1,9 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react'
+import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {
   findNodeHandle,
   type ListRenderItemInfo,
@@ -42,6 +37,7 @@ interface SectionRef {
 }
 
 interface ProfileFeedgensProps {
+  ref?: React.Ref<SectionRef>
   scrollElRef: ListRef
   did: string
   headerOffset: number
@@ -56,22 +52,17 @@ function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
   return item.uri
 }
 
-export const ProfileStarterPacks = React.forwardRef<
-  SectionRef,
-  ProfileFeedgensProps
->(function ProfileFeedgensImpl(
-  {
-    scrollElRef,
-    did,
-    headerOffset,
-    enabled,
-    style,
-    testID,
-    setScrollViewTag,
-    isMe,
-  },
+export function ProfileStarterPacks({
   ref,
-) {
+  scrollElRef,
+  did,
+  headerOffset,
+  enabled,
+  style,
+  testID,
+  setScrollViewTag,
+  isMe,
+}: ProfileFeedgensProps) {
   const t = useTheme()
   const bottomBarOffset = useBottomBarOffset(100)
   const [isPTRing, setIsPTRing] = useState(false)
@@ -101,7 +92,7 @@ export const ProfileStarterPacks = React.forwardRef<
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -158,7 +149,7 @@ export const ProfileStarterPacks = React.forwardRef<
       />
     </View>
   )
-})
+}
 
 function CreateAnother() {
   const {_} = useLingui()
