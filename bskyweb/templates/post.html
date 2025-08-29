@@ -54,11 +54,22 @@
       },
       {%- if postText %}
       "text": "{{ postText }}",
+      "url": "https://bsky.app/profile/{{ postView.Author.Handle }}/post/{{ postRecordKey }}",
       {% endif %}
-      {%- if imageThumbUrls %}
-      "image": "{{ imageThumbUrls[0] }}",
+      {%- if (imgThumbUrls and imgThumbUrls|length > 0) %}
+      "image": [
+        {%- for imgThumbUrl in imgThumbUrls %}
+        "{{ imgThumbUrl }}"{% if not forloop.Last %},{% endif %}
+        {% endfor %}
+      ],
+      {%- elif videoThumbUrl %}
+      "image": [
+        {%- if videoThumbUrl %}
+        "{{ videoThumbUrl }}"
+        {% endif %}
+      ],
       {% endif %}
-      "datePublished": "{{ postView.IndexedAt }}",
+      "datePublished": "{{ postCreatedAt }}",
       "interactionStatistic": [
         {
           "@type": "InteractionCounter",
