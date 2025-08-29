@@ -33,7 +33,8 @@ export function QrCodeDialog({
 }) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const [isProcessing, setIsProcessing] = useState(false)
+  const [isSaveProcessing, setIsSaveProcessing] = useState(false)
+  const [isCopyProcessing, setIsCopyProcessing] = useState(false)
 
   const ref = useRef<ViewShot>(null)
 
@@ -78,7 +79,7 @@ export function QrCodeDialog({
           return
         }
       } else {
-        setIsProcessing(true)
+        setIsSaveProcessing(true)
 
         if (
           !bsky.validate(
@@ -108,7 +109,7 @@ export function QrCodeDialog({
         shareType: 'qrcode',
         qrShareType: 'save',
       })
-      setIsProcessing(false)
+      setIsSaveProcessing(false)
       Toast.show(
         isWeb
           ? _(msg`QR code has been downloaded!`)
@@ -119,7 +120,7 @@ export function QrCodeDialog({
   }
 
   const onCopyPress = async () => {
-    setIsProcessing(true)
+    setIsCopyProcessing(true)
     ref.current?.capture?.().then(async (uri: string) => {
       const canvas = await getCanvas(uri)
       // @ts-expect-error web only
@@ -134,7 +135,7 @@ export function QrCodeDialog({
         qrShareType: 'copy',
       })
       Toast.show(_(msg`QR code copied to your clipboard!`))
-      setIsProcessing(false)
+      setIsCopyProcessing(false)
       control.close()
     })
   }
@@ -167,39 +168,43 @@ export function QrCodeDialog({
             ) : (
               <>
                 <QrCode starterPack={starterPack} link={link} ref={ref} />
-                {isProcessing ? (
-                  <View>
-                    <Loader size="xl" />
-                  </View>
-                ) : (
-                  <View
-                    style={[
-                      a.w_full,
-                      a.gap_md,
-                      gtMobile && [a.flex_row, a.justify_center, a.flex_wrap],
-                    ]}>
-                    <Button
-                      label={_(msg`Copy QR code`)}
-                      color="primary_subtle"
-                      size="large"
-                      onPress={isWeb ? onCopyPress : onSharePress}>
-                      <ButtonIcon icon={isWeb ? ChainLinkIcon : ShareIcon} />
-                      <ButtonText>
-                        {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
-                      </ButtonText>
-                    </Button>
-                    <Button
-                      label={_(msg`Save QR code`)}
-                      color="secondary"
-                      size="large"
-                      onPress={onSavePress}>
-                      <ButtonIcon icon={FloppyDiskIcon} />
-                      <ButtonText>
-                        <Trans>Save</Trans>
-                      </ButtonText>
-                    </Button>
-                  </View>
-                )}
+                <View
+                  style={[
+                    a.w_full,
+                    a.gap_md,
+                    gtMobile && [a.flex_row, a.justify_center, a.flex_wrap],
+                  ]}>
+                  <Button
+                    label={_(msg`Copy QR code`)}
+                    color="primary_subtle"
+                    size="large"
+                    onPress={isWeb ? onCopyPress : onSharePress}>
+                    <ButtonIcon
+                      icon={
+                        isCopyProcessing
+                          ? Loader
+                          : isWeb
+                            ? ChainLinkIcon
+                            : ShareIcon
+                      }
+                    />
+                    <ButtonText>
+                      {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
+                    </ButtonText>
+                  </Button>
+                  <Button
+                    label={_(msg`Save QR code`)}
+                    color="secondary"
+                    size="large"
+                    onPress={onSavePress}>
+                    <ButtonIcon
+                      icon={isSaveProcessing ? Loader : FloppyDiskIcon}
+                    />
+                    <ButtonText>
+                      <Trans>Save</Trans>
+                    </ButtonText>
+                  </Button>
+                </View>
               </>
             )}
           </Suspense>
