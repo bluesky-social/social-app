@@ -1,4 +1,4 @@
-import React from 'react'
+import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
 import type ViewShot from 'react-native-view-shot'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
@@ -30,9 +30,9 @@ export function QrCodeDialog({
   control: DialogControlProps
 }) {
   const {_} = useLingui()
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
-  const ref = React.useRef<ViewShot>(null)
+  const ref = useRef<ViewShot>(null)
 
   const getCanvas = (base64: string): Promise<HTMLCanvasElement> => {
     return new Promise(resolve => {
@@ -154,12 +154,12 @@ export function QrCodeDialog({
   }
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Create a QR code for a starter pack`)}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
-          <React.Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading />}>
             {!link ? (
               <Loading />
             ) : (
@@ -196,7 +196,7 @@ export function QrCodeDialog({
                 )}
               </>
             )}
-          </React.Suspense>
+          </Suspense>
         </View>
         <Dialog.Close />
       </Dialog.ScrollableInner>
@@ -206,7 +206,7 @@ export function QrCodeDialog({
 
 function Loading() {
   return (
-    <View style={[a.align_center, a.p_xl]}>
+    <View style={[a.align_center, a.justify_center, {minHeight: 400}]}>
       <Loader size="xl" />
     </View>
   )
