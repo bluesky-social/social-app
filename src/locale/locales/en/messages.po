@@ -2858,7 +2858,7 @@ msgstr ""
 msgid "Download CAR file"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:367
+#: src/view/com/composer/text-input/TextInput.web.tsx:361
 msgid "Drop to add images"
 msgstr ""
 
@@ -5606,7 +5606,7 @@ msgid "No reposts yet"
 msgstr ""
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:61
-#: src/view/com/composer/text-input/web/Autocomplete.tsx:172
+#: src/view/com/composer/text-input/web/Autocomplete.tsx:192
 msgid "No result"
 msgstr ""
 
