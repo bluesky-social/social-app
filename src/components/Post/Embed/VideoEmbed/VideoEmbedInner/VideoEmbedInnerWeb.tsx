@@ -139,7 +139,7 @@ function useHLS({
   playlist: string
   setHasSubtitleTrack: (v: boolean) => void
   setError: (v: Error | null) => void
-  videoRef: React.RefObject<HTMLVideoElement>
+  videoRef: React.RefObject<HTMLVideoElement | null>
   setHlsLoading: (v: boolean) => void
 }) {
   const [Hls, setHls] = useState<typeof HlsTypes.default | undefined>(

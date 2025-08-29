@@ -230,7 +230,7 @@ export function BottomBarWeb() {
 }
 
 const NavItem: React.FC<{
-  children: (props: {isActive: boolean}) => React.ReactChild
+  children: (props: {isActive: boolean}) => React.ReactNode
   href: string
   routeName: string
   hasNew?: boolean

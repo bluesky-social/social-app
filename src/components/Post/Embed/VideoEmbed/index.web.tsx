@@ -10,7 +10,6 @@ import {View} from 'react-native'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {isFirefox} from '#/lib/browser'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
@@ -38,7 +37,7 @@ export function VideoEmbed({
     useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
-  const lastKnownTime = useRef<number | undefined>()
+  const lastKnownTime = useRef<number | undefined>(undefined)
 
   useEffect(() => {
     if (!ref.current) return
