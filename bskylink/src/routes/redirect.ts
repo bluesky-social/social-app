@@ -1,10 +1,13 @@
 import assert from 'node:assert'
 
 import {DAY, SECOND} from '@atproto/common'
-import escapeHTML from 'escape-html'
 import {type Express} from 'express'
 
 import {type AppContext} from '../context.js'
+import {linkRedirectContents} from '../html/linkRedirectContents.js'
+import {linkWarningContents} from '../html/linkWarningContents.js'
+import {linkWarningLayout} from '../html/linkWarningLayout.js'
+import {redirectLogger} from '../logger.js'
 import {handler} from './util.js'
 
 const INTERNAL_IP_REGEX = new RegExp(
@@ -39,14 +42,56 @@ export default function (ctx: AppContext, app: Express) {
         return res.status(302).end()
       }
 
+      // Default to a max age header
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
-      res.type('html')
       res.status(200)
+      res.type('html')
 
-      const escaped = escapeHTML(url.href)
-      return res.send(
-        `<html><head><meta http-equiv="refresh" content="0; URL='${escaped}'" /><style>:root { color-scheme: light dark; }</style></head></html>`,
-      )
+      let html: string | undefined
+
+      if (ctx.cfg.service.safelinkEnabled) {
+        const rule = await ctx.safelinkClient.tryFindRule(link)
+        if (rule !== 'ok') {
+          switch (rule.action) {
+            case 'whitelist':
+              redirectLogger.info(`Whitelist rule matched for ${rule.url}`)
+              break
+            case 'block':
+              html = linkWarningLayout(
+                'Blocked Link Warning',
+                linkWarningContents(req, {
+                  type: 'block',
+                  link: url.href,
+                }),
+              )
+              res.setHeader('Cache-Control', 'no-store')
+              redirectLogger.info(`Block rule matched for ${rule.url}`)
+              break
+            case 'warn':
+              html = linkWarningLayout(
+                'Malicious Link Warning',
+                linkWarningContents(req, {
+                  type: 'warn',
+                  link: url.href,
+                }),
+              )
+              res.setHeader('Cache-Control', 'no-store')
+              redirectLogger.info(`Warn rule matched for ${rule.url}`)
+              break
+            default:
+              redirectLogger.warn(
+                `${rule.action} rule (an unknown rule) matched for ${rule.url}`,
+              )
+          }
+        }
+      }
+
+      // If there is no html defined yet, we will create a redirect html
+      if (!html) {
+        html = linkRedirectContents(url.href)
+      }
+
+      return res.end(html)
     }),
   )
 }
