@@ -83,7 +83,7 @@ export function SubscribeMenu({list}: {list: AppBskyGraphDefs.ListView}) {
             </Button>
           )}
         </Menu.Trigger>
-        <Menu.Outer>
+        <Menu.Outer showCancel>
           <Menu.Group>
             <Menu.Item
               label={_(msg`Mute accounts`)}
