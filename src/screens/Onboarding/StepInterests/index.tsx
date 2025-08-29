@@ -244,6 +244,7 @@ export function StepInterests() {
         ) : (
           <Button
             disabled={saving || !data}
+            testID="onboardingContinue"
             variant="solid"
             color="primary"
             size="large"

@@ -580,6 +580,7 @@ function LegacyFinalStep({
 
       <OnboardingControls.Portal>
         <Button
+          testID="onboardingFinish"
           disabled={saving}
           key={state.activeStep} // remove focus state on nav
           color="primary"
