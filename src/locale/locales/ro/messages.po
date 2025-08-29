@@ -151,7 +151,7 @@ msgstr "{0} este în direct"
 msgid "{0} is not a valid URL"
 msgstr "{0} nu este un URL valid"
 
-#: src/screens/Signup/StepHandle/index.tsx:186
+#: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
 msgstr "{0} nu este disponibil"
 
@@ -723,7 +723,7 @@ msgid "Add emoji reaction"
 msgstr "Adăugați reacție emoji"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:482
+#: src/view/com/composer/SelectMediaButton.tsx:468
 msgid "Add media to post"
 msgstr "Adăugare conținut media la postare"
 
@@ -1043,7 +1043,7 @@ msgstr "un etichetator necunoscut"
 msgid "and"
 msgstr "și"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:45
 #: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr "Animale"
@@ -1219,7 +1219,7 @@ msgstr "Sunteți sigur?"
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "Scrieți în <0>{suggestedLanguageName}</0>?"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr "Artă"
@@ -1487,7 +1487,7 @@ msgstr "Estompare imagini"
 msgid "Blur images and filter from feeds"
 msgstr "Estompați imaginile și filtrați din fluxuri"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:46
 #: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr "Cărți"
@@ -1883,7 +1883,7 @@ msgstr "Faceți clic pentru a deschide meniul de etichete pentru {tag}"
 msgid "Click to retry failed message"
 msgstr "Faceți clic pentru a reîncerca mesajul eșuat"
 
-#: src/screens/Onboarding/index.tsx:46
+#: src/screens/Onboarding/index.tsx:48
 msgid "Climate"
 msgstr "Climă"
 
@@ -2014,12 +2014,12 @@ msgstr "Mod culoare"
 msgid "Color theme"
 msgstr "Temă de culoare"
 
-#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/index.tsx:54
 #: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr "Comedie"
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr "Benzi Desenate"
@@ -2031,7 +2031,7 @@ msgid "Community Guidelines"
 msgstr "Regulile Comunității"
 
 #: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:587
+#: src/screens/Onboarding/StepFinished.tsx:588
 msgid "Complete onboarding and start using your account"
 msgstr "Finalizați înregistrarea și începeți să vă folosiți contul"
 
@@ -2173,8 +2173,8 @@ msgstr "Fundal meniu contextual, faceți clic pentru a închide meniul."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepInterests/index.tsx:254
+#: src/screens/Onboarding/StepProfile/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Continuare"
@@ -2191,8 +2191,8 @@ msgstr "Continuați firul"
 msgid "Continue thread..."
 msgstr "Continuați firul..."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepInterests/index.tsx:251
+#: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2212,7 +2212,7 @@ msgstr "Conversație ștearsă"
 msgid "Conversation deleted"
 msgstr "Conversație ștearsă"
 
-#: src/screens/Onboarding/index.tsx:55
+#: src/screens/Onboarding/index.tsx:57
 msgid "Cooking"
 msgstr "Gătit"
 
@@ -2426,7 +2426,7 @@ msgstr "Creați un cont"
 msgid "Create an account without using this starter pack"
 msgstr "Creați un cont fără a utiliza acest pachet de pornire"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Create an avatar instead"
 msgstr "Creați un avatar în schimb"
 
@@ -2457,7 +2457,7 @@ msgstr "Creat {0}"
 msgid "Creator has been blocked"
 msgstr "Creatorul a fost blocat"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:42
 #: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr "Cultură"
@@ -2734,7 +2734,7 @@ msgstr "Descurajați aplicațiile să-mi arate contul utilizatorilor deconectaț
 msgid "Discover new custom feeds"
 msgstr "Descoperiți fluxuri personalizate noi"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:435
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "Descoperiți Fluxuri Noi"
@@ -2815,8 +2815,8 @@ msgstr "Nu vă faceți griji! Toate mesajele existente și setările sunt salvat
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:329
-#: src/screens/Onboarding/StepProfile/index.tsx:332
+#: src/screens/Onboarding/StepProfile/index.tsx:331
+#: src/screens/Onboarding/StepProfile/index.tsx:334
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3005,7 +3005,7 @@ msgstr "Editați cine poate răspunde"
 msgid "Edit your starter pack"
 msgstr "Editați-vă pachetul de pornire"
 
-#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/index.tsx:47
 #: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr "Educație"
@@ -3434,10 +3434,10 @@ msgstr "Nu s-a reușit urmărirea tuturor conturilor sugerate. Vă rugăm să î
 msgid "Failed to load conversations"
 msgstr "Încărcarea conversațiilor a eșuat"
 
-#: src/screens/Search/Explore.tsx:470
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:561
+#: src/screens/Search/Explore.tsx:600
 msgid "Failed to load feeds preferences"
 msgstr "Încărcarea preferințelor fluxurilor a eșuat"
 
@@ -3467,14 +3467,14 @@ msgstr "Încărcarea mesajelor anterioare a eșuat"
 msgid "Failed to load preference."
 msgstr "Nu s-a putut încărca preferința."
 
-#: src/screens/Search/Explore.tsx:463
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:464
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:554
+#: src/screens/Search/Explore.tsx:593
 msgid "Failed to load suggested feeds"
 msgstr "Încărcarea fluxurilor sugerate a eșuat"
 
-#: src/screens/Search/Explore.tsx:373
+#: src/screens/Search/Explore.tsx:374
 msgid "Failed to load suggested follows"
 msgstr "Încărcarea sugestiilor de urmărire a eșuat"
 
@@ -3662,7 +3662,7 @@ msgid "Filter who you receive notifications from"
 msgstr "Filtrați de la cine primiți notificări"
 
 #: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "Se Finalizează"
 
@@ -3690,7 +3690,7 @@ msgstr "Găsiți-vă oamenii"
 msgid "Finish"
 msgstr "Finalizare"
 
-#: src/screens/Onboarding/index.tsx:49
+#: src/screens/Onboarding/index.tsx:51
 msgid "Fitness"
 msgstr "Fitness"
 
@@ -3853,7 +3853,7 @@ msgstr "Font"
 msgid "Font size"
 msgstr "Dimensiune font"
 
-#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/index.tsx:56
 #: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr "Gastronomie"
@@ -4576,7 +4576,7 @@ msgstr "Alăturați-vă la Bluesky"
 msgid "Join the conversation"
 msgstr "Alăturați-vă conversației"
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr "Jurnalism"
@@ -4758,7 +4758,7 @@ msgid "Let's get your password reset!"
 msgstr "Să vă resetăm parola!"
 
 #: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Let's go!"
 msgstr "Să începem!"
 
@@ -4943,12 +4943,12 @@ msgstr "Caracteristica în direct este în testare beta"
 msgid "Live link"
 msgstr "Link transmisiune în direct"
 
-#: src/screens/Search/Explore.tsx:86
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "Încărcați mai multe"
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:505
+#: src/screens/Search/Explore.tsx:582
 msgid "Load more suggested feeds"
 msgstr "Încărcați mai multe fluxuri sugerate"
 
@@ -5344,7 +5344,7 @@ msgstr "Numele este obligatoriu"
 msgid "Name or Description Violates Community Standards"
 msgstr "Numele sau Descrierea Încalcă Standardele Comunități"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr "Natură"
@@ -5498,7 +5498,7 @@ msgstr "Listă de Utilizatori Nouă"
 msgid "Newest replies first"
 msgstr "Cele mai noi răspunsuri primele"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
@@ -5620,7 +5620,7 @@ msgstr "Niciun rezultat"
 msgid "No results"
 msgstr "Niciun rezultat"
 
-#: src/screens/Search/Explore.tsx:786
+#: src/screens/Search/Explore.tsx:787
 msgid "No results for \"{0}\"."
 msgstr "Niciun rezultat pentru „{0}”."
 
@@ -5638,7 +5638,7 @@ msgstr "Niciun rezultat găsit pentru „{query}”"
 msgid "No results found for {query}"
 msgstr "Niciun rezultat găsit pentru „{query}”"
 
-#: src/screens/Search/Explore.tsx:790
+#: src/screens/Search/Explore.tsx:791
 msgid "No results."
 msgstr "Niciun rezultat."
 
@@ -5815,11 +5815,11 @@ msgstr "Unei sau mai multor GIF-uri le lipsește textul alternativ."
 msgid "One or more images is missing alt text."
 msgstr "Unei sau mai multor imagini le lipsește textul alternativ."
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:387
 msgid "One or more of your selected files are not supported."
 msgstr "Unul sau mai multe dintre fișierele selectate nu sunt acceptate."
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "Unul sau mai multe dintre fișierele selectate sunt prea mari. Dimensiunea maximă este de 100 MB."
 
@@ -5841,7 +5841,7 @@ msgstr "Doar {0} poate răspunde."
 msgid "Only followers who I follow"
 msgstr "Doar urmăritorii pe care îi urmăresc"
 
-#: src/lib/media/picker.shared.ts:28
+#: src/lib/media/picker.shared.ts:31
 msgid "Only image files are supported"
 msgstr "Doar fișierele imagine sunt acceptate"
 
@@ -5866,7 +5866,7 @@ msgstr "Hopa!"
 msgid "Open"
 msgstr "Deschidere"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Open avatar creator"
 msgstr "Deschideți creatorul de avatar"
 
@@ -5976,7 +5976,7 @@ msgid "Opens composer"
 msgstr "Deschide compozitorul"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:488
+#: src/view/com/composer/SelectMediaButton.tsx:474
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Deschide galeria dispozitivului pentru a selecta până la {MAX_IMAGES, plural, one {} few {# imagini}other {# de imagini}}, sau un singur videoclip sau GIF."
 
@@ -6157,7 +6157,7 @@ msgstr "Permisiunea de a vă accesa biblioteca de fotografii a fost refuzată. V
 msgid "Person toggle"
 msgstr "Comutare persoană"
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:44
 #: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr "Animale de companie"
@@ -6384,7 +6384,7 @@ msgstr "Vă rugăm să vă verificați adresa de e-mail"
 msgid "Please write your message below:"
 msgstr "Vă rugăm să vă scrieți mesajul mai jos:"
 
-#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/index.tsx:50
 #: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
@@ -7377,7 +7377,7 @@ msgstr "Salvează setările de decupare a imaginilor"
 msgid "Say hello!"
 msgstr "Spuneți salut!"
 
-#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/index.tsx:49
 #: src/screens/Onboarding/state.ts:120
 msgid "Science"
 msgstr "Știință"
@@ -7438,11 +7438,11 @@ msgstr "Căutați „{searchText}”"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Căutați fluxuri pe care doriți să le sugerați altora."
 
-#: src/screens/Search/Explore.tsx:360
+#: src/screens/Search/Explore.tsx:361
 msgid "Search for more accounts"
 msgstr "Căutați mai multe conturi"
 
-#: src/screens/Search/Explore.tsx:437
+#: src/screens/Search/Explore.tsx:438
 msgid "Search for more feeds"
 msgstr "Căutați mai multe fluxuri"
 
@@ -7665,7 +7665,7 @@ msgstr "Selectați limba preferată pentru traduceri în flux."
 msgid "Select your preferred notification channels"
 msgstr "Selectați canalele de notificare preferate"
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
 msgstr "Selectarea mai multor tipuri de conținut media nu este acceptată."
 
@@ -8123,7 +8123,7 @@ msgstr "Mai mic"
 msgid "Snoozes the reminder"
 msgstr "Amânare memento"
 
-#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr "Dezvoltare Software"
@@ -8219,7 +8219,7 @@ msgstr "Spam"
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; mențiuni sau răspunsuri excesive"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:43
 #: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
@@ -8270,7 +8270,7 @@ msgstr "Pachet de pornire de dvs."
 msgid "Starter pack is invalid"
 msgstr "Pachetul de pornire nu este valid"
 
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:629
 #: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "Pachete de Pornire"
@@ -8357,7 +8357,7 @@ msgstr "Succes!"
 msgid "Successfully verified"
 msgstr "Verificat cu succes"
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:358
 msgid "Suggested Accounts"
 msgstr "Conturi Sugerate"
 
@@ -8460,7 +8460,7 @@ msgstr "Sarcină completă - 10 aprecieri!"
 msgid "Teach our algorithm what you like"
 msgstr "Învățați algoritmul ce vă place"
 
-#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/index.tsx:52
 #: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr "Tehnologie"
@@ -9389,7 +9389,7 @@ msgstr "Actualizarea vizibilității răspunsului a eșuat"
 msgid "Updating..."
 msgstr "Se actualizează..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:291
 msgid "Upload a photo instead"
 msgstr "Încărcați o fotografie în schimb"
 
@@ -9516,15 +9516,15 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "Listă de utilizatori actualizată"
 
-#: src/screens/Signup/StepHandle/index.tsx:231
+#: src/screens/Signup/StepHandle/index.tsx:234
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr "Numele de utilizator nu poate fi mai lung decât {MAX_SERVICE_HANDLE_LENGTH, plural, one {} few {# caractere}other {# de caractere}}"
 
-#: src/screens/Signup/StepHandle/index.tsx:215
+#: src/screens/Signup/StepHandle/index.tsx:218
 msgid "Username cannot begin or end with a hyphen"
 msgstr "Numele de utilizator nu poate începe sau termina cu o cratimă"
 
-#: src/screens/Signup/StepHandle/index.tsx:219
+#: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr "Numele de utilizator trebuie să conțină doar litere (a-z), cifre și cratime"
 
@@ -9665,7 +9665,7 @@ msgstr "Flux video"
 msgid "Video from {0}: {text}"
 msgstr "Videoclip de la {0}: {text}"
 
-#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/index.tsx:55
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
@@ -9699,7 +9699,7 @@ msgstr "Videoclip: {0}"
 msgid "Videos"
 msgstr "Videoclipuri"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:404
 msgid "Videos must be less than 3 minutes long."
 msgstr "Videoclipurile trebuie să aibă o lungime de mai puțin de 3 minute."
 
@@ -10123,7 +10123,7 @@ msgstr "Scrieți o postare"
 msgid "Write your reply"
 msgstr "Scrieți-vă răspunsul"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:41
 #: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr "Scriitori"
@@ -10257,11 +10257,11 @@ msgstr "Acum puteți alege să fiți notificat când anumite persoane postează.
 msgid "You can now sign in with your new password."
 msgstr "Acum vă puteți conecta cu noua parolă."
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one GIF at a time."
 msgstr "Puteți selecta doar un singur GIF odată."
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
 msgstr "Puteți selecta doar un singur videoclip odată."
 
@@ -10270,7 +10270,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Puteți să vă reactivați contul pentru a continua să vă conectați. Profilul și postările dvs. vor fi vizibile pentru alți utilizatori."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "Puteți selecta până la {MAX_IMAGES, plural, one {} few {# imagini}other {# de imagini}} în total."
 
@@ -10448,7 +10448,7 @@ msgstr "Trebuie să selectați cel puțin un etichetator pentru un raport"
 msgid "You must sign in to view this post."
 msgstr "Trebuie să vă conectați pentru a vizualiza această postare."
 
-#: src/view/com/composer/SelectMediaButton.tsx:439
+#: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
 msgstr "Trebuie să permiteți accesul la biblioteca dvs. media."
 
@@ -10740,4 +10740,3 @@ msgstr "Interesele dvs. selectate ne ajută să vă oferim conținut care vă in
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Verificările dvs."
-

@@ -151,7 +151,7 @@ msgstr "{0} zuzenean dago"
 msgid "{0} is not a valid URL"
 msgstr "{0} ez da URL baliozkoa"
 
-#: src/screens/Signup/StepHandle/index.tsx:186
+#: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
 msgstr "{0} ez dago eskuragarri"
 
@@ -723,7 +723,7 @@ msgid "Add emoji reaction"
 msgstr "Gehitu emoji erreakzioa"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:482
+#: src/view/com/composer/SelectMediaButton.tsx:468
 msgid "Add media to post"
 msgstr "Gehitu multimedia postari"
 
@@ -1043,7 +1043,7 @@ msgstr "etiketatzaile ezezaguna"
 msgid "and"
 msgstr "eta"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:45
 #: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr "Animaliak"
@@ -1219,7 +1219,7 @@ msgstr "Ziur zaude?"
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "<0>{suggestedLanguageName}</0>-z idazten ari zara?"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr "Artea"
@@ -1487,7 +1487,7 @@ msgstr "Irudiak lausotu"
 msgid "Blur images and filter from feeds"
 msgstr "Irudiak lausotu eta iragazi feedetatik"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:46
 #: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr "Liburuak"
@@ -1883,7 +1883,7 @@ msgstr "Egin klik hemen {tag}-ren etiketa-menua irekitzeko"
 msgid "Click to retry failed message"
 msgstr "Egin klik huts egindako mezua berriro bidaltzen saiatzeko"
 
-#: src/screens/Onboarding/index.tsx:46
+#: src/screens/Onboarding/index.tsx:48
 msgid "Climate"
 msgstr "Giroa"
 
@@ -2014,12 +2014,12 @@ msgstr "Kolore modua"
 msgid "Color theme"
 msgstr "Kolore-gaia"
 
-#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/index.tsx:54
 #: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr "Komedia"
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr "Komikiak"
@@ -2031,7 +2031,7 @@ msgid "Community Guidelines"
 msgstr "Komunitate-gidalerroak"
 
 #: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:587
+#: src/screens/Onboarding/StepFinished.tsx:588
 msgid "Complete onboarding and start using your account"
 msgstr "Osatu sartzea eta hasi zure kontua erabiltzen"
 
@@ -2173,8 +2173,8 @@ msgstr "Testuinguru-menuaren atzeko planoa, egin klik menua ixteko."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepInterests/index.tsx:254
+#: src/screens/Onboarding/StepProfile/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Jarraitu"
@@ -2191,8 +2191,8 @@ msgstr "Jarraitu haria"
 msgid "Continue thread..."
 msgstr "Jarraitu haria..."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepInterests/index.tsx:251
+#: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2212,7 +2212,7 @@ msgstr "Elkarrizketa ezabatuta"
 msgid "Conversation deleted"
 msgstr "Elkarrizketa ezabatuta"
 
-#: src/screens/Onboarding/index.tsx:55
+#: src/screens/Onboarding/index.tsx:57
 msgid "Cooking"
 msgstr "Sukaldatzen"
 
@@ -2426,7 +2426,7 @@ msgstr "Sortu kontu bat"
 msgid "Create an account without using this starter pack"
 msgstr "Sortu kontu bat abio multzo hau erabili gabe"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Create an avatar instead"
 msgstr "Sortu abatar bat horren ordez"
 
@@ -2457,7 +2457,7 @@ msgstr "Sortuta {0}"
 msgid "Creator has been blocked"
 msgstr "Sortzailea blokeatu egin da"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:42
 #: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr "Kultura"
@@ -2734,7 +2734,7 @@ msgstr "Utzi aplikazioei saioa amaitutako erabiltzaileei nire kontua erakusten"
 msgid "Discover new custom feeds"
 msgstr "Aurkitu feed pertsonalizatu berriak"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:435
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "Aurkitu Feed Berriak"
@@ -2815,8 +2815,8 @@ msgstr "Ez kezkatu! Mezu eta ezarpen guztiak gordeta daude eta heldua zarela egi
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:329
-#: src/screens/Onboarding/StepProfile/index.tsx:332
+#: src/screens/Onboarding/StepProfile/index.tsx:331
+#: src/screens/Onboarding/StepProfile/index.tsx:334
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3005,7 +3005,7 @@ msgstr "Editatu nork erantzun dezakeen"
 msgid "Edit your starter pack"
 msgstr "Editatu zure abio multzoa"
 
-#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/index.tsx:47
 #: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr "Hezkuntza"
@@ -3434,10 +3434,10 @@ msgstr ""
 msgid "Failed to load conversations"
 msgstr "Ezin izan dira elkarrizketak kargatu"
 
-#: src/screens/Search/Explore.tsx:470
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:561
+#: src/screens/Search/Explore.tsx:600
 msgid "Failed to load feeds preferences"
 msgstr "Ezin izan dira kargatu feeden hobespenak"
 
@@ -3467,14 +3467,14 @@ msgstr "Ezin izan dira kargatu iraganeko mezuak"
 msgid "Failed to load preference."
 msgstr "Ezin izan da hobespena kargatu."
 
-#: src/screens/Search/Explore.tsx:463
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:464
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:554
+#: src/screens/Search/Explore.tsx:593
 msgid "Failed to load suggested feeds"
 msgstr "Ezin izan dira iradokitako feedak kargatu"
 
-#: src/screens/Search/Explore.tsx:373
+#: src/screens/Search/Explore.tsx:374
 msgid "Failed to load suggested follows"
 msgstr "Ezin izan dira kargatu iradokitako jarraipenak"
 
@@ -3662,7 +3662,7 @@ msgid "Filter who you receive notifications from"
 msgstr "Iragazi noren jakinarazpenak jasotzen dituzun"
 
 #: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "Amaitzen"
 
@@ -3690,7 +3690,7 @@ msgstr ""
 msgid "Finish"
 msgstr "Amaitu"
 
-#: src/screens/Onboarding/index.tsx:49
+#: src/screens/Onboarding/index.tsx:51
 msgid "Fitness"
 msgstr "Sasoia"
 
@@ -3853,7 +3853,7 @@ msgstr "Letra-tipoa"
 msgid "Font size"
 msgstr "Letra-tipo tamaina"
 
-#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/index.tsx:56
 #: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr "Elikagaia"
@@ -4576,7 +4576,7 @@ msgstr "Sartu Bluesky"
 msgid "Join the conversation"
 msgstr "Bat egin elkarrizketan"
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr "Kazetaritza"
@@ -4758,7 +4758,7 @@ msgid "Let's get your password reset!"
 msgstr "Lor dezagun pasahitza berrezartzea!"
 
 #: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Let's go!"
 msgstr "Goazen!"
 
@@ -4943,12 +4943,12 @@ msgstr "Zuzeneko funtzioa beta proban dago"
 msgid "Live link"
 msgstr "Zuzeneko esteka"
 
-#: src/screens/Search/Explore.tsx:86
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "Kargatu gehiago"
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:505
+#: src/screens/Search/Explore.tsx:582
 msgid "Load more suggested feeds"
 msgstr "Kargatu iradokitako feed gehiago"
 
@@ -5344,7 +5344,7 @@ msgstr "Izena derrigorrezkoa da"
 msgid "Name or Description Violates Community Standards"
 msgstr "Izenak edo Deskribapenak Komunitatearen Arauak Urratzen ditu"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr "Natura"
@@ -5498,7 +5498,7 @@ msgstr "Erabiltzaile Zerrenda berria"
 msgid "Newest replies first"
 msgstr "Erantzun berrienak lehenengo"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
@@ -5620,7 +5620,7 @@ msgstr "Ez dago emaitzarik"
 msgid "No results"
 msgstr "Ez dago emaitzarik"
 
-#: src/screens/Search/Explore.tsx:786
+#: src/screens/Search/Explore.tsx:787
 msgid "No results for \"{0}\"."
 msgstr "Emaitzarik ez honentzat: \"{0}\"."
 
@@ -5638,7 +5638,7 @@ msgstr "Ez da emaitzarik aurkitu \"{query}\"-rentzat"
 msgid "No results found for {query}"
 msgstr "Ez da emaitzarik aurkitu {query}-rentzat"
 
-#: src/screens/Search/Explore.tsx:790
+#: src/screens/Search/Explore.tsx:791
 msgid "No results."
 msgstr "Ez dago emaitzarik."
 
@@ -5815,11 +5815,11 @@ msgstr "GIF bati edo gehiagori aukerazko testua falta zaio."
 msgid "One or more images is missing alt text."
 msgstr "Irudi bati edo gehiagori aukerazko testua falta zaio."
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:387
 msgid "One or more of your selected files are not supported."
 msgstr "Hautatutako fitxategi bat edo gehiago ez dira onartzen."
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "Hautatutako fitxategi bat edo gehiago handiegiak dira. Gehienezko tamaina 100 MB da."
 
@@ -5841,7 +5841,7 @@ msgstr "{0}-k bakarrik erantzun dezake."
 msgid "Only followers who I follow"
 msgstr "Jarraitzen ditudan jarraitzaileak bakarrik"
 
-#: src/lib/media/picker.shared.ts:28
+#: src/lib/media/picker.shared.ts:31
 msgid "Only image files are supported"
 msgstr "Irudi-fitxategiak soilik onartzen dira"
 
@@ -5866,7 +5866,7 @@ msgstr "Ups!"
 msgid "Open"
 msgstr "Ireki"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Open avatar creator"
 msgstr "Ireki abatar sortzailea"
 
@@ -5976,7 +5976,7 @@ msgid "Opens composer"
 msgstr "Konpositorea irekitzen du"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:488
+#: src/view/com/composer/SelectMediaButton.tsx:474
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Gailuaren galeria irekitzen du gehienez {MAX_IMAGES, plural, other {# irudi}}, edo bideo edo GIF bakarra hautatzeko."
 
@@ -6157,7 +6157,7 @@ msgstr "Ukatu egin da zure argazki liburutegira sartzeko baimena. Mesedez, gaitu
 msgid "Person toggle"
 msgstr "Pertsona txandakatzea"
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:44
 #: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr "Etxe-animaliak"
@@ -6384,7 +6384,7 @@ msgstr "Mesedez, egiazttu zure helbide elektronikoa"
 msgid "Please write your message below:"
 msgstr "Mesedez, idatzi zure mezua jarraian:"
 
-#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/index.tsx:50
 #: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
@@ -7377,7 +7377,7 @@ msgstr "Irudi mozketa ezarpenak gordetzen ditu"
 msgid "Say hello!"
 msgstr "Esan kaixo!"
 
-#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/index.tsx:49
 #: src/screens/Onboarding/state.ts:120
 msgid "Science"
 msgstr "Zientzia"
@@ -7438,11 +7438,11 @@ msgstr "Bilatu \"{searchText}\""
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Bilatu besteei iradoki nahi diezun feedak."
 
-#: src/screens/Search/Explore.tsx:360
+#: src/screens/Search/Explore.tsx:361
 msgid "Search for more accounts"
 msgstr "Bilatu kontu gehiago"
 
-#: src/screens/Search/Explore.tsx:437
+#: src/screens/Search/Explore.tsx:438
 msgid "Search for more feeds"
 msgstr "Bilatu feed gehiago"
 
@@ -7665,7 +7665,7 @@ msgstr "Aukeratu zure feedean itzulpenak egiteko nahi duzun hizkuntza."
 msgid "Select your preferred notification channels"
 msgstr "Hautatu zure gogoko jakinarazpen kanalak"
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
 msgstr "Ez da onartzen hainbat euskarri mota hautatzea."
 
@@ -8123,7 +8123,7 @@ msgstr "Txikiagoa"
 msgid "Snoozes the reminder"
 msgstr "Gogorarazpena atzeratzen du"
 
-#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr "Software Garatzailea"
@@ -8219,7 +8219,7 @@ msgstr "Spama"
 msgid "Spam; excessive mentions or replies"
 msgstr "Spama; gehiegizko aipamen edo erantzunak"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:43
 #: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
@@ -8270,7 +8270,7 @@ msgstr "Zure abio multzoa"
 msgid "Starter pack is invalid"
 msgstr "Abio multzoa ez da zuzena"
 
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:629
 #: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "Abio Multzoak"
@@ -8357,7 +8357,7 @@ msgstr "Arrakasta!"
 msgid "Successfully verified"
 msgstr "Behar bezala egiaztatu da"
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:358
 msgid "Suggested Accounts"
 msgstr "Iradokitako Kontuak"
 
@@ -8460,7 +8460,7 @@ msgstr "Ataza amaituta - 10-ek gogoko dute!"
 msgid "Teach our algorithm what you like"
 msgstr "Irakatsi gure algoritmoari gustatzen zaizuna"
 
-#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/index.tsx:52
 #: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr "Teknologia"
@@ -9389,7 +9389,7 @@ msgstr "Ezin izan da eguneratu erantzunen ikusgaitasuna"
 msgid "Updating..."
 msgstr "Eguneratzen..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:291
 msgid "Upload a photo instead"
 msgstr "Kargatu argazki bat ordez"
 
@@ -9516,15 +9516,15 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "Erabiltzaile zerrenda eguneratua"
 
-#: src/screens/Signup/StepHandle/index.tsx:231
+#: src/screens/Signup/StepHandle/index.tsx:234
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr "Erabiltzaile-izenak ezin du {MAX_SERVICE_HANDLE_LENGTH, plural, other {# karaktere}} baino luzeagoa izan"
 
-#: src/screens/Signup/StepHandle/index.tsx:215
+#: src/screens/Signup/StepHandle/index.tsx:218
 msgid "Username cannot begin or end with a hyphen"
 msgstr "Erabiltzaile-izenak ezin du marratxo batekin hasi edo amaitu"
 
-#: src/screens/Signup/StepHandle/index.tsx:219
+#: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr "Erabiltzaile-izenak letrak (a-z), zenbakiak eta marratxoak bakarrik izan behar ditu"
 
@@ -9665,7 +9665,7 @@ msgstr "Bideo Feeda"
 msgid "Video from {0}: {text}"
 msgstr "{0}-ren bideoa: {text}"
 
-#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/index.tsx:55
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
@@ -9699,7 +9699,7 @@ msgstr "Bideoa: {0}"
 msgid "Videos"
 msgstr "Bideoak"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:404
 msgid "Videos must be less than 3 minutes long."
 msgstr "Bideoek 3 minutu baino gutxiago iraun behar dute."
 
@@ -10123,7 +10123,7 @@ msgstr "Idatzi posta"
 msgid "Write your reply"
 msgstr "Idatzi zure erantzuna"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:41
 #: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr "Idazleak"
@@ -10257,11 +10257,11 @@ msgstr "Orain pertsona zehatzek posteatzen dutenean jakinarazpenak jasotzea auke
 msgid "You can now sign in with your new password."
 msgstr "Orain pasahitz berriarekin saioa hasi dezakezu."
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one GIF at a time."
 msgstr "GIF bakarra hauta dezakezu aldi berean."
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
 msgstr "Bideo bakarra hauta dezakezu aldi berean."
 
@@ -10270,7 +10270,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Zure kontua berriro aktiba dezakezu saioa hasten jarraitzeko. Zure profila eta postak beste erabiltzaileek ikusgai izango dituzte."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "Guztira gehienez {MAX_IMAGES, plural, other {# irudi}} hauta ditzakezu."
 
@@ -10448,7 +10448,7 @@ msgstr "Gutxienez etiketatzaile bat hautatu behar duzu salaketa baterako"
 msgid "You must sign in to view this post."
 msgstr "Saioa hasi behar duzu post hau ikusteko."
 
-#: src/view/com/composer/SelectMediaButton.tsx:439
+#: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
 msgstr "Zure multimedia liburutegirako sarbidea baimendu behar duzu."
 
@@ -10740,4 +10740,3 @@ msgstr "Aukeratutako interesek gogoko duzun edukia zerbitzatzen laguntzen digute
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Zure egiaztapenak"
-

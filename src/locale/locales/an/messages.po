@@ -151,7 +151,7 @@ msgstr ""
 msgid "{0} is not a valid URL"
 msgstr ""
 
-#: src/screens/Signup/StepHandle/index.tsx:186
+#: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
 msgstr ""
 
@@ -723,7 +723,7 @@ msgid "Add emoji reaction"
 msgstr ""
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:482
+#: src/view/com/composer/SelectMediaButton.tsx:468
 msgid "Add media to post"
 msgstr ""
 
@@ -1043,7 +1043,7 @@ msgstr "un etiquetador desconoixiu"
 msgid "and"
 msgstr "y"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:45
 #: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr "Animals"
@@ -1219,7 +1219,7 @@ msgstr "Yes seguro?"
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "Yes escribindo en <0>{suggestedLanguageName}</0>?"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr "Arte"
@@ -1487,7 +1487,7 @@ msgstr "Desenfocar imáchens"
 msgid "Blur images and filter from feeds"
 msgstr "Desenfocar imáchens y filtrar dende las canals"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:46
 #: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr "Libros"
@@ -1883,7 +1883,7 @@ msgstr "Fe clic pa ubrir lo menu de {tag}"
 msgid "Click to retry failed message"
 msgstr "Fe clic pa reintentar mensache fallido"
 
-#: src/screens/Onboarding/index.tsx:46
+#: src/screens/Onboarding/index.tsx:48
 msgid "Climate"
 msgstr "Clima"
 
@@ -2014,12 +2014,12 @@ msgstr "Modo de color"
 msgid "Color theme"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/index.tsx:54
 #: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr "Comedia"
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr "Historietas"
@@ -2031,7 +2031,7 @@ msgid "Community Guidelines"
 msgstr "Directrices d'a comunidat"
 
 #: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:587
+#: src/screens/Onboarding/StepFinished.tsx:588
 msgid "Complete onboarding and start using your account"
 msgstr "Completa la incorporación y prencipia a usar la tuya cuenta"
 
@@ -2173,8 +2173,8 @@ msgstr "Fondo d'o menú contextual, faga clic pa zarrar lo menú."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepInterests/index.tsx:254
+#: src/screens/Onboarding/StepProfile/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Continar"
@@ -2191,8 +2191,8 @@ msgstr ""
 msgid "Continue thread..."
 msgstr "Continar filo..."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepInterests/index.tsx:251
+#: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2212,7 +2212,7 @@ msgstr "Conversa eliminada"
 msgid "Conversation deleted"
 msgstr "Conversa eliminada"
 
-#: src/screens/Onboarding/index.tsx:55
+#: src/screens/Onboarding/index.tsx:57
 msgid "Cooking"
 msgstr "Cocinando"
 
@@ -2426,7 +2426,7 @@ msgstr "Crea una cuenta"
 msgid "Create an account without using this starter pack"
 msgstr ""
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Create an avatar instead"
 msgstr "Crea un avatar"
 
@@ -2457,7 +2457,7 @@ msgstr "Creau {0}"
 msgid "Creator has been blocked"
 msgstr "Lo creador ha estau blocau"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:42
 #: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr "Cultura"
@@ -2734,7 +2734,7 @@ msgstr "Privar que las aplicacions amuestren la mía cuenta a los usuarios desco
 msgid "Discover new custom feeds"
 msgstr "Descubre nuevas canals personalizadas"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:435
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "Descubrir nuevas canals"
@@ -2815,8 +2815,8 @@ msgstr ""
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:329
-#: src/screens/Onboarding/StepProfile/index.tsx:332
+#: src/screens/Onboarding/StepProfile/index.tsx:331
+#: src/screens/Onboarding/StepProfile/index.tsx:334
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3005,7 +3005,7 @@ msgstr "Editar quí puede responder"
 msgid "Edit your starter pack"
 msgstr "Edita lo tuyo paquet d'inicio"
 
-#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/index.tsx:47
 #: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr "Educación"
@@ -3434,10 +3434,10 @@ msgstr ""
 msgid "Failed to load conversations"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:470
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:561
+#: src/screens/Search/Explore.tsx:600
 msgid "Failed to load feeds preferences"
 msgstr "Error en cargar las preferencias de canals"
 
@@ -3467,14 +3467,14 @@ msgstr "Error en cargar los mensaches anteriors"
 msgid "Failed to load preference."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:463
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:464
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:554
+#: src/screens/Search/Explore.tsx:593
 msgid "Failed to load suggested feeds"
 msgstr "Error en cargar las canals sucheridas"
 
-#: src/screens/Search/Explore.tsx:373
+#: src/screens/Search/Explore.tsx:374
 msgid "Failed to load suggested follows"
 msgstr "Error en cargar las sucherencias de seguimiento"
 
@@ -3662,7 +3662,7 @@ msgid "Filter who you receive notifications from"
 msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "Finalizando"
 
@@ -3690,7 +3690,7 @@ msgstr ""
 msgid "Finish"
 msgstr "Rematar"
 
-#: src/screens/Onboarding/index.tsx:49
+#: src/screens/Onboarding/index.tsx:51
 msgid "Fitness"
 msgstr "Exercicio"
 
@@ -3853,7 +3853,7 @@ msgstr "Fuent"
 msgid "Font size"
 msgstr "Grandaria de fuent"
 
-#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/index.tsx:56
 #: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr "Minchar"
@@ -4576,7 +4576,7 @@ msgstr "Une-te a Bluesky"
 msgid "Join the conversation"
 msgstr "Une-te a la conversa"
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr "Periodismo"
@@ -4758,7 +4758,7 @@ msgid "Let's get your password reset!"
 msgstr "Imos a restablir la tuya clau!"
 
 #: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Let's go!"
 msgstr "Imos!"
 
@@ -4943,12 +4943,12 @@ msgstr ""
 msgid "Live link"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:86
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "Cargar-ne mas"
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:505
+#: src/screens/Search/Explore.tsx:582
 msgid "Load more suggested feeds"
 msgstr "Cargar mas canals sucheridas"
 
@@ -5344,7 +5344,7 @@ msgstr "Nombre requeriu"
 msgid "Name or Description Violates Community Standards"
 msgstr "Nombre u descripción que violan los estándard d'a comunidat"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr "Naturaleza"
@@ -5498,7 +5498,7 @@ msgstr "Nueva lista d'usuarios"
 msgid "Newest replies first"
 msgstr "Respuestas nuevas primer"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
@@ -5620,7 +5620,7 @@ msgstr "Sin resultau"
 msgid "No results"
 msgstr "Sin resultaus"
 
-#: src/screens/Search/Explore.tsx:786
+#: src/screens/Search/Explore.tsx:787
 msgid "No results for \"{0}\"."
 msgstr ""
 
@@ -5638,7 +5638,7 @@ msgstr "No s'ha trobau resultaus pa \"{query}\""
 msgid "No results found for {query}"
 msgstr "No s'ha trobau resultaus pa {query}"
 
-#: src/screens/Search/Explore.tsx:790
+#: src/screens/Search/Explore.tsx:791
 msgid "No results."
 msgstr ""
 
@@ -5815,11 +5815,11 @@ msgstr "Falta lo texto alternativo d'uno u mas GIFs."
 msgid "One or more images is missing alt text."
 msgstr "Falta lo texto alternativo en una u cuantas imáchens."
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:387
 msgid "One or more of your selected files are not supported."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr ""
 
@@ -5841,7 +5841,7 @@ msgstr "Nomás {0} puede responder."
 msgid "Only followers who I follow"
 msgstr ""
 
-#: src/lib/media/picker.shared.ts:28
+#: src/lib/media/picker.shared.ts:31
 msgid "Only image files are supported"
 msgstr "Nomás s'admite fichers d'imachen"
 
@@ -5866,7 +5866,7 @@ msgstr "Ui!"
 msgid "Open"
 msgstr "Ubierto"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Open avatar creator"
 msgstr "Ubrir lo creyador de avatares"
 
@@ -5976,7 +5976,7 @@ msgid "Opens composer"
 msgstr "Ubrir compositor"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:488
+#: src/view/com/composer/SelectMediaButton.tsx:474
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
@@ -6157,7 +6157,7 @@ msgstr ""
 msgid "Person toggle"
 msgstr "Alternar persona"
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:44
 #: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr "Mascotas"
@@ -6384,7 +6384,7 @@ msgstr ""
 msgid "Please write your message below:"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/index.tsx:50
 #: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
@@ -7377,7 +7377,7 @@ msgstr "Alza los achustes de retalle d'a imachen"
 msgid "Say hello!"
 msgstr "Di ola!"
 
-#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/index.tsx:49
 #: src/screens/Onboarding/state.ts:120
 msgid "Science"
 msgstr "Ciencia"
@@ -7438,11 +7438,11 @@ msgstr "Buscar \"{searchText}\""
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Buscar canals que quieras sucherir a atros."
 
-#: src/screens/Search/Explore.tsx:360
+#: src/screens/Search/Explore.tsx:361
 msgid "Search for more accounts"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:437
+#: src/screens/Search/Explore.tsx:438
 msgid "Search for more feeds"
 msgstr ""
 
@@ -7665,7 +7665,7 @@ msgstr "Tría en qué idioma deseyas traducir las publicacions d'a tuya canal."
 msgid "Select your preferred notification channels"
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
 msgstr ""
 
@@ -8123,7 +8123,7 @@ msgstr "Mas chicot"
 msgid "Snoozes the reminder"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr "Programación"
@@ -8219,7 +8219,7 @@ msgstr "Vasuera"
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; mencions u respuestas excesivas"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:43
 #: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
@@ -8270,7 +8270,7 @@ msgstr "Paquet d'inicio creau per tu"
 msgid "Starter pack is invalid"
 msgstr "Lo paquet d'inicio ye invalido"
 
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:629
 #: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "Paquez d'inicio"
@@ -8357,7 +8357,7 @@ msgstr "Exito!"
 msgid "Successfully verified"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:358
 msgid "Suggested Accounts"
 msgstr ""
 
@@ -8460,7 +8460,7 @@ msgstr "Fayena completada - 10 \"me fa goyo\"!"
 msgid "Teach our algorithm what you like"
 msgstr "Amuestra a lo nuestro algorismo lo que te fa goyo"
 
-#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/index.tsx:52
 #: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr "Tecnolochía"
@@ -9389,7 +9389,7 @@ msgstr "Ha fallau l'actualización d'a visibilidat d'a respuesta"
 msgid "Updating..."
 msgstr "Actualizando..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:291
 msgid "Upload a photo instead"
 msgstr "Puya una foto en cuenta"
 
@@ -9516,15 +9516,15 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "Lista d'usuarios actualizada"
 
-#: src/screens/Signup/StepHandle/index.tsx:231
+#: src/screens/Signup/StepHandle/index.tsx:234
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr ""
 
-#: src/screens/Signup/StepHandle/index.tsx:215
+#: src/screens/Signup/StepHandle/index.tsx:218
 msgid "Username cannot begin or end with a hyphen"
 msgstr ""
 
-#: src/screens/Signup/StepHandle/index.tsx:219
+#: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr ""
 
@@ -9665,7 +9665,7 @@ msgstr "Canal de video"
 msgid "Video from {0}: {text}"
 msgstr "Video de {0}: {text}"
 
-#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/index.tsx:55
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
@@ -9699,7 +9699,7 @@ msgstr "Video: {0}"
 msgid "Videos"
 msgstr "Videos"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:404
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
@@ -10123,7 +10123,7 @@ msgstr "Redacta una publicación"
 msgid "Write your reply"
 msgstr "Redacta una respuesta"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:41
 #: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr "Escritors"
@@ -10257,11 +10257,11 @@ msgstr ""
 msgid "You can now sign in with your new password."
 msgstr "Agora puez iniciar sesión con a tuya nueva clau."
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one GIF at a time."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
 msgstr ""
 
@@ -10270,7 +10270,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Puez reactivar la tuya cuenta pa continar iniciando sesión. Lo tuyo perfil y publicacions serán visibles pa atros usuarios."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
@@ -10448,7 +10448,7 @@ msgstr "Has de triar a lo menos un etiquetador pa un informe"
 msgid "You must sign in to view this post."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:439
+#: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
 msgstr ""
 
@@ -10740,4 +10740,3 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr ""
-

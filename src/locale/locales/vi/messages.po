@@ -151,7 +151,7 @@ msgstr ""
 msgid "{0} is not a valid URL"
 msgstr ""
 
-#: src/screens/Signup/StepHandle/index.tsx:186
+#: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
 msgstr ""
 
@@ -723,7 +723,7 @@ msgid "Add emoji reaction"
 msgstr "Thêm emoji để bày tỏ cảm xúc"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:482
+#: src/view/com/composer/SelectMediaButton.tsx:468
 msgid "Add media to post"
 msgstr ""
 
@@ -1043,7 +1043,7 @@ msgstr "dịch vụ nhãn không xác định"
 msgid "and"
 msgstr "và"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:45
 #: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr "Động vật"
@@ -1219,7 +1219,7 @@ msgstr "Bạn có chắc chắn không?"
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "Bạn đang viết bằng <0>{suggestedLanguageName}</0> đúng không?"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr "Nghệ thuật"
@@ -1487,7 +1487,7 @@ msgstr "Làm mờ hình ảnh"
 msgid "Blur images and filter from feeds"
 msgstr "Làm mờ hình ảnh và lọc từ bảng tin"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:46
 #: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr "Sách"
@@ -1883,7 +1883,7 @@ msgstr "Nhấn để mở trình đơn thẻ cho {tag}"
 msgid "Click to retry failed message"
 msgstr "Nhấn để thử lại tin nhắn không thành công"
 
-#: src/screens/Onboarding/index.tsx:46
+#: src/screens/Onboarding/index.tsx:48
 msgid "Climate"
 msgstr "Khí hậu"
 
@@ -2014,12 +2014,12 @@ msgstr "Chế độ màu"
 msgid "Color theme"
 msgstr "Chế độ màu"
 
-#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/index.tsx:54
 #: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr "Hài kịch"
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr "Truyện tranh"
@@ -2031,7 +2031,7 @@ msgid "Community Guidelines"
 msgstr "Quy tắc cộng đồng"
 
 #: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:587
+#: src/screens/Onboarding/StepFinished.tsx:588
 msgid "Complete onboarding and start using your account"
 msgstr "Hoàn thành quá trình hướng dẫn và bắt đầu sử dụng tài khoản của bạn"
 
@@ -2173,8 +2173,8 @@ msgstr "Nền trình đơn, nhấn để đóng trình đơn."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepInterests/index.tsx:254
+#: src/screens/Onboarding/StepProfile/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Tiếp tục"
@@ -2191,8 +2191,8 @@ msgstr ""
 msgid "Continue thread..."
 msgstr "Tiếp tục thảo luận..."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepInterests/index.tsx:251
+#: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2212,7 +2212,7 @@ msgstr "Hội thoại đã bị xóa"
 msgid "Conversation deleted"
 msgstr "Hội thoại đã bị xóa"
 
-#: src/screens/Onboarding/index.tsx:55
+#: src/screens/Onboarding/index.tsx:57
 msgid "Cooking"
 msgstr "Nấu ăn"
 
@@ -2426,7 +2426,7 @@ msgstr "Tạo tài khoản"
 msgid "Create an account without using this starter pack"
 msgstr "Tạo tài khoản nhưng không sử dụng gói khởi đầu này"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Create an avatar instead"
 msgstr "Tạo hình đại diện"
 
@@ -2457,7 +2457,7 @@ msgstr "Đã tạo {0}"
 msgid "Creator has been blocked"
 msgstr "Người tạo đã bị chặn"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:42
 #: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr "Văn hóa"
@@ -2734,7 +2734,7 @@ msgstr "Ngăn ứng dụng hiển thị tài khoản của tôi cho người dù
 msgid "Discover new custom feeds"
 msgstr "Khám phá bảng tin mới"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:435
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "Khám phá bảng tin mới"
@@ -2815,8 +2815,8 @@ msgstr ""
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:329
-#: src/screens/Onboarding/StepProfile/index.tsx:332
+#: src/screens/Onboarding/StepProfile/index.tsx:331
+#: src/screens/Onboarding/StepProfile/index.tsx:334
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3005,7 +3005,7 @@ msgstr "Chỉnh sửa ai có thể trả lời"
 msgid "Edit your starter pack"
 msgstr "Chỉnh sửa gói khởi đầu của bạn"
 
-#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/index.tsx:47
 #: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr "Giáo dục"
@@ -3434,10 +3434,10 @@ msgstr ""
 msgid "Failed to load conversations"
 msgstr "Tải cuộc trò chuyện không thành công"
 
-#: src/screens/Search/Explore.tsx:470
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:561
+#: src/screens/Search/Explore.tsx:600
 msgid "Failed to load feeds preferences"
 msgstr "Không tải được cài đặt bảng tin"
 
@@ -3467,14 +3467,14 @@ msgstr "Không tải được tin nhắn trước"
 msgid "Failed to load preference."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:463
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:464
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:554
+#: src/screens/Search/Explore.tsx:593
 msgid "Failed to load suggested feeds"
 msgstr "Không tải được gợi ý bảng tin"
 
-#: src/screens/Search/Explore.tsx:373
+#: src/screens/Search/Explore.tsx:374
 msgid "Failed to load suggested follows"
 msgstr "Không tải được gợi ý theo dõi"
 
@@ -3662,7 +3662,7 @@ msgid "Filter who you receive notifications from"
 msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "Đang hoàn tất"
 
@@ -3690,7 +3690,7 @@ msgstr ""
 msgid "Finish"
 msgstr "Hoàn tất"
 
-#: src/screens/Onboarding/index.tsx:49
+#: src/screens/Onboarding/index.tsx:51
 msgid "Fitness"
 msgstr "Thể hình"
 
@@ -3853,7 +3853,7 @@ msgstr "Phông chữ"
 msgid "Font size"
 msgstr "Kích cỡ phông chữ"
 
-#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/index.tsx:56
 #: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr "Ăn uống"
@@ -4576,7 +4576,7 @@ msgstr "Tham gia Bluesky"
 msgid "Join the conversation"
 msgstr "Tham gia trò chuyện"
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr "Báo chí"
@@ -4758,7 +4758,7 @@ msgid "Let's get your password reset!"
 msgstr "Cùng đặt lại mật khẩu của bạn nào!"
 
 #: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Let's go!"
 msgstr "Bắt đầu nào!"
 
@@ -4943,12 +4943,12 @@ msgstr ""
 msgid "Live link"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:86
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "Tải thêm"
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:505
+#: src/screens/Search/Explore.tsx:582
 msgid "Load more suggested feeds"
 msgstr "Tải thêm gợi ý bảng tin"
 
@@ -5344,7 +5344,7 @@ msgstr "Tên là bắt buộc"
 msgid "Name or Description Violates Community Standards"
 msgstr "Tên hoặc mô tả phi phạm tiêu chuẩn cộng đồng"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr "Thiên nhiên"
@@ -5498,7 +5498,7 @@ msgstr "Danh sách người dùng mới"
 msgid "Newest replies first"
 msgstr "Trả lời mới nhất trước"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
@@ -5620,7 +5620,7 @@ msgstr "Không có kết quả"
 msgid "No results"
 msgstr "Không có kết quả"
 
-#: src/screens/Search/Explore.tsx:786
+#: src/screens/Search/Explore.tsx:787
 msgid "No results for \"{0}\"."
 msgstr "Không có kết quả nào cho \"{0}\"."
 
@@ -5638,7 +5638,7 @@ msgstr "Không tìm thấy kết quả nào cho \"{query}\""
 msgid "No results found for {query}"
 msgstr "Không tìm thấy kết quả nào cho {query}"
 
-#: src/screens/Search/Explore.tsx:790
+#: src/screens/Search/Explore.tsx:791
 msgid "No results."
 msgstr "Không có kểt quả nào."
 
@@ -5815,11 +5815,11 @@ msgstr "Một hoặc nhiều GIF thiếu văn bản thay thế."
 msgid "One or more images is missing alt text."
 msgstr "Một hoặc nhiều hình ảnh thiếu văn bản thay thế."
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:387
 msgid "One or more of your selected files are not supported."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr ""
 
@@ -5841,7 +5841,7 @@ msgstr "Chỉ {0} có thể trả lời"
 msgid "Only followers who I follow"
 msgstr ""
 
-#: src/lib/media/picker.shared.ts:28
+#: src/lib/media/picker.shared.ts:31
 msgid "Only image files are supported"
 msgstr "Chỉ hỗ trợ tệp hình ảnh"
 
@@ -5866,7 +5866,7 @@ msgstr "Ôi!"
 msgid "Open"
 msgstr "Mở"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Open avatar creator"
 msgstr "Mở trình tạo hình đại diện"
 
@@ -5976,7 +5976,7 @@ msgid "Opens composer"
 msgstr "Mở trình soạn thảo"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:488
+#: src/view/com/composer/SelectMediaButton.tsx:474
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
@@ -6157,7 +6157,7 @@ msgstr ""
 msgid "Person toggle"
 msgstr "Tắt/bật người"
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:44
 #: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr "Thú cưng"
@@ -6384,7 +6384,7 @@ msgstr ""
 msgid "Please write your message below:"
 msgstr ""
 
-#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/index.tsx:50
 #: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
@@ -7377,7 +7377,7 @@ msgstr "Lưu cài đặt cắt hình"
 msgid "Say hello!"
 msgstr "Gửi lời chào!"
 
-#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/index.tsx:49
 #: src/screens/Onboarding/state.ts:120
 msgid "Science"
 msgstr "Khoa học"
@@ -7438,11 +7438,11 @@ msgstr "Tìm kiếm \"{searchText}\""
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Tìm kiếm bảng tin bạn muốn đề xuất cho người khác."
 
-#: src/screens/Search/Explore.tsx:360
+#: src/screens/Search/Explore.tsx:361
 msgid "Search for more accounts"
 msgstr "Tìm thêm tài khoản"
 
-#: src/screens/Search/Explore.tsx:437
+#: src/screens/Search/Explore.tsx:438
 msgid "Search for more feeds"
 msgstr "Tìm thêm bảng tin"
 
@@ -7665,7 +7665,7 @@ msgstr "Chọn ngôn ngữ ưa thích cho bản dịch trong bảng tin của b�
 msgid "Select your preferred notification channels"
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
 msgstr ""
 
@@ -8123,7 +8123,7 @@ msgstr "Nhỏ hơn"
 msgid "Snoozes the reminder"
 msgstr "Tạm bỏ qua lời nhắc"
 
-#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr "Lập trình viên"
@@ -8219,7 +8219,7 @@ msgstr "Spam"
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; tag người hoặc trả lời liên tục"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:43
 #: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
@@ -8270,7 +8270,7 @@ msgstr "Gói khởi đầu bởi bạn"
 msgid "Starter pack is invalid"
 msgstr "Gói khởi đầu không hợp lệ"
 
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:629
 #: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "Gói khởi đầu"
@@ -8357,7 +8357,7 @@ msgstr "Thành công!"
 msgid "Successfully verified"
 msgstr "Đã xác minh thành công"
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:358
 msgid "Suggested Accounts"
 msgstr "Tài khoản đề xuất"
 
@@ -8460,7 +8460,7 @@ msgstr "Hoàn thành nhiệm vụ - 10 lượt thích!"
 msgid "Teach our algorithm what you like"
 msgstr "Dạy thuật toán những điều bạn thích"
 
-#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/index.tsx:52
 #: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr "Công nghệ"
@@ -9389,7 +9389,7 @@ msgstr "Không thể cập nhật trạng thái hiển thị của trả lời"
 msgid "Updating..."
 msgstr "Đang cập nhật..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:291
 msgid "Upload a photo instead"
 msgstr "Tải lên ảnh"
 
@@ -9516,15 +9516,15 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "Đã cập nhật danh sách người dùng"
 
-#: src/screens/Signup/StepHandle/index.tsx:231
+#: src/screens/Signup/StepHandle/index.tsx:234
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr ""
 
-#: src/screens/Signup/StepHandle/index.tsx:215
+#: src/screens/Signup/StepHandle/index.tsx:218
 msgid "Username cannot begin or end with a hyphen"
 msgstr ""
 
-#: src/screens/Signup/StepHandle/index.tsx:219
+#: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr ""
 
@@ -9665,7 +9665,7 @@ msgstr "Bảng tin video"
 msgid "Video from {0}: {text}"
 msgstr "Video từ {0}: {text}"
 
-#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/index.tsx:55
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
@@ -9699,7 +9699,7 @@ msgstr "Video: {0}"
 msgid "Videos"
 msgstr "Video"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:404
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
@@ -10123,7 +10123,7 @@ msgstr "Soạn bài đăng"
 msgid "Write your reply"
 msgstr "Soạn trả lời"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:41
 #: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr "Tác giả"
@@ -10257,11 +10257,11 @@ msgstr ""
 msgid "You can now sign in with your new password."
 msgstr "Bạn có thể đăng nhập bằng mật khẩu mới của mình."
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one GIF at a time."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
 msgstr ""
 
@@ -10270,7 +10270,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Bạn có thể kích hoạt lại tài khoản của mình để tiếp tục đăng nhập. Hồ sơ và bài đăng của bạn sẽ hiển thị cho người dùng khác."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
@@ -10448,7 +10448,7 @@ msgstr "Bạn phải chọn ít nhất một dịch vụ gắn nhãn cho một b
 msgid "You must sign in to view this post."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:439
+#: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
 msgstr ""
 
@@ -10740,4 +10740,3 @@ msgstr "Mục quan tâm mà bạn chọn giúp chúng tôi đưa nội dung mà 
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Xác minh của bạn"
-

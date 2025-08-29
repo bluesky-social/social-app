@@ -151,7 +151,7 @@ msgstr "{0} is live"
 msgid "{0} is not a valid URL"
 msgstr "{0} is net in falide URL"
 
-#: src/screens/Signup/StepHandle/index.tsx:186
+#: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
 msgstr "{0} is net beskikber"
 
@@ -723,7 +723,7 @@ msgid "Add emoji reaction"
 msgstr "Emoji-reaksje tafoegje"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:482
+#: src/view/com/composer/SelectMediaButton.tsx:468
 msgid "Add media to post"
 msgstr ""
 
@@ -1043,7 +1043,7 @@ msgstr "in ûnbekende labeler"
 msgid "and"
 msgstr "en"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:45
 #: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr "Bisten"
@@ -1219,7 +1219,7 @@ msgstr "Bisto wis?"
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "Skriuwsto yn it <0>{suggestedLanguageName}</0>?"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr "Keunst"
@@ -1487,7 +1487,7 @@ msgstr "Ofbyldingen ferdizenje"
 msgid "Blur images and filter from feeds"
 msgstr "Ofbyldingen dizich meitsje en út dyn feeds filterje"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:46
 #: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr "Boeken"
@@ -1883,7 +1883,7 @@ msgstr "Klik om it labelmenu foar {tag} te iepenjen"
 msgid "Click to retry failed message"
 msgstr "Klik om mislearre priveeberjocht opnij te probearjen"
 
-#: src/screens/Onboarding/index.tsx:46
+#: src/screens/Onboarding/index.tsx:48
 msgid "Climate"
 msgstr "Klimaat"
 
@@ -2014,12 +2014,12 @@ msgstr "Kleurmodus"
 msgid "Color theme"
 msgstr "Kleuretema"
 
-#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/index.tsx:54
 #: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr "Komeedzje"
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr "Strips"
@@ -2031,7 +2031,7 @@ msgid "Community Guidelines"
 msgstr "Mienskipsrjochtlinen"
 
 #: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:587
+#: src/screens/Onboarding/StepFinished.tsx:588
 msgid "Complete onboarding and start using your account"
 msgstr "Foltôgje de yntroduksje en begjin mei it brûken fan dyn account"
 
@@ -2173,8 +2173,8 @@ msgstr "Kontekstmenu-eftergrûn, klik om it menu te sluten."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepInterests/index.tsx:254
+#: src/screens/Onboarding/StepProfile/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Trochgean"
@@ -2191,8 +2191,8 @@ msgstr "Petear trochsette"
 msgid "Continue thread..."
 msgstr "Fierder lêze…"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepInterests/index.tsx:251
+#: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2212,7 +2212,7 @@ msgstr "Petear fuortsmiten"
 msgid "Conversation deleted"
 msgstr "Petear fuortsmiten"
 
-#: src/screens/Onboarding/index.tsx:55
+#: src/screens/Onboarding/index.tsx:57
 msgid "Cooking"
 msgstr "Iten siede"
 
@@ -2426,7 +2426,7 @@ msgstr "In account oanmeitsje"
 msgid "Create an account without using this starter pack"
 msgstr "In account oanmeitsje sûnder gebrûk fan dit startpakket"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Create an avatar instead"
 msgstr "Yn stee dêrfan in avatar meitsje"
 
@@ -2457,7 +2457,7 @@ msgstr "Makke {0}"
 msgid "Creator has been blocked"
 msgstr "Makker is blokkearre"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:42
 #: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr "Kultuer"
@@ -2734,7 +2734,7 @@ msgstr "Apps ûntmoedigje om myn account te toanen oan ôfmelde brûkers"
 msgid "Discover new custom feeds"
 msgstr "Nije personalisearre feeds ûntdekke"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:435
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "Nije feeds ûntdekke"
@@ -2815,8 +2815,8 @@ msgstr "Meitsje dy gjin soargen! Alle besteande berjochten en ynstellingen wurde
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:329
-#: src/screens/Onboarding/StepProfile/index.tsx:332
+#: src/screens/Onboarding/StepProfile/index.tsx:331
+#: src/screens/Onboarding/StepProfile/index.tsx:334
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3005,7 +3005,7 @@ msgstr "Wa’t reagearje kin bewurkje"
 msgid "Edit your starter pack"
 msgstr "Dyn startpakket bewurkje"
 
-#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/index.tsx:47
 #: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr "Underwiis"
@@ -3434,10 +3434,10 @@ msgstr ""
 msgid "Failed to load conversations"
 msgstr "Laden van konversaasjes mislearre"
 
-#: src/screens/Search/Explore.tsx:470
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:561
+#: src/screens/Search/Explore.tsx:600
 msgid "Failed to load feeds preferences"
 msgstr "Laden fan feedfoarkarren is mislearre"
 
@@ -3467,14 +3467,14 @@ msgstr "Laden fan eardere priveeberjochten is mislearre"
 msgid "Failed to load preference."
 msgstr "Laden fan foarkar mislearre."
 
-#: src/screens/Search/Explore.tsx:463
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:464
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:554
+#: src/screens/Search/Explore.tsx:593
 msgid "Failed to load suggested feeds"
 msgstr "Laden fan foarstelde feeds is mislearre"
 
-#: src/screens/Search/Explore.tsx:373
+#: src/screens/Search/Explore.tsx:374
 msgid "Failed to load suggested follows"
 msgstr "It is net slagge om in list te laden mei folchsuggestjes"
 
@@ -3662,7 +3662,7 @@ msgid "Filter who you receive notifications from"
 msgstr "Filter fan wa’tsto meldingen ûntfangst"
 
 #: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "Foltôgje"
 
@@ -3690,7 +3690,7 @@ msgstr ""
 msgid "Finish"
 msgstr "Foltôgje"
 
-#: src/screens/Onboarding/index.tsx:49
+#: src/screens/Onboarding/index.tsx:51
 msgid "Fitness"
 msgstr "Fitness"
 
@@ -3853,7 +3853,7 @@ msgstr "Lettertype"
 msgid "Font size"
 msgstr "Lettergrutte"
 
-#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/index.tsx:56
 #: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr "Iten en drinken"
@@ -4576,7 +4576,7 @@ msgstr "Lid wurde fan Bluesky"
 msgid "Join the conversation"
 msgstr "Doh mei oan it petear"
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr "Sjoernalistyk"
@@ -4758,7 +4758,7 @@ msgid "Let's get your password reset!"
 msgstr "Litte wy dyn wachtwurd opnij ynstelle!"
 
 #: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Let's go!"
 msgstr "Los!"
 
@@ -4943,12 +4943,12 @@ msgstr "Live-funksje is yn beta-test"
 msgid "Live link"
 msgstr "Live-keppeling"
 
-#: src/screens/Search/Explore.tsx:86
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "Mear lade"
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:505
+#: src/screens/Search/Explore.tsx:582
 msgid "Load more suggested feeds"
 msgstr "Mear foarstelde feeds lade"
 
@@ -5344,7 +5344,7 @@ msgstr "Namme is fereaske"
 msgid "Name or Description Violates Community Standards"
 msgstr "Namme of omskriuwing skeint mienskipsnoarmen"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr "Natuer"
@@ -5498,7 +5498,7 @@ msgstr "Nije brûkerslist"
 msgid "Newest replies first"
 msgstr "Nijste antwurden earst"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
@@ -5620,7 +5620,7 @@ msgstr "Gjin resultaat"
 msgid "No results"
 msgstr "Gjin resultaten"
 
-#: src/screens/Search/Explore.tsx:786
+#: src/screens/Search/Explore.tsx:787
 msgid "No results for \"{0}\"."
 msgstr "Gjin resultaten foar ‘{0}’."
 
@@ -5638,7 +5638,7 @@ msgstr "Gjin resultaten fûn foar ‘{query}’"
 msgid "No results found for {query}"
 msgstr "Gjin resultaten fûn foar {query}"
 
-#: src/screens/Search/Explore.tsx:790
+#: src/screens/Search/Explore.tsx:791
 msgid "No results."
 msgstr "Gjin resultaten."
 
@@ -5815,11 +5815,11 @@ msgstr "Alt-tekst ûntbrekt by ien of mear GIF’s."
 msgid "One or more images is missing alt text."
 msgstr "Alt-tekst ûntbrekt by ien of mear ôfbyldingen."
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:387
 msgid "One or more of your selected files are not supported."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr ""
 
@@ -5841,7 +5841,7 @@ msgstr "Allinnich {0} kin reagearje."
 msgid "Only followers who I follow"
 msgstr "Allinnich folgers dy’t ik folgje"
 
-#: src/lib/media/picker.shared.ts:28
+#: src/lib/media/picker.shared.ts:31
 msgid "Only image files are supported"
 msgstr "Allinnich ôfbyldingsbestannen wurde stipe"
 
@@ -5866,7 +5866,7 @@ msgstr "Wûpsty!"
 msgid "Open"
 msgstr "Iepenje"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Open avatar creator"
 msgstr "Avatar-makker iepenje"
 
@@ -5976,7 +5976,7 @@ msgid "Opens composer"
 msgstr "Iepenet composer"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:488
+#: src/view/com/composer/SelectMediaButton.tsx:474
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
@@ -6157,7 +6157,7 @@ msgstr "Tagong ta dyn fotobiblioteek is wegere. Skeakelje dit yn dyn systeemynst
 msgid "Person toggle"
 msgstr "Persoan wikselje"
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:44
 #: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr "Bisten"
@@ -6384,7 +6384,7 @@ msgstr "Ferifiearje dyn e-mailadres"
 msgid "Please write your message below:"
 msgstr "Skriuw hjirûnder dyn berjocht:"
 
-#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/index.tsx:50
 #: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
@@ -7377,7 +7377,7 @@ msgstr "Bewarret ynstellingen foar bysnijen fan ôfbyldingen"
 msgid "Say hello!"
 msgstr "Sis hallo!"
 
-#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/index.tsx:49
 #: src/screens/Onboarding/state.ts:120
 msgid "Science"
 msgstr "Wittenskip"
@@ -7438,11 +7438,11 @@ msgstr "Sykje nei ‘{searchText}’"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Sykje nei feeds dy’tsto oan oaren foarstelle wolst."
 
-#: src/screens/Search/Explore.tsx:360
+#: src/screens/Search/Explore.tsx:361
 msgid "Search for more accounts"
 msgstr "Nei mear accounts sykje"
 
-#: src/screens/Search/Explore.tsx:437
+#: src/screens/Search/Explore.tsx:438
 msgid "Search for more feeds"
 msgstr "Nei mear feeds sykje"
 
@@ -7665,7 +7665,7 @@ msgstr "Selektearje de taal wêryn’tsto de oersettingen yn dyn feed werjaan wo
 msgid "Select your preferred notification channels"
 msgstr "Selektearje dyn winske meldingskanalen"
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
 msgstr ""
 
@@ -8123,7 +8123,7 @@ msgstr "Lytser"
 msgid "Snoozes the reminder"
 msgstr "Snûzet it omtinken"
 
-#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr "Softwareûntwikkeler"
@@ -8219,7 +8219,7 @@ msgstr "Spam"
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; oermjittich protte fermeldingen of reaksjes"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:43
 #: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
@@ -8270,7 +8270,7 @@ msgstr "Startpakket troch dy"
 msgid "Starter pack is invalid"
 msgstr "Startpakket is ûnjildich"
 
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:629
 #: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "Startpakketten"
@@ -8357,7 +8357,7 @@ msgstr "Slagge!"
 msgid "Successfully verified"
 msgstr "Mei sukses ferifiearre"
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:358
 msgid "Suggested Accounts"
 msgstr "Foarstelde accounts"
 
@@ -8460,7 +8460,7 @@ msgstr "Taak foltôge – 10 mei-’k-wol-oers!"
 msgid "Teach our algorithm what you like"
 msgstr "Lear ús algoritme wêr’tsto wol oer meist"
 
-#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/index.tsx:52
 #: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr "Technology"
@@ -9389,7 +9389,7 @@ msgstr "Bywurkjen fan sichtberheid fan reaksje is mislearre"
 msgid "Updating..."
 msgstr "Bywurkje…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:291
 msgid "Upload a photo instead"
 msgstr "Laad yn stee dêrfan in foto op"
 
@@ -9516,15 +9516,15 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "Brûkerslist bywurke"
 
-#: src/screens/Signup/StepHandle/index.tsx:231
+#: src/screens/Signup/StepHandle/index.tsx:234
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr "Brûkersnamme mei net langer as {MAX_SERVICE_HANDLE_LENGTH, plural, one {}other {# tekens}} wêze"
 
-#: src/screens/Signup/StepHandle/index.tsx:215
+#: src/screens/Signup/StepHandle/index.tsx:218
 msgid "Username cannot begin or end with a hyphen"
 msgstr "Brûkersnamme mei net mei in keppelteken begjinne of einigje"
 
-#: src/screens/Signup/StepHandle/index.tsx:219
+#: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr "Brûkersnamme mei allinnich letters (a-z), sifers en keppeltekens befetsje"
 
@@ -9665,7 +9665,7 @@ msgstr "Fideofeed"
 msgid "Video from {0}: {text}"
 msgstr "Fideo fan {0}: {text}"
 
-#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/index.tsx:55
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
@@ -9699,7 +9699,7 @@ msgstr "Fideo: {0}"
 msgid "Videos"
 msgstr "Fideo’s"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:404
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
@@ -10123,7 +10123,7 @@ msgstr "Skriuw berjocht"
 msgid "Write your reply"
 msgstr "Skriuw dyn reaksje"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:41
 #: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr "Skriuwers"
@@ -10257,11 +10257,11 @@ msgstr "Do kinst der no foar kieze om in melding te ûntfangen wannear’t spesi
 msgid "You can now sign in with your new password."
 msgstr "Do kinst dy no oanmelde mei dyn nije wachtwurd."
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one GIF at a time."
 msgstr ""
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
 msgstr ""
 
@@ -10270,7 +10270,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "Do kinst dyn account opnij aktivearje om troch gean te kinnen mei oanmelden. Dyn profyl en berjochten binne dan sichtber foar oare brûkers."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
@@ -10448,7 +10448,7 @@ msgstr "Do moatst minimaal ien labeler selektearje foar in melding"
 msgid "You must sign in to view this post."
 msgstr "Do moatst oanmelde om dit berjocht te besjen."
 
-#: src/view/com/composer/SelectMediaButton.tsx:439
+#: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
 msgstr ""
 
@@ -10740,4 +10740,3 @@ msgstr "Dyn selektearre ynteressen helpe ús dy ynhâld dy’t dy ynteressearret
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Dyn ferifikaasjes"
-

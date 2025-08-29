@@ -151,7 +151,7 @@ msgstr "{0}はライブ中"
 msgid "{0} is not a valid URL"
 msgstr "{0} は有効な URL ではありません"
 
-#: src/screens/Signup/StepHandle/index.tsx:186
+#: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
 msgstr "{0}は利用できません"
 
@@ -723,7 +723,7 @@ msgid "Add emoji reaction"
 msgstr "絵文字リアクションを追加"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:482
+#: src/view/com/composer/SelectMediaButton.tsx:468
 msgid "Add media to post"
 msgstr "投稿にメディアを追加する"
 
@@ -1043,7 +1043,7 @@ msgstr "不明なラベラー"
 msgid "and"
 msgstr "および"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:45
 #: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr "動物"
@@ -1219,7 +1219,7 @@ msgstr "本当によろしいですか？"
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "<0>{suggestedLanguageName}</0>で書かれた投稿ですか？"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr "アート"
@@ -1487,7 +1487,7 @@ msgstr "画像をぼかす"
 msgid "Blur images and filter from feeds"
 msgstr "画像のぼかしとフィードからのフィルタリング"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:46
 #: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr "書籍"
@@ -1883,7 +1883,7 @@ msgstr "クリックして {tag} のタグメニューを表示"
 msgid "Click to retry failed message"
 msgstr "送信失敗したメッセージを再送信"
 
-#: src/screens/Onboarding/index.tsx:46
+#: src/screens/Onboarding/index.tsx:48
 msgid "Climate"
 msgstr "気象"
 
@@ -2014,12 +2014,12 @@ msgstr "カラーモード"
 msgid "Color theme"
 msgstr "カラーテーマ"
 
-#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/index.tsx:54
 #: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr "コメディー"
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr "漫画"
@@ -2031,7 +2031,7 @@ msgid "Community Guidelines"
 msgstr "コミュニティガイドライン"
 
 #: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:587
+#: src/screens/Onboarding/StepFinished.tsx:588
 msgid "Complete onboarding and start using your account"
 msgstr "初期設定を完了してアカウントを使い始める"
 
@@ -2173,8 +2173,8 @@ msgstr "コンテキストメニューの背景をクリックし、メニュー
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepInterests/index.tsx:254
+#: src/screens/Onboarding/StepProfile/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "続行"
@@ -2191,8 +2191,8 @@ msgstr "スレッドの続き"
 msgid "Continue thread..."
 msgstr "スレッドの続き…"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepInterests/index.tsx:251
+#: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2212,7 +2212,7 @@ msgstr "会話が削除されました"
 msgid "Conversation deleted"
 msgstr "会話が削除されました"
 
-#: src/screens/Onboarding/index.tsx:55
+#: src/screens/Onboarding/index.tsx:57
 msgid "Cooking"
 msgstr "料理"
 
@@ -2426,7 +2426,7 @@ msgstr "アカウントを作成"
 msgid "Create an account without using this starter pack"
 msgstr "このスターターパックを使用せずにアカウントを作成する"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Create an avatar instead"
 msgstr "代わりにアバターを作成"
 
@@ -2457,7 +2457,7 @@ msgstr "{0}に作成"
 msgid "Creator has been blocked"
 msgstr "作者はブロック中です"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:42
 #: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr "文化"
@@ -2734,7 +2734,7 @@ msgstr "アプリがログアウトしたユーザーに自分のアカウント
 msgid "Discover new custom feeds"
 msgstr "新しいカスタムフィードを見つける"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:435
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
@@ -2815,8 +2815,8 @@ msgstr "心配しないでください！すべての既存のメッセージと
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:329
-#: src/screens/Onboarding/StepProfile/index.tsx:332
+#: src/screens/Onboarding/StepProfile/index.tsx:331
+#: src/screens/Onboarding/StepProfile/index.tsx:334
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3005,7 +3005,7 @@ msgstr "誰が返信できるのかを編集"
 msgid "Edit your starter pack"
 msgstr "スターターパックを編集"
 
-#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/index.tsx:47
 #: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr "教育"
@@ -3434,10 +3434,10 @@ msgstr "すべての推奨アカウントをフォローできませんでした
 msgid "Failed to load conversations"
 msgstr "会話の読み込みに失敗しました"
 
-#: src/screens/Search/Explore.tsx:470
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:561
+#: src/screens/Search/Explore.tsx:600
 msgid "Failed to load feeds preferences"
 msgstr "フィードの設定の読み込みに失敗しました"
 
@@ -3467,14 +3467,14 @@ msgstr "過去のメッセージの読み込みに失敗しました"
 msgid "Failed to load preference."
 msgstr "設定の読み込みに失敗しました。"
 
-#: src/screens/Search/Explore.tsx:463
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:464
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:554
+#: src/screens/Search/Explore.tsx:593
 msgid "Failed to load suggested feeds"
 msgstr "おすすめのフィードの読み込みに失敗しました"
 
-#: src/screens/Search/Explore.tsx:373
+#: src/screens/Search/Explore.tsx:374
 msgid "Failed to load suggested follows"
 msgstr "おすすめのフォローの読み込みに失敗しました"
 
@@ -3662,7 +3662,7 @@ msgid "Filter who you receive notifications from"
 msgstr "通知を受け取るユーザーをフィルターする"
 
 #: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "最後に"
 
@@ -3690,7 +3690,7 @@ msgstr "仲間を探そう"
 msgid "Finish"
 msgstr "完了"
 
-#: src/screens/Onboarding/index.tsx:49
+#: src/screens/Onboarding/index.tsx:51
 msgid "Fitness"
 msgstr "フィットネス"
 
@@ -3853,7 +3853,7 @@ msgstr "フォント"
 msgid "Font size"
 msgstr "フォントサイズ"
 
-#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/index.tsx:56
 #: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr "食べ物"
@@ -4576,7 +4576,7 @@ msgstr "Blueskyに参加"
 msgid "Join the conversation"
 msgstr "会話に参加"
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr "報道"
@@ -4758,7 +4758,7 @@ msgid "Let's get your password reset!"
 msgstr "パスワードをリセットしましょう！"
 
 #: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Let's go!"
 msgstr "さあ始めましょう！"
 
@@ -4943,12 +4943,12 @@ msgstr "ライブ機能はベータテスト中"
 msgid "Live link"
 msgstr "ライブのリンク"
 
-#: src/screens/Search/Explore.tsx:86
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "さらに読み込む"
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:505
+#: src/screens/Search/Explore.tsx:582
 msgid "Load more suggested feeds"
 msgstr "おすすめのフィードをさらに読み込む"
 
@@ -5344,7 +5344,7 @@ msgstr "名前は必須です"
 msgid "Name or Description Violates Community Standards"
 msgstr "名前または説明がコミュニティ基準に違反"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr "自然"
@@ -5498,7 +5498,7 @@ msgstr "新しいユーザーリスト"
 msgid "Newest replies first"
 msgstr "新しい順に返信を表示"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
@@ -5620,7 +5620,7 @@ msgstr "結果はありません"
 msgid "No results"
 msgstr "結果はありません"
 
-#: src/screens/Search/Explore.tsx:786
+#: src/screens/Search/Explore.tsx:787
 msgid "No results for \"{0}\"."
 msgstr "「{0}」に該当するものは見つかりませんでした。"
 
@@ -5638,7 +5638,7 @@ msgstr "「{query}」の検索結果はありません"
 msgid "No results found for {query}"
 msgstr "「{query}」の検索結果はありません"
 
-#: src/screens/Search/Explore.tsx:790
+#: src/screens/Search/Explore.tsx:791
 msgid "No results."
 msgstr "見つかりませんでした。"
 
@@ -5815,11 +5815,11 @@ msgstr "1つもしくは複数のGIFにALTテキストがありません。"
 msgid "One or more images is missing alt text."
 msgstr "1つもしくは複数の画像にALTテキストがありません。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:387
 msgid "One or more of your selected files are not supported."
 msgstr "選択したファイルの 1つ以上がサポートされていません。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "選択したファイルのうちの1つ以上が大きすぎます。最大で100MBです。"
 
@@ -5841,7 +5841,7 @@ msgstr "{0}のみ返信可能。"
 msgid "Only followers who I follow"
 msgstr "フォロー中のフォロワーのみ"
 
-#: src/lib/media/picker.shared.ts:28
+#: src/lib/media/picker.shared.ts:31
 msgid "Only image files are supported"
 msgstr "画像ファイルのみに対応しています"
 
@@ -5866,7 +5866,7 @@ msgstr "おっと！"
 msgid "Open"
 msgstr "開かれています"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Open avatar creator"
 msgstr "アバター・クリエイターを開く"
 
@@ -5976,7 +5976,7 @@ msgid "Opens composer"
 msgstr "編集画面を開く"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:488
+#: src/view/com/composer/SelectMediaButton.tsx:474
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "デバイスのギャラリーを開いて最大{MAX_IMAGES, plural, other {#枚の画像}}、あるいは動画またはGIFを1つを選択します。"
 
@@ -6157,7 +6157,7 @@ msgstr "写真ライブラリへのアクセスが拒否されました。シス
 msgid "Person toggle"
 msgstr "ユーザーを切り替え"
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:44
 #: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr "ペット"
@@ -6384,7 +6384,7 @@ msgstr "メールアドレスを確認してください"
 msgid "Please write your message below:"
 msgstr "メッセージを以下に記入してください："
 
-#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/index.tsx:50
 #: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
@@ -7377,7 +7377,7 @@ msgstr "画像の切り抜き設定を保存"
 msgid "Say hello!"
 msgstr "よろしく！"
 
-#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/index.tsx:49
 #: src/screens/Onboarding/state.ts:120
 msgid "Science"
 msgstr "科学"
@@ -7438,11 +7438,11 @@ msgstr "「{searchText}」を検索"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "他の人におすすめしたいフィードを検索。"
 
-#: src/screens/Search/Explore.tsx:360
+#: src/screens/Search/Explore.tsx:361
 msgid "Search for more accounts"
 msgstr "もっとアカウントを検索"
 
-#: src/screens/Search/Explore.tsx:437
+#: src/screens/Search/Explore.tsx:438
 msgid "Search for more feeds"
 msgstr "もっとフィードを検索"
 
@@ -7665,7 +7665,7 @@ msgstr "フィード内の翻訳に使用する言語を選択します。"
 msgid "Select your preferred notification channels"
 msgstr "お好みの通知チャンネルを選択してください"
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
 msgstr "複数のメディアタイプの選択はサポートされていません。"
 
@@ -8123,7 +8123,7 @@ msgstr "小さい"
 msgid "Snoozes the reminder"
 msgstr "リマインダーをスヌーズ"
 
-#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr "ソフトウェア開発"
@@ -8219,7 +8219,7 @@ msgstr "スパム"
 msgid "Spam; excessive mentions or replies"
 msgstr "スパム、過剰なメンションや返信"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:43
 #: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
@@ -8270,7 +8270,7 @@ msgstr "自分のスターターパック"
 msgid "Starter pack is invalid"
 msgstr "スターターパックが無効です"
 
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:629
 #: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "スターターパック"
@@ -8357,7 +8357,7 @@ msgstr "成功！"
 msgid "Successfully verified"
 msgstr "正常に認証されました"
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:358
 msgid "Suggested Accounts"
 msgstr "おすすめアカウント"
 
@@ -8460,7 +8460,7 @@ msgstr "タスク完了 - 10いいね！"
 msgid "Teach our algorithm what you like"
 msgstr "アルゴリズムを鍛える"
 
-#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/index.tsx:52
 #: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr "テクノロジー"
@@ -9389,7 +9389,7 @@ msgstr "返信の表示設定の更新に失敗しました"
 msgid "Updating..."
 msgstr "更新中…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:291
 msgid "Upload a photo instead"
 msgstr "代わりに写真をアップロード"
 
@@ -9516,15 +9516,15 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "ユーザーリストを更新しました"
 
-#: src/screens/Signup/StepHandle/index.tsx:231
+#: src/screens/Signup/StepHandle/index.tsx:234
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr "ユーザー名は{MAX_SERVICE_HANDLE_LENGTH, plural, other {#文字}}までです"
 
-#: src/screens/Signup/StepHandle/index.tsx:215
+#: src/screens/Signup/StepHandle/index.tsx:218
 msgid "Username cannot begin or end with a hyphen"
 msgstr "ユーザー名はハイフンで始まったり終わったりできません"
 
-#: src/screens/Signup/StepHandle/index.tsx:219
+#: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr "ユーザー名はアルファベット(a-z)、数字、ハイフンのみ使用できます"
 
@@ -9665,7 +9665,7 @@ msgstr "ビデオフィード"
 msgid "Video from {0}: {text}"
 msgstr "{0}からのビデオ：{text}"
 
-#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/index.tsx:55
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
@@ -9699,7 +9699,7 @@ msgstr "ビデオ：{0}"
 msgid "Videos"
 msgstr "ビデオ"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:404
 msgid "Videos must be less than 3 minutes long."
 msgstr "ビデオは3分未満でなければなりません。"
 
@@ -10123,7 +10123,7 @@ msgstr "投稿を書く"
 msgid "Write your reply"
 msgstr "返信を書く"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:41
 #: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr "ライター"
@@ -10257,11 +10257,11 @@ msgstr "特定のユーザーが投稿した時に通知を受け取ることが
 msgid "You can now sign in with your new password."
 msgstr "新しいパスワードでサインインできるようになりました。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one GIF at a time."
 msgstr "一度に1つのGIFしか選択できません。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
 msgstr "一度に1つのビデオしか選択できません。"
 
@@ -10270,7 +10270,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "アカウントを再有効化してログインし続けることができます。あなたのプロフィールと投稿は他のユーザーに見えるようになります。"
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "合計で{MAX_IMAGES, plural, other {#枚の画像}}まで選択できます。"
 
@@ -10448,7 +10448,7 @@ msgstr "報告をするには少なくとも1つのラベラーを選択する�
 msgid "You must sign in to view this post."
 msgstr "この投稿を見るにはサインインする必要があります。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:439
+#: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
 msgstr "メディアライブラリへのアクセスを許可する必要があります。"
 
@@ -10740,4 +10740,3 @@ msgstr "「気になること」は興味を引くコンテンツを提供する
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "あなたの認証情報"
-

@@ -151,7 +151,7 @@ msgstr "{0} 正在直播"
 msgid "{0} is not a valid URL"
 msgstr "{0} 不是有效的 URL 地址"
 
-#: src/screens/Signup/StepHandle/index.tsx:186
+#: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
 msgstr "{0} 已被占用"
 
@@ -723,7 +723,7 @@ msgid "Add emoji reaction"
 msgstr "添加表情符号反应"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:482
+#: src/view/com/composer/SelectMediaButton.tsx:468
 msgid "Add media to post"
 msgstr "添加媒体内容至帖文"
 
@@ -1043,7 +1043,7 @@ msgstr "未知标记者"
 msgid "and"
 msgstr "和"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:45
 #: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr "动物"
@@ -1219,7 +1219,7 @@ msgstr "你确定吗？"
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "你正在使用 <0>{suggestedLanguageName}</0> 撰写吗？"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr "艺术"
@@ -1487,7 +1487,7 @@ msgstr "模糊化图片"
 msgid "Blur images and filter from feeds"
 msgstr "模糊化图片并从动态源中过滤"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:46
 #: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr "书籍"
@@ -1883,7 +1883,7 @@ msgstr "点按来开启 {tag} 的标签菜单"
 msgid "Click to retry failed message"
 msgstr "点击以重试发送私信"
 
-#: src/screens/Onboarding/index.tsx:46
+#: src/screens/Onboarding/index.tsx:48
 msgid "Climate"
 msgstr "气象"
 
@@ -2014,12 +2014,12 @@ msgstr "主题模式"
 msgid "Color theme"
 msgstr "色彩主题"
 
-#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/index.tsx:54
 #: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr "喜剧"
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr "漫画"
@@ -2031,7 +2031,7 @@ msgid "Community Guidelines"
 msgstr "社群准则"
 
 #: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:587
+#: src/screens/Onboarding/StepFinished.tsx:588
 msgid "Complete onboarding and start using your account"
 msgstr "完成入门引导并开始使用你的账户"
 
@@ -2173,8 +2173,8 @@ msgstr "上下文菜单背景，点击以关闭菜单。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepInterests/index.tsx:254
+#: src/screens/Onboarding/StepProfile/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "继续"
@@ -2191,8 +2191,8 @@ msgstr "加载更多帖文串"
 msgid "Continue thread..."
 msgstr "加载更多帖文串……"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepInterests/index.tsx:251
+#: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2212,7 +2212,7 @@ msgstr "已删除对话"
 msgid "Conversation deleted"
 msgstr "已删除对话"
 
-#: src/screens/Onboarding/index.tsx:55
+#: src/screens/Onboarding/index.tsx:57
 msgid "Cooking"
 msgstr "烹饪"
 
@@ -2426,7 +2426,7 @@ msgstr "创建一个账户"
 msgid "Create an account without using this starter pack"
 msgstr "不使用此新手包注册账号"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Create an avatar instead"
 msgstr "创建一个头像"
 
@@ -2457,7 +2457,7 @@ msgstr "创建于 {0}"
 msgid "Creator has been blocked"
 msgstr "已屏蔽此列表的创建者"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:42
 #: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr "文化"
@@ -2734,7 +2734,7 @@ msgstr "阻止平台向未登录用户显示我的账户"
 msgid "Discover new custom feeds"
 msgstr "探索新的自定义动态源"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:435
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "探索新的动态源"
@@ -2815,8 +2815,8 @@ msgstr "别担心！你现有的对话及设置都已保存，只需验证你已
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:329
-#: src/screens/Onboarding/StepProfile/index.tsx:332
+#: src/screens/Onboarding/StepProfile/index.tsx:331
+#: src/screens/Onboarding/StepProfile/index.tsx:334
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3005,7 +3005,7 @@ msgstr "编辑哪些人可以回复"
 msgid "Edit your starter pack"
 msgstr "编辑你的新手包"
 
-#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/index.tsx:47
 #: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr "教育"
@@ -3434,10 +3434,10 @@ msgstr "无法关注所有建议的账户，请重试"
 msgid "Failed to load conversations"
 msgstr "无法加载对话"
 
-#: src/screens/Search/Explore.tsx:470
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:561
+#: src/screens/Search/Explore.tsx:600
 msgid "Failed to load feeds preferences"
 msgstr "无法加载动态源偏好设置"
 
@@ -3467,14 +3467,14 @@ msgstr "无法加载过去的私信"
 msgid "Failed to load preference."
 msgstr "无法加载首选项。"
 
-#: src/screens/Search/Explore.tsx:463
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:464
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:554
+#: src/screens/Search/Explore.tsx:593
 msgid "Failed to load suggested feeds"
 msgstr "无法加载建议的动态源"
 
-#: src/screens/Search/Explore.tsx:373
+#: src/screens/Search/Explore.tsx:374
 msgid "Failed to load suggested follows"
 msgstr "无法加载建议关注"
 
@@ -3662,7 +3662,7 @@ msgid "Filter who you receive notifications from"
 msgstr "筛选你想接收的通知来源"
 
 #: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "正在完成"
 
@@ -3690,7 +3690,7 @@ msgstr "找到志同道合的人"
 msgid "Finish"
 msgstr "完成"
 
-#: src/screens/Onboarding/index.tsx:49
+#: src/screens/Onboarding/index.tsx:51
 msgid "Fitness"
 msgstr "健康"
 
@@ -3853,7 +3853,7 @@ msgstr "字体"
 msgid "Font size"
 msgstr "字体大小"
 
-#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/index.tsx:56
 #: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr "食物"
@@ -4576,7 +4576,7 @@ msgstr "加入 Bluesky"
 msgid "Join the conversation"
 msgstr "加入对话"
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr "新闻学"
@@ -4758,7 +4758,7 @@ msgid "Let's get your password reset!"
 msgstr "让我们来重置你的密码吧！"
 
 #: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Let's go!"
 msgstr "让我们开始吧！"
 
@@ -4943,12 +4943,12 @@ msgstr "直播功能正在测试中"
 msgid "Live link"
 msgstr "直播链接"
 
-#: src/screens/Search/Explore.tsx:86
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "加载更多"
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:505
+#: src/screens/Search/Explore.tsx:582
 msgid "Load more suggested feeds"
 msgstr "加载更多建议的动态源"
 
@@ -5344,7 +5344,7 @@ msgstr "名称是必填项"
 msgid "Name or Description Violates Community Standards"
 msgstr "名称或描述违反了社群准则"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr "自然"
@@ -5498,7 +5498,7 @@ msgstr "新的用户列表"
 msgid "Newest replies first"
 msgstr "最新回复优先"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
@@ -5620,7 +5620,7 @@ msgstr "没有结果"
 msgid "No results"
 msgstr "没有结果"
 
-#: src/screens/Search/Explore.tsx:786
+#: src/screens/Search/Explore.tsx:787
 msgid "No results for \"{0}\"."
 msgstr "找不到符合“{0}”的结果。"
 
@@ -5638,7 +5638,7 @@ msgstr "找不到符合“{query}”的结果"
 msgid "No results found for {query}"
 msgstr "找不到符合 {query} 的结果"
 
-#: src/screens/Search/Explore.tsx:790
+#: src/screens/Search/Explore.tsx:791
 msgid "No results."
 msgstr "没有结果。"
 
@@ -5815,11 +5815,11 @@ msgstr "至少有一张 GIF 缺失了替代文本。"
 msgid "One or more images is missing alt text."
 msgstr "至少有一张图片缺失了替代文本。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:387
 msgid "One or more of your selected files are not supported."
 msgstr "你所选中的部分文件格式不被支持。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "你选中的部分太大，最大的文件大小为 100 MB。"
 
@@ -5841,7 +5841,7 @@ msgstr "仅限{0}可以回复。"
 msgid "Only followers who I follow"
 msgstr "仅限我关注的人"
 
-#: src/lib/media/picker.shared.ts:28
+#: src/lib/media/picker.shared.ts:31
 msgid "Only image files are supported"
 msgstr "仅支持图片文件"
 
@@ -5866,7 +5866,7 @@ msgstr "糟糕！"
 msgid "Open"
 msgstr "开放"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Open avatar creator"
 msgstr "开启头像创建工具"
 
@@ -5976,7 +5976,7 @@ msgid "Opens composer"
 msgstr "开启编辑器"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:488
+#: src/view/com/composer/SelectMediaButton.tsx:474
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "开启设备相册以选择最多 {MAX_IMAGES, plural, other {# 张图片}}、单段视频或一张 GIF。"
 
@@ -6157,7 +6157,7 @@ msgstr "已被拒绝访问照片图库，请在系统设置中授权。"
 msgid "Person toggle"
 msgstr "切换用户"
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:44
 #: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr "宠物"
@@ -6384,7 +6384,7 @@ msgstr "请验证你的电子邮箱"
 msgid "Please write your message below:"
 msgstr "请在以下栏位填写你的信息："
 
-#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/index.tsx:50
 #: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
@@ -7377,7 +7377,7 @@ msgstr "保存图片裁剪设置"
 msgid "Say hello!"
 msgstr "问声好！"
 
-#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/index.tsx:49
 #: src/screens/Onboarding/state.ts:120
 msgid "Science"
 msgstr "科学"
@@ -7438,11 +7438,11 @@ msgstr "搜索“{searchText}”"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "通过搜索来添加你想分享的动态源。"
 
-#: src/screens/Search/Explore.tsx:360
+#: src/screens/Search/Explore.tsx:361
 msgid "Search for more accounts"
 msgstr "搜索更多账户"
 
-#: src/screens/Search/Explore.tsx:437
+#: src/screens/Search/Explore.tsx:438
 msgid "Search for more feeds"
 msgstr "搜索更多动态源"
 
@@ -7665,7 +7665,7 @@ msgstr "选择你在订阅的动态源中翻译的目标语言。"
 msgid "Select your preferred notification channels"
 msgstr "自定义你的通知推送选项"
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
 msgstr "不支持选择多种媒体类型。"
 
@@ -8123,7 +8123,7 @@ msgstr "更小"
 msgid "Snoozes the reminder"
 msgstr "暂停提醒"
 
-#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr "程序开发"
@@ -8219,7 +8219,7 @@ msgstr "垃圾内容"
 msgid "Spam; excessive mentions or replies"
 msgstr "垃圾内容、过于频繁的提及或回复"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:43
 #: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
@@ -8270,7 +8270,7 @@ msgstr "你创建的新手包"
 msgid "Starter pack is invalid"
 msgstr "无效的新手包"
 
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:629
 #: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "新手包"
@@ -8357,7 +8357,7 @@ msgstr "完成！"
 msgid "Successfully verified"
 msgstr "成功认证"
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:358
 msgid "Suggested Accounts"
 msgstr "推荐账户"
 
@@ -8460,7 +8460,7 @@ msgstr "任务完成：喜欢 10 则帖文！"
 msgid "Teach our algorithm what you like"
 msgstr "让我们的算法了解你的喜好"
 
-#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/index.tsx:52
 #: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr "科技"
@@ -9389,7 +9389,7 @@ msgstr "更新回复可见性失败"
 msgid "Updating..."
 msgstr "更新中……"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:291
 msgid "Upload a photo instead"
 msgstr "上传图片"
 
@@ -9516,15 +9516,15 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "已更新用户列表"
 
-#: src/screens/Signup/StepHandle/index.tsx:231
+#: src/screens/Signup/StepHandle/index.tsx:234
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr "用户名不能超过 {MAX_SERVICE_HANDLE_LENGTH, plural, other {# 个字符}}"
 
-#: src/screens/Signup/StepHandle/index.tsx:215
+#: src/screens/Signup/StepHandle/index.tsx:218
 msgid "Username cannot begin or end with a hyphen"
 msgstr "用户名不能使用连字符（-）开头或结尾"
 
-#: src/screens/Signup/StepHandle/index.tsx:219
+#: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr "用户名只能包含字母（a-z）、数字及连字符（-）"
 
@@ -9665,7 +9665,7 @@ msgstr "视频动态源"
 msgid "Video from {0}: {text}"
 msgstr "视频来自{0}：{text}"
 
-#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/index.tsx:55
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
@@ -9699,7 +9699,7 @@ msgstr "视频：{0}"
 msgid "Videos"
 msgstr "视频"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:404
 msgid "Videos must be less than 3 minutes long."
 msgstr "视频长度不得超过 3 分钟。"
 
@@ -10123,7 +10123,7 @@ msgstr "撰写帖文"
 msgid "Write your reply"
 msgstr "撰写你的回复"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:41
 #: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr "作家"
@@ -10257,11 +10257,11 @@ msgstr "你可以在其他人发帖时收到提醒了。如果你不希望错过
 msgid "You can now sign in with your new password."
 msgstr "你现在可以使用新密码登录。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one GIF at a time."
 msgstr "你一次只能选择一个 GIF。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
 msgstr "你一次只能选择一个视频。"
 
@@ -10270,7 +10270,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "你可以继续登录以重新启用你的账户，其他用户将能够重新看到你的个人资料和帖文。"
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "你最多只能选择 {MAX_IMAGES, plural, other {# 张图片}}。"
 
@@ -10448,7 +10448,7 @@ msgstr "你必须选择至少一个标记者来进行举报"
 msgid "You must sign in to view this post."
 msgstr "你必须先登录才能查看这则帖文。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:439
+#: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
 msgstr "你必须授予权限以访问媒体内容。"
 
@@ -10740,4 +10740,3 @@ msgstr "你选择的兴趣可帮助我们提供你所关心的内容。"
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "你的认证"
-

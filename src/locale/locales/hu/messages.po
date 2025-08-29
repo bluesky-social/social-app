@@ -151,7 +151,7 @@ msgstr "{0} élő adásban van"
 msgid "{0} is not a valid URL"
 msgstr "A(z) {0} egy érvénytelen webcím"
 
-#: src/screens/Signup/StepHandle/index.tsx:186
+#: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
 msgstr "A(z) {0} felhasználónév nem elérhető"
 
@@ -723,7 +723,7 @@ msgid "Add emoji reaction"
 msgstr "Emoji-reakció hozzáfűzése"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:482
+#: src/view/com/composer/SelectMediaButton.tsx:468
 msgid "Add media to post"
 msgstr "Médiatartalom csatolása a bejegyzéshez"
 
@@ -1043,7 +1043,7 @@ msgstr "ismeretlen feljegyző"
 msgid "and"
 msgstr "és"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:45
 #: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr "Állatok"
@@ -1219,7 +1219,7 @@ msgstr "Biztos vagy benne?"
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "Jelenleg <0>{suggestedLanguageName}</0> nyelven írsz?"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr "Művészet"
@@ -1487,7 +1487,7 @@ msgstr "Képek elhomályosítása"
 msgid "Blur images and filter from feeds"
 msgstr "Képek elhomályosítása és kiszűrés a hírfolyamokból"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:46
 #: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr "Könyvek"
@@ -1883,7 +1883,7 @@ msgstr "A(z) {tag} címke menüjének megnyitása"
 msgid "Click to retry failed message"
 msgstr "Üzenetküldés megkísérlése ismét"
 
-#: src/screens/Onboarding/index.tsx:46
+#: src/screens/Onboarding/index.tsx:48
 msgid "Climate"
 msgstr "Éghajlat"
 
@@ -2014,12 +2014,12 @@ msgstr "Színmód"
 msgid "Color theme"
 msgstr "Színséma"
 
-#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/index.tsx:54
 #: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr "Humor"
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr "Képregények"
@@ -2031,7 +2031,7 @@ msgid "Community Guidelines"
 msgstr "Közösségi irányelvek"
 
 #: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:587
+#: src/screens/Onboarding/StepFinished.tsx:588
 msgid "Complete onboarding and start using your account"
 msgstr "Regisztrációs varázsló befejezése és a Bluesky használatának megkezdése"
 
@@ -2173,8 +2173,8 @@ msgstr "A környezetérzékeny menü háttere. Kattints ide a menü bezárásáh
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepInterests/index.tsx:254
+#: src/screens/Onboarding/StepProfile/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Folytatás"
@@ -2191,8 +2191,8 @@ msgstr "Válaszlánc folytatása"
 msgid "Continue thread..."
 msgstr "Válaszlánc folytatása…"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepInterests/index.tsx:251
+#: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2212,7 +2212,7 @@ msgstr "Törölted a beszélgetést"
 msgid "Conversation deleted"
 msgstr "Törölted a beszélgetést"
 
-#: src/screens/Onboarding/index.tsx:55
+#: src/screens/Onboarding/index.tsx:57
 msgid "Cooking"
 msgstr "Sütés-főzés"
 
@@ -2426,7 +2426,7 @@ msgstr "Regisztráció"
 msgid "Create an account without using this starter pack"
 msgstr "Fiók létrehozása a kezdőcsomag igénybevétele nélkül"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Create an avatar instead"
 msgstr "Profilkép létrehozása"
 
@@ -2457,7 +2457,7 @@ msgstr "Létrehozás dátuma: {0}"
 msgid "Creator has been blocked"
 msgstr "Letiltott szerző"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:42
 #: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr "Kultúra"
@@ -2734,7 +2734,7 @@ msgstr "A fiók kijelentkezett felhasználók elől való elrejtésének kérelm
 msgid "Discover new custom feeds"
 msgstr "Egyéni hírfolyamok felfedezése"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:435
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "Új hírfolyamok felfedezése"
@@ -2815,8 +2815,8 @@ msgstr "Ne aggódj! A korábbi üzeneteid és beállításaid nem vesztek el és
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:329
-#: src/screens/Onboarding/StepProfile/index.tsx:332
+#: src/screens/Onboarding/StepProfile/index.tsx:331
+#: src/screens/Onboarding/StepProfile/index.tsx:334
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3005,7 +3005,7 @@ msgstr "Válaszjogosultsági beállítások szerkesztése"
 msgid "Edit your starter pack"
 msgstr "Kezdőcsomag szerkesztése"
 
-#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/index.tsx:47
 #: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr "Tanítás-tanulás"
@@ -3434,10 +3434,10 @@ msgstr "A javasolt fiókok automatikus követése meghiúsult. Próbáld újra"
 msgid "Failed to load conversations"
 msgstr "A csevegések betöltése meghiúsult"
 
-#: src/screens/Search/Explore.tsx:470
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:561
+#: src/screens/Search/Explore.tsx:600
 msgid "Failed to load feeds preferences"
 msgstr "A hírfolyambeállítások betöltése meghiúsult"
 
@@ -3467,14 +3467,14 @@ msgstr "A korábbi üzenetek betöltése meghiúsult"
 msgid "Failed to load preference."
 msgstr "A betöltés meghiúsult."
 
-#: src/screens/Search/Explore.tsx:463
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:464
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:554
+#: src/screens/Search/Explore.tsx:593
 msgid "Failed to load suggested feeds"
 msgstr "Az ajánlott hírfolyamok betöltése meghiúsult"
 
-#: src/screens/Search/Explore.tsx:373
+#: src/screens/Search/Explore.tsx:374
 msgid "Failed to load suggested follows"
 msgstr "A javasolt személyek betöltése meghiúsult"
 
@@ -3662,7 +3662,7 @@ msgid "Filter who you receive notifications from"
 msgstr "Értesítések forrásainak szűrése"
 
 #: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "Befejezés folyamatban…"
 
@@ -3690,7 +3690,7 @@ msgstr "Találj rá a Veled együttérző emberekre!"
 msgid "Finish"
 msgstr "Befejezés"
 
-#: src/screens/Onboarding/index.tsx:49
+#: src/screens/Onboarding/index.tsx:51
 msgid "Fitness"
 msgstr "Fitnesz"
 
@@ -3853,7 +3853,7 @@ msgstr "Betűtípus"
 msgid "Font size"
 msgstr "Betűméret"
 
-#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/index.tsx:56
 #: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr "Étel-ital"
@@ -4576,7 +4576,7 @@ msgstr "Csatlakozz a Blueskyhoz!"
 msgid "Join the conversation"
 msgstr "Csatlakozz hozzánk!"
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr "Sajtó"
@@ -4758,7 +4758,7 @@ msgid "Let's get your password reset!"
 msgstr "Állítsuk helyre a jelszavad!"
 
 #: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Let's go!"
 msgstr "Gyerünk!"
 
@@ -4943,12 +4943,12 @@ msgstr "Az élő adások kísérleti fázisban vannak"
 msgid "Live link"
 msgstr "Élő adás hivatkozása"
 
-#: src/screens/Search/Explore.tsx:86
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "Továbbiak"
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:505
+#: src/screens/Search/Explore.tsx:582
 msgid "Load more suggested feeds"
 msgstr "További javasolt hírfolyamok"
 
@@ -5344,7 +5344,7 @@ msgstr "A név megadása kötelező"
 msgid "Name or Description Violates Community Standards"
 msgstr "A címe vagy a leírása megszegi a közösségi irányelveket"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr "Természet"
@@ -5498,7 +5498,7 @@ msgstr "Felhasználólista létrehozása"
 msgid "Newest replies first"
 msgstr "A legújabb válaszok elöl"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
@@ -5620,7 +5620,7 @@ msgstr "Nincs találat"
 msgid "No results"
 msgstr "Nincs találat"
 
-#: src/screens/Search/Explore.tsx:786
+#: src/screens/Search/Explore.tsx:787
 msgid "No results for \"{0}\"."
 msgstr "A(z) „{0}” kifejezésre nincs találat."
 
@@ -5638,7 +5638,7 @@ msgstr "A(z) „{query}” kifejezésre nincs találat"
 msgid "No results found for {query}"
 msgstr "A(z) „{query}” kifejezésre nincs találat"
 
-#: src/screens/Search/Explore.tsx:790
+#: src/screens/Search/Explore.tsx:791
 msgid "No results."
 msgstr "Nincs találat."
 
@@ -5815,11 +5815,11 @@ msgstr "Legalább egy GIF-ről hiányzik a helyettesítő szöveg."
 msgid "One or more images is missing alt text."
 msgstr "Legalább egy képről hiányzik a helyettesítő szöveg."
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:387
 msgid "One or more of your selected files are not supported."
 msgstr "A kiválasztott fájlok közül legalább egy nem támogatott formátumú."
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "A kiválasztott fájlok közül legalább egy túl nagy. A korlát 100 MB."
 
@@ -5841,7 +5841,7 @@ msgstr "Csak {0} válaszolhatnak."
 msgid "Only followers who I follow"
 msgstr "Csak a kölcsönös követőktől"
 
-#: src/lib/media/picker.shared.ts:28
+#: src/lib/media/picker.shared.ts:31
 msgid "Only image files are supported"
 msgstr "Csak a képfájlok támogatottak"
 
@@ -5866,7 +5866,7 @@ msgstr "Hoppá!"
 msgid "Open"
 msgstr "Megnyitás"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Open avatar creator"
 msgstr "Profilképkészítő megnyitása"
 
@@ -5976,7 +5976,7 @@ msgid "Opens composer"
 msgstr "Bejegyzésíró megnyitása"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:488
+#: src/view/com/composer/SelectMediaButton.tsx:474
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "A készülék galériájának megnyitása. A bejegyzéshez legfeljebb {MAX_IMAGES, plural, other {# kép}}, vagy egy videó vagy GIF csatolható."
 
@@ -6157,7 +6157,7 @@ msgstr "A galéria hozzáférését megtagadták. Engedélyezd a rendszerbeáll�
 msgid "Person toggle"
 msgstr "Személy ki/be"
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:44
 #: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr "Háziállatok"
@@ -6384,7 +6384,7 @@ msgstr "E-mail-cím visszaigazolása"
 msgid "Please write your message below:"
 msgstr "Üzenet megadása:"
 
-#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/index.tsx:50
 #: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
@@ -7377,7 +7377,7 @@ msgstr "Képkivágási beállítások mentése"
 msgid "Say hello!"
 msgstr "Köszönj!"
 
-#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/index.tsx:49
 #: src/screens/Onboarding/state.ts:120
 msgid "Science"
 msgstr "Tudomány"
@@ -7438,11 +7438,11 @@ msgstr "Keresés: {searchText}"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "Ajánlható hírfolyamok keresése."
 
-#: src/screens/Search/Explore.tsx:360
+#: src/screens/Search/Explore.tsx:361
 msgid "Search for more accounts"
 msgstr "További fiókok keresése"
 
-#: src/screens/Search/Explore.tsx:437
+#: src/screens/Search/Explore.tsx:438
 msgid "Search for more feeds"
 msgstr "További hírfolyamok keresése"
 
@@ -7665,7 +7665,7 @@ msgstr "Add meg, hogy milyen nyelvre szeretnéd lefordítani a bejegyzéseket."
 msgid "Select your preferred notification channels"
 msgstr "Kívánt értesítési csatornák megadása"
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
 msgstr "Egy bejegyzéshez csak egyféle médiatartalom csatolható."
 
@@ -8123,7 +8123,7 @@ msgstr "Kisebb"
 msgid "Snoozes the reminder"
 msgstr "Emlékeztető elhalasztása"
 
-#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr "Szoftverfejlesztő"
@@ -8219,7 +8219,7 @@ msgstr "Spam"
 msgid "Spam; excessive mentions or replies"
 msgstr "Spam; túl sok említés vagy válasz"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:43
 #: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
@@ -8270,7 +8270,7 @@ msgstr "Kezdőcsomag – Saját"
 msgid "Starter pack is invalid"
 msgstr "Ez a kezdőcsomag érvénytelen"
 
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:629
 #: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "Kezdőcsomagok"
@@ -8357,7 +8357,7 @@ msgstr "Siker!"
 msgid "Successfully verified"
 msgstr "Hitelesítetted a fiókot"
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:358
 msgid "Suggested Accounts"
 msgstr "Javasolt fiókok"
 
@@ -8458,10 +8458,11 @@ msgstr "Feladat teljesítve – 10 kedvelés!"
 
 #: src/components/ProgressGuide/List.tsx:64
 msgid "Teach our algorithm what you like"
-msgstr "Tanítsd meg az algoritmusnak,\n"
+msgstr ""
+"Tanítsd meg az algoritmusnak,\n"
 "hogy mit szeretnél látni!"
 
-#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/index.tsx:52
 #: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr "Technológia"
@@ -9390,7 +9391,7 @@ msgstr "A válasz láthatóságának frissítése meghiúsult"
 msgid "Updating..."
 msgstr "Frissítés folyamatban…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:291
 msgid "Upload a photo instead"
 msgstr "Fénykép feltöltése"
 
@@ -9517,15 +9518,15 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "Frissítetted a felhasználólistát"
 
-#: src/screens/Signup/StepHandle/index.tsx:231
+#: src/screens/Signup/StepHandle/index.tsx:234
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr "A felhasználónév legfejlebb {MAX_SERVICE_HANDLE_LENGTH, plural, one {}other {# karakter}} hosszú lehet"
 
-#: src/screens/Signup/StepHandle/index.tsx:215
+#: src/screens/Signup/StepHandle/index.tsx:218
 msgid "Username cannot begin or end with a hyphen"
 msgstr "A felhasználónév nem kezdődhet vagy végződhet kötőjellel"
 
-#: src/screens/Signup/StepHandle/index.tsx:219
+#: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr "A felhasználónév csak az angol ábécé betűit (A–Z), számokat és kötőjeleket tartalmazhat"
 
@@ -9666,7 +9667,7 @@ msgstr "Videófolyam"
 msgid "Video from {0}: {text}"
 msgstr "{0} videója: {text}"
 
-#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/index.tsx:55
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
@@ -9700,7 +9701,7 @@ msgstr "Videó: {0}"
 msgid "Videos"
 msgstr "Videók"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:404
 msgid "Videos must be less than 3 minutes long."
 msgstr "A videónak 3 percnél rövidebbnek kell lennie."
 
@@ -10124,7 +10125,7 @@ msgstr "Bejegyzés írása"
 msgid "Write your reply"
 msgstr "Válasz írása"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:41
 #: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr "Írók"
@@ -10258,11 +10259,11 @@ msgstr "Mostantól feliratkozhatsz egyes személyek tevékenységeire. Ha van ol
 msgid "You can now sign in with your new password."
 msgstr "Mostantól bejelentkezhetsz az új jelszóval."
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one GIF at a time."
 msgstr "Egy bejegyzéshez csak egy GIF csatolható."
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
 msgstr "Egy bejegyzéshez csak egy videó csatolható."
 
@@ -10271,7 +10272,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "A bejelentkezés folytatásához újraaktiválhatod a fiókodat. Ezek után a profilod és a bejegyzéseid ismét láthatóak lesznek más felhasználók számára."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "Egy bejegyzéshez csak {MAX_IMAGES, plural, other {# kép}} csatolható."
 
@@ -10449,7 +10450,7 @@ msgstr "A jelentéshez ki kell választanod legalább egy címzettet"
 msgid "You must sign in to view this post."
 msgstr "A bejegyzés megtekintéséhez be kell jelentkezned."
 
-#: src/view/com/composer/SelectMediaButton.tsx:439
+#: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
 msgstr "A galériához hozzáférés szükséges."
 
@@ -10741,4 +10742,3 @@ msgstr "Az érdeklődési köreid megadásával személyre szabhatod a javasolt 
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Saját hitelesítések"
-

@@ -151,7 +151,7 @@ msgstr "{0} 님은 라이브 중"
 msgid "{0} is not a valid URL"
 msgstr "{0}은(는) 올바른 URL이 아닙니다"
 
-#: src/screens/Signup/StepHandle/index.tsx:186
+#: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
 msgstr "{0}은(는) 사용할 수 없습니다"
 
@@ -723,7 +723,7 @@ msgid "Add emoji reaction"
 msgstr "이모티콘 반응 추가"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:482
+#: src/view/com/composer/SelectMediaButton.tsx:468
 msgid "Add media to post"
 msgstr "게시물에 미디어 추가"
 
@@ -1043,7 +1043,7 @@ msgstr "알 수 없는 라벨러"
 msgid "and"
 msgstr "및"
 
-#: src/screens/Onboarding/index.tsx:43
+#: src/screens/Onboarding/index.tsx:45
 #: src/screens/Onboarding/state.ts:102
 msgid "Animals"
 msgstr "동물"
@@ -1219,7 +1219,7 @@ msgstr "정말인가요?"
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr "<0>{suggestedLanguageName}</0>(으)로 쓰고 있나요?"
 
-#: src/screens/Onboarding/index.tsx:37
+#: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:103
 msgid "Art"
 msgstr "예술"
@@ -1487,7 +1487,7 @@ msgstr "이미지 블러"
 msgid "Blur images and filter from feeds"
 msgstr "이미지 블러 및 피드에서 필터링"
 
-#: src/screens/Onboarding/index.tsx:44
+#: src/screens/Onboarding/index.tsx:46
 #: src/screens/Onboarding/state.ts:104
 msgid "Books"
 msgstr "책"
@@ -1883,7 +1883,7 @@ msgstr "클릭하여 {tag}에 대한 태그 메뉴를 엽니다"
 msgid "Click to retry failed message"
 msgstr "클릭하여 메시지 다시 보내기"
 
-#: src/screens/Onboarding/index.tsx:46
+#: src/screens/Onboarding/index.tsx:48
 msgid "Climate"
 msgstr "기후"
 
@@ -2014,12 +2014,12 @@ msgstr "색상 모드"
 msgid "Color theme"
 msgstr "색상 테마"
 
-#: src/screens/Onboarding/index.tsx:52
+#: src/screens/Onboarding/index.tsx:54
 #: src/screens/Onboarding/state.ts:105
 msgid "Comedy"
 msgstr "코미디"
 
-#: src/screens/Onboarding/index.tsx:38
+#: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:106
 msgid "Comics"
 msgstr "만화"
@@ -2031,7 +2031,7 @@ msgid "Community Guidelines"
 msgstr "커뮤니티 가이드라인"
 
 #: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:587
+#: src/screens/Onboarding/StepFinished.tsx:588
 msgid "Complete onboarding and start using your account"
 msgstr "온보딩 완료 후 계정 사용 시작"
 
@@ -2173,8 +2173,8 @@ msgstr "컨텍스트 메뉴 배경을 클릭하여 메뉴를 닫습니다."
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
-#: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:277
+#: src/screens/Onboarding/StepInterests/index.tsx:254
+#: src/screens/Onboarding/StepProfile/index.tsx:278
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "계속"
@@ -2191,8 +2191,8 @@ msgstr "스레드 더 보기"
 msgid "Continue thread..."
 msgstr "스레드 더 보기…"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:274
+#: src/screens/Onboarding/StepInterests/index.tsx:251
+#: src/screens/Onboarding/StepProfile/index.tsx:275
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2212,7 +2212,7 @@ msgstr "대화를 삭제했습니다"
 msgid "Conversation deleted"
 msgstr "대화 삭제됨"
 
-#: src/screens/Onboarding/index.tsx:55
+#: src/screens/Onboarding/index.tsx:57
 msgid "Cooking"
 msgstr "요리"
 
@@ -2426,7 +2426,7 @@ msgstr "계정 만들기"
 msgid "Create an account without using this starter pack"
 msgstr "이 스타터 팩을 사용하지 않고 계정 만들기"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Create an avatar instead"
 msgstr "대신 아바타 만들기"
 
@@ -2457,7 +2457,7 @@ msgstr "{0}에 생성됨"
 msgid "Creator has been blocked"
 msgstr "작성자 차단됨"
 
-#: src/screens/Onboarding/index.tsx:40
+#: src/screens/Onboarding/index.tsx:42
 #: src/screens/Onboarding/state.ts:107
 msgid "Culture"
 msgstr "문화"
@@ -2734,7 +2734,7 @@ msgstr "앱이 로그아웃한 사용자에게 내 계정을 표시하지 않도
 msgid "Discover new custom feeds"
 msgstr "새로운 맞춤 피드 찾아보기"
 
-#: src/screens/Search/Explore.tsx:434
+#: src/screens/Search/Explore.tsx:435
 #: src/view/screens/Feeds.tsx:730
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
@@ -2815,8 +2815,8 @@ msgstr "걱정 마세요! 모든 기존 메시지와 설정은 저장되며 성�
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:329
-#: src/screens/Onboarding/StepProfile/index.tsx:332
+#: src/screens/Onboarding/StepProfile/index.tsx:331
+#: src/screens/Onboarding/StepProfile/index.tsx:334
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3005,7 +3005,7 @@ msgstr "답글을 달 수 있는 사용자 편집"
 msgid "Edit your starter pack"
 msgstr "스타터 팩 편집"
 
-#: src/screens/Onboarding/index.tsx:45
+#: src/screens/Onboarding/index.tsx:47
 #: src/screens/Onboarding/state.ts:109
 msgid "Education"
 msgstr "교육"
@@ -3434,10 +3434,10 @@ msgstr "모든 추천 계정을 팔로우하지 못했습니다. 다시 시도�
 msgid "Failed to load conversations"
 msgstr "대화를 불러오지 못했습니다"
 
-#: src/screens/Search/Explore.tsx:470
-#: src/screens/Search/Explore.tsx:522
-#: src/screens/Search/Explore.tsx:560
-#: src/screens/Search/Explore.tsx:599
+#: src/screens/Search/Explore.tsx:471
+#: src/screens/Search/Explore.tsx:523
+#: src/screens/Search/Explore.tsx:561
+#: src/screens/Search/Explore.tsx:600
 msgid "Failed to load feeds preferences"
 msgstr "피드 환경설정을 불러오지 못했습니다"
 
@@ -3467,14 +3467,14 @@ msgstr "지난 메시지를 불러오지 못했습니다"
 msgid "Failed to load preference."
 msgstr "환경설정을 불러오지 못했습니다."
 
-#: src/screens/Search/Explore.tsx:463
-#: src/screens/Search/Explore.tsx:515
-#: src/screens/Search/Explore.tsx:553
-#: src/screens/Search/Explore.tsx:592
+#: src/screens/Search/Explore.tsx:464
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:554
+#: src/screens/Search/Explore.tsx:593
 msgid "Failed to load suggested feeds"
 msgstr "추천 피드를 불러오지 못했습니다"
 
-#: src/screens/Search/Explore.tsx:373
+#: src/screens/Search/Explore.tsx:374
 msgid "Failed to load suggested follows"
 msgstr "추천 팔로우를 불러오지 못했습니다"
 
@@ -3662,7 +3662,7 @@ msgid "Filter who you receive notifications from"
 msgstr "알림 수신 대상 필터링"
 
 #: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "마무리 중"
 
@@ -3690,7 +3690,7 @@ msgstr "마음 맞는 사람 찾기"
 msgid "Finish"
 msgstr "완료"
 
-#: src/screens/Onboarding/index.tsx:49
+#: src/screens/Onboarding/index.tsx:51
 msgid "Fitness"
 msgstr "건강"
 
@@ -3853,7 +3853,7 @@ msgstr "글꼴"
 msgid "Font size"
 msgstr "글꼴 크기"
 
-#: src/screens/Onboarding/index.tsx:54
+#: src/screens/Onboarding/index.tsx:56
 #: src/screens/Onboarding/state.ts:110
 msgid "Food"
 msgstr "음식"
@@ -4576,7 +4576,7 @@ msgstr "Bluesky 가입하기"
 msgid "Join the conversation"
 msgstr "대화에 참여하기"
 
-#: src/screens/Onboarding/index.tsx:35
+#: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:112
 msgid "Journalism"
 msgstr "저널리즘"
@@ -4758,7 +4758,7 @@ msgid "Let's get your password reset!"
 msgstr "비밀번호를 재설정해 봅시다!"
 
 #: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:590
+#: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Let's go!"
 msgstr "출발!"
 
@@ -4943,12 +4943,12 @@ msgstr "라이브 기능은 베타 테스트 중입니다"
 msgid "Live link"
 msgstr "라이브 링크"
 
-#: src/screens/Search/Explore.tsx:86
+#: src/screens/Search/Explore.tsx:87
 msgid "Load more"
 msgstr "더 불러오기"
 
-#: src/screens/Search/Explore.tsx:504
-#: src/screens/Search/Explore.tsx:581
+#: src/screens/Search/Explore.tsx:505
+#: src/screens/Search/Explore.tsx:582
 msgid "Load more suggested feeds"
 msgstr "추천 피드 더 불러오기"
 
@@ -5344,7 +5344,7 @@ msgstr "이름을 입력하세요"
 msgid "Name or Description Violates Community Standards"
 msgstr "이름 또는 설명이 커뮤니티 기준을 위반함"
 
-#: src/screens/Onboarding/index.tsx:36
+#: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:115
 msgid "Nature"
 msgstr "자연"
@@ -5498,7 +5498,7 @@ msgstr "새 사용자 리스트"
 msgid "Newest replies first"
 msgstr "새로운 순"
 
-#: src/screens/Onboarding/index.tsx:34
+#: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:116
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
 msgid "News"
@@ -5620,7 +5620,7 @@ msgstr "결과 없음"
 msgid "No results"
 msgstr "결과 없음"
 
-#: src/screens/Search/Explore.tsx:786
+#: src/screens/Search/Explore.tsx:787
 msgid "No results for \"{0}\"."
 msgstr "\"{0}\"에 대한 결과가 없습니다."
 
@@ -5638,7 +5638,7 @@ msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 
-#: src/screens/Search/Explore.tsx:790
+#: src/screens/Search/Explore.tsx:791
 msgid "No results."
 msgstr "결과가 없습니다."
 
@@ -5815,11 +5815,11 @@ msgstr "하나 이상의 GIF에 대체 텍스트가 누락되었습니다."
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
-#: src/view/com/composer/SelectMediaButton.tsx:390
+#: src/view/com/composer/SelectMediaButton.tsx:387
 msgid "One or more of your selected files are not supported."
 msgstr "선택한 파일 중 지원되지 않는 파일이 있습니다."
 
-#: src/view/com/composer/SelectMediaButton.tsx:413
+#: src/view/com/composer/SelectMediaButton.tsx:410
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr "선택한 파일 중 크기가 너무 큰 파일이 있습니다. 최대 크기는 100MB입니다."
 
@@ -5841,7 +5841,7 @@ msgstr "{0}만 답글을 달 수 있습니다."
 msgid "Only followers who I follow"
 msgstr "내가 팔로우하는 팔로워만"
 
-#: src/lib/media/picker.shared.ts:28
+#: src/lib/media/picker.shared.ts:31
 msgid "Only image files are supported"
 msgstr "이미지 파일만 지원됩니다"
 
@@ -5866,7 +5866,7 @@ msgstr "이런!"
 msgid "Open"
 msgstr "공개성"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:285
+#: src/screens/Onboarding/StepProfile/index.tsx:287
 msgid "Open avatar creator"
 msgstr "아바타 생성기 열기"
 
@@ -5976,7 +5976,7 @@ msgid "Opens composer"
 msgstr "답글 작성 상자를 엽니다"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:488
+#: src/view/com/composer/SelectMediaButton.tsx:474
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "기기 갤러리를 열어 이미지를 최대 {MAX_IMAGES, plural, other {#개}}까지 또는 동영상, GIF를 1개 선택합니다."
 
@@ -6157,7 +6157,7 @@ msgstr "사진 보관함에 대한 접근 권한이 거부되었습니다. 시�
 msgid "Person toggle"
 msgstr "사용자 켜기/끄기"
 
-#: src/screens/Onboarding/index.tsx:42
+#: src/screens/Onboarding/index.tsx:44
 #: src/screens/Onboarding/state.ts:117
 msgid "Pets"
 msgstr "반려동물"
@@ -6384,7 +6384,7 @@ msgstr "이메일을 인증해 주세요"
 msgid "Please write your message below:"
 msgstr "아래에 메시지를 작성하세요:"
 
-#: src/screens/Onboarding/index.tsx:48
+#: src/screens/Onboarding/index.tsx:50
 #: src/screens/Onboarding/state.ts:119
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:232
 msgid "Politics"
@@ -7377,7 +7377,7 @@ msgstr "이미지 자르기 설정을 저장합니다"
 msgid "Say hello!"
 msgstr "인사해 보세요!"
 
-#: src/screens/Onboarding/index.tsx:47
+#: src/screens/Onboarding/index.tsx:49
 #: src/screens/Onboarding/state.ts:120
 msgid "Science"
 msgstr "과학"
@@ -7438,11 +7438,11 @@ msgstr "\"{searchText}\"에 대한 검색 결과"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "다른 사람에게 추천할 피드를 검색하세요."
 
-#: src/screens/Search/Explore.tsx:360
+#: src/screens/Search/Explore.tsx:361
 msgid "Search for more accounts"
 msgstr "더 많은 계정 검색하기"
 
-#: src/screens/Search/Explore.tsx:437
+#: src/screens/Search/Explore.tsx:438
 msgid "Search for more feeds"
 msgstr "더 많은 피드 검색하기"
 
@@ -7665,7 +7665,7 @@ msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
 msgid "Select your preferred notification channels"
 msgstr "선호하는 알림 채널 선택"
 
-#: src/view/com/composer/SelectMediaButton.tsx:393
+#: src/view/com/composer/SelectMediaButton.tsx:390
 msgid "Selecting multiple media types is not supported."
 msgstr "여러 유형의 미디어를 함께 선택할 수 없습니다."
 
@@ -8123,7 +8123,7 @@ msgstr "작음"
 msgid "Snoozes the reminder"
 msgstr "알림을 끕니다"
 
-#: src/screens/Onboarding/index.tsx:51
+#: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
@@ -8219,7 +8219,7 @@ msgstr "스팸"
 msgid "Spam; excessive mentions or replies"
 msgstr "스팸, 과도한 멘션 또는 답글"
 
-#: src/screens/Onboarding/index.tsx:41
+#: src/screens/Onboarding/index.tsx:43
 #: src/screens/Onboarding/state.ts:121
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:230
 msgid "Sports"
@@ -8270,7 +8270,7 @@ msgstr "내 스타터 팩"
 msgid "Starter pack is invalid"
 msgstr "스타터 팩이 유효하지 않음"
 
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:629
 #: src/view/screens/Profile.tsx:231
 msgid "Starter Packs"
 msgstr "스타터 팩"
@@ -8357,7 +8357,7 @@ msgstr "성공!"
 msgid "Successfully verified"
 msgstr "성공적으로 인증했습니다"
 
-#: src/screens/Search/Explore.tsx:357
+#: src/screens/Search/Explore.tsx:358
 msgid "Suggested Accounts"
 msgstr "추천 계정"
 
@@ -8460,7 +8460,7 @@ msgstr "작업 완료 - 좋아요 10번!"
 msgid "Teach our algorithm what you like"
 msgstr "무엇을 좋아하는지 알고리즘에게 알려주세요"
 
-#: src/screens/Onboarding/index.tsx:50
+#: src/screens/Onboarding/index.tsx:52
 #: src/screens/Onboarding/state.ts:122
 msgid "Tech"
 msgstr "기술"
@@ -9389,7 +9389,7 @@ msgstr "답글 표시 여부를 업데이트하지 못했습니다"
 msgid "Updating..."
 msgstr "업데이트 중…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:289
+#: src/screens/Onboarding/StepProfile/index.tsx:291
 msgid "Upload a photo instead"
 msgstr "대신 사진 업로드하기"
 
@@ -9516,15 +9516,15 @@ msgctxt "toast"
 msgid "User list updated"
 msgstr "사용자 리스트를 업데이트했습니다"
 
-#: src/screens/Signup/StepHandle/index.tsx:231
+#: src/screens/Signup/StepHandle/index.tsx:234
 msgid "Username cannot be longer than {MAX_SERVICE_HANDLE_LENGTH, plural, other {# characters}}"
 msgstr "사용자 이름은 {MAX_SERVICE_HANDLE_LENGTH, plural, other {#자}}를 초과할 수 없습니다"
 
-#: src/screens/Signup/StepHandle/index.tsx:215
+#: src/screens/Signup/StepHandle/index.tsx:218
 msgid "Username cannot begin or end with a hyphen"
 msgstr "사용자 이름은 하이픈으로 시작하거나 끝날 수 없습니다"
 
-#: src/screens/Signup/StepHandle/index.tsx:219
+#: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Username must only contain letters (a-z), numbers, and hyphens"
 msgstr "사용자 이름에는 영문자(a-z), 숫자, 하이픈만 사용할 수 있습니다"
 
@@ -9665,7 +9665,7 @@ msgstr "동영상 피드"
 msgid "Video from {0}: {text}"
 msgstr "{0} 님의 동영상: {text}"
 
-#: src/screens/Onboarding/index.tsx:53
+#: src/screens/Onboarding/index.tsx:55
 #: src/screens/Onboarding/state.ts:111
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:234
 msgid "Video Games"
@@ -9699,7 +9699,7 @@ msgstr "동영상: {0}"
 msgid "Videos"
 msgstr "동영상"
 
-#: src/view/com/composer/SelectMediaButton.tsx:407
+#: src/view/com/composer/SelectMediaButton.tsx:404
 msgid "Videos must be less than 3 minutes long."
 msgstr "동영상 길이는 3분 미만이어야 합니다."
 
@@ -10123,7 +10123,7 @@ msgstr "게시물 작성"
 msgid "Write your reply"
 msgstr "답글 작성하기"
 
-#: src/screens/Onboarding/index.tsx:39
+#: src/screens/Onboarding/index.tsx:41
 #: src/screens/Onboarding/state.ts:124
 msgid "Writers"
 msgstr "작가"
@@ -10257,11 +10257,11 @@ msgstr "이제 특정 사용자가 게시물을 올릴 때 알림을 받도록 �
 msgid "You can now sign in with your new password."
 msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
 
-#: src/view/com/composer/SelectMediaButton.tsx:410
+#: src/view/com/composer/SelectMediaButton.tsx:407
 msgid "You can only select one GIF at a time."
 msgstr "GIF는 한 번에 하나만 선택할 수 있습니다."
 
-#: src/view/com/composer/SelectMediaButton.tsx:404
+#: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
 msgstr "동영상은 한 번에 하나만 선택할 수 있습니다."
 
@@ -10270,7 +10270,7 @@ msgid "You can reactivate your account to continue logging in. Your profile and 
 msgstr "계정을 재활성화하여 로그인을 계속할 수 있습니다. 내 프로필과 글이 다른 사용자에게 표시됩니다."
 
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
-#: src/view/com/composer/SelectMediaButton.tsx:396
+#: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
 msgstr "이미지는 최대 {MAX_IMAGES, plural, other {#개}}까지 선택할 수 있습니다."
 
@@ -10448,7 +10448,7 @@ msgstr "신고하려면 라벨을 하나 이상 선택해야 합니다"
 msgid "You must sign in to view this post."
 msgstr "이 게시물을 보려면 로그인해야 합니다."
 
-#: src/view/com/composer/SelectMediaButton.tsx:439
+#: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
 msgstr "미디어 라이브러리에 대한 접근 권한을 허용해야 합니다."
 
@@ -10740,4 +10740,3 @@ msgstr "선택한 관심 주제는 사용자가 관심 있는 콘텐츠를 제�
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "내 인증"
-
