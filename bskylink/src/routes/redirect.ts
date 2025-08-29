@@ -1,10 +1,15 @@
 import assert from 'node:assert'
 
+import {ToolsOzoneSafelinkDefs} from '@atproto/api'
 import {DAY, SECOND} from '@atproto/common'
-import escapeHTML from 'escape-html'
 import {type Express} from 'express'
+import {type Hole} from 'uhtml'
 
 import {type AppContext} from '../context.js'
+import {linkRedirectContents} from '../html/linkRedirectContents.js'
+import {linkWarningContents} from '../html/linkWarningContents.js'
+import {linkWarningLayout} from '../html/linkWarningLayout.js'
+import {redirectLogger} from '../logger.js'
 import {handler} from './util.js'
 
 const INTERNAL_IP_REGEX = new RegExp(
@@ -39,14 +44,65 @@ export default function (ctx: AppContext, app: Express) {
         return res.status(302).end()
       }
 
+      // Default to a max age header
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
-      res.type('html')
       res.status(200)
+      res.type('html')
 
-      const escaped = escapeHTML(url.href)
-      return res.send(
-        `<html><head><meta http-equiv="refresh" content="0; URL='${escaped}'" /><style>:root { color-scheme: light dark; }</style></head></html>`,
-      )
+      let hole: Hole | undefined
+
+      if (ctx.cfg.service.safelinkEnabled) {
+        const rulePresent: ToolsOzoneSafelinkDefs.Event | undefined =
+          ctx.cfg.eventCache.smartGet(link)
+
+        if (rulePresent) {
+          switch (rulePresent.action) {
+            case ToolsOzoneSafelinkDefs.WHITELIST:
+              redirectLogger.info(
+                `Whitelist rule matched for ${rulePresent.url}`,
+              )
+              break
+            case ToolsOzoneSafelinkDefs.REMOVERULE:
+              redirectLogger.info(`Remove rule matched for ${rulePresent.url}`)
+              break
+            case ToolsOzoneSafelinkDefs.BLOCK:
+              hole = linkWarningLayout(
+                'Blocked Link Warning',
+                linkWarningContents(req, {
+                  type: 'block',
+                  link: url.href,
+                }),
+              )
+              res.setHeader('Cache-Control', 'no-store')
+              redirectLogger.info(`Block rule matched for ${rulePresent.url}`)
+              break
+            case ToolsOzoneSafelinkDefs.WARN:
+              hole = linkWarningLayout(
+                'Malicious Link Warning',
+                linkWarningContents(req, {
+                  type: 'warn',
+                  link: url.href,
+                }),
+              )
+              res.setHeader('Cache-Control', 'no-store')
+              redirectLogger.info(`Warn rule matched for ${rulePresent.url}`)
+              break
+            default:
+              redirectLogger.warn(
+                `${rulePresent.action} rule (an unknown rule) matched for ${rulePresent.url}`,
+              )
+          }
+        } else {
+          redirectLogger.info(`No rule present for ${rulePresent.url}`)
+        }
+      }
+
+      // If there is no hole defined yet, we will create a redirect hole
+      if (!hole) {
+        hole = linkRedirectContents(url.href)
+      }
+
+      return res.end(String(hole))
     }),
   )
 }
