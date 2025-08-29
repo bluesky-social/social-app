@@ -39,6 +39,40 @@
   <link rel="alternate" type="application/rss+xml" href="https://{{ requestHost }}/profile/{{ profileView.Did }}/rss">
   {% endif %}
   <link rel="alternate" href="at://{{ profileView.Did }}/app.bsky.actor.profile/self" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "dateCreated": "{{ profileView.CreatedAt }}",
+    "mainEntity": {
+      "@type": "Person",
+      "name": "{{ profileView.DisplayName }}",
+      "alternateName": "@{{ profileView.Handle }}",
+      "identifier": "{{ profileView.Did }}",
+      "description": "{{ profileView.Description }}",
+      "image": "{{ profileView.Avatar }}",
+      "interactionStatistic": [
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/FollowAction",
+          "userInteractionCount": {{ profileView.FollowersCount }}
+        }
+      ],
+      "agentInteractionStatistic": [
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/FollowAction",
+          "userInteractionCount": {{ profileView.FollowsCount }}
+        },
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/WriteAction",
+          "userInteractionCount": {{ profileView.PostsCount }}
+        }
+      ]
+    }
+  }
+  </script>
 {% endif -%}
 {%- endblock %}
 
