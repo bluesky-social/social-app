@@ -72,7 +72,7 @@ function Inner({
 
   const onPressConfirmDelete = async () => {
     if (!currentAccount?.did) {
-      throw new Error(`DeleteAccount modal: currentAccount.did is undefined`)
+      throw new Error('DeleteAccount modal: currentAccount.did is undefined')
     }
 
     if (!confirmCode) {
