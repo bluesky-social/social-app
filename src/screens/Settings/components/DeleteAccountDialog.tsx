@@ -235,7 +235,6 @@ function Inner({
             <>
               <Button
                 label={_(msg`Send Email`)}
-                variant="solid"
                 color="negative"
                 size="large"
                 disabled={isProcessing}
@@ -247,7 +246,6 @@ function Inner({
               </Button>
               <Button
                 label={_(msg`Cancel`)}
-                variant="solid"
                 color="secondary"
                 size="large"
                 disabled={isProcessing}
@@ -261,7 +259,6 @@ function Inner({
             <>
               <Button
                 label={_(msg`Delete account`)}
-                variant="solid"
                 color="negative"
                 size="large"
                 disabled={isProcessing}
@@ -273,7 +270,6 @@ function Inner({
               </Button>
               <Button
                 label={_(msg`Cancel`)}
-                variant="solid"
                 color="secondary"
                 size="large"
                 disabled={isProcessing}
