@@ -4,14 +4,13 @@ import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 
@@ -36,7 +35,7 @@ export function AboutSection({
 }: AboutSectionProps) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {isMobile} = useWebMediaQueries()
+  const {gtMobile} = useBreakpoints()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const isOwner = list.creator.did === currentAccount?.did
 
@@ -55,7 +54,7 @@ export function AboutSection({
     if (!isOwner) {
       return <View />
     }
-    if (isMobile) {
+    if (!gtMobile) {
       return (
         <View style={[a.px_sm, a.py_sm]}>
           <Button
@@ -91,7 +90,7 @@ export function AboutSection({
         </Button>
       </View>
     )
-  }, [isOwner, _, onPressAddUser, isMobile])
+  }, [isOwner, _, onPressAddUser, gtMobile])
 
   const renderEmptyState = useCallback(() => {
     return (
