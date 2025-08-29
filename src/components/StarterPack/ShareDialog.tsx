@@ -4,13 +4,12 @@ import {type AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useSaveImageToMediaLibrary} from '#/lib/media/save-image'
 import {shareUrl} from '#/lib/sharing'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Dialog from '#/components/Dialog'
@@ -48,7 +47,7 @@ function ShareDialogInner({
 }: Props) {
   const {_} = useLingui()
   const t = useTheme()
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {gtMobile} = useBreakpoints()
 
   const imageUrl = getStarterPackOgCard(starterPack)
 
@@ -76,8 +75,8 @@ function ShareDialogInner({
             <Loader size="xl" />
           </View>
         ) : (
-          <View style={[!isTabletOrDesktop && a.gap_lg]}>
-            <View style={[a.gap_sm, isTabletOrDesktop && a.pb_lg]}>
+          <View style={[!gtMobile && a.gap_lg]}>
+            <View style={[a.gap_sm, gtMobile && a.pb_lg]}>
               <Text style={[a.font_bold, a.text_2xl]}>
                 <Trans>Invite people to this starter pack!</Trans>
               </Text>
@@ -94,8 +93,8 @@ function ShareDialogInner({
                 a.rounded_sm,
                 {
                   aspectRatio: 1200 / 630,
-                  transform: [{scale: isTabletOrDesktop ? 0.85 : 1}],
-                  marginTop: isTabletOrDesktop ? -20 : 0,
+                  transform: [{scale: gtMobile ? 0.85 : 1}],
+                  marginTop: gtMobile ? -20 : 0,
                 },
               ]}
               accessibilityIgnoresInvertColors={true}
@@ -103,7 +102,12 @@ function ShareDialogInner({
             <View
               style={[
                 a.gap_md,
-                web([a.gap_sm, a.justify_center, a.flex_row, a.flex_wrap]),
+                gtMobile && [
+                  a.gap_sm,
+                  a.justify_center,
+                  a.flex_row,
+                  a.flex_wrap,
+                ],
               ]}>
               <Button
                 label={isWeb ? _(msg`Copy link`) : _(msg`Share link`)}

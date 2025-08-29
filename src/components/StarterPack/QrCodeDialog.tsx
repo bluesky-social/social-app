@@ -10,8 +10,7 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, web} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
@@ -20,6 +19,7 @@ import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/i
 import {FloppyDisk_Stroke2_Corner0_Rounded as FloppyDiskIcon} from '#/components/icons/FloppyDisk'
 import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
+import * as Toast from '#/components/Toast'
 import * as bsky from '#/types/bsky'
 
 export function QrCodeDialog({
@@ -32,6 +32,7 @@ export function QrCodeDialog({
   control: DialogControlProps
 }) {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const [isProcessing, setIsProcessing] = useState(false)
 
   const ref = useRef<ViewShot>(null)
@@ -70,10 +71,9 @@ export function QrCodeDialog({
         try {
           await createAssetAsync(`file://${uri}`)
         } catch (e: unknown) {
-          Toast.show(
-            _(msg`An error occurred while saving the QR code!`),
-            'xmark',
-          )
+          Toast.show(_(msg`An error occurred while saving the QR code!`), {
+            type: 'error',
+          })
           logger.error('Failed to save QR code', {error: e})
           return
         }
@@ -176,7 +176,7 @@ export function QrCodeDialog({
                     style={[
                       a.w_full,
                       a.gap_md,
-                      web([a.flex_row, a.justify_center, a.flex_wrap]),
+                      gtMobile && [a.flex_row, a.justify_center, a.flex_wrap],
                     ]}>
                     <Button
                       label={_(msg`Copy QR code`)}
