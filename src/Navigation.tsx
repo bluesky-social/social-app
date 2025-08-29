@@ -16,6 +16,7 @@ import {
   NavigationContainer,
   StackActions,
 } from '@react-navigation/native'
+import {createNativeStackNavigator} from '@react-navigation/native-stack'
 
 import {timeout} from '#/lib/async/timeout'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
@@ -31,6 +32,7 @@ import {buildStateObject} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
   type BottomTabNavigatorParams,
+  type CoreNavigatorParams,
   type FlatNavigatorParams,
   type HomeTabNavigatorParams,
   type MessagesTabNavigatorParams,
@@ -39,7 +41,7 @@ import {
   type SearchTabNavigatorParams,
 } from '#/lib/routes/types'
 import {type RouteParams, type State} from '#/lib/routes/types'
-import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
+import {attachRouteToLogEvents, logEvent, useGate} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
@@ -71,6 +73,16 @@ import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {ForgotPasswordScreen} from '#/screens/Authentication/ForgotPasswordScreen'
+import {LandingScreen} from '#/screens/Authentication/LandingScreen'
+import {PasswordUpdatedScreen} from '#/screens/Authentication/PasswordUpdatedScreen'
+import {SelectAccountScreen} from '#/screens/Authentication/SelectAccountScreen'
+import {SetNewPasswordScreen} from '#/screens/Authentication/SetNewPasswordScreen'
+import {SignInScreen} from '#/screens/Authentication/SignInScreen'
+import {SignUpCaptchaScreen} from '#/screens/Authentication/SignUpCaptchaScreen'
+import {SignUpHandleScreen} from '#/screens/Authentication/SignUpHandleScreen'
+import {SignUpInfoScreen} from '#/screens/Authentication/SignUpInfoScreen'
+import {StarterPackLandingScreen} from '#/screens/Authentication/StarterPackLandingScreen'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import HashtagScreen from '#/screens/Hashtag'
 import {LogScreen} from '#/screens/Log'
@@ -136,10 +148,12 @@ import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {useAccountSwitcher} from './lib/hooks/useAccountSwitcher'
 import {useNonReactiveCallback} from './lib/hooks/useNonReactiveCallback'
 import {useLoggedOutViewControls} from './state/shell/logged-out'
+import {useLoggedOutView} from './state/shell/logged-out'
 import {useCloseAllActiveElements} from './state/util'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
+const Core = createNativeStackNavigator<CoreNavigatorParams>()
 const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
 const NotificationsTab =
@@ -767,6 +781,76 @@ const FlatNavigator = () => {
       {commonScreens(Flat, numUnread)}
     </Flat.Navigator>
   )
+}
+
+/**
+ * The core navigator on native handles authentication, switching between
+ * the main tab navigator when logged in and the auth screen when logged out.
+ */
+export const NativeNavigator = () => {
+  const t = useTheme()
+  const gate = useGate()
+  const {hasSession} = useSession()
+  const {showLoggedOut} = useLoggedOutView()
+
+  if (gate('new_auth_flow')) {
+    return (
+      <Core.Navigator screenOptions={screenOptions(t)}>
+        {hasSession && !showLoggedOut ? (
+          <Core.Screen
+            name="App"
+            getComponent={() => TabsNavigator}
+            options={{animation: 'fade', animationDuration: 200}}
+          />
+        ) : (
+          <>
+            <Core.Screen
+              name="Landing"
+              getComponent={() => LandingScreen}
+              options={{animation: 'fade', animationDuration: 200}}
+            />
+            <Core.Screen
+              name="StarterPackLanding"
+              getComponent={() => StarterPackLandingScreen}
+            />
+            <Core.Group>
+              <Core.Screen
+                name="SelectAccount"
+                getComponent={() => SelectAccountScreen}
+              />
+              <Core.Screen name="SignIn" getComponent={() => SignInScreen} />
+              <Core.Screen
+                name="ForgotPassword"
+                getComponent={() => ForgotPasswordScreen}
+              />
+              <Core.Screen
+                name="SetNewPassword"
+                getComponent={() => SetNewPasswordScreen}
+              />
+              <Core.Screen
+                name="PasswordUpdated"
+                getComponent={() => PasswordUpdatedScreen}
+              />
+              <Core.Screen
+                name="SignUpInfo"
+                getComponent={() => SignUpInfoScreen}
+              />
+              <Core.Screen
+                name="SignUpHandle"
+                getComponent={() => SignUpHandleScreen}
+              />
+              <Core.Screen
+                name="SignUpCaptcha"
+                getComponent={() => SignUpCaptchaScreen}
+              />
+            </Core.Group>
+          </>
+        )}
+      </Core.Navigator>
+    )
+  } else {
+    return <TabsNavigator />
+  }
 }
 
 /**
