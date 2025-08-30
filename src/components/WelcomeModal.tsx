@@ -3,6 +3,7 @@ import {Animated, ImageBackground, StyleSheet, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
@@ -23,6 +24,7 @@ interface WelcomeModalProps {
 export function WelcomeModal({control}: WelcomeModalProps) {
   const {_} = useLingui()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const {isMobile} = useWebMediaQueries()
   const fadeAnim = React.useRef(new Animated.Value(0)).current
 
   React.useEffect(() => {
@@ -82,7 +84,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
             <View style={styles.mainContent}>
               <Text
                 style={[
-                  a.text_4xl,
+                  isMobile ? a.text_3xl : a.text_4xl,
                   a.font_bold,
                   a.text_center,
                   styles.mainText,
@@ -91,7 +93,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
               </Text>
               <Text
                 style={[
-                  a.text_4xl,
+                  isMobile ? a.text_3xl : a.text_4xl,
                   a.font_bold,
                   a.text_center,
                   styles.mainText,
@@ -100,7 +102,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
               </Text>
               <Text
                 style={[
-                  a.text_4xl,
+                  isMobile ? a.text_3xl : a.text_4xl,
                   a.font_bold,
                   a.text_center,
                   styles.mainText,
