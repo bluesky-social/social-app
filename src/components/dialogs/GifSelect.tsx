@@ -147,10 +147,8 @@ function GifList({
           a.align_center,
           !gtMobile && web(a.gap_md),
           a.pb_sm,
+          t.atoms.bg,
         ]}>
-        {/* cover top corners */}
-        <View style={[a.absolute, a.inset_0, t.atoms.bg]} />
-
         {!gtMobile && isWeb && (
           <Button
             size="small"
