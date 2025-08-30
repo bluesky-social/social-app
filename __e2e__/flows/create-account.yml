@@ -32,6 +32,9 @@ appId: xyz.blueskyweb.app
     text: "Not Now"
     optional: true
 - inputText: "e2e-test"
+- extendedWaitUntil:
+    visible:
+        id: "handleAvailableCheck"
 - tapOn:
     id: "nextBtn"
-
+- assertVisible: "Give your profile a face"

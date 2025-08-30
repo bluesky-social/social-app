@@ -1,10 +1,6 @@
 import {useCallback} from 'react'
 import {Keyboard} from 'react-native'
-import {
-  type ImagePickerAsset,
-  launchImageLibraryAsync,
-  UIImagePickerPreferredAssetRepresentationMode,
-} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,8 +9,9 @@ import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
+import {openUnifiedPicker} from '#/lib/media/picker'
 import {extractDataUriMime} from '#/lib/media/util'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -448,18 +445,7 @@ export function SelectMediaButton({
     }
 
     const {assets, canceled} = await sheetWrapper(
-      launchImageLibraryAsync({
-        exif: false,
-        mediaTypes: ['images', 'videos'],
-        quality: 1,
-        allowsMultipleSelection: true,
-        legacy: true,
-        base64: isWeb,
-        selectionLimit: isIOS ? selectionCountRemaining : undefined,
-        preferredAssetRepresentationMode:
-          UIImagePickerPreferredAssetRepresentationMode.Current,
-        videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
-      }),
+      openUnifiedPicker({selectionCountRemaining}),
     )
 
     if (canceled) return

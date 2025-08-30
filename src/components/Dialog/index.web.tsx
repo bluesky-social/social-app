@@ -33,6 +33,9 @@ export * from '#/components/Dialog/types'
 export * from '#/components/Dialog/utils'
 export {Input} from '#/components/forms/TextField'
 
+// 100 minus 10vh of paddingVertical
+export const WEB_DIALOG_HEIGHT = '80vh'
+
 const stopPropagation = (e: any) => e.stopPropagation()
 const preventDefault = (e: any) => e.preventDefault()
 
@@ -215,9 +218,17 @@ export const InnerFlatList = React.forwardRef<
   FlatListProps<any> & {label: string} & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
+    footer?: React.ReactNode
   }
 >(function InnerFlatList(
-  {label, style, webInnerStyle, webInnerContentContainerStyle, ...props},
+  {
+    label,
+    style,
+    webInnerStyle,
+    webInnerContentContainerStyle,
+    footer,
+    ...props
+  },
   ref,
 ) {
   const {gtMobile} = useBreakpoints()
@@ -227,8 +238,7 @@ export const InnerFlatList = React.forwardRef<
       style={[
         a.overflow_hidden,
         a.px_0,
-        // 100 minus 10vh of paddingVertical
-        web({maxHeight: '80vh'}),
+        web({maxHeight: WEB_DIALOG_HEIGHT}),
         webInnerStyle,
       ]}
       contentContainerStyle={[a.h_full, a.px_0, webInnerContentContainerStyle]}>
@@ -237,9 +247,31 @@ export const InnerFlatList = React.forwardRef<
         style={[a.h_full, gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}
         {...props}
       />
+      {footer}
     </Inner>
   )
 })
+
+export function FlatListFooter({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.absolute,
+        a.bottom_0,
+        a.w_full,
+        a.z_10,
+        t.atoms.bg,
+        a.border_t,
+        t.atoms.border_contrast_low,
+        a.px_lg,
+        a.py_md,
+      ]}>
+      {children}
+    </View>
+  )
+}
 
 export function Close() {
   const {_} = useLingui()

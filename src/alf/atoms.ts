@@ -1016,6 +1016,9 @@ export const atoms = {
   block: web({
     display: 'block',
   }),
+  contents: web({
+    display: 'contents',
+  }),
 
   /*
    * Transition

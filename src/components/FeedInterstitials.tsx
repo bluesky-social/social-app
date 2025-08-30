@@ -29,7 +29,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-import {InlineLinkText} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -423,28 +423,28 @@ export function ProfileGrid({
 function SeeMoreSuggestedProfilesCard() {
   const t = useTheme()
   const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp>()
 
   return (
-    <Button
+    <Link
+      to="/search"
       color="primary"
       label={_(msg`Browse more accounts on the Explore page`)}
       style={[
         a.flex_col,
         a.align_center,
-        a.gap_xs,
+        a.justify_center,
+        a.gap_sm,
         a.p_md,
         a.rounded_lg,
         t.atoms.shadow_sm,
         {width: FINAL_CARD_WIDTH},
-      ]}
-      onPress={() => navigation.navigate('SearchTab')}>
+      ]}>
       <ButtonIcon icon={ArrowRight} size="lg" />
       <ButtonText
         style={[a.text_md, a.font_medium, a.leading_snug, a.text_center]}>
         <Trans>See more</Trans>
       </ButtonText>
-    </Button>
+    </Link>
   )
 }
 

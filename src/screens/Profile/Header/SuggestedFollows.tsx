@@ -28,7 +28,6 @@ export function AnimatedProfileHeaderSuggestedFollows({
   actorDid: string
 }) {
   const gate = useGate()
-  if (!gate('post_follow_profile_suggested_accounts')) return null
 
   /* NOTE (caidanw):
    * Android does not work well with this feature yet.
@@ -36,6 +35,8 @@ export function AnimatedProfileHeaderSuggestedFollows({
    * Blocking the ability to scroll on Android is too much of a trade-off for now.
    **/
   if (isAndroid) return null
+
+  if (!gate('post_follow_profile_suggested_accounts')) return null
 
   return (
     <AccordionAnimation isExpanded={isExpanded}>

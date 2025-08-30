@@ -1,7 +1,7 @@
 import {createServer as createHTTPServer} from 'node:http'
 import {parse} from 'node:url'
 
-import {createServer, TestPDS} from '../jest/test-pds'
+import {createServer, type TestPDS} from '../jest/test-pds'
 
 async function main() {
   let server: TestPDS
@@ -181,10 +181,10 @@ async function main() {
             'warn-profile',
             'warn-posts',
             'muted-account',
-            'muted-by-list-account',
+            'muted-by-list-acc',
             'blocking-account',
             'blockedby-account',
-            'mutual-block-account',
+            'mutual-block-acc',
           ]) {
             await server.mocker.createUser(user)
             await server.mocker.follow('alice', user)
@@ -411,16 +411,16 @@ async function main() {
           await server.mocker.addToMuteList(
             'alice',
             list,
-            server.mocker.users['muted-by-list-account'].did,
+            server.mocker.users['muted-by-list-acc'].did,
           )
-          await server.mocker.createPost('muted-by-list-account', 'muted post')
+          await server.mocker.createPost('muted-by-list-acc', 'muted post')
           await server.mocker.createQuotePost(
-            'muted-by-list-account',
+            'muted-by-list-acc',
             'account quote post',
             anchorPost,
           )
           await server.mocker.createReply(
-            'muted-by-list-account',
+            'muted-by-list-acc',
             'account reply',
             anchorPost,
           )
@@ -470,16 +470,16 @@ async function main() {
           )
 
           await server.mocker.createPost(
-            'mutual-block-account',
+            'mutual-block-acc',
             'mutual-block post',
           )
           await server.mocker.createQuotePost(
-            'mutual-block-account',
+            'mutual-block-acc',
             'mutual-block quote post',
             anchorPost,
           )
           await server.mocker.createReply(
-            'mutual-block-account',
+            'mutual-block-acc',
             'mutual-block reply',
             anchorPost,
           )
@@ -488,15 +488,15 @@ async function main() {
               repo: server.mocker.users.alice.did,
             },
             {
-              subject: server.mocker.users['mutual-block-account'].did,
+              subject: server.mocker.users['mutual-block-acc'].did,
               createdAt: new Date().toISOString(),
             },
           )
           await server.mocker.users[
-            'mutual-block-account'
+            'mutual-block-acc'
           ].agent.app.bsky.graph.block.create(
             {
-              repo: server.mocker.users['mutual-block-account'].did,
+              repo: server.mocker.users['mutual-block-acc'].did,
             },
             {
               subject: server.mocker.users.alice.did,
@@ -509,7 +509,16 @@ async function main() {
         }
       }
       console.log('Ready')
-      return res.writeHead(200).end(server.pdsUrl)
+      return res
+        .writeHead(200, {
+          'content-type': 'application/json',
+        })
+        .end(
+          JSON.stringify({
+            pdsUrl: server.pdsUrl,
+            appviewDid: server.appviewDid,
+          }),
+        )
     } catch (e) {
       console.error('Error!', e)
       return res.writeHead(500).end()

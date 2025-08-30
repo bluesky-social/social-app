@@ -11,7 +11,7 @@ export const RELEASE_VERSION: string =
   process.env.EXPO_PUBLIC_RELEASE_VERSION || packageJson.version
 
 /**
- * The env the app is running in e.g. development, testflight, production
+ * The env the app is running in e.g. development, testflight, production, e2e
  */
 export const ENV: string = process.env.EXPO_PUBLIC_ENV
 

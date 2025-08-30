@@ -268,6 +268,7 @@ export function StepProfile() {
         <OnboardingControls.Portal>
           <View style={[a.gap_md, gtMobile && a.flex_row_reverse]}>
             <Button
+              testID="onboardingContinue"
               variant="solid"
               color="primary"
               size="large"
@@ -279,6 +280,7 @@ export function StepProfile() {
               <ButtonIcon icon={ChevronRight} position="right" />
             </Button>
             <Button
+              testID="onboardingAvatarCreator"
               variant="ghost"
               color="primary"
               size="large"

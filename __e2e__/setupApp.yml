@@ -11,3 +11,8 @@ appId: xyz.blueskyweb.app
 - swipe:
    from: "Bluesky"
    direction: DOWN
+- tapOn:
+   id: e2eProxyHeaderInput
+- inputText: ${output.result}
+- pressKey: Enter
+- hideKeyboard

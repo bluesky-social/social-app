@@ -1,5 +1,5 @@
 import {AtUri, BskyAgent} from '@atproto/api'
-import {TestBsky, TestNetwork} from '@atproto/dev-env'
+import {type TestBsky, TestNetwork} from '@atproto/dev-env'
 import fs from 'fs'
 import net from 'net'
 import path from 'path'
@@ -13,6 +13,7 @@ export interface TestUser {
 }
 
 export interface TestPDS {
+  appviewDid: string
   pdsUrl: string
   mocker: Mocker
   close: () => Promise<void>
@@ -112,6 +113,7 @@ export async function createServer(
   )
 
   return {
+    appviewDid: testNet.bsky.serverDid,
     pdsUrl,
     mocker: new Mocker(testNet, pdsUrl, pic),
     async close() {

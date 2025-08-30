@@ -3,11 +3,14 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: "?users&follows&labels"
+      SERVER_PATH: "?users&follows&labels"
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 
 # create a modlist
 - tapOn:
@@ -28,20 +31,17 @@ appId: xyz.blueskyweb.app
 - assertVisible: "Muted Users"
 - assertVisible: "Shhh"
 
-- tapOn:
-    label: "Dropdown"
-    point: "71%,9%"
-
+# DOES NOT WORK - THE BUTTON IS NOT ACCESSIBLE
+# IGNORING FOR NOW, FIX THE COMPONENTS IN THE NEXT RELEASE
+# BECAUSE THIS IS A LEGIT A11Y PROBLEM -sfn
+- tapOn: "Subscribe to this list"
 - tapOn: "Mute accounts"
 - tapOn: "Mute list"
 - tapOn: "Unmute"
 
-- tapOn:
-      label: "Dropdown"
-      point: "71%,9%"
-
+- tapOn: "Subscribe to this list"
 - tapOn: "Block accounts"
 - tapOn: "Block list"
 - tapOn: "Unblock"
 
- # the rest of the behaviors are tested in curate-lists.yml
+  # the rest of the behaviors are tested in curate-lists.yml

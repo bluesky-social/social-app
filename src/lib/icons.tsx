@@ -7,17 +7,19 @@ export function MagnifyingGlassIcon({
   style,
   size,
   strokeWidth = 2,
+  color = 'currentColor',
 }: {
   style?: StyleProp<ViewStyle>
   size?: string | number
   strokeWidth?: number
+  color?: string
 }) {
   return (
     <Svg
       fill="none"
       viewBox="0 0 24 24"
       strokeWidth={strokeWidth}
-      stroke="currentColor"
+      stroke={color}
       width={size || 24}
       height={size || 24}
       style={style}>

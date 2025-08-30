@@ -13,13 +13,15 @@ import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {Portal} from '#/components/Portal'
+import {ENV} from '#/env'
 import {StepSuggestedAccounts} from './StepSuggestedAccounts'
 
 export function Onboarding() {
   const {_} = useLingui()
   const gate = useGate()
-  const showValueProp = gate('onboarding_value_prop')
-  const showSuggestedAccounts = gate('onboarding_suggested_accounts')
+  const showValueProp = ENV !== 'e2e' && gate('onboarding_value_prop')
+  const showSuggestedAccounts =
+    ENV !== 'e2e' && gate('onboarding_suggested_accounts')
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     totalSteps: showSuggestedAccounts ? 4 : 3,
