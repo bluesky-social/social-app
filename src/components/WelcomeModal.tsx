@@ -3,6 +3,7 @@ import {Animated, ImageBackground, StyleSheet, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, web} from '#/alf'
@@ -22,7 +23,15 @@ interface WelcomeModalProps {
 export function WelcomeModal({control}: WelcomeModalProps) {
   const {_} = useLingui()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
-  const fadeAnim = React.useRef(new Animated.Value(1)).current
+  const fadeAnim = React.useRef(new Animated.Value(0)).current
+
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 100,
+      useNativeDriver: true,
+    }).start()
+  }, [fadeAnim])
 
   const fadeOutAndClose = React.useCallback(
     (callback?: () => void) => {
@@ -39,16 +48,19 @@ export function WelcomeModal({control}: WelcomeModalProps) {
   )
 
   const onPressCreateAccount = React.useCallback(() => {
+    logEvent('welcomeModal:signupClicked', {})
     fadeOutAndClose(() => {
       requestSwitchToAccount({requestedAccount: 'new'})
     })
   }, [fadeOutAndClose, requestSwitchToAccount])
 
   const onPressExplore = React.useCallback(() => {
+    logEvent('welcomeModal:exploreClicked', {})
     fadeOutAndClose()
   }, [fadeOutAndClose])
 
   const onPressSignIn = React.useCallback(() => {
+    logEvent('welcomeModal:signinClicked', {})
     fadeOutAndClose(() => {
       requestSwitchToAccount({requestedAccount: 'existing'})
     })
@@ -59,7 +71,6 @@ export function WelcomeModal({control}: WelcomeModalProps) {
       <View style={styles.modalContainer}>
         <ImageBackground source={welcomeModalBg} style={styles.backgroundImage}>
           <View style={styles.container}>
-            {/* Header with Logo */}
             <View style={styles.header}>
               <View style={styles.logoContainer}>
                 <Logo width={24} />
@@ -68,8 +79,6 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 </Text>
               </View>
             </View>
-
-            {/* Main Content */}
             <View style={styles.mainContent}>
               <Text
                 style={[
@@ -99,27 +108,20 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 <Trans>Social media you control.</Trans>
               </Text>
             </View>
-
-            {/* Action Buttons */}
             <View style={styles.actionButtons}>
               <Button
                 onPress={onPressCreateAccount}
                 label={_(msg`Create account`)}
                 size="large"
-                variant="solid"
                 color="primary"
                 style={styles.createAccountButton}>
                 <ButtonText>
                   <Trans>Create account</Trans>
                 </ButtonText>
               </Button>
-
-              {/* Explore as link-style text */}
               <Text style={styles.exploreLink} onPress={onPressExplore}>
                 <Trans>Explore the app</Trans>
               </Text>
-
-              {/* Sign In Link */}
               <View style={styles.signInContainer}>
                 <Text style={[a.text_md, styles.signInText]}>
                   <Trans>Already have an account?</Trans>{' '}
@@ -140,12 +142,12 @@ const styles = StyleSheet.create({
   modalOverlay: {
     ...a.fixed,
     ...a.inset_0,
-    justifyContent: 'center',
-    alignItems: 'center',
+    ...a.justify_center,
+    ...a.align_center,
     zIndex: 9999,
     backgroundColor: 'rgba(0,0,0,0.2)',
     ...web({
-      backdropFilter: 'blur(10px)',
+      backdropFilter: 'blur(15px)',
     }),
   },
   modalContainer: {
@@ -153,74 +155,82 @@ const styles = StyleSheet.create({
     maxHeight: 600,
     width: '90%',
     height: '90%',
-    borderRadius: 16,
-    overflow: 'hidden',
+    ...a.rounded_lg,
+    ...a.overflow_hidden,
     backgroundColor: '#C0DCF0',
   },
   backgroundImage: {
-    flex: 1,
+    ...a.flex_1,
     resizeMode: 'cover',
-    justifyContent: 'center',
+    ...a.justify_center,
   },
   container: {
-    gap: 24,
-    alignItems: 'center',
-    padding: 32,
+    ...a.gap_2xl,
+    ...a.align_center,
+    ...a.p_4xl,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    padding: 0,
-    userSelect: 'none',
+    ...a.flex_row,
+    ...a.align_center,
+    ...a.justify_center,
+    ...a.w_full,
+    ...a.p_0,
+    ...web({
+      userSelect: 'none',
+    }),
   },
   headerText: {
     color: '#354358',
   },
   logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
+    ...a.flex_row,
+    ...a.align_center,
+    ...a.gap_xs,
   },
   mainContent: {
-    gap: 10,
-    alignItems: 'center',
-    paddingTop: 48,
-    paddingBottom: 48,
+    ...a.gap_sm,
+    ...a.align_center,
+    ...a.pt_5xl,
+    ...a.pb_5xl,
   },
   mainText: {
     color: '#354358',
-    fontWeight: '500',
-    textAlign: 'center',
+    ...a.font_medium,
+    ...a.text_center,
   },
   actionButtons: {
-    gap: 16,
-    alignItems: 'center',
-    userSelect: 'none',
+    ...a.gap_lg,
+    ...a.align_center,
+    ...web({
+      userSelect: 'none',
+    }),
   },
   createAccountButton: {
     width: 200,
     backgroundColor: '#006AFF',
   },
   exploreLink: {
-    fontSize: 16,
+    ...a.text_md,
     color: '#006AFF',
-    textDecorationLine: 'none',
-    fontWeight: '500',
+    ...web({
+      textDecorationLine: 'none',
+    }),
+    ...a.font_medium,
   },
   signInContainer: {
-    alignItems: 'center',
-    paddingTop: 8,
-    padding: 0,
+    ...a.align_center,
+    ...a.pt_sm,
+    ...a.p_0,
   },
   signInText: {
     color: '#1a1a1a',
-    textDecorationLine: 'none',
+    ...web({
+      textDecorationLine: 'none',
+    }),
   },
   signInLink: {
     color: '#006AFF',
-    fontWeight: '500',
+    ...a.font_medium,
     fontSize: undefined,
   },
 })

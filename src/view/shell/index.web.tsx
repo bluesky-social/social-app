@@ -8,6 +8,7 @@ import {RemoveScrollBar} from 'react-remove-scroll-bar'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {useGeolocation} from '#/state/geolocation'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
@@ -45,6 +46,7 @@ function ShellInner() {
   const [showDrawerDelayedExit, setShowDrawerDelayedExit] = useState(showDrawer)
   const {state: policyUpdateState} = usePolicyUpdateContext()
   const welcomeModalControl = useWelcomeModal()
+  const gate = useGate()
 
   useLayoutEffect(() => {
     if (showDrawer !== showDrawerDelayedExit) {
@@ -82,7 +84,9 @@ function ShellInner() {
       <AgeAssuranceRedirectDialog />
       <LinkWarningDialog />
       <Lightbox />
-      {welcomeModalControl.isOpen && (
+
+      {/* Show welcome modal if the gate is enabled */}
+      {welcomeModalControl.isOpen && gate('welcome_modal') && (
         <WelcomeModal control={welcomeModalControl} />
       )}
 
