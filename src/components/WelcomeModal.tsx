@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     ...a.p_0,
   },
   signInText: {
-    color: '#1a1a1a',
+    color: '#405168',
     ...web({
       textDecorationLine: 'none',
     }),
