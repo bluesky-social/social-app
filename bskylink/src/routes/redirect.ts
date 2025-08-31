@@ -54,7 +54,7 @@ export default function (ctx: AppContext, app: Express) {
         if (rule !== 'ok') {
           switch (rule.action) {
             case 'whitelist':
-              redirectLogger.info(`Whitelist rule matched for ${rule.url}`)
+              redirectLogger.info({rule}, 'Whitelist rule matched')
               break
             case 'block':
               html = linkWarningLayout(
@@ -65,7 +65,7 @@ export default function (ctx: AppContext, app: Express) {
                 }),
               )
               res.setHeader('Cache-Control', 'no-store')
-              redirectLogger.info(`Block rule matched for ${rule.url}`)
+              redirectLogger.info({rule}, 'Block rule matched')
               break
             case 'warn':
               html = linkWarningLayout(
@@ -76,12 +76,10 @@ export default function (ctx: AppContext, app: Express) {
                 }),
               )
               res.setHeader('Cache-Control', 'no-store')
-              redirectLogger.info(`Warn rule matched for ${rule.url}`)
+              redirectLogger.info({rule}, 'Warn rule matched')
               break
             default:
-              redirectLogger.warn(
-                `${rule.action} rule (an unknown rule) matched for ${rule.url}`,
-              )
+              redirectLogger.warn({rule}, 'Unknown rule matched')
           }
         }
       }

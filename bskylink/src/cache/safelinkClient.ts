@@ -52,12 +52,9 @@ export class SafelinkClient {
         {error: e, inputUrl: link},
         'failed to normalize looked up link',
       )
-
+      // fail open
       return 'ok'
     }
-
-    redirectLogger.info(url)
-    redirectLogger.info(domain)
 
     const urlRule = this.urlCache.get(url)
     if (urlRule) {
