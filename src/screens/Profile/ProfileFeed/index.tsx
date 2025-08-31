@@ -169,7 +169,7 @@ export function ProfileFeedScreenInner({
   const [hasNew, setHasNew] = React.useState(false)
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const queryClient = useQueryClient()
-  const feedFeedback = useFeedFeedback(feed, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useAnimatedRef() as ListRef
 
   const onScrollToTop = useCallback(() => {

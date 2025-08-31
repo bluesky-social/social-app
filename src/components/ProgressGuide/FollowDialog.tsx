@@ -1,17 +1,9 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {
-  ScrollView,
-  type StyleProp,
-  TextInput,
-  useWindowDimensions,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import {TextInput, useWindowDimensions, View} from 'react-native'
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -28,7 +20,6 @@ import {
 import {
   atoms as a,
   native,
-  tokens,
   useBreakpoints,
   useTheme,
   type ViewStyleProp,
@@ -40,6 +31,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -337,12 +329,13 @@ let Header = ({
           }}
           onEscape={control.close}
         />
-        <Tabs
+        <InterestTabs
           onSelectTab={onSelectTab}
           interests={interests}
           selectedInterest={selectedInterest}
-          hasSearchText={!!searchText}
+          disabled={!!searchText}
           interestsDisplayNames={interestsDisplayNames}
+          TabComponent={Tab}
         />
       </View>
     </View>
@@ -403,99 +396,6 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
   )
 }
 
-let Tabs = ({
-  onSelectTab,
-  interests,
-  selectedInterest,
-  hasSearchText,
-  interestsDisplayNames,
-  TabComponent = Tab,
-  contentContainerStyle,
-}: {
-  onSelectTab: (tab: string) => void
-  interests: string[]
-  selectedInterest: string
-  hasSearchText: boolean
-  interestsDisplayNames: Record<string, string>
-  TabComponent?: React.ComponentType<React.ComponentProps<typeof Tab>>
-  contentContainerStyle?: StyleProp<ViewStyle>
-}): React.ReactNode => {
-  const listRef = useRef<ScrollView>(null)
-  const [totalWidth, setTotalWidth] = useState(0)
-  const pendingTabOffsets = useRef<{x: number; width: number}[]>([])
-  const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
-
-  const onInitialLayout = useNonReactiveCallback(() => {
-    const index = interests.indexOf(selectedInterest)
-    scrollIntoViewIfNeeded(index)
-  })
-
-  useEffect(() => {
-    if (tabOffsets) {
-      onInitialLayout()
-    }
-  }, [tabOffsets, onInitialLayout])
-
-  function scrollIntoViewIfNeeded(index: number) {
-    const btnLayout = tabOffsets[index]
-    if (!btnLayout) return
-    listRef.current?.scrollTo({
-      // centered
-      x: btnLayout.x - (totalWidth / 2 - btnLayout.width / 2),
-      animated: true,
-    })
-  }
-
-  function handleSelectTab(index: number) {
-    const tab = interests[index]
-    onSelectTab(tab)
-    scrollIntoViewIfNeeded(index)
-  }
-
-  function handleTabLayout(index: number, x: number, width: number) {
-    if (!tabOffsets.length) {
-      pendingTabOffsets.current[index] = {x, width}
-      if (pendingTabOffsets.current.length === interests.length) {
-        setTabOffsets(pendingTabOffsets.current)
-      }
-    }
-  }
-
-  return (
-    <ScrollView
-      ref={listRef}
-      horizontal
-      contentContainerStyle={[a.gap_sm, a.px_lg, contentContainerStyle]}
-      showsHorizontalScrollIndicator={false}
-      decelerationRate="fast"
-      snapToOffsets={
-        tabOffsets.length === interests.length
-          ? tabOffsets.map(o => o.x - tokens.space.xl)
-          : undefined
-      }
-      onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
-      scrollEventThrottle={200} // big throttle
-    >
-      {interests.map((interest, i) => {
-        const active = interest === selectedInterest && !hasSearchText
-        return (
-          <TabComponent
-            key={interest}
-            onSelectTab={handleSelectTab}
-            active={active}
-            index={i}
-            interest={interest}
-            interestsDisplayName={interestsDisplayNames[interest]}
-            onLayout={handleTabLayout}
-          />
-        )
-      })}
-    </ScrollView>
-  )
-}
-Tabs = memo(Tabs)
-export {Tabs}
-
 let Tab = ({
   onSelectTab,
   interest,
@@ -513,24 +413,36 @@ let Tab = ({
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
-  const activeText = active ? _(msg` (active)`) : ''
+  const label = active
+    ? _(
+        msg({
+          message: `Search for "${interestsDisplayName}" (active)`,
+          comment:
+            'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.',
+        }),
+      )
+    : _(
+        msg({
+          message: `Search for "${interestsDisplayName}"`,
+          comment:
+            'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.',
+        }),
+      )
   return (
     <View
       key={interest}
       onLayout={e =>
         onLayout(index, e.nativeEvent.layout.x, e.nativeEvent.layout.width)
       }>
-      <Button
-        label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
-        onPress={() => onSelectTab(index)}>
-        {({hovered, pressed, focused}) => (
+      <Button label={label} onPress={() => onSelectTab(index)}>
+        {({hovered, pressed}) => (
           <View
             style={[
               a.rounded_full,
               a.px_lg,
               a.py_sm,
               a.border,
-              active || hovered || pressed || focused
+              active || hovered || pressed
                 ? [
                     t.atoms.bg_contrast_25,
                     {borderColor: t.atoms.bg_contrast_25.backgroundColor},
@@ -540,7 +452,7 @@ let Tab = ({
             <Text
               style={[
                 a.font_medium,
-                active || hovered || pressed || focused
+                active || hovered || pressed
                   ? t.atoms.text
                   : t.atoms.text_contrast_medium,
               ]}>
@@ -758,14 +670,4 @@ function Empty({message}: {message: string}) {
       <Text style={[a.text_xs, t.atoms.text_contrast_low]}>(╯°□°)╯︵ ┻━┻</Text>
     </View>
   )
-}
-
-export function boostInterests(boosts?: string[]) {
-  return (_a: string, _b: string) => {
-    const indexA = boosts?.indexOf(_a) ?? -1
-    const indexB = boosts?.indexOf(_b) ?? -1
-    const rankA = indexA === -1 ? Infinity : indexA
-    const rankB = indexB === -1 ? Infinity : indexB
-    return rankA - rankB
-  }
 }

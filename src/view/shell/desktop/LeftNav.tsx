@@ -236,6 +236,7 @@ function SwitchMenuItems({
     setShowLoggedOut(true)
     closeEverything()
   }
+
   return (
     <Menu.Outer>
       {accounts && accounts.length > 0 && (
@@ -255,6 +256,7 @@ function SwitchMenuItems({
           <Menu.Divider />
         </>
       )}
+      <SwitcherMenuProfileLink />
       <Menu.Item
         label={_(msg`Add another account`)}
         onPress={onAddAnotherAccount}>
@@ -270,6 +272,56 @@ function SwitchMenuItems({
         </Menu.ItemText>
       </Menu.Item>
     </Menu.Outer>
+  )
+}
+
+function SwitcherMenuProfileLink() {
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
+  const navigation = useNavigation()
+  const context = Menu.useMenuContext()
+  const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/'
+  const [pathName] = useMemo(() => router.matchPath(profileLink), [profileLink])
+  const currentRouteInfo = useNavigationState(state => {
+    if (!state) {
+      return {name: 'Home'}
+    }
+    return getCurrentRoute(state)
+  })
+  let isCurrent =
+    currentRouteInfo.name === 'Profile'
+      ? isTab(currentRouteInfo.name, pathName) &&
+        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+          currentAccount?.handle
+      : isTab(currentRouteInfo.name, pathName)
+  const onProfilePress = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) {
+        return
+      }
+      e.preventDefault()
+      context.control.close()
+      if (isCurrent) {
+        emitSoftReset()
+      } else {
+        const [screen, params] = router.matchPath(profileLink)
+        // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
+        navigation.navigate(screen, params, {pop: true})
+      }
+    },
+    [navigation, profileLink, isCurrent, context],
+  )
+  return (
+    <Menu.Item
+      label={_(msg`Go to profile`)}
+      // @ts-expect-error The function signature differs on web -inb
+      onPress={onProfilePress}
+      href={profileLink}>
+      <Menu.ItemIcon icon={UserCircle} />
+      <Menu.ItemText>
+        <Trans>Go to profile</Trans>
+      </Menu.ItemText>
+    </Menu.Item>
   )
 }
 

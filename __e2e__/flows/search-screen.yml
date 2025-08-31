@@ -3,20 +3,22 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: "?users"
+      SERVER_PATH: "?users"
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
 
 # Navigate to another user profile via autocomplete
+- extendedWaitUntil:
+    visible:
+      id: "bottomBarSearchBtn"
 - tapOn:
     id: "bottomBarSearchBtn"
-- assertVisible: "Search for posts, users, or feeds"
-- tapOn: "Search for posts, users, or feeds"
+- assertVisible: "Search for posts, users[,]? or feeds"
+- tapOn: "Search for posts, users[,]? or feeds"
 - inputText: "b"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"
 - assertVisible:
     id: "profileView"
-

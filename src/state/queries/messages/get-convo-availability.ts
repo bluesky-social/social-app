@@ -1,6 +1,6 @@
 import {useQuery} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useAgent} from '#/state/session'
 import {STALE} from '..'
 

@@ -1,6 +1,9 @@
 import {type Insets, Platform} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 
+import {type ProxyHeaderValue} from '#/state/session/agent'
+import {BLUESKY_PROXY_DID, CHAT_PROXY_DID} from '#/env'
+
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
@@ -89,8 +92,6 @@ export const STAGING_FEEDS = [
   `feedgen|${STAGING_DEFAULT_FEED('whats-hot')}`,
   `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ]
-
-export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
 export const POST_IMG_MAX = {
   width: 2000,
@@ -212,6 +213,20 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
+
+// temp hack for e2e - esb
+export let BLUESKY_PROXY_HEADER: ProxyHeaderValue = `${BLUESKY_PROXY_DID}#bsky_appview`
+export function setBlueskyProxyHeader(header: ProxyHeaderValue) {
+  BLUESKY_PROXY_HEADER = header
+}
+
+export const BLUESKY_SERVICE_HEADERS = {
+  'atproto-proxy': BLUESKY_PROXY_HEADER,
+}
+
+export const DM_SERVICE_HEADERS = {
+  'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
+}
 
 export const webLinks = {
   tos: `https://bsky.social/about/support/tos`,

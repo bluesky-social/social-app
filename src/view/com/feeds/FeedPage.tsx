@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {VIDEO_FEED_URIS} from '#/lib/constants'
+import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {ComposeIcon2} from '#/lib/icons'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
@@ -17,9 +17,12 @@ import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useSetHomeBadge} from '#/state/home-badge'
-import {type SavedFeedSourceInfo} from '#/state/queries/feed'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {type FeedDescriptor, type FeedParams} from '#/state/queries/post-feed'
+import {type FeedSourceInfo} from '#/state/queries/feed'
+import {
+  type FeedDescriptor,
+  type FeedParams,
+  RQKEY as FEED_RQKEY,
+} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -51,7 +54,7 @@ export function FeedPage({
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
-  feedInfo: SavedFeedSourceInfo
+  feedInfo: FeedSourceInfo
 }) {
   const {hasSession} = useSession()
   const {_} = useLingui()
@@ -61,7 +64,7 @@ export function FeedPage({
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
   const headerOffset = useHeaderOffset()
-  const feedFeedback = useFeedFeedback(feed, hasSession)
+  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
   const [hasNew, setHasNew] = useState(false)
   const setHomeBadge = useSetHomeBadge()
@@ -127,8 +130,12 @@ export function FeedPage({
   }, [scrollToTop, feed, queryClient])
 
   const shouldPrefetch = isNative && isPageAdjacent
+  const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI
   return (
-    <View testID={testID}>
+    <View
+      testID={testID}
+      // @ts-expect-error web only -sfn
+      dataSet={{nosnippet: isDiscoverFeed ? '' : undefined}}>
       <MainScrollProvider>
         <FeedFeedbackProvider value={feedFeedback}>
           <PostFeed

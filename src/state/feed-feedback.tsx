@@ -10,15 +10,57 @@ import {AppState, type AppStateStatus} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
-import {FEEDBACK_FEEDS, STAGING_FEEDS} from '#/lib/constants'
+import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
+import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {logEvent} from '#/lib/statsig/statsig'
 import {Logger} from '#/logger'
+import {
+  type FeedSourceFeedInfo,
+  type FeedSourceInfo,
+  isFeedSourceFeedInfo,
+} from '#/state/queries/feed'
 import {
   type FeedDescriptor,
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAgent} from './session'
+
+export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
+
+export const PASSIVE_FEEDBACK_INTERACTIONS = [
+  'app.bsky.feed.defs#clickthroughItem',
+  'app.bsky.feed.defs#clickthroughAuthor',
+  'app.bsky.feed.defs#clickthroughReposter',
+  'app.bsky.feed.defs#clickthroughEmbed',
+  'app.bsky.feed.defs#interactionSeen',
+] as const
+
+export type PassiveFeedbackInteraction =
+  (typeof PASSIVE_FEEDBACK_INTERACTIONS)[number]
+
+export const DIRECT_FEEDBACK_INTERACTIONS = [
+  'app.bsky.feed.defs#requestLess',
+  'app.bsky.feed.defs#requestMore',
+] as const
+
+export type DirectFeedbackInteraction =
+  (typeof DIRECT_FEEDBACK_INTERACTIONS)[number]
+
+export const ALL_FEEDBACK_INTERACTIONS = [
+  ...PASSIVE_FEEDBACK_INTERACTIONS,
+  ...DIRECT_FEEDBACK_INTERACTIONS,
+] as const
+
+export type FeedbackInteraction = (typeof ALL_FEEDBACK_INTERACTIONS)[number]
+
+export function isFeedbackInteraction(
+  interactionEvent: string,
+): interactionEvent is FeedbackInteraction {
+  return ALL_FEEDBACK_INTERACTIONS.includes(
+    interactionEvent as FeedbackInteraction,
+  )
+}
 
 const logger = Logger.create(Logger.Context.FeedFeedback)
 
@@ -27,6 +69,7 @@ export type StateContext = {
   onItemSeen: (item: any) => void
   sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
   feedDescriptor: FeedDescriptor | undefined
+  feedSourceInfo: FeedSourceInfo | undefined
 }
 
 const stateContext = createContext<StateContext>({
@@ -34,15 +77,27 @@ const stateContext = createContext<StateContext>({
   onItemSeen: (_item: any) => {},
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
   feedDescriptor: undefined,
+  feedSourceInfo: undefined,
 })
 stateContext.displayName = 'FeedFeedbackContext'
 
 export function useFeedFeedback(
-  feed: FeedDescriptor | undefined,
+  feedSourceInfo: FeedSourceInfo | undefined,
   hasSession: boolean,
 ) {
   const agent = useAgent()
-  const enabled = isDiscoverFeed(feed) && hasSession
+
+  const feed =
+    !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo)
+      ? feedSourceInfo
+      : undefined
+
+  const isDiscover = isDiscoverFeed(feed?.feedDescriptor)
+  const acceptsInteractions = Boolean(isDiscover || feed?.acceptsInteractions)
+  const proxyDid = feed?.view?.did
+  const enabled =
+    Boolean(feed) && Boolean(proxyDid) && acceptsInteractions && hasSession
+  const enabledInteractions = getEnabledInteractions(enabled, feed, isDiscover)
 
   const queue = useRef<Set<string>>(new Set())
   const history = useRef<
@@ -65,35 +120,45 @@ export function useFeedFeedback(
     const interactions = Array.from(queue.current).map(toInteraction)
     queue.current.clear()
 
-    let proxyDid = 'did:web:discover.bsky.app'
-    if (STAGING_FEEDS.includes(feed ?? '')) {
-      proxyDid = 'did:web:algo.pop2.bsky.app'
+    const interactionsToSend = interactions.filter(
+      interaction =>
+        interaction.event &&
+        isFeedbackInteraction(interaction.event) &&
+        enabledInteractions.includes(interaction.event),
+    )
+
+    if (interactionsToSend.length === 0) {
+      return
     }
 
     // Send to the feed
     agent.app.bsky.feed
       .sendInteractions(
-        {interactions},
+        {interactions: interactionsToSend},
         {
           encoding: 'application/json',
           headers: {
-            // TODO when we start sending to other feeds, we need to grab their DID -prf
             'atproto-proxy': `${proxyDid}#bsky_fg`,
           },
         },
       )
       .catch((e: any) => {
-        logger.warn('Failed to send feed interactions', {error: e})
+        if (!isNetworkError(e)) {
+          logger.warn('Failed to send feed interactions', {error: e})
+        }
       })
 
     // Send to Statsig
     if (aggregatedStats.current === null) {
       aggregatedStats.current = createAggregatedStats()
     }
-    sendOrAggregateInteractionsForStats(aggregatedStats.current, interactions)
+    sendOrAggregateInteractionsForStats(
+      aggregatedStats.current,
+      interactionsToSend,
+    )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, feed])
+  }, [agent, throttledFlushAggregatedStats, proxyDid, enabledInteractions])
 
   const sendToFeed = useMemo(
     () =>
@@ -165,7 +230,8 @@ export function useFeedFeedback(
       // call on various events
       // queues the event to be sent with the throttled sendToFeed call
       sendInteraction,
-      feedDescriptor: feed,
+      feedDescriptor: feed?.feedDescriptor,
+      feedSourceInfo: typeof feed === 'object' ? feed : undefined,
     }
   }, [enabled, onItemSeen, sendInteraction, feed])
 }
@@ -181,8 +247,19 @@ export function useFeedFeedbackContext() {
 // take advantage of the feed feedback API. Until that's in
 // place, we're hardcoding it to the discover feed.
 // -prf
-function isDiscoverFeed(feed?: FeedDescriptor) {
+export function isDiscoverFeed(feed?: FeedDescriptor) {
   return !!feed && FEEDBACK_FEEDS.includes(feed)
+}
+
+function getEnabledInteractions(
+  enabled: boolean,
+  feed: FeedSourceFeedInfo | undefined,
+  isDiscover: boolean,
+): readonly FeedbackInteraction[] {
+  if (!enabled || !feed) {
+    return []
+  }
+  return isDiscover ? ALL_FEEDBACK_INTERACTIONS : DIRECT_FEEDBACK_INTERACTIONS
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {

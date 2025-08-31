@@ -1,10 +1,6 @@
 import {useCallback} from 'react'
 import {Keyboard} from 'react-native'
-import {
-  type ImagePickerAsset,
-  launchImageLibraryAsync,
-  UIImagePickerPreferredAssetRepresentationMode,
-} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,8 +9,9 @@ import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
+import {openUnifiedPicker} from '#/lib/media/picker'
 import {extractDataUriMime} from '#/lib/media/util'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {MAX_IMAGES} from '#/view/com/composer/state/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
@@ -410,7 +407,7 @@ export function SelectMediaButton({
             msg`You can only select one GIF at a time.`,
           ),
           [SelectedAssetError.FileTooBig]: _(
-            msg`One or more of your selected files is too large. Maximum size is 100 MB.`,
+            msg`One or more of your selected files are too large. Maximum size is 100 MB.`,
           ),
         }[error]
       })
@@ -448,18 +445,7 @@ export function SelectMediaButton({
     }
 
     const {assets, canceled} = await sheetWrapper(
-      launchImageLibraryAsync({
-        exif: false,
-        mediaTypes: ['images', 'videos'],
-        quality: 1,
-        allowsMultipleSelection: true,
-        legacy: true,
-        base64: isWeb,
-        selectionLimit: isIOS ? selectionCountRemaining : undefined,
-        preferredAssetRepresentationMode:
-          UIImagePickerPreferredAssetRepresentationMode.Current,
-        videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
-      }),
+      openUnifiedPicker({selectionCountRemaining}),
     )
 
     if (canceled) return
@@ -481,34 +467,17 @@ export function SelectMediaButton({
       label={_(
         msg({
           message: `Add media to post`,
-          comment: `Accessibility label for button in composer to add photos or a video to a post`,
+          comment: `Accessibility label for button in composer to add images, a video, or a GIF to a post`,
         }),
       )}
-      accessibilityHint={
-        isNative
-          ? _(
-              msg({
-                message: `Opens device gallery to select up to ${plural(
-                  MAX_IMAGES,
-                  {
-                    other: '# images',
-                  },
-                )}, or a single video.`,
-                comment: `Accessibility hint on native for button in composer to add images or a video to a post. Maximum number of images that can be selected is currently 4 but may change.`,
-              }),
-            )
-          : _(
-              msg({
-                message: `Opens device gallery to select up to ${plural(
-                  MAX_IMAGES,
-                  {
-                    other: '# images',
-                  },
-                )}, or a single video or GIF.`,
-                comment: `Accessibility hint on web for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
-              }),
-            )
-      }
+      accessibilityHint={_(
+        msg({
+          message: `Opens device gallery to select up to ${plural(MAX_IMAGES, {
+            other: '# images',
+          })}, or a single video or GIF.`,
+          comment: `Accessibility hint for button in composer to add images, a video, or a GIF to a post. Maximum number of images that can be selected is currently 4 but may change.`,
+        }),
+      )}
       style={a.p_sm}
       variant="ghost"
       shape="round"

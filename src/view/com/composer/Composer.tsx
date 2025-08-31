@@ -40,19 +40,20 @@ import Animated, {
   ZoomIn,
   ZoomOut,
 } from 'react-native-reanimated'
-import {RootSiblingParent} from 'react-native-root-siblings'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
   AppBskyUnspeccedDefs,
+  AtUri,
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
@@ -71,6 +72,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
+import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
@@ -108,14 +110,11 @@ import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
-import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
+import {SelectPostLanguagesBtn} from '#/view/com/composer/select-language/SelectPostLanguagesDialog'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
-import {
-  TextInput,
-  type TextInputRef,
-} from '#/view/com/composer/text-input/TextInput'
+import {TextInput} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
@@ -129,7 +128,7 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
-import * as toast from '#/components/Toast'
+import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
@@ -153,6 +152,7 @@ import {
   processVideo,
   type VideoState,
 } from './state/video'
+import {type TextInputRef} from './text-input/TextInput.types'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
@@ -189,6 +189,7 @@ export const ComposePost = ({
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
+  const navigation = useNavigation<NavigationProp>()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
@@ -303,7 +304,9 @@ export const ComposePost = ({
   )
 
   const onPressCancel = useCallback(() => {
-    if (
+    if (textInput.current?.maybeClosePopup()) {
+      return
+    } else if (
       thread.posts.some(
         post =>
           post.shortenedGraphemeLength > 0 ||
@@ -522,12 +525,29 @@ export const ComposePost = ({
       onPostSuccess?.(postSuccessData)
     }
     onClose()
-    toast.show(
-      thread.posts.length > 1
-        ? _(msg`Your posts have been published`)
-        : replyTo
-          ? _(msg`Your reply has been published`)
-          : _(msg`Your post has been published`),
+    Toast.show(
+      <Toast.Outer>
+        <Toast.Icon />
+        <Toast.Text>
+          {thread.posts.length > 1
+            ? _(msg`Your posts were sent`)
+            : replyTo
+              ? _(msg`Your reply was sent`)
+              : _(msg`Your post was sent`)}
+        </Toast.Text>
+        {postUri && (
+          <Toast.Action
+            label={_(msg`View post`)}
+            onPress={() => {
+              const {host: name, rkey} = new AtUri(postUri)
+              navigation.navigate('PostThread', {name, rkey})
+            }}>
+            <Trans context="Action to view the post the user just created">
+              View
+            </Trans>
+          </Toast.Action>
+        )}
+      </Toast.Outer>,
       {type: 'success'},
     )
   }, [
@@ -544,6 +564,7 @@ export const ComposePost = ({
     replyTo,
     setLangPrefs,
     queryClient,
+    navigation,
   ])
 
   // Preserves the referential identity passed to each post item.
@@ -663,88 +684,84 @@ export const ComposePost = ({
   const isWebFooterSticky = !isNative && thread.posts.length > 1
   return (
     <BottomSheetPortalProvider>
-      <RootSiblingParent>
-        <KeyboardAvoidingView
-          testID="composePostView"
-          behavior={isIOS ? 'padding' : 'height'}
-          keyboardVerticalOffset={keyboardVerticalOffset}
-          style={a.flex_1}>
-          <View
-            style={[a.flex_1, viewStyles]}
-            aria-modal
-            accessibilityViewIsModal>
-            <RootSiblingParent>
-              <ComposerTopBar
-                canPost={canPost}
-                isReply={!!replyTo}
-                isPublishQueued={publishOnUpload}
-                isPublishing={isPublishing}
-                isThread={thread.posts.length > 1}
-                publishingStage={publishingStage}
-                topBarAnimatedStyle={topBarAnimatedStyle}
-                onCancel={onPressCancel}
-                onPublish={onPressPublish}>
-                {missingAltError && <AltTextReminder error={missingAltError} />}
-                <ErrorBanner
-                  error={error}
-                  videoState={erroredVideo}
-                  clearError={() => setError('')}
-                  clearVideo={
-                    erroredVideoPostId
-                      ? () => clearVideo(erroredVideoPostId)
-                      : () => {}
-                  }
+      <KeyboardAvoidingView
+        testID="composePostView"
+        behavior={isIOS ? 'padding' : 'height'}
+        keyboardVerticalOffset={keyboardVerticalOffset}
+        style={a.flex_1}>
+        <View
+          style={[a.flex_1, viewStyles]}
+          aria-modal
+          accessibilityViewIsModal>
+          <ComposerTopBar
+            canPost={canPost}
+            isReply={!!replyTo}
+            isPublishQueued={publishOnUpload}
+            isPublishing={isPublishing}
+            isThread={thread.posts.length > 1}
+            publishingStage={publishingStage}
+            topBarAnimatedStyle={topBarAnimatedStyle}
+            onCancel={onPressCancel}
+            onPublish={onPressPublish}>
+            {missingAltError && <AltTextReminder error={missingAltError} />}
+            <ErrorBanner
+              error={error}
+              videoState={erroredVideo}
+              clearError={() => setError('')}
+              clearVideo={
+                erroredVideoPostId
+                  ? () => clearVideo(erroredVideoPostId)
+                  : () => {}
+              }
+            />
+          </ComposerTopBar>
+
+          <Animated.ScrollView
+            ref={scrollViewRef}
+            layout={native(LinearTransition)}
+            onScroll={scrollHandler}
+            contentContainerStyle={a.flex_grow}
+            style={a.flex_1}
+            keyboardShouldPersistTaps="always"
+            onContentSizeChange={onScrollViewContentSizeChange}
+            onLayout={onScrollViewLayout}>
+            {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
+            {thread.posts.map((post, index) => (
+              <React.Fragment key={post.id}>
+                <ComposerPost
+                  post={post}
+                  dispatch={composerDispatch}
+                  textInput={post.id === activePost.id ? textInput : null}
+                  isFirstPost={index === 0}
+                  isLastPost={index === thread.posts.length - 1}
+                  isPartOfThread={thread.posts.length > 1}
+                  isReply={index > 0 || !!replyTo}
+                  isActive={post.id === activePost.id}
+                  canRemovePost={thread.posts.length > 1}
+                  canRemoveQuote={index > 0 || !initQuote}
+                  onSelectVideo={selectVideo}
+                  onClearVideo={clearVideo}
+                  onPublish={onComposerPostPublish}
+                  onError={setError}
                 />
-              </ComposerTopBar>
+                {isWebFooterSticky && post.id === activePost.id && (
+                  <View style={styles.stickyFooterWeb}>{footer}</View>
+                )}
+              </React.Fragment>
+            ))}
+          </Animated.ScrollView>
+          {!isWebFooterSticky && footer}
+        </View>
 
-              <Animated.ScrollView
-                ref={scrollViewRef}
-                layout={native(LinearTransition)}
-                onScroll={scrollHandler}
-                contentContainerStyle={a.flex_grow}
-                style={a.flex_1}
-                keyboardShouldPersistTaps="always"
-                onContentSizeChange={onScrollViewContentSizeChange}
-                onLayout={onScrollViewLayout}>
-                {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-                {thread.posts.map((post, index) => (
-                  <React.Fragment key={post.id}>
-                    <ComposerPost
-                      post={post}
-                      dispatch={composerDispatch}
-                      textInput={post.id === activePost.id ? textInput : null}
-                      isFirstPost={index === 0}
-                      isLastPost={index === thread.posts.length - 1}
-                      isPartOfThread={thread.posts.length > 1}
-                      isReply={index > 0 || !!replyTo}
-                      isActive={post.id === activePost.id}
-                      canRemovePost={thread.posts.length > 1}
-                      canRemoveQuote={index > 0 || !initQuote}
-                      onSelectVideo={selectVideo}
-                      onClearVideo={clearVideo}
-                      onPublish={onComposerPostPublish}
-                      onError={setError}
-                    />
-                    {isWebFooterSticky && post.id === activePost.id && (
-                      <View style={styles.stickyFooterWeb}>{footer}</View>
-                    )}
-                  </React.Fragment>
-                ))}
-              </Animated.ScrollView>
-              {!isWebFooterSticky && footer}
-            </RootSiblingParent>
-          </View>
-
-          <Prompt.Basic
-            control={discardPromptControl}
-            title={_(msg`Discard draft?`)}
-            description={_(msg`Are you sure you'd like to discard this draft?`)}
-            onConfirm={onClose}
-            confirmButtonCta={_(msg`Discard`)}
-            confirmButtonColor="negative"
-          />
-        </KeyboardAvoidingView>
-      </RootSiblingParent>
+        <Prompt.Basic
+          control={discardPromptControl}
+          title={_(msg`Discard draft?`)}
+          description={_(msg`Are you sure you'd like to discard this draft?`)}
+          onConfirm={onClose}
+          confirmButtonCta={_(msg`Discard`)}
+          confirmButtonColor="negative"
+        />
+      </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
   )
 }
@@ -831,7 +848,7 @@ let ComposerPost = React.memo(function ComposerPost({
         if (isNative) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          toast.show(_(msg`Unsupported video type: ${mimeType}`), {
+          Toast.show(_(msg`Unsupported video type: ${mimeType}`), {
             type: 'error',
           })
           return
@@ -1367,7 +1384,7 @@ function ComposerFooter({
       }
 
       errors.map(error => {
-        toast.show(error, {
+        Toast.show(error, {
           type: 'warning',
         })
       })
@@ -1436,7 +1453,7 @@ function ComposerFooter({
             />
           </Button>
         )}
-        <SelectLangBtn />
+        <SelectPostLanguagesBtn />
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}

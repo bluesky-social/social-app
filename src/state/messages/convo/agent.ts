@@ -10,6 +10,7 @@ import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
 import {isNative} from '#/platform/detection'
@@ -33,7 +34,6 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 

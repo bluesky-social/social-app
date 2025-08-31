@@ -1,11 +1,15 @@
 import {
-  ChatBskyConvoDefs,
-  ChatBskyConvoListConvos,
-  ChatBskyConvoMuteConvo,
+  type ChatBskyConvoDefs,
+  type ChatBskyConvoListConvos,
+  type ChatBskyConvoMuteConvo,
 } from '@atproto/api'
-import {InfiniteData, useMutation, useQueryClient} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useAgent} from '#/state/session'
 import {RQKEY as CONVO_KEY} from './conversation'
 import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'

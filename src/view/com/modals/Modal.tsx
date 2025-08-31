@@ -7,12 +7,10 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useModalControls, useModals} from '#/state/modals'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
-import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
-import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
 
 const DEFAULT_SNAPPOINTS = ['90%']
@@ -61,12 +59,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'content-languages-settings') {
     snapPoints = ContentLanguagesSettingsModal.snapPoints
     element = <ContentLanguagesSettingsModal.Component />
-  } else if (activeModal?.name === 'post-languages-settings') {
-    snapPoints = PostLanguagesSettingsModal.snapPoints
-    element = <PostLanguagesSettingsModal.Component />
-  } else if (activeModal?.name === 'change-password') {
-    snapPoints = ChangePasswordModal.snapPoints
-    element = <ChangePasswordModal.Component />
   } else {
     return null
   }
