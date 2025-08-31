@@ -200,7 +200,6 @@ export class SafelinkClient {
     } else {
       await this.db.transaction(async db => {
         for (const rule of res.data.events) {
-          redirectLogger.info(rule.id)
           if (rule.eventType === 'removeRule') {
             await this.removeRule(db, rule)
           } else {
