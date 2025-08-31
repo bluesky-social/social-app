@@ -3,6 +3,7 @@ import {
   CredentialSession,
   type ToolsOzoneSafelinkQueryEvents,
 } from '@atproto/api'
+import {HOUR} from '@atproto/common'
 import {LRUCache} from 'lru-cache'
 
 import {type ServiceConfig} from '../config.js'
@@ -57,7 +58,7 @@ export class SafelinkClient {
     }
 
     const urlRule = this.urlCache.get(url)
-    if (urlRule) {
+    if (urlRule && urlRule !== 'ok') {
       return urlRule
     }
 
@@ -90,11 +91,12 @@ export class SafelinkClient {
     url: string,
     pattern: RulePatternType,
   ): Promise<SafelinkRule> {
-    // @ts-ignore
     return db.db
       .selectFrom('safelink_rule')
+      .selectAll()
       .where('url', '=', url)
       .where('pattern', '=', pattern)
+      .orderBy('createdAt', 'desc')
       .executeTakeFirstOrThrow()
   }
 
@@ -125,9 +127,9 @@ export class SafelinkClient {
       })
 
     if (rule.pattern === 'domain') {
-      this.domainCache.set(rule.url, rule)
+      this.domainCache.delete(rule.url)
     } else {
-      this.urlCache.set(rule.url, rule)
+      this.urlCache.delete(rule.url)
     }
   }
 
@@ -181,6 +183,7 @@ export class SafelinkClient {
       res = await agent.tools.ozone.safelink.queryEvents({
         cursor,
         limit: 100,
+        sortDirection: 'asc',
       })
     } catch (err) {
       redirectLogger.error(
@@ -191,15 +194,13 @@ export class SafelinkClient {
       return
     }
 
-    if (res.data.cursor === this.cursor || res.data.events.length === 0) {
-      redirectLogger.info(
-        {cursor: res.data.cursor},
-        'received same cursor from Ozone',
-      )
+    if (res.data.events.length === 0) {
+      redirectLogger.info('received no new safelink events from ozone')
       setTimeout(() => this.runFetchEvents(), SAFELINK_MAX_FETCH_INTERVAL)
     } else {
       await this.db.transaction(async db => {
         for (const rule of res.data.events) {
+          redirectLogger.info(rule.id)
           if (rule.eventType === 'removeRule') {
             await this.removeRule(db, rule)
           } else {
@@ -210,7 +211,7 @@ export class SafelinkClient {
       if (res.data.cursor) {
         redirectLogger.info(
           {cursor: res.data.cursor},
-          'received new cursor from Ozone',
+          'received new safelink events from Ozone',
         )
         await this.setCursor(res.data.cursor)
       }
@@ -223,6 +224,7 @@ export class SafelinkClient {
       // TODO: catch err
       const res = await this.db.db
         .selectFrom('safelink_cursor')
+        .selectAll()
         .orderBy('createdAt desc')
         .limit(1)
         .executeTakeFirst()
@@ -230,8 +232,6 @@ export class SafelinkClient {
       if (!res) {
         return ''
       }
-
-      // @ts-ignore TODO: fix this
       this.cursor = res.cursor
     }
     return this.cursor
@@ -281,19 +281,14 @@ export class OzoneAgent {
   private session: CredentialSession
   private agent: AtpAgent
 
+  private refreshAt: number = 0
+
   constructor(pdsHost: string, identifier: string, password: string) {
     this.identifier = identifier
     this.password = password
 
     this.session = new CredentialSession(new URL(pdsHost))
     this.agent = new AtpAgent(this.session)
-  }
-
-  public async getSession(): Promise<CredentialSession> {
-    if (!this.session.hasSession) {
-      await this.getAgent()
-    }
-    return this.session
   }
 
   public async getAgent(): Promise<AtpAgent> {
@@ -310,6 +305,12 @@ export class OzoneAgent {
         password: this.password,
       })
       redirectLogger.info('ozone session created successfully')
+      this.refreshAt = Date.now() + HOUR
+    }
+
+    if (Date.now() <= this.refreshAt) {
+      await this.session.refreshSession()
+      this.refreshAt = Date.now() + HOUR
     }
 
     return this.agent

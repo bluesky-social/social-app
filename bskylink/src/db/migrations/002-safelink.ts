@@ -1,4 +1,4 @@
-import {type Kysely} from 'kysely'
+import {type Kysely, sql} from 'kysely'
 
 export async function up(db: Kysely<unknown>): Promise<void> {
   await db.schema
@@ -22,14 +22,16 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .execute()
 
   await db.schema
-    .createIndex('safelink_rule_url_pattern_idx')
+    .createIndex('safelink_rule_url_pattern_created_at_idx')
     .on('safelink_rule')
-    .columns(['url', 'pattern'])
+    .expression(sql`"url", "pattern", "createdAt" DESC`)
     .execute()
 }
 
 export async function down(db: Kysely<unknown>): Promise<void> {
-  await db.schema.dropIndex('safelink_rule_url_pattern_idx').execute()
+  await db.schema
+    .dropIndex('safelink_rule_url_pattern_created_at_idx')
+    .execute()
   await db.schema.dropTable('safelink_rule').execute()
   await db.schema.dropTable('safelink_cursor').execute()
 }
