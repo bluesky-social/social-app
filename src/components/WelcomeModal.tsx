@@ -1,5 +1,11 @@
 import React from 'react'
-import {Animated, ImageBackground, StyleSheet, View} from 'react-native'
+import {
+  Animated,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -26,6 +32,9 @@ export function WelcomeModal({control}: WelcomeModalProps) {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const fadeAnim = React.useRef(new Animated.Value(0)).current
+  const [closeButtonHovered, setCloseButtonHovered] = React.useState(false)
+  const [exploreLinkHovered, setExploreLinkHovered] = React.useState(false)
+  const [signInLinkHovered, setSignInLinkHovered] = React.useState(false)
 
   React.useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -72,13 +81,27 @@ export function WelcomeModal({control}: WelcomeModalProps) {
     <Animated.View style={[styles.modalOverlay, {opacity: fadeAnim}]}>
       <View style={styles.modalContainer}>
         <ImageBackground source={welcomeModalBg} style={styles.backgroundImage}>
+          <Pressable
+            style={styles.closeButton}
+            onPress={() => fadeOutAndClose()}
+            onPointerEnter={() => setCloseButtonHovered(true)}
+            onPointerLeave={() => setCloseButtonHovered(false)}
+            accessibilityRole="button"
+            accessibilityLabel="Close modal"
+            accessibilityHint="Closes the welcome modal">
+            <Text
+              style={[
+                styles.closeButtonText,
+                closeButtonHovered && styles.closeButtonTextHovered,
+              ]}>
+              ×
+            </Text>
+          </Pressable>
           <View style={styles.container}>
             <View style={styles.header}>
               <View style={styles.logoContainer}>
-                <Logo width={24} />
-                <Text style={[a.text_xl, a.font_bold, styles.headerText]}>
-                  Bluesky
-                </Text>
+                <Logo width={26} />
+                <Text style={[a.text_2xl, styles.headerText]}>Bluesky</Text>
               </View>
             </View>
             <View style={styles.mainContent}>
@@ -90,23 +113,9 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   styles.mainText,
                 ]}>
                 <Trans>Real people.</Trans>
-              </Text>
-              <Text
-                style={[
-                  isMobile ? a.text_3xl : a.text_4xl,
-                  a.font_bold,
-                  a.text_center,
-                  styles.mainText,
-                ]}>
+                {'\n'}
                 <Trans>Real conversations.</Trans>
-              </Text>
-              <Text
-                style={[
-                  isMobile ? a.text_3xl : a.text_4xl,
-                  a.font_bold,
-                  a.text_center,
-                  styles.mainText,
-                ]}>
+                {'\n'}
                 <Trans>Social media you control.</Trans>
               </Text>
             </View>
@@ -121,15 +130,39 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   <Trans>Create account</Trans>
                 </ButtonText>
               </Button>
-              <Text style={styles.exploreLink} onPress={onPressExplore}>
-                <Trans>Explore the app</Trans>
-              </Text>
+              <Pressable
+                onPointerEnter={() => setExploreLinkHovered(true)}
+                onPointerLeave={() => setExploreLinkHovered(false)}
+                accessibilityRole="button"
+                accessibilityLabel="Explore the app"
+                accessibilityHint="Closes the modal and allows you to explore the app">
+                <Text
+                  style={[
+                    styles.exploreLink,
+                    exploreLinkHovered && styles.exploreLinkHovered,
+                  ]}
+                  onPress={onPressExplore}>
+                  <Trans>Explore the app</Trans>
+                </Text>
+              </Pressable>
               <View style={styles.signInContainer}>
                 <Text style={[a.text_md, styles.signInText]}>
                   <Trans>Already have an account?</Trans>{' '}
-                  <Text style={styles.signInLink} onPress={onPressSignIn}>
-                    <Trans>Sign in</Trans>
-                  </Text>
+                  <Pressable
+                    onPointerEnter={() => setSignInLinkHovered(true)}
+                    onPointerLeave={() => setSignInLinkHovered(false)}
+                    accessibilityRole="button"
+                    accessibilityLabel="Sign in"
+                    accessibilityHint="Opens the sign in dialog">
+                    <Text
+                      style={[
+                        styles.signInLink,
+                        signInLinkHovered && styles.signInLinkHovered,
+                      ]}
+                      onPress={onPressSignIn}>
+                      <Trans>Sign in</Trans>
+                    </Text>
+                  </Pressable>
                 </Text>
               </View>
             </View>
@@ -183,6 +216,8 @@ const styles = StyleSheet.create({
   },
   headerText: {
     color: '#354358',
+    ...a.font_bold,
+    letterSpacing: -0.5,
   },
   logoContainer: {
     ...a.flex_row,
@@ -193,12 +228,23 @@ const styles = StyleSheet.create({
     ...a.gap_sm,
     ...a.align_center,
     ...a.pt_5xl,
-    ...a.pb_5xl,
+    ...a.pb_3xl,
+    ...a.mt_2xl,
   },
   mainText: {
     color: '#354358',
-    ...a.font_medium,
+    ...a.font_bold,
     ...a.text_center,
+    ...web({
+      backgroundImage:
+        'linear-gradient(180deg, #313F54 0%, #667B99 83.65%, rgba(102, 123, 153, 0.50) 100%)',
+      backgroundClip: 'text',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      color: 'transparent',
+      lineHeight: 1.2,
+      letterSpacing: -0.5,
+    }),
   },
   actionButtons: {
     ...a.gap_lg,
@@ -219,6 +265,11 @@ const styles = StyleSheet.create({
     }),
     ...a.font_medium,
   },
+  exploreLinkHovered: {
+    ...web({
+      textDecorationLine: 'underline',
+    }),
+  },
   signInContainer: {
     ...a.align_center,
     ...a.pt_sm,
@@ -234,5 +285,28 @@ const styles = StyleSheet.create({
     color: '#006AFF',
     ...a.font_medium,
     fontSize: undefined,
+  },
+  signInLinkHovered: {
+    ...web({
+      textDecorationLine: 'underline',
+    }),
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+  },
+  closeButtonText: {
+    fontSize: 30,
+    color: '#354358',
+    opacity: 0.7,
+  },
+  closeButtonTextHovered: {
+    opacity: 1,
   },
 })
