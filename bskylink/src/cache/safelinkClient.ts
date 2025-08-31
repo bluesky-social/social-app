@@ -32,9 +32,9 @@ export class SafelinkClient {
     this.db = db
 
     this.ozoneAgent = new OzoneAgent(
-      cfg.ozoneUrl!,
-      cfg.ozoneAgentHandle!,
-      cfg.ozoneAgentPass!,
+      cfg.safelinkPdsUrl!,
+      cfg.safelinkAgentIdentifier!,
+      cfg.safelinkAgentPass!,
     )
   }
 
@@ -185,6 +185,7 @@ export class SafelinkClient {
         return ''
       }
 
+      // @ts-ignore TODO: fix this
       this.cursor = res.cursor
     }
     return this.cursor

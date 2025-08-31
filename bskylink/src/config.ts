@@ -11,9 +11,9 @@ export type ServiceConfig = {
   hostnames: string[]
   appHostname: string
   safelinkEnabled: boolean
-  ozoneUrl?: string
-  ozoneAgentHandle?: string
-  ozoneAgentPass?: string
+  safelinkPdsUrl?: string
+  safelinkAgentIdentifier?: string
+  safelinkAgentPass?: string
 }
 
 export type DbConfig = {
@@ -41,9 +41,9 @@ export type Environment = {
   dbPostgresPoolMaxUses?: number
   dbPostgresPoolIdleTimeoutMs?: number
   safelinkEnabled?: boolean
-  ozoneUrl?: string
-  ozoneAgentHandle?: string
-  ozoneAgentPass?: string
+  safelinkPdsUrl?: string
+  safelinkAgentIdentifier?: string
+  safelinkAgentPass?: string
 }
 
 export const readEnv = (): Environment => {
@@ -61,9 +61,9 @@ export const readEnv = (): Environment => {
       'LINK_DB_POSTGRES_POOL_IDLE_TIMEOUT_MS',
     ),
     safelinkEnabled: envBool('SAFELINK_ENABLED'),
-    ozoneUrl: envStr('OZONE_URL'),
-    ozoneAgentHandle: envStr('OZONE_AGENT_HANDLE'),
-    ozoneAgentPass: envStr('OZONE_AGENT_PASS'),
+    safelinkPdsUrl: envStr('SAFELINK_PDS_URL'),
+    safelinkAgentIdentifier: envStr('SAFELINK_AGENT_IDENTIFIER'),
+    safelinkAgentPass: envStr('SAFELINK_AGENT_PASS'),
   }
 }
 
@@ -74,9 +74,9 @@ export const envToCfg = (env: Environment): Config => {
     hostnames: env.hostnames,
     appHostname: env.appHostname ?? 'bsky.app',
     safelinkEnabled: env.safelinkEnabled ?? false,
-    ozoneUrl: env.ozoneUrl,
-    ozoneAgentHandle: env.ozoneAgentHandle,
-    ozoneAgentPass: env.ozoneAgentPass,
+    safelinkPdsUrl: env.safelinkPdsUrl,
+    safelinkAgentIdentifier: env.safelinkAgentIdentifier,
+    safelinkAgentPass: env.safelinkAgentPass,
   }
   if (!env.dbPostgresUrl) {
     throw new Error('Must configure postgres url (LINK_DB_POSTGRES_URL)')
