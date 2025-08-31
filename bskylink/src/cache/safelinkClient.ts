@@ -10,6 +10,9 @@ import type Database from '../db/index.js'
 import {type RulePatternType, type SafelinkRule} from '../db/schema.js'
 import {redirectLogger} from '../logger.js'
 
+const SAFELINK_MIN_FETCH_INTERVAL = 1_000
+const SAFELINK_MAX_FETCH_INTERVAL = 10_000
+
 export class SafelinkClient {
   private domainCache: LRUCache<string, SafelinkRule | 'ok'>
   private urlCache: LRUCache<string, SafelinkRule | 'ok'>
@@ -39,37 +42,47 @@ export class SafelinkClient {
   }
 
   public async tryFindRule(link: string): Promise<SafelinkRule | 'ok'> {
-    const u = new URL(link)
-    u.search = ''
-    u.hash = ''
+    let url: string
+    let domain: string
+    try {
+      url = SafelinkClient.normalizeUrl(link)
+      domain = SafelinkClient.normalizeDomain(link)
+    } catch (e) {
+      redirectLogger.error(
+        {error: e, inputUrl: link},
+        'failed to normalize looked up link',
+      )
 
-    const d = new URL(u.href)
-    d.pathname = ''
+      return 'ok'
+    }
 
-    const urlRule = this.urlCache.get(u.href)
+    redirectLogger.info(url)
+    redirectLogger.info(domain)
+
+    const urlRule = this.urlCache.get(url)
     if (urlRule) {
       return urlRule
     }
 
-    const domainRule = this.domainCache.get(d.href)
+    const domainRule = this.domainCache.get(domain)
     if (domainRule) {
       return domainRule
     }
 
     try {
-      const maybeUrlRule = await this.getRule(this.db, u.href, 'url')
-      this.urlCache.set(u.href, maybeUrlRule)
+      const maybeUrlRule = await this.getRule(this.db, url, 'url')
+      this.urlCache.set(url, maybeUrlRule)
       return maybeUrlRule
     } catch (e) {
-      this.urlCache.set(u.href, 'ok')
+      this.urlCache.set(url, 'ok')
     }
 
     try {
-      const maybeDomainRule = await this.getRule(this.db, u.href, 'domain')
-      this.domainCache.set(d.href, maybeDomainRule)
+      const maybeDomainRule = await this.getRule(this.db, domain, 'domain')
+      this.domainCache.set(domain, maybeDomainRule)
       return maybeDomainRule
     } catch (e) {
-      this.domainCache.set(d.href, 'ok')
+      this.domainCache.set(domain, 'ok')
     }
 
     return 'ok'
@@ -89,6 +102,20 @@ export class SafelinkClient {
   }
 
   private async addRule(db: Database, rule: SafelinkRule) {
+    try {
+      if (rule.pattern === 'url') {
+        rule.url = SafelinkClient.normalizeUrl(rule.url)
+      } else if (rule.pattern === 'domain') {
+        rule.url = SafelinkClient.normalizeDomain(rule.url)
+      }
+    } catch (e) {
+      redirectLogger.error(
+        {error: e, inputUrl: rule.url},
+        'failed to normalize rule input URL',
+      )
+      return
+    }
+
     db.db
       .insertInto('safelink_rule')
       .values(rule)
@@ -108,6 +135,20 @@ export class SafelinkClient {
   }
 
   private async removeRule(db: Database, rule: SafelinkRule) {
+    try {
+      if (rule.pattern === 'url') {
+        rule.url = SafelinkClient.normalizeUrl(rule.url)
+      } else if (rule.pattern === 'domain') {
+        rule.url = SafelinkClient.normalizeDomain(rule.url)
+      }
+    } catch (e) {
+      redirectLogger.error(
+        {error: e, inputUrl: rule.url},
+        'failed to normalize rule input URL',
+      )
+      return
+    }
+
     await db.db
       .deleteFrom('safelink_rule')
       .where('pattern', '=', 'domain')
@@ -133,7 +174,7 @@ export class SafelinkClient {
       agent = await this.ozoneAgent.getAgent()
     } catch (err) {
       redirectLogger.error({error: err}, 'error getting Ozone agent')
-      setTimeout(() => this.runFetchEvents(), 10_000)
+      setTimeout(() => this.runFetchEvents(), SAFELINK_MAX_FETCH_INTERVAL)
       return
     }
 
@@ -149,12 +190,16 @@ export class SafelinkClient {
         {error: err},
         'error fetching safelink events from Ozone',
       )
-      setTimeout(() => this.runFetchEvents(), 10_000)
+      setTimeout(() => this.runFetchEvents(), SAFELINK_MAX_FETCH_INTERVAL)
       return
     }
 
-    if (res.data.cursor === this.cursor) {
-      setTimeout(() => this.runFetchEvents(), 10_000)
+    if (res.data.cursor === this.cursor || res.data.events.length === 0) {
+      redirectLogger.info(
+        {cursor: res.data.cursor},
+        'received same cursor from Ozone',
+      )
+      setTimeout(() => this.runFetchEvents(), SAFELINK_MAX_FETCH_INTERVAL)
     } else {
       await this.db.transaction(async db => {
         for (const rule of res.data.events) {
@@ -166,9 +211,13 @@ export class SafelinkClient {
         }
       })
       if (res.data.cursor) {
+        redirectLogger.info(
+          {cursor: res.data.cursor},
+          'received new cursor from Ozone',
+        )
         await this.setCursor(res.data.cursor)
       }
-      setTimeout(() => this.runFetchEvents(), 1_000)
+      setTimeout(() => this.runFetchEvents(), SAFELINK_MIN_FETCH_INTERVAL)
     }
   }
 
@@ -200,9 +249,31 @@ export class SafelinkClient {
           createdAt: new Date(),
         })
         .execute()
+      this.cursor = cursor
     } catch (err) {
       redirectLogger.error({error: err}, 'failed to update safelink cursor')
     }
+  }
+
+  private static normalizeUrl(input: string) {
+    if (!input.startsWith('https://')) {
+      input = `https://${input}`
+    }
+    const u = new URL(input)
+    u.hash = ''
+    let normalized = u.href.replace(/^[^:]+:\/\//, '').toLowerCase()
+    if (normalized.endsWith('/')) {
+      normalized = normalized.substring(0, normalized.length - 1)
+    }
+    return normalized
+  }
+
+  private static normalizeDomain(input: string) {
+    if (!input.startsWith('https://')) {
+      input = `https://${input}`
+    }
+    const u = new URL(input)
+    return u.host.toLowerCase()
   }
 }
 

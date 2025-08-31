@@ -17,8 +17,6 @@ async function main() {
     link.ctx.safelinkClient.runFetchEvents()
   }
 
-  console.log('here')
-
   await link.start()
   httpLogger.info('link service is running')
   process.on('SIGTERM', async () => {
