@@ -18,7 +18,7 @@ export function useWelcomeModal() {
     // 4. We're on the homepage (path is '/' or '/home')
     if (!hasSession && !hasShownRef.current && typeof window !== 'undefined') {
       const currentPath = window.location.pathname
-      const isHomePage = currentPath === '/' || currentPath === '/home'
+      const isHomePage = currentPath === '/'
 
       if (isHomePage) {
         // Small delay to ensure the page has loaded
