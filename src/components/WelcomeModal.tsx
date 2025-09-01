@@ -68,9 +68,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
         a.align_center,
         {zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.2)'},
         web({backdropFilter: 'blur(15px)'}),
-        a.fade_in,
-        isExiting && a.fade_out,
-        web({animationFillMode: 'forwards'}),
+        isExiting ? a.fade_out : a.fade_in,
       ]}>
       <FocusScope.FocusScope asChild loop trapped>
         <View
