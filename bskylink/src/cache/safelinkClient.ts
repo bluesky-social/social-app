@@ -205,10 +205,16 @@ export class SafelinkClient {
     } else {
       await this.db.transaction(async db => {
         for (const rule of res.data.events) {
-          if (rule.eventType === 'removeRule') {
-            await this.removeRule(db, rule)
-          } else {
-            await this.addRule(db, rule)
+          switch (rule.eventType) {
+            case 'removeRule':
+              await this.removeRule(db, rule)
+              break
+            case 'addRule':
+            case 'updateRule':
+              await this.addRule(db, rule)
+              break
+            default:
+              redirectLogger.warn({rule}, 'received unknown rule event type')
           }
         }
       })
