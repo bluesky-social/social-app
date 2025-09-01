@@ -40,9 +40,8 @@ export function WelcomeModal({control}: WelcomeModalProps) {
 
   const onPressCreateAccount = () => {
     logger.metric('welcomeModal:signupClicked', {})
-    fadeOutAndClose(() => {
-      requestSwitchToAccount({requestedAccount: 'new'})
-    })
+    control.close()
+    requestSwitchToAccount({requestedAccount: 'new'})
   }
 
   const onPressExplore = () => {
@@ -52,9 +51,8 @@ export function WelcomeModal({control}: WelcomeModalProps) {
 
   const onPressSignIn = () => {
     logger.metric('welcomeModal:signinClicked', {})
-    fadeOutAndClose(() => {
-      requestSwitchToAccount({requestedAccount: 'existing'})
-    })
+    control.close()
+    requestSwitchToAccount({requestedAccount: 'existing'})
   }
 
   FocusGuards.useFocusGuards()
@@ -145,33 +143,36 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 </Text>
               </View>
               <View style={[a.gap_md, a.align_center]}>
-                <Button
-                  onPress={onPressCreateAccount}
-                  label={_(msg`Create account`)}
-                  size="large"
-                  color="primary"
-                  style={{
-                    width: 200,
-                    backgroundColor: '#006AFF',
-                  }}>
-                  <ButtonText>
-                    <Trans>Create account</Trans>
-                  </ButtonText>
-                </Button>
-                <Button
-                  onPress={onPressExplore}
-                  label={_(msg`Explore the app`)}
-                  size="large"
-                  color="primary"
-                  variant="ghost"
-                  style={[a.bg_transparent, {width: 200}]}
-                  hoverStyle={[a.bg_transparent]}>
-                  {({hovered}) => (
-                    <ButtonText style={hovered && [a.underline]}>
-                      <Trans>Explore the app</Trans>
+                <View>
+                  <Button
+                    onPress={onPressCreateAccount}
+                    label={_(msg`Create account`)}
+                    size="large"
+                    color="primary"
+                    style={{
+                      width: 200,
+                      backgroundColor: '#006AFF',
+                    }}>
+                    <ButtonText>
+                      <Trans>Create account</Trans>
                     </ButtonText>
-                  )}
-                </Button>
+                  </Button>
+                  <Button
+                    onPress={onPressExplore}
+                    label={_(msg`Explore the app`)}
+                    size="large"
+                    color="primary"
+                    variant="ghost"
+                    style={[a.bg_transparent, {width: 200}]}
+                    hoverStyle={[a.bg_transparent]}>
+                    {({hovered}) => (
+                      <ButtonText
+                        style={[hovered && [a.underline], {color: '#006AFF'}]}>
+                        <Trans>Explore the app</Trans>
+                      </ButtonText>
+                    )}
+                  </Button>
+                </View>
                 <View style={[a.align_center]}>
                   <Text style={[a.text_md, {color: '#405168'}]}>
                     <Trans>Already have an account?</Trans>{' '}

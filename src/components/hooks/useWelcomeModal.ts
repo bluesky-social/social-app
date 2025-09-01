@@ -8,28 +8,30 @@ export function useWelcomeModal() {
   const [isOpen, setIsOpen] = useState(false)
 
   const open = () => setIsOpen(true)
-  const close = () => setIsOpen(false)
+  const close = () => {
+    setIsOpen(false)
+    // Mark that user has actively closed the modal, don't show again this session
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('welcomeModalClosed', 'true')
+    }
+  }
 
   useEffect(() => {
     // Only show modal if:
     // 1. User is not logged in
-    // 2. We haven't shown it yet in this session
-    // 3. We're on the web (this is a web-only feature)
-    // 4. We're on the homepage (path is '/' or '/home')
-    if (
-      isWeb &&
-      !hasSession &&
-      sessionStorage.getItem('welcomeModalShown') !== 'true' &&
-      typeof window !== 'undefined'
-    ) {
+    // 2. We're on the web (this is a web-only feature)
+    // 3. We're on the homepage (path is '/' or '/home')
+    // 4. User hasn't actively closed the modal in this session
+    if (isWeb && !hasSession && typeof window !== 'undefined') {
       const currentPath = window.location.pathname
       const isHomePage = currentPath === '/'
+      const hasUserClosedModal =
+        sessionStorage.getItem('welcomeModalClosed') === 'true'
 
-      if (isHomePage) {
+      if (isHomePage && !hasUserClosedModal) {
         // Small delay to ensure the page has loaded
         const timer = setTimeout(() => {
           open()
-          sessionStorage.setItem('welcomeModalShown', 'true')
         }, 1000)
 
         return () => clearTimeout(timer)
