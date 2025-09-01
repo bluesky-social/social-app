@@ -153,7 +153,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                   <Trans>Social media you control.</Trans>
                 </Text>
               </View>
-              <View style={[a.gap_lg, a.align_center]}>
+              <View style={[a.gap_md, a.align_center]}>
                 <Button
                   onPress={onPressCreateAccount}
                   label={_(msg`Create account`)}
@@ -181,7 +181,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     </ButtonText>
                   )}
                 </Button>
-                <View style={[a.align_center, a.pt_sm]}>
+                <View style={[a.align_center]}>
                   <Text style={[a.text_md, {color: '#405168'}]}>
                     <Trans>Already have an account?</Trans>{' '}
                     <Pressable
