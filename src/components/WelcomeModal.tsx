@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {Animated, Pressable, View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -60,7 +60,9 @@ export function WelcomeModal({control}: WelcomeModalProps) {
   FocusGuards.useFocusGuards()
 
   return (
-    <Animated.View
+    <View
+      role="dialog"
+      aria-modal
       style={[
         a.fixed,
         a.inset_0,
@@ -225,6 +227,6 @@ export function WelcomeModal({control}: WelcomeModalProps) {
           </ImageBackground>
         </View>
       </FocusScope.FocusScope>
-    </Animated.View>
+    </View>
   )
 }
