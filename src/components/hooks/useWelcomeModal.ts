@@ -1,11 +1,11 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useState} from 'react'
 
+import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 
 export function useWelcomeModal() {
   const {hasSession} = useSession()
   const [isOpen, setIsOpen] = useState(false)
-  const hasShownRef = useRef(false)
 
   const open = () => setIsOpen(true)
   const close = () => setIsOpen(false)
@@ -16,7 +16,12 @@ export function useWelcomeModal() {
     // 2. We haven't shown it yet in this session
     // 3. We're on the web (this is a web-only feature)
     // 4. We're on the homepage (path is '/' or '/home')
-    if (!hasSession && !hasShownRef.current && typeof window !== 'undefined') {
+    if (
+      isWeb &&
+      !hasSession &&
+      sessionStorage.getItem('welcomeModalShown') !== 'true' &&
+      typeof window !== 'undefined'
+    ) {
       const currentPath = window.location.pathname
       const isHomePage = currentPath === '/'
 
@@ -24,7 +29,7 @@ export function useWelcomeModal() {
         // Small delay to ensure the page has loaded
         const timer = setTimeout(() => {
           open()
-          hasShownRef.current = true
+          sessionStorage.setItem('welcomeModalShown', 'true')
         }, 1000)
 
         return () => clearTimeout(timer)
