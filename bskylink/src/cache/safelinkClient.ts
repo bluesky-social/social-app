@@ -1,6 +1,7 @@
 import {
   AtpAgent,
   CredentialSession,
+  type ToolsOzoneSafelinkDefs,
   type ToolsOzoneSafelinkQueryEvents,
 } from '@atproto/api'
 import {HOUR} from '@atproto/common'
@@ -8,7 +9,7 @@ import {LRUCache} from 'lru-cache'
 
 import {type ServiceConfig} from '../config.js'
 import type Database from '../db/index.js'
-import {type RulePatternType, type SafelinkRule} from '../db/schema.js'
+import {type SafelinkRule} from '../db/schema.js'
 import {redirectLogger} from '../logger.js'
 
 const SAFELINK_MIN_FETCH_INTERVAL = 1_000
@@ -93,7 +94,7 @@ export class SafelinkClient {
   private async getRule(
     db: Database,
     url: string,
-    pattern: RulePatternType,
+    pattern: ToolsOzoneSafelinkDefs.PatternType,
   ): Promise<SafelinkRule> {
     return db.db
       .selectFrom('safelink_rule')

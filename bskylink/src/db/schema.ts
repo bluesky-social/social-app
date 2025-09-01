@@ -1,3 +1,4 @@
+import {type ToolsOzoneSafelinkDefs} from '@atproto/api'
 import {type Selectable} from 'kysely'
 
 export type DbSchema = {
@@ -16,27 +17,13 @@ export enum LinkType {
   StarterPack = 1,
 }
 
-export type RuleEventType =
-  | 'addRule'
-  | 'updateRule'
-  | 'removeRule'
-  | (string & {})
-export type RulePatternType = 'domain' | 'url' | (string & {})
-export type RuleActionType = 'block' | 'warn' | 'whitelist' | (string & {})
-export type RuleReasonType =
-  | 'csam'
-  | 'spam'
-  | 'phishing'
-  | 'none'
-  | (string & {})
-
 export interface SafelinkRule {
   id: number
-  eventType: RuleEventType
+  eventType: ToolsOzoneSafelinkDefs.EventType
   url: string
-  pattern: RulePatternType
-  action: RuleActionType
-  reason: RuleReasonType
+  pattern: ToolsOzoneSafelinkDefs.PatternType
+  action: ToolsOzoneSafelinkDefs.ActionType
+  reason: ToolsOzoneSafelinkDefs.ReasonType
   createdBy: string
   createdAt: string
   comment?: string
