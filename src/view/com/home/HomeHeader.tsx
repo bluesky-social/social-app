@@ -1,10 +1,10 @@
 import React from 'react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
-import {FeedSourceInfo} from '#/state/queries/feed'
+import {type NavigationProp} from '#/lib/routes/types'
+import {type FeedSourceInfo} from '#/state/queries/feed'
 import {useSession} from '#/state/session'
-import {RenderTabBarFnProps} from '#/view/com/pager/Pager'
+import {type RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {TabBar} from '../pager/TabBar'
 import {HomeHeaderLayout} from './HomeHeaderLayout'
 
@@ -15,7 +15,7 @@ export function HomeHeader(
     feeds: FeedSourceInfo[]
   },
 ) {
-  const {feeds} = props
+  const {feeds, onSelect: onSelectProp} = props
   const {hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
 
@@ -43,11 +43,11 @@ export function HomeHeader(
     (index: number) => {
       if (!hasPinnedCustom && index === items.length - 1) {
         onPressFeedsLink()
-      } else if (props.onSelect) {
-        props.onSelect(index)
+      } else if (onSelectProp) {
+        onSelectProp(index)
       }
     },
-    [items.length, onPressFeedsLink, props, hasPinnedCustom],
+    [items.length, onPressFeedsLink, onSelectProp, hasPinnedCustom],
   )
 
   return (
