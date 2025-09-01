@@ -14,6 +14,7 @@ import {redirectLogger} from '../logger.js'
 
 const SAFELINK_MIN_FETCH_INTERVAL = 1_000
 const SAFELINK_MAX_FETCH_INTERVAL = 10_000
+const SCHEME_REGEX = /^[a-zA-Z][a-zA-Z0-9+.-]*:/
 
 export class SafelinkClient {
   private domainCache: LRUCache<string, SafelinkRule | 'ok'>
@@ -263,12 +264,12 @@ export class SafelinkClient {
   }
 
   private static normalizeUrl(input: string) {
-    if (!input.startsWith('https://')) {
+    if (!SCHEME_REGEX.test(input)) {
       input = `https://${input}`
     }
     const u = new URL(input)
     u.hash = ''
-    let normalized = u.href.replace(/^[^:]+:\/\//, '').toLowerCase()
+    let normalized = u.href.replace(SCHEME_REGEX, '').toLowerCase()
     if (normalized.endsWith('/')) {
       normalized = normalized.substring(0, normalized.length - 1)
     }
@@ -276,7 +277,7 @@ export class SafelinkClient {
   }
 
   private static normalizeDomain(input: string) {
-    if (!input.startsWith('https://')) {
+    if (!SCHEME_REGEX.test(input)) {
       input = `https://${input}`
     }
     const u = new URL(input)
