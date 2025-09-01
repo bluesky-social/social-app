@@ -4,7 +4,8 @@ import {
   type ToolsOzoneSafelinkDefs,
   type ToolsOzoneSafelinkQueryEvents,
 } from '@atproto/api'
-import {HOUR} from '@atproto/common'
+import {ExpiredTokenError} from '@atproto/api/dist/client/types/com/atproto/server/confirmEmail.js'
+import {MINUTE} from '@atproto/common'
 import {LRUCache} from 'lru-cache'
 
 import {type ServiceConfig} from '../config.js'
@@ -192,6 +193,13 @@ export class SafelinkClient {
         sortDirection: 'asc',
       })
     } catch (err) {
+      if (err instanceof ExpiredTokenError) {
+        redirectLogger.info('ozone agent had expired session, refreshing...')
+        await this.ozoneAgent.refreshSession()
+        setTimeout(() => this.runFetchEvents(), SAFELINK_MIN_FETCH_INTERVAL)
+        return
+      }
+
       redirectLogger.error(
         {error: err},
         'error fetching safelink events from Ozone',
@@ -292,7 +300,7 @@ export class OzoneAgent {
   private session: CredentialSession
   private agent: AtpAgent
 
-  private refreshAt: number = 0
+  private refreshAt = 0
 
   constructor(pdsHost: string, identifier: string, password: string) {
     this.identifier = identifier
@@ -302,7 +310,7 @@ export class OzoneAgent {
     this.agent = new AtpAgent(this.session)
   }
 
-  public async getAgent(): Promise<AtpAgent> {
+  public async getAgent() {
     if (!this.identifier && !this.password) {
       throw new Error(
         'OZONE_AGENT_HANDLE and OZONE_AGENT_PASS environment variables must be set',
@@ -316,14 +324,22 @@ export class OzoneAgent {
         password: this.password,
       })
       redirectLogger.info('ozone session created successfully')
-      this.refreshAt = Date.now() + HOUR
+      this.refreshAt = Date.now() + 50 * MINUTE
     }
 
     if (Date.now() <= this.refreshAt) {
-      await this.session.refreshSession()
-      this.refreshAt = Date.now() + HOUR
+      await this.refreshSession()
     }
 
     return this.agent
+  }
+
+  public async refreshSession() {
+    try {
+      await this.session.refreshSession()
+      this.refreshAt = Date.now() + 50 * MINUTE
+    } catch (e) {
+      redirectLogger.error({error: e}, 'error refreshing session')
+    }
   }
 }
