@@ -224,14 +224,12 @@ export class SafelinkClient {
 
   private async getCursor() {
     if (this.cursor === '') {
-      // TODO: catch err
       const res = await this.db.db
         .selectFrom('safelink_cursor')
         .selectAll()
         .orderBy('createdAt', 'desc')
         .limit(1)
         .executeTakeFirst()
-
       if (!res) {
         return ''
       }
