@@ -8,7 +8,7 @@ import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {logger} from '#/logger'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from './icons/Times'
@@ -25,7 +25,6 @@ interface WelcomeModalProps {
 
 export function WelcomeModal({control}: WelcomeModalProps) {
   const {_} = useLingui()
-  const t = useTheme()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {gtMobile} = useBreakpoints()
   const fadeAnim = useAnimatedValue(0)
@@ -112,14 +111,13 @@ export function WelcomeModal({control}: WelcomeModalProps) {
             size="small"
             variant="ghost"
             shape="round">
-            {({hovered, pressed}) => (
+            {({hovered, pressed, focused}) => (
               <XIcon
                 size="md"
-                style={[
-                  hovered || pressed
-                    ? t.atoms.text
-                    : t.atoms.text_contrast_medium,
-                ]}
+                style={{
+                  color: '#354358',
+                  opacity: hovered || pressed || focused ? 1 : 0.7,
+                }}
               />
             )}
           </Button>
