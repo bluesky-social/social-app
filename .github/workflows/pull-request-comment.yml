@@ -188,7 +188,7 @@ jobs:
           header: pull-request-eas-build-${{ steps.pr-info.outputs.head-sha }}
           number: ${{ github.event.issue.number }}
           message: |
-            Your requested OTA deployment was successful! You may now apply it by opening the deep link below in your browser:
+            Your requested OTA deployment was successful! You may now apply it by either scanning the QR code or opening the deep link below in your browser:
 
             <img src="https://bsky-qr.vercel.app?channel=pull-request-${{ github.event.issue.number }}" width=300 height=300>
 
