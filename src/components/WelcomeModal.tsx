@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {
   Animated,
   ImageBackground,
@@ -9,11 +9,11 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {logEvent} from '#/lib/statsig/statsig'
+import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
+import {logger} from '#/logger'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, web} from '#/alf'
+import {atoms as a, useBreakpoints, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 
@@ -30,13 +30,13 @@ interface WelcomeModalProps {
 export function WelcomeModal({control}: WelcomeModalProps) {
   const {_} = useLingui()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
-  const {isMobile} = useWebMediaQueries()
-  const fadeAnim = React.useRef(new Animated.Value(0)).current
-  const [closeButtonHovered, setCloseButtonHovered] = React.useState(false)
-  const [exploreLinkHovered, setExploreLinkHovered] = React.useState(false)
-  const [signInLinkHovered, setSignInLinkHovered] = React.useState(false)
+  const {gtMobile} = useBreakpoints()
+  const fadeAnim = useAnimatedValue(0)
+  const [closeButtonHovered, setCloseButtonHovered] = useState(false)
+  const [exploreLinkHovered, setExploreLinkHovered] = useState(false)
+  const [signInLinkHovered, setSignInLinkHovered] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 100,
@@ -44,38 +44,35 @@ export function WelcomeModal({control}: WelcomeModalProps) {
     }).start()
   }, [fadeAnim])
 
-  const fadeOutAndClose = React.useCallback(
-    (callback?: () => void) => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-      }).start(() => {
-        control.close()
-        if (callback) callback()
-      })
-    },
-    [fadeAnim, control],
-  )
+  const fadeOutAndClose = (callback?: () => void) => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 100,
+      useNativeDriver: true,
+    }).start(() => {
+      control.close()
+      if (callback) callback()
+    })
+  }
 
-  const onPressCreateAccount = React.useCallback(() => {
-    logEvent('welcomeModal:signupClicked', {})
+  const onPressCreateAccount = () => {
+    logger.metric('welcomeModal:signupClicked', {})
     fadeOutAndClose(() => {
       requestSwitchToAccount({requestedAccount: 'new'})
     })
-  }, [fadeOutAndClose, requestSwitchToAccount])
+  }
 
-  const onPressExplore = React.useCallback(() => {
-    logEvent('welcomeModal:exploreClicked', {})
+  const onPressExplore = () => {
+    logger.metric('welcomeModal:exploreClicked', {})
     fadeOutAndClose()
-  }, [fadeOutAndClose])
+  }
 
-  const onPressSignIn = React.useCallback(() => {
-    logEvent('welcomeModal:signinClicked', {})
+  const onPressSignIn = () => {
+    logger.metric('welcomeModal:signinClicked', {})
     fadeOutAndClose(() => {
       requestSwitchToAccount({requestedAccount: 'existing'})
     })
-  }, [fadeOutAndClose, requestSwitchToAccount])
+  }
 
   return (
     <Animated.View style={[styles.modalOverlay, {opacity: fadeAnim}]}>
@@ -107,7 +104,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
             <View style={styles.mainContent}>
               <Text
                 style={[
-                  isMobile ? a.text_3xl : a.text_4xl,
+                  gtMobile ? a.text_4xl : a.text_3xl,
                   a.font_bold,
                   a.text_center,
                   styles.mainText,
