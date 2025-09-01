@@ -1,7 +1,9 @@
 import {
   useCallback,
   useContext,
+  useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -139,10 +141,6 @@ export function Pager({
     [parentOnPageScrollStateChanged],
   )
 
-  const drawerGesture = useContext(DrawerGestureContext) ?? Gesture.Native() // noop for web
-  const nativeGesture =
-    Gesture.Native().requireExternalGestureToFail(drawerGesture)
-
   return (
     <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
       {renderTabBar({
@@ -151,7 +149,7 @@ export function Pager({
         dragProgress,
         dragState,
       })}
-      <GestureDetector gesture={nativeGesture}>
+      <DrawerGestureRequireFail>
         <AnimatedPagerView
           ref={pagerView}
           style={[a.flex_1]}
@@ -159,9 +157,29 @@ export function Pager({
           onPageScroll={handlePageScroll}>
           {children}
         </AnimatedPagerView>
-      </GestureDetector>
+      </DrawerGestureRequireFail>
     </View>
   )
+}
+
+function DrawerGestureRequireFail({children}: {children: React.ReactNode}) {
+  const drawerGesture = useContext(DrawerGestureContext)
+
+  const nativeGesture = useMemo(() => Gesture.Native(), [])
+
+  // the drawer gesture identity changes whenever the drawer opens/closes,
+  // but we don't want the GestureDetector to rerender when that happens
+  // therefore we just keep adding the gestures every time it changes to the same
+  // native gesture -sfn
+  useEffect(() => {
+    if (drawerGesture) {
+      nativeGesture.requireExternalGestureToFail(drawerGesture)
+    }
+
+    // TODO: figure out how to clean this up
+  }, [drawerGesture, nativeGesture])
+
+  return <GestureDetector gesture={nativeGesture}>{children}</GestureDetector>
 }
 
 function usePagerHandlers(
