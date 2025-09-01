@@ -57,11 +57,15 @@ export class SafelinkClient {
       return 'ok'
     }
 
+    // First, check if there is an existing URL rule. Note that even if the rule is 'ok', we still
+    // want to check for a blocking domain rule, so we will only return here if the url rule exists
+    // _and_ it is not 'ok'.
     const urlRule = this.urlCache.get(url)
     if (urlRule && urlRule !== 'ok') {
       return urlRule
     }
 
+    // If we find a domain rule of _any_ kind, including 'ok', we can now return that rule.
     const domainRule = this.domainCache.get(domain)
     if (domainRule) {
       return domainRule
@@ -224,7 +228,7 @@ export class SafelinkClient {
       const res = await this.db.db
         .selectFrom('safelink_cursor')
         .selectAll()
-        .orderBy('createdAt desc')
+        .orderBy('createdAt', 'desc')
         .limit(1)
         .executeTakeFirst()
 
