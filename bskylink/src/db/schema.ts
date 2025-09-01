@@ -1,4 +1,4 @@
-import {type GeneratedAlways, type Selectable} from 'kysely'
+import {type Selectable} from 'kysely'
 
 export type DbSchema = {
   link: Link
@@ -43,9 +43,9 @@ export interface SafelinkRule {
 }
 
 export interface SafelinkCursor {
-  id: GeneratedAlways<number>
+  id: number
   cursor: string
-  createdAt: Date
+  updatedAt: Date
 }
 
 export type LinkEntry = Selectable<Link>

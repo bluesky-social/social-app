@@ -227,8 +227,7 @@ export class SafelinkClient {
       const res = await this.db.db
         .selectFrom('safelink_cursor')
         .selectAll()
-        .orderBy('createdAt', 'desc')
-        .limit(1)
+        .where('id', '=', 1)
         .executeTakeFirst()
       if (!res) {
         return ''
@@ -239,13 +238,16 @@ export class SafelinkClient {
   }
 
   private async setCursor(cursor: string) {
+    const updatedAt = new Date()
     try {
       await this.db.db
         .insertInto('safelink_cursor')
         .values({
+          id: 1,
           cursor,
-          createdAt: new Date(),
+          updatedAt,
         })
+        .onConflict(oc => oc.column('id').doUpdateSet({cursor, updatedAt}))
         .execute()
       this.cursor = cursor
     } catch (err) {

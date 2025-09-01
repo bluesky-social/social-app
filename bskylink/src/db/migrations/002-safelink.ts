@@ -16,9 +16,9 @@ export async function up(db: Kysely<unknown>): Promise<void> {
 
   await db.schema
     .createTable('safelink_cursor')
-    .addColumn('id', 'bigserial', col => col.primaryKey())
+    .addColumn('id', 'bigserial', col => col.notNull())
     .addColumn('cursor', 'varchar', col => col.notNull())
-    .addColumn('createdAt', 'timestamptz', col => col.notNull())
+    .addColumn('updatedAt', 'timestamptz', col => col.notNull())
     .execute()
 
   await db.schema
