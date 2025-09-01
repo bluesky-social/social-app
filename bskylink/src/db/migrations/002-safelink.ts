@@ -8,10 +8,7 @@ export async function up(db: Kysely<unknown>): Promise<void> {
     .addColumn('url', 'varchar', col => col.notNull())
     .addColumn('pattern', 'varchar', col => col.notNull())
     .addColumn('action', 'varchar', col => col.notNull())
-    .addColumn('reason', 'varchar', col => col.notNull())
-    .addColumn('createdBy', 'varchar', col => col.notNull())
     .addColumn('createdAt', 'timestamptz', col => col.notNull())
-    .addColumn('comment', 'varchar', col => col.notNull())
     .execute()
 
   await db.schema

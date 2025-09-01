@@ -23,10 +23,7 @@ export interface SafelinkRule {
   url: string
   pattern: ToolsOzoneSafelinkDefs.PatternType
   action: ToolsOzoneSafelinkDefs.ActionType
-  reason: ToolsOzoneSafelinkDefs.ReasonType
-  createdBy: string
   createdAt: string
-  comment?: string
 }
 
 export interface SafelinkCursor {

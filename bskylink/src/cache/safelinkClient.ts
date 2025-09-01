@@ -124,7 +124,14 @@ export class SafelinkClient {
 
     db.db
       .insertInto('safelink_rule')
-      .values(rule)
+      .values({
+        id: rule.id,
+        eventType: rule.eventType,
+        url: rule.url,
+        pattern: rule.pattern,
+        action: rule.action,
+        createdAt: rule.createdAt,
+      })
       .execute()
       .catch(err => {
         redirectLogger.error(
