@@ -1,11 +1,10 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {Animated, Pressable, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {FocusGuards, FocusScope} from 'radix-ui/internal'
 
-import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {logger} from '#/logger'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
@@ -28,26 +27,15 @@ export function WelcomeModal({control}: WelcomeModalProps) {
   const {_} = useLingui()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {gtMobile} = useBreakpoints()
-  const fadeAnim = useAnimatedValue(0)
+  const [isExiting, setIsExiting] = useState(false)
   const [signInLinkHovered, setSignInLinkHovered] = useState(false)
 
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 100,
-      useNativeDriver: true,
-    }).start()
-  }, [fadeAnim])
-
   const fadeOutAndClose = (callback?: () => void) => {
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: true,
-    }).start(() => {
+    setIsExiting(true)
+    setTimeout(() => {
       control.close()
       if (callback) callback()
-    })
+    }, 150)
   }
 
   const onPressCreateAccount = () => {
@@ -80,7 +68,9 @@ export function WelcomeModal({control}: WelcomeModalProps) {
         a.align_center,
         {zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.2)'},
         web({backdropFilter: 'blur(15px)'}),
-        {opacity: fadeAnim},
+        a.fade_in,
+        isExiting && a.fade_out,
+        web({animationFillMode: 'forwards'}),
       ]}>
       <FocusScope.FocusScope asChild loop trapped>
         <View
@@ -94,6 +84,7 @@ export function WelcomeModal({control}: WelcomeModalProps) {
             },
             a.rounded_lg,
             a.overflow_hidden,
+            a.zoom_in,
           ])}>
           <ImageBackground
             source={welcomeModalBg}
