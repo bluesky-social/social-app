@@ -44,8 +44,9 @@ export default function (ctx: AppContext, app: Express) {
       res.status(200)
 
       const escaped = escapeHTML(url.href)
+      const escapedTitle = escapeHTML(url.hostname)
       return res.send(
-        `<html><head><meta http-equiv="refresh" content="0; URL='${escaped}'" /><style>:root { color-scheme: light dark; }</style></head></html>`,
+        `<html><head><title>${escapedTitle}</title><meta http-equiv="refresh" content="0; URL='${escaped}'" /><style>:root { color-scheme: light dark; }</style></head></html>`,
       )
     }),
   )
