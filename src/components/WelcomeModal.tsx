@@ -1,11 +1,6 @@
 import {useEffect, useState} from 'react'
-import {
-  Animated,
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {Animated, Pressable, View} from 'react-native'
+import {ImageBackground} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -13,9 +8,10 @@ import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {logger} from '#/logger'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useBreakpoints, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from './icons/Times'
 
 const welcomeModalBg = require('../../assets/images/welcome-modal-bg.jpg')
 
@@ -29,11 +25,10 @@ interface WelcomeModalProps {
 
 export function WelcomeModal({control}: WelcomeModalProps) {
   const {_} = useLingui()
+  const t = useTheme()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {gtMobile} = useBreakpoints()
   const fadeAnim = useAnimatedValue(0)
-  const [closeButtonHovered, setCloseButtonHovered] = useState(false)
-  const [exploreLinkHovered, setExploreLinkHovered] = useState(false)
   const [signInLinkHovered, setSignInLinkHovered] = useState(false)
 
   useEffect(() => {
@@ -75,39 +70,99 @@ export function WelcomeModal({control}: WelcomeModalProps) {
   }
 
   return (
-    <Animated.View style={[styles.modalOverlay, {opacity: fadeAnim}]}>
-      <View style={styles.modalContainer}>
-        <ImageBackground source={welcomeModalBg} style={styles.backgroundImage}>
-          <Pressable
-            style={styles.closeButton}
+    <Animated.View
+      style={[
+        a.fixed,
+        a.inset_0,
+        a.justify_center,
+        a.align_center,
+        {zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.2)'},
+        web({backdropFilter: 'blur(15px)'}),
+        {opacity: fadeAnim},
+      ]}>
+      <View
+        style={[
+          {
+            maxWidth: 800,
+            maxHeight: 600,
+            width: '90%',
+            height: '90%',
+            backgroundColor: '#C0DCF0',
+          },
+          a.rounded_lg,
+          a.overflow_hidden,
+        ]}>
+        <ImageBackground
+          source={welcomeModalBg}
+          style={[a.flex_1, a.justify_center]}
+          contentFit="cover">
+          <Button
+            label={_(msg`Close welcome modal`)}
+            style={[
+              a.absolute,
+              {
+                top: 8,
+                right: 8,
+              },
+              a.bg_transparent,
+            ]}
+            hoverStyle={[a.bg_transparent]}
             onPress={() => fadeOutAndClose()}
-            onPointerEnter={() => setCloseButtonHovered(true)}
-            onPointerLeave={() => setCloseButtonHovered(false)}
-            accessibilityRole="button"
-            accessibilityLabel="Close modal"
-            accessibilityHint="Closes the welcome modal">
-            <Text
+            color="secondary"
+            size="small"
+            variant="ghost"
+            shape="round">
+            {({hovered, pressed}) => (
+              <XIcon
+                size="md"
+                style={[
+                  hovered || pressed
+                    ? t.atoms.text
+                    : t.atoms.text_contrast_medium,
+                ]}
+              />
+            )}
+          </Button>
+          <View style={[a.gap_2xl, a.align_center, a.p_4xl]}>
+            <View
               style={[
-                styles.closeButtonText,
-                closeButtonHovered && styles.closeButtonTextHovered,
+                a.flex_row,
+                a.align_center,
+                a.justify_center,
+                a.w_full,
+                a.p_0,
               ]}>
-              ×
-            </Text>
-          </Pressable>
-          <View style={styles.container}>
-            <View style={styles.header}>
-              <View style={styles.logoContainer}>
+              <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                 <Logo width={26} />
-                <Text style={[a.text_2xl, styles.headerText]}>Bluesky</Text>
+                <Text
+                  style={[
+                    a.text_2xl,
+                    a.font_bold,
+                    a.user_select_none,
+                    {color: '#354358', letterSpacing: -0.5},
+                  ]}>
+                  Bluesky
+                </Text>
               </View>
             </View>
-            <View style={styles.mainContent}>
+            <View
+              style={[a.gap_sm, a.align_center, a.pt_5xl, a.pb_3xl, a.mt_2xl]}>
               <Text
                 style={[
                   gtMobile ? a.text_4xl : a.text_3xl,
                   a.font_bold,
                   a.text_center,
-                  styles.mainText,
+                  {color: '#354358'},
+                  web({
+                    backgroundImage:
+                      'linear-gradient(180deg, #313F54 0%, #667B99 83.65%, rgba(102, 123, 153, 0.50) 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    color: 'transparent',
+                    lineHeight: 1.2,
+                    letterSpacing: -0.5,
+                  }),
                 ]}>
                 <Trans>Real people.</Trans>
                 {'\n'}
@@ -116,45 +171,51 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 <Trans>Social media you control.</Trans>
               </Text>
             </View>
-            <View style={styles.actionButtons}>
+            <View style={[a.gap_lg, a.align_center]}>
               <Button
                 onPress={onPressCreateAccount}
                 label={_(msg`Create account`)}
                 size="large"
                 color="primary"
-                style={styles.createAccountButton}>
+                style={{
+                  width: 200,
+                  backgroundColor: '#006AFF',
+                }}>
                 <ButtonText>
                   <Trans>Create account</Trans>
                 </ButtonText>
               </Button>
-              <Pressable
-                onPointerEnter={() => setExploreLinkHovered(true)}
-                onPointerLeave={() => setExploreLinkHovered(false)}
-                accessibilityRole="button"
-                accessibilityLabel="Explore the app"
-                accessibilityHint="Closes the modal and allows you to explore the app">
-                <Text
-                  style={[
-                    styles.exploreLink,
-                    exploreLinkHovered && styles.exploreLinkHovered,
-                  ]}
-                  onPress={onPressExplore}>
-                  <Trans>Explore the app</Trans>
-                </Text>
-              </Pressable>
-              <View style={styles.signInContainer}>
-                <Text style={[a.text_md, styles.signInText]}>
+              <Button
+                onPress={onPressExplore}
+                label={_(msg`Explore the app`)}
+                size="large"
+                color="primary"
+                variant="ghost"
+                style={[a.bg_transparent, {width: 200}]}
+                hoverStyle={[a.bg_transparent]}>
+                {({hovered}) => (
+                  <ButtonText style={hovered && [a.underline]}>
+                    <Trans>Explore the app</Trans>
+                  </ButtonText>
+                )}
+              </Button>
+              <View style={[a.align_center, a.pt_sm]}>
+                <Text style={[a.text_md, {color: '#405168'}]}>
                   <Trans>Already have an account?</Trans>{' '}
                   <Pressable
                     onPointerEnter={() => setSignInLinkHovered(true)}
                     onPointerLeave={() => setSignInLinkHovered(false)}
                     accessibilityRole="button"
-                    accessibilityLabel="Sign in"
-                    accessibilityHint="Opens the sign in dialog">
+                    accessibilityLabel={_(msg`Sign in`)}
+                    accessibilityHint="">
                     <Text
                       style={[
-                        styles.signInLink,
-                        signInLinkHovered && styles.signInLinkHovered,
+                        a.font_medium,
+                        {
+                          color: '#006AFF',
+                          fontSize: undefined,
+                        },
+                        signInLinkHovered && a.underline,
                       ]}
                       onPress={onPressSignIn}>
                       <Trans>Sign in</Trans>
@@ -169,141 +230,3 @@ export function WelcomeModal({control}: WelcomeModalProps) {
     </Animated.View>
   )
 }
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    ...a.fixed,
-    ...a.inset_0,
-    ...a.justify_center,
-    ...a.align_center,
-    zIndex: 9999,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    ...web({
-      backdropFilter: 'blur(15px)',
-    }),
-  },
-  modalContainer: {
-    maxWidth: 800,
-    maxHeight: 600,
-    width: '90%',
-    height: '90%',
-    ...a.rounded_lg,
-    ...a.overflow_hidden,
-    backgroundColor: '#C0DCF0',
-  },
-  backgroundImage: {
-    ...a.flex_1,
-    resizeMode: 'cover',
-    ...a.justify_center,
-  },
-  container: {
-    ...a.gap_2xl,
-    ...a.align_center,
-    ...a.p_4xl,
-  },
-  header: {
-    ...a.flex_row,
-    ...a.align_center,
-    ...a.justify_center,
-    ...a.w_full,
-    ...a.p_0,
-    ...web({
-      userSelect: 'none',
-    }),
-  },
-  headerText: {
-    color: '#354358',
-    ...a.font_bold,
-    letterSpacing: -0.5,
-  },
-  logoContainer: {
-    ...a.flex_row,
-    ...a.align_center,
-    ...a.gap_xs,
-  },
-  mainContent: {
-    ...a.gap_sm,
-    ...a.align_center,
-    ...a.pt_5xl,
-    ...a.pb_3xl,
-    ...a.mt_2xl,
-  },
-  mainText: {
-    color: '#354358',
-    ...a.font_bold,
-    ...a.text_center,
-    ...web({
-      backgroundImage:
-        'linear-gradient(180deg, #313F54 0%, #667B99 83.65%, rgba(102, 123, 153, 0.50) 100%)',
-      backgroundClip: 'text',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      color: 'transparent',
-      lineHeight: 1.2,
-      letterSpacing: -0.5,
-    }),
-  },
-  actionButtons: {
-    ...a.gap_lg,
-    ...a.align_center,
-    ...web({
-      userSelect: 'none',
-    }),
-  },
-  createAccountButton: {
-    width: 200,
-    backgroundColor: '#006AFF',
-  },
-  exploreLink: {
-    ...a.text_md,
-    color: '#006AFF',
-    ...web({
-      textDecorationLine: 'none',
-    }),
-    ...a.font_medium,
-  },
-  exploreLinkHovered: {
-    ...web({
-      textDecorationLine: 'underline',
-    }),
-  },
-  signInContainer: {
-    ...a.align_center,
-    ...a.pt_sm,
-    ...a.p_0,
-  },
-  signInText: {
-    color: '#405168',
-    ...web({
-      textDecorationLine: 'none',
-    }),
-  },
-  signInLink: {
-    color: '#006AFF',
-    ...a.font_medium,
-    fontSize: undefined,
-  },
-  signInLinkHovered: {
-    ...web({
-      textDecorationLine: 'underline',
-    }),
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-  },
-  closeButtonText: {
-    fontSize: 30,
-    color: '#354358',
-    opacity: 0.7,
-  },
-  closeButtonTextHovered: {
-    opacity: 1,
-  },
-})
