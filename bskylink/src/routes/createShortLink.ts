@@ -84,13 +84,15 @@ const getUrl = (ctx: AppContext, req: Request, id: string) => {
     return `${baseUrl}/${id}`
   }
   const host = req.headers.host ?? ''
-  const baseUrl = ctx.cfg.service.hostnames.includes(host)
+  const baseUrl = ctx.cfg.service.hostnamesSet.has(host)
     ? `https://${host}`
     : `https://${ctx.cfg.service.hostnames[0]}`
   return `${baseUrl}/${id}`
 }
 
 const normalizedPathFromParts = (parts: string[]): string => {
+  // When given ['path1', 'path2', 'te:fg'], output should be
+  // /path1/path2/te:fg
   return (
     '/' +
     parts

@@ -9,6 +9,7 @@ export type ServiceConfig = {
   port: number
   version?: string
   hostnames: string[]
+  hostnamesSet: Set<string>
   appHostname: string
   safelinkEnabled: boolean
   safelinkPdsUrl?: string
@@ -72,6 +73,7 @@ export const envToCfg = (env: Environment): Config => {
     port: env.port ?? 3000,
     version: env.version,
     hostnames: env.hostnames,
+    hostnamesSet: new Set(env.hostnames),
     appHostname: env.appHostname ?? 'bsky.app',
     safelinkEnabled: env.safelinkEnabled ?? false,
     safelinkPdsUrl: env.safelinkPdsUrl,
