@@ -380,7 +380,7 @@ function StarterPackItem({
 
       <Button
         label={isInPack ? _(msg`Remove`) : _(msg`Add`)}
-        color={isInPack ? 'secondary' : 'primary'}
+        color={isInPack ? 'secondary' : 'primary_subtle'}
         size="tiny"
         disabled={isPendingRefresh}
         onPress={handleToggleMembership}>
