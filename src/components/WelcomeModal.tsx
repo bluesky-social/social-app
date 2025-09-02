@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
@@ -37,6 +37,12 @@ export function WelcomeModal({control}: WelcomeModalProps) {
       if (callback) callback()
     }, 150)
   }
+
+  useEffect(() => {
+    if (control.isOpen) {
+      logger.metric('welcomeModal:presented', {})
+    }
+  }, [control.isOpen])
 
   const onPressCreateAccount = () => {
     logger.metric('welcomeModal:signupClicked', {})
@@ -215,7 +221,10 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                 a.bg_transparent,
               ]}
               hoverStyle={[a.bg_transparent]}
-              onPress={() => fadeOutAndClose()}
+              onPress={() => {
+                logger.metric('welcomeModal:dismissed', {})
+                fadeOutAndClose()
+              }}
               color="secondary"
               size="small"
               variant="ghost"
