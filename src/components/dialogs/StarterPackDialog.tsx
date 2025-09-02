@@ -134,7 +134,6 @@ function StarterPackList({
 
   const {
     data,
-    refetch,
     isError,
     isLoading,
     hasNextPage,
@@ -145,15 +144,7 @@ function StarterPackList({
   const membershipItems =
     data?.pages.flatMap(page => page.starterPacksWithMembership) || []
 
-  const _onRefresh = useCallback(async () => {
-    try {
-      await refetch()
-    } catch (err) {
-      // Error handling is optional since this is just a refresh
-    }
-  }, [refetch])
-
-  const _onEndReached = useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -237,9 +228,7 @@ function StarterPackList({
           ? () => 'starter_pack_dialog_loader'
           : (item: StarterPackWithMembership) => item.starterPack.uri
       }
-      refreshing={false}
-      onRefresh={_onRefresh}
-      onEndReached={_onEndReached}
+      onEndReached={onEndReached}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
