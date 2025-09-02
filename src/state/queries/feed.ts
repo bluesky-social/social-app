@@ -2,6 +2,7 @@ import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
   type AppBskyActorDefs,
   type AppBskyFeedDefs,
+  type AppBskyFeedGetFeedGenerators,
   type AppBskyGraphDefs,
   type AppBskyUnspeccedGetPopularFeedGenerators,
   AtUri,
@@ -322,6 +323,101 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
     if (count < limit && (data?.pages.length || 0) < 6) {
       query.fetchNextPage()
       lastPageCountRef.current = data?.pages?.length || 0
+    }
+  }, [query, limit])
+
+  return query
+}
+
+export function useGetBlackskyFeedsQuery(options?: GetPopularFeedsOptions) {
+  const {hasSession} = useSession()
+  const agent = useAgent()
+  const limit = options?.limit || 10
+  const {data: preferences} = usePreferencesQuery()
+  const queryClient = useQueryClient()
+  const moderationOpts = useModerationOpts()
+
+  // Make sure this doesn't invalidate unless really needed.
+  const selectArgs = useMemo(
+    () => ({
+      hasSession,
+      savedFeeds: preferences?.savedFeeds || [],
+      moderationOpts,
+    }),
+    [hasSession, preferences?.savedFeeds, moderationOpts],
+  )
+
+  const query = useInfiniteQuery<
+    AppBskyFeedGetFeedGenerators.OutputSchema,
+    Error,
+    InfiniteData<AppBskyFeedGetFeedGenerators.OutputSchema>,
+    QueryKey,
+    string | undefined
+  >({
+    enabled: Boolean(moderationOpts) && options?.enabled !== false,
+    queryKey: createGetPopularFeedsQueryKey(options),
+    queryFn: async () => {
+      const res = await agent.app.bsky.feed.getFeedGenerators({
+        feeds: [
+          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-trend',
+          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky',
+          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-edu',
+          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-op',
+          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-videos',
+          'at://did:plc:w4xbfzo7kqfes5zb7r6qv3rw/app.bsky.feed.generator/blacksky-photos',
+          'at://did:plc:3guzzweuqraryl3rdkimjamk/app.bsky.feed.generator/for-you',
+        ],
+      })
+
+      // precache feeds
+      for (const feed of res.data.feeds) {
+        const hydratedFeed = hydrateFeedGenerator(feed)
+        precacheFeed(queryClient, hydratedFeed)
+      }
+
+      return res.data
+    },
+    initialPageParam: undefined,
+    getNextPageParam: _lastPage => null,
+    select: useCallback(
+      (data: InfiniteData<AppBskyFeedGetFeedGenerators.OutputSchema>) => {
+        const {
+          savedFeeds,
+          hasSession: hasSessionInner,
+          moderationOpts,
+        } = selectArgs
+        return {
+          ...data,
+          pages: data.pages.map(page => {
+            return {
+              ...page,
+              feeds: page.feeds.filter(feed => {
+                if (
+                  !hasSessionInner &&
+                  KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)
+                ) {
+                  return false
+                }
+                const alreadySaved = Boolean(
+                  savedFeeds?.find(f => {
+                    return f.value === feed.uri
+                  }),
+                )
+                const decision = moderateFeedGenerator(feed, moderationOpts!)
+                return !alreadySaved && !decision.ui('contentList').filter
+              }),
+            }
+          }),
+        }
+      },
+      [selectArgs /* Don't change. Everything needs to go into selectArgs. */],
+    ),
+  })
+
+  useEffect(() => {
+    const {isFetching, hasNextPage} = query
+    if (isFetching || !hasNextPage) {
+      return
     }
   }, [query, limit])
 

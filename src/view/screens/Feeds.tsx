@@ -19,7 +19,7 @@ import {s} from '#/lib/styles'
 import {isNative, isWeb} from '#/platform/detection'
 import {
   type SavedFeedItem,
-  useGetPopularFeedsQuery,
+  useGetBlackskyFeedsQuery,
   useSavedFeeds,
   useSearchPopularFeedsMutation,
 } from '#/state/queries/feed'
@@ -123,7 +123,7 @@ export function FeedsScreen(_props: Props) {
     fetchNextPage: fetchNextPopularFeedsPage,
     isFetchingNextPage: isPopularFeedsFetchingNextPage,
     hasNextPage: hasNextPopularFeedsPage,
-  } = useGetPopularFeedsQuery()
+  } = useGetBlackskyFeedsQuery()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {
