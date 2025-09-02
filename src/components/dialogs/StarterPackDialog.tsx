@@ -78,7 +78,6 @@ export function StarterPackDialog({
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <StarterPackList
-        control={control}
         onStartWizard={wrappedNavToWizard}
         targetDid={targetDid}
         enabled={enabled}
@@ -122,16 +121,15 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
 }
 
 function StarterPackList({
-  control,
   onStartWizard,
   targetDid,
   enabled,
 }: {
-  control: Dialog.DialogControlProps
   onStartWizard: () => void
   targetDid: string
   enabled?: boolean
 }) {
+  const control = Dialog.useDialogContext()
   const {_} = useLingui()
 
   const {
