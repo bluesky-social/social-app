@@ -15,7 +15,9 @@ module.exports = function (_config) {
 
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
-  const IS_DEV = !IS_TESTFLIGHT || !IS_PRODUCTION
+  const IS_DEV =
+    process.env.EXPO_PUBLIC_ENV === 'development' ||
+    (!IS_TESTFLIGHT && !IS_PRODUCTION)
 
   const ASSOCIATED_DOMAINS = [
     'applinks:bsky.app',
