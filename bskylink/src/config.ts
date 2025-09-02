@@ -61,10 +61,10 @@ export const readEnv = (): Environment => {
     dbPostgresPoolIdleTimeoutMs: envInt(
       'LINK_DB_POSTGRES_POOL_IDLE_TIMEOUT_MS',
     ),
-    safelinkEnabled: envBool('SAFELINK_ENABLED'),
-    safelinkPdsUrl: envStr('SAFELINK_PDS_URL'),
-    safelinkAgentIdentifier: envStr('SAFELINK_AGENT_IDENTIFIER'),
-    safelinkAgentPass: envStr('SAFELINK_AGENT_PASS'),
+    safelinkEnabled: envBool('LINK_SAFELINK_ENABLED'),
+    safelinkPdsUrl: envStr('LINK_SAFELINK_PDS_URL'),
+    safelinkAgentIdentifier: envStr('LINK_SAFELINK_AGENT_IDENTIFIER'),
+    safelinkAgentPass: envStr('LINK_SAFELINK_AGENT_PASS'),
   }
 }
 
