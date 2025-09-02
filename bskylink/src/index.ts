@@ -7,6 +7,7 @@ import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
 
 import {type Config} from './config.js'
 import {AppContext} from './context.js'
+import i18n from './i18n.js'
 import {default as routes, errorHandler} from './routes/index.js'
 
 export * from './config.js'
@@ -25,6 +26,7 @@ export class LinkService {
   static async create(cfg: Config): Promise<LinkService> {
     let app = express()
     app.use(cors())
+    app.use(i18n.init)
 
     const ctx = await AppContext.fromConfig(cfg)
     app = routes(ctx, app)
