@@ -33,16 +33,14 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
+      name: IS_DEV ? 'Bluesky (DEV)' : 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
       runtimeVersion: {
         policy: 'appVersion',
       },
-      icon: IS_DEV
-        ? './assets/app-icons/ios_icon_default_next.png'
-        : './assets/app-icons/icon_dev.png',
+      icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#1083fe',
       newArchEnabled: false,
