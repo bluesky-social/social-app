@@ -173,8 +173,13 @@ export function WelcomeModal({control}: WelcomeModalProps) {
                     )}
                   </Button>
                 </View>
-                <View style={[a.align_center]}>
-                  <Text style={[a.text_md, {color: '#405168'}]}>
+                <View style={[a.align_center, {minWidth: 200}]}>
+                  <Text
+                    style={[
+                      a.text_md,
+                      a.text_center,
+                      {color: '#405168', lineHeight: 24},
+                    ]}>
                     <Trans>Already have an account?</Trans>{' '}
                     <Pressable
                       onPointerEnter={() => setSignInLinkHovered(true)}
