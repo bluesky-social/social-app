@@ -210,6 +210,7 @@ export const KNOWN_AUTHED_ONLY_FEEDS = [
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/mutuals', // mutuals, by bluesky
   'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/my-followers', // followers, by jaz
   'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
+  'at://did:plc:3guzzweuqraryl3rdkimjamk/app.bsky.feed.generator/for-you', // spacecowboy fyp
 ]
 
 type GetPopularFeedsOptions = {limit?: number; enabled?: boolean}
