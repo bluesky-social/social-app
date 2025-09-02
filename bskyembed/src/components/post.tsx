@@ -6,10 +6,10 @@ import {
 } from '@atproto/api'
 import {h} from 'preact'
 
-import replyIcon from '../../assets/bubble_filled_stroke2_corner2_rounded.svg'
-import likeIcon from '../../assets/heart2_filled_stroke2_corner0_rounded.svg'
-import logo from '../../assets/logo.svg'
-import repostIcon from '../../assets/repost_stroke2_corner2_rounded.svg'
+import likeIcon from '../../assets/heart_stroke2_corner0_rounded.svg'
+import logo from '../../assets/logo_full_name.svg'
+import replyIcon from '../../assets/reply_unfilled_stroke2_corner0_rounded.svg'
+import repostIcon from '../../assetsrepost_unfilled_stroke2_corner0_rounded.svg'
 import {CONTENT_LABELS} from '../labels'
 import {getRkey, niceDate, prettyNumber} from '../utils'
 import {Container} from './container'
@@ -35,7 +35,13 @@ export function Post({thread}: Props) {
   const href = `/profile/${post.author.did}/post/${getRkey(post)}`
   return (
     <Container href={href}>
-      <div className="flex-1 flex-col flex gap-2" lang={record?.langs?.[0]}>
+      <div
+        className="flex-1 flex-col flex gap-2 border rounded-md"
+        style={{
+          borderColor: 'var(--color-primary)',
+          borderRadius: 20,
+        }}
+        lang={record?.langs?.[0]}>
         <div className="flex gap-2.5 items-center cursor-pointer">
           <Link href={`/profile/${post.author.did}`} className="rounded-full">
             <div className="w-10 h-10 overflow-hidden rounded-full bg-neutral-300 dark:bg-slate-700 shrink-0">
@@ -58,11 +64,6 @@ export function Post({thread}: Props) {
             </Link>
           </div>
           <div className="flex-1" />
-          <Link
-            href={href}
-            className="transition-transform hover:scale-110 shrink-0 self-start">
-            <img src={logo} className="h-8" />
-          </Link>
         </div>
         <PostContent record={record} />
         <Embed content={post.embed} labels={post.labels} />
@@ -73,12 +74,20 @@ export function Post({thread}: Props) {
             {niceDate(post.indexedAt)}
           </time>
         </Link>
-        <div className="border-t dark:border-slate-600 w-full pt-2.5 flex items-center gap-5 text-sm cursor-pointer">
+        <div className="border-t w-full pt-2.5 flex items-center gap-5 text-sm cursor-pointer">
           {!!post.likeCount && (
             <div className="flex items-center gap-2 cursor-pointer">
               <img src={likeIcon} className="w-5 h-5" />
               <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
                 {prettyNumber(post.likeCount)}
+              </p>
+            </div>
+          )}
+          {!!post.replyCount && (
+            <div className="flex items-center gap-2 cursor-pointer">
+              <img src={replyIcon} className="w-5 h-5" />
+              <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
+                {prettyNumber(post.replyCount)}
               </p>
             </div>
           )}
@@ -90,12 +99,6 @@ export function Post({thread}: Props) {
               </p>
             </div>
           )}
-          <div className="flex items-center gap-2 cursor-pointer">
-            <img src={replyIcon} className="w-5 h-5" />
-            <p className="font-bold text-neutral-500 dark:text-neutral-300 mb-px">
-              Reply
-            </p>
-          </div>
           <div className="flex-1" />
           <p className="cursor-pointer text-brand dark:text-brandLighten font-bold hover:underline hidden min-[450px]:inline">
             {post.replyCount
@@ -104,8 +107,16 @@ export function Post({thread}: Props) {
                 } on Bluesky`
               : `View on Bluesky`}
           </p>
+        </div>
+
+        <div className="flex cursor-pointer min-[450px]:hidden">
+          <Link
+            href={href}
+            className="transition-transform hover:scale-110 shrink-0 self-start">
+            <img src={logo} className="h-8" />
+          </Link>
           <p className="cursor-pointer text-brand font-bold hover:underline min-[450px]:hidden">
-            <span className="hidden min-[380px]:inline">View on </span>Bluesky
+            Bluesky
           </p>
         </div>
       </div>
