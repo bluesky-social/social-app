@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:44\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
 #: src/components/InterestTabs.tsx:325
 msgid "\"{interestsDisplayName}\" category (active)"
-msgstr ""
+msgstr "Kategorio \"{interestsDisplayName}\" (aktiva)"
 
 #: src/screens/Messages/components/ChatListItem.tsx:160
 msgid "(contains embedded content)"
@@ -125,7 +125,7 @@ msgstr "{0, plural, one {{1} afiŝo} other {{1} afiŝoj}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, one {# homo}other {# homoj}} uzis ĉi tiun startpakon!"
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
 msgstr "{0, plural, other {+# pli}}"
 
@@ -524,7 +524,7 @@ msgstr "7 tagoj"
 
 #: src/screens/Onboarding/StepFinished.tsx:341
 msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
-msgstr ""
+msgstr "Aro de popularaj fluoj, kiujn vi povas trovi ĉe Bluesky, inkluzive de News, Booksky, Game Dev, Blacksky kaj Fountain Pens"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/screens/Messages/components/ChatListItem.tsx:210
@@ -650,8 +650,8 @@ msgstr "Agadaj sciigoj"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "Aldoni"
@@ -782,7 +782,7 @@ msgstr "Aldoni ĉi tiun fluon al viaj fluoj"
 msgid "Add to lists"
 msgstr "Aldoni al listoj"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -797,7 +797,7 @@ msgstr "Aldoni uzanton al la listo"
 msgid "Added to list"
 msgstr "Aldonita al listo"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
 msgstr "Aldonita al la startpako"
 
@@ -964,7 +964,7 @@ msgstr "Eraro okazis dum densigo de la videaĵo."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
 msgid "An error occurred while fetching suggested accounts."
-msgstr ""
+msgstr "Eraro okazis dum ŝargado de proponitaj kontoj."
 
 #: src/state/queries/explore-feed-previews.tsx:173
 msgid "An error occurred while fetching the feed."
@@ -997,7 +997,7 @@ msgstr "Eraro okazis dum alŝutado de la videaĵo."
 
 #: src/screens/Onboarding/StepFinished.tsx:359
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
-msgstr ""
+msgstr "Ilustraĵo montranta plurajn Bluesky-afiŝojn apud piktogramoj de reafiŝado, ŝatado kaj komentado"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:84
 #: src/components/verification/VerifierDialog.tsx:86
@@ -1808,7 +1808,7 @@ msgstr "Elektu homojn"
 
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:226
 msgid "Choose Post Languages"
-msgstr ""
+msgstr "Elektu lingvojn de la afiŝo"
 
 #: src/screens/Onboarding/StepFinished.tsx:575
 msgid "Choose the algorithms that power your custom feeds."
@@ -1879,7 +1879,7 @@ msgstr "Alklaku por ebligi citafiŝojn de ĉi tiu afiŝo."
 msgid "Click to open tag menu for {tag}"
 msgstr "Alklaku por malfermi etikedan menuon por {tag}"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "Alklaku por reprovi sendi mesaĝon"
 
@@ -1901,7 +1901,7 @@ msgstr "🐮 Dek bovinoj 🐮"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2174,7 +2174,7 @@ msgstr "Fono de kuntekstmenuo, alklaku por fermi la menuon."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Daŭrigi"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Daŭrigi fadenon..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2378,8 +2378,8 @@ msgstr "Ne eblis ĝisdatigi sciigajn agordojn"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "Krei"
@@ -2426,7 +2426,7 @@ msgstr "Krei konton"
 msgid "Create an account without using this starter pack"
 msgstr "Krei konton neuzante ĉi tiun startpakon"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Krei profilbildon anstataŭe"
 
@@ -2444,8 +2444,8 @@ msgstr "Krei novan konton"
 msgid "Create report for {0}"
 msgstr "Krei raporton pri {0}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
 msgstr "Krei startpakon"
 
@@ -2772,7 +2772,7 @@ msgstr "Montrata nomo"
 
 #: src/screens/Onboarding/StepFinished.tsx:347
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
-msgstr ""
+msgstr "Forlasu la trolojn kaj klakallogilojn. Trovu realajn homojn kaj konversaciojn, kiuj gravas por vi."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:402
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:404
@@ -2815,8 +2815,8 @@ msgstr "Ne maltrankvilu! Ĉiuj ekzistantaj mesaĝoj kaj agordoj estas konservita
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,7 +3382,7 @@ msgstr "Malsukcesis akcepti babilejon"
 msgid "Failed to add emoji reaction"
 msgstr "Malsukcesis aldoni emoĝian reagon"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
 msgstr "Malsukcesis aldoni al la startpako"
 
@@ -3427,7 +3427,7 @@ msgstr "Malsukcesis forigi startpakon"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:126
 msgid "Failed to follow all suggested accounts, please try again"
-msgstr ""
+msgstr "Malsukcesis sekvi ĉiujn proponitajn kontojn, bonvolu reprovi"
 
 #: src/screens/Messages/ChatList.tsx:270
 #: src/screens/Messages/Inbox.tsx:208
@@ -3492,7 +3492,7 @@ msgstr "Malsukcesis alpingli afiŝon"
 msgid "Failed to remove emoji reaction"
 msgstr "Malsukcesis forigi emoĝian reagon"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
 msgstr "Malsukcesis forigi el la startpako"
 
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "Malsukcesis konservi viajn interesojn."
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "Malsukcesis sendi"
 
@@ -3684,7 +3684,7 @@ msgstr "Trovi afiŝojn, uzantojn kaj fluojn ĉe Bluesky"
 
 #: src/screens/Onboarding/StepFinished.tsx:345
 msgid "Find your people"
-msgstr ""
+msgstr "Trovu viajn konatojn"
 
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Finish"
@@ -3759,7 +3759,7 @@ msgstr "Sekvi ĉiujn"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:232
 msgid "Follow all accounts"
-msgstr ""
+msgstr "Eksekvu ĉiujn kontojn"
 
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:518
@@ -3775,7 +3775,7 @@ msgstr "Sekvi reciproke"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:121
 msgid "Followed all accounts!"
-msgstr ""
+msgstr "Ĉiuj kontoj eksekvitaj!"
 
 #: src/components/KnownFollowers.tsx:238
 msgid "Followed by <0>{0}</0>"
@@ -3885,7 +3885,7 @@ msgstr "Eterne"
 
 #: src/screens/Onboarding/StepFinished.tsx:354
 msgid "Forget the noise"
-msgstr ""
+msgstr "Forgesu pri bruo"
 
 #: src/screens/Login/index.tsx:153
 #: src/screens/Login/index.tsx:168
@@ -3902,7 +3902,7 @@ msgstr "Ĉu vi forgesis?"
 
 #: src/screens/Onboarding/StepFinished.tsx:336
 msgid "Free your feed"
-msgstr ""
+msgstr "Liberu vian fluon"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:54
 #: src/lib/moderation/useReportOptions.ts:54
@@ -3999,7 +3999,7 @@ msgstr "Enkonduko"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Donu vizaĝon al via profilo"
 
@@ -4161,7 +4161,7 @@ msgstr "Ĉu vi havas problemon?"
 msgid "Help"
 msgstr "Helpo"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Afiŝu foton aŭ kreu profilbildon por ke homoj sciu, ke vi ne estas roboto."
 
@@ -4662,7 +4662,7 @@ msgstr "Plej freŝaj"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:277
 msgctxt "english-only-resource"
 msgid "Learn more"
-msgstr ""
+msgstr "Ekscii pli"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
@@ -4702,7 +4702,7 @@ msgstr "Eksciu pli pri ĉi tiu averto"
 #: src/components/verification/VerifierDialog.tsx:118
 msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
-msgstr ""
+msgstr "Ekscii pli pri konfirmado ĉe Bluesky"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
@@ -5479,7 +5479,7 @@ msgstr "Novaj afiŝoj de {firstAuthorLink} kaj <0>{additionalAuthorsCount, plura
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "Novaj afiŝoj de {firstAuthorName} kaj {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
 msgstr "Nova startpako"
 
@@ -5533,7 +5533,7 @@ msgstr "Sekva bildo"
 
 #: src/screens/Onboarding/StepFinished.tsx:356
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
-msgstr ""
+msgstr "Sen reklamoj, sen enpenetra spurado, sen okupo-kaptiloj. Bluesky respektas vian tempon kaj atenton."
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
@@ -5576,7 +5576,7 @@ msgstr "Ankoraŭ ne estas mesaĝoj"
 
 #: src/screens/Onboarding/StepFinished.tsx:338
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
-msgstr ""
+msgstr "Ne plu da eterna rulumado tra aĉaĵo-plenaj algoritmoj. Trovu fluojn kiuj funkcias por vi, ne kontraŭ vi."
 
 #: src/view/com/notifications/NotificationFeed.tsx:122
 msgid "No notifications yet!"
@@ -5750,7 +5750,7 @@ msgstr "Sciigoj pri ĉio alia, ekzemple kiam iu aliĝos uzante unu el viaj start
 msgid "now"
 msgstr "nun"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "Nun"
 
@@ -5827,7 +5827,7 @@ msgstr "Unu aŭ pli el viaj elektitaj dosieroj estas tro grandaj. Maksimuma gran
 msgid "One or more videos is missing alt text."
 msgstr "Al unu aŭ pli da videaĵoj mankas alternativa teksto."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "Nur dosieroj .jpg kaj .png estas subtenataj"
 
@@ -5841,7 +5841,7 @@ msgstr "Nur {0} povas respondi."
 msgid "Only followers who I follow"
 msgstr "Nur sekvantoj kiujn mi sekvas"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Nur bildaj dosieroj estas subtenataj"
 
@@ -5866,7 +5866,7 @@ msgstr "Ups!"
 msgid "Open"
 msgstr "Malfermi"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Malfermi la profilbildan kreilon"
 
@@ -6771,7 +6771,7 @@ msgstr "Lastaj serĉoj"
 
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:274
 msgid "Recently used"
-msgstr ""
+msgstr "Laste uzitaj"
 
 #: src/screens/Search/modules/ExploreRecommendations.tsx:54
 msgid "Recommended"
@@ -6797,8 +6797,8 @@ msgstr "Reŝargi konversaciojn"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,7 +6931,7 @@ msgstr "Forigis el listo"
 msgid "Removed from saved feeds"
 msgstr "Forigis el konservitaj fluoj"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
 msgstr "Forigita el la startpako"
 
@@ -7248,7 +7248,7 @@ msgstr "Provoj ensaluti"
 msgid "Retries the last action, which errored out"
 msgstr "Reprovas la lastan agon, kiu eraris"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -7384,11 +7384,11 @@ msgstr "Scienco"
 
 #: src/components/InterestTabs.tsx:250
 msgid "Scroll left"
-msgstr ""
+msgstr "Rulumi maldekstren"
 
 #: src/components/InterestTabs.tsx:284
 msgid "Scroll right"
-msgstr ""
+msgstr "Rulumi dekstren"
 
 #: src/view/screens/ProfileList.tsx:996
 msgid "Scroll to top"
@@ -7419,12 +7419,12 @@ msgstr "Serĉi fluojn"
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.
 #: src/components/ProgressGuide/FollowDialog.tsx:425
 msgid "Search for \"{interestsDisplayName}\""
-msgstr ""
+msgstr "Serĉi \"{interestsDisplayName}\""
 
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
 #: src/components/ProgressGuide/FollowDialog.tsx:418
 msgid "Search for \"{interestsDisplayName}\" (active)"
-msgstr ""
+msgstr "Serĉi \"{interestsDisplayName}\" (aktiva)"
 
 #: src/view/shell/desktop/Search.tsx:131
 msgid "Search for \"{query}\""
@@ -7461,7 +7461,7 @@ msgstr "Serĉado nun estas nedisponebla kiam elsalutinta"
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:257
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:258
 msgid "Search languages"
-msgstr ""
+msgstr "Serĉi lingvojn"
 
 #: src/screens/Profile/ProfileSearch.tsx:36
 msgid "Search my posts"
@@ -7534,7 +7534,7 @@ msgstr "Serĉ-ŝovilo. Uzu la sagoklavojn por serĉi antaŭen kaj malantaŭen ka
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.
 #: src/components/InterestTabs.tsx:332
 msgid "Select \"{interestsDisplayName}\" category"
-msgstr ""
+msgstr "Elekti kategorion \"{interestsDisplayName}\""
 
 #. Accessibility label for a username suggestion in the account creation flow
 #: src/screens/Signup/StepHandle/HandleSuggestions.tsx:42
@@ -7634,7 +7634,7 @@ msgstr "Elektu kontrol-servo(j)n, al kiu vi volas raporti"
 
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:236
 msgid "Select up to 3 languages used in this post"
-msgstr ""
+msgstr "Elektu ĝis 3 lingvojn uzitajn en ĉi tiu afiŝo"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
@@ -8876,7 +8876,7 @@ msgstr "Tiu identigilo estas rezervita. Bonvolu provi alian."
 
 #: src/components/dialogs/BirthDateSettings.tsx:45
 msgid "This information is private and not shared with other users."
-msgstr ""
+msgstr "Ĉi tiuj informoj estas privataj kaj ne montrataj al aliaj uzantoj."
 
 #: src/components/live/EditLiveDialog.tsx:189
 #: src/components/live/GoLiveDialog.tsx:160
@@ -9389,7 +9389,7 @@ msgstr "Ĝisdatigado de responda videbleco malsukcesis"
 msgid "Updating..."
 msgstr "Ĝisdatigado..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Alŝuti foton anstataŭe"
 
@@ -10358,7 +10358,7 @@ msgstr "Vi ne havas fluojn."
 msgid "You have no lists."
 msgstr "Vi ne havas listojn."
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
 msgstr "Vi havas neniun startpakon."
 
@@ -10421,7 +10421,7 @@ msgstr "Vi devas esti almenaŭ 13-jaraĝa por krei konton."
 
 #: src/components/dialogs/BirthDateSettings.tsx:131
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
-msgstr ""
+msgstr "Vi devas aĝi almenaŭ 13 jarojn por uzi Bluesky. Legu niajn <0>uzokondiĉojn</0> por pliaj informoj."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 msgid "You must be following at least seven other people to generate a starter pack."
@@ -10711,11 +10711,11 @@ msgstr "Via preferata lingvo"
 
 #: src/screens/Onboarding/StepFinished.tsx:422
 msgid "Your profile picture"
-msgstr ""
+msgstr "Via profilbildo"
 
 #: src/screens/Onboarding/StepFinished.tsx:350
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
-msgstr ""
+msgstr "Via profilbildo ĉirkaŭita per samcentraj cirkloj de profilbildoj de aliaj uzantoj"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."

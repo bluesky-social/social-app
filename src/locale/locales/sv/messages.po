@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:45\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -125,7 +125,7 @@ msgstr "{0, plural, other {{1} inlägg}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, other {# personer har}} använt det här startpaketet!"
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
 msgstr "{0, plural, other {+# till}}"
 
@@ -650,8 +650,8 @@ msgstr "Aktivitetsnotiser"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "Lägg till"
@@ -782,7 +782,7 @@ msgstr "Lägg till bland dina flöden"
 msgid "Add to lists"
 msgstr "Lägg till i listor"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -797,7 +797,7 @@ msgstr "Lägg till användare i lista"
 msgid "Added to list"
 msgstr "Tillagd i listan"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
 msgstr "Tillagt i startpaket"
 
@@ -1879,7 +1879,7 @@ msgstr "Klicka för att tillåta citeringar av detta inlägg."
 msgid "Click to open tag menu for {tag}"
 msgstr "Klicka för att öppna taggmenyn för {tag}"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "Klicka för att försöka på nytt med misslyckat meddelande"
 
@@ -1901,7 +1901,7 @@ msgstr "Galopp 🐴 galopp 🐴"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2174,7 +2174,7 @@ msgstr "Utanför kontextmenyn. Klicka för att stänga menyn."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Fortsätt"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Utöka tråd…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2378,8 +2378,8 @@ msgstr "Kunde inte uppdatera notisinställningar"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "Skapa"
@@ -2426,7 +2426,7 @@ msgstr "Skapa ett konto"
 msgid "Create an account without using this starter pack"
 msgstr "Skapa ett konto utan att använda det här startpaketet"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Skapa en avatar istället"
 
@@ -2444,8 +2444,8 @@ msgstr "Skapa nytt konto"
 msgid "Create report for {0}"
 msgstr "Skapa anmälan för {0}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
 msgstr "Skapa startpaket"
 
@@ -2815,8 +2815,8 @@ msgstr "Ingen fara! Alla dina befintliga meddelanden och inställningar är spar
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,7 +3382,7 @@ msgstr "Det gick inte att acceptera chatten"
 msgid "Failed to add emoji reaction"
 msgstr "Det gick inte att lägga till emoji-reaktion"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
 msgstr "Det gick inte att lägga till i startpaket"
 
@@ -3492,7 +3492,7 @@ msgstr "Det gick inte att fästa inlägget"
 msgid "Failed to remove emoji reaction"
 msgstr "Det gick inte att ta bort emoji-reaktion"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
 msgstr "Det gick inte att ta bort från startpaket"
 
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "Det gick inte att spara dina intressen."
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "Det gick inte att skicka"
 
@@ -3999,7 +3999,7 @@ msgstr "Kom igång"
 msgid "GIF"
 msgstr "Gif-bild"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Ge din profil ett ansikte"
 
@@ -4161,7 +4161,7 @@ msgstr "Har du problem?"
 msgid "Help"
 msgstr "Hjälp"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Låt folk veta att du inte är en bot genom att ladda upp en bild eller skapa en avatar."
 
@@ -5479,7 +5479,7 @@ msgstr "Nya inlägg från {firstAuthorLink} och <0>{additionalAuthorsCount, plur
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "Nya inlägg från {firstAuthorName} och {additionalAuthorsCount, plural, one {{formattedAuthorsCount} annan} other {{formattedAuthorsCount} andra}}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
 msgstr "Nytt startpaket"
 
@@ -5576,7 +5576,7 @@ msgstr "Inga meddelanden ännu"
 
 #: src/screens/Onboarding/StepFinished.tsx:338
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
-msgstr "Inget mer doomscrollande orsakat av skräpfyllda algoritmer. Välj flöden som fungerar för dig – inte emot dig."
+msgstr "Inget mer doomscrollande orsakat av skräpfyllda algoritmer. Hitta flöden som arbetar för dig – inte emot dig."
 
 #: src/view/com/notifications/NotificationFeed.tsx:122
 msgid "No notifications yet!"
@@ -5750,7 +5750,7 @@ msgstr "Notiser för allt annat, t.ex. när någon använder ett av dina startpa
 msgid "now"
 msgstr "nu"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "Nu"
 
@@ -5827,7 +5827,7 @@ msgstr "En eller flera av de filer du valt är för stora. Maxstorlek är 100 M
 msgid "One or more videos is missing alt text."
 msgstr "Ett eller flera videoklipp saknar alternativtext."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "Endast .jpg- och .png-filer stöds"
 
@@ -5841,7 +5841,7 @@ msgstr "Endast {0} kan svara."
 msgid "Only followers who I follow"
 msgstr "Bara följare som jag följer"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Endast bildfiler stöds"
 
@@ -5866,7 +5866,7 @@ msgstr "Hoppsan!"
 msgid "Open"
 msgstr "Öppna"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Öppna avatarskapare"
 
@@ -6797,8 +6797,8 @@ msgstr "Ladda om konversationer"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,7 +6931,7 @@ msgstr "Borttaget från lista"
 msgid "Removed from saved feeds"
 msgstr "Borttaget från sparade flöden"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
 msgstr "Togs bort från startpaket"
 
@@ -7248,7 +7248,7 @@ msgstr "Gör ett nytt inloggningsförsök"
 msgid "Retries the last action, which errored out"
 msgstr "Försöker igen med den senaste misslyckade åtgärden"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -8572,7 +8572,7 @@ msgstr "Svaret har dolts av trådskaparen."
 
 #: src/components/dialogs/BirthDateSettings.tsx:122
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
-msgstr "Det födelsedatum du har angett visar att du är under 18 år. Vissa funktioner och innehåll kan vara otillgängliga för dig."
+msgstr "Enligt det födelsedatum du har angett är du under 18 år. Vissa funktioner och innehåll kan vara otillgängliga för dig."
 
 #: src/screens/Moderation/index.tsx:426
 msgid "The Bluesky web application"
@@ -9389,7 +9389,7 @@ msgstr "Det gick inte att uppdatera synlighet för svar"
 msgid "Updating..."
 msgstr "Uppdaterar…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Ladda upp ett foto istället"
 
@@ -10358,7 +10358,7 @@ msgstr "Du har inga flöden."
 msgid "You have no lists."
 msgstr "Du har inga listor."
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
 msgstr "Du har inga startpaket."
 

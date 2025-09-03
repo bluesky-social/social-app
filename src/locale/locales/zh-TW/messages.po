@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:44\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -125,7 +125,7 @@ msgstr "{0, plural, other {{1} 則貼文}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "總共有 {0, plural, other {# 個人}}使用過這個新手包！"
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
 msgstr "{0, plural, other {+其他 # 個新手包}}"
 
@@ -650,8 +650,8 @@ msgstr "動態通知"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "新增"
@@ -782,7 +782,7 @@ msgstr "將此新增至您的動態源"
 msgid "Add to lists"
 msgstr "新增至列表"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -797,7 +797,7 @@ msgstr "將用戶新增至列表"
 msgid "Added to list"
 msgstr "成功新增至列表"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
 msgstr "成功新增至新手包"
 
@@ -1879,7 +1879,7 @@ msgstr "點此以允許其他人引用這則貼文。"
 msgid "Click to open tag menu for {tag}"
 msgstr "點此以開啟 {tag} 的標籤選單"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "點此以重新傳送訊息"
 
@@ -1901,7 +1901,7 @@ msgstr "達達的馬蹄 🐴 是美麗的錯誤 🐴"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2174,7 +2174,7 @@ msgstr "內容選單背景，點一下以關閉選單。"
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "繼續"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "繼續載入討論串……"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2378,8 +2378,8 @@ msgstr "無法更新通知設定"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "建立"
@@ -2426,7 +2426,7 @@ msgstr "建立帳號"
 msgid "Create an account without using this starter pack"
 msgstr "不使用此新手包建立帳號"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "或是建立一個大頭貼照"
 
@@ -2444,8 +2444,8 @@ msgstr "建立新帳號"
 msgid "Create report for {0}"
 msgstr "建立 {0} 的檢舉"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
 msgstr "建立新手包"
 
@@ -2772,7 +2772,7 @@ msgstr "名稱"
 
 #: src/screens/Onboarding/StepFinished.tsx:347
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
-msgstr "告別網路酸民和標題黨，找到真正對你重要的人與對話。"
+msgstr "告別網路酸民和標題黨，找到您真正在意的人與感興趣的對話。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:402
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:404
@@ -2815,8 +2815,8 @@ msgstr "不用擔心！您現有的訊息和設定都已儲存，只需驗證您
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,7 +3382,7 @@ msgstr "無法接受對話邀請"
 msgid "Failed to add emoji reaction"
 msgstr "無法加入表情符號反應"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
 msgstr "無法新增至新手包"
 
@@ -3492,7 +3492,7 @@ msgstr "無法釘選貼文"
 msgid "Failed to remove emoji reaction"
 msgstr "無法刪除表情符號反應"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
 msgstr "無法從新手包刪除"
 
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "無法儲存感興趣的主題。"
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "無法傳送"
 
@@ -3684,7 +3684,7 @@ msgstr "在 Bluesky 上尋找貼文、用戶和動態源"
 
 #: src/screens/Onboarding/StepFinished.tsx:345
 msgid "Find your people"
-msgstr ""
+msgstr "找到與您志同道合的人"
 
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Finish"
@@ -3885,7 +3885,7 @@ msgstr "永遠"
 
 #: src/screens/Onboarding/StepFinished.tsx:354
 msgid "Forget the noise"
-msgstr "忘記無盡的騷擾"
+msgstr "忘記那些無盡的喧擾"
 
 #: src/screens/Login/index.tsx:153
 #: src/screens/Login/index.tsx:168
@@ -3902,7 +3902,7 @@ msgstr "忘記了？"
 
 #: src/screens/Onboarding/StepFinished.tsx:336
 msgid "Free your feed"
-msgstr "客製化您的動態源"
+msgstr "還您一個乾淨的河道"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:54
 #: src/lib/moderation/useReportOptions.ts:54
@@ -3999,7 +3999,7 @@ msgstr "開始吧"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "為您的個人檔案選擇大頭貼照"
 
@@ -4161,7 +4161,7 @@ msgstr "遇到問題？"
 msgid "Help"
 msgstr "幫助"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "透過上傳圖片或建立大頭貼照，讓大家知道您不是機器人。"
 
@@ -4353,7 +4353,7 @@ msgstr "一旦您刪除這個列表，以後將無法再恢復。"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:272
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
-msgstr "如果您擁有自己的網域，可以將其設定為您的帳號代碼。同時還可以證明自己的身分。<0>瞭解詳情。</0>"
+msgstr "如果您擁有自己的網域，可以將其設定為您的帳號代碼。同時還可以證明自己的身分。<0>在此瞭解詳情。</0>"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:272
 msgid "If you need to update your email, <0>click here</0>."
@@ -5479,7 +5479,7 @@ msgstr "來自 {firstAuthorLink} 和<0>{additionalAuthorsCount, plural, other {�
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "來自 {firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}的新貼文"
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
 msgstr "建立新手包"
 
@@ -5533,7 +5533,7 @@ msgstr "下一張圖片"
 
 #: src/screens/Onboarding/StepFinished.tsx:356
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
-msgstr "無廣告，無侵入式追踪，當然也沒有互動陷阱。 Bluesky 尊重您的時間和注意力。"
+msgstr "無廣告、無侵入式追蹤，更沒有成癮性設計。Bluesky 尊重您寶貴的時間與注意力。"
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
@@ -5576,7 +5576,7 @@ msgstr "目前還沒有訊息"
 
 #: src/screens/Onboarding/StepFinished.tsx:338
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
-msgstr "告別那些充滿垃圾資訊的演算法，找到對你有利而非有害的動態源。"
+msgstr "告別那些充滿垃圾資訊的演算法，找到對您有利而非有害的動態源。"
 
 #: src/view/com/notifications/NotificationFeed.tsx:122
 msgid "No notifications yet!"
@@ -5750,7 +5750,7 @@ msgstr "所有其他的通知，例如有人使用了您的新手包註冊帳號
 msgid "now"
 msgstr "剛剛"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "剛剛"
 
@@ -5827,7 +5827,7 @@ msgstr "至少有一個選擇的檔案太大了。最大檔案尺寸為 100 MB�
 msgid "One or more videos is missing alt text."
 msgstr "至少有一段影片缺少了替代文字。"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "僅支援 .jpg 或 .png 格式的圖片"
 
@@ -5841,7 +5841,7 @@ msgstr "只有{0}可以回覆。"
 msgid "Only followers who I follow"
 msgstr "僅限我回跟的跟隨者"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "僅支援圖片檔案"
 
@@ -5866,7 +5866,7 @@ msgstr "糟糕！"
 msgid "Open"
 msgstr "開放"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "開啟大頭貼照建立工具"
 
@@ -6797,8 +6797,8 @@ msgstr "重新載入對話"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,7 +6931,7 @@ msgstr "成功從列表中刪除"
 msgid "Removed from saved feeds"
 msgstr "成功從儲存的動態源中刪除"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
 msgstr "成功從新手包刪除"
 
@@ -7248,7 +7248,7 @@ msgstr "重試登入"
 msgid "Retries the last action, which errored out"
 msgstr "重新執行上一個出現錯誤的動作"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -8572,7 +8572,7 @@ msgstr "此討論串的發布者隱藏了這則回覆。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:122
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
-msgstr "您輸入的出生日期表示您未滿 18 歲，你可能無法使用一些功能或檢視某些內容。"
+msgstr "您輸入的出生日期表示您未滿 18 歲，可能無法使用一些功能或檢視某些內容。"
 
 #: src/screens/Moderation/index.tsx:426
 msgid "The Bluesky web application"
@@ -9389,7 +9389,7 @@ msgstr "無法更新回覆可見度"
 msgid "Updating..."
 msgstr "更新中……"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "或是上傳圖片"
 
@@ -10358,7 +10358,7 @@ msgstr "您還沒有建立任何動態源。"
 msgid "You have no lists."
 msgstr "您還沒有建立任何列表。"
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
 msgstr "您目前沒有任何新手包。"
 
@@ -10711,11 +10711,11 @@ msgstr "您的偏好語言"
 
 #: src/screens/Onboarding/StepFinished.tsx:422
 msgid "Your profile picture"
-msgstr ""
+msgstr "您的大頭貼照"
 
 #: src/screens/Onboarding/StepFinished.tsx:350
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
-msgstr ""
+msgstr "您的大頭貼照在中心，周圈環繞著許多用戶的大頭貼照"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."

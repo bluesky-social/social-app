@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:44\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -125,7 +125,7 @@ msgstr "{0, plural, other {{1} Posts}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, other {# Personen haben}} dieses Startpaket verwendet!"
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
 msgstr "{0, plural, other {+# mehr}}"
 
@@ -650,8 +650,8 @@ msgstr "Aktivitätsmitteilungen"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "Hinzufügen"
@@ -782,7 +782,7 @@ msgstr "Füge diesen Feed zu deinen Feeds hinzu"
 msgid "Add to lists"
 msgstr "Zu Listen hinzufügen"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -797,7 +797,7 @@ msgstr "Nutzer zur Liste hinzufügen"
 msgid "Added to list"
 msgstr "Zur Liste hinzugefügt"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
 msgstr "Zum Startpaket hinzugefügt"
 
@@ -1879,7 +1879,7 @@ msgstr "Klicke, um Zitate dieses Posts zu aktivieren."
 msgid "Click to open tag menu for {tag}"
 msgstr "Klicken, um das Tag-Menü für {tag} zu öffnen"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "Klicke hier, um die fehlgeschlagene Nachricht erneut zu senden"
 
@@ -1901,7 +1901,7 @@ msgstr "Klipp 🐴 klapp 🐴"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2174,7 +2174,7 @@ msgstr "Hintergrund des Kontextmenüs; klicken, um das Menü zu schließen"
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Fortfahren"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Thread fortsetzen…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2378,8 +2378,8 @@ msgstr "Mitteilungseinstellungen konnten nicht aktualisiert werden"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "Erstellen"
@@ -2426,7 +2426,7 @@ msgstr "Einen Account erstellen"
 msgid "Create an account without using this starter pack"
 msgstr "Stattdessen ohne dieses Startpaket einen Account erstellen"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Stattdessen einen Avatar erstellen"
 
@@ -2444,8 +2444,8 @@ msgstr "Neuen Account erstellen"
 msgid "Create report for {0}"
 msgstr "Meldung für {0} erstellen"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
 msgstr "Startpaket erstellen"
 
@@ -2815,8 +2815,8 @@ msgstr "Keine Sorge! Alle vorhandenen Nachrichten und Einstellungen werden gespe
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,7 +3382,7 @@ msgstr "Chat konnte nicht angenommen werden"
 msgid "Failed to add emoji reaction"
 msgstr "Fehler beim Hinzufügen der Emoji-Reaktion"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
 msgstr "Hinzufügen zum Startpaket fehlgeschlagen"
 
@@ -3492,7 +3492,7 @@ msgstr "Post konnte nicht angeheftet werden"
 msgid "Failed to remove emoji reaction"
 msgstr "Fehler beim Entfernen der Emoji-Reaktion"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
 msgstr "Fehler beim Entfernen aus dem Startpaket"
 
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "Interessen konnten nicht gespeichert werden."
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "Konnte nicht gesendet werden"
 
@@ -3999,7 +3999,7 @@ msgstr "Erste Schritte"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Gib deinem Profil ein Gesicht"
 
@@ -4022,7 +4022,7 @@ msgstr "Eklatante Verstöße gegen Gesetze oder die Nutzungsbedingungen"
 #: src/view/screens/NotFound.tsx:57
 #: src/view/screens/ProfileList.tsx:1038
 msgid "Go back"
-msgstr "Zurückgehen"
+msgstr "Zurück"
 
 #: src/components/Error.tsx:78
 #: src/screens/List/ListHiddenScreen.tsx:224
@@ -4161,7 +4161,7 @@ msgstr "Hast du Probleme?"
 msgid "Help"
 msgstr "Hilfe"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Hilf anderen zu erkennen, dass du kein Bot bist, indem du ein Bild hochlädst oder einen Avatar erstellst."
 
@@ -4674,11 +4674,11 @@ msgstr "Mehr über die Altersverifikation erfahren"
 
 #: src/view/com/auth/SplashScreen.web.tsx:168
 msgid "Learn more about Bluesky"
-msgstr "Erfahre mehr über Bluesky"
+msgstr "Erfahre mehr über Bluesky (auf Englisch)"
 
 #: src/view/com/auth/server-input/index.tsx:218
 msgid "Learn more about self hosting your PDS."
-msgstr "Erfahre mehr über das Selbst-Hosting deiner PDS."
+msgstr "Erfahre mehr über das Selbst-Hosting deiner PDS (auf Englisch)."
 
 #: src/components/moderation/ContentHider.tsx:152
 #: src/components/moderation/ContentHider.tsx:218
@@ -4687,11 +4687,11 @@ msgstr "Erfahre mehr über die Moderation, die auf diesen Inhalt angewendet wurd
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:149
 msgid "Learn more about these changes and how to share your thoughts with us by <0>reading our blog post.</0>"
-msgstr "Erfahre mehr über diese Änderungen und wie du uns deine Meinung mitteilen kannst, indem du <0>unseren Blogpost liest.</0>"
+msgstr "Erfahre mehr über diese Änderungen und wie du uns deine Meinung mitteilen kannst, indem du <0>unseren Blogpost liest (auf Englisch).</0>"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:89
 msgid "Learn more about these changes and how to share your thoughts with us by reading our blog post."
-msgstr "Erfahre mehr über diese Änderungen und wie du uns deine Meinung mitteilen kannst, indem du unseren Blogpost liest."
+msgstr "Erfahre mehr über diese Änderungen und wie du uns deine Meinung mitteilen kannst, indem du unseren Blogpost liest (auf Englisch)."
 
 #: src/components/moderation/PostHider.tsx:110
 #: src/components/moderation/ScreenHider.tsx:127
@@ -4707,7 +4707,7 @@ msgstr "Mehr über die Verifizierung auf Bluesky erfahren (auf Englisch)"
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
 msgid "Learn more about what is public on Bluesky."
-msgstr "Erfahre mehr darüber, was auf Bluesky öffentlich ist."
+msgstr "Erfahre mehr darüber, was auf Bluesky öffentlich ist (auf Englisch)."
 
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:86
 msgid "Learn more in your <0>account settings.</0>"
@@ -4831,7 +4831,7 @@ msgstr "Gefällt {likeCount, plural, one {# Nutzer} other {# Nutzern}}"
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:41
 #: src/view/screens/Profile.tsx:229
 msgid "Likes"
-msgstr "„Gefällt mir“-Angaben"
+msgstr "Gefällt mir"
 
 #: src/lib/hooks/useNotificationHandler.ts:168
 #: src/screens/Settings/NotificationSettings/index.tsx:207
@@ -5479,7 +5479,7 @@ msgstr "Neue Posts von {firstAuthorLink} und <0>{additionalAuthorsCount, plural,
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "Neue Posts von {firstAuthorName} und {additionalAuthorsCount, plural, one {{formattedAuthorsCount} weiterer} other {{formattedAuthorsCount} weitere}}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
 msgstr "Neues Startpaket"
 
@@ -5750,7 +5750,7 @@ msgstr "Mitteilungen für alles andere, z. B. wenn jemand über eines deiner Sta
 msgid "now"
 msgstr "jetzt"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "Jetzt"
 
@@ -5827,7 +5827,7 @@ msgstr "Eine oder mehrere deiner ausgewählten Dateien sind zu groß. Die maxima
 msgid "One or more videos is missing alt text."
 msgstr "Bei einem oder mehreren Videos fehlen Alt-Texte."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "Nur .jpg- und .png-Dateien werden unterstützt"
 
@@ -5841,7 +5841,7 @@ msgstr "Nur {0} kann antworten."
 msgid "Only followers who I follow"
 msgstr "Nur Follower, denen ich folge"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Es werden nur Bilddateien unterstützt"
 
@@ -5866,7 +5866,7 @@ msgstr "Huch!"
 msgid "Open"
 msgstr "Öffnen"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Avatar-Editor öffnen"
 
@@ -6797,8 +6797,8 @@ msgstr "Konversationen neu laden"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,7 +6931,7 @@ msgstr "Aus der Liste entfernt"
 msgid "Removed from saved feeds"
 msgstr "Aus gespeicherten Feeds entfernt"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
 msgstr "Aus dem Startpaket entfernt"
 
@@ -7248,7 +7248,7 @@ msgstr "Erneuter Versuch, sich einzuloggen"
 msgid "Retries the last action, which errored out"
 msgstr "Wiederholt die letzte Aktion, bei der ein Fehler aufgetreten ist"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -8126,7 +8126,7 @@ msgstr "Erinnerung vorübergehend ausblenden"
 #: src/screens/Onboarding/index.tsx:53
 #: src/screens/Onboarding/state.ts:108
 msgid "Software Dev"
-msgstr "Software-Entwickler"
+msgstr "Software-Entwicklung"
 
 #: src/components/verification/VerificationsDialog.tsx:120
 msgid "Some of your verifications are invalid."
@@ -9389,7 +9389,7 @@ msgstr "Aktualisieren der Antwort-Sichtbarkeit ist fehlgeschlagen"
 msgid "Updating..."
 msgstr "Wird aktualisiert…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Stattdessen ein Foto hochladen"
 
@@ -10012,7 +10012,7 @@ msgstr "Wir aktualisieren unsere Nutzungsbedingungen, Datenschutzerklärung und 
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:61
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
-msgstr "Wir aktualisieren unsere Nutzungsbedingungen, Datenschutzerklärung und Urheberrechtsrichtlinie, gültig ab dem 15. September 2025. Außerdem aktualisieren wir unsere Community-Richtlinien und möchten deine Meinung dazu hören! Diese neuen Richtlinien treten am 15. Oktober 2025 in Kraft. Erfahre mehr über diese Änderungen und wie du uns deine Meinung mitteilen kannst, indem du unseren Blogpost liest."
+msgstr "Wir aktualisieren unsere Nutzungsbedingungen, Datenschutzerklärung und Urheberrechtsrichtlinie, gültig ab dem 15. September 2025. Außerdem aktualisieren wir unsere Community-Richtlinien und möchten deine Meinung dazu hören! Diese neuen Richtlinien treten am 15. Oktober 2025 in Kraft. Erfahre mehr über diese Änderungen und wie du uns deine Meinung mitteilen kannst, indem du unseren Blogpost liest (auf Englisch)."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:169
 msgid "We've confirmed your age assurance status. You can now close this dialog."
@@ -10358,7 +10358,7 @@ msgstr "Du hast keine Feeds."
 msgid "You have no lists."
 msgstr "Du hast keine Listen."
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
 msgstr "Du hast keine Startpakete."
 
