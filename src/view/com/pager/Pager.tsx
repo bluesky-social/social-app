@@ -1,7 +1,9 @@
 import {
+  memo,
   useCallback,
   useContext,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -56,6 +58,7 @@ interface Props {
 }
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
+const MemoizedAnimatedPagerView = memo(AnimatedPagerView)
 
 export function Pager({
   ref,
@@ -139,10 +142,6 @@ export function Pager({
     [parentOnPageScrollStateChanged],
   )
 
-  const drawerGesture = useContext(DrawerGestureContext) ?? Gesture.Native() // noop for web
-  const nativeGesture =
-    Gesture.Native().requireExternalGestureToFail(drawerGesture)
-
   return (
     <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
       {renderTabBar({
@@ -151,17 +150,31 @@ export function Pager({
         dragProgress,
         dragState,
       })}
-      <GestureDetector gesture={nativeGesture}>
-        <AnimatedPagerView
+      <DrawerGestureRequireFail>
+        <MemoizedAnimatedPagerView
           ref={pagerView}
-          style={[a.flex_1]}
+          style={a.flex_1}
           initialPage={initialPage}
           onPageScroll={handlePageScroll}>
           {children}
-        </AnimatedPagerView>
-      </GestureDetector>
+        </MemoizedAnimatedPagerView>
+      </DrawerGestureRequireFail>
     </View>
   )
+}
+
+function DrawerGestureRequireFail({children}: {children: React.ReactNode}) {
+  const drawerGesture = useContext(DrawerGestureContext)
+
+  const nativeGesture = useMemo(() => {
+    const gesture = Gesture.Native()
+    if (drawerGesture) {
+      gesture.requireExternalGestureToFail(drawerGesture)
+    }
+    return gesture
+  }, [drawerGesture])
+
+  return <GestureDetector gesture={nativeGesture}>{children}</GestureDetector>
 }
 
 function usePagerHandlers(
