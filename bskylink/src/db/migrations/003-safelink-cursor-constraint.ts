@@ -11,7 +11,7 @@ export async function up(
 
   await db.schema
     .alterTable('safelink_cursor')
-    .addUniqueConstraint('uc_id', ['id'])
+    .addPrimaryKeyConstraint('pk_id', ['id'])
     .execute()
 }
 
@@ -26,6 +26,6 @@ export async function down(
 
   await db.schema
     .alterTable('safelink_cursor')
-    .dropConstraint('uc_id')
+    .dropConstraint('pk_id')
     .execute()
 }
