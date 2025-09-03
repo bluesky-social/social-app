@@ -8,7 +8,7 @@ msgstr ""
 "Language: ru\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:45\n"
 "Last-Translator: \n"
 "Language-Team: Russian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
 #: src/components/InterestTabs.tsx:325
 msgid "\"{interestsDisplayName}\" category (active)"
-msgstr ""
+msgstr "Категория \"{interestsDisplayName}\" (активна)"
 
 #: src/screens/Messages/components/ChatListItem.tsx:160
 msgid "(contains embedded content)"
@@ -125,7 +125,7 @@ msgstr "{0, plural, one {{1} пост} few {{1} поста} many {{1} посто
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural,  few {# человека воспользовались} other {# человек воспользовался}} этим стартовым набором!"
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
 msgstr ""
 
@@ -141,7 +141,7 @@ msgstr "{0} <0>в <1>тексте и тегах</1></0>"
 
 #: src/screens/Profile/Header/Metrics.tsx:49
 msgid "{0} following"
-msgstr ""
+msgstr "{0} подписок"
 
 #: src/components/live/LiveStatusDialog.tsx:68
 msgid "{0} is live"
@@ -153,7 +153,7 @@ msgstr "{0} не является допустимым URL"
 
 #: src/screens/Signup/StepHandle/index.tsx:189
 msgid "{0} is not available"
-msgstr ""
+msgstr "{0} недоступен"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:223
 msgid "{0} joined this week"
@@ -178,11 +178,11 @@ msgstr "{0} отреагировал {1} на {2}"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:187
 msgid "{0}, a feed by {1}, liked by {2}"
-msgstr ""
+msgstr "{0}, лента от {1}, которая нравится {2}"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:188
 msgid "{0}, a list by {1}"
-msgstr ""
+msgstr "{0}, список от {1}"
 
 #: src/view/com/util/UserAvatar.tsx:572
 #: src/view/com/util/UserAvatar.tsx:590
@@ -372,7 +372,7 @@ msgstr "{firstAuthorName} понравился ваш пост"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:482
 msgid "{firstAuthorName} liked your repost"
-msgstr ""
+msgstr "Пользователю {firstAuthorName} понравился ваш репост"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:455
 msgid "{firstAuthorName} removed their verification from your account"
@@ -384,7 +384,7 @@ msgstr "{firstAuthorName} репостнул ваш пост"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:506
 msgid "{firstAuthorName} reposted your repost"
-msgstr ""
+msgstr "Пользователь {firstAuthorName} сделал репост вашего репоста"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:401
 msgid "{firstAuthorName} signed up with your starter pack"
@@ -496,7 +496,7 @@ msgstr "<0>{date}</0> в {time}"
 
 #: src/screens/Search/SearchResults.tsx:255
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
-msgstr ""
+msgstr "<0>Войдите в свой аккаунт</0><1> или </1><2>создайте аккаунт</2><3>, </3><4> чтобы искать новости, спорт, политику и всё остальное, что происходит на Bluesky.</4>"
 
 #: src/screens/StarterPack/Wizard/index.tsx:502
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
@@ -524,7 +524,7 @@ msgstr "7 дней"
 
 #: src/screens/Onboarding/StepFinished.tsx:341
 msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
-msgstr ""
+msgstr "Подборка популярных лент, которые вы можете найти на Bluesky, включая News, Booksky, Game Dev, Blacksky и Foundation Pens"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/screens/Messages/components/ChatListItem.tsx:210
@@ -642,16 +642,16 @@ msgstr "Учётные записи с фигурной синей галочк�
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:102
 #: src/screens/Settings/NotificationSettings/index.tsx:192
 msgid "Activity from others"
-msgstr ""
+msgstr "Активность от других"
 
 #: src/Navigation.tsx:491
 msgid "Activity notifications"
-msgstr ""
+msgstr "Уведомления от активностей"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "Добавить"
@@ -782,7 +782,7 @@ msgstr "Добавьте эту ленту в свои ленты"
 msgid "Add to lists"
 msgstr "Добавить в списки"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -797,13 +797,13 @@ msgstr "Добавить пользователя в список"
 msgid "Added to list"
 msgstr "Добавлено в список"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:112
 msgid "Additional details (limit 1000 characters)"
-msgstr ""
+msgstr "Дополнительные сведения (не больше 1000 символов)"
 
 #: src/components/moderation/ReportDialog/index.tsx:421
 msgid "Additional details (limit 300 characters)"
@@ -839,7 +839,7 @@ msgstr "Расширенные"
 
 #: src/components/ageAssurance/AgeAssuranceBadge.tsx:42
 msgid "Age Assurance"
-msgstr ""
+msgstr "Проверка возраста"
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:70
 msgid "Age assurance inquiry failed to send, please try again."
@@ -852,7 +852,7 @@ msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:145
 msgid "Age assurance only takes a few minutes"
-msgstr ""
+msgstr "Проверка возраста занимает всего лишь несколько минут"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:223
 msgid "alice@example.com"
@@ -892,7 +892,7 @@ msgstr "Разрешить новые сообщения от"
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
 msgid "Allow others to be notified of your posts"
-msgstr ""
+msgstr "Разрешить уведомлять других пользователей о ваших постах"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:348
 msgid "Allow quote posts"
@@ -1074,7 +1074,7 @@ msgstr "Любой может взаимодействовать"
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
 msgid "Anyone who follows me"
-msgstr ""
+msgstr "Любой, кто подписан на меня"
 
 #: src/Navigation.tsx:531
 #: src/screens/Settings/AppIconSettings/index.tsx:67
@@ -1239,7 +1239,7 @@ msgstr "Назначьте тему для алгоритма"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:208
 msgid "At least 8 characters"
-msgstr ""
+msgstr "Как минимум 8 символов"
 
 #: src/screens/Settings/AppIconSettings/useAppIconSets.ts:58
 msgctxt "Name of app icon variant"
@@ -1254,7 +1254,7 @@ msgstr "Автовоспроизведение видео и GIF-файлов"
 #. Shown next to an available username suggestion in the account creation flow
 #: src/screens/Signup/StepHandle/HandleSuggestions.tsx:72
 msgid "Available"
-msgstr ""
+msgstr "Доступен"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:315
 #: src/components/moderation/LabelsOnMeDialog.tsx:316
@@ -1301,7 +1301,7 @@ msgstr "Чтобы принять этот запрос на чат, необх�
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:43
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
-msgstr ""
+msgstr "Перед тем, как вы будете получать уведомления о постах пользователя {name}, вы должны подтвердить свой адрес электронной почты."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
@@ -1312,15 +1312,15 @@ msgstr "Чтобы написать другому пользователю, н�
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:318
 msgid "Begin"
-msgstr ""
+msgstr "Начать"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:312
 msgid "Begin age assurance process"
-msgstr ""
+msgstr "Начать процесс проверки возраста"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:51
 msgid "Begin the age assurance process by completing the fields below."
-msgstr ""
+msgstr "Начните процесс проверки возраста, заполнив поля ниже."
 
 #: src/components/dialogs/BirthDateSettings.tsx:115
 #: src/screens/Settings/AccountSettings.tsx:142
@@ -1686,11 +1686,11 @@ msgstr "Изменить службу модерации"
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:260
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:266
 msgid "Change password"
-msgstr ""
+msgstr "Изменить пароль"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:164
 msgid "Change password dialog"
-msgstr ""
+msgstr "Окно изменения пароля"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:98
 msgid "Change post language to {suggestedLanguageName}"
@@ -1702,7 +1702,7 @@ msgstr "Причина изменения жалобы"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:57
 msgid "Change your password"
-msgstr ""
+msgstr "Измените свой пароль"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
@@ -1853,7 +1853,7 @@ msgstr "Очистить поисковый запрос"
 
 #: src/view/com/feeds/MissingFeed.tsx:87
 msgid "Click for information"
-msgstr ""
+msgstr "Нажмите для информации"
 
 #: src/view/screens/Support.tsx:41
 msgid "click here"
@@ -1879,7 +1879,7 @@ msgstr "Нажмите, чтобы включить цитирование эт�
 msgid "Click to open tag menu for {tag}"
 msgstr "Нажмите, чтобы открыть меню тегов для {tag}"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "Нажмите, чтобы повторить неудачное сообщение"
 
@@ -1901,7 +1901,7 @@ msgstr "Клип 🐴 клоп 🐴"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2103,12 +2103,12 @@ msgstr "Соединение..."
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:213
 msgid "Connection issue"
-msgstr ""
+msgstr "Проблема с подключением"
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:28
 msgid "Contact our moderation team"
-msgstr ""
+msgstr "Обратитесь к нашей команде модерации"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:155
 #: src/screens/Signup/index.tsx:212
@@ -2118,7 +2118,7 @@ msgstr "Служба поддержки"
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:94
 msgid "Contact us"
-msgstr ""
+msgstr "Обратитесь к нам"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:51
 msgid "Content & Media"
@@ -2174,7 +2174,7 @@ msgstr "Фон контекстного меню, нажмите, чтобы з�
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Далее"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Продолжить ветку..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2341,11 +2341,11 @@ msgstr ""
 
 #: src/view/com/feeds/MissingFeed.tsx:133
 msgid "Could not connect to feed service"
-msgstr ""
+msgstr "Не удалось подключиться к сервису лент"
 
 #: src/view/com/feeds/MissingFeed.tsx:182
 msgid "Could not find profile"
-msgstr ""
+msgstr "Не удалось найти профиль"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:35
 #: src/components/dms/ReportDialog.tsx:310
@@ -2370,16 +2370,16 @@ msgstr "Не удалось обработать ваше видео"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:288
 msgid "Could not save changes: {0}"
-msgstr ""
+msgstr "Не удалось сохранить изменения: {0}"
 
 #: src/state/queries/notifications/settings.ts:49
 msgid "Could not update notification settings"
-msgstr ""
+msgstr "Не удалось обновить настройки уведомлений"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "Создать"
@@ -2426,7 +2426,7 @@ msgstr "Создать учётную запись"
 msgid "Create an account without using this starter pack"
 msgstr "Создать учётную запись без этого стартового набора"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Создать аватар вместо этого"
 
@@ -2444,10 +2444,10 @@ msgstr "Создать новую учётную запись"
 msgid "Create report for {0}"
 msgstr "Создать отчёт для {0}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
-msgstr ""
+msgstr "Создать стартовый набор"
 
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
@@ -2815,8 +2815,8 @@ msgstr ""
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,7 +3382,7 @@ msgstr "Не удалось принять чат"
 msgid "Failed to add emoji reaction"
 msgstr "Не удалось добавить эмодзи-реакцию"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
 msgstr ""
 
@@ -3492,7 +3492,7 @@ msgstr "Не удалось закрепить пост"
 msgid "Failed to remove emoji reaction"
 msgstr "Не удалось удалить эмодзи-реакцию"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
 msgstr ""
 
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "Не удалось сохранить ваши интересы."
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "Не удалось отправить"
 
@@ -3759,7 +3759,7 @@ msgstr "Подписаться на всех"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:232
 msgid "Follow all accounts"
-msgstr ""
+msgstr "Подписаться на все аккаунты"
 
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:518
@@ -3775,7 +3775,7 @@ msgstr "Подписаться в ответ"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:121
 msgid "Followed all accounts!"
-msgstr ""
+msgstr "Вы подписаны на всё аккаунты!"
 
 #: src/components/KnownFollowers.tsx:238
 msgid "Followed by <0>{0}</0>"
@@ -3885,7 +3885,7 @@ msgstr "Навсегда"
 
 #: src/screens/Onboarding/StepFinished.tsx:354
 msgid "Forget the noise"
-msgstr ""
+msgstr "Забудьте о шуме"
 
 #: src/screens/Login/index.tsx:153
 #: src/screens/Login/index.tsx:168
@@ -3902,7 +3902,7 @@ msgstr "Забыли пароль?"
 
 #: src/screens/Onboarding/StepFinished.tsx:336
 msgid "Free your feed"
-msgstr ""
+msgstr "Освободите свою ленту"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:54
 #: src/lib/moderation/useReportOptions.ts:54
@@ -3932,39 +3932,39 @@ msgstr "Получить помощь"
 
 #: src/screens/Settings/NotificationSettings/NewFollowerNotificationSettings.tsx:43
 msgid "Get notifications when people follow you."
-msgstr ""
+msgstr "Получайте уведомления, когда на вас подписываются люди."
 
 #: src/screens/Settings/NotificationSettings/LikesOnRepostsNotificationSettings.tsx:43
 msgid "Get notifications when people like posts that you've reposted."
-msgstr ""
+msgstr "Получайте уведомления, когда люди ставят лайки на ваши репосты."
 
 #: src/screens/Settings/NotificationSettings/LikeNotificationSettings.tsx:43
 msgid "Get notifications when people like your posts."
-msgstr ""
+msgstr "Получайте уведомления, когда люди ставят лайки на ваши посты."
 
 #: src/screens/Settings/NotificationSettings/MentionNotificationSettings.tsx:43
 msgid "Get notifications when people mention you."
-msgstr ""
+msgstr "Получайте уведомления, когда люди упоминают вас."
 
 #: src/screens/Settings/NotificationSettings/QuoteNotificationSettings.tsx:43
 msgid "Get notifications when people quote your posts."
-msgstr ""
+msgstr "Получайте уведомления, когда люди цитируют ваши посты."
 
 #: src/screens/Settings/NotificationSettings/ReplyNotificationSettings.tsx:43
 msgid "Get notifications when people reply to your posts."
-msgstr ""
+msgstr "Получайте уведомления, когда люди отвечают на ваши посты."
 
 #: src/screens/Settings/NotificationSettings/RepostsOnRepostsNotificationSettings.tsx:43
 msgid "Get notifications when people repost posts that you've reposted."
-msgstr ""
+msgstr "Получайте уведомления, когда люди репостят ваши репосты."
 
 #: src/screens/Settings/NotificationSettings/RepostNotificationSettings.tsx:43
 msgid "Get notifications when people repost your posts."
-msgstr ""
+msgstr "Получайте уведомления, когда люди репостят ваши посты."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:77
 msgid "Get notified about new posts"
-msgstr ""
+msgstr "Получайте уведомления о новых постах"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:104
 msgid "Get notified about posts and replies from accounts you choose."
@@ -3999,7 +3999,7 @@ msgstr "Начало работы"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Придайте своему профилю лицо"
 
@@ -4161,7 +4161,7 @@ msgstr "Возникли проблемы?"
 msgid "Help"
 msgstr "Справка"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Чтобы люди знали, что вы не бот, загрузите фотографию или создайте аватар."
 
@@ -4421,31 +4421,31 @@ msgstr "Выдача себя за другого, дезинформация и
 
 #: src/screens/Settings/NotificationSettings/index.tsx:284
 msgid "In-app"
-msgstr ""
+msgstr "В приложении"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:143
 msgid "In-app notifications"
-msgstr ""
+msgstr "Уведомления в приложении"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:267
 msgid "In-app, Everyone"
-msgstr ""
+msgstr "В приложении, Все"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:275
 msgid "In-app, People you follow"
-msgstr ""
+msgstr "В приложении, Люди, на которых вы подписаны"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:282
 msgid "In-app, Push"
-msgstr ""
+msgstr "В приложении, Push"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:265
 msgid "In-app, Push, Everyone"
-msgstr ""
+msgstr "В приложении, Push, Все"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:273
 msgid "In-app, Push, People you follow"
-msgstr ""
+msgstr "В приложении, Push, Люди, на которых вы подписаны"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:91
 #: src/lib/moderation/useReportOptions.ts:91
@@ -4491,7 +4491,7 @@ msgstr "Настройки взаимодействия"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
-msgstr ""
+msgstr "Представляем уведомления об активности"
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4504,7 +4504,7 @@ msgstr "Недопустимый псевдоним. Пожалуйста, по�
 
 #: src/components/moderation/ReportDialog/index.tsx:73
 msgid "Invalid report subject"
-msgstr ""
+msgstr "Недопустимая тема отчета"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "Invalid Verification Code"
@@ -4548,7 +4548,7 @@ msgstr "Он правильный"
 
 #: src/screens/StarterPack/Wizard/index.tsx:491
 msgid "It's just <0>{0} </0>right now! Add more people to your starter pack by searching above."
-msgstr ""
+msgstr "Сейчас это просто <0>{0} </0>! Добавьте больше людей в свой стартовый набор, воспользовавшись поиском выше."
 
 #: src/screens/StarterPack/Wizard/index.tsx:486
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -4583,19 +4583,19 @@ msgstr "Журналистика"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Keep me posted"
-msgstr ""
+msgstr "Держите меня в курсе"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:344
 msgid "KWS Privacy Policy"
-msgstr ""
+msgstr "Политика конфиденциальности KWS"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:334
 msgid "KWS Terms of Use"
-msgstr ""
+msgstr "Условия использования KWS"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:201
 msgid "KWS website"
-msgstr ""
+msgstr "Веб-сайт KWS"
 
 #: src/components/moderation/ContentHider.tsx:234
 msgid "Labeled by {0}."
@@ -4642,11 +4642,11 @@ msgstr "Увеличенный"
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:139
 msgid "Last initiated {timeAgo} ago"
-msgstr ""
+msgstr "Последнее инициирование {timeAgo} назад"
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:137
 msgid "Last initiated just now"
-msgstr ""
+msgstr "Последнее инициирование только что"
 
 #: src/screens/Hashtag.tsx:95
 #: src/screens/Search/SearchResults.tsx:57
@@ -4662,7 +4662,7 @@ msgstr "Недавние"
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:277
 msgctxt "english-only-resource"
 msgid "Learn more"
-msgstr ""
+msgstr "Узнать больше"
 
 #: src/components/moderation/ScreenHider.tsx:140
 msgid "Learn More"
@@ -5479,7 +5479,7 @@ msgstr ""
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
 msgstr ""
 
@@ -5533,7 +5533,7 @@ msgstr "Следующее изображение"
 
 #: src/screens/Onboarding/StepFinished.tsx:356
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
-msgstr ""
+msgstr "Без рекламы, без инвазивного отслеживания, без вовлекающих ловушек. Bluesky уважает ваше время и внимание."
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
@@ -5576,7 +5576,7 @@ msgstr "Сообщения пока отсутствуют"
 
 #: src/screens/Onboarding/StepFinished.tsx:338
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
-msgstr ""
+msgstr "Больше никаких алгоритмов, наполненных бесполезной информацией. Найдите каналы, которые работают на вас, а не против вас."
 
 #: src/view/com/notifications/NotificationFeed.tsx:122
 msgid "No notifications yet!"
@@ -5750,7 +5750,7 @@ msgstr ""
 msgid "now"
 msgstr "сейчас"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "Сейчас"
 
@@ -5827,7 +5827,7 @@ msgstr ""
 msgid "One or more videos is missing alt text."
 msgstr "В одном или нескольких видео отсутствует альтернативный текст."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "Поддерживаются только файлы .jpg и .png"
 
@@ -5841,7 +5841,7 @@ msgstr "Только {0} могут отвечать."
 msgid "Only followers who I follow"
 msgstr ""
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Поддерживаются только файлы изображений"
 
@@ -5866,7 +5866,7 @@ msgstr "Ой!"
 msgid "Open"
 msgstr "Открыть"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Открыть создатель аватара"
 
@@ -6307,7 +6307,7 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:259
 msgid "Please enter the code we sent to <0>{0}</0> below."
-msgstr ""
+msgstr "Пожалуйста, введите код, который мы отправили <0>{0}</0> ниже."
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:65
 msgid "Please enter the code you received and the new password you would like to use."
@@ -6328,7 +6328,7 @@ msgstr "Пожалуйста, введите код приглашения."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:217
 msgid "Please enter your new email address."
-msgstr ""
+msgstr "Пожалуйста, введите новый адрес электронной почты."
 
 #: src/screens/Login/LoginForm.tsx:99
 msgid "Please enter your password"
@@ -6797,8 +6797,8 @@ msgstr "Перезагрузить беседы"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,7 +6931,7 @@ msgstr "Удалено из списка"
 msgid "Removed from saved feeds"
 msgstr "Удалено из сохранённых лент"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
 msgstr ""
 
@@ -7248,7 +7248,7 @@ msgstr "Повторная попытка входа в систему"
 msgid "Retries the last action, which errored out"
 msgstr "Повторяет последнее действие, которое вызвало ошибку"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -7517,11 +7517,11 @@ msgstr "Посмотреть вакансии в Bluesky"
 #: src/components/FeedInterstitials.tsx:394
 #: src/components/FeedInterstitials.tsx:445
 msgid "See more"
-msgstr ""
+msgstr "Подробнее"
 
 #: src/components/FeedInterstitials.tsx:392
 msgid "See more suggested profiles on the Explore page"
-msgstr ""
+msgstr "Подробнее о предлагаемых профилях на странице Explore"
 
 #: src/view/screens/SavedFeeds.tsx:213
 msgid "See this guide"
@@ -7596,7 +7596,7 @@ msgstr "Выберите, на какое время игнорировать э
 #: src/components/LanguageSelect.tsx:35
 #: src/components/LanguageSelect.tsx:36
 msgid "Select language"
-msgstr ""
+msgstr "Выбрать язык"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:248
 msgid "Select language..."
@@ -8346,7 +8346,7 @@ msgstr "Подписаться на этот список"
 
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:164
 msgid "Success"
-msgstr ""
+msgstr "Успех"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:182
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:286
@@ -9089,7 +9089,7 @@ msgstr "Перевести"
 #: src/screens/Settings/ThreadPreferences.tsx:115
 #: src/screens/Settings/ThreadPreferences.tsx:120
 msgid "Tree view"
-msgstr ""
+msgstr "Деревовидный вид"
 
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:59
 msgid "Trending"
@@ -9156,11 +9156,11 @@ msgstr ""
 
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:51
 msgid "Unavailable"
-msgstr ""
+msgstr "Недоступно"
 
 #: src/view/com/feeds/MissingFeed.tsx:126
 msgid "Unavailable feed information"
-msgstr ""
+msgstr "Информация о ленте недоступна"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:97
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
@@ -9224,7 +9224,7 @@ msgstr "Отписаться от пользователя"
 
 #: src/components/BlockedGeoOverlay.tsx:37
 msgid "Unfortunately, Bluesky is unavailable in Mississippi right now."
-msgstr ""
+msgstr "К сожалению, Bluesky в настоящее время недоступен в штате Миссисипи."
 
 #: src/components/moderation/ReportDialog/index.tsx:372
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
@@ -9389,7 +9389,7 @@ msgstr "Не удалось изменить видимость ответа"
 msgid "Updating..."
 msgstr "Изменение..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Загрузить вместо этого фотографию"
 
@@ -9587,7 +9587,7 @@ msgstr "Подтвердить аккаунт"
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:122
 msgid "Verify again"
-msgstr ""
+msgstr "Подтвердить снова"
 
 #. Button text and accessibility label for action to verify the user's email address using the code entered
 #. Button text and accessibility label for action to verify the user's email address using the code entered
@@ -9595,7 +9595,7 @@ msgstr ""
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:367
 msgctxt "action"
 msgid "Verify code"
-msgstr ""
+msgstr "Подтвердить код"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:538
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:559
@@ -9605,7 +9605,7 @@ msgstr "Проверка DNS-записи"
 #. Dialog title when a user is verifying their email address by entering a code they have been sent
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:214
 msgid "Verify email code"
-msgstr ""
+msgstr "Подтвердить код электронной почты"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:67
 msgid "Verify email dialog"
@@ -9646,7 +9646,7 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:126
 #: src/screens/Settings/AboutSettings.tsx:155
 msgid "Version {0}"
-msgstr ""
+msgstr "Версия {0}"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:81
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:131
@@ -9906,7 +9906,7 @@ msgstr "У нас закончились посты в ваших подписк
 
 #: src/screens/Settings/InterestsSettings.tsx:154
 msgid "We recommend selecting at least two interests."
-msgstr ""
+msgstr "Мы рекомендуем выбрать как минимум два интереса."
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:240
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
@@ -10358,7 +10358,7 @@ msgstr "У вас нет лент."
 msgid "You have no lists."
 msgstr "У вас нет списков."
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
 msgstr ""
 
@@ -10707,7 +10707,7 @@ msgstr "Ваши посты, лайки и блокировки являются
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:290
 msgid "Your preferred language"
-msgstr ""
+msgstr "Ваш предпочтительный язык"
 
 #: src/screens/Onboarding/StepFinished.tsx:422
 msgid "Your profile picture"
@@ -10715,7 +10715,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:350
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
-msgstr ""
+msgstr "Ваша фотография в профиле, окруженная концентрическими кругами с фотографиями других пользователей"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
@@ -10723,7 +10723,7 @@ msgstr "Ваш профиль, посты, ленты и списки больш
 
 #: src/view/com/composer/Composer.tsx:535
 msgid "Your reply was sent"
-msgstr ""
+msgstr "Ваш ответ был отправлен"
 
 #: src/components/moderation/ReportDialog/index.tsx:394
 msgid "Your report will be sent to <0>{0}</0>."

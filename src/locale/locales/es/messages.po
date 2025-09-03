@@ -8,7 +8,7 @@ msgstr ""
 "Language: es\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:45\n"
 "Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -125,7 +125,7 @@ msgstr "{0, plural, one {}other {{1} publicaciones}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, one {}other {# personas han}} usado este paquete de inicio."
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
 msgstr ""
 
@@ -650,8 +650,8 @@ msgstr "Notificaciones de actividad"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "Añadir"
@@ -782,7 +782,7 @@ msgstr "Añade este feed a tus feeds"
 msgid "Add to lists"
 msgstr "Añadir a las listas"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -797,7 +797,7 @@ msgstr "Añadir usuario a la lista"
 msgid "Added to list"
 msgstr "Añadido a la lista"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
 msgstr ""
 
@@ -1879,7 +1879,7 @@ msgstr "Clic para habilitar las citas para esta publicación."
 msgid "Click to open tag menu for {tag}"
 msgstr "Haz clic para abrir el menú de etiquetas de {tag}"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "Clic para reintentar mensaje fallido"
 
@@ -1901,7 +1901,7 @@ msgstr "Tacatá 🐴 tacatá 🐴"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2174,7 +2174,7 @@ msgstr "Fondo del menú contextual, haga clic para cerrar el menú."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Continuar"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Continuar hilo..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2378,8 +2378,8 @@ msgstr ""
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "Crear"
@@ -2426,7 +2426,7 @@ msgstr "Crea una cuenta"
 msgid "Create an account without using this starter pack"
 msgstr "Crear una cuenta sin usar este paquete de inicio"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Crea un avatar"
 
@@ -2444,8 +2444,8 @@ msgstr "Crear una cuenta nueva"
 msgid "Create report for {0}"
 msgstr "Crea un reporte de {0}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
 msgstr ""
 
@@ -2815,8 +2815,8 @@ msgstr ""
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,7 +3382,7 @@ msgstr "Error al aceptar el chat"
 msgid "Failed to add emoji reaction"
 msgstr "Error al añadir una reacción de emoji"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
 msgstr ""
 
@@ -3492,7 +3492,7 @@ msgstr "Error al fijar la publicación"
 msgid "Failed to remove emoji reaction"
 msgstr "Error al eliminar una reacción de emoji"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
 msgstr ""
 
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "Error al guardar tus intereses."
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "Error al enviar"
 
@@ -3999,7 +3999,7 @@ msgstr "Comenzando"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Ponle cara a tu perfil"
 
@@ -4161,7 +4161,7 @@ msgstr "¿Tienes problemas?"
 msgid "Help"
 msgstr "Ayuda"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Sube una foto o crea un avatar para que la gente sepa que no eres un bot."
 
@@ -5479,7 +5479,7 @@ msgstr ""
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
 msgstr ""
 
@@ -5750,7 +5750,7 @@ msgstr ""
 msgid "now"
 msgstr "ahora"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "Ahora"
 
@@ -5827,7 +5827,7 @@ msgstr ""
 msgid "One or more videos is missing alt text."
 msgstr "Falta el texto alternativo en uno o más videos."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "Solo se admiten archivos .jpg y .png"
 
@@ -5841,7 +5841,7 @@ msgstr "Solo {0} puede responder."
 msgid "Only followers who I follow"
 msgstr "Solo seguidores a quienes sigo"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Solo se admiten archivos de imagen"
 
@@ -5866,7 +5866,7 @@ msgstr "¡Uy!"
 msgid "Open"
 msgstr "Abierto"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Abrir el creador de avatares"
 
@@ -6797,8 +6797,8 @@ msgstr "Recargar conversaciones"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,7 +6931,7 @@ msgstr "Eliminado de la lista"
 msgid "Removed from saved feeds"
 msgstr "Eliminado de mis feeds guardados"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
 msgstr ""
 
@@ -7248,7 +7248,7 @@ msgstr "Vuelve a intentar el inicio de sesión"
 msgid "Retries the last action, which errored out"
 msgstr "Reintenta la última acción, que presentó un error"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -9389,7 +9389,7 @@ msgstr "Actualizar la visibilidad de la respuesta falló"
 msgid "Updating..."
 msgstr "Actualizando..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Sube una foto en su lugar"
 
@@ -10358,7 +10358,7 @@ msgstr "No tienes feeds."
 msgid "You have no lists."
 msgstr "No tienes listas."
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
 msgstr ""
 

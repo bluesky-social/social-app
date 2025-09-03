@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:44\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
 #: src/components/InterestTabs.tsx:325
 msgid "\"{interestsDisplayName}\" category (active)"
-msgstr ""
+msgstr "\"{interestsDisplayName}\" kategoria (aktiboa)"
 
 #: src/screens/Messages/components/ChatListItem.tsx:160
 msgid "(contains embedded content)"
@@ -125,9 +125,9 @@ msgstr "{0, plural, other {{1} postak}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, other {# pertsonek}} erabili dute abio multzo hau!"
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
-msgstr ""
+msgstr "{0, plural, other {+# gehiago}}"
 
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
@@ -524,7 +524,7 @@ msgstr "7 egun"
 
 #: src/screens/Onboarding/StepFinished.tsx:341
 msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
-msgstr ""
+msgstr "Bluesky-n aurki ditzakezun feed ezagunen bilduma bat, besteak beste, News, Booksky, Game Dev, Blacksky eta Fountain Pens"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/screens/Messages/components/ChatListItem.tsx:210
@@ -650,8 +650,8 @@ msgstr "Jarduera jakinarazpenak"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "Gehitu"
@@ -782,11 +782,11 @@ msgstr "Gehitu feed hau zure feedetara"
 msgid "Add to lists"
 msgstr "Gehitu zerrendetara"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
-msgstr ""
+msgstr "Gehitu abio multzoei"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:156
 msgid "Add user to list"
@@ -797,9 +797,9 @@ msgstr "Gehitu erabiltzailea zerrendara"
 msgid "Added to list"
 msgstr "Zerrendara gehitua"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
-msgstr ""
+msgstr "Abio multzora gehituta"
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:112
 msgid "Additional details (limit 1000 characters)"
@@ -964,7 +964,7 @@ msgstr "Errore bat gertatu da bideoa konprimitzean."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:176
 msgid "An error occurred while fetching suggested accounts."
-msgstr ""
+msgstr "Errore bat gertatu da iradokitako kontuak eskuratzean."
 
 #: src/state/queries/explore-feed-previews.tsx:173
 msgid "An error occurred while fetching the feed."
@@ -997,7 +997,7 @@ msgstr "Errore bat gertatu da bideoa igotzean."
 
 #: src/screens/Onboarding/StepFinished.tsx:359
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
-msgstr ""
+msgstr "Hainbat Bluesky-ren posten ilustrazioa, berposta, atsegin dut eta iruzkin ikonoekin batera"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:84
 #: src/components/verification/VerifierDialog.tsx:86
@@ -1690,7 +1690,7 @@ msgstr "Aldatu pasahitza"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:164
 msgid "Change password dialog"
-msgstr ""
+msgstr "Pasahitza aldatzeko elkarrizketa-koadroa"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:98
 msgid "Change post language to {suggestedLanguageName}"
@@ -1702,7 +1702,7 @@ msgstr "Aldatu salaketa arrazoia"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:57
 msgid "Change your password"
-msgstr ""
+msgstr "Aldatu zure pasahitza"
 
 #: src/screens/Settings/AppIconSettings/index.tsx:216
 msgid "Changes app icon"
@@ -1808,7 +1808,7 @@ msgstr "Aukeratu Jendea"
 
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:226
 msgid "Choose Post Languages"
-msgstr ""
+msgstr "Aukeratu posten hizkuntza"
 
 #: src/screens/Onboarding/StepFinished.tsx:575
 msgid "Choose the algorithms that power your custom feeds."
@@ -1879,7 +1879,7 @@ msgstr "Egin klik post honen aipamen postak gaitzeko."
 msgid "Click to open tag menu for {tag}"
 msgstr "Egin klik hemen {tag}-ren etiketa-menua irekitzeko"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "Egin klik huts egindako mezua berriro bidaltzen saiatzeko"
 
@@ -1901,7 +1901,7 @@ msgstr "Klip 🐴 klop 🐴"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2174,7 +2174,7 @@ msgstr "Testuinguru-menuaren atzeko planoa, egin klik menua ixteko."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Jarraitu"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Jarraitu haria..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2378,8 +2378,8 @@ msgstr "Ezin izan dira jakinarazpenen ezarpenak eguneratu"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "Sortu"
@@ -2426,7 +2426,7 @@ msgstr "Sortu kontu bat"
 msgid "Create an account without using this starter pack"
 msgstr "Sortu kontu bat abio multzo hau erabili gabe"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Sortu abatar bat horren ordez"
 
@@ -2444,10 +2444,10 @@ msgstr "Sortu kontu berria"
 msgid "Create report for {0}"
 msgstr "Sortu salaketa {0}rentzat"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
-msgstr ""
+msgstr "Sortu abio multzoa"
 
 #: src/screens/Settings/AppPasswords.tsx:174
 msgid "Created {0}"
@@ -2772,7 +2772,7 @@ msgstr "Bistaratzeko izena"
 
 #: src/screens/Onboarding/StepFinished.tsx:347
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
-msgstr ""
+msgstr "Utzi troll-ak eta klik egiteko amua. Aurkitu zuretzat garrantzitsuak diren benetako pertsonak eta elkarrizketak."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:402
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:404
@@ -2815,8 +2815,8 @@ msgstr "Ez kezkatu! Mezu eta ezarpen guztiak gordeta daude eta heldua zarela egi
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,9 +3382,9 @@ msgstr "Ezin izan da txata onartu"
 msgid "Failed to add emoji reaction"
 msgstr "Errorea emoji erreakzioa gehitzean"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
-msgstr ""
+msgstr "Ezin izan da abio multzora gehitu"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:597
 msgid "Failed to change handle. Please try again."
@@ -3427,7 +3427,7 @@ msgstr "Ezin izan da abio multzoa ezabatu"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:126
 msgid "Failed to follow all suggested accounts, please try again"
-msgstr ""
+msgstr "Ezin izan dira iradokitako kontu guztiak jarraitu, mesedez, saiatu berriro"
 
 #: src/screens/Messages/ChatList.tsx:270
 #: src/screens/Messages/Inbox.tsx:208
@@ -3492,9 +3492,9 @@ msgstr "Ezin izan da posta ainguratu"
 msgid "Failed to remove emoji reaction"
 msgstr "Errorea emoji errakzioa kentzerakoan"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
-msgstr ""
+msgstr "Ezin izan da abio multzotik kendu"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:34
 msgid "Failed to remove verification"
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "Ezin izan dira zure interesak gorde."
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "Ezin izan da bidali"
 
@@ -3606,7 +3606,7 @@ msgstr "Feedbacka"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:288
 msgctxt "toast"
 msgid "Feedback sent to feed operator"
-msgstr ""
+msgstr "Iritzia feedaren operadoreari bidali zaio"
 
 #: src/Navigation.tsx:573
 #: src/screens/Search/SearchResults.tsx:73
@@ -3684,7 +3684,7 @@ msgstr "Aurkitu postak, erabiltzaileak eta feedak Bluesky-n"
 
 #: src/screens/Onboarding/StepFinished.tsx:345
 msgid "Find your people"
-msgstr ""
+msgstr "Aurkitu zure jendea"
 
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Finish"
@@ -3759,7 +3759,7 @@ msgstr "Jarraitu denak"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:232
 msgid "Follow all accounts"
-msgstr ""
+msgstr "Jarraitu kontu guztiak"
 
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:518
@@ -3775,7 +3775,7 @@ msgstr "Jarraitu bueltan"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:121
 msgid "Followed all accounts!"
-msgstr ""
+msgstr "Kontu guztiak jarraituta!"
 
 #: src/components/KnownFollowers.tsx:238
 msgid "Followed by <0>{0}</0>"
@@ -3885,7 +3885,7 @@ msgstr "Betirako"
 
 #: src/screens/Onboarding/StepFinished.tsx:354
 msgid "Forget the noise"
-msgstr ""
+msgstr "Ahaztu zarata"
 
 #: src/screens/Login/index.tsx:153
 #: src/screens/Login/index.tsx:168
@@ -3902,7 +3902,7 @@ msgstr "Ahaztuta?"
 
 #: src/screens/Onboarding/StepFinished.tsx:336
 msgid "Free your feed"
-msgstr ""
+msgstr "Askatu zure feeda"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:54
 #: src/lib/moderation/useReportOptions.ts:54
@@ -3999,7 +3999,7 @@ msgstr "Hasten"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Eman aurpegia zure profilari"
 
@@ -4161,7 +4161,7 @@ msgstr "Arazoak dituzu?"
 msgid "Help"
 msgstr "Laguntza"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Lagundu jendeari jakiten ez zarela bot bat argazki bat kargatuz edo abatar bat sortuz."
 
@@ -4548,7 +4548,7 @@ msgstr "Zuzena da"
 
 #: src/screens/StarterPack/Wizard/index.tsx:491
 msgid "It's just <0>{0} </0>right now! Add more people to your starter pack by searching above."
-msgstr ""
+msgstr "Oraintxe <0>{0}</0> bakarrik dago! Gehitu jende gehiago zure abio multzoari goiko bilaketan."
 
 #: src/screens/StarterPack/Wizard/index.tsx:486
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -5479,9 +5479,9 @@ msgstr "{firstAuthorLink} eta <0>{additionalAuthorsCount, plural, one {beste {fo
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {formattedAuthorsCount}} other {beste {formattedAuthorsCount}}}-ren post berriak"
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
-msgstr ""
+msgstr "Abio multzo berria"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -5533,7 +5533,7 @@ msgstr "Hurrengo irudia"
 
 #: src/screens/Onboarding/StepFinished.tsx:356
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
-msgstr ""
+msgstr "Iragarkirik ez, jarraipen inbaditzailerik ez, parte-hartze tranparik ez. Bluesky-k zure denbora eta arreta errespetatzen ditu."
 
 #: src/screens/Settings/AppPasswords.tsx:108
 msgid "No app passwords yet"
@@ -5576,7 +5576,7 @@ msgstr "Oraindik ez dago mezurik"
 
 #: src/screens/Onboarding/StepFinished.tsx:338
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
-msgstr ""
+msgstr "Zaborrez betetako algoritmo masibo gehiagorik ez. Aurkitu zure alde funtzionatzen duten feedak, ez zure aurka."
 
 #: src/view/com/notifications/NotificationFeed.tsx:122
 msgid "No notifications yet!"
@@ -5750,7 +5750,7 @@ msgstr "Beste guztiaren jakinarazpenak, adibidez, norbait zure abio-multzo baten
 msgid "now"
 msgstr "orain"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "Orain"
 
@@ -5827,7 +5827,7 @@ msgstr "Hautatutako fitxategi bat edo gehiago handiegiak dira. Gehienezko tamain
 msgid "One or more videos is missing alt text."
 msgstr "Bideo bati edo gehiagori aukerazko testua falta zaio."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpg eta .png fitxategiak soilik onartzen dira"
 
@@ -5841,7 +5841,7 @@ msgstr "{0}-k bakarrik erantzun dezake."
 msgid "Only followers who I follow"
 msgstr "Jarraitzen ditudan jarraitzaileak bakarrik"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Irudi-fitxategiak soilik onartzen dira"
 
@@ -5866,7 +5866,7 @@ msgstr "Ups!"
 msgid "Open"
 msgstr "Ireki"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Ireki abatar sortzailea"
 
@@ -6020,7 +6020,7 @@ msgstr "Pasahitza berrezartzeko formularioa irekitzen du"
 
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:58
 msgid "Opens post language settings"
-msgstr ""
+msgstr "Postaren hizkuntza ezarpenak irekitzen ditu"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:906
 #: src/view/com/util/UserAvatar.tsx:594
@@ -6311,7 +6311,7 @@ msgstr "Mesedez, sartu behean <0>{0}</0> helbidera bidali dugun kodea."
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:65
 msgid "Please enter the code you received and the new password you would like to use."
-msgstr ""
+msgstr "Mesedez, sartu jaso duzun kodea eta erabili nahi duzun pasahitz berria."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:247
 msgid "Please enter the security code we sent to your previous email address."
@@ -6458,7 +6458,7 @@ msgstr "Postaren Interakzio-Ezarpenak"
 #. Accessibility label for button that opens dialog to choose post language settings
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:53
 msgid "Post language selection"
-msgstr ""
+msgstr "Postaren hizkuntza hautatzea"
 
 #: src/screens/PostThread/components/ThreadError.tsx:32
 #: src/screens/PostThread/components/ThreadItemPostTombstone.tsx:25
@@ -6771,7 +6771,7 @@ msgstr "Azken Bilaketak"
 
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:274
 msgid "Recently used"
-msgstr ""
+msgstr "Duela gutxi erabilia"
 
 #: src/screens/Search/modules/ExploreRecommendations.tsx:54
 msgid "Recommended"
@@ -6797,8 +6797,8 @@ msgstr "Berriz kargatu elkarrizketak"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,9 +6931,9 @@ msgstr "Zerrendatik kenduta"
 msgid "Removed from saved feeds"
 msgstr "Gordetako feedetatik kenduta"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
-msgstr ""
+msgstr "Abio multzotik kenduta"
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:122
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
@@ -7248,7 +7248,7 @@ msgstr "Saioa hasi berriro"
 msgid "Retries the last action, which errored out"
 msgstr "Azken ekintza berriro saiatzen da, errorea izan duena"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -7384,11 +7384,11 @@ msgstr "Zientzia"
 
 #: src/components/InterestTabs.tsx:250
 msgid "Scroll left"
-msgstr ""
+msgstr "Joan ezkerrera"
 
 #: src/components/InterestTabs.tsx:284
 msgid "Scroll right"
-msgstr ""
+msgstr "Joan eskuinera"
 
 #: src/view/screens/ProfileList.tsx:996
 msgid "Scroll to top"
@@ -7424,7 +7424,7 @@ msgstr "Bilatu \"{interestsDisplayName}\""
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
 #: src/components/ProgressGuide/FollowDialog.tsx:418
 msgid "Search for \"{interestsDisplayName}\" (active)"
-msgstr ""
+msgstr "Bilatu \"{interestsDisplayName}\" (aktiboa)"
 
 #: src/view/shell/desktop/Search.tsx:131
 msgid "Search for \"{query}\""
@@ -7461,7 +7461,7 @@ msgstr "Bilaketa ez dago erabilgarri saioa itxita dagoenean"
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:257
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:258
 msgid "Search languages"
-msgstr ""
+msgstr "Bilatu hizkuntzak"
 
 #: src/screens/Profile/ProfileSearch.tsx:36
 msgid "Search my posts"
@@ -7534,7 +7534,7 @@ msgstr "Bilaketa graduatzailea. Erabili gezi-teklak aurrera eta atzera bilatzeko
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.
 #: src/components/InterestTabs.tsx:332
 msgid "Select \"{interestsDisplayName}\" category"
-msgstr ""
+msgstr "Hautatu \"{interestsDisplayName}\" kategoria"
 
 #. Accessibility label for a username suggestion in the account creation flow
 #: src/screens/Signup/StepHandle/HandleSuggestions.tsx:42
@@ -7634,7 +7634,7 @@ msgstr "Aukeratu salatzeko moderazio-zerbitzuak"
 
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:236
 msgid "Select up to 3 languages used in this post"
-msgstr ""
+msgstr "Hautatu post honetan erabilitako gehienez 3 hizkuntza"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
@@ -8108,7 +8108,7 @@ msgstr "Saltatu"
 #: src/screens/Onboarding/StepFinished.tsx:373
 #: src/screens/Onboarding/StepFinished.tsx:459
 msgid "Skip introduction and start using your account"
-msgstr ""
+msgstr "Saltatu sarrera eta hasi zure kontua erabiltzen"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:237
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:219
@@ -8572,7 +8572,7 @@ msgstr "Hari honen egileak erantzun hau ezkutatu du."
 
 #: src/components/dialogs/BirthDateSettings.tsx:122
 msgid "The birthdate you've entered means you are under 18 years old. Certain content and features may be unavailable to you."
-msgstr ""
+msgstr "Sartu duzun jaiotze-datak 18 urtetik beherakoa zarela esan nahi du. Baliteke eduki eta funtzio batzuk ez izatea erabilgarri zuretzat."
 
 #: src/screens/Moderation/index.tsx:426
 msgid "The Bluesky web application"
@@ -8624,7 +8624,7 @@ msgstr "Zure kokapeneko legeek heldua zarela egiaztatzea eskatzen dute funtzio b
 
 #: src/components/LoggedOutCTA.tsx:63
 msgid "The open social network."
-msgstr ""
+msgstr "Sare sozial irekia."
 
 #: src/view/screens/PrivacyPolicy.tsx:35
 msgid "The Privacy Policy has been moved to <0/>"
@@ -8805,7 +8805,7 @@ msgstr "Txat hau deskonektatu da"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:144
 msgid "This confirmation code is not valid. Please try again."
-msgstr ""
+msgstr "Baieztapen-kode hau ez da baliozkoa. Mesedez, saiatu berriro."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -8876,7 +8876,7 @@ msgstr "Handle hau erreserbatuta dago. Mesedez, saiatu beste bat."
 
 #: src/components/dialogs/BirthDateSettings.tsx:45
 msgid "This information is private and not shared with other users."
-msgstr ""
+msgstr "Informazio hau pribatua da eta ez da beste erabiltzaileekin partekatzen."
 
 #: src/components/live/EditLiveDialog.tsx:189
 #: src/components/live/GoLiveDialog.tsx:160
@@ -9132,7 +9132,7 @@ msgstr "Ezin da konektatu. Mesedez, egiaztatu Interneteko konexioa eta saiatu be
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:95
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:140
 msgid "Unable to contact your service. Please check your internet connection and try again."
-msgstr ""
+msgstr "Ezin da zure zerbitzuarekin harremanetan jarri. Mesedez, egiaztatu zure interneteko konexioa eta saiatu berriro."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:79
@@ -9389,7 +9389,7 @@ msgstr "Ezin izan da eguneratu erantzunen ikusgaitasuna"
 msgid "Updating..."
 msgstr "Eguneratzen..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Kargatu argazki bat ordez"
 
@@ -9706,7 +9706,7 @@ msgstr "Bideoek 3 minutu baino gutxiago iraun behar dute."
 #: src/view/com/composer/Composer.tsx:545
 msgctxt "Action to view the post the user just created"
 msgid "View"
-msgstr ""
+msgstr "Ikusi"
 
 #: src/screens/Profile/Header/Shell.tsx:229
 msgid "View {0}'s avatar"
@@ -9767,7 +9767,7 @@ msgstr "Joera-bideo gehiago ikusi"
 
 #: src/view/com/composer/Composer.tsx:540
 msgid "View post"
-msgstr ""
+msgstr "Ikusi posta"
 
 #: src/components/ProfileHoverCard/index.web.tsx:466
 #: src/components/ProfileHoverCard/index.web.tsx:486
@@ -10358,9 +10358,9 @@ msgstr "Ez duzu feedik."
 msgid "You have no lists."
 msgstr "Ez duzu zerrendarik."
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
-msgstr ""
+msgstr "Ez duzu abio multzorik."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:164
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -10421,7 +10421,7 @@ msgstr "Kontua sortzeko 13 urte edo gehiago izan behar dituzu."
 
 #: src/components/dialogs/BirthDateSettings.tsx:131
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
-msgstr ""
+msgstr "Gutxienez 13 urte izan behar dituzu Bluesky erabiltzeko. Irakurri gure <0>Zerbitzu Baldintzak</0> informazio gehiago lortzeko."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 msgid "You must be following at least seven other people to generate a starter pack."
@@ -10687,7 +10687,7 @@ msgstr "Zure mutututako hitzak"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:71
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
-msgstr ""
+msgstr "Zure pasahitza behar bezala aldatu da! Mesedez, erabili zure pasahitz berria Bluesky-n saioa hasten duzunean hemendik aurrera."
 
 #: src/screens/Signup/StepInfo/index.tsx:130
 msgid "Your password must be at least 8 characters long."
@@ -10695,11 +10695,11 @@ msgstr "Pasahitzak 8 karaktereko luzera izan behar du gutxienez."
 
 #: src/view/com/composer/Composer.tsx:536
 msgid "Your post was sent"
-msgstr ""
+msgstr "Zure posta bidali da"
 
 #: src/view/com/composer/Composer.tsx:533
 msgid "Your posts were sent"
-msgstr ""
+msgstr "Zure postak bidali dira"
 
 #: src/screens/Onboarding/StepFinished.tsx:545
 msgid "Your posts, likes, and blocks are public. Mutes are private."
@@ -10711,11 +10711,11 @@ msgstr "Zure hizkuntza hobetsia"
 
 #: src/screens/Onboarding/StepFinished.tsx:422
 msgid "Your profile picture"
-msgstr ""
+msgstr "Zure profileko argazkia"
 
 #: src/screens/Onboarding/StepFinished.tsx:350
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
-msgstr ""
+msgstr "Zure profileko argazkia beste erabiltzaileen profileko argazkien zirkulu zentrokidez inguratuta"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
@@ -10723,7 +10723,7 @@ msgstr "Zure profila, postak, feedak eta zerrendak ez dira ikusgai egongo beste 
 
 #: src/view/com/composer/Composer.tsx:535
 msgid "Your reply was sent"
-msgstr ""
+msgstr "Zure erantzuna bidali da"
 
 #: src/components/moderation/ReportDialog/index.tsx:394
 msgid "Your report will be sent to <0>{0}</0>."

@@ -90,7 +90,7 @@ export function InterestTabs({
   }
 
   const canScrollLeft = scrollX > 0
-  const canScrollRight = scrollX < contentWidth - totalWidth
+  const canScrollRight = Math.ceil(scrollX) < contentWidth - totalWidth
 
   const cleanupRef = useRef<(() => void) | null>(null)
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:45\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -125,7 +125,7 @@ msgstr "{0, plural, one {} few {{1} postări}other {{1} de postări}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "{0, plural, one {O persoană a} few {# persoane au}other {# de persoane au}} folosit acest pachet de pornire!"
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
 msgstr "{0, plural, one {} few {+încă #}other {+încă #}}"
 
@@ -650,8 +650,8 @@ msgstr "Notificări de activitate"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "Adăugare"
@@ -782,7 +782,7 @@ msgstr "Adăugați acest flux la fluxurile dvs."
 msgid "Add to lists"
 msgstr "Adăugare la liste"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -797,7 +797,7 @@ msgstr "Adăugare utilizator la listă"
 msgid "Added to list"
 msgstr "Adăugat la listă"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
 msgstr "Adăugat la pachetul de pornire"
 
@@ -1879,7 +1879,7 @@ msgstr "Faceți clic pentru a activa postările citate ale acestei postări."
 msgid "Click to open tag menu for {tag}"
 msgstr "Faceți clic pentru a deschide meniul de etichete pentru {tag}"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "Faceți clic pentru a reîncerca mesajul eșuat"
 
@@ -1901,7 +1901,7 @@ msgstr "Clip 🐴 clop 🐴"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2174,7 +2174,7 @@ msgstr "Fundal meniu contextual, faceți clic pentru a închide meniul."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Continuare"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Continuați firul..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2378,8 +2378,8 @@ msgstr "Nu s-au putut actualiza setările de notificare"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "Creare"
@@ -2426,7 +2426,7 @@ msgstr "Creați un cont"
 msgid "Create an account without using this starter pack"
 msgstr "Creați un cont fără a utiliza acest pachet de pornire"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Creați un avatar în schimb"
 
@@ -2444,8 +2444,8 @@ msgstr "Creare cont nou"
 msgid "Create report for {0}"
 msgstr "Creați un raport pentru {0}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
 msgstr "Creare pachet de pornire"
 
@@ -2815,8 +2815,8 @@ msgstr "Nu vă faceți griji! Toate mesajele existente și setările sunt salvat
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,7 +3382,7 @@ msgstr "Acceptarea conversației a eșuat"
 msgid "Failed to add emoji reaction"
 msgstr "Adăugarea reacției emoji a eșuat"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
 msgstr "Adăugarea la pachetul de pornire a eșuat"
 
@@ -3492,7 +3492,7 @@ msgstr "Nu s-a reușit fixarea postării"
 msgid "Failed to remove emoji reaction"
 msgstr "Ștergerea reacției emoji a eșuat"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
 msgstr "Nu s-a putut elimina din pachetul de pornire"
 
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "Salvarea intereselor a eșuat."
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "Nu s-a putut trimite"
 
@@ -3999,7 +3999,7 @@ msgstr "Introducere"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Oferiți profilului dvs. o față"
 
@@ -4161,7 +4161,7 @@ msgstr "Aveți dificultăți?"
 msgid "Help"
 msgstr "Ajutor"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Ajutați oamenii să știe că nu sunteți un robot încărcând o imagine sau creând un avatar."
 
@@ -5479,7 +5479,7 @@ msgstr "Postare nouă de la {firstAuthorLink} și <0>{additionalAuthorsCount, pl
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "Postare nouă de la {firstAuthorName} și {additionalAuthorsCount, plural, one {{formattedAuthorsCount} un alt utilizator} few {{formattedAuthorsCount} alți utilizatori} other {{formattedAuthorsCount} alți utilizatori}}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
 msgstr "Pachet de pornire nou"
 
@@ -5750,7 +5750,7 @@ msgstr "Notificări pentru orice altceva, cum ar fi atunci când cineva se alăt
 msgid "now"
 msgstr "acum"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "Acum"
 
@@ -5827,7 +5827,7 @@ msgstr "Unul sau mai multe dintre fișierele selectate sunt prea mari. Dimensiun
 msgid "One or more videos is missing alt text."
 msgstr "Unei sau mai multor videoclipuri le lipsește textul alternativ."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "Doar fișierele .jpg și .png sunt acceptate"
 
@@ -5841,7 +5841,7 @@ msgstr "Doar {0} poate răspunde."
 msgid "Only followers who I follow"
 msgstr "Doar urmăritorii pe care îi urmăresc"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Doar fișierele imagine sunt acceptate"
 
@@ -5866,7 +5866,7 @@ msgstr "Hopa!"
 msgid "Open"
 msgstr "Deschidere"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Deschideți creatorul de avatar"
 
@@ -6797,8 +6797,8 @@ msgstr "Reîncărcați conversațiile"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,7 +6931,7 @@ msgstr "Eliminat din listă"
 msgid "Removed from saved feeds"
 msgstr "Eliminat din fluxurile salvate"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
 msgstr "Eliminat din pachetul de pornire"
 
@@ -7248,7 +7248,7 @@ msgstr "Reîncearcă conectarea"
 msgid "Retries the last action, which errored out"
 msgstr "Reîncearcă ultima acțiune, care a eșuat"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -9389,7 +9389,7 @@ msgstr "Actualizarea vizibilității răspunsului a eșuat"
 msgid "Updating..."
 msgstr "Se actualizează..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Încărcați o fotografie în schimb"
 
@@ -10358,7 +10358,7 @@ msgstr "Nu aveți fluxuri."
 msgid "You have no lists."
 msgstr "Nu aveți liste."
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
 msgstr "Nu aveți pachete de pornire."
 

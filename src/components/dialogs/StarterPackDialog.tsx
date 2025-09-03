@@ -78,7 +78,6 @@ export function StarterPackDialog({
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <StarterPackList
-        control={control}
         onStartWizard={wrappedNavToWizard}
         targetDid={targetDid}
         enabled={enabled}
@@ -122,21 +121,19 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
 }
 
 function StarterPackList({
-  control,
   onStartWizard,
   targetDid,
   enabled,
 }: {
-  control: Dialog.DialogControlProps
   onStartWizard: () => void
   targetDid: string
   enabled?: boolean
 }) {
+  const control = Dialog.useDialogContext()
   const {_} = useLingui()
 
   const {
     data,
-    refetch,
     isError,
     isLoading,
     hasNextPage,
@@ -147,15 +144,7 @@ function StarterPackList({
   const membershipItems =
     data?.pages.flatMap(page => page.starterPacksWithMembership) || []
 
-  const _onRefresh = useCallback(async () => {
-    try {
-      await refetch()
-    } catch (err) {
-      // Error handling is optional since this is just a refresh
-    }
-  }, [refetch])
-
-  const _onEndReached = useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -239,9 +228,7 @@ function StarterPackList({
           ? () => 'starter_pack_dialog_loader'
           : (item: StarterPackWithMembership) => item.starterPack.uri
       }
-      refreshing={false}
-      onRefresh={_onRefresh}
-      onEndReached={_onEndReached}
+      onEndReached={onEndReached}
       onEndReachedThreshold={0.1}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={<Empty onStartWizard={onStartWizard} />}
@@ -382,7 +369,7 @@ function StarterPackItem({
 
       <Button
         label={isInPack ? _(msg`Remove`) : _(msg`Add`)}
-        color={isInPack ? 'secondary' : 'primary'}
+        color={isInPack ? 'secondary' : 'primary_subtle'}
         size="tiny"
         disabled={isPendingRefresh}
         onPress={handleToggleMembership}>

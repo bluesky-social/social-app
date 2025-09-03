@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:44\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -125,7 +125,7 @@ msgstr "{0, plural, other {{1} 條帖文}}"
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "總共 {0, plural, other {# 個人}}用過呢個新手包！"
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
 msgstr "{0, plural, other {+其他 # 個新手包}}"
 
@@ -650,8 +650,8 @@ msgstr "動態通知"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "新增"
@@ -782,7 +782,7 @@ msgstr "將佢加入到你嘅動態源"
 msgid "Add to lists"
 msgstr "加到清單"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -797,7 +797,7 @@ msgstr "加入用戶到清單"
 msgid "Added to list"
 msgstr "經已加入到清單"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
 msgstr "經已加到新手包"
 
@@ -1879,7 +1879,7 @@ msgstr "撳低去畀返人引用呢條帖文。"
 msgid "Click to open tag menu for {tag}"
 msgstr "撳低去打開 {tag} 嘅標籤選單"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "撳低去試多次傳送訊息"
 
@@ -1901,7 +1901,7 @@ msgstr "Clip 🐴 clop 🐴"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2174,7 +2174,7 @@ msgstr "內容選單背景，撳低去閂咗選單。"
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "繼續"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "繼續撈啲討論串……"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2378,8 +2378,8 @@ msgstr "更新唔到通知設定"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "建立"
@@ -2426,7 +2426,7 @@ msgstr "建立一個帳號"
 msgid "Create an account without using this starter pack"
 msgstr "唔用呢個新手包註冊帳號"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "或建立一個頭像"
 
@@ -2444,8 +2444,8 @@ msgstr "建立新帳號"
 msgid "Create report for {0}"
 msgstr "擧報 {0}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
 msgstr "建立新手包"
 
@@ -2815,8 +2815,8 @@ msgstr "唔使驚！你所有現存嘅訊息同設定都經已儲存，只要驗
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,7 +3382,7 @@ msgstr "接受唔到傾偈邀請"
 msgid "Failed to add emoji reaction"
 msgstr "加唔到 Emoji 反應"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
 msgstr "加唔到到新手包"
 
@@ -3492,7 +3492,7 @@ msgstr "固定唔到帖文"
 msgid "Failed to remove emoji reaction"
 msgstr "刪唔到 Emoji 反應"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
 msgstr "喺新手包度刪唔到佢"
 
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "儲存唔到你嘅心水主題。"
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "傳送唔到"
 
@@ -3999,7 +3999,7 @@ msgstr "開始啦"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "整張相喺你嘅 profile 嗰度先啦"
 
@@ -4161,7 +4161,7 @@ msgstr "遇到問題？"
 msgid "Help"
 msgstr "協助"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "上載一張相或整張頭像，等大家知道你唔係機械人。"
 
@@ -5479,7 +5479,7 @@ msgstr "嚟自 {firstAuthorLink} 及<0>其他 {additionalAuthorsCount, plural, o
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "嚟自 {firstAuthorName} 及其他 {additionalAuthorsCount, plural,one {{formattedAuthorsCount} 人} other {{formattedAuthorsCount} 人}}嘅新帖文"
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
 msgstr "建立新手包"
 
@@ -5750,7 +5750,7 @@ msgstr "其他通知，譬如有人用咗你嘅新手包註冊帳號嗰陣。"
 msgid "now"
 msgstr "而家"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "而家"
 
@@ -5827,7 +5827,7 @@ msgstr "你所揀選嘅部分檔案過大。最大檔案大細係 100 MB。"
 msgid "One or more videos is missing alt text."
 msgstr "一條或多條影片冇咗替代文字。"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "淨係支援 .jpg 同 .png 檔圖片"
 
@@ -5841,7 +5841,7 @@ msgstr "淨係得{0}可以回覆。"
 msgid "Only followers who I follow"
 msgstr "僅限我跟返嘅人"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "淨係支援圖片檔案"
 
@@ -5866,7 +5866,7 @@ msgstr "大鑊！"
 msgid "Open"
 msgstr "開放"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "打開頭像製作器"
 
@@ -6797,8 +6797,8 @@ msgstr "撈多次對話"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,7 +6931,7 @@ msgstr "經已喺清單度刪除"
 msgid "Removed from saved feeds"
 msgstr "經已喺儲存咗嘅動態源度刪除"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
 msgstr "經已喺新手包度刪除"
 
@@ -7248,7 +7248,7 @@ msgstr "試多次登入"
 msgid "Retries the last action, which errored out"
 msgstr "試多次執行上一個出錯誤嘅動作"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -9389,7 +9389,7 @@ msgstr "更新唔到回覆可見度"
 msgid "Updating..."
 msgstr "更新緊……"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "或上載圖片"
 
@@ -10358,7 +10358,7 @@ msgstr "你仲未有任何動態源。"
 msgid "You have no lists."
 msgstr "你仲未有清單。"
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
 msgstr "你而家未有任何新手包。"
 

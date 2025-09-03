@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-29 14:45\n"
+"PO-Revision-Date: 2025-09-03 02:45\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -125,7 +125,7 @@ msgstr "{0, plural, one {{1} phost} two {{1} phost} few {{1} puist}other {{1} po
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr "Chleachd {0, plural, one {# duine} two {# dhuine} few {# daoine} other {# duin}} a’ phacaid tòiseachaidh seo!"
 
-#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:357
 msgid "{0, plural, other {+# more}}"
 msgstr ""
 
@@ -650,8 +650,8 @@ msgstr "Brathan gnìomhachd"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:328
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr "Cuir ris"
@@ -782,7 +782,7 @@ msgstr "Cuir an t-inbhir seo ris na h-inbhirean agad"
 msgid "Add to lists"
 msgstr "Cuir ri liosta"
 
-#: src/components/dialogs/StarterPackDialog.tsx:187
+#: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -797,7 +797,7 @@ msgstr "Cuir an cleachdaiche ri liosta"
 msgid "Added to list"
 msgstr "Chaidh a chur ris an liosta"
 
-#: src/components/dialogs/StarterPackDialog.tsx:271
+#: src/components/dialogs/StarterPackDialog.tsx:258
 msgid "Added to starter pack"
 msgstr ""
 
@@ -1879,7 +1879,7 @@ msgstr "Dèan briogadh airson puist a nì luaidh air a’ phost seo a chur an co
 msgid "Click to open tag menu for {tag}"
 msgstr "Dèan briogadh is fosgail clàr-taice nan tagaichean airson {tag}"
 
-#: src/components/dms/MessageItem.tsx:317
+#: src/components/dms/MessageItem.tsx:318
 msgid "Click to retry failed message"
 msgstr "Dèan briogadh airson feuchainn ris an teachdaireachd a dh’fhàillig as ùr"
 
@@ -1901,7 +1901,7 @@ msgstr "Turt 🐴 turt 🐴"
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:190
+#: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:381
 #: src/components/dms/ReportDialog.tsx:390
@@ -2174,7 +2174,7 @@ msgstr "Cùlaibh a’ chlàir-thaice cho-theacsail, dèan briogadh airson an cl�
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Air adhart"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Leugh an còrr dhen t-snàithlean…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2378,8 +2378,8 @@ msgstr "Cha b’ urrainn dhuinn roghainnean nam brathan ùrachadh"
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:113
-#: src/components/dialogs/StarterPackDialog.tsx:212
+#: src/components/dialogs/StarterPackDialog.tsx:112
+#: src/components/dialogs/StarterPackDialog.tsx:201
 #: src/components/StarterPack/ProfileStarterPacks.tsx:300
 msgid "Create"
 msgstr "Cruthaich"
@@ -2426,7 +2426,7 @@ msgstr "Cruthaich cunntas"
 msgid "Create an account without using this starter pack"
 msgstr "Cruthaich cunntas ach as aonais na pacaid tòiseachaidh seo"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Cruthaich avatar na àite"
 
@@ -2444,8 +2444,8 @@ msgstr "Cruthaich cunntas ùr"
 msgid "Create report for {0}"
 msgstr "Cruthaich aithris airson {0}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:108
-#: src/components/dialogs/StarterPackDialog.tsx:207
+#: src/components/dialogs/StarterPackDialog.tsx:107
+#: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "Create starter pack"
 msgstr ""
 
@@ -2815,8 +2815,8 @@ msgstr "Na gabh dragh! Chaidh gach teachdaireachd is roghainn a shàbhaladh is b
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3382,7 +3382,7 @@ msgstr "Cha b’ urrainn dhuinn gabhail ris a’ chabadaich"
 msgid "Failed to add emoji reaction"
 msgstr "Cha b’ urrainn dhuinn an emoji a chur mar fhrith-fhreagairt"
 
-#: src/components/dialogs/StarterPackDialog.tsx:283
+#: src/components/dialogs/StarterPackDialog.tsx:270
 msgid "Failed to add to starter pack"
 msgstr ""
 
@@ -3492,7 +3492,7 @@ msgstr "Cha b’ urrainn dhuinn am post a phrìneachadh"
 msgid "Failed to remove emoji reaction"
 msgstr "Cha b’ urrainn dhuinn an emoji a chuir thu mar fhrith-fhreagairt a thoirt air falbh"
 
-#: src/components/dialogs/StarterPackDialog.tsx:302
+#: src/components/dialogs/StarterPackDialog.tsx:289
 msgid "Failed to remove from starter pack"
 msgstr ""
 
@@ -3513,7 +3513,7 @@ msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr "Cha b’ urrainn dhuinn na rudan sa bheil ùidh agad a shàbhaladh."
 
-#: src/components/dms/MessageItem.tsx:310
+#: src/components/dms/MessageItem.tsx:311
 msgid "Failed to send"
 msgstr "Dh’fhàillig a chur"
 
@@ -3999,7 +3999,7 @@ msgstr "A’ dèanamh toiseach-tòiseachaidh"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Cuir aodann ris a’ phròifil agad"
 
@@ -4161,7 +4161,7 @@ msgstr "A bheil duilgheadasan agad?"
 msgid "Help"
 msgstr "Cobhair"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Dèan nas soilleire e do dhaoine nach e bot a th’ annad le bhith a’ luchdadh suas dealbh no a’ cruthachadh avatar."
 
@@ -5479,7 +5479,7 @@ msgstr "Puist ùra o {firstAuthorLink} agus <0>{additionalAuthorsCount, plural, 
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr "Puist ùra o {firstAuthorName} agus {additionalAuthorsCount, plural, one {{formattedAuthorsCount} eile} two {{formattedAuthorsCount} eile} few {{formattedAuthorsCount} eile} other {{formattedAuthorsCount} eile}}"
 
-#: src/components/dialogs/StarterPackDialog.tsx:204
+#: src/components/dialogs/StarterPackDialog.tsx:193
 msgid "New starter pack"
 msgstr ""
 
@@ -5750,7 +5750,7 @@ msgstr "Brathan mu rud sam bith eile, can nuair a chuir cuideigin gu feum pacaid
 msgid "now"
 msgstr "an-dràsta"
 
-#: src/components/dms/MessageItem.tsx:274
+#: src/components/dms/MessageItem.tsx:275
 msgid "Now"
 msgstr "An-dràsta"
 
@@ -5827,7 +5827,7 @@ msgstr "Thagh thu co-dhiù aon fhaidhle a tha ro mhòr. ’S e 100MB am meud as 
 msgid "One or more videos is missing alt text."
 msgstr "Tha roghainn teacsa a dhìth air co-dhiù aon video."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "Chan eil taic ach ri faidhlichean .jpg agus .png"
 
@@ -5841,7 +5841,7 @@ msgstr "Chan fhaod ach {0} freagairt."
 msgid "Only followers who I follow"
 msgstr "Dìreach luchd-leantainn a tha mise gan leantainn cuideachd"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Chan eil taic ach ri faidhlichean dhealbhan"
 
@@ -5866,7 +5866,7 @@ msgstr "Ìoc!"
 msgid "Open"
 msgstr "Fosgail"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Fosgail cruthadair nan avatar"
 
@@ -6797,8 +6797,8 @@ msgstr "Ath-luchdaich na còmhraidhean"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:438
-#: src/components/dialogs/StarterPackDialog.tsx:384
-#: src/components/dialogs/StarterPackDialog.tsx:390
+#: src/components/dialogs/StarterPackDialog.tsx:371
+#: src/components/dialogs/StarterPackDialog.tsx:377
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -6931,7 +6931,7 @@ msgstr "Air a thoirt air falbh on liosta"
 msgid "Removed from saved feeds"
 msgstr "Air a thoirt air falbh o na h-inbhirean a shàbhail thu"
 
-#: src/components/dialogs/StarterPackDialog.tsx:290
+#: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
 msgstr ""
 
@@ -7248,7 +7248,7 @@ msgstr "Feuchaidh seo ri clàradh a-steach a-rithist"
 msgid "Retries the last action, which errored out"
 msgstr "Feuchaidh seo ris a’ ghnìomh mu dheireadh a-rithist is e air fàilligeadh"
 
-#: src/components/dms/MessageItem.tsx:321
+#: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:111
 #: src/components/moderation/ReportDialog/index.tsx:229
@@ -9389,7 +9389,7 @@ msgstr "Cha b’ urrainn dhuinn faicsinneachd na freagairt ùrachadh"
 msgid "Updating..."
 msgstr "Ga ùrachadh…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Luchdaich suas dealbh an àite sin"
 
@@ -10358,7 +10358,7 @@ msgstr "Chan eil inbhir sam bith agad."
 msgid "You have no lists."
 msgstr "Chan eil liosta sam bith agad."
 
-#: src/components/dialogs/StarterPackDialog.tsx:102
+#: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
 msgstr ""
 

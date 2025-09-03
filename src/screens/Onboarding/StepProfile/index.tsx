@@ -4,7 +4,7 @@ import {Image as ExpoImage} from 'expo-image'
 import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
-  MediaTypeOptions,
+  UIImagePickerPreferredAssetRepresentationMode,
 } from 'expo-image-picker'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -97,10 +97,12 @@ export function StepProfile() {
       const response = await sheetWrapper(
         launchImageLibraryAsync({
           exif: false,
-          mediaTypes: MediaTypeOptions.Images,
+          mediaTypes: ['images'],
           quality: 1,
           ...opts,
           legacy: true,
+          preferredAssetRepresentationMode:
+            UIImagePickerPreferredAssetRepresentationMode.Automatic,
         }),
       )
 
