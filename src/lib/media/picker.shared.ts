@@ -23,6 +23,8 @@ export async function openPicker(opts?: ImagePickerOptions) {
     selectionLimit: 1,
     ...opts,
     legacy: true,
+    preferredAssetRepresentationMode:
+      UIImagePickerPreferredAssetRepresentationMode.Automatic,
   })
 
   return (response.assets ?? [])
@@ -54,7 +56,7 @@ export async function openUnifiedPicker({
     base64: isWeb,
     selectionLimit: isIOS ? selectionCountRemaining : undefined,
     preferredAssetRepresentationMode:
-      UIImagePickerPreferredAssetRepresentationMode.Current,
+      UIImagePickerPreferredAssetRepresentationMode.Automatic,
     videoMaxDuration: VIDEO_MAX_DURATION_MS / 1000,
   })
 }
