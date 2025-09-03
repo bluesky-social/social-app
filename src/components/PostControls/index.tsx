@@ -26,7 +26,7 @@ import {
 } from '#/state/shell/progress-guide'
 import {formatCount} from '#/view/com/util/numeric/format'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {BookmarkButton} from './BookmarkButton'
 import {
@@ -92,6 +92,7 @@ let PostControls = ({
       post.author.viewer?.blockingByList,
   )
   const replyDisabled = post.viewer?.replyDisabled
+  const {gtPhone} = useBreakpoints()
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
 
@@ -194,7 +195,7 @@ let PostControls = ({
         a.gap_md,
         style,
       ]}>
-      <View style={[a.flex_row, a.flex_1]}>
+      <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
         <View
           style={[
             a.flex_1,
@@ -282,7 +283,7 @@ let PostControls = ({
         {/* Spacer! */}
         <View />
       </View>
-      <View style={[a.flex_row, a.justify_end, big && a.gap_sm]}>
+      <View style={[a.flex_row, a.justify_end, (big || gtPhone) && a.gap_sm]}>
         <BookmarkButton post={post} big={big} />
         <ShareMenuButton
           testID="postShareBtn"
