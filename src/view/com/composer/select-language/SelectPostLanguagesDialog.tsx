@@ -56,7 +56,7 @@ export function SelectPostLanguagesBtn() {
           }),
         )}
         accessibilityHint={_(msg`Opens post language settings`)}
-        style={[a.mx_md]}>
+        style={[a.mr_xs]}>
         {({pressed, hovered, focused}) => {
           const color =
             pressed || hovered || focused
