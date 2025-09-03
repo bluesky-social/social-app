@@ -1,6 +1,7 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
+import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -30,7 +31,7 @@ export function BookmarksAnnouncement() {
 
       <Dialog.ScrollableInner
         label={_(msg`Introducing saved posts AKA bookmarks`)}
-        style={[web({maxWidth: 400})]}
+        style={[web({maxWidth: 440})]}
         contentContainerStyle={[
           {
             paddingTop: 0,
@@ -42,27 +43,21 @@ export function BookmarksAnnouncement() {
           style={[
             a.align_center,
             a.overflow_hidden,
-            t.atoms.bg_contrast_25,
             {
-              gap: isWeb ? 16 : 24,
-              paddingTop: isWeb ? 24 : 48,
+              gap: 16,
+              paddingTop: isWeb ? 24 : 40,
               borderTopLeftRadius: a.rounded_md.borderRadius,
               borderTopRightRadius: a.rounded_md.borderRadius,
             },
           ]}>
-          <View
-            style={[
-              a.pl_sm,
-              a.pr_md,
-              a.py_sm,
-              a.rounded_full,
-              a.flex_row,
-              a.align_center,
-              a.gap_xs,
-              {
-                backgroundColor: t.palette.primary_100,
-              },
-            ]}>
+          <LinearGradient
+            colors={[t.palette.primary_25, t.palette.primary_100]}
+            locations={[0, 1]}
+            start={{x: 0, y: 0}}
+            end={{x: 0, y: 1}}
+            style={[a.absolute, a.inset_0]}
+          />
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SparkleIcon fill={t.palette.primary_800} size="sm" />
             <Text
               style={[
@@ -75,54 +70,46 @@ export function BookmarksAnnouncement() {
             </Text>
           </View>
 
-          <View style={[a.relative, a.w_full]}>
+          <View
+            style={[
+              a.relative,
+              a.w_full,
+              {
+                paddingTop: 8,
+                paddingHorizontal: 32,
+                paddingBottom: 32,
+              },
+            ]}>
             <View
               style={[
-                a.absolute,
-                t.atoms.bg_contrast_25,
                 t.atoms.shadow_md,
                 {
-                  shadowOpacity: 0.4,
-                  top: 5,
-                  bottom: 0,
-                  left: '17%',
-                  right: '17%',
-                  width: '66%',
-                  borderTopLeftRadius: 40,
-                  borderTopRightRadius: 40,
-                },
-              ]}
-            />
-            <View
-              style={[
-                a.overflow_hidden,
-                {
-                  aspectRatio: 398 / 228,
+                  shadowOpacity: 0.2,
+                  shadowOffset: {
+                    width: 0,
+                    height: 10,
+                  },
+                  aspectRatio: 333 / 104,
                 },
               ]}>
               <Image
                 accessibilityIgnoresInvertColors
-                source={require('../../../../assets/images/activity_notifications_announcement.webp')}
+                source={require('../../../../assets/images/bookmarks_announcement_nux.webp')}
                 style={[
                   a.w_full,
                   {
-                    aspectRatio: 398 / 268,
+                    aspectRatio: 333 / 104,
                   },
                 ]}
                 alt={_(
-                  msg`A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature.`,
+                  msg`A screenshot of a post with a new button next to the like button that allows you to save the post to your bookmarks. The post is from @jcsalterego.bsky.social and reads "inventing a saturday that immediately follows monday".`,
                 )}
               />
             </View>
           </View>
         </View>
-        <View
-          style={[
-            a.align_center,
-            a.px_xl,
-            isWeb ? [a.pt_xl, a.gap_xl, a.pb_sm] : [a.pt_3xl, a.gap_3xl],
-          ]}>
-          <View style={[a.gap_md, a.align_center]}>
+        <View style={[a.align_center, a.px_xl, a.pt_xl, a.gap_2xl, a.pb_sm]}>
+          <View style={[a.gap_sm, a.align_center]}>
             <Text
               style={[
                 a.text_3xl,
@@ -156,12 +143,11 @@ export function BookmarksAnnouncement() {
             <Button
               label={_(msg`Close`)}
               size="large"
-              variant="solid"
               color="primary"
               onPress={() => {
                 control.close()
               }}
-              style={[a.w_full, {maxWidth: 280}]}>
+              style={[a.w_full]}>
               <ButtonText>
                 <Trans>Close</Trans>
               </ButtonText>
