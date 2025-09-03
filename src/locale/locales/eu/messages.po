@@ -2174,7 +2174,7 @@ msgstr "Testuinguru-menuaren atzeko planoa, egin klik menua ixteko."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Jarraitu"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Jarraitu haria..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2426,7 +2426,7 @@ msgstr "Sortu kontu bat"
 msgid "Create an account without using this starter pack"
 msgstr "Sortu kontu bat abio multzo hau erabili gabe"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Sortu abatar bat horren ordez"
 
@@ -2815,8 +2815,8 @@ msgstr "Ez kezkatu! Mezu eta ezarpen guztiak gordeta daude eta heldua zarela egi
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3999,7 +3999,7 @@ msgstr "Hasten"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Eman aurpegia zure profilari"
 
@@ -4161,7 +4161,7 @@ msgstr "Arazoak dituzu?"
 msgid "Help"
 msgstr "Laguntza"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Lagundu jendeari jakiten ez zarela bot bat argazki bat kargatuz edo abatar bat sortuz."
 
@@ -5827,7 +5827,7 @@ msgstr "Hautatutako fitxategi bat edo gehiago handiegiak dira. Gehienezko tamain
 msgid "One or more videos is missing alt text."
 msgstr "Bideo bati edo gehiagori aukerazko testua falta zaio."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpg eta .png fitxategiak soilik onartzen dira"
 
@@ -5841,7 +5841,7 @@ msgstr "{0}-k bakarrik erantzun dezake."
 msgid "Only followers who I follow"
 msgstr "Jarraitzen ditudan jarraitzaileak bakarrik"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Irudi-fitxategiak soilik onartzen dira"
 
@@ -5866,7 +5866,7 @@ msgstr "Ups!"
 msgid "Open"
 msgstr "Ireki"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Ireki abatar sortzailea"
 
@@ -9389,7 +9389,7 @@ msgstr "Ezin izan da eguneratu erantzunen ikusgaitasuna"
 msgid "Updating..."
 msgstr "Eguneratzen..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Kargatu argazki bat ordez"
 
@@ -10740,4 +10740,3 @@ msgstr "Aukeratutako interesek gogoko duzun edukia zerbitzatzen laguntzen digute
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Zure egiaztapenak"
-

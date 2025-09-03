@@ -2174,7 +2174,7 @@ msgstr "Cefndir ddewislen cyd-destun, cliciwch i gau'r ddewislen."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Parhau"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Parhau â'r trywydd..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2426,7 +2426,7 @@ msgstr "Creu cyfrif"
 msgid "Create an account without using this starter pack"
 msgstr "Crëwch gyfrif heb ddefnyddio'r pecyn cychwyn hwn"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Creu afatar yn lle hynny"
 
@@ -2815,8 +2815,8 @@ msgstr "Peidiwch â phoeni! Mae'r holl negeseuon a gosodiadau wedi'u cadw a bydd
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3999,7 +3999,7 @@ msgstr "Dechrau arni"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Rhowch wyneb i'ch proffil"
 
@@ -4161,7 +4161,7 @@ msgstr "Yn cael trafferth?"
 msgid "Help"
 msgstr "Cymorth"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "Helpwch bobl i wybod nad ydych chi'n bot trwy lwytho llun neu greu afatar."
 
@@ -5827,7 +5827,7 @@ msgstr "Mae un neu fwy o'r ffeiliau hyn yn rhy fawr. Uchafswm maint yw 100 MB."
 msgid "One or more videos is missing alt text."
 msgstr "Does dim testun amgen ar un neu fwy o fideos."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "Dim ond ffeiliau .jpg a .png sy'n cael eu cefnogi"
 
@@ -5841,7 +5841,7 @@ msgstr "Dim ond {0} all ateb."
 msgid "Only followers who I follow"
 msgstr "Dim ond dilynwyr rwy'n eu dilyn"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Dim ond ffeiliau delwedd sy'n cael eu cefnogi"
 
@@ -5866,7 +5866,7 @@ msgstr "Wps!"
 msgid "Open"
 msgstr "Agor"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Agor y crëwr avatar"
 
@@ -9389,7 +9389,7 @@ msgstr "Wedi methu diweddaru gwelededd ateb"
 msgid "Updating..."
 msgstr "Yn diweddaru..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Llwytho lun i fyny yn lle hynny"
 
@@ -10740,4 +10740,3 @@ msgstr "Mae'r diddordebau rydych wedi'u dewis yn ein helpu i ddarparu cynnwys sy
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Eich dilysiadau"
-

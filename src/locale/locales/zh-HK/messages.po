@@ -2174,7 +2174,7 @@ msgstr "內容選單背景，撳低去閂咗選單。"
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "繼續"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "繼續撈啲討論串……"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2426,7 +2426,7 @@ msgstr "建立一個帳號"
 msgid "Create an account without using this starter pack"
 msgstr "唔用呢個新手包註冊帳號"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "或建立一個頭像"
 
@@ -2815,8 +2815,8 @@ msgstr "唔使驚！你所有現存嘅訊息同設定都經已儲存，只要驗
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3999,7 +3999,7 @@ msgstr "開始啦"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "整張相喺你嘅 profile 嗰度先啦"
 
@@ -4161,7 +4161,7 @@ msgstr "遇到問題？"
 msgid "Help"
 msgstr "協助"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "上載一張相或整張頭像，等大家知道你唔係機械人。"
 
@@ -5827,7 +5827,7 @@ msgstr "你所揀選嘅部分檔案過大。最大檔案大細係 100 MB。"
 msgid "One or more videos is missing alt text."
 msgstr "一條或多條影片冇咗替代文字。"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "淨係支援 .jpg 同 .png 檔圖片"
 
@@ -5841,7 +5841,7 @@ msgstr "淨係得{0}可以回覆。"
 msgid "Only followers who I follow"
 msgstr "僅限我跟返嘅人"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "淨係支援圖片檔案"
 
@@ -5866,7 +5866,7 @@ msgstr "大鑊！"
 msgid "Open"
 msgstr "開放"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "打開頭像製作器"
 
@@ -9389,7 +9389,7 @@ msgstr "更新唔到回覆可見度"
 msgid "Updating..."
 msgstr "更新緊……"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "或上載圖片"
 
@@ -10740,4 +10740,3 @@ msgstr "你揀選嘅心水主題可以幫我哋提供更多你所關注嘅內容
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "你嘅驗證"
-

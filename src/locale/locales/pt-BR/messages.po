@@ -2174,7 +2174,7 @@ msgstr "Fundo do menu, clique para fechá-lo."
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "Continuar"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "Continuar tópico..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2426,7 +2426,7 @@ msgstr "Criar uma conta"
 msgid "Create an account without using this starter pack"
 msgstr "Criar uma conta sem usar este pacote inicial"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "Adicionar uma foto de perfil"
 
@@ -2815,8 +2815,8 @@ msgstr "Não se preocupe! Todas as mensagens e configurações existentes estão
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3999,7 +3999,7 @@ msgstr "Começando"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "Dê uma cara nova pro seu perfil"
 
@@ -4161,7 +4161,7 @@ msgstr "Precisa de ajuda?"
 msgid "Help"
 msgstr "Ajuda"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "As pessoas não vão achar que você é um bot se você criar um avatar ou fazer upload de uma imagem."
 
@@ -5827,7 +5827,7 @@ msgstr ""
 msgid "One or more videos is missing alt text."
 msgstr "Um ou mais vídeos estão sem texto alternativo."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr "Apenas imagens .jpg ou .png são permitidas"
 
@@ -5841,7 +5841,7 @@ msgstr "Apenas {0} pode responder."
 msgid "Only followers who I follow"
 msgstr "Apenas seguidores que eu sigo"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "Apenas arquivos de imagem são suportados"
 
@@ -5866,7 +5866,7 @@ msgstr "Opa!"
 msgid "Open"
 msgstr "Aberto"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "Abrir criador de avatar"
 
@@ -9389,7 +9389,7 @@ msgstr "Falha na atualização da visibilidade da resposta"
 msgid "Updating..."
 msgstr "Atualizando..."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "Enviar uma foto"
 
@@ -10740,4 +10740,3 @@ msgstr "Seus interesses escolhidos nos ajudam a entregar o conteúdo que interes
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "Suas verificações"
-

@@ -2174,7 +2174,7 @@ msgstr "コンテキストメニューの背景をクリックし、メニュー
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:162
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:170
 #: src/screens/Onboarding/StepInterests/index.tsx:254
-#: src/screens/Onboarding/StepProfile/index.tsx:278
+#: src/screens/Onboarding/StepProfile/index.tsx:280
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:246
 msgid "Continue"
 msgstr "続行"
@@ -2192,7 +2192,7 @@ msgid "Continue thread..."
 msgstr "スレッドの続き…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:251
-#: src/screens/Onboarding/StepProfile/index.tsx:275
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:243
 #: src/screens/Signup/BackNextButtons.tsx:60
 msgid "Continue to next step"
@@ -2426,7 +2426,7 @@ msgstr "アカウントを作成"
 msgid "Create an account without using this starter pack"
 msgstr "このスターターパックを使用せずにアカウントを作成する"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:293
+#: src/screens/Onboarding/StepProfile/index.tsx:295
 msgid "Create an avatar instead"
 msgstr "代わりにアバターを作成"
 
@@ -2815,8 +2815,8 @@ msgstr "心配しないでください！すべての既存のメッセージと
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
 #: src/components/Select/index.tsx:192
-#: src/screens/Onboarding/StepProfile/index.tsx:331
-#: src/screens/Onboarding/StepProfile/index.tsx:334
+#: src/screens/Onboarding/StepProfile/index.tsx:333
+#: src/screens/Onboarding/StepProfile/index.tsx:336
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:215
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:222
 #: src/view/com/auth/server-input/index.tsx:232
@@ -3999,7 +3999,7 @@ msgstr "入門"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:233
+#: src/screens/Onboarding/StepProfile/index.tsx:235
 msgid "Give your profile a face"
 msgstr "プロフィールに顔をつける"
 
@@ -4161,7 +4161,7 @@ msgstr "なにか問題が発生しましたか？"
 msgid "Help"
 msgstr "ヘルプ"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:236
+#: src/screens/Onboarding/StepProfile/index.tsx:238
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "画像をアップロードするかアバターを作ってあなたがbotではないことをみんなに知らせましょう。"
 
@@ -5827,7 +5827,7 @@ msgstr "選択したファイルのうちの1つ以上が大きすぎます。�
 msgid "One or more videos is missing alt text."
 msgstr "1つもしくは複数のビデオにALTテキストがありません。"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:118
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpgと.pngファイルのみに対応しています"
 
@@ -5841,7 +5841,7 @@ msgstr "{0}のみ返信可能。"
 msgid "Only followers who I follow"
 msgstr "フォロー中のフォロワーのみ"
 
-#: src/lib/media/picker.shared.ts:31
+#: src/lib/media/picker.shared.ts:33
 msgid "Only image files are supported"
 msgstr "画像ファイルのみに対応しています"
 
@@ -5866,7 +5866,7 @@ msgstr "おっと！"
 msgid "Open"
 msgstr "開かれています"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:287
+#: src/screens/Onboarding/StepProfile/index.tsx:289
 msgid "Open avatar creator"
 msgstr "アバター・クリエイターを開く"
 
@@ -9389,7 +9389,7 @@ msgstr "返信の表示設定の更新に失敗しました"
 msgid "Updating..."
 msgstr "更新中…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:291
+#: src/screens/Onboarding/StepProfile/index.tsx:293
 msgid "Upload a photo instead"
 msgstr "代わりに写真をアップロード"
 
@@ -10740,4 +10740,3 @@ msgstr "「気になること」は興味を引くコンテンツを提供する
 #: src/components/verification/VerificationsDialog.tsx:65
 msgid "Your verifications"
 msgstr "あなたの認証情報"
-
