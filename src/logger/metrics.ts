@@ -48,6 +48,11 @@ export type MetricEvents = {
   // Screen events
   'splash:signInPressed': {}
   'splash:createAccountPressed': {}
+  'welcomeModal:signupClicked': {}
+  'welcomeModal:exploreClicked': {}
+  'welcomeModal:signinClicked': {}
+  'welcomeModal:dismissed': {}
+  'welcomeModal:presented': {}
   'signup:nextPressed': {
     activeStep: number
     phoneVerificationRequired?: boolean
