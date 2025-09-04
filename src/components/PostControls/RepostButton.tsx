@@ -5,12 +5,12 @@ import {useLingui} from '@lingui/react'
 
 import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {Repost_Stroke2_Corner3_Rounded as Repost} from '#/components/icons/Repost'
+import {formatPostStatCount} from '#/components/PostControls/util'
 import {Text} from '#/components/Typography'
 import {
   PostControlButton,
@@ -25,6 +25,7 @@ interface Props {
   onQuote: () => void
   big?: boolean
   embeddingDisabled: boolean
+  compactCount?: boolean
 }
 
 let RepostButton = ({
@@ -34,6 +35,7 @@ let RepostButton = ({
   onQuote,
   big,
   embeddingDisabled,
+  compactCount,
 }: Props): React.ReactNode => {
   const t = useTheme()
   const {_, i18n} = useLingui()
@@ -86,7 +88,7 @@ let RepostButton = ({
         <PostControlButtonIcon icon={Repost} />
         {typeof repostCount !== 'undefined' && repostCount > 0 && (
           <PostControlButtonText testID="repostCount">
-            {formatCount(i18n, repostCount)}
+            {formatPostStatCount(i18n, repostCount, {compact: compactCount})}
           </PostControlButtonText>
         )}
       </PostControlButton>

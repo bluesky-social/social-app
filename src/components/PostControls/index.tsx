@@ -24,10 +24,11 @@ import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
-import {formatCount} from '#/view/com/util/numeric/format'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints} from '#/alf'
-import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
+import {atoms as a, flatten, useBreakpoints} from '#/alf'
+import {Reply as Bubble} from '#/components/icons/Reply'
+import {formatPostStatCount} from '#/components/PostControls/util'
+import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
   PostControlButtonIcon,
@@ -51,6 +52,7 @@ let PostControls = ({
   threadgateRecord,
   onShowLess,
   viaRepost,
+  variant,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -65,9 +67,9 @@ let PostControls = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
   viaRepost?: {uri: string; cid: string}
+  variant?: 'compact' | 'normal' | 'large'
 }): React.ReactNode => {
   const {_, i18n} = useLingui()
-  const {gtMobile} = useBreakpoints()
   const {openComposer} = useOpenComposer()
   const {feedDescriptor} = useFeedFeedbackContext()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(
@@ -92,6 +94,7 @@ let PostControls = ({
       post.author.viewer?.blockingByList,
   )
   const replyDisabled = post.viewer?.replyDisabled
+  const {gtPhone} = useBreakpoints()
 
   const [hasLikeIconBeenToggled, setHasLikeIconBeenToggled] = useState(false)
 
@@ -184,6 +187,12 @@ let PostControls = ({
     })
   }
 
+  const secondaryControlSpacingStyles = flatten([
+    {gap: 0}, // default, we want `gap` to be defined on the resulting object
+    variant !== 'compact' && a.gap_xs,
+    (big || gtPhone) && a.gap_sm,
+  ])
+
   return (
     <View
       style={[
@@ -191,104 +200,124 @@ let PostControls = ({
         a.justify_between,
         a.align_center,
         !big && a.pt_2xs,
+        a.gap_md,
         style,
       ]}>
-      <View
-        style={[
-          big ? a.align_center : [a.flex_1, a.align_start, {marginLeft: -6}],
-          replyDisabled ? {opacity: 0.5} : undefined,
-        ]}>
-        <PostControlButton
-          testID="replyBtn"
-          onPress={
-            !replyDisabled ? () => requireAuth(() => onPressReply()) : undefined
-          }
-          label={_(
-            msg({
-              message: `Reply (${plural(post.replyCount || 0, {
-                one: '# reply',
-                other: '# replies',
-              })})`,
-              comment:
-                'Accessibility label for the reply button, verb form followed by number of replies and noun form',
-            }),
-          )}
-          big={big}>
-          <PostControlButtonIcon icon={Bubble} />
-          {typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
-            <PostControlButtonText>
-              {formatCount(i18n, post.replyCount)}
-            </PostControlButtonText>
-          )}
-        </PostControlButton>
-      </View>
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-        <RepostButton
-          isReposted={!!post.viewer?.repost}
-          repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
-          onRepost={onRepost}
-          onQuote={onQuote}
-          big={big}
-          embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
-        />
-      </View>
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-        <PostControlButton
-          testID="likeBtn"
-          big={big}
-          onPress={() => requireAuth(() => onPressToggleLike())}
-          label={
-            post.viewer?.like
-              ? _(
-                  msg({
-                    message: `Unlike (${plural(post.likeCount || 0, {
-                      one: '# like',
-                      other: '# likes',
-                    })})`,
-                    comment:
-                      'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
-                  }),
-                )
-              : _(
-                  msg({
-                    message: `Like (${plural(post.likeCount || 0, {
-                      one: '# like',
-                      other: '# likes',
-                    })})`,
-                    comment:
-                      'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
-                  }),
-                )
-          }>
-          <AnimatedLikeIcon
-            isLiked={Boolean(post.viewer?.like)}
+      <View style={[a.flex_row, a.flex_1, {maxWidth: 320}]}>
+        <View
+          style={[
+            a.flex_1,
+            a.align_start,
+            {marginLeft: big ? -2 : -6},
+            replyDisabled ? {opacity: 0.5} : undefined,
+          ]}>
+          <PostControlButton
+            testID="replyBtn"
+            onPress={
+              !replyDisabled
+                ? () => requireAuth(() => onPressReply())
+                : undefined
+            }
+            label={_(
+              msg({
+                message: `Reply (${plural(post.replyCount || 0, {
+                  one: '# reply',
+                  other: '# replies',
+                })})`,
+                comment:
+                  'Accessibility label for the reply button, verb form followed by number of replies and noun form',
+              }),
+            )}
+            big={big}>
+            <PostControlButtonIcon icon={Bubble} />
+            {typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
+              <PostControlButtonText>
+                {formatPostStatCount(i18n, post.replyCount, {
+                  compact: variant === 'compact',
+                })}
+              </PostControlButtonText>
+            )}
+          </PostControlButton>
+        </View>
+        <View style={[a.flex_1, a.align_start]}>
+          <RepostButton
+            isReposted={!!post.viewer?.repost}
+            repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
+            onRepost={onRepost}
+            onQuote={onQuote}
             big={big}
-            hasBeenToggled={hasLikeIconBeenToggled}
-          />
-          <CountWheel
-            likeCount={post.likeCount ?? 0}
-            big={big}
-            isLiked={Boolean(post.viewer?.like)}
-            hasBeenToggled={hasLikeIconBeenToggled}
-          />
-        </PostControlButton>
-      </View>
-      <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
-        <View style={[!big && a.ml_sm]}>
-          <ShareMenuButton
-            testID="postShareBtn"
-            post={post}
-            big={big}
-            record={record}
-            richText={richText}
-            timestamp={post.indexedAt}
-            threadgateRecord={threadgateRecord}
-            onShare={onShare}
+            embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+            compactCount={variant === 'compact'}
           />
         </View>
+        <View style={[a.flex_1, a.align_start]}>
+          <PostControlButton
+            testID="likeBtn"
+            big={big}
+            onPress={() => requireAuth(() => onPressToggleLike())}
+            label={
+              post.viewer?.like
+                ? _(
+                    msg({
+                      message: `Unlike (${plural(post.likeCount || 0, {
+                        one: '# like',
+                        other: '# likes',
+                      })})`,
+                      comment:
+                        'Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun',
+                    }),
+                  )
+                : _(
+                    msg({
+                      message: `Like (${plural(post.likeCount || 0, {
+                        one: '# like',
+                        other: '# likes',
+                      })})`,
+                      comment:
+                        'Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form',
+                    }),
+                  )
+            }>
+            <AnimatedLikeIcon
+              isLiked={Boolean(post.viewer?.like)}
+              big={big}
+              hasBeenToggled={hasLikeIconBeenToggled}
+            />
+            <CountWheel
+              likeCount={post.likeCount ?? 0}
+              big={big}
+              isLiked={Boolean(post.viewer?.like)}
+              hasBeenToggled={hasLikeIconBeenToggled}
+              compactCount={variant === 'compact'}
+            />
+          </PostControlButton>
+        </View>
+        {/* Spacer! */}
+        <View />
       </View>
-      <View
-        style={big ? a.align_center : [gtMobile && a.flex_1, a.align_start]}>
+      <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
+        <BookmarkButton
+          post={post}
+          big={big}
+          logContext={logContext}
+          hitSlop={{
+            right: secondaryControlSpacingStyles.gap / 2,
+          }}
+        />
+        <ShareMenuButton
+          testID="postShareBtn"
+          post={post}
+          big={big}
+          record={record}
+          richText={richText}
+          timestamp={post.indexedAt}
+          threadgateRecord={threadgateRecord}
+          onShare={onShare}
+          hitSlop={{
+            left: secondaryControlSpacingStyles.gap / 2,
+            right: secondaryControlSpacingStyles.gap / 2,
+          }}
+        />
         <PostMenuButton
           testID="postDropdownBtn"
           post={post}
@@ -300,6 +329,9 @@ let PostControls = ({
           timestamp={post.indexedAt}
           threadgateRecord={threadgateRecord}
           onShowLess={onShowLess}
+          hitSlop={{
+            left: secondaryControlSpacingStyles.gap / 2,
+          }}
         />
       </View>
     </View>

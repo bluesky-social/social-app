@@ -25,6 +25,7 @@ export interface PostShadow {
   embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined
   pinned: boolean
   optimisticReplyCount: number | undefined
+  bookmarked: boolean | undefined
 }
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
@@ -92,6 +93,18 @@ function mergeShadow(
     likeCount = Math.max(0, likeCount)
   }
 
+  let bookmarkCount = post.bookmarkCount ?? 0
+  if ('bookmarked' in shadow) {
+    const wasBookmarked = !!post.viewer?.bookmarked
+    const isBookmarked = !!shadow.bookmarked
+    if (wasBookmarked && !isBookmarked) {
+      bookmarkCount--
+    } else if (!wasBookmarked && isBookmarked) {
+      bookmarkCount++
+    }
+    bookmarkCount = Math.max(0, bookmarkCount)
+  }
+
   let repostCount = post.repostCount ?? 0
   if ('repostUri' in shadow) {
     const wasReposted = !!post.viewer?.repost
@@ -127,11 +140,14 @@ function mergeShadow(
     likeCount: likeCount,
     repostCount: repostCount,
     replyCount: replyCount,
+    bookmarkCount: bookmarkCount,
     viewer: {
       ...(post.viewer || {}),
       like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
       repost: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
       pinned: 'pinned' in shadow ? shadow.pinned : post.viewer?.pinned,
+      bookmarked:
+        'bookmarked' in shadow ? shadow.bookmarked : post.viewer?.bookmarked,
     },
   })
 }
