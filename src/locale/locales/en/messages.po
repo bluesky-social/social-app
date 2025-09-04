@@ -530,7 +530,7 @@ msgstr ""
 msgid "A new form of verification"
 msgstr ""
 
-#: src/components/BlockedGeoOverlay.tsx:39
+#: src/components/BlockedGeoOverlay.tsx:50
 msgid "A new Mississippi law requires us to implement age verification for all users before they can access Bluesky. We think this law creates challenges that go beyond its child safety goals, and creates significant barriers that limit free speech and disproportionately harm smaller platforms and emerging technologies."
 msgstr ""
 
@@ -845,7 +845,7 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:145
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:193
 msgid "Age assurance only takes a few minutes"
 msgstr ""
 
@@ -879,6 +879,10 @@ msgstr ""
 msgid "Allow access to your direct messages"
 msgstr ""
 
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
+msgid "Allow location access"
+msgstr ""
+
 #: src/screens/Messages/Settings.tsx:86
 #: src/screens/Messages/Settings.tsx:89
 msgid "Allow new messages from"
@@ -905,6 +909,10 @@ msgstr ""
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:235
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:241
 msgid "Already have a code?"
+msgstr ""
+
+#: src/components/WelcomeModal.tsx:189
+msgid "Already have an account?"
 msgstr ""
 
 #: src/screens/Login/ChooseAccountForm.tsx:43
@@ -1047,7 +1055,7 @@ msgstr ""
 msgid "Animated GIF"
 msgstr ""
 
-#: src/components/BlockedGeoOverlay.tsx:92
+#: src/components/BlockedGeoOverlay.tsx:104
 #: src/components/PolicyUpdateOverlay/Badge.tsx:33
 msgid "Announcement"
 msgstr ""
@@ -1223,7 +1231,7 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr ""
 
-#: src/components/BlockedGeoOverlay.tsx:42
+#: src/components/BlockedGeoOverlay.tsx:53
 msgid "As a small team, we cannot justify building the expensive infrastructure this requirement demands while legal challenges to this law are pending."
 msgstr ""
 
@@ -1575,6 +1583,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:206
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:129
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:135
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:164
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:125
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:131
 #: src/components/dialogs/InAppBrowserConsent.tsx:98
@@ -1846,6 +1855,10 @@ msgstr ""
 msgid "Clear search query"
 msgstr ""
 
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:116
+msgid "Click below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
+msgstr ""
+
 #: src/view/com/feeds/MissingFeed.tsx:87
 msgid "Click for information"
 msgstr ""
@@ -1944,7 +1957,7 @@ msgstr ""
 msgid "Close dialog"
 msgstr ""
 
-#: src/view/shell/index.web.tsx:100
+#: src/view/shell/index.web.tsx:110
 msgid "Close drawer menu"
 msgstr ""
 
@@ -1973,6 +1986,10 @@ msgstr ""
 
 #: src/components/Menu/index.tsx:344
 msgid "Close this dialog"
+msgstr ""
+
+#: src/components/WelcomeModal.tsx:214
+msgid "Close welcome modal"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
@@ -2081,6 +2098,20 @@ msgstr ""
 msgid "Confirm your birthdate"
 msgstr ""
 
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:89
+#: src/components/BlockedGeoOverlay.tsx:141
+#: src/components/BlockedGeoOverlay.tsx:147
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:45
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:112
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:159
+msgid "Confirm your location"
+msgstr ""
+
+#: src/components/BlockedGeoOverlay.tsx:135
+msgid "Confirm your location with GPS. Your location data is not tracked and does not leave your device."
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
 #: src/screens/Login/LoginForm.tsx:274
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:186
@@ -2100,7 +2131,7 @@ msgstr ""
 msgid "Connection issue"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:132
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:28
 msgid "Contact our moderation team"
 msgstr ""
@@ -2395,6 +2426,8 @@ msgstr ""
 
 #: src/components/LoggedOutCTA.tsx:71
 #: src/components/LoggedOutCTA.tsx:76
+#: src/components/WelcomeModal.tsx:155
+#: src/components/WelcomeModal.tsx:163
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
 #: src/view/shell/bottom-bar/BottomBar.tsx:345
@@ -3338,6 +3371,11 @@ msgstr ""
 msgid "Explore"
 msgstr ""
 
+#: src/components/WelcomeModal.tsx:168
+#: src/components/WelcomeModal.tsx:177
+msgid "Explore the app"
+msgstr ""
+
 #: src/screens/Settings/AccountSettings.tsx:152
 #: src/screens/Settings/AccountSettings.tsx:156
 msgid "Export my data"
@@ -3493,6 +3531,10 @@ msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:34
 msgid "Failed to remove verification"
+msgstr ""
+
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:87
+msgid "Failed to resolve location. Please try again."
 msgstr ""
 
 #: src/lib/media/save-image.ts:28
@@ -3853,7 +3895,7 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
-#: src/components/BlockedGeoOverlay.tsx:45
+#: src/components/BlockedGeoOverlay.tsx:56
 msgid "For now, we have made the difficult decision to block access to Bluesky in the state of Mississippi."
 msgstr ""
 
@@ -4537,6 +4579,10 @@ msgstr ""
 msgid "Invites, but personal"
 msgstr ""
 
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:86
+msgid "Is your location not accurate? <0>Click here to confirm your location.</0>"
+msgstr ""
+
 #: src/screens/Signup/StepInfo/index.tsx:293
 msgid "It's correct"
 msgstr ""
@@ -4635,11 +4681,11 @@ msgstr ""
 msgid "Larger"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:139
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:187
 msgid "Last initiated {timeAgo} ago"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:137
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated just now"
 msgstr ""
 
@@ -5684,6 +5730,10 @@ msgstr ""
 msgid "Not Found"
 msgstr ""
 
+#: src/components/BlockedGeoOverlay.tsx:126
+msgid "Not in Mississippi?"
+msgstr ""
+
 #: src/view/com/profile/ProfileMenu.tsx:497
 msgid "Note about sharing"
 msgstr ""
@@ -6724,7 +6774,7 @@ msgstr ""
 msgid "Read more replies"
 msgstr ""
 
-#: src/components/BlockedGeoOverlay.tsx:29
+#: src/components/BlockedGeoOverlay.tsx:40
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:112
 msgid "Read our blog post"
 msgstr ""
@@ -6741,6 +6791,14 @@ msgstr ""
 #: src/screens/Signup/StepInfo/Policies.tsx:81
 #: src/screens/Signup/StepInfo/Policies.tsx:101
 msgid "Read the Bluesky Terms of Service"
+msgstr ""
+
+#: src/components/WelcomeModal.tsx:146
+msgid "Real conversations."
+msgstr ""
+
+#: src/components/WelcomeModal.tsx:144
+msgid "Real people."
 msgstr ""
 
 #: src/screens/Takendown.tsx:162
@@ -8010,6 +8068,8 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
+#: src/components/WelcomeModal.tsx:194
+#: src/components/WelcomeModal.tsx:206
 #: src/screens/Login/index.tsx:122
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/LoginForm.tsx:181
@@ -8116,6 +8176,10 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:91
 msgid "Snoozes the reminder"
+msgstr ""
+
+#: src/components/WelcomeModal.tsx:148
+msgid "Social media you control."
 msgstr ""
 
 #: src/screens/Onboarding/index.tsx:53
@@ -8523,6 +8587,11 @@ msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
+msgstr ""
+
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:115
+#: src/components/BlockedGeoOverlay.tsx:169
+msgid "Thanks! You're all set."
 msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:497
@@ -9119,6 +9188,10 @@ msgstr ""
 msgid "Type:"
 msgstr ""
 
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:92
+msgid "Unable to access location. You'll need to visit your system settings to enable location services for Bluesky"
+msgstr ""
+
 #: src/lib/hooks/useCleanError.ts:27
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
@@ -9217,7 +9290,7 @@ msgstr ""
 msgid "Unfollows the user"
 msgstr ""
 
-#: src/components/BlockedGeoOverlay.tsx:37
+#: src/components/BlockedGeoOverlay.tsx:48
 msgid "Unfortunately, Bluesky is unavailable in Mississippi right now."
 msgstr ""
 
@@ -9580,7 +9653,7 @@ msgstr ""
 msgid "Verify account"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:122
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify again"
 msgstr ""
 
@@ -9606,8 +9679,8 @@ msgstr ""
 msgid "Verify email dialog"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:110
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:124
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:158
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:172
 msgid "Verify now"
 msgstr ""
 
@@ -9968,6 +10041,14 @@ msgstr ""
 msgid "We're so excited to have you join us!"
 msgstr ""
 
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:105
+msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
+msgstr ""
+
+#: src/components/BlockedGeoOverlay.tsx:159
+msgid "We're sorry, but based on your device's location, you are currently located in a region we cannot provide access at this time."
+msgstr ""
+
 #: src/view/screens/ProfileList.tsx:117
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr ""
@@ -10177,7 +10258,7 @@ msgstr ""
 msgid "You are creating an account on"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:80
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:128
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr ""
 
@@ -10674,6 +10755,10 @@ msgstr ""
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:94
 msgid "Your interests help us find what you like!"
+msgstr ""
+
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:130
+msgid "Your location data is not tracked and does not leave your device."
 msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:369
