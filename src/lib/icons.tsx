@@ -304,6 +304,28 @@ export function HashtagIcon({
   )
 }
 
+export function HashtagWideIcon({
+  style,
+  strokeWidth = 1.5,
+  size = 65,
+}: {
+  style?: StyleProp<TextStyle>
+  strokeWidth?: number
+  size?: string | number
+}) {
+  return (
+    <Svg width={size} height="64" viewBox="0 0 65 64" fill="none" style={style}>
+      <Path
+        d="M23.8333 10L18.5 54M46.5 10L41.1667 54M10.5 20.6667H54.5M54.5 43.3333H10.5"
+        stroke="currentColor"
+        strokeWidth={strokeWidth}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </Svg>
+  )
+}
+
 // Copyright (c) 2020 Refactoring UI Inc.
 // https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
 export function ShieldExclamation({
