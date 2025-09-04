@@ -415,13 +415,18 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           />
           {post.repostCount !== 0 ||
           post.likeCount !== 0 ||
-          post.quoteCount !== 0 ? (
+          post.quoteCount !== 0 ||
+          post.bookmarkCount !== 0 ? (
             // Show this section unless we're *sure* it has no engagement.
             <View
               style={[
                 a.flex_row,
+                a.flex_wrap,
                 a.align_center,
-                a.gap_lg,
+                {
+                  rowGap: a.gap_sm.gap,
+                  columnGap: a.gap_lg.gap,
+                },
                 a.border_t,
                 a.border_b,
                 a.mt_md,
@@ -471,6 +476,22 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                       {formatPostStatCount(i18n, post.likeCount)}
                     </Text>{' '}
                     <Plural value={post.likeCount} one="like" other="likes" />
+                  </Text>
+                </Link>
+              ) : null}
+              {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
+                <Link to={likesHref} label={_(msg`Saves of this post`)}>
+                  <Text
+                    testID="bookmarkCount-expanded"
+                    style={[a.text_md, t.atoms.text_contrast_medium]}>
+                    <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                      {formatPostStatCount(i18n, post.bookmarkCount)}
+                    </Text>{' '}
+                    <Plural
+                      value={post.bookmarkCount}
+                      one="save"
+                      other="saves"
+                    />
                   </Text>
                 </Link>
               ) : null}
