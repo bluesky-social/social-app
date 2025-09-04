@@ -24,10 +24,10 @@ import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
-import {formatCount} from '#/view/com/util/numeric/format'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
+import {formatPostStatCount} from '#/components/PostControls/util'
 import {BookmarkButton} from './BookmarkButton'
 import {
   PostControlButton,
@@ -52,6 +52,7 @@ let PostControls = ({
   threadgateRecord,
   onShowLess,
   viaRepost,
+  variant,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -66,6 +67,7 @@ let PostControls = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
   viaRepost?: {uri: string; cid: string}
+  variant?: 'compact' | 'normal' | 'large'
 }): React.ReactNode => {
   const {_, i18n} = useLingui()
   const {openComposer} = useOpenComposer()
@@ -224,7 +226,9 @@ let PostControls = ({
             <PostControlButtonIcon icon={Bubble} />
             {typeof post.replyCount !== 'undefined' && post.replyCount > 0 && (
               <PostControlButtonText>
-                {formatCount(i18n, post.replyCount)}
+                {formatPostStatCount(i18n, post.replyCount, {
+                  compact: variant === 'compact',
+                })}
               </PostControlButtonText>
             )}
           </PostControlButton>
@@ -237,6 +241,7 @@ let PostControls = ({
             onQuote={onQuote}
             big={big}
             embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
+            compactCount={variant === 'compact'}
           />
         </View>
         <View style={[a.flex_1, a.align_start]}>
@@ -277,6 +282,7 @@ let PostControls = ({
               big={big}
               isLiked={Boolean(post.viewer?.like)}
               hasBeenToggled={hasLikeIconBeenToggled}
+              compactCount={variant === 'compact'}
             />
           </PostControlButton>
         </View>
