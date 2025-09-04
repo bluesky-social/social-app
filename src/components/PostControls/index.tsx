@@ -188,7 +188,8 @@ let PostControls = ({
   }
 
   const secondaryControlSpacingStyles = flatten([
-    a.gap_xs,
+    {gap: 0}, // default, we want `gap` to be defined on the resulting object
+    variant !== 'compact' && a.gap_xs,
     (big || gtPhone) && a.gap_sm,
   ])
 
