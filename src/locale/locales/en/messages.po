@@ -944,7 +944,7 @@ msgstr ""
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:264
+#: src/components/dialogs/GifSelect.tsx:253
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:362
 msgid "An error has occurred"
 msgstr ""
@@ -1890,7 +1890,7 @@ msgstr ""
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:184
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:237
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:243
-#: src/components/dialogs/GifSelect.tsx:280
+#: src/components/dialogs/GifSelect.tsx:269
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:158
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
@@ -1935,7 +1935,7 @@ msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:224
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:230
-#: src/components/dialogs/GifSelect.tsx:274
+#: src/components/dialogs/GifSelect.tsx:263
 #: src/components/verification/VerificationsDialog.tsx:136
 #: src/components/verification/VerifierDialog.tsx:141
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:246
@@ -1953,7 +1953,7 @@ msgstr ""
 msgid "Close emoji picker"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:170
+#: src/components/dialogs/GifSelect.tsx:159
 msgid "Close GIF dialog"
 msgstr ""
 
@@ -3436,7 +3436,7 @@ msgstr ""
 msgid "Failed to load feeds preferences"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:224
+#: src/components/dialogs/GifSelect.tsx:213
 msgid "Failed to load GIFs"
 msgstr ""
 
@@ -5543,7 +5543,7 @@ msgstr ""
 msgid "No expiry set"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:230
+#: src/components/dialogs/GifSelect.tsx:219
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr ""
 
@@ -5637,7 +5637,7 @@ msgstr ""
 msgid "No results."
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:228
+#: src/components/dialogs/GifSelect.tsx:217
 msgid "No search results found for \"{search}\"."
 msgstr ""
 
@@ -5764,7 +5764,7 @@ msgstr ""
 msgid "Off"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:267
+#: src/components/dialogs/GifSelect.tsx:256
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:365
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
@@ -7445,7 +7445,7 @@ msgstr ""
 msgid "Search for posts, users, or feeds"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:178
+#: src/components/dialogs/GifSelect.tsx:167
 msgid "Search GIFs"
 msgstr ""
 
@@ -7472,7 +7472,7 @@ msgstr ""
 msgid "Search profiles"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:179
+#: src/components/dialogs/GifSelect.tsx:168
 msgid "Search Tenor"
 msgstr ""
 
@@ -7580,7 +7580,7 @@ msgstr ""
 msgid "Select GIF"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:305
+#: src/components/dialogs/GifSelect.tsx:294
 msgid "Select GIF \"{0}\""
 msgstr ""
 
@@ -8663,7 +8663,7 @@ msgstr ""
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:225
+#: src/components/dialogs/GifSelect.tsx:214
 msgid "There was an issue connecting to Tenor."
 msgstr ""
 
@@ -8748,7 +8748,7 @@ msgstr ""
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:269
+#: src/components/dialogs/GifSelect.tsx:258
 #: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:367
 #: src/view/com/util/ErrorBoundary.tsx:59
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
