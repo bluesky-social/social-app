@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
+import {transparentifyColor} from '#/alf/util/colorGeneration'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useNuxDialogContext} from '#/components/dialogs/nuxs'
@@ -82,15 +83,26 @@ export function BookmarksAnnouncement() {
             ]}>
             <View
               style={[
-                t.atoms.shadow_md,
                 {
-                  shadowOpacity: 0.2,
-                  shadowOffset: {
-                    width: 0,
-                    height: 10,
-                  },
+                  borderRadius: 24,
                   aspectRatio: 333 / 104,
                 },
+                isWeb
+                  ? [
+                      {
+                        boxShadow: `0px 10px 15px -3px ${transparentifyColor(t.palette.black, 0.2)}`,
+                      },
+                    ]
+                  : [
+                      t.atoms.shadow_md,
+                      {
+                        shadowOpacity: 0.2,
+                        shadowOffset: {
+                          width: 0,
+                          height: 10,
+                        },
+                      },
+                    ],
               ]}>
               <Image
                 accessibilityIgnoresInvertColors
@@ -133,7 +145,7 @@ export function BookmarksAnnouncement() {
                 },
               ]}>
               <Trans>
-                Finally! Keep track of posts that matter to you. Save them to
+                Finally! Keep track of posts that matter to you. Save them to
                 revisit anytime.
               </Trans>
             </Text>
