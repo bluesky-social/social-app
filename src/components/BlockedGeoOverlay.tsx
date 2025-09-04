@@ -156,7 +156,7 @@ export function BlockedGeoOverlay() {
                     props.disableDialogAction()
                     props.setDialogError(
                       _(
-                        msg`We're sorry, but based on your device's location, you are currently located in a region we cannot provide access at this time.`,
+                        msg`We're sorry, but based on your device's location, you are currently located in a region where we cannot provide access at this time.`,
                       ),
                     )
                   } else {

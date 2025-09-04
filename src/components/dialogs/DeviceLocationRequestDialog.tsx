@@ -89,7 +89,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
       } else {
         setError(
           _(
-            msg`Unable to access location. You'll need to visit your system settings to enable location services for Bluesky`,
+            msg`Unable to access location. You'll need to visit your system settings to enable location services for Bluesky.`,
           ),
         )
       }
@@ -114,9 +114,9 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
       <View style={[a.gap_sm, a.pb_xs]}>
         <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
-            Click below to allow Bluesky to access your GPS location. We will
-            then use that data to more accurately determine the content and
-            features available in your region.
+            Tap below to allow Bluesky to access your GPS location. We will then
+            use that data to more accurately determine the content and features
+            available in your region.
           </Trans>
         </Text>
 
@@ -143,7 +143,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
         {!dialogDisabled && (
           <Button
             disabled={isRequesting}
-            label={_(msg`Confirm your location`)}
+            label={_(msg`Allow location access`)}
             onPress={onPressConfirm}
             size={isWeb ? 'small' : 'large'}
             color="primary">
@@ -156,7 +156,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
 
         {!isWeb && (
           <Button
-            label={_(msg`Confirm your location`)}
+            label={_(msg`Cancel`)}
             onPress={() => close()}
             size={isWeb ? 'small' : 'large'}
             color="secondary">
