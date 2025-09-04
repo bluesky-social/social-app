@@ -23,8 +23,6 @@ import {useSession} from '#/state/session'
 import {List, type ListRef} from '#/view/com/util/List'
 import {ChatListLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {AgeRestrictedScreen} from '#/components/ageAssurance/AgeRestrictedScreen'
-import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps, useDialogControl} from '#/components/Dialog'
 import {NewChat} from '#/components/dms/dialogs/NewChatDialog'
@@ -67,31 +65,7 @@ function keyExtractor(item: ListItem) {
 
 type Props = NativeStackScreenProps<MessagesTabNavigatorParams, 'Messages'>
 
-export function MessagesScreen(props: Props) {
-  const {_} = useLingui()
-  const aaCopy = useAgeAssuranceCopy()
-
-  return (
-    <AgeRestrictedScreen
-      screenTitle={_(msg`Chats`)}
-      infoText={aaCopy.chatsInfoText}
-      rightHeaderSlot={
-        <Link
-          to="/messages/settings"
-          label={_(msg`Chat settings`)}
-          size="small"
-          color="secondary">
-          <ButtonText>
-            <Trans>Chat settings</Trans>
-          </ButtonText>
-        </Link>
-      }>
-      <MessagesScreenInner {...props} />
-    </AgeRestrictedScreen>
-  )
-}
-
-export function MessagesScreenInner({navigation, route}: Props) {
+export function MessagesScreen({navigation, route}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()

@@ -13,7 +13,6 @@ import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
-import {useGeolocationStatus} from '#/state/geolocation'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
@@ -26,17 +25,11 @@ import {ModalsContainer} from '#/view/com/modals/Modal'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, select, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
-import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
-import {BlockedGeoOverlay} from '#/components/BlockedGeoOverlay'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
 import {InAppBrowserConsentDialog} from '#/components/dialogs/InAppBrowserConsent'
 import {LinkWarningDialog} from '#/components/dialogs/LinkWarning'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
-import {
-  Outlet as PolicyUpdateOverlayPortalOutlet,
-  usePolicyUpdateContext,
-} from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
@@ -47,7 +40,6 @@ import {DrawerContent} from './Drawer'
 function ShellInner() {
   const winDim = useWindowDimensions()
   const insets = useSafeAreaInsets()
-  const {state: policyUpdateState} = usePolicyUpdateContext()
 
   const closeAnyActiveElement = useCloseAnyActiveElement()
 
@@ -103,20 +95,14 @@ function ShellInner() {
       <MutedWordsDialog />
       <SigninDialog />
       <EmailDialog />
-      <AgeAssuranceRedirectDialog />
       <InAppBrowserConsentDialog />
       <LinkWarningDialog />
       <Lightbox />
+      <>
+        <PortalOutlet />
+        <BottomSheetOutlet />
+      </>
 
-      {/* Until policy update has been completed by the user, don't render anything that is portaled */}
-      {policyUpdateState.completed && (
-        <>
-          <PortalOutlet />
-          <BottomSheetOutlet />
-        </>
-      )}
-
-      <PolicyUpdateOverlayPortalOutlet />
     </>
   )
 }
@@ -193,7 +179,6 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
 
 export function Shell() {
   const t = useTheme()
-  const {status: geolocation} = useGeolocationStatus()
   const fullyExpandedCount = useDialogFullyExpandedCountContext()
 
   useIntentHandler()
@@ -213,13 +198,9 @@ export function Shell() {
           navigationBar: t.name !== 'light' ? 'light' : 'dark',
         }}
       />
-      {geolocation?.isAgeBlockedGeo ? (
-        <BlockedGeoOverlay />
-      ) : (
-        <RoutesContainer>
-          <ShellInner />
-        </RoutesContainer>
-      )}
+      <RoutesContainer>
+        <ShellInner />
+      </RoutesContainer>
     </View>
   )
 }

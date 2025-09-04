@@ -32,7 +32,6 @@ import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {logger} from '#/logger'
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
@@ -143,12 +142,8 @@ export function usePostFeedQuery(
    * available for the remainder of the session, so this delay only affects cold
    * loads. -esb
    */
-  const {isReady: isAgeAssuranceReady} = useAgeAssuranceContext()
   const enabled =
-    opts?.enabled !== false &&
-    Boolean(moderationOpts) &&
-    Boolean(preferences) &&
-    isAgeAssuranceReady
+    opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const userInterests = aggregateUserInterests(preferences)
   const followingPinnedIndex =
     preferences?.savedFeeds?.findIndex(

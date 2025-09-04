@@ -22,11 +22,7 @@ type AllowIncoming = 'all' | 'none' | 'following'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'MessagesSettings'>
 
-export function MessagesSettingsScreen(props: Props) {
-  return <MessagesSettingsScreenInner {...props} />
-}
-
-export function MessagesSettingsScreenInner({}: Props) {
+export function MessagesSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({

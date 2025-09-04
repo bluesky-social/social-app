@@ -7,7 +7,6 @@ import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
-import {AgeAssuranceAccountCard} from '#/components/ageAssurance/AgeAssuranceAccountCard'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {
@@ -146,7 +145,6 @@ export function AccountSettingsScreen({}: Props) {
               onPress={() => birthdayControl.open()}
             />
           </SettingsList.Item>
-          <AgeAssuranceAccountCard style={[a.px_xl, a.pt_xs, a.pb_md]} />
           <SettingsList.Divider />
           <SettingsList.PressableItem
             label={_(msg`Export my data`)}

@@ -8,7 +8,6 @@ import debounce from 'lodash.debounce'
 import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNative} from '#/platform/detection'
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
 import {IS_DEV} from '#/env'
@@ -37,7 +36,7 @@ async function _registerPushToken({
         : PUBLIC_APPVIEW_DID,
       platform: Platform.OS,
       token: token.data,
-        appId: 'community.blacksky',
+      appId: 'community.blacksky',
       ageRestricted: extra.ageRestricted ?? false,
     }
 
@@ -69,21 +68,12 @@ export function useRegisterPushToken() {
   const {currentAccount} = useSession()
 
   return useCallback(
-    ({
-      token,
-      isAgeRestricted,
-    }: {
-      token: Notifications.DevicePushToken
-      isAgeRestricted: boolean
-    }) => {
+    ({token}: {token: Notifications.DevicePushToken}) => {
       if (!currentAccount) return
       return _registerPushTokenDebounced({
         agent,
         currentAccount,
         token,
-        extra: {
-          ageRestricted: isAgeRestricted,
-        },
       })
     },
     [agent, currentAccount],
@@ -122,41 +112,30 @@ async function getPushToken() {
  * @see https://github.com/bluesky-social/social-app/pull/4467
  */
 export function useGetAndRegisterPushToken() {
-  const {isAgeRestricted} = useAgeAssuranceContext()
   const registerPushToken = useRegisterPushToken()
-  return useCallback(
-    async ({
-      isAgeRestricted: isAgeRestrictedOverride,
-    }: {
-      isAgeRestricted?: boolean
-    } = {}) => {
-      if (!isNative || IS_DEV) return
+  return useCallback(async () => {
+    if (!isNative || IS_DEV) return
 
+    /**
+     * This will also fire the listener added via `addPushTokenListener`. That
+     * listener also handles registration.
+     */
+    const token = await getPushToken()
+
+    notyLogger.debug(`useGetAndRegisterPushToken`, {
+      token: token ?? 'undefined',
+    })
+
+    if (token) {
       /**
-       * This will also fire the listener added via `addPushTokenListener`. That
-       * listener also handles registration.
+       * The listener should have registered the token already, but just in
+       * case, call the debounced function again.
        */
-      const token = await getPushToken()
+      registerPushToken({token})
+    }
 
-      notyLogger.debug(`useGetAndRegisterPushToken`, {
-        token: token ?? 'undefined',
-      })
-
-      if (token) {
-        /**
-         * The listener should have registered the token already, but just in
-         * case, call the debounced function again.
-         */
-        registerPushToken({
-          token,
-          isAgeRestricted: isAgeRestrictedOverride ?? isAgeRestricted,
-        })
-      }
-
-      return token
-    },
-    [registerPushToken, isAgeRestricted],
-  )
+    return token
+  }, [registerPushToken])
 }
 
 /**
@@ -170,15 +149,13 @@ export function useNotificationsRegistration() {
   const {currentAccount} = useSession()
   const registerPushToken = useRegisterPushToken()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
-  const {isReady: isAgeRestrictionReady, isAgeRestricted} =
-    useAgeAssuranceContext()
 
   useEffect(() => {
     /**
      * We want this to init right away _after_ we have a logged in user, and
      * _after_ we've loaded their age assurance state.
      */
-    if (!currentAccount || !isAgeRestrictionReady) return
+    if (!currentAccount) return
 
     notyLogger.debug(`useNotificationsRegistration`)
 
@@ -203,20 +180,14 @@ export function useNotificationsRegistration() {
      * @see https://docs.expo.dev/versions/latest/sdk/notifications/#addpushtokenlistenerlistener
      */
     const subscription = Notifications.addPushTokenListener(async token => {
-      registerPushToken({token, isAgeRestricted: isAgeRestricted})
+      registerPushToken({token})
       notyLogger.debug(`addPushTokenListener callback`, {token})
     })
 
     return () => {
       subscription.remove()
     }
-  }, [
-    currentAccount,
-    getAndRegisterPushToken,
-    registerPushToken,
-    isAgeRestrictionReady,
-    isAgeRestricted,
-  ])
+  }, [currentAccount, getAndRegisterPushToken, registerPushToken])
 }
 
 export function useRequestNotificationsPermission() {
