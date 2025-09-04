@@ -879,6 +879,7 @@ msgstr ""
 msgid "Allow access to your direct messages"
 msgstr ""
 
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
 msgid "Allow location access"
 msgstr ""
@@ -1583,6 +1584,7 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:206
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:129
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:135
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:159
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:164
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:125
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:131
@@ -1855,10 +1857,6 @@ msgstr ""
 msgid "Clear search query"
 msgstr ""
 
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:116
-msgid "Click below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
-msgstr ""
-
 #: src/view/com/feeds/MissingFeed.tsx:87
 msgid "Click for information"
 msgstr ""
@@ -2103,8 +2101,6 @@ msgstr ""
 #: src/components/BlockedGeoOverlay.tsx:147
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:45
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:112
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
-#: src/components/dialogs/DeviceLocationRequestDialog.tsx:159
 msgid "Confirm your location"
 msgstr ""
 
@@ -4580,7 +4576,7 @@ msgid "Invites, but personal"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:86
-msgid "Is your location not accurate? <0>Click here to confirm your location.</0>"
+msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
 msgstr ""
 
 #: src/screens/Signup/StepInfo/index.tsx:293
@@ -8485,6 +8481,10 @@ msgstr ""
 msgid "Tags only"
 msgstr ""
 
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:116
+msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
+msgstr ""
+
 #: src/view/com/feeds/MissingFeed.tsx:89
 msgid "Tap for information"
 msgstr ""
@@ -9189,7 +9189,7 @@ msgid "Type:"
 msgstr ""
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:92
-msgid "Unable to access location. You'll need to visit your system settings to enable location services for Bluesky"
+msgid "Unable to access location. You'll need to visit your system settings to enable location services for Bluesky."
 msgstr ""
 
 #: src/lib/hooks/useCleanError.ts:27
@@ -10046,7 +10046,7 @@ msgid "We're sorry, but based on your device's location, you are currently locat
 msgstr ""
 
 #: src/components/BlockedGeoOverlay.tsx:159
-msgid "We're sorry, but based on your device's location, you are currently located in a region we cannot provide access at this time."
+msgid "We're sorry, but based on your device's location, you are currently located in a region where we cannot provide access at this time."
 msgstr ""
 
 #: src/view/screens/ProfileList.tsx:117
