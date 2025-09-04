@@ -1,14 +1,25 @@
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {updatePostShadow} from '#/state/cache/post-shadow'
-import {truncateAndInvalidate as invalidateBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
+import {
+  optimisticallyDeleteBookmark,
+  optimisticallySaveBookmark,
+} from '#/state/queries/bookmarks/useBookmarksQuery'
 import {useAgent} from '#/state/session'
 
 type MutationArgs =
-  | {action: 'create'; uri: string; cid: string}
-  | {action: 'delete'; uri: string}
+  | {action: 'create'; post: AppBskyFeedDefs.PostView}
+  | {
+      action: 'delete'
+      /**
+       * For deletions, we only need to URI. Plus, in some cases we only know the
+       * URI, such as when a post was deleted by the author.
+       */
+      uri: string
+    }
 
 export function useBookmarkMutation() {
   const qc = useQueryClient()
@@ -17,10 +28,10 @@ export function useBookmarkMutation() {
   return useMutation({
     async mutationFn(args: MutationArgs) {
       if (args.action === 'create') {
-        updatePostShadow(qc, args.uri, {bookmarked: true})
+        updatePostShadow(qc, args.post.uri, {bookmarked: true})
         await agent.app.bsky.bookmark.createBookmark({
-          uri: args.uri,
-          cid: args.cid,
+          uri: args.post.uri,
+          cid: args.post.cid,
         })
       } else if (args.action === 'delete') {
         updatePostShadow(qc, args.uri, {bookmarked: false})
@@ -29,12 +40,16 @@ export function useBookmarkMutation() {
         })
       }
     },
-    onSuccess() {
-      invalidateBookmarksQuery(qc)
+    onSuccess(_, args) {
+      if (args.action === 'create') {
+        optimisticallySaveBookmark(qc, args.post)
+      } else if (args.action === 'delete') {
+        optimisticallyDeleteBookmark(qc, {uri: args.uri})
+      }
     },
     onError(e, args) {
       if (args.action === 'create') {
-        updatePostShadow(qc, args.uri, {bookmarked: false})
+        updatePostShadow(qc, args.post.uri, {bookmarked: false})
       } else if (args.action === 'delete') {
         updatePostShadow(qc, args.uri, {bookmarked: true})
       }

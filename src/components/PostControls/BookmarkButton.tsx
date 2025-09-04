@@ -25,7 +25,7 @@ export const BookmarkButton = memo(function BookmarkButton({
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
 
-  const {uri, cid, viewer} = post
+  const {viewer} = post
   const isBookmarked = !!viewer?.bookmarked
 
   const undoLabel = _(
@@ -39,8 +39,7 @@ export const BookmarkButton = memo(function BookmarkButton({
     try {
       await bookmark({
         action: 'create',
-        uri,
-        cid,
+        post,
       })
 
       toast.show(
@@ -73,7 +72,7 @@ export const BookmarkButton = memo(function BookmarkButton({
     try {
       await bookmark({
         action: 'delete',
-        uri,
+        uri: post.uri,
       })
 
       toast.show(

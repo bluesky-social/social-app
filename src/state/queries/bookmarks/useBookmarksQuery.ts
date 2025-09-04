@@ -1,4 +1,8 @@
-import {type AppBskyBookmarkGetBookmarks} from '@atproto/api'
+import {
+  type $Typed,
+  type AppBskyBookmarkGetBookmarks,
+  type AppBskyFeedDefs,
+} from '@atproto/api'
 import {
   type InfiniteData,
   type QueryClient,
@@ -25,6 +29,7 @@ export function useBookmarksQuery() {
     async queryFn({pageParam}) {
       const res = await agent.app.bsky.bookmark.getBookmarks({
         cursor: pageParam,
+        limit: 5,
       })
       return res.data
     },
@@ -47,4 +52,64 @@ export async function truncateAndInvalidate(qc: QueryClient) {
     },
   )
   return qc.invalidateQueries({queryKey: [bookmarksQueryKeyRoot]})
+}
+
+export async function optimisticallySaveBookmark(
+  qc: QueryClient,
+  post: AppBskyFeedDefs.PostView,
+) {
+  qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.OutputSchema>>(
+    {
+      queryKey: [bookmarksQueryKeyRoot],
+    },
+    data => {
+      if (!data) return data
+      return {
+        ...data,
+        pages: data.pages.map((page, index) => {
+          if (index === 0) {
+            post.$type = 'app.bsky.feed.defs#postView'
+            return {
+              ...page,
+              bookmarks: [
+                {
+                  createdAt: new Date().toISOString(),
+                  subject: {
+                    uri: post.uri,
+                    cid: post.cid,
+                  },
+                  item: post as $Typed<AppBskyFeedDefs.PostView>,
+                },
+                ...page.bookmarks,
+              ],
+            }
+          }
+          return page
+        }),
+      }
+    },
+  )
+}
+
+export async function optimisticallyDeleteBookmark(
+  qc: QueryClient,
+  {uri}: {uri: string},
+) {
+  qc.setQueriesData<InfiniteData<AppBskyBookmarkGetBookmarks.OutputSchema>>(
+    {
+      queryKey: [bookmarksQueryKeyRoot],
+    },
+    data => {
+      if (!data) return data
+      return {
+        ...data,
+        pages: data.pages.map(page => {
+          return {
+            ...page,
+            bookmarks: page.bookmarks.filter(b => b.subject.uri !== uri),
+          }
+        }),
+      }
+    },
+  )
 }
