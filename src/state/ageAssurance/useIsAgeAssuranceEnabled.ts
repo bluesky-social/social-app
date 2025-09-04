@@ -1,9 +1,9 @@
 import {useMemo} from 'react'
 
-import {useGeolocation} from '#/state/geolocation'
+import {useGeolocationStatus} from '#/state/geolocation'
 
 export function useIsAgeAssuranceEnabled() {
-  const {geolocation} = useGeolocation()
+  const {status: geolocation} = useGeolocationStatus()
 
   return useMemo(() => {
     return !!geolocation?.isAgeRestrictedGeo

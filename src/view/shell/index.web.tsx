@@ -9,7 +9,7 @@ import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
-import {useGeolocation} from '#/state/geolocation'
+import {useGeolocationStatus} from '#/state/geolocation'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -142,7 +142,7 @@ function ShellInner() {
 
 export function Shell() {
   const t = useTheme()
-  const {geolocation} = useGeolocation()
+  const {status: geolocation} = useGeolocationStatus()
   return (
     <View style={[a.util_screen_outer, t.atoms.bg]}>
       {geolocation?.isAgeBlockedGeo ? (

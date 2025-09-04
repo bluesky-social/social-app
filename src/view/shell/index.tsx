@@ -13,7 +13,7 @@ import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {isAndroid, isIOS} from '#/platform/detection'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
-import {useGeolocation} from '#/state/geolocation'
+import {useGeolocationStatus} from '#/state/geolocation'
 import {useSession} from '#/state/session'
 import {
   useIsDrawerOpen,
@@ -184,7 +184,7 @@ function ShellInner() {
 
 export function Shell() {
   const t = useTheme()
-  const {geolocation} = useGeolocation()
+  const {status: geolocation} = useGeolocationStatus()
   const fullyExpandedCount = useDialogFullyExpandedCountContext()
 
   useIntentHandler()
