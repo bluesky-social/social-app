@@ -29,7 +29,6 @@ export function useBookmarksQuery() {
     async queryFn({pageParam}) {
       const res = await agent.app.bsky.bookmark.getBookmarks({
         cursor: pageParam,
-        limit: 5,
       })
       return res.data
     },
