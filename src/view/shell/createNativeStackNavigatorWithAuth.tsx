@@ -27,6 +27,7 @@ import {
 
 import {PWI_ENABLED} from '#/lib/build-flags'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useGate} from '#/lib/statsig/statsig'
 import {isNative, isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
@@ -35,6 +36,7 @@ import {
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {LoggedOut} from '#/view/com/auth/LoggedOut'
+import {AuthenticationFlow} from '#/screens/Authentication/components/Flow'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
 import {SignupQueued} from '#/screens/SignupQueued'
@@ -113,8 +115,17 @@ function NativeStackNavigator({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
+  const gate = useGate()
+
   if (!hasSession && (!PWI_ENABLED || activeRouteRequiresAuth || isNative)) {
-    return <LoggedOut />
+    if (gate('new_auth_flow')) {
+      // I don't like how we have to split it like this, would prefer something neater
+      if (isWeb) {
+        return <AuthenticationFlow />
+      }
+    } else {
+      return <LoggedOut />
+    }
   }
   if (hasSession && currentAccount?.signupQueued) {
     return <SignupQueued />
@@ -123,7 +134,13 @@ function NativeStackNavigator({
     return <Takendown />
   }
   if (showLoggedOut) {
-    return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+    if (gate('new_auth_flow')) {
+      if (isWeb) {
+        return <AuthenticationFlow onDismiss={() => setShowLoggedOut(false)} />
+      }
+    } else {
+      return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+    }
   }
   if (currentAccount?.status === 'deactivated') {
     return <Deactivated />

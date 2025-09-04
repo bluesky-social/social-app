@@ -38,7 +38,7 @@ import {
   usePolicyUpdateContext,
 } from '#/components/PolicyUpdateOverlay'
 import {Outlet as PortalOutlet} from '#/components/Portal'
-import {RoutesContainer, TabsNavigator} from '#/Navigation'
+import {NativeNavigator, RoutesContainer} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {Composer} from './Composer'
@@ -154,7 +154,7 @@ function ShellInner() {
                 dim: 'rgba(10, 13, 16, 0.8)',
               }),
             }}>
-            <TabsNavigator />
+            <NativeNavigator />
           </Drawer>
         </ErrorBoundary>
       </View>

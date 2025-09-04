@@ -250,7 +250,7 @@ export function createInput(Component: typeof TextInput) {
             ctx.onBlur()
             onBlur?.(e)
           }}
-          placeholder={placeholder || label}
+          placeholder={placeholder ?? label}
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           style={flattened}
