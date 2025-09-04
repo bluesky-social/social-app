@@ -290,7 +290,7 @@ let PostControls = ({
         <View />
       </View>
       <View style={[a.flex_row, a.justify_end, (big || gtPhone) && a.gap_sm]}>
-        <BookmarkButton post={post} big={big} />
+        <BookmarkButton post={post} big={big} logContext={logContext} />
         <ShareMenuButton
           testID="postShareBtn"
           post={post}

@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import type React from 'react'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
+import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useTheme} from '#/alf'
@@ -16,9 +17,11 @@ import {PostControlButton, PostControlButtonIcon} from './PostControlButton'
 export const BookmarkButton = memo(function BookmarkButton({
   post,
   big,
+  logContext,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   big?: boolean
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
 }): React.ReactNode {
   const t = useTheme()
   const {_} = useLingui()
@@ -41,6 +44,8 @@ export const BookmarkButton = memo(function BookmarkButton({
         action: 'create',
         post,
       })
+
+      logger.metric('post:bookmark', {logContext})
 
       toast.show(
         <toast.Outer>
@@ -74,6 +79,8 @@ export const BookmarkButton = memo(function BookmarkButton({
         action: 'delete',
         uri: post.uri,
       })
+
+      logger.metric('post:unbookmark', {logContext})
 
       toast.show(
         <toast.Outer>

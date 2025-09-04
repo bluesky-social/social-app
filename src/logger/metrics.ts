@@ -238,6 +238,14 @@ export type MetricEvents = {
   'post:unmute': {}
   'post:pin': {}
   'post:unpin': {}
+  'post:bookmark': {
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+  }
+  'post:unbookmark': {
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+  }
+  'bookmarks:view': {}
+  'bookmarks:post-clicked': {}
   'profile:follow': {
     didBecomeMutual: boolean | undefined
     followeeClout: number | undefined

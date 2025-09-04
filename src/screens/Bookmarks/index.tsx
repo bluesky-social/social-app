@@ -15,6 +15,7 @@ import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
+import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useBookmarksQuery} from '#/state/queries/bookmarks/useBookmarksQuery'
@@ -41,6 +42,7 @@ export function BookmarksScreen({}: Props) {
   useFocusEffect(
     useCallback(() => {
       setMinimalShellMode(false)
+      logger.metric('bookmarks:view', {})
     }, [setMinimalShellMode]),
   )
 
@@ -268,7 +270,15 @@ function renderItem({item, index}: {item: ListItem; index: number}) {
       return <EmptyState />
     }
     case 'bookmark': {
-      return <Post post={item.bookmark.item} hideTopBorder={index === 0} />
+      return (
+        <Post
+          post={item.bookmark.item}
+          hideTopBorder={index === 0}
+          onBeforePress={() => {
+            logger.metric('bookmarks:post-clicked', {})
+          }}
+        />
+      )
     }
     case 'bookmarkNotFound': {
       return (
