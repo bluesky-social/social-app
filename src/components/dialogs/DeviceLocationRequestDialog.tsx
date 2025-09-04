@@ -89,7 +89,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
       } else {
         setError(
           _(
-            msg`Unable to access location. You'll need to visit your system settings to enable location services for Bluesky`,
+            msg`Unable to access location. You'll need to visit your system settings to enable location services for Bluesky.`,
           ),
         )
       }
