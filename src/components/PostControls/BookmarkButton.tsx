@@ -1,4 +1,5 @@
 import {memo} from 'react'
+import {type Insets} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,10 +19,12 @@ export const BookmarkButton = memo(function BookmarkButton({
   post,
   big,
   logContext,
+  hitSlop,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   big?: boolean
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+  hitSlop?: Insets
 }): React.ReactNode {
   const t = useTheme()
   const {_} = useLingui()
@@ -122,7 +125,8 @@ export const BookmarkButton = memo(function BookmarkButton({
           ? _(msg`Remove from saved posts`)
           : _(msg`Add to saved posts`)
       }
-      onPress={onHandlePress}>
+      onPress={onHandlePress}
+      hitSlop={hitSlop}>
       <PostControlButtonIcon
         fill={isBookmarked ? t.palette.primary_500 : undefined}
         icon={isBookmarked ? BookmarkFilled : Bookmark}

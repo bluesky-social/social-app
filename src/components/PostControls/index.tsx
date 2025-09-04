@@ -25,7 +25,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, flatten, useBreakpoints} from '#/alf'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {formatPostStatCount} from '#/components/PostControls/util'
 import {BookmarkButton} from './BookmarkButton'
@@ -187,6 +187,11 @@ let PostControls = ({
     })
   }
 
+  const secondaryControlSpacingStyles = flatten([
+    a.gap_xs,
+    (big || gtPhone) && a.gap_sm,
+  ])
+
   return (
     <View
       style={[
@@ -289,8 +294,15 @@ let PostControls = ({
         {/* Spacer! */}
         <View />
       </View>
-      <View style={[a.flex_row, a.justify_end, (big || gtPhone) && a.gap_sm]}>
-        <BookmarkButton post={post} big={big} logContext={logContext} />
+      <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
+        <BookmarkButton
+          post={post}
+          big={big}
+          logContext={logContext}
+          hitSlop={{
+            right: secondaryControlSpacingStyles.gap / 2,
+          }}
+        />
         <ShareMenuButton
           testID="postShareBtn"
           post={post}
@@ -300,6 +312,10 @@ let PostControls = ({
           timestamp={post.indexedAt}
           threadgateRecord={threadgateRecord}
           onShare={onShare}
+          hitSlop={{
+            left: secondaryControlSpacingStyles.gap / 2,
+            right: secondaryControlSpacingStyles.gap / 2,
+          }}
         />
         <PostMenuButton
           testID="postDropdownBtn"
@@ -312,6 +328,9 @@ let PostControls = ({
           timestamp={post.indexedAt}
           threadgateRecord={threadgateRecord}
           onShowLess={onShowLess}
+          hitSlop={{
+            left: secondaryControlSpacingStyles.gap / 2,
+          }}
         />
       </View>
     </View>
