@@ -132,8 +132,6 @@ function BookmarksInner() {
 
       if (bookmarks.length > 0) {
         for (const bookmark of bookmarks) {
-          if (AppBskyFeedDefs.isBlockedPost(bookmark.item)) {
-          }
           if (AppBskyFeedDefs.isNotFoundPost(bookmark.item)) {
             i.push({
               type: 'bookmarkNotFound',
