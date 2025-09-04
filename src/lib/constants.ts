@@ -176,7 +176,7 @@ export const GIF_SEARCH = (params: string) =>
 export const GIF_FEATURED = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/featured?${params}`
 
-export const MAX_LABELERS = 20
+export const MAX_LABELERS = 30
 
 export const VIDEO_SERVICE = 'https://video.bsky.app'
 export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
