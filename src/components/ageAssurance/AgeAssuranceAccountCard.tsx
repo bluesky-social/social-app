@@ -90,7 +90,7 @@ function Inner({style}: ViewStyleProp & {}) {
                       {...createStaticClick(() => {
                         locationControl.open()
                       })}>
-                      Click here to confirm your location.
+                      Tap here to confirm your location.
                     </InlineLinkText>{' '}
                   </Trans>
                 </Text>
