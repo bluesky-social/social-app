@@ -27,7 +27,10 @@ export function BookmarksAnnouncement() {
   }, [nuxDialogs])
 
   return (
-    <Dialog.Outer control={control} onClose={onClose}>
+    <Dialog.Outer
+      control={control}
+      onClose={onClose}
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
