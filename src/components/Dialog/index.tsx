@@ -267,7 +267,10 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
         scrollEventThrottle={50}
         onScroll={isAndroid ? onScroll : undefined}
         keyboardShouldPersistTaps="handled"
-        stickyHeaderIndices={header ? [0] : undefined}>
+        // TODO: figure out why this positions the header absolutely (rather than stickily)
+        // on Android. fine to disable for now, because we don't have any
+        // dialogs that use this that actually scroll -sfn
+        stickyHeaderIndices={ios(header ? [0] : undefined)}>
         {header}
         {children}
       </KeyboardAwareScrollView>
