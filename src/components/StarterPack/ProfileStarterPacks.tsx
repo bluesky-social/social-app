@@ -214,7 +214,7 @@ function Empty() {
     onError: e => {
       logger.error('Failed to generate starter pack', {safeMessage: e})
       setIsGenerating(false)
-      if (e.name === 'NOT_ENOUGH_FOLLOWERS') {
+      if (e.message.includes('NOT_ENOUGH_FOLLOWERS')) {
         followersDialogControl.open()
       } else {
         errorDialogControl.open()
