@@ -1442,7 +1442,7 @@ function ComposerFooter({
           <Button
             label={_(msg`Add new post`)}
             onPress={onAddPost}
-            style={[a.p_sm, a.m_2xs]}
+            style={[a.p_sm]}
             variant="ghost"
             shape="round"
             color="primary">
