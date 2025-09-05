@@ -117,7 +117,11 @@ export function BookmarksAnnouncement() {
                   },
                 ]}
                 alt={_(
-                  msg`A screenshot of a post with a new button next to the share button that allows you to save the post to your bookmarks. The post is from @jcsalterego.bsky.social and reads "inventing a saturday that immediately follows monday".`,
+                  msg({
+                    message: `A screenshot of a post with a new button next to the share button that allows you to save the post to your bookmarks. The post is from @jcsalterego.bsky.social and reads "inventing a saturday that immediately follows monday".`,
+                    comment:
+                      'Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.',
+                  }),
                 )}
               />
             </View>
