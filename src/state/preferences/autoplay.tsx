@@ -5,40 +5,73 @@ import * as persisted from '#/state/persisted'
 type StateContext = boolean
 type SetContext = (v: boolean) => void
 
-const stateContext = React.createContext<StateContext>(
-  Boolean(persisted.defaults.disableAutoplay),
+const stateVideoContext = React.createContext<StateContext>(
+  Boolean(persisted.defaults.disableVideoAutoplay),
 )
-stateContext.displayName = 'AutoplayStateContext'
-const setContext = React.createContext<SetContext>((_: boolean) => {})
-setContext.displayName = 'AutoplaySetContext'
+stateVideoContext.displayName = 'AutoplayStateVideoContext'
+const setVideoContext = React.createContext<SetContext>((_: boolean) => {})
+setVideoContext.displayName = 'AutoplaySetVideoContext'
+
+const stateGifContext = React.createContext<StateContext>(
+  Boolean(persisted.defaults.disableGifAutoplay),
+)
+stateGifContext.displayName = 'AutoplayStateGifContext'
+const setGifContext = React.createContext<SetContext>((_: boolean) => {})
+setGifContext.displayName = 'AutoplaySetGifContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = React.useState(
-    Boolean(persisted.get('disableAutoplay')),
+  const [videoState, setVideoState] = React.useState(
+    Boolean(persisted.get('disableVideoAutoplay')),
   )
 
-  const setStateWrapped = React.useCallback(
-    (autoplayDisabled: persisted.Schema['disableAutoplay']) => {
-      setState(Boolean(autoplayDisabled))
-      persisted.write('disableAutoplay', autoplayDisabled)
+  const setVideoStateWrapped = React.useCallback(
+    (autoplayVideoDisabled: persisted.Schema['disableVideoAutoplay']) => {
+      setVideoState(Boolean(autoplayVideoDisabled))
+      persisted.write('disableVideoAutoplay', autoplayVideoDisabled)
     },
-    [setState],
+    [setVideoState],
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate('disableAutoplay', nextDisableAutoplay => {
-      setState(Boolean(nextDisableAutoplay))
+    return persisted.onUpdate('disableVideoAutoplay', nextDisableVideoAutoplay => {
+      setVideoState(Boolean(nextDisableVideoAutoplay))
     })
-  }, [setStateWrapped])
+  }, [setVideoStateWrapped])
+
+
+  const [gifState, setGifState] = React.useState(
+    Boolean(persisted.get('disableGifAutoplay')),
+  )
+
+  const setGifStateWrapped = React.useCallback(
+    (autoplayGifDisabled: persisted.Schema['disableGifAutoplay']) => {
+      setGifState(Boolean(autoplayGifDisabled))
+      persisted.write('disableGifAutoplay', autoplayGifDisabled)
+    },
+    [setGifState],
+  )
+
+  React.useEffect(() => {
+    return persisted.onUpdate('disableGifAutoplay', nextDisableGifAutoplay => {
+      setGifState(Boolean(nextDisableGifAutoplay))
+    })
+  }, [setGifStateWrapped])
 
   return (
-    <stateContext.Provider value={state}>
-      <setContext.Provider value={setStateWrapped}>
-        {children}
-      </setContext.Provider>
-    </stateContext.Provider>
+    <stateVideoContext.Provider value={videoState}>
+      <setVideoContext.Provider value={setVideoStateWrapped}>
+        <stateGifContext.Provider value={gifState}>
+          <setGifContext.Provider value={setGifStateWrapped}>
+            {children}
+          </setGifContext.Provider>
+        </stateGifContext.Provider>
+      </setVideoContext.Provider>
+    </stateVideoContext.Provider>
   )
 }
 
-export const useAutoplayDisabled = () => React.useContext(stateContext)
-export const useSetAutoplayDisabled = () => React.useContext(setContext)
+export const useVideoAutoplayDisabled = () => React.useContext(stateVideoContext)
+export const useSetVideoAutoplayDisabled = () => React.useContext(setVideoContext)
+
+export const useGifAutoplayDisabled = () => React.useContext(stateGifContext)
+export const useSetGifAutoplayDisabled = () => React.useContext(setGifContext)
