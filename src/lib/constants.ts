@@ -1,5 +1,5 @@
 import {type Insets, Platform} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
 
 import {type ProxyHeaderValue} from '#/state/session/agent'
 import {BLUESKY_PROXY_DID, CHAT_PROXY_DID} from '#/env'
@@ -226,6 +226,10 @@ export const BLUESKY_PROXY_HEADER = {
 
 export const DM_SERVICE_HEADERS = {
   'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
+}
+
+export const BLUESKY_MOD_SERVICE_HEADERS = {
+  'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
 }
 
 export const webLinks = {
