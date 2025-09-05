@@ -42,11 +42,7 @@ function createISOCountryCode(
     countryCode: string
   },
 ): string {
-  if (geolocation.regionCode) {
-    return `${geolocation.countryCode}-${geolocation.regionCode}`.toUpperCase()
-  } else {
-    return geolocation.countryCode.toUpperCase()
-  }
+  return geolocation.countryCode.toUpperCase()
 }
 
 export function useInitAgeAssurance() {
