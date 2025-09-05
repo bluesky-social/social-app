@@ -17,6 +17,7 @@ import {BookmarksAnnouncement} from '#/components/dialogs/nuxs/BookmarksAnnounce
  * NUXs
  */
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
+import {isExistingUserAsOf} from './utils'
 
 type Context = {
   activeNux: Nux | undefined
@@ -34,6 +35,12 @@ const queuedNuxs: {
 }[] = [
   {
     id: Nux.BookmarksAnnouncement,
+    enabled: ({currentProfile}) => {
+      return isExistingUserAsOf(
+        '2025-09-08T00:00:00.000Z',
+        currentProfile.createdAt,
+      )
+    },
   },
 ]
 
