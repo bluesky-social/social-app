@@ -91,11 +91,13 @@ export function GeolocationStatusProvider({
 
   const configContext = React.useMemo(() => ({config}), [config])
   const statusContext = React.useMemo(() => {
-    if (deviceGeolocation) {
-      logger.debug('geolocation: has device geolocation available')
+    if (deviceGeolocation?.countryCode) {
+      logger.debug('has device geolocation available')
     }
     const geolocation = mergeGeolocation(deviceGeolocation, config)
     const status = computeGeolocationStatus(geolocation, config)
+    // ensure this remains debug and never leaves device
+    logger.debug('result', {deviceGeolocation, geolocation, status, config})
     return {location: geolocation, status}
   }, [config, deviceGeolocation])
 
@@ -117,7 +119,7 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   const handleSetDeviceGeolocation = React.useCallback(
     (location: DeviceLocation) => {
-      logger.debug('geolocation: setting device geolocation')
+      logger.debug('setting device geolocation')
       setDeviceGeolocation({
         countryCode: location.countryCode ?? undefined,
         regionCode: location.regionCode ?? undefined,

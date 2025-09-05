@@ -20,7 +20,7 @@ async function getGeolocationConfig(
   })
 
   if (!res.ok) {
-    throw new Error(`geolocation config: fetch failed ${res.status}`)
+    throw new Error(`config: fetch failed ${res.status}`)
   }
 
   const json = await res.json()
@@ -35,7 +35,7 @@ async function getGeolocationConfig(
       ageRestrictedGeos: json.ageRestrictedGeos ?? [],
       ageBlockedGeos: json.ageBlockedGeos ?? [],
     }
-    logger.debug(`geolocation config: success`)
+    logger.debug(`config: success`)
     return config
   } else {
     return undefined
@@ -85,7 +85,7 @@ export function beginResolveGeolocationConfig() {
     } catch (e: any) {
       success = false
 
-      logger.debug(`geolocation config: failed initial request`, {
+      logger.debug(`config: failed initial request`, {
         safeMessage: e.message,
       })
 
@@ -101,12 +101,12 @@ export function beginResolveGeolocationConfig() {
             success = true
           } else {
             // endpoint should throw on all failures, this is insurance
-            throw new Error(`geolocation config: nothing returned from retries`)
+            throw new Error(`config: nothing returned from retries`)
           }
         })
         .catch((e: any) => {
           // complete fail closed
-          logger.debug(`geolocation config: failed retries`, {
+          logger.debug(`config: failed retries`, {
             safeMessage: e.message,
           })
         })
@@ -123,21 +123,19 @@ export function beginResolveGeolocationConfig() {
  */
 export async function ensureGeolocationConfigIsResolved() {
   if (!geolocationConfigResolution) {
-    throw new Error(
-      `geolocation config: beginResolveGeolocationConfig not called yet`,
-    )
+    throw new Error(`config: beginResolveGeolocationConfig not called yet`)
   }
 
   const cached = device.get(['geolocation'])
   if (cached) {
-    logger.debug(`geolocation config: using cache`)
+    logger.debug(`config: using cache`)
   } else {
-    logger.debug(`geolocation config: no cache`)
+    logger.debug(`config: no cache`)
     const {success} = await geolocationConfigResolution
     if (success) {
-      logger.debug(`geolocation config: resolved`)
+      logger.debug(`config: resolved`)
     } else {
-      logger.info(`geolocation config: failed to resolve`)
+      logger.info(`config: failed to resolve`)
     }
   }
 }
