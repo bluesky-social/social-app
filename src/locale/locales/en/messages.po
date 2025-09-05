@@ -95,7 +95,7 @@ msgstr ""
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:478
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:479
 msgid "{0, plural, one {like} other {likes}}"
 msgstr ""
 
@@ -103,15 +103,15 @@ msgstr ""
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:462
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:463
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:444
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:445
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:490
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:491
 msgid "{0, plural, one {save} other {saves}}"
 msgstr ""
 
@@ -218,6 +218,16 @@ msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:455
 msgid "{count, plural, one {# unread item} other {# unread items}}"
+msgstr ""
+
+#. For post statistics. Indicates a number in the thousands. Please use the shortest format appropriate for your language.
+#: src/components/PostControls/util.ts:36
+msgid "{count}K"
+msgstr ""
+
+#. For post statistics. Indicates a number in the millions. Please use the shortest format appropriate for your language.
+#: src/components/PostControls/util.ts:28
+msgid "{count}M"
 msgstr ""
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:385
@@ -538,6 +548,7 @@ msgstr ""
 msgid "A new Mississippi law requires us to implement age verification for all users before they can access Bluesky. We think this law creates challenges that go beyond its child safety goals, and creates significant barriers that limit free speech and disproportionately harm smaller platforms and emerging technologies."
 msgstr ""
 
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
 msgid "A screenshot of a post with a new button next to the share button that allows you to save the post to your bookmarks. The post is from @jcsalterego.bsky.social and reads \"inventing a saturday that immediately follows monday\"."
 msgstr ""
@@ -896,8 +907,8 @@ msgstr ""
 msgid "Allow location access"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:86
-#: src/screens/Messages/Settings.tsx:89
+#: src/screens/Messages/Settings.tsx:75
+#: src/screens/Messages/Settings.tsx:78
 msgid "Allow new messages from"
 msgstr ""
 
@@ -1182,12 +1193,12 @@ msgstr ""
 msgid "Apply Pull Request"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:664
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:665
 msgid "Archived from {0}"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:633
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:672
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:634
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:673
 msgid "Archived post"
 msgstr ""
 
@@ -1321,7 +1332,7 @@ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
-#: src/screens/Messages/ChatList.tsx:358
+#: src/screens/Messages/ChatList.tsx:369
 #: src/screens/Messages/Conversation.tsx:228
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
@@ -1441,7 +1452,7 @@ msgstr ""
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:689
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:690
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr ""
 
@@ -1605,7 +1616,7 @@ msgstr ""
 #: src/components/live/GoLiveDialog.tsx:247
 #: src/components/live/GoLiveDialog.tsx:253
 #: src/components/Menu/index.tsx:350
-#: src/components/PostControls/RepostButton.tsx:211
+#: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:144
 #: src/components/Prompt.tsx:146
 #: src/screens/Deactivated.tsx:158
@@ -1647,7 +1658,7 @@ msgstr ""
 msgid "Cancel image crop"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:205
+#: src/components/PostControls/RepostButton.tsx:204
 msgid "Cancel quote post"
 msgstr ""
 
@@ -1659,9 +1670,9 @@ msgstr ""
 msgid "Cancel search"
 msgstr ""
 
-#: src/components/PostControls/index.tsx:104
-#: src/components/PostControls/index.tsx:135
-#: src/components/PostControls/index.tsx:163
+#: src/components/PostControls/index.tsx:105
+#: src/components/PostControls/index.tsx:136
+#: src/components/PostControls/index.tsx:164
 #: src/state/shell/composer/index.tsx:94
 msgid "Cannot interact with a blocked user"
 msgstr ""
@@ -1775,12 +1786,13 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:76
 #: src/Navigation.tsx:554
-#: src/screens/Messages/ChatList.tsx:367
+#: src/screens/Messages/ChatList.tsx:81
+#: src/screens/Messages/ChatList.tsx:85
+#: src/screens/Messages/ChatList.tsx:378
 msgid "Chat settings"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:33
-#: src/screens/Messages/Settings.tsx:78
+#: src/screens/Messages/Settings.tsx:67
 msgid "Chat Settings"
 msgstr ""
 
@@ -1790,8 +1802,8 @@ msgid "Chat unmuted"
 msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:76
-#: src/screens/Messages/ChatList.tsx:383
-#: src/screens/Messages/ChatList.tsx:407
+#: src/screens/Messages/ChatList.tsx:394
+#: src/screens/Messages/ChatList.tsx:418
 msgid "Chats"
 msgstr ""
 
@@ -1916,8 +1928,8 @@ msgstr ""
 #: src/components/dialogs/GifSelect.tsx:269
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:158
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:159
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:167
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:163
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
@@ -2738,8 +2750,8 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
-#: src/screens/Messages/Settings.tsx:155
-#: src/screens/Messages/Settings.tsx:158
+#: src/screens/Messages/Settings.tsx:144
+#: src/screens/Messages/Settings.tsx:147
 #: src/screens/Moderation/index.tsx:413
 msgid "Disabled"
 msgstr ""
@@ -3159,8 +3171,8 @@ msgstr ""
 msgid "Enable trending videos in your Discover feed"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:146
-#: src/screens/Messages/Settings.tsx:149
+#: src/screens/Messages/Settings.tsx:135
+#: src/screens/Messages/Settings.tsx:138
 #: src/screens/Moderation/index.tsx:411
 msgid "Enabled"
 msgstr ""
@@ -3274,8 +3286,8 @@ msgstr ""
 msgid "Everybody can reply to this post."
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:99
-#: src/screens/Messages/Settings.tsx:102
+#: src/screens/Messages/Settings.tsx:88
+#: src/screens/Messages/Settings.tsx:91
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:164
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:174
 msgid "Everyone"
@@ -3472,7 +3484,7 @@ msgstr ""
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:270
+#: src/screens/Messages/ChatList.tsx:281
 #: src/screens/Messages/Inbox.tsx:208
 msgid "Failed to load conversations"
 msgstr ""
@@ -3595,7 +3607,7 @@ msgstr ""
 msgid "Failed to update notification declaration"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:50
+#: src/screens/Messages/Settings.tsx:39
 msgid "Failed to update settings"
 msgstr ""
 
@@ -3713,7 +3725,7 @@ msgstr ""
 msgid "Finalizing"
 msgstr ""
 
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:150
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:154
 msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
 msgstr ""
 
@@ -4130,8 +4142,8 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:89
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:75
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:84
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:77
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:86
 #: src/screens/Moderation/index.tsx:214
 msgid "Go to account settings"
 msgstr ""
@@ -4843,7 +4855,7 @@ msgid "Like"
 msgstr ""
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
-#: src/components/PostControls/index.tsx:271
+#: src/components/PostControls/index.tsx:269
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -4908,7 +4920,7 @@ msgstr ""
 msgid "Likes of your reposts notifications"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:471
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:472
 msgid "Likes on this post"
 msgstr ""
 
@@ -5468,8 +5480,8 @@ msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}
 msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
-#: src/screens/Messages/ChatList.tsx:390
-#: src/screens/Messages/ChatList.tsx:397
+#: src/screens/Messages/ChatList.tsx:401
+#: src/screens/Messages/ChatList.tsx:408
 msgid "New chat"
 msgstr ""
 
@@ -5648,8 +5660,8 @@ msgstr ""
 msgid "No notifications yet!"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:117
-#: src/screens/Messages/Settings.tsx:120
+#: src/screens/Messages/Settings.tsx:106
+#: src/screens/Messages/Settings.tsx:109
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
@@ -5771,7 +5783,7 @@ msgstr ""
 msgid "Note: This post is only visible to logged-in users."
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:291
+#: src/screens/Messages/ChatList.tsx:302
 msgid "Nothing here"
 msgstr ""
 
@@ -5785,11 +5797,11 @@ msgstr ""
 msgid "Notification settings"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:139
+#: src/screens/Messages/Settings.tsx:128
 msgid "Notification sounds"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:136
+#: src/screens/Messages/Settings.tsx:125
 msgid "Notification Sounds"
 msgstr ""
 
@@ -5862,7 +5874,7 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:694
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:695
 msgid "Okay"
 msgstr ""
 
@@ -6732,8 +6744,8 @@ msgstr ""
 msgid "Quote notifications"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:176
-#: src/components/PostControls/RepostButton.tsx:199
+#: src/components/PostControls/RepostButton.tsx:175
+#: src/components/PostControls/RepostButton.tsx:198
 #: src/components/PostControls/RepostButton.web.tsx:84
 #: src/components/PostControls/RepostButton.web.tsx:91
 msgid "Quote post"
@@ -6747,8 +6759,8 @@ msgstr ""
 msgid "Quote post was successfully detached"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:175
-#: src/components/PostControls/RepostButton.tsx:197
+#: src/components/PostControls/RepostButton.tsx:174
+#: src/components/PostControls/RepostButton.tsx:196
 #: src/components/PostControls/RepostButton.web.tsx:83
 #: src/components/PostControls/RepostButton.web.tsx:90
 msgid "Quote posts disabled"
@@ -6765,7 +6777,7 @@ msgstr ""
 msgid "Quotes"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:455
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:456
 msgid "Quotes of this post"
 msgstr ""
 
@@ -6876,7 +6888,7 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:274
+#: src/screens/Messages/ChatList.tsx:285
 #: src/screens/Messages/Inbox.tsx:212
 msgid "Reload conversations"
 msgstr ""
@@ -6978,8 +6990,8 @@ msgstr ""
 msgid "Remove profile"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:153
-#: src/components/PostControls/RepostButton.tsx:163
+#: src/components/PostControls/RepostButton.tsx:152
+#: src/components/PostControls/RepostButton.tsx:162
 msgid "Remove repost"
 msgstr ""
 
@@ -7091,7 +7103,7 @@ msgid "Reply"
 msgstr ""
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
-#: src/components/PostControls/index.tsx:222
+#: src/components/PostControls/index.tsx:223
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -7218,8 +7230,8 @@ msgstr ""
 msgid "Report this user"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:154
-#: src/components/PostControls/RepostButton.tsx:165
+#: src/components/PostControls/RepostButton.tsx:153
+#: src/components/PostControls/RepostButton.tsx:164
 #: src/components/PostControls/RepostButton.web.tsx:68
 #: src/components/PostControls/RepostButton.web.tsx:75
 msgctxt "action"
@@ -7227,7 +7239,7 @@ msgid "Repost"
 msgstr ""
 
 #. Accessibility label for the repost button when the post has not been reposted, verb form followed by number of reposts and noun form
-#: src/components/PostControls/RepostButton.tsx:78
+#: src/components/PostControls/RepostButton.tsx:77
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr ""
 
@@ -7235,7 +7247,7 @@ msgstr ""
 msgid "Repost notifications"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:146
+#: src/components/PostControls/RepostButton.tsx:145
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
 #: src/screens/StarterPack/StarterPackScreen.tsx:561
@@ -7265,7 +7277,7 @@ msgstr ""
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:437
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:438
 msgid "Reposts of this post"
 msgstr ""
 
@@ -7354,7 +7366,7 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:346
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
-#: src/screens/Messages/ChatList.tsx:280
+#: src/screens/Messages/ChatList.tsx:291
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Onboarding/StepInterests/index.tsx:226
@@ -7463,7 +7475,7 @@ msgstr ""
 msgid "Saved Feeds"
 msgstr ""
 
-#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:139
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:143
 #: src/Navigation.tsx:608
 #: src/screens/Bookmarks/index.tsx:55
 msgid "Saved Posts"
@@ -7478,7 +7490,7 @@ msgstr ""
 msgid "Saves image crop settings"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:483
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:484
 msgid "Saves of this post"
 msgstr ""
 
@@ -8112,7 +8124,7 @@ msgstr ""
 msgid "Show warning and filter from feeds"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:635
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:636
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -9042,7 +9054,7 @@ msgstr ""
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:675
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:676
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr ""
 
@@ -9212,8 +9224,8 @@ msgstr ""
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:597
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:600
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:598
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:601
 msgid "Translate"
 msgstr ""
 
@@ -9289,7 +9301,7 @@ msgstr ""
 msgid "Unapply Pull Request {currentChannel}"
 msgstr ""
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:51
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:53
 msgid "Unavailable"
 msgstr ""
 
@@ -9340,7 +9352,7 @@ msgid "Undo repost"
 msgstr ""
 
 #. Accessibility label for the repost button when the post has been reposted, verb followed by number of reposts and noun
-#: src/components/PostControls/RepostButton.tsx:68
+#: src/components/PostControls/RepostButton.tsx:67
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr ""
 
@@ -9379,7 +9391,7 @@ msgid "Unlike"
 msgstr ""
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
-#: src/components/PostControls/index.tsx:261
+#: src/components/PostControls/index.tsx:259
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -9680,8 +9692,8 @@ msgstr ""
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:108
-#: src/screens/Messages/Settings.tsx:111
+#: src/screens/Messages/Settings.tsx:97
+#: src/screens/Messages/Settings.tsx:100
 msgid "Users I follow"
 msgstr ""
 
@@ -10209,7 +10221,7 @@ msgid "Who can verify?"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:258
+#: src/screens/Messages/ChatList.tsx:269
 #: src/screens/Messages/Inbox.tsx:197
 msgid "Whoops!"
 msgstr ""
@@ -10392,7 +10404,7 @@ msgstr ""
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:127
+#: src/screens/Messages/Settings.tsx:116
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr ""
 
@@ -10493,7 +10505,7 @@ msgstr ""
 msgid "You have muted this user"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:301
+#: src/screens/Messages/ChatList.tsx:312
 msgid "You have no conversations yet. Start one!"
 msgstr ""
 
@@ -10579,7 +10591,7 @@ msgstr ""
 msgid "You must complete age assurance in order to access the settings below."
 msgstr ""
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:64
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:66
 msgid "You must complete age assurance in order to access this screen."
 msgstr ""
 
