@@ -1,11 +1,8 @@
-import {useCallback} from 'react'
-import {type GestureResponderEvent, Keyboard} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {codeToLanguageName} from '#/locale/helpers'
-import {isNative} from '#/platform/detection'
 import {
   toPostLanguages,
   useLanguagePrefs,
@@ -83,32 +80,16 @@ export function PostLanguageSelect() {
   )
 }
 
-function LanguageBtn({
-  onPress,
-  ...props
-}: Omit<ButtonProps, 'label' | 'children'>) {
+function LanguageBtn(props: Omit<ButtonProps, 'label' | 'children'>) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const t = useTheme()
-
-  const handlePress = useCallback(
-    async (evt: GestureResponderEvent) => {
-      if (isNative) {
-        if (Keyboard.isVisible()) {
-          Keyboard.dismiss()
-        }
-      }
-      onPress?.(evt)
-    },
-    [onPress],
-  )
 
   const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
 
   return (
     <Button
       testID="selectLangBtn"
-      onPress={handlePress}
       size="small"
       hitSlop={LANG_DROPDOWN_HITSLOP}
       label={_(
