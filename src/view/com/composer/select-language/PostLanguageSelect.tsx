@@ -1,4 +1,4 @@
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
@@ -69,7 +69,9 @@ export function PostLanguageSelect() {
           <Menu.Item
             label={_(msg`More languages...`)}
             onPress={languageDialogControl.open}>
-            <Menu.ItemText>{_(msg`More languages...`)}</Menu.ItemText>
+            <Menu.ItemText>
+              <Trans>More languages...</Trans>
+            </Menu.ItemText>
             <Menu.ItemIcon icon={ChevronRightIcon} />
           </Menu.Item>
         </Menu.Outer>
