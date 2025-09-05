@@ -1,16 +1,13 @@
 import {useCallback, useMemo, useState} from 'react'
-import {Keyboard, useWindowDimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {languageName} from '#/locale/helpers'
-import {codeToLanguageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {isNative, isWeb} from '#/platform/detection'
 import {
-  toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
@@ -21,75 +18,14 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {SearchInput} from '#/components/forms/SearchInput'
 import * as Toggle from '#/components/forms/Toggle'
-import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 
-export function SelectPostLanguagesBtn() {
-  const {_} = useLingui()
-  const langPrefs = useLanguagePrefs()
-  const t = useTheme()
-  const control = Dialog.useDialogControl()
-
-  const onPressMore = useCallback(async () => {
-    if (isNative) {
-      if (Keyboard.isVisible()) {
-        Keyboard.dismiss()
-      }
-    }
-    control.open()
-  }, [control])
-
-  const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
-
-  return (
-    <>
-      <Button
-        testID="selectLangBtn"
-        onPress={onPressMore}
-        size="small"
-        hitSlop={LANG_DROPDOWN_HITSLOP}
-        label={_(
-          msg({
-            message: `Post language selection`,
-            comment: `Accessibility label for button that opens dialog to choose post language settings`,
-          }),
-        )}
-        accessibilityHint={_(msg`Opens post language settings`)}
-        style={[a.mx_md]}>
-        {({pressed, hovered, focused}) => {
-          const color =
-            pressed || hovered || focused
-              ? t.palette.primary_300
-              : t.palette.primary_500
-          if (postLanguagesPref.length > 0) {
-            return (
-              <Text
-                style={[
-                  {color},
-                  a.font_bold,
-                  a.text_sm,
-                  a.leading_snug,
-                  {maxWidth: 100},
-                ]}
-                numberOfLines={1}>
-                {postLanguagesPref
-                  .map(lang => codeToLanguageName(lang, langPrefs.appLanguage))
-                  .join(', ')}
-              </Text>
-            )
-          } else {
-            return <GlobeIcon size="xs" style={{color}} />
-          }
-        }}
-      </Button>
-
-      <LanguageDialog control={control} />
-    </>
-  )
-}
-
-function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
+export function PostLanguageSelectDialog({
+  control,
+}: {
+  control: Dialog.DialogControlProps
+}) {
   const {height} = useWindowDimensions()
   const insets = useSafeAreaInsets()
 
@@ -104,13 +40,13 @@ function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
       nativeOptions={{minHeight: height - insets.top}}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
-        <PostLanguagesSettingsDialogInner />
+        <DialogInner />
       </ErrorBoundary>
     </Dialog.Outer>
   )
 }
 
-export function PostLanguagesSettingsDialogInner() {
+export function DialogInner() {
   const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
 
