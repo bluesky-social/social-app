@@ -1,33 +1,42 @@
 import React, {useRef, useState} from 'react'
-import { ActivityIndicator, Keyboard, LayoutAnimation, type TextInput, View,  } from 'react-native'
-import { ComAtprotoServerCreateSession, type ComAtprotoServerDescribeServer,  } from '@gander-social-atproto/api'
-import { msg, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import {
+  ActivityIndicator,
+  Keyboard,
+  LayoutAnimation,
+  type TextInput,
+  View,
+} from 'react-native'
+import {
+  ComAtprotoServerCreateSession,
+  type ComAtprotoServerDescribeServer,
+} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import { useRequestNotificationsPermission } from '#/lib/notifications/notifications'
-import { isNetworkError } from '#/lib/strings/errors'
-import { cleanError } from '#/lib/strings/errors'
-import { createFullHandle } from '#/lib/strings/handles'
-import { colors } from '#/lib/styles'
-import { logger } from '#/logger'
-import { useSetHasCheckedForStarterPack } from '#/state/preferences/used-starter-packs'
-import { useProfilesQuery } from '#/state/queries/profile'
-import { type SessionAccount, useSession, useSessionApi } from '#/state/session'
-import { useLoggedOutViewControls } from '#/state/shell/logged-out'
-import { Logo } from '#/view/icons/Logo'
-import { atoms as a, useTheme } from '#/alf'
-import { AccountItem } from '#/components/AccountList'
-import { Button, ButtonIcon, ButtonText } from '#/components/Button'
-import { FormError } from '#/components/forms/FormError'
-import { HostingProvider } from '#/components/forms/HostingProvider'
-// import { HostingProvider } from '#/components/forms/HostingProvider'
+import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
+import {isNetworkError} from '#/lib/strings/errors'
+import {cleanError} from '#/lib/strings/errors'
+import {createFullHandle} from '#/lib/strings/handles'
+import {colors} from '#/lib/styles'
+import {logger} from '#/logger'
+import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
+import {useProfilesQuery} from '#/state/queries/profile'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {Logo} from '#/view/icons/Logo'
+import {atoms as a, useTheme} from '#/alf'
+import {AccountItem} from '#/components/AccountList'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {FormError} from '#/components/forms/FormError'
+import {HostingProvider} from '#/components/forms/HostingProvider'
+// import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
-// import { At_Stroke2_Corner0_Rounded as At } from '#/components/icons/At'
-// import { Lock_Stroke2_Corner0_Rounded as Lock } from '#/components/icons/Lock'
-import { Ticket_Stroke2_Corner0_Rounded as Ticket } from '#/components/icons/Ticket'
-import { Loader } from '#/components/Loader'
-import { Text } from '#/components/Typography'
-import { FormContainer } from './FormContainer'
+// import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+// import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
+import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
+import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 

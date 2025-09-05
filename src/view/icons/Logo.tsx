@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, type TextProps } from 'react-native'
-import Svg, {Path, type PathProps, type SvgProps} from 'react-native-svg'
+import Svg, { Path, type PathProps, type SvgProps } from 'react-native-svg'
 
 import { colors } from '#/lib/styles'
 

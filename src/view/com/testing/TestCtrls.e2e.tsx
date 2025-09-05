@@ -116,7 +116,7 @@ export function TestCtrls() {
       <Pressable
         testID="e2eStartOnboarding"
         onPress={() => {
-          onboardingDispatch({type: 'start'})
+          onboardingDispatch({type: 'start', handle: undefined})
         }}
         accessibilityRole="button"
         style={BTN}
@@ -125,7 +125,7 @@ export function TestCtrls() {
       <Pressable
         testID="e2eStartLongboarding"
         onPress={() => {
-          onboardingDispatch({type: 'start'})
+          onboardingDispatch({type: 'start', handle: undefined})
         }}
         accessibilityRole="button"
         style={BTN}

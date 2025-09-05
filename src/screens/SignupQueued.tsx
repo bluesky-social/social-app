@@ -42,7 +42,7 @@ export function SignupQueued() {
         // ready to go, exchange the access token for a usable one and kick off onboarding
         await agent.sessionManager.refreshSession()
         if (!isSignupQueued(agent.session?.accessJwt)) {
-          onboardingDispatch({type: 'start'})
+          onboardingDispatch({type: 'start', handle: undefined})
         }
       } else {
         // not ready, update UI

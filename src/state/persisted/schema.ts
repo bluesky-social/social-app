@@ -113,6 +113,7 @@ const schema = z.object({
   }),
   onboarding: z.object({
     step: z.string(),
+    handle: z.string().optional(),
   }),
   hiddenPosts: z.array(z.string()).optional(), // should move to server
   useInAppBrowser: z.boolean().optional(),
@@ -162,6 +163,7 @@ export const defaults: Schema = {
   },
   onboarding: {
     step: 'Home',
+    handle: undefined,
   },
   hiddenPosts: [],
   useInAppBrowser: undefined,

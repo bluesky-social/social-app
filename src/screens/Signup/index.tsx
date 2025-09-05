@@ -1,24 +1,30 @@
-import { useEffect, useReducer, useState } from 'react'
-import { AppState, type AppStateStatus, View } from 'react-native'
+import {useEffect, useReducer, useState} from 'react'
+import {AppState, type AppStateStatus, View} from 'react-native'
 import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import Svg, {Path} from 'react-native-svg'
-import { AppGndrGraphStarterpack } from '@gander-social-atproto/api'
-import { msg, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import {AppGndrGraphStarterpack} from '@gander-social-atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import { useServiceQuery } from '#/state/queries/service'
-import { useStarterPackQuery } from '#/state/queries/starter-packs'
-import { useActiveStarterPack } from '#/state/shell/starter-pack'
-import { LoggedOutLayout } from '#/view/com/util/layouts/LoggedOutLayout'
-import { initialState, reducer, SignupContext, SignupStep, useSubmitSignup,  } from '#/screens/Signup/state'
-import { StepCaptcha } from '#/screens/Signup/StepCaptcha'
-import { StepGandle } from '#/screens/Signup/StepGandle'
-import { StepInfo } from '#/screens/Signup/StepInfo'
-import { StepVerification } from '#/screens/Signup/StepVerification'
-import { atoms as a, useBreakpoints } from '#/alf'
-import { Button, ButtonText } from '#/components/Button'
-import { LinearGradientBackground } from '#/components/LinearGradientBackground'
-import { Text } from '#/components/Typography'
+import {useServiceQuery} from '#/state/queries/service'
+import {useStarterPackQuery} from '#/state/queries/starter-packs'
+import {useActiveStarterPack} from '#/state/shell/starter-pack'
+import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
+import {
+  initialState,
+  reducer,
+  SignupContext,
+  SignupStep,
+  useSubmitSignup,
+} from '#/screens/Signup/state'
+import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
+import {StepGandle} from '#/screens/Signup/StepGandle'
+import {StepInfo} from '#/screens/Signup/StepInfo'
+import {StepVerification} from '#/screens/Signup/StepVerification'
+import {atoms as a, useBreakpoints} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {LinearGradientBackground} from '#/components/LinearGradientBackground'
+import {Text} from '#/components/Typography'
 import * as gndr from '#/types/gndr'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
@@ -74,6 +80,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   useEffect(() => {
     if (state.pendingSubmit) {
       if (!state.pendingSubmit.mutableProcessed) {
+        // eslint-disable-next-line react-compiler/react-compiler
         state.pendingSubmit.mutableProcessed = true
         submit(state, dispatch)
       }
@@ -140,13 +147,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               <View style={[a.flex_row, a.justify_between, a.align_center]}>
                 <Text
                   style={[{fontWeight: '700', color: '#000000', fontSize: 16}]}>
-                  <Trans>
-                    Step {state.activeStep + 1} of{' '}
-                    {state.serviceDescription &&
-                    !state.serviceDescription.phoneVerificationRequired
-                      ? '3'
-                      : '4'}
-                  </Trans>
+                  <Trans>Step {state.activeStep + 1} of 7</Trans>
                 </Text>
                 <Button
                   style={[a.self_start]}
@@ -226,6 +227,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                   </Svg>
                 </View>
               )}
+
               <Text style={[{fontSize: 32, fontWeight: '600'}]}>
                 {state.activeStep === SignupStep.INFO ? (
                   <>

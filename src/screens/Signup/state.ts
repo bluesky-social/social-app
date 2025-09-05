@@ -336,7 +336,10 @@ export function useSubmitSignup() {
          * Must happen last so that if the user has multiple tabs open and
          * createAccount fails, one tab is not stuck in onboarding — Eric
          */
-        onboardingDispatch({type: 'start'})
+        onboardingDispatch({
+          type: 'start',
+          handle: createFullHandle(state.handle, state.userDomain),
+        })
       } catch (e: any) {
         let errMsg = e.toString()
         if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {

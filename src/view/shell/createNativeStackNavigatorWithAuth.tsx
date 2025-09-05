@@ -5,17 +5,25 @@ import { View } from 'react-native'
 // Copyright (c) 2017 React Navigation Contributors
 import { createNavigatorFactory, type EventArg, type NavigatorTypeBagBase, type ParamListBase, type StackActionHelpers, StackActions, type StackNavigationState, StackRouter, type StackRouterOptions, type StaticConfig, type TypedNavigator, useNavigationBuilder,  } from '@react-navigation/native'
 import { NativeStackView } from '@react-navigation/native-stack'
-import { type NativeStackNavigationEventMap, type NativeStackNavigationOptions, type NativeStackNavigationProp, type NativeStackNavigatorProps,  } from '@react-navigation/native-stack'
+import {
+    type NativeStackNavigationEventMap,
+    type NativeStackNavigationOptions,
+    type NativeStackNavigationProp,
+    type NativeStackNavigatorProps,
+}  from '@react-navigation/native-stack'
 
 import { PWI_ENABLED } from '#/lib/build-flags'
 import { useWebMediaQueries } from '#/lib/hooks/useWebMediaQueries'
 import { isNative, isWeb } from '#/platform/detection'
 import { useSession } from '#/state/session'
 import { useOnboardingState } from '#/state/shell'
-import { useLoggedOutView, useLoggedOutViewControls,  } from '#/state/shell/logged-out'
+import {
+    useLoggedOutView,
+    useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
 import { LoggedOut } from '#/view/com/auth/LoggedOut'
 import { Deactivated } from '#/screens/Deactivated'
-import { Onboarding } from '#/screens/Onboarding'
+import { Onboarding2 } from '#/screens/Onboarding2'
 import { SignupQueued } from '#/screens/SignupQueued'
 import { Takendown } from '#/screens/Takendown'
 import { atoms as a, useLayoutBreakpoints } from '#/alf'
@@ -108,7 +116,7 @@ function NativeStackNavigator({
     return <Deactivated />
   }
   if (onboardingState.isActive) {
-    return <Onboarding />
+    return <Onboarding2 handle={onboardingState.handle} />
   }
   const newDescriptors: typeof descriptors = {}
   for (let key in descriptors) {

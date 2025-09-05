@@ -373,7 +373,7 @@ function DevOptions() {
 
   const resetOnboarding = async () => {
     navigation.navigate('Home')
-    onboardingDispatch({type: 'start'})
+    onboardingDispatch({type: 'start', handle: undefined})
     Toast.show(_(msg`Onboarding reset`))
   }
 

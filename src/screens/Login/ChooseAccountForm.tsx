@@ -114,6 +114,16 @@ export const ChooseAccountForm = ({
           pendingDid={pendingDid}
         />
       </View>
+      <View>
+        <Text style={[a.self_center, a.text_4xl, a.font_bold, a.mx_2xl]}>
+          <Trans>Sign in to Gander.</Trans>
+        </Text>
+        <AccountList
+          onSelectAccount={onSelect}
+          onSelectOther={() => onSelectAccount()}
+          pendingDid={pendingDid}
+        />
+      </View>
     </FormContainer>
   )
 }

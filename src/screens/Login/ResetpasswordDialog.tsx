@@ -108,7 +108,7 @@ export function ResetPasswordDialog({
     setResending(true)
 
     try {
-      const agent = new GndrAgent({service: serviceUrl})
+      const agent = new BskyAgent({service: serviceUrl})
       await agent.com.atproto.server.requestPasswordReset({email})
       setResending(false)
       Keyboard.dismiss()

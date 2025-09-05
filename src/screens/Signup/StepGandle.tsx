@@ -4,7 +4,11 @@ import Svg, {Path} from 'react-native-svg'
 import { msg, Plural, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 
-import { createFullHandle, MAX_SERVICE_HANDLE_LENGTH, validateServiceHandle,  } from '#/lib/strings/handles'
+import {
+  createFullHandle,
+  MAX_SERVICE_HANDLE_LENGTH,
+  validateServiceHandle,
+} from '#/lib/strings/handles'
 import { logger } from '#/logger'
 import { useAgent } from '#/state/session'
 import { ScreenTransition } from '#/screens/Login/ScreenTransition'

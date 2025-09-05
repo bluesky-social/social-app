@@ -16,13 +16,14 @@ const OnboardingStepsArray = Object.values(OnboardingScreenSteps)
 type Action =
   | {type: 'set'; step: OnboardingStep}
   | {type: 'next'; currentStep?: OnboardingStep}
-  | {type: 'start'}
+  | {type: 'start'; handle?: string}
   | {type: 'finish'}
   | {type: 'skip'}
 
 export type StateContext = persisted.Schema['onboarding'] & {
   isComplete: boolean
   isActive: boolean
+  handle?: string
 }
 export type DispatchContext = (action: Action) => void
 
@@ -35,7 +36,7 @@ function reducer(state: StateContext, action: Action): StateContext {
   switch (action.type) {
     case 'set': {
       if (OnboardingStepsArray.includes(action.step)) {
-        persisted.write('onboarding', {step: action.step})
+        persisted.write('onboarding', {step: action.step, handle: state.handle})
         return compute({...state, step: action.step})
       }
       return state
@@ -50,19 +51,19 @@ function reducer(state: StateContext, action: Action): StateContext {
       } else if (currentStep === 'RecommendedFollows') {
         nextStep = 'Home'
       }
-      persisted.write('onboarding', {step: nextStep})
+      persisted.write('onboarding', {step: nextStep, handle: state.handle})
       return compute({...state, step: nextStep})
     }
     case 'start': {
-      persisted.write('onboarding', {step: 'Welcome'})
-      return compute({...state, step: 'Welcome'})
+      persisted.write('onboarding', {step: 'Welcome', handle: action.handle})
+      return compute({...state, step: 'Welcome', handle: action.handle})
     }
     case 'finish': {
-      persisted.write('onboarding', {step: 'Home'})
+      persisted.write('onboarding', {step: 'Home', handle: state.handle})
       return compute({...state, step: 'Home'})
     }
     case 'skip': {
-      persisted.write('onboarding', {step: 'Home'})
+      persisted.write('onboarding', {step: 'Home', handle: state.handle})
       return compute({...state, step: 'Home'})
     }
     default: {
@@ -116,5 +117,6 @@ function compute(state: persisted.Schema['onboarding']): StateContext {
     ...state,
     isActive: state.step !== 'Home',
     isComplete: state.step === 'Home',
+    handle: state.handle,
   }
 }

@@ -1,6 +1,6 @@
 {
-  "project_id": "1",
-  "base_url": "https://gander.api.crowdin.com",
+  "project_id": "814326",
+  "base_url": "https://api.crowdin.com",
   "base_path": ".",
   "preserve_hierarchy": true,
   "files": [
@@ -9,7 +9,7 @@
       "translation": "/src/locale/locales/%two_letters_code%/messages.po",
       "languages_mapping": {
           "two_letters_code": {
-            "pt-PT": "pt-PT",
+            "pt-PT": "pt",
             "pt-BR": "pt-BR",
             "en-GB": "en-GB",
             "zh-CN": "zh-CN",

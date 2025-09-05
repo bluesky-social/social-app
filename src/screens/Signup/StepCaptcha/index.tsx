@@ -37,12 +37,14 @@ export function StepCaptcha() {
   }, [state.serviceUrl, state.handle, state.userDomain, stateParam, theme.name])
 
   const onSuccess = React.useCallback(
-    (code: string) => {
+    (_code: string) => {
+      //console.log('onSuccess', _code)
       setCompleted(true)
       logger.metric('signup:captchaSuccess', {}, {statsig: true})
+      //logger.metric('signup:captchaSuccess', {}, {code: _code})
       dispatch({
         type: 'submit',
-        task: {verificationCode: code, mutableProcessed: false},
+        task: {verificationCode: _code, mutableProcessed: false},
       })
     },
     [dispatch],

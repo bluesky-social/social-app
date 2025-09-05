@@ -1,27 +1,27 @@
 import React, {useRef} from 'react'
-import { Keyboard, type TextInput, View } from 'react-native'
-import { msg, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import {Keyboard, type TextInput, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 import type tldts from 'tldts'
 
-import { isEmailMaybeInvalid } from '#/lib/strings/email'
-import { logger } from '#/logger'
-import { ScreenTransition } from '#/screens/Login/ScreenTransition'
-import { is13, is18, useSignupContext } from '#/screens/Signup/state'
-import { ConfirmationDialog } from '#/screens/Signup/StepInfo/ConfirmationDialog'
-import { PasswordValidation } from '#/screens/Signup/StepInfo/PasswordValidation'
-import { Policies } from '#/screens/Signup/StepInfo/Policies'
-import { atoms as a } from '#/alf'
-import { Button, ButtonIcon, ButtonText } from '#/components/Button'
-import { useDialogControl } from '#/components/Dialog'
+import {isEmailMaybeInvalid} from '#/lib/strings/email'
+import {logger} from '#/logger'
+import {ScreenTransition} from '#/screens/Login/ScreenTransition'
+import {is13, is18, useSignupContext} from '#/screens/Signup/state'
+import {ConfirmationDialog} from '#/screens/Signup/StepInfo/ConfirmationDialog'
+import {PasswordValidation} from '#/screens/Signup/StepInfo/PasswordValidation'
+import {Policies} from '#/screens/Signup/StepInfo/Policies'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import * as DateField from '#/components/forms/DateField'
-import { type DateFieldRef } from '#/components/forms/DateField/types'
-import { FormError } from '#/components/forms/FormError'
-import { HostingProvider } from '#/components/forms/HostingProvider'
+import {type DateFieldRef} from '#/components/forms/DateField/types'
+import {FormError} from '#/components/forms/FormError'
+import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
-import { Ticket_Stroke2_Corner0_Rounded as Ticket } from '#/components/icons/Ticket'
-import { Loader } from '#/components/Loader'
+import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {Loader} from '#/components/Loader'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -169,21 +169,21 @@ export function StepInfo({
   }
 
   const onNextPress = () => {
+    // Save form data to state before moving to next step
     const inviteCode = inviteCodeValueRef.current
     const email = emailValueRef.current
     const password = passwordValueRef.current
 
-    dispatch({type: 'setInviteCode', value: inviteCode})
+    // Save invite code if required
+    if (state.serviceDescription?.inviteCodeRequired && inviteCode) {
+      dispatch({type: 'setInviteCode', value: inviteCode})
+    }
+
+    // Save email and password to state
     dispatch({type: 'setEmail', value: email})
     dispatch({type: 'setPassword', value: password})
+
     dispatch({type: 'next'})
-    logger.metric(
-      'signup:nextPressed',
-      {
-        activeStep: state.activeStep,
-      },
-      {statsig: true},
-    )
   }
 
   const onPressSelectService = React.useCallback(() => {
@@ -423,56 +423,6 @@ export function StepInfo({
         onConfirm={onNextPress}
         email={currentEmail}
       />
-      <View style={[a.flex_row, a.align_center, a.pt_lg]}>
-        <Button
-          label={_(msg`Cancel`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>
-            <Trans>Cancel</Trans>
-          </ButtonText>
-        </Button>
-        <View style={a.flex_1} />
-        {isServerError ? (
-          <Button
-            testID="retryButton"
-            label={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries connection`)}
-            variant="solid"
-            color="secondary"
-            size="large"
-            onPress={refetchServer}>
-            <ButtonText>
-              <Trans>Retry</Trans>
-            </ButtonText>
-          </Button>
-        ) : (
-          <Button
-            testID="nextBtn"
-            label={_(msg`Continue to next step`)}
-            accessibilityHint={_(msg`Opens confirmation dialog`)}
-            variant="solid"
-            color="primary"
-            size="large"
-            disabled={state.isLoading || !is13(state.dateOfBirth)}
-            onPress={() => {
-              if (validateForm()) {
-                confirmationDialogControl.open()
-              }
-            }}>
-            <ButtonText>
-              {hasWarnedEmail ? (
-                _(msg`It's correct`)
-              ) : (
-                <Trans>Agree and continue</Trans>
-              )}
-            </ButtonText>
-            {state.isLoading && <ButtonIcon icon={Loader} />}
-          </Button>
-        )}
-      </View>
     </ScreenTransition>
   )
 }

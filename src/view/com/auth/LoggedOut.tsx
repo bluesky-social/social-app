@@ -6,7 +6,10 @@ import { useLingui } from '@lingui/react'
 
 import { PressableScale } from '#/lib/custom-animations/PressableScale'
 import { logEvent } from '#/lib/statsig/statsig'
-import { useLoggedOutView, useLoggedOutViewControls,  } from '#/state/shell/logged-out'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
 import { useSetMinimalShellMode } from '#/state/shell/minimal-mode'
 import { ErrorBoundary } from '#/view/com/util/ErrorBoundary'
 import { Login } from '#/screens/Login'
@@ -121,6 +124,13 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
             onPressBack={() =>
               setScreenState(ScreenState.S_LoginOrCreateAccount)
             }
+          />
+        ) : undefined}
+        {isWelcomeScreen ? (
+          <Welcome
+            onGetStartedPress={() => {
+              setScreenState(ScreenState.S_Login)
+            }}
           />
         ) : undefined}
         {isWelcomeScreen ? (
