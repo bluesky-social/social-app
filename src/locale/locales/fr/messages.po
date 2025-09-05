@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-05 16:23\n"
+"PO-Revision-Date: 2025-09-05 18:01\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -719,7 +719,7 @@ msgstr "Ajouter un autre post"
 
 #: src/view/com/composer/Composer.tsx:1444
 msgid "Add another post to thread"
-msgstr ""
+msgstr "Ajouter un autre post au fil de discussion"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -5279,7 +5279,7 @@ msgstr "Plus de fils d’actu"
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:70
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:73
 msgid "More languages..."
-msgstr ""
+msgstr "Plus de langues…"
 
 #: src/view/com/profile/ProfileMenu.tsx:223
 #: src/view/com/profile/ProfileMenu.tsx:229
@@ -7470,7 +7470,7 @@ msgstr "Enregistrer dans mes fils d’actu"
 #: src/view/shell/Drawer.tsx:571
 msgctxt "link to bookmarks screen"
 msgid "Saved"
-msgstr ""
+msgstr "Conservés"
 
 #: src/view/screens/SavedFeeds.tsx:172
 msgid "Saved Feeds"
@@ -7668,7 +7668,7 @@ msgstr "Sélectionner {0}"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:58
 msgid "Select {langName}"
-msgstr ""
+msgstr "Sélectionner {langName}"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -7746,7 +7746,7 @@ msgstr "Sélectionner une modération"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:45
 msgid "Select post language"
-msgstr ""
+msgstr "Sélectionner la langue du post"
 
 #: src/screens/Settings/LanguageSettings.tsx:131
 msgid "Select primary language"

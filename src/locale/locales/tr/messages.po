@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-05 16:23\n"
+"PO-Revision-Date: 2025-09-05 18:01\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -5279,7 +5279,7 @@ msgstr "Daha fazla akış"
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:70
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:73
 msgid "More languages..."
-msgstr ""
+msgstr "Diğer diller..."
 
 #: src/view/com/profile/ProfileMenu.tsx:223
 #: src/view/com/profile/ProfileMenu.tsx:229
@@ -7470,7 +7470,7 @@ msgstr "Akışlarıma kaydet"
 #: src/view/shell/Drawer.tsx:571
 msgctxt "link to bookmarks screen"
 msgid "Saved"
-msgstr ""
+msgstr "Kayıtlı"
 
 #: src/view/screens/SavedFeeds.tsx:172
 msgid "Saved Feeds"
@@ -7668,7 +7668,7 @@ msgstr "{0} kullanıcı adını seç"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:58
 msgid "Select {langName}"
-msgstr ""
+msgstr "{langName} dilini seç"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -7746,7 +7746,7 @@ msgstr "Moderatör seç"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:45
 msgid "Select post language"
-msgstr ""
+msgstr "Gönderi dilini seçin"
 
 #: src/screens/Settings/LanguageSettings.tsx:131
 msgid "Select primary language"

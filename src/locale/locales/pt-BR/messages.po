@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-05 16:23\n"
+"PO-Revision-Date: 2025-09-05 18:01\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -5279,7 +5279,7 @@ msgstr "Mais feeds"
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:70
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:73
 msgid "More languages..."
-msgstr ""
+msgstr "Mais idiomas..."
 
 #: src/view/com/profile/ProfileMenu.tsx:223
 #: src/view/com/profile/ProfileMenu.tsx:229
@@ -7470,7 +7470,7 @@ msgstr "Salvar nos meus feeds"
 #: src/view/shell/Drawer.tsx:571
 msgctxt "link to bookmarks screen"
 msgid "Saved"
-msgstr ""
+msgstr "Salvo"
 
 #: src/view/screens/SavedFeeds.tsx:172
 msgid "Saved Feeds"
@@ -9278,7 +9278,7 @@ msgstr "Tipo:"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:92
 msgid "Unable to access location. You'll need to visit your system settings to enable location services for Bluesky."
-msgstr ""
+msgstr "Não foi possível acessar a localização. Você precisará verificar as suas configurações de sistema para ativar os serviços de localização do Bluesky."
 
 #: src/lib/hooks/useCleanError.ts:27
 #: src/lib/strings/errors.ts:11
@@ -9288,7 +9288,7 @@ msgstr "Não foi possível conectar. Verifique a sua conexão de internet e tent
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:95
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:140
 msgid "Unable to contact your service. Please check your internet connection and try again."
-msgstr ""
+msgstr "Não foi possível conectar. Verifique a sua conexão de internet e tente novamente."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:68
 #: src/screens/Login/index.tsx:79
@@ -10136,11 +10136,11 @@ msgstr "Estamos muito felizes em receber você!"
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:105
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
-msgstr ""
+msgstr "Lamentamos, mas com base na localização do seu dispositivo, você está localizado em uma região que requer verificação de idade."
 
 #: src/components/BlockedGeoOverlay.tsx:159
 msgid "We're sorry, but based on your device's location, you are currently located in a region where we cannot provide access at this time."
-msgstr ""
+msgstr "Lamentamos, mas com base na localização do seu dispositivo, você está localizado em uma região onde não podemos fornecer acesso no momento."
 
 #: src/view/screens/ProfileList.tsx:117
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
@@ -10432,7 +10432,7 @@ msgstr "Você só pode selecionar um GIF por vez."
 
 #: src/view/com/composer/SelectMediaButton.tsx:401
 msgid "You can only select one video at a time."
-msgstr ""
+msgstr "Você só pode selecionar um vídeo por vez."
 
 #: src/screens/Deactivated.tsx:133
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
@@ -10441,7 +10441,7 @@ msgstr "Você pode reativar sua conta para continuar fazendo login. Seu perfil e
 #. Error message for maximum number of images that can be selected to add to a post, currently 4 but may change.
 #: src/view/com/composer/SelectMediaButton.tsx:393
 msgid "You can select up to {MAX_IMAGES, plural, other {# images}} in total."
-msgstr ""
+msgstr "Você pode selecionar até {MAX_IMAGES, plural, other {# imagens}} no total."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:85
 msgid "You can set default interaction settings in <0>Settings → Moderation → Interaction settings</0>."
@@ -10529,7 +10529,7 @@ msgstr "Você não tem listas."
 
 #: src/components/dialogs/StarterPackDialog.tsx:101
 msgid "You have no starter packs."
-msgstr ""
+msgstr "Você não tem pacotes iniciais."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:164
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -10590,7 +10590,7 @@ msgstr "Você deve ter 13 anos de idade ou mais para criar uma conta."
 
 #: src/components/dialogs/BirthDateSettings.tsx:131
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
-msgstr ""
+msgstr "Você deve ter pelo menos 13 anos de idade para usar o Bluesky. Leia os nossos <0>Termos de Serviço</0> para obter mais informações."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:334
 msgid "You must be following at least seven other people to generate a starter pack."
@@ -10619,7 +10619,7 @@ msgstr "Você precisa fazer login para visualizar esta postagem."
 
 #: src/view/com/composer/SelectMediaButton.tsx:436
 msgid "You need to allow access to your media library."
-msgstr ""
+msgstr "Você precisa permitir acesso à sua biblioteca de mídia."
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/index.tsx:23
 msgid "You need to verify your email address before you can enable email 2FA."
@@ -10798,7 +10798,7 @@ msgstr "Seu nome de usuário atual <0>{0}</0> permanecerá automaticamente reser
 
 #: src/screens/Moderation/index.tsx:208
 msgid "Your declared age is under 18. Some settings below may be disabled. If this was a mistake, you may edit your birthdate in your <0>account settings</0>."
-msgstr ""
+msgstr "A sua idade declarada é inferior a 18 anos. Algumas configurações abaixo podem estar desativadas. Se isto foi um engano, você pode editar sua data de nascimento nas <0>configurações da conta</0>."
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:253
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:257
@@ -10852,7 +10852,7 @@ msgstr "Seus interesses nos ajudam a encontrar o que você gosta!"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:130
 msgid "Your location data is not tracked and does not leave your device."
-msgstr ""
+msgstr "Seus dados de localização não são rastreados e não saem do seu dispositivo."
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
@@ -10860,7 +10860,7 @@ msgstr "Suas palavras silenciadas"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:71
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
-msgstr ""
+msgstr "Sua senha foi alterada com sucesso! Use a sua nova senha quando entrar no Bluesky daqui em diante."
 
 #: src/screens/Signup/StepInfo/index.tsx:130
 msgid "Your password must be at least 8 characters long."
@@ -10868,11 +10868,11 @@ msgstr "Sua senha deve ter no mínimo 8 caracteres."
 
 #: src/view/com/composer/Composer.tsx:537
 msgid "Your post was sent"
-msgstr ""
+msgstr "Sua postagem foi enviada"
 
 #: src/view/com/composer/Composer.tsx:534
 msgid "Your posts were sent"
-msgstr ""
+msgstr "Suas postagens foram enviadas"
 
 #: src/screens/Onboarding/StepFinished.tsx:545
 msgid "Your posts, likes, and blocks are public. Mutes are private."
@@ -10884,11 +10884,11 @@ msgstr "Seu idioma de preferência"
 
 #: src/screens/Onboarding/StepFinished.tsx:422
 msgid "Your profile picture"
-msgstr ""
+msgstr "Sua foto de perfil"
 
 #: src/screens/Onboarding/StepFinished.tsx:350
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
-msgstr ""
+msgstr "Sua foto de perfil cercada por círculos concêntricos das fotos de perfil de outros usuários"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."

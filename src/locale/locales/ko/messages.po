@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-05 16:23\n"
+"PO-Revision-Date: 2025-09-05 18:01\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -5279,7 +5279,7 @@ msgstr "피드 더 보기"
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:70
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:73
 msgid "More languages..."
-msgstr ""
+msgstr "모든 언어..."
 
 #: src/view/com/profile/ProfileMenu.tsx:223
 #: src/view/com/profile/ProfileMenu.tsx:229
@@ -7470,7 +7470,7 @@ msgstr "내 피드에 저장"
 #: src/view/shell/Drawer.tsx:571
 msgctxt "link to bookmarks screen"
 msgid "Saved"
-msgstr ""
+msgstr "저장됨"
 
 #: src/view/screens/SavedFeeds.tsx:172
 msgid "Saved Feeds"

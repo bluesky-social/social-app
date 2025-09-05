@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-05 16:23\n"
+"PO-Revision-Date: 2025-09-05 18:01\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -719,7 +719,7 @@ msgstr "添加另一则帖文"
 
 #: src/view/com/composer/Composer.tsx:1444
 msgid "Add another post to thread"
-msgstr ""
+msgstr "添加另一则帖文至帖文串"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -5279,7 +5279,7 @@ msgstr "更多动态源"
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:70
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:73
 msgid "More languages..."
-msgstr ""
+msgstr "更多语言……"
 
 #: src/view/com/profile/ProfileMenu.tsx:223
 #: src/view/com/profile/ProfileMenu.tsx:229
@@ -7470,7 +7470,7 @@ msgstr "保存到我的动态源"
 #: src/view/shell/Drawer.tsx:571
 msgctxt "link to bookmarks screen"
 msgid "Saved"
-msgstr ""
+msgstr "收藏"
 
 #: src/view/screens/SavedFeeds.tsx:172
 msgid "Saved Feeds"
@@ -7668,7 +7668,7 @@ msgstr "选择 {0}"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:58
 msgid "Select {langName}"
-msgstr ""
+msgstr "选择 {langName}"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -7746,7 +7746,7 @@ msgstr "选择内容审核服务提供方"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:45
 msgid "Select post language"
-msgstr ""
+msgstr "选择帖文语言"
 
 #: src/screens/Settings/LanguageSettings.tsx:131
 msgid "Select primary language"

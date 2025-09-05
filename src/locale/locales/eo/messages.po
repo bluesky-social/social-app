@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-05 16:23\n"
+"PO-Revision-Date: 2025-09-05 18:01\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -546,7 +546,7 @@ msgstr "Nova leĝo de Misisipio postulas, ke ni realigu aĝan konfirmadon por ĉ
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
 msgid "A screenshot of a post with a new button next to the share button that allows you to save the post to your bookmarks. The post is from @jcsalterego.bsky.social and reads \"inventing a saturday that immediately follows monday\"."
-msgstr ""
+msgstr "Ekrankopio kun afiŝo kun nova butono, apud la konigi-butono, kiu ebligas vin konservi la afiŝon al viaj legosignoj. La afiŝo estas de @jcsalterego.bsky.social kaj diras \"inventas sabaton kiu senprokraste sekvos lundon\"."
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
@@ -719,7 +719,7 @@ msgstr "Aldoni plian afiŝon"
 
 #: src/view/com/composer/Composer.tsx:1444
 msgid "Add another post to thread"
-msgstr ""
+msgstr "Aldoni plian afiŝon al fadeno"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -900,7 +900,7 @@ msgstr "Permesi aliron al viaj rektaj mesaĝoj"
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
 msgid "Allow location access"
-msgstr ""
+msgstr "Permesu aliron al la loko"
 
 #: src/screens/Messages/Settings.tsx:75
 #: src/screens/Messages/Settings.tsx:78
@@ -2009,7 +2009,7 @@ msgstr "Fermi ĉi tiun dialogujon"
 
 #: src/components/WelcomeModal.tsx:214
 msgid "Close welcome modal"
-msgstr ""
+msgstr "Fermi bonvenon-fenestron"
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Closes password update alert"
@@ -2123,11 +2123,11 @@ msgstr "Konfirmu vian naskiĝdaton"
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:45
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:112
 msgid "Confirm your location"
-msgstr ""
+msgstr "Konfirmu vian lokon"
 
 #: src/components/BlockedGeoOverlay.tsx:135
 msgid "Confirm your location with GPS. Your location data is not tracked and does not leave your device."
-msgstr ""
+msgstr "Konfirmu vian lokon per GPS. Datumoj pri via loko ne estas spurataj kaj ne forlasos vian aparaton."
 
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
 #: src/screens/Login/LoginForm.tsx:274
@@ -3391,7 +3391,7 @@ msgstr "Esplori"
 #: src/components/WelcomeModal.tsx:168
 #: src/components/WelcomeModal.tsx:177
 msgid "Explore the app"
-msgstr ""
+msgstr "Esplori la apon"
 
 #: src/screens/Settings/AccountSettings.tsx:152
 #: src/screens/Settings/AccountSettings.tsx:156
@@ -3552,7 +3552,7 @@ msgstr "Malsukcesis forigi konfirmon"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:87
 msgid "Failed to resolve location. Please try again."
-msgstr ""
+msgstr "Malsukcesis trovi la lokon. Bonvolu reprovi."
 
 #: src/lib/media/save-image.ts:28
 msgid "Failed to save image: {0}"
@@ -3722,7 +3722,7 @@ msgstr "Finante"
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:154
 msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
-msgstr ""
+msgstr "Finfine! Vidu afiŝojn kiuj gravas al vi. Konservu ilin por reviziti iam ajn."
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:48
 #: src/view/com/posts/FollowingEmptyState.tsx:53
@@ -4555,11 +4555,11 @@ msgstr "Agordoj pri interagado"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:32
 msgid "Introducing activity notifications"
-msgstr "Ni prezentas agadaj sciigoj"
+msgstr "Ni prezentas \"agadaj sciigoj\""
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:37
 msgid "Introducing saved posts AKA bookmarks"
-msgstr ""
+msgstr "Ni prezentas \"konservitaj afiŝoj\" alinome \"legosignoj\""
 
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
@@ -4612,7 +4612,7 @@ msgstr "Invitoj sed personaj"
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:86
 msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
-msgstr ""
+msgstr "Ĉu via loko ne estas ĝusta? <0>Tuŝetu ĉi tie por konfirmi vian lokon.</0>"
 
 #: src/screens/Signup/StepInfo/index.tsx:293
 msgid "It's correct"
@@ -5279,7 +5279,7 @@ msgstr "Pli da fluoj"
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:70
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:73
 msgid "More languages..."
-msgstr ""
+msgstr "Pliaj lingvoj..."
 
 #: src/view/com/profile/ProfileMenu.tsx:223
 #: src/view/com/profile/ProfileMenu.tsx:229
@@ -5789,7 +5789,7 @@ msgstr "Estas nenio ĉi tie"
 
 #: src/screens/Bookmarks/components/EmptyState.tsx:35
 msgid "Nothing saved yet"
-msgstr ""
+msgstr "Ankoraŭ nenio konservita"
 
 #: src/Navigation.tsx:422
 #: src/Navigation.tsx:569
@@ -7470,7 +7470,7 @@ msgstr "Konservi al miaj fluoj"
 #: src/view/shell/Drawer.tsx:571
 msgctxt "link to bookmarks screen"
 msgid "Saved"
-msgstr ""
+msgstr "Konservitaj"
 
 #: src/view/screens/SavedFeeds.tsx:172
 msgid "Saved Feeds"
@@ -7668,7 +7668,7 @@ msgstr "Elektu {0}"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:58
 msgid "Select {langName}"
-msgstr ""
+msgstr "Elekti {langName}"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
@@ -7746,7 +7746,7 @@ msgstr "Elekti kontrolanton"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:45
 msgid "Select post language"
-msgstr ""
+msgstr "Elektu afiŝan lingvon"
 
 #: src/screens/Settings/LanguageSettings.tsx:131
 msgid "Select primary language"
@@ -7904,7 +7904,7 @@ msgstr "Agordoj por agado de aliuloj"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
 msgid "Settings for allowing others to be notified of your posts"
-msgstr "Agordoj por permesi aliuloj esti sciigotaj pri viaj afiŝoj"
+msgstr "Agordoj por permesi al aliuloj ricevi sciigojn pri viaj afiŝoj"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:121
 msgid "Settings for like notifications"
@@ -8567,7 +8567,7 @@ msgstr "Nur kradvortoj"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:116
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
-msgstr ""
+msgstr "Tuŝetu sube por permesi al Bluesky aliri vian GPS-pozicion. Ni tiam uzos tiujn datumojn por pli precize determini la enhavon kaj funkciojn disponeblajn en via regiono."
 
 #: src/view/com/feeds/MissingFeed.tsx:89
 msgid "Tap for information"
@@ -9278,7 +9278,7 @@ msgstr "Tipo:"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:92
 msgid "Unable to access location. You'll need to visit your system settings to enable location services for Bluesky."
-msgstr ""
+msgstr "Ne eblas aliri la lokon. Vi bezonos viziti viajn sistemajn agordojn por ŝalti lokotrovajn servojn por Bluesky."
 
 #: src/lib/hooks/useCleanError.ts:27
 #: src/lib/strings/errors.ts:11
@@ -10136,11 +10136,11 @@ msgstr "Ni ege feliĉas ke vi aliĝas nin!"
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:105
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
-msgstr ""
+msgstr "Bedaŭrinde, sed laŭ la loko de via aparato vi nune estas poziciita en regiono, kiu devigas aĝan garantion."
 
 #: src/components/BlockedGeoOverlay.tsx:159
 msgid "We're sorry, but based on your device's location, you are currently located in a region where we cannot provide access at this time."
-msgstr ""
+msgstr "Bedaŭrinde, sed laŭ la loko de via aparato vi nune estas poziciita en regiono, kie ni ne povas provizi aliron je nuna tempo."
 
 #: src/view/screens/ProfileList.tsx:117
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
@@ -10852,7 +10852,7 @@ msgstr "Viaj interesoj helpas nin ekscii, kion vi ŝatas!"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:130
 msgid "Your location data is not tracked and does not leave your device."
-msgstr ""
+msgstr "Datumoj pri via loko ne estas spurataj kaj ne forlasos vian aparaton."
 
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
