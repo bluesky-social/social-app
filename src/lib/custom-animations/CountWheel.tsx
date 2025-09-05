@@ -6,13 +6,12 @@ import Animated, {
   useReducedMotion,
   withTiming,
 } from 'react-native-reanimated'
-import {i18n} from '@lingui/core'
 
 import {decideShouldRoll} from '#/lib/custom-animations/util'
 import {s} from '#/lib/styles'
 import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
-import {formatPostStatCount} from '#/components/PostControls/util'
+import {useFormatPostStatCount} from '#/components/PostControls/util'
 
 const animationConfig = {
   duration: 400,
@@ -92,13 +91,11 @@ export function CountWheel({
   big,
   isLiked,
   hasBeenToggled,
-  compactCount,
 }: {
   likeCount: number
   big?: boolean
   isLiked: boolean
   hasBeenToggled: boolean
-  compactCount?: boolean
 }) {
   const t = useTheme()
   const shouldAnimate = !useReducedMotion() && hasBeenToggled
@@ -111,12 +108,9 @@ export function CountWheel({
   const [key, setKey] = React.useState(0)
   const [prevCount, setPrevCount] = React.useState(likeCount)
   const prevIsLiked = React.useRef(isLiked)
-  const formattedCount = formatPostStatCount(i18n, likeCount, {
-    compact: compactCount,
-  })
-  const formattedPrevCount = formatPostStatCount(i18n, prevCount, {
-    compact: compactCount,
-  })
+  const formatPostStatCount = useFormatPostStatCount()
+  const formattedCount = formatPostStatCount(likeCount)
+  const formattedPrevCount = formatPostStatCount(prevCount)
 
   React.useEffect(() => {
     if (isLiked === prevIsLiked.current) {
