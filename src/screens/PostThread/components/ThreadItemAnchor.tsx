@@ -52,7 +52,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostControls} from '#/components/PostControls'
-import {formatPostStatCount} from '#/components/PostControls/util'
+import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -176,11 +176,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   postSource?: PostSource
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
+  const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow
   const record = item.value.post.record
@@ -439,7 +440,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="repostCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatPostStatCount(i18n, post.repostCount)}
+                      {formatPostStatCount(post.repostCount)}
                     </Text>{' '}
                     <Plural
                       value={post.repostCount}
@@ -457,7 +458,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatPostStatCount(i18n, post.quoteCount)}
+                      {formatPostStatCount(post.quoteCount)}
                     </Text>{' '}
                     <Plural
                       value={post.quoteCount}
@@ -473,7 +474,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="likeCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatPostStatCount(i18n, post.likeCount)}
+                      {formatPostStatCount(post.likeCount)}
                     </Text>{' '}
                     <Plural value={post.likeCount} one="like" other="likes" />
                   </Text>
@@ -485,7 +486,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="bookmarkCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatPostStatCount(i18n, post.bookmarkCount)}
+                      {formatPostStatCount(post.bookmarkCount)}
                     </Text>{' '}
                     <Plural
                       value={post.bookmarkCount}
