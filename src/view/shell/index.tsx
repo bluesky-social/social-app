@@ -45,25 +45,10 @@ import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
 function ShellInner() {
-  const t = useTheme()
-  const isDrawerOpen = useIsDrawerOpen()
-  const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
-  const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
   const insets = useSafeAreaInsets()
   const {state: policyUpdateState} = usePolicyUpdateContext()
 
-  const renderDrawerContent = useCallback(() => <DrawerContent />, [])
-  const onOpenDrawer = useCallback(
-    () => setIsDrawerOpen(true),
-    [setIsDrawerOpen],
-  )
-  const onCloseDrawer = useCallback(
-    () => setIsDrawerOpen(false),
-    [setIsDrawerOpen],
-  )
-  const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
-  const {hasSession} = useSession()
   const closeAnyActiveElement = useCloseAnyActiveElement()
 
   useNotificationsRegistration()
@@ -102,60 +87,14 @@ function ShellInner() {
     }
   }, [dedupe, navigation])
 
-  const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
-  const [trendingScrollGesture] = useState(() => Gesture.Native())
   return (
     <>
       <View style={[a.h_full]}>
         <ErrorBoundary
           style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
-          <Drawer
-            renderDrawerContent={renderDrawerContent}
-            drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
-            configureGestureHandler={handler => {
-              handler = handler.requireExternalGestureToFail(
-                trendingScrollGesture,
-              )
-
-              if (swipeEnabled) {
-                if (isDrawerOpen) {
-                  return handler.activeOffsetX([-1, 1])
-                } else {
-                  return (
-                    handler
-                      // Any movement to the left is a pager swipe
-                      // so fail the drawer gesture immediately.
-                      .failOffsetX(-1)
-                      // Don't rush declaring that a movement to the right
-                      // is a drawer swipe. It could be a vertical scroll.
-                      .activeOffsetX(5)
-                  )
-                }
-              } else {
-                // Fail the gesture immediately.
-                // This seems more reliable than the `swipeEnabled` prop.
-                // With `swipeEnabled` alone, the gesture may freeze after toggling off/on.
-                return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
-              }
-            }}
-            open={isDrawerOpen}
-            onOpen={onOpenDrawer}
-            onClose={onCloseDrawer}
-            swipeEdgeWidth={winDim.width}
-            swipeMinVelocity={100}
-            swipeMinDistance={10}
-            drawerType={isIOS ? 'slide' : 'front'}
-            overlayStyle={{
-              backgroundColor: select(t.name, {
-                light: 'rgba(0, 57, 117, 0.1)',
-                dark: isAndroid
-                  ? 'rgba(16, 133, 254, 0.1)'
-                  : 'rgba(1, 82, 168, 0.1)',
-                dim: 'rgba(10, 13, 16, 0.8)',
-              }),
-            }}>
+          <DrawerLayout>
             <TabsNavigator />
-          </Drawer>
+          </DrawerLayout>
         </ErrorBoundary>
       </View>
 
@@ -179,6 +118,76 @@ function ShellInner() {
 
       <PolicyUpdateOverlayPortalOutlet />
     </>
+  )
+}
+
+function DrawerLayout({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  const isDrawerOpen = useIsDrawerOpen()
+  const setIsDrawerOpen = useSetDrawerOpen()
+  const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
+  const winDim = useWindowDimensions()
+
+  const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
+  const {hasSession} = useSession()
+
+  const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
+  const [trendingScrollGesture] = useState(() => Gesture.Native())
+
+  const renderDrawerContent = useCallback(() => <DrawerContent />, [])
+  const onOpenDrawer = useCallback(
+    () => setIsDrawerOpen(true),
+    [setIsDrawerOpen],
+  )
+  const onCloseDrawer = useCallback(
+    () => setIsDrawerOpen(false),
+    [setIsDrawerOpen],
+  )
+
+  return (
+    <Drawer
+      renderDrawerContent={renderDrawerContent}
+      drawerStyle={{width: Math.min(400, winDim.width * 0.8)}}
+      configureGestureHandler={handler => {
+        handler = handler.requireExternalGestureToFail(trendingScrollGesture)
+
+        if (swipeEnabled) {
+          if (isDrawerOpen) {
+            return handler.activeOffsetX([-1, 1])
+          } else {
+            return (
+              handler
+                // Any movement to the left is a pager swipe
+                // so fail the drawer gesture immediately.
+                .failOffsetX(-1)
+                // Don't rush declaring that a movement to the right
+                // is a drawer swipe. It could be a vertical scroll.
+                .activeOffsetX(5)
+            )
+          }
+        } else {
+          // Fail the gesture immediately.
+          // This seems more reliable than the `swipeEnabled` prop.
+          // With `swipeEnabled` alone, the gesture may freeze after toggling off/on.
+          return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
+        }
+      }}
+      open={isDrawerOpen}
+      onOpen={onOpenDrawer}
+      onClose={onCloseDrawer}
+      swipeEdgeWidth={winDim.width}
+      swipeMinVelocity={100}
+      swipeMinDistance={10}
+      drawerType={isIOS ? 'slide' : 'front'}
+      overlayStyle={{
+        backgroundColor: select(t.name, {
+          light: 'rgba(0, 57, 117, 0.1)',
+          dark: isAndroid ? 'rgba(16, 133, 254, 0.1)' : 'rgba(1, 82, 168, 0.1)',
+          dim: 'rgba(10, 13, 16, 0.8)',
+        }),
+      }}>
+      {children}
+    </Drawer>
   )
 }
 
