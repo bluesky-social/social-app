@@ -763,7 +763,7 @@ export function DesktopLeftNav() {
             label={_(
               msg({
                 message: 'Saved',
-                comment: 'link to bookmarks screen',
+                context: 'link to bookmarks screen',
               }),
             )}
           />
