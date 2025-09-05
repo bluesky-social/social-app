@@ -760,7 +760,12 @@ export function DesktopLeftNav() {
                 width={NAV_ICON_WIDTH}
               />
             }
-            label={_(msg`Saved`)}
+            label={_(
+              msg({
+                message: 'Saved',
+                context: 'link to bookmarks screen',
+              }),
+            )}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
