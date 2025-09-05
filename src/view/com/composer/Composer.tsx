@@ -110,7 +110,6 @@ import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
-import {SelectPostLanguagesBtn} from '#/view/com/composer/select-language/SelectPostLanguagesDialog'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
@@ -131,6 +130,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
   type AssetType,
   SelectMediaButton,
@@ -1453,7 +1453,7 @@ function ComposerFooter({
             />
           </Button>
         )}
-        <SelectPostLanguagesBtn />
+        <PostLanguageSelect />
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}
