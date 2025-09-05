@@ -1,4 +1,5 @@
 import {
+  type JSX,
   useCallback,
   useContext,
   useImperativeHandle,

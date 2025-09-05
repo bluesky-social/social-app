@@ -160,7 +160,7 @@ export type ContentProps<T> = {
     item: T,
     index: number,
     selectedValue?: string | null,
-  ) => React.ReactElement
+  ) => React.ReactElement<any>
   /*
    * Extracts the value from an item. Defaults to `item => item.value`
    */
