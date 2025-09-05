@@ -48,7 +48,7 @@ export function PostLanguageSelect() {
         <Menu.Trigger label={_(msg`Select post language`)}>
           {({props}) => <LanguageBtn {...props} />}
         </Menu.Trigger>
-        <Menu.Outer showCancel>
+        <Menu.Outer>
           <Menu.Group>
             {dedupedHistory.map(historyItem => {
               const langCodes = historyItem.split(',')
