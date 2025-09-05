@@ -13,6 +13,7 @@ import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
 import {useLightbox} from '#/state/lightbox'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {useTheme} from '#/alf'
 import {FlatList_INTERNAL} from './Views'
 
@@ -38,6 +39,7 @@ export type ListProps<ItemT = any> = Omit<
   disableFullWindowScroll?: boolean
   sideBorders?: boolean
   progressViewOffset?: number
+  footerExtensionHeight?: number
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 
@@ -54,6 +56,8 @@ let List = React.forwardRef<ListMethods, ListProps>(
       style,
       progressViewOffset,
       automaticallyAdjustsScrollIndicatorInsets = false,
+      contentContainerStyle,
+      footerExtensionHeight = 0,
       ...props
     },
     ref,
@@ -62,6 +66,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
     const t = useTheme()
     const dedupe = useDedupe(400)
     const {activeLightbox} = useLightbox()
+    const {footerHeight} = useShellLayout()
 
     function handleScrolledDownChange(didScrollDown: boolean) {
       onScrolledDownChange?.(didScrollDown)
@@ -156,13 +161,25 @@ let List = React.forwardRef<ListMethods, ListProps>(
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         {...props}
+        contentContainerStyle={[
+          !isIOS && {paddingBottom: footerHeight + footerExtensionHeight},
+          contentContainerStyle,
+        ]}
         automaticallyAdjustsScrollIndicatorInsets={
           automaticallyAdjustsScrollIndicatorInsets
         }
         scrollIndicatorInsets={{
           top: headerOffset,
           right: 1,
+          bottom: footerHeight + footerExtensionHeight,
           ...props.scrollIndicatorInsets,
+        }}
+        contentInset={{
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: footerHeight + footerExtensionHeight,
+          ...props.contentInset,
         }}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
         contentOffset={contentOffset}
