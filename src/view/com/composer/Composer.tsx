@@ -122,9 +122,10 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
@@ -941,7 +942,7 @@ let ComposerPost = React.memo(function ComposerPost({
                 })
               }
             }}>
-            <ButtonIcon icon={X} />
+            <ButtonIcon icon={XIcon} />
           </Button>
           <Prompt.Basic
             control={discardPromptControl}
@@ -1430,7 +1431,7 @@ function ComposerFooter({
                   variant="ghost"
                   shape="round"
                   color="primary">
-                  <EmojiSmile size="lg" />
+                  <EmojiSmileIcon size="lg" />
                 </Button>
               ) : null}
             </ToolbarWrapper>
@@ -1440,17 +1441,13 @@ function ComposerFooter({
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
         {showAddButton && (
           <Button
-            label={_(msg`Add new post`)}
+            label={_(msg`Add another post to thread`)}
             onPress={onAddPost}
             style={[a.p_sm]}
             variant="ghost"
             shape="round"
             color="primary">
-            <FontAwesomeIcon
-              icon="add"
-              size={20}
-              color={t.palette.primary_500}
-            />
+            <PlusIcon size="lg" />
           </Button>
         )}
         <PostLanguageSelect />
@@ -1753,7 +1750,7 @@ function ErrorBanner({
           t.atoms.bg_contrast_25,
         ]}>
         <View style={[a.relative, a.flex_row, a.gap_sm, {paddingRight: 48}]}>
-          <CircleInfo fill={t.palette.negative_400} />
+          <CircleInfoIcon fill={t.palette.negative_400} />
           <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
             {error}
           </NewText>
@@ -1765,7 +1762,7 @@ function ErrorBanner({
             shape="round"
             style={[a.absolute, {top: 0, right: 0}]}
             onPress={onClearError}>
-            <ButtonIcon icon={X} />
+            <ButtonIcon icon={XIcon} />
           </Button>
         </View>
         {videoError && videoState.jobId && (
