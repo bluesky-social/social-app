@@ -214,13 +214,14 @@ export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
 
 // temp hack for e2e - esb
-export let BLUESKY_PROXY_HEADER: ProxyHeaderValue = `${BLUESKY_PROXY_DID}#bsky_appview`
-export function setBlueskyProxyHeader(header: ProxyHeaderValue) {
-  BLUESKY_PROXY_HEADER = header
-}
-
-export const BLUESKY_SERVICE_HEADERS = {
-  'atproto-proxy': BLUESKY_PROXY_HEADER,
+export const BLUESKY_PROXY_HEADER = {
+  value: `${BLUESKY_PROXY_DID}#bsky_appview`,
+  get() {
+    return this.value as ProxyHeaderValue
+  },
+  set(value: string) {
+    this.value = value
+  },
 }
 
 export const DM_SERVICE_HEADERS = {
