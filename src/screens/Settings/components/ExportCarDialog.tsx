@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,14 +18,14 @@ import {Text} from '#/components/Typography'
 export function ExportCarDialog({
   control,
 }: {
-  control: Dialog.DialogOuterProps['control']
+  control: Dialog.DialogControlProps
 }) {
   const {_} = useLingui()
   const t = useTheme()
   const agent = useAgent()
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const download = React.useCallback(async () => {
+  const download = useCallback(async () => {
     if (!agent.session) {
       return // shouldnt ever happen
     }
@@ -52,7 +52,7 @@ export function ExportCarDialog({
   }, [_, control, agent])
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
@@ -63,7 +63,7 @@ export function ExportCarDialog({
           </Text>
           <Text
             nativeID="dialog-description"
-            style={[a.text_sm, a.leading_normal, t.atoms.text_contrast_high]}>
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
             <Trans>
               Your account repository, containing all public data records, can
               be downloaded as a "CAR" file. This file does not include media
@@ -73,7 +73,6 @@ export function ExportCarDialog({
           </Text>
 
           <Button
-            variant="solid"
             color="primary"
             size="large"
             label={_(msg`Download CAR file`)}
