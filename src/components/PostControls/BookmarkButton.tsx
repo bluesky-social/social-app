@@ -9,6 +9,7 @@ import {useCleanError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
+import {useRequireAuth} from '#/state/session'
 import {useTheme} from '#/alf'
 import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
@@ -30,6 +31,7 @@ export const BookmarkButton = memo(function BookmarkButton({
   const {_} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
+  const requireAuth = useRequireAuth()
 
   const {viewer} = post
   const isBookmarked = !!viewer?.bookmarked
@@ -108,13 +110,14 @@ export const BookmarkButton = memo(function BookmarkButton({
     }
   }
 
-  const onHandlePress = async () => {
-    if (isBookmarked) {
-      await remove()
-    } else {
-      await save()
-    }
-  }
+  const onHandlePress = () =>
+    requireAuth(async () => {
+      if (isBookmarked) {
+        await remove()
+      } else {
+        await save()
+      }
+    })
 
   return (
     <PostControlButton
