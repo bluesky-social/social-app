@@ -8,7 +8,7 @@ msgstr ""
 "Language: uk\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-03 02:45\n"
+"PO-Revision-Date: 2025-09-05 18:01\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -81,7 +81,7 @@ msgstr "{0, plural, one {# секунда} few {# секунди} many {# сек
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:225
 #: src/view/shell/bottom-bar/BottomBar.tsx:257
-#: src/view/shell/Drawer.tsx:487
+#: src/view/shell/Drawer.tsx:498
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -100,7 +100,7 @@ msgstr "{0, plural, one {підписник} few {підписники} many {п
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {читаю} few {читаю} many {читаю} other {читаю}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:473
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:479
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {вподобайка} few {вподобайки} many {вподобайки} other {вподобайки}}"
 
@@ -108,13 +108,17 @@ msgstr "{0, plural, one {вподобайка} few {вподобайки} many {
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {пост} few {пости} many {постів} other {постів}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:457
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:463
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {цитата} few {цитати} many {цитати} other {цитата}}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:439
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:445
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {репост} few {репости} many {репостів} other {репостів}}"
+
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:491
+msgid "{0, plural, one {save} other {saves}}"
+msgstr ""
 
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:82
 msgid "{0, plural, other {{1} posts}}"
@@ -217,7 +221,7 @@ msgstr "{0}хв"
 msgid "{0}s"
 msgstr "{0}с"
 
-#: src/view/shell/desktop/LeftNav.tsx:454
+#: src/view/shell/desktop/LeftNav.tsx:455
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -469,11 +473,11 @@ msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1}, </1> та {2, plural, one {# інші} few {# інші} many {# інші} other {# інші}} долучені до вашої підбірки"
 
-#: src/view/shell/Drawer.tsx:116
+#: src/view/shell/Drawer.tsx:117
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr "<0>{0}</0> {1, plural, one {читач} few {читачі} many {читачі} other {читачі}}"
 
-#: src/view/shell/Drawer.tsx:127
+#: src/view/shell/Drawer.tsx:128
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {читаєте} few {читаєте} many {читаєте} other {читаєте}}"
 
@@ -535,15 +539,20 @@ msgstr ""
 msgid "A new form of verification"
 msgstr ""
 
-#: src/components/BlockedGeoOverlay.tsx:39
+#: src/components/BlockedGeoOverlay.tsx:50
 msgid "A new Mississippi law requires us to implement age verification for all users before they can access Bluesky. We think this law creates challenges that go beyond its child safety goals, and creates significant barriers that limit free speech and disproportionately harm smaller platforms and emerging technologies."
+msgstr ""
+
+#. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:120
+msgid "A screenshot of a post with a new button next to the share button that allows you to save the post to your bookmarks. The post is from @jcsalterego.bsky.social and reads \"inventing a saturday that immediately follows monday\"."
 msgstr ""
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:113
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
 msgstr ""
 
-#: src/Navigation.tsx:523
+#: src/Navigation.tsx:524
 #: src/screens/Settings/AboutSettings.tsx:75
 #: src/screens/Settings/Settings.tsx:244
 #: src/screens/Settings/Settings.tsx:247
@@ -570,11 +579,11 @@ msgstr ""
 msgid "Accessibility"
 msgstr "Доступність"
 
-#: src/Navigation.tsx:382
+#: src/Navigation.tsx:383
 msgid "Accessibility Settings"
 msgstr "Налаштування доступності"
 
-#: src/Navigation.tsx:398
+#: src/Navigation.tsx:399
 #: src/screens/Login/LoginForm.tsx:194
 #: src/screens/Settings/AccountSettings.tsx:51
 #: src/screens/Settings/Settings.tsx:174
@@ -644,7 +653,7 @@ msgstr ""
 msgid "Activity from others"
 msgstr ""
 
-#: src/Navigation.tsx:491
+#: src/Navigation.tsx:492
 msgid "Activity notifications"
 msgstr ""
 
@@ -699,14 +708,18 @@ msgstr "Додати альтернативний текст (за бажанн�
 
 #: src/screens/Settings/Settings.tsx:564
 #: src/screens/Settings/Settings.tsx:567
-#: src/view/shell/desktop/LeftNav.tsx:261
-#: src/view/shell/desktop/LeftNav.tsx:265
+#: src/view/shell/desktop/LeftNav.tsx:262
+#: src/view/shell/desktop/LeftNav.tsx:266
 msgid "Add another account"
 msgstr "Додати інший обліковий запис"
 
-#: src/view/com/composer/Composer.tsx:810
+#: src/view/com/composer/Composer.tsx:811
 msgid "Add another post"
 msgstr "Написати ще"
+
+#: src/view/com/composer/Composer.tsx:1444
+msgid "Add another post to thread"
+msgstr ""
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:102
 msgid "Add app password"
@@ -739,10 +752,6 @@ msgstr ""
 #: src/components/dialogs/MutedWords.tsx:112
 msgid "Add muted words and tags"
 msgstr "Додати ігноровані слова та теги"
-
-#: src/view/com/composer/Composer.tsx:1443
-msgid "Add new post"
-msgstr "Написати"
 
 #: src/view/screens/ProfileList.tsx:932
 #: src/view/screens/ProfileList.tsx:950
@@ -782,6 +791,10 @@ msgstr "Додати цю стрічку до вашої стрічки"
 msgid "Add to lists"
 msgstr "Додати до списку"
 
+#: src/components/PostControls/BookmarkButton.tsx:129
+msgid "Add to saved posts"
+msgstr ""
+
 #: src/components/dialogs/StarterPackDialog.tsx:176
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
@@ -801,7 +814,7 @@ msgstr "Додано до списку"
 msgid "Added to starter pack"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:112
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:111
 msgid "Additional details (limit 1000 characters)"
 msgstr ""
 
@@ -841,16 +854,16 @@ msgstr "Розширені"
 msgid "Age Assurance"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:70
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:69
 msgid "Age assurance inquiry failed to send, please try again."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:78
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:77
 msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:145
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:193
 msgid "Age assurance only takes a few minutes"
 msgstr ""
 
@@ -871,7 +884,7 @@ msgstr "Здійснено підписку на усі облікові зап�
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:64
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:99
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:101
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:280
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:216
 msgid "All languages"
 msgstr ""
 
@@ -884,8 +897,13 @@ msgstr "Усі збережені стрічки в одному місці."
 msgid "Allow access to your direct messages"
 msgstr "Дозволити доступ до ваших особистих повідомлень"
 
-#: src/screens/Messages/Settings.tsx:86
-#: src/screens/Messages/Settings.tsx:89
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:146
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:152
+msgid "Allow location access"
+msgstr ""
+
+#: src/screens/Messages/Settings.tsx:75
+#: src/screens/Messages/Settings.tsx:78
 msgid "Allow new messages from"
 msgstr "Дозволяти нові повідомлення від"
 
@@ -911,6 +929,10 @@ msgstr "Надати доступ до особистих повідомлень
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:241
 msgid "Already have a code?"
 msgstr "Вже маєте код?"
+
+#: src/components/WelcomeModal.tsx:189
+msgid "Already have an account?"
+msgstr ""
 
 #: src/screens/Login/ChooseAccountForm.tsx:43
 msgid "Already signed in as @{0}"
@@ -949,8 +971,8 @@ msgstr ""
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Було надіслано лист на адресу {0}. Він містить код підтвердження, який можна ввести нижче."
 
-#: src/components/dialogs/GifSelect.tsx:264
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:362
+#: src/components/dialogs/GifSelect.tsx:253
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:298
 msgid "An error has occurred"
 msgstr "Виникла помилка"
 
@@ -1052,7 +1074,7 @@ msgstr "Тварини"
 msgid "Animated GIF"
 msgstr "Анімована GIF"
 
-#: src/components/BlockedGeoOverlay.tsx:92
+#: src/components/BlockedGeoOverlay.tsx:104
 #: src/components/PolicyUpdateOverlay/Badge.tsx:33
 msgid "Announcement"
 msgstr ""
@@ -1076,7 +1098,7 @@ msgstr "Усі можуть взаємодіяти"
 msgid "Anyone who follows me"
 msgstr ""
 
-#: src/Navigation.tsx:531
+#: src/Navigation.tsx:532
 #: src/screens/Settings/AppIconSettings/index.tsx:67
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:18
 #: src/screens/Settings/AppIconSettings/SettingsListItem.tsx:23
@@ -1113,7 +1135,7 @@ msgstr "Назва повинна бути не менше 4 символів у
 msgid "App passwords"
 msgstr "Паролі застосунку"
 
-#: src/Navigation.tsx:350
+#: src/Navigation.tsx:351
 #: src/screens/Settings/AppPasswords.tsx:51
 msgid "App Passwords"
 msgstr "Паролі для застосунків"
@@ -1128,7 +1150,7 @@ msgid "Appeal \"{0}\" label"
 msgstr "Оскаржити мітку \"{0}\""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:258
-#: src/screens/Messages/components/ChatDisabled.tsx:91
+#: src/screens/Messages/components/ChatDisabled.tsx:98
 msgctxt "toast"
 msgid "Appeal submitted"
 msgstr "Оскарження подано"
@@ -1142,14 +1164,14 @@ msgstr ""
 msgid "Appeal Suspension"
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:51
-#: src/screens/Messages/components/ChatDisabled.tsx:53
-#: src/screens/Messages/components/ChatDisabled.tsx:99
-#: src/screens/Messages/components/ChatDisabled.tsx:101
+#: src/screens/Messages/components/ChatDisabled.tsx:52
+#: src/screens/Messages/components/ChatDisabled.tsx:54
+#: src/screens/Messages/components/ChatDisabled.tsx:106
+#: src/screens/Messages/components/ChatDisabled.tsx:108
 msgid "Appeal this decision"
 msgstr "Оскаржити це рішення"
 
-#: src/Navigation.tsx:390
+#: src/Navigation.tsx:391
 #: src/screens/Settings/AppearanceSettings.tsx:86
 #: src/screens/Settings/Settings.tsx:212
 #: src/screens/Settings/Settings.tsx:215
@@ -1166,12 +1188,12 @@ msgstr "Застосувати рекомендовані стрічки за з
 msgid "Apply Pull Request"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:643
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:665
 msgid "Archived from {0}"
 msgstr "Архівовано {0}"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:612
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:651
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:634
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:673
 msgid "Archived post"
 msgstr "Архівований пост"
 
@@ -1203,11 +1225,11 @@ msgstr "Ви впевнені, що хочете залишити цю розм�
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "Ви впевнені, що бажаєте вилучити це зі своїх стрічок?"
 
-#: src/view/com/composer/Composer.tsx:759
+#: src/view/com/composer/Composer.tsx:760
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Ви дійсно бажаєте видалити цю чернетку?"
 
-#: src/view/com/composer/Composer.tsx:949
+#: src/view/com/composer/Composer.tsx:950
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Ви справді хочете не публікувати пост?"
 
@@ -1228,7 +1250,7 @@ msgstr "Мистецтво"
 msgid "Artistic or non-erotic nudity."
 msgstr "Художня або нееротична оголеність."
 
-#: src/components/BlockedGeoOverlay.tsx:42
+#: src/components/BlockedGeoOverlay.tsx:53
 msgid "As a small team, we cannot justify building the expensive infrastructure this requirement demands while legal challenges to this law are pending."
 msgstr ""
 
@@ -1266,8 +1288,8 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:316
 #: src/screens/Login/SetNewPasswordForm.tsx:168
 #: src/screens/Login/SetNewPasswordForm.tsx:174
-#: src/screens/Messages/components/ChatDisabled.tsx:133
-#: src/screens/Messages/components/ChatDisabled.tsx:134
+#: src/screens/Messages/components/ChatDisabled.tsx:140
+#: src/screens/Messages/components/ChatDisabled.tsx:141
 #: src/screens/Profile/Header/Shell.tsx:158
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:271
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:280
@@ -1305,7 +1327,7 @@ msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:54
 #: src/components/dms/MessageProfileButton.tsx:58
-#: src/screens/Messages/ChatList.tsx:358
+#: src/screens/Messages/ChatList.tsx:369
 #: src/screens/Messages/Conversation.tsx:228
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
@@ -1353,11 +1375,11 @@ msgstr "Заблокувати обліковий запис?"
 msgid "Block accounts"
 msgstr "Заблокувати облікові записи"
 
-#: src/components/dms/ReportDialog.tsx:317
+#: src/components/dms/ReportDialog.tsx:322
 msgid "Block and Delete"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:352
+#: src/components/dms/ReportDialog.tsx:357
 msgid "Block and/or delete this conversation"
 msgstr ""
 
@@ -1373,12 +1395,12 @@ msgstr ""
 msgid "Block these accounts?"
 msgstr "Заблокувати ці облікові записи?"
 
-#: src/components/dms/ReportDialog.tsx:356
-#: src/components/dms/ReportDialog.tsx:359
+#: src/components/dms/ReportDialog.tsx:361
+#: src/components/dms/ReportDialog.tsx:364
 msgid "Block user"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:323
+#: src/components/dms/ReportDialog.tsx:328
 msgid "Block User"
 msgstr ""
 
@@ -1390,7 +1412,7 @@ msgstr "Заблоковано"
 msgid "Blocked accounts"
 msgstr "Заблоковані облікові записи"
 
-#: src/Navigation.tsx:191
+#: src/Navigation.tsx:192
 #: src/view/screens/ModerationBlockedAccounts.tsx:104
 msgid "Blocked Accounts"
 msgstr "Заблоковані облікові записи"
@@ -1425,7 +1447,7 @@ msgstr "Блог"
 msgid "Bluesky"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:668
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:690
 msgid "Bluesky cannot confirm the authenticity of the claimed date."
 msgstr "Bluesky не може підтвердити автентичність зазначеної дати."
 
@@ -1578,8 +1600,10 @@ msgid "Camera"
 msgstr "Камера"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:206
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:129
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:135
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:128
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:134
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:159
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:164
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:125
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:131
 #: src/components/dialogs/InAppBrowserConsent.tsx:98
@@ -1587,7 +1611,7 @@ msgstr "Камера"
 #: src/components/live/GoLiveDialog.tsx:247
 #: src/components/live/GoLiveDialog.tsx:253
 #: src/components/Menu/index.tsx:350
-#: src/components/PostControls/RepostButton.tsx:209
+#: src/components/PostControls/RepostButton.tsx:210
 #: src/components/Prompt.tsx:144
 #: src/components/Prompt.tsx:146
 #: src/screens/Deactivated.tsx:158
@@ -1603,13 +1627,13 @@ msgstr "Камера"
 #: src/screens/Settings/Settings.tsx:289
 #: src/screens/Takendown.tsx:99
 #: src/screens/Takendown.tsx:102
-#: src/view/com/composer/Composer.tsx:1004
-#: src/view/com/composer/Composer.tsx:1015
+#: src/view/com/composer/Composer.tsx:1005
+#: src/view/com/composer/Composer.tsx:1016
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:52
 #: src/view/com/modals/CreateOrEditList.tsx:333
 #: src/view/com/modals/CropImage.web.tsx:97
-#: src/view/shell/desktop/LeftNav.tsx:212
+#: src/view/shell/desktop/LeftNav.tsx:213
 msgid "Cancel"
 msgstr "Скасувати"
 
@@ -1629,7 +1653,7 @@ msgstr "Скасувати видалення облікового запису"
 msgid "Cancel image crop"
 msgstr "Скасувати обрізання зображення"
 
-#: src/components/PostControls/RepostButton.tsx:203
+#: src/components/PostControls/RepostButton.tsx:204
 msgid "Cancel quote post"
 msgstr "Скасувати цитування посту"
 
@@ -1641,9 +1665,9 @@ msgstr ""
 msgid "Cancel search"
 msgstr "Скасувати пошук"
 
-#: src/components/PostControls/index.tsx:101
-#: src/components/PostControls/index.tsx:132
-#: src/components/PostControls/index.tsx:160
+#: src/components/PostControls/index.tsx:105
+#: src/components/PostControls/index.tsx:136
+#: src/components/PostControls/index.tsx:164
 #: src/state/shell/composer/index.tsx:94
 msgid "Cannot interact with a blocked user"
 msgstr "Не можна взаємодіяти із заблокованим користувачем"
@@ -1718,10 +1742,10 @@ msgid "Changes saved"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:99
-#: src/Navigation.tsx:548
+#: src/Navigation.tsx:549
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
-#: src/view/shell/desktop/LeftNav.tsx:606
-#: src/view/shell/Drawer.tsx:455
+#: src/view/shell/desktop/LeftNav.tsx:607
+#: src/view/shell/Drawer.tsx:466
 msgid "Chat"
 msgstr "Чат"
 
@@ -1744,7 +1768,7 @@ msgctxt "toast"
 msgid "Chat muted"
 msgstr "Чат стишено"
 
-#: src/Navigation.tsx:558
+#: src/Navigation.tsx:559
 #: src/screens/Messages/components/InboxPreview.tsx:22
 msgid "Chat request inbox"
 msgstr ""
@@ -1756,13 +1780,14 @@ msgid "Chat requests"
 msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:76
-#: src/Navigation.tsx:553
-#: src/screens/Messages/ChatList.tsx:367
+#: src/Navigation.tsx:554
+#: src/screens/Messages/ChatList.tsx:81
+#: src/screens/Messages/ChatList.tsx:85
+#: src/screens/Messages/ChatList.tsx:378
 msgid "Chat settings"
 msgstr "Налаштування чату"
 
-#: src/screens/Messages/Settings.tsx:33
-#: src/screens/Messages/Settings.tsx:78
+#: src/screens/Messages/Settings.tsx:67
 msgid "Chat Settings"
 msgstr "Налаштування чату"
 
@@ -1772,8 +1797,8 @@ msgid "Chat unmuted"
 msgstr "Сповіщення чату увімкнено"
 
 #: src/screens/Messages/ChatList.tsx:76
-#: src/screens/Messages/ChatList.tsx:383
-#: src/screens/Messages/ChatList.tsx:407
+#: src/screens/Messages/ChatList.tsx:394
+#: src/screens/Messages/ChatList.tsx:418
 msgid "Chats"
 msgstr ""
 
@@ -1806,7 +1831,7 @@ msgstr "Обрати для мене"
 msgid "Choose People"
 msgstr "Обрати людей"
 
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:226
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:162
 msgid "Choose Post Languages"
 msgstr ""
 
@@ -1895,16 +1920,18 @@ msgstr "Тик 🐴 тигидик 🐴"
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:184
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:237
 #: src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx:243
-#: src/components/dialogs/GifSelect.tsx:280
+#: src/components/dialogs/GifSelect.tsx:269
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:158
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:167
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:163
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:171
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
 #: src/components/dialogs/StarterPackDialog.tsx:179
 #: src/components/dms/EmojiPopup.android.tsx:58
-#: src/components/dms/ReportDialog.tsx:381
-#: src/components/dms/ReportDialog.tsx:390
+#: src/components/dms/ReportDialog.tsx:386
+#: src/components/dms/ReportDialog.tsx:395
 #: src/components/live/EditLiveDialog.tsx:229
 #: src/components/live/EditLiveDialog.tsx:235
 #: src/components/NewskieDialog.tsx:146
@@ -1919,7 +1946,7 @@ msgstr "Тик 🐴 тигидик 🐴"
 #: src/components/WhoCanReply.tsx:209
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:286
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:291
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:377
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:313
 #: src/view/com/feeds/MissingFeed.tsx:208
 #: src/view/com/feeds/MissingFeed.tsx:215
 msgid "Close"
@@ -1940,16 +1967,16 @@ msgstr "Закрити нижнє меню"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:224
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:230
-#: src/components/dialogs/GifSelect.tsx:274
+#: src/components/dialogs/GifSelect.tsx:263
 #: src/components/verification/VerificationsDialog.tsx:136
 #: src/components/verification/VerifierDialog.tsx:141
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:246
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:340
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:372
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:182
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:276
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:308
 msgid "Close dialog"
 msgstr "Закрити діалогове вікно"
 
-#: src/view/shell/index.web.tsx:100
+#: src/view/shell/index.web.tsx:110
 msgid "Close drawer menu"
 msgstr ""
 
@@ -1958,7 +1985,7 @@ msgstr ""
 msgid "Close emoji picker"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:170
+#: src/components/dialogs/GifSelect.tsx:159
 msgid "Close GIF dialog"
 msgstr "Закрити діалогове вікно GIF"
 
@@ -1980,11 +2007,15 @@ msgstr ""
 msgid "Close this dialog"
 msgstr "Закрити діалогове вікно"
 
+#: src/components/WelcomeModal.tsx:214
+msgid "Close welcome modal"
+msgstr ""
+
 #: src/screens/Login/PasswordUpdatedForm.tsx:32
 msgid "Closes password update alert"
 msgstr "Закриває сповіщення про оновлення пароля"
 
-#: src/view/com/composer/Composer.tsx:1012
+#: src/view/com/composer/Composer.tsx:1013
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2025,7 +2056,7 @@ msgid "Comics"
 msgstr "Комікси"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:45
-#: src/Navigation.tsx:340
+#: src/Navigation.tsx:341
 #: src/view/screens/CommunityGuidelines.tsx:34
 msgid "Community Guidelines"
 msgstr "Правила спільноти"
@@ -2039,11 +2070,11 @@ msgstr "Завершити ознайомлення та розпочати ко
 msgid "Complete the challenge"
 msgstr "Завершити завдання"
 
-#: src/view/shell/desktop/LeftNav.tsx:571
+#: src/view/shell/desktop/LeftNav.tsx:572
 msgid "Compose new post"
 msgstr "Новий пост"
 
-#: src/view/com/composer/Composer.tsx:913
+#: src/view/com/composer/Composer.tsx:914
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2051,7 +2082,7 @@ msgstr ""
 msgid "Compose reply"
 msgstr "Відповісти"
 
-#: src/view/com/composer/Composer.tsx:1837
+#: src/view/com/composer/Composer.tsx:1834
 msgid "Compressing video..."
 msgstr "Стискання відео..."
 
@@ -2086,6 +2117,18 @@ msgstr "Підтвердити ваш вік:"
 msgid "Confirm your birthdate"
 msgstr "Підтвердити вашу дату народження"
 
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:89
+#: src/components/BlockedGeoOverlay.tsx:141
+#: src/components/BlockedGeoOverlay.tsx:147
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:45
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:112
+msgid "Confirm your location"
+msgstr ""
+
+#: src/components/BlockedGeoOverlay.tsx:135
+msgid "Confirm your location with GPS. Your location data is not tracked and does not leave your device."
+msgstr ""
+
 #: src/components/dialogs/EmailDialog/components/TokenField.tsx:36
 #: src/screens/Login/LoginForm.tsx:274
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:186
@@ -2105,8 +2148,8 @@ msgstr "З’єднання..."
 msgid "Connection issue"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:84
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:28
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:132
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:29
 msgid "Contact our moderation team"
 msgstr ""
 
@@ -2116,7 +2159,7 @@ msgstr ""
 msgid "Contact support"
 msgstr "Служба підтримки"
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:94
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:93
 msgid "Contact us"
 msgstr ""
 
@@ -2129,7 +2172,7 @@ msgstr ""
 msgid "Content and media"
 msgstr "Вміст та медіа"
 
-#: src/Navigation.tsx:507
+#: src/Navigation.tsx:508
 msgid "Content and Media"
 msgstr "Вміст та медіа"
 
@@ -2202,8 +2245,8 @@ msgstr "Продовжити до наступного кроку"
 msgid "Conversation"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:318
-#: src/components/dms/ReportDialog.tsx:321
+#: src/components/dms/ReportDialog.tsx:323
+#: src/components/dms/ReportDialog.tsx:326
 msgctxt "toast"
 msgid "Conversation deleted"
 msgstr "Розмову видалено"
@@ -2330,7 +2373,7 @@ msgstr "Копіювати значення запису TXT"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:40
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:107
-#: src/Navigation.tsx:345
+#: src/Navigation.tsx:346
 #: src/view/screens/CopyrightPolicy.tsx:31
 msgid "Copyright Policy"
 msgstr "Політика захисту авторського права"
@@ -2348,7 +2391,7 @@ msgid "Could not find profile"
 msgstr ""
 
 #: src/components/dms/LeaveConvoPrompt.tsx:35
-#: src/components/dms/ReportDialog.tsx:310
+#: src/components/dms/ReportDialog.tsx:315
 msgid "Could not leave chat"
 msgstr "Не вдалось залишити чат"
 
@@ -2390,7 +2433,7 @@ msgstr "Створити QR-код для підбірки"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:178
 #: src/components/StarterPack/ProfileStarterPacks.tsx:287
-#: src/Navigation.tsx:588
+#: src/Navigation.tsx:589
 msgid "Create a starter pack"
 msgstr "Створити власну підбірку"
 
@@ -2400,6 +2443,8 @@ msgstr "Створення власної підбірки для мене"
 
 #: src/components/LoggedOutCTA.tsx:71
 #: src/components/LoggedOutCTA.tsx:76
+#: src/components/WelcomeModal.tsx:155
+#: src/components/WelcomeModal.tsx:163
 #: src/view/com/auth/SplashScreen.tsx:55
 #: src/view/com/auth/SplashScreen.web.tsx:117
 #: src/view/shell/bottom-bar/BottomBar.tsx:345
@@ -2562,14 +2607,14 @@ msgstr ""
 msgid "Delete chat declaration record"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:362
-#: src/components/dms/ReportDialog.tsx:365
+#: src/components/dms/ReportDialog.tsx:367
+#: src/components/dms/ReportDialog.tsx:370
 #: src/screens/Messages/components/RequestButtons.tsx:136
 #: src/screens/Messages/components/RequestButtons.tsx:139
 msgid "Delete conversation"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:320
+#: src/components/dms/ReportDialog.tsx:325
 msgid "Delete Conversation"
 msgstr ""
 
@@ -2595,7 +2640,7 @@ msgstr "Видалити мій обліковий запис"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:685
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:687
-#: src/view/com/composer/Composer.tsx:923
+#: src/view/com/composer/Composer.tsx:924
 msgid "Delete post"
 msgstr "Видалити пост"
 
@@ -2700,15 +2745,15 @@ msgstr "Вимкнути субтитри"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
-#: src/screens/Messages/Settings.tsx:155
-#: src/screens/Messages/Settings.tsx:158
+#: src/screens/Messages/Settings.tsx:144
+#: src/screens/Messages/Settings.tsx:147
 #: src/screens/Moderation/index.tsx:413
 msgid "Disabled"
 msgstr "Вимкнено"
 
 #: src/screens/Profile/Header/EditProfileDialog.tsx:83
-#: src/view/com/composer/Composer.tsx:761
-#: src/view/com/composer/Composer.tsx:956
+#: src/view/com/composer/Composer.tsx:762
+#: src/view/com/composer/Composer.tsx:957
 msgid "Discard"
 msgstr "Видалити"
 
@@ -2716,11 +2761,11 @@ msgstr "Видалити"
 msgid "Discard changes?"
 msgstr "Відхилити зміни?"
 
-#: src/view/com/composer/Composer.tsx:758
+#: src/view/com/composer/Composer.tsx:759
 msgid "Discard draft?"
 msgstr "Відхилити чернетку?"
 
-#: src/view/com/composer/Composer.tsx:948
+#: src/view/com/composer/Composer.tsx:949
 msgid "Discard post?"
 msgstr "Не зберігати пост?"
 
@@ -2743,7 +2788,7 @@ msgstr "Відкрити для себе нові стрічки"
 msgid "Dismiss"
 msgstr "Відхилити"
 
-#: src/view/com/composer/Composer.tsx:1761
+#: src/view/com/composer/Composer.tsx:1758
 msgid "Dismiss error"
 msgstr "Пропустити помилку"
 
@@ -2810,7 +2855,7 @@ msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:149
 #: src/components/dialogs/BirthDateSettings.tsx:156
-#: src/components/dms/ReportDialog.tsx:314
+#: src/components/dms/ReportDialog.tsx:319
 #: src/components/forms/DateField/index.tsx:103
 #: src/components/forms/DateField/index.tsx:109
 #: src/components/Select/index.tsx:185
@@ -2823,7 +2868,7 @@ msgstr ""
 #: src/view/com/auth/server-input/index.tsx:233
 #: src/view/com/composer/labels/LabelsBtn.tsx:223
 #: src/view/com/composer/labels/LabelsBtn.tsx:230
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:345
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:281
 #: src/view/com/composer/videos/SubtitleDialog.tsx:168
 #: src/view/com/composer/videos/SubtitleDialog.tsx:178
 #: src/view/com/modals/CropImage.web.tsx:112
@@ -2959,7 +3004,7 @@ msgstr ""
 msgid "Edit Moderation List"
 msgstr "Редагувати список модерації"
 
-#: src/Navigation.tsx:355
+#: src/Navigation.tsx:356
 #: src/view/screens/Feeds.tsx:518
 msgid "Edit My Feeds"
 msgstr "Редагувати мої стрічки"
@@ -3001,7 +3046,7 @@ msgstr "Редагувати список користувачів"
 msgid "Edit who can reply"
 msgstr "Редагувати, хто може відповідати"
 
-#: src/Navigation.tsx:593
+#: src/Navigation.tsx:594
 msgid "Edit your starter pack"
 msgstr "Редагувати вашу власну підбірку"
 
@@ -3121,8 +3166,8 @@ msgstr ""
 msgid "Enable trending videos in your Discover feed"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:146
-#: src/screens/Messages/Settings.tsx:149
+#: src/screens/Messages/Settings.tsx:135
+#: src/screens/Messages/Settings.tsx:138
 #: src/screens/Moderation/index.tsx:411
 msgid "Enabled"
 msgstr "Увімкнено"
@@ -3191,7 +3236,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1846
+#: src/view/com/composer/Composer.tsx:1843
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr "Помилка"
@@ -3236,8 +3281,8 @@ msgstr "Всі можуть відповідати"
 msgid "Everybody can reply to this post."
 msgstr "Всі можуть відповідати на цей пост."
 
-#: src/screens/Messages/Settings.tsx:99
-#: src/screens/Messages/Settings.tsx:102
+#: src/screens/Messages/Settings.tsx:88
+#: src/screens/Messages/Settings.tsx:91
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:164
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:174
 msgid "Everyone"
@@ -3336,11 +3381,16 @@ msgstr "Відверто або потенційно проблемний вмі
 msgid "Explicit sexual images."
 msgstr "Відверті сексуальні зображення."
 
-#: src/Navigation.tsx:750
+#: src/Navigation.tsx:759
 #: src/screens/Search/Shell.tsx:307
-#: src/view/shell/desktop/LeftNav.tsx:688
-#: src/view/shell/Drawer.tsx:403
+#: src/view/shell/desktop/LeftNav.tsx:689
+#: src/view/shell/Drawer.tsx:414
 msgid "Explore"
+msgstr ""
+
+#: src/components/WelcomeModal.tsx:168
+#: src/components/WelcomeModal.tsx:177
+msgid "Explore the app"
 msgstr ""
 
 #: src/screens/Settings/AccountSettings.tsx:152
@@ -3367,7 +3417,7 @@ msgstr "Зовнішні медіа"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "Зовнішні медіа можуть дозволяти вебсайтам збирати інформацію про вас та ваш пристрій. Інформація не надсилається та не запитується, допоки не натиснуто кнопку «Відтворити»."
 
-#: src/Navigation.tsx:374
+#: src/Navigation.tsx:375
 #: src/screens/Settings/ExternalMediaPreferences.tsx:34
 msgid "External Media Preferences"
 msgstr "Налаштування зовнішніх медіа"
@@ -3429,7 +3479,7 @@ msgstr "Не вдалось видалити власну підбірку"
 msgid "Failed to follow all suggested accounts, please try again"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:270
+#: src/screens/Messages/ChatList.tsx:281
 #: src/screens/Messages/Inbox.tsx:208
 msgid "Failed to load conversations"
 msgstr ""
@@ -3441,7 +3491,7 @@ msgstr ""
 msgid "Failed to load feeds preferences"
 msgstr "Не вдалося завантажити параметри стрічок"
 
-#: src/components/dialogs/GifSelect.tsx:224
+#: src/components/dialogs/GifSelect.tsx:213
 msgid "Failed to load GIFs"
 msgstr "Не вдалося завантажити GIF"
 
@@ -3500,6 +3550,10 @@ msgstr ""
 msgid "Failed to remove verification"
 msgstr ""
 
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:87
+msgid "Failed to resolve location. Please try again."
+msgstr ""
+
 #: src/lib/media/save-image.ts:28
 msgid "Failed to save image: {0}"
 msgstr "Не вдалося зберегти зображення: {0}"
@@ -3523,7 +3577,7 @@ msgid "Failed to send email, please try again."
 msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:254
-#: src/screens/Messages/components/ChatDisabled.tsx:87
+#: src/screens/Messages/components/ChatDisabled.tsx:94
 msgid "Failed to submit appeal, please try again."
 msgstr "Не вдалося подати апеляцію. Будь ласка, спробуйте ще раз."
 
@@ -3548,7 +3602,7 @@ msgstr "Не вдалося оновити стрічки"
 msgid "Failed to update notification declaration"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:50
+#: src/screens/Messages/Settings.tsx:39
 msgid "Failed to update settings"
 msgstr "Не вдалося оновити налаштування"
 
@@ -3567,7 +3621,7 @@ msgstr ""
 msgid "Failed to verify handle. Please try again."
 msgstr "Не вдалось підтвердити псевдонім. Будь ласка, спробуйте ще раз."
 
-#: src/Navigation.tsx:290
+#: src/Navigation.tsx:291
 msgid "Feed"
 msgstr "Стрічка"
 
@@ -3598,7 +3652,7 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:106
 #: src/view/shell/desktop/RightNav.tsx:107
-#: src/view/shell/Drawer.tsx:357
+#: src/view/shell/Drawer.tsx:368
 msgid "Feedback"
 msgstr "Зворотний зв'язок"
 
@@ -3608,14 +3662,14 @@ msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr ""
 
-#: src/Navigation.tsx:573
+#: src/Navigation.tsx:574
 #: src/screens/Search/SearchResults.tsx:73
 #: src/screens/StarterPack/StarterPackScreen.tsx:190
 #: src/view/screens/Feeds.tsx:511
 #: src/view/screens/Profile.tsx:230
 #: src/view/screens/SavedFeeds.tsx:104
-#: src/view/shell/desktop/LeftNav.tsx:726
-#: src/view/shell/Drawer.tsx:519
+#: src/view/shell/desktop/LeftNav.tsx:727
+#: src/view/shell/Drawer.tsx:530
 msgid "Feeds"
 msgstr "Стрічки"
 
@@ -3665,6 +3719,10 @@ msgstr ""
 #: src/screens/Onboarding/StepFinished.tsx:591
 msgid "Finalizing"
 msgstr "Завершення"
+
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:154
+msgid "Finally! Keep track of posts that matter to you. Save them to revisit anytime."
+msgstr ""
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:48
 #: src/view/com/posts/FollowingEmptyState.tsx:53
@@ -3793,7 +3851,7 @@ msgstr "Читають <0>{0}</0> та <1>{1}</1>"
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr "Читають <0>{0}</0>, <1>{1}</1>, та {2, plural, one {# інші} few {# інші} many {# інші} other {# інші}}"
 
-#: src/Navigation.tsx:244
+#: src/Navigation.tsx:245
 msgid "Followers of @{0} that you know"
 msgstr "Читачі @{0}, яких читаєте ви"
 
@@ -3832,7 +3890,7 @@ msgstr ""
 msgid "Following feed preferences"
 msgstr "Налаштування стрічки тих, кого ви читаєте"
 
-#: src/Navigation.tsx:361
+#: src/Navigation.tsx:362
 #: src/screens/Settings/FollowingFeedPreferences.tsx:56
 msgid "Following Feed Preferences"
 msgstr "Налаштування стрічки тих, кого ви читаєте"
@@ -3858,7 +3916,7 @@ msgstr "Розмір шрифту"
 msgid "Food"
 msgstr "Їжа"
 
-#: src/components/BlockedGeoOverlay.tsx:45
+#: src/components/BlockedGeoOverlay.tsx:56
 msgid "For now, we have made the difficult decision to block access to Bluesky in the state of Mississippi."
 msgstr ""
 
@@ -3926,7 +3984,7 @@ msgstr "Від <0/>"
 msgid "Generate a starter pack"
 msgstr "Згенерувати особисту підбірку"
 
-#: src/view/shell/Drawer.tsx:361
+#: src/view/shell/Drawer.tsx:372
 msgid "Get help"
 msgstr "Допомога"
 
@@ -4035,7 +4093,7 @@ msgstr "Перейти назад"
 msgid "Go Back"
 msgstr "Назад"
 
-#: src/components/dms/ReportDialog.tsx:192
+#: src/components/dms/ReportDialog.tsx:197
 #: src/components/ReportDialog/SelectReportOptionView.tsx:78
 #: src/components/ReportDialog/SubmitView.tsx:110
 #: src/screens/Onboarding/Layout.tsx:121
@@ -4043,6 +4101,12 @@ msgstr "Назад"
 #: src/screens/Signup/BackNextButtons.tsx:35
 msgid "Go back to previous step"
 msgstr "Перейти назад до попереднього кроку"
+
+#: src/screens/Bookmarks/components/EmptyState.tsx:43
+#: src/screens/Bookmarks/components/EmptyState.tsx:51
+msgctxt "Button to go back to the home timeline"
+msgid "Go home"
+msgstr "Перейти на головну"
 
 #: src/view/screens/NotFound.tsx:57
 msgid "Go home"
@@ -4073,8 +4137,8 @@ msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:89
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:75
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:84
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:77
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:86
 #: src/screens/Moderation/index.tsx:214
 msgid "Go to account settings"
 msgstr ""
@@ -4088,8 +4152,8 @@ msgid "Go to next"
 msgstr "Далі"
 
 #: src/components/dms/ConvoMenu.tsx:227
-#: src/view/shell/desktop/LeftNav.tsx:316
-#: src/view/shell/desktop/LeftNav.tsx:322
+#: src/view/shell/desktop/LeftNav.tsx:317
+#: src/view/shell/desktop/LeftNav.tsx:323
 msgid "Go to profile"
 msgstr "Перейти до облікового запису"
 
@@ -4136,7 +4200,7 @@ msgstr "Тактильний відгук"
 msgid "Harassment, trolling, or intolerance"
 msgstr "Домагання, тролінг або нетерпимість"
 
-#: src/Navigation.tsx:538
+#: src/Navigation.tsx:539
 msgid "Hashtag"
 msgstr "Хештег"
 
@@ -4157,7 +4221,7 @@ msgstr "Виникли проблеми?"
 #: src/screens/Settings/Settings.tsx:240
 #: src/view/shell/desktop/RightNav.tsx:124
 #: src/view/shell/desktop/RightNav.tsx:125
-#: src/view/shell/Drawer.tsx:370
+#: src/view/shell/Drawer.tsx:381
 msgid "Help"
 msgstr "Довідка"
 
@@ -4298,11 +4362,11 @@ msgstr "Хм, ми не змогли завантажити цей сервіс 
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Чекай-но! Ми поступово даємо доступ до відео, а ви поки що чекаєте в черзі. Спробуйте пізніше!"
 
-#: src/Navigation.tsx:745
-#: src/Navigation.tsx:765
+#: src/Navigation.tsx:754
+#: src/Navigation.tsx:774
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
-#: src/view/shell/desktop/LeftNav.tsx:670
-#: src/view/shell/Drawer.tsx:429
+#: src/view/shell/desktop/LeftNav.tsx:671
+#: src/view/shell/Drawer.tsx:440
 msgid "Home"
 msgstr "Головна"
 
@@ -4493,6 +4557,10 @@ msgstr ""
 msgid "Introducing activity notifications"
 msgstr ""
 
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:37
+msgid "Introducing saved posts AKA bookmarks"
+msgstr ""
+
 #: src/screens/Login/LoginForm.tsx:156
 #: src/screens/Settings/components/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
@@ -4542,6 +4610,10 @@ msgstr "Запросіть друзів стежити за вашими улю�
 msgid "Invites, but personal"
 msgstr "Запрошення окрім особистих"
 
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:86
+msgid "Is your location not accurate? <0>Tap here to confirm your location.</0>"
+msgstr ""
+
 #: src/screens/Signup/StepInfo/index.tsx:293
 msgid "It's correct"
 msgstr "Все вірно"
@@ -4554,7 +4626,7 @@ msgstr ""
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "Зараз ви на самоті. Додайте користувачів до власної підбірки шукаючи їх вище."
 
-#: src/view/com/composer/Composer.tsx:1780
+#: src/view/com/composer/Composer.tsx:1777
 msgid "Job ID: {0}"
 msgstr "Вакансія: {0}"
 
@@ -4626,7 +4698,7 @@ msgstr "Мітки на вашому обліковому записі"
 msgid "Labels on your content"
 msgstr "Мітки на вашому контенті"
 
-#: src/Navigation.tsx:217
+#: src/Navigation.tsx:218
 msgid "Language Settings"
 msgstr "Налаштування мови"
 
@@ -4640,11 +4712,11 @@ msgstr "Мови"
 msgid "Larger"
 msgstr "Більше"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:139
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:187
 msgid "Last initiated {timeAgo} ago"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:137
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
 msgid "Last initiated just now"
 msgstr ""
 
@@ -4778,7 +4850,7 @@ msgid "Like"
 msgstr "Вподобати"
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
-#: src/components/PostControls/index.tsx:253
+#: src/components/PostControls/index.tsx:269
 msgid "Like ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -4791,7 +4863,7 @@ msgstr "Вподобати 10 постів"
 msgid "Like 10 posts to train the Discover feed"
 msgstr "Вподобати 10 постів задля тренування Стрічки відкриття"
 
-#: src/Navigation.tsx:451
+#: src/Navigation.tsx:452
 msgid "Like notifications"
 msgstr ""
 
@@ -4803,8 +4875,8 @@ msgstr "Вподобати цю стрічку"
 msgid "Like this labeler"
 msgstr ""
 
-#: src/Navigation.tsx:295
-#: src/Navigation.tsx:300
+#: src/Navigation.tsx:296
+#: src/Navigation.tsx:301
 msgid "Liked by"
 msgstr "Вподобано"
 
@@ -4839,11 +4911,11 @@ msgstr "Уподобання"
 msgid "Likes of your reposts"
 msgstr ""
 
-#: src/Navigation.tsx:475
+#: src/Navigation.tsx:476
 msgid "Likes of your reposts notifications"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:466
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:472
 msgid "Likes on this post"
 msgstr "Уподобання цього посту"
 
@@ -4852,7 +4924,7 @@ msgstr "Уподобання цього посту"
 msgid "Linear"
 msgstr ""
 
-#: src/Navigation.tsx:250
+#: src/Navigation.tsx:251
 msgid "List"
 msgstr "Список"
 
@@ -4914,12 +4986,12 @@ msgctxt "toast"
 msgid "List unmuted"
 msgstr "Список більше не ігноровано"
 
-#: src/Navigation.tsx:171
+#: src/Navigation.tsx:172
 #: src/view/screens/Lists.tsx:65
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
-#: src/view/shell/desktop/LeftNav.tsx:744
-#: src/view/shell/Drawer.tsx:534
+#: src/view/shell/desktop/LeftNav.tsx:745
+#: src/view/shell/Drawer.tsx:545
 msgid "Lists"
 msgstr "Списки"
 
@@ -4967,7 +5039,7 @@ msgstr "Завантажити нові пости"
 msgid "Loading..."
 msgstr "Завантаження..."
 
-#: src/Navigation.tsx:320
+#: src/Navigation.tsx:321
 msgid "Log"
 msgstr "Звіт"
 
@@ -4980,7 +5052,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:131
-#: src/view/shell/Drawer.tsx:672
+#: src/view/shell/Drawer.tsx:709
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr "Лого від <0>@sawaratsuki.bsky.social</0>"
 
@@ -5058,7 +5130,7 @@ msgstr "Медіа"
 msgid "Media that may be disturbing or inappropriate for some audiences."
 msgstr "Медіавміст, який може бути тривожним або недоречним для певних глядачів."
 
-#: src/Navigation.tsx:435
+#: src/Navigation.tsx:436
 msgid "Mention notifications"
 msgstr ""
 
@@ -5115,7 +5187,7 @@ msgstr "Повідомлення задовге"
 msgid "Message options"
 msgstr ""
 
-#: src/Navigation.tsx:760
+#: src/Navigation.tsx:769
 msgid "Messages"
 msgstr "Повідомлення"
 
@@ -5124,7 +5196,7 @@ msgctxt "Name of app icon variant"
 msgid "Midnight"
 msgstr ""
 
-#: src/Navigation.tsx:499
+#: src/Navigation.tsx:500
 msgid "Miscellaneous notifications"
 msgstr ""
 
@@ -5138,7 +5210,7 @@ msgstr "Оманливий обліковий запис"
 msgid "Misleading Post"
 msgstr "Оманливий пост"
 
-#: src/Navigation.tsx:176
+#: src/Navigation.tsx:177
 #: src/screens/Moderation/index.tsx:100
 #: src/screens/Settings/Settings.tsx:188
 #: src/screens/Settings/Settings.tsx:191
@@ -5177,7 +5249,7 @@ msgstr "Список модерації оновлено"
 msgid "Moderation lists"
 msgstr "Списки для модерації"
 
-#: src/Navigation.tsx:181
+#: src/Navigation.tsx:182
 #: src/view/screens/ModerationModlists.tsx:65
 msgid "Moderation Lists"
 msgstr "Списки для модерації"
@@ -5186,7 +5258,7 @@ msgstr "Списки для модерації"
 msgid "moderation settings"
 msgstr "Налаштування модерації"
 
-#: src/Navigation.tsx:310
+#: src/Navigation.tsx:311
 msgid "Moderation states"
 msgstr "Статус модерації"
 
@@ -5203,6 +5275,11 @@ msgstr "Модератор вирішив встановити загальне 
 #: src/view/shell/desktop/Feeds.tsx:118
 msgid "More feeds"
 msgstr "Більше стрічок"
+
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:70
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:73
+msgid "More languages..."
+msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:223
 #: src/view/com/profile/ProfileMenu.tsx:229
@@ -5295,7 +5372,7 @@ msgstr "Ігнорувати слова та теги"
 msgid "Muted accounts"
 msgstr "Ігноровані облікові записи"
 
-#: src/Navigation.tsx:186
+#: src/Navigation.tsx:187
 #: src/view/screens/ModerationMutedAccounts.tsx:118
 msgid "Muted Accounts"
 msgstr "Ігноровані облікові записи"
@@ -5363,7 +5440,7 @@ msgstr ""
 msgid "Navigates to the next screen"
 msgstr "Переходить до наступного екрана"
 
-#: src/view/shell/Drawer.tsx:77
+#: src/view/shell/Drawer.tsx:78
 msgid "Navigates to your profile"
 msgstr "Переходить до вашого профілю"
 
@@ -5403,8 +5480,8 @@ msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}
 msgstr ""
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
-#: src/screens/Messages/ChatList.tsx:390
-#: src/screens/Messages/ChatList.tsx:397
+#: src/screens/Messages/ChatList.tsx:401
+#: src/screens/Messages/ChatList.tsx:408
 msgid "New chat"
 msgstr "Новий чат"
 
@@ -5413,11 +5490,12 @@ msgid "New email address"
 msgstr ""
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:74
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:73
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:63
 msgid "New Feature"
 msgstr ""
 
-#: src/Navigation.tsx:467
+#: src/Navigation.tsx:468
 msgid "New follower notifications"
 msgstr ""
 
@@ -5466,7 +5544,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "Новий пост"
 
-#: src/view/shell/desktop/LeftNav.tsx:579
+#: src/view/shell/desktop/LeftNav.tsx:580
 msgctxt "action"
 msgid "New Post"
 msgstr "Новий пост"
@@ -5548,7 +5626,7 @@ msgstr "Відсутня панель DNS"
 msgid "No expiry set"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:230
+#: src/components/dialogs/GifSelect.tsx:219
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr "GIF-файлів не знайдено. З Tenor можуть бути проблеми."
 
@@ -5582,8 +5660,8 @@ msgstr ""
 msgid "No notifications yet!"
 msgstr "Ще ніяких сповіщень!"
 
-#: src/screens/Messages/Settings.tsx:117
-#: src/screens/Messages/Settings.tsx:120
+#: src/screens/Messages/Settings.tsx:106
+#: src/screens/Messages/Settings.tsx:109
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
@@ -5642,7 +5720,7 @@ msgstr "Нічого не знайдено за запитом «{query}»"
 msgid "No results."
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:228
+#: src/components/dialogs/GifSelect.tsx:217
 msgid "No search results found for \"{search}\"."
 msgstr "За запитом \"{search}\" нічого не знайдено."
 
@@ -5684,10 +5762,14 @@ msgstr ""
 msgid "Not followed by anyone you're following"
 msgstr ""
 
-#: src/Navigation.tsx:166
+#: src/Navigation.tsx:167
 #: src/view/screens/Profile.tsx:125
 msgid "Not Found"
 msgstr "Не знайдено"
+
+#: src/components/BlockedGeoOverlay.tsx:126
+msgid "Not in Mississippi?"
+msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:497
 msgid "Note about sharing"
@@ -5701,26 +5783,30 @@ msgstr "Примітка: Bluesky є відкритою і публічною м
 msgid "Note: This post is only visible to logged-in users."
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:291
+#: src/screens/Messages/ChatList.tsx:302
 msgid "Nothing here"
 msgstr "Тут нічого немає"
 
-#: src/Navigation.tsx:421
-#: src/Navigation.tsx:568
+#: src/screens/Bookmarks/components/EmptyState.tsx:35
+msgid "Nothing saved yet"
+msgstr ""
+
+#: src/Navigation.tsx:422
+#: src/Navigation.tsx:569
 #: src/view/screens/Notifications.tsx:136
 msgid "Notification settings"
 msgstr "Налаштування сповіщень"
 
-#: src/screens/Messages/Settings.tsx:139
+#: src/screens/Messages/Settings.tsx:128
 msgid "Notification sounds"
 msgstr "Звуки сповіщень"
 
-#: src/screens/Messages/Settings.tsx:136
+#: src/screens/Messages/Settings.tsx:125
 msgid "Notification Sounds"
 msgstr "Звуки сповіщень"
 
-#: src/Navigation.tsx:563
-#: src/Navigation.tsx:755
+#: src/Navigation.tsx:564
+#: src/Navigation.tsx:764
 #: src/screens/Notifications/ActivityList.tsx:29
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:90
 #: src/screens/Settings/NotificationSettings/index.tsx:92
@@ -5737,8 +5823,8 @@ msgstr "Звуки сповіщень"
 #: src/screens/Settings/Settings.tsx:199
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
-#: src/view/shell/desktop/LeftNav.tsx:707
-#: src/view/shell/Drawer.tsx:482
+#: src/view/shell/desktop/LeftNav.tsx:708
+#: src/view/shell/Drawer.tsx:493
 msgid "Notifications"
 msgstr "Сповіщення"
 
@@ -5769,8 +5855,8 @@ msgstr "Нагота чи матеріали для дорослих не поз
 msgid "Off"
 msgstr "Вимкнено"
 
-#: src/components/dialogs/GifSelect.tsx:267
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:365
+#: src/components/dialogs/GifSelect.tsx:256
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:301
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
 msgstr "О, ні!"
@@ -5788,7 +5874,7 @@ msgid "OK"
 msgstr ""
 
 #: src/screens/Login/PasswordUpdatedForm.tsx:37
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:673
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:695
 msgid "Okay"
 msgstr "Добре"
 
@@ -5807,11 +5893,11 @@ msgstr "на<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "Скинути ознайомлення"
 
-#: src/view/com/composer/Composer.tsx:358
+#: src/view/com/composer/Composer.tsx:359
 msgid "One or more GIFs is missing alt text."
 msgstr "Одна або декілька GIF не мають описового тексту."
 
-#: src/view/com/composer/Composer.tsx:355
+#: src/view/com/composer/Composer.tsx:356
 msgid "One or more images is missing alt text."
 msgstr "Для одного або кількох зображень відсутній опис."
 
@@ -5823,7 +5909,7 @@ msgstr ""
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:365
+#: src/view/com/composer/Composer.tsx:366
 msgid "One or more videos is missing alt text."
 msgstr "Одне або більше відео не мають описового тексту."
 
@@ -5880,7 +5966,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1428
+#: src/view/com/composer/Composer.tsx:1429
 msgid "Open emoji picker"
 msgstr "Емоджі"
 
@@ -5917,7 +6003,7 @@ msgstr "Відкрити налаштування ігнорування слі�
 msgid "Open pack"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/index.tsx:62
+#: src/components/PostControls/PostMenu/index.tsx:65
 msgid "Open post options menu"
 msgstr "Відкрити меню налаштувань посту"
 
@@ -5926,7 +6012,7 @@ msgstr "Відкрити меню налаштувань посту"
 msgid "Open profile"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/index.tsx:87
+#: src/components/PostControls/ShareMenu/index.tsx:90
 msgid "Open share menu"
 msgstr ""
 
@@ -5980,7 +6066,7 @@ msgstr "Відкриє редактор"
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1429
+#: src/view/com/composer/Composer.tsx:1430
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -6018,7 +6104,7 @@ msgstr ""
 msgid "Opens password reset form"
 msgstr "Відкриває форму скидання пароля"
 
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:58
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:103
 msgid "Opens post language settings"
 msgstr ""
 
@@ -6027,7 +6113,7 @@ msgstr ""
 msgid "Opens this profile"
 msgstr "Відкриває цей профіль"
 
-#: src/components/dms/ReportDialog.tsx:221
+#: src/components/dms/ReportDialog.tsx:226
 #: src/components/ReportDialog/SubmitView.tsx:168
 msgid "Optionally provide additional information below:"
 msgstr "За бажанням надайте додаткову інформацію нижче:"
@@ -6078,11 +6164,11 @@ msgstr "Інший обліковий запис"
 msgid "Our blog post"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:348
+#: src/components/dms/ReportDialog.tsx:353
 msgid "Our moderation team has received your report."
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:28
+#: src/screens/Messages/components/ChatDisabled.tsx:29
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr "Наші модератори переглянули скарги та вирішили позбавити вас доступу до чатів у Bluesky."
 
@@ -6136,11 +6222,11 @@ msgstr "Призупинити відео"
 msgid "People"
 msgstr "Люди"
 
-#: src/Navigation.tsx:237
+#: src/Navigation.tsx:238
 msgid "People followed by @{0}"
 msgstr "Люди, яких читає @{0}"
 
-#: src/Navigation.tsx:230
+#: src/Navigation.tsx:231
 msgid "People following @{0}"
 msgstr "Люди, які читають @{0}"
 
@@ -6346,7 +6432,7 @@ msgstr ""
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "Просимо пояснити чому ви вважаєте, що ця мітка була помилково додана до {0}"
 
-#: src/screens/Messages/components/ChatDisabled.tsx:110
+#: src/screens/Messages/components/ChatDisabled.tsx:117
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr "Будь ласка, поясніть, чому ви вважаєте, що ваші чати були хибно відключені"
 
@@ -6355,7 +6441,7 @@ msgstr "Будь ласка, поясніть, чому ви вважаєте, �
 msgid "Please go back, or activate this element to return to the start of the active content."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:98
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:97
 msgid "Please provide any additional details you feel moderators may need in order to properly assess your Age Assurance status."
 msgstr ""
 
@@ -6399,12 +6485,12 @@ msgctxt "description"
 msgid "Post"
 msgstr "Запостити"
 
-#: src/view/com/composer/Composer.tsx:1075
+#: src/view/com/composer/Composer.tsx:1076
 msgctxt "action"
 msgid "Post"
 msgstr "Запостити"
 
-#: src/view/com/composer/Composer.tsx:1073
+#: src/view/com/composer/Composer.tsx:1074
 msgctxt "action"
 msgid "Post All"
 msgstr "Опублікувати все"
@@ -6413,10 +6499,10 @@ msgstr "Опублікувати все"
 msgid "Post blocked"
 msgstr ""
 
-#: src/Navigation.tsx:263
-#: src/Navigation.tsx:270
-#: src/Navigation.tsx:277
-#: src/Navigation.tsx:284
+#: src/Navigation.tsx:264
+#: src/Navigation.tsx:271
+#: src/Navigation.tsx:278
+#: src/Navigation.tsx:285
 msgid "Post by @{0}"
 msgstr "Пост від @{0}"
 
@@ -6450,13 +6536,13 @@ msgstr "Пост приховано вами"
 msgid "Post interaction settings"
 msgstr "Налаштування взаємодії з постом"
 
-#: src/Navigation.tsx:197
+#: src/Navigation.tsx:198
 #: src/screens/ModerationInteractionSettings/index.tsx:34
 msgid "Post Interaction Settings"
 msgstr ""
 
 #. Accessibility label for button that opens dialog to choose post language settings
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:53
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:98
 msgid "Post language selection"
 msgstr ""
 
@@ -6469,6 +6555,10 @@ msgstr "Пост не знайдено"
 msgctxt "toast"
 msgid "Post pinned"
 msgstr "Пост закріплено"
+
+#: src/components/PostControls/BookmarkButton.tsx:59
+msgid "Post saved"
+msgstr ""
 
 #: src/state/queries/pinned-post.ts:61
 msgctxt "toast"
@@ -6542,8 +6632,8 @@ msgstr "Конфіденційність"
 msgid "Privacy and security"
 msgstr "Конфіденційність та безпека"
 
-#: src/Navigation.tsx:406
-#: src/Navigation.tsx:414
+#: src/Navigation.tsx:407
+#: src/Navigation.tsx:415
 #: src/screens/Settings/ActivityPrivacySettings.tsx:40
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:45
 msgid "Privacy and Security"
@@ -6555,16 +6645,16 @@ msgstr ""
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:35
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:102
-#: src/Navigation.tsx:330
+#: src/Navigation.tsx:331
 #: src/screens/Settings/AboutSettings.tsx:92
 #: src/screens/Settings/AboutSettings.tsx:95
 #: src/view/screens/PrivacyPolicy.tsx:31
-#: src/view/shell/Drawer.tsx:667
-#: src/view/shell/Drawer.tsx:668
+#: src/view/shell/Drawer.tsx:704
+#: src/view/shell/Drawer.tsx:705
 msgid "Privacy Policy"
 msgstr "Політика конфіденційності"
 
-#: src/view/com/composer/Composer.tsx:1843
+#: src/view/com/composer/Composer.tsx:1840
 msgid "Processing video..."
 msgstr "Обробка відео..."
 
@@ -6579,9 +6669,9 @@ msgid "profile"
 msgstr "профіль"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:316
-#: src/view/shell/desktop/LeftNav.tsx:762
-#: src/view/shell/Drawer.tsx:76
-#: src/view/shell/Drawer.tsx:559
+#: src/view/shell/desktop/LeftNav.tsx:786
+#: src/view/shell/Drawer.tsx:77
+#: src/view/shell/Drawer.tsx:596
 msgid "Profile"
 msgstr "Профіль"
 
@@ -6603,22 +6693,22 @@ msgid "Public, sharable lists which can be used to drive feeds."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1055
+#: src/view/com/composer/Composer.tsx:1056
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1048
+#: src/view/com/composer/Composer.tsx:1049
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1033
+#: src/view/com/composer/Composer.tsx:1034
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1040
+#: src/view/com/composer/Composer.tsx:1041
 msgid "Publish reply"
 msgstr ""
 
@@ -6650,14 +6740,14 @@ msgstr "QR-код завантажено!"
 msgid "QR code saved to your camera roll!"
 msgstr "QR-код збережено до галереї!"
 
-#: src/Navigation.tsx:443
+#: src/Navigation.tsx:444
 msgid "Quote notifications"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:174
-#: src/components/PostControls/RepostButton.tsx:197
-#: src/components/PostControls/RepostButton.web.tsx:84
-#: src/components/PostControls/RepostButton.web.tsx:91
+#: src/components/PostControls/RepostButton.tsx:175
+#: src/components/PostControls/RepostButton.tsx:198
+#: src/components/PostControls/RepostButton.web.tsx:85
+#: src/components/PostControls/RepostButton.web.tsx:92
 msgid "Quote post"
 msgstr "Цитувати пост"
 
@@ -6669,10 +6759,10 @@ msgstr "Цитування посту повторно додано"
 msgid "Quote post was successfully detached"
 msgstr "Цитування посту успішно відкріплено"
 
-#: src/components/PostControls/RepostButton.tsx:173
-#: src/components/PostControls/RepostButton.tsx:195
-#: src/components/PostControls/RepostButton.web.tsx:83
-#: src/components/PostControls/RepostButton.web.tsx:90
+#: src/components/PostControls/RepostButton.tsx:174
+#: src/components/PostControls/RepostButton.tsx:196
+#: src/components/PostControls/RepostButton.web.tsx:84
+#: src/components/PostControls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
 msgstr "Цитування постів вимкнено"
 
@@ -6687,7 +6777,7 @@ msgstr "Налаштування цитування"
 msgid "Quotes"
 msgstr "Цитування"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:450
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:456
 msgid "Quotes of this post"
 msgstr "Цитування цього поста"
 
@@ -6729,7 +6819,7 @@ msgstr ""
 msgid "Read more replies"
 msgstr ""
 
-#: src/components/BlockedGeoOverlay.tsx:29
+#: src/components/BlockedGeoOverlay.tsx:40
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:112
 msgid "Read our blog post"
 msgstr ""
@@ -6748,12 +6838,20 @@ msgstr "Читати Політику конфіденційності Bluesky"
 msgid "Read the Bluesky Terms of Service"
 msgstr "Читати Умови використання Bluesky"
 
+#: src/components/WelcomeModal.tsx:146
+msgid "Real conversations."
+msgstr ""
+
+#: src/components/WelcomeModal.tsx:144
+msgid "Real people."
+msgstr ""
+
 #: src/screens/Takendown.tsx:162
 #: src/screens/Takendown.tsx:170
 msgid "Reason for appeal"
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:212
+#: src/components/dms/ReportDialog.tsx:217
 msgid "Reason:"
 msgstr "Підстава:"
 
@@ -6769,7 +6867,7 @@ msgstr ""
 msgid "Recent Searches"
 msgstr "Останні запити"
 
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:274
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:210
 msgid "Recently used"
 msgstr ""
 
@@ -6790,7 +6888,7 @@ msgstr ""
 msgid "Reject chat request"
 msgstr ""
 
-#: src/screens/Messages/ChatList.tsx:274
+#: src/screens/Messages/ChatList.tsx:285
 #: src/screens/Messages/Inbox.tsx:212
 msgid "Reload conversations"
 msgstr "Перезавантажити розмови"
@@ -6802,6 +6900,7 @@ msgstr "Перезавантажити розмови"
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
+#: src/screens/Bookmarks/index.tsx:255
 #: src/screens/Settings/Settings.tsx:662
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 #: src/view/com/posts/PostFeedErrorMessage.tsx:217
@@ -6865,6 +6964,11 @@ msgstr "Прибрати зі швидкого доступу?"
 msgid "Remove from saved feeds"
 msgstr "Прибрати зі збережених стрічок"
 
+#: src/components/PostControls/BookmarkButton.tsx:128
+#: src/screens/Bookmarks/index.tsx:249
+msgid "Remove from saved posts"
+msgstr ""
+
 #: src/components/FeedCard.tsx:338
 msgid "Remove from your feeds?"
 msgstr ""
@@ -6886,8 +6990,8 @@ msgstr "Видалити ігноровані слова з вашого спи�
 msgid "Remove profile"
 msgstr "Вилучити обліковий запис"
 
-#: src/components/PostControls/RepostButton.tsx:151
-#: src/components/PostControls/RepostButton.tsx:161
+#: src/components/PostControls/RepostButton.tsx:152
+#: src/components/PostControls/RepostButton.tsx:162
 msgid "Remove repost"
 msgstr "Видалити репост"
 
@@ -6930,6 +7034,11 @@ msgstr "Видалено зі списку"
 #: src/screens/List/ListHiddenScreen.tsx:94
 msgid "Removed from saved feeds"
 msgstr "Вилучено зі збережених стрічок"
+
+#: src/components/PostControls/BookmarkButton.tsx:94
+#: src/screens/Bookmarks/index.tsx:207
+msgid "Removed from saved posts"
+msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Removed from starter pack"
@@ -6988,13 +7097,13 @@ msgstr "Відповіді вимкнуто"
 msgid "Replies to this post are disabled."
 msgstr "Відповіді в цьому пості вимкнено."
 
-#: src/view/com/composer/Composer.tsx:1071
+#: src/view/com/composer/Composer.tsx:1072
 msgctxt "action"
 msgid "Reply"
 msgstr "Відповісти"
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
-#: src/components/PostControls/index.tsx:207
+#: src/components/PostControls/index.tsx:223
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
@@ -7008,7 +7117,7 @@ msgstr "Відповідь прихована автором гілки"
 msgid "Reply Hidden by You"
 msgstr "Відповідь прихована вами"
 
-#: src/Navigation.tsx:427
+#: src/Navigation.tsx:428
 msgid "Reply notifications"
 msgstr ""
 
@@ -7081,7 +7190,7 @@ msgstr "Поскаржитись на пост"
 msgid "Report starter pack"
 msgstr "Поскаржитись на підбірку"
 
-#: src/components/dms/ReportDialog.tsx:345
+#: src/components/dms/ReportDialog.tsx:350
 msgid "Report submitted"
 msgstr ""
 
@@ -7099,8 +7208,8 @@ msgstr "Поскаржитись на цю стрічку"
 msgid "Report this list"
 msgstr "Поскаржитись на цей список"
 
-#: src/components/dms/ReportDialog.tsx:59
-#: src/components/dms/ReportDialog.tsx:180
+#: src/components/dms/ReportDialog.tsx:61
+#: src/components/dms/ReportDialog.tsx:185
 #: src/components/moderation/ReportDialog/copy.ts:43
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Report this message"
@@ -7121,26 +7230,26 @@ msgstr "Поскаржитись на цю підбірку"
 msgid "Report this user"
 msgstr "Поскаржитись на цього користувача"
 
-#: src/components/PostControls/RepostButton.tsx:152
-#: src/components/PostControls/RepostButton.tsx:163
-#: src/components/PostControls/RepostButton.web.tsx:68
-#: src/components/PostControls/RepostButton.web.tsx:75
+#: src/components/PostControls/RepostButton.tsx:153
+#: src/components/PostControls/RepostButton.tsx:164
+#: src/components/PostControls/RepostButton.web.tsx:69
+#: src/components/PostControls/RepostButton.web.tsx:76
 msgctxt "action"
 msgid "Repost"
 msgstr "Репост"
 
 #. Accessibility label for the repost button when the post has not been reposted, verb form followed by number of reposts and noun form
-#: src/components/PostControls/RepostButton.tsx:76
+#: src/components/PostControls/RepostButton.tsx:77
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr "Репости ({0, plural, one {# репост} few {# репости} many {# репостів} other {# репостів}})"
 
-#: src/Navigation.tsx:459
+#: src/Navigation.tsx:460
 msgid "Repost notifications"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.tsx:144
-#: src/components/PostControls/RepostButton.web.tsx:43
-#: src/components/PostControls/RepostButton.web.tsx:103
+#: src/components/PostControls/RepostButton.tsx:145
+#: src/components/PostControls/RepostButton.web.tsx:44
+#: src/components/PostControls/RepostButton.web.tsx:104
 #: src/screens/StarterPack/StarterPackScreen.tsx:561
 msgid "Repost or quote post"
 msgstr "Репостити або цитувати"
@@ -7168,7 +7277,7 @@ msgstr "Ви зробили репост"
 msgid "Reposts"
 msgstr ""
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:432
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:438
 msgid "Reposts of this post"
 msgstr "Репости цього поста"
 
@@ -7178,7 +7287,7 @@ msgstr "Репости цього поста"
 msgid "Reposts of your reposts"
 msgstr ""
 
-#: src/Navigation.tsx:483
+#: src/Navigation.tsx:484
 msgid "Reposts of your reposts notifications"
 msgstr ""
 
@@ -7257,7 +7366,7 @@ msgstr "Повторити останню дію, яка спричинила п
 #: src/components/StarterPack/ProfileStarterPacks.tsx:346
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
-#: src/screens/Messages/ChatList.tsx:280
+#: src/screens/Messages/ChatList.tsx:291
 #: src/screens/Messages/components/MessageListError.tsx:25
 #: src/screens/Messages/Inbox.tsx:218
 #: src/screens/Onboarding/StepInterests/index.tsx:226
@@ -7357,9 +7466,21 @@ msgstr "Зберегти QR-код"
 msgid "Save to my feeds"
 msgstr "Зберегти до моїх стрічок"
 
+#: src/view/shell/desktop/LeftNav.tsx:764
+#: src/view/shell/Drawer.tsx:571
+msgctxt "link to bookmarks screen"
+msgid "Saved"
+msgstr ""
+
 #: src/view/screens/SavedFeeds.tsx:172
 msgid "Saved Feeds"
 msgstr "Збережені стрічки"
+
+#: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:143
+#: src/Navigation.tsx:608
+#: src/screens/Bookmarks/index.tsx:55
+msgid "Saved Posts"
+msgstr ""
 
 #: src/screens/Profile/components/ProfileFeedHeader.tsx:132
 #: src/view/screens/ProfileList.tsx:372
@@ -7369,6 +7490,10 @@ msgstr "Збережено до ваших стрічок"
 #: src/view/com/modals/CropImage.web.tsx:105
 msgid "Saves image crop settings"
 msgstr "Зберігає налаштування обрізання зображення"
+
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:484
+msgid "Saves of this post"
+msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
@@ -7403,7 +7528,7 @@ msgstr "Прогорнути вгору"
 msgid "Search"
 msgstr "Пошук"
 
-#: src/Navigation.tsx:256
+#: src/Navigation.tsx:257
 #: src/screens/Profile/ProfileSearch.tsx:37
 msgid "Search @{0}'s posts"
 msgstr ""
@@ -7450,7 +7575,7 @@ msgstr ""
 msgid "Search for posts, users, or feeds"
 msgstr ""
 
-#: src/components/dialogs/GifSelect.tsx:178
+#: src/components/dialogs/GifSelect.tsx:167
 msgid "Search GIFs"
 msgstr "Пошук GIF-файлів"
 
@@ -7458,8 +7583,8 @@ msgstr "Пошук GIF-файлів"
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:257
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:258
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:193
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:194
 msgid "Search languages"
 msgstr ""
 
@@ -7477,7 +7602,7 @@ msgstr ""
 msgid "Search profiles"
 msgstr "Пошук профілів"
 
-#: src/components/dialogs/GifSelect.tsx:179
+#: src/components/dialogs/GifSelect.tsx:168
 msgid "Search Tenor"
 msgstr "Пошук Tenor"
 
@@ -7541,6 +7666,10 @@ msgstr ""
 msgid "Select {0}"
 msgstr ""
 
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:58
+msgid "Select {langName}"
+msgstr ""
+
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:67
 msgid "Select a color"
 msgstr "Вибрати колір"
@@ -7585,7 +7714,7 @@ msgstr "Вибрати існуючий обліковий запис"
 msgid "Select GIF"
 msgstr "Вибрати GIF"
 
-#: src/components/dialogs/GifSelect.tsx:305
+#: src/components/dialogs/GifSelect.tsx:294
 msgid "Select GIF \"{0}\""
 msgstr "Вибрати GIF \"{0}\""
 
@@ -7603,7 +7732,7 @@ msgid "Select language..."
 msgstr "Обрати мову..."
 
 #: src/screens/Settings/LanguageSettings.tsx:178
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:290
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:226
 msgid "Select languages"
 msgstr "Вибрати мови"
 
@@ -7614,6 +7743,10 @@ msgstr ""
 #: src/components/ReportDialog/SelectLabelerView.tsx:28
 msgid "Select moderator"
 msgstr "Вибрати модератора"
+
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:45
+msgid "Select post language"
+msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:131
 msgid "Select primary language"
@@ -7632,7 +7765,7 @@ msgstr "Обрати {emojiName} емодзі як ваш аватар"
 msgid "Select the moderation service(s) to report to"
 msgstr "Вибрати сервіс(и) модерації для скарги"
 
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:236
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:172
 msgid "Select up to 3 languages used in this post"
 msgstr ""
 
@@ -7685,7 +7818,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "Надіслати ел. лист"
 
-#: src/view/shell/Drawer.tsx:350
+#: src/view/shell/Drawer.tsx:361
 msgid "Send feedback"
 msgstr "Надіслати відгук"
 
@@ -7702,8 +7835,8 @@ msgstr ""
 msgid "Send post to..."
 msgstr "Надіслати пост до..."
 
-#: src/components/dms/ReportDialog.tsx:271
-#: src/components/dms/ReportDialog.tsx:274
+#: src/components/dms/ReportDialog.tsx:276
+#: src/components/dms/ReportDialog.tsx:279
 #: src/components/ReportDialog/SubmitView.tsx:221
 #: src/components/ReportDialog/SubmitView.tsx:225
 msgid "Send report"
@@ -7758,10 +7891,10 @@ msgstr "Налаштуйте ваш обліковий запис"
 msgid "Sets email for password reset"
 msgstr "Встановлює ел. адресу для скидання пароля"
 
-#: src/Navigation.tsx:212
+#: src/Navigation.tsx:213
 #: src/screens/Settings/Settings.tsx:99
-#: src/view/shell/desktop/LeftNav.tsx:780
-#: src/view/shell/Drawer.tsx:572
+#: src/view/shell/desktop/LeftNav.tsx:804
+#: src/view/shell/Drawer.tsx:609
 msgid "Settings"
 msgstr "Налаштування"
 
@@ -7898,7 +8031,7 @@ msgstr ""
 msgid "Share your favorite feed!"
 msgstr "Поділіться улюбленою стрічкою!"
 
-#: src/Navigation.tsx:315
+#: src/Navigation.tsx:316
 msgid "Shared Preferences Tester"
 msgstr "Тестувальник спільних налаштувань"
 
@@ -8000,7 +8133,7 @@ msgstr "Показати попередження"
 msgid "Show warning and filter from feeds"
 msgstr "Показати попередження і фільтрувати зі стрічки"
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:614
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:636
 msgid "Shows information about when this post was created"
 msgstr ""
 
@@ -8015,6 +8148,8 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:97
 #: src/components/dialogs/Signin.tsx:99
+#: src/components/WelcomeModal.tsx:194
+#: src/components/WelcomeModal.tsx:206
 #: src/screens/Login/index.tsx:122
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/LoginForm.tsx:181
@@ -8068,9 +8203,9 @@ msgstr ""
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
 #: src/screens/Takendown.tsx:85
-#: src/view/shell/desktop/LeftNav.tsx:211
-#: src/view/shell/desktop/LeftNav.tsx:268
-#: src/view/shell/desktop/LeftNav.tsx:271
+#: src/view/shell/desktop/LeftNav.tsx:212
+#: src/view/shell/desktop/LeftNav.tsx:269
+#: src/view/shell/desktop/LeftNav.tsx:272
 msgid "Sign out"
 msgstr "Вийти"
 
@@ -8079,7 +8214,7 @@ msgid "Sign Out"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:285
-#: src/view/shell/desktop/LeftNav.tsx:208
+#: src/view/shell/desktop/LeftNav.tsx:209
 msgid "Sign out?"
 msgstr "Вийти?"
 
@@ -8121,6 +8256,10 @@ msgstr "Менше"
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:91
 msgid "Snoozes the reminder"
+msgstr ""
+
+#: src/components/WelcomeModal.tsx:148
+msgid "Social media you control."
 msgstr ""
 
 #: src/screens/Onboarding/index.tsx:53
@@ -8247,8 +8386,8 @@ msgstr ""
 msgid "Start chat with {displayName}"
 msgstr "Розпочати чат з {displayName}"
 
-#: src/Navigation.tsx:578
-#: src/Navigation.tsx:583
+#: src/Navigation.tsx:579
+#: src/Navigation.tsx:584
 #: src/screens/StarterPack/Wizard/index.tsx:209
 msgid "Starter Pack"
 msgstr "Набір початківця"
@@ -8292,17 +8431,17 @@ msgstr "Крок {0} з {1}"
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Сховище очищено, тепер вам треба перезапустити застосунок."
 
-#: src/Navigation.tsx:305
+#: src/Navigation.tsx:306
 #: src/screens/Settings/Settings.tsx:448
 msgid "Storybook"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:118
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:124
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123
 #: src/components/moderation/LabelsOnMeDialog.tsx:324
 #: src/components/moderation/LabelsOnMeDialog.tsx:325
-#: src/screens/Messages/components/ChatDisabled.tsx:142
-#: src/screens/Messages/components/ChatDisabled.tsx:143
+#: src/screens/Messages/components/ChatDisabled.tsx:149
+#: src/screens/Messages/components/ChatDisabled.tsx:150
 msgid "Submit"
 msgstr "Надіслати"
 
@@ -8382,7 +8521,7 @@ msgctxt "Name of app icon variant"
 msgid "Sunset"
 msgstr ""
 
-#: src/Navigation.tsx:325
+#: src/Navigation.tsx:326
 #: src/view/screens/Support.tsx:31
 #: src/view/screens/Support.tsx:34
 msgid "Support"
@@ -8391,7 +8530,7 @@ msgstr "Підтримка"
 #: src/screens/Settings/Settings.tsx:123
 #: src/screens/Settings/Settings.tsx:137
 #: src/screens/Settings/Settings.tsx:604
-#: src/view/shell/desktop/LeftNav.tsx:246
+#: src/view/shell/desktop/LeftNav.tsx:247
 msgid "Switch account"
 msgstr "Перемкнути обліковий запис"
 
@@ -8400,11 +8539,11 @@ msgstr "Перемкнути обліковий запис"
 msgid "Switch Account"
 msgstr "Перемикнути обліковий запис"
 
-#: src/view/shell/desktop/LeftNav.tsx:109
+#: src/view/shell/desktop/LeftNav.tsx:110
 msgid "Switch accounts"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:345
+#: src/view/shell/desktop/LeftNav.tsx:346
 msgid "Switch to {0}"
 msgstr ""
 
@@ -8425,6 +8564,10 @@ msgstr "Системний журнал"
 #: src/components/dialogs/MutedWords.tsx:282
 msgid "Tags only"
 msgstr "Лише мітки"
+
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:116
+msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
+msgstr ""
 
 #: src/view/com/feeds/MissingFeed.tsx:89
 msgid "Tap for information"
@@ -8485,12 +8628,12 @@ msgstr "Умови"
 #: src/components/dialogs/BirthDateSettings.tsx:135
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:30
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:97
-#: src/Navigation.tsx:335
+#: src/Navigation.tsx:336
 #: src/screens/Settings/AboutSettings.tsx:84
 #: src/screens/Settings/AboutSettings.tsx:87
 #: src/view/screens/TermsOfService.tsx:31
-#: src/view/shell/Drawer.tsx:660
-#: src/view/shell/Drawer.tsx:662
+#: src/view/shell/Drawer.tsx:697
+#: src/view/shell/Drawer.tsx:699
 msgid "Terms of Service"
 msgstr "Умови Використання"
 
@@ -8509,12 +8652,12 @@ msgstr "Використані терміни порушують стандар�
 msgid "Text & tags"
 msgstr "Текст та мітки"
 
-#: src/components/dms/ReportDialog.tsx:229
+#: src/components/dms/ReportDialog.tsx:234
 msgid "Text field"
 msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:288
-#: src/screens/Messages/components/ChatDisabled.tsx:108
+#: src/screens/Messages/components/ChatDisabled.tsx:115
 msgid "Text input field"
 msgstr "Поле вводу тексту"
 
@@ -8529,6 +8672,11 @@ msgstr "Дякуємо. Вашу скаргу було надіслано."
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr "Дякуємо, ви успішно підтвердили адресу електронної пошти. Ви можете закрити цей діалог."
+
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:115
+#: src/components/BlockedGeoOverlay.tsx:169
+msgid "Thanks! You're all set."
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:497
 msgid "That contains the following:"
@@ -8668,7 +8816,7 @@ msgstr "Тема"
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "Немає граничного часу для деактивації облікового запису, повертайтеся коли завгодно."
 
-#: src/components/dialogs/GifSelect.tsx:225
+#: src/components/dialogs/GifSelect.tsx:214
 msgid "There was an issue connecting to Tenor."
 msgstr "Виникла проблема при з'єднанні до Tenor."
 
@@ -8714,7 +8862,7 @@ msgstr "Під час отримання інформації про викор�
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
 msgstr "Виникла проблема під час видалення цієї стрічки. Будь ласка, перевірте з'єднання з інтернетом та спробуйте знов."
 
-#: src/components/dms/ReportDialog.tsx:259
+#: src/components/dms/ReportDialog.tsx:264
 #: src/components/ReportDialog/SubmitView.tsx:88
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "Виникла проблема з надсиланням вашої скарги. Будь ласка, перевірте підключення до Інтернету."
@@ -8753,8 +8901,8 @@ msgstr "Виникла проблема! {0}"
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "Виникла проблема. Перевірте підключення до Інтернету і повторіть спробу."
 
-#: src/components/dialogs/GifSelect.tsx:269
-#: src/view/com/composer/select-language/SelectPostLanguagesDialog.tsx:367
+#: src/components/dialogs/GifSelect.tsx:258
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:303
 #: src/view/com/util/ErrorBoundary.tsx:59
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "У застосунку сталася неочікувана проблема. Будь ласка, повідомте нас, якщо ви отримали це повідомлення!"
@@ -8795,7 +8943,7 @@ msgstr ""
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr "Це звернення буде надіслано до <0>{sourceName}</0>."
 
-#: src/screens/Messages/components/ChatDisabled.tsx:104
+#: src/screens/Messages/components/ChatDisabled.tsx:111
 msgid "This appeal will be sent to Bluesky's moderation service."
 msgstr "Це звернення буде направлено до сервісу модерації Bluesky."
 
@@ -8915,7 +9063,7 @@ msgstr ""
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
 msgstr "Даний сервіс модерації недоступний. Перегляньте деталі нижче. Якщо проблема не зникне, зв'яжіться з нами."
 
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:654
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:676
 msgid "This post claims to have been created on <0>{0}</0>, but was first seen by Bluesky on <1>{1}</1>."
 msgstr "Зазначається, що пост було створено — <0>{0}</0>, але вперше цей пост було оприлюднено на Bluesky — <1>{1}</1>."
 
@@ -8927,11 +9075,15 @@ msgstr ""
 msgid "This post is only visible to logged-in users."
 msgstr ""
 
+#: src/screens/Bookmarks/index.tsx:245
+msgid "This post was deleted by its author"
+msgstr ""
+
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:712
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Цей пост буде приховано від стрічок та гілок. Цю дію не можна скасувати."
 
-#: src/view/com/composer/Composer.tsx:474
+#: src/view/com/composer/Composer.tsx:475
 msgid "This post's author has disabled quote posts."
 msgstr "Автор цього поста вимкнув можливість його цитувати."
 
@@ -9023,7 +9175,7 @@ msgstr "Налаштування гілок"
 msgid "Threaded"
 msgstr ""
 
-#: src/Navigation.tsx:368
+#: src/Navigation.tsx:369
 msgid "Threads Preferences"
 msgstr "Налаштування обговорень"
 
@@ -9073,7 +9225,7 @@ msgstr "Топ"
 msgid "Top replies first"
 msgstr ""
 
-#: src/Navigation.tsx:543
+#: src/Navigation.tsx:544
 msgid "Topic"
 msgstr ""
 
@@ -9081,8 +9233,8 @@ msgstr ""
 #: src/components/dms/MessageContextMenu.tsx:139
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:444
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:446
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:576
-#: src/screens/PostThread/components/ThreadItemAnchor.tsx:579
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:598
+#: src/screens/PostThread/components/ThreadItemAnchor.tsx:601
 msgid "Translate"
 msgstr "Перекласти"
 
@@ -9124,6 +9276,10 @@ msgstr "Введіть своє повідомлення тут"
 msgid "Type:"
 msgstr "Тип:"
 
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:92
+msgid "Unable to access location. You'll need to visit your system settings to enable location services for Bluesky."
+msgstr ""
+
 #: src/lib/hooks/useCleanError.ts:27
 #: src/lib/strings/errors.ts:11
 msgid "Unable to connect. Please check your internet connection and try again."
@@ -9154,7 +9310,7 @@ msgstr ""
 msgid "Unapply Pull Request {currentChannel}"
 msgstr ""
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:51
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:53
 msgid "Unavailable"
 msgstr ""
 
@@ -9194,13 +9350,18 @@ msgstr "Розблокувати обліковий запис?"
 msgid "Unblock list"
 msgstr ""
 
-#: src/components/PostControls/RepostButton.web.tsx:67
-#: src/components/PostControls/RepostButton.web.tsx:74
+#: src/components/PostControls/BookmarkButton.tsx:40
+msgctxt "Button label to undo saving/removing a post from saved posts."
+msgid "Undo"
+msgstr ""
+
+#: src/components/PostControls/RepostButton.web.tsx:68
+#: src/components/PostControls/RepostButton.web.tsx:75
 msgid "Undo repost"
 msgstr "Скасувати репост"
 
 #. Accessibility label for the repost button when the post has been reposted, verb followed by number of reposts and noun
-#: src/components/PostControls/RepostButton.tsx:66
+#: src/components/PostControls/RepostButton.tsx:67
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
 msgstr ""
 
@@ -9222,7 +9383,7 @@ msgstr ""
 msgid "Unfollows the user"
 msgstr ""
 
-#: src/components/BlockedGeoOverlay.tsx:37
+#: src/components/BlockedGeoOverlay.tsx:48
 msgid "Unfortunately, Bluesky is unavailable in Mississippi right now."
 msgstr ""
 
@@ -9239,7 +9400,7 @@ msgid "Unlike"
 msgstr "Прибрати вподобання"
 
 #. Accessibility label for the like button when the post has been liked, verb followed by number of likes and noun
-#: src/components/PostControls/index.tsx:243
+#: src/components/PostControls/index.tsx:259
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
 msgstr ""
 
@@ -9339,7 +9500,7 @@ msgstr "Відписатися від цього мітника"
 msgid "Unsubscribed from list"
 msgstr "Відписано від списку"
 
-#: src/view/com/composer/Composer.tsx:851
+#: src/view/com/composer/Composer.tsx:852
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -9425,7 +9586,7 @@ msgstr "Завантаження зображень..."
 msgid "Uploading link thumbnail..."
 msgstr "Завантаження ескізу посилання..."
 
-#: src/view/com/composer/Composer.tsx:1840
+#: src/view/com/composer/Composer.tsx:1837
 msgid "Uploading video..."
 msgstr "Завантаження відео..."
 
@@ -9468,7 +9629,7 @@ msgstr ""
 msgid "Used by:"
 msgstr "Використано:"
 
-#: src/components/dms/ReportDialog.tsx:324
+#: src/components/dms/ReportDialog.tsx:329
 msgctxt "toast"
 msgid "User blocked"
 msgstr ""
@@ -9540,8 +9701,8 @@ msgstr "користувачі, яких читає <0>@{0}</0>"
 msgid "users following <0>@{0}</0>"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:108
-#: src/screens/Messages/Settings.tsx:111
+#: src/screens/Messages/Settings.tsx:97
+#: src/screens/Messages/Settings.tsx:100
 msgid "Users I follow"
 msgstr "Користувачі, яких я читаю"
 
@@ -9565,7 +9726,7 @@ msgstr ""
 msgid "Verification settings"
 msgstr ""
 
-#: src/Navigation.tsx:205
+#: src/Navigation.tsx:206
 #: src/screens/Moderation/VerificationSettings.tsx:32
 msgid "Verification Settings"
 msgstr ""
@@ -9585,7 +9746,7 @@ msgstr ""
 msgid "Verify account"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:122
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:170
 msgid "Verify again"
 msgstr ""
 
@@ -9611,8 +9772,8 @@ msgstr ""
 msgid "Verify email dialog"
 msgstr "Діалог підтвердження адреси електронної пошти"
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:110
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:124
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:158
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:172
 msgid "Verify now"
 msgstr ""
 
@@ -9657,7 +9818,7 @@ msgstr "Відео"
 msgid "Video failed to process"
 msgstr "Не вдалось обробити відео"
 
-#: src/Navigation.tsx:599
+#: src/Navigation.tsx:600
 msgid "Video Feed"
 msgstr ""
 
@@ -9687,7 +9848,7 @@ msgstr "Відео не знайдено."
 msgid "Video settings"
 msgstr "Налаштування відео"
 
-#: src/view/com/composer/Composer.tsx:1850
+#: src/view/com/composer/Composer.tsx:1847
 msgid "Video uploaded"
 msgstr "Відео завантажено"
 
@@ -9703,7 +9864,7 @@ msgstr ""
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:545
+#: src/view/com/composer/Composer.tsx:546
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -9765,7 +9926,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:540
+#: src/view/com/composer/Composer.tsx:541
 msgid "View post"
 msgstr ""
 
@@ -9973,6 +10134,14 @@ msgstr ""
 msgid "We're so excited to have you join us!"
 msgstr "Ми дуже раді, що ви приєдналися!"
 
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:105
+msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
+msgstr ""
+
+#: src/components/BlockedGeoOverlay.tsx:159
+msgid "We're sorry, but based on your device's location, you are currently located in a region where we cannot provide access at this time."
+msgstr ""
+
 #: src/view/screens/ProfileList.tsx:117
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "Дуже прикро, але нам не вдалося знайти цей список. Якщо це продовжується, будь ласка, зв'яжіться з його автором: @{handleOrDid}."
@@ -9985,7 +10154,7 @@ msgstr "На жаль, ми не змогли зараз завантажити 
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Даруйте, нам не вдалося виконати пошук за вашим запитом. Будь ласка, спробуйте ще раз через кілька хвилин."
 
-#: src/view/com/composer/Composer.tsx:471
+#: src/view/com/composer/Composer.tsx:472
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Нам прикро! Пост, на який ви відповідаєте, видалено."
 
@@ -10036,7 +10205,7 @@ msgstr "Яку назву оберете для власної підбірки?
 
 #: src/view/com/auth/SplashScreen.tsx:38
 #: src/view/com/auth/SplashScreen.web.tsx:99
-#: src/view/com/composer/Composer.tsx:811
+#: src/view/com/composer/Composer.tsx:812
 msgid "What's up?"
 msgstr "Як справи?"
 
@@ -10061,7 +10230,7 @@ msgid "Who can verify?"
 msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
-#: src/screens/Messages/ChatList.tsx:258
+#: src/screens/Messages/ChatList.tsx:269
 #: src/screens/Messages/Inbox.tsx:197
 msgid "Whoops!"
 msgstr "Упс!"
@@ -10114,12 +10283,12 @@ msgstr "Чому слід переглянути цього користувач
 msgid "Write a message"
 msgstr "Уведіть повідомлення"
 
-#: src/view/com/composer/Composer.tsx:911
+#: src/view/com/composer/Composer.tsx:912
 msgid "Write post"
 msgstr "Написати пост"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:90
-#: src/view/com/composer/Composer.tsx:809
+#: src/view/com/composer/Composer.tsx:810
 msgid "Write your reply"
 msgstr "Написати відповідь"
 
@@ -10182,7 +10351,7 @@ msgstr ""
 msgid "You are creating an account on"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:80
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:128
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr ""
 
@@ -10244,7 +10413,7 @@ msgstr "Ви також можете тимчасово деактивувати
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr ""
 
-#: src/screens/Messages/Settings.tsx:127
+#: src/screens/Messages/Settings.tsx:116
 msgid "You can continue ongoing conversations regardless of which setting you choose."
 msgstr "Ви можете продовжувати поточні розмови незалежно від того, які налаштування ви оберете."
 
@@ -10345,7 +10514,7 @@ msgstr "Ви увімкнули ігнорування цього обліков
 msgid "You have muted this user"
 msgstr "Ви увімкнули ігнорування цього користувача"
 
-#: src/screens/Messages/ChatList.tsx:301
+#: src/screens/Messages/ChatList.tsx:312
 msgid "You have no conversations yet. Start one!"
 msgstr "У вас поки немає розмов. Розпочніть першу!"
 
@@ -10431,7 +10600,7 @@ msgstr "Ви маєте читати щонайменше сімох корис�
 msgid "You must complete age assurance in order to access the settings below."
 msgstr ""
 
-#: src/components/ageAssurance/AgeRestrictedScreen.tsx:64
+#: src/components/ageAssurance/AgeRestrictedScreen.tsx:66
 msgid "You must complete age assurance in order to access this screen."
 msgstr ""
 
@@ -10473,7 +10642,7 @@ msgid "You reacted {0} to {1}"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:286
-#: src/view/shell/desktop/LeftNav.tsx:209
+#: src/view/shell/desktop/LeftNav.tsx:210
 msgid "You will be signed out of all your accounts."
 msgstr "Ви вийдете з усіх облікових записів."
 
@@ -10615,7 +10784,7 @@ msgstr "Ваша дата народження"
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "Ваш браузер не підтримує цей формат відео. Будь ласка, спробуйте інший браузер."
 
-#: src/screens/Messages/components/ChatDisabled.tsx:25
+#: src/screens/Messages/components/ChatDisabled.tsx:26
 msgid "Your chats have been disabled"
 msgstr "Ваші чати вимкнено"
 
@@ -10664,7 +10833,7 @@ msgstr "Ваша домашня стрічка порожня! Підпишіт�
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "Вашим повним псевдонімом буде <0>@{0}</0>"
 
-#: src/Navigation.tsx:515
+#: src/Navigation.tsx:516
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:67
 #: src/screens/Settings/ContentAndMediaSettings.tsx:92
 #: src/screens/Settings/ContentAndMediaSettings.tsx:95
@@ -10681,6 +10850,10 @@ msgstr ""
 msgid "Your interests help us find what you like!"
 msgstr ""
 
+#: src/components/dialogs/DeviceLocationRequestDialog.tsx:130
+msgid "Your location data is not tracked and does not leave your device."
+msgstr ""
+
 #: src/components/dialogs/MutedWords.tsx:369
 msgid "Your muted words"
 msgstr "Ваші ігноровані слова"
@@ -10693,11 +10866,11 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:536
+#: src/view/com/composer/Composer.tsx:537
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:533
+#: src/view/com/composer/Composer.tsx:534
 msgid "Your posts were sent"
 msgstr ""
 
@@ -10721,7 +10894,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Ваш обліковий запис, пости, стрічки та списки більше не будуть видимі іншим користувачам Bluesky. Ви можете відновити свій обліковий запис в будь-який момент ввівши дані облікового запису у поле для входу."
 
-#: src/view/com/composer/Composer.tsx:535
+#: src/view/com/composer/Composer.tsx:536
 msgid "Your reply was sent"
 msgstr ""
 
@@ -10729,7 +10902,7 @@ msgstr ""
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr ""
 
-#: src/components/dms/ReportDialog.tsx:200
+#: src/components/dms/ReportDialog.tsx:205
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "Вашу скаргу буде надіслано до Служби модерації Bluesky"
 
