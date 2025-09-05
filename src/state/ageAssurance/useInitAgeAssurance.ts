@@ -14,7 +14,7 @@ import {
 import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {logger} from '#/logger'
 import {createAgeAssuranceQueryKey} from '#/state/ageAssurance'
-import {useGeolocationStatus} from '#/state/geolocation'
+import {type DeviceLocation, useGeolocationStatus} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 
 let APPVIEW = PUBLIC_APPVIEW
@@ -33,6 +33,22 @@ let APPVIEW_DID = PUBLIC_APPVIEW_DID
 //   APPVIEW_DID = ``
 // }
 
+/**
+ * Creates an ISO country code string from the given geolocation data.
+ * Examples: `GB` or `GB-ENG`
+ */
+function createISOCountryCode(
+  geolocation: Omit<DeviceLocation, 'countryCode'> & {
+    countryCode: string
+  },
+): string {
+  if (geolocation.regionCode) {
+    return `${geolocation.countryCode}-${geolocation.regionCode}`.toUpperCase()
+  } else {
+    return geolocation.countryCode.toUpperCase()
+  }
+}
+
 export function useInitAgeAssurance() {
   const qc = useQueryClient()
   const agent = useAgent()
@@ -41,7 +57,9 @@ export function useInitAgeAssurance() {
     async mutationFn(
       props: Omit<AppBskyUnspeccedInitAgeAssurance.InputSchema, 'countryCode'>,
     ) {
-      if (!geolocation?.countryCode) {
+      const countryCode = geolocation?.countryCode
+      const regionCode = geolocation?.regionCode
+      if (!countryCode) {
         throw new Error(`Geolocation not available, cannot init age assurance.`)
       }
 
@@ -65,7 +83,10 @@ export function useInitAgeAssurance() {
         2e3,
         appView.app.bsky.unspecced.initAgeAssurance({
           ...props,
-          countryCode: geolocation?.countryCode?.toUpperCase(),
+          countryCode: createISOCountryCode({
+            countryCode,
+            regionCode,
+          }),
         }),
       )
 
