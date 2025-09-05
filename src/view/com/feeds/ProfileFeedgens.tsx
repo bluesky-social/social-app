@@ -8,8 +8,10 @@ import {
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {HashtagWideIcon} from '#/lib/icons'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -66,6 +68,7 @@ export const ProfileFeedgens = React.forwardRef<
   } = useProfileFeedgensQuery(did, opts)
   const isEmpty = !isPending && !data?.pages[0]?.feeds.length
   const {data: preferences} = usePreferencesQuery()
+  const navigation = useNavigation()
 
   const items = React.useMemo(() => {
     let items: any[] = []
@@ -135,9 +138,21 @@ export const ProfileFeedgens = React.forwardRef<
       if (item === EMPTY) {
         return (
           <EmptyState
-            icon="hashtag"
-            message={_(msg`You have no feeds.`)}
-            testID="listsEmpty"
+            icon={
+              <HashtagWideIcon
+                size={64}
+                color={t.atoms.text_contrast_medium.color}
+              />
+            }
+            message="You haven't made any custom feeds yet."
+            textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
+            button={{
+              label: 'Browse custom feeds',
+              text: 'Browse custom feeds',
+              onPress: () => navigation.navigate('Feeds' as never),
+              size: 'large',
+              color: 'secondary',
+            }}
           />
         )
       } else if (item === ERROR_ITEM) {
@@ -171,7 +186,7 @@ export const ProfileFeedgens = React.forwardRef<
       }
       return null
     },
-    [_, t, error, refetch, onPressRetryLoadMore, preferences],
+    [_, t, error, refetch, onPressRetryLoadMore, preferences, navigation],
   )
 
   React.useEffect(() => {
