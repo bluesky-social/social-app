@@ -25,11 +25,20 @@ import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Glo
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
 
-export function SelectPostLanguagesBtn() {
+export function SelectPostLanguagesBtn({
+  /** Optionally can be passed to show different values than what is saved in
+   * langPrefs. */
+  currentLanguages,
+}: {
+  currentLanguages?: string[]
+}) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const t = useTheme()
   const control = Dialog.useDialogControl()
+
+  const postLanguagesPref =
+    currentLanguages ?? toPostLanguages(langPrefs.postLanguage)
 
   const onPressMore = useCallback(async () => {
     if (isNative) {
@@ -39,8 +48,6 @@ export function SelectPostLanguagesBtn() {
     }
     control.open()
   }, [control])
-
-  const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
 
   return (
     <>
@@ -84,12 +91,18 @@ export function SelectPostLanguagesBtn() {
         }}
       </Button>
 
-      <LanguageDialog control={control} />
+      <LanguageDialog control={control} currentLanguages={currentLanguages} />
     </>
   )
 }
 
-function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
+function LanguageDialog({
+  control,
+  currentLanguages,
+}: {
+  control: Dialog.DialogControlProps
+  currentLanguages?: string[]
+}) {
   const {height} = useWindowDimensions()
   const insets = useSafeAreaInsets()
 
@@ -104,13 +117,17 @@ function LanguageDialog({control}: {control: Dialog.DialogControlProps}) {
       nativeOptions={{minHeight: height - insets.top}}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
-        <PostLanguagesSettingsDialogInner />
+        <PostLanguagesSettingsDialogInner currentLanguages={currentLanguages} />
       </ErrorBoundary>
     </Dialog.Outer>
   )
 }
 
-export function PostLanguagesSettingsDialogInner() {
+export function PostLanguagesSettingsDialogInner({
+  currentLanguages,
+}: {
+  currentLanguages?: string[]
+}) {
   const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
 
@@ -127,8 +144,11 @@ export function PostLanguagesSettingsDialogInner() {
   }, [])
 
   const langPrefs = useLanguagePrefs()
+  const postLanguagesPref =
+    currentLanguages ?? toPostLanguages(langPrefs.postLanguage)
+
   const [checkedLanguagesCode2, setCheckedLanguagesCode2] = useState<string[]>(
-    langPrefs.postLanguage.split(',') || [langPrefs.primaryLanguage],
+    postLanguagesPref || [langPrefs.primaryLanguage],
   )
   const [search, setSearch] = useState('')
 
