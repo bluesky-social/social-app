@@ -123,7 +123,6 @@
     "array.prototype.findlast": "^1.2.3",
     "await-lock": "^2.2.2",
     "babel-plugin-transform-remove-console": "^6.9.4",
-    "base64-js": "^1.5.1",
     "bcp-47": "^2.1.0",
     "bcp-47-match": "^2.0.3",
     "date-fns": "^2.30.0",
