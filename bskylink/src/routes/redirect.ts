@@ -19,6 +19,10 @@ export default function (ctx: AppContext, app: Express) {
   return app.get(
     '/redirect',
     handler(async (req, res) => {
+      const addMetrics = (ruleStr: string, statusCode: number) => {
+        ctx.metrics.redirects.labels(ruleStr, statusCode.toString()).inc()
+      }
+
       let link = req.query.u
       assert(
         typeof link === 'string',
@@ -39,6 +43,7 @@ export default function (ctx: AppContext, app: Express) {
       ) {
         res.setHeader('Cache-Control', 'no-store')
         res.setHeader('Location', `https://${ctx.cfg.service.appHostname}`)
+        addMetrics('bad_url', 302)
         return res.status(302).end()
       }
 
@@ -49,9 +54,12 @@ export default function (ctx: AppContext, app: Express) {
 
       let html: string | undefined
 
+      let ruleStr = 'ok'
       if (ctx.cfg.service.safelinkEnabled) {
         const rule = await ctx.safelinkClient.tryFindRule(link)
         if (rule !== 'ok') {
+          ruleStr = rule.action
+
           switch (rule.action) {
             case 'whitelist':
               redirectLogger.info({rule}, 'Whitelist rule matched')
@@ -88,6 +96,8 @@ export default function (ctx: AppContext, app: Express) {
       if (!html) {
         html = linkRedirectContents(url.href)
       }
+
+      addMetrics(ruleStr, 302)
 
       return res.end(html)
     }),
