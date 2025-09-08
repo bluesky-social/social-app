@@ -30,11 +30,6 @@ import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
-import {
-  beginResolveGeolocationConfig,
-  ensureGeolocationConfigIsResolved,
-  Provider as GeolocationProvider,
-} from '#/state/geolocation'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
 import {Provider as InvitesStateProvider} from '#/state/invites'
@@ -85,11 +80,6 @@ if (isAndroid) {
   // iOS is handled by the config plugin -sfn
   ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP)
 }
-
-/**
- * Begin geolocation ASAP
- */
-beginResolveGeolocationConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -197,10 +187,7 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([
-      initPersistedState(),
-      ensureGeolocationConfigIsResolved(),
-    ]).then(() => setReady(true))
+    Promise.all([initPersistedState()]).then(() => setReady(true))
   }, [])
 
   if (!isReady) {
@@ -212,38 +199,36 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <GeolocationProvider>
-      <A11yProvider>
-        <KeyboardControllerProvider>
-          <SessionProvider>
-            <PrefsStateProvider>
-              <I18nProvider>
-                <ShellStateProvider>
-                  <InvitesStateProvider>
-                    <ModalStateProvider>
-                      <DialogStateProvider>
-                        <LightboxStateProvider>
-                          <PortalProvider>
-                            <BottomSheetProvider>
-                              <StarterPackProvider>
-                                <SafeAreaProvider
-                                  initialMetrics={initialWindowMetrics}>
-                                  <InnerApp />
-                                </SafeAreaProvider>
-                              </StarterPackProvider>
-                            </BottomSheetProvider>
-                          </PortalProvider>
-                        </LightboxStateProvider>
-                      </DialogStateProvider>
-                    </ModalStateProvider>
-                  </InvitesStateProvider>
-                </ShellStateProvider>
-              </I18nProvider>
-            </PrefsStateProvider>
-          </SessionProvider>
-        </KeyboardControllerProvider>
-      </A11yProvider>
-    </GeolocationProvider>
+    <A11yProvider>
+      <KeyboardControllerProvider>
+        <SessionProvider>
+          <PrefsStateProvider>
+            <I18nProvider>
+              <ShellStateProvider>
+                <InvitesStateProvider>
+                  <ModalStateProvider>
+                    <DialogStateProvider>
+                      <LightboxStateProvider>
+                        <PortalProvider>
+                          <BottomSheetProvider>
+                            <StarterPackProvider>
+                              <SafeAreaProvider
+                                initialMetrics={initialWindowMetrics}>
+                                <InnerApp />
+                              </SafeAreaProvider>
+                            </StarterPackProvider>
+                          </BottomSheetProvider>
+                        </PortalProvider>
+                      </LightboxStateProvider>
+                    </DialogStateProvider>
+                  </ModalStateProvider>
+                </InvitesStateProvider>
+              </ShellStateProvider>
+            </I18nProvider>
+          </PrefsStateProvider>
+        </SessionProvider>
+      </KeyboardControllerProvider>
+    </A11yProvider>
   )
 }
 

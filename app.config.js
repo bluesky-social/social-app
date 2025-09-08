@@ -367,7 +367,6 @@ module.exports = function (_config) {
           },
         ],
         ['expo-screen-orientation', {initialOrientation: 'PORTRAIT_UP'}],
-        ['expo-location'],
       ].filter(Boolean),
       extra: {
         eas: {

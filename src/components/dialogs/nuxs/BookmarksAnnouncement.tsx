@@ -109,11 +109,11 @@ export function BookmarksAnnouncement() {
               ]}>
               <Image
                 accessibilityIgnoresInvertColors
-                source={require('../../../../assets/images/bookmarks_announcement_nux.webp')}
+                source={require('../../../../assets/images/bookmarks_announcement_nux.png')}
                 style={[
                   a.w_full,
                   {
-                    aspectRatio: 333 / 104,
+                    aspectRatio: 600 / 225,
                   },
                 ]}
                 alt={_(
