@@ -5,7 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
@@ -342,7 +342,7 @@ let SearchScreenUserResults = ({
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useActorSearchPaginated({
+  } = useActorSearch({
     query,
     enabled: active,
   })
