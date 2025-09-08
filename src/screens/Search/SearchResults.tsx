@@ -377,10 +377,10 @@ let SearchScreenFeedsResults = ({
       {results.length ? (
         <List
           data={results}
-          renderItem={({item}) => (
+          renderItem={({item, index}) => (
             <View
               style={[
-                a.border_b,
+                index !== 0 && a.border_t,
                 t.atoms.border_contrast_low,
                 a.px_lg,
                 a.py_lg,
@@ -390,7 +390,7 @@ let SearchScreenFeedsResults = ({
           )}
           keyExtractor={item => item.uri}
           desktopFixedHeight
-          contentContainerStyle={{paddingBottom: 100}}
+          ListFooterComponent={<ListFooter />}
         />
       ) : (
         <EmptyState message={_(msg`No results found for ${query}`)} />
