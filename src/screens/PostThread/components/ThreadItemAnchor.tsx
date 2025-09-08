@@ -481,20 +481,14 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 </Link>
               ) : null}
               {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
-                <Link to={likesHref} label={_(msg`Saves of this post`)}>
-                  <Text
-                    testID="bookmarkCount-expanded"
-                    style={[a.text_md, t.atoms.text_contrast_medium]}>
-                    <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatPostStatCount(post.bookmarkCount)}
-                    </Text>{' '}
-                    <Plural
-                      value={post.bookmarkCount}
-                      one="save"
-                      other="saves"
-                    />
-                  </Text>
-                </Link>
+                <Text
+                  testID="bookmarkCount-expanded"
+                  style={[a.text_md, t.atoms.text_contrast_medium]}>
+                  <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                    {formatPostStatCount(post.bookmarkCount)}
+                  </Text>{' '}
+                  <Plural value={post.bookmarkCount} one="save" other="saves" />
+                </Text>
               ) : null}
             </View>
           ) : null}
