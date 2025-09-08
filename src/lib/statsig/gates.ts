@@ -8,6 +8,7 @@ export type Gate =
   | 'feed_reply_button_open_thread'
   | 'old_postonboarding'
   | 'onboarding_add_video_feed'
+  | 'onboarding_suggested_starterpacks'
   | 'post_follow_profile_suggested_accounts'
   | 'remove_show_latest_button'
   | 'test_gate_1'
