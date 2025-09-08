@@ -5,7 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {useActorSearch} from '#/state/queries/actor-search'
+import {useActorSearchPaginated} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
@@ -176,9 +176,8 @@ let SearchScreenPostResults = ({
   active: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   const [isPTR, setIsPTR] = useState(false)
-  const isLoggedin = Boolean(currentAccount?.did)
 
   const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
@@ -248,7 +247,7 @@ let SearchScreenPostResults = ({
     requestSwitchToAccount({requestedAccount: 'new'})
   }
 
-  if (!isLoggedin) {
+  if (!hasSession) {
     return (
       <SearchError
         title={_(msg`Search is currently unavailable when logged out`)}>
@@ -331,21 +330,66 @@ let SearchScreenUserResults = ({
   active: boolean
 }): React.ReactNode => {
   const {_} = useLingui()
+  const {hasSession} = useSession()
+  const [isPTR, setIsPTR] = useState(false)
 
-  const {data: results, isFetched} = useActorSearch({
+  const {
+    isFetched,
+    data: results,
+    isFetching,
+    error,
+    refetch,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useActorSearchPaginated({
     query,
     enabled: active,
   })
 
-  return isFetched && results ? (
+  const onPullToRefresh = useCallback(async () => {
+    setIsPTR(true)
+    await refetch()
+    setIsPTR(false)
+  }, [setIsPTR, refetch])
+  const onEndReached = useCallback(() => {
+    if (!hasSession) return
+    if (isFetching || !hasNextPage || error) return
+    fetchNextPage()
+  }, [isFetching, error, hasNextPage, fetchNextPage, hasSession])
+
+  const profiles = useMemo(() => {
+    return results?.pages.flatMap(page => page.actors) || []
+  }, [results])
+
+  if (error) {
+    return (
+      <EmptyState
+        message={_(
+          msg`We're sorry, but your search could not be completed. Please try again in a few minutes.`,
+        )}
+        error={error.toString()}
+      />
+    )
+  }
+
+  return isFetched && profiles ? (
     <>
-      {results.length ? (
+      {profiles.length ? (
         <List
-          data={results}
+          data={profiles}
           renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} />}
           keyExtractor={item => item.did}
+          refreshing={isPTR}
+          onRefresh={onPullToRefresh}
+          onEndReached={onEndReached}
           desktopFixedHeight
-          contentContainerStyle={{paddingBottom: 100}}
+          ListFooterComponent={
+            <ListFooter
+              hasNextPage={hasNextPage && hasSession}
+              isFetchingNextPage={isFetchingNextPage}
+            />
+          }
         />
       ) : (
         <EmptyState message={_(msg`No results found for ${query}`)} />
@@ -377,10 +421,10 @@ let SearchScreenFeedsResults = ({
       {results.length ? (
         <List
           data={results}
-          renderItem={({item, index}) => (
+          renderItem={({item}) => (
             <View
               style={[
-                index !== 0 && a.border_t,
+                a.border_t,
                 t.atoms.border_contrast_low,
                 a.px_lg,
                 a.py_lg,
