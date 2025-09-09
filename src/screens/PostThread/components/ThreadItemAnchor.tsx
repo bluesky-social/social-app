@@ -354,7 +354,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     )}
                   </Text>
 
-                  <View style={[{paddingLeft: 3, top: -1}]}>
+                  <View style={[a.pl_xs]}>
                     <VerificationCheckButton profile={authorShadow} size="md" />
                   </View>
                 </View>
