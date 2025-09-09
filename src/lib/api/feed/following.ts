@@ -1,6 +1,6 @@
-import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
+import {type AppBskyFeedDefs, type BskyAgent} from '@atproto/api'
 
-import {FeedAPI, FeedAPIResponse} from './types'
+import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class FollowingFeedAPI implements FeedAPI {
   agent: BskyAgent

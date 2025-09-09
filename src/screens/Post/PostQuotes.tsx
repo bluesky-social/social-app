@@ -2,7 +2,10 @@ import React from 'react'
 import {Plural, Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {usePostThreadQuery} from '#/state/queries/post-thread'
 import {useSetMinimalShellMode} from '#/state/shell'

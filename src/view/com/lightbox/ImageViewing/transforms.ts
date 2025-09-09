@@ -1,4 +1,4 @@
-import type {Position} from './@types'
+import {type Position} from './@types'
 
 export type TransformMatrix = [
   number,

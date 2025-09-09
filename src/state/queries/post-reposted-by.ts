@@ -1,8 +1,11 @@
-import {AppBskyActorDefs, AppBskyFeedGetRepostedBy} from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type AppBskyActorDefs,
+  type AppBskyFeedGetRepostedBy,
+} from '@atproto/api'
+import {
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 

@@ -1,11 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import {BSKY_LABELER_DID, ModerationCause} from '@atproto/api'
+import {BSKY_LABELER_DID, type ModerationCause} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ModerationDetailsDialog,

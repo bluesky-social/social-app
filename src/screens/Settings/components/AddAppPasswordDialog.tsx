@@ -8,7 +8,7 @@ import Animated, {
   SlideInRight,
   SlideOutLeft,
 } from 'react-native-reanimated'
-import {ComAtprotoServerCreateAppPassword} from '@atproto/api'
+import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'

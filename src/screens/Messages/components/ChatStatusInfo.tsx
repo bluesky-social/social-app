@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ActiveConvoStates} from '#/state/messages/convo'
+import {type ActiveConvoStates} from '#/state/messages/convo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
