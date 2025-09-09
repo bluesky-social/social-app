@@ -1,18 +1,18 @@
 import React from 'react'
 import {
-  StyleProp,
+  type StyleProp,
   TouchableWithoutFeedback,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'

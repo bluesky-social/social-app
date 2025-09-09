@@ -1,13 +1,13 @@
 import {
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'

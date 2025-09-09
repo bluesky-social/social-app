@@ -3,12 +3,12 @@ import {View} from 'react-native'
 import {
   atoms as a,
   flatten,
-  TextStyleProp,
+  type TextStyleProp,
   useTheme,
-  ViewStyleProp,
+  type ViewStyleProp,
 } from '#/alf'
-import {Props} from '#/components/icons/common'
-import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
+import {type Props} from '#/components/icons/common'
+import {type Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 
 export function IconCircle({
   icon: Icon,

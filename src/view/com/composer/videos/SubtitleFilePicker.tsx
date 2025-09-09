@@ -1,7 +1,8 @@
-import React, {useRef} from 'react'
+import {useRef} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
 import {logger} from '#/logger'
 import * as Toast from '#/view/com/util/Toast'

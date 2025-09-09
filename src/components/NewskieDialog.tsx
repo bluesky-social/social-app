@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
+import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {differenceInSeconds} from 'date-fns'

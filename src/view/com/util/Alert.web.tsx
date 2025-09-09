@@ -1,4 +1,4 @@
-import {AlertButton, AlertStatic} from 'react-native'
+import {type AlertButton, type AlertStatic} from 'react-native'
 
 class WebAlert implements Pick<AlertStatic, 'alert'> {
   public alert(title: string, message?: string, buttons?: AlertButton[]): void {

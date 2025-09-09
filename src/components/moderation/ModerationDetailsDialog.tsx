@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {ModerationCause} from '@atproto/api'
+import {type ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,7 +12,7 @@ import {useSession} from '#/state/session'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
-import {AppModerationCause} from '#/components/Pills'
+import {type AppModerationCause} from '#/components/Pills'
 import {Text} from '#/components/Typography'
 
 export {useDialogControl as useModerationDetailsDialogControl} from '#/components/Dialog'

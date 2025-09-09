@@ -1,12 +1,12 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
-import {AppBskyVideoDefs, BskyAgent} from '@atproto/api'
-import {I18n} from '@lingui/core'
+import {type AppBskyVideoDefs, type BskyAgent} from '@atproto/api'
+import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {AbortError} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
-import {CompressedVideo} from '#/lib/media/video/types'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 
