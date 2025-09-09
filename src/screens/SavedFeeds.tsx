@@ -136,9 +136,11 @@ function SavedFeedsInner({
 
         {preferences ? (
           !pinnedFeeds.length ? (
-            <Admonition type="info">
-              <Trans>You don't have any pinned feeds.</Trans>
-            </Admonition>
+            <View style={[a.flex_1, a.p_lg]}>
+              <Admonition type="info">
+                <Trans>You don't have any pinned feeds.</Trans>
+              </Admonition>
+            </View>
           ) : (
             pinnedFeeds.map(f => (
               <ListItem
@@ -176,9 +178,11 @@ function SavedFeedsInner({
 
         {preferences ? (
           !unpinnedFeeds.length ? (
-            <Admonition type="info">
-              <Trans>You don't have any saved feeds.</Trans>
-            </Admonition>
+            <View style={[a.flex_1, a.p_lg]}>
+              <Admonition type="info">
+                <Trans>You don't have any saved feeds.</Trans>
+              </Admonition>
+            </View>
           ) : (
             unpinnedFeeds.map(f => (
               <ListItem
