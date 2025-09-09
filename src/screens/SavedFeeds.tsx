@@ -111,7 +111,6 @@ function SavedFeedsInner({
         <Button
           testID="saveChangesBtn"
           size="small"
-          variant={hasUnsavedChanges ? 'solid' : 'solid'}
           color={hasUnsavedChanges ? 'primary' : 'secondary'}
           onPress={onSaveChanges}
           label={_(msg`Save changes`)}
