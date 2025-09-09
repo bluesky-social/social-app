@@ -39,6 +39,7 @@ export const router = new Router<AllNavigatableRoutes>({
   // debug
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
+  StorybookLists: '/sys/debug-lists',
   Log: '/sys/log',
   // settings
   LanguageSettings: '/settings/language',
