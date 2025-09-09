@@ -1,4 +1,4 @@
-import React from 'react'
+import {lazy} from 'react'
 import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
@@ -15,20 +15,20 @@ import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
 
-const LazyViewShot = React.lazy(
+const LazyViewShot = lazy(
   // @ts-expect-error dynamic import
   () => import('react-native-view-shot/src/index'),
 )
 
-interface Props {
+export function QrCode({
+  starterPack,
+  link,
+  ref,
+}: {
   starterPack: AppBskyGraphDefs.StarterPackView
   link: string
-}
-
-export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
-  {starterPack, link},
-  ref,
-) {
+  ref: React.Ref<ViewShot>
+}) {
   const {record} = starterPack
 
   if (
@@ -93,7 +93,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
       </LinearGradientBackground>
     </LazyViewShot>
   )
-})
+}
 
 export function QrCodeInner({link}: {link: string}) {
   const t = useTheme()

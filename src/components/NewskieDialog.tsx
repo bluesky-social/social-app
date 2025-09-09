@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -27,30 +27,12 @@ export function NewskieDialog({
   disabled?: boolean
 }) {
   const {_} = useLingui()
-  const t = useTheme()
-  const moderationOpts = useModerationOpts()
-  const {currentAccount} = useSession()
-  const timeAgo = useGetTimeAgo()
   const control = useDialogControl()
 
-  const isMe = profile.did === currentAccount?.did
   const createdAt = profile.createdAt as string | undefined
 
-  const profileName = React.useMemo(() => {
-    const name = profile.displayName || profile.handle
-
-    if (isMe) {
-      return _(msg`You`)
-    }
-
-    if (!moderationOpts) return name
-    const moderation = moderateProfile(profile, moderationOpts)
-
-    return sanitizeDisplayName(name, moderation.ui('displayName'))
-  }, [_, isMe, moderationOpts, profile])
-
-  const [now] = React.useState(() => Date.now())
-  const daysOld = React.useMemo(() => {
+  const [now] = useState(() => Date.now())
+  const daysOld = useMemo(() => {
     if (!createdAt) return Infinity
     return differenceInSeconds(now, new Date(createdAt)) / 86400
   }, [createdAt, now])
@@ -77,88 +59,116 @@ export function NewskieDialog({
         )}
       </Button>
 
-      <Dialog.Outer control={control}>
+      <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
-        <Dialog.ScrollableInner
-          label={_(msg`New user info dialog`)}
-          style={web({width: 'auto', maxWidth: 400, minWidth: 200})}>
-          <View style={[a.gap_md]}>
-            <View style={[a.align_center]}>
-              <View
-                style={[
-                  {
-                    height: 60,
-                    width: 64,
-                  },
-                ]}>
-                <Newskie
-                  width={64}
-                  height={64}
-                  fill="#FFC404"
-                  style={[a.absolute, a.inset_0]}
-                />
-              </View>
-              <Text style={[a.font_bold, a.text_xl]}>
-                {isMe ? (
-                  <Trans>Welcome, friend!</Trans>
-                ) : (
-                  <Trans>Say hello!</Trans>
-                )}
-              </Text>
-            </View>
-            <Text style={[a.text_md, a.text_center, a.leading_snug]}>
-              {profile.joinedViaStarterPack ? (
-                <Trans>
-                  {profileName} joined Bluesky using a starter pack{' '}
-                  {timeAgo(createdAt, now, {format: 'long'})} ago
-                </Trans>
-              ) : (
-                <Trans>
-                  {profileName} joined Bluesky{' '}
-                  {timeAgo(createdAt, now, {format: 'long'})} ago
-                </Trans>
-              )}
-            </Text>
-            {profile.joinedViaStarterPack ? (
-              <StarterPackCard.Link
-                starterPack={profile.joinedViaStarterPack}
-                onPress={() => {
-                  control.close()
-                }}>
-                <View
-                  style={[
-                    a.w_full,
-                    a.mt_sm,
-                    a.p_lg,
-                    a.border,
-                    a.rounded_sm,
-                    t.atoms.border_contrast_low,
-                  ]}>
-                  <StarterPackCard.Card
-                    starterPack={profile.joinedViaStarterPack}
-                  />
-                </View>
-              </StarterPackCard.Link>
-            ) : null}
-
-            {isNative && (
-              <Button
-                label={_(msg`Close`)}
-                variant="solid"
-                color="secondary"
-                size="small"
-                style={[a.mt_sm]}
-                onPress={() => control.close()}>
-                <ButtonText>
-                  <Trans>Close</Trans>
-                </ButtonText>
-              </Button>
-            )}
-          </View>
-
-          <Dialog.Close />
-        </Dialog.ScrollableInner>
+        <DialogInner profile={profile} createdAt={createdAt} now={now} />
       </Dialog.Outer>
     </View>
+  )
+}
+
+function DialogInner({
+  profile,
+  createdAt,
+  now,
+}: {
+  profile: AppBskyActorDefs.ProfileViewDetailed
+  createdAt: string
+  now: number
+}) {
+  const control = Dialog.useDialogContext()
+  const {_} = useLingui()
+  const t = useTheme()
+  const moderationOpts = useModerationOpts()
+  const {currentAccount} = useSession()
+  const timeAgo = useGetTimeAgo()
+  const isMe = profile.did === currentAccount?.did
+
+  const profileName = useMemo(() => {
+    const name = profile.displayName || profile.handle
+
+    if (isMe) {
+      return _(msg`You`)
+    }
+
+    if (!moderationOpts) return name
+    const moderation = moderateProfile(profile, moderationOpts)
+
+    return sanitizeDisplayName(name, moderation.ui('displayName'))
+  }, [_, isMe, moderationOpts, profile])
+
+  return (
+    <Dialog.ScrollableInner
+      label={_(msg`New user info dialog`)}
+      style={web({maxWidth: 400})}>
+      <View style={[a.gap_md]}>
+        <View style={[a.align_center]}>
+          <View
+            style={[
+              {
+                height: 60,
+                width: 64,
+              },
+            ]}>
+            <Newskie
+              width={64}
+              height={64}
+              fill="#FFC404"
+              style={[a.absolute, a.inset_0]}
+            />
+          </View>
+          <Text style={[a.font_bold, a.text_xl]}>
+            {isMe ? <Trans>Welcome, friend!</Trans> : <Trans>Say hello!</Trans>}
+          </Text>
+        </View>
+        <Text style={[a.text_md, a.text_center, a.leading_snug]}>
+          {profile.joinedViaStarterPack ? (
+            <Trans>
+              {profileName} joined Bluesky using a starter pack{' '}
+              {timeAgo(createdAt, now, {format: 'long'})} ago
+            </Trans>
+          ) : (
+            <Trans>
+              {profileName} joined Bluesky{' '}
+              {timeAgo(createdAt, now, {format: 'long'})} ago
+            </Trans>
+          )}
+        </Text>
+        {profile.joinedViaStarterPack ? (
+          <StarterPackCard.Link
+            starterPack={profile.joinedViaStarterPack}
+            onPress={() => control.close()}>
+            <View
+              style={[
+                a.w_full,
+                a.mt_sm,
+                a.p_lg,
+                a.border,
+                a.rounded_sm,
+                t.atoms.border_contrast_low,
+              ]}>
+              <StarterPackCard.Card
+                starterPack={profile.joinedViaStarterPack}
+              />
+            </View>
+          </StarterPackCard.Link>
+        ) : null}
+
+        {isNative && (
+          <Button
+            label={_(msg`Close`)}
+            color="secondary"
+            size="small"
+            style={[a.mt_sm]}
+            onPress={() => control.close()}>
+            <ButtonText>
+              <Trans>Close</Trans>
+            </ButtonText>
+          </Button>
+        )}
+      </View>
+
+      <Dialog.Close />
+    </Dialog.ScrollableInner>
   )
 }
