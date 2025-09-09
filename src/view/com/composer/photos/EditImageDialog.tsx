@@ -1,5 +1,3 @@
-import type React from 'react'
-
 import {type ComposerImage} from '#/state/gallery'
 import type * as Dialog from '#/components/Dialog'
 

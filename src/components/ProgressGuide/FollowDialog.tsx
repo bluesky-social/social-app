@@ -293,8 +293,8 @@ let Header = ({
   interestsDisplayNames,
 }: {
   guide: Follow10ProgressGuide
-  inputRef: React.RefObject<TextInput>
-  listRef: React.RefObject<ListMethods>
+  inputRef: React.RefObject<TextInput | null>
+  listRef: React.RefObject<ListMethods | null>
   onSelectTab: (v: string) => void
   searchText: string
   setHeaderHeight: (v: number) => void
@@ -565,7 +565,7 @@ function SearchInput({
 }: {
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput>
+  inputRef: React.RefObject<TextInput | null>
   defaultValue: string
 }) {
   const t = useTheme()

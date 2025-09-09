@@ -71,8 +71,8 @@ export type ButtonState = {
 export type ButtonContext = VariantProps & ButtonState
 
 type NonTextElements =
-  | React.ReactElement
-  | Iterable<React.ReactElement | null | undefined | boolean>
+  | React.ReactElement<any>
+  | Iterable<React.ReactElement<any> | null | undefined | boolean>
 
 export type ButtonProps = Pick<
   PressableProps,

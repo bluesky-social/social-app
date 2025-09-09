@@ -174,7 +174,7 @@ export const ComposePost = ({
   videoUri: initVideoUri,
   cancelRef,
 }: Props & {
-  cancelRef?: React.RefObject<CancelRef>
+  cancelRef?: React.RefObject<CancelRef | null>
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
