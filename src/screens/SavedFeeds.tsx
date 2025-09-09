@@ -9,7 +9,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {TIMELINE_SAVED_FEED} from '#/lib/constants'
+import {RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
   type CommonNavigatorParams,
@@ -125,7 +125,16 @@ function SavedFeedsInner({
       <Layout.Content>
         {noSavedFeedsOfAnyType && (
           <View style={[t.atoms.border_contrast_low, a.border_b]}>
-            <NoSavedFeedsOfAnyType />
+            <NoSavedFeedsOfAnyType
+              onAddRecommendedFeeds={() =>
+                setCurrentFeeds(
+                  RECOMMENDED_SAVED_FEEDS.map(f => ({
+                    ...f,
+                    id: TID.nextStr(),
+                  })),
+                )
+              }
+            />
           </View>
         )}
 
