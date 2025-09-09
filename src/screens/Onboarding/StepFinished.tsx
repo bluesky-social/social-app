@@ -23,6 +23,7 @@ import {uploadBlob} from '#/lib/api'
 import {
   BSKY_APP_ACCOUNT_DID,
   DISCOVER_SAVED_FEED,
+  FOUNDER_DID,
   TIMELINE_SAVED_FEED,
   VIDEO_SAVED_FEED,
 } from '#/lib/constants'
@@ -117,6 +118,7 @@ export function StepFinished() {
       await Promise.all([
         bulkWriteFollows(agent, [
           BSKY_APP_ACCOUNT_DID,
+          FOUNDER_DID,
           ...(listItems?.map(i => i.subject.did) ?? []),
         ]),
         (async () => {
