@@ -159,8 +159,8 @@ export function ProfileFeedgens({
             message={_(msg`You haven't made any custom feeds yet.`)}
             textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
             button={{
-              label: 'Browse custom feeds',
-              text: 'Browse custom feeds',
+              label: _(msg`Browse custom feeds`),
+              text: _(msg`Browse custom feeds`),
               onPress: () => navigation.navigate('Feeds' as never),
               size: 'small',
               color: 'secondary',
