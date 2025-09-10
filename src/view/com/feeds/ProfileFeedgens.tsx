@@ -153,16 +153,16 @@ export function ProfileFeedgens({
             icon={
               <HashtagWideIcon
                 size={64}
-                color={t.atoms.text_contrast_medium.color}
+                style={{color: t.atoms.text_contrast_low.color}}
               />
             }
-            message="You haven't made any custom feeds yet."
+            message={_(msg`You haven't made any custom feeds yet.`)}
             textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
             button={{
               label: 'Browse custom feeds',
               text: 'Browse custom feeds',
               onPress: () => navigation.navigate('Feeds' as never),
-              size: 'large',
+              size: 'small',
               color: 'secondary',
             }}
           />

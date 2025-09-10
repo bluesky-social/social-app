@@ -41,7 +41,11 @@ import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Heart2_Stroke1_Corner0_Rounded} from '#/components/icons/Heart2'
+import {Image_Stroke1_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
+import {Message_Stroke1_Corner0_Rounded_Filled as MessageIcon} from '#/components/icons/Message'
+import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons/VideoClip'
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
@@ -179,6 +183,7 @@ function ProfileScreenLoaded({
   })
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
+  const t = useTheme()
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
@@ -408,6 +413,14 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No posts yet.`)}
+                emptyStateButton={{
+                  label: 'Write a post',
+                  text: 'Write a post',
+                  onPress: () => openComposer({}),
+                  size: 'small',
+                  color: 'primary',
+                }}
               />
             )
           : null}
@@ -421,6 +434,14 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No replies yet.`)}
+                emptyStateIcon={
+                  <MessageIcon
+                    viewBox="0 0 51 51"
+                    size="3xl"
+                    fill={t.atoms.text_contrast_low.color}
+                  />
+                }
               />
             )
           : null}
@@ -434,6 +455,21 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No media yet.`)}
+                emptyStateButton={{
+                  label: 'Post a photo',
+                  text: 'Post a photo',
+                  onPress: () => openComposer({}),
+                  size: 'small',
+                  color: 'primary',
+                }}
+                emptyStateIcon={
+                  <ImageIcon
+                    viewBox="0 0 51 51"
+                    size="3xl"
+                    fill={t.atoms.text_contrast_low.color}
+                  />
+                }
               />
             )
           : null}
@@ -447,6 +483,21 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No video posts yet.`)}
+                emptyStateButton={{
+                  label: 'Post a video',
+                  text: 'Post a video',
+                  onPress: () => openComposer({}),
+                  size: 'small',
+                  color: 'primary',
+                }}
+                emptyStateIcon={
+                  <VideoIcon
+                    viewBox="0 0 51 51"
+                    size="3xl"
+                    fill={t.atoms.text_contrast_low.color}
+                  />
+                }
               />
             )
           : null}
@@ -460,6 +511,13 @@ function ProfileScreenLoaded({
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
+                emptyStateMessage={_(msg`No likes yet.`)}
+                emptyStateIcon={
+                  <Heart2_Stroke1_Corner0_Rounded
+                    size="3xl"
+                    fill={t.atoms.text_contrast_low.color}
+                  />
+                }
               />
             )
           : null}
