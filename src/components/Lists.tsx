@@ -85,27 +85,23 @@ function ListFooterMaybeError({
           a.align_center,
           t.atoms.bg_contrast_25,
         ]}>
-        <Text
-          style={[a.flex_1, a.text_sm, t.atoms.text_contrast_medium]}
-          numberOfLines={2}>
-          {error ? (
-            cleanError(error)
-          ) : (
-            <Trans>Oops, something went wrong!</Trans>
+        <View style={[a.flex_1, a.justify_center]}>
+          <Text style={[a.text_sm, a.font_medium, t.atoms.text_contrast_high]}>
+            <Trans>Oops, an error occurred</Trans>
+          </Text>
+          {error && (
+            <Text
+              style={[a.text_sm, t.atoms.text_contrast_low]}
+              numberOfLines={2}>
+              {cleanError(error)}
+            </Text>
           )}
-        </Text>
+        </View>
         <Button
-          variant="solid"
           label={_(msg`Press to retry`)}
-          style={[
-            a.align_center,
-            a.justify_center,
-            a.rounded_sm,
-            a.overflow_hidden,
-            a.px_md,
-            a.py_sm,
-          ]}
-          onPress={onRetry}>
+          onPress={onRetry}
+          color="secondary_inverted"
+          size="small">
           <ButtonText>
             <Trans>Retry</Trans>
           </ButtonText>
