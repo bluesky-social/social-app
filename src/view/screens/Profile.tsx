@@ -42,7 +42,7 @@ import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {atoms as a, useTheme} from '#/alf'
-import {Heart2_Stroke1_Corner0_Rounded} from '#/components/icons/Heart2'
+import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {Image_Stroke1_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Message_Stroke1_Corner0_Rounded_Filled as MessageIcon} from '#/components/icons/Message'
 import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons/VideoClip'
@@ -415,8 +415,8 @@ function ProfileScreenLoaded({
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={_(msg`No posts yet.`)}
                 emptyStateButton={{
-                  label: 'Write a post',
-                  text: 'Write a post',
+                  label: _(msg`Write a post`),
+                  text: _(msg`Write a post`),
                   onPress: () => openComposer({}),
                   size: 'small',
                   color: 'primary',
@@ -457,8 +457,8 @@ function ProfileScreenLoaded({
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={_(msg`No media yet.`)}
                 emptyStateButton={{
-                  label: 'Post a photo',
-                  text: 'Post a photo',
+                  label: _(msg`Post a photo`),
+                  text: _(msg`Post a photo`),
                   onPress: () => openComposer({}),
                   size: 'small',
                   color: 'primary',
@@ -485,8 +485,8 @@ function ProfileScreenLoaded({
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={_(msg`No video posts yet.`)}
                 emptyStateButton={{
-                  label: 'Post a video',
-                  text: 'Post a video',
+                  label: _(msg`Post a video`),
+                  text: _(msg`Post a video`),
                   onPress: () => openComposer({}),
                   size: 'small',
                   color: 'primary',
@@ -513,7 +513,7 @@ function ProfileScreenLoaded({
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={_(msg`No likes yet.`)}
                 emptyStateIcon={
-                  <Heart2_Stroke1_Corner0_Rounded
+                  <HeartIcon
                     size="3xl"
                     fill={t.atoms.text_contrast_low.color}
                   />
