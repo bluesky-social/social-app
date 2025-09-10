@@ -96,16 +96,20 @@ function DialogInner({
   // Generate the join message based on the conditions
   const getJoinMessage = () => {
     const timeAgoString = timeAgo(createdAt, now, {format: 'long'})
-    
+
     if (isMe) {
       if (profile.joinedViaStarterPack) {
-        return _(msg`You joined Bluesky using a starter pack ${timeAgoString} ago`)
+        return _(
+          msg`You joined Bluesky using a starter pack ${timeAgoString} ago`,
+        )
       } else {
         return _(msg`You joined Bluesky ${timeAgoString} ago`)
       }
     } else {
       if (profile.joinedViaStarterPack) {
-        return _(msg`${profileName} joined Bluesky using a starter pack ${timeAgoString} ago`)
+        return _(
+          msg`${profileName} joined Bluesky using a starter pack ${timeAgoString} ago`,
+        )
       } else {
         return _(msg`${profileName} joined Bluesky ${timeAgoString} ago`)
       }
