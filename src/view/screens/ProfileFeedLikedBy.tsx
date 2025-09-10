@@ -3,7 +3,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {PostLikedBy as PostLikedByComponent} from '#/view/com/post-thread/PostLikedBy'

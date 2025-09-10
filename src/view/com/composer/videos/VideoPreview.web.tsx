@@ -1,9 +1,9 @@
 import {View} from 'react-native'
-import {ImagePickerAsset} from 'expo-image-picker'
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {CompressedVideo} from '#/lib/media/video/types'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'

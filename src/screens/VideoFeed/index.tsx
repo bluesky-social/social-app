@@ -869,6 +869,7 @@ function Overlay({
                     richText={richText}
                     post={post}
                     record={record}
+                    feedContext={feedContext}
                     logContext="FeedItem"
                     onPressReply={() =>
                       navigation.navigate('PostThread', {

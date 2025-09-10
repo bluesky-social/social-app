@@ -3,7 +3,7 @@ import {jwtDecode} from 'jwt-decode'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 
 export function readLastActiveAccount() {
   const {currentAccount, accounts} = persisted.get('session')

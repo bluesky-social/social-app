@@ -2,7 +2,7 @@ import {parse} from 'bcp-47'
 
 import {dedupArray} from '#/lib/functions'
 import {logger} from '#/logger'
-import {Schema} from '#/state/persisted/schema'
+import {type Schema} from '#/state/persisted/schema'
 
 export function normalizeData(data: Schema) {
   const next = {...data}

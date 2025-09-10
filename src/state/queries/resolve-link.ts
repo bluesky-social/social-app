@@ -1,4 +1,4 @@
-import {QueryClient, useQuery} from '@tanstack/react-query'
+import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries/index'
 import {useAgent} from '../session'
@@ -9,10 +9,10 @@ export const RQKEY_LINK = (url: string) => [RQKEY_LINK_ROOT, url]
 const RQKEY_GIF_ROOT = 'resolve-gif'
 export const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url]
 
-import {BskyAgent} from '@atproto/api'
+import {type BskyAgent} from '@atproto/api'
 
-import {ResolvedLink, resolveGif, resolveLink} from '#/lib/api/resolve'
-import {Gif} from './tenor'
+import {type ResolvedLink, resolveGif, resolveLink} from '#/lib/api/resolve'
+import {type Gif} from './tenor'
 
 export function useResolveLinkQuery(url: string) {
   const agent = useAgent()

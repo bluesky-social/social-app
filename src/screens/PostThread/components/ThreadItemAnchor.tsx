@@ -32,7 +32,6 @@ import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
@@ -53,6 +52,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostControls} from '#/components/PostControls'
+import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -176,11 +176,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   postSource?: PostSource
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
   const {gtTablet} = useBreakpoints()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
+  const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow
   const record = item.value.post.record
@@ -353,7 +354,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     )}
                   </Text>
 
-                  <View style={[{paddingLeft: 3, top: -1}]}>
+                  <View style={[a.pl_xs]}>
                     <VerificationCheckButton profile={authorShadow} size="md" />
                   </View>
                 </View>
@@ -415,13 +416,18 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           />
           {post.repostCount !== 0 ||
           post.likeCount !== 0 ||
-          post.quoteCount !== 0 ? (
+          post.quoteCount !== 0 ||
+          post.bookmarkCount !== 0 ? (
             // Show this section unless we're *sure* it has no engagement.
             <View
               style={[
                 a.flex_row,
+                a.flex_wrap,
                 a.align_center,
-                a.gap_lg,
+                {
+                  rowGap: a.gap_sm.gap,
+                  columnGap: a.gap_lg.gap,
+                },
                 a.border_t,
                 a.border_b,
                 a.mt_md,
@@ -434,7 +440,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="repostCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatCount(i18n, post.repostCount)}
+                      {formatPostStatCount(post.repostCount)}
                     </Text>{' '}
                     <Plural
                       value={post.repostCount}
@@ -452,7 +458,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatCount(i18n, post.quoteCount)}
+                      {formatPostStatCount(post.quoteCount)}
                     </Text>{' '}
                     <Plural
                       value={post.quoteCount}
@@ -468,11 +474,21 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="likeCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatCount(i18n, post.likeCount)}
+                      {formatPostStatCount(post.likeCount)}
                     </Text>{' '}
                     <Plural value={post.likeCount} one="like" other="likes" />
                   </Text>
                 </Link>
+              ) : null}
+              {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
+                <Text
+                  testID="bookmarkCount-expanded"
+                  style={[a.text_md, t.atoms.text_contrast_medium]}>
+                  <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                    {formatPostStatCount(post.bookmarkCount)}
+                  </Text>{' '}
+                  <Plural value={post.bookmarkCount} one="save" other="saves" />
+                </Text>
               ) : null}
             </View>
           ) : null}

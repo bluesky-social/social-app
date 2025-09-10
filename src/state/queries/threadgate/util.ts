@@ -1,6 +1,6 @@
-import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
+import {type AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
+import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import * as bsky from '#/types/bsky'
 
 export function threadgateViewToAllowUISetting(

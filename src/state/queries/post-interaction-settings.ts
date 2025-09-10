@@ -1,4 +1,4 @@
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {preferencesQueryKey} from '#/state/queries/preferences'

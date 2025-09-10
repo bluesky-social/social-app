@@ -2,7 +2,6 @@ import React from 'react'
 import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
 import {View} from 'react-native'
 import {Trans} from '@lingui/macro'
-
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {atoms as a, useTheme} from '#/alf'

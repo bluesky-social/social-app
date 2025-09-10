@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'

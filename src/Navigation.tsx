@@ -1,4 +1,4 @@
-import {useCallback, useRef} from 'react'
+import {type JSX, useCallback, useRef} from 'react'
 import {Linking} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {i18n, type MessageDescriptor} from '@lingui/core'
@@ -64,13 +64,12 @@ import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PrivacyPolicyScreen} from '#/view/screens/PrivacyPolicy'
 import {ProfileScreen} from '#/view/screens/Profile'
 import {ProfileFeedLikedByScreen} from '#/view/screens/ProfileFeedLikedBy'
-import {ProfileListScreen} from '#/view/screens/ProfileList'
-import {SavedFeeds} from '#/view/screens/SavedFeeds'
 import {Storybook} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {BookmarksScreen} from '#/screens/Bookmarks'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import HashtagScreen from '#/screens/Hashtag'
 import {LogScreen} from '#/screens/Log'
@@ -91,6 +90,8 @@ import {ProfileFollowersScreen} from '#/screens/Profile/ProfileFollowers'
 import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {ProfileSearchScreen} from '#/screens/Profile/ProfileSearch'
+import {ProfileListScreen} from '#/screens/ProfileList'
+import {SavedFeeds} from '#/screens/SavedFeeds'
 import {SearchScreen} from '#/screens/Search'
 import {AboutSettingsScreen} from '#/screens/Settings/AboutSettings'
 import {AccessibilitySettingsScreen} from '#/screens/Settings/AccessibilitySettings'
@@ -597,6 +598,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         getComponent={() => VideoFeed}
         options={{
           title: title(msg`Video Feed`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="Bookmarks"
+        getComponent={() => BookmarksScreen}
+        options={{
+          title: title(msg`Saved Posts`),
           requireAuth: true,
         }}
       />

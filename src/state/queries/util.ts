@@ -1,12 +1,16 @@
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  AtUri,
+  type AtUri,
 } from '@atproto/api'
-import {InfiniteData, QueryClient, QueryKey} from '@tanstack/react-query'
+import {
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
+} from '@tanstack/react-query'
 
 import * as bsky from '#/types/bsky'
 

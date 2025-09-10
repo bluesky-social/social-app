@@ -74,7 +74,18 @@ export function MessagesScreen(props: Props) {
   return (
     <AgeRestrictedScreen
       screenTitle={_(msg`Chats`)}
-      infoText={aaCopy.chatsInfoText}>
+      infoText={aaCopy.chatsInfoText}
+      rightHeaderSlot={
+        <Link
+          to="/messages/settings"
+          label={_(msg`Chat settings`)}
+          size="small"
+          color="secondary">
+          <ButtonText>
+            <Trans>Chat settings</Trans>
+          </ButtonText>
+        </Link>
+      }>
       <MessagesScreenInner {...props} />
     </AgeRestrictedScreen>
   )

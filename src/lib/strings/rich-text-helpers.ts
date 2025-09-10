@@ -1,4 +1,4 @@
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppBskyRichtextFacet, type RichText} from '@atproto/api'
 
 import {linkRequiresWarning} from './url-helpers'
 

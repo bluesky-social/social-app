@@ -1,4 +1,4 @@
-import {ComAtprotoServerCreateAppPassword} from '@atproto/api'
+import {type ComAtprotoServerCreateAppPassword} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'

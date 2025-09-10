@@ -87,7 +87,21 @@ export function LogScreen({}: NativeStackScreenProps<
                   ) : (
                     <CircleInfoIcon size="sm" />
                   )}
-                  <Text style={[a.flex_1]}>{String(entry.message)}</Text>
+                  <View
+                    style={[
+                      a.flex_1,
+                      a.flex_row,
+                      a.justify_start,
+                      a.align_center,
+                      a.gap_sm,
+                    ]}>
+                    {entry.context && (
+                      <Text style={[t.atoms.text_contrast_medium]}>
+                        ({String(entry.context)})
+                      </Text>
+                    )}
+                    <Text>{String(entry.message)}</Text>
+                  </View>
                   {entry.metadata &&
                     Object.keys(entry.metadata).length > 0 &&
                     (expanded.includes(entry.id) ? (
@@ -115,7 +129,9 @@ export function LogScreen({}: NativeStackScreenProps<
                       t.atoms.border_contrast_low,
                     ]}>
                     <View style={[a.px_sm, a.py_xs]}>
-                      <Text>{JSON.stringify(entry.metadata, null, 2)}</Text>
+                      <Text style={[a.leading_snug, {fontFamily: 'monospace'}]}>
+                        {JSON.stringify(entry.metadata, null, 2)}
+                      </Text>
                     </View>
                   </View>
                 )}

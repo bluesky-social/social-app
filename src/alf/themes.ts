@@ -1,5 +1,5 @@
 import {atoms} from '#/alf/atoms'
-import {Palette, Theme} from '#/alf/types'
+import {type Palette, type Theme} from '#/alf/types'
 import {
   BLUE_HUE,
   defaultScale,

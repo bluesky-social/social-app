@@ -1,12 +1,13 @@
 import {createContext, useContext, useMemo} from 'react'
-import {type GestureResponderEvent, type View} from 'react-native'
+import {type GestureResponderEvent, type Insets, type View} from 'react-native'
 
-import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text, type TextProps} from '#/components/Typography'
+
+export const DEFAULT_HITSLOP = {top: 5, bottom: 10, left: 10, right: 10}
 
 const PostControlContext = createContext<{
   big?: boolean
@@ -25,12 +26,13 @@ export function PostControlButton({
   active,
   activeColor,
   ...props
-}: ButtonProps & {
+}: Omit<ButtonProps, 'hitSlop'> & {
   ref?: React.Ref<View>
   active?: boolean
   big?: boolean
   color?: string
   activeColor?: string
+  hitSlop?: Insets
 }) {
   const t = useTheme()
   const playHaptic = useHaptics()
@@ -83,8 +85,11 @@ export function PostControlButton({
       shape="round"
       variant="ghost"
       color="secondary"
-      hitSlop={POST_CTRL_HITSLOP}
-      {...props}>
+      {...props}
+      hitSlop={{
+        ...DEFAULT_HITSLOP,
+        ...(props.hitSlop || {}),
+      }}>
       {typeof children === 'function' ? (
         args => (
           <PostControlContext.Provider value={ctx}>
@@ -102,12 +107,20 @@ export function PostControlButton({
 
 export function PostControlButtonIcon({
   icon: Comp,
-}: {
+  style,
+  ...rest
+}: SVGIconProps & {
   icon: React.ComponentType<SVGIconProps>
 }) {
   const {big, color} = useContext(PostControlContext)
 
-  return <Comp style={[color, a.pointer_events_none]} width={big ? 22 : 18} />
+  return (
+    <Comp
+      style={[color, a.pointer_events_none, style]}
+      {...rest}
+      width={big ? 22 : 18}
+    />
+  )
 }
 
 export function PostControlButtonText({style, ...props}: TextProps) {

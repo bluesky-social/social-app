@@ -1,11 +1,16 @@
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type AppBskyFeedDefs, type ComAtprotoLabelDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
-import {Button, ButtonIcon, ButtonSize, ButtonText} from '#/components/Button'
+import {
+  Button,
+  ButtonIcon,
+  type ButtonSize,
+  ButtonText,
+} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
   LabelsOnMeDialog,

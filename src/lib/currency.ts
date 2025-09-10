@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {deviceLocales} from '#/locale/deviceLocales'
-import {useGeolocation} from '#/state/geolocation'
+import {useGeolocationStatus} from '#/state/geolocation'
 import {useLanguagePrefs} from '#/state/preferences'
 
 /**
@@ -275,7 +275,7 @@ export const countryCodeToCurrency: Record<string, string> = {
 export function useFormatCurrency(
   options?: Parameters<typeof Intl.NumberFormat>[1],
 ) {
-  const {geolocation} = useGeolocation()
+  const {location: geolocation} = useGeolocationStatus()
   const {appLanguage} = useLanguagePrefs()
   return React.useMemo(() => {
     const locale = deviceLocales.at(0)

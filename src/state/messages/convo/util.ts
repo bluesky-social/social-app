@@ -1,9 +1,9 @@
 import {
-  ConvoState,
-  ConvoStateBackgrounded,
-  ConvoStateDisabled,
-  ConvoStateReady,
-  ConvoStateSuspended,
+  type ConvoState,
+  type ConvoStateBackgrounded,
+  type ConvoStateDisabled,
+  type ConvoStateReady,
+  type ConvoStateSuspended,
   ConvoStatus,
 } from './types'
 

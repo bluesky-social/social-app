@@ -2,8 +2,8 @@ import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
 
 import {logEvent} from '#/lib/statsig/statsig'
-import {FeedPostSliceItem} from '#/state/queries/post-feed'
-import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
+import {type FeedPostSliceItem} from '#/state/queries/post-feed'
+import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useGutters} from '#/alf'
 import * as Grid from '#/components/Grid'
 import {

@@ -1,4 +1,4 @@
-import {I18n} from '@lingui/core'
+import {type I18n} from '@lingui/core'
 
 export function niceDate(i18n: I18n, date: number | string | Date) {
   const d = new Date(date)

@@ -1,4 +1,4 @@
-import {ImageRequireSource} from 'react-native'
+import {type ImageRequireSource} from 'react-native'
 
 // @ts-ignore we need to pretend -prf
 export const DEF_AVATAR: ImageRequireSource = {uri: '/img/default-avatar.png'}

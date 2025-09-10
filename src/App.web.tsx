@@ -21,8 +21,8 @@ import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {
-  beginResolveGeolocation,
-  ensureGeolocationResolved,
+  beginResolveGeolocationConfig,
+  ensureGeolocationConfigIsResolved,
   Provider as GeolocationProvider,
 } from '#/state/geolocation'
 import {Provider as HomeBadgeProvider} from '#/state/home-badge'
@@ -69,7 +69,7 @@ import {Provider as HideBottomBarBorderProvider} from './lib/hooks/useHideBottom
 /**
  * Begin geolocation ASAP
  */
-beginResolveGeolocation()
+beginResolveGeolocationConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -178,9 +178,10 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
-      setReady(true),
-    )
+    Promise.all([
+      initPersistedState(),
+      ensureGeolocationConfigIsResolved(),
+    ]).then(() => setReady(true))
   }, [])
 
   if (!isReady) {

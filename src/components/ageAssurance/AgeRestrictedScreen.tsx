@@ -18,10 +18,12 @@ export function AgeRestrictedScreen({
   children,
   screenTitle,
   infoText,
+  rightHeaderSlot,
 }: {
   children: React.ReactNode
   screenTitle?: string
   infoText?: string
+  rightHeaderSlot?: React.ReactNode
 }) {
   const {_} = useLingui()
   const copy = useAgeAssuranceCopy()
@@ -46,12 +48,12 @@ export function AgeRestrictedScreen({
     <Layout.Screen>
       <Layout.Header.Outer>
         <Layout.Header.BackButton />
-        <Layout.Header.Content>
+        <Layout.Header.Content align="left">
           <Layout.Header.TitleText>
             {screenTitle ?? <Trans>Unavailable</Trans>}
           </Layout.Header.TitleText>
         </Layout.Header.Content>
-        <Layout.Header.Slot />
+        {rightHeaderSlot ?? <Layout.Header.Slot />}
       </Layout.Header.Outer>
       <Layout.Content>
         <View style={[a.p_lg]}>

@@ -1,11 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
-import {ReportOption} from '#/lib/moderation/useReportOptions'
+import {type ReportOption} from '#/lib/moderation/useReportOptions'
 import {isAndroid} from '#/platform/detection'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -19,7 +19,7 @@ import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/i
 import {PaperPlane_Stroke2_Corner0_Rounded as SendIcon} from '#/components/icons/PaperPlane'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {ReportDialogProps} from './types'
+import {type ReportDialogProps} from './types'
 
 export function SubmitView({
   params,

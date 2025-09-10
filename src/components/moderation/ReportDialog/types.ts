@@ -1,12 +1,12 @@
 import {
-  $Typed,
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  ChatBskyConvoDefs,
+  type $Typed,
+  type AppBskyActorDefs,
+  type AppBskyFeedDefs,
+  type AppBskyGraphDefs,
+  type ChatBskyConvoDefs,
 } from '@atproto/api'
 
-import * as Dialog from '#/components/Dialog'
+import type * as Dialog from '#/components/Dialog'
 
 export type ReportSubject =
   | $Typed<AppBskyActorDefs.ProfileViewBasic>

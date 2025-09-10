@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ConvoItem, ConvoItemError} from '#/state/messages/convo/types'
+import {type ConvoItem, ConvoItemError} from '#/state/messages/convo/types'
 import {atoms as a, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {InlineLinkText} from '#/components/Link'

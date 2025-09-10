@@ -3,11 +3,11 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   AppBskyEmbedVideo,
-  AppBskyFeedDefs,
+  type AppBskyFeedDefs,
   AppBskyFeedPost,
-  ModerationDecision,
+  type ModerationDecision,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -15,7 +15,7 @@ import {useLingui} from '@lingui/react'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {VideoFeedSourceContext} from '#/screens/VideoFeed/types'
+import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {atoms as a, useTheme} from '#/alf'
 import {BLUE_HUE} from '#/alf/util/colorGeneration'
 import {select} from '#/alf/util/themeSelector'

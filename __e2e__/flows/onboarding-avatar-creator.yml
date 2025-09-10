@@ -33,4 +33,9 @@ appId: xyz.blueskyweb.app
 - assertVisible: "You're ready to go!"
 - tapOn:
     id: "onboardingFinish"
+- tapOn:
+    label: "NUX, if applicable"
+    text: "Close"
+    optional: true
+- waitForAnimationToEnd
 - assertVisible: "Following"

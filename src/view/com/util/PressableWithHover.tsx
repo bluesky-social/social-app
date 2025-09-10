@@ -1,6 +1,11 @@
-import {forwardRef, PropsWithChildren} from 'react'
-import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
-import {View} from 'react-native'
+import {forwardRef, type PropsWithChildren} from 'react'
+import {
+  Pressable,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native'
+import {type View} from 'react-native'
 
 import {addStyle} from '#/lib/styles'
 import {useInteractionState} from '#/components/hooks/useInteractionState'

@@ -1,9 +1,9 @@
 import {
   AppBskyFeedDefs,
-  AppBskyFeedGetPostThread,
+  type AppBskyFeedGetPostThread,
   AppBskyFeedThreadgate,
   AtUri,
-  BskyAgent,
+  type BskyAgent,
 } from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
@@ -11,7 +11,7 @@ import {networkRetry, retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
 import {STALE} from '#/state/queries'
 import {RQKEY_ROOT as postThreadQueryKeyRoot} from '#/state/queries/post-thread'
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
+import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {
   createThreadgateRecord,
   mergeThreadgateRecords,

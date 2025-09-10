@@ -1,5 +1,10 @@
-import {ComponentProps} from 'react'
-import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import {type ComponentProps, type JSX} from 'react'
+import {
+  type Pressable,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -12,14 +17,15 @@ import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
 import {ios} from '#/alf'
+import {atoms as a} from '#/alf'
 
-export interface FABProps
-  extends ComponentProps<typeof TouchableWithoutFeedback> {
+export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
   icon: JSX.Element
+  style?: StyleProp<ViewStyle>
 }
 
-export function FABInner({testID, icon, onPress, ...props}: FABProps) {
+export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const {isMobile, isTablet} = useWebMediaQueries()
   const playHaptic = useHaptics()
@@ -51,6 +57,7 @@ export function FABInner({testID, icon, onPress, ...props}: FABProps) {
           playHaptic('Heavy')
         })}
         targetScale={0.9}
+        style={[a.rounded_full, style]}
         {...props}>
         <LinearGradient
           colors={[gradients.blueLight.start, gradients.blueLight.end]}

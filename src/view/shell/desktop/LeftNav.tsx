@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {type JSX, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -40,6 +40,7 @@ import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
+import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {
   BulletList_Filled_Corner0_Rounded as ListFilled,
   BulletList_Stroke2_Corner0_Rounded as List,
@@ -742,6 +743,29 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Lists`)}
+          />
+          <NavItem
+            href="/saved"
+            icon={
+              <Bookmark
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
+            iconFilled={
+              <BookmarkFilled
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
+            label={_(
+              msg({
+                message: 'Saved',
+                context: 'link to bookmarks screen',
+              }),
+            )}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}

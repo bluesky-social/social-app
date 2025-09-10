@@ -39,7 +39,7 @@ export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
 
   const agent = new BskyAppAgent({service: PUBLIC_BSKY_SERVICE})
-  agent.configureProxy(BLUESKY_PROXY_HEADER)
+  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
   return agent
 }
 
@@ -77,7 +77,7 @@ export async function createAgentAndResume(
     }
   }
 
-  agent.configureProxy(BLUESKY_PROXY_HEADER)
+  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare(gates, moderation, onSessionChange)
 }
@@ -112,7 +112,7 @@ export async function createAgentAndLogin(
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
 
-  agent.configureProxy(BLUESKY_PROXY_HEADER)
+  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare(gates, moderation, onSessionChange)
 }
@@ -201,7 +201,7 @@ export async function createAgentAndCreateAccount(
     logger.error(e, {message: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
-  agent.configureProxy(BLUESKY_PROXY_HEADER)
+  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
 
   return agent.prepare(gates, moderation, onSessionChange)
 }

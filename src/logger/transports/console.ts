@@ -1,6 +1,6 @@
 import format from 'date-fns/format'
 
-import {LogLevel, Transport} from '#/logger/types'
+import {LogLevel, type Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 import {isWeb} from '#/platform/detection'
 

@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {
   Image,
   Pressable,
@@ -363,7 +363,7 @@ let EditableUserAvatar = ({
     }
   }, [circular, size])
 
-  const onOpenCamera = React.useCallback(async () => {
+  const onOpenCamera = useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
       return
     }
@@ -377,7 +377,7 @@ let EditableUserAvatar = ({
     )
   }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
 
-  const onOpenLibrary = React.useCallback(async () => {
+  const onOpenLibrary = useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
@@ -421,7 +421,7 @@ let EditableUserAvatar = ({
     circular,
   ])
 
-  const onRemoveAvatar = React.useCallback(() => {
+  const onRemoveAvatar = useCallback(() => {
     onSelectNewAvatar(null)
   }, [onSelectNewAvatar])
 
@@ -528,7 +528,7 @@ let PreviewableUserAvatar = ({
   disableNavigation,
   onBeforePress,
   live,
-  ...rest
+  ...props
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -557,9 +557,14 @@ let PreviewableUserAvatar = ({
       moderation={moderation}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       live={status.isActive || live}
-      {...rest}
+      {...props}
     />
   )
+
+  const linkStyle =
+    props.type !== 'algo' && props.type !== 'list'
+      ? a.rounded_full
+      : {borderRadius: props.size > 32 ? 8 : 3}
 
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
@@ -596,7 +601,8 @@ let PreviewableUserAvatar = ({
             did: profile.did,
             handle: profile.handle,
           })}
-          onPress={onPress}>
+          onPress={onPress}
+          style={linkStyle}>
           {avatarEl}
         </Link>
       )}

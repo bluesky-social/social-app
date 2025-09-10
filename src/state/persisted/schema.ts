@@ -78,8 +78,8 @@ const schema = z.object({
     postLanguage: z.string(),
     /**
      * The user's post language history, used to pre-populate the post language
-     * selector in the composer. Within each value, multiple languages are
-     * separated by values.
+     * selector in the composer. Within each value, multiple languages are separated
+     * by commas.
      *
      * BCP-47 2-letter language codes without region.
      */

@@ -1,11 +1,11 @@
-import React from 'react'
-import {StyleProp, ViewStyle} from 'react-native'
+import {type StyleProp, type ViewStyle} from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
   SlideInLeft,
   SlideInRight,
 } from 'react-native-reanimated'
+import type React from 'react'
 
 import {isWeb} from '#/platform/detection'
 

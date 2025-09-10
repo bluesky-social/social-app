@@ -1,10 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import {BSKY_LABELER_DID, ComAtprotoModerationDefs} from '@atproto/api'
+import {ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/state/ageAssurance/util'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -58,9 +59,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
         },
         {
           encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
-          },
+          headers: BLUESKY_MOD_SERVICE_HEADERS,
         },
       )
     },

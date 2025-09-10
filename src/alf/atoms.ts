@@ -1063,6 +1063,7 @@ export const atoms = {
   }),
   fade_out: web({
     animation: 'fadeOut ease-out 0.15s',
+    animationFillMode: 'forwards',
   }),
   zoom_in: web({
     animation: 'zoomIn ease-out 0.1s',

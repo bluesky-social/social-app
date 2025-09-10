@@ -1,4 +1,5 @@
 import {memo, useMemo, useState} from 'react'
+import {type Insets} from 'react-native'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
@@ -7,7 +8,6 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
@@ -28,6 +28,7 @@ let PostMenuButton = ({
   timestamp,
   threadgateRecord,
   onShowLess,
+  hitSlop,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -39,6 +40,7 @@ let PostMenuButton = ({
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShowLess?: (interaction: AppBskyFeedDefs.Interaction) => void
+  hitSlop?: Insets
 }): React.ReactNode => {
   const {_} = useLingui()
 
@@ -66,7 +68,8 @@ let PostMenuButton = ({
                 testID="postDropdownBtn"
                 big={big}
                 label={props.accessibilityLabel}
-                {...props}>
+                {...props}
+                hitSlop={hitSlop}>
                 <PostControlButtonIcon icon={DotsHorizontal} />
               </PostControlButton>
             )

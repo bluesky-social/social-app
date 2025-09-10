@@ -1,5 +1,5 @@
 import React, {memo, useState} from 'react'
-import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
+import {type LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedReaction,
@@ -8,10 +8,10 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
-  AppBskyActorDefs,
-  AppBskyLabelerDefs,
-  ModerationOpts,
-  RichText as RichTextAPI,
+  type AppBskyActorDefs,
+  type AppBskyLabelerDefs,
+  type ModerationOpts,
+  type RichText as RichTextAPI,
 } from '@atproto/api'
 import {useIsFocused} from '@react-navigation/native'
 

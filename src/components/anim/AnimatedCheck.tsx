@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import Svg, {Circle, Path} from 'react-native-svg'
 
-import {Props, useCommonSVGProps} from '#/components/icons/common'
+import {type Props, useCommonSVGProps} from '#/components/icons/common'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)

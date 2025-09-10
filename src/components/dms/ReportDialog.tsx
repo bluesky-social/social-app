@@ -1,19 +1,21 @@
-import React, {memo, useMemo, useState} from 'react'
+import {memo, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
-  $Typed,
-  AppBskyActorDefs,
-  ChatBskyConvoDefs,
-  ComAtprotoModerationCreateReport,
+  type $Typed,
+  type AppBskyActorDefs,
+  type ChatBskyConvoDefs,
+  type ComAtprotoModerationCreateReport,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 import {useMutation} from '@tanstack/react-query'
+import type React from 'react'
 
-import {ReportOption} from '#/lib/moderation/useReportOptions'
-import {NavigationProp} from '#/lib/routes/types'
+import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
+import {type ReportOption} from '#/lib/moderation/useReportOptions'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
@@ -168,7 +170,10 @@ function SubmitStep({
           reason: details,
         } satisfies ComAtprotoModerationCreateReport.InputSchema
 
-        await agent.createModerationReport(report)
+        await agent.createModerationReport(report, {
+          encoding: 'application/json',
+          headers: BLUESKY_MOD_SERVICE_HEADERS,
+        })
       }
     },
     onSuccess: onComplete,

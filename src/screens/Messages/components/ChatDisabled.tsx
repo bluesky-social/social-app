@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {BLUESKY_MOD_SERVICE_HEADERS} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -73,14 +74,20 @@ function DialogInner() {
     mutationFn: async () => {
       if (!currentAccount)
         throw new Error('No current account, should be unreachable')
-      await agent.createModerationReport({
-        reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
-        subject: {
-          $type: 'com.atproto.admin.defs#repoRef',
-          did: currentAccount.did,
+      await agent.createModerationReport(
+        {
+          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          subject: {
+            $type: 'com.atproto.admin.defs#repoRef',
+            did: currentAccount.did,
+          },
+          reason: details,
         },
-        reason: details,
-      })
+        {
+          encoding: 'application/json',
+          headers: BLUESKY_MOD_SERVICE_HEADERS,
+        },
+      )
     },
     onError: err => {
       logger.error('Failed to submit chat appeal', {message: err})

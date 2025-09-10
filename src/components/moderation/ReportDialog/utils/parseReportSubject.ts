@@ -6,8 +6,8 @@ import {
 } from '@atproto/api'
 
 import {
-  ParsedReportSubject,
-  ReportSubject,
+  type ParsedReportSubject,
+  type ReportSubject,
 } from '#/components/moderation/ReportDialog/types'
 import * as bsky from '#/types/bsky'
 
