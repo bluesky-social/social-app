@@ -6,14 +6,20 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isIOS, isNative} from '#/platform/detection'
-import {type FeedDescriptor} from '#/state/queries/post-feed'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
+import {
+  type FeedDescriptor,
+  RQKEY as FEED_RQKEY,
+} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {PostFeed} from '#/view/com/posts/PostFeed'
-import {EmptyState} from '#/view/com/util/EmptyState'
+import {
+  EmptyState,
+  type EmptyStateButtonProps,
+} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
+import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
 import {type SectionRef} from './types'
 
@@ -24,6 +30,9 @@ interface FeedSectionProps {
   scrollElRef: ListRef
   ignoreFilterFor?: string
   setScrollViewTag: (tag: number | null) => void
+  emptyStateMessage?: string
+  emptyStateButton?: EmptyStateButtonProps
+  emptyStateIcon?: React.ReactElement
 }
 export const ProfileFeedSection = React.forwardRef<
   SectionRef,
@@ -36,6 +45,9 @@ export const ProfileFeedSection = React.forwardRef<
     scrollElRef,
     ignoreFilterFor,
     setScrollViewTag,
+    emptyStateMessage,
+    emptyStateButton,
+    emptyStateIcon,
   },
   ref,
 ) {
@@ -48,6 +60,7 @@ export const ProfileFeedSection = React.forwardRef<
   const adjustedInitialNumToRender = useInitialNumToRender({
     screenHeightOffset: headerHeight,
   })
+  const t = useTheme()
 
   const onScrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -63,8 +76,18 @@ export const ProfileFeedSection = React.forwardRef<
   }))
 
   const renderPostsEmpty = React.useCallback(() => {
-    return <EmptyState icon="growth" message={_(msg`No posts yet.`)} />
-  }, [_])
+    return (
+      <EmptyState
+        icon={
+          emptyStateIcon || (
+            <EditIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
+          )
+        }
+        message={emptyStateMessage || _(msg`No posts yet.`)}
+        button={emptyStateButton}
+      />
+    )
+  }, [_, t, emptyStateMessage, emptyStateButton, emptyStateIcon])
 
   React.useEffect(() => {
     if (isIOS && isFocused && scrollElRef.current) {
