@@ -1,13 +1,9 @@
-import React, {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react'
+import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {
   findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -42,6 +38,7 @@ interface SectionRef {
 }
 
 interface ProfileFeedgensProps {
+  ref?: React.Ref<SectionRef>
   scrollElRef: ListRef
   did: string
   headerOffset: number
@@ -56,24 +53,20 @@ function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
   return item.uri
 }
 
-export const ProfileStarterPacks = React.forwardRef<
-  SectionRef,
-  ProfileFeedgensProps
->(function ProfileFeedgensImpl(
-  {
-    scrollElRef,
-    did,
-    headerOffset,
-    enabled,
-    style,
-    testID,
-    setScrollViewTag,
-    isMe,
-  },
+export function ProfileStarterPacks({
   ref,
-) {
+  scrollElRef,
+  did,
+  headerOffset,
+  enabled,
+  style,
+  testID,
+  setScrollViewTag,
+  isMe,
+}: ProfileFeedgensProps) {
   const t = useTheme()
   const bottomBarOffset = useBottomBarOffset(100)
+  const {height} = useWindowDimensions()
   const [isPTRing, setIsPTRing] = useState(false)
   const {
     data,
@@ -101,7 +94,7 @@ export const ProfileStarterPacks = React.forwardRef<
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -144,7 +137,10 @@ export const ProfileStarterPacks = React.forwardRef<
         refreshing={isPTRing}
         headerOffset={headerOffset}
         progressViewOffset={ios(0)}
-        contentContainerStyle={{paddingBottom: headerOffset + bottomBarOffset}}
+        contentContainerStyle={{
+          minHeight: height + headerOffset,
+          paddingBottom: bottomBarOffset,
+        }}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}
@@ -158,7 +154,7 @@ export const ProfileStarterPacks = React.forwardRef<
       />
     </View>
   )
-})
+}
 
 function CreateAnother() {
   const {_} = useLingui()

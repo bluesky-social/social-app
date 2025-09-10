@@ -33,6 +33,7 @@ interface LabelsSectionProps {
   isFocused: boolean
   setScrollViewTag: (tag: number | null) => void
 }
+
 export function ProfileLabelsSection({
   ref,
   isLabelerLoading,

@@ -1,8 +1,15 @@
-import React from 'react'
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 import {
   findNodeHandle,
   type ListRenderItemInfo,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -33,6 +40,7 @@ interface SectionRef {
 }
 
 interface ProfileListsProps {
+  ref?: React.Ref<SectionRef>
   did: string
   scrollElRef: ListRef
   headerOffset: number
@@ -42,182 +50,185 @@ interface ProfileListsProps {
   setScrollViewTag: (tag: number | null) => void
 }
 
-export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
-  function ProfileListsImpl(
-    {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
-    ref,
-  ) {
-    const t = useTheme()
-    const {_} = useLingui()
-    const [isPTRing, setIsPTRing] = React.useState(false)
-    const opts = React.useMemo(() => ({enabled}), [enabled])
-    const {
-      data,
-      isPending,
-      hasNextPage,
-      fetchNextPage,
-      isFetchingNextPage,
-      isError,
-      error,
-      refetch,
-    } = useProfileListsQuery(did, opts)
-    const isEmpty = !isPending && !data?.pages[0]?.lists.length
+export function ProfileLists({
+  ref,
+  did,
+  scrollElRef,
+  headerOffset,
+  enabled,
+  style,
+  testID,
+  setScrollViewTag,
+}: ProfileListsProps) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {height} = useWindowDimensions()
+  const [isPTRing, setIsPTRing] = useState(false)
+  const opts = useMemo(() => ({enabled}), [enabled])
+  const {
+    data,
+    isPending,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+    refetch,
+  } = useProfileListsQuery(did, opts)
+  const isEmpty = !isPending && !data?.pages[0]?.lists.length
 
-    const items = React.useMemo(() => {
-      let items: any[] = []
-      if (isError && isEmpty) {
-        items = items.concat([ERROR_ITEM])
+  const items = useMemo(() => {
+    let items: any[] = []
+    if (isError && isEmpty) {
+      items = items.concat([ERROR_ITEM])
+    }
+    if (isPending) {
+      items = items.concat([LOADING])
+    } else if (isEmpty) {
+      items = items.concat([EMPTY])
+    } else if (data?.pages) {
+      for (const page of data?.pages) {
+        items = items.concat(page.lists)
       }
-      if (isPending) {
-        items = items.concat([LOADING])
-      } else if (isEmpty) {
-        items = items.concat([EMPTY])
-      } else if (data?.pages) {
-        for (const page of data?.pages) {
-          items = items.concat(page.lists)
-        }
-      }
-      if (isError && !isEmpty) {
-        items = items.concat([LOAD_MORE_ERROR_ITEM])
-      }
-      return items
-    }, [isError, isEmpty, isPending, data])
+    }
+    if (isError && !isEmpty) {
+      items = items.concat([LOAD_MORE_ERROR_ITEM])
+    }
+    return items
+  }, [isError, isEmpty, isPending, data])
 
-    // events
-    // =
+  // events
+  // =
 
-    const queryClient = useQueryClient()
+  const queryClient = useQueryClient()
 
-    const onScrollToTop = React.useCallback(() => {
-      scrollElRef.current?.scrollToOffset({
-        animated: isNative,
-        offset: -headerOffset,
-      })
-      queryClient.invalidateQueries({queryKey: RQKEY(did)})
-    }, [scrollElRef, queryClient, headerOffset, did])
+  const onScrollToTop = useCallback(() => {
+    scrollElRef.current?.scrollToOffset({
+      animated: isNative,
+      offset: -headerOffset,
+    })
+    queryClient.invalidateQueries({queryKey: RQKEY(did)})
+  }, [scrollElRef, queryClient, headerOffset, did])
 
-    React.useImperativeHandle(ref, () => ({
-      scrollToTop: onScrollToTop,
-    }))
+  useImperativeHandle(ref, () => ({
+    scrollToTop: onScrollToTop,
+  }))
 
-    const onRefresh = React.useCallback(async () => {
-      setIsPTRing(true)
-      try {
-        await refetch()
-      } catch (err) {
-        logger.error('Failed to refresh lists', {message: err})
-      }
-      setIsPTRing(false)
-    }, [refetch, setIsPTRing])
+  const onRefresh = useCallback(async () => {
+    setIsPTRing(true)
+    try {
+      await refetch()
+    } catch (err) {
+      logger.error('Failed to refresh lists', {message: err})
+    }
+    setIsPTRing(false)
+  }, [refetch, setIsPTRing])
 
-    const onEndReached = React.useCallback(async () => {
-      if (isFetchingNextPage || !hasNextPage || isError) return
-      try {
-        await fetchNextPage()
-      } catch (err) {
-        logger.error('Failed to load more lists', {message: err})
-      }
-    }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+  const onEndReached = useCallback(async () => {
+    if (isFetchingNextPage || !hasNextPage || isError) return
+    try {
+      await fetchNextPage()
+    } catch (err) {
+      logger.error('Failed to load more lists', {message: err})
+    }
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-    const onPressRetryLoadMore = React.useCallback(() => {
-      fetchNextPage()
-    }, [fetchNextPage])
+  const onPressRetryLoadMore = useCallback(() => {
+    fetchNextPage()
+  }, [fetchNextPage])
 
-    // rendering
-    // =
+  // rendering
+  // =
 
-    const renderItemInner = React.useCallback(
-      ({item, index}: ListRenderItemInfo<any>) => {
-        if (item === EMPTY) {
-          return (
-            <EmptyState
-              icon="list-ul"
-              message={_(msg`You have no lists.`)}
-              testID="listsEmpty"
-            />
-          )
-        } else if (item === ERROR_ITEM) {
-          return (
-            <ErrorMessage
-              message={cleanError(error)}
-              onPressTryAgain={refetch}
-            />
-          )
-        } else if (item === LOAD_MORE_ERROR_ITEM) {
-          return (
-            <LoadMoreRetryBtn
-              label={_(
-                msg`There was an issue fetching your lists. Tap here to try again.`,
-              )}
-              onPress={onPressRetryLoadMore}
-            />
-          )
-        } else if (item === LOADING) {
-          return <FeedLoadingPlaceholder />
-        }
+  const renderItemInner = useCallback(
+    ({item, index}: ListRenderItemInfo<any>) => {
+      if (item === EMPTY) {
         return (
-          <View
-            style={[
-              (index !== 0 || isWeb) && a.border_t,
-              t.atoms.border_contrast_low,
-              a.px_lg,
-              a.py_lg,
-            ]}>
-            <ListCard.Default view={item} />
-          </View>
+          <EmptyState
+            icon="list-ul"
+            message={_(msg`You have no lists.`)}
+            testID="listsEmpty"
+          />
         )
-      },
-      [error, refetch, onPressRetryLoadMore, _, t.atoms.border_contrast_low],
-    )
-
-    React.useEffect(() => {
-      if (isIOS && enabled && scrollElRef.current) {
-        const nativeTag = findNodeHandle(scrollElRef.current)
-        setScrollViewTag(nativeTag)
+      } else if (item === ERROR_ITEM) {
+        return (
+          <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
+        )
+      } else if (item === LOAD_MORE_ERROR_ITEM) {
+        return (
+          <LoadMoreRetryBtn
+            label={_(
+              msg`There was an issue fetching your lists. Tap here to try again.`,
+            )}
+            onPress={onPressRetryLoadMore}
+          />
+        )
+      } else if (item === LOADING) {
+        return <FeedLoadingPlaceholder />
       }
-    }, [enabled, scrollElRef, setScrollViewTag])
-
-    const ProfileListsFooter = React.useCallback(() => {
-      if (isEmpty) return null
       return (
-        <ListFooter
-          hasNextPage={hasNextPage}
-          isFetchingNextPage={isFetchingNextPage}
-          onRetry={fetchNextPage}
-          error={cleanError(error)}
-          height={180 + headerOffset}
-        />
+        <View
+          style={[
+            (index !== 0 || isWeb) && a.border_t,
+            t.atoms.border_contrast_low,
+            a.px_lg,
+            a.py_lg,
+          ]}>
+          <ListCard.Default view={item} />
+        </View>
       )
-    }, [
-      hasNextPage,
-      error,
-      isFetchingNextPage,
-      headerOffset,
-      fetchNextPage,
-      isEmpty,
-    ])
+    },
+    [error, refetch, onPressRetryLoadMore, _, t.atoms.border_contrast_low],
+  )
 
+  useEffect(() => {
+    if (isIOS && enabled && scrollElRef.current) {
+      const nativeTag = findNodeHandle(scrollElRef.current)
+      setScrollViewTag(nativeTag)
+    }
+  }, [enabled, scrollElRef, setScrollViewTag])
+
+  const ProfileListsFooter = useCallback(() => {
+    if (isEmpty) return null
     return (
-      <View testID={testID} style={style}>
-        <List
-          testID={testID ? `${testID}-flatlist` : undefined}
-          ref={scrollElRef}
-          data={items}
-          keyExtractor={keyExtractor}
-          renderItem={renderItemInner}
-          ListFooterComponent={ProfileListsFooter}
-          refreshing={isPTRing}
-          onRefresh={onRefresh}
-          headerOffset={headerOffset}
-          progressViewOffset={ios(0)}
-          removeClippedSubviews={true}
-          desktopFixedHeight
-          onEndReached={onEndReached}
-        />
-      </View>
+      <ListFooter
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        onRetry={fetchNextPage}
+        error={cleanError(error)}
+        height={180 + headerOffset}
+      />
     )
-  },
-)
+  }, [
+    hasNextPage,
+    error,
+    isFetchingNextPage,
+    headerOffset,
+    fetchNextPage,
+    isEmpty,
+  ])
+
+  return (
+    <View testID={testID} style={style}>
+      <List
+        testID={testID ? `${testID}-flatlist` : undefined}
+        ref={scrollElRef}
+        data={items}
+        keyExtractor={keyExtractor}
+        renderItem={renderItemInner}
+        ListFooterComponent={ProfileListsFooter}
+        refreshing={isPTRing}
+        onRefresh={onRefresh}
+        headerOffset={headerOffset}
+        progressViewOffset={ios(0)}
+        removeClippedSubviews={true}
+        desktopFixedHeight
+        onEndReached={onEndReached}
+        contentContainerStyle={{minHeight: height + headerOffset}}
+      />
+    </View>
+  )
+}
 
 function keyExtractor(item: any) {
   return item._reactKey || item.uri
