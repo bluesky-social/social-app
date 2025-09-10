@@ -15,6 +15,7 @@ import {
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -27,6 +28,7 @@ import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
+import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {ListFooter} from '#/components/Lists'
 
@@ -50,32 +52,27 @@ interface ProfileListsProps {
   setScrollViewTag: (tag: number | null) => void
 }
 
-export function ProfileLists({
-  ref,
-  did,
-  scrollElRef,
-  headerOffset,
-  enabled,
-  style,
-  testID,
-  setScrollViewTag,
-}: ProfileListsProps) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const {height} = useWindowDimensions()
-  const [isPTRing, setIsPTRing] = useState(false)
-  const opts = useMemo(() => ({enabled}), [enabled])
-  const {
-    data,
-    isPending,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-    isError,
-    error,
-    refetch,
-  } = useProfileListsQuery(did, opts)
-  const isEmpty = !isPending && !data?.pages[0]?.lists.length
+export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
+  function ProfileListsImpl(
+    {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
+    ref,
+  ) {
+    const t = useTheme()
+    const {_} = useLingui()
+    const [isPTRing, setIsPTRing] = React.useState(false)
+    const opts = React.useMemo(() => ({enabled}), [enabled])
+    const {
+      data,
+      isPending,
+      hasNextPage,
+      fetchNextPage,
+      isFetchingNextPage,
+      isError,
+      error,
+      refetch,
+    } = useProfileListsQuery(did, opts)
+    const isEmpty = !isPending && !data?.pages[0]?.lists.length
+    const navigation = useNavigation()
 
   const items = useMemo(() => {
     let items: any[] = []
@@ -140,9 +137,50 @@ export function ProfileLists({
   // rendering
   // =
 
-  const renderItemInner = useCallback(
-    ({item, index}: ListRenderItemInfo<any>) => {
-      if (item === EMPTY) {
+    const renderItemInner = React.useCallback(
+      ({item, index}: ListRenderItemInfo<any>) => {
+        if (item === EMPTY) {
+          return (
+            <EmptyState
+              icon={
+                <ListIcon
+                  size="3xl"
+                  fill={t.atoms.text_contrast_low.color}
+                  viewBox="0 0 47 38"
+                />
+              }
+              message={_(
+                msg`Lists allow you to see content from your favorite people.`,
+              )}
+              button={{
+                label: 'Create a list',
+                text: 'Create a list',
+                onPress: () => navigation.navigate('Lists' as never),
+                size: 'small',
+                color: 'primary',
+              }}
+              testID="listsEmpty"
+            />
+          )
+        } else if (item === ERROR_ITEM) {
+          return (
+            <ErrorMessage
+              message={cleanError(error)}
+              onPressTryAgain={refetch}
+            />
+          )
+        } else if (item === LOAD_MORE_ERROR_ITEM) {
+          return (
+            <LoadMoreRetryBtn
+              label={_(
+                msg`There was an issue fetching your lists. Tap here to try again.`,
+              )}
+              onPress={onPressRetryLoadMore}
+            />
+          )
+        } else if (item === LOADING) {
+          return <FeedLoadingPlaceholder />
+        }
         return (
           <EmptyState
             icon="list-ul"
@@ -150,21 +188,22 @@ export function ProfileLists({
             testID="listsEmpty"
           />
         )
-      } else if (item === ERROR_ITEM) {
-        return (
-          <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
-        )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
-        return (
-          <LoadMoreRetryBtn
-            label={_(
-              msg`There was an issue fetching your lists. Tap here to try again.`,
-            )}
-            onPress={onPressRetryLoadMore}
-          />
-        )
-      } else if (item === LOADING) {
-        return <FeedLoadingPlaceholder />
+      },
+      [
+        t.atoms.border_contrast_low,
+        t.atoms.text_contrast_low.color,
+        _,
+        navigation,
+        error,
+        refetch,
+        onPressRetryLoadMore,
+      ],
+    )
+
+    React.useEffect(() => {
+      if (isIOS && enabled && scrollElRef.current) {
+        const nativeTag = findNodeHandle(scrollElRef.current)
+        setScrollViewTag(nativeTag)
       }
       return (
         <View

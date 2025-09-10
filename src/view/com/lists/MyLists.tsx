@@ -18,9 +18,9 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {type MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {atoms as a, useTheme} from '#/alf'
-import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
+import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
-import {Text} from '#/components/Typography'
+import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
 
@@ -51,36 +51,19 @@ export function MyLists({
   const isEmpty = !isFetching && !data?.length
 
   const items = React.useMemo(() => {
-    let items: any[] = []
+    let listItems: any[] = []
     if (isError && isEmpty) {
-      items = items.concat([ERROR_ITEM])
+      listItems = listItems.concat([ERROR_ITEM])
     }
     if ((!isFetched && isFetching) || !moderationOpts) {
-      items = items.concat([LOADING])
+      listItems = listItems.concat([LOADING])
     } else if (isEmpty) {
-      items = items.concat([EMPTY])
+      listItems = listItems.concat([EMPTY])
     } else {
-      items = items.concat(data)
+      listItems = listItems.concat(data)
     }
-    return items
+    return listItems
   }, [isError, isEmpty, isFetched, isFetching, moderationOpts, data])
-
-  let emptyText
-  switch (filter) {
-    case 'curate':
-      emptyText = _(
-        msg`Public, sharable lists which can be used to drive feeds.`,
-      )
-      break
-    case 'mod':
-      emptyText = _(
-        msg`Public, sharable lists of users to mute or block in bulk.`,
-      )
-      break
-    default:
-      emptyText = _(msg`You have no lists.`)
-      break
-  }
 
   // events
   // =
@@ -102,34 +85,19 @@ export function MyLists({
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_xl]}>
-            <View
-              style={[
-                a.align_center,
-                a.justify_center,
-                a.rounded_full,
-                t.atoms.bg_contrast_25,
-                {
-                  width: 32,
-                  height: 32,
-                },
-              ]}>
-              <ListIcon size="md" fill={t.atoms.text_contrast_low.color} />
-            </View>
-            <Text
-              style={[
-                a.text_center,
-                a.flex_1,
-                a.text_sm,
-                a.leading_snug,
-                t.atoms.text_contrast_medium,
-                {
-                  maxWidth: 200,
-                },
-              ]}>
-              {emptyText}
-            </Text>
-          </View>
+          <EmptyState
+            icon={
+              <ListIcon
+                size="3xl"
+                fill={t.atoms.text_contrast_low.color}
+                viewBox="0 0 47 38"
+              />
+            }
+            message={_(
+              msg`Lists allow you to see content from your favorite people.`,
+            )}
+            testID="listsEmpty"
+          />
         )
       } else if (item === ERROR_ITEM) {
         return (
@@ -159,7 +127,7 @@ export function MyLists({
         </View>
       )
     },
-    [t, renderItem, error, onRefresh, emptyText],
+    [_, t, renderItem, error, onRefresh],
   )
 
   if (inline) {
