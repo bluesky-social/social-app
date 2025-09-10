@@ -88,8 +88,8 @@ function DialogInner({
     if (!moderationOpts) return profile.displayName || profile.handle
     const moderation = moderateProfile(profile, moderationOpts)
     return sanitizeDisplayName(
-      profile.displayName || profile.handle, 
-      moderation.ui('displayName')
+      profile.displayName || profile.handle,
+      moderation.ui('displayName'),
     )
   }, [moderationOpts, profile])
 
