@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -30,6 +31,7 @@ export function HomeHeaderLayoutMobile({
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
+  const navigation = useNavigation()
 
   return (
     <Animated.View
@@ -56,8 +58,12 @@ export function HomeHeaderLayoutMobile({
           <PressableScale
             targetScale={0.9}
             onPress={() => {
-              playHaptic('Light')
-              emitSoftReset()
+              if (__DEV__) {
+                navigation.navigate('Debug')
+              } else {
+                playHaptic('Light')
+                emitSoftReset()
+              }
             }}>
             <Logo width={30} />
           </PressableScale>
