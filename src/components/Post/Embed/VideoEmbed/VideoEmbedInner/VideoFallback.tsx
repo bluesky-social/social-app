@@ -3,7 +3,9 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text as TypoText} from '#/components/Typography'
 
 export function Container({children}: {children: React.ReactNode}) {
@@ -16,12 +18,12 @@ export function Container({children}: {children: React.ReactNode}) {
         a.justify_center,
         a.align_center,
         a.px_lg,
-        a.border,
-        t.atoms.border_contrast_low,
-        a.rounded_sm,
+        a.rounded_md,
+        a.overflow_hidden,
         a.gap_lg,
       ]}>
       {children}
+      <MediaInsetBorder />
     </View>
   )
 }
@@ -50,8 +52,8 @@ export function RetryButton({onPress}: {onPress: () => void}) {
       onPress={onPress}
       size="small"
       color="secondary_inverted"
-      variant="solid"
       label={_(msg`Retry`)}>
+      <ButtonIcon icon={ArrowRotateIcon} />
       <ButtonText>
         <Trans>Retry</Trans>
       </ButtonText>

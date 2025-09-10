@@ -86,7 +86,13 @@ export function VideoEmbed({
   const contents = (
     <div
       ref={ref}
-      style={{display: 'flex', flex: 1, cursor: 'default'}}
+      style={{
+        display: 'flex',
+        flex: 1,
+        cursor: 'default',
+        backgroundImage: `url(${embed.thumbnail})`,
+        backgroundSize: 'cover',
+      }}
       onClick={evt => evt.stopPropagation()}>
       <ErrorBoundary renderError={renderError} key={key}>
         <OnlyNearScreen>
