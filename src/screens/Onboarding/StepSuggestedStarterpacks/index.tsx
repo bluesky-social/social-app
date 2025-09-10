@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarterPacksQuery'
 import {useOnboardingDispatch} from '#/state/shell'
@@ -100,12 +99,7 @@ export function StepSuggestedStarterpacks() {
             </Admonition>
           </View>
         ) : (
-          <View
-            style={[
-              a.flex_1,
-              a.mt_md,
-              isWeb && [a.border_x, a.rounded_sm, a.overflow_hidden],
-            ]}>
+          <View style={[a.flex_1, a.mt_md]}>
             {suggestedUsers?.starterPacks.map(starterPack => (
               <View style={[a.pb_lg]} key={starterPack.uri}>
                 <StarterPackCard view={starterPack} />
