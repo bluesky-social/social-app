@@ -16,28 +16,28 @@
   <meta property="og:url" content="{{ requestURI }}">
   <link rel="canonical" href="{{ requestURI|canonicalize_url }}" />
   {% endif -%}
-  
+
   {%- if feedView.DisplayName %}
   <meta property="og:title" content="{{ feedView.DisplayName }} by @{{ feedView.Creator.Handle }}">
   {% else %}
   <meta property="og:title" content="Feed by @{{ feedView.Creator.Handle }}">
   {% endif -%}
-  
+
   {%- if feedView.Description %}
   <meta name="description" content="{{ feedView.Description }}">
   <meta property="og:description" content="{{ feedView.Description }}">
   <meta property="twitter:description" content="{{ feedView.Description }}">
   {% endif -%}
-  
+
   {%- if feedView.Avatar %}
   <meta property="og:image" content="{{ feedView.Avatar }}">
   <meta property="twitter:image" content="{{ feedView.Avatar }}">
   <meta name="twitter:card" content="summary">
   {% endif %}
-  
+
   <meta name="twitter:label1" content="Created by">
   <meta name="twitter:value1" content="@{{ feedView.Creator.Handle }}">
-  
+
   <link rel="alternate" href="{{ feedView.Uri }}" />
 {% endif -%}
 {%- endblock %}
