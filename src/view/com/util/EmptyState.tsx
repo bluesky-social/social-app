@@ -1,17 +1,13 @@
 import React from 'react'
 import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
 import {View} from 'react-native'
-import {type IconProp} from '@fortawesome/fontawesome-svg-core'
-import {
-  FontAwesomeIcon,
-  type FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, type ButtonProps, ButtonText} from '#/components/Button'
+import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {Text} from '#/components/Typography'
 
@@ -29,7 +25,7 @@ export function EmptyState({
   button,
 }: {
   testID?: string
-  icon: IconProp | 'user-group' | 'growth' | React.ReactElement
+  icon: 'growth' | React.ReactElement
   message: string
   style?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
@@ -38,6 +34,11 @@ export function EmptyState({
   const pal = usePalette('default')
   const {isTabletOrDesktop} = useWebMediaQueries()
   const iconSize = isTabletOrDesktop ? 64 : 48
+  const t = useTheme()
+
+  const placeholderIcon = (
+    <EditIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
+  )
 
   const renderIcon = () => {
     if (typeof icon === 'object' && React.isValidElement(icon)) {
@@ -48,13 +49,7 @@ export function EmptyState({
       return <Growth width={iconSize} fill={pal.colors.emptyStateIcon} />
     }
 
-    return (
-      <FontAwesomeIcon
-        icon={icon as IconProp}
-        size={iconSize}
-        style={[{color: pal.colors.emptyStateIcon} as FontAwesomeIconStyle]}
-      />
-    )
+    return icon || placeholderIcon
   }
 
   return (
