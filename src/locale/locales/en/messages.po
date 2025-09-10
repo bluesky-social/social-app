@@ -521,7 +521,7 @@ msgstr ""
 msgid "7 days"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:341
+#: src/screens/Onboarding/StepFinished.tsx:343
 msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
 msgstr ""
 
@@ -982,7 +982,7 @@ msgstr ""
 msgid "An error occurred while uploading the video."
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:359
+#: src/screens/Onboarding/StepFinished.tsx:361
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
 msgstr ""
 
@@ -1745,7 +1745,7 @@ msgstr ""
 msgid "Choose Post Languages"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:575
+#: src/screens/Onboarding/StepFinished.tsx:577
 msgid "Choose the algorithms that power your custom feeds."
 msgstr ""
 
@@ -1964,8 +1964,8 @@ msgstr ""
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:588
+#: src/screens/Onboarding/StepFinished.tsx:475
+#: src/screens/Onboarding/StepFinished.tsx:590
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
@@ -2691,7 +2691,7 @@ msgstr ""
 msgid "Display name"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:347
+#: src/screens/Onboarding/StepFinished.tsx:349
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr ""
 
@@ -3584,8 +3584,8 @@ msgstr ""
 msgid "Filter who you receive notifications from"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:591
+#: src/screens/Onboarding/StepFinished.tsx:481
+#: src/screens/Onboarding/StepFinished.tsx:593
 msgid "Finalizing"
 msgstr ""
 
@@ -3609,7 +3609,7 @@ msgstr ""
 msgid "Find posts, users, and feeds on Blacksky"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:345
+#: src/screens/Onboarding/StepFinished.tsx:347
 msgid "Find your people"
 msgstr ""
 
@@ -3621,7 +3621,7 @@ msgstr ""
 msgid "Fitness"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:571
+#: src/screens/Onboarding/StepFinished.tsx:573
 msgid "Flexible"
 msgstr ""
 
@@ -3791,7 +3791,7 @@ msgstr ""
 msgid "Forever"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:354
+#: src/screens/Onboarding/StepFinished.tsx:356
 msgid "Forget the noise"
 msgstr ""
 
@@ -3808,7 +3808,7 @@ msgstr ""
 msgid "Forgot?"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:336
+#: src/screens/Onboarding/StepFinished.tsx:338
 msgid "Free your feed"
 msgstr ""
 
@@ -4625,8 +4625,8 @@ msgstr ""
 msgid "Let's get your password reset!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:591
+#: src/screens/Onboarding/StepFinished.tsx:483
+#: src/screens/Onboarding/StepFinished.tsx:593
 msgid "Let's go!"
 msgstr ""
 
@@ -5249,7 +5249,7 @@ msgstr ""
 msgid "Need to report a copyright violation?"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:559
+#: src/screens/Onboarding/StepFinished.tsx:561
 msgid "Never lose access to your followers or data."
 msgstr ""
 
@@ -5384,8 +5384,8 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
-#: src/screens/Onboarding/StepFinished.tsx:474
-#: src/screens/Onboarding/StepFinished.tsx:483
+#: src/screens/Onboarding/StepFinished.tsx:476
+#: src/screens/Onboarding/StepFinished.tsx:485
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -5405,7 +5405,7 @@ msgstr ""
 msgid "Next image"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:356
+#: src/screens/Onboarding/StepFinished.tsx:358
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
 msgstr ""
 
@@ -5448,7 +5448,7 @@ msgstr ""
 msgid "No messages yet"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:338
+#: src/screens/Onboarding/StepFinished.tsx:340
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr ""
 
@@ -5740,7 +5740,7 @@ msgstr ""
 msgid "Oops!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:555
+#: src/screens/Onboarding/StepFinished.tsx:557
 msgid "Open"
 msgstr ""
 
@@ -6444,7 +6444,7 @@ msgctxt "toast"
 msgid "Profile updated"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:541
+#: src/screens/Onboarding/StepFinished.tsx:543
 msgid "Public"
 msgstr ""
 
@@ -7989,16 +7989,16 @@ msgstr ""
 msgid "Similar accounts"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:380
-#: src/screens/Onboarding/StepFinished.tsx:462
+#: src/screens/Onboarding/StepFinished.tsx:382
+#: src/screens/Onboarding/StepFinished.tsx:464
 #: src/screens/Onboarding/StepInterests/index.tsx:240
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:222
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Skip"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:373
-#: src/screens/Onboarding/StepFinished.tsx:459
+#: src/screens/Onboarding/StepFinished.tsx:375
+#: src/screens/Onboarding/StepFinished.tsx:461
 msgid "Skip introduction and start using your account"
 msgstr ""
 
@@ -9741,7 +9741,7 @@ msgstr ""
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:533
+#: src/screens/Onboarding/StepFinished.tsx:535
 msgid "We hope you have a wonderful time. Remember, Blacksky is:"
 msgstr ""
 
@@ -10322,7 +10322,7 @@ msgstr ""
 msgid "You're in line"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:530
+#: src/screens/Onboarding/StepFinished.tsx:532
 msgid "You're ready to go!"
 msgstr ""
 
@@ -10480,15 +10480,15 @@ msgstr ""
 msgid "Your posts were sent"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:545
+#: src/screens/Onboarding/StepFinished.tsx:547
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:422
+#: src/screens/Onboarding/StepFinished.tsx:424
 msgid "Your profile picture"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:350
+#: src/screens/Onboarding/StepFinished.tsx:352
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
 msgstr ""
 
