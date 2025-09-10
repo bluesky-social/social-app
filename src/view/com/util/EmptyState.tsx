@@ -7,7 +7,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, type ButtonProps, ButtonText} from '#/components/Button'
-import {EditBig_Stroke2_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
+import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {Text} from '#/components/Typography'
 
@@ -37,7 +37,11 @@ export function EmptyState({
   const t = useTheme()
 
   const placeholderIcon = (
+<<<<<<< HEAD
     <EditIcon size="2xl" fill={t.atoms.text_contrast_low.color} />
+=======
+    <EditIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
+>>>>>>> aee67f715 (add empty state icon)
   )
 
   const renderIcon = () => {
