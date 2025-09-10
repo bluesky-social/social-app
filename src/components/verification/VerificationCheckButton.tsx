@@ -99,15 +99,15 @@ export function Badge({
             : _(msg`View this user's verifications`)
         }
         hitSlop={20}
-        onPress={() => {
+        onPress={evt => {
+          evt.preventDefault()
           logger.metric('verification:badge:click', {}, {statsig: true})
           if (state.profile.role === 'verifier') {
             verifierDialogControl.open()
           } else {
             verificationsDialogControl.open()
           }
-        }}
-        style={[]}>
+        }}>
         {({hovered}) => (
           <View
             style={[
