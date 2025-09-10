@@ -7,7 +7,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {getAllListMembers} from '#/state/queries/list-members'
@@ -115,9 +114,9 @@ export function StarterPackCard({
         a.p_lg,
         a.gap_md,
         a.border,
-        a.rounded_sm,
+        a.rounded_lg,
         a.overflow_hidden,
-        t.atoms.border_contrast_low,
+        t.atoms.border_contrast_medium,
       ]}>
       <AvatarStack
         profiles={profiles ?? []}
@@ -129,14 +128,14 @@ export function StarterPackCard({
         style={[
           a.w_full,
           a.flex_row,
-          a.align_start,
+          a.align_end,
           a.gap_lg,
           web({
             position: 'static',
             zIndex: 'unset',
           }),
         ]}>
-        <View style={[a.flex_1]}>
+        <View style={[a.flex_1, a.gap_2xs]}>
           <Text
             emoji
             style={[a.text_md, a.font_bold, a.leading_snug]}
@@ -145,18 +144,15 @@ export function StarterPackCard({
           </Text>
           <Text
             emoji
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}
-            numberOfLines={1}>
-            {view.creator?.did === currentAccount?.did
-              ? _(msg`By you`)
-              : _(msg`By ${sanitizeHandle(view.creator.handle, '@')}`)}
+            style={[a.text_xs, t.atoms.text_contrast_medium, a.leading_snug]}
+            numberOfLines={2}>
+            {record.description}
           </Text>
         </View>
         <Button
           label={_(msg`Follow all`)}
           disabled={isProcessing || isFollowingAll}
           onPress={onFollowAll}
-          variant="solid"
           color="secondary"
           size="small"
           style={[a.z_50]}>

@@ -9,7 +9,7 @@ import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarter
 import {useOnboardingDispatch} from '#/state/shell'
 import {OnboardingControls} from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
@@ -19,7 +19,6 @@ import {StarterPackCard} from './StarterPackCard'
 
 export function StepSuggestedStarterpacks() {
   const {_} = useLingui()
-  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
 
@@ -105,8 +104,6 @@ export function StepSuggestedStarterpacks() {
             style={[
               a.flex_1,
               a.mt_md,
-              a.border_y,
-              t.atoms.border_contrast_low,
               isWeb && [a.border_x, a.rounded_sm, a.overflow_hidden],
             ]}>
             {suggestedUsers?.starterPacks.map(starterPack => (
