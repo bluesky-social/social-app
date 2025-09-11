@@ -4,7 +4,6 @@ import {type AppBskyActorDefs, type ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
-import type React from 'react'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {makeProfileLink} from '#/lib/routes/links'

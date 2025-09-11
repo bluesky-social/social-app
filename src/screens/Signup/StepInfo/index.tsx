@@ -60,7 +60,7 @@ export function StepInfo({
 
   const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
 
-  const tldtsRef = React.useRef<typeof tldts>()
+  const tldtsRef = React.useRef<typeof tldts>(undefined)
   React.useEffect(() => {
     // @ts-expect-error - valid path
     import('tldts/dist/index.cjs.min.js').then(tldts => {

@@ -96,13 +96,12 @@ const ImageAltTextInner = ({
         <View style={[t.atoms.bg_contrast_50, a.rounded_sm, a.overflow_hidden]}>
           <Image
             style={imageStyle}
-            source={{
-              uri: (image.transformed ?? image.source).path,
-            }}
+            source={{uri: (image.transformed ?? image.source).path}}
             contentFit="contain"
             accessible={true}
             accessibilityIgnoresInvertColors
             enableLiveTextInteraction
+            autoplay={false}
           />
         </View>
       </View>

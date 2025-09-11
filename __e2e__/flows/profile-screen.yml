@@ -3,7 +3,7 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: "?users&posts&feeds"
+      SERVER_PATH: "?users&posts&feeds"
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
@@ -12,10 +12,10 @@ appId: xyz.blueskyweb.app
 # Navigate to another user profile
 - extendedWaitUntil:
     visible:
-        id: "bottomBarSearchBtn"
+      id: "bottomBarSearchBtn"
 - tapOn:
     id: "bottomBarSearchBtn"
-- tapOn: "Search for posts, users, or feeds"
+- tapOn: "Search for posts, users[,]? or feeds"
 - inputText: "b"
 - tapOn:
     id: "searchAutoCompleteResult-bob.test"

@@ -6,10 +6,10 @@ import {
   View,
 } from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
-import {ComAtprotoServerDefs} from '@atproto/api'
+import {type ComAtprotoServerDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -22,7 +22,7 @@ import {isWeb} from '#/platform/detection'
 import {useInvitesAPI, useInvitesState} from '#/state/invites'
 import {useModalControls} from '#/state/modals'
 import {
-  InviteCodesQueryResponse,
+  type InviteCodesQueryResponse,
   useInviteCodesQuery,
 } from '#/state/queries/invites'
 import {ErrorMessage} from '../util/error/ErrorMessage'

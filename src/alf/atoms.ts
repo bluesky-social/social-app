@@ -70,8 +70,20 @@ export const atoms = {
   overflow_visible: {
     overflow: 'visible',
   },
+  overflow_x_visible: {
+    overflowX: 'visible',
+  },
+  overflow_y_visible: {
+    overflowY: 'visible',
+  },
   overflow_hidden: {
     overflow: 'hidden',
+  },
+  overflow_x_hidden: {
+    overflowX: 'hidden',
+  },
+  overflow_y_hidden: {
+    overflowY: 'hidden',
   },
   /**
    * @platform web
@@ -363,6 +375,14 @@ export const atoms = {
   border_r_0: {
     borderRightWidth: 0,
   },
+  border_x_0: {
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+  },
+  border_y_0: {
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+  },
   border: {
     borderWidth: StyleSheet.hairlineWidth,
   },
@@ -377,6 +397,14 @@ export const atoms = {
   },
   border_r: {
     borderRightWidth: StyleSheet.hairlineWidth,
+  },
+  border_x: {
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
+  },
+  border_y: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   border_transparent: {
     borderColor: 'transparent',
@@ -988,6 +1016,9 @@ export const atoms = {
   block: web({
     display: 'block',
   }),
+  contents: web({
+    display: 'contents',
+  }),
 
   /*
    * Transition
@@ -1032,6 +1063,7 @@ export const atoms = {
   }),
   fade_out: web({
     animation: 'fadeOut ease-out 0.15s',
+    animationFillMode: 'forwards',
   }),
   zoom_in: web({
     animation: 'zoomIn ease-out 0.1s',

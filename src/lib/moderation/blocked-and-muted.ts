@@ -1,4 +1,4 @@
-import * as bsky from '#/types/bsky'
+import type * as bsky from '#/types/bsky'
 
 export function isBlockedOrBlocking(profile: bsky.profile.AnyProfileView) {
   return profile.viewer?.blockedBy || profile.viewer?.blocking

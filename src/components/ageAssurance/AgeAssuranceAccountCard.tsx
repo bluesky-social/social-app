@@ -3,8 +3,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {isNative} from '#/platform/detection'
 import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
 import {logger} from '#/state/ageAssurance/util'
+import {useDeviceGeolocationApi} from '#/state/geolocation'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
@@ -16,8 +18,10 @@ import {
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRequestDialog'
 import {Divider} from '#/components/Divider'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
@@ -35,8 +39,10 @@ function Inner({style}: ViewStyleProp & {}) {
   const {_, i18n} = useLingui()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
+  const locationControl = Dialog.useDialogControl()
   const getTimeAgo = useGetTimeAgo()
   const {gtPhone} = useBreakpoints()
+  const {setDeviceGeolocation} = useDeviceGeolocationApi()
 
   const copy = useAgeAssuranceCopy()
   const {status, lastInitiatedAt} = useAgeAssurance()
@@ -71,8 +77,50 @@ function Inner({style}: ViewStyleProp & {}) {
             </View>
           </View>
 
-          <View style={[a.pb_md]}>
+          <View style={[a.pb_md, a.gap_xs]}>
             <Text style={[a.text_sm, a.leading_snug]}>{copy.notice}</Text>
+
+            {isNative && (
+              <>
+                <Text style={[a.text_sm, a.leading_snug]}>
+                  <Trans>
+                    Is your location not accurate?{' '}
+                    <InlineLinkText
+                      label={_(msg`Confirm your location`)}
+                      {...createStaticClick(() => {
+                        locationControl.open()
+                      })}>
+                      Tap here to confirm your location.
+                    </InlineLinkText>{' '}
+                  </Trans>
+                </Text>
+
+                <DeviceLocationRequestDialog
+                  control={locationControl}
+                  onLocationAcquired={props => {
+                    if (props.geolocationStatus.isAgeRestrictedGeo) {
+                      props.disableDialogAction()
+                      props.setDialogError(
+                        _(
+                          msg`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
+                        ),
+                      )
+                    } else {
+                      props.closeDialog(() => {
+                        // set this after close!
+                        setDeviceGeolocation({
+                          countryCode: props.geolocationStatus.countryCode,
+                          regionCode: props.geolocationStatus.regionCode,
+                        })
+                        Toast.show(_(msg`Thanks! You're all set.`), {
+                          type: 'success',
+                        })
+                      })
+                    }
+                  }}
+                />
+              </>
+            )}
           </View>
 
           {isBlocked ? (

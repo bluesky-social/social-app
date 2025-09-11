@@ -1,7 +1,7 @@
-import {StyleProp, StyleSheet, TextStyle} from 'react-native'
+import {type StyleProp, StyleSheet, type TextStyle} from 'react-native'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {TypographyVariant} from '#/lib/ThemeContext'
+import {type TypographyVariant} from '#/lib/ThemeContext'
 import {useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {TextLinkOnWebOnly} from './Link'
 import {LoadingPlaceholder} from './LoadingPlaceholder'

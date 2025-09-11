@@ -7,6 +7,7 @@ import ExpoImageCropTool, {type OpenCropperOptions} from 'expo-image-crop-tool'
 
 import {compressIfNeeded} from './manip'
 import {type PickerImage} from './picker.shared'
+import {ImagePickerResult} from 'expo-image-picker'
 
 async function getFile() {
   const imagesDir = documentDirectory!
@@ -36,6 +37,22 @@ async function getFile() {
 
 export async function openPicker(): Promise<PickerImage[]> {
   return [await getFile()]
+}
+
+export async function openUnifiedPicker(): Promise<ImagePickerResult> {
+  const file = await getFile()
+
+  return {
+    assets: [
+      {
+        type: 'image',
+        uri: file.path,
+        mimeType: file.mime,
+        ...file,
+      },
+    ],
+    canceled: false,
+  }
 }
 
 export async function openCamera(): Promise<PickerImage> {

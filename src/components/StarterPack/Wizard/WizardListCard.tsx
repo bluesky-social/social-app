@@ -131,10 +131,13 @@ export function WizardProfileCard({
 }) {
   const {currentAccount} = useSession()
 
-  const isMe = profile.did === currentAccount?.did
-  const included = isMe || state.profiles.some(p => p.did === profile.did)
+  // Determine the "main" profile for this starter pack - either targetDid or current account
+  const targetProfileDid = state.targetDid || currentAccount?.did
+  const isTarget = profile.did === targetProfileDid
+  const included = isTarget || state.profiles.some(p => p.did === profile.did)
   const disabled =
-    isMe || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE - 1)
+    isTarget ||
+    (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE - 1)
   const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)
@@ -144,7 +147,7 @@ export function WizardProfileCard({
     if (disabled) return
 
     Keyboard.dismiss()
-    if (profile.did === currentAccount?.did) return
+    if (profile.did === targetProfileDid) return
 
     if (!included) {
       dispatch({type: 'AddProfile', profile})

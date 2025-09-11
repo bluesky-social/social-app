@@ -28,7 +28,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 const Context = createContext<{
-  inputRef: React.RefObject<TextInput> | null
+  inputRef: React.RefObject<TextInput | null> | null
   isInvalid: boolean
   hovered: boolean
   onHoverIn: () => void
@@ -48,9 +48,11 @@ const Context = createContext<{
 })
 Context.displayName = 'TextFieldContext'
 
-export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
+export type RootProps = React.PropsWithChildren<
+  {isInvalid?: boolean} & TextStyleProp
+>
 
-export function Root({children, isInvalid = false}: RootProps) {
+export function Root({children, isInvalid = false, style}: RootProps) {
   const inputRef = useRef<TextInput>(null)
   const {
     state: hovered,
@@ -85,7 +87,14 @@ export function Root({children, isInvalid = false}: RootProps) {
   return (
     <Context.Provider value={context}>
       <View
-        style={[a.flex_row, a.align_center, a.relative, a.w_full, a.px_md]}
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.relative,
+          a.w_full,
+          a.px_md,
+          style,
+        ]}
         {...web({
           onClick: () => inputRef.current?.focus(),
           onMouseOver: onHoverIn,
@@ -143,7 +152,7 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
-  inputRef?: React.RefObject<TextInput> | React.ForwardedRef<TextInput>
+  inputRef?: React.RefObject<TextInput | null> | React.ForwardedRef<TextInput>
 }
 
 export function createInput(Component: typeof TextInput) {

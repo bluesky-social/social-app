@@ -1,5 +1,4 @@
 import {type SvgProps} from 'react-native-svg'
-import type React from 'react'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {atoms as a, useTheme, web} from '#/alf'

@@ -12,9 +12,9 @@ import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnstablePostSource} from '#/state/unstable-post-source'
-import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
+import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
 import {ThreadError} from '#/screens/PostThread/components/ThreadError'
 import {
   ThreadItemAnchor,
@@ -38,6 +38,7 @@ import {
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {LoggedOutCTA} from '#/components/LoggedOutCTA'
 
 const PARENT_CHUNK_SIZE = 5
 const CHILDREN_CHUNK_SIZE = 50
@@ -48,7 +49,10 @@ export function PostThread({uri}: {uri: string}) {
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const anchorPostSource = useUnstablePostSource(uri)
-  const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
+  const feedFeedback = useFeedFeedback(
+    anchorPostSource?.feedSourceInfo,
+    hasSession,
+  )
 
   /*
    * One query to rule them all
@@ -405,6 +409,8 @@ export function PostThread({uri}: {uri: string}) {
                 onPostSuccess={optimisticOnPostReply}
                 postSource={anchorPostSource}
               />
+              {/* Show CTA for logged-out visitors */}
+              <LoggedOutCTA style={a.px_lg} gateName="cta_above_post_replies" />
             </View>
           )
         } else {
@@ -455,7 +461,7 @@ export function PostThread({uri}: {uri: string}) {
         return (
           <View>
             {gtMobile && (
-              <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />
+              <ThreadComposePrompt onPressCompose={onReplyToAnchor} />
             )}
           </View>
         )
@@ -586,7 +592,7 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
 
   return (
     <Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
-      <PostThreadComposePrompt onPressCompose={onPressReply} />
+      <ThreadComposePrompt onPressCompose={onPressReply} />
     </Animated.View>
   )
 }

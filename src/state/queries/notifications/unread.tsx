@@ -9,10 +9,9 @@ import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {resetBadgeCount} from '#/lib/notifications/notifications'
-import {logger} from '#/logger'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {truncateAndInvalidate} from '#/state/queries/util'
 import {useAgent, useSession} from '#/state/session'
-import {useModerationOpts} from '../../preferences/moderation-opts'
-import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
 import {type CachedFeedPage, type FeedPage} from './types'
 import {fetchPage} from './util'
@@ -189,8 +188,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
           }
           broadcast.postMessage({event: unreadCountStr})
-        } catch (e) {
-          logger.warn('Failed to check unread notifications', {error: e})
         } finally {
           isFetchingRef.current = false
         }

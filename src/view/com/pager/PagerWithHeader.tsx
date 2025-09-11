@@ -1,4 +1,4 @@
-import {memo, useCallback, useEffect, useRef, useState} from 'react'
+import {type JSX, memo, useCallback, useEffect, useRef, useState} from 'react'
 import {
   type LayoutChangeEvent,
   type NativeScrollEvent,

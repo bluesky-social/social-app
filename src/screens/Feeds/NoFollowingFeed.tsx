@@ -1,5 +1,4 @@
-import React from 'react'
-import {View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,27 +8,26 @@ import {atoms as a, useTheme} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-export function NoFollowingFeed() {
+export function NoFollowingFeed({onAddFeed}: {onAddFeed?: () => void}) {
   const t = useTheme()
   const {_} = useLingui()
   const {mutateAsync: addSavedFeeds} = useAddSavedFeedsMutation()
 
-  const addRecommendedFeeds = React.useCallback(
-    (e: any) => {
-      e.preventDefault()
+  const addRecommendedFeeds = (e: GestureResponderEvent) => {
+    e.preventDefault()
 
-      addSavedFeeds([
-        {
-          ...TIMELINE_SAVED_FEED,
-          pinned: true,
-        },
-      ])
+    addSavedFeeds([
+      {
+        ...TIMELINE_SAVED_FEED,
+        pinned: true,
+      },
+    ])
 
-      // prevent navigation
-      return false
-    },
-    [addSavedFeeds],
-  )
+    onAddFeed?.()
+
+    // prevent navigation
+    return false as const
+  }
 
   return (
     <View style={[a.flex_row, a.flex_wrap, a.align_center, a.py_md, a.px_lg]}>
@@ -37,7 +35,7 @@ export function NoFollowingFeed() {
         <Trans>
           Looks like you're missing a following feed.{' '}
           <InlineLinkText
-            to="/"
+            to="#"
             label={_(msg`Add the default feed of only people you follow`)}
             onPress={addRecommendedFeeds}
             style={[a.leading_snug]}>

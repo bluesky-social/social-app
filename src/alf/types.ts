@@ -1,4 +1,4 @@
-import {StyleProp, TextStyle, ViewStyle} from 'react-native'
+import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
 
 export type TextStyleProp = {
   style?: StyleProp<TextStyle>

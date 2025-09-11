@@ -2,7 +2,6 @@ import {memo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {CenteredView} from '#/view/com/util/Views'

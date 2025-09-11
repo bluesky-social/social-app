@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
 import {findNodeHandle, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,6 +18,7 @@ import {Text} from '#/components/Typography'
 import {type SectionRef} from './types'
 
 interface FeedSectionProps {
+  ref?: React.Ref<SectionRef>
   feed: FeedDescriptor
   headerHeight: number
   isFocused: boolean
@@ -25,31 +26,26 @@ interface FeedSectionProps {
   ignoreFilterFor?: string
   setScrollViewTag: (tag: number | null) => void
 }
-export const ProfileFeedSection = React.forwardRef<
-  SectionRef,
-  FeedSectionProps
->(function FeedSectionImpl(
-  {
-    feed,
-    headerHeight,
-    isFocused,
-    scrollElRef,
-    ignoreFilterFor,
-    setScrollViewTag,
-  },
+export function ProfileFeedSection({
   ref,
-) {
+  feed,
+  headerHeight,
+  isFocused,
+  scrollElRef,
+  ignoreFilterFor,
+  setScrollViewTag,
+}: FeedSectionProps) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
-  const [hasNew, setHasNew] = React.useState(false)
-  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const [hasNew, setHasNew] = useState(false)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads')
   const isVideoFeed = isNative && feed.endsWith('posts_with_video')
   const adjustedInitialNumToRender = useInitialNumToRender({
     screenHeightOffset: headerHeight,
   })
 
-  const onScrollToTop = React.useCallback(() => {
+  const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
       animated: isNative,
       offset: -headerHeight,
@@ -58,15 +54,15 @@ export const ProfileFeedSection = React.forwardRef<
     setHasNew(false)
   }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
   }))
 
-  const renderPostsEmpty = React.useCallback(() => {
+  const renderPostsEmpty = useCallback(() => {
     return <EmptyState icon="growth" message={_(msg`No posts yet.`)} />
   }, [_])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isIOS && isFocused && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
       setScrollViewTag(nativeTag)
@@ -101,7 +97,7 @@ export const ProfileFeedSection = React.forwardRef<
       )}
     </View>
   )
-})
+}
 
 function ProfileEndOfFeed() {
   const t = useTheme()

@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,7 +9,7 @@ import {Button, useButtonContext} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as LabelingServiceCard from '#/components/LabelingServiceCard'
 import {Text} from '#/components/Typography'
-import {ReportDialogProps} from './types'
+import {type ReportDialogProps} from './types'
 
 export function SelectLabelerView({
   ...props

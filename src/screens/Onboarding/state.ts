@@ -11,7 +11,7 @@ import {
 export type OnboardingState = {
   hasPrev: boolean
   totalSteps: number
-  activeStep: 'profile' | 'interests' | 'finished'
+  activeStep: 'profile' | 'interests' | 'suggested-accounts' | 'finished'
   activeStepIndex: number
 
   interestsStepResults: {
@@ -33,6 +33,11 @@ export type OnboardingState = {
       emoji: Emoji
       backgroundColor: AvatarColor
     }
+  }
+
+  experiments?: {
+    onboarding_suggested_accounts?: boolean
+    onboarding_value_prop?: boolean
   }
 }
 
@@ -160,22 +165,49 @@ export function reducer(
 
   switch (a.type) {
     case 'next': {
-      if (s.activeStep === 'profile') {
-        next.activeStep = 'interests'
-        next.activeStepIndex = 2
-      } else if (s.activeStep === 'interests') {
-        next.activeStep = 'finished'
-        next.activeStepIndex = 3
+      if (s.experiments?.onboarding_suggested_accounts) {
+        if (s.activeStep === 'profile') {
+          next.activeStep = 'interests'
+          next.activeStepIndex = 2
+        } else if (s.activeStep === 'interests') {
+          next.activeStep = 'suggested-accounts'
+          next.activeStepIndex = 3
+        }
+        if (s.activeStep === 'suggested-accounts') {
+          next.activeStep = 'finished'
+          next.activeStepIndex = 4
+        }
+      } else {
+        if (s.activeStep === 'profile') {
+          next.activeStep = 'interests'
+          next.activeStepIndex = 2
+        } else if (s.activeStep === 'interests') {
+          next.activeStep = 'finished'
+          next.activeStepIndex = 3
+        }
       }
       break
     }
     case 'prev': {
-      if (s.activeStep === 'interests') {
-        next.activeStep = 'profile'
-        next.activeStepIndex = 1
-      } else if (s.activeStep === 'finished') {
-        next.activeStep = 'interests'
-        next.activeStepIndex = 2
+      if (s.experiments?.onboarding_suggested_accounts) {
+        if (s.activeStep === 'interests') {
+          next.activeStep = 'profile'
+          next.activeStepIndex = 1
+        } else if (s.activeStep === 'suggested-accounts') {
+          next.activeStep = 'interests'
+          next.activeStepIndex = 2
+        } else if (s.activeStep === 'finished') {
+          next.activeStep = 'suggested-accounts'
+          next.activeStepIndex = 3
+        }
+      } else {
+        if (s.activeStep === 'interests') {
+          next.activeStep = 'profile'
+          next.activeStepIndex = 1
+        } else if (s.activeStep === 'finished') {
+          next.activeStep = 'interests'
+          next.activeStepIndex = 2
+        }
       }
       break
     }

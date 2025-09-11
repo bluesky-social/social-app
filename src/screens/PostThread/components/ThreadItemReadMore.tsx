@@ -90,10 +90,10 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
                   interacted && a.underline,
                 ]}>
                 <Trans>
-                  Read {item.moreReplies} more{' '}
+                  Read{' '}
                   <Plural
-                    one="reply"
-                    other="replies"
+                    one="# more reply"
+                    other="# more replies"
                     value={item.moreReplies}
                   />
                 </Trans>

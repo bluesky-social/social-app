@@ -46,12 +46,14 @@ import {
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
   AppBskyUnspeccedDefs,
+  AtUri,
   type BskyAgent,
   type RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
@@ -70,6 +72,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
+import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
@@ -77,7 +80,11 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
-import {type ComposerImage, pasteImage} from '#/state/gallery'
+import {
+  type ComposerImage,
+  createComposerImage,
+  pasteImage,
+} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -103,32 +110,33 @@ import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
 import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
-import {SelectPhotoBtn} from '#/view/com/composer/photos/SelectPhotoBtn'
-import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
-import {
-  TextInput,
-  type TextInputRef,
-} from '#/view/com/composer/text-input/TextInput'
+import {TextInput} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
-import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
 import {Text} from '#/view/com/util/text/Text'
-import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {PostLanguageSelect} from './select-language/PostLanguageSelect'
+import {
+  type AssetType,
+  SelectMediaButton,
+  type SelectMediaButtonProps,
+} from './SelectMediaButton'
 import {
   type ComposerAction,
   composerReducer,
@@ -145,6 +153,7 @@ import {
   processVideo,
   type VideoState,
 } from './state/video'
+import {type TextInputRef} from './text-input/TextInput.types'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
@@ -165,7 +174,7 @@ export const ComposePost = ({
   videoUri: initVideoUri,
   cancelRef,
 }: Props & {
-  cancelRef?: React.RefObject<CancelRef>
+  cancelRef?: React.RefObject<CancelRef | null>
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -181,6 +190,7 @@ export const ComposePost = ({
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
+  const navigation = useNavigation<NavigationProp>()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
@@ -295,7 +305,9 @@ export const ComposePost = ({
   )
 
   const onPressCancel = useCallback(() => {
-    if (
+    if (textInput.current?.maybeClosePopup()) {
+      return
+    } else if (
       thread.posts.some(
         post =>
           post.shortenedGraphemeLength > 0 ||
@@ -515,11 +527,29 @@ export const ComposePost = ({
     }
     onClose()
     Toast.show(
-      thread.posts.length > 1
-        ? _(msg`Your posts have been published`)
-        : replyTo
-          ? _(msg`Your reply has been published`)
-          : _(msg`Your post has been published`),
+      <Toast.Outer>
+        <Toast.Icon />
+        <Toast.Text>
+          {thread.posts.length > 1
+            ? _(msg`Your posts were sent`)
+            : replyTo
+              ? _(msg`Your reply was sent`)
+              : _(msg`Your post was sent`)}
+        </Toast.Text>
+        {postUri && (
+          <Toast.Action
+            label={_(msg`View post`)}
+            onPress={() => {
+              const {host: name, rkey} = new AtUri(postUri)
+              navigation.navigate('PostThread', {name, rkey})
+            }}>
+            <Trans context="Action to view the post the user just created">
+              View
+            </Trans>
+          </Toast.Action>
+        )}
+      </Toast.Outer>,
+      {type: 'success'},
     )
   }, [
     _,
@@ -535,6 +565,7 @@ export const ComposePost = ({
     replyTo,
     setLangPrefs,
     queryClient,
+    navigation,
   ])
 
   // Preserves the referential identity passed to each post item.
@@ -811,11 +842,16 @@ let ComposerPost = React.memo(function ComposerPost({
 
   const onPhotoPasted = useCallback(
     async (uri: string) => {
-      if (uri.startsWith('data:video/') || uri.startsWith('data:image/gif')) {
+      if (
+        uri.startsWith('data:video/') ||
+        (isWeb && uri.startsWith('data:image/gif'))
+      ) {
         if (isNative) return // web only
         const [mimeType] = uri.slice('data:'.length).split(';')
         if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
-          Toast.show(_(msg`Unsupported video type`), 'xmark')
+          Toast.show(_(msg`Unsupported video type: ${mimeType}`), {
+            type: 'error',
+          })
           return
         }
         const name = `pasted.${mimeToExt(mimeType)}`
@@ -906,7 +942,7 @@ let ComposerPost = React.memo(function ComposerPost({
                 })
               }
             }}>
-            <ButtonIcon icon={X} />
+            <ButtonIcon icon={XIcon} />
           </Button>
           <Prompt.Basic
             control={discardPromptControl}
@@ -1251,7 +1287,6 @@ function ComposerFooter({
   dispatch,
   showAddButton,
   onEmojiButtonPress,
-  onError,
   onSelectVideo,
   onAddPost,
 }: {
@@ -1266,11 +1301,32 @@ function ComposerFooter({
   const t = useTheme()
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
+  /*
+   * Once we've allowed a certain type of asset to be selected, we don't allow
+   * other types of media to be selected.
+   */
+  const [selectedAssetsType, setSelectedAssetsType] = useState<
+    AssetType | undefined
+  >(undefined)
 
   const media = post.embed.media
   const images = media?.type === 'images' ? media.images : []
   const video = media?.type === 'video' ? media.video : null
   const isMaxImages = images.length >= MAX_IMAGES
+  const isMaxVideos = !!video
+
+  let selectedAssetsCount = 0
+  let isMediaSelectionDisabled = false
+
+  if (media?.type === 'images') {
+    isMediaSelectionDisabled = isMaxImages
+    selectedAssetsCount = images.length
+  } else if (media?.type === 'video') {
+    isMediaSelectionDisabled = isMaxVideos
+    selectedAssetsCount = 1
+  } else {
+    isMediaSelectionDisabled = !!media
+  }
 
   const onImageAdd = useCallback(
     (next: ComposerImage[]) => {
@@ -1287,6 +1343,54 @@ function ComposerFooter({
       dispatch({type: 'embed_add_gif', gif})
     },
     [dispatch],
+  )
+
+  /*
+   * Reset if the user clears any selected media
+   */
+  if (selectedAssetsType !== undefined && !media) {
+    setSelectedAssetsType(undefined)
+  }
+
+  const onSelectAssets = useCallback<SelectMediaButtonProps['onSelectAssets']>(
+    async ({type, assets, errors}) => {
+      setSelectedAssetsType(type)
+
+      if (assets.length) {
+        if (type === 'image') {
+          const images: ComposerImage[] = []
+
+          await Promise.all(
+            assets.map(async image => {
+              const composerImage = await createComposerImage({
+                path: image.uri,
+                width: image.width,
+                height: image.height,
+                mime: image.mimeType!,
+              })
+              images.push(composerImage)
+            }),
+          ).catch(e => {
+            logger.error(`createComposerImage failed`, {
+              safeMessage: e.message,
+            })
+          })
+
+          onImageAdd(images)
+        } else if (type === 'video') {
+          onSelectVideo(post.id, assets[0])
+        } else if (type === 'gif') {
+          onSelectVideo(post.id, assets[0])
+        }
+      }
+
+      errors.map(error => {
+        Toast.show(error, {
+          type: 'warning',
+        })
+      })
+    },
+    [post.id, onSelectVideo, onImageAdd],
   )
 
   return (
@@ -1307,15 +1411,11 @@ function ComposerFooter({
             <VideoUploadToolbar state={video} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <SelectPhotoBtn
-                size={images.length}
-                disabled={media?.type === 'images' ? isMaxImages : !!media}
-                onAdd={onImageAdd}
-              />
-              <SelectVideoBtn
-                onSelectVideo={asset => onSelectVideo(post.id, asset)}
-                disabled={!!media}
-                setError={onError}
+              <SelectMediaButton
+                disabled={isMediaSelectionDisabled}
+                allowedAssetTypes={selectedAssetsType}
+                selectedAssetsCount={selectedAssetsCount}
+                onSelectAssets={onSelectAssets}
               />
               <OpenCameraBtn
                 disabled={media?.type === 'images' ? isMaxImages : !!media}
@@ -1331,7 +1431,7 @@ function ComposerFooter({
                   variant="ghost"
                   shape="round"
                   color="primary">
-                  <EmojiSmile size="lg" />
+                  <EmojiSmileIcon size="lg" />
                 </Button>
               ) : null}
             </ToolbarWrapper>
@@ -1341,20 +1441,16 @@ function ComposerFooter({
       <View style={[a.flex_row, a.align_center, a.justify_between]}>
         {showAddButton && (
           <Button
-            label={_(msg`Add new post`)}
+            label={_(msg`Add another post to thread`)}
             onPress={onAddPost}
-            style={[a.p_sm, a.m_2xs]}
+            style={[a.p_sm]}
             variant="ghost"
             shape="round"
             color="primary">
-            <FontAwesomeIcon
-              icon="add"
-              size={20}
-              color={t.palette.primary_500}
-            />
+            <PlusIcon size="lg" />
           </Button>
         )}
-        <SelectLangBtn />
+        <PostLanguageSelect />
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}
@@ -1654,7 +1750,7 @@ function ErrorBanner({
           t.atoms.bg_contrast_25,
         ]}>
         <View style={[a.relative, a.flex_row, a.gap_sm, {paddingRight: 48}]}>
-          <CircleInfo fill={t.palette.negative_400} />
+          <CircleInfoIcon fill={t.palette.negative_400} />
           <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
             {error}
           </NewText>
@@ -1666,7 +1762,7 @@ function ErrorBanner({
             shape="round"
             style={[a.absolute, {top: 0, right: 0}]}
             onPress={onClearError}>
-            <ButtonIcon icon={X} />
+            <ButtonIcon icon={XIcon} />
           </Button>
         </View>
         {videoError && videoState.jobId && (

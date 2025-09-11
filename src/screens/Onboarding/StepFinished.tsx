@@ -1,5 +1,12 @@
-import React from 'react'
+import {useCallback, useContext, useState} from 'react'
 import {View} from 'react-native'
+import Animated, {
+  Easing,
+  LayoutAnimationConfig,
+  SlideInRight,
+  SlideOutLeft,
+} from 'react-native-reanimated'
+import {Image} from 'expo-image'
 import {
   type AppBskyActorDefs,
   type AppBskyActorProfile,
@@ -22,6 +29,7 @@ import {
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {preferencesQueryKey} from '#/state/queries/preferences'
@@ -36,13 +44,22 @@ import {
 import {
   DescriptionText,
   OnboardingControls,
+  OnboardingHeaderSlot,
   TitleText,
 } from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
+import {Context, type OnboardingState} from '#/screens/Onboarding/state'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
-import {atoms as a, useTheme} from '#/alf'
+import {
+  atoms as a,
+  native,
+  platform,
+  tokens,
+  useBreakpoints,
+  useTheme,
+} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
@@ -53,10 +70,9 @@ import * as bsky from '#/types/bsky'
 
 export function StepFinished() {
   const {_} = useLingui()
-  const t = useTheme()
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch} = useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
-  const [saving, setSaving] = React.useState(false)
+  const [saving, setSaving] = useState(false)
   const queryClient = useQueryClient()
   const agent = useAgent()
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -66,7 +82,7 @@ export function StepFinished() {
   const {startProgressGuide} = useProgressGuideControls()
   const gate = useGate()
 
-  const finishOnboarding = React.useCallback(async () => {
+  const finishOnboarding = useCallback(async () => {
     setSaving(true)
 
     let starterPack: AppBskyGraphDefs.StarterPackView | undefined
@@ -245,6 +261,267 @@ export function StepFinished() {
     gate,
   ])
 
+  return state.experiments?.onboarding_value_prop ? (
+    <ValueProposition
+      finishOnboarding={finishOnboarding}
+      saving={saving}
+      state={state}
+    />
+  ) : (
+    <LegacyFinalStep
+      finishOnboarding={finishOnboarding}
+      saving={saving}
+      state={state}
+    />
+  )
+}
+
+const PROP_1 = {
+  light: platform({
+    native: require('../../../assets/images/onboarding/value_prop_1_light.webp'),
+    web: require('../../../assets/images/onboarding/value_prop_1_light_borderless.webp'),
+  }),
+  dim: platform({
+    native: require('../../../assets/images/onboarding/value_prop_1_dim.webp'),
+    web: require('../../../assets/images/onboarding/value_prop_1_dim_borderless.webp'),
+  }),
+  dark: platform({
+    native: require('../../../assets/images/onboarding/value_prop_1_dark.webp'),
+    web: require('../../../assets/images/onboarding/value_prop_1_dark_borderless.webp'),
+  }),
+} as const
+
+const PROP_2 = {
+  light: require('../../../assets/images/onboarding/value_prop_2_light.webp'),
+  dim: require('../../../assets/images/onboarding/value_prop_2_dim.webp'),
+  dark: require('../../../assets/images/onboarding/value_prop_2_dark.webp'),
+} as const
+
+const PROP_3 = {
+  light: require('../../../assets/images/onboarding/value_prop_3_light.webp'),
+  dim: require('../../../assets/images/onboarding/value_prop_3_dim.webp'),
+  dark: require('../../../assets/images/onboarding/value_prop_3_dark.webp'),
+} as const
+
+function ValueProposition({
+  finishOnboarding,
+  saving,
+  state,
+}: {
+  finishOnboarding: () => void
+  saving: boolean
+  state: OnboardingState
+}) {
+  const [subStep, setSubStep] = useState<0 | 1 | 2>(0)
+  const t = useTheme()
+  const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
+
+  const image = [PROP_1[t.name], PROP_2[t.name], PROP_3[t.name]][subStep]
+
+  const onPress = () => {
+    if (subStep === 2) {
+      finishOnboarding() // has its own metrics
+    } else if (subStep === 1) {
+      setSubStep(2)
+      logger.metric('onboarding:valueProp:stepTwo:nextPressed', {})
+    } else if (subStep === 0) {
+      setSubStep(1)
+      logger.metric('onboarding:valueProp:stepOne:nextPressed', {})
+    }
+  }
+
+  const {title, description, alt} = [
+    {
+      title: _(msg`Free your feed`),
+      description: _(
+        msg`No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you.`,
+      ),
+      alt: _(
+        msg`A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens`,
+      ),
+    },
+    {
+      title: _(msg`Find your people`),
+      description: _(
+        msg`Ditch the trolls and clickbait. Find real people and conversations that matter to you.`,
+      ),
+      alt: _(
+        msg`Your profile picture surrounded by concentric circles of other users' profile pictures`,
+      ),
+    },
+    {
+      title: _(msg`Forget the noise`),
+      description: _(
+        msg`No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention.`,
+      ),
+      alt: _(
+        msg`An illustration of several Bluesky posts alongside repost, like, and comment icons`,
+      ),
+    },
+  ][subStep]
+
+  return (
+    <>
+      {!gtMobile && (
+        <OnboardingHeaderSlot.Portal>
+          <Button
+            disabled={saving}
+            variant="ghost"
+            color="secondary"
+            size="small"
+            label={_(msg`Skip introduction and start using your account`)}
+            onPress={() => {
+              logger.metric('onboarding:valueProp:skipPressed', {})
+              finishOnboarding()
+            }}
+            style={[a.bg_transparent]}>
+            <ButtonText>
+              <Trans>Skip</Trans>
+            </ButtonText>
+          </Button>
+        </OnboardingHeaderSlot.Portal>
+      )}
+
+      <LayoutAnimationConfig skipEntering skipExiting>
+        <Animated.View
+          key={subStep}
+          entering={native(
+            SlideInRight.easing(Easing.out(Easing.exp)).duration(500),
+          )}
+          exiting={native(
+            SlideOutLeft.easing(Easing.out(Easing.exp)).duration(500),
+          )}>
+          <View
+            style={[
+              a.relative,
+              a.align_center,
+              a.justify_center,
+              isNative && {marginHorizontal: tokens.space.xl * -1},
+              a.pointer_events_none,
+            ]}>
+            <Image
+              source={image}
+              style={[a.w_full, {aspectRatio: 1}]}
+              alt={alt}
+              accessibilityIgnoresInvertColors={false} // I guess we do need it to blend into the background
+            />
+            {subStep === 1 && (
+              <Image
+                source={state.profileStepResults.imageUri}
+                style={[
+                  a.z_10,
+                  a.absolute,
+                  a.rounded_full,
+                  {
+                    width: `${(80 / 393) * 100}%`,
+                    height: `${(80 / 393) * 100}%`,
+                  },
+                ]}
+                accessibilityIgnoresInvertColors
+                alt={_(msg`Your profile picture`)}
+              />
+            )}
+          </View>
+
+          <View style={[a.mt_4xl, a.gap_2xl, a.align_center]}>
+            <View style={[a.flex_row, a.gap_sm]}>
+              <Dot active={subStep === 0} />
+              <Dot active={subStep === 1} />
+              <Dot active={subStep === 2} />
+            </View>
+
+            <View style={[a.gap_sm]}>
+              <Text style={[a.font_heavy, a.text_3xl, a.text_center]}>
+                {title}
+              </Text>
+              <Text
+                style={[
+                  t.atoms.text_contrast_medium,
+                  a.text_md,
+                  a.leading_snug,
+                  a.text_center,
+                ]}>
+                {description}
+              </Text>
+            </View>
+          </View>
+        </Animated.View>
+      </LayoutAnimationConfig>
+
+      <OnboardingControls.Portal>
+        <View style={gtMobile && [a.gap_md, a.flex_row]}>
+          {gtMobile && (
+            <Button
+              disabled={saving}
+              color="secondary"
+              size="large"
+              label={_(msg`Skip introduction and start using your account`)}
+              onPress={() => finishOnboarding()}>
+              <ButtonText>
+                <Trans>Skip</Trans>
+              </ButtonText>
+            </Button>
+          )}
+          <Button
+            disabled={saving}
+            key={state.activeStep} // remove focus state on nav
+            color="primary"
+            size="large"
+            label={
+              subStep === 2
+                ? _(msg`Complete onboarding and start using your account`)
+                : _(msg`Next`)
+            }
+            onPress={onPress}>
+            <ButtonText>
+              {saving ? (
+                <Trans>Finalizing</Trans>
+              ) : subStep === 2 ? (
+                <Trans>Let's go!</Trans>
+              ) : (
+                <Trans>Next</Trans>
+              )}
+            </ButtonText>
+            {subStep === 2 && (
+              <ButtonIcon icon={saving ? Loader : ArrowRight} />
+            )}
+          </Button>
+        </View>
+      </OnboardingControls.Portal>
+    </>
+  )
+}
+
+function Dot({active}: {active: boolean}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <View
+      style={[
+        a.rounded_full,
+        {width: 8, height: 8},
+        active
+          ? {backgroundColor: t.palette.primary_500}
+          : t.atoms.bg_contrast_50,
+      ]}
+    />
+  )
+}
+
+function LegacyFinalStep({
+  finishOnboarding,
+  saving,
+  state,
+}: {
+  finishOnboarding: () => void
+  saving: boolean
+  state: OnboardingState
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
   return (
     <View style={[a.align_start]}>
       <IconCircle icon={Check} style={[a.mb_2xl]} />
@@ -303,9 +580,9 @@ export function StepFinished() {
 
       <OnboardingControls.Portal>
         <Button
+          testID="onboardingFinish"
           disabled={saving}
           key={state.activeStep} // remove focus state on nav
-          variant="solid"
           color="primary"
           size="large"
           label={_(msg`Complete onboarding and start using your account`)}
