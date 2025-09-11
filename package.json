@@ -186,7 +186,7 @@
     "react-is": "19",
     "react-keyed-flatten-children": "^5.0.0",
     "react-native": "0.81.4",
-    "react-native-compressor": "^1.11.0",
+    "react-native-compressor": "^1.12.0",
     "react-native-date-picker": "^5.0.13",
     "react-native-device-attest": "^0.1.6",
     "react-native-drawer-layout": "^4.1.8",
