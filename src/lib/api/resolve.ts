@@ -247,6 +247,11 @@ export async function resolveServiceURL(
     s => s.id === '#atproto_pds' || s.type === 'AtprotoPersonalDataServer',
   )
 
+  // If the service ends with "bsky.ntwork", it's a mushroom URL.
+  if (pdsService?.serviceEndpoint?.endsWith('bsky.network')) {
+    return DEFAULT_SERVICE
+  }
+
   return pdsService?.serviceEndpoint || DEFAULT_SERVICE
 }
 
