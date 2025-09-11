@@ -104,7 +104,6 @@ export class SafelinkClient {
       this.urlCache.set(url, maybeUrlRule)
 
       addMetrics('ok', false)
-
       return maybeUrlRule
     } catch (e) {
       this.urlCache.set(url, 'ok')
@@ -115,7 +114,6 @@ export class SafelinkClient {
       this.domainCache.set(domain, maybeDomainRule)
 
       addMetrics('ok', false)
-
       return maybeDomainRule
     } catch (e) {
       this.domainCache.set(domain, 'ok')

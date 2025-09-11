@@ -74,6 +74,6 @@ export class Metrics {
 
   async start(port: number) {
     const server = this.app.listen(port)
-    await once(server, 'listening')
+    await once(server, 'metrics server listening')
   }
 }

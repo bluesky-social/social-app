@@ -98,7 +98,6 @@ export default function (ctx: AppContext, app: Express) {
       }
 
       addMetrics(ruleStr, 302)
-
       return res.end(html)
     }),
   )
