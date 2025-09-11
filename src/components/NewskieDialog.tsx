@@ -93,7 +93,6 @@ function DialogInner({
     )
   }, [moderationOpts, profile])
 
-  // Generate the join message based on the conditions
   const getJoinMessage = () => {
     const timeAgoString = timeAgo(createdAt, now, {format: 'long'})
 
