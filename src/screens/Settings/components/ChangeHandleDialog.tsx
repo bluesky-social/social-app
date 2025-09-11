@@ -40,6 +40,7 @@ import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icon
 import {SquareBehindSquare4_Stroke2_Corner0_Rounded as CopyIcon} from '#/components/icons/SquareBehindSquare4'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {CopyButton} from './CopyButton'
@@ -149,6 +150,7 @@ function ProvidedHandlePage({
   goToOwnHandle: () => void
 }) {
   const {_} = useLingui()
+  const t = useTheme()
   const [subdomain, setSubdomain] = useState('')
   const agent = useAgent()
   const control = Dialog.useDialogContext()
@@ -175,7 +177,12 @@ function ProvidedHandlePage({
     },
   })
 
-  const host = serviceInfo.availableUserDomains[0]
+  const [host, setHost] = useState(serviceInfo.availableUserDomains?.[0] || '')
+
+  const availableDomains = useMemo(
+    () => serviceInfo.availableUserDomains || [],
+    [serviceInfo.availableUserDomains],
+  )
 
   const validation = useMemo(
     () => validateServiceHandle(subdomain, host),
@@ -240,6 +247,74 @@ function ProvidedHandlePage({
                 {host}
               </TextField.SuffixText>
             </TextField.Root>
+            {availableDomains.length > 1 && (
+              <View style={[a.mt_md]}>
+                <Text
+                  style={[a.text_sm, a.mb_xs, t.atoms.text_contrast_medium]}>
+                  <Trans>Domain</Trans>
+                </Text>
+                <Menu.Root>
+                  <Menu.Trigger label={_(msg`Select domain`)}>
+                    {({props}) => (
+                      <Button
+                        {...props}
+                        label={_(msg`Select domain`)}
+                        variant="solid"
+                        color="secondary"
+                        size="large"
+                        style={[
+                          a.flex_row,
+                          a.align_center,
+                          a.justify_between,
+                          a.w_full,
+                        ]}>
+                        <View style={[a.flex_1, a.align_start]}>
+                          <ButtonText style={[a.text_md, a.font_bold]}>
+                            {host}
+                          </ButtonText>
+                          {host === availableDomains[0] && (
+                            <Text
+                              style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                              <Trans>Default</Trans>
+                            </Text>
+                          )}
+                        </View>
+                        <ButtonIcon icon={ArrowRightIcon} />
+                      </Button>
+                    )}
+                  </Menu.Trigger>
+                  <Menu.Outer>
+                    <Menu.Group>
+                      {availableDomains.map((domain, index) => (
+                        <Menu.Item
+                          key={domain}
+                          label={domain}
+                          onPress={() => setHost(domain)}>
+                          <Menu.ItemText>
+                            <View
+                              style={[a.flex_row, a.align_center, a.gap_sm]}>
+                              <Text>{domain}</Text>
+                              {index === 0 && (
+                                <Text
+                                  style={[
+                                    a.text_xs,
+                                    t.atoms.text_contrast_medium,
+                                  ]}>
+                                  (<Trans>Default</Trans>)
+                                </Text>
+                              )}
+                            </View>
+                          </Menu.ItemText>
+                          {host === domain && (
+                            <Menu.ItemIcon icon={CheckIcon} />
+                          )}
+                        </Menu.Item>
+                      ))}
+                    </Menu.Group>
+                  </Menu.Outer>
+                </Menu.Root>
+              </View>
+            )}
           </View>
           <Text>
             <Trans>
