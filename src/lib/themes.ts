@@ -296,7 +296,7 @@ export const darkTheme: Theme = {
   palette: {
     ...defaultTheme.palette,
     default: {
-      background: darkPalette.black,
+      background: darkPalette.contrast_0,
       backgroundLight: darkPalette.contrast_25,
       text: darkPalette.white,
       textLight: darkPalette.contrast_600,
@@ -345,7 +345,7 @@ export const dimTheme: Theme = {
     ...darkTheme.palette,
     default: {
       ...darkTheme.palette.default,
-      background: dimPalette.black,
+      background: dimPalette.contrast_0,
       backgroundLight: dimPalette.contrast_25,
       text: dimPalette.white,
       textLight: dimPalette.contrast_700,
