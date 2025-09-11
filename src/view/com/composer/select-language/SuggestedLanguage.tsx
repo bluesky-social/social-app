@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react'
 import {View} from 'react-native'
+import {parseLanguage} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import lande from 'lande'
@@ -19,16 +20,30 @@ import {Text} from '#/components/Typography'
 const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
 const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
-export function SuggestedLanguage({text}: {text: string}) {
+export function SuggestedLanguage({
+  text,
+  replyToLanguage: replyToLanguageProp,
+}: {
+  text: string
+  replyToLanguage?: string
+}) {
+  const replyToLanguage = cleanUpLanguage(replyToLanguageProp)
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
-  >()
+  >(text.length === 0 ? replyToLanguage : undefined)
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const t = useTheme()
   const {_} = useLingui()
 
   useEffect(() => {
+    // For replies, suggest the language of the post being replied to if no text
+    // has been typed yet
+    if (replyToLanguage && text.length === 0) {
+      setSuggestedLanguage(replyToLanguage)
+      return
+    }
+
     const textTrimmed = text.trim()
 
     // Don't run the language model on small posts, the results are likely
@@ -43,7 +58,7 @@ export function SuggestedLanguage({text}: {text: string}) {
     })
 
     return () => cancelIdle(idle)
-  }, [text])
+  }, [text, replyToLanguage])
 
   if (
     suggestedLanguage &&
@@ -111,4 +126,12 @@ function guessLanguage(text: string): string | undefined {
     return undefined
   }
   return code3ToCode2Strict(lang)
+}
+
+function cleanUpLanguage(text: string | undefined): string | undefined {
+  if (!text) {
+    return undefined
+  }
+
+  return parseLanguage(text)?.language
 }

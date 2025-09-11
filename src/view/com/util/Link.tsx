@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from 'react'
+import {type JSX, memo, useCallback, useMemo} from 'react'
 import {
   type GestureResponderEvent,
   Platform,

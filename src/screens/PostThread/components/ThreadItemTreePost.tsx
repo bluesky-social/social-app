@@ -298,6 +298,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
         author: post.author,
         embed: post.embed,
         moderation,
+        langs: post.record.langs,
       },
       onPostSuccess: onPostSuccess,
     })
@@ -367,6 +368,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     </View>
                   )}
                   <PostControls
+                    variant="compact"
                     post={postShadow}
                     record={record}
                     richText={richText}

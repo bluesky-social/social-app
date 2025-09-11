@@ -8,6 +8,7 @@ type StateContext = persisted.Schema['kawaii']
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.kawaii,
 )
+stateContext.displayName = 'KawaiiStateContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(persisted.get('kawaii'))

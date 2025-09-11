@@ -12,7 +12,7 @@ import {useLingui} from '@lingui/react'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {useTranslate} from '#/lib/hooks/useTranslate'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -32,26 +32,27 @@ import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
-import {PostThreadFollowBtn} from '#/view/com/post-thread/PostThreadFollowBtn'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
+import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   LINEAR_AVI_WIDTH,
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
 } from '#/screens/PostThread/const'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {InlineLinkText, Link} from '#/components/Link'
+import {LoggedOutCTA} from '#/components/LoggedOutCTA'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostControls} from '#/components/PostControls'
+import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
@@ -175,10 +176,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   postSource?: PostSource
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const {openComposer} = useOpenComposer()
   const {currentAccount, hasSession} = useSession()
-  const feedFeedback = useFeedFeedback(postSource?.feed, hasSession)
+  const {gtTablet} = useBreakpoints()
+  const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
+  const formatPostStatCount = useFormatPostStatCount()
 
   const post = postShadow
   const record = item.value.post.record
@@ -254,6 +257,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
         author: post.author,
         embed: post.embed,
         moderation,
+        langs: record.langs,
       },
       onPostSuccess: onPostSuccess,
     })
@@ -310,6 +314,8 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           },
           isRoot && [a.pt_lg],
         ]}>
+        {/* Show CTA for logged-out visitors - hide on desktop and check gate */}
+        {!gtTablet && <LoggedOutCTA gateName="cta_above_post_heading" />}
         <View style={[a.flex_row, a.gap_md, a.pb_md]}>
           <View collapsable={false}>
             <PreviewableUserAvatar
@@ -348,7 +354,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     )}
                   </Text>
 
-                  <View style={[{paddingLeft: 3, top: -1}]}>
+                  <View style={[a.pl_xs]}>
                     <VerificationCheckButton profile={authorShadow} size="md" />
                   </View>
                 </View>
@@ -366,7 +372,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           </Link>
           {showFollowButton && (
             <View collapsable={false}>
-              <PostThreadFollowBtn did={post.author.did} />
+              <ThreadItemAnchorFollowButton did={post.author.did} />
             </View>
           )}
         </View>
@@ -410,13 +416,18 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
           />
           {post.repostCount !== 0 ||
           post.likeCount !== 0 ||
-          post.quoteCount !== 0 ? (
+          post.quoteCount !== 0 ||
+          post.bookmarkCount !== 0 ? (
             // Show this section unless we're *sure* it has no engagement.
             <View
               style={[
                 a.flex_row,
+                a.flex_wrap,
                 a.align_center,
-                a.gap_lg,
+                {
+                  rowGap: a.gap_sm.gap,
+                  columnGap: a.gap_lg.gap,
+                },
                 a.border_t,
                 a.border_b,
                 a.mt_md,
@@ -429,7 +440,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="repostCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatCount(i18n, post.repostCount)}
+                      {formatPostStatCount(post.repostCount)}
                     </Text>{' '}
                     <Plural
                       value={post.repostCount}
@@ -447,7 +458,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatCount(i18n, post.quoteCount)}
+                      {formatPostStatCount(post.quoteCount)}
                     </Text>{' '}
                     <Plural
                       value={post.quoteCount}
@@ -463,11 +474,21 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="likeCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                      {formatCount(i18n, post.likeCount)}
+                      {formatPostStatCount(post.likeCount)}
                     </Text>{' '}
                     <Plural value={post.likeCount} one="like" other="likes" />
                   </Text>
                 </Link>
+              ) : null}
+              {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
+                <Text
+                  testID="bookmarkCount-expanded"
+                  style={[a.text_md, t.atoms.text_contrast_medium]}>
+                  <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                    {formatPostStatCount(post.bookmarkCount)}
+                  </Text>{' '}
+                  <Plural value={post.bookmarkCount} one="save" other="saves" />
+                </Text>
               ) : null}
             </View>
           ) : null}
@@ -509,14 +530,10 @@ function ExpandedPostDetails({
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const openLink = useOpenLink()
+  const translate = useTranslate()
   const isRootPost = !('reply' in post.record)
   const langPrefs = useLanguagePrefs()
 
-  const translatorUrl = getTranslatorLink(
-    post.record?.text || '',
-    langPrefs.primaryLanguage,
-  )
   const needsTranslation = useMemo(
     () =>
       Boolean(
@@ -529,7 +546,7 @@ function ExpandedPostDetails({
   const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
-      openLink(translatorUrl, true)
+      translate(post.record.text || '', langPrefs.primaryLanguage)
 
       if (
         bsky.dangerousIsType<AppBskyFeedPost.Record>(
@@ -546,7 +563,7 @@ function ExpandedPostDetails({
 
       return false
     },
-    [openLink, translatorUrl, langPrefs, post],
+    [translate, langPrefs, post],
   )
 
   return (
@@ -566,7 +583,12 @@ function ExpandedPostDetails({
             </Text>
 
             <InlineLinkText
-              to={translatorUrl}
+              // overridden to open an intent on android, but keep
+              // as anchor tag for accessibility
+              to={getTranslatorLink(
+                post.record.text,
+                langPrefs.primaryLanguage,
+              )}
               label={_(msg`Translate`)}
               style={[a.text_sm]}
               onPress={onTranslatePress}>

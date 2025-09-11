@@ -30,8 +30,10 @@ const StateContext = React.createContext<SessionStateContext>({
   currentAccount: undefined,
   hasSession: false,
 })
+StateContext.displayName = 'SessionStateContext'
 
 const AgentContext = React.createContext<BskyAgent | null>(null)
+AgentContext.displayName = 'SessionAgentContext'
 
 const ApiContext = React.createContext<SessionApiContext>({
   createAccount: async () => {},
@@ -42,6 +44,7 @@ const ApiContext = React.createContext<SessionApiContext>({
   removeAccount: () => {},
   partialRefreshSession: async () => {},
 })
+ApiContext.displayName = 'SessionApiContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const cancelPendingTask = useOneTaskAtATime()

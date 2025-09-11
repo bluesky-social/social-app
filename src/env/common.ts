@@ -11,7 +11,7 @@ export const RELEASE_VERSION: string =
   process.env.EXPO_PUBLIC_RELEASE_VERSION || packageJson.version
 
 /**
- * The env the app is running in e.g. development, testflight, production
+ * The env the app is running in e.g. development, testflight, production, e2e
  */
 export const ENV: string = process.env.EXPO_PUBLIC_ENV
 
@@ -63,6 +63,12 @@ export const LOG_LEVEL = (process.env.EXPO_PUBLIC_LOG_LEVEL || 'info') as
 export const LOG_DEBUG: string = process.env.EXPO_PUBLIC_LOG_DEBUG || ''
 
 /**
+ * The DID of the Bluesky appview to proxy to
+ */
+export const BLUESKY_PROXY_DID: Did =
+  process.env.EXPO_PUBLIC_BLUESKY_PROXY_DID || 'did:web:api.bsky.app'
+
+/**
  * The DID of the chat service to proxy to
  */
 export const CHAT_PROXY_DID: Did =
@@ -87,3 +93,16 @@ export const GCP_PROJECT_ID: number =
   process.env.EXPO_PUBLIC_GCP_PROJECT_ID === undefined
     ? 0
     : Number(process.env.EXPO_PUBLIC_GCP_PROJECT_ID)
+
+/**
+ * URL for the bapp-config web worker _development_ environment. Can be a
+ * locally running server, see `env.example` for more.
+ */
+export const BAPP_CONFIG_DEV_URL = process.env.BAPP_CONFIG_DEV_URL
+
+/**
+ * Dev environment passthrough value for bapp-config web worker. Allows local
+ * dev access to the web worker running in `development` mode.
+ */
+export const BAPP_CONFIG_DEV_BYPASS_SECRET: string =
+  process.env.BAPP_CONFIG_DEV_BYPASS_SECRET

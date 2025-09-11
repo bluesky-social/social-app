@@ -4,11 +4,11 @@ import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
 import {
   defaults,
-  Schema,
+  type Schema,
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
-import {PersistedApi} from './types'
+import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'

@@ -29,10 +29,11 @@ import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as AgeAssuranceProvider} from '#/state/ageAssurance'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
+import {Provider as EmailVerificationProvider} from '#/state/email-verification'
 import {listenSessionDropped} from '#/state/events'
 import {
-  beginResolveGeolocation,
-  ensureGeolocationResolved,
+  beginResolveGeolocationConfig,
+  ensureGeolocationConfigIsResolved,
   Provider as GeolocationProvider,
 } from '#/state/geolocation'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
@@ -73,6 +74,7 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PolicyUpdateOverlayProvider} from '#/components/PolicyUpdateOverlay'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Provider as VideoVolumeProvider} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {ToastOutlet} from '#/components/Toast'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -89,7 +91,7 @@ if (isAndroid) {
 /**
  * Begin geolocation ASAP
  */
-beginResolveGeolocation()
+beginResolveGeolocationConfig()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -155,18 +157,21 @@ function InnerApp() {
                                               <MutedThreadsProvider>
                                                 <ProgressGuideProvider>
                                                   <ServiceAccountManager>
-                                                    <HideBottomBarBorderProvider>
-                                                      <GestureHandlerRootView
-                                                        style={s.h100pct}>
-                                                        <GlobalGestureEventsProvider>
-                                                          <IntentDialogProvider>
-                                                            <TestCtrls />
-                                                            <Shell />
-                                                            <NuxDialogs />
-                                                          </IntentDialogProvider>
-                                                        </GlobalGestureEventsProvider>
-                                                      </GestureHandlerRootView>
-                                                    </HideBottomBarBorderProvider>
+                                                    <EmailVerificationProvider>
+                                                      <HideBottomBarBorderProvider>
+                                                        <GestureHandlerRootView
+                                                          style={s.h100pct}>
+                                                          <GlobalGestureEventsProvider>
+                                                            <IntentDialogProvider>
+                                                              <TestCtrls />
+                                                              <Shell />
+                                                              <NuxDialogs />
+                                                              <ToastOutlet />
+                                                            </IntentDialogProvider>
+                                                          </GlobalGestureEventsProvider>
+                                                        </GestureHandlerRootView>
+                                                      </HideBottomBarBorderProvider>
+                                                    </EmailVerificationProvider>
                                                   </ServiceAccountManager>
                                                 </ProgressGuideProvider>
                                               </MutedThreadsProvider>
@@ -198,9 +203,10 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
-      setReady(true),
-    )
+    Promise.all([
+      initPersistedState(),
+      ensureGeolocationConfigIsResolved(),
+    ]).then(() => setReady(true))
   }, [])
 
   if (!isReady) {

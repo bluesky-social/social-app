@@ -1,112 +1,80 @@
-/*
- * Note: relies on styles in #/styles.css
+import React from 'react'
+import {nanoid} from 'nanoid/non-secure'
+import {toast as sonner, Toaster} from 'sonner'
+
+import {atoms as a} from '#/alf'
+import {DURATION} from '#/components/Toast/const'
+import {
+  Icon as ToastIcon,
+  Outer as ToastOuter,
+  Text as ToastText,
+  ToastConfigProvider,
+} from '#/components/Toast/Toast'
+import {type BaseToastOptions} from '#/components/Toast/types'
+
+export {DURATION} from '#/components/Toast/const'
+export * from '#/components/Toast/Toast'
+export {type ToastType} from '#/components/Toast/types'
+
+/**
+ * Toasts are rendered in a global outlet, which is placed at the top of the
+ * component tree.
  */
-
-import {useEffect, useState} from 'react'
-import {AccessibilityInfo, Pressable, View} from 'react-native'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-
-import {atoms as a, useBreakpoints} from '#/alf'
-import {DEFAULT_TOAST_DURATION} from '#/components/Toast/const'
-import {Toast} from '#/components/Toast/Toast'
-import {type ToastApi, type ToastType} from '#/components/Toast/types'
-
-const TOAST_ANIMATION_STYLES = {
-  entering: {
-    animation: 'toastFadeIn 0.3s ease-out forwards',
-  },
-  exiting: {
-    animation: 'toastFadeOut 0.2s ease-in forwards',
-  },
-}
-
-interface ActiveToast {
-  type: ToastType
-  content: React.ReactNode
-  a11yLabel: string
-}
-type GlobalSetActiveToast = (_activeToast: ActiveToast | undefined) => void
-let globalSetActiveToast: GlobalSetActiveToast | undefined
-let toastTimeout: NodeJS.Timeout | undefined
-type ToastContainerProps = {}
-
-export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
-  const {_} = useLingui()
-  const {gtPhone} = useBreakpoints()
-  const [activeToast, setActiveToast] = useState<ActiveToast | undefined>()
-  const [isExiting, setIsExiting] = useState(false)
-
-  useEffect(() => {
-    globalSetActiveToast = (t: ActiveToast | undefined) => {
-      if (!t && activeToast) {
-        setIsExiting(true)
-        setTimeout(() => {
-          setActiveToast(t)
-          setIsExiting(false)
-        }, 200)
-      } else {
-        if (t) {
-          AccessibilityInfo.announceForAccessibility(t.a11yLabel)
-        }
-        setActiveToast(t)
-        setIsExiting(false)
-      }
-    }
-  }, [activeToast])
-
+export function ToastOutlet() {
   return (
-    <>
-      {activeToast && (
-        <View
-          style={[
-            a.fixed,
-            {
-              left: a.px_xl.paddingLeft,
-              right: a.px_xl.paddingLeft,
-              bottom: a.px_xl.paddingLeft,
-              ...(isExiting
-                ? TOAST_ANIMATION_STYLES.exiting
-                : TOAST_ANIMATION_STYLES.entering),
-            },
-            gtPhone && [
-              {
-                maxWidth: 380,
-              },
-            ],
-          ]}>
-          <Toast content={activeToast.content} type={activeToast.type} />
-          <Pressable
-            style={[a.absolute, a.inset_0]}
-            accessibilityLabel={_(
-              msg({
-                message: `Dismiss message`,
-                comment: `Accessibility label for dismissing a toast notification`,
-              }),
-            )}
-            accessibilityHint=""
-            onPress={() => setActiveToast(undefined)}
-          />
-        </View>
-      )}
-    </>
+    <Toaster
+      position="bottom-left"
+      gap={a.gap_sm.gap}
+      offset={a.p_xl.padding}
+      mobileOffset={a.p_xl.padding}
+    />
   )
 }
 
-export const toast: ToastApi = {
-  show(props) {
-    if (toastTimeout) {
-      clearTimeout(toastTimeout)
-    }
+/**
+ * Access the full Sonner API
+ */
+export const api = sonner
 
-    globalSetActiveToast?.({
-      type: props.type,
-      content: props.content,
-      a11yLabel: props.a11yLabel,
-    })
+/**
+ * Our base toast API, using the `Toast` export of this file.
+ */
+export function show(
+  content: React.ReactNode,
+  {type = 'default', ...options}: BaseToastOptions = {},
+) {
+  const id = nanoid()
 
-    toastTimeout = setTimeout(() => {
-      globalSetActiveToast?.(undefined)
-    }, props.duration || DEFAULT_TOAST_DURATION)
-  },
+  if (typeof content === 'string') {
+    sonner(
+      <ToastConfigProvider id={id} type={type}>
+        <ToastOuter>
+          <ToastIcon />
+          <ToastText>{content}</ToastText>
+        </ToastOuter>
+      </ToastConfigProvider>,
+      {
+        ...options,
+        unstyled: true, // required on web
+        id,
+        duration: options?.duration ?? DURATION,
+      },
+    )
+  } else if (React.isValidElement(content)) {
+    sonner(
+      <ToastConfigProvider id={id} type={type}>
+        {content}
+      </ToastConfigProvider>,
+      {
+        ...options,
+        unstyled: true, // required on web
+        id,
+        duration: options?.duration ?? DURATION,
+      },
+    )
+  } else {
+    throw new Error(
+      `Toast can be a string or a React element, got ${typeof content}`,
+    )
+  }
 }

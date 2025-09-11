@@ -25,6 +25,7 @@ const Context = createContext<{
   register: () => {},
   unregister: () => {},
 })
+Context.displayName = 'GlobalGestureEventsContext'
 
 export function GlobalGestureEventsProvider({
   children,

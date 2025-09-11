@@ -11,7 +11,7 @@ import {
 } from '#/state/ageAssurance/types'
 import {useIsAgeAssuranceEnabled} from '#/state/ageAssurance/useIsAgeAssuranceEnabled'
 import {logger} from '#/state/ageAssurance/util'
-import {useGeolocation} from '#/state/geolocation'
+import {useGeolocationStatus} from '#/state/geolocation'
 import {useAgent} from '#/state/session'
 
 export const createAgeAssuranceQueryKey = (did: string) =>
@@ -28,11 +28,13 @@ const AgeAssuranceContext = createContext<AgeAssuranceContextType>({
   lastInitiatedAt: undefined,
   isAgeRestricted: false,
 })
+AgeAssuranceContext.displayName = 'AgeAssuranceContext'
 
 const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
   // @ts-ignore can't be bothered to type this
   refetch: () => Promise.resolve(),
 })
+AgeAssuranceAPIContext.displayName = 'AgeAssuranceAPIContext'
 
 /**
  * Low-level provider for fetching age assurance state on app load. Do not add
@@ -41,7 +43,7 @@ const AgeAssuranceAPIContext = createContext<AgeAssuranceAPIContextType>({
  */
 export function Provider({children}: {children: React.ReactNode}) {
   const agent = useAgent()
-  const {geolocation} = useGeolocation()
+  const {status: geolocation} = useGeolocationStatus()
   const isAgeAssuranceEnabled = useIsAgeAssuranceEnabled()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
   const [refetchWhilePending, setRefetchWhilePending] = useState(false)

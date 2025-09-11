@@ -35,25 +35,15 @@ export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
 
-export interface PostLanguagesSettingsModal {
-  name: 'post-languages-settings'
-}
-
-export interface ChangePasswordModal {
-  name: 'change-password'
-}
-
 /**
  * @deprecated DO NOT ADD NEW MODALS
  */
 export type Modal =
   // Account
   | DeleteAccountModal
-  | ChangePasswordModal
 
   // Curation
   | ContentLanguagesSettingsModal
-  | PostLanguagesSettingsModal
 
   // Lists
   | CreateOrEditListModal
@@ -70,6 +60,7 @@ const ModalContext = React.createContext<{
   isModalActive: false,
   activeModals: [],
 })
+ModalContext.displayName = 'ModalContext'
 
 const ModalControlContext = React.createContext<{
   openModal: (modal: Modal) => void
@@ -80,6 +71,7 @@ const ModalControlContext = React.createContext<{
   closeModal: () => false,
   closeAllModals: () => false,
 })
+ModalControlContext.displayName = 'ModalControlContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeModals, setActiveModals] = React.useState<Modal[]>([])

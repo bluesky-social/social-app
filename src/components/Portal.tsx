@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react'
 
-type Component = React.ReactElement
+type Component = React.ReactElement<any>
 
 type ContextType = {
   outlet: Component | null
@@ -28,6 +28,7 @@ export function createPortalGroup() {
     append: () => {},
     remove: () => {},
   })
+  Context.displayName = 'PortalContext'
 
   function Provider(props: React.PropsWithChildren<{}>) {
     const map = useRef<ComponentMap>({})

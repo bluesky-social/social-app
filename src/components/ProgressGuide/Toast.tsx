@@ -14,7 +14,7 @@ import {useLingui} from '@lingui/react'
 import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
-import {AnimatedCheck, AnimatedCheckRef} from '../anim/AnimatedCheck'
+import {AnimatedCheck, type AnimatedCheckRef} from '../anim/AnimatedCheck'
 import {Text} from '../Typography'
 
 export interface ProgressGuideToastRef {
@@ -39,7 +39,7 @@ export const ProgressGuideToast = React.forwardRef<
   const translateY = useSharedValue(0)
   const opacity = useSharedValue(0)
   const animatedCheckRef = React.useRef<AnimatedCheckRef | null>(null)
-  const timeoutRef = React.useRef<NodeJS.Timeout | undefined>()
+  const timeoutRef = React.useRef<NodeJS.Timeout | undefined>(undefined)
   const winDim = useWindowDimensions()
 
   /**

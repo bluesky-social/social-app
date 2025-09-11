@@ -70,6 +70,7 @@ import {
   useFeedFeedbackContext,
 } from '#/state/feed-feedback'
 import {useFeedFeedback} from '#/state/feed-feedback'
+import {useFeedInfo} from '#/state/queries/feed'
 import {usePostLikeMutationQueue} from '#/state/queries/post'
 import {
   type AuthorFilter,
@@ -80,9 +81,9 @@ import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
-import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
 import {Header} from '#/screens/VideoFeed/components/Header'
 import {atoms as a, ios, platform, ThemeProvider, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
@@ -199,7 +200,9 @@ function Feed() {
         throw new Error(`Invalid video feed params ${JSON.stringify(params)}`)
     }
   }, [params])
-  const feedFeedback = useFeedFeedback(feedDesc, hasSession)
+  const feedUri = params.type === 'feedgen' ? params.uri : undefined
+  const {data: feedInfo} = useFeedInfo(feedUri)
+  const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
     usePostFeedQuery(
       feedDesc,
@@ -753,6 +756,7 @@ function Overlay({
         text: record?.text || '',
         author: post.author,
         embed: post.embed,
+        langs: record?.langs,
       },
     })
   }, [openComposer, post, record])
@@ -865,6 +869,7 @@ function Overlay({
                     richText={richText}
                     post={post}
                     record={record}
+                    feedContext={feedContext}
                     logContext="FeedItem"
                     onPressReply={() =>
                       navigation.navigate('PostThread', {
@@ -882,7 +887,7 @@ function Overlay({
               player={player}
               seekingAnimationSV={seekingAnimationSV}
               scrollGesture={scrollGesture}>
-              <PostThreadComposePrompt
+              <ThreadComposePrompt
                 onPressCompose={onPressReply}
                 style={[a.pt_md, a.pb_sm]}
               />

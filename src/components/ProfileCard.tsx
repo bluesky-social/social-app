@@ -513,12 +513,19 @@ export function FollowButtonInner({
       comment: 'User is following this account, click to unfollow',
     }),
   )
-  const followLabel = _(
-    msg({
-      message: 'Follow',
-      comment: 'User is not following this account, click to follow',
-    }),
-  )
+  const followLabel = profile.viewer?.followedBy
+    ? _(
+        msg({
+          message: 'Follow back',
+          comment: 'User is not following this account, click to follow back',
+        }),
+      )
+    : _(
+        msg({
+          message: 'Follow',
+          comment: 'User is not following this account, click to follow',
+        }),
+      )
 
   if (!profile.viewer) return null
   if (
@@ -558,6 +565,24 @@ export function FollowButtonInner({
         </Button>
       )}
     </View>
+  )
+}
+
+export function FollowButtonPlaceholder({style}: ViewStyleProp) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.rounded_sm,
+        t.atoms.bg_contrast_25,
+        a.w_full,
+        {
+          height: 33,
+        },
+        style,
+      ]}
+    />
   )
 }
 

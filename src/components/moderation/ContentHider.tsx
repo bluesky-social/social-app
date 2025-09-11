@@ -215,7 +215,7 @@ function ContentHiderActive({
             control.open()
           }}
           label={_(
-            msg`Learn more about the moderation applied to this content.`,
+            msg`Learn more about the moderation applied to this content`,
           )}
           style={[a.pt_sm]}>
           {state => (
