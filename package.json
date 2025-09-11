@@ -19,6 +19,7 @@
     }
   },
   "scripts": {
+    "alf": "rm -rf node_modules/@bsky.app/alf/dist && cp -R ../alf/dist/ node_modules/@bsky.app/alf/dist",
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package && yarn intl:compile-if-needed",
     "prebuild": "EXPO_NO_GIT_STATUS=1 expo prebuild --clean",
@@ -74,6 +75,7 @@
     "@atproto/api": "^0.16.7",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
+    "@bsky.app/alf": "^0.1.0-alpha.12",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
