@@ -108,7 +108,11 @@ export const LoginForm = ({
 
       // Check that the domain isn't a bluesky domain.
       const isBlueskyDomain = handle.endsWith('bsky.social')
-      if (isBlueskyDomain) return
+      if (isBlueskyDomain) {
+        // We reset it back to bsky.social, if it isn't already.
+        setServiceUrl(DEFAULT_SERVICE)
+        return
+      }
 
       // Ignore if the user has manually selected a custom host in this session to prevent unexpected behavior.
       if (hasManuallySelectedProvider) return
@@ -116,7 +120,7 @@ export const LoginForm = ({
       setIsDetectingProvider(true)
 
       try {
-        const agent = new BskyAgent({service: 'https://bsky.social'})
+        const agent = new BskyAgent({service: DEFAULT_SERVICE})
         const detectedServiceUrl = await resolveServiceURL(agent, handle)
         setServiceUrl(detectedServiceUrl)
       } catch (e) {
