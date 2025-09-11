@@ -987,7 +987,7 @@ msgstr ""
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:343
+#: src/components/StarterPack/ProfileStarterPacks.tsx:339
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr ""
 
@@ -995,7 +995,7 @@ msgstr ""
 msgid "An error occurred while loading the video. Please try again later."
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:226
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:232
 msgid "An error occurred while loading the video. Please try again."
 msgstr ""
 
@@ -1307,8 +1307,8 @@ msgid "Before creating a post or replying, you must first verify your email."
 msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:71
-#: src/components/StarterPack/ProfileStarterPacks.tsx:235
-#: src/components/StarterPack/ProfileStarterPacks.tsx:245
+#: src/components/StarterPack/ProfileStarterPacks.tsx:231
+#: src/components/StarterPack/ProfileStarterPacks.tsx:241
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr ""
 
@@ -1422,7 +1422,7 @@ msgstr ""
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:203
+#: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
 msgstr ""
 
@@ -1469,7 +1469,7 @@ msgstr ""
 msgid "Bluesky Social Terms of Service"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:310
+#: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr ""
 
@@ -1819,7 +1819,7 @@ msgstr ""
 msgid "Choose Feeds"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:318
+#: src/components/StarterPack/ProfileStarterPacks.tsx:314
 msgid "Choose for me"
 msgstr ""
 
@@ -2422,7 +2422,7 @@ msgstr ""
 #. Text on button to create a new starter pack
 #: src/components/dialogs/StarterPackDialog.tsx:112
 #: src/components/dialogs/StarterPackDialog.tsx:201
-#: src/components/StarterPack/ProfileStarterPacks.tsx:300
+#: src/components/StarterPack/ProfileStarterPacks.tsx:296
 msgid "Create"
 msgstr ""
 
@@ -2430,13 +2430,13 @@ msgstr ""
 msgid "Create a QR code for a starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:178
-#: src/components/StarterPack/ProfileStarterPacks.tsx:287
+#: src/components/StarterPack/ProfileStarterPacks.tsx:174
+#: src/components/StarterPack/ProfileStarterPacks.tsx:283
 #: src/Navigation.tsx:589
 msgid "Create a starter pack"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:274
+#: src/components/StarterPack/ProfileStarterPacks.tsx:270
 msgid "Create a starter pack for me"
 msgstr ""
 
@@ -2474,7 +2474,7 @@ msgstr ""
 msgid "Create an avatar instead"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:185
+#: src/components/StarterPack/ProfileStarterPacks.tsx:181
 msgid "Create another"
 msgstr ""
 
@@ -3173,7 +3173,7 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:113
+#: src/screens/Profile/Sections/Feed.tsx:109
 msgid "End of feed"
 msgstr ""
 
@@ -3985,7 +3985,7 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:307
+#: src/components/StarterPack/ProfileStarterPacks.tsx:303
 msgid "Generate a starter pack"
 msgstr ""
 
@@ -4691,7 +4691,7 @@ msgstr ""
 msgid "Labels added"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:194
+#: src/screens/Profile/Sections/Labels.tsx:195
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
@@ -4825,7 +4825,7 @@ msgstr ""
 msgid "left to go."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:323
+#: src/components/StarterPack/ProfileStarterPacks.tsx:319
 msgid "Let me choose"
 msgstr ""
 
@@ -5036,7 +5036,7 @@ msgid "Load new notifications"
 msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:224
-#: src/screens/Profile/Sections/Feed.tsx:98
+#: src/screens/Profile/Sections/Feed.tsx:94
 #: src/screens/ProfileList/FeedSection.tsx:105
 #: src/view/com/feeds/FeedPage.tsx:169
 msgid "Load new posts"
@@ -5087,7 +5087,7 @@ msgstr ""
 msgid "Make adjustments to email settings for your account"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:282
+#: src/components/StarterPack/ProfileStarterPacks.tsx:278
 msgid "Make one for me"
 msgstr ""
 
@@ -5692,7 +5692,7 @@ msgstr ""
 msgid "No posts here"
 msgstr ""
 
-#: src/screens/Profile/Sections/Feed.tsx:66
+#: src/screens/Profile/Sections/Feed.tsx:62
 msgid "No posts yet."
 msgstr ""
 
@@ -5956,8 +5956,8 @@ msgid "Oops, something went wrong!"
 msgstr ""
 
 #: src/components/Lists.tsx:173
-#: src/components/StarterPack/ProfileStarterPacks.tsx:332
-#: src/components/StarterPack/ProfileStarterPacks.tsx:341
+#: src/components/StarterPack/ProfileStarterPacks.tsx:328
+#: src/components/StarterPack/ProfileStarterPacks.tsx:337
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:106
 #: src/view/screens/Profile.tsx:125
@@ -7381,9 +7381,9 @@ msgstr ""
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
 #: src/components/moderation/ReportDialog/index.tsx:229
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:54
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:56
-#: src/components/StarterPack/ProfileStarterPacks.tsx:346
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:58
+#: src/components/StarterPack/ProfileStarterPacks.tsx:342
 #: src/screens/Login/LoginForm.tsx:323
 #: src/screens/Login/LoginForm.tsx:330
 #: src/screens/Messages/ChatList.tsx:291
@@ -8321,7 +8321,7 @@ msgstr ""
 
 #: src/components/ReportDialog/index.tsx:54
 #: src/screens/Moderation/index.tsx:112
-#: src/screens/Profile/Sections/Labels.tsx:184
+#: src/screens/Profile/Sections/Labels.tsx:185
 msgid "Something went wrong, please try again."
 msgstr ""
 
@@ -8431,7 +8431,7 @@ msgstr ""
 msgid "Starter Packs"
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:266
+#: src/components/StarterPack/ProfileStarterPacks.tsx:262
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
 msgstr ""
 
@@ -8480,7 +8480,7 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:231
+#: src/screens/Profile/Sections/Labels.tsx:232
 msgid "Subscribe to @{0} to use these labels:"
 msgstr ""
 
@@ -8866,8 +8866,8 @@ msgstr ""
 msgid "There was an issue fetching your app passwords"
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:151
-#: src/view/com/lists/ProfileLists.tsx:150
+#: src/view/com/feeds/ProfileFeedgens.tsx:163
+#: src/view/com/lists/ProfileLists.tsx:161
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
 
@@ -9058,7 +9058,7 @@ msgstr ""
 msgid "This label was applied by you."
 msgstr ""
 
-#: src/screens/Profile/Sections/Labels.tsx:218
+#: src/screens/Profile/Sections/Labels.tsx:219
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr ""
 
@@ -9870,7 +9870,7 @@ msgstr ""
 msgid "Video is playing"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:219
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:225
 msgid "Video not found."
 msgstr ""
 
@@ -10548,12 +10548,12 @@ msgstr ""
 msgid "You have no conversations yet. Start one!"
 msgstr ""
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:139
+#: src/view/com/feeds/ProfileFeedgens.tsx:151
 msgid "You have no feeds."
 msgstr ""
 
 #: src/view/com/lists/MyLists.tsx:81
-#: src/view/com/lists/ProfileLists.tsx:135
+#: src/view/com/lists/ProfileLists.tsx:149
 msgid "You have no lists."
 msgstr ""
 
@@ -10581,7 +10581,7 @@ msgstr ""
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:263
+#: src/components/StarterPack/ProfileStarterPacks.tsx:259
 msgid "You haven't created a starter pack yet!"
 msgstr ""
 
@@ -10622,7 +10622,7 @@ msgstr ""
 msgid "You must be at least 13 years old to use Bluesky. Read our <0>Terms of Service</0> for more information."
 msgstr ""
 
-#: src/components/StarterPack/ProfileStarterPacks.tsx:334
+#: src/components/StarterPack/ProfileStarterPacks.tsx:330
 msgid "You must be following at least seven other people to generate a starter pack."
 msgstr ""
 
@@ -10810,7 +10810,7 @@ msgstr ""
 msgid "Your birth date"
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/index.web.tsx:223
+#: src/components/Post/Embed/VideoEmbed/index.web.tsx:229
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr ""
 
