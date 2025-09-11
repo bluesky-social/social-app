@@ -406,7 +406,7 @@ function FollowingFeedCard() {
         />
       </View>
       <View style={[a.flex_1, a.flex_row, a.gap_sm, a.align_center]}>
-        <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
+        <Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]}>
           <Trans context="feed-name">Following</Trans>
         </Text>
       </View>

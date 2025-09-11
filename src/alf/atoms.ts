@@ -7,7 +7,6 @@ import * as Layout from '#/components/Layout'
 export const atoms = {
   ...baseAtoms,
 
-  font_bold: baseAtoms.font_semiBold,
   /**
    * @deprecated
    */

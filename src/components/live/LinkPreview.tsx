@@ -70,7 +70,7 @@ export function LinkPreview({
           <>
             <Text
               numberOfLines={2}
-              style={[a.leading_snug, a.font_bold, a.text_md]}>
+              style={[a.leading_snug, a.font_semi_bold, a.text_md]}>
               {linkMeta.title || linkMeta.url}
             </Text>
             <View style={[a.flex_row, a.align_center, a.gap_2xs]}>

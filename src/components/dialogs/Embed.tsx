@@ -147,7 +147,7 @@ function EmbedDialogInner({
 
           {showCustomisation && (
             <View style={[a.gap_sm, a.p_md]}>
-              <Text style={[t.atoms.text_contrast_medium, a.font_bold]}>
+              <Text style={[t.atoms.text_contrast_medium, a.font_semi_bold]}>
                 <Trans>Color theme</Trans>
               </Text>
               <ToggleButton.Group

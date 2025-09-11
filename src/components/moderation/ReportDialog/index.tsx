@@ -393,7 +393,7 @@ function Inner(props: ReportDialogProps) {
                 <Text style={[a.leading_snug, a.pb_xs]}>
                   <Trans>
                     Your report will be sent to{' '}
-                    <Text style={[a.font_bold, a.leading_snug]}>
+                    <Text style={[a.font_semi_bold, a.leading_snug]}>
                       {state.selectedLabeler?.creator.displayName}
                     </Text>
                     .
@@ -598,7 +598,7 @@ function OptionCard({
               ? [t.atoms.border_contrast_high]
               : [t.atoms.border_contrast_low],
           ]}>
-          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
             {option.title}
           </Text>
           <Text
@@ -670,7 +670,7 @@ function LabelerCard({
             avatar={labeler.creator.avatar}
           />
           <View style={[a.flex_1]}>
-            <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
               {title}
             </Text>
             <Text

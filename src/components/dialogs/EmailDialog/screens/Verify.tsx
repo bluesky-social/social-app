@@ -239,7 +239,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
             state.mutationStatus === 'success' ? (
               <Trans>
                 We sent an email to{' '}
-                <Span style={[a.font_bold, t.atoms.text]}>
+                <Span style={[a.font_semi_bold, t.atoms.text]}>
                   {currentAccount!.email}
                 </Span>{' '}
                 containing a link. Please click on it to complete the email
@@ -248,7 +248,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
             ) : (
               <Trans>
                 We'll send an email to{' '}
-                <Span style={[a.font_bold, t.atoms.text]}>
+                <Span style={[a.font_semi_bold, t.atoms.text]}>
                   {currentAccount!.email}
                 </Span>{' '}
                 containing a link. Please click on it to complete the email
@@ -258,7 +258,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
           ) : (
             <Trans>
               Please enter the code we sent to{' '}
-              <Span style={[a.font_bold, t.atoms.text]}>
+              <Span style={[a.font_semi_bold, t.atoms.text]}>
                 {currentAccount!.email}
               </Span>{' '}
               below.

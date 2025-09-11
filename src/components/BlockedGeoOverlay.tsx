@@ -96,7 +96,7 @@ export function BlockedGeoOverlay() {
               <Mark fill={t.palette.primary_600} width={14} />
               <Text
                 style={[
-                  a.font_bold,
+                  a.font_semi_bold,
                   {
                     color: t.palette.primary_600,
                   },

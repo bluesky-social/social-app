@@ -151,7 +151,8 @@ function LinkBox({href}: {href: string}) {
       ]}>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {scheme}
-        <Text style={[a.text_md, a.leading_snug, t.atoms.text, a.font_bold]}>
+        <Text
+          style={[a.text_md, a.leading_snug, t.atoms.text, a.font_semi_bold]}>
           {hostname}
         </Text>
         {rest}

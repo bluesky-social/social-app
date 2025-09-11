@@ -287,7 +287,12 @@ export function LabelText({
   return (
     <Text
       nativeID={nativeID}
-      style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium, a.mb_sm]}>
+      style={[
+        a.text_sm,
+        a.font_semi_bold,
+        t.atoms.text_contrast_medium,
+        a.mb_sm,
+      ]}>
       {children}
     </Text>
   )

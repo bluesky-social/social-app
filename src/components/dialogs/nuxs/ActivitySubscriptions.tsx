@@ -66,7 +66,7 @@ export function ActivitySubscriptionsNUX() {
             <SparkleIcon fill={t.palette.primary_800} size="sm" />
             <Text
               style={[
-                a.font_bold,
+                a.font_semi_bold,
                 {
                   color: t.palette.primary_800,
                 },

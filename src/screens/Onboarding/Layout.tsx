@@ -234,7 +234,7 @@ export function TitleText({
       style={[
         a.pb_sm,
         a.text_4xl,
-        a.font_bold,
+        a.font_semi_bold,
         {
           lineHeight: leading(a.text_4xl, a.leading_tight),
         },

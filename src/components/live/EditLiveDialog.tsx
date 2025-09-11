@@ -120,7 +120,7 @@ function DialogInner({
       style={web({maxWidth: 420})}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_bold, a.text_2xl]}>
+          <Text style={[a.font_semi_bold, a.text_2xl]}>
             <Trans>You are Live</Trans>
           </Text>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -182,7 +182,7 @@ function DialogInner({
                   a.text_sm,
                   a.leading_snug,
                   a.flex_1,
-                  a.font_bold,
+                  a.font_semi_bold,
                   {color: t.palette.negative_500},
                 ]}>
                 {liveLinkError ? (

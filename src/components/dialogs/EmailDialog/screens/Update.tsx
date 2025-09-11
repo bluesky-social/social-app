@@ -239,7 +239,7 @@ export function Update(_props: ScreenProps<ScreenID.Update>) {
           <>
             <Divider />
             <View>
-              <Text style={[a.text_md, a.pb_sm, a.font_bold]}>
+              <Text style={[a.text_md, a.pb_sm, a.font_semi_bold]}>
                 <Trans>Security step required</Trans>
               </Text>
               <Text

@@ -115,7 +115,7 @@ let DrawerProfileCard = ({
       </View>
       <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
         <Trans>
-          <Text style={[a.text_md, a.font_bold]}>
+          <Text style={[a.text_md, a.font_semi_bold]}>
             {formatCount(i18n, profile?.followersCount ?? 0)}
           </Text>{' '}
           <Plural
@@ -126,7 +126,7 @@ let DrawerProfileCard = ({
         </Trans>{' '}
         &middot;{' '}
         <Trans>
-          <Text style={[a.text_md, a.font_bold]}>
+          <Text style={[a.text_md, a.font_semi_bold]}>
             {formatCount(i18n, profile?.followsCount ?? 0)}
           </Text>{' '}
           <Plural
@@ -656,7 +656,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
                     style={[
                       a.text_xs,
                       a.leading_tight,
-                      a.font_bold,
+                      a.font_semi_bold,
                       {
                         fontVariant: ['tabular-nums'],
                         color: colors.white,

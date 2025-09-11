@@ -106,7 +106,7 @@ function Inner({}: {control: DialogControlProps}) {
             <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
                 We have sent another verification email to{' '}
-                <Text style={[a.text_md, a.font_bold]}>
+                <Text style={[a.text_md, a.font_semi_bold]}>
                   {currentAccount?.email}
                 </Text>
                 .

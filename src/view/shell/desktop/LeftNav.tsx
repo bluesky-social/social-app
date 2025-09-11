@@ -462,7 +462,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
               style={[
                 a.absolute,
                 a.text_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 a.rounded_full,
                 a.text_center,
                 a.leading_tight,

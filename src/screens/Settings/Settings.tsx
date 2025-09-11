@@ -513,7 +513,9 @@ function DevOptions() {
 
       <SettingsList.Divider />
       <View style={[a.p_xl, a.gap_md]}>
-        <Text style={[a.text_lg, a.font_bold]}>PolicyUpdate202508 Debug</Text>
+        <Text style={[a.text_lg, a.font_semi_bold]}>
+          PolicyUpdate202508 Debug
+        </Text>
 
         <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_md]}>
           <Button

@@ -227,7 +227,8 @@ export function VideoPostCard({
                   {likeCount > 0 && (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                       <Heart size="sm" fill="white" />
-                      <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
+                      <Text
+                        style={[a.text_sm, a.font_semi_bold, {color: 'white'}]}>
                         {formatCount(i18n, likeCount)}
                       </Text>
                     </View>
@@ -235,7 +236,8 @@ export function VideoPostCard({
                   {repostCount > 0 && (
                     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                       <Repost size="sm" fill="white" />
-                      <Text style={[a.text_sm, a.font_bold, {color: 'white'}]}>
+                      <Text
+                        style={[a.text_sm, a.font_semi_bold, {color: 'white'}]}>
                         {formatCount(i18n, repostCount)}
                       </Text>
                     </View>
@@ -520,7 +522,11 @@ export function CompactVideoPostCard({
                       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
                         <Heart size="sm" fill="white" />
                         <Text
-                          style={[a.text_sm, a.font_bold, {color: 'white'}]}>
+                          style={[
+                            a.text_sm,
+                            a.font_semi_bold,
+                            {color: 'white'},
+                          ]}>
                           {formatCount(i18n, likeCount)}
                         </Text>
                       </View>
