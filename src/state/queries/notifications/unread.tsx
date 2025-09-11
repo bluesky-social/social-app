@@ -9,6 +9,7 @@ import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {resetBadgeCount} from '#/lib/notifications/notifications'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import {useModerationOpts} from '../../preferences/moderation-opts'
@@ -190,7 +191,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           }
           broadcast.postMessage({event: unreadCountStr})
         } catch (e) {
-          logger.warn('Failed to check unread notifications', {error: e})
+          if (!isNetworkError(e)) {
+            logger.warn('Failed to check unread notifications', {error: e})
+          } else {
+            logger.log(
+              'Failed to check unread notifications due to network error',
+            )
+          }
         } finally {
           isFetchingRef.current = false
         }
