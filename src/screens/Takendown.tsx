@@ -62,6 +62,7 @@ export function Takendown() {
           reason: appealText,
         },
         {
+          encoding: 'application/json',
           headers: BLUESKY_MOD_SERVICE_HEADERS,
         },
       )
