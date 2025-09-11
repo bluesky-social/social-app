@@ -386,7 +386,7 @@ export function getNotificationPayload(
     return payload
   } else {
     if (payload) {
-      notyLogger.warn('getNotificationPayload: received unknown payload', {
+      notyLogger.log('getNotificationPayload: received unknown payload', {
         payload,
         identifier: e.request.identifier,
       })
