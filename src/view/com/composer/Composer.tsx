@@ -173,8 +173,10 @@ export const ComposePost = ({
   imageUris: initImageUris,
   videoUri: initVideoUri,
   cancelRef,
+  setIsDirty,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef | null>
+  setIsDirty?: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -304,24 +306,37 @@ export const ComposePost = ({
     [insets, isKeyboardVisible],
   )
 
-  const onPressCancel = useCallback(() => {
-    if (textInput.current?.maybeClosePopup()) {
+  const isDirty = thread.posts.some(
+    post =>
+      post.shortenedGraphemeLength > 0 || post.embed.media || post.embed.link,
+  )
+
+  // very unfortunate, but we need to pass state back up to the parent on iOS
+  //
+  // WARNING - if the Modal on iOS thinks it's not dirty,
+  // `allowSwipeDismissal` will be true, and if we don't then close the composer
+  // when `onPressCancel` is called it will be bad (might even softlock)
+  // so we need to keep the parent state and the behaviour of onPressCancel in
+  // tight sync. do NOT force the modal to stay open without marking it as dirty! -sfn
+  useEffect(() => {
+    if (isIOS) {
+      setIsDirty?.(isDirty)
+    }
+  }, [isDirty, setIsDirty])
+
+  const onPressCancel = useNonReactiveCallback(() => {
+    // web only, so it's fine w.r.t. the Modal
+    const didCloseAutocomplete = textInput.current?.maybeClosePopup()
+    if (isWeb && didCloseAutocomplete) {
       return
-    } else if (
-      thread.posts.some(
-        post =>
-          post.shortenedGraphemeLength > 0 ||
-          post.embed.media ||
-          post.embed.link,
-      )
-    ) {
+    } else if (isDirty) {
       closeAllDialogs()
       Keyboard.dismiss()
       discardPromptControl.open()
     } else {
       onClose()
     }
-  }, [thread, closeAllDialogs, discardPromptControl, onClose])
+  })
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
