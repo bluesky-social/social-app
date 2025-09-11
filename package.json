@@ -94,7 +94,6 @@
     "@miblanchard/react-native-slider": "^2.6.0",
     "@mozzius/expo-dynamic-app-icon": "^1.7.1",
     "@react-native-async-storage/async-storage": "2.2.0",
-    "@react-native-picker/picker": "2.11.1",
     "@react-navigation/bottom-tabs": "^7.3.13",
     "@react-navigation/drawer": "^7.3.12",
     "@react-navigation/native": "^7.1.9",
