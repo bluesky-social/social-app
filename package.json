@@ -19,7 +19,6 @@
     }
   },
   "scripts": {
-    "alf": "rm -rf node_modules/@bsky.app/alf/dist && cp -R ../alf/dist/ node_modules/@bsky.app/alf/dist",
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package && yarn intl:compile-if-needed",
     "prebuild": "EXPO_NO_GIT_STATUS=1 expo prebuild --clean",
