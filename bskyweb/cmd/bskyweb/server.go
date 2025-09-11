@@ -504,20 +504,32 @@ func (srv *Server) WebPost(c echo.Context) error {
 	req := c.Request()
 	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
 	data["postView"] = postView
+	data["postRecordKey"] = rkey
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	if postView.Embed != nil {
 		if postView.Embed.EmbedImages_View != nil {
+			// Only images
 			var thumbUrls []string
 			for i := range postView.Embed.EmbedImages_View.Images {
 				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
 			}
 			data["imgThumbUrls"] = thumbUrls
-		} else if postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
+		} else if postView.Embed.EmbedVideo_View != nil {
+			// Only video
+			data["videoThumbUrl"] = *postView.Embed.EmbedVideo_View.Thumbnail
+		} else if postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil {
+			// Record plus image/video
+			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil {
+				// Record plus image
+				var thumbUrls []string
+				for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
+					thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
+				}
+				data["imgThumbUrls"] = thumbUrls
+			} else if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View != nil {
+				// Record plus video
+				data["videoThumbUrl"] = *postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Thumbnail
 			}
-			data["imgThumbUrls"] = thumbUrls
 		}
 	}
 
@@ -525,6 +537,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
 		if ok {
 			data["postText"] = ExpandPostText(postRecord)
+			data["postCreatedAt"] = postRecord.CreatedAt
 		}
 	}
 
