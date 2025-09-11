@@ -3635,10 +3635,10 @@
   resolved "https://registry.yarnpkg.com/@braintree/sanitize-url/-/sanitize-url-6.0.4.tgz#923ca57e173c6b232bbbb07347b1be982f03e783"
   integrity sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==
 
-"@bsky.app/alf@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@bsky.app/alf/-/alf-0.1.0.tgz#7fcd82fbb961a3cb675892d1d6568105ea879492"
-  integrity sha512-uw3ga4qfDA+5BijLk1FAJQVBXHIQIwROfLuzvXBTM4oY5gd74cMpvsftvFdwlm7+U+jqsKDqahTAbOM1DXCUiw==
+"@bsky.app/alf@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@bsky.app/alf/-/alf-0.1.1.tgz#db9b3352748806e1541559336fe53eb5277fa792"
+  integrity sha512-bFRuAfHA6T64HBbwS2zRPA9UsQGK4fNbYu4kMwIiqGAtHHfANxLVG0timF/L/viZECDsFmu0Tub6QgQdZi9ThA==
   dependencies:
     react-responsive "^10.0.1"
 
