@@ -133,7 +133,7 @@ export function BookmarksAnnouncement() {
               style={[
                 a.text_3xl,
                 a.leading_tight,
-                a.font_heavy,
+                a.font_bold,
                 a.text_center,
                 {
                   fontSize: isWeb ? 28 : 32,

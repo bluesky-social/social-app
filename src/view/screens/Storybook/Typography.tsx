@@ -30,8 +30,8 @@ export function Typography() {
       <Text style={[a.text_xl, a.font_semi_bold, a.italic]}>
         This is bold italic text
       </Text>
-      <Text style={[a.text_xl, a.font_heavy]}>This is heavy text</Text>
-      <Text style={[a.text_xl, a.font_heavy, a.italic]}>
+      <Text style={[a.text_xl, a.font_bold]}>This is heavy text</Text>
+      <Text style={[a.text_xl, a.font_bold, a.italic]}>
         This is heavy italic text
       </Text>
 

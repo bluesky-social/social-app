@@ -128,7 +128,7 @@ function DialogInner({
       }
       style={web({maxWidth: 500})}>
       <View style={[a.gap_sm]}>
-        <Text style={[a.font_heavy, a.text_2xl]}>
+        <Text style={[a.font_bold, a.text_2xl]}>
           {type === 'feed' ? (
             <Trans>Could not connect to feed service</Trans>
           ) : (

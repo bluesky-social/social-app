@@ -90,7 +90,7 @@ let DrawerProfileCard = ({
         <View style={[a.flex_row, a.align_center, a.gap_xs, a.flex_1]}>
           <Text
             emoji
-            style={[a.font_heavy, a.text_xl, a.mt_2xs, a.leading_tight]}
+            style={[a.font_bold, a.text_xl, a.mt_2xs, a.leading_tight]}
             numberOfLines={1}>
             {profile?.displayName || account.handle}
           </Text>
@@ -673,7 +673,7 @@ function MenuItem({icon, label, count, bold, onPress}: MenuItemProps) {
             style={[
               a.flex_1,
               a.text_2xl,
-              bold && a.font_heavy,
+              bold && a.font_bold,
               web(a.leading_snug),
             ]}
             numberOfLines={1}>

@@ -174,7 +174,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
     return (
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.text_xl, a.font_heavy]}>
+          <Text style={[a.text_xl, a.font_bold]}>
             <Span style={{top: 1}}>
               <Check size="sm" fill={t.palette.positive_600} />
             </Span>
@@ -197,7 +197,7 @@ export function Verify({config, showScreen}: ScreenProps<ScreenID.Verify>) {
   return (
     <View style={[a.gap_lg]}>
       <View style={[a.gap_sm]}>
-        <Text style={[a.text_xl, a.font_heavy]}>
+        <Text style={[a.text_xl, a.font_bold]}>
           {state.step === 'email' ? (
             state.mutationStatus === 'success' ? (
               <>

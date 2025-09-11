@@ -121,8 +121,7 @@ export function BlockedGeoOverlay() {
               </View>
 
               <View style={[a.mt_xl, a.align_start]}>
-                <Text
-                  style={[a.text_lg, a.font_heavy, a.leading_snug, a.pb_xs]}>
+                <Text style={[a.text_lg, a.font_bold, a.leading_snug, a.pb_xs]}>
                   <Trans>Not in Mississippi?</Trans>
                 </Text>
                 <Text

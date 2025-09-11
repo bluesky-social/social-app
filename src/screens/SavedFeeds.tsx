@@ -374,7 +374,7 @@ function SectionHeaderText({children}: {children: React.ReactNode}) {
         a.border_b,
         t.atoms.border_contrast_low,
       ]}>
-      <Text style={[a.text_xl, a.font_heavy, a.leading_snug]}>{children}</Text>
+      <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>{children}</Text>
     </View>
   )
 }

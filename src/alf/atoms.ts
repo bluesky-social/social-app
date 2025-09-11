@@ -7,11 +7,6 @@ import * as Layout from '#/components/Layout'
 export const atoms = {
   ...baseAtoms,
 
-  /**
-   * @deprecated
-   */
-  font_heavy: baseAtoms.font_bold,
-
   h_full_vh: web({
     height: '100vh',
   }),

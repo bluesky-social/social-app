@@ -432,7 +432,7 @@ function ValueProposition({
             </View>
 
             <View style={[a.gap_sm]}>
-              <Text style={[a.font_heavy, a.text_3xl, a.text_center]}>
+              <Text style={[a.font_bold, a.text_3xl, a.text_center]}>
                 {title}
               </Text>
               <Text

@@ -67,7 +67,7 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
         />
       ) : (
         <>
-          <Text style={[a.text_2xl, a.font_heavy, a.pb_xs, a.leading_tight]}>
+          <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
             {isAccount ? (
               <Trans>Labels on your account</Trans>
             ) : (

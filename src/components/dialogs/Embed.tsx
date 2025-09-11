@@ -104,7 +104,7 @@ function EmbedDialogInner({
     <Dialog.Inner label={_(msg`Embed post`)} style={[{maxWidth: 500}]}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.text_2xl, a.font_heavy]}>
+          <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>Embed post</Trans>
           </Text>
           <Text
