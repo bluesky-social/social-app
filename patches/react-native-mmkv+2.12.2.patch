@@ -1,30 +1,19 @@
 diff --git a/node_modules/react-native-mmkv/src/createMMKV.ts b/node_modules/react-native-mmkv/src/createMMKV.ts
-index 15d29a0..e97a879 100644
+index 15d29a0..26ebfe9 100644
 --- a/node_modules/react-native-mmkv/src/createMMKV.ts
 +++ b/node_modules/react-native-mmkv/src/createMMKV.ts
-@@ -46,7 +46,7 @@ export const createMMKV = (config: MMKVConfiguration): NativeMMKV => {
+@@ -48,7 +48,7 @@ export const createMMKV = (config: MMKVConfiguration): NativeMMKV => {
+     // Check if we are running on-device (JSI)
+     if (global.nativeCallSyncHook == null || MMKVModule.install == null) {
+       throw new Error(
+-        'Failed to create a new MMKV instance: React Native is not running on-device. MMKV can only be used when synchronous method invocations (JSI) are possible. If you are using a remote debugger (e.g. Chrome), switch to an on-device debugger (e.g. Flipper) instead.'
++        `Failed to create a new MMKV instance: React Native is not running on-device. MMKV can only be used when synchronous method invocations (JSI) are possible. If you are using a remote debugger (e.g. Chrome), switch to an on-device debugger (e.g. Flipper) instead. global.nativeCallSyncHook == null: ${global.nativeCallSyncHook == null}; MMKVModule.install == null: ${MMKVModule.install == null}`
+       );
      }
  
-     // Check if we are running on-device (JSI)
--    if (global.nativeCallSyncHook == null || MMKVModule.install == null) {
-+    if (isRemoteDebuggingInChrome() || MMKVModule.install == null) {
-       throw new Error(
-         'Failed to create a new MMKV instance: React Native is not running on-device. MMKV can only be used when synchronous method invocations (JSI) are possible. If you are using a remote debugger (e.g. Chrome), switch to an on-device debugger (e.g. Flipper) instead.'
-       );
-@@ -68,3 +68,16 @@ export const createMMKV = (config: MMKVConfiguration): NativeMMKV => {
+@@ -67,4 +67,4 @@ export const createMMKV = (config: MMKVConfiguration): NativeMMKV => {
+   }
  
    return global.mmkvCreateNewInstance(config);
- };
-+
-+declare global {
-+  const RN$Bridgeless: boolean;
-+}
-+
-+function isRemoteDebuggingInChrome() {
-+  // Remote debugging in Chrome is not supported in bridgeless
-+  if ('RN$Bridgeless' in global && RN$Bridgeless === true) {
-+    return false;
-+  }
-+
-+  return __DEV__ && typeof global.nativeCallSyncHook === 'undefined';
-+}
+-};
++};z
