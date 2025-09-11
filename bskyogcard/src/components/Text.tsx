@@ -18,7 +18,7 @@ export function Text({
     },
     a.font_normal,
     a.leading_tight,
-    a.tracking_wide,
+    // a.tracking_wide, // 0.25
     t.atoms.text,
     {
       fontFamily: FONT_FAMILY_DEF,

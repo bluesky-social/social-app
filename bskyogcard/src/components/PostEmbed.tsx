@@ -308,7 +308,7 @@ export function LinkEmbed({
               right: a.p_md.padding,
             },
           ]}>
-          <Text cx={[t.atoms.text, a.font_heavy, a.text_sm]}>GIF</Text>
+          <Text cx={[t.atoms.text, a.font_bold, a.text_sm]}>GIF</Text>
         </Box>
       </Box>
     )

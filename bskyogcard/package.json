@@ -12,6 +12,7 @@
   "dependencies": {
     "@atproto/api": "^0.15.14",
     "@atproto/common": "^0.4.11",
+    "@bsky.app/alf": "^0.1.0",
     "@resvg/resvg-js": "^2.6.2",
     "express": "^4.19.2",
     "http-terminator": "^3.2.0",
