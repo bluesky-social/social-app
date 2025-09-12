@@ -164,7 +164,6 @@ See [testing.md](./testing.md).
 - TextEncoder / TextDecoder
 - react-native-url-polyfill
 - Array#findLast (on web)
-- atob (on native)
 
 ### Sentry sourcemaps
 
