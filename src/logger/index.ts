@@ -5,7 +5,6 @@ import {add} from '#/logger/logDump'
 import {type MetricEvents} from '#/logger/metrics'
 import {bitdriftTransport} from '#/logger/transports/bitdrift'
 import {consoleTransport} from '#/logger/transports/console'
-import {sentryTransport} from '#/logger/transports/sentry'
 import {
   LogContext,
   LogLevel,
@@ -19,9 +18,7 @@ import {ENV} from '#/env'
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (ENV) {
     case 'production': {
-      return [sentryTransport, isNative && bitdriftTransport].filter(
-        Boolean,
-      ) as Transport[]
+      return [isNative && bitdriftTransport].filter(Boolean) as Transport[]
     }
     case 'test': {
       return []

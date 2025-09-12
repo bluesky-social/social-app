@@ -1,6 +1,7 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
-const {getSentryExpoConfig} = require('@sentry/react-native/metro')
-const cfg = getSentryExpoConfig(__dirname)
+const {getDefaultConfig} = require('expo/metro-config')
+
+const cfg = getDefaultConfig(__dirname)
 
 cfg.resolver.sourceExts = process.env.RN_SRC_EXT
   ? process.env.RN_SRC_EXT.split(',').concat(cfg.resolver.sourceExts)

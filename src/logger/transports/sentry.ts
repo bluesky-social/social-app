@@ -1,5 +1,4 @@
 import {isNetworkError} from '#/lib/strings/errors'
-import {Sentry} from '#/logger/sentry/lib'
 import {LogLevel, type Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 
@@ -7,8 +6,7 @@ export const sentryTransport: Transport = (
   level,
   context,
   message,
-  {type, tags, ...metadata},
-  timestamp,
+  {tags, ...metadata},
 ) => {
   // Skip debug messages entirely for now - esb
   if (level === LogLevel.Debug) return
@@ -38,15 +36,6 @@ export const sentryTransport: Transport = (
       } as const
     )[level]
 
-    Sentry.addBreadcrumb({
-      category: context,
-      message,
-      data: meta,
-      type: type || 'default',
-      level: severity,
-      timestamp: timestamp / 1000, // Sentry expects seconds
-    })
-
     // We don't want to send any network errors to sentry
     if (isNetworkError(message)) {
       return
@@ -68,20 +57,15 @@ export const sentryTransport: Transport = (
     /**
      * It's otherwise an Error and should be reported with captureException
      */
-    Sentry.captureException(message, {
-      tags: _tags,
-      extra: meta,
-    })
   }
 }
 
-const queuedMessages: [string, Parameters<typeof Sentry.captureMessage>[1]][] =
-  []
+const queuedMessages: [string, Parameters<any>[1]][] = []
 let sentrySendTimeout: ReturnType<typeof setTimeout> | null = null
 
 function queueMessageForSentry(
   message: string,
-  captureContext: Parameters<typeof Sentry.captureMessage>[1],
+  captureContext: Parameters<any>[1],
 ) {
   queuedMessages.push([message, captureContext])
   if (!sentrySendTimeout) {
@@ -94,11 +78,4 @@ function queueMessageForSentry(
   }
 }
 
-function sendQueuedMessages() {
-  while (queuedMessages.length > 0) {
-    const record = queuedMessages.shift()
-    if (record) {
-      Sentry.captureMessage(record[0], record[1])
-    }
-  }
-}
+function sendQueuedMessages() {}

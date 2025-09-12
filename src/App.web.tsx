@@ -1,4 +1,3 @@
-import '#/logger/sentry/setup' // must be near top
 import '#/view/icons'
 import './style.css'
 
@@ -7,7 +6,6 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import * as Sentry from '@sentry/react-native'
 
 import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
@@ -221,4 +219,4 @@ function App() {
   )
 }
 
-export default Sentry.wrap(App)
+export default App
