@@ -422,12 +422,12 @@ msgstr ""
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:131
-msgid "{profileName} joined Bluesky {0} ago"
+#: src/components/NewskieDialog.tsx:113
+msgid "{profileName} joined Bluesky {timeAgoString} ago"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:126
-msgid "{profileName} joined Bluesky using a starter pack {0} ago"
+#: src/components/NewskieDialog.tsx:110
+msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
@@ -1150,12 +1150,12 @@ msgctxt "toast"
 msgid "Appeal submitted"
 msgstr ""
 
-#: src/screens/Takendown.tsx:111
-#: src/screens/Takendown.tsx:144
+#: src/screens/Takendown.tsx:120
+#: src/screens/Takendown.tsx:153
 msgid "Appeal suspension"
 msgstr ""
 
-#: src/screens/Takendown.tsx:114
+#: src/screens/Takendown.tsx:123
 msgid "Appeal Suspension"
 msgstr ""
 
@@ -1465,7 +1465,7 @@ msgstr ""
 msgid "Bluesky is better with friends!"
 msgstr ""
 
-#: src/screens/Takendown.tsx:217
+#: src/screens/Takendown.tsx:226
 msgid "Bluesky Social Terms of Service"
 msgstr ""
 
@@ -1621,8 +1621,8 @@ msgstr ""
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:246
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:252
 #: src/screens/Settings/Settings.tsx:289
-#: src/screens/Takendown.tsx:99
-#: src/screens/Takendown.tsx:102
+#: src/screens/Takendown.tsx:108
+#: src/screens/Takendown.tsx:111
 #: src/view/com/composer/Composer.tsx:1005
 #: src/view/com/composer/Composer.tsx:1016
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
@@ -1930,8 +1930,8 @@ msgstr ""
 #: src/components/dms/ReportDialog.tsx:395
 #: src/components/live/EditLiveDialog.tsx:229
 #: src/components/live/EditLiveDialog.tsx:235
-#: src/components/NewskieDialog.tsx:159
-#: src/components/NewskieDialog.tsx:165
+#: src/components/NewskieDialog.tsx:167
+#: src/components/NewskieDialog.tsx:173
 #: src/components/Post/Embed/ExternalEmbed/Gif.tsx:197
 #: src/components/ProgressGuide/FollowDialog.tsx:379
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:118
@@ -5577,7 +5577,7 @@ msgstr ""
 msgid "New starter pack"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:102
+#: src/components/NewskieDialog.tsx:120
 msgid "New user info dialog"
 msgstr ""
 
@@ -6864,8 +6864,8 @@ msgstr ""
 msgid "Real people."
 msgstr ""
 
-#: src/screens/Takendown.tsx:162
-#: src/screens/Takendown.tsx:170
+#: src/screens/Takendown.tsx:171
+#: src/screens/Takendown.tsx:179
 msgid "Reason for appeal"
 msgstr ""
 
@@ -7512,7 +7512,7 @@ msgid "Saves image crop settings"
 msgstr ""
 
 #: src/components/dms/ChatEmptyPill.tsx:33
-#: src/components/NewskieDialog.tsx:121
+#: src/components/NewskieDialog.tsx:139
 #: src/view/com/notifications/NotificationFeedItem.tsx:751
 #: src/view/com/notifications/NotificationFeedItem.tsx:776
 msgid "Say hello!"
@@ -8219,14 +8219,14 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:288
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:96
-#: src/screens/Takendown.tsx:85
+#: src/screens/Takendown.tsx:94
 #: src/view/shell/desktop/LeftNav.tsx:212
 #: src/view/shell/desktop/LeftNav.tsx:269
 #: src/view/shell/desktop/LeftNav.tsx:272
 msgid "Sign out"
 msgstr ""
 
-#: src/screens/Takendown.tsx:88
+#: src/screens/Takendown.tsx:97
 msgid "Sign Out"
 msgstr ""
 
@@ -8462,11 +8462,11 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/screens/Takendown.tsx:70
+#: src/screens/Takendown.tsx:79
 msgid "Submit appeal"
 msgstr ""
 
-#: src/screens/Takendown.tsx:76
+#: src/screens/Takendown.tsx:85
 msgid "Submit Appeal"
 msgstr ""
 
@@ -10221,7 +10221,7 @@ msgstr ""
 msgid "Welcome back!"
 msgstr ""
 
-#: src/components/NewskieDialog.tsx:121
+#: src/components/NewskieDialog.tsx:139
 msgid "Welcome, friend!"
 msgstr ""
 
@@ -10270,7 +10270,7 @@ msgstr ""
 msgid "Whoops! Trending videos failed to load."
 msgstr ""
 
-#: src/screens/Takendown.tsx:173
+#: src/screens/Takendown.tsx:182
 msgid "Why are you appealing?"
 msgstr ""
 
@@ -10363,10 +10363,6 @@ msgstr ""
 
 #: src/components/dms/DateDivider.tsx:46
 msgid "Yesterday"
-msgstr ""
-
-#: src/components/NewskieDialog.tsx:91
-msgid "You"
 msgstr ""
 
 #: src/screens/Signup/StepInfo/Policies.tsx:23
@@ -10598,6 +10594,14 @@ msgstr ""
 msgid "You initiated this flow already, {0} ago. It may take up to 5 minutes for emails to reach your inbox. Please consider waiting a few minutes before trying again."
 msgstr ""
 
+#: src/components/NewskieDialog.tsx:105
+msgid "You joined Bluesky {timeAgoString} ago"
+msgstr ""
+
+#: src/components/NewskieDialog.tsx:102
+msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
+msgstr ""
+
 #: src/components/moderation/LabelsOnMeDialog.tsx:79
 msgid "You may appeal non-self labels if you feel they were placed in error."
 msgstr ""
@@ -10786,7 +10790,7 @@ msgstr ""
 msgid "Your account has been deleted"
 msgstr ""
 
-#: src/screens/Takendown.tsx:146
+#: src/screens/Takendown.tsx:155
 msgid "Your account has been suspended"
 msgstr ""
 
@@ -10798,11 +10802,11 @@ msgstr ""
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
-#: src/screens/Takendown.tsx:214
+#: src/screens/Takendown.tsx:223
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr ""
 
-#: src/screens/Takendown.tsx:154
+#: src/screens/Takendown.tsx:163
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr ""
 
