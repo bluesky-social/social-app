@@ -83,7 +83,7 @@ function WizardListCard({
           emoji
           style={[
             a.flex_1,
-            a.font_bold,
+            a.font_semi_bold,
             a.text_md,
             a.leading_tight,
             a.self_start,

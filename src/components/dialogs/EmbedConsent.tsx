@@ -54,7 +54,7 @@ export function EmbedConsentDialog({
         label={_(msg`External Media`)}
         style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
         <View style={a.gap_sm}>
-          <Text style={[a.text_2xl, a.font_bold]}>
+          <Text style={[a.text_2xl, a.font_semi_bold]}>
             <Trans>External Media</Trans>
           </Text>
 

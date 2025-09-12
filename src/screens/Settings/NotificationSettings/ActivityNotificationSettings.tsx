@@ -140,7 +140,10 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                           Enable notifications for an account by visiting their
                           profile and pressing the{' '}
                           <RNText
-                            style={[a.font_bold, t.atoms.text_contrast_high]}>
+                            style={[
+                              a.font_semi_bold,
+                              t.atoms.text_contrast_high,
+                            ]}>
                             bell icon
                           </RNText>{' '}
                           <BellRingingFilledIcon
@@ -157,7 +160,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                           <InlineLinkText
                             label={_(msg`Privacy and Security settings`)}
                             to={{screen: 'ActivityPrivacySettings'}}
-                            style={[a.font_bold]}>
+                            style={[a.font_semi_bold]}>
                             Settings &rarr; Privacy and Security
                           </InlineLinkText>
                           .

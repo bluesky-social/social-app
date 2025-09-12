@@ -885,7 +885,7 @@ export function Explore({
                 ]}>
                 <CircleInfo size="md" fill={t.palette.negative_400} />
                 <View style={[a.flex_1, a.gap_sm]}>
-                  <Text style={[a.font_bold, a.leading_snug]}>
+                  <Text style={[a.font_semi_bold, a.leading_snug]}>
                     {item.message}
                   </Text>
                   <Text

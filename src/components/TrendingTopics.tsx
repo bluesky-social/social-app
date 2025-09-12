@@ -90,7 +90,7 @@ export function TrendingTopic({
 
       <Text
         style={[
-          a.font_bold,
+          a.font_semi_bold,
           a.leading_tight,
           isSmall ? [a.text_sm] : [a.text_md, {paddingBottom: 1}],
         ]}

@@ -515,7 +515,7 @@ function Inner({
           <View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
             <Text
               numberOfLines={1}
-              style={[a.text_lg, a.font_bold, a.self_start]}>
+              style={[a.text_lg, a.font_semi_bold, a.self_start]}>
               {sanitizeDisplayName(
                 profile.displayName || sanitizeHandle(profile.handle),
                 moderation.ui('displayName'),
@@ -562,7 +562,7 @@ function Inner({
               label={`${followers} ${pluralizedFollowers}`}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
+              <Text style={[a.text_md, a.font_semi_bold]}>{followers} </Text>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {pluralizedFollowers}
               </Text>
@@ -572,7 +572,7 @@ function Inner({
               label={_(msg`${following} following`)}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Text style={[a.text_md, a.font_bold]}>{following} </Text>
+              <Text style={[a.text_md, a.font_semi_bold]}>{following} </Text>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {pluralizedFollowings}
               </Text>

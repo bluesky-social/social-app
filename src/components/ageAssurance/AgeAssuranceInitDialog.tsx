@@ -178,7 +178,7 @@ function Inner() {
       <View style={[a.align_start]}>
         <AgeAssuranceBadge />
 
-        <Text style={[a.text_xl, a.font_heavy, a.pt_xl, a.pb_md]}>
+        <Text style={[a.text_xl, a.font_bold, a.pt_xl, a.pb_md]}>
           {success ? <Trans>Success!</Trans> : <Trans>Verify your age</Trans>}
         </Text>
 

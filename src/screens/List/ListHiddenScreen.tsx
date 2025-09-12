@@ -122,7 +122,7 @@ export function ListHiddenScreen({
           width={42}
         />
         <View style={[a.gap_sm, a.align_center]}>
-          <Text style={[a.font_bold, a.text_3xl]}>
+          <Text style={[a.font_semi_bold, a.text_3xl]}>
             {list.creator.viewer?.blocking || list.creator.viewer?.blockedBy ? (
               <Trans>Creator has been blocked</Trans>
             ) : (
@@ -150,7 +150,7 @@ export function ListHiddenScreen({
             ) : (
               <Trans>
                 This list – created by{' '}
-                <Text style={[a.font_bold]}>
+                <Text style={[a.font_semi_bold]}>
                   {sanitizeHandle(list.creator.handle, '@')}
                 </Text>{' '}
                 – contains possible violations of Bluesky's community guidelines

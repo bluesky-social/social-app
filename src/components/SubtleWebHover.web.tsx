@@ -11,7 +11,7 @@ export function SubtleWebHover({
   if (isTouchDevice) {
     return null
   }
-  let opacity: number
+  let opacity = 0.5
   switch (t.name) {
     case 'dark':
       opacity = 0.4

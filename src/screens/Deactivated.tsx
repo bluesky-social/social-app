@@ -121,7 +121,7 @@ export function Deactivated() {
           </View>
 
           <View style={[a.gap_xs, a.pb_3xl]}>
-            <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_xl, a.font_semi_bold, a.leading_snug]}>
               <Trans>Welcome back!</Trans>
             </Text>
             <Text style={[a.text_sm, a.leading_snug]}>

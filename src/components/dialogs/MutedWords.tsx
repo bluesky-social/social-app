@@ -108,7 +108,12 @@ function MutedWordsInner() {
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
       <View>
         <Text
-          style={[a.text_md, a.font_bold, a.pb_sm, t.atoms.text_contrast_high]}>
+          style={[
+            a.text_md,
+            a.font_semi_bold,
+            a.pb_sm,
+            t.atoms.text_contrast_high,
+          ]}>
           <Trans>Add muted words and tags</Trans>
         </Text>
         <Text style={[a.pb_lg, a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -147,7 +152,7 @@ function MutedWordsInner() {
               style={[
                 a.pb_xs,
                 a.text_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Duration:</Trans>
@@ -247,7 +252,7 @@ function MutedWordsInner() {
               style={[
                 a.pb_xs,
                 a.text_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Mute in:</Trans>
@@ -293,7 +298,7 @@ function MutedWordsInner() {
               style={[
                 a.pb_xs,
                 a.text_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Options:</Trans>
@@ -362,7 +367,7 @@ function MutedWordsInner() {
           <Text
             style={[
               a.text_md,
-              a.font_bold,
+              a.font_semi_bold,
               a.pb_md,
               t.atoms.text_contrast_high,
             ]}>
@@ -455,7 +460,7 @@ function MutedWordRow({
               style={[
                 a.flex_1,
                 a.leading_snug,
-                a.font_bold,
+                a.font_semi_bold,
                 web({
                   overflowWrap: 'break-word',
                   wordBreak: 'break-word',
@@ -466,7 +471,8 @@ function MutedWordRow({
                   {word.value}{' '}
                   <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
                     in{' '}
-                    <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                    <Text
+                      style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
                       text & tags
                     </Text>
                   </Text>
@@ -476,7 +482,8 @@ function MutedWordRow({
                   {word.value}{' '}
                   <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
                     in{' '}
-                    <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                    <Text
+                      style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
                       tags
                     </Text>
                   </Text>

@@ -155,7 +155,7 @@ export function DialogInner() {
             style={[
               t.atoms.text,
               a.text_left,
-              a.font_bold,
+              a.font_semi_bold,
               a.text_xl,
               a.mb_sm,
             ]}>
@@ -240,7 +240,7 @@ export function DialogInner() {
                 style={[
                   a.px_0,
                   a.py_md,
-                  a.font_bold,
+                  a.font_semi_bold,
                   a.text_xs,
                   t.atoms.text_contrast_low,
                   a.pt_3xl,

@@ -34,7 +34,8 @@ export const SplashScreen = ({
             <Logotype width={161} fill={t.atoms.text.color} />
           </View>
 
-          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+          <Text
+            style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
             <Trans>What's up?</Trans>
           </Text>
         </View>

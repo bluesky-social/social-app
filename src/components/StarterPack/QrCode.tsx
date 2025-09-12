@@ -54,14 +54,19 @@ export function QrCode({
         ]}>
         <View style={[a.gap_sm]}>
           <Text
-            style={[a.font_bold, a.text_3xl, a.text_center, {color: 'white'}]}>
+            style={[
+              a.font_semi_bold,
+              a.text_3xl,
+              a.text_center,
+              {color: 'white'},
+            ]}>
             {record.name}
           </Text>
         </View>
         <View style={[a.gap_xl, a.align_center]}>
           <Text
             style={[
-              a.font_bold,
+              a.font_semi_bold,
               a.text_center,
               {color: 'white', fontSize: 18},
             ]}>
@@ -76,7 +81,7 @@ export function QrCode({
               a.flex,
               a.flex_row,
               a.align_center,
-              a.font_bold,
+              a.font_semi_bold,
               {color: 'white', fontSize: 18, gap: 6},
             ]}>
             <Trans>

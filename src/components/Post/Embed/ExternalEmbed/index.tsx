@@ -126,7 +126,7 @@ export const ExternalEmbed = ({
                 <Text
                   emoji
                   numberOfLines={3}
-                  style={[a.text_md, a.font_bold, a.leading_snug]}>
+                  style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
                   {link.title || link.uri}
                 </Text>
               )}

@@ -79,7 +79,7 @@ function Inner({
         gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
       ]}>
       <View style={[a.gap_sm, a.pb_lg]}>
-        <Text style={[a.text_2xl, a.font_bold, a.pr_4xl, a.leading_tight]}>
+        <Text style={[a.text_2xl, a.font_semi_bold, a.pr_4xl, a.leading_tight]}>
           {label}
         </Text>
         <Text style={[a.text_md, a.leading_snug]}>
@@ -206,7 +206,7 @@ function VerifierCard({
               <ProfileCard.AvatarPlaceholder />
               <View style={[a.flex_1]}>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_snug]}
+                  style={[a.text_md, a.font_semi_bold, a.leading_snug]}
                   numberOfLines={1}>
                   <Trans>Unknown verifier</Trans>
                 </Text>

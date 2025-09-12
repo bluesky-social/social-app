@@ -67,7 +67,7 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
         />
       ) : (
         <>
-          <Text style={[a.text_2xl, a.font_heavy, a.pb_xs, a.leading_tight]}>
+          <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
             {isAccount ? (
               <Trans>Labels on your account</Trans>
             ) : (
@@ -134,7 +134,7 @@ function Label({
       ]}>
       <View style={[a.p_md, a.gap_sm, a.flex_row]}>
         <View style={[a.flex_1, a.gap_xs]}>
-          <Text emoji style={[a.font_bold, a.text_md]}>
+          <Text emoji style={[a.font_semi_bold, a.text_md]}>
             {strings.name}
           </Text>
           <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
@@ -264,7 +264,7 @@ function AppealForm({
   return (
     <>
       <View>
-        <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
+        <Text style={[a.text_2xl, a.font_semi_bold, a.pb_xs, a.leading_tight]}>
           <Trans>Appeal "{strings.name}" label</Trans>
         </Text>
         <Text style={[a.text_md, a.leading_snug]}>

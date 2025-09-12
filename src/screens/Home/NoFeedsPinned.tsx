@@ -75,7 +75,7 @@ export function NoFeedsPinned({
           },
         ]}>
         <View style={[a.align_center, a.gap_sm, a.pb_xl]}>
-          <Text style={[a.text_xl, a.font_bold]}>
+          <Text style={[a.text_xl, a.font_semi_bold]}>
             <Trans>Whoops!</Trans>
           </Text>
           <Text

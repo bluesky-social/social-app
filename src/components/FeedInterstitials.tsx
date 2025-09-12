@@ -380,7 +380,7 @@ export function ProfileGrid({
           a.justify_between,
         ]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
-        <Text style={[a.text_sm, a.font_bold, t.atoms.text]}>
+        <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
           {isFeedContext ? (
             <Trans>Suggested for you</Trans>
           ) : (
@@ -516,7 +516,7 @@ export function SuggestedFeeds() {
           style={[
             a.flex_1,
             a.text_lg,
-            a.font_bold,
+            a.font_semi_bold,
             t.atoms.text_contrast_medium,
           ]}>
           <Trans>Some other feeds you might like</Trans>

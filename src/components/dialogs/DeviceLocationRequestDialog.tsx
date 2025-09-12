@@ -108,7 +108,7 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
 
   return (
     <View style={[a.gap_md]}>
-      <Text style={[a.text_xl, a.font_heavy]}>
+      <Text style={[a.text_xl, a.font_bold]}>
         <Trans>Confirm your location</Trans>
       </Text>
       <View style={[a.gap_sm, a.pb_xs]}>

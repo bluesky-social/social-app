@@ -225,7 +225,7 @@ let ProfileHeaderLabeler = ({
                             ? t.palette.contrast_700
                             : t.palette.white,
                         },
-                        a.font_bold,
+                        a.font_semi_bold,
                         a.text_center,
                         a.leading_tight,
                       ]}>
@@ -297,7 +297,7 @@ let ProfileHeaderLabeler = ({
                     {({hovered, focused, pressed}) => (
                       <Text
                         style={[
-                          a.font_bold,
+                          a.font_semi_bold,
                           a.text_sm,
                           t.atoms.text_contrast_medium,
                           (hovered || focused || pressed) &&

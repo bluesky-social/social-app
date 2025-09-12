@@ -328,7 +328,7 @@ function DialogInner({
               style={[
                 a.text_sm,
                 a.mt_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 {color: t.palette.negative_400},
               ]}>
               <Plural
@@ -379,7 +379,7 @@ function DialogInner({
               style={[
                 a.text_sm,
                 a.mt_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 {color: t.palette.negative_400},
               ]}>
               <Plural

@@ -89,7 +89,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
         <AgeAssuranceBadge />
       </View>
 
-      <Text style={[a.text_2xl, a.font_heavy, a.pt_md, a.leading_tight]}>
+      <Text style={[a.text_2xl, a.font_bold, a.pt_md, a.leading_tight]}>
         <Trans>Contact us</Trans>
       </Text>
 

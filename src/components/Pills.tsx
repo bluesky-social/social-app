@@ -133,7 +133,7 @@ export function Label({
               emoji
               style={[
                 text,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
                 {paddingRight: 3},

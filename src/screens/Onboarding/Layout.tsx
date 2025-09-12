@@ -17,7 +17,6 @@ import {
   useTheme,
   web,
 } from '#/alf'
-import {leading} from '#/alf/typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
 import {HEADER_SLOT_SIZE} from '#/components/Layout'
@@ -234,10 +233,8 @@ export function TitleText({
       style={[
         a.pb_sm,
         a.text_4xl,
-        a.font_bold,
-        {
-          lineHeight: leading(a.text_4xl, a.leading_tight),
-        },
+        a.font_semi_bold,
+        a.leading_tight,
         flatten(style),
       ]}>
       {children}

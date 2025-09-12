@@ -249,7 +249,7 @@ export function LabelText({
   return (
     <Text
       style={[
-        a.font_bold,
+        a.font_semi_bold,
         a.leading_tight,
         {
           userSelect: 'none',

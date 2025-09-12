@@ -77,7 +77,7 @@ export function AccountList({
             ]}>
             <Text
               style={[
-                a.font_bold,
+                a.font_semi_bold,
                 a.flex_1,
                 a.flex_row,
                 a.py_sm,
@@ -151,7 +151,7 @@ function AccountItem({
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <Text
                 emoji
-                style={[a.font_bold, a.leading_tight]}
+                style={[a.font_semi_bold, a.leading_tight]}
                 numberOfLines={1}>
                 {sanitizeDisplayName(
                   profile?.displayName || profile?.handle || account.handle,

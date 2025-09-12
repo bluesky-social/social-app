@@ -244,7 +244,7 @@ function ProvidedHandlePage({
           <Text>
             <Trans>
               Your full handle will be{' '}
-              <Text style={[a.font_bold]}>
+              <Text style={[a.font_semi_bold]}>
                 @{createFullHandle(subdomain, host)}
               </Text>
             </Trans>
@@ -280,7 +280,7 @@ function ProvidedHandlePage({
                   }),
                 )}
                 to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
-                style={[a.font_bold]}
+                style={[a.font_semi_bold]}
                 disableMismatchWarning>
                 Learn more here.
               </InlineLinkText>
@@ -522,7 +522,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           <Admonition type="info" style={[a.mb_md]}>
             <Trans>
               Your current handle{' '}
-              <Text style={[a.font_bold]}>
+              <Text style={[a.font_semi_bold]}>
                 {sanitizeHandle(currentAccount?.handle || '', '@')}
               </Text>{' '}
               will automatically remain reserved for you. You can switch back to

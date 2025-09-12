@@ -36,7 +36,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
 
       <View style={[a.pt_lg]}>
         <Text
-          style={[a.text_3xl, a.font_heavy, {lineHeight: a.text_3xl.fontSize}]}>
+          style={[a.text_3xl, a.font_bold, {lineHeight: a.text_3xl.fontSize}]}>
           <Trans>Join the conversation</Trans>
         </Text>
       </View>

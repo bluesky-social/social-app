@@ -62,7 +62,7 @@ export function AgeRestrictedScreen({
           </View>
 
           <View style={[a.gap_sm, a.pb_lg]}>
-            <Text style={[a.text_xl, a.leading_snug, a.font_heavy]}>
+            <Text style={[a.text_xl, a.leading_snug, a.font_bold]}>
               <Trans>
                 You must complete age assurance in order to access this screen.
               </Trans>

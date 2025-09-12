@@ -95,7 +95,7 @@ export function GifAltTextDialogLoaded({
           <Plus size="sm" fill={t.palette.white} />
         )}
         <Text
-          style={[a.font_bold, {color: t.palette.white}]}
+          style={[a.font_semi_bold, {color: t.palette.white}]}
           accessible={false}>
           <Trans>ALT</Trans>
         </Text>
@@ -206,7 +206,8 @@ function AltTextInner({
         </View>
         {/* below the text input to force tab order */}
         <View>
-          <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
+          <Text
+            style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
             <Trans>Add alt text</Trans>
           </Text>
           <View style={[a.align_center]}>

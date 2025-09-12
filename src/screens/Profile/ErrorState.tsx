@@ -27,7 +27,7 @@ export function ErrorState({error}: {error: string}) {
     <View style={[a.px_xl]}>
       <CircleInfo width={48} style={[t.atoms.text_contrast_low]} />
 
-      <Text style={[a.text_xl, a.font_bold, a.pb_md, a.pt_xl]}>
+      <Text style={[a.text_xl, a.font_semi_bold, a.pb_md, a.pt_xl]}>
         <Trans>Hmmmm, we couldn't load that moderation service.</Trans>
       </Text>
       <Text

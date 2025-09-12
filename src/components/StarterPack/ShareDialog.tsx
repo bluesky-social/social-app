@@ -77,7 +77,7 @@ function ShareDialogInner({
         ) : (
           <View style={[!gtMobile && a.gap_lg]}>
             <View style={[a.gap_sm, gtMobile && a.pb_lg]}>
-              <Text style={[a.font_bold, a.text_2xl]}>
+              <Text style={[a.font_semi_bold, a.text_2xl]}>
                 <Trans>Invite people to this starter pack!</Trans>
               </Text>
               <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
