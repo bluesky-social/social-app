@@ -8,37 +8,27 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {useCallback, useEffect, useMemo, useState} from 'react'
-import {LayoutAnimation, PixelRatio, StyleSheet, View} from 'react-native'
+import React, {useEffect, useMemo, useState} from 'react'
+import {LayoutAnimation, StyleSheet, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
-import {Gesture} from 'react-native-gesture-handler'
-import PagerView from 'react-native-pager-view'
 import Animated, {
   type AnimatedRef,
   cancelAnimation,
-  interpolate,
   measure,
   runOnJS,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
-  withDecay,
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
-import {
-  SafeAreaView,
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import * as ScreenOrientation from 'expo-screen-orientation'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 
-import {type Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
 import {isIOS} from '#/platform/detection'
 import {type Lightbox} from '#/state/lightbox'
@@ -48,14 +38,10 @@ import {ScrollView} from '#/view/com/util/Views'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
-import {type ImageSource, type Transform} from './@types'
+import {type ImageSource} from './@types'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
-import ImageItem from './components/ImageItem/ImageItem'
-
-type Rect = {x: number; y: number; width: number; height: number}
 
 const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
-const PIXEL_RATIO = PixelRatio.get()
 
 const SLOW_SPRING: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
@@ -210,10 +196,9 @@ function ImageView({
 }) {
   const {images, index: initialImageIndex} = lightbox
   const isAnimated = useMemo(() => canAnimate(lightbox), [lightbox])
-  const [isScaled, setIsScaled] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
-  const [imageIndex, setImageIndex] = useState(initialImageIndex)
-  const [showControls, setShowControls] = useState(true)
+  const [isScaled] = useState(false)
+  const [imageIndex] = useState(initialImageIndex)
+  const [showControls] = useState(true)
   const [isAltExpanded, setAltExpanded] = React.useState(false)
   const dismissSwipeTranslateY = useSharedValue(0)
   const isFlyingAway = useSharedValue(false)
@@ -285,17 +270,6 @@ function ImageView({
     }
   })
 
-  const onTap = useCallback(() => {
-    setShowControls(show => !show)
-  }, [])
-
-  const onZoom = useCallback((nextIsScaled: boolean) => {
-    setIsScaled(nextIsScaled)
-    if (nextIsScaled) {
-      setShowControls(false)
-    }
-  }, [])
-
   useAnimatedReaction(
     () => {
       const screenSize = measure(safeAreaRef)
@@ -335,37 +309,6 @@ function ImageView({
         style={[styles.backdrop, backdropStyle]}
         renderToHardwareTextureAndroid
       />
-      <PagerView
-        scrollEnabled={!isScaled}
-        initialPage={initialImageIndex}
-        onPageSelected={e => {
-          setImageIndex(e.nativeEvent.position)
-          setIsScaled(false)
-        }}
-        onPageScrollStateChanged={e => {
-          setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
-        }}
-        overdrag={true}
-        style={styles.pager}>
-        {images.map((imageSrc, i) => (
-          <View key={imageSrc.uri}>
-            <LightboxImage
-              onTap={onTap}
-              onZoom={onZoom}
-              imageSrc={imageSrc}
-              onRequestClose={onRequestClose}
-              isScrollViewBeingDragged={isDragging}
-              showControls={showControls}
-              safeAreaRef={safeAreaRef}
-              isScaled={isScaled}
-              isFlyingAway={isFlyingAway}
-              isActive={i === imageIndex}
-              dismissSwipeTranslateY={dismissSwipeTranslateY}
-              openProgress={openProgress}
-            />
-          </View>
-        ))}
-      </PagerView>
       <View style={styles.controls}>
         <Animated.View
           style={animatedHeaderStyle}
@@ -386,164 +329,6 @@ function ImageView({
         </Animated.View>
       </View>
     </Animated.View>
-  )
-}
-
-function LightboxImage({
-  imageSrc,
-  onTap,
-  onZoom,
-  onRequestClose,
-  isScrollViewBeingDragged,
-  isScaled,
-  isFlyingAway,
-  isActive,
-  showControls,
-  safeAreaRef,
-  openProgress,
-  dismissSwipeTranslateY,
-}: {
-  imageSrc: ImageSource
-  onRequestClose: () => void
-  onTap: () => void
-  onZoom: (scaled: boolean) => void
-  isScrollViewBeingDragged: boolean
-  isScaled: boolean
-  isActive: boolean
-  isFlyingAway: SharedValue<boolean>
-  showControls: boolean
-  safeAreaRef: AnimatedRef<View>
-  openProgress: SharedValue<number>
-  dismissSwipeTranslateY: SharedValue<number>
-}) {
-  const [fetchedDims, setFetchedDims] = React.useState<Dimensions | null>(null)
-  const dims = fetchedDims ?? imageSrc.dimensions ?? imageSrc.thumbDimensions
-  let imageAspect: number | undefined
-  if (dims) {
-    imageAspect = dims.width / dims.height
-    if (Number.isNaN(imageAspect)) {
-      imageAspect = undefined
-    }
-  }
-
-  const safeFrameDelayedForJSThreadOnly = useSafeAreaFrame()
-  const safeInsetsDelayedForJSThreadOnly = useSafeAreaInsets()
-  const measureSafeArea = React.useCallback(() => {
-    'worklet'
-    let safeArea: Rect | null = measure(safeAreaRef)
-    if (!safeArea) {
-      if (_WORKLET) {
-        console.error('Expected to always be able to measure safe area.')
-      }
-      const frame = safeFrameDelayedForJSThreadOnly
-      const insets = safeInsetsDelayedForJSThreadOnly
-      safeArea = {
-        x: frame.x + insets.left,
-        y: frame.y + insets.top,
-        width: frame.width - insets.left - insets.right,
-        height: frame.height - insets.top - insets.bottom,
-      }
-    }
-    return safeArea
-  }, [
-    safeFrameDelayedForJSThreadOnly,
-    safeInsetsDelayedForJSThreadOnly,
-    safeAreaRef,
-  ])
-
-  const {thumbRect} = imageSrc
-  const transforms = useDerivedValue(() => {
-    'worklet'
-    const safeArea = measureSafeArea()
-    const openProgressValue = openProgress.get()
-    const dismissTranslateY =
-      isActive && openProgressValue === 1 ? dismissSwipeTranslateY.get() : 0
-
-    if (openProgressValue === 0 && isFlyingAway.get()) {
-      return {
-        isHidden: true,
-        isResting: false,
-        scaleAndMoveTransform: [],
-        cropFrameTransform: [],
-        cropContentTransform: [],
-      }
-    }
-
-    if (isActive && thumbRect && imageAspect && openProgressValue < 1) {
-      return interpolateTransform(
-        openProgressValue,
-        thumbRect,
-        safeArea,
-        imageAspect,
-      )
-    }
-    return {
-      isHidden: false,
-      isResting: dismissTranslateY === 0,
-      scaleAndMoveTransform: [{translateY: dismissTranslateY}],
-      cropFrameTransform: [],
-      cropContentTransform: [],
-    }
-  })
-
-  const dismissSwipePan = Gesture.Pan()
-    .enabled(isActive && !isScaled)
-    .activeOffsetY([-10, 10])
-    .failOffsetX([-10, 10])
-    .maxPointers(1)
-    .onUpdate(e => {
-      'worklet'
-      if (openProgress.get() !== 1 || isFlyingAway.get()) {
-        return
-      }
-      dismissSwipeTranslateY.set(e.translationY)
-    })
-    .onEnd(e => {
-      'worklet'
-      if (openProgress.get() !== 1 || isFlyingAway.get()) {
-        return
-      }
-      if (Math.abs(e.velocityY) > 200) {
-        isFlyingAway.set(true)
-        if (dismissSwipeTranslateY.get() === 0) {
-          // HACK: If the initial value is 0, withDecay() animation doesn't start.
-          // This is a bug in Reanimated, but for now we'll work around it like this.
-          dismissSwipeTranslateY.set(1)
-        }
-        dismissSwipeTranslateY.set(() => {
-          'worklet'
-          return withDecay({
-            velocity: e.velocityY,
-            velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
-            deceleration: 1, // Danger! This relies on the reaction below stopping it.
-          })
-        })
-      } else {
-        dismissSwipeTranslateY.set(() => {
-          'worklet'
-          return withSpring(0, {
-            stiffness: 700,
-            damping: 50,
-          })
-        })
-      }
-    })
-
-  return (
-    <ImageItem
-      imageSrc={imageSrc}
-      onTap={onTap}
-      onZoom={onZoom}
-      onRequestClose={onRequestClose}
-      onLoad={setFetchedDims}
-      isScrollViewBeingDragged={isScrollViewBeingDragged}
-      showControls={showControls}
-      measureSafeArea={measureSafeArea}
-      imageAspect={imageAspect}
-      imageDimensions={dims ?? undefined}
-      dismissSwipePan={dismissSwipePan}
-      transforms={transforms}
-    />
   )
 }
 
@@ -697,90 +482,6 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
   },
 })
-
-function interpolatePx(
-  px: number,
-  inputRange: readonly number[],
-  outputRange: readonly number[],
-) {
-  'worklet'
-  const value = interpolate(px, inputRange, outputRange)
-  return Math.round(value * PIXEL_RATIO) / PIXEL_RATIO
-}
-
-function interpolateTransform(
-  progress: number,
-  thumbnailDims: {
-    pageX: number
-    width: number
-    pageY: number
-    height: number
-  },
-  safeArea: {width: number; height: number; x: number; y: number},
-  imageAspect: number,
-): {
-  scaleAndMoveTransform: Transform
-  cropFrameTransform: Transform
-  cropContentTransform: Transform
-  isResting: boolean
-  isHidden: boolean
-} {
-  'worklet'
-  const thumbAspect = thumbnailDims.width / thumbnailDims.height
-  let uncroppedInitialWidth
-  let uncroppedInitialHeight
-  if (imageAspect > thumbAspect) {
-    uncroppedInitialWidth = thumbnailDims.height * imageAspect
-    uncroppedInitialHeight = thumbnailDims.height
-  } else {
-    uncroppedInitialWidth = thumbnailDims.width
-    uncroppedInitialHeight = thumbnailDims.width / imageAspect
-  }
-  const safeAreaAspect = safeArea.width / safeArea.height
-  let finalWidth
-  let finalHeight
-  if (safeAreaAspect > imageAspect) {
-    finalWidth = safeArea.height * imageAspect
-    finalHeight = safeArea.height
-  } else {
-    finalWidth = safeArea.width
-    finalHeight = safeArea.width / imageAspect
-  }
-  const initialScale = Math.min(
-    uncroppedInitialWidth / finalWidth,
-    uncroppedInitialHeight / finalHeight,
-  )
-  const croppedFinalWidth = thumbnailDims.width / initialScale
-  const croppedFinalHeight = thumbnailDims.height / initialScale
-  const screenCenterX = safeArea.width / 2
-  const screenCenterY = safeArea.height / 2
-  const thumbnailSafeAreaX = thumbnailDims.pageX - safeArea.x
-  const thumbnailSafeAreaY = thumbnailDims.pageY - safeArea.y
-  const thumbnailCenterX = thumbnailSafeAreaX + thumbnailDims.width / 2
-  const thumbnailCenterY = thumbnailSafeAreaY + thumbnailDims.height / 2
-  const initialTranslateX = thumbnailCenterX - screenCenterX
-  const initialTranslateY = thumbnailCenterY - screenCenterY
-  const scale = interpolate(progress, [0, 1], [initialScale, 1])
-  const translateX = interpolatePx(progress, [0, 1], [initialTranslateX, 0])
-  const translateY = interpolatePx(progress, [0, 1], [initialTranslateY, 0])
-  const cropScaleX = interpolate(
-    progress,
-    [0, 1],
-    [croppedFinalWidth / finalWidth, 1],
-  )
-  const cropScaleY = interpolate(
-    progress,
-    [0, 1],
-    [croppedFinalHeight / finalHeight, 1],
-  )
-  return {
-    isHidden: false,
-    isResting: progress === 1,
-    scaleAndMoveTransform: [{translateX}, {translateY}, {scale}],
-    cropFrameTransform: [{scaleX: cropScaleX}, {scaleY: cropScaleY}],
-    cropContentTransform: [{scaleX: 1 / cropScaleX}, {scaleY: 1 / cropScaleY}],
-  }
-}
 
 function withClampedSpring(value: any, config: WithSpringConfig) {
   'worklet'
