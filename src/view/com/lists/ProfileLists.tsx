@@ -15,6 +15,7 @@ import {
 } from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
@@ -27,6 +28,7 @@ import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
+import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {ListFooter} from '#/components/Lists'
 
@@ -143,6 +145,7 @@ export function ProfileLists({
   const renderItemInner = useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY) {
+
         return (
           <EmptyState
             icon="list-ul"
@@ -150,6 +153,23 @@ export function ProfileLists({
             testID="listsEmpty"
           />
         )
+      },
+      [
+        t.atoms.border_contrast_low,
+        t.atoms.text_contrast_low.color,
+        _,
+        navigation,
+        error,
+        refetch,
+        onPressRetryLoadMore,
+      ],
+    )
+
+    React.useEffect(() => {
+      if (isIOS && enabled && scrollElRef.current) {
+        const nativeTag = findNodeHandle(scrollElRef.current)
+        setScrollViewTag(nativeTag)
+
       } else if (item === ERROR_ITEM) {
         return (
           <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
@@ -165,6 +185,7 @@ export function ProfileLists({
         )
       } else if (item === LOADING) {
         return <FeedLoadingPlaceholder />
+
       }
       return (
         <View
