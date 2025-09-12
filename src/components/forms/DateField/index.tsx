@@ -1,6 +1,5 @@
 import {useCallback, useImperativeHandle} from 'react'
 import {Keyboard, View} from 'react-native'
-import DatePicker from 'react-native-date-picker'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -80,25 +79,7 @@ export function DateField({
         <Dialog.Handle />
         <Dialog.ScrollableInner label={label}>
           <View style={a.gap_lg}>
-            <View style={[a.relative, a.w_full, a.align_center]}>
-              <DatePicker
-                timeZoneOffsetInMinutes={0}
-                theme={t.scheme}
-                date={new Date(toSimpleDateString(value))}
-                onDateChange={onChangeInternal}
-                mode="date"
-                locale={i18n.locale}
-                testID={`${testID}-datepicker`}
-                aria-label={label}
-                accessibilityLabel={label}
-                accessibilityHint={accessibilityHint}
-                maximumDate={
-                  maximumDate
-                    ? new Date(toSimpleDateString(maximumDate))
-                    : undefined
-                }
-              />
-            </View>
+            <View style={[a.relative, a.w_full, a.align_center]} />
             <Button
               label={_(msg`Done`)}
               onPress={() => control.close()}
