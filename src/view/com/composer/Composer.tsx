@@ -122,6 +122,8 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -187,6 +189,7 @@ export const ComposePost = ({
   const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
+  const switchAccountControl = Dialog.useDialogControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
@@ -744,6 +747,7 @@ export const ComposePost = ({
                   onClearVideo={clearVideo}
                   onPublish={onComposerPostPublish}
                   onError={setError}
+                  onPressAvatar={switchAccountControl.open}
                 />
                 {isWebFooterSticky && post.id === activePost.id && (
                   <View style={styles.stickyFooterWeb}>{footer}</View>
@@ -762,6 +766,8 @@ export const ComposePost = ({
           confirmButtonCta={_(msg`Discard`)}
           confirmButtonColor="negative"
         />
+
+        <SwitchAccountDialog control={switchAccountControl} />
       </KeyboardAvoidingView>
     </BottomSheetPortalProvider>
   )
@@ -782,6 +788,7 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo,
   onError,
   onPublish,
+  onPressAvatar,
 }: {
   post: PostDraft
   dispatch: (action: ComposerAction) => void
@@ -797,6 +804,7 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
+  onPressAvatar: () => void
 }) {
   const {currentAccount} = useSession()
   const currentDid = currentAccount!.did
@@ -879,12 +887,18 @@ let ComposerPost = React.memo(function ComposerPost({
         isTextOnly && isNative && a.flex_grow,
       ]}>
       <View style={[a.flex_row, isNative && a.flex_1]}>
-        <UserAvatar
-          avatar={currentProfile?.avatar}
-          size={42}
-          type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-          style={[a.mt_xs]}
-        />
+        <Button
+          label={_(msg`Switch account`)}
+          onPress={onPressAvatar}
+          variant="ghost"
+          shape="round"
+          style={{height: 42}}>
+          <UserAvatar
+            avatar={currentProfile?.avatar}
+            size={42}
+            type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+          />
+        </Button>
         <TextInput
           ref={textInput}
           style={[a.pt_xs]}
