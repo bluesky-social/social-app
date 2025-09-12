@@ -15,7 +15,9 @@ module.exports = function (_config) {
 
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
-  const IS_DEV = !IS_TESTFLIGHT || !IS_PRODUCTION
+  const IS_DEV =
+    process.env.EXPO_PUBLIC_ENV === 'development' ||
+    (!IS_TESTFLIGHT && !IS_PRODUCTION)
 
   const ASSOCIATED_DOMAINS = [
     'applinks:bsky.app',
@@ -33,7 +35,7 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
+      name: IS_DEV ? 'Bluesky (DEV)' : 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
@@ -45,7 +47,9 @@ module.exports = function (_config) {
       primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: IS_DEV
+          ? 'dev.xyz.blueskyweb.app'
+          : 'xyz.blueskyweb.app',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -148,8 +152,10 @@ module.exports = function (_config) {
           backgroundImage: './assets/icon-android-background.png',
           backgroundColor: '#1185FE',
         },
-        googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        googleServicesFile: IS_DEV
+          ? './google-services.json.example'
+          : './google-services.json',
+        package: IS_DEV ? 'dev.xyz.blueskyweb.app' : 'xyz.blueskyweb.app',
         intentFilters: [
           {
             action: 'VIEW',
@@ -370,7 +376,9 @@ module.exports = function (_config) {
                 appExtensions: [
                   {
                     targetName: 'Share-with-Bluesky',
-                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    bundleIdentifier: IS_DEV
+                      ? 'dev.xyz.blueskyweb.app.Share-with-Bluesky'
+                      : 'xyz.blueskyweb.app.Share-with-Bluesky',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
@@ -379,7 +387,9 @@ module.exports = function (_config) {
                   },
                   {
                     targetName: 'BlueskyNSE',
-                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNSE',
+                    bundleIdentifier: IS_DEV
+                      ? 'dev.xyz.blueskyweb.app.BlueskyNSE'
+                      : 'xyz.blueskyweb.app.BlueskyNSE',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
@@ -388,7 +398,9 @@ module.exports = function (_config) {
                   },
                   {
                     targetName: 'BlueskyClip',
-                    bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
+                    bundleIdentifier: IS_DEV
+                      ? 'dev.xyz.blueskyweb.app.AppClip'
+                      : 'xyz.blueskyweb.app.AppClip',
                   },
                 ],
               },
