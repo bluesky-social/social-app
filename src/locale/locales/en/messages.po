@@ -769,7 +769,7 @@ msgstr ""
 msgid "Add the default feed of only people you follow"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:416
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:491
 msgid "Add the following DNS record to your domain:"
 msgstr ""
 
@@ -1534,8 +1534,8 @@ msgstr ""
 #: src/screens/Search/Shell.tsx:349
 #: src/screens/Settings/AppIconSettings/index.tsx:44
 #: src/screens/Settings/AppIconSettings/index.tsx:225
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:78
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:85
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:79
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:86
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:246
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:252
 #: src/screens/Settings/Settings.tsx:282
@@ -1612,8 +1612,8 @@ msgstr ""
 msgid "Change app language"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:94
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:98
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:95
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:99
 msgid "Change Handle"
 msgstr ""
 
@@ -1725,7 +1725,7 @@ msgstr ""
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:399
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:474
 msgid "Choose domain verification method"
 msgstr ""
 
@@ -2179,13 +2179,13 @@ msgstr ""
 msgid "Copy code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:501
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:576
 #: src/view/com/profile/ProfileMenu.tsx:480
 #: src/view/com/profile/ProfileMenu.tsx:483
 msgid "Copy DID"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:434
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:509
 msgid "Copy host"
 msgstr ""
 
@@ -2237,7 +2237,7 @@ msgstr ""
 msgid "Copy QR code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:455
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:530
 msgid "Copy TXT record value"
 msgstr ""
 
@@ -2431,6 +2431,8 @@ msgid "Debug panel"
 msgstr ""
 
 #: src/screens/Settings/AppearanceSettings.tsx:169
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:278
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:303
 #: src/screens/Signup/StepHandle/index.tsx:239
 #: src/screens/Signup/StepHandle/index.tsx:264
 msgid "Default"
@@ -2695,8 +2697,8 @@ msgstr ""
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:402
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:404
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:477
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:479
 msgid "DNS Panel"
 msgstr ""
 
@@ -2708,11 +2710,12 @@ msgstr ""
 msgid "Does not include nudity."
 msgstr ""
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:254
 #: src/screens/Signup/StepHandle/index.tsx:215
 msgid "Domain"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:517
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:592
 msgid "Domain verified!"
 msgstr ""
 
@@ -2787,7 +2790,7 @@ msgstr ""
 msgid "Duration:"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:235
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:242
 msgid "e.g. alice"
 msgstr ""
 
@@ -2795,7 +2798,7 @@ msgstr ""
 msgid "e.g. Alice Lastname"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:386
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:461
 msgid "e.g. alice.com"
 msgstr ""
 
@@ -3074,7 +3077,7 @@ msgstr ""
 msgid "Enter fullscreen"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:380
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:455
 msgid "Enter the domain you want to use"
 msgstr ""
 
@@ -3315,7 +3318,7 @@ msgstr ""
 msgid "Failed to add to starter pack"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:597
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:672
 msgid "Failed to change handle. Please try again."
 msgstr ""
 
@@ -3492,7 +3495,7 @@ msgstr ""
 msgid "Failed to verify email, please try again."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:370
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:445
 msgid "Failed to verify handle. Please try again."
 msgstr ""
 
@@ -4025,16 +4028,16 @@ msgstr ""
 msgid "Handle"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:601
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:676
 msgid "Handle already taken. Please try a different one."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:195
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:354
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:202
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:429
 msgid "Handle changed!"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:605
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:680
 msgid "Handle too long. Please try a shorter one."
 msgstr ""
 
@@ -4212,7 +4215,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:427
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:502
 msgid "Host:"
 msgstr ""
 
@@ -4235,8 +4238,8 @@ msgstr ""
 msgid "I have a code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:290
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:296
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:365
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:371
 msgid "I have my own domain"
 msgstr ""
 
@@ -4257,7 +4260,7 @@ msgstr ""
 msgid "If you delete this list, you won't be able to recover it."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:272
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:347
 msgid "If you have your own domain, you can use that as your handle. This lets you self-verify your identity. <0>Learn more here.</0>"
 msgstr ""
 
@@ -4408,7 +4411,7 @@ msgstr ""
 msgid "Invalid 2FA confirmation code."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:607
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:682
 msgid "Invalid handle. Please try a different one."
 msgstr ""
 
@@ -4546,8 +4549,8 @@ msgstr ""
 #: src/components/verification/VerifierDialog.tsx:142
 #: src/screens/Moderation/VerificationSettings.tsx:48
 #: src/screens/Profile/Header/EditProfileDialog.tsx:351
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:213
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:277
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:220
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:352
 msgctxt "english-only-resource"
 msgid "Learn more"
 msgstr ""
@@ -5253,7 +5256,7 @@ msgstr ""
 msgid "Never lose access to your followers or data."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:577
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:652
 msgid "Nevermind, create a handle for me"
 msgstr ""
 
@@ -5301,9 +5304,9 @@ msgstr ""
 msgid "New followers"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:226
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:234
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:385
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:233
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:241
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:460
 msgid "New handle"
 msgstr ""
 
@@ -5413,8 +5416,8 @@ msgstr ""
 msgid "No app passwords yet"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:407
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:409
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:482
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:484
 msgid "No DNS Panel"
 msgstr ""
 
@@ -5735,7 +5738,7 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:332
 #: src/components/StarterPack/ProfileStarterPacks.tsx:341
 #: src/screens/Settings/AppPasswords.tsx:59
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:106
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:107
 #: src/view/screens/Profile.tsx:125
 msgid "Oops!"
 msgstr ""
@@ -6545,7 +6548,7 @@ msgstr ""
 msgid "Quotes of this post"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:610
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:685
 msgid "Rate limit exceeded – you've tried to change your handle too many times in a short period. Please wait a minute before trying again."
 msgstr ""
 
@@ -7160,7 +7163,7 @@ msgid "Returns to home page"
 msgstr ""
 
 #: src/screens/Profile/ProfileFeed/index.tsx:93
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:569
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:644
 #: src/screens/VideoFeed/index.tsx:1147
 #: src/view/screens/NotFound.tsx:60
 #: src/view/screens/ProfileList.tsx:1039
@@ -7179,7 +7182,7 @@ msgstr ""
 #: src/components/StarterPack/QrCodeDialog.tsx:192
 #: src/screens/Profile/Header/EditProfileDialog.tsx:238
 #: src/screens/Profile/Header/EditProfileDialog.tsx:252
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:267
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:342
 #: src/view/com/composer/GifAltText.tsx:193
 #: src/view/com/composer/GifAltText.tsx:202
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:62
@@ -7217,7 +7220,7 @@ msgstr ""
 msgid "Save image crop"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:253
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:328
 msgid "Save new handle"
 msgstr ""
 
@@ -7458,6 +7461,8 @@ msgstr ""
 msgid "Select content languages"
 msgstr ""
 
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:257
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:261
 #: src/screens/Signup/StepHandle/index.tsx:218
 #: src/screens/Signup/StepHandle/index.tsx:222
 msgid "Select domain"
@@ -8414,7 +8419,7 @@ msgstr ""
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:497
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:572
 msgid "That contains the following:"
 msgstr ""
 
@@ -8582,7 +8587,7 @@ msgstr ""
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:107
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:108
 msgid "There was an issue fetching your service info"
 msgstr ""
 
@@ -8742,7 +8747,7 @@ msgstr ""
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:603
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:678
 msgid "This handle is reserved. Please try a different one."
 msgstr ""
 
@@ -8823,7 +8828,7 @@ msgstr ""
 msgid "This service has not provided terms of service or a privacy policy."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:466
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:541
 msgid "This should create a domain record at:"
 msgstr ""
 
@@ -8997,7 +9002,7 @@ msgstr ""
 msgid "Type your message here"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:442
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:517
 msgid "Type:"
 msgstr ""
 
@@ -9240,8 +9245,8 @@ msgstr ""
 msgid "Update email"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:536
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:557
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:611
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:632
 msgid "Update to {domain}"
 msgstr ""
 
@@ -9267,7 +9272,7 @@ msgstr ""
 msgid "Upload a photo instead"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:482
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:557
 msgid "Upload a text file to:"
 msgstr ""
 
@@ -9307,7 +9312,7 @@ msgstr ""
 msgid "Use app passwords to sign in to other Blacksky clients without giving full access to your account or password."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:568
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:643
 msgid "Use default provider"
 msgstr ""
 
@@ -9427,7 +9432,7 @@ msgstr ""
 msgid "Users you follow"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:448
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:523
 msgid "Value:"
 msgstr ""
 
@@ -9467,8 +9472,8 @@ msgctxt "action"
 msgid "Verify code"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:538
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:559
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:613
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:634
 msgid "Verify DNS Record"
 msgstr ""
 
@@ -9481,8 +9486,8 @@ msgstr ""
 msgid "Verify email dialog"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:539
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:561
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:614
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:636
 msgid "Verify Text File"
 msgstr ""
 
@@ -9933,7 +9938,7 @@ msgstr ""
 msgid "Writers"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:366
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:441
 msgid "Wrong DID returned from server. Received: {0}"
 msgstr ""
 
@@ -10020,7 +10025,7 @@ msgstr ""
 msgid "You are verified. You will lose your verification status if you change your display name. <0>Learn more.</0>"
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:208
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:215
 msgid "You are verified. You will lose your verification status if you change your handle. <0>Learn more.</0>"
 msgstr ""
 
@@ -10412,7 +10417,7 @@ msgstr ""
 msgid "Your choice will be remembered for future links. You can change it at any time in settings."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:523
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:598
 msgid "Your current handle <0>{0}</0> will automatically remain reserved for you. You can switch back to it at any time from this account."
 msgstr ""
 
@@ -10439,7 +10444,7 @@ msgstr ""
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr ""
 
-#: src/screens/Settings/components/ChangeHandleDialog.tsx:245
+#: src/screens/Settings/components/ChangeHandleDialog.tsx:320
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr ""
 
