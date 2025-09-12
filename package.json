@@ -92,7 +92,7 @@
     "@lingui/react": "^4.14.1",
     "@mattermost/react-native-paste-input": "mattermost/react-native-paste-input",
     "@miblanchard/react-native-slider": "^2.6.0",
-    "@mozzius/expo-dynamic-app-icon": "^1.7.1",
+    "@mozzius/expo-dynamic-app-icon": "^1.8.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-navigation/bottom-tabs": "^7.3.13",
     "@react-navigation/drawer": "^7.3.12",
@@ -124,7 +124,6 @@
     "bcp-47": "^2.1.0",
     "bcp-47-match": "^2.0.3",
     "date-fns": "^2.30.0",
-    "deprecated-react-native-prop-types": "^5.0.0",
     "email-validator": "^2.0.4",
     "emoji-mart": "^5.5.2",
     "emoji-regex": "^10.4.0",
@@ -278,7 +277,8 @@
   "resolutions": {
     "@react-native/babel-preset": "0.81.4",
     "@react-native/normalize-colors": "0.81.4",
-    "**/expo-constants": "17.0.3",
+    "**/@expo/image-utils": "0.8.7",
+    "**/expo-constants": "18.0.8",
     "**/expo-device": "7.1.4",
     "**/zod": "3.23.8",
     "**/multiformats": "9.9.0"
