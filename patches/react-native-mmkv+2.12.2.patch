@@ -1,0 +1,91 @@
+diff --git a/node_modules/react-native-mmkv/lib/commonjs/createMMKV.js b/node_modules/react-native-mmkv/lib/commonjs/createMMKV.js
+index b9b9d69..9ec36f9 100644
+--- a/node_modules/react-native-mmkv/lib/commonjs/createMMKV.js
++++ b/node_modules/react-native-mmkv/lib/commonjs/createMMKV.js
+@@ -38,8 +38,8 @@ const createMMKV = config => {
+     }
+ 
+     // Check if we are running on-device (JSI)
+-    if (global.nativeCallSyncHook == null || MMKVModule.install == null) {
+-      throw new Error('Failed to create a new MMKV instance: React Native is not running on-device. MMKV can only be used when synchronous method invocations (JSI) are possible. If you are using a remote debugger (e.g. Chrome), switch to an on-device debugger (e.g. Flipper) instead.');
++    if (isRemoteDebuggingInChrome() || MMKVModule.install == null) {
++      throw new Error(`Failed to create a new MMKV instance: React Native is not running on-device. MMKV can only be used when synchronous method invocations (JSI) are possible. If you are using a remote debugger (e.g. Chrome), switch to an on-device debugger (e.g. Flipper) instead. isRemoteDebuggingInChrome(): ${isRemoteDebuggingInChrome()}; MMKVModule.install == null: ${MMKVModule.install == null}`);
+     }
+ 
+     // Call the synchronous blocking install() function
+@@ -51,5 +51,13 @@ const createMMKV = config => {
+   }
+   return global.mmkvCreateNewInstance(config);
+ };
++function isRemoteDebuggingInChrome() {
++  // Remote debugging in Chrome is not supported in bridgeless
++  if ('RN$Bridgeless' in global && RN$Bridgeless === true) {
++    return false;
++  }
++
++  return __DEV__ && typeof global.nativeCallSyncHook === 'undefined';
++}
+ exports.createMMKV = createMMKV;
+ //# sourceMappingURL=createMMKV.js.map
+diff --git a/node_modules/react-native-mmkv/lib/module/createMMKV.js b/node_modules/react-native-mmkv/lib/module/createMMKV.js
+index 644840d..6e704d6 100644
+--- a/node_modules/react-native-mmkv/lib/module/createMMKV.js
++++ b/node_modules/react-native-mmkv/lib/module/createMMKV.js
+@@ -32,8 +32,8 @@ export const createMMKV = config => {
+     }
+ 
+     // Check if we are running on-device (JSI)
+-    if (global.nativeCallSyncHook == null || MMKVModule.install == null) {
+-      throw new Error('Failed to create a new MMKV instance: React Native is not running on-device. MMKV can only be used when synchronous method invocations (JSI) are possible. If you are using a remote debugger (e.g. Chrome), switch to an on-device debugger (e.g. Flipper) instead.');
++    if (isRemoteDebuggingInChrome() || MMKVModule.install == null) {
++      throw new Error(`Failed to create a new MMKV instance: React Native is not running on-device. MMKV can only be used when synchronous method invocations (JSI) are possible. If you are using a remote debugger (e.g. Chrome), switch to an on-device debugger (e.g. Flipper) instead. isRemoteDebuggingInChrome(): ${isRemoteDebuggingInChrome()}; MMKVModule.install == null: ${MMKVModule.install == null}`);
+     }
+ 
+     // Call the synchronous blocking install() function
+@@ -45,4 +45,13 @@ export const createMMKV = config => {
+   }
+   return global.mmkvCreateNewInstance(config);
+ };
++
++function isRemoteDebuggingInChrome() {
++  // Remote debugging in Chrome is not supported in bridgeless
++  if ('RN$Bridgeless' in global && RN$Bridgeless === true) {
++    return false;
++  }
++
++  return __DEV__ && typeof global.nativeCallSyncHook === 'undefined';
++}
+ //# sourceMappingURL=createMMKV.js.map
+diff --git a/node_modules/react-native-mmkv/src/createMMKV.ts b/node_modules/react-native-mmkv/src/createMMKV.ts
+index 15d29a0..55675fd 100644
+--- a/node_modules/react-native-mmkv/src/createMMKV.ts
++++ b/node_modules/react-native-mmkv/src/createMMKV.ts
+@@ -46,9 +46,9 @@ export const createMMKV = (config: MMKVConfiguration): NativeMMKV => {
+     }
+ 
+     // Check if we are running on-device (JSI)
+-    if (global.nativeCallSyncHook == null || MMKVModule.install == null) {
++    if (isRemoteDebuggingInChrome() || MMKVModule.install == null) {
+       throw new Error(
+-        'Failed to create a new MMKV instance: React Native is not running on-device. MMKV can only be used when synchronous method invocations (JSI) are possible. If you are using a remote debugger (e.g. Chrome), switch to an on-device debugger (e.g. Flipper) instead.'
++        `Failed to create a new MMKV instance: React Native is not running on-device. MMKV can only be used when synchronous method invocations (JSI) are possible. If you are using a remote debugger (e.g. Chrome), switch to an on-device debugger (e.g. Flipper) instead. isRemoteDebuggingInChrome(): ${isRemoteDebuggingInChrome()}; MMKVModule.install == null: ${MMKVModule.install == null}`
+       );
+     }
+ 
+@@ -68,3 +68,16 @@ export const createMMKV = (config: MMKVConfiguration): NativeMMKV => {
+ 
+   return global.mmkvCreateNewInstance(config);
+ };
++
++declare global {
++  const RN$Bridgeless: boolean;
++}
++
++function isRemoteDebuggingInChrome() {
++  // Remote debugging in Chrome is not supported in bridgeless
++  if ('RN$Bridgeless' in global && RN$Bridgeless === true) {
++    return false;
++  }
++
++  return __DEV__ && typeof global.nativeCallSyncHook === 'undefined';
++}
