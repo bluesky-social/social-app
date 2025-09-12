@@ -1,5 +1,6 @@
 import {useCallback, useImperativeHandle, useState} from 'react'
 import {Keyboard} from 'react-native'
+import DatePicker from 'react-native-date-picker'
 import {useLingui} from '@lingui/react'
 
 import {useTheme} from '#/alf'
@@ -66,6 +67,32 @@ export function DateField({
         isInvalid={isInvalid}
         accessibilityHint={accessibilityHint}
       />
+
+      {open && (
+        // Android implementation of DatePicker currently does not change default button colors according to theme and only takes hex values for buttonColor
+        // Can remove the buttonColor setting if/when this PR is merged: https://github.com/henninghall/react-native-date-picker/pull/871
+        <DatePicker
+          modal
+          open
+          timeZoneOffsetInMinutes={0}
+          theme={t.scheme}
+          // @ts-ignore TODO
+          buttonColor={t.name === 'light' ? '#000000' : '#ffffff'}
+          date={new Date(value)}
+          onConfirm={onChangeInternal}
+          onCancel={onCancel}
+          mode="date"
+          locale={i18n.locale}
+          is24hourSource="locale"
+          testID={`${testID}-datepicker`}
+          aria-label={label}
+          accessibilityLabel={label}
+          accessibilityHint={accessibilityHint}
+          maximumDate={
+            maximumDate ? new Date(toSimpleDateString(maximumDate)) : undefined
+          }
+        />
+      )}
     </>
   )
 }
