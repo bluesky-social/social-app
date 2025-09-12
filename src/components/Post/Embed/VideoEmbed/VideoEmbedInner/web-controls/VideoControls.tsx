@@ -8,7 +8,7 @@ import {isTouchDevice} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
 import {isIPhoneWeb} from '#/platform/detection'
 import {
-  useAutoplayDisabled,
+  useVideoAutoplayDisabled,
   useSetSubtitlesEnabled,
   useSubtitlesEnabled,
 } from '#/state/preferences'
@@ -123,7 +123,7 @@ export function Controls({
 
   // autoplay/pause based on visibility
   const isWithinMessage = useIsWithinMessage()
-  const autoplayDisabled = useAutoplayDisabled() || isWithinMessage
+  const autoplayDisabled = useVideoAutoplayDisabled() || isWithinMessage
   useEffect(() => {
     if (active) {
       if (onScreen) {
