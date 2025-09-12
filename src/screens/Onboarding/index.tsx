@@ -15,6 +15,7 @@ import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {Portal} from '#/components/Portal'
 import {ENV} from '#/env'
 import {StepSuggestedAccounts} from './StepSuggestedAccounts'
+import {StepSuggestedStarterpacks} from './StepSuggestedStarterpacks'
 
 export function Onboarding() {
   const {_} = useLingui()
@@ -22,12 +23,16 @@ export function Onboarding() {
   const showValueProp = ENV !== 'e2e' && gate('onboarding_value_prop')
   const showSuggestedAccounts =
     ENV !== 'e2e' && gate('onboarding_suggested_accounts')
+  const showSuggestedStarterpacks =
+    ENV !== 'e2e' && gate('onboarding_suggested_starterpacks')
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    totalSteps: showSuggestedAccounts ? 4 : 3,
+    totalSteps:
+      3 + (showSuggestedAccounts ? 1 : 0) + (showSuggestedStarterpacks ? 1 : 0),
     experiments: {
       onboarding_suggested_accounts: showSuggestedAccounts,
       onboarding_value_prop: showValueProp,
+      onboarding_suggested_starterpacks: showSuggestedStarterpacks,
     },
   })
 
@@ -72,6 +77,9 @@ export function Onboarding() {
               {state.activeStep === 'interests' && <StepInterests />}
               {state.activeStep === 'suggested-accounts' && (
                 <StepSuggestedAccounts />
+              )}
+              {state.activeStep === 'suggested-starterpacks' && (
+                <StepSuggestedStarterpacks />
               )}
               {state.activeStep === 'finished' && <StepFinished />}
             </Layout>
