@@ -12,6 +12,7 @@ import {type ServiceConfig} from '../config.js'
 import type Database from '../db/index.js'
 import {type SafelinkRule} from '../db/schema.js'
 import {redirectLogger} from '../logger.js'
+import {type Metrics} from '../metrics.js'
 
 const SAFELINK_MIN_FETCH_INTERVAL = 1_000
 const SAFELINK_MAX_FETCH_INTERVAL = 10_000
@@ -22,12 +23,21 @@ export class SafelinkClient {
   private urlCache: LRUCache<string, SafelinkRule | 'ok'>
 
   private db: Database
+  private metrics: Metrics
 
   private ozoneAgent: OzoneAgent
 
   private cursor?: string
 
-  constructor({cfg, db}: {cfg: ServiceConfig; db: Database}) {
+  constructor({
+    cfg,
+    db,
+    metrics,
+  }: {
+    cfg: ServiceConfig
+    db: Database
+    metrics: Metrics
+  }) {
     this.domainCache = new LRUCache<string, SafelinkRule | 'ok'>({
       max: 10000,
     })
@@ -37,6 +47,7 @@ export class SafelinkClient {
     })
 
     this.db = db
+    this.metrics = metrics
 
     this.ozoneAgent = new OzoneAgent(
       cfg.safelinkPdsUrl!,
@@ -46,6 +57,17 @@ export class SafelinkClient {
   }
 
   public async tryFindRule(link: string): Promise<SafelinkRule | 'ok'> {
+    const start = process.hrtime.bigint()
+    const addMetrics = (status: 'ok' | 'error', cached: boolean) => {
+      const end = process.hrtime.bigint()
+      const respTimeMs = Number(end - start) / 1_000_000 // ns to ms :3
+
+      this.metrics.safeLinkLookups.labels(status, cached ? 'yes' : 'no').inc()
+      this.metrics.safeLinkLookupDuration
+        .labels(status, cached ? 'yes' : 'no')
+        .observe(respTimeMs)
+    }
+
     let url: string
     let domain: string
     try {
@@ -56,6 +78,7 @@ export class SafelinkClient {
         {error: e, inputUrl: link},
         'failed to normalize looked up link',
       )
+      addMetrics('error', false)
       // fail open
       return 'ok'
     }
@@ -65,18 +88,23 @@ export class SafelinkClient {
     // _and_ it is not 'ok'.
     const urlRule = this.urlCache.get(url)
     if (urlRule && urlRule !== 'ok') {
+      addMetrics('ok', true)
       return urlRule
     }
 
     // If we find a domain rule of _any_ kind, including 'ok', we can now return that rule.
     const domainRule = this.domainCache.get(domain)
     if (domainRule) {
+      addMetrics('ok', true)
       return domainRule
     }
 
     try {
       const maybeUrlRule = await this.getRule(this.db, url, 'url')
       this.urlCache.set(url, maybeUrlRule)
+
+      addMetrics('ok', false)
+
       return maybeUrlRule
     } catch (e) {
       this.urlCache.set(url, 'ok')
@@ -85,11 +113,15 @@ export class SafelinkClient {
     try {
       const maybeDomainRule = await this.getRule(this.db, domain, 'domain')
       this.domainCache.set(domain, maybeDomainRule)
+
+      addMetrics('ok', false)
+
       return maybeDomainRule
     } catch (e) {
       this.domainCache.set(domain, 'ok')
     }
 
+    addMetrics('ok', false)
     return 'ok'
   }
 

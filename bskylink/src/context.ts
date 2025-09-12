@@ -1,6 +1,7 @@
 import {SafelinkClient} from './cache/safelinkClient.js'
 import {type Config} from './config.js'
 import Database from './db/index.js'
+import {Metrics} from './metrics.js'
 
 export type AppContextOptions = {
   cfg: Config
@@ -10,6 +11,7 @@ export type AppContextOptions = {
 export class AppContext {
   cfg: Config
   db: Database
+  metrics: Metrics = new Metrics()
   safelinkClient: SafelinkClient
   abortController = new AbortController()
 
@@ -19,6 +21,7 @@ export class AppContext {
     this.safelinkClient = new SafelinkClient({
       cfg: this.opts.cfg.service,
       db: this.opts.db,
+      metrics: this.metrics,
     })
   }
 
