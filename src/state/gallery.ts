@@ -3,7 +3,7 @@ import {
   deleteAsync,
   makeDirectoryAsync,
   moveAsync,
-} from 'expo-file-system'
+} from 'expo-file-system/legacy'
 import {
   type Action,
   type ActionCrop,
