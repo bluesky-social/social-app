@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {Modal, View} from 'react-native'
 
 import {useDialogStateControlContext} from '#/state/dialogs'
@@ -11,11 +11,17 @@ export function Composer({}: {winHeight: number}) {
   const t = useTheme()
   const state = useComposerState()
   const ref = useComposerCancelRef()
+  const [isDirty, setIsDirty] = useState(
+    !!state?.text ||
+      !!state?.imageUris ||
+      !!state?.videoUri ||
+      !!state?.mention,
+  )
 
   const open = !!state
-  const prevOpen = React.useRef(open)
+  const prevOpen = useRef(open)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open && !prevOpen.current) {
       setFullyExpandedCount(c => c + 1)
     } else if (!open && prevOpen.current) {
@@ -31,7 +37,8 @@ export function Composer({}: {winHeight: number}) {
       visible={open}
       presentationStyle="pageSheet"
       animationType="slide"
-      onRequestClose={() => ref.current?.onPressCancel()}>
+      onRequestClose={() => ref.current?.onPressCancel()}
+      allowSwipeDismissal={!isDirty}>
       <View style={[t.atoms.bg, a.flex_1]}>
         <ComposePost
           cancelRef={ref}
@@ -43,6 +50,7 @@ export function Composer({}: {winHeight: number}) {
           text={state?.text}
           imageUris={state?.imageUris}
           videoUri={state?.videoUri}
+          setIsDirty={setIsDirty}
         />
       </View>
     </Modal>
