@@ -9,7 +9,7 @@ import {isIOS, isNative} from '#/platform/detection'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {PostFeed} from '#/view/com/posts/PostFeed'
+import {PostFeed, type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
@@ -25,6 +25,7 @@ interface FeedSectionProps {
   scrollElRef: ListRef
   ignoreFilterFor?: string
   setScrollViewTag: (tag: number | null) => void
+  postFeedRef?: React.Ref<PostFeedRef>
 }
 export function ProfileFeedSection({
   ref,
@@ -34,6 +35,7 @@ export function ProfileFeedSection({
   scrollElRef,
   ignoreFilterFor,
   setScrollViewTag,
+  postFeedRef,
 }: FeedSectionProps) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -87,6 +89,7 @@ export function ProfileFeedSection({
           shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
         }
         isVideoFeed={isVideoFeed}
+        ref={postFeedRef}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
