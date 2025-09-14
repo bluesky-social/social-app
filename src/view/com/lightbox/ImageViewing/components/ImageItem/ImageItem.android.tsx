@@ -1,13 +1,13 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {
   Gesture,
   GestureDetector,
-  PanGesture,
+  type PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
@@ -16,10 +16,11 @@ import Animated, {
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
 
-import type {
-  Dimensions as ImageDimensions,
-  ImageSource,
-  Transform,
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
+import {
+  type Dimensions as ImageDimensions,
+  type ImageSource,
+  type Transform,
 } from '../../@types'
 import {
   applyRounding,
@@ -28,7 +29,7 @@ import {
   prependPinch,
   prependTransform,
   readTransform,
-  TransformMatrix,
+  type TransformMatrix,
 } from '../../transforms'
 
 const MIN_SCREEN_ZOOM = 2
@@ -383,7 +384,7 @@ const ImageItem = ({
         renderToHardwareTextureAndroid>
         <Animated.View style={containerStyle}>
           {showLoader && (
-            <ActivityIndicator
+            <CustomActivityIndicator
               size="small"
               color="#FFF"
               style={styles.loading}

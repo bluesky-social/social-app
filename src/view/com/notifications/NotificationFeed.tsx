@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  type ListRenderItemInfo,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {type ListRenderItemInfo, StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -19,6 +14,7 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListProps, type ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {NotificationFeedItem} from './NotificationFeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -151,7 +147,7 @@ export function NotificationFeed({
     () =>
       isFetchingNextPage ? (
         <View style={styles.feedFooter}>
-          <ActivityIndicator />
+          <CustomActivityIndicator />
         </View>
       ) : (
         <View />

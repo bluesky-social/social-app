@@ -1,11 +1,6 @@
 import React, {useCallback} from 'react'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from 'react-native'
-import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
+import {StyleSheet, useWindowDimensions, View} from 'react-native'
+import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -18,12 +13,13 @@ import {isAndroid, isMobileWeb, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {
   getMembership,
-  ListMembersip,
+  type ListMembersip,
   useDangerousListMembershipsQuery,
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
 import {useSession} from '#/state/session'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {MyLists} from '../lists/MyLists'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
@@ -227,7 +223,7 @@ function ListItem({
       </View>
       <View>
         {isProcessing || typeof membership === 'undefined' ? (
-          <ActivityIndicator />
+          <CustomActivityIndicator />
         ) : (
           <Button
             testID={`user-${handle}-addBtn`}

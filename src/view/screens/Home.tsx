@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -36,6 +36,7 @@ import {CustomFeedEmptyState} from '#/view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from '#/view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from '#/view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import * as Layout from '#/components/Layout'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 
@@ -91,7 +92,7 @@ export function HomeScreen(props: Props) {
     return (
       <Layout.Screen>
         <Layout.Center style={styles.loading}>
-          <ActivityIndicator size="large" />
+          <CustomActivityIndicator size="large" />
         </Layout.Center>
       </Layout.Screen>
     )

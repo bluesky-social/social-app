@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, Keyboard, View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import {type ComAtprotoServerDescribeServer} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -11,6 +11,7 @@ import {logger} from '#/logger'
 import {Agent} from '#/state/session/agent'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
@@ -131,7 +132,7 @@ export const ForgotPasswordForm = ({
         </Button>
         <View style={a.flex_1} />
         {!serviceDescription || isProcessing ? (
-          <ActivityIndicator />
+          <CustomActivityIndicator />
         ) : (
           <Button
             label={_(msg`Next`)}

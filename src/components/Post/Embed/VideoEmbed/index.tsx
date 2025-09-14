@@ -1,5 +1,5 @@
 import {useCallback, useRef, useState} from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -9,6 +9,7 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
@@ -138,7 +139,7 @@ function InnerWrapper({embed}: Props) {
                   a.align_center,
                   a.justify_center,
                 ]}>
-                <ActivityIndicator size="large" color="white" />
+                <CustomActivityIndicator size="large" color="white" />
               </View>
             ) : (
               <PlayButtonIcon />

@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -34,6 +34,7 @@ import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
 import {SearchInput} from '#/components/forms/SearchInput'
@@ -414,7 +415,7 @@ export function FeedsScreen(_props: Props) {
       } else if (item.type === 'popularFeedsLoadingMore') {
         return (
           <View style={s.p10}>
-            <ActivityIndicator size="large" />
+            <CustomActivityIndicator size="large" />
           </View>
         )
       } else if (item.type === 'savedFeedsHeader') {

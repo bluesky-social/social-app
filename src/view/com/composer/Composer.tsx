@@ -8,7 +8,6 @@ import React, {
   useState,
 } from 'react'
 import {
-  ActivityIndicator,
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
@@ -122,6 +121,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -1021,7 +1021,7 @@ function ComposerTopBar({
           <>
             <Text style={pal.textLight}>{publishingStage}</Text>
             <View style={styles.postBtn}>
-              <ActivityIndicator />
+              <CustomActivityIndicator />
             </View>
           </>
         ) : (

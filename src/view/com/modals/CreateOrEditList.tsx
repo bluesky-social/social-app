@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   ScrollView,
   StyleSheet,
@@ -32,6 +31,7 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -303,7 +303,7 @@ export function Component({
           </View>
           {isProcessing ? (
             <View style={[styles.btn, s.mt10, {backgroundColor: colors.gray2}]}>
-              <ActivityIndicator />
+              <CustomActivityIndicator />
             </View>
           ) : (
             <TouchableOpacity

@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import {StyleSheet, TouchableOpacity, View, type ViewStyle} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -18,6 +12,7 @@ import {Link} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
 import {atoms as a} from '#/alf'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {SearchInput} from '#/components/forms/SearchInput'
 
 let SearchLinkCard = ({
@@ -123,7 +118,7 @@ export function DesktopSearch() {
           ]}>
           {isFetching && !autocompleteData?.length ? (
             <View style={{padding: 8}}>
-              <ActivityIndicator />
+              <CustomActivityIndicator />
             </View>
           ) : (
             <>

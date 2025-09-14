@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -11,6 +11,7 @@ import {logger} from '#/logger'
 import {Agent} from '#/state/session/agent'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {FormError} from '#/components/forms/FormError'
 import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
@@ -176,7 +177,7 @@ export const SetNewPasswordForm = ({
         </Button>
         <View style={a.flex_1} />
         {isProcessing ? (
-          <ActivityIndicator />
+          <CustomActivityIndicator />
         ) : (
           <Button
             label={_(msg`Next`)}

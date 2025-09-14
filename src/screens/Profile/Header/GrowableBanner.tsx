@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {ActivityIndicator} from 'react-native'
 import Animated, {
   Extrapolation,
   interpolate,
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -13,6 +12,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {BlurView} from 'expo-blur'
 import {useIsFetching} from '@tanstack/react-query'
+import type React from 'react'
 
 import {isIOS} from '#/platform/detection'
 import {RQKEY_ROOT as STARTERPACK_RQKEY_ROOT} from '#/state/queries/actor-starter-packs'
@@ -21,6 +21,7 @@ import {RQKEY_ROOT as FEEDGEN_RQKEY_ROOT} from '#/state/queries/profile-feedgens
 import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
@@ -139,7 +140,7 @@ function GrowableBannerInner({
           a.align_center,
         ]}>
         <Animated.View style={[animatedSpinnerStyle]}>
-          <ActivityIndicator
+          <CustomActivityIndicator
             key={animateSpinner ? 'spin' : 'stop'}
             size="large"
             color="white"

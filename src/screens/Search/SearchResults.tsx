@@ -1,5 +1,5 @@
 import {memo, useCallback, useMemo, useState} from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {View} from 'react-native'
 import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,6 +18,7 @@ import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme, web} from '#/alf'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import * as FeedCard from '#/components/FeedCard'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
@@ -103,7 +104,7 @@ function Loader() {
   return (
     <Layout.Content>
       <View style={[a.py_xl]}>
-        <ActivityIndicator />
+        <CustomActivityIndicator />
       </View>
     </Layout.Content>
   )

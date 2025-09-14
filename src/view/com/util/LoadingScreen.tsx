@@ -1,6 +1,7 @@
-import {ActivityIndicator, View} from 'react-native'
+import {View} from 'react-native'
 
 import {s} from '#/lib/styles'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import * as Layout from '#/components/Layout'
 
 /**
@@ -10,7 +11,7 @@ export function LoadingScreen() {
   return (
     <Layout.Content>
       <View style={s.p20}>
-        <ActivityIndicator size="large" />
+        <CustomActivityIndicator size="large" />
       </View>
     </Layout.Content>
   )

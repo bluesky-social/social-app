@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  ActivityIndicator,
   type GestureResponderEvent,
   Pressable,
   StyleSheet,
@@ -30,6 +29,7 @@ import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {atoms as a, useTheme} from '#/alf'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
@@ -65,7 +65,7 @@ function PlaceholderOverlay({
         {!isPlayerActive ? (
           <PlayButtonIcon />
         ) : (
-          <ActivityIndicator size="large" color="white" />
+          <CustomActivityIndicator size="large" color="white" />
         )}
       </Pressable>
     </View>

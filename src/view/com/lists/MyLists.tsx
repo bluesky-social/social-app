@@ -1,13 +1,12 @@
 import React from 'react'
 import {
-  ActivityIndicator,
   FlatList as RNFlatList,
   RefreshControl,
-  StyleProp,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
+import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,8 +15,9 @@ import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
+import {type MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {atoms as a, useTheme} from '#/alf'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {Text} from '#/components/Typography'
@@ -141,7 +141,7 @@ export function MyLists({
       } else if (item === LOADING) {
         return (
           <View style={{padding: 20}}>
-            <ActivityIndicator />
+            <CustomActivityIndicator />
           </View>
         )
       }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -32,6 +32,7 @@ import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
 import * as Layout from '#/components/Layout'
@@ -158,7 +159,7 @@ function SavedFeedsInner({
             ))
           )
         ) : (
-          <ActivityIndicator style={{marginTop: 20}} />
+          <CustomActivityIndicator style={{marginTop: 20}} />
         )}
 
         {noFollowingFeed && (
@@ -198,7 +199,7 @@ function SavedFeedsInner({
             ))
           )
         ) : (
-          <ActivityIndicator style={{marginTop: 20}} />
+          <CustomActivityIndicator style={{marginTop: 20}} />
         )}
 
         <View style={styles.footerText}>

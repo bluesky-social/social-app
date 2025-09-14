@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import {type ComAtprotoServerDefs} from '@atproto/api'
 import {
@@ -25,6 +20,7 @@ import {
   type InviteCodesQueryResponse,
   useInviteCodesQuery,
 } from '#/state/queries/invites'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
 import {Link} from '../util/Link'
@@ -42,7 +38,7 @@ export function Component() {
     <ErrorMessage message={cleanError(error)} />
   ) : isLoading || !invites ? (
     <View style={{padding: 18}}>
-      <ActivityIndicator />
+      <CustomActivityIndicator />
     </View>
   ) : (
     <Inner invites={invites} />

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {ActivityIndicator, Platform, View} from 'react-native'
+import {Platform, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,6 +12,7 @@ import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {FormError} from '#/components/forms/FormError'
 import {GCP_PROJECT_ID} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
@@ -161,7 +162,7 @@ function StepCaptchaInner({
               onError={onError}
             />
           ) : (
-            <ActivityIndicator size="large" />
+            <CustomActivityIndicator size="large" />
           )}
         </View>
         <FormError error={state.error} />

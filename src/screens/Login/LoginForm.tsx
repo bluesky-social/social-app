@@ -1,11 +1,5 @@
 import React, {useRef, useState} from 'react'
-import {
-  ActivityIndicator,
-  Keyboard,
-  LayoutAnimation,
-  type TextInput,
-  View,
-} from 'react-native'
+import {Keyboard, LayoutAnimation, type TextInput, View} from 'react-native'
 import {
   ComAtprotoServerCreateSession,
   type ComAtprotoServerDescribeServer,
@@ -23,6 +17,7 @@ import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {FormError} from '#/components/forms/FormError'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
@@ -332,7 +327,7 @@ export const LoginForm = ({
           </Button>
         ) : !serviceDescription ? (
           <>
-            <ActivityIndicator />
+            <CustomActivityIndicator />
             <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
               <Trans>Connecting...</Trans>
             </Text>

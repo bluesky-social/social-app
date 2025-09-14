@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  type GestureResponderEvent,
-  Pressable,
-} from 'react-native'
+import {type GestureResponderEvent, Pressable} from 'react-native'
 import {Image} from 'expo-image'
 import {type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -13,6 +9,7 @@ import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {Fill} from '#/components/Fill'
@@ -141,7 +138,7 @@ export function ExternalGif({
               <PlayButtonIcon />
             ) : (
               // Activity indicator while gif loads
-              <ActivityIndicator size="large" color="white" />
+              <CustomActivityIndicator size="large" color="white" />
             )}
           </Fill>
         )}

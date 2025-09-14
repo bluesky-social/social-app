@@ -1,5 +1,5 @@
 import {memo} from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -9,6 +9,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {SearchLinkCard} from '#/view/shell/desktop/Search'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
 import {atoms as a, native} from '#/alf'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import * as Layout from '#/components/Layout'
 
 let AutocompleteResults = ({
@@ -34,7 +35,7 @@ let AutocompleteResults = ({
       !moderationOpts ? (
         <Layout.Content>
           <View style={[a.py_xl]}>
-            <ActivityIndicator />
+            <CustomActivityIndicator />
           </View>
         </Layout.Content>
       ) : (

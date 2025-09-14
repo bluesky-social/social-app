@@ -68,7 +68,7 @@ function Inner() {
     Done: {
       title: _(msg`Password changed`),
       message: _(
-        msg`Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on.`,
+        msg`Your password has been changed successfully! Please use your new password when you sign in to Blacksky from now on.`,
       ),
     },
   }

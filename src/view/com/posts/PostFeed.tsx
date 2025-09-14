@@ -1,6 +1,5 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
-  ActivityIndicator,
   AppState,
   Dimensions,
   LayoutAnimation,
@@ -48,6 +47,7 @@ import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {
   PostFeedVideoGridRow,
@@ -774,7 +774,7 @@ let PostFeed = ({
 
     return isFetchingNextPage ? (
       <View style={[styles.feedFooter]}>
-        <ActivityIndicator />
+        <CustomActivityIndicator />
         <View style={{height: offset}} />
       </View>
     ) : shouldRenderEndOfFeed ? (

@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  ActivityIndicator,
   type GestureResponderEvent,
   type NativeSyntheticEvent,
   type NativeTouchEvent,
@@ -15,6 +14,7 @@ import {
 
 import {choose} from '#/lib/functions'
 import {useTheme} from '#/lib/ThemeContext'
+import {CustomActivityIndicator} from '#/components/CustomActivityIndicator.tsx'
 import {Text} from '../text/Text'
 
 export type ButtonType =
@@ -181,7 +181,7 @@ export function Button({
     return (
       <View style={[styles.labelContainer, labelContainerStyle]}>
         {label && withLoading && isLoading ? (
-          <ActivityIndicator size={12} color={typeLabelStyle.color} />
+          <CustomActivityIndicator size={12} color={typeLabelStyle.color} />
         ) : null}
         <Text type="button" style={[typeLabelStyle, labelStyle]}>
           {label}
