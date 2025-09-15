@@ -28,9 +28,9 @@ import {useAgent} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
-// types are a little loose so that we can use `.includes`
-export const DIRECT_FEEDBACK_INTERACTIONS: AppBskyFeedDefs.Interaction['event'][] =
-  ['app.bsky.feed.defs#requestLess', 'app.bsky.feed.defs#requestMore']
+export const DIRECT_FEEDBACK_INTERACTIONS = new Set<
+  AppBskyFeedDefs.Interaction['event']
+>(['app.bsky.feed.defs#requestLess', 'app.bsky.feed.defs#requestMore'])
 
 const logger = Logger.create(Logger.Context.FeedFeedback)
 
@@ -92,7 +92,7 @@ export function useFeedFeedback(
     const interactionsToSend = interactions.filter(
       interaction =>
         interaction.event &&
-        isInteractionEnabled(enabled, feed, interaction.event),
+        isInteractionAllowed(enabled, feed, interaction.event),
     )
 
     if (interactionsToSend.length === 0) {
@@ -219,7 +219,7 @@ export function isDiscoverFeed(feed?: FeedDescriptor) {
   return !!feed && FEEDBACK_FEEDS.includes(feed)
 }
 
-function isInteractionEnabled(
+function isInteractionAllowed(
   enabled: boolean,
   feed: FeedSourceFeedInfo | undefined,
   interaction: AppBskyFeedDefs.Interaction['event'],
@@ -228,7 +228,7 @@ function isInteractionEnabled(
     return false
   }
   const isDiscover = isDiscoverFeed(feed.feedDescriptor)
-  return isDiscover ? true : DIRECT_FEEDBACK_INTERACTIONS.includes(interaction)
+  return isDiscover ? true : DIRECT_FEEDBACK_INTERACTIONS.has(interaction)
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
