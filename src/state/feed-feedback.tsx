@@ -28,44 +28,9 @@ import {useAgent} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
-export const PASSIVE_FEEDBACK_INTERACTIONS = [
-  'app.bsky.feed.defs#clickthroughItem',
-  'app.bsky.feed.defs#clickthroughAuthor',
-  'app.bsky.feed.defs#clickthroughReposter',
-  'app.bsky.feed.defs#clickthroughEmbed',
-  'app.bsky.feed.defs#interactionSeen',
-  'app.bsky.feed.defs#interactionLike',
-  'app.bsky.feed.defs#interactionRepost',
-  'app.bsky.feed.defs#interactionReply',
-  'app.bsky.feed.defs#interactionQuote',
-  'app.bsky.feed.defs#interactionShare',
-] as const satisfies AppBskyFeedDefs.Interaction['event'][]
-
-export type PassiveFeedbackInteraction =
-  (typeof PASSIVE_FEEDBACK_INTERACTIONS)[number]
-
-export const DIRECT_FEEDBACK_INTERACTIONS = [
-  'app.bsky.feed.defs#requestLess',
-  'app.bsky.feed.defs#requestMore',
-] as const satisfies AppBskyFeedDefs.Interaction['event'][]
-
-export type DirectFeedbackInteraction =
-  (typeof DIRECT_FEEDBACK_INTERACTIONS)[number]
-
-export const ALL_FEEDBACK_INTERACTIONS = [
-  ...PASSIVE_FEEDBACK_INTERACTIONS,
-  ...DIRECT_FEEDBACK_INTERACTIONS,
-] as const
-
-export type FeedbackInteraction = (typeof ALL_FEEDBACK_INTERACTIONS)[number]
-
-export function isFeedbackInteraction(
-  interactionEvent: string,
-): interactionEvent is FeedbackInteraction {
-  return ALL_FEEDBACK_INTERACTIONS.includes(
-    interactionEvent as FeedbackInteraction,
-  )
-}
+// types are a little loose so that we can use `.includes`
+export const DIRECT_FEEDBACK_INTERACTIONS: AppBskyFeedDefs.Interaction['event'][] =
+  ['app.bsky.feed.defs#requestLess', 'app.bsky.feed.defs#requestMore']
 
 const logger = Logger.create(Logger.Context.FeedFeedback)
 
@@ -102,7 +67,6 @@ export function useFeedFeedback(
   const proxyDid = feed?.view?.did
   const enabled =
     Boolean(feed) && Boolean(proxyDid) && acceptsInteractions && hasSession
-  const enabledInteractions = getEnabledInteractions(enabled, feed, isDiscover)
 
   const queue = useRef<Set<string>>(new Set())
   const history = useRef<
@@ -128,8 +92,7 @@ export function useFeedFeedback(
     const interactionsToSend = interactions.filter(
       interaction =>
         interaction.event &&
-        isFeedbackInteraction(interaction.event) &&
-        enabledInteractions.includes(interaction.event),
+        isInteractionEnabled(enabled, feed, interaction.event),
     )
 
     if (interactionsToSend.length === 0) {
@@ -163,7 +126,7 @@ export function useFeedFeedback(
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, proxyDid, enabledInteractions])
+  }, [agent, throttledFlushAggregatedStats, proxyDid, enabled, feed])
 
   const sendToFeed = useMemo(
     () =>
@@ -256,15 +219,16 @@ export function isDiscoverFeed(feed?: FeedDescriptor) {
   return !!feed && FEEDBACK_FEEDS.includes(feed)
 }
 
-function getEnabledInteractions(
+function isInteractionEnabled(
   enabled: boolean,
   feed: FeedSourceFeedInfo | undefined,
-  isDiscover: boolean,
-): readonly FeedbackInteraction[] {
+  interaction: AppBskyFeedDefs.Interaction['event'],
+) {
   if (!enabled || !feed) {
-    return []
+    return false
   }
-  return isDiscover ? ALL_FEEDBACK_INTERACTIONS : DIRECT_FEEDBACK_INTERACTIONS
+  const isDiscover = isDiscoverFeed(feed.feedDescriptor)
+  return isDiscover ? true : DIRECT_FEEDBACK_INTERACTIONS.includes(interaction)
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
