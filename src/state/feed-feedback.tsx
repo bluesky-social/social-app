@@ -34,7 +34,12 @@ export const PASSIVE_FEEDBACK_INTERACTIONS = [
   'app.bsky.feed.defs#clickthroughReposter',
   'app.bsky.feed.defs#clickthroughEmbed',
   'app.bsky.feed.defs#interactionSeen',
-] as const
+  'app.bsky.feed.defs#interactionLike',
+  'app.bsky.feed.defs#interactionRepost',
+  'app.bsky.feed.defs#interactionReply',
+  'app.bsky.feed.defs#interactionQuote',
+  'app.bsky.feed.defs#interactionShare',
+] as const satisfies AppBskyFeedDefs.Interaction['event'][]
 
 export type PassiveFeedbackInteraction =
   (typeof PASSIVE_FEEDBACK_INTERACTIONS)[number]
@@ -42,7 +47,7 @@ export type PassiveFeedbackInteraction =
 export const DIRECT_FEEDBACK_INTERACTIONS = [
   'app.bsky.feed.defs#requestLess',
   'app.bsky.feed.defs#requestMore',
-] as const
+] as const satisfies AppBskyFeedDefs.Interaction['event'][]
 
 export type DirectFeedbackInteraction =
   (typeof DIRECT_FEEDBACK_INTERACTIONS)[number]
