@@ -71,7 +71,7 @@ const schema = z.object({
     contentLanguages: z.array(z.string()),
     /**
      * The language(s) the user is currently posting in, configured within the
-     * composer. Multiple languages are psearate by commas.
+     * composer. Multiple languages are separated by commas.
      *
      * BCP-47 2-letter language code without region.
      */
