@@ -43,6 +43,52 @@
   <meta name="article:published_time" content="{{ postView.IndexedAt }}">
   <link rel="alternate" type="application/json+oembed" href="https://embed.bsky.app/oembed?format=json&url={{ postView.Uri | urlencode }}" />
   <link rel="alternate" href="{{ postView.Uri }}" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "DiscussionForumPosting",
+      "author": {
+        "@type": "Person",
+        "name": "{{ postView.Author.DisplayName }}",
+        "url": "https://bsky.app/profile/{{ postView.Author.Handle }}"
+      },
+      {%- if postText %}
+      "text": "{{ postText }}",
+      "url": "https://bsky.app/profile/{{ postView.Author.Handle }}/post/{{ postRecordKey }}",
+      {% endif %}
+      {%- if (imgThumbUrls and imgThumbUrls|length > 0) %}
+      "image": [
+        {%- for imgThumbUrl in imgThumbUrls %}
+        "{{ imgThumbUrl }}"{% if not forloop.Last %},{% endif %}
+        {% endfor %}
+      ],
+      {%- elif videoThumbUrl %}
+      "image": [
+        {%- if videoThumbUrl %}
+        "{{ videoThumbUrl }}"
+        {% endif %}
+      ],
+      {% endif %}
+      "datePublished": "{{ postCreatedAt }}",
+      "interactionStatistic": [
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/LikeAction",
+          "userInteractionCount": {{ postView.LikeCount }}
+        },
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/CommentAction",
+          "userInteractionCount": {{ postView.ReplyCount }}
+        },
+        {
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/ShareAction",
+          "userInteractionCount": {{ postView.RepostCount + postView.QuoteCount }}
+        }
+      ]
+    }
+  </script>
 {% endif -%}
 {%- endblock %}
 
