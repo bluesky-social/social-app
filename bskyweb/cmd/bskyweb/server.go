@@ -499,11 +499,9 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 		return c.Render(http.StatusOK, "post.html", data)
 	}
-	did := pv.Did
-	data["did"] = did
 
 	// then fetch the post thread (with extra context)
-	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", pv.Did, rkey)
 	tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, 0, uri)
 	if err != nil {
 		log.Warnf("failed to fetch post: %s\t%v", uri, err)
