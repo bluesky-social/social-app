@@ -52,7 +52,7 @@ export function LanguageSelectDialog({
   return (
     <Dialog.Outer
       control={control}
-      nativeOptions={{minHeight: height - insets.top}}>
+      nativeOptions={{minHeight: isIOS26 ? height : height - insets.top}}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
         <DialogInner

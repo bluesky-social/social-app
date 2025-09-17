@@ -133,7 +133,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
 import {
   draftToComposerPosts,
@@ -2138,10 +2138,15 @@ function useKeyboardVerticalOffset() {
     return bottom * -1
   }
 
+  // they ditched the gap behaviour on 26
+  if (IS_LIQUID_GLASS) {
+    return top
+  }
+
   // iPhone SE
   if (top === 20) return 40
 
-  // all other iPhones
+  // all other iPhones on <26
   return top + 10
 }
 
