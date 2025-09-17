@@ -1,11 +1,6 @@
 import React from 'react'
-import {
-  type StyleProp,
-  type TextStyle,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
+import {View} from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
@@ -41,11 +36,7 @@ export function EmptyState({
   const t = useTheme()
 
   const placeholderIcon = (
-<<<<<<< HEAD
     <EditIcon size="2xl" fill={t.atoms.text_contrast_low.color} />
-=======
-    <EditIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
->>>>>>> aee67f715 (add empty state icon)
   )
 
   const renderIcon = () => {
@@ -90,7 +81,7 @@ export function EmptyState({
           a.self_center,
           textStyle,
         ]}>
-        <Trans>{message}</Trans>
+        {message}
       </Text>
       {button && (
         <View style={[a.flex_shrink, a.mt_xl, a.self_center]}>
