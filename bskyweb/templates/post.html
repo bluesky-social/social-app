@@ -42,6 +42,18 @@
   {% endif %}
   <meta name="twitter:label1" content="Posted At">
   <meta name="twitter:value1" content="{{ postView.IndexedAt }}">
+  {%- if postView.LikeCount %}
+  <meta name="twitter:label2" content="Likes">
+  <meta name="twitter:value2" content="{{ postView.LikeCount }}">
+  {% endif -%}
+  {%- if postView.ReplyCount %}
+  <meta name="twitter:label3" content="Replies">
+  <meta name="twitter:value3" content="{{ postView.ReplyCount }}">
+  {% endif -%}
+  {%- if postView.RepostCount %}
+  <meta name="twitter:label4" content="Reposts">
+  <meta name="twitter:value4" content="{{ postView.RepostCount }}">
+  {% endif -%}
   <meta property="article:published_time" content="{{ postView.IndexedAt }}">
   <link rel="alternate" type="application/json+oembed" href="https://embed.bsky.app/oembed?format=json&url={{ postView.Uri | urlencode }}" />
   <link rel="alternate" href="{{ postView.Uri }}" />
