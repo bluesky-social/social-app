@@ -2,6 +2,7 @@ import React from 'react'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
@@ -9,6 +10,8 @@ import {logger} from '#/logger'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useSession} from '#/state/session'
+import {useTheme} from '#/alf'
+import {PeopleRemove2_Stroke1_Corner0_Rounded as PeopleRemoveIcon} from '#/components/icons/PeopleRemove2'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
@@ -39,8 +42,10 @@ function keyExtractor(item: ActorDefs.ProfileViewBasic) {
 
 export function ProfileFollowers({name}: {name: string}) {
   const {_} = useLingui()
+  const navigation = useNavigation()
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
+  const t = useTheme()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
@@ -129,12 +134,23 @@ export function ProfileFollowers({name}: {name: string}) {
         emptyType="results"
         emptyMessage={
           isMe
-            ? _(msg`You do not have any followers.`)
+            ? _(msg`No followers yet.`)
             : _(msg`This user doesn't have any followers.`)
         }
         errorMessage={cleanError(resolveError || error)}
         onRetry={isError ? refetch : undefined}
         sideBorders={false}
+        useEmptyState={true}
+        emptyStateIcon={
+          <PeopleRemoveIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
+        }
+        emptyStateButton={{
+          label: _(msg`Go back`),
+          text: _(msg`Go back`),
+          color: 'secondary',
+          size: 'small',
+          onPress: () => navigation.goBack(),
+        }}
       />
     )
   }

@@ -18,7 +18,6 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {HashtagWideIcon} from '#/lib/icons'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -31,6 +30,7 @@ import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
+import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import {ListFooter} from '#/components/Lists'
 
 const LOADING = {_reactKey: '__loading__'}
@@ -151,19 +151,22 @@ export function ProfileFeedgens({
         return (
           <EmptyState
             icon={
-              <HashtagWideIcon
-                size={64}
-                style={{color: t.atoms.text_contrast_low.color}}
+              <ListIcon
+                size="3xl"
+                fill={t.atoms.text_contrast_low.color}
+                viewBox="0 0 47 38"
               />
             }
-            message={_(msg`You haven't made any custom feeds yet.`)}
+            message={_(
+              msg`Lists allow you to see content from your favorite people.`,
+            )}
             textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
             button={{
-              label: _(msg`Browse custom feeds`),
-              text: _(msg`Browse custom feeds`),
-              onPress: () => navigation.navigate('Feeds' as never),
+              label: _(msg`Create a list`),
+              text: _(msg`Create a list`),
+              onPress: () => navigation.navigate('Lists' as never),
               size: 'small',
-              color: 'secondary',
+              color: 'primary',
             }}
           />
         )
