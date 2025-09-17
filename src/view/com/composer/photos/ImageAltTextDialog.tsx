@@ -29,6 +29,7 @@ export const ImageAltTextDialog = ({
   onChange,
 }: Props): React.ReactNode => {
   const [altText, setAltText] = React.useState(image.alt)
+  const {height} = useWindowDimensions()
 
   return (
     <Dialog.Outer
@@ -38,7 +39,8 @@ export const ImageAltTextDialog = ({
           ...image,
           alt: enforceLen(altText, MAX_ALT_TEXT, true),
         })
-      }}>
+      }}
+      nativeOptions={{minHeight: height}}>
       <Dialog.Handle />
       <ImageAltTextInner
         control={control}

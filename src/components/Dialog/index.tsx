@@ -30,7 +30,7 @@ import {isAndroid, isIOS, isIOS26} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import {atoms as a, ios, platform, tokens, useTheme} from '#/alf'
+import {atoms as a, ios, ios26, platform, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -191,9 +191,7 @@ export function Inner({children, style, header}: DialogInnerProps) {
         style={[
           a.pt_2xl,
           a.px_xl,
-          {
-            paddingBottom: insets.bottom + insets.top,
-          },
+          isIOS26 ? {paddingBottom: insets.bottom + insets.top} : a.pb_2xl,
           style,
         ]}>
         {children}
@@ -227,10 +225,14 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
     let paddingBottom = 0
     if (isIOS) {
       paddingBottom += keyboardHeight / 4
-      if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
-        paddingBottom += insets.bottom + tokens.space.md
+      if (isIOS26) {
+        paddingBottom += tokens.space.xl
+      } else {
+        if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
+          paddingBottom += insets.bottom + tokens.space.md
+        }
+        paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
       }
-      paddingBottom = Math.max(paddingBottom, tokens.space._2xl)
     } else {
       paddingBottom += keyboardHeight
       if (nativeSnapPoint === BottomSheetSnapPoint.Full) {
@@ -347,7 +349,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
         a.pt_md,
         {
           paddingBottom: platform({
-            ios: tokens.space.md + bottom,
+            ios: tokens.space.md + bottom + (ios26(top) ?? 0),
             android: tokens.space.md + bottom + top,
           }),
         },
