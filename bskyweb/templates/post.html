@@ -12,7 +12,6 @@
 
 {% block html_head_extra -%}
 {%- if postView -%}
-  <meta property="og:site_name" content="Bluesky Social">
   <meta property="og:type" content="article">
   <meta property="profile:username" content="{{ postView.Author.Handle }}">
   {%- if requestURI %}
@@ -35,10 +34,10 @@
   <meta property="twitter:image" content="{{ imgThumbUrl }}">
   {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
-  {%- elif postView.Author.Avatar %}
-  <meta name="twitter:card" content="summary">
+  {% else %}
   <meta property="og:image" content="{{ postView.Author.Avatar }}">
   <meta property="twitter:image" content="{{ postView.Author.Avatar }}">
+  <meta name="twitter:card" content="summary">
   {% endif %}
   <meta name="twitter:label1" content="Posted At">
   <meta name="twitter:value1" content="{{ postView.IndexedAt }}">
@@ -58,7 +57,6 @@
   <link rel="alternate" type="application/json+oembed" href="https://embed.bsky.app/oembed?format=json&url={{ postView.Uri | urlencode }}" />
   <link rel="alternate" href="{{ postView.Uri }}" />
 {%- elif requiresAuth and profileHandle -%}
-  <meta property="og:site_name" content="Bluesky Social">
   <meta property="og:type" content="article">
   <meta property="profile:username" content="{{ profileHandle }}">
   {%- if requestURI %}
