@@ -492,6 +492,14 @@ func (srv *Server) WebPost(c echo.Context) error {
 
 	if !unauthedViewingOkay {
 		log.Warnf("WebPost: profile %s requires authentication", identifier)
+		// Provide minimal OpenGraph data for auth-required posts
+		req := c.Request()
+		data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+		data["requiresAuth"] = true
+		data["profileHandle"] = pv.Handle
+		if pv.DisplayName != nil {
+			data["profileDisplayName"] = *pv.DisplayName
+		}
 		return c.Render(http.StatusOK, "post.html", data)
 	}
 	did := pv.Did
