@@ -6,7 +6,7 @@ import {
 import {AtUri} from '@atproto/api'
 import {type BskyAgent} from '@atproto/api'
 
-import {POST_IMG_MAX} from '#/lib/constants'
+import {DEFAULT_SERVICE, POST_IMG_MAX} from '#/lib/constants'
 import {getLinkMeta} from '#/lib/link-meta/link-meta'
 import {resolveShortLink} from '#/lib/link-meta/resolve-short-link'
 import {downloadAndResize} from '#/lib/media/manip'
@@ -211,6 +211,48 @@ async function resolveExternal(
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
   }
+}
+
+interface ServiceEndpoint {
+  id: string
+  type: string
+  serviceEndpoint: string
+}
+
+interface DIDDocument {
+  id: string
+  service?: ServiceEndpoint[]
+}
+
+export async function resolveServiceURL(
+  agent: BskyAgent,
+  handle: string,
+): Promise<string> {
+  console.log('here')
+  const {data} = await agent.resolveHandle({handle: handle})
+  const did = data.did
+
+  let didDoc: DIDDocument
+  if (did.startsWith('did:plc')) {
+    const response = await fetch(`https://plc.directory/${did}`)
+    didDoc = await response.json()
+  } else if (did.startsWith('did:web')) {
+    const response = await fetch(`https://${handle}/.well-known/did.json`)
+    didDoc = await response.json()
+  } else {
+    throw new Error('Unsupported DID method')
+  }
+  // Step 3: Extract PDS endpoint
+  const pdsService = didDoc.service?.find(
+    s => s.id === '#atproto_pds' || s.type === 'AtprotoPersonalDataServer',
+  )
+
+  // If the service ends with "bsky.ntwork", it's a mushroom URL.
+  if (pdsService?.serviceEndpoint?.endsWith('bsky.network')) {
+    return DEFAULT_SERVICE
+  }
+
+  return pdsService?.serviceEndpoint || DEFAULT_SERVICE
 }
 
 export async function imageToThumb(
