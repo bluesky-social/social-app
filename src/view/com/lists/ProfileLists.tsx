@@ -253,3 +253,6 @@ export function ProfileFeedgens({
 function keyExtractor(item: any) {
   return item._reactKey || item.uri
 }
+
+// Export as ProfileLists for compatibility
+export const ProfileLists = ProfileFeedgens

@@ -35,6 +35,7 @@ interface FeedSectionProps {
   emptyStateButton?: EmptyStateButtonProps
   emptyStateIcon?: React.ReactElement
 }
+
 export function ProfileFeedSection({
   ref,
   feed,
