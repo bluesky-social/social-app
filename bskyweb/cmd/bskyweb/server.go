@@ -465,11 +465,13 @@ func (srv *Server) WebPost(c echo.Context) error {
 	rkeyParam := c.Param("rkey")
 	rkey, err := syntax.ParseRecordKey(rkeyParam)
 	if err != nil {
+		log.Warnf("WebPost: failed to parse rkey %s: %v", rkeyParam, err)
 		return c.Render(http.StatusOK, "post.html", data)
 	}
 	handleOrDIDParam := c.Param("handleOrDID")
 	handleOrDID, err := syntax.ParseAtIdentifier(handleOrDIDParam)
 	if err != nil {
+		log.Warnf("WebPost: failed to parse identifier %s: %v", handleOrDIDParam, err)
 		return c.Render(http.StatusOK, "post.html", data)
 	}
 
@@ -489,6 +491,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 	}
 
 	if !unauthedViewingOkay {
+		log.Warnf("WebPost: profile %s requires authentication", identifier)
 		return c.Render(http.StatusOK, "post.html", data)
 	}
 	did := pv.Did
