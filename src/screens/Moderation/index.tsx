@@ -142,7 +142,7 @@ function SubItem({
       ]}>
       <View style={[a.flex_row, a.align_center, a.gap_md]}>
         <Icon size="md" style={[t.atoms.text_contrast_medium]} />
-        <Text style={[a.text_sm, a.font_bold]}>{title}</Text>
+        <Text style={[a.text_sm, a.font_semi_bold]}>{title}</Text>
       </View>
       <ChevronRight
         size="sm"
@@ -221,7 +221,12 @@ export function ModerationScreenInner({
       )}
 
       <Text
-        style={[a.text_md, a.font_bold, a.pb_md, t.atoms.text_contrast_high]}>
+        style={[
+          a.text_md,
+          a.font_semi_bold,
+          a.pb_md,
+          t.atoms.text_contrast_high,
+        ]}>
         <Trans>Moderation tools</Trans>
       </Text>
 
@@ -330,7 +335,7 @@ export function ModerationScreenInner({
               a.pt_2xl,
               a.pb_md,
               a.text_md,
-              a.font_bold,
+              a.font_semi_bold,
               t.atoms.text_contrast_high,
             ]}>
             <Trans>Content filters</Trans>
@@ -364,7 +369,7 @@ export function ModerationScreenInner({
               a.pt_2xl,
               a.pb_md,
               a.text_md,
-              a.font_bold,
+              a.font_semi_bold,
               t.atoms.text_contrast_high,
             ]}>
             <Trans>Content filters</Trans>
@@ -396,7 +401,8 @@ export function ModerationScreenInner({
                       a.justify_between,
                       disabledOnIOS && {opacity: 0.5},
                     ]}>
-                    <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+                    <Text
+                      style={[a.font_semi_bold, t.atoms.text_contrast_high]}>
                       <Trans>Enable adult content</Trans>
                     </Text>
                     <Toggle.Item
@@ -465,7 +471,7 @@ export function ModerationScreenInner({
       <Text
         style={[
           a.text_md,
-          a.font_bold,
+          a.font_semi_bold,
           a.pt_2xl,
           a.pb_md,
           t.atoms.text_contrast_high,

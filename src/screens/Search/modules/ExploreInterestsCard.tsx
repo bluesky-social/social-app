@@ -63,7 +63,7 @@ export function ExploreInterestsCard() {
           ]}>
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             <Shapes />
-            <Text style={[a.text_xl, a.font_bold, a.leading_tight]}>
+            <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
               <Trans>Your interests</Trans>
             </Text>
           </View>

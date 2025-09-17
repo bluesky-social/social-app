@@ -45,7 +45,7 @@ export function SearchHistory({
       <View style={[a.w_full, a.gap_md]}>
         {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
           <View style={[a.px_lg, a.pt_sm]}>
-            <Text style={[a.text_md, a.font_bold]}>
+            <Text style={[a.text_md, a.font_semi_bold]}>
               <Trans>Recent Searches</Trans>
             </Text>
           </View>

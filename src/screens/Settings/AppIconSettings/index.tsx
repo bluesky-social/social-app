@@ -93,7 +93,7 @@ export function AppIconSettingsScreen({}: Props) {
                 a.text_md,
                 a.mt_xl,
                 a.mb_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Bluesky+</Trans>
@@ -201,7 +201,12 @@ function RowText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
     <Text
-      style={[a.text_md, a.font_bold, a.flex_1, t.atoms.text_contrast_medium]}
+      style={[
+        a.text_md,
+        a.font_semi_bold,
+        a.flex_1,
+        t.atoms.text_contrast_medium,
+      ]}
       emoji>
       {children}
     </Text>

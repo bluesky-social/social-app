@@ -45,7 +45,7 @@ export function Avatar({avatar}: {avatar?: string}) {
 
 export function Title({value}: {value: string}) {
   return (
-    <Text emoji style={[a.text_md, a.font_bold, a.leading_tight]}>
+    <Text emoji style={[a.text_md, a.font_semi_bold, a.leading_tight]}>
       {value}
     </Text>
   )

@@ -233,7 +233,7 @@ function InlineNameAndHandle({
       <Text
         emoji
         style={[
-          a.font_bold,
+          a.font_semi_bold,
           a.leading_tight,
           a.flex_shrink_0,
           {maxWidth: '70%'},
@@ -287,7 +287,7 @@ export function Name({
         emoji
         style={[
           a.text_md,
-          a.font_bold,
+          a.font_semi_bold,
           a.leading_snug,
           a.self_start,
           a.flex_shrink,

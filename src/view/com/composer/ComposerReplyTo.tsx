@@ -101,7 +101,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       <View style={[a.flex_1, a.pl_md, a.pr_sm, a.gap_2xs]}>
         <View style={[a.flex_row, a.align_center, a.pr_xs]}>
           <Text
-            style={[a.font_bold, a.text_md, a.leading_snug, a.flex_shrink]}
+            style={[a.font_semi_bold, a.text_md, a.leading_snug, a.flex_shrink]}
             numberOfLines={1}
             emoji>
             {sanitizeDisplayName(

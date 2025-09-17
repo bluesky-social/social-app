@@ -167,7 +167,7 @@ function AppPasswordCard({
           a.gap_sm,
         ]}>
         <View style={[a.gap_xs]}>
-          <Text style={[t.atoms.text, a.text_md, a.font_bold]}>
+          <Text style={[t.atoms.text, a.text_md, a.font_semi_bold]}>
             {appPassword.name}
           </Text>
           <Text style={[t.atoms.text_contrast_medium]}>

@@ -127,7 +127,7 @@ export function TitleAndByline({
         allowOverride={creator && currentAccount?.did === creator.did}>
         <Hider.Mask>
           <Text
-            style={[a.text_md, a.font_bold, a.leading_snug, a.italic]}
+            style={[a.text_md, a.font_semi_bold, a.leading_snug, a.italic]}
             numberOfLines={1}>
             <Trans>Hidden list</Trans>
           </Text>
@@ -135,7 +135,7 @@ export function TitleAndByline({
         <Hider.Content>
           <Text
             emoji
-            style={[a.text_md, a.font_bold, a.leading_snug]}
+            style={[a.text_md, a.font_semi_bold, a.leading_snug]}
             numberOfLines={1}>
             {title}
           </Text>

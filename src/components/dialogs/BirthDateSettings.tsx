@@ -38,7 +38,7 @@ export function BirthDateSettingsDialog({
         label={_(msg`My Birthday`)}
         style={web({maxWidth: 400})}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.text_xl, a.font_bold]}>
+          <Text style={[a.text_xl, a.font_semi_bold]}>
             <Trans>My Birthday</Trans>
           </Text>
           <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>

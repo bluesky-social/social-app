@@ -460,7 +460,7 @@ let SearchScreenInner = ({
               a.pt_sm,
               a.pb_lg,
             ]}>
-            <Text style={[a.text_2xl, a.font_heavy]}>
+            <Text style={[a.text_2xl, a.font_bold]}>
               <Trans>Search</Trans>
             </Text>
           </View>

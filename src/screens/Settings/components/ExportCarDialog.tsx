@@ -58,7 +58,7 @@ export function ExportCarDialog({
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title">
         <View style={[a.relative, a.gap_lg, a.w_full]}>
-          <Text nativeID="dialog-title" style={[a.text_2xl, a.font_heavy]}>
+          <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
             <Trans>Export My Data</Trans>
           </Text>
           <Text

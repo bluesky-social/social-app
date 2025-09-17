@@ -92,7 +92,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
               onPress={onBeforePressAuthor}
               style={[
                 a.text_md,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text,
                 a.leading_tight,
                 a.flex_shrink_0,

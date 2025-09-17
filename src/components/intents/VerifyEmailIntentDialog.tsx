@@ -75,7 +75,7 @@ function Inner({}: {control: DialogControlProps}) {
           </View>
         ) : status === 'success' ? (
           <View style={[a.gap_sm, isNative && a.pb_xl]}>
-            <Text style={[a.font_heavy, a.text_2xl]}>
+            <Text style={[a.font_bold, a.text_2xl]}>
               <Trans>Email Verified</Trans>
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
@@ -87,7 +87,7 @@ function Inner({}: {control: DialogControlProps}) {
           </View>
         ) : status === 'failure' ? (
           <View style={[a.gap_sm]}>
-            <Text style={[a.font_heavy, a.text_2xl]}>
+            <Text style={[a.font_bold, a.text_2xl]}>
               <Trans>Invalid Verification Code</Trans>
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
@@ -100,13 +100,13 @@ function Inner({}: {control: DialogControlProps}) {
           </View>
         ) : (
           <View style={[a.gap_sm, isNative && a.pb_xl]}>
-            <Text style={[a.font_heavy, a.text_2xl]}>
+            <Text style={[a.font_bold, a.text_2xl]}>
               <Trans>Email Resent</Trans>
             </Text>
             <Text style={[a.text_md, a.leading_snug]}>
               <Trans>
                 We have sent another verification email to{' '}
-                <Text style={[a.text_md, a.font_bold]}>
+                <Text style={[a.text_md, a.font_semi_bold]}>
                   {currentAccount?.email}
                 </Text>
                 .

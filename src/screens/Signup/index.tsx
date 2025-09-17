@@ -131,7 +131,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             <Animated.View entering={!isFetchedAtMount ? FadeIn : undefined}>
               <LinearGradientBackground
                 style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
-                <Text style={[a.font_bold, a.text_xl, {color: 'white'}]}>
+                <Text style={[a.font_semi_bold, a.text_xl, {color: 'white'}]}>
                   {starterPack.record.name}
                 </Text>
                 <Text style={[{color: 'white'}]}>
@@ -159,7 +159,11 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             ]}>
             <View style={[a.gap_sm, a.pb_sm]}>
               <Text
-                style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium]}>
+                style={[
+                  a.text_sm,
+                  a.font_semi_bold,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 <Trans>
                   Step {state.activeStep + 1} of{' '}
                   {state.serviceDescription &&
@@ -168,7 +172,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     : '3'}
                 </Trans>
               </Text>
-              <Text style={[a.text_3xl, a.font_heavy]}>
+              <Text style={[a.text_3xl, a.font_bold]}>
                 {state.activeStep === SignupStep.INFO ? (
                   <Trans>Your account</Trans>
                 ) : state.activeStep === SignupStep.HANDLE ? (

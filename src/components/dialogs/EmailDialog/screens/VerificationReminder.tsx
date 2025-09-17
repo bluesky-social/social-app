@@ -58,7 +58,7 @@ export function VerificationReminder({
       <View style={[a.mb_xs, {height: 150 - dialogPadding}]} />
 
       <View style={[a.gap_sm]}>
-        <Text style={[a.text_xl, a.font_heavy]}>
+        <Text style={[a.text_xl, a.font_bold]}>
           <Trans>Please verify your email</Trans>
         </Text>
         <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>

@@ -121,7 +121,7 @@ export function TabBar({
                     styles.itemText,
                     selected ? t.atoms.text : t.atoms.text_contrast_medium,
                     a.text_md,
-                    a.font_bold,
+                    a.font_semi_bold,
                     {lineHeight: 20},
                   ]}>
                   {item}

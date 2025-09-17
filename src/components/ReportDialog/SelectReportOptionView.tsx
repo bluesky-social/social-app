@@ -85,7 +85,7 @@ export function SelectReportOptionView(props: {
       ) : null}
 
       <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-        <Text style={[a.text_2xl, a.font_bold]}>{i18n.title}</Text>
+        <Text style={[a.text_2xl, a.font_semi_bold]}>{i18n.title}</Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           {i18n.description}
         </Text>
@@ -173,7 +173,8 @@ function ReportOptionButton({
         interacted && t.atoms.bg_contrast_50,
       ]}>
       <View style={[a.flex_1, a.gap_xs]}>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+        <Text
+          style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
           {title}
         </Text>
         <Text style={[a.leading_tight, {maxWidth: 400}]}>{description}</Text>

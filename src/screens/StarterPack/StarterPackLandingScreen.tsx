@@ -183,7 +183,7 @@ function LandingScreenLoaded({
           </View>
           <Text
             style={[
-              a.font_bold,
+              a.font_semi_bold,
               a.text_4xl,
               a.text_center,
               a.leading_tight,
@@ -192,7 +192,12 @@ function LandingScreenLoaded({
             {record.name}
           </Text>
           <Text
-            style={[a.text_center, a.font_bold, a.text_md, {color: 'white'}]}>
+            style={[
+              a.text_center,
+              a.font_semi_bold,
+              a.text_md,
+              {color: 'white'},
+            ]}>
             Starter pack by {`@${creator.handle}`}
           </Text>
         </LinearGradientBackground>
@@ -218,7 +223,11 @@ function LandingScreenLoaded({
                 color={t.atoms.text_contrast_medium.color}
               />
               <Text
-                style={[a.font_bold, a.text_sm, t.atoms.text_contrast_medium]}
+                style={[
+                  a.font_semi_bold,
+                  a.text_sm,
+                  t.atoms.text_contrast_medium,
+                ]}
                 numberOfLines={1}>
                 <Trans>
                   {formatCount(i18n, JOINED_THIS_WEEK)} joined this week
@@ -229,7 +238,7 @@ function LandingScreenLoaded({
           <View style={[a.gap_3xl]}>
             {Boolean(listItemsSample?.length) && (
               <View style={[a.gap_md]}>
-                <Text style={[a.font_heavy, a.text_lg]}>
+                <Text style={[a.font_bold, a.text_lg]}>
                   {listItemsCount <= 8 ? (
                     <Trans>You'll follow these people right away</Trans>
                   ) : (
@@ -270,7 +279,7 @@ function LandingScreenLoaded({
             )}
             {feeds?.length ? (
               <View style={[a.gap_md]}>
-                <Text style={[a.font_heavy, a.text_lg]}>
+                <Text style={[a.font_bold, a.text_lg]}>
                   <Trans>You'll stay updated with these feeds</Trans>
                 </Text>
 
@@ -387,7 +396,11 @@ export function AppClipOverlay({
         {/* Webkit needs this to have a zindex of 2? */}
         <View style={[a.gap_md, {zIndex: 2}]}>
           <Text
-            style={[a.font_bold, a.text_4xl, {lineHeight: 40, color: 'white'}]}>
+            style={[
+              a.font_semi_bold,
+              a.text_4xl,
+              {lineHeight: 40, color: 'white'},
+            ]}>
             Download Bluesky to get started!
           </Text>
           <Text style={[a.text_lg, {color: 'white'}]}>

@@ -125,7 +125,7 @@ export function SubmitView({
           t.atoms.border_contrast_low,
         ]}>
         <View style={[a.flex_1, a.gap_xs]}>
-          <Text style={[a.text_md, a.font_bold]}>
+          <Text style={[a.text_md, a.font_semi_bold]}>
             {selectedReportOption.title}
           </Text>
           <Text style={[a.leading_tight, {maxWidth: 400}]}>

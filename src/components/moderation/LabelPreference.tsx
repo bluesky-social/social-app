@@ -48,7 +48,7 @@ export function Content({
 
   return (
     <View style={[a.gap_xs, a.flex_1]}>
-      <Text emoji style={[a.font_bold, gtPhone ? a.text_sm : a.text_md]}>
+      <Text emoji style={[a.font_semi_bold, gtPhone ? a.text_sm : a.text_md]}>
         {name}
       </Text>
       <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
@@ -241,7 +241,12 @@ export function LabelerLabelPreference({
           <View style={[a.flex_row, a.gap_xs, a.align_center, a.mt_xs]}>
             <CircleInfo size="sm" fill={t.atoms.text_contrast_high.color} />
 
-            <Text style={[t.atoms.text_contrast_medium, a.font_bold, a.italic]}>
+            <Text
+              style={[
+                t.atoms.text_contrast_medium,
+                a.font_semi_bold,
+                a.italic,
+              ]}>
               {adultDisabled ? (
                 <Trans>Adult content is disabled.</Trans>
               ) : isGlobalLabel ? (
@@ -274,7 +279,7 @@ export function LabelerLabelPreference({
                 t.atoms.border_contrast_low,
                 a.self_start,
               ]}>
-              <Text emoji style={[a.font_bold, t.atoms.text_contrast_low]}>
+              <Text emoji style={[a.font_semi_bold, t.atoms.text_contrast_low]}>
                 {currentPrefLabel}
               </Text>
             </View>

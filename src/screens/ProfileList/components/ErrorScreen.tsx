@@ -22,7 +22,7 @@ export function ErrorScreen({error}: {error: React.ReactNode}) {
 
   return (
     <View style={[a.px_xl, a.py_md, a.gap_md]}>
-      <Text style={[a.text_4xl, a.font_heavy]}>
+      <Text style={[a.text_4xl, a.font_bold]}>
         <Trans>Could not load list</Trans>
       </Text>
       <Text style={[a.text_md, t.atoms.text_contrast_high, a.leading_snug]}>

@@ -90,7 +90,7 @@ export function DesktopFeeds() {
               a.text_md,
               a.leading_snug,
               current
-                ? [a.font_bold, t.atoms.text]
+                ? [a.font_semi_bold, t.atoms.text]
                 : [t.atoms.text_contrast_medium],
               web({
                 marginHorizontal: 2,

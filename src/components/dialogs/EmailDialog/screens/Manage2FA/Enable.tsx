@@ -88,7 +88,7 @@ export function Enable() {
   return (
     <View style={[a.gap_lg]}>
       <View style={[a.gap_sm]}>
-        <Text style={[a.text_xl, a.font_heavy, a.leading_snug]}>
+        <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
           <Trans>Enable email 2FA</Trans>
         </Text>
 

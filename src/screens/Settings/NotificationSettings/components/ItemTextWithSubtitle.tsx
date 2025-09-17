@@ -19,7 +19,7 @@ export function ItemTextWithSubtitle({
   const t = useTheme()
   return (
     <View style={[a.flex_1, bold ? a.gap_xs : a.gap_2xs]}>
-      <SettingsList.ItemText style={bold && [a.font_bold, a.text_lg]}>
+      <SettingsList.ItemText style={bold && [a.font_semi_bold, a.text_lg]}>
         {titleText}
       </SettingsList.ItemText>
       {showSkeleton ? (
