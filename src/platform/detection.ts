@@ -10,3 +10,7 @@ export const isMobileWeb =
   // @ts-ignore we know window exists -prf
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
 export const isIPhoneWeb = isWeb && /iPhone/.test(navigator.userAgent)
+
+const iOSMajorVersion =
+  Platform.OS === 'ios' ? parseInt(Platform.Version.split('.')[0], 10) : 0
+export const isIOS26 = iOSMajorVersion >= 26
