@@ -3,6 +3,8 @@
 {% block head_title %}
 {%- if postView -%}
   @{{ postView.Author.Handle }} on Bluesky
+{%- elif requiresAuth and profileHandle -%}
+  @{{ profileHandle }} on Bluesky
 {%- else -%}
   Bluesky
 {%- endif -%}
@@ -11,7 +13,7 @@
 {% block html_head_extra -%}
 {%- if postView -%}
   <meta property="og:type" content="article">
-  <meta property="profile:username" content="{{ profileView.Handle }}">
+  <meta property="profile:username" content="{{ postView.Author.Handle }}">
   {%- if requestURI %}
   <meta property="og:url" content="{{ requestURI }}">
   <link rel="canonical" href="{{ requestURI|canonicalize_url }}" />
@@ -32,17 +34,44 @@
   <meta property="twitter:image" content="{{ imgThumbUrl }}">
   {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
-  {%- elif postView.Author.Avatar %}
-  <meta name="twitter:card" content="summary">
+  {% else %}
   <meta property="og:image" content="{{ postView.Author.Avatar }}">
   <meta property="twitter:image" content="{{ postView.Author.Avatar }}">
+  <meta name="twitter:card" content="summary">
   {% endif %}
   <meta name="twitter:label1" content="Posted At">
   <meta name="twitter:value1" content="{{ postView.IndexedAt }}">
-  <meta name="article:published_time" content="{{ postView.IndexedAt }}">
-  <meta name="article:published_time" content="{{ postView.IndexedAt }}">
+  {%- if postView.LikeCount %}
+  <meta name="twitter:label2" content="Likes">
+  <meta name="twitter:value2" content="{{ postView.LikeCount }}">
+  {% endif -%}
+  {%- if postView.ReplyCount %}
+  <meta name="twitter:label3" content="Replies">
+  <meta name="twitter:value3" content="{{ postView.ReplyCount }}">
+  {% endif -%}
+  {%- if postView.RepostCount %}
+  <meta name="twitter:label4" content="Reposts">
+  <meta name="twitter:value4" content="{{ postView.RepostCount }}">
+  {% endif -%}
+  <meta property="article:published_time" content="{{ postView.IndexedAt }}">
   <link rel="alternate" type="application/json+oembed" href="https://embed.bsky.app/oembed?format=json&url={{ postView.Uri | urlencode }}" />
   <link rel="alternate" href="{{ postView.Uri }}" />
+{%- elif requiresAuth and profileHandle -%}
+  <meta property="og:type" content="article">
+  <meta property="profile:username" content="{{ profileHandle }}">
+  {%- if requestURI %}
+  <meta property="og:url" content="{{ requestURI }}">
+  <link rel="canonical" href="{{ requestURI|canonicalize_url }}" />
+  {% endif -%}
+  {%- if profileDisplayName %}
+  <meta property="og:title" content="{{ profileDisplayName }} (@{{ profileHandle }})">
+  {% else %}
+  <meta property="og:title" content="@{{ profileHandle }}">
+  {% endif -%}
+  <meta name="description" content="This post requires authentication to view.">
+  <meta property="og:description" content="This post requires authentication to view.">
+  <meta property="twitter:description" content="This post requires authentication to view.">
+  <meta name="twitter:card" content="summary">
 {% endif -%}
 {%- endblock %}
 
@@ -55,6 +84,12 @@
   <p id="bsky_did">{{ postView.Author.Did }}</p>
   <p id="bsky_post_text">{{ postText }}</p>
   <p id="bsky_post_indexedat">{{ postView.IndexedAt }}</p>
+</div>
+{%- elif requiresAuth and profileHandle -%}
+<div id="bsky_post_summary">
+  <h3>Post</h3>
+  <p id="bsky_handle">{{ profileHandle }}</p>
+  <p id="bsky_post_text">This post requires authentication to view.</p>
 </div>
 {% endif -%}
 {%- endblock %}

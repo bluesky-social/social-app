@@ -488,20 +488,26 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
+	req := c.Request()
 	if !unauthedViewingOkay {
+		// Provide minimal OpenGraph data for auth-required posts
+		data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+		data["requiresAuth"] = true
+		data["profileHandle"] = pv.Handle
+		if pv.DisplayName != nil {
+			data["profileDisplayName"] = *pv.DisplayName
+		}
 		return c.Render(http.StatusOK, "post.html", data)
 	}
-	did := pv.Did
-	data["did"] = did
 
 	// then fetch the post thread (with extra context)
-	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", pv.Did, rkey)
 	tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, 0, uri)
 	if err != nil {
 		log.Warnf("failed to fetch post: %s\t%v", uri, err)
 		return c.Render(http.StatusOK, "post.html", data)
 	}
-	req := c.Request()
+
 	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
 	data["postView"] = postView
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
