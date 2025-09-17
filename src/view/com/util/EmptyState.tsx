@@ -4,7 +4,7 @@ import {View} from 'react-native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, type ButtonProps, ButtonText} from '#/components/Button'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
@@ -34,9 +34,10 @@ export function EmptyState({
   const {isTabletOrDesktop} = useWebMediaQueries()
   const iconSize = isTabletOrDesktop ? 64 : 48
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
 
   const placeholderIcon = (
-    <EditIcon size="2xl" fill={t.atoms.text_contrast_low.color} />
+    <EditIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
   )
 
   const renderIcon = () => {
@@ -73,7 +74,7 @@ export function EmptyState({
       </View>
       <Text
         style={[
-          {color: pal.colors.textLight, maxWidth: '40%'},
+          {color: pal.colors.textLight, maxWidth: gtMobile ? '40%' : '60%'},
           a.font_medium,
           a.text_md,
           a.leading_snug,

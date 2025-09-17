@@ -18,7 +18,7 @@ import {
 } from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {atoms as a, ios, useTheme} from '#/alf'
+import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
 import {type SectionRef} from './types'
@@ -58,7 +58,7 @@ export function ProfileFeedSection({
     screenHeightOffset: headerHeight,
   })
   const t = useTheme()
-
+  const {gtPhone} = useBreakpoints()
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
       animated: isNative,
@@ -74,17 +74,27 @@ export function ProfileFeedSection({
 
   const renderPostsEmpty = useCallback(() => {
     return (
-      <EmptyState
-        icon={
-          emptyStateIcon || (
-            <EditIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
-          )
-        }
-        message={emptyStateMessage || _(msg`No posts yet.`)}
-        button={emptyStateButton}
-      />
+      <View style={[a.flex_1, a.justify_center, a.align_center]}>
+        <EmptyState
+          style={{width: '100%', marginTop: gtPhone ? 0 : 200}}
+          icon={
+            emptyStateIcon || (
+              <EditIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
+            )
+          }
+          message={emptyStateMessage || _(msg`No posts yet.`)}
+          button={emptyStateButton}
+        />
+      </View>
     )
-  }, [_, t, emptyStateMessage, emptyStateButton, emptyStateIcon])
+  }, [
+    _,
+    emptyStateButton,
+    emptyStateIcon,
+    emptyStateMessage,
+    gtPhone,
+    t.atoms.text_contrast_low.color,
+  ])
 
   useEffect(() => {
     if (isIOS && isFocused && scrollElRef.current) {
