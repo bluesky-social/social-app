@@ -1,9 +1,10 @@
 import {type JSX, useCallback, useRef} from 'react'
 import {Linking} from 'react-native'
 import * as Notifications from 'expo-notifications'
+import {type BottomTabBarProps} from '@bottom-tabs/react-navigation'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
-import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
+import {useLingui} from '@lingui/react'
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -38,7 +39,7 @@ import {type RouteParams, type State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {isAndroid, isIOS26, isNative, isWeb} from '#/platform/detection'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {
@@ -123,7 +124,7 @@ import {
 import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
-import {type Theme, useTheme} from '#/alf'
+import {ios26, type Theme, useTheme} from '#/alf'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
@@ -614,6 +615,8 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
+  const {_} = useLingui()
+  const t = useTheme()
   const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
@@ -625,22 +628,67 @@ function TabsNavigator() {
     <Tab.Navigator
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
-      screenOptions={{headerShown: false, lazy: true}}
-      tabBar={tabBar}
+      minimizeBehavior="automatic"
+      screenOptions={{
+        lazy: true,
+        tabBarActiveTintColor: ios26(t.palette.primary_500),
+      }}
+      tabBar={isIOS26 ? undefined : tabBar}
       disablePageAnimations={isAndroid}>
-      <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
-      <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
+      <Tab.Screen
+        name="HomeTab"
+        getComponent={() => HomeTabNavigator}
+        options={{
+          title: '',
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/homeOpen_filled_corner0_rounded.svg')
+              : require('../assets/icons/homeOpen_stroke2_corner0_rounded.svg'),
+        }}
+      />
+      <Tab.Screen
+        name="SearchTab"
+        getComponent={() => SearchTabNavigator}
+        options={{
+          title: '',
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/magnifyingGlass_filled_corner0_rounded.svg')
+              : require('../assets/icons/magnifyingGlass2_stroke2_corner0_rounded.svg'),
+        }}
+      />
       <Tab.Screen
         name="MessagesTab"
         getComponent={() => MessagesTabNavigator}
+        options={{
+          title: '',
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/message_stroke2_corner0_rounded_filled.svg')
+              : require('../assets/icons/message_stroke2_corner0_rounded.svg'),
+        }}
       />
       <Tab.Screen
         name="NotificationsTab"
         getComponent={() => NotificationsTabNavigator}
+        options={{
+          title: '',
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/bell_filled_corner0_rounded.svg')
+              : require('../assets/icons/bell_stroke2_corner0_rounded.svg'),
+        }}
       />
       <Tab.Screen
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
+        options={{
+          title: '',
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/userCircle_filled_corner0_rounded.svg')
+              : require('../assets/icons/userCircle_stroke2_corner0_rounded.svg'),
+        }}
       />
     </Tab.Navigator>
   )
