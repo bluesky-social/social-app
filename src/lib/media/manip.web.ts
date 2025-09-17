@@ -157,7 +157,7 @@ function createResizedImage(
 
 export async function saveBytesToDisk(
   filename: string,
-  bytes: Uint8Array,
+  bytes: Uint8Array<ArrayBuffer>,
   type: string,
 ) {
   const blob = new Blob([bytes], {type})

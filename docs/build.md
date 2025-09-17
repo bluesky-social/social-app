@@ -63,7 +63,7 @@ After you do `yarn ios` and `yarn android` once, you can later just run `yarn we
 ### Tips
 
 - Copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
-- To run on the device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release`.
+- To run on the device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release` on Android or `--configuration Release` on iOS.
 - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` and `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
 - `npx react-native info` Checks what has been installed.
 - If the Android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
@@ -164,7 +164,6 @@ See [testing.md](./testing.md).
 - TextEncoder / TextDecoder
 - react-native-url-polyfill
 - Array#findLast (on web)
-- atob (on native)
 
 ### Sentry sourcemaps
 

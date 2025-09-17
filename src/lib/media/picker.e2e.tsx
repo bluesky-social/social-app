@@ -2,7 +2,7 @@ import {
   documentDirectory,
   getInfoAsync,
   readDirectoryAsync,
-} from 'expo-file-system'
+} from 'expo-file-system/legacy'
 import ExpoImageCropTool, {type OpenCropperOptions} from 'expo-image-crop-tool'
 
 import {compressIfNeeded} from './manip'

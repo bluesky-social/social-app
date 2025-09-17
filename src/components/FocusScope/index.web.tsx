@@ -1,4 +1,3 @@
-import {type ReactNode} from 'react'
 import {FocusScope as RadixFocusScope} from 'radix-ui/internal'
 
 /*
@@ -6,7 +5,7 @@ import {FocusScope as RadixFocusScope} from 'radix-ui/internal'
  * use this in Dialogs and such already. It's here as a convenient counterpart
  * to the hacky native solution.
  */
-export function FocusScope({children}: {children: ReactNode}) {
+export function FocusScope({children}: {children: React.ReactNode}) {
   return (
     <RadixFocusScope.FocusScope loop asChild trapped>
       {children}

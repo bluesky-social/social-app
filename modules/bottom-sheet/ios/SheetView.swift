@@ -1,4 +1,5 @@
 import ExpoModulesCore
+import React
 import UIKit
 
 class SheetView: ExpoView, UISheetPresentationControllerDelegate {

@@ -33,7 +33,7 @@ jest.mock('react-native-safe-area-context', () => {
   }
 })
 
-jest.mock('expo-file-system', () => ({
+jest.mock('expo-file-system/legacy', () => ({
   getInfoAsync: jest.fn().mockResolvedValue({exists: true, size: 100}),
   deleteAsync: jest.fn(),
   createDownloadResumable: jest.fn(),

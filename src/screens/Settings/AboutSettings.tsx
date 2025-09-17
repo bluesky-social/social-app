@@ -1,7 +1,7 @@
 import {useMemo} from 'react'
 import {Platform} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
-import * as FileSystem from 'expo-file-system'
+import * as FileSystem from 'expo-file-system/legacy'
 import {Image} from 'expo-image'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'

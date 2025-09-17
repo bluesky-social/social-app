@@ -10,7 +10,7 @@ import {
   makeDirectoryAsync,
   StorageAccessFramework,
   writeAsStringAsync,
-} from 'expo-file-system'
+} from 'expo-file-system/legacy'
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
