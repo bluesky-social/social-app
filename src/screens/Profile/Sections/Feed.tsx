@@ -35,25 +35,7 @@ interface FeedSectionProps {
   emptyStateButton?: EmptyStateButtonProps
   emptyStateIcon?: React.ReactElement
 }
-<<<<<<< HEAD
 export function ProfileFeedSection({
-=======
-export const ProfileFeedSection = React.forwardRef<
-  SectionRef,
-  FeedSectionProps
->(function FeedSectionImpl(
-  {
-    feed,
-    headerHeight,
-    isFocused,
-    scrollElRef,
-    ignoreFilterFor,
-    setScrollViewTag,
-    emptyStateMessage,
-    emptyStateButton,
-    emptyStateIcon,
-  },
->>>>>>> e0bade160 (update type error fixes)
   ref,
   feed,
   headerHeight,
@@ -61,6 +43,9 @@ export const ProfileFeedSection = React.forwardRef<
   scrollElRef,
   ignoreFilterFor,
   setScrollViewTag,
+  emptyStateMessage,
+  emptyStateButton,
+  emptyStateIcon,
 }: FeedSectionProps) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -86,7 +71,7 @@ export const ProfileFeedSection = React.forwardRef<
     scrollToTop: onScrollToTop,
   }))
 
-  const renderPostsEmpty = React.useCallback(() => {
+  const renderPostsEmpty = useCallback(() => {
     return (
       <EmptyState
         icon={

@@ -18,18 +18,19 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {HashtagWideIcon} from '#/lib/icons'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
-import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
-import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
-import * as ListCard from '#/components/ListCard'
+import * as FeedCard from '#/components/FeedCard'
 import {ListFooter} from '#/components/Lists'
 
 const LOADING = {_reactKey: '__loading__'}
@@ -41,7 +42,7 @@ interface SectionRef {
   scrollToTop: () => void
 }
 
-interface ProfileListsProps {
+interface ProfileFeedgensProps {
   ref?: React.Ref<SectionRef>
   did: string
   scrollElRef: ListRef
@@ -52,27 +53,34 @@ interface ProfileListsProps {
   setScrollViewTag: (tag: number | null) => void
 }
 
-export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
-  function ProfileListsImpl(
-    {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
-    ref,
-  ) {
-    const t = useTheme()
-    const {_} = useLingui()
-    const [isPTRing, setIsPTRing] = React.useState(false)
-    const opts = React.useMemo(() => ({enabled}), [enabled])
-    const {
-      data,
-      isPending,
-      hasNextPage,
-      fetchNextPage,
-      isFetchingNextPage,
-      isError,
-      error,
-      refetch,
-    } = useProfileListsQuery(did, opts)
-    const isEmpty = !isPending && !data?.pages[0]?.lists.length
-    const navigation = useNavigation()
+export function ProfileFeedgens({
+  ref,
+  did,
+  scrollElRef,
+  headerOffset,
+  enabled,
+  style,
+  testID,
+  setScrollViewTag,
+}: ProfileFeedgensProps) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const [isPTRing, setIsPTRing] = useState(false)
+  const {height} = useWindowDimensions()
+  const opts = useMemo(() => ({enabled}), [enabled])
+  const {
+    data,
+    isPending,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    isError,
+    error,
+    refetch,
+  } = useProfileFeedgensQuery(did, opts)
+  const isEmpty = !isPending && !data?.pages[0]?.feeds.length
+  const {data: preferences} = usePreferencesQuery()
+  const navigation = useNavigation()
 
   const items = useMemo(() => {
     let items: any[] = []
@@ -85,10 +93,9 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       items = items.concat([EMPTY])
     } else if (data?.pages) {
       for (const page of data?.pages) {
-        items = items.concat(page.lists)
+        items = items.concat(page.feeds)
       }
-    }
-    if (isError && !isEmpty) {
+    } else if (isError && !isEmpty) {
       items = items.concat([LOAD_MORE_ERROR_ITEM])
     }
     return items
@@ -116,17 +123,18 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh lists', {message: err})
+      logger.error('Failed to refresh feeds', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
+
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more lists', {message: err})
+      logger.error('Failed to load more feeds', {message: err})
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
@@ -137,87 +145,60 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
   // rendering
   // =
 
-    const renderItemInner = React.useCallback(
-      ({item, index}: ListRenderItemInfo<any>) => {
-        if (item === EMPTY) {
-          return (
-            <EmptyState
-              icon={
-                <ListIcon
-                  size="3xl"
-                  fill={t.atoms.text_contrast_low.color}
-                  viewBox="0 0 47 38"
-                />
-              }
-              message={_(
-                msg`Lists allow you to see content from your favorite people.`,
-              )}
-              button={{
-                label: 'Create a list',
-                text: 'Create a list',
-                onPress: () => navigation.navigate('Lists' as never),
-                size: 'small',
-                color: 'primary',
-              }}
-              testID="listsEmpty"
-            />
-          )
-        } else if (item === ERROR_ITEM) {
-          return (
-            <ErrorMessage
-              message={cleanError(error)}
-              onPressTryAgain={refetch}
-            />
-          )
-        } else if (item === LOAD_MORE_ERROR_ITEM) {
-          return (
-            <LoadMoreRetryBtn
-              label={_(
-                msg`There was an issue fetching your lists. Tap here to try again.`,
-              )}
-              onPress={onPressRetryLoadMore}
-            />
-          )
-        } else if (item === LOADING) {
-          return <FeedLoadingPlaceholder />
-        }
+  const renderItem = useCallback(
+    ({item, index}: ListRenderItemInfo<any>) => {
+      if (item === EMPTY) {
         return (
           <EmptyState
-            icon="list-ul"
-            message={_(msg`You have no lists.`)}
-            testID="listsEmpty"
+            icon={
+              <HashtagWideIcon
+                size={64}
+                style={{color: t.atoms.text_contrast_low.color}}
+              />
+            }
+            message={_(msg`You haven't made any custom feeds yet.`)}
+            textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
+            button={{
+              label: _(msg`Browse custom feeds`),
+              text: _(msg`Browse custom feeds`),
+              onPress: () => navigation.navigate('Feeds' as never),
+              size: 'small',
+              color: 'secondary',
+            }}
           />
         )
-      },
-      [
-        t.atoms.border_contrast_low,
-        t.atoms.text_contrast_low.color,
-        _,
-        navigation,
-        error,
-        refetch,
-        onPressRetryLoadMore,
-      ],
-    )
-
-    React.useEffect(() => {
-      if (isIOS && enabled && scrollElRef.current) {
-        const nativeTag = findNodeHandle(scrollElRef.current)
-        setScrollViewTag(nativeTag)
+      } else if (item === ERROR_ITEM) {
+        return (
+          <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
+        )
+      } else if (item === LOAD_MORE_ERROR_ITEM) {
+        return (
+          <LoadMoreRetryBtn
+            label={_(
+              msg`There was an issue fetching your lists. Tap here to try again.`,
+            )}
+            onPress={onPressRetryLoadMore}
+          />
+        )
+      } else if (item === LOADING) {
+        return <FeedLoadingPlaceholder />
       }
-      return (
-        <View
-          style={[
-            (index !== 0 || isWeb) && a.border_t,
-            t.atoms.border_contrast_low,
-            a.px_lg,
-            a.py_lg,
-          ]}>
-          <ListCard.Default view={item} />
-        </View>
-      )
+      if (preferences) {
+        return (
+          <View
+            style={[
+              (index !== 0 || isWeb) && a.border_t,
+              t.atoms.border_contrast_low,
+              a.px_lg,
+              a.py_lg,
+            ]}>
+            <FeedCard.Default view={item} />
+          </View>
+        )
+      }
+      return null
     },
-    [error, refetch, onPressRetryLoadMore, _, t.atoms.border_contrast_low],
+    [_, t, error, refetch, onPressRetryLoadMore, preferences, navigation],
   )
 
   useEffect(() => {
@@ -227,7 +208,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     }
   }, [enabled, scrollElRef, setScrollViewTag])
 
-  const ProfileListsFooter = useCallback(() => {
+  const ProfileFeedgensFooter = useCallback(() => {
     if (isEmpty) return null
     return (
       <ListFooter
@@ -254,8 +235,8 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
         ref={scrollElRef}
         data={items}
         keyExtractor={keyExtractor}
-        renderItem={renderItemInner}
-        ListFooterComponent={ProfileListsFooter}
+        renderItem={renderItem}
+        ListFooterComponent={ProfileFeedgensFooter}
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
