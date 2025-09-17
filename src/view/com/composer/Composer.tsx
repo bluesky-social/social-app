@@ -1656,7 +1656,7 @@ const styles = StyleSheet.create({
   topbarInner: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: isIOS26 ? 16 : 8,
     height: 54,
     gap: 4,
   },
