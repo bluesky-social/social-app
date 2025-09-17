@@ -4,7 +4,6 @@ import * as Notifications from 'expo-notifications'
 import {type BottomTabBarProps} from '@bottom-tabs/react-navigation'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -615,7 +614,6 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
-  const {_} = useLingui()
   const t = useTheme()
   const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
