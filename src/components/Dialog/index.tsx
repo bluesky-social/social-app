@@ -38,7 +38,7 @@ import {
   type DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
-import {IS_ANDROID, IS_IOS} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
 import {
   type BottomSheetSnapPointChangeEvent,
@@ -166,7 +166,8 @@ export function Outer({
   return (
     <BottomSheet
       ref={ref}
-      cornerRadius={20}
+      // device-bezel radius when undefined
+      cornerRadius={IS_LIQUID_GLASS ? undefined : 20}
       backgroundColor={t.atoms.bg.backgroundColor}
       {...nativeOptions}
       onSnapPointChange={onSnapPointChange}
