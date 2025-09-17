@@ -5,6 +5,9 @@ import {BUNDLE_IDENTIFIER, IS_TESTFLIGHT, RELEASE_VERSION} from '#/env/common'
 
 export * from '#/env/common'
 
+const iOSMajorVersion =
+  Platform.OS === 'ios' ? parseInt(Platform.Version.split('.')[0], 10) : 0
+
 /**
  * The semver version of the app, specified in our `package.json`.file. On
  * iOs/Android, the native build version is appended to the semver version, so
@@ -41,3 +44,4 @@ export const IS_WEB_FIREFOX: boolean = false
  * Misc
  */
 export const IS_HIGH_DPI: boolean = true
+export const IS_LIQUID_GLASS: boolean = iOSMajorVersion >= 26
