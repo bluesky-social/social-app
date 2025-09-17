@@ -21,6 +21,10 @@ import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {useActorStarterPacksQuery} from '#/state/queries/actor-starter-packs'
+import {
+  EmptyState,
+  type EmptyStateButtonProps,
+} from '#/view/com/util/EmptyState'
 import {List, type ListRef} from '#/view/com/util/List'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, ios, useTheme} from '#/alf'
@@ -47,11 +51,37 @@ interface ProfileFeedgensProps {
   testID?: string
   setScrollViewTag: (tag: number | null) => void
   isMe: boolean
+  emptyStateMessage?: string
+  emptyStateButton?: EmptyStateButtonProps
+  emptyStateIcon?: React.ReactElement
 }
 
 function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
   return item.uri
 }
+
+// function EmptyStateComponent({
+//   message,
+//   button,
+//   icon,
+// }: {
+//   message?: string
+//   button?: EmptyStateButtonProps
+//   icon?: React.ReactElement
+// }) {
+//   return (
+//     <View style={[a.px_lg, a.py_5xl, a.align_center, a.justify_center]}>
+//       <EmptyState
+//         icon={icon ?? 'growth'}
+//         message={
+//           message ??
+//           'Starter packs let you share your favorite feeds and people with your friends.'
+//         }
+//         button={button}
+//       />
+//     </View>
+//   )
+// }
 
 export function ProfileStarterPacks({
   ref,
@@ -63,6 +93,9 @@ export function ProfileStarterPacks({
   testID,
   setScrollViewTag,
   isMe,
+  emptyStateMessage,
+  emptyStateButton,
+  emptyStateIcon,
 }: ProfileFeedgensProps) {
   const t = useTheme()
   const bottomBarOffset = useBottomBarOffset(100)
@@ -79,6 +112,27 @@ export function ProfileStarterPacks({
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
+  const {_} = useLingui()
+
+  const EmptyComponent = useCallback(() => {
+    if (emptyStateMessage || emptyStateButton || emptyStateIcon) {
+      return (
+        <View style={[a.px_lg, a.align_center, a.justify_center]}>
+          <EmptyState
+            icon={emptyStateIcon ?? 'growth'}
+            message={
+              emptyStateMessage ??
+              _(
+                'Starter packs let you share your favorite feeds and people with your friends.',
+              )
+            }
+            button={emptyStateButton}
+          />
+        </View>
+      )
+    }
+    return <Empty />
+  }, [_, emptyStateMessage, emptyStateButton, emptyStateIcon])
 
   useImperativeHandle(ref, () => ({
     scrollToTop: () => {},
@@ -146,7 +200,7 @@ export function ProfileStarterPacks({
         onEndReached={onEndReached}
         onRefresh={onRefresh}
         ListEmptyComponent={
-          data ? (isMe ? Empty : undefined) : FeedLoadingPlaceholder
+          data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
         }
         ListFooterComponent={
           !!data && items?.length !== 0 && isMe ? CreateAnother : undefined
