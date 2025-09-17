@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {languageName} from '#/locale/helpers'
 import {type Language, LANGUAGES, LANGUAGES_MAP_CODE2} from '#/locale/languages'
-import {isNative, isWeb} from '#/platform/detection'
+import {isIOS26, isNative, isWeb} from '#/platform/detection'
 import {
   toPostLanguages,
   useLanguagePrefs,
