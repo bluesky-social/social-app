@@ -488,9 +488,9 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
+	req := c.Request()
 	if !unauthedViewingOkay {
 		// Provide minimal OpenGraph data for auth-required posts
-		req := c.Request()
 		data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 		data["requiresAuth"] = true
 		data["profileHandle"] = pv.Handle
@@ -509,7 +509,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 		log.Warnf("failed to fetch post: %s\t%v", uri, err)
 		return c.Render(http.StatusOK, "post.html", data)
 	}
-	req := c.Request()
+
 	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
 	data["postView"] = postView
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
