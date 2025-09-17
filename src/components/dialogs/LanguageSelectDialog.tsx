@@ -17,7 +17,7 @@ import {SearchInput} from '#/components/forms/SearchInput'
 import * as Toggle from '#/components/forms/Toggle'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 export function LanguageSelectDialog({
   titleText,
@@ -52,7 +52,9 @@ export function LanguageSelectDialog({
   return (
     <Dialog.Outer
       control={control}
-      nativeOptions={{minHeight: isIOS26 ? height : height - insets.top}}>
+      nativeOptions={{
+        minHeight: IS_LIQUID_GLASS ? height : height - insets.top,
+      }}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
         <DialogInner
