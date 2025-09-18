@@ -43,11 +43,14 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
+  type AppBskyActorDefs,
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
   AppBskyUnspeccedDefs,
+  AtpAgent,
   AtUri,
   type BskyAgent,
+  CredentialSession,
   type RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -56,6 +59,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useActorStatus} from '#/lib/actor-status'
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {retry} from '#/lib/async/retry'
@@ -75,6 +79,7 @@ import {mimeToExt} from '#/lib/media/video/util'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
@@ -93,9 +98,9 @@ import {
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useProfileQuery} from '#/state/queries/profile'
+import {useProfilesQuery} from '#/state/queries/profile'
 import {type Gif} from '#/state/queries/tenor'
-import {useAgent, useSession} from '#/state/session'
+import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
@@ -126,6 +131,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import * as Menu from '#/components/Menu'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
@@ -176,10 +182,33 @@ export const ComposePost = ({
 }: Props & {
   cancelRef?: React.RefObject<CancelRef | null>
 }) => {
-  const {currentAccount} = useSession()
-  const agent = useAgent()
+  const {currentAccount, accounts} = useSession()
+  const defaultAgent = useAgent()
+  const [selectedAccount, setSelectedAccount] = useState(currentAccount!)
+
+  const agent = useMemo(() => {
+    if (selectedAccount.did === currentAccount!.did) {
+      return defaultAgent
+    }
+    const session = new CredentialSession(new URL(selectedAccount.service))
+    if (
+      selectedAccount.refreshJwt &&
+      selectedAccount.accessJwt &&
+      selectedAccount.active
+    ) {
+      session.resumeSession({
+        ...selectedAccount,
+        accessJwt: selectedAccount.accessJwt,
+        refreshJwt: selectedAccount.refreshJwt,
+        active: selectedAccount.active,
+      })
+    }
+    const newAgent = new AtpAgent(session)
+    return newAgent
+  }, [selectedAccount, currentAccount, defaultAgent])
+
   const queryClient = useQueryClient()
-  const currentDid = currentAccount!.did
+  const currentDid = selectedAccount.did
   const {closeComposer} = useComposerControls()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -191,6 +220,9 @@ export const ComposePost = ({
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
+  const {data: profiles} = useProfilesQuery({
+    handles: accounts.map(acc => acc.did),
+  })
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
@@ -744,6 +776,9 @@ export const ComposePost = ({
                   onClearVideo={clearVideo}
                   onPublish={onComposerPostPublish}
                   onError={setError}
+                  selectedAccount={selectedAccount}
+                  onSelectAccount={setSelectedAccount}
+                  profiles={profiles?.profiles}
                 />
                 {isWebFooterSticky && post.id === activePost.id && (
                   <View style={styles.stickyFooterWeb}>{footer}</View>
@@ -782,6 +817,9 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo,
   onError,
   onPublish,
+  selectedAccount,
+  onSelectAccount,
+  profiles,
 }: {
   post: PostDraft
   dispatch: (action: ComposerAction) => void
@@ -797,11 +835,19 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
+  selectedAccount: SessionAccount
+  onSelectAccount: (account: SessionAccount) => void
+  profiles: AppBskyActorDefs.ProfileViewDetailed[] | undefined
 }) {
-  const {currentAccount} = useSession()
-  const currentDid = currentAccount!.did
+  const {accounts} = useSession()
   const {_} = useLingui()
-  const {data: currentProfile} = useProfileQuery({did: currentDid})
+  const currentProfile = profiles?.find(p => p.did === selectedAccount.did)
+  const otherAccounts = accounts
+    .filter(acc => acc.did !== selectedAccount.did)
+    .map(account => ({
+      account,
+      profile: profiles?.find(p => p.did === account.did),
+    }))
   const richtext = post.richtext
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
   const forceMinHeight = isWeb && isTextOnly && isActive
@@ -878,13 +924,43 @@ let ComposerPost = React.memo(function ComposerPost({
         !isActive && styles.inactivePost,
         isTextOnly && isNative && a.flex_grow,
       ]}>
-      <View style={[a.flex_row, isNative && a.flex_1]}>
-        <UserAvatar
-          avatar={currentProfile?.avatar}
-          size={42}
-          type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-          style={[a.mt_xs]}
-        />
+      <View style={[a.flex_row, a.align_start, isNative && a.flex_1]}>
+        <Menu.Root>
+          <Menu.Trigger label={_(msg`Switch account`)}>
+            {({props}) => (
+              <Button
+                {...props}
+                label={_(msg`Switch account`)}
+                variant="ghost"
+                color="primary"
+                shape="round">
+                <UserAvatar
+                  avatar={currentProfile?.avatar}
+                  size={42}
+                  type={
+                    currentProfile?.associated?.labeler ? 'labeler' : 'user'
+                  }
+                  style={[a.mt_xs]}
+                />
+              </Button>
+            )}
+          </Menu.Trigger>
+          <Menu.Outer>
+            <Menu.Group>
+              <Menu.LabelText>
+                <Trans>Switch account</Trans>
+              </Menu.LabelText>
+              {otherAccounts.map(other => (
+                <SwitchMenuItem
+                  key={other.account.did}
+                  account={other.account}
+                  profile={other.profile}
+                  onSelect={onSelectAccount}
+                />
+              ))}
+            </Menu.Group>
+          </Menu.Outer>
+        </Menu.Root>
         <TextInput
           ref={textInput}
           style={[a.pt_xs]}
@@ -1081,6 +1157,45 @@ function ComposerTopBar({
       </View>
       {children}
     </Animated.View>
+  )
+}
+
+function SwitchMenuItem({
+  account,
+  profile,
+  onSelect,
+}: {
+  account: SessionAccount
+  profile: AppBskyActorDefs.ProfileViewDetailed | undefined
+  onSelect: (account: SessionAccount) => void
+}) {
+  const {_} = useLingui()
+  const {isActive: live} = useActorStatus(profile)
+
+  return (
+    <Menu.Item
+      style={[a.gap_sm, {minWidth: 150}]}
+      key={account.did}
+      label={_(
+        msg`Switch to ${sanitizeHandle(
+          profile?.handle ?? account.handle,
+          '@',
+        )}`,
+      )}
+      onPress={() => onSelect(account)}>
+      <View>
+        <UserAvatar
+          avatar={profile?.avatar}
+          size={20}
+          type={profile?.associated?.labeler ? 'labeler' : 'user'}
+          live={live}
+          hideLiveBadge
+        />
+      </View>
+      <Menu.ItemText>
+        {sanitizeHandle(profile?.handle ?? account.handle, '@')}
+      </Menu.ItemText>
+    </Menu.Item>
   )
 }
 
