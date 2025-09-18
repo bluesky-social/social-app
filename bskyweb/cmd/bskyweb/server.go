@@ -394,9 +394,7 @@ func (srv *Server) Shutdown() error {
 func (srv *Server) NewTemplateContext() pongo2.Context {
 	return pongo2.Context{
 		"staticCDNHost": srv.cfg.staticCDNHost,
-		"favicon":       fmt.Sprintf("%s/static/favicon.png", "https://bsky.app"),
-		// specify the default image for social cards
-		"defaultBannerImage": fmt.Sprintf("%s/static/social-card-default.png", srv.cfg.staticCDNHost),
+		"favicon":       fmt.Sprintf("%s/static/favicon.png", srv.cfg.staticCDNHost),
 	}
 }
 
