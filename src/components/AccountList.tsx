@@ -23,11 +23,15 @@ export function AccountList({
   onSelectOther,
   otherLabel,
   pendingDid,
+  currentAccountDid,
+  showAddAccount = true,
 }: {
   onSelectAccount: (account: SessionAccount) => void
-  onSelectOther: () => void
+  onSelectOther?: () => void
   otherLabel?: string
   pendingDid: string | null
+  currentAccountDid?: string
+  showAddAccount?: boolean
 }) {
   const {currentAccount, accounts} = useSession()
   const t = useTheme()
@@ -37,8 +41,10 @@ export function AccountList({
   })
 
   const onPressAddAccount = useCallback(() => {
-    onSelectOther()
+    onSelectOther?.()
   }, [onSelectOther])
+
+  const activeDid = currentAccountDid || currentAccount?.did
 
   return (
     <View
@@ -55,42 +61,44 @@ export function AccountList({
             profile={profiles?.profiles.find(p => p.did === account.did)}
             account={account}
             onSelect={onSelectAccount}
-            isCurrentAccount={account.did === currentAccount?.did}
+            isCurrentAccount={account.did === activeDid}
             isPendingAccount={account.did === pendingDid}
           />
           <View style={[{borderBottomWidth: 1}, t.atoms.border_contrast_low]} />
         </React.Fragment>
       ))}
-      <Button
-        testID="chooseAddAccountBtn"
-        style={[a.flex_1]}
-        onPress={pendingDid ? undefined : onPressAddAccount}
-        label={_(msg`Sign in to account that is not listed`)}>
-        {({hovered, pressed}) => (
-          <View
-            style={[
-              a.flex_1,
-              a.flex_row,
-              a.align_center,
-              {height: 48},
-              (hovered || pressed) && t.atoms.bg_contrast_25,
-            ]}>
-            <Text
+      {showAddAccount && (
+        <Button
+          testID="chooseAddAccountBtn"
+          style={[a.flex_1]}
+          onPress={pendingDid ? undefined : onPressAddAccount}
+          label={_(msg`Sign in to account that is not listed`)}>
+          {({hovered, pressed}) => (
+            <View
               style={[
-                a.font_bold,
                 a.flex_1,
                 a.flex_row,
-                a.py_sm,
-                a.leading_tight,
-                t.atoms.text_contrast_medium,
-                {paddingLeft: 56},
+                a.align_center,
+                {height: 48},
+                (hovered || pressed) && t.atoms.bg_contrast_25,
               ]}>
-              {otherLabel ?? <Trans>Other account</Trans>}
-            </Text>
-            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
-          </View>
-        )}
-      </Button>
+              <Text
+                style={[
+                  a.font_bold,
+                  a.flex_1,
+                  a.flex_row,
+                  a.py_sm,
+                  a.leading_tight,
+                  t.atoms.text_contrast_medium,
+                  {paddingLeft: 56},
+                ]}>
+                {otherLabel ?? <Trans>Other account</Trans>}
+              </Text>
+              <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+            </View>
+          )}
+        </Button>
+      )}
     </View>
   )
 }
