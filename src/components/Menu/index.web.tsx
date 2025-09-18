@@ -84,7 +84,7 @@ export function Root({
       {context.control.isOpen && (
         <Portal>
           <Pressable
-            style={[a.fixed, a.inset_0, a.z_50]}
+            style={[a.fixed, a.inset_0, a.z_50, web({cursor: 'default'})]}
             onPress={() => context.control.close()}
             accessibilityHint=""
             accessibilityLabel={_(

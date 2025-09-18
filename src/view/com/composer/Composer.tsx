@@ -43,11 +43,14 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
+  type AppBskyActorDefs,
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
   AppBskyUnspeccedDefs,
+  AtpAgent,
   AtUri,
   type BskyAgent,
+  CredentialSession,
   type RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -75,6 +78,7 @@ import {mimeToExt} from '#/lib/media/video/util'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
@@ -93,11 +97,12 @@ import {
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useProfileQuery} from '#/state/queries/profile'
+import {useProfilesQuery} from '#/state/queries/profile'
 import {type Gif} from '#/state/queries/tenor'
-import {useAgent, useSession} from '#/state/session'
+import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
 import {
@@ -111,21 +116,22 @@ import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
-// TODO: Prevent naming components that coincide with RN primitives
-// due to linting false positives
 import {TextInput} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
 import {Text} from '#/view/com/util/text/Text'
+import * as LegacyToast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import * as Menu from '#/components/Menu'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
@@ -153,6 +159,7 @@ import {
   processVideo,
   type VideoState,
 } from './state/video'
+import {SwitchAccountDialog} from './SwitchAccount'
 import {type TextInputRef} from './text-input/TextInput.types'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
@@ -176,11 +183,35 @@ export const ComposePost = ({
 }: Props & {
   cancelRef?: React.RefObject<CancelRef | null>
 }) => {
-  const {currentAccount} = useSession()
-  const agent = useAgent()
+  const {currentAccount, accounts} = useSession()
+  const defaultAgent = useAgent()
+  const [selectedAccount, setSelectedAccount] = useState(currentAccount!)
+
+  const agent = useMemo(() => {
+    if (selectedAccount.did === currentAccount!.did) {
+      return defaultAgent
+    }
+    const session = new CredentialSession(new URL(selectedAccount.service))
+    if (
+      selectedAccount.refreshJwt &&
+      selectedAccount.accessJwt &&
+      selectedAccount.active
+    ) {
+      session.resumeSession({
+        ...selectedAccount,
+        accessJwt: selectedAccount.accessJwt,
+        refreshJwt: selectedAccount.refreshJwt,
+        active: selectedAccount.active,
+      })
+    }
+    const newAgent = new AtpAgent(session)
+    return newAgent
+  }, [selectedAccount, currentAccount, defaultAgent])
+
   const queryClient = useQueryClient()
-  const currentDid = currentAccount!.did
+  const currentDid = selectedAccount.did
   const {closeComposer} = useComposerControls()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -191,6 +222,9 @@ export const ComposePost = ({
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
+  const {data: profiles} = useProfilesQuery({
+    handles: accounts.map(acc => acc.did),
+  })
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
@@ -207,6 +241,54 @@ export const ComposePost = ({
       initInteractionSettings: preferences?.postInteractionSettings,
     },
     createComposerState,
+  )
+
+  const onSelectAccount = React.useCallback(
+    async (account: SessionAccount) => {
+      if (account.did === selectedAccount.did) {
+        return
+      }
+
+      // create a temporary agent for the selected account
+      const session = new CredentialSession(new URL(account.service))
+      if (account.refreshJwt && account.accessJwt && account.active) {
+        session.resumeSession({
+          ...account,
+          accessJwt: account.accessJwt,
+          refreshJwt: account.refreshJwt,
+          active: account.active,
+        })
+      }
+      const tempAgent = new AtpAgent(session)
+
+      try {
+        // try a simple request to check if the session is valid
+        await tempAgent.getProfile({actor: account.did})
+        // if it succeeds, update the selected account
+        setSelectedAccount(account)
+      } catch (e: any) {
+        if (
+          String(e.message).toLowerCase().includes('token has expired') ||
+          String(e.message).toLowerCase().includes('authentication required')
+        ) {
+          closeComposer()
+          requestSwitchToAccount({requestedAccount: account.did})
+          LegacyToast.show(
+            _(msg`Please sign in as @${account.handle}`),
+            'circle-exclamation',
+          )
+        } else {
+          setError(cleanError(e.message))
+        }
+      }
+    },
+    [
+      selectedAccount.did,
+      closeComposer,
+      requestSwitchToAccount,
+      _,
+      setSelectedAccount,
+    ],
   )
 
   const thread = composerState.thread
@@ -744,6 +826,9 @@ export const ComposePost = ({
                   onClearVideo={clearVideo}
                   onPublish={onComposerPostPublish}
                   onError={setError}
+                  selectedAccount={selectedAccount}
+                  onSelectAccount={onSelectAccount}
+                  profiles={profiles?.profiles}
                 />
                 {isWebFooterSticky && post.id === activePost.id && (
                   <View style={styles.stickyFooterWeb}>{footer}</View>
@@ -782,6 +867,9 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo,
   onError,
   onPublish,
+  selectedAccount,
+  onSelectAccount,
+  profiles,
 }: {
   post: PostDraft
   dispatch: (action: ComposerAction) => void
@@ -797,11 +885,19 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
+  selectedAccount: SessionAccount
+  onSelectAccount: (account: SessionAccount) => void
+  profiles: AppBskyActorDefs.ProfileViewDetailed[] | undefined
 }) {
-  const {currentAccount} = useSession()
-  const currentDid = currentAccount!.did
+  const {accounts} = useSession()
   const {_} = useLingui()
-  const {data: currentProfile} = useProfileQuery({did: currentDid})
+  const currentProfile = profiles?.find(p => p.did === selectedAccount.did)
+  const otherAccounts = accounts
+    .filter(acc => acc.did !== selectedAccount.did)
+    .map(account => ({
+      account,
+      profile: profiles?.find(p => p.did === account.did),
+    }))
   const richtext = post.richtext
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
   const forceMinHeight = isWeb && isTextOnly && isActive
@@ -811,6 +907,7 @@ let ComposerPost = React.memo(function ComposerPost({
       : _(msg`Add another post`)
     : _(msg`What's up?`)
   const discardPromptControl = Prompt.usePromptControl()
+  const switchAccountControl = Dialog.useDialogControl()
 
   const dispatchPost = useCallback(
     (action: PostAction) => {
@@ -878,13 +975,82 @@ let ComposerPost = React.memo(function ComposerPost({
         !isActive && styles.inactivePost,
         isTextOnly && isNative && a.flex_grow,
       ]}>
-      <View style={[a.flex_row, isNative && a.flex_1]}>
-        <UserAvatar
-          avatar={currentProfile?.avatar}
-          size={42}
-          type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-          style={[a.mt_xs]}
-        />
+      <View style={[a.flex_row, a.align_start, isNative && a.flex_1]}>
+        {isWeb ? (
+          <Menu.Root>
+            <Menu.Trigger label={_(msg`Switch account`)}>
+              {({props}) => (
+                <Button
+                  {...props}
+                  disabled={otherAccounts.length === 0}
+                  label={_(msg`Switch account`)}
+                  variant="ghost"
+                  color="primary"
+                  shape="round">
+                  <UserAvatar
+                    avatar={currentProfile?.avatar}
+                    size={42}
+                    type={
+                      currentProfile?.associated?.labeler ? 'labeler' : 'user'
+                    }
+                  />
+                </Button>
+              )}
+            </Menu.Trigger>
+            <Menu.Outer>
+              <Menu.LabelText>
+                <Trans>Switch account</Trans>
+              </Menu.LabelText>
+              <Menu.Group>
+                {otherAccounts.map(({account, profile}) => (
+                  <Menu.Item
+                    style={[a.gap_sm, {minWidth: 150}]}
+                    key={account.did}
+                    label={_(
+                      msg`Switch to ${sanitizeHandle(
+                        profile?.handle ?? account.handle,
+                        '@',
+                      )}`,
+                    )}
+                    onPress={() => onSelectAccount(account)}>
+                    <View>
+                      <UserAvatar
+                        avatar={profile?.avatar}
+                        size={20}
+                        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                        hideLiveBadge
+                      />
+                    </View>
+                    <Menu.ItemText>
+                      {sanitizeHandle(profile?.handle ?? account.handle, '@')}
+                    </Menu.ItemText>
+                  </Menu.Item>
+                ))}
+              </Menu.Group>
+            </Menu.Outer>
+          </Menu.Root>
+        ) : (
+          <>
+            <Button
+              disabled={otherAccounts.length === 0}
+              label={_(msg`Switch account`)}
+              variant="ghost"
+              color="primary"
+              shape="round"
+              onPress={switchAccountControl.open}>
+              <UserAvatar
+                avatar={currentProfile?.avatar}
+                size={42}
+                type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+              />
+            </Button>
+            <SwitchAccountDialog
+              control={switchAccountControl}
+              onSelectAccount={onSelectAccount}
+              currentAccountDid={selectedAccount.did}
+            />
+          </>
+        )}
         <TextInput
           ref={textInput}
           style={[a.pt_xs]}
