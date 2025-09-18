@@ -59,7 +59,6 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useActorStatus} from '#/lib/actor-status'
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
 import {retry} from '#/lib/async/retry'
@@ -116,8 +115,6 @@ import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
-// TODO: Prevent naming components that coincide with RN primitives
-// due to linting false positives
 import {TextInput} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
@@ -127,6 +124,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
@@ -159,6 +157,7 @@ import {
   processVideo,
   type VideoState,
 } from './state/video'
+import {SwitchAccountDialog} from './SwitchAccount'
 import {type TextInputRef} from './text-input/TextInput.types'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
@@ -239,6 +238,27 @@ export const ComposePost = ({
       initInteractionSettings: preferences?.postInteractionSettings,
     },
     createComposerState,
+  )
+
+  const onSelectAccount = React.useCallback(
+    async (account: SessionAccount) => {
+      if (account.did === selectedAccount.did) {
+        return
+      }
+
+      // create a temporary agent for the selected account
+      const session = new CredentialSession(new URL(account.service))
+      if (account.refreshJwt && account.accessJwt && account.active) {
+        session.resumeSession({
+          ...account,
+          accessJwt: account.accessJwt,
+          refreshJwt: account.refreshJwt,
+          active: account.active,
+        })
+      }
+      setSelectedAccount(account)
+    },
+    [selectedAccount.did, setSelectedAccount],
   )
 
   const thread = composerState.thread
@@ -777,7 +797,7 @@ export const ComposePost = ({
                   onPublish={onComposerPostPublish}
                   onError={setError}
                   selectedAccount={selectedAccount}
-                  onSelectAccount={setSelectedAccount}
+                  onSelectAccount={onSelectAccount}
                   profiles={profiles?.profiles}
                 />
                 {isWebFooterSticky && post.id === activePost.id && (
@@ -857,6 +877,7 @@ let ComposerPost = React.memo(function ComposerPost({
       : _(msg`Add another post`)
     : _(msg`What's up?`)
   const discardPromptControl = Prompt.usePromptControl()
+  const switchAccountControl = Dialog.useDialogControl()
 
   const dispatchPost = useCallback(
     (action: PostAction) => {
@@ -925,42 +946,81 @@ let ComposerPost = React.memo(function ComposerPost({
         isTextOnly && isNative && a.flex_grow,
       ]}>
       <View style={[a.flex_row, a.align_start, isNative && a.flex_1]}>
-        <Menu.Root>
-          <Menu.Trigger label={_(msg`Switch account`)}>
-            {({props}) => (
-              <Button
-                {...props}
-                label={_(msg`Switch account`)}
-                variant="ghost"
-                color="primary"
-                shape="round">
-                <UserAvatar
-                  avatar={currentProfile?.avatar}
-                  size={42}
-                  type={
-                    currentProfile?.associated?.labeler ? 'labeler' : 'user'
-                  }
-                  style={[a.mt_xs]}
-                />
-              </Button>
-            )}
-          </Menu.Trigger>
-          <Menu.Outer>
-            <Menu.Group>
+        {isWeb ? (
+          <Menu.Root>
+            <Menu.Trigger label={_(msg`Switch account`)}>
+              {({props}) => (
+                <Button
+                  {...props}
+                  disabled={otherAccounts.length === 0}
+                  label={_(msg`Switch account`)}
+                  variant="ghost"
+                  color="primary"
+                  shape="round">
+                  <UserAvatar
+                    avatar={currentProfile?.avatar}
+                    size={42}
+                    type={
+                      currentProfile?.associated?.labeler ? 'labeler' : 'user'
+                    }
+                  />
+                </Button>
+              )}
+            </Menu.Trigger>
+            <Menu.Outer>
               <Menu.LabelText>
                 <Trans>Switch account</Trans>
               </Menu.LabelText>
-              {otherAccounts.map(other => (
-                <SwitchMenuItem
-                  key={other.account.did}
-                  account={other.account}
-                  profile={other.profile}
-                  onSelect={onSelectAccount}
-                />
-              ))}
-            </Menu.Group>
-          </Menu.Outer>
-        </Menu.Root>
+              <Menu.Group>
+                {otherAccounts.map(({account, profile}) => (
+                  <Menu.Item
+                    style={[a.gap_sm, {minWidth: 150}]}
+                    key={account.did}
+                    label={_(
+                      msg`Switch to ${sanitizeHandle(
+                        profile?.handle ?? account.handle,
+                        '@',
+                      )}`,
+                    )}
+                    onPress={() => onSelectAccount(account)}>
+                    <View>
+                      <UserAvatar
+                        avatar={profile?.avatar}
+                        size={20}
+                        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                        hideLiveBadge
+                      />
+                    </View>
+                    <Menu.ItemText>
+                      {sanitizeHandle(profile?.handle ?? account.handle, '@')}
+                    </Menu.ItemText>
+                  </Menu.Item>
+                ))}
+              </Menu.Group>
+            </Menu.Outer>
+          </Menu.Root>
+        ) : (
+          <>
+            <Button
+              disabled={otherAccounts.length === 0}
+              label={_(msg`Switch account`)}
+              variant="ghost"
+              color="primary"
+              shape="round"
+              onPress={switchAccountControl.open}>
+              <UserAvatar
+                avatar={currentProfile?.avatar}
+                size={42}
+                type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+              />
+            </Button>
+            <SwitchAccountDialog
+              control={switchAccountControl}
+              onSelectAccount={onSelectAccount}
+              currentAccountDid={selectedAccount.did}
+            />
+          </>
+        )}
         <TextInput
           ref={textInput}
           style={[a.pt_xs]}
@@ -1157,45 +1217,6 @@ function ComposerTopBar({
       </View>
       {children}
     </Animated.View>
-  )
-}
-
-function SwitchMenuItem({
-  account,
-  profile,
-  onSelect,
-}: {
-  account: SessionAccount
-  profile: AppBskyActorDefs.ProfileViewDetailed | undefined
-  onSelect: (account: SessionAccount) => void
-}) {
-  const {_} = useLingui()
-  const {isActive: live} = useActorStatus(profile)
-
-  return (
-    <Menu.Item
-      style={[a.gap_sm, {minWidth: 150}]}
-      key={account.did}
-      label={_(
-        msg`Switch to ${sanitizeHandle(
-          profile?.handle ?? account.handle,
-          '@',
-        )}`,
-      )}
-      onPress={() => onSelect(account)}>
-      <View>
-        <UserAvatar
-          avatar={profile?.avatar}
-          size={20}
-          type={profile?.associated?.labeler ? 'labeler' : 'user'}
-          live={live}
-          hideLiveBadge
-        />
-      </View>
-      <Menu.ItemText>
-        {sanitizeHandle(profile?.handle ?? account.handle, '@')}
-      </Menu.ItemText>
-    </Menu.Item>
   )
 }
 
