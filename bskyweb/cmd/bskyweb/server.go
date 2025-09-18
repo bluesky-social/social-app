@@ -394,6 +394,7 @@ func (srv *Server) Shutdown() error {
 func (srv *Server) NewTemplateContext() pongo2.Context {
 	return pongo2.Context{
 		"staticCDNHost": srv.cfg.staticCDNHost,
+		"favicon":       fmt.Sprintf("%s/static/favicon.png", srv.cfg.staticCDNHost),
 	}
 }
 
@@ -599,13 +600,16 @@ func (srv *Server) WebProfile(c echo.Context) error {
 			unauthedViewingOkay = false
 		}
 	}
-	if !unauthedViewingOkay {
-		return c.Render(http.StatusOK, "profile.html", data)
-	}
+
 	req := c.Request()
 	data["profileView"] = pv
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	data["requestHost"] = req.Host
+
+	if !unauthedViewingOkay {
+		data["requiresAuth"] = true
+	}
+
 	return c.Render(http.StatusOK, "profile.html", data)
 }
 
