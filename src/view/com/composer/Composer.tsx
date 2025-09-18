@@ -102,6 +102,7 @@ import {type Gif} from '#/state/queries/tenor'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
 import {
@@ -121,6 +122,7 @@ import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
 import {Text} from '#/view/com/util/text/Text'
+import * as LegacyToast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -209,6 +211,7 @@ export const ComposePost = ({
   const queryClient = useQueryClient()
   const currentDid = selectedAccount.did
   const {closeComposer} = useComposerControls()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -256,9 +259,33 @@ export const ComposePost = ({
           active: account.active,
         })
       }
-      setSelectedAccount(account)
+      const tempAgent = new AtpAgent(session)
+
+      try {
+        // try a simple request to check if the session is valid
+        await tempAgent.getProfile({actor: account.did})
+        // if it succeeds, update the selected account
+        setSelectedAccount(account)
+      } catch (e: any) {
+        if (String(e.message).toLowerCase().includes('token has expired')) {
+          closeComposer()
+          requestSwitchToAccount({requestedAccount: account.did})
+          LegacyToast.show(
+            _(msg`Please sign in as @${account.handle}`),
+            'circle-exclamation',
+          )
+        } else {
+          setError(cleanError(e.message))
+        }
+      }
     },
-    [selectedAccount.did, setSelectedAccount],
+    [
+      selectedAccount.did,
+      closeComposer,
+      requestSwitchToAccount,
+      _,
+      setSelectedAccount,
+    ],
   )
 
   const thread = composerState.thread
