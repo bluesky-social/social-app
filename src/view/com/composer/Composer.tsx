@@ -267,7 +267,10 @@ export const ComposePost = ({
         // if it succeeds, update the selected account
         setSelectedAccount(account)
       } catch (e: any) {
-        if (String(e.message).toLowerCase().includes('token has expired')) {
+        if (
+          String(e.message).toLowerCase().includes('token has expired') ||
+          String(e.message).toLowerCase().includes('authentication required')
+        ) {
           closeComposer()
           requestSwitchToAccount({requestedAccount: account.did})
           LegacyToast.show(
