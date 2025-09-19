@@ -24,6 +24,9 @@ async function main() {
     await link.destroy()
     httpLogger.info('link service is stopped')
   })
+
+  await link.ctx.metrics.start(cfg.service.metricsPort)
+  httpLogger.info('link metrics is running')
 }
 
 main()
