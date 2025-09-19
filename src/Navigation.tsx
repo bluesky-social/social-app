@@ -1,12 +1,10 @@
 import {type JSX, useCallback, useRef} from 'react'
 import {Linking} from 'react-native'
 import * as Notifications from 'expo-notifications'
+import {type BottomTabBarProps} from '@bottom-tabs/react-navigation'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
-import {
-  type BottomTabBarProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs'
+import {useLingui} from '@lingui/react'
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -15,6 +13,7 @@ import {
   type LinkingOptions,
   NavigationContainer,
   StackActions,
+  useNavigation,
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
@@ -27,10 +26,9 @@ import {
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {logger as notyLogger} from '#/lib/notifications/util'
-import {buildStateObject} from '#/lib/routes/helpers'
+import {buildStateObject, getTabState, TabState} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
-  type BottomTabNavigatorParams,
   type FlatNavigatorParams,
   type HomeTabNavigatorParams,
   type MessagesTabNavigatorParams,
@@ -42,7 +40,7 @@ import {type RouteParams, type State} from '#/lib/routes/types'
 import {attachRouteToLogEvents, logEvent} from '#/lib/statsig/statsig'
 import {bskyTitle} from '#/lib/strings/headings'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isAndroid, isIOS26, isNative, isWeb} from '#/platform/detection'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
 import {
@@ -127,15 +125,17 @@ import {
 import {Wizard} from '#/screens/StarterPack/Wizard'
 import TopicScreen from '#/screens/Topic'
 import {VideoFeed} from '#/screens/VideoFeed'
-import {type Theme, useTheme} from '#/alf'
+import {ios26, type Theme, useTheme} from '#/alf'
 import {
   EmailDialogScreenID,
   useEmailDialogControl,
 } from '#/components/dialogs/EmailDialog'
 import {router} from '#/routes'
 import {Referrer} from '../modules/expo-bluesky-swiss-army'
+import {Tab} from './BottomBarNavigator'
 import {useAccountSwitcher} from './lib/hooks/useAccountSwitcher'
 import {useNonReactiveCallback} from './lib/hooks/useNonReactiveCallback'
+import {emitSoftReset} from './state/events'
 import {useLoggedOutViewControls} from './state/shell/logged-out'
 import {useCloseAllActiveElements} from './state/util'
 
@@ -150,7 +150,6 @@ const MyProfileTab =
 const MessagesTab =
   createNativeStackNavigatorWithAuth<MessagesTabNavigatorParams>()
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
-const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
 /**
  * These "common screens" are reused across stacks.
@@ -618,6 +617,9 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
+  const {_} = useLingui()
+  const t = useTheme()
+  const navigation = useNavigation()
   const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
@@ -625,25 +627,88 @@ function TabsNavigator() {
     [],
   )
 
+  const tabPress = useCallback(
+    (tab: string) => (evt: any) => {
+      const state = navigation.getState()
+      const tabState = getTabState(state, tab)
+      if (tabState === TabState.InsideAtRoot) {
+        evt.preventDefault()
+        emitSoftReset()
+      }
+    },
+    [navigation],
+  )
+
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
-      screenOptions={{headerShown: false, lazy: true}}
-      tabBar={tabBar}>
-      <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
-      <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
+      labeled={false}
+      screenOptions={{
+        lazy: true,
+        tabBarActiveTintColor: ios26(t.palette.primary_500),
+      }}
+      tabBar={isIOS26 ? undefined : tabBar}
+      disablePageAnimations={isAndroid}>
+      <Tab.Screen
+        name="HomeTab"
+        getComponent={() => HomeTabNavigator}
+        options={{
+          title: _(msg`Home`),
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/homeOpen_filled_corner0_rounded.svg')
+              : require('../assets/icons/homeOpen_stroke2_corner0_rounded.svg'),
+        }}
+        listeners={{tabPress: tabPress('HomeTab')}}
+      />
+      <Tab.Screen
+        name="SearchTab"
+        getComponent={() => SearchTabNavigator}
+        options={{
+          title: _(msg`Explore`),
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/magnifyingGlass_filled_corner0_rounded.svg')
+              : require('../assets/icons/magnifyingGlass2_stroke2_corner0_rounded.svg'),
+        }}
+        listeners={{tabPress: tabPress('SearchTab')}}
+      />
       <Tab.Screen
         name="MessagesTab"
         getComponent={() => MessagesTabNavigator}
+        options={{
+          title: _(msg`Chats`),
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/message_stroke2_corner0_rounded_filled.svg')
+              : require('../assets/icons/message_stroke2_corner0_rounded.svg'),
+        }}
+        listeners={{tabPress: tabPress('MessagesTab')}}
       />
       <Tab.Screen
         name="NotificationsTab"
         getComponent={() => NotificationsTabNavigator}
+        options={{
+          title: _(msg`Notifications`),
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/bell_filled_corner0_rounded.svg')
+              : require('../assets/icons/bell_stroke2_corner0_rounded.svg'),
+        }}
+        listeners={{tabPress: tabPress('NotificationsTab')}}
       />
       <Tab.Screen
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
+        options={{
+          title: _(msg`Profile`),
+          tabBarIcon: ({focused}) =>
+            focused
+              ? require('../assets/icons/userCircle_filled_corner0_rounded.svg')
+              : require('../assets/icons/userCircle_stroke2_corner0_rounded.svg'),
+        }}
+        listeners={{tabPress: tabPress('MyProfileTab')}}
       />
     </Tab.Navigator>
   )
