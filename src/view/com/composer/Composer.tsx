@@ -57,7 +57,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
-import {EmbeddingDisabledError} from '#/lib/api/resolve'
+import {EmbeddingDisabledError, type ResolvedLink} from '#/lib/api/resolve'
 import {retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
 import {
@@ -95,6 +95,7 @@ import {
 } from '#/state/preferences/languages'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
+import {RQKEY_LINK as RQKEY_EXTERNAL_LINK} from '#/state/queries/resolve-link'
 import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
@@ -386,23 +387,53 @@ export const ComposePost = ({
     if (isPublishing) {
       return
     }
+    const firstPost = thread.posts[0]
+    logger.info(`composer: publish pressed`, firstPost)
 
+    let quoteForRepost: {uri: string; cid: string} | undefined
     if (
-      initQuote &&
+      !replyTo &&
       thread.posts.length === 1 &&
-      thread.posts[0].richtext.text.trim().length === 0 &&
-      !thread.posts[0].embed.media &&
-      !thread.posts[0].embed.link
+      !firstPost.embed.media &&
+      !firstPost.embed.link &&
+      firstPost.embed.quote
     ) {
+      const quoteUri = firstPost.embed.quote.uri
+      const text = firstPost.richtext.text.trim()
+
+      if (text.length === 0 || text === quoteUri) {
+        // it's an empty quote so we need to get the cid
+        if (initQuote?.uri === quoteUri) {
+          // case 1, user started with "quote post" button. we have the cid in initQuote
+          quoteForRepost = {
+            uri: initQuote.uri,
+            cid: initQuote.cid,
+          }
+        } else {
+          // case 2, user pasted a link of a post. we need to get post details from cache
+          const metadata = queryClient.getQueryData<ResolvedLink>(
+            RQKEY_EXTERNAL_LINK(quoteUri),
+          )
+          if (metadata?.type === 'record' && metadata.kind === 'post') {
+            quoteForRepost = {
+              uri: metadata.view.uri,
+              cid: metadata.view.cid,
+            }
+          }
+        }
+      }
+    }
+
+    if (quoteForRepost) {
       setError('')
       setIsPublishing(true)
       try {
         const {uri: repostUri} = await agent.repost(
-          initQuote.uri,
-          initQuote.cid,
+          quoteForRepost.uri,
+          quoteForRepost.cid,
         )
         logEvent('post:repost', {logContext: 'Post'})
-        updatePostShadow(queryClient, initQuote.uri, {
+        updatePostShadow(queryClient, quoteForRepost.uri, {
           repostUri,
         })
         onClose()
