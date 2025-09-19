@@ -78,6 +78,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
+import {updatePostShadow} from '#/state/cache/post-shadow'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
 import {
@@ -383,6 +384,33 @@ export const ComposePost = ({
 
   const onPressPublish = React.useCallback(async () => {
     if (isPublishing) {
+      return
+    }
+
+    if (
+      initQuote &&
+      thread.posts.length === 1 &&
+      thread.posts[0].richtext.text.trim().length === 0 &&
+      !thread.posts[0].embed.media &&
+      !thread.posts[0].embed.link
+    ) {
+      setError('')
+      setIsPublishing(true)
+      try {
+        const {uri: repostUri} = await agent.repost(
+          initQuote.uri,
+          initQuote.cid,
+        )
+        logEvent('post:repost', {logContext: 'Post'})
+        updatePostShadow(queryClient, initQuote.uri, {
+          repostUri,
+        })
+        onClose()
+        onPost?.(undefined)
+      } catch (e: any) {
+        setError(cleanError(e.message))
+        setIsPublishing(false)
+      }
       return
     }
 
