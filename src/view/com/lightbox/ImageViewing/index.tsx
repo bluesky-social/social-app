@@ -57,12 +57,6 @@ type Rect = {x: number; y: number; width: number; height: number}
 const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
 
-const SLOW_SPRING: WithSpringConfig = {
-  mass: isIOS ? 1.25 : 0.75,
-  damping: 300,
-  stiffness: 800,
-  restDisplacementThreshold: 0.01,
-}
 const FAST_SPRING: WithSpringConfig = {
   mass: isIOS ? 1.25 : 0.75,
   damping: 150,
@@ -112,14 +106,14 @@ export default function ImageViewRoot({
     // https://github.com/software-mansion/react-native-reanimated/issues/6677
     rAF_FIXED(() => {
       openProgress.set(() =>
-        isAnimated ? withClampedSpring(1, SLOW_SPRING) : 1,
+        isAnimated ? withClampedSpring(1, FAST_SPRING) : 1,
       )
     })
     return () => {
       // https://github.com/software-mansion/react-native-reanimated/issues/6677
       rAF_FIXED(() => {
         openProgress.set(() =>
-          isAnimated ? withClampedSpring(0, SLOW_SPRING) : 0,
+          isAnimated ? withClampedSpring(0, FAST_SPRING) : 0,
         )
       })
     }
