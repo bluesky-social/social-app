@@ -4,6 +4,7 @@ import * as Notifications from 'expo-notifications'
 import {type BottomTabBarProps} from '@bottom-tabs/react-navigation'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -12,6 +13,7 @@ import {
   type LinkingOptions,
   NavigationContainer,
   StackActions,
+  useNavigation,
 } from '@react-navigation/native'
 
 import {timeout} from '#/lib/async/timeout'
@@ -24,7 +26,7 @@ import {
 } from '#/lib/hooks/useNotificationHandler'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {logger as notyLogger} from '#/lib/notifications/util'
-import {buildStateObject} from '#/lib/routes/helpers'
+import {buildStateObject, getTabState, TabState} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
   type FlatNavigatorParams,
@@ -133,6 +135,7 @@ import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {Tab} from './BottomBarNavigator'
 import {useAccountSwitcher} from './lib/hooks/useAccountSwitcher'
 import {useNonReactiveCallback} from './lib/hooks/useNonReactiveCallback'
+import {emitSoftReset} from './state/events'
 import {useLoggedOutViewControls} from './state/shell/logged-out'
 import {useCloseAllActiveElements} from './state/util'
 
@@ -614,7 +617,9 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
+  const {_} = useLingui()
   const t = useTheme()
+  const navigation = useNavigation()
   const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
@@ -622,11 +627,23 @@ function TabsNavigator() {
     [],
   )
 
+  const tabPress = useCallback(
+    (tab: string) => (evt: any) => {
+      const state = navigation.getState()
+      const tabState = getTabState(state, tab)
+      if (tabState === TabState.InsideAtRoot) {
+        evt.preventDefault()
+        emitSoftReset()
+      }
+    },
+    [navigation],
+  )
+
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
-      minimizeBehavior="automatic"
+      labeled={false}
       screenOptions={{
         lazy: true,
         tabBarActiveTintColor: ios26(t.palette.primary_500),
@@ -637,56 +654,61 @@ function TabsNavigator() {
         name="HomeTab"
         getComponent={() => HomeTabNavigator}
         options={{
-          title: '',
+          title: _(msg`Home`),
           tabBarIcon: ({focused}) =>
             focused
               ? require('../assets/icons/homeOpen_filled_corner0_rounded.svg')
               : require('../assets/icons/homeOpen_stroke2_corner0_rounded.svg'),
         }}
+        listeners={{tabPress: tabPress('HomeTab')}}
       />
       <Tab.Screen
         name="SearchTab"
         getComponent={() => SearchTabNavigator}
         options={{
-          title: '',
+          title: _(msg`Explore`),
           tabBarIcon: ({focused}) =>
             focused
               ? require('../assets/icons/magnifyingGlass_filled_corner0_rounded.svg')
               : require('../assets/icons/magnifyingGlass2_stroke2_corner0_rounded.svg'),
         }}
+        listeners={{tabPress: tabPress('SearchTab')}}
       />
       <Tab.Screen
         name="MessagesTab"
         getComponent={() => MessagesTabNavigator}
         options={{
-          title: '',
+          title: _(msg`Chats`),
           tabBarIcon: ({focused}) =>
             focused
               ? require('../assets/icons/message_stroke2_corner0_rounded_filled.svg')
               : require('../assets/icons/message_stroke2_corner0_rounded.svg'),
         }}
+        listeners={{tabPress: tabPress('MessagesTab')}}
       />
       <Tab.Screen
         name="NotificationsTab"
         getComponent={() => NotificationsTabNavigator}
         options={{
-          title: '',
+          title: _(msg`Notifications`),
           tabBarIcon: ({focused}) =>
             focused
               ? require('../assets/icons/bell_filled_corner0_rounded.svg')
               : require('../assets/icons/bell_stroke2_corner0_rounded.svg'),
         }}
+        listeners={{tabPress: tabPress('NotificationsTab')}}
       />
       <Tab.Screen
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
         options={{
-          title: '',
+          title: _(msg`Profile`),
           tabBarIcon: ({focused}) =>
             focused
               ? require('../assets/icons/userCircle_filled_corner0_rounded.svg')
               : require('../assets/icons/userCircle_stroke2_corner0_rounded.svg'),
         }}
+        listeners={{tabPress: tabPress('MyProfileTab')}}
       />
     </Tab.Navigator>
   )
