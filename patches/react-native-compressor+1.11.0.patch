@@ -1,0 +1,10 @@
+diff --git a/node_modules/react-native-compressor/ios/Video/VideoMain.swift b/node_modules/react-native-compressor/ios/Video/VideoMain.swift
+index 6fe5e9c..af8a0b5 100644
+--- a/node_modules/react-native-compressor/ios/Video/VideoMain.swift
++++ b/node_modules/react-native-compressor/ios/Video/VideoMain.swift
+@@ -1,5 +1,4 @@
+ import Foundation
+-import AssetsLibrary
+ import AVFoundation
+ import Photos
+ import MobileCoreServices

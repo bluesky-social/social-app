@@ -1,6 +1,6 @@
 import {Platform} from 'react-native'
 
-import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
+import {isAndroid, isIOS, isIOS26, isNative, isWeb} from '#/platform/detection'
 
 /**
  * Identity function on web. Returns nothing on other platforms.
@@ -24,6 +24,19 @@ export function web(value: any) {
  */
 export function ios(value: any) {
   if (isIOS) {
+    return value
+  }
+}
+
+/**
+ * Identity function on iOS versions >=26. Returns nothing on other platforms.
+ *
+ * Note: Platform splitting does not tree-shake away the other platforms,
+ * so don't do stuff like e.g. rely on platform-specific imports. Use
+ * platform-split files instead.
+ */
+export function ios26(value: any) {
+  if (isIOS26) {
     return value
   }
 }
