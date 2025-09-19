@@ -1,12 +1,19 @@
 import {Platform} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 
-import {BUNDLE_IDENTIFIER, IS_TESTFLIGHT, RELEASE_VERSION} from '#/env/common'
+import {
+  BUNDLE_IDENTIFIER,
+  ENV,
+  IS_TESTFLIGHT,
+  RELEASE_VERSION,
+} from '#/env/common'
 
 export * from '#/env/common'
 
 const iOSMajorVersion =
-  Platform.OS === 'ios' ? parseInt(Platform.Version.split('.')[0], 10) : 0
+  ENV !== 'test' && Platform.OS === 'ios'
+    ? parseInt(Platform.Version.split('.')[0], 10)
+    : 0
 
 /**
  * The semver version of the app, specified in our `package.json`.file. On
