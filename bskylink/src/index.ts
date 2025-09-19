@@ -44,7 +44,8 @@ export class LinkService {
         const respTimeMs = Number(end - start) / 1_000_000 // ns to ms :3
 
         if (req.route) {
-          ctx.metrics.requestDuration
+          ctx.metrics
+            .getHistogram('requestDuration')
             .labels(req.route.path, req.method, res.statusCode.toString())
             .observe(respTimeMs)
         }

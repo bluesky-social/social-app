@@ -20,7 +20,10 @@ export default function (ctx: AppContext, app: Express) {
     '/redirect',
     handler(async (req, res) => {
       const addMetrics = (ruleStr: string, statusCode: number) => {
-        ctx.metrics.redirects.labels(ruleStr, statusCode.toString()).inc()
+        ctx.metrics
+          .getCounter('redirects')
+          .labels(ruleStr, statusCode.toString())
+          .inc()
       }
 
       let link = req.query.u

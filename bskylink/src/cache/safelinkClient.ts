@@ -8,11 +8,10 @@ import {ExpiredTokenError} from '@atproto/api/dist/client/types/com/atproto/serv
 import {MINUTE} from '@atproto/common'
 import {LRUCache} from 'lru-cache'
 
-import {type ServiceConfig} from '../config.js'
+import {type AppContext} from '../context.js'
 import type Database from '../db/index.js'
 import {type SafelinkRule} from '../db/schema.js'
 import {redirectLogger} from '../logger.js'
-import {type Metrics} from '../metrics.js'
 
 const SAFELINK_MIN_FETCH_INTERVAL = 1_000
 const SAFELINK_MAX_FETCH_INTERVAL = 10_000
@@ -22,22 +21,12 @@ export class SafelinkClient {
   private domainCache: LRUCache<string, SafelinkRule | 'ok'>
   private urlCache: LRUCache<string, SafelinkRule | 'ok'>
 
-  private db: Database
-  private metrics: Metrics
+  private ctx: AppContext
 
   private ozoneAgent: OzoneAgent
-
   private cursor?: string
 
-  constructor({
-    cfg,
-    db,
-    metrics,
-  }: {
-    cfg: ServiceConfig
-    db: Database
-    metrics: Metrics
-  }) {
+  constructor(ctx: AppContext) {
     this.domainCache = new LRUCache<string, SafelinkRule | 'ok'>({
       max: 10000,
     })
@@ -46,13 +35,12 @@ export class SafelinkClient {
       max: 25000,
     })
 
-    this.db = db
-    this.metrics = metrics
+    this.ctx = ctx
 
     this.ozoneAgent = new OzoneAgent(
-      cfg.safelinkPdsUrl!,
-      cfg.safelinkAgentIdentifier!,
-      cfg.safelinkAgentPass!,
+      this.ctx.cfg.service.safelinkPdsUrl!,
+      this.ctx.cfg.service.safelinkAgentIdentifier!,
+      this.ctx.cfg.service.safelinkAgentPass!,
     )
   }
 
@@ -62,8 +50,12 @@ export class SafelinkClient {
       const end = process.hrtime.bigint()
       const respTimeMs = Number(end - start) / 1_000_000 // ns to ms :3
 
-      this.metrics.safeLinkLookups.labels(status, cached ? 'yes' : 'no').inc()
-      this.metrics.safeLinkLookupDuration
+      this.ctx.metrics
+        .getCounter('safeLinkLookups')
+        .labels(status, cached ? 'yes' : 'no')
+        .inc()
+      this.ctx.metrics
+        .getHistogram('safeLinkLookupDuration')
         .labels(status, cached ? 'yes' : 'no')
         .observe(respTimeMs)
     }
@@ -100,7 +92,7 @@ export class SafelinkClient {
     }
 
     try {
-      const maybeUrlRule = await this.getRule(this.db, url, 'url')
+      const maybeUrlRule = await this.getRule(this.ctx.db, url, 'url')
       this.urlCache.set(url, maybeUrlRule)
 
       addMetrics('ok', false)
@@ -110,7 +102,7 @@ export class SafelinkClient {
     }
 
     try {
-      const maybeDomainRule = await this.getRule(this.db, domain, 'domain')
+      const maybeDomainRule = await this.getRule(this.ctx.db, domain, 'domain')
       this.domainCache.set(domain, maybeDomainRule)
 
       addMetrics('ok', false)
@@ -249,7 +241,7 @@ export class SafelinkClient {
       redirectLogger.info('received no new safelink events from ozone')
       setTimeout(() => this.runFetchEvents(), SAFELINK_MAX_FETCH_INTERVAL)
     } else {
-      await this.db.transaction(async db => {
+      await this.ctx.db.transaction(async db => {
         for (const rule of res.data.events) {
           switch (rule.eventType) {
             case 'removeRule':
@@ -277,7 +269,7 @@ export class SafelinkClient {
 
   private async getCursor() {
     if (this.cursor === '') {
-      const res = await this.db.db
+      const res = await this.ctx.db.db
         .selectFrom('safelink_cursor')
         .selectAll()
         .where('id', '=', 1)
@@ -293,7 +285,7 @@ export class SafelinkClient {
   private async setCursor(cursor: string) {
     const updatedAt = new Date()
     try {
-      await this.db.db
+      await this.ctx.db.db
         .insertInto('safelink_cursor')
         .values({
           id: 1,

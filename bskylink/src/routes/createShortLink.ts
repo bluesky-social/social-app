@@ -14,7 +14,8 @@ export default function (ctx: AppContext, app: Express) {
     bodyParser.json(),
     handler(async (req, res) => {
       const addMetrics = (statusCode: number) => {
-        ctx.metrics.shortLinkRequests
+        ctx.metrics
+          .getCounter('shortLinkRequests')
           .labels('POST', statusCode.toString())
           .inc()
       }
