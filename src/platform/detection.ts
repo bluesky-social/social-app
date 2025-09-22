@@ -1,7 +1,5 @@
 import {Platform} from 'react-native'
 
-import {ENV} from '#/env'
-
 export const isIOS = Platform.OS === 'ios'
 export const isAndroid = Platform.OS === 'android'
 export const isNative = isIOS || isAndroid
@@ -13,8 +11,9 @@ export const isMobileWeb =
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
 export const isIPhoneWeb = isWeb && /iPhone/.test(navigator.userAgent)
 
+// for some reason Platform.OS === 'ios' AND Platform.Version is undefined in our CI unit tests -sfn
 const iOSMajorVersion =
-  ENV !== 'test' && Platform.OS === 'ios'
+  Platform.OS === 'ios' && typeof Platform.Version === 'string'
     ? parseInt(Platform.Version.split('.')[0], 10)
     : 0
 export const isIOS26 = iOSMajorVersion >= 26
