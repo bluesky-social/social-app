@@ -28,7 +28,7 @@ export function PostLanguageSelectDialog({
   currentLanguages,
   control,
 }: {
-  currentLanguages?: string[],
+  currentLanguages?: string[]
   control: Dialog.DialogControlProps
 }) {
   const {height} = useWindowDimensions()
@@ -51,11 +51,7 @@ export function PostLanguageSelectDialog({
   )
 }
 
-export function DialogInner({
-  currentLanguages,
-}: {
-  currentLanguages?: string[]
-}) {
+export function DialogInner({currentLanguages}: {currentLanguages?: string[]}) {
   const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
 
