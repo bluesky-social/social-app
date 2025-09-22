@@ -57,7 +57,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
@@ -187,26 +187,29 @@ export const ComposePost = ({
   const defaultAgent = useAgent()
   const [selectedAccount, setSelectedAccount] = useState(currentAccount!)
 
-  const agent = useMemo(() => {
-    if (selectedAccount.did === currentAccount!.did) {
-      return defaultAgent
-    }
-    const session = new CredentialSession(new URL(selectedAccount.service))
-    if (
-      selectedAccount.refreshJwt &&
-      selectedAccount.accessJwt &&
-      selectedAccount.active
-    ) {
-      session.resumeSession({
-        ...selectedAccount,
-        accessJwt: selectedAccount.accessJwt,
-        refreshJwt: selectedAccount.refreshJwt,
-        active: selectedAccount.active,
-      })
-    }
-    const newAgent = new AtpAgent(session)
-    return newAgent
-  }, [selectedAccount, currentAccount, defaultAgent])
+  const {data: agent = defaultAgent} = useQuery({
+    queryKey: ['composer-agent', currentAccount, selectedAccount],
+    queryFn: async () => {
+      if (selectedAccount.did === currentAccount!.did) {
+        return defaultAgent
+      }
+      const session = new CredentialSession(new URL(selectedAccount.service))
+      if (
+        selectedAccount.refreshJwt &&
+        selectedAccount.accessJwt &&
+        selectedAccount.active
+      ) {
+        await session.resumeSession({
+          ...selectedAccount,
+          accessJwt: selectedAccount.accessJwt,
+          refreshJwt: selectedAccount.refreshJwt,
+          active: selectedAccount.active,
+        })
+      }
+      return new AtpAgent(session)
+    },
+    staleTime: 5 * 60 * 1000,
+  })
 
   const queryClient = useQueryClient()
   const currentDid = selectedAccount.did
@@ -264,6 +267,11 @@ export const ComposePost = ({
       try {
         // try a simple request to check if the session is valid
         await tempAgent.getProfile({actor: account.did})
+        // lets cache the agent for this account to avoid double resume
+        queryClient.setQueryData(
+          ['composer-agent', currentAccount, selectedAccount],
+          tempAgent,
+        )
         // if it succeeds, update the selected account
         setSelectedAccount(account)
       } catch (e: any) {
@@ -283,11 +291,12 @@ export const ComposePost = ({
       }
     },
     [
-      selectedAccount.did,
+      selectedAccount,
       closeComposer,
       requestSwitchToAccount,
       _,
-      setSelectedAccount,
+      currentAccount,
+      queryClient,
     ],
   )
 
