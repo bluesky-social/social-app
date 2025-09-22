@@ -78,7 +78,6 @@ import {mimeToExt} from '#/lib/media/video/util'
 import {type NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
-import {sanitizeHandle} from '#/lib/strings/handles'
 import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
@@ -123,20 +122,18 @@ import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
 import {Text} from '#/view/com/util/text/Text'
 import * as LegacyToast from '#/view/com/util/Toast'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import * as Dialog from '#/components/Dialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
 import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
-import * as Menu from '#/components/Menu'
 import {LazyQuoteEmbed} from '#/components/Post/Embed/LazyQuoteEmbed'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {AccountSwitcher} from './account-switcher/AccountSwitcher'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
   type AssetType,
@@ -159,7 +156,6 @@ import {
   processVideo,
   type VideoState,
 } from './state/video'
-import {SwitchAccountDialog} from './SwitchAccount'
 import {type TextInputRef} from './text-input/TextInput.types'
 import {getVideoMetadata} from './videos/pickVideo'
 import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
@@ -920,15 +916,7 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectAccount: (account: SessionAccount) => void
   profiles: AppBskyActorDefs.ProfileViewDetailed[] | undefined
 }) {
-  const {accounts} = useSession()
   const {_} = useLingui()
-  const currentProfile = profiles?.find(p => p.did === selectedAccount.did)
-  const otherAccounts = accounts
-    .filter(acc => acc.did !== selectedAccount.did)
-    .map(account => ({
-      account,
-      profile: profiles?.find(p => p.did === account.did),
-    }))
   const richtext = post.richtext
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
   const forceMinHeight = isWeb && isTextOnly && isActive
@@ -938,7 +926,6 @@ let ComposerPost = React.memo(function ComposerPost({
       : _(msg`Add another post`)
     : _(msg`What's up?`)
   const discardPromptControl = Prompt.usePromptControl()
-  const switchAccountControl = Dialog.useDialogControl()
 
   const dispatchPost = useCallback(
     (action: PostAction) => {
@@ -1007,81 +994,11 @@ let ComposerPost = React.memo(function ComposerPost({
         isTextOnly && isNative && a.flex_grow,
       ]}>
       <View style={[a.flex_row, a.align_start, isNative && a.flex_1]}>
-        {isWeb ? (
-          <Menu.Root>
-            <Menu.Trigger label={_(msg`Switch account`)}>
-              {({props}) => (
-                <Button
-                  {...props}
-                  disabled={otherAccounts.length === 0}
-                  label={_(msg`Switch account`)}
-                  variant="ghost"
-                  color="primary"
-                  shape="round">
-                  <UserAvatar
-                    avatar={currentProfile?.avatar}
-                    size={42}
-                    type={
-                      currentProfile?.associated?.labeler ? 'labeler' : 'user'
-                    }
-                  />
-                </Button>
-              )}
-            </Menu.Trigger>
-            <Menu.Outer>
-              <Menu.LabelText>
-                <Trans>Switch account</Trans>
-              </Menu.LabelText>
-              <Menu.Group>
-                {otherAccounts.map(({account, profile}) => (
-                  <Menu.Item
-                    style={[a.gap_sm, {minWidth: 150}]}
-                    key={account.did}
-                    label={_(
-                      msg`Switch to ${sanitizeHandle(
-                        profile?.handle ?? account.handle,
-                        '@',
-                      )}`,
-                    )}
-                    onPress={() => onSelectAccount(account)}>
-                    <View>
-                      <UserAvatar
-                        avatar={profile?.avatar}
-                        size={20}
-                        type={profile?.associated?.labeler ? 'labeler' : 'user'}
-                        hideLiveBadge
-                      />
-                    </View>
-                    <Menu.ItemText>
-                      {sanitizeHandle(profile?.handle ?? account.handle, '@')}
-                    </Menu.ItemText>
-                  </Menu.Item>
-                ))}
-              </Menu.Group>
-            </Menu.Outer>
-          </Menu.Root>
-        ) : (
-          <>
-            <Button
-              disabled={otherAccounts.length === 0}
-              label={_(msg`Switch account`)}
-              variant="ghost"
-              color="primary"
-              shape="round"
-              onPress={switchAccountControl.open}>
-              <UserAvatar
-                avatar={currentProfile?.avatar}
-                size={42}
-                type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-              />
-            </Button>
-            <SwitchAccountDialog
-              control={switchAccountControl}
-              onSelectAccount={onSelectAccount}
-              currentAccountDid={selectedAccount.did}
-            />
-          </>
-        )}
+        <AccountSwitcher
+          selectedAccount={selectedAccount}
+          onSelectAccount={onSelectAccount}
+          profiles={profiles}
+        />
         <TextInput
           ref={textInput}
           style={[a.pt_xs]}
