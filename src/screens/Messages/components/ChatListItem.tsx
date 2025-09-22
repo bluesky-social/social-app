@@ -333,9 +333,9 @@ function ChatListItemReady({
   return (
     <GestureActionView actions={actions}>
       <View
-        // @ts-expect-error web only
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        // @ts-expect-error web only
         onFocus={onFocus}
         onBlur={onMouseLeave}
         style={[a.relative, t.atoms.bg]}>
