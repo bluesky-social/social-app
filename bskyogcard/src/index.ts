@@ -38,8 +38,17 @@ export class CardService {
       promClient: {
         collectDefaultMetrics: {},
       },
-      // Don't expose /metrics on main app - we'll use separate server
+
       autoregister: false,
+      normalizePath: req => {
+        // If we have a matched route, use its path (with :params) instead of the full URL path
+        if (req.route) {
+          return req.route.path
+        }
+
+        // Group all unmatched paths together to reduce cardinality
+        return '<unmatched>'
+      },
     })
     app.use(metricsMiddleware)
 
