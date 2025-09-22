@@ -12,7 +12,7 @@ import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {ComposeIcon2} from '#/lib/icons'
+import {ComposeIcon2, HashtagWideIcon} from '#/lib/icons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {type NavigationProp} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
@@ -189,7 +189,12 @@ export function ProfileFeedScreenInner({
   }, [onScrollToTop, isScreenFocused])
 
   const renderPostsEmpty = useCallback(() => {
-    return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
+    return (
+      <EmptyState
+        icon={<HashtagWideIcon size="2xl" />}
+        message={_(msg`This feed is empty.`)}
+      />
+    )
   }, [_])
 
   const isVideoFeed = React.useMemo(() => {
