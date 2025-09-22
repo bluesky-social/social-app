@@ -28,6 +28,7 @@
   {% endif -%}
   {%- if profileView.Banner %}
   <meta property="og:image" content="{{ profileView.Banner }}">
+  <meta property="twitter:image" content="{{ profileView.Banner }}">
   <meta name="twitter:card" content="summary_large_image">
   {%- elif profileView.Avatar -%}
   {# Don't use avatar image in cards; usually looks bad #}
