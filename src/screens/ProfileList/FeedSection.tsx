@@ -5,10 +5,13 @@ import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {HashtagWideIcon} from '#/lib/icons'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import {type FeedDescriptor} from '#/state/queries/post-feed'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
+import {
+  type FeedDescriptor,
+  RQKEY as FEED_RQKEY,
+} from '#/state/queries/post-feed'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
@@ -68,7 +71,10 @@ export function FeedSection({
   const renderPostsEmpty = useCallback(() => {
     return (
       <View style={[a.gap_xl, a.align_center]}>
-        <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
+        <EmptyState
+          icon={<HashtagWideIcon size="2xl" />}
+          message={_(msg`This feed is empty.`)}
+        />
         {isOwner && (
           <Button
             label={_(msg`Start adding people`)}

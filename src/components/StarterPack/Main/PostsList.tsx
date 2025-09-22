@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HashtagWideIcon} from '#/lib/icons'
 import {isNative} from '#/platform/detection'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {PostFeed} from '#/view/com/posts/PostFeed'
@@ -33,7 +34,12 @@ export const PostsList = React.forwardRef<SectionRef, ProfilesListProps>(
     }))
 
     const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
+      return (
+        <EmptyState
+          icon={<HashtagWideIcon size="2xl" />}
+          message={_(msg`This feed is empty.`)}
+        />
+      )
     }, [_])
 
     return (

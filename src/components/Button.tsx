@@ -779,6 +779,7 @@ export function ButtonIcon({
       lg: 24,
       xl: 28,
       '2xl': 32,
+      '3xl': 40,
     }[iconSizeShorthand]
 
     /*
