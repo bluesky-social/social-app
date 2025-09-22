@@ -10,21 +10,21 @@ import * as Dialog from '#/components/Dialog'
 import {SwitchAccountDialog} from '../SwitchAccount'
 
 interface AccountSwitcherProps {
-  selectedAccount: SessionAccount
-  onSelectAccount: (account: SessionAccount) => void
+  selectedAccountDid: string
+  onSelectAccount: (accountDid: string) => void
   profiles: AppBskyActorDefs.ProfileViewDetailed[] | undefined
 }
 
 export const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
-  selectedAccount,
+  selectedAccountDid,
   onSelectAccount,
   profiles,
 }) => {
   const {accounts} = useSession()
   const {_} = useLingui()
-  const currentProfile = profiles?.find(p => p.did === selectedAccount.did)
+  const currentProfile = profiles?.find(p => p.did === selectedAccountDid)
   const otherAccounts = accounts
-    .filter((acc: SessionAccount) => acc.did !== selectedAccount.did)
+    .filter((acc: SessionAccount) => acc.did !== selectedAccountDid)
     .map((account: SessionAccount) => ({
       account,
       profile: profiles?.find(p => p.did === account.did),
@@ -48,8 +48,8 @@ export const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
       </Button>
       <SwitchAccountDialog
         control={switchAccountControl}
-        onSelectAccount={onSelectAccount}
-        currentAccountDid={selectedAccount.did}
+        onSelectAccount={account => onSelectAccount(account.did)}
+        currentAccountDid={selectedAccountDid}
       />
     </>
   )

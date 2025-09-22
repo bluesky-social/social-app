@@ -99,7 +99,7 @@ import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type Gif} from '#/state/queries/tenor'
-import {type SessionAccount, useAgent, useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -182,7 +182,9 @@ export const ComposePost = ({
 }) => {
   const {currentAccount, accounts} = useSession()
   const defaultAgent = useAgent()
-  const [selectedAccount, setSelectedAccount] = useState(currentAccount!)
+  const [selectedAccountDid, setSelectedAccountDid] = useState(
+    currentAccount!.did,
+  )
 
   const {data: agent = defaultAgent} = useQuery({
     queryKey: [
@@ -190,16 +192,36 @@ export const ComposePost = ({
       currentAccount?.did,
       currentAccount?.service,
       currentAccount?.active,
-      selectedAccount?.did,
-      selectedAccount?.service,
-      selectedAccount?.accessJwt,
-      selectedAccount?.refreshJwt,
-      selectedAccount?.active,
+      selectedAccountDid,
+      // include account data in the query key to invalidate when tokens change
+      // hmm we don't want a nested array i think so spreading seems like the way to go(?)
+      ...(() => {
+        const selectedAccount = accounts.find(
+          acc => acc.did === selectedAccountDid,
+        )
+        return selectedAccount
+          ? [
+              selectedAccount.service,
+              selectedAccount.accessJwt,
+              selectedAccount.refreshJwt,
+              selectedAccount.active,
+            ]
+          : []
+      })(),
     ],
     queryFn: async () => {
-      if (selectedAccount.did === currentAccount!.did) {
+      if (selectedAccountDid === currentAccount!.did) {
         return defaultAgent
       }
+
+      // get fresh account data from the session store
+      const selectedAccount = accounts.find(
+        acc => acc.did === selectedAccountDid,
+      )
+      if (!selectedAccount) {
+        throw new Error(`Account with DID ${selectedAccountDid} not found`)
+      }
+
       const session = new CredentialSession(new URL(selectedAccount.service))
       if (
         selectedAccount.refreshJwt &&
@@ -219,7 +241,7 @@ export const ComposePost = ({
   })
 
   const queryClient = useQueryClient()
-  const currentDid = selectedAccount.did
+  const currentDid = selectedAccountDid
   const {closeComposer} = useComposerControls()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {_} = useLingui()
@@ -254,8 +276,15 @@ export const ComposePost = ({
   )
 
   const onSelectAccount = React.useCallback(
-    async (account: SessionAccount) => {
-      if (account.did === selectedAccount.did) {
+    async (accountDid: string) => {
+      if (accountDid === selectedAccountDid) {
+        return
+      }
+
+      // get fresh account data from session store
+      const account = accounts.find(acc => acc.did === accountDid)
+      if (!account) {
+        setError('Account not found')
         return
       }
 
@@ -281,7 +310,7 @@ export const ComposePost = ({
             currentAccount?.did,
             currentAccount?.service,
             currentAccount?.active,
-            account.did,
+            accountDid,
             account.service,
             account.accessJwt,
             account.refreshJwt,
@@ -290,7 +319,7 @@ export const ComposePost = ({
           tempAgent,
         )
         // if it succeeds, update the selected account
-        setSelectedAccount(account)
+        setSelectedAccountDid(accountDid)
       } catch (e: any) {
         if (
           String(e.message).toLowerCase().includes('token has expired') ||
@@ -308,7 +337,8 @@ export const ComposePost = ({
       }
     },
     [
-      selectedAccount.did,
+      selectedAccountDid,
+      accounts,
       closeComposer,
       requestSwitchToAccount,
       _,
@@ -854,7 +884,7 @@ export const ComposePost = ({
                   onClearVideo={clearVideo}
                   onPublish={onComposerPostPublish}
                   onError={setError}
-                  selectedAccount={selectedAccount}
+                  selectedAccountDid={selectedAccountDid}
                   onSelectAccount={onSelectAccount}
                   profiles={profiles?.profiles}
                 />
@@ -895,7 +925,7 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo,
   onError,
   onPublish,
-  selectedAccount,
+  selectedAccountDid,
   onSelectAccount,
   profiles,
 }: {
@@ -913,8 +943,8 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
-  selectedAccount: SessionAccount
-  onSelectAccount: (account: SessionAccount) => void
+  selectedAccountDid: string
+  onSelectAccount: (accountDid: string) => void
   profiles: AppBskyActorDefs.ProfileViewDetailed[] | undefined
 }) {
   const {_} = useLingui()
@@ -996,7 +1026,7 @@ let ComposerPost = React.memo(function ComposerPost({
       ]}>
       <View style={[a.flex_row, a.align_start, isNative && a.flex_1]}>
         <AccountSwitcher
-          selectedAccount={selectedAccount}
+          selectedAccountDid={selectedAccountDid}
           onSelectAccount={onSelectAccount}
           profiles={profiles}
         />

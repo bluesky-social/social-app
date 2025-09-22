@@ -12,21 +12,21 @@ import {Button} from '#/components/Button'
 import * as Menu from '#/components/Menu'
 
 interface AccountSwitcherProps {
-  selectedAccount: SessionAccount
-  onSelectAccount: (account: SessionAccount) => void
+  selectedAccountDid: string
+  onSelectAccount: (accountDid: string) => void
   profiles: AppBskyActorDefs.ProfileViewDetailed[] | undefined
 }
 
 export const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
-  selectedAccount,
+  selectedAccountDid,
   onSelectAccount,
   profiles,
 }) => {
   const {accounts} = useSession()
   const {_} = useLingui()
-  const currentProfile = profiles?.find(p => p.did === selectedAccount.did)
+  const currentProfile = profiles?.find(p => p.did === selectedAccountDid)
   const otherAccounts = accounts
-    .filter((acc: SessionAccount) => acc.did !== selectedAccount.did)
+    .filter((acc: SessionAccount) => acc.did !== selectedAccountDid)
     .map((account: SessionAccount) => ({
       account,
       profile: profiles?.find(p => p.did === account.did),
@@ -66,7 +66,7 @@ export const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
                   '@',
                 )}`,
               )}
-              onPress={() => onSelectAccount(account)}>
+              onPress={() => onSelectAccount(account.did)}>
               <View>
                 <UserAvatar
                   avatar={profile?.avatar}
