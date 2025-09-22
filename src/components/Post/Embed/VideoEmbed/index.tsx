@@ -74,7 +74,7 @@ export function VideoEmbed({embed, crop}: Props) {
           aspectRatio={constrained || 1}
           // slightly smaller max height than images
           // images use 16 / 9, for reference
-          boundingBox={14 / 9}>
+          minMobileAspectRatio={14 / 9}>
           {contents}
         </ConstrainedImage>
       )}
