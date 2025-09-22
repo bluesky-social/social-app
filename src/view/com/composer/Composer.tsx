@@ -258,6 +258,13 @@ export const ComposePost = ({
     handles: accounts.map(acc => acc.did),
   })
 
+  // if accounts array changes, invalidate agent so we still have fresh tokens
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: ['composer-agent'],
+    })
+  }, [accounts, queryClient])
+
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
