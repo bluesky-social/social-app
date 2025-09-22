@@ -95,6 +95,7 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type Gif} from '#/state/queries/tenor'
@@ -214,7 +215,7 @@ export const ComposePost = ({
       }
       return new AtpAgent(session)
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: STALE.MINUTES.FIVE,
   })
 
   const queryClient = useQueryClient()
