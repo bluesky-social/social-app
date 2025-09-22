@@ -36,9 +36,7 @@ export class CardService {
       includeStatusCode: true,
       includeUp: true,
       promClient: {
-        collectDefaultMetrics: {
-          timeout: 5000,
-        },
+        collectDefaultMetrics: {},
       },
       // Don't expose /metrics on main app - we'll use separate server
       autoregister: false,
