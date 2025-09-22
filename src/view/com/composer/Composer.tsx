@@ -188,7 +188,15 @@ export const ComposePost = ({
   const [selectedAccount, setSelectedAccount] = useState(currentAccount!)
 
   const {data: agent = defaultAgent} = useQuery({
-    queryKey: ['composer-agent', currentAccount, selectedAccount],
+    queryKey: [
+      'composer-agent',
+      currentAccount?.did,
+      currentAccount?.service,
+      selectedAccount?.did,
+      selectedAccount?.service,
+      selectedAccount?.accessJwt,
+      selectedAccount?.refreshJwt,
+    ],
     queryFn: async () => {
       if (selectedAccount.did === currentAccount!.did) {
         return defaultAgent
@@ -269,7 +277,15 @@ export const ComposePost = ({
         await tempAgent.getProfile({actor: account.did})
         // lets cache the agent for this account to avoid double resume
         queryClient.setQueryData(
-          ['composer-agent', currentAccount, selectedAccount],
+          [
+            'composer-agent',
+            currentAccount?.did,
+            currentAccount?.service,
+            account.did,
+            account.service,
+            account.accessJwt,
+            account.refreshJwt,
+          ],
           tempAgent,
         )
         // if it succeeds, update the selected account
@@ -291,11 +307,12 @@ export const ComposePost = ({
       }
     },
     [
-      selectedAccount,
+      selectedAccount.did,
       closeComposer,
       requestSwitchToAccount,
       _,
-      currentAccount,
+      currentAccount?.did,
+      currentAccount?.service,
       queryClient,
     ],
   )
