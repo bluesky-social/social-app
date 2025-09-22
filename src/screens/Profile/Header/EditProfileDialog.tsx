@@ -26,6 +26,8 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
+const PRONOUNS_MAX_GRAPHEMES = 50
+const WEBSITE_MAX_GRAPHEMES = 300
 const DESCRIPTION_MAX_GRAPHEMES = 256
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -115,6 +117,12 @@ function DialogInner({
   const [displayName, setDisplayName] = useState(initialDisplayName)
   const initialDescription = profile.description || ''
   const [description, setDescription] = useState(initialDescription)
+  const initialPronouns = ''
+  const [pronouns, setPronouns] = useState(initialPronouns)
+  const initialWebsite = ''
+  const [website, setWebsite] = useState(initialWebsite)
+  const initialLocation = ''
+  const [location, setLocation] = useState(initialLocation)
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
     profile.banner,
   )
@@ -131,6 +139,9 @@ function DialogInner({
   const dirty =
     displayName !== initialDisplayName ||
     description !== initialDescription ||
+    pronouns !== initialPronouns ||
+    website !== initialWebsite ||
+    location !== initialLocation ||
     userAvatar !== profile.avatar ||
     userBanner !== profile.banner
 
@@ -209,6 +220,15 @@ function DialogInner({
     text: displayName,
     maxCount: DISPLAY_NAME_MAX_GRAPHEMES,
   })
+  const pronounsTooLong = useWarnMaxGraphemeCount({
+    text: pronouns,
+    maxCount: PRONOUNS_MAX_GRAPHEMES,
+  })
+  const websiteTooLong = useWarnMaxGraphemeCount({
+    text: website,
+    maxCount: WEBSITE_MAX_GRAPHEMES,
+  })
+  const websiteInvalidFormat = !!(website && !website.match(/^https?:\/\/.+/))
   const descriptionTooLong = useWarnMaxGraphemeCount({
     text: description,
     maxCount: DESCRIPTION_MAX_GRAPHEMES,
@@ -241,7 +261,10 @@ function DialogInner({
           !dirty ||
           isUpdatingProfile ||
           displayNameTooLong ||
-          descriptionTooLong
+          descriptionTooLong ||
+          pronounsTooLong ||
+          websiteTooLong ||
+          websiteInvalidFormat
         }
         size="small"
         color="primary"
@@ -262,6 +285,9 @@ function DialogInner({
       isUpdatingProfile,
       displayNameTooLong,
       descriptionTooLong,
+      pronounsTooLong,
+      websiteTooLong,
+      websiteInvalidFormat,
     ],
   )
 
@@ -388,6 +414,90 @@ function DialogInner({
               />
             </Text>
           )}
+        </View>
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Pronouns</Trans>
+          </TextField.LabelText>
+          <TextField.Root isInvalid={pronounsTooLong}>
+            <Dialog.Input
+              defaultValue={pronouns}
+              onChangeText={setPronouns}
+              label={_(msg`Pronouns`)}
+              placeholder={_(msg`Pronouns`)}
+              testID="editProfilePronounsInput"
+            />
+          </TextField.Root>
+          {pronounsTooLong && (
+            <Text
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_bold,
+                {color: t.palette.negative_400},
+              ]}>
+              <Plural
+                value={PRONOUNS_MAX_GRAPHEMES}
+                other="The maximum number of characters is #."
+              />
+            </Text>
+          )}
+        </View>
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Website</Trans>
+          </TextField.LabelText>
+          <TextField.Root isInvalid={websiteTooLong || websiteInvalidFormat}>
+            <Dialog.Input
+              defaultValue={website}
+              onChangeText={setWebsite}
+              label={_(msg`Website`)}
+              placeholder={_(msg`URL`)}
+              testID="editProfileWebsiteInput"
+            />
+          </TextField.Root>
+          {websiteTooLong && (
+            <Text
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_bold,
+                {color: t.palette.negative_400},
+              ]}>
+              <Plural
+                value={WEBSITE_MAX_GRAPHEMES}
+                other="Website is too long. The maximum number of characters is #."
+              />
+            </Text>
+          )}
+          {websiteInvalidFormat && (
+            <Text
+              style={[
+                a.text_sm,
+                a.mt_xs,
+                a.font_bold,
+                {color: t.palette.negative_400},
+              ]}>
+              <Trans>Website must start with http:// or https://</Trans>
+            </Text>
+          )}
+        </View>
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Location</Trans>
+          </TextField.LabelText>
+          <TextField.Root>
+            <Dialog.Input
+              defaultValue={location}
+              onChangeText={setLocation}
+              label={_(msg`Location`)}
+              placeholder={_(msg`Location`)}
+              testID="editProfileLocationInput"
+            />
+          </TextField.Root>
         </View>
       </View>
     </Dialog.ScrollableInner>

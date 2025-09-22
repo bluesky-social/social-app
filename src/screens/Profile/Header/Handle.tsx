@@ -33,6 +33,11 @@ export function ProfileHeaderHandle({
           </Text>
         </View>
       ) : undefined}
+      {profile?.pronouns && (
+        <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.px_sm, a.py_xs]}>
+          <Text style={[t.atoms.text, a.text_sm]}>{profile.pronouns}</Text>
+        </View>
+      )}
       <Text
         emoji
         numberOfLines={1}
