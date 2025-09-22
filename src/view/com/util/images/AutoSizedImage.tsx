@@ -35,10 +35,9 @@ export function ConstrainedImage({
    * the height of the image.
    */
   const outerAspectRatio = React.useMemo<DimensionValue>(() => {
-    const ratio = boundingBox
-      ? Math.min(1 / aspectRatio, boundingBox)
-      : isNative || !gtMobile
-        ? Math.min(1 / aspectRatio, 16 / 9) // 9:16 bounding box
+    const ratio =
+      isNative || !gtMobile
+        ? Math.min(1 / aspectRatio, boundingBox ?? 16 / 9) // 9:16 bounding box
         : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
     return `${ratio * 100}%`
   }, [aspectRatio, gtMobile, boundingBox])
