@@ -2,36 +2,42 @@ import {writeFile} from 'node:fs/promises'
 import * as path from 'node:path'
 import {fileURLToPath} from 'node:url'
 
-const __DIRNAME = path.dirname(fileURLToPath(import.meta.url))
+import {
+  ADDITIONAL_FONTS,
+  ADDITIONAL_FONTS_POSTSCRIPT_NAMES,
+} from '../src/util/fonts.js'
 
-const FONTS = [
-  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-jp@5.0/japanese-700-normal.ttf',
-  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-tc@5.0/chinese-traditional-700-normal.ttf',
-  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-sc@5.0/chinese-simplified-700-normal.ttf',
-  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-hk@5.0/chinese-hongkong-700-normal.ttf',
-  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-kr@5.0/korean-700-normal.ttf',
-  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-thai@5.0/thai-700-normal.ttf',
-  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-arabic@5.0/arabic-700-normal.ttf',
-  'https://cdn.jsdelivr.net/fontsource/fonts/noto-sans-hebrew@5.0/hebrew-700-normal.ttf',
-]
+const __DIRNAME = path.dirname(fileURLToPath(import.meta.url))
+const outDir = path.join(__DIRNAME, '..', 'src', 'assets', 'fonts')
 
 async function main() {
   await Promise.all(
-    FONTS.map(async urlStr => {
-      const url = new URL(urlStr)
-      const res = await fetch(url)
-      const font = await res.arrayBuffer()
-      const filename = url.pathname
-        .split('/')
-        .slice(-2)
-        .join('/')
-        .replace(/@[\d.]+\//, '-')
+    ADDITIONAL_FONTS.map(async urlStr => {
+      // get last part of the URL
+      const raw = urlStr.split('/').slice(-1).join('')
+      // style and weight are known parts of the path, rest is the font family
+      const [styleWithExtension, weight, ...fontFamilyParts] = raw
+        .split('-')
+        .reverse()
+      const style = styleWithExtension.split('.')[0]
+      // re-reverse the font family parts to get the original order
+      const rawFontFamily = fontFamilyParts.reverse().join('-')
+      // get the postscript name from the map
+      const postScriptName = ADDITIONAL_FONTS_POSTSCRIPT_NAMES[rawFontFamily]
+      // our filename format: `weight-postScriptName-style.ttf`
+      const filename = `${weight}-${postScriptName}-${style}.ttf`
+      // fetch the file
+      const res = await fetch(urlStr)
+
       if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: fetching failed for ${filename}`)
+        throw new Error(`HTTP ${res.status}: fetching failed for ${urlStr}`)
       }
+
+      console.log(`Writing font ${filename}...`)
+
       await writeFile(
-        path.join(__DIRNAME, '..', 'src', 'assets', 'fonts', filename),
-        Buffer.from(font),
+        path.join(outDir, filename),
+        Buffer.from(await res.arrayBuffer()),
       )
     }),
   )

@@ -1,0 +1,31 @@
+import {atoms as a, style as s, theme as t} from '../theme/index.js'
+import {FONT_FAMILY_DEF} from '../util/fonts.js'
+
+const SCALE_MULTIPLIER = 1 - 0.0625
+
+export function Text({
+  children,
+  cx,
+}: {
+  children?: React.ReactNode
+  cx?: Record<string, any>[]
+}) {
+  const styles = s([
+    a.flex,
+    a.flex_wrap,
+    {
+      columnGap: '1px',
+    },
+    a.font_normal,
+    a.leading_tight,
+    // a.tracking_wide, // 0.25
+    t.atoms.text,
+    {
+      fontFamily: FONT_FAMILY_DEF,
+      fontWeight: 400,
+    },
+    ...(cx ?? []),
+  ])
+  styles.fontSize = (styles.fontSize || a.text_md.fontSize) * SCALE_MULTIPLIER
+  return <div style={styles}>{children}</div>
+}

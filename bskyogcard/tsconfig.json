@@ -5,7 +5,8 @@
     "esModuleInterop": true,
     "moduleResolution": "NodeNext",
     "jsx": "react-jsx",
-    "outDir": "dist"
+    "outDir": "dist",
+    "skipLibCheck": true
   },
   "include": ["./src/index.ts", "./src/bin.ts"]
 }
