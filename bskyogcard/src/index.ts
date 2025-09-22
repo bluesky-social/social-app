@@ -58,9 +58,9 @@ export class CardService {
 
     // Start separate metrics server
     const metricsApp = express()
-    metricsApp.get('/metrics', (_req, res) => {
+    metricsApp.get('/metrics', async (_req, res) => {
       res.set('Content-Type', register.contentType)
-      res.end(register.metrics())
+      res.end(await register.metrics())
     })
 
     this.metricsServer = metricsApp.listen(this.ctx.cfg.service.metricsPort)
