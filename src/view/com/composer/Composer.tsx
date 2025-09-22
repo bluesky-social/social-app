@@ -192,10 +192,12 @@ export const ComposePost = ({
       'composer-agent',
       currentAccount?.did,
       currentAccount?.service,
+      currentAccount?.active,
       selectedAccount?.did,
       selectedAccount?.service,
       selectedAccount?.accessJwt,
       selectedAccount?.refreshJwt,
+      selectedAccount?.active,
     ],
     queryFn: async () => {
       if (selectedAccount.did === currentAccount!.did) {
@@ -281,10 +283,12 @@ export const ComposePost = ({
             'composer-agent',
             currentAccount?.did,
             currentAccount?.service,
+            currentAccount?.active,
             account.did,
             account.service,
             account.accessJwt,
             account.refreshJwt,
+            account.active,
           ],
           tempAgent,
         )
@@ -313,6 +317,7 @@ export const ComposePost = ({
       _,
       currentAccount?.did,
       currentAccount?.service,
+      currentAccount?.active,
       queryClient,
     ],
   )
