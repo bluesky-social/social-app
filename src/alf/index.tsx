@@ -38,13 +38,15 @@ export type Alf = {
   flags: {}
 }
 
+const themes = createThemes()
+
 /*
  * Context
  */
 export const Context = React.createContext<Alf>({
   themeName: 'light',
   theme: defaultTheme,
-  themes: createThemes(),
+  themes,
   fonts: {
     scale: getFontScale(),
     scaleMultiplier: computeFontScaleMultiplier(getFontScale()),
@@ -69,10 +71,10 @@ export function ThemeProvider({
   const setFontScaleAndPersist = React.useCallback<
     Alf['fonts']['setFontScale']
   >(
-    fontScale => {
-      setFontScale(fontScale)
-      persistFontScale(fontScale)
-      setFontScaleMultiplier(computeFontScaleMultiplier(fontScale))
+    fs => {
+      setFontScale(fs)
+      persistFontScale(fs)
+      setFontScaleMultiplier(computeFontScaleMultiplier(fs))
     },
     [setFontScale],
   )
@@ -82,15 +84,12 @@ export function ThemeProvider({
   const setFontFamilyAndPersist = React.useCallback<
     Alf['fonts']['setFontFamily']
   >(
-    fontFamily => {
-      setFontFamily(fontFamily)
-      persistFontFamily(fontFamily)
+    ff => {
+      setFontFamily(ff)
+      persistFontFamily(ff)
     },
     [setFontFamily],
   )
-  const themes = React.useMemo(() => {
-    return createThemes()
-  }, [])
 
   const value = React.useMemo<Alf>(
     () => ({
@@ -108,7 +107,6 @@ export function ThemeProvider({
     }),
     [
       themeName,
-      themes,
       fontScale,
       setFontScaleAndPersist,
       fontFamily,
