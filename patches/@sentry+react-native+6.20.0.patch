@@ -1,8 +1,28 @@
+diff --git a/node_modules/@sentry/react-native/dist/js/tools/sentryMetroSerializer.js b/node_modules/@sentry/react-native/dist/js/tools/sentryMetroSerializer.js
+index d7f2350..e9c0368 100644
+--- a/node_modules/@sentry/react-native/dist/js/tools/sentryMetroSerializer.js
++++ b/node_modules/@sentry/react-native/dist/js/tools/sentryMetroSerializer.js
+@@ -12,12 +12,9 @@ exports.createSentryMetroSerializer = exports.unstable_beforeAssetSerializationP
+ const crypto = require("crypto");
+ const utils_1 = require("./utils");
+ const utils_2 = require("./vendor/metro/utils");
+-let countLines;
+-try {
+-    countLines = require('metro/private/lib/countLines');
+-}
+-catch (e) {
+-    countLines = require('metro/src/lib/countLines');
++const newline = /\r\n?|\n|\u2028|\u2029/g;
++function countLines(string) {
++    return (string.match(newline) || []).length + 1;
+ }
+ const DEBUG_ID_PLACE_HOLDER = '__debug_id_place_holder__';
+ const DEBUG_ID_MODULE_PATH = '__debugid__';
 diff --git a/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js b/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js
-index c282ade..8777755 100755
+index b3783b5..d5e3e45 100755
 --- a/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js
 +++ b/node_modules/@sentry/react-native/scripts/expo-upload-sourcemaps.js
-@@ -215,7 +215,7 @@ for (const [assetGroupName, assets] of Object.entries(groupedAssets)) {
+@@ -218,7 +218,7 @@ for (const [assetGroupName, assets] of Object.entries(groupedAssets)) {
  
    const isHermes = assets.find(asset => asset.endsWith('.hbc'));
    const windowsCallback = process.platform === "win32" ? 'node ' : '';
