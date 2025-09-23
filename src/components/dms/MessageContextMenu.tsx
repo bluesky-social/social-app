@@ -1,4 +1,4 @@
-import {memo, useCallback} from 'react'
+import {memo, useCallback, useState} from 'react'
 import {LayoutAnimation} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
@@ -38,6 +38,8 @@ export let MessageContextMenu = ({
   const convo = useConvoActive()
   const deleteControl = usePromptControl()
   const reportControl = usePromptControl()
+  const translateControl = usePromptControl()
+  const [translation, setTranslation] = useState('')
   const langPrefs = useLanguagePrefs()
   const openLink = useOpenLink()
 
@@ -57,22 +59,65 @@ export let MessageContextMenu = ({
   }, [_, message.text, message.facets])
 
   const onPressTranslateMessage = useCallback(() => {
-    const translatorUrl = getTranslatorLink(
-      message.text,
-      langPrefs.primaryLanguage,
-    )
-    openLink(translatorUrl, true)
+    const supportsTranslatorAPI = 'Translator' in self
+    const supportsLanguageDetectorAPI = 'LanguageDetector' in self
+    const textToTranslate = message.text
+    const targetLanguage = langPrefs.primaryLanguage
 
-    logger.metric(
-      'translate',
-      {
-        sourceLanguages: [],
-        targetLanguage: langPrefs.primaryLanguage,
-        textLength: message.text.length,
-      },
-      {statsig: false},
-    )
-  }, [langPrefs.primaryLanguage, message.text, openLink])
+    const run = async () => {
+      if (!supportsTranslatorAPI || !supportsLanguageDetectorAPI) {
+        const translatorUrl = getTranslatorLink(textToTranslate, targetLanguage)
+        openLink(translatorUrl, true)
+
+        logger.metric(
+          'translate',
+          {
+            sourceLanguages: [],
+            targetLanguage: targetLanguage,
+            textLength: textToTranslate.length,
+          },
+          {statsig: false},
+        )
+        return
+      }
+
+      try {
+        const languageDetector = await self.LanguageDetector.create()
+        const sourceLanguage = (
+          await languageDetector.detect(textToTranslate)
+        )[0].detectedLanguage
+
+        const translator = await self.Translator.create({
+          sourceLanguage,
+          targetLanguage: targetLanguage,
+        })
+
+        const translations = []
+        const postParagraphs = textToTranslate.split(/\n/)
+        for (const postParagraph of postParagraphs) {
+          translations.push(await translator.translate(postParagraph))
+        }
+        const translatedText = translations.join('\n')
+        setTranslation(translatedText)
+        translateControl.open()
+
+        logger.metric(
+          'translate',
+          {
+            sourceLanguages: [],
+            targetLanguage: targetLanguage,
+            textLength: textToTranslate.length,
+          },
+          {statsig: false},
+        )
+      } catch (err) {
+        console.error(err)
+        Toast.show(_(msg`Could not translate`), 'xmark')
+      }
+    }
+
+    run()
+  }, [message.text, langPrefs.primaryLanguage, openLink, translateControl, _])
 
   const onDelete = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -191,6 +236,14 @@ export let MessageContextMenu = ({
         confirmButtonColor="negative"
         onConfirm={onDelete}
       />
+
+      <Prompt.Outer control={translateControl}>
+        <Prompt.TitleText>{_(msg`Translation`)}</Prompt.TitleText>
+        <Prompt.DescriptionText>{translation}</Prompt.DescriptionText>
+        <Prompt.Actions>
+          <Prompt.Action cta={_(msg`OK`)} onPress={() => {}} />
+        </Prompt.Actions>
+      </Prompt.Outer>
     </>
   )
 }
