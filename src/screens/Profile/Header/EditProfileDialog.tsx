@@ -121,8 +121,6 @@ function DialogInner({
   const [pronouns, setPronouns] = useState(initialPronouns)
   const initialWebsite = ''
   const [website, setWebsite] = useState(initialWebsite)
-  const initialLocation = ''
-  const [location, setLocation] = useState(initialLocation)
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
     profile.banner,
   )
@@ -141,7 +139,6 @@ function DialogInner({
     description !== initialDescription ||
     pronouns !== initialPronouns ||
     website !== initialWebsite ||
-    location !== initialLocation ||
     userAvatar !== profile.avatar ||
     userBanner !== profile.banner
 
@@ -193,6 +190,7 @@ function DialogInner({
         updates: {
           displayName: displayName.trimEnd(),
           description: description.trimEnd(),
+          pronouns: pronouns.trimEnd(),
         },
         newUserAvatar,
         newUserBanner,
@@ -210,6 +208,7 @@ function DialogInner({
     control,
     displayName,
     description,
+    pronouns,
     newUserAvatar,
     newUserBanner,
     setImageError,
@@ -483,21 +482,6 @@ function DialogInner({
               <Trans>Website must start with http:// or https://</Trans>
             </Text>
           )}
-        </View>
-
-        <View>
-          <TextField.LabelText>
-            <Trans>Location</Trans>
-          </TextField.LabelText>
-          <TextField.Root>
-            <Dialog.Input
-              defaultValue={location}
-              onChangeText={setLocation}
-              label={_(msg`Location`)}
-              placeholder={_(msg`Location`)}
-              testID="editProfileLocationInput"
-            />
-          </TextField.Root>
         </View>
       </View>
     </Dialog.ScrollableInner>

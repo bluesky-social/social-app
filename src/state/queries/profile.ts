@@ -177,6 +177,9 @@ export function useProfileUpdateMutation() {
           if ('pinnedPost' in updates) {
             next.pinnedPost = updates.pinnedPost
           }
+          if ('pronouns' in updates) {
+            next.pronouns = updates.pronouns
+          }
         }
         if (newUserAvatarPromise) {
           const res = await newUserAvatarPromise
@@ -220,7 +223,8 @@ export function useProfileUpdateMutation() {
             }
             return (
               res.data.displayName === updates.displayName &&
-              res.data.description === updates.description
+              res.data.description === updates.description &&
+              (res.data as any).pronouns === (updates as any).pronouns
             )
           }),
       )
