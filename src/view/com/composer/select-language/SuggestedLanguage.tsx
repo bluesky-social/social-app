@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {View} from 'react-native'
+import {Text as RNText, View} from 'react-native'
 import {parseLanguage} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -27,22 +27,20 @@ export function SuggestedLanguage({
   currentLanguages: string[]
   onAcceptSuggestedLanguage: (language: string | null) => void
 }) {
+  const langPrefs = useLanguagePrefs()
   const replyToLanguage = cleanUpLanguage(replyToLanguageProp)
+  const [hasInteracted, setHasInteracted] = useState(false)
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
-  >(text.length === 0 ? replyToLanguage : undefined)
-  const langPrefs = useLanguagePrefs()
-  const t = useTheme()
-  const {_} = useLingui()
+  >(undefined)
 
   useEffect(() => {
-    // For replies, suggest the language of the post being replied to if no text
-    // has been typed yet
-    if (replyToLanguage && text.length === 0) {
-      setSuggestedLanguage(replyToLanguage)
-      return
+    if (text.length > 0 && !hasInteracted) {
+      setHasInteracted(true)
     }
+  }, [text, hasInteracted])
 
+  useEffect(() => {
     const textTrimmed = text.trim()
 
     // Don't run the language model on small posts, the results are likely
@@ -57,52 +55,121 @@ export function SuggestedLanguage({
     })
 
     return () => cancelIdle(idle)
-  }, [text, replyToLanguage])
+  }, [text])
 
-  if (suggestedLanguage && !currentLanguages.includes(suggestedLanguage)) {
+  /*
+   * We've detected a language, and the user hasn't already selected it.
+   */
+  const hasLanguageSuggestion =
+    suggestedLanguage && !currentLanguages.includes(suggestedLanguage)
+  /*
+   * We have not detected a different language, and the user has not already
+   * selected the language of the post they are replying to.
+   */
+  const hasSuggestedReplyLanguage =
+    !hasInteracted &&
+    !suggestedLanguage &&
+    replyToLanguage &&
+    !currentLanguages.includes(replyToLanguage)
+
+  if (hasLanguageSuggestion) {
     const suggestedLanguageName = codeToLanguageName(
       suggestedLanguage,
       langPrefs.appLanguage,
     )
 
     return (
+      <LanguageSuggestionButton
+        label={
+          <RNText>
+            <Trans>
+              Are you writing in{' '}
+              <Text style={[a.font_bold]}>{suggestedLanguageName}</Text>?
+            </Trans>
+          </RNText>
+        }
+        value={suggestedLanguage}
+        onAccept={onAcceptSuggestedLanguage}
+      />
+    )
+  } else if (hasSuggestedReplyLanguage) {
+    const suggestedLanguageName = codeToLanguageName(
+      replyToLanguage,
+      langPrefs.appLanguage,
+    )
+
+    return (
+      <LanguageSuggestionButton
+        label={
+          <RNText>
+            <Trans>
+              The post you're replying to is written in {suggestedLanguageName}.
+              Would you like to reply in{' '}
+              <Text style={[a.font_bold]}>{suggestedLanguageName}</Text>?
+            </Trans>
+          </RNText>
+        }
+        value={replyToLanguage}
+        onAccept={onAcceptSuggestedLanguage}
+      />
+    )
+  } else {
+    return null
+  }
+}
+
+function LanguageSuggestionButton({
+  label,
+  value,
+  onAccept,
+}: {
+  label: React.ReactNode
+  value: string
+  onAccept: (language: string | null) => void
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  return (
+    <View style={[a.px_lg, a.py_sm]}>
       <View
         style={[
-          t.atoms.border_contrast_low,
-          a.gap_sm,
+          a.gap_md,
           a.border,
           a.flex_row,
           a.align_center,
           a.rounded_sm,
-          a.px_lg,
-          a.py_md,
-          a.mx_md,
-          a.my_sm,
+          a.p_md,
+          a.pl_lg,
           t.atoms.bg,
+          t.atoms.border_contrast_low,
         ]}>
         <EarthIcon />
-        <Text style={[a.flex_1]}>
-          <Trans>
-            Are you writing in{' '}
-            <Text style={[a.font_bold]}>{suggestedLanguageName}</Text>?
-          </Trans>
-        </Text>
+        <View style={[a.flex_1]}>
+          <Text
+            style={[
+              a.flex_1,
+              a.leading_snug,
+              {
+                maxWidth: 400,
+              },
+            ]}>
+            {label}
+          </Text>
+        </View>
 
         <Button
-          color="secondary"
           size="small"
-          variant="solid"
-          onPress={() => onAcceptSuggestedLanguage(suggestedLanguage)}
-          label={_(msg`Change post language to ${suggestedLanguageName}`)}>
+          color="secondary"
+          onPress={() => onAccept(value)}
+          label={_(msg`Accept this language suggestion`)}>
           <ButtonText>
             <Trans>Yes</Trans>
           </ButtonText>
         </Button>
       </View>
-    )
-  } else {
-    return null
-  }
+    </View>
+  )
 }
 
 /**
