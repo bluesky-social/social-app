@@ -12,6 +12,7 @@ export enum LogContext {
   ReportDialog = 'report-dialog',
   FeedFeedback = 'feed-feedback',
   PostSource = 'post-source',
+  AgeAssurance = 'age-assurance',
 
   /**
    * METRIC IS FOR INTERNAL USE ONLY, don't create any other loggers using this

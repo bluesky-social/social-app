@@ -36,6 +36,7 @@ import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/compon
 import {FloppyDisk_Stroke2_Corner0_Rounded as SaveIcon} from '#/components/icons/FloppyDisk'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {Text as NewText} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'SavedFeeds'>
 export function SavedFeeds({}: Props) {
@@ -296,7 +297,7 @@ function ListItem({
         <FeedSourceCard
           key={feedUri}
           feedUri={feedUri}
-          style={[isPinned && {paddingRight: 8}]}
+          style={[isPinned && a.pr_sm]}
           showMinimalPlaceholder
           hideTopBorder={true}
         />
@@ -391,26 +392,17 @@ function ListItem({
 function FollowingFeedCard() {
   const t = useTheme()
   return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.flex_1,
-        {
-          paddingHorizontal: 18,
-          paddingVertical: 20,
-        },
-      ]}>
+    <View style={[a.flex_row, a.align_center, a.flex_1, a.p_lg]}>
       <View
         style={[
           a.align_center,
           a.justify_center,
           a.rounded_sm,
+          a.mr_md,
           {
             width: 36,
             height: 36,
             backgroundColor: t.palette.primary_500,
-            marginRight: 10,
           },
         ]}>
         <FilterTimeline
@@ -423,11 +415,10 @@ function FollowingFeedCard() {
           fill={t.palette.white}
         />
       </View>
-      <View
-        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
-        <Text type="lg-medium" style={[t.atoms.text]} numberOfLines={1}>
+      <View style={[a.flex_1, a.flex_row, a.gap_sm, a.align_center]}>
+        <NewText style={[a.text_sm, a.font_bold, a.leading_snug]}>
           <Trans>Following</Trans>
-        </Text>
+        </NewText>
       </View>
     </View>
   )

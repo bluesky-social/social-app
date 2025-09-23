@@ -2,16 +2,15 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type AtpAgent} from '@atproto/api'
+import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
-import {Logger} from '#/logger'
+import {logger as notyLogger} from '#/lib/notifications/util'
 import {isNative} from '#/platform/detection'
+import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {type SessionAccount, useAgent, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
-
-const logger = Logger.create(Logger.Context.Notifications)
 
 /**
  * @private
@@ -21,27 +20,33 @@ async function _registerPushToken({
   agent,
   currentAccount,
   token,
+  extra = {},
 }: {
   agent: AtpAgent
   currentAccount: SessionAccount
   token: Notifications.DevicePushToken
+  extra?: {
+    ageRestricted?: boolean
+  }
 }) {
   try {
-    await agent.app.bsky.notification.registerPush({
+    const payload: AppBskyNotificationRegisterPush.InputSchema = {
       serviceDid: currentAccount.service?.includes('staging')
         ? PUBLIC_STAGING_APPVIEW_DID
         : PUBLIC_APPVIEW_DID,
       platform: Platform.OS,
       token: token.data,
       appId: 'xyz.blueskyweb.app',
-    })
+      ageRestricted: extra.ageRestricted ?? false,
+    }
 
-    logger.debug(`registerPushToken: success`, {
-      tokenType: token.type,
-      token: token.data,
-    })
+    notyLogger.debug(`registerPushToken: registering`, {...payload})
+
+    await agent.app.bsky.notification.registerPush(payload)
+
+    notyLogger.debug(`registerPushToken: success`)
   } catch (error) {
-    logger.error(`registerPushToken: failed`, {safeMessage: error})
+    notyLogger.error(`registerPushToken: failed`, {safeMessage: error})
   }
 }
 
@@ -63,12 +68,21 @@ export function useRegisterPushToken() {
   const {currentAccount} = useSession()
 
   return useCallback(
-    ({token}: {token: Notifications.DevicePushToken}) => {
+    ({
+      token,
+      isAgeRestricted,
+    }: {
+      token: Notifications.DevicePushToken
+      isAgeRestricted: boolean
+    }) => {
       if (!currentAccount) return
       return _registerPushTokenDebounced({
         agent,
         currentAccount,
         token,
+        extra: {
+          ageRestricted: isAgeRestricted,
+        },
       })
     },
     [agent, currentAccount],
@@ -80,7 +94,7 @@ export function useRegisterPushToken() {
  */
 async function getPushToken() {
   const granted = (await Notifications.getPermissionsAsync()).granted
-  logger.debug(`getPushToken`, {granted})
+  notyLogger.debug(`getPushToken`, {granted})
   if (granted) {
     return Notifications.getDevicePushTokenAsync()
   }
@@ -102,31 +116,46 @@ async function getPushToken() {
  * it fires), so there's a possibility that multiple calls will be made, but
  * that is acceptable.
  *
- * @see https://github.com/bluesky-social/social-app/pull/4467
  * @see https://github.com/expo/expo/issues/28656
  * @see https://github.com/expo/expo/issues/29909
+ * @see https://github.com/bluesky-social/social-app/pull/4467
  */
 export function useGetAndRegisterPushToken() {
+  const {isAgeRestricted} = useAgeAssuranceContext()
   const registerPushToken = useRegisterPushToken()
-  return useCallback(async () => {
-    /**
-     * This will also fire the listener added via `addPushTokenListener`. That
-     * listener also handles registration.
-     */
-    const token = await getPushToken()
+  return useCallback(
+    async ({
+      isAgeRestricted: isAgeRestrictedOverride,
+    }: {
+      isAgeRestricted?: boolean
+    } = {}) => {
+      if (!isNative) return
 
-    logger.debug(`useGetAndRegisterPushToken`, {token: token ?? 'undefined'})
-
-    if (token) {
       /**
-       * The listener should have registered the token already, but just in
-       * case, call the debounced function again.
+       * This will also fire the listener added via `addPushTokenListener`. That
+       * listener also handles registration.
        */
-      registerPushToken({token})
-    }
+      const token = await getPushToken()
 
-    return token
-  }, [registerPushToken])
+      notyLogger.debug(`useGetAndRegisterPushToken`, {
+        token: token ?? 'undefined',
+      })
+
+      if (token) {
+        /**
+         * The listener should have registered the token already, but just in
+         * case, call the debounced function again.
+         */
+        registerPushToken({
+          token,
+          isAgeRestricted: isAgeRestrictedOverride ?? isAgeRestricted,
+        })
+      }
+
+      return token
+    },
+    [registerPushToken, isAgeRestricted],
+  )
 }
 
 /**
@@ -140,14 +169,17 @@ export function useNotificationsRegistration() {
   const {currentAccount} = useSession()
   const registerPushToken = useRegisterPushToken()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
+  const {isReady: isAgeRestrictionReady, isAgeRestricted} =
+    useAgeAssuranceContext()
 
   useEffect(() => {
     /**
-     * We want this to init right away _after_ we have a logged in user.
+     * We want this to init right away _after_ we have a logged in user, and
+     * _after_ we've loaded their age assurance state.
      */
-    if (!currentAccount) return
+    if (!currentAccount || !isAgeRestrictionReady) return
 
-    logger.debug(`useNotificationsRegistration`)
+    notyLogger.debug(`useNotificationsRegistration`)
 
     /**
      * Init push token, if permissions are granted already. If they weren't,
@@ -160,6 +192,9 @@ export function useNotificationsRegistration() {
      * Register the push token with the Bluesky server, whenever it changes.
      * This is also fired any time `getDevicePushTokenAsync` is called.
      *
+     * Since this is registered immediately after `getAndRegisterPushToken`, it
+     * should also detect that getter and be fired almost immediately after this.
+     *
      * According to the Expo docs, there is a chance that the token will change
      * while the app is open in some rare cases. This will fire
      * `registerPushToken` whenever that happens.
@@ -167,14 +202,20 @@ export function useNotificationsRegistration() {
      * @see https://docs.expo.dev/versions/latest/sdk/notifications/#addpushtokenlistenerlistener
      */
     const subscription = Notifications.addPushTokenListener(async token => {
-      registerPushToken({token})
-      logger.debug(`addPushTokenListener callback`, {token})
+      registerPushToken({token, isAgeRestricted: isAgeRestricted})
+      notyLogger.debug(`addPushTokenListener callback`, {token})
     })
 
     return () => {
       subscription.remove()
     }
-  }, [currentAccount, getAndRegisterPushToken, registerPushToken])
+  }, [
+    currentAccount,
+    getAndRegisterPushToken,
+    registerPushToken,
+    isAgeRestrictionReady,
+    isAgeRestricted,
+  ])
 }
 
 export function useRequestNotificationsPermission() {
@@ -202,7 +243,7 @@ export function useRequestNotificationsPermission() {
 
     const res = await Notifications.requestPermissionsAsync()
 
-    logger.metric(`notifications:request`, {
+    notyLogger.metric(`notifications:request`, {
       context: context,
       status: res.status,
     })

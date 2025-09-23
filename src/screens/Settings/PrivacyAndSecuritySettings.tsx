@@ -81,7 +81,9 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             )}
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
-            label={_(msg`Settings for activity alerts`)}
+            label={_(
+              msg`Settings for allowing others to be notified of your posts`,
+            )}
             to={{screen: 'ActivityPrivacySettings'}}
             contentContainerStyle={[a.align_start]}>
             <SettingsList.ItemIcon icon={BellRingingIcon} />
