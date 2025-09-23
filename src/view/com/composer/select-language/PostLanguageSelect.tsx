@@ -97,6 +97,7 @@ export function PostLanguageSelect({
       <PostLanguageSelectDialog
         control={languageDialogControl}
         currentLanguages={currentLanguages}
+        onSelectLanguage={onSelectLanguage}
       />
     </>
   )

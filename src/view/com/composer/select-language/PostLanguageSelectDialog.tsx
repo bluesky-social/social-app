@@ -23,13 +23,17 @@ import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Ti
 import {Text} from '#/components/Typography'
 
 export function PostLanguageSelectDialog({
-  /** Optionally can be passed to show different values than what is saved in
-   * langPrefs. */
-  currentLanguages,
   control,
+  /**
+   * Optionally can be passed to show different values than what is saved in
+   * langPrefs.
+   */
+  currentLanguages,
+  onSelectLanguage,
 }: {
-  currentLanguages?: string[]
   control: Dialog.DialogControlProps
+  currentLanguages?: string[]
+  onSelectLanguage?: (language: string) => void
 }) {
   const {height} = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -45,13 +49,22 @@ export function PostLanguageSelectDialog({
       nativeOptions={{minHeight: height - insets.top}}>
       <Dialog.Handle />
       <ErrorBoundary renderError={renderErrorBoundary}>
-        <DialogInner currentLanguages={currentLanguages} />
+        <DialogInner
+          currentLanguages={currentLanguages}
+          onSelectLanguage={onSelectLanguage}
+        />
       </ErrorBoundary>
     </Dialog.Outer>
   )
 }
 
-export function DialogInner({currentLanguages}: {currentLanguages?: string[]}) {
+export function DialogInner({
+  currentLanguages,
+  onSelectLanguage,
+}: {
+  currentLanguages?: string[]
+  onSelectLanguage?: (language: string) => void
+}) {
   const control = Dialog.useDialogContext()
   const [headerHeight, setHeaderHeight] = useState(0)
 
@@ -87,6 +100,7 @@ export function DialogInner({currentLanguages}: {currentLanguages?: string[]}) {
         langsString = langPrefs.primaryLanguage
       }
       setLangPrefs.setPostLanguage(langsString)
+      onSelectLanguage?.(langsString)
     })
   }
 
