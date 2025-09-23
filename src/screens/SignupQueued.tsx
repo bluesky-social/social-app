@@ -14,7 +14,7 @@ import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
-import {IS_IOS, IS_WEB} from '#/env'
+import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 const COL_WIDTH = 400
 
@@ -107,7 +107,9 @@ export function SignupQueued() {
       animationType={native('slide')}
       presentationStyle="formSheet"
       style={[web(a.util_screen_outer)]}>
-      {IS_IOS && <SystemBars style={{statusBar: 'light'}} />}
+      {IS_IOS && !IS_LIQUID_GLASS && (
+        <SystemBars style={{statusBar: 'light'}} />
+      )}
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}
         contentContainerStyle={{borderWidth: 0}}
