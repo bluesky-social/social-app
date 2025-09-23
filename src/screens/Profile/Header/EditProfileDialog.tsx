@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
-import {Dimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -28,8 +28,6 @@ import {useSimpleVerificationState} from '#/components/verification'
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 256
 
-const SCREEN_HEIGHT = Dimensions.get('window').height
-
 export function EditProfileDialog({
   profile,
   control,
@@ -42,6 +40,7 @@ export function EditProfileDialog({
   const {_} = useLingui()
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
+  const {height} = useWindowDimensions()
 
   const onPressCancel = useCallback(() => {
     if (dirty) {
@@ -56,7 +55,7 @@ export function EditProfileDialog({
       control={control}
       nativeOptions={{
         preventDismiss: dirty,
-        minHeight: SCREEN_HEIGHT,
+        minHeight: height,
       }}
       webOptions={{
         onBackgroundPress: () => {
@@ -186,8 +185,7 @@ function DialogInner({
         newUserAvatar,
         newUserBanner,
       })
-      onUpdate?.()
-      control.close()
+      control.close(() => onUpdate?.())
       Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
@@ -369,7 +367,7 @@ function DialogInner({
               defaultValue={description}
               onChangeText={setDescription}
               multiline
-              label={_(msg`Display name`)}
+              label={_(msg`Description`)}
               placeholder={_(msg`Tell us a bit about yourself`)}
               testID="editProfileDescriptionInput"
             />

@@ -1,5 +1,8 @@
 import {useCallback, useMemo} from 'react'
+import {type RichText} from '@atproto/api'
 import Graphemer from 'graphemer'
+
+import {shortenLinks} from './rich-text-manip'
 
 export function enforceLen(
   str: string,
@@ -45,13 +48,17 @@ export function useWarnMaxGraphemeCount({
   text,
   maxCount,
 }: {
-  text: string
+  text: string | RichText
   maxCount: number
 }) {
   const splitter = useMemo(() => new Graphemer(), [])
 
   return useMemo(() => {
-    return splitter.countGraphemes(text) > maxCount
+    if (typeof text === 'string') {
+      return splitter.countGraphemes(text) > maxCount
+    } else {
+      return shortenLinks(text).graphemeLength > maxCount
+    }
   }, [splitter, maxCount, text])
 }
 
