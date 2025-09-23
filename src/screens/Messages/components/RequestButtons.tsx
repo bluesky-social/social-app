@@ -129,7 +129,7 @@ export function RejectMenu({
             </Button>
           )}
         </Menu.Trigger>
-        <Menu.Outer>
+        <Menu.Outer showCancel>
           <Menu.Group>
             {showDeleteConvo && (
               <Menu.Item
