@@ -32,6 +32,8 @@ export class LinkService {
     app = routes(ctx, app)
     app.use(errorHandler)
 
+    ctx.metrics.registerExpressMetrics(app)
+
     return new LinkService(app, ctx)
   }
 
