@@ -2,7 +2,7 @@ import events from 'node:events'
 import type http from 'node:http'
 
 import cors from 'cors'
-import express, {type Response} from 'express'
+import express from 'express'
 import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
 
 import {type Config} from './config.js'
@@ -32,28 +32,7 @@ export class LinkService {
     app = routes(ctx, app)
     app.use(errorHandler)
 
-    // request duration logging
-    app.use((req, res, next) => {
-      const start = process.hrtime.bigint()
-      const originalEnd = res.end.bind(res) as Response['end']
-      res.end = function (
-        this: Response,
-        ...args: Parameters<Response['end']>
-      ): ReturnType<Response['end']> {
-        const end = process.hrtime.bigint()
-        const respTimeMs = Number(end - start) / 1_000_000 // ns to ms :3
-
-        if (req.route) {
-          ctx.metrics
-            .getHistogram('requestDuration')
-            .labels(req.route.path, req.method, res.statusCode.toString())
-            .observe(respTimeMs)
-        }
-
-        return originalEnd(...args)
-      } as Response['end']
-      next()
-    })
+    ctx.metrics.registerExpressMetrics(app)
 
     return new LinkService(app, ctx)
   }
