@@ -6,7 +6,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 
-import {isIOS26} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
@@ -45,15 +44,11 @@ export function Header({
         style,
       ]}>
       {renderLeft && (
-        <View style={[a.absolute, {left: isIOS26 ? 14 : 6}]}>
-          {renderLeft()}
-        </View>
+        <View style={[a.absolute, {left: 6}]}>{renderLeft()}</View>
       )}
       {children}
       {renderRight && (
-        <View style={[a.absolute, {right: isIOS26 ? 14 : 6}]}>
-          {renderRight()}
-        </View>
+        <View style={[a.absolute, {right: 6}]}>{renderRight()}</View>
       )}
     </View>
   )
