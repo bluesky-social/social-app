@@ -13,7 +13,7 @@ import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {SearchInput} from '#/components/forms/SearchInput'
 import {Loader} from '#/components/Loader'
-import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
+import {ScreenTransition} from '#/components/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -64,7 +64,10 @@ export function StepProfiles({
   }
 
   return (
-    <ScreenTransition style={[a.flex_1]} direction={state.transitionDirection}>
+    <ScreenTransition
+      style={[a.flex_1]}
+      direction={state.transitionDirection}
+      enabledWeb>
       <View style={[a.border_b, t.atoms.border_contrast_medium]}>
         <View style={[a.py_sm, a.px_md, {height: 60}]}>
           <SearchInput

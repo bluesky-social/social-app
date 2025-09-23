@@ -8,7 +8,7 @@ import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
+import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 
 export function StepDetails() {
@@ -23,7 +23,7 @@ export function StepDetails() {
   })
 
   return (
-    <ScreenTransition direction={state.transitionDirection}>
+    <ScreenTransition direction={state.transitionDirection} enabledWeb>
       <View style={[a.px_xl, a.gap_xl, a.mt_4xl]}>
         <View style={[a.gap_md, a.align_center, a.px_md, a.mb_md]}>
           <StarterPack width={90} gradient="sky" />
