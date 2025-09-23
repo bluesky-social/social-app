@@ -7,11 +7,6 @@ export const color = {
   temp_purple_dark: tokens.labelerColor.purple_dark,
 } as const
 
-export const fontWeight = {
-  ...tokens.fontWeight,
-  heavy: tokens.fontWeight.bold,
-}
-
 export const gradients = {
   primary: {
     values: [
