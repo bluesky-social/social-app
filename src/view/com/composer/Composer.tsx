@@ -197,12 +197,28 @@ export const ComposePost = ({
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishingStage, setPublishingStage] = useState('')
   const [error, setError] = useState('')
+
+  /**
+   * A temporarly local reference to a language suggestion that the user has
+   * accepted. This overrides the global post language preference, but is not
+   * stored permanently.
+   */
   const [acceptedLanguageSuggestion, setAcceptedLanguageSuggestion] = useState<
     string | null
   >(null)
 
-  // NOTE(@elijaharita): if a temporary language suggestion has been accepted,
-  // show that as the post language instead of the one from langPrefs.
+  /**
+   * The language of the post being replied to, if any. We just use the first
+   * language available, for now.
+   */
+  const [replyToLanguage, setReplyToLanguage] = useState<string | undefined>(
+    replyTo?.langs?.[0],
+  )
+
+  /**
+   * The currently selected languages of the post. Prefer local temporary
+   * language suggestion over global lang prefs, if available.
+   */
   const currentLanguages = useMemo(
     () =>
       acceptedLanguageSuggestion
@@ -211,11 +227,15 @@ export const ComposePost = ({
     [acceptedLanguageSuggestion, langPrefs.postLanguage],
   )
 
-  // This effect clears the temporary language suggestion if the post language
-  // is manually changed, so the user doesn't get stuck with the suggestion.
-  useEffect(() => {
+  /**
+   * When the user selects a language from the composer language selector,
+   * clear any temporary language suggestions they may have selected
+   * previously, and any we might try to suggest to them.
+   */
+  const onSelectLanguage = () => {
     setAcceptedLanguageSuggestion(null)
-  }, [langPrefs.postLanguage])
+    setReplyToLanguage(undefined)
+  }
 
   const [composerState, composerDispatch] = useReducer(
     composerReducer,
@@ -674,8 +694,7 @@ export const ComposePost = ({
     <>
       <SuggestedLanguage
         text={activePost.richtext.text}
-        // Use the first language if any exists
-        replyToLanguage={replyTo?.langs?.[0]}
+        replyToLanguage={replyToLanguage}
         currentLanguages={currentLanguages}
         onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
       />
@@ -701,6 +720,7 @@ export const ComposePost = ({
           })
         }}
         currentLanguages={currentLanguages}
+        onSelectLanguage={onSelectLanguage}
       />
     </>
   )
@@ -1313,6 +1333,7 @@ function ComposerFooter({
   onSelectVideo,
   onAddPost,
   currentLanguages,
+  onSelectLanguage,
 }: {
   post: PostDraft
   dispatch: (action: PostAction) => void
@@ -1322,6 +1343,7 @@ function ComposerFooter({
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onAddPost: () => void
   currentLanguages: string[]
+  onSelectLanguage?: (language: string) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -1475,7 +1497,10 @@ function ComposerFooter({
             <PlusIcon size="lg" />
           </Button>
         )}
-        <PostLanguageSelect currentLanguages={currentLanguages} />
+        <PostLanguageSelect
+          currentLanguages={currentLanguages}
+          onSelectLanguage={onSelectLanguage}
+        />
         <CharProgress
           count={post.shortenedGraphemeLength}
           style={{width: 65}}

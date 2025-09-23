@@ -19,8 +19,10 @@ import {PostLanguageSelectDialog} from './PostLanguageSelectDialog'
 
 export function PostLanguageSelect({
   currentLanguages: currentLanguagesProp,
+  onSelectLanguage,
 }: {
   currentLanguages?: string[]
+  onSelectLanguage?: (language: string) => void
 }) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
@@ -68,7 +70,10 @@ export function PostLanguageSelect({
                 <Menu.Item
                   key={historyItem}
                   label={_(msg`Select ${langName}`)}
-                  onPress={() => setLangPrefs.setPostLanguage(historyItem)}>
+                  onPress={() => {
+                    setLangPrefs.setPostLanguage(historyItem)
+                    onSelectLanguage?.(historyItem)
+                  }}>
                   <Menu.ItemText>{langName}</Menu.ItemText>
                   <Menu.ItemRadio
                     selected={currentLanguages.includes(historyItem)}
