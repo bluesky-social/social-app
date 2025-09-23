@@ -62,7 +62,10 @@ export class CardService {
     // Start main application server
     this.server = this.app.listen(this.ctx.cfg.service.port)
     this.server.keepAliveTimeout = 90000
-    this.terminator = createHttpTerminator({server: this.server})
+    this.terminator = createHttpTerminator({
+      server: this.server,
+      gracefulTerminationTimeout: 15000, // 15s timeout for in-flight requests
+    })
     await events.once(this.server, 'listening')
 
     // Start separate metrics server
@@ -73,13 +76,32 @@ export class CardService {
     })
 
     this.metricsServer = metricsApp.listen(this.ctx.cfg.service.metricsPort)
-    this.metricsTerminator = createHttpTerminator({server: this.metricsServer})
+    this.metricsTerminator = createHttpTerminator({
+      server: this.metricsServer,
+      gracefulTerminationTimeout: 2000, // 2s timeout for metrics server
+    })
     await events.once(this.metricsServer, 'listening')
   }
 
   async destroy() {
+    const startTime = Date.now()
+
     this.ctx.abortController.abort()
-    await this.terminator?.terminate()
-    await this.metricsTerminator?.terminate()
+
+    const shutdownPromises = []
+
+    if (this.terminator) {
+      shutdownPromises.push(this.terminator.terminate())
+    }
+
+    if (this.metricsTerminator) {
+      shutdownPromises.push(this.metricsTerminator.terminate())
+    }
+
+    await Promise.all(shutdownPromises)
+
+    const elapsed = Date.now() - startTime
+    const {httpLogger} = await import('./logger.js')
+    httpLogger.info(`Graceful shutdown completed in ${elapsed}ms`)
   }
 }
