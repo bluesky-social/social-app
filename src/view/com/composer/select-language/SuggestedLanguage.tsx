@@ -20,12 +20,12 @@ export function SuggestedLanguage({
   text,
   replyToLanguage: replyToLanguageProp,
   currentLanguages,
-  onChange,
+  onAcceptSuggestedLanguage,
 }: {
   text: string
   replyToLanguage?: string
   currentLanguages: string[]
-  onChange: (language: string | null) => void
+  onAcceptSuggestedLanguage: (language: string | null) => void
 }) {
   const replyToLanguage = cleanUpLanguage(replyToLanguageProp)
   const [suggestedLanguage, setSuggestedLanguage] = useState<
@@ -92,7 +92,7 @@ export function SuggestedLanguage({
           color="secondary"
           size="small"
           variant="solid"
-          onPress={() => onChange(suggestedLanguage)}
+          onPress={() => onAcceptSuggestedLanguage(suggestedLanguage)}
           label={_(msg`Change post language to ${suggestedLanguageName}`)}>
           <ButtonText>
             <Trans>Yes</Trans>

@@ -674,10 +674,10 @@ export const ComposePost = ({
     <>
       <SuggestedLanguage
         text={activePost.richtext.text}
-        // NOTE(@elijaharita): currently just choosing the first language if any exists
+        // Use the first language if any exists
         replyToLanguage={replyTo?.langs?.[0]}
         currentLanguages={currentLanguages}
-        onChange={setAcceptedLanguageSuggestion}
+        onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
       />
       <ComposerPills
         isReply={!!replyTo}
