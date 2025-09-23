@@ -8,7 +8,7 @@ import {
   setFontFamily as persistFontFamily,
   setFontScale as persistFontScale,
 } from '#/alf/fonts'
-import {createThemes, defaultTheme} from '#/alf/themes'
+import {themes} from '#/alf/themes'
 import {type Device} from '#/storage'
 
 export {type TextStyleProp, type Theme, type ViewStyleProp} from '@bsky.app/alf'
@@ -24,7 +24,7 @@ export * from '#/alf/util/useGutters'
 export type Alf = {
   themeName: ThemeName
   theme: Theme
-  themes: ReturnType<typeof createThemes>
+  themes: typeof themes
   fonts: {
     scale: Exclude<Device['fontScale'], undefined>
     scaleMultiplier: number
@@ -38,14 +38,12 @@ export type Alf = {
   flags: {}
 }
 
-const themes = createThemes()
-
 /*
  * Context
  */
 export const Context = React.createContext<Alf>({
   themeName: 'light',
-  theme: defaultTheme,
+  theme: themes.light,
   themes,
   fonts: {
     scale: getFontScale(),
