@@ -113,10 +113,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@haileyok/ts-util@^1.3.3":
-  version "1.3.3"
-  resolved "https://registry.yarnpkg.com/@haileyok/ts-util/-/ts-util-1.3.3.tgz#2bc5005c58ef9251765676f9707e1671bd712d33"
-  integrity sha512-1Djml2jn7hG8pniQfN3TaZQJ+IijIdNzlcEFhB3bBBoGz7/vjHNDfWMwbGLCpsP0vdGrbhjE7YIZy0U1CGLUXw==
+"@haileyok/ts-util@^1.3.4":
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/@haileyok/ts-util/-/ts-util-1.3.4.tgz#6f76b8f03cd2e33e9965a7a2f42b9b82504cb5ec"
+  integrity sha512-WWjthZgZ6WVfmJoDVJM7BrBeH4aUrQcWajaeQqi8lWAZeWklDVXFtKei53f1CZEiaKm2P0tGjxW5zmQ4+vi/4g==
   dependencies:
     cors "^2.8.5"
     events "^3.3.0"
