@@ -216,7 +216,7 @@ msgstr ""
 msgid "{0}s"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:455
+#: src/view/shell/desktop/LeftNav.tsx:454
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -1740,7 +1740,7 @@ msgstr ""
 #: src/lib/hooks/useNotificationHandler.ts:99
 #: src/Navigation.tsx:549
 #: src/view/shell/bottom-bar/BottomBar.tsx:221
-#: src/view/shell/desktop/LeftNav.tsx:607
+#: src/view/shell/desktop/LeftNav.tsx:608
 #: src/view/shell/Drawer.tsx:466
 msgid "Chat"
 msgstr ""
@@ -2066,7 +2066,7 @@ msgstr ""
 msgid "Complete the challenge"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:572
+#: src/view/shell/desktop/LeftNav.tsx:573
 msgid "Compose new post"
 msgstr ""
 
@@ -3384,7 +3384,7 @@ msgstr ""
 
 #: src/Navigation.tsx:759
 #: src/screens/Search/Shell.tsx:307
-#: src/view/shell/desktop/LeftNav.tsx:689
+#: src/view/shell/desktop/LeftNav.tsx:690
 #: src/view/shell/Drawer.tsx:414
 msgid "Explore"
 msgstr ""
@@ -3673,7 +3673,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:190
 #: src/view/screens/Feeds.tsx:511
 #: src/view/screens/Profile.tsx:230
-#: src/view/shell/desktop/LeftNav.tsx:727
+#: src/view/shell/desktop/LeftNav.tsx:728
 #: src/view/shell/Drawer.tsx:530
 msgid "Feeds"
 msgstr ""
@@ -4370,7 +4370,7 @@ msgstr ""
 #: src/Navigation.tsx:754
 #: src/Navigation.tsx:774
 #: src/view/shell/bottom-bar/BottomBar.tsx:178
-#: src/view/shell/desktop/LeftNav.tsx:671
+#: src/view/shell/desktop/LeftNav.tsx:672
 #: src/view/shell/Drawer.tsx:440
 msgid "Home"
 msgstr ""
@@ -4997,7 +4997,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:65
 #: src/view/screens/Profile.tsx:224
 #: src/view/screens/Profile.tsx:232
-#: src/view/shell/desktop/LeftNav.tsx:745
+#: src/view/shell/desktop/LeftNav.tsx:746
 #: src/view/shell/Drawer.tsx:545
 msgid "Lists"
 msgstr ""
@@ -5560,7 +5560,7 @@ msgctxt "action"
 msgid "New post"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:580
+#: src/view/shell/desktop/LeftNav.tsx:581
 msgctxt "action"
 msgid "New Post"
 msgstr ""
@@ -5839,7 +5839,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:199
 #: src/view/screens/Notifications.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:252
-#: src/view/shell/desktop/LeftNav.tsx:708
+#: src/view/shell/desktop/LeftNav.tsx:709
 #: src/view/shell/Drawer.tsx:493
 msgid "Notifications"
 msgstr ""
@@ -6454,8 +6454,8 @@ msgstr ""
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr ""
 
-#: src/components/FocusScope/index.tsx:93
-#: src/components/FocusScope/index.tsx:117
+#: src/components/FocusScope/index.tsx:91
+#: src/components/FocusScope/index.tsx:115
 msgid "Please go back, or activate this element to return to the start of the active content."
 msgstr ""
 
@@ -6687,7 +6687,7 @@ msgid "profile"
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:316
-#: src/view/shell/desktop/LeftNav.tsx:786
+#: src/view/shell/desktop/LeftNav.tsx:787
 #: src/view/shell/Drawer.tsx:77
 #: src/view/shell/Drawer.tsx:596
 msgid "Profile"
@@ -7486,7 +7486,7 @@ msgstr ""
 msgid "Save to my feeds"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:764
+#: src/view/shell/desktop/LeftNav.tsx:765
 #: src/view/shell/Drawer.tsx:571
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -7909,7 +7909,7 @@ msgstr ""
 
 #: src/Navigation.tsx:213
 #: src/screens/Settings/Settings.tsx:99
-#: src/view/shell/desktop/LeftNav.tsx:804
+#: src/view/shell/desktop/LeftNav.tsx:805
 #: src/view/shell/Drawer.tsx:609
 msgid "Settings"
 msgstr ""
@@ -10754,7 +10754,7 @@ msgstr ""
 msgid "You've found some people to follow"
 msgstr ""
 
-#: src/components/FocusScope/index.tsx:114
+#: src/components/FocusScope/index.tsx:112
 msgid "You've reached the end of the active content."
 msgstr ""
 
@@ -10766,7 +10766,7 @@ msgstr ""
 msgid "You've reached the maximum number of requests allowed. Please try again later."
 msgstr ""
 
-#: src/components/FocusScope/index.tsx:90
+#: src/components/FocusScope/index.tsx:88
 msgid "You've reached the start of the active content."
 msgstr ""
 
