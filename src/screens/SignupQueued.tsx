@@ -6,7 +6,7 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS, isIOS26, isWeb} from '#/platform/detection'
 import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Logo} from '#/view/icons/Logo'
@@ -106,7 +106,7 @@ export function SignupQueued() {
       animationType={native('slide')}
       presentationStyle="formSheet"
       style={[web(a.util_screen_outer)]}>
-      {isIOS && <SystemBars style={{statusBar: 'light'}} />}
+      {isIOS && !isIOS26 && <SystemBars style={{statusBar: 'light'}} />}
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}
         contentContainerStyle={{borderWidth: 0}}
