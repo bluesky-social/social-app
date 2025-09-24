@@ -1,13 +1,13 @@
 import {
-  AppBskyActorDefs,
-  AppBskyActorGetSuggestions,
-  AppBskyGraphGetSuggestedFollowsByActor,
+  type AppBskyActorDefs,
+  type AppBskyActorGetSuggestions,
+  type AppBskyGraphGetSuggestedFollowsByActor,
   moderateProfile,
 } from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
   useQuery,
 } from '@tanstack/react-query'
@@ -106,12 +106,15 @@ export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
 export function useSuggestedFollowsByActorQuery({
   did,
   enabled,
+  staleTime = STALE.MINUTES.FIVE,
 }: {
   did: string
   enabled?: boolean
+  staleTime?: number
 }) {
   const agent = useAgent()
   return useQuery({
+    staleTime,
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
       const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({

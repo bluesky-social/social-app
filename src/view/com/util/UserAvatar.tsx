@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {
   Image,
   Pressable,
@@ -70,6 +70,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
   type: UserAvatarType
   moderation?: ModerationUI
   usePlainRNImage?: boolean
+  noBorder?: boolean
   onLoad?: () => void
   style?: StyleProp<ViewStyle>
 }
@@ -219,6 +220,7 @@ let UserAvatar = ({
   style,
   live,
   hideLiveBadge,
+  noBorder,
 }: UserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
@@ -309,7 +311,7 @@ let UserAvatar = ({
           onLoad={onLoad}
         />
       )}
-      <MediaInsetBorder style={borderStyle} />
+      {!noBorder && <MediaInsetBorder style={borderStyle} />}
       {live && size > 16 && !hideLiveBadge && (
         <LiveIndicator size={size > 32 ? 'small' : 'tiny'} />
       )}
@@ -318,7 +320,7 @@ let UserAvatar = ({
   ) : (
     <View style={containerStyle}>
       <DefaultAvatar type={type} shape={finalShape} size={size} />
-      <MediaInsetBorder style={borderStyle} />
+      {!noBorder && <MediaInsetBorder style={borderStyle} />}
       {live && size > 16 && !hideLiveBadge && (
         <LiveIndicator size={size > 32 ? 'small' : 'tiny'} />
       )}
@@ -361,7 +363,7 @@ let EditableUserAvatar = ({
     }
   }, [circular, size])
 
-  const onOpenCamera = React.useCallback(async () => {
+  const onOpenCamera = useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
       return
     }
@@ -375,7 +377,7 @@ let EditableUserAvatar = ({
     )
   }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
 
-  const onOpenLibrary = React.useCallback(async () => {
+  const onOpenLibrary = useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
@@ -419,7 +421,7 @@ let EditableUserAvatar = ({
     circular,
   ])
 
-  const onRemoveAvatar = React.useCallback(() => {
+  const onRemoveAvatar = useCallback(() => {
     onSelectNewAvatar(null)
   }, [onSelectNewAvatar])
 
@@ -526,7 +528,7 @@ let PreviewableUserAvatar = ({
   disableNavigation,
   onBeforePress,
   live,
-  ...rest
+  ...props
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -555,9 +557,14 @@ let PreviewableUserAvatar = ({
       moderation={moderation}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       live={status.isActive || live}
-      {...rest}
+      {...props}
     />
   )
+
+  const linkStyle =
+    props.type !== 'algo' && props.type !== 'list'
+      ? a.rounded_full
+      : {borderRadius: props.size > 32 ? 8 : 3}
 
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
@@ -594,7 +601,8 @@ let PreviewableUserAvatar = ({
             did: profile.did,
             handle: profile.handle,
           })}
-          onPress={onPress}>
+          onPress={onPress}
+          style={linkStyle}>
           {avatarEl}
         </Link>
       )}

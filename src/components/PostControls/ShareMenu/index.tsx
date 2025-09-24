@@ -1,4 +1,5 @@
 import {memo, useMemo, useState} from 'react'
+import {type Insets} from 'react-native'
 import {
   type AppBskyFeedDefs,
   type AppBskyFeedPost,
@@ -8,7 +9,6 @@ import {
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
@@ -34,6 +34,7 @@ let ShareMenuButton = ({
   timestamp,
   threadgateRecord,
   onShare,
+  hitSlop,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -43,6 +44,7 @@ let ShareMenuButton = ({
   timestamp: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
   onShare: () => void
+  hitSlop?: Insets
 }): React.ReactNode => {
   const {_} = useLingui()
   const gate = useGate()
@@ -92,7 +94,8 @@ let ShareMenuButton = ({
                 big={big}
                 label={props.accessibilityLabel}
                 {...props}
-                onLongPress={native(onNativeLongPress)}>
+                onLongPress={native(onNativeLongPress)}
+                hitSlop={hitSlop}>
                 <PostControlButtonIcon icon={ShareIcon} />
               </PostControlButton>
             )

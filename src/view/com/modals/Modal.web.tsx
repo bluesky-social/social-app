@@ -6,12 +6,8 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
-import * as ChangePasswordModal from './ChangePassword'
-import * as CreateOrEditListModal from './CreateOrEditList'
 import * as DeleteAccountModal from './DeleteAccount'
-import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
-import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as UserAddRemoveLists from './UserAddRemoveLists'
 
 export function ModalsContainer() {
@@ -50,20 +46,12 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   let element
-  if (modal.name === 'create-or-edit-list') {
-    element = <CreateOrEditListModal.Component {...modal} />
-  } else if (modal.name === 'user-add-remove-lists') {
+  if (modal.name === 'user-add-remove-lists') {
     element = <UserAddRemoveLists.Component {...modal} />
   } else if (modal.name === 'delete-account') {
     element = <DeleteAccountModal.Component />
-  } else if (modal.name === 'invite-codes') {
-    element = <InviteCodesModal.Component />
   } else if (modal.name === 'content-languages-settings') {
     element = <ContentLanguagesSettingsModal.Component />
-  } else if (modal.name === 'post-languages-settings') {
-    element = <PostLanguagesSettingsModal.Component />
-  } else if (modal.name === 'change-password') {
-    element = <ChangePasswordModal.Component />
   } else {
     return null
   }

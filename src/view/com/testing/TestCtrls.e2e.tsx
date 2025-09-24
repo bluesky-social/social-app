@@ -1,8 +1,9 @@
-import {LogBox, Pressable, View} from 'react-native'
+import {useState} from 'react'
+import {LogBox, Pressable, View, TextInput} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useModalControls} from '#/state/modals'
-import {useSessionApi} from '#/state/session'
+import {BLUESKY_PROXY_HEADER} from '#/lib/constants'
+import {useSessionApi, useAgent} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
 import {navigate} from '../../../Navigation'
@@ -18,9 +19,9 @@ LogBox.ignoreAllLogs()
 const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
 export function TestCtrls() {
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const {logoutEveryAccount, login} = useSessionApi()
-  const {openModal} = useModalControls()
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const onPressSignInAlice = async () => {
@@ -45,8 +46,19 @@ export function TestCtrls() {
     )
     setShowLoggedOut(false)
   }
+  const [proxyHeader, setProxyHeader] = useState('')
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
+      <TextInput
+        testID="e2eProxyHeaderInput"
+        onChangeText={val => setProxyHeader(val as any)}
+        onSubmitEditing={() => {
+          const header = `${proxyHeader}#bsky_appview`
+          BLUESKY_PROXY_HEADER.set(header)
+          agent.configureProxy(header as any)
+        }}
+        style={BTN}
+      />
       <Pressable
         testID="e2eSignInAlice"
         onPress={onPressSignInAlice}
@@ -96,14 +108,14 @@ export function TestCtrls() {
         style={BTN}
       />
       <Pressable
-        testID="e2eRefreshHome"
-        onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
+        testID="storybookBtn"
+        onPress={() => navigate('Debug')}
         accessibilityRole="button"
         style={BTN}
       />
       <Pressable
-        testID="e2eOpenInviteCodesModal"
-        onPress={() => openModal({name: 'invite-codes'})}
+        testID="e2eRefreshHome"
+        onPress={() => queryClient.invalidateQueries({queryKey: ['post-feed']})}
         accessibilityRole="button"
         style={BTN}
       />

@@ -1,10 +1,13 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ReportOption, useReportOptions} from '#/lib/moderation/useReportOptions'
+import {
+  type ReportOption,
+  useReportOptions,
+} from '#/lib/moderation/useReportOptions'
 import {Link} from '#/components/Link'
 import {DMCA_LINK} from '#/components/ReportDialog/const'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
@@ -23,7 +26,7 @@ import {
 } from '#/components/icons/Chevron'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
 import {Text} from '#/components/Typography'
-import {ReportDialogProps} from './types'
+import {type ReportDialogProps} from './types'
 
 export function SelectReportOptionView(props: {
   params: ReportDialogProps['params']

@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useState} from 'react'
+import {type JSX, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -40,6 +40,7 @@ import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
+import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {
   BulletList_Filled_Corner0_Rounded as ListFilled,
   BulletList_Stroke2_Corner0_Rounded as List,
@@ -236,6 +237,7 @@ function SwitchMenuItems({
     setShowLoggedOut(true)
     closeEverything()
   }
+
   return (
     <Menu.Outer>
       {accounts && accounts.length > 0 && (
@@ -255,6 +257,7 @@ function SwitchMenuItems({
           <Menu.Divider />
         </>
       )}
+      <SwitcherMenuProfileLink />
       <Menu.Item
         label={_(msg`Add another account`)}
         onPress={onAddAnotherAccount}>
@@ -270,6 +273,56 @@ function SwitchMenuItems({
         </Menu.ItemText>
       </Menu.Item>
     </Menu.Outer>
+  )
+}
+
+function SwitcherMenuProfileLink() {
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
+  const navigation = useNavigation()
+  const context = Menu.useMenuContext()
+  const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/'
+  const [pathName] = useMemo(() => router.matchPath(profileLink), [profileLink])
+  const currentRouteInfo = useNavigationState(state => {
+    if (!state) {
+      return {name: 'Home'}
+    }
+    return getCurrentRoute(state)
+  })
+  let isCurrent =
+    currentRouteInfo.name === 'Profile'
+      ? isTab(currentRouteInfo.name, pathName) &&
+        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+          currentAccount?.handle
+      : isTab(currentRouteInfo.name, pathName)
+  const onProfilePress = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) {
+        return
+      }
+      e.preventDefault()
+      context.control.close()
+      if (isCurrent) {
+        emitSoftReset()
+      } else {
+        const [screen, params] = router.matchPath(profileLink)
+        // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
+        navigation.navigate(screen, params, {pop: true})
+      }
+    },
+    [navigation, profileLink, isCurrent, context],
+  )
+  return (
+    <Menu.Item
+      label={_(msg`Go to profile`)}
+      // @ts-expect-error The function signature differs on web -inb
+      onPress={onProfilePress}
+      href={profileLink}>
+      <Menu.ItemIcon icon={UserCircle} />
+      <Menu.ItemText>
+        <Trans>Go to profile</Trans>
+      </Menu.ItemText>
+    </Menu.Item>
   )
 }
 
@@ -379,7 +432,6 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         style={[
           a.align_center,
           a.justify_center,
-          a.z_10,
           {
             width: 24,
             height: 24,
@@ -414,6 +466,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                 a.rounded_full,
                 a.text_center,
                 a.leading_tight,
+                a.z_20,
                 {
                   top: '-10%',
                   left: count.length === 1 ? 12 : 8,
@@ -439,6 +492,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
             style={[
               a.absolute,
               a.rounded_full,
+              a.z_20,
               {
                 backgroundColor: t.palette.primary_500,
                 width: 8,
@@ -690,6 +744,29 @@ export function DesktopLeftNav() {
               />
             }
             label={_(msg`Lists`)}
+          />
+          <NavItem
+            href="/saved"
+            icon={
+              <Bookmark
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
+            iconFilled={
+              <BookmarkFilled
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
+            label={_(
+              msg({
+                message: 'Saved',
+                context: 'link to bookmarks screen',
+              }),
+            )}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}

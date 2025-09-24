@@ -5,9 +5,8 @@ import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {useTranslate} from '#/lib/hooks/useTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
@@ -41,7 +40,7 @@ export let MessageContextMenu = ({
   const translateControl = usePromptControl()
   const [translation, setTranslation] = useState('')
   const langPrefs = useLanguagePrefs()
-  const openLink = useOpenLink()
+  const translate = useTranslate()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
@@ -66,8 +65,7 @@ export let MessageContextMenu = ({
 
     const run = async () => {
       if (!supportsTranslatorAPI || !supportsLanguageDetectorAPI) {
-        const translatorUrl = getTranslatorLink(textToTranslate, targetLanguage)
-        openLink(translatorUrl, true)
+        translate(message.text, langPrefs.primaryLanguage)
 
         logger.metric(
           'translate',
@@ -117,7 +115,7 @@ export let MessageContextMenu = ({
     }
 
     run()
-  }, [message.text, langPrefs.primaryLanguage, openLink, translateControl, _])
+  }, [message.text, langPrefs.primaryLanguage, translate, translateControl, _])
 
   const onDelete = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

@@ -1,5 +1,6 @@
 import {
   Children,
+  type JSX,
   useCallback,
   useImperativeHandle,
   useRef,

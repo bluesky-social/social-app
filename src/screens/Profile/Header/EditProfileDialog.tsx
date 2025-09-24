@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
-import {Dimensions, View} from 'react-native'
+import {useWindowDimensions, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -8,7 +8,6 @@ import {urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {type ImageMeta} from '#/state/gallery'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
@@ -23,12 +22,11 @@ import * as TextField from '#/components/forms/TextField'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
+import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
 const DESCRIPTION_MAX_GRAPHEMES = 256
-
-const SCREEN_HEIGHT = Dimensions.get('window').height
 
 export function EditProfileDialog({
   profile,
@@ -42,20 +40,7 @@ export function EditProfileDialog({
   const {_} = useLingui()
   const cancelControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
-
-  // 'You might lose unsaved changes' warning
-  useEffect(() => {
-    if (isWeb && dirty) {
-      const abortController = new AbortController()
-      const {signal} = abortController
-      window.addEventListener('beforeunload', evt => evt.preventDefault(), {
-        signal,
-      })
-      return () => {
-        abortController.abort()
-      }
-    }
-  }, [dirty])
+  const {height} = useWindowDimensions()
 
   const onPressCancel = useCallback(() => {
     if (dirty) {
@@ -70,7 +55,16 @@ export function EditProfileDialog({
       control={control}
       nativeOptions={{
         preventDismiss: dirty,
-        minHeight: SCREEN_HEIGHT,
+        minHeight: height,
+      }}
+      webOptions={{
+        onBackgroundPress: () => {
+          if (dirty) {
+            cancelControl.open()
+          } else {
+            control.close()
+          }
+        },
       }}
       testID="editProfileModal">
       <DialogInner
@@ -191,8 +185,7 @@ function DialogInner({
         newUserAvatar,
         newUserBanner,
       })
-      onUpdate?.()
-      control.close()
+      control.close(() => onUpdate?.())
       Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
     } catch (e: any) {
       logger.error('Failed to update user profile', {message: String(e)})
@@ -329,22 +322,18 @@ function DialogInner({
             />
           </TextField.Root>
           {displayNameTooLong && (
-            <TextField.SuffixText
+            <Text
               style={[
                 a.text_sm,
                 a.mt_xs,
                 a.font_bold,
                 {color: t.palette.negative_400},
-              ]}
-              label={_(msg`Display name is too long`)}>
-              <Trans>
-                Display name is too long.{' '}
-                <Plural
-                  value={DISPLAY_NAME_MAX_GRAPHEMES}
-                  other="The maximum number of characters is #."
-                />
-              </Trans>
-            </TextField.SuffixText>
+              ]}>
+              <Plural
+                value={DISPLAY_NAME_MAX_GRAPHEMES}
+                other="Display name is too long. The maximum number of characters is #."
+              />
+            </Text>
           )}
         </View>
 
@@ -356,9 +345,14 @@ function DialogInner({
                 You are verified. You will lose your verification status if you
                 change your display name.{' '}
                 <InlineLinkText
-                  label={_(msg`Learn more`)}
+                  label={_(
+                    msg({
+                      message: `Learn more`,
+                      context: `english-only-resource`,
+                    }),
+                  )}
                   to={urls.website.blog.initialVerificationAnnouncement}>
-                  <Trans>Learn more.</Trans>
+                  <Trans context="english-only-resource">Learn more.</Trans>
                 </InlineLinkText>
               </Trans>
             </Admonition>
@@ -373,28 +367,24 @@ function DialogInner({
               defaultValue={description}
               onChangeText={setDescription}
               multiline
-              label={_(msg`Display name`)}
+              label={_(msg`Description`)}
               placeholder={_(msg`Tell us a bit about yourself`)}
               testID="editProfileDescriptionInput"
             />
           </TextField.Root>
           {descriptionTooLong && (
-            <TextField.SuffixText
+            <Text
               style={[
                 a.text_sm,
                 a.mt_xs,
                 a.font_bold,
                 {color: t.palette.negative_400},
-              ]}
-              label={_(msg`Description is too long`)}>
-              <Trans>
-                Description is too long.{' '}
-                <Plural
-                  value={DESCRIPTION_MAX_GRAPHEMES}
-                  other="The maximum number of characters is #."
-                />
-              </Trans>
-            </TextField.SuffixText>
+              ]}>
+              <Plural
+                value={DESCRIPTION_MAX_GRAPHEMES}
+                other="Description is too long. The maximum number of characters is #."
+              />
+            </Text>
           )}
         </View>
       </View>

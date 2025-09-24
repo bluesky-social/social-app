@@ -11,25 +11,25 @@ import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
   Gesture,
   GestureDetector,
-  PanGesture,
+  type PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
-  SharedValue,
+  type SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
   useAnimatedRef,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {
-  Dimensions as ImageDimensions,
-  ImageSource,
-  Transform,
+  type Dimensions as ImageDimensions,
+  type ImageSource,
+  type Transform,
 } from '../../@types'
 
 const MAX_ORIGINAL_IMAGE_ZOOM = 2

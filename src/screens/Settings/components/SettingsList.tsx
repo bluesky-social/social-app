@@ -18,6 +18,7 @@ const ItemContext = createContext({
   destructive: false,
   withinGroup: false,
 })
+ItemContext.displayName = 'SettingsListItemContext'
 
 const Portal = createPortalGroup()
 
@@ -124,7 +125,7 @@ export function LinkItem({
   contentContainerStyle,
   chevronColor,
   ...props
-}: LinkProps & {
+}: Omit<LinkProps, Button.UninheritableButtonProps> & {
   contentContainerStyle?: StyleProp<ViewStyle>
   destructive?: boolean
   chevronColor?: string
@@ -132,7 +133,7 @@ export function LinkItem({
   const t = useTheme()
 
   return (
-    <Link color="secondary" {...props}>
+    <Link {...props}>
       {args => (
         <Item
           destructive={destructive}
@@ -154,7 +155,7 @@ export function PressableItem({
   contentContainerStyle,
   hoverStyle,
   ...props
-}: Button.ButtonProps & {
+}: Omit<Button.ButtonProps, Button.UninheritableButtonProps> & {
   contentContainerStyle?: StyleProp<ViewStyle>
   destructive?: boolean
 }) {

@@ -1,12 +1,12 @@
 import React, {useCallback} from 'react'
-import {Keyboard, Pressable, View} from 'react-native'
-import {ChatBskyConvoDefs, ModerationCause} from '@atproto/api'
+import {Keyboard, View} from 'react-native'
+import {type ChatBskyConvoDefs, type ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
-import {Shadow} from '#/state/cache/types'
+import {type NavigationProp} from '#/lib/routes/types'
+import {type Shadow} from '#/state/cache/types'
 import {
   useConvoQuery,
   useMarkAsReadMutation,
@@ -14,11 +14,15 @@ import {
 import {useMuteConvo} from '#/state/queries/messages/mute-conversation'
 import {useProfileBlockMutationQueue} from '#/state/queries/profile'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {type ViewStyleProp} from '#/alf'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
 import {BlockedByListDialog} from '#/components/dms/BlockedByListDialog'
 import {LeaveConvoPrompt} from '#/components/dms/LeaveConvoPrompt'
 import {ReportConversationPrompt} from '#/components/dms/ReportConversationPrompt'
+import {ReportDialog} from '#/components/dms/ReportDialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as ArrowBoxLeft} from '#/components/icons/ArrowBoxLeft'
+import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import {DotGrid_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
@@ -30,9 +34,7 @@ import {
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
-import * as bsky from '#/types/bsky'
-import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '../icons/Bubble'
-import {ReportDialog} from './ReportDialog'
+import type * as bsky from '#/types/bsky'
 
 let ConvoMenu = ({
   convo,
@@ -59,7 +61,6 @@ let ConvoMenu = ({
   style?: ViewStyleProp['style']
 }): React.ReactNode => {
   const {_} = useLingui()
-  const t = useTheme()
 
   const leaveConvoControl = Prompt.usePromptControl()
   const reportControl = Prompt.usePromptControl()
@@ -73,22 +74,21 @@ let ConvoMenu = ({
         {!hideTrigger && (
           <View style={[style]}>
             <Menu.Trigger label={_(msg`Chat settings`)}>
-              {({props, state}) => (
-                <Pressable
+              {({props}) => (
+                <Button
+                  label={props.accessibilityLabel}
                   {...props}
                   onPress={() => {
                     Keyboard.dismiss()
                     props.onPress()
                   }}
-                  style={[
-                    a.p_sm,
-                    a.rounded_full,
-                    (state.hovered || state.pressed) && t.atoms.bg_contrast_25,
-                    // make sure pfp is in the middle
-                    {marginLeft: -10},
-                  ]}>
-                  <DotsHorizontal size="md" style={t.atoms.text} />
-                </Pressable>
+                  size="small"
+                  color="secondary"
+                  shape="round"
+                  variant="ghost"
+                  style={[a.bg_transparent]}>
+                  <ButtonIcon icon={DotsHorizontal} size="md" />
+                </Button>
               )}
             </Menu.Trigger>
           </View>

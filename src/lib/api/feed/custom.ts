@@ -1,6 +1,6 @@
 import {
-  AppBskyFeedDefs,
-  AppBskyFeedGetFeed as GetCustomFeed,
+  type AppBskyFeedDefs,
+  type AppBskyFeedGetFeed as GetCustomFeed,
   BskyAgent,
   jsonStringToLex,
 } from '@atproto/api'
@@ -9,7 +9,7 @@ import {
   getAppLanguageAsContentLanguage,
   getContentLanguages,
 } from '#/state/preferences/languages'
-import {FeedAPI, FeedAPIResponse} from './types'
+import {type FeedAPI, type FeedAPIResponse} from './types'
 import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {

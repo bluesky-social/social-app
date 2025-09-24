@@ -4,7 +4,6 @@ import {useLingui} from '@lingui/react'
 import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {useTheme} from '#/alf'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
@@ -14,6 +13,7 @@ import {
   PostControlButtonIcon,
   PostControlButtonText,
 } from './PostControlButton'
+import {useFormatPostStatCount} from './util'
 
 interface Props {
   isReposted: boolean
@@ -33,9 +33,10 @@ export const RepostButton = ({
   embeddingDisabled,
 }: Props) => {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const {hasSession} = useSession()
   const requireAuth = useRequireAuth()
+  const formatPostStatCount = useFormatPostStatCount()
 
   return hasSession ? (
     <EventStopper onKeyDown={false}>
@@ -53,7 +54,7 @@ export const RepostButton = ({
                 <PostControlButtonIcon icon={Repost} />
                 {typeof repostCount !== 'undefined' && repostCount > 0 && (
                   <PostControlButtonText testID="repostCount">
-                    {formatCount(i18n, repostCount)}
+                    {formatPostStatCount(repostCount)}
                   </PostControlButtonText>
                 )}
               </PostControlButton>
@@ -62,11 +63,17 @@ export const RepostButton = ({
         </Menu.Trigger>
         <Menu.Outer style={{minWidth: 170}}>
           <Menu.Item
-            label={isReposted ? _(msg`Undo repost`) : _(msg`Repost`)}
+            label={
+              isReposted
+                ? _(msg`Undo repost`)
+                : _(msg({message: `Repost`, context: `action`}))
+            }
             testID="repostDropdownRepostBtn"
             onPress={onRepost}>
             <Menu.ItemText>
-              {isReposted ? _(msg`Undo repost`) : _(msg`Repost`)}
+              {isReposted
+                ? _(msg`Undo repost`)
+                : _(msg({message: `Repost`, context: `action`}))}
             </Menu.ItemText>
             <Menu.ItemIcon icon={Repost} position="right" />
           </Menu.Item>
@@ -99,7 +106,7 @@ export const RepostButton = ({
       <PostControlButtonIcon icon={Repost} />
       {typeof repostCount !== 'undefined' && repostCount > 0 && (
         <PostControlButtonText testID="repostCount">
-          {formatCount(i18n, repostCount)}
+          {formatPostStatCount(repostCount)}
         </PostControlButtonText>
       )}
     </PostControlButton>

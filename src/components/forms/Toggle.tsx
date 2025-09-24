@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View, ViewStyle} from 'react-native'
+import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -8,9 +8,9 @@ import {
   atoms as a,
   flatten,
   native,
-  TextStyleProp,
+  type TextStyleProp,
   useTheme,
-  ViewStyleProp,
+  type ViewStyleProp,
 } from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
@@ -35,6 +35,7 @@ const ItemContext = React.createContext<ItemState>({
   pressed: false,
   focused: false,
 })
+ItemContext.displayName = 'ToggleItemContext'
 
 const GroupContext = React.createContext<{
   values: string[]
@@ -49,6 +50,7 @@ const GroupContext = React.createContext<{
   maxSelectionsReached: false,
   setFieldValue: () => {},
 })
+GroupContext.displayName = 'ToggleGroupContext'
 
 export type GroupProps = React.PropsWithChildren<{
   type?: 'radio' | 'checkbox'
@@ -57,6 +59,7 @@ export type GroupProps = React.PropsWithChildren<{
   disabled?: boolean
   onChange: (value: string[]) => void
   label: string
+  style?: StyleProp<ViewStyle>
 }>
 
 export type ItemProps = ViewStyleProp & {
@@ -82,6 +85,7 @@ export function Group({
   type = 'checkbox',
   maxSelections,
   label,
+  style,
 }: GroupProps) {
   const groupRole = type === 'radio' ? 'radiogroup' : undefined
   const values = type === 'radio' ? providedValues.slice(0, 1) : providedValues
@@ -134,7 +138,7 @@ export function Group({
   return (
     <GroupContext.Provider value={context}>
       <View
-        style={[a.w_full]}
+        style={[a.w_full, style]}
         role={groupRole}
         {...(groupRole === 'radiogroup'
           ? {

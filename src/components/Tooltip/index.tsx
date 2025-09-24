@@ -53,12 +53,14 @@ const TooltipContext = createContext<TooltipContextType>({
   visible: false,
   onVisibleChange: () => {},
 })
+TooltipContext.displayName = 'TooltipContext'
 
 const TargetContext = createContext<TargetContextType>({
   targetMeasurements: undefined,
   setTargetMeasurements: () => {},
   shouldMeasure: false,
 })
+TargetContext.displayName = 'TargetContext'
 
 export function Outer({
   children,

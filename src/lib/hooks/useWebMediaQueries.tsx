@@ -2,6 +2,9 @@ import {useMediaQuery} from 'react-responsive'
 
 import {isNative} from '#/platform/detection'
 
+/**
+ * @deprecated use `useBreakpoints` from `#/alf` instead
+ */
 export function useWebMediaQueries() {
   const isDesktop = useMediaQuery({minWidth: 1300})
   const isTablet = useMediaQuery({minWidth: 800, maxWidth: 1300 - 1})

@@ -4,7 +4,7 @@ import {Image as ExpoImage} from 'expo-image'
 import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
-  MediaTypeOptions,
+  UIImagePickerPreferredAssetRepresentationMode,
 } from 'expo-image-picker'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -59,6 +59,7 @@ interface IAvatarContext {
 }
 
 const AvatarContext = React.createContext<IAvatarContext>({} as IAvatarContext)
+AvatarContext.displayName = 'AvatarContext'
 export const useAvatar = () => React.useContext(AvatarContext)
 
 const randomColor =
@@ -96,10 +97,12 @@ export function StepProfile() {
       const response = await sheetWrapper(
         launchImageLibraryAsync({
           exif: false,
-          mediaTypes: MediaTypeOptions.Images,
+          mediaTypes: ['images'],
           quality: 1,
           ...opts,
           legacy: true,
+          preferredAssetRepresentationMode:
+            UIImagePickerPreferredAssetRepresentationMode.Automatic,
         }),
       )
 
@@ -265,10 +268,11 @@ export function StepProfile() {
         </View>
 
         <OnboardingControls.Portal>
-          <View style={[a.gap_md, gtMobile && {flexDirection: 'row-reverse'}]}>
+          <View style={[a.gap_md, gtMobile && a.flex_row_reverse]}>
             <Button
-              variant="gradient"
-              color="gradient_sky"
+              testID="onboardingContinue"
+              variant="solid"
+              color="primary"
               size="large"
               label={_(msg`Continue to next step`)}
               onPress={onContinue}>
@@ -278,6 +282,7 @@ export function StepProfile() {
               <ButtonIcon icon={ChevronRight} position="right" />
             </Button>
             <Button
+              testID="onboardingAvatarCreator"
               variant="ghost"
               color="primary"
               size="large"

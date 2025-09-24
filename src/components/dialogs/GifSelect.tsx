@@ -1,4 +1,4 @@
-import React, {
+import {
   useCallback,
   useImperativeHandle,
   useMemo,
@@ -37,7 +37,7 @@ export function GifSelectDialog({
   onClose,
   onSelectGif: onSelectGifProp,
 }: {
-  controlRef: React.RefObject<{open: () => void}>
+  controlRef: React.RefObject<{open: () => void} | null>
   onClose?: () => void
   onSelectGif: (gif: Gif) => void
 }) {
@@ -119,7 +119,7 @@ function GifList({
     [onSelectGif],
   )
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
@@ -146,20 +146,9 @@ function GifList({
           a.flex_row,
           a.align_center,
           !gtMobile && web(a.gap_md),
+          a.pb_sm,
+          t.atoms.bg,
         ]}>
-        {/* cover top corners */}
-        <View
-          style={[
-            a.absolute,
-            a.inset_0,
-            {
-              borderBottomLeftRadius: 8,
-              borderBottomRightRadius: 8,
-            },
-            t.atoms.bg,
-          ]}
-        />
-
         {!gtMobile && isWeb && (
           <Button
             size="small"
@@ -172,7 +161,7 @@ function GifList({
           </Button>
         )}
 
-        <TextField.Root>
+        <TextField.Root style={[!gtMobile && isWeb && a.flex_1]}>
           <TextField.Icon icon={Search} />
           <TextField.Input
             label={_(msg`Search GIFs`)}
@@ -206,11 +195,9 @@ function GifList({
         renderItem={renderItem}
         numColumns={gtMobile ? 3 : 2}
         columnWrapperStyle={[a.gap_sm]}
-        contentContainerStyle={[
-          native([a.px_xl, {minHeight: height}]),
-          web(a.h_full_vh),
-        ]}
-        style={[web(a.h_full_vh)]}
+        contentContainerStyle={[native([a.px_xl, {minHeight: height}])]}
+        webInnerStyle={[web({minHeight: '80vh'})]}
+        webInnerContentContainerStyle={[web(a.pb_0)]}
         ListHeaderComponent={
           <>
             {listHeader}

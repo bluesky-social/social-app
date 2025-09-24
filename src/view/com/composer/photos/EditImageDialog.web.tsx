@@ -19,7 +19,7 @@ import {type EditImageDialogProps} from './EditImageDialog'
 
 export function EditImageDialog(props: EditImageDialogProps) {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer control={props.control} webOptions={{alignCenter: true}}>
       <Dialog.Handle />
       <DialogInner {...props} />
     </Dialog.Outer>
@@ -112,7 +112,7 @@ function EditImageInner({
   aspectRatio,
 }: Required<Pick<EditImageDialogProps, 'image'>> &
   Omit<EditImageDialogProps, 'control' | 'image'> & {
-    saveRef: React.RefObject<{save: () => Promise<void>}>
+    saveRef: React.RefObject<{save: () => Promise<void>} | null>
   }) {
   const t = useTheme()
   const [isDragging, setIsDragging] = useState(false)

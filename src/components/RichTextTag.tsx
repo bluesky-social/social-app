@@ -1,10 +1,10 @@
 import React from 'react'
-import {StyleProp, Text as RNText, TextStyle} from 'react-native'
+import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {isNative, isWeb} from '#/platform/detection'
 import {

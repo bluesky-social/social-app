@@ -1,5 +1,5 @@
-import React from 'react'
-import {I18n} from '@lingui/core'
+import React, {type JSX} from 'react'
+import {type I18n} from '@lingui/core'
 import {useLingui} from '@lingui/react'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'

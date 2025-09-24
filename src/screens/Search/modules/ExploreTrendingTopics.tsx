@@ -163,10 +163,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
     a.align_center,
     a.gap_xs,
     a.rounded_full,
-    a.px_sm,
-    {
-      height: 28,
-    },
+    {height: 28, paddingHorizontal: 10},
   ]
 
   let Icon: React.ComponentType<SVGIconProps> | null = null
@@ -218,7 +215,7 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
   return (
     <View style={[pillStyles, {backgroundColor}]}>
       {Icon && <Icon size="sm" style={{color}} />}
-      <Text style={[a.text_sm, {color}]}>{text}</Text>
+      <Text style={[a.text_sm, a.font_medium, {color}]}>{text}</Text>
     </View>
   )
 }

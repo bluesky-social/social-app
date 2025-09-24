@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AtUri} from '@atproto/api'
+import {type AtUri} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -10,10 +10,10 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 // import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 // import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
 // import {UserAvatar} from '#/view/com/util/UserAvatar'
-import type {TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
-import {atoms as a, native, useTheme, ViewStyleProp} from '#/alf'
+import {type TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
+import {atoms as a, native, useTheme, type ViewStyleProp} from '#/alf'
 import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function TrendingTopic({

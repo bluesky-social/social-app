@@ -1,14 +1,6 @@
 import React from 'react'
-import {type AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-
-export interface CreateOrEditListModal {
-  name: 'create-or-edit-list'
-  purpose?: string
-  list?: AppBskyGraphDefs.ListView
-  onSave?: (uri: string) => void
-}
 
 export interface UserAddRemoveListsModal {
   name: 'user-add-remove-lists'
@@ -23,42 +15,22 @@ export interface DeleteAccountModal {
   name: 'delete-account'
 }
 
-export interface WaitlistModal {
-  name: 'waitlist'
-}
-
-export interface InviteCodesModal {
-  name: 'invite-codes'
-}
-
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
 
-export interface PostLanguagesSettingsModal {
-  name: 'post-languages-settings'
-}
-
-export interface ChangePasswordModal {
-  name: 'change-password'
-}
-
+/**
+ * @deprecated DO NOT ADD NEW MODALS
+ */
 export type Modal =
   // Account
   | DeleteAccountModal
-  | ChangePasswordModal
 
   // Curation
   | ContentLanguagesSettingsModal
-  | PostLanguagesSettingsModal
 
   // Lists
-  | CreateOrEditListModal
   | UserAddRemoveListsModal
-
-  // Bluesky access
-  | WaitlistModal
-  | InviteCodesModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean
@@ -67,6 +39,7 @@ const ModalContext = React.createContext<{
   isModalActive: false,
   activeModals: [],
 })
+ModalContext.displayName = 'ModalContext'
 
 const ModalControlContext = React.createContext<{
   openModal: (modal: Modal) => void
@@ -77,6 +50,7 @@ const ModalControlContext = React.createContext<{
   closeModal: () => false,
   closeAllModals: () => false,
 })
+ModalControlContext.displayName = 'ModalControlContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [activeModals, setActiveModals] = React.useState<Modal[]>([])
@@ -125,10 +99,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
+/**
+ * @deprecated use the dialog system from `#/components/Dialog.tsx`
+ */
 export function useModals() {
   return React.useContext(ModalContext)
 }
 
+/**
+ * @deprecated use the dialog system from `#/components/Dialog.tsx`
+ */
 export function useModalControls() {
   return React.useContext(ModalControlContext)
 }

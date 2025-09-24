@@ -31,6 +31,7 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {MAX_POST_LINES} from '#/lib/constants'
+import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -41,7 +42,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 import {type FeedNotification} from '#/state/queries/notifications/feed'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useAgent} from '#/state/session'
@@ -195,47 +195,51 @@ let NotificationFeedItem = ({
     }
     const isHighlighted = highlightUnread && !item.notification.isRead
     return (
-      <Post
-        post={item.subject}
-        style={
-          isHighlighted && {
-            backgroundColor: pal.colors.unreadNotifBg,
-            borderColor: pal.colors.unreadNotifBorder,
+      <View testID={`feedItem-by-${item.notification.author.handle}`}>
+        <Post
+          post={item.subject}
+          style={
+            isHighlighted && {
+              backgroundColor: pal.colors.unreadNotifBg,
+              borderColor: pal.colors.unreadNotifBorder,
+            }
           }
-        }
-        hideTopBorder={hideTopBorder}
-      />
+          hideTopBorder={hideTopBorder}
+        />
+      </View>
     )
   }
 
   const firstAuthorLink = (
-    <InlineLinkText
-      key={firstAuthor.href}
-      style={[t.atoms.text, a.font_bold, a.text_md, a.leading_tight]}
-      to={firstAuthor.href}
-      disableMismatchWarning
-      emoji
-      label={_(msg`Go to ${firstAuthorName}'s profile`)}>
-      {forceLTR(firstAuthorName)}
-      {firstAuthorVerification.showBadge && (
-        <View
-          style={[
-            a.relative,
-            {
-              paddingTop: platform({android: 2}),
-              marginBottom: platform({ios: -7}),
-              top: platform({web: 1}),
-              paddingLeft: 3,
-              paddingRight: 2,
-            },
-          ]}>
-          <VerificationCheck
-            width={14}
-            verifier={firstAuthorVerification.role === 'verifier'}
-          />
-        </View>
-      )}
-    </InlineLinkText>
+    <ProfileHoverCard did={firstAuthor.profile.did} inline>
+      <InlineLinkText
+        key={firstAuthor.href}
+        style={[t.atoms.text, a.font_bold, a.text_md, a.leading_tight]}
+        to={firstAuthor.href}
+        disableMismatchWarning
+        emoji
+        label={_(msg`Go to ${firstAuthorName}'s profile`)}>
+        {forceLTR(firstAuthorName)}
+        {firstAuthorVerification.showBadge && (
+          <View
+            style={[
+              a.relative,
+              {
+                paddingTop: platform({android: 2}),
+                marginBottom: platform({ios: -7}),
+                top: platform({web: 1}),
+                paddingLeft: 3,
+                paddingRight: 2,
+              },
+            ]}>
+            <VerificationCheck
+              width={14}
+              verifier={firstAuthorVerification.role === 'verifier'}
+            />
+          </View>
+        )}
+      </InlineLinkText>
+    </ProfileHoverCard>
   )
   const additionalAuthorsCount = authors.length - 1
   const hasMultipleAuthors = additionalAuthorsCount > 0
@@ -244,7 +248,7 @@ let NotificationFeedItem = ({
     : ''
 
   let a11yLabel = ''
-  let notificationContent: ReactElement
+  let notificationContent: ReactElement<any>
   let icon = (
     <HeartIconFilled
       size="xl"
