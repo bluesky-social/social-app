@@ -1,4 +1,4 @@
-import {memo, useMemo} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {
   Platform,
   type PressableProps,
@@ -8,7 +8,7 @@ import {
 import * as Clipboard from 'expo-clipboard'
 import {
   type AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppBskyFeedPost,
   type AppBskyFeedThreadgate,
   AtUri,
   type RichText as RichTextAPI,
@@ -83,7 +83,6 @@ import {
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
-import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
   post,
@@ -127,6 +126,8 @@ let PostMenuItems = ({
   const postInteractionSettingsDialogControl = useDialogControl()
   const quotePostDetachConfirmControl = useDialogControl()
   const hideReplyConfirmControl = useDialogControl()
+  const translateControl = useDialogControl()
+  const [translation, setTranslation] = useState('')
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
 
@@ -171,11 +172,6 @@ let PostMenuItems = ({
     const urip = new AtUri(postUri)
     return makeProfileLink(postAuthor, 'post', urip.rkey)
   }, [postUri, postAuthor])
-
-  const translatorUrl = getTranslatorLink(
-    record.text,
-    langPrefs.primaryLanguage,
-  )
 
   const onDeletePost = () => {
     deletePostMutate({uri: postUri}).then(
@@ -234,26 +230,70 @@ let PostMenuItems = ({
     Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }
 
-  const onPressTranslate = async () => {
-    await openLink(translatorUrl, true)
+  const onPressTranslate = useCallback(async () => {
+    const supportsTranslatorAPI = 'Translator' in self
+    const textToTranslate = record.text
+    const targetLanguage = langPrefs.primaryLanguage
 
-    if (
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        post.record,
-        AppBskyFeedPost.isRecord,
-      )
-    ) {
+    if (!supportsTranslatorAPI) {
+      const translatorUrl = getTranslatorLink(textToTranslate, targetLanguage)
+      await openLink(translatorUrl, true)
       logger.metric(
         'translate',
         {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
+          sourceLanguages: record.langs ?? [],
+          targetLanguage: targetLanguage,
+          textLength: textToTranslate.length,
         },
         {statsig: false},
       )
+      return
     }
-  }
+
+    try {
+      let sourceLanguage = record.langs?.[0]
+
+      if (!sourceLanguage && 'LanguageDetector' in self) {
+        const languageDetector = await self.LanguageDetector.create()
+        const detectionResult = await languageDetector.detect(textToTranslate)
+        sourceLanguage = detectionResult[0]?.detectedLanguage
+      }
+
+      const translator = await self.Translator.create({
+        sourceLanguage,
+        targetLanguage: targetLanguage,
+      })
+
+      const translations = []
+      const postParagraphs = textToTranslate.split(/\n/)
+      for (const postParagraph of postParagraphs) {
+        translations.push(await translator.translate(postParagraph))
+      }
+      const translatedText = translations.join('\n')
+      setTranslation(translatedText)
+      translateControl.open()
+
+      logger.metric(
+        'translate',
+        {
+          sourceLanguages: record.langs ?? [],
+          targetLanguage: targetLanguage,
+          textLength: textToTranslate.length,
+        },
+        {statsig: false},
+      )
+    } catch (err) {
+      console.error(err)
+      Toast.show(_(msg`Could not translate`), 'xmark')
+    }
+  }, [
+    record.text,
+    record.langs,
+    langPrefs.primaryLanguage,
+    openLink,
+    translateControl,
+    _,
+  ])
 
   const onHidePost = () => {
     hidePost({uri: postUri})
@@ -757,6 +797,14 @@ let PostMenuItems = ({
         confirmButtonCta={_(msg`Block`)}
         confirmButtonColor="negative"
       />
+
+      <Prompt.Outer control={translateControl}>
+        <Prompt.TitleText>{_(msg`Translation`)}</Prompt.TitleText>
+        <Prompt.DescriptionText>{translation}</Prompt.DescriptionText>
+        <Prompt.Actions>
+          <Prompt.Action cta={_(msg`OK`)} onPress={() => {}} />
+        </Prompt.Actions>
+      </Prompt.Outer>
     </>
   )
 }
