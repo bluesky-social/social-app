@@ -621,7 +621,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
 
   if (!isBackdated) return null
 
-  const orange = t.name === 'light' ? colors.warning.dark : colors.warning.light
+  const orange = colors.warning
 
   return (
     <>
