@@ -199,7 +199,7 @@ export const ComposePost = ({
   const [error, setError] = useState('')
 
   /**
-   * A temporarly local reference to a language suggestion that the user has
+   * A temporary local reference to a language suggestion that the user has
    * accepted. This overrides the global post language preference, but is not
    * stored permanently.
    */
