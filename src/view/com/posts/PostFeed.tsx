@@ -52,6 +52,7 @@ import {useLiveNowConfig} from '#/state/service-config'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {useSelectedFeed} from '#/state/shell/selected-feed'
+import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
@@ -67,7 +68,6 @@ import {
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
-import {List, type ListRef} from '#/components/List'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -191,6 +191,7 @@ let PostFeed = ({
   testID,
   headerOffset = 0,
   progressViewOffset,
+  desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
   savedFeedConfig,
@@ -204,7 +205,7 @@ let PostFeed = ({
   enabled?: boolean
   pollInterval?: number
   disablePoll?: boolean
-  scrollElRef?: ListRef<any>
+  scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
   onScrolledDownChange?: (isScrolledDown: boolean) => void
   renderEmptyState: () => JSX.Element
@@ -886,6 +887,9 @@ let PostFeed = ({
         onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
         extraData={extraData}
+        desktopFixedHeight={
+          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+        }
         initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={9}
         maxToRenderPerBatch={isIOS ? 5 : 1}

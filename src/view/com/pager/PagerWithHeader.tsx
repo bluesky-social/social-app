@@ -17,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {isIOS} from '#/platform/detection'
 import {
   Pager,
@@ -24,7 +25,6 @@ import {
   type RenderTabBarFnProps,
 } from '#/view/com/pager/Pager'
 import {useTheme} from '#/alf'
-import {ListScrollProvider} from '#/components/List'
 import {type ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
@@ -355,7 +355,7 @@ function PagerItem({
   }
 
   return (
-    <ListScrollProvider onScroll={onScrollWorklet}>
+    <ScrollProvider onScroll={onScrollWorklet}>
       {renderTab({
         headerHeight,
         isFocused,
@@ -363,7 +363,7 @@ function PagerItem({
           ListMethods | ScrollView | null
         >,
       })}
-    </ListScrollProvider>
+    </ScrollProvider>
   )
 }
 
