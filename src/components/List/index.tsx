@@ -1,8 +1,9 @@
-import {forwardRef, useMemo} from 'react'
+import {forwardRef, useMemo, useState} from 'react'
 import {
   type FlatList,
   type FlatListProps,
   RefreshControl,
+  View,
   type ViewToken,
 } from 'react-native'
 import Animated, {
@@ -14,9 +15,9 @@ import Animated, {
 import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
-import {isIOS, isNative} from '#/platform/detection'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {useLightbox} from '#/state/lightbox'
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {useListScrollContext} from '#/components/List/ListScrollProvider'
 
 export {
@@ -85,10 +86,19 @@ type ListProps<Item extends {key: string}> = Omit<
    */
   didScrollDownThreshold?: number
   onScrolledDownChange?: (isScrolledDown: boolean) => void
+
+  StickyHeaderComponent?: FlatListProps<Item>['ListHeaderComponent']
+  stickyHeaderOffset?: number
 }
 
 export const List = forwardRef(function List<Item extends {key: string}>(
-  props: ListProps<Item>,
+  {
+    stickyHeaderIndices,
+    ListHeaderComponent,
+    StickyHeaderComponent,
+    stickyHeaderOffset,
+    ...props
+  }: ListProps<Item>,
   ref: React.Ref<FlatList<Item>>,
 ) {
   const t = useTheme()
@@ -167,58 +177,95 @@ export const List = forwardRef(function List<Item extends {key: string}>(
     )
   }
 
-  return (
-    <Animated.FlatList
-      ref={ref}
-      keyExtractor={props.keyExtractor || (i => i.key)}
-      viewabilityConfig={viewabilityConfig}
-      onViewableItemsChanged={onViewableItemsChanged}
-      /**
-       * iOS automatically adds in the safe area to the scroll indicator
-       * insets, even though the overwhelming majority of our ScrollViews do
-       * not stretch from edge to edge.
-       * @see https://github.com/bluesky-social/social-app/pull/7131
-       */
-      automaticallyAdjustsScrollIndicatorInsets={false}
-      /**
-       * For better UX, we default to true, but it can be disabled if needed.
-       * @see https://github.com/bluesky-social/social-app/pull/8529
-       */
-      showsVerticalScrollIndicator
-      indicatorStyle={t.name === 'light' ? 'black' : 'white'}
-      scrollIndicatorInsets={{
-        top: props.headerOffset ?? 0,
-        bottom: props.footerOffset ?? 0,
-        /**
-         * May fix a bug where the scroll indicator is in the middle of the screen
-         * @see https://github.com/facebook/react-native/issues/26610
-         */
-        right: 1,
-      }}
-      /**
-       * Native only. On web, we use padding on `style` instead.
-       */
-      contentOffset={
-        props.headerOffset ? {x: 0, y: props.headerOffset * -1} : undefined
+  const header = useMemo(() => {
+    if (isWeb) return {}
+
+    if (StickyHeaderComponent) {
+      if (ListHeaderComponent) {
+        throw new Error(
+          `List: cannot use both StickyHeaderComponent and ListHeaderComponent`,
+        )
       }
-      scrollsToTop={!activeLightbox}
-      refreshControl={refreshControl}
-      {...(props as FlatListPropsWithLayout<Item>)}
-      style={[
-        {
-          paddingTop: props.headerOffset,
-          paddingBottom: props.footerOffset,
-        },
-        web([
-          /*
-           * On web, the List should always fill its container, otherwise
-           * `onScroll` will not work due to the entire page scrolling.
+
+      return {
+        ListHeaderComponent: platform({
+          default: StickyHeaderComponent,
+          // web: () => (
+          //   <View style={[a.fixed]}>
+          //     <StickyHeaderComponent />
+          //   </View>
+          // )
+        }),
+        stickyHeaderIndices: [0],
+      }
+    }
+
+    return {ListHeaderComponent, stickyHeaderIndices}
+  }, [ListHeaderComponent, StickyHeaderComponent, stickyHeaderIndices])
+
+  const [stickyHeaderHeight, setStickyHeaderHeight] =
+    useState(stickyHeaderOffset)
+
+  const headerOffset = isWeb ? stickyHeaderHeight : (props.headerOffset ?? 0)
+
+  return (
+    <>
+      {isWeb && StickyHeaderComponent && (
+        <View
+          style={[a.fixed, a.w_full, a.z_10]}
+          onLayout={e => {
+            setStickyHeaderHeight(e.nativeEvent.layout.height)
+          }}>
+          <StickyHeaderComponent />
+        </View>
+      )}
+
+      <Animated.FlatList
+        ref={ref}
+        keyExtractor={props.keyExtractor || (i => i.key)}
+        viewabilityConfig={viewabilityConfig}
+        onViewableItemsChanged={onViewableItemsChanged}
+        /**
+         * iOS automatically adds in the safe area to the scroll indicator
+         * insets, even though the overwhelming majority of our ScrollViews do
+         * not stretch from edge to edge.
+         * @see https://github.com/bluesky-social/social-app/pull/7131
+         */
+        automaticallyAdjustsScrollIndicatorInsets={false}
+        /**
+         * For better UX, we default to true, but it can be disabled if needed.
+         * @see https://github.com/bluesky-social/social-app/pull/8529
+         */
+        showsVerticalScrollIndicator
+        indicatorStyle={t.name === 'light' ? 'black' : 'white'}
+        scrollIndicatorInsets={{
+          top: headerOffset ?? 0,
+          bottom: props.footerOffset ?? 0,
+          /**
+           * May fix a bug where the scroll indicator is in the middle of the screen
+           * @see https://github.com/facebook/react-native/issues/26610
            */
-          a.h_full,
-        ]),
-      ]}
-      onScroll={onScroll}
-    />
+          right: 1,
+        }}
+        /**
+         * Native only. On web, we use padding on `style` instead.
+         */
+        contentOffset={headerOffset ? {x: 0, y: headerOffset * -1} : undefined}
+        scrollsToTop={!activeLightbox}
+        refreshControl={refreshControl}
+        {...(props as FlatListPropsWithLayout<Item>)}
+        {...header}
+        style={[
+          {
+            paddingTop: headerOffset,
+            paddingBottom: props.footerOffset,
+            transform: 'unset',
+          },
+          props.style,
+        ]}
+        onScroll={onScroll}
+      />
+    </>
   )
 }) as <Item extends {key: string}>(
   props: ListProps<Item> & {ref?: React.Ref<FlatList<Item>>},
