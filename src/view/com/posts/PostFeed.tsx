@@ -891,11 +891,6 @@ let PostFeed = ({
         maxToRenderPerBatch={isIOS ? 5 : 1}
         updateCellsBatchingPeriod={40}
         onItemSeen={onItemSeen}
-        style={[
-          {
-            height: '100vh',
-          },
-        ]}
       />
     </View>
   )
