@@ -30,7 +30,7 @@ import {isAndroid, isIOS, isIOS26} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
-import {atoms as a, ios, ios26, platform, tokens, useTheme} from '#/alf'
+import {atoms as a, ios, platform, tokens, useTheme} from '#/alf'
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -349,7 +349,7 @@ export function FlatListFooter({children}: {children: React.ReactNode}) {
         a.pt_md,
         {
           paddingBottom: platform({
-            ios: tokens.space.md + bottom + (ios26(top) ?? 0),
+            ios: tokens.space.md + bottom + (isIOS26 ? top : 0),
             android: tokens.space.md + bottom + top,
           }),
         },
