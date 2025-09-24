@@ -27,7 +27,9 @@ export {
 export type ListRef<Item extends {key: string}> =
   React.MutableRefObject<FlatList<Item> | null>
 
-type ListProps<Item extends {key: string}> = Omit<
+export type ListItem = {key: string}
+
+export type ListProps<Item extends ListItem> = Omit<
   FlatListProps<Item>,
   | 'onScroll'
   | 'onScrollBeginDrag'
@@ -87,7 +89,7 @@ type ListProps<Item extends {key: string}> = Omit<
   onScrolledDownChange?: (isScrolledDown: boolean) => void
 }
 
-export const List = forwardRef(function List<Item extends {key: string}>(
+export const List = forwardRef(function List<Item extends ListItem>(
   {...props}: ListProps<Item>,
   ref: React.Ref<FlatList<Item>>,
 ) {
