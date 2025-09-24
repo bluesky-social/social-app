@@ -18,7 +18,11 @@ import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
 import {hasProp} from '#/lib/type-guards'
-import {getPostLanguage, getTranslatorLink} from '#/locale/helpers'
+import {
+  getPostLanguage,
+  getTranslatorLink,
+  isPostInLanguage,
+} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {
   POST_TOMBSTONE,
@@ -525,6 +529,15 @@ function ExpandedPostDetails({
   const translatorUrl = getTranslatorLink(
     post.record?.text || '',
     langPrefs.primaryLanguage,
+  )
+
+  const needsTranslation = useMemo(
+    () =>
+      Boolean(
+        langPrefs.primaryLanguage &&
+          !isPostInLanguage(post, [langPrefs.primaryLanguage]),
+      ),
+    [post, langPrefs.primaryLanguage],
   )
 
   const onTranslatePress = useCallback(
