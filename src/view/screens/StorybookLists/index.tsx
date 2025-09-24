@@ -39,7 +39,7 @@ export function Inner() {
     runOnJS(log)(`scroll ${e.contentOffset.y}`)
   }, [])
 
-  const items: Item[] = Array.from({length: 100}).map((_, i) => ({
+  const items: Item[] = Array.from({length: 1000}).map((_, i) => ({
     key: `item-${i + 1}`,
     type: 'item' as const,
     title: `Item ${i + 1}`,
@@ -59,6 +59,8 @@ export function Inner() {
   return (
     <ListScrollProvider onScroll={onScrollWorklet}>
       <Layout.List<Item>
+        windowSize={9}
+        maxToRenderPerBatch={5}
         data={items}
         stickyHeaderIndices={[1]}
         renderItem={({item, index}) => {
