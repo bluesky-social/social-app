@@ -47,7 +47,7 @@ export function usePostThread({anchor}: {anchor?: string}) {
     view,
     setView: baseSetView,
     prioritizeFollowedUsers,
-  } = useThreadPreferences()
+  } = useThreadPreferences({save: true})
   const below = useMemo(() => {
     return view === 'linear'
       ? LINEAR_VIEW_BELOW
