@@ -44,18 +44,21 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type ImagePickerAsset} from 'expo-image-picker'
 import {
+  type AppBskyActorDefs,
   AppBskyFeedDefs,
   type AppBskyFeedGetPostThread,
   AppBskyUnspeccedDefs,
+  AtpAgent,
   AtUri,
   type BskyAgent,
+  CredentialSession,
   type RichText,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import * as apilib from '#/lib/api/index'
 import {EmbeddingDisabledError} from '#/lib/api/resolve'
@@ -92,12 +95,14 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useProfileQuery} from '#/state/queries/profile'
+import {useProfilesQuery} from '#/state/queries/profile'
 import {type Gif} from '#/state/queries/tenor'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {type ComposerOpts, type OnPostSuccessData} from '#/state/shell/composer'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
 import {
@@ -111,15 +116,13 @@ import {Gallery} from '#/view/com/composer/photos/Gallery'
 import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
 import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
 import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
-// TODO: Prevent naming components that coincide with RN primitives
-// due to linting false positives
 import {TextInput} from '#/view/com/composer/text-input/TextInput'
 import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
 import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
 import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
 import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
 import {Text} from '#/view/com/util/text/Text'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+import * as LegacyToast from '#/view/com/util/Toast'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
@@ -131,6 +134,7 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text as NewText} from '#/components/Typography'
 import {BottomSheetPortalProvider} from '../../../../modules/bottom-sheet'
+import {AccountSwitcher} from './account-switcher/AccountSwitcher'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
   type AssetType,
@@ -176,11 +180,70 @@ export const ComposePost = ({
 }: Props & {
   cancelRef?: React.RefObject<CancelRef | null>
 }) => {
-  const {currentAccount} = useSession()
-  const agent = useAgent()
+  const {currentAccount, accounts} = useSession()
+  const defaultAgent = useAgent()
+  const [selectedAccountDid, setSelectedAccountDid] = useState(
+    currentAccount!.did,
+  )
+
+  const {data: agent = defaultAgent} = useQuery({
+    queryKey: [
+      'composer-agent',
+      currentAccount?.did,
+      currentAccount?.service,
+      currentAccount?.active,
+      selectedAccountDid,
+      // include account data in the query key to invalidate when tokens change
+      // hmm we don't want a nested array i think so spreading seems like the way to go(?)
+      ...(() => {
+        const selectedAccount = accounts.find(
+          acc => acc.did === selectedAccountDid,
+        )
+        return selectedAccount
+          ? [
+              selectedAccount.service,
+              selectedAccount.accessJwt,
+              selectedAccount.refreshJwt,
+              selectedAccount.active,
+            ]
+          : []
+      })(),
+    ],
+    queryFn: async () => {
+      if (selectedAccountDid === currentAccount!.did) {
+        return defaultAgent
+      }
+
+      // get fresh account data from the session store
+      const selectedAccount = accounts.find(
+        acc => acc.did === selectedAccountDid,
+      )
+      if (!selectedAccount) {
+        throw new Error(`Account with DID ${selectedAccountDid} not found`)
+      }
+
+      const session = new CredentialSession(new URL(selectedAccount.service))
+      if (
+        selectedAccount.refreshJwt &&
+        selectedAccount.accessJwt &&
+        selectedAccount.active
+      ) {
+        await session.resumeSession({
+          ...selectedAccount,
+          accessJwt: selectedAccount.accessJwt,
+          refreshJwt: selectedAccount.refreshJwt,
+          active: selectedAccount.active,
+        })
+      }
+      return new AtpAgent(session)
+    },
+    staleTime: STALE.MINUTES.FIVE,
+  })
+
   const queryClient = useQueryClient()
-  const currentDid = currentAccount!.did
+  const currentDid = selectedAccountDid
   const {closeComposer} = useComposerControls()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -191,6 +254,16 @@ export const ComposePost = ({
   const {closeAllModals} = useModalControls()
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation<NavigationProp>()
+  const {data: profiles} = useProfilesQuery({
+    handles: accounts.map(acc => acc.did),
+  })
+
+  // if accounts array changes, invalidate agent so we still have fresh tokens
+  useEffect(() => {
+    queryClient.invalidateQueries({
+      queryKey: ['composer-agent'],
+    })
+  }, [accounts, queryClient])
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isPublishing, setIsPublishing] = useState(false)
@@ -207,6 +280,80 @@ export const ComposePost = ({
       initInteractionSettings: preferences?.postInteractionSettings,
     },
     createComposerState,
+  )
+
+  const onSelectAccount = React.useCallback(
+    async (accountDid: string) => {
+      if (accountDid === selectedAccountDid) {
+        return
+      }
+
+      // get fresh account data from session store
+      const account = accounts.find(acc => acc.did === accountDid)
+      if (!account) {
+        setError('Account not found')
+        return
+      }
+
+      // create a temporary agent for the selected account
+      const session = new CredentialSession(new URL(account.service))
+      if (account.refreshJwt && account.accessJwt && account.active) {
+        session.resumeSession({
+          ...account,
+          accessJwt: account.accessJwt,
+          refreshJwt: account.refreshJwt,
+          active: account.active,
+        })
+      }
+      const tempAgent = new AtpAgent(session)
+
+      try {
+        // try a simple request to check if the session is valid
+        await tempAgent.getProfile({actor: account.did})
+        // lets cache the agent for this account to avoid double resume
+        queryClient.setQueryData(
+          [
+            'composer-agent',
+            currentAccount?.did,
+            currentAccount?.service,
+            currentAccount?.active,
+            accountDid,
+            account.service,
+            account.accessJwt,
+            account.refreshJwt,
+            account.active,
+          ],
+          tempAgent,
+        )
+        // if it succeeds, update the selected account
+        setSelectedAccountDid(accountDid)
+      } catch (e: any) {
+        if (
+          String(e.message).toLowerCase().includes('token has expired') ||
+          String(e.message).toLowerCase().includes('authentication required')
+        ) {
+          closeComposer()
+          requestSwitchToAccount({requestedAccount: account.did})
+          LegacyToast.show(
+            _(msg`Please sign in as @${account.handle}`),
+            'circle-exclamation',
+          )
+        } else {
+          setError(cleanError(e.message))
+        }
+      }
+    },
+    [
+      selectedAccountDid,
+      accounts,
+      closeComposer,
+      requestSwitchToAccount,
+      _,
+      currentAccount?.did,
+      currentAccount?.service,
+      currentAccount?.active,
+      queryClient,
+    ],
   )
 
   const thread = composerState.thread
@@ -744,6 +891,9 @@ export const ComposePost = ({
                   onClearVideo={clearVideo}
                   onPublish={onComposerPostPublish}
                   onError={setError}
+                  selectedAccountDid={selectedAccountDid}
+                  onSelectAccount={onSelectAccount}
+                  profiles={profiles?.profiles}
                 />
                 {isWebFooterSticky && post.id === activePost.id && (
                   <View style={styles.stickyFooterWeb}>{footer}</View>
@@ -782,6 +932,9 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo,
   onError,
   onPublish,
+  selectedAccountDid,
+  onSelectAccount,
+  profiles,
 }: {
   post: PostDraft
   dispatch: (action: ComposerAction) => void
@@ -797,11 +950,11 @@ let ComposerPost = React.memo(function ComposerPost({
   onSelectVideo: (postId: string, asset: ImagePickerAsset) => void
   onError: (error: string) => void
   onPublish: (richtext: RichText) => void
+  selectedAccountDid: string
+  onSelectAccount: (accountDid: string) => void
+  profiles: AppBskyActorDefs.ProfileViewDetailed[] | undefined
 }) {
-  const {currentAccount} = useSession()
-  const currentDid = currentAccount!.did
   const {_} = useLingui()
-  const {data: currentProfile} = useProfileQuery({did: currentDid})
   const richtext = post.richtext
   const isTextOnly = !post.embed.link && !post.embed.quote && !post.embed.media
   const forceMinHeight = isWeb && isTextOnly && isActive
@@ -878,12 +1031,11 @@ let ComposerPost = React.memo(function ComposerPost({
         !isActive && styles.inactivePost,
         isTextOnly && isNative && a.flex_grow,
       ]}>
-      <View style={[a.flex_row, isNative && a.flex_1]}>
-        <UserAvatar
-          avatar={currentProfile?.avatar}
-          size={42}
-          type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-          style={[a.mt_xs]}
+      <View style={[a.flex_row, a.align_start, isNative && a.flex_1]}>
+        <AccountSwitcher
+          selectedAccountDid={selectedAccountDid}
+          onSelectAccount={onSelectAccount}
+          profiles={profiles}
         />
         <TextInput
           ref={textInput}
