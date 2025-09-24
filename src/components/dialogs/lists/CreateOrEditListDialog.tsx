@@ -354,7 +354,7 @@ function DialogInner({
     : _(msg`e.g. Spammers`)
 
   const descriptionPlaceholder = isCurateList
-    ? _(msg`e.g. The posters that never miss.`)
+    ? _(msg`e.g. The posters who never miss.`)
     : _(msg`e.g. Users that repeatedly reply with ads.`)
 
   return (
