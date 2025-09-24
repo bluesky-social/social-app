@@ -104,7 +104,7 @@ function EmbedDialogInner({
     <Dialog.Inner label={_(msg`Embed post`)} style={[{maxWidth: 500}]}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.text_2xl, a.font_heavy]}>
+          <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>Embed post</Trans>
           </Text>
           <Text
@@ -147,7 +147,7 @@ function EmbedDialogInner({
 
           {showCustomisation && (
             <View style={[a.gap_sm, a.p_md]}>
-              <Text style={[t.atoms.text_contrast_medium, a.font_bold]}>
+              <Text style={[t.atoms.text_contrast_medium, a.font_semi_bold]}>
                 <Trans>Color theme</Trans>
               </Text>
               <ToggleButton.Group

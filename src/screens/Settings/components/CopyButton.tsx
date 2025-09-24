@@ -58,7 +58,7 @@ export function CopyButton({
           pointerEvents="none">
           <Text
             style={[
-              a.font_bold,
+              a.font_semi_bold,
               a.text_right,
               a.text_md,
               t.atoms.text_contrast_high,

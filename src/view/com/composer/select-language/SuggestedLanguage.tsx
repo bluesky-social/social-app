@@ -88,7 +88,7 @@ export function SuggestedLanguage({
         <Text style={[a.flex_1]}>
           <Trans>
             Are you writing in{' '}
-            <Text style={[a.font_bold]}>{suggestedLanguageName}</Text>?
+            <Text style={[a.font_semi_bold]}>{suggestedLanguageName}</Text>?
           </Trans>
         </Text>
 

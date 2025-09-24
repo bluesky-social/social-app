@@ -160,7 +160,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
               a.pb_md,
             ]}>
             <SuccessIcon size="sm" fill={t.palette.positive_600} />
-            <Text style={[a.text_xl, a.font_heavy]}>
+            <Text style={[a.text_xl, a.font_bold]}>
               <Trans>Success</Trans>
             </Text>
           </View>
@@ -209,7 +209,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           ]}>
           {error && <ErrorIcon size="md" fill={t.palette.negative_500} />}
 
-          <Text style={[a.text_xl, a.font_heavy]}>
+          <Text style={[a.text_xl, a.font_bold]}>
             {error ? <Trans>Connection issue</Trans> : <Trans>Verifying</Trans>}
           </Text>
 

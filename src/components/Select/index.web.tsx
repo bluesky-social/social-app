@@ -259,7 +259,7 @@ export function Item({ref, value, style, children}: ItemProps) {
         a.text_sm,
         {outline: 0},
         (hovered || focused) && {backgroundColor: t.palette.primary_50},
-        selected && [a.font_bold],
+        selected && [a.font_semi_bold],
         a.transition_color,
         style,
       ])}>

@@ -3635,6 +3635,13 @@
   resolved "https://registry.yarnpkg.com/@braintree/sanitize-url/-/sanitize-url-6.0.4.tgz#923ca57e173c6b232bbbb07347b1be982f03e783"
   integrity sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==
 
+"@bsky.app/alf@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@bsky.app/alf/-/alf-0.1.2.tgz#8e3b3cd0b27f1dfe359d99edd2afd7d123b7ab69"
+  integrity sha512-lIidmkoHsqXwj07BY4fYIu/JyWGXRAGLfh65qhGzWpXLTK1DGyoQUjz5CwsqTDSQWpCfBC7eEaOtYjjv9cAjSQ==
+  dependencies:
+    react-responsive "^10.0.1"
+
 "@bufbuild/protobuf@^1.5.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@bufbuild/protobuf/-/protobuf-1.7.0.tgz#cecddc8162a231642b410bc7b99309cd5969733c"

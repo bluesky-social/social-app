@@ -255,7 +255,7 @@ function Empty() {
         {marginTop: a.border.borderWidth},
       ]}>
       <View style={[a.gap_xs]}>
-        <Text style={[a.font_bold, a.text_lg, {color: 'white'}]}>
+        <Text style={[a.font_semi_bold, a.text_lg, {color: 'white'}]}>
           <Trans>You haven't created a starter pack yet!</Trans>
         </Text>
         <Text style={[a.text_md, {color: 'white'}]}>

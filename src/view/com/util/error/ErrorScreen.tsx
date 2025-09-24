@@ -62,7 +62,7 @@ export function ErrorScreen({
             />
           </View>
         </View>
-        <Text style={[a.text_center, a.font_heavy, a.text_2xl, a.mb_md]}>
+        <Text style={[a.text_center, a.font_bold, a.text_2xl, a.mb_md]}>
           {title}
         </Text>
         <Text style={[a.text_center, a.text_md, a.mb_xl]}>{message}</Text>

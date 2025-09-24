@@ -135,7 +135,7 @@ function DialogInner({
               style={[a.absolute, a.inset_0]}
             />
           </View>
-          <Text style={[a.font_bold, a.text_xl]}>
+          <Text style={[a.font_semi_bold, a.text_xl]}>
             {isMe ? <Trans>Welcome, friend!</Trans> : <Trans>Say hello!</Trans>}
           </Text>
         </View>

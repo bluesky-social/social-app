@@ -126,7 +126,7 @@ function DialogInner({
       accessibilityDescribedBy="dialog-description"
       accessibilityLabelledBy="dialog-title">
       <View style={[a.relative, a.gap_md, a.w_full]}>
-        <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
+        <Text nativeID="dialog-title" style={[a.text_2xl, a.font_semi_bold]}>
           <Trans>Choose your account provider</Trans>
         </Text>
         <ToggleButton.Group

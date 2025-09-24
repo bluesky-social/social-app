@@ -113,7 +113,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
             ) : (
               <Text
                 style={[
-                  a.font_bold,
+                  a.font_semi_bold,
                   a.text_lg,
                   a.text_center,
                   a.mt_lg,
