@@ -1,9 +1,8 @@
-import {forwardRef, useMemo, useState} from 'react'
+import {forwardRef, useMemo} from 'react'
 import {
   type FlatList,
   type FlatListProps,
   RefreshControl,
-  View,
   type ViewToken,
 } from 'react-native'
 import Animated, {
@@ -15,9 +14,9 @@ import Animated, {
 import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useLightbox} from '#/state/lightbox'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useListScrollContext} from '#/components/List/ListScrollProvider'
 
 export {
@@ -86,19 +85,10 @@ type ListProps<Item extends {key: string}> = Omit<
    */
   didScrollDownThreshold?: number
   onScrolledDownChange?: (isScrolledDown: boolean) => void
-
-  StickyHeaderComponent?: FlatListProps<Item>['ListHeaderComponent']
-  stickyHeaderOffset?: number
 }
 
 export const List = forwardRef(function List<Item extends {key: string}>(
-  {
-    stickyHeaderIndices,
-    ListHeaderComponent,
-    StickyHeaderComponent,
-    stickyHeaderOffset,
-    ...props
-  }: ListProps<Item>,
+  {...props}: ListProps<Item>,
   ref: React.Ref<FlatList<Item>>,
 ) {
   const t = useTheme()
@@ -177,50 +167,19 @@ export const List = forwardRef(function List<Item extends {key: string}>(
     )
   }
 
-  const header = useMemo(() => {
-    if (isWeb) return {}
-
-    if (StickyHeaderComponent) {
-      if (ListHeaderComponent) {
-        throw new Error(
-          `List: cannot use both StickyHeaderComponent and ListHeaderComponent`,
-        )
-      }
-
-      return {
-        ListHeaderComponent: platform({
-          default: StickyHeaderComponent,
-          // web: () => (
-          //   <View style={[a.fixed]}>
-          //     <StickyHeaderComponent />
-          //   </View>
-          // )
-        }),
-        stickyHeaderIndices: [0],
-      }
-    }
-
-    return {ListHeaderComponent, stickyHeaderIndices}
-  }, [ListHeaderComponent, StickyHeaderComponent, stickyHeaderIndices])
-
-  const [stickyHeaderHeight, setStickyHeaderHeight] =
-    useState(stickyHeaderOffset)
-
-  const headerOffset = isWeb ? stickyHeaderHeight : (props.headerOffset ?? 0)
+  /**
+   * Web only, provides a handle on the resulting `List` DOM element, which we
+   * then use to apply sticky styles to individual list item wrappers.
+   */
+  const dataSet = props.stickyHeaderIndices?.reduce((ds, i) => {
+    return {...ds, [`sticky-header-index-${i}`]: 1}
+  }, {})
 
   return (
     <>
-      {isWeb && StickyHeaderComponent && (
-        <View
-          style={[a.fixed, a.w_full, a.z_10]}
-          onLayout={e => {
-            setStickyHeaderHeight(e.nativeEvent.layout.height)
-          }}>
-          <StickyHeaderComponent />
-        </View>
-      )}
-
       <Animated.FlatList
+        // @ts-ignore
+        dataSet={dataSet}
         ref={ref}
         keyExtractor={props.keyExtractor || (i => i.key)}
         viewabilityConfig={viewabilityConfig}
@@ -239,7 +198,7 @@ export const List = forwardRef(function List<Item extends {key: string}>(
         showsVerticalScrollIndicator
         indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         scrollIndicatorInsets={{
-          top: headerOffset ?? 0,
+          top: props.headerOffset ?? 0,
           bottom: props.footerOffset ?? 0,
           /**
            * May fix a bug where the scroll indicator is in the middle of the screen
@@ -250,14 +209,16 @@ export const List = forwardRef(function List<Item extends {key: string}>(
         /**
          * Native only. On web, we use padding on `style` instead.
          */
-        contentOffset={headerOffset ? {x: 0, y: headerOffset * -1} : undefined}
+        contentOffset={
+          props.headerOffset ? {x: 0, y: props.headerOffset * -1} : undefined
+        }
         scrollsToTop={!activeLightbox}
         refreshControl={refreshControl}
         {...(props as FlatListPropsWithLayout<Item>)}
-        {...header}
         style={[
+          a.h_full,
           {
-            paddingTop: headerOffset,
+            paddingTop: props.headerOffset,
             paddingBottom: props.footerOffset,
             transform: 'unset',
           },

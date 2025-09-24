@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {List as OldList} from '#/view/com/util/List'
@@ -12,18 +11,28 @@ import {List, ListScrollProvider, useListScrollHandler} from '#/components/List'
 import {Text} from '#/components/Typography'
 
 export function StorybookLists() {
-  return <Inner />
+  return (
+    <Layout.Screen>
+      <Inner />
+    </Layout.Screen>
+  )
 }
 
-const items = Array.from({length: 100}).map((_, i) => ({
-  key: `item-${i + 1}`,
-  title: `Item ${i + 1}`,
-}))
-
-type Item = {
-  key: string
-  title: string
-}
+type Item =
+  | {
+      key: string
+      type: 'item'
+      title: string
+    }
+  | {
+      key: string
+      type: 'header'
+      title: string
+    }
+  | {
+      key: string
+      type: 'spacer'
+    }
 
 const log = (msg: any) => console.log(msg)
 
@@ -41,12 +50,28 @@ function Header() {
 
 export function Inner() {
   const t = useTheme()
-  const insets = useSafeAreaInsets()
   const [old, setOld] = useState<boolean>(false)
   const onScrollWorklet = useListScrollHandler(e => {
     'worklet'
     runOnJS(log)(`scroll ${e.contentOffset.y}`)
   }, [])
+
+  const items: Item[] = Array.from({length: 100}).map((_, i) => ({
+    key: `item-${i + 1}`,
+    type: 'item' as const,
+    title: `Item ${i + 1}`,
+  }))
+
+  items.unshift({
+    key: 'header',
+    type: 'header' as const,
+    title: 'Header',
+  })
+
+  items.unshift({
+    key: 'spacer',
+    type: 'spacer' as const,
+  })
 
   return (
     <View style={[]}>
@@ -67,27 +92,34 @@ export function Inner() {
         <ListScrollProvider onScroll={onScrollWorklet}>
           <List<Item>
             data={items}
-            headerOffset={insets.top}
-            stickyHeaderOffset={52}
-            StickyHeaderComponent={Header}
             onScrolledDownChange={scrolledDown => {
               console.log(`Scrolled down: ${scrolledDown}`)
             }}
-            renderItem={({item, index}) => (
-              <Layout.Center>
-                <View
-                  style={[
-                    a.px_md,
-                    a.align_center,
-                    a.justify_center,
-                    {height: 100},
-                    index % 2 === 0 ? t.atoms.bg_contrast_25 : t.atoms.bg,
-                  ]}>
-                  <Text>{item.title}</Text>
-                </View>
-              </Layout.Center>
-            )}
-            style={[a.debug]}
+            stickyHeaderIndices={[1]}
+            renderItem={({item, index}) => {
+              if (item.type === 'header') {
+                return <Header />
+              }
+              if (item.type === 'spacer') {
+                return <View style={[t.atoms.bg_contrast_50, {height: 100}]} />
+              }
+
+              return (
+                <Layout.Center>
+                  <View
+                    style={[
+                      a.px_md,
+                      a.align_center,
+                      a.justify_center,
+                      {height: 100},
+                      index % 2 === 0 ? t.atoms.bg_contrast_25 : t.atoms.bg,
+                    ]}>
+                    <Text>{item.title}</Text>
+                  </View>
+                </Layout.Center>
+              )
+            }}
+            style={[a.h_full_vh]}
           />
         </ListScrollProvider>
       ) : (
