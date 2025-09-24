@@ -1,7 +1,7 @@
-import {createContext, useContext} from 'react'
+import {createContext, useContext, useMemo} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useAlf, useBreakpoints, useTheme} from '#/alf'
 import {Button as BaseButton, type ButtonProps} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
@@ -44,12 +44,22 @@ export function Text({
   style,
   ...rest
 }: Pick<TextProps, 'children' | 'style'>) {
+  const {fontScaleCompensation} = useAdmonitionFontScaleCompensation()
+
   return (
-    <BaseText
-      {...rest}
-      style={[a.flex_1, a.text_sm, a.leading_snug, a.pr_md, style]}>
-      {children}
-    </BaseText>
+    <View
+      style={[
+        a.flex_1,
+        {
+          top: fontScaleCompensation,
+        },
+      ]}>
+      <BaseText
+        {...rest}
+        style={[a.flex_1, a.text_sm, a.leading_snug, a.pr_md, style]}>
+        {children}
+      </BaseText>
+    </View>
   )
 }
 
@@ -118,5 +128,21 @@ export function Admonition({
         <Text>{children}</Text>
       </Row>
     </Outer>
+  )
+}
+
+// This is very vibe based, but it seems to work well enough across all 3 font scales.
+function useAdmonitionFontScaleCompensation() {
+  const {fonts} = useAlf()
+  const fontScaleCompensation = useMemo(() => {
+    const scale = parseInt(fonts.scale, 10)
+    return 1.0 - 0.57 * scale
+  }, [fonts.scale])
+
+  return useMemo(
+    () => ({
+      fontScaleCompensation,
+    }),
+    [fontScaleCompensation],
   )
 }
