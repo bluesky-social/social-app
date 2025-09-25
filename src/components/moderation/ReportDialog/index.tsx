@@ -677,7 +677,13 @@ function OptionCard({
   return (
     <Button
       testID={`report:option:${option.title}`}
-      label={_(msg`Create report for ${option.title}`)}
+      label={_(
+        msg({
+          message: `Create report for ${option.title}`,
+          comment:
+            'Accessibility label for button to create a moderation report for the selected option',
+        }),
+      )}
       onPress={onPress}
       disabled={!onSelect}>
       {({hovered, pressed}) => (
