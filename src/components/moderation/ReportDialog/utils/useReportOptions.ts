@@ -11,7 +11,7 @@ export type TopLevelReason =
   | 'civicIntegrity'
   | 'other'
 
-export interface TopLevelReportOption {
+export interface ReportOptionCategory {
   key: TopLevelReason
   title: string
   description: string
@@ -20,15 +20,15 @@ export interface TopLevelReportOption {
   isOther?: boolean
 }
 
-export interface TopLevelReportOptions {
-  childSafety: TopLevelReportOption
-  violencePhysicalHarm: TopLevelReportOption
-  sexualAdultContent: TopLevelReportOption
-  harassmentHate: TopLevelReportOption
-  misleading: TopLevelReportOption
-  ruleBreaking: TopLevelReportOption
-  civicIntegrity: TopLevelReportOption
-  other: TopLevelReportOption
+export interface ReportOptionCategories {
+  childSafety: ReportOptionCategory
+  violencePhysicalHarm: ReportOptionCategory
+  sexualAdultContent: ReportOptionCategory
+  harassmentHate: ReportOptionCategory
+  misleading: ReportOptionCategory
+  ruleBreaking: ReportOptionCategory
+  civicIntegrity: ReportOptionCategory
+  other: ReportOptionCategory
 }
 
 export interface ReportOption {
@@ -39,7 +39,7 @@ export interface ReportOption {
 export function useReportOptions() {
   const {_} = useLingui()
 
-  const reasons = {
+  const categories = {
     childSafety: {
       key: 'childSafety',
       title: _(msg`Child Safety`),
@@ -297,11 +297,13 @@ export function useReportOptions() {
     },
   }
 
-  const sortedReasons = Object.values(reasons).sort((a, b) => a.sort - b.sort)
+  const sortedCategories = (
+    Object.values(categories) as ReportOptionCategory[]
+  ).sort((a, b) => a.sort - b.sort)
 
-  const getTopLevelReason = (reasonName: TopLevelReason) => {
-    return reasons[reasonName]
+  const getCategory = (reasonName: TopLevelReason) => {
+    return categories[reasonName]
   }
 
-  return {reasons, sortedReasons, getTopLevelReason}
+  return {categories, sortedCategories, getCategory}
 }
