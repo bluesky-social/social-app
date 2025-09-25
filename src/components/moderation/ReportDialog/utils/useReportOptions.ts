@@ -157,7 +157,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonSexualAnimal',
         },
         {
-          title: _(msg`Unlabelled Adult Content`),
+          title: _(msg`Unlabeled Adult Content`),
           reason: 'tools.ozone.report.defs#reasonSexualUnlabeled',
         },
         {
