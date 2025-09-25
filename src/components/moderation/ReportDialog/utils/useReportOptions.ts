@@ -285,7 +285,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonCivicMisinformation',
         },
         {
-          title: _(msg`Impersonation of Electoral Officials/Entities`),
+          title: _(msg`Impersonation of Electoral Officials or Entities`),
           reason: 'tools.ozone.report.defs#reasonCivicImpersonation',
         },
         {
