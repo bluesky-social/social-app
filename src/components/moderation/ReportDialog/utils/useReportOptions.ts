@@ -235,7 +235,7 @@ export function useReportOptions() {
     ruleBreaking: {
       key: 'ruleBreaking',
       title: _(msg`Breaking Network Rules`),
-      description: _(msg`Hacking, stolen content or prohibited sales`),
+      description: _(msg`Hacking, stolen content, or prohibited sales`),
       sort: 6,
       options: [
         {
