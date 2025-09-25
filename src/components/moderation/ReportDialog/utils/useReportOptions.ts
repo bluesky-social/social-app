@@ -85,7 +85,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonChildSafetyPromotion',
         },
         {
-          title: _(msg`Other Child Safety`),
+          title: _(msg`Other Child Safety Issue`),
           reason: 'tools.ozone.report.defs#reasonChildSafetyOther',
         },
       ],
