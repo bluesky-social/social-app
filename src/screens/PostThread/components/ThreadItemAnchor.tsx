@@ -129,7 +129,8 @@ function ThreadItemAnchorDeleted({isRoot}: {isRoot: boolean}) {
             ]}>
             <TrashIcon style={[t.atoms.text_contrast_medium]} />
           </View>
-          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+          <Text
+            style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
             <Trans>Post has been deleted</Trans>
           </Text>
         </View>
@@ -343,7 +344,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     style={[
                       a.flex_shrink,
                       a.text_lg,
-                      a.font_bold,
+                      a.font_semi_bold,
                       a.leading_snug,
                     ]}
                     numberOfLines={1}>
@@ -440,7 +441,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="repostCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
-                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
                         {formatPostStatCount(post.repostCount)}
                       </Text>{' '}
                       <Plural
@@ -460,7 +461,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="quoteCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
-                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
                         {formatPostStatCount(post.quoteCount)}
                       </Text>{' '}
                       <Plural
@@ -478,7 +479,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     testID="likeCount-expanded"
                     style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
-                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
                         {formatPostStatCount(post.likeCount)}
                       </Text>{' '}
                       <Plural value={post.likeCount} one="like" other="likes" />
@@ -491,7 +492,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   testID="bookmarkCount-expanded"
                   style={[a.text_md, t.atoms.text_contrast_medium]}>
                   <Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
-                    <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                    <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
                       {formatPostStatCount(post.bookmarkCount)}
                     </Text>{' '}
                     <Plural
@@ -664,7 +665,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
             <Text
               style={[
                 a.text_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
               ]}>
@@ -681,9 +682,14 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
         <Prompt.DescriptionText>
           <Trans>
             This post claims to have been created on{' '}
-            <RNText style={[a.font_bold]}>{niceDate(i18n, createdAt)}</RNText>,
-            but was first seen by Bluesky on{' '}
-            <RNText style={[a.font_bold]}>{niceDate(i18n, indexedAt)}</RNText>.
+            <RNText style={[a.font_semi_bold]}>
+              {niceDate(i18n, createdAt)}
+            </RNText>
+            , but was first seen by Bluesky on{' '}
+            <RNText style={[a.font_semi_bold]}>
+              {niceDate(i18n, indexedAt)}
+            </RNText>
+            .
           </Trans>
         </Prompt.DescriptionText>
         <Text

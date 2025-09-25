@@ -374,7 +374,7 @@ function SectionHeaderText({children}: {children: React.ReactNode}) {
         a.border_b,
         t.atoms.border_contrast_low,
       ]}>
-      <Text style={[a.text_xl, a.font_heavy, a.leading_snug]}>{children}</Text>
+      <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>{children}</Text>
     </View>
   )
 }
@@ -406,7 +406,7 @@ function FollowingFeedCard() {
         />
       </View>
       <View style={[a.flex_1, a.flex_row, a.gap_sm, a.align_center]}>
-        <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
+        <Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]}>
           <Trans context="feed-name">Following</Trans>
         </Text>
       </View>

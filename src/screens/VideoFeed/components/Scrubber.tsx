@@ -179,7 +179,7 @@ export function Scrubber({
           timeStyle,
         ]}
         pointerEvents="none">
-        <Text style={[a.text_center, a.font_bold]}>
+        <Text style={[a.text_center, a.font_semi_bold]}>
           <Text style={[a.text_5xl, {fontVariant: ['tabular-nums']}]}>
             {formatTime(currentSeekTime)}
           </Text>

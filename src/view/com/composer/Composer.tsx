@@ -32,6 +32,7 @@ import Animated, {
   runOnUI,
   scrollTo,
   useAnimatedRef,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -65,7 +66,6 @@ import {
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
 } from '#/lib/constants'
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useAppState} from '#/lib/hooks/useAppState'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -1770,7 +1770,7 @@ function ErrorBanner({
             style={[
               {paddingLeft: 28},
               a.text_xs,
-              a.font_bold,
+              a.font_semi_bold,
               a.leading_snug,
               t.atoms.text_contrast_low,
             ]}>
@@ -1863,7 +1863,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
           progress={wheelProgress}
         />
       </Animated.View>
-      <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
+      <NewText style={[a.font_semi_bold, a.ml_sm]}>{text}</NewText>
     </ToolbarWrapper>
   )
 }

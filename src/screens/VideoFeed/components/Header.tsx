@@ -120,7 +120,7 @@ export function FeedHeader({
         <Text
           style={[
             a.text_md,
-            a.font_heavy,
+            a.font_bold,
             a.leading_tight,
             gtMobile && a.text_lg,
           ]}

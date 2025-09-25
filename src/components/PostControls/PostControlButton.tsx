@@ -128,7 +128,12 @@ export function PostControlButtonText({style, ...props}: TextProps) {
 
   return (
     <Text
-      style={[color, big ? a.text_md : a.text_sm, active && a.font_bold, style]}
+      style={[
+        color,
+        big ? a.text_md : a.text_sm,
+        active && a.font_semi_bold,
+        style,
+      ]}
       {...props}
     />
   )

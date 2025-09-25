@@ -154,7 +154,7 @@ function HeaderReady({
                 emoji
                 style={[
                   a.text_md,
-                  a.font_bold,
+                  a.font_semi_bold,
                   a.self_start,
                   web(a.leading_normal),
                 ]}

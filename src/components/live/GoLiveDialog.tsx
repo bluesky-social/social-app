@@ -94,7 +94,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
       style={web({maxWidth: 420})}>
       <View style={[a.gap_xl]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_bold, a.text_2xl]}>
+          <Text style={[a.font_semi_bold, a.text_2xl]}>
             <Trans>Go Live</Trans>
           </Text>
           <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
@@ -153,7 +153,7 @@ function DialogInner({profile}: {profile: bsky.profile.AnyProfileView}) {
                   a.text_sm,
                   a.leading_snug,
                   a.flex_1,
-                  a.font_bold,
+                  a.font_semi_bold,
                   {color: t.palette.negative_500},
                 ]}>
                 {liveLinkError ? (

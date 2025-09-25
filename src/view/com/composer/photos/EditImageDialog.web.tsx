@@ -19,7 +19,7 @@ import {type EditImageDialogProps} from './EditImageDialog'
 
 export function EditImageDialog(props: EditImageDialogProps) {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer control={props.control} webOptions={{alignCenter: true}}>
       <Dialog.Handle />
       <DialogInner {...props} />
     </Dialog.Outer>

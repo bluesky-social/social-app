@@ -71,7 +71,10 @@ export function VideoEmbed({embed, crop}: Props) {
       ) : (
         <ConstrainedImage
           fullBleed={crop === 'square'}
-          aspectRatio={constrained || 1}>
+          aspectRatio={constrained || 1}
+          // slightly smaller max height than images
+          // images use 16 / 9, for reference
+          minMobileAspectRatio={14 / 9}>
           {contents}
         </ConstrainedImage>
       )}
