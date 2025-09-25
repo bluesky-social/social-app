@@ -289,7 +289,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonCivicImpersonation',
         },
         {
-          title: _(msg`Other`),
+          title: _(msg`Other Civic Integrity Issue`),
           reason: 'tools.ozone.report.defs#reasonViolenceOther',
         },
       ],
