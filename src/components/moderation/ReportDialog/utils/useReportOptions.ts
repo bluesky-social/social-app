@@ -37,6 +37,17 @@ export interface ReportOption {
   reason: ReasonType
 }
 
+export const OtherReportReasons = new Set<ReasonType | undefined>([
+  'com.atproto.moderation.defs#reasonOther',
+  'tools.ozone.report.defs#reasonChildSafetyOther',
+  'tools.ozone.report.defs#reasonViolenceOther',
+  'tools.ozone.report.defs#reasonSexualOther',
+  'tools.ozone.report.defs#reasonHarassmentOther',
+  'tools.ozone.report.defs#reasonMisleadingOther',
+  'tools.ozone.report.defs#reasonRuleOther',
+  'tools.ozone.report.defs#reasonChildSafetyOther',
+])
+
 export function useReportOptions() {
   const {_} = useLingui()
 
