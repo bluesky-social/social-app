@@ -92,7 +92,7 @@ export function useReportOptions() {
     },
     violencePhysicalHarm: {
       key: 'violencePhysicalHarm',
-      title: _(msg`Violence of Physical Harm`),
+      title: _(msg`Violence or Physical Harm`),
       sort: 2,
       description: _(msg`Threats, calls for violence, or graphic content`),
       options: [
