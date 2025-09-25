@@ -83,7 +83,6 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
 import {IS_INTERNAL} from '#/env'
-import * as bsky from '#/types/bsky'
 
 let PostMenuItems = ({
   post,
