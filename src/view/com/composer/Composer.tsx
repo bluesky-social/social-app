@@ -1043,7 +1043,7 @@ function ComposerTopBar({
     <Animated.View
       style={topBarAnimatedStyle}
       layout={native(LinearTransition)}>
-      <View style={styles.topbarInner}>
+      <View style={[a.flex_row, a.align_center, a.gap_xs, a.p_lg, a.pb_md]}>
         <Button
           label={_(msg`Cancel`)}
           variant="ghost"
@@ -1705,13 +1705,6 @@ function useHideKeyboardOnBackground() {
 }
 
 const styles = StyleSheet.create({
-  topbarInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: isIOS26 ? 16 : 8,
-    height: 54,
-    gap: 4,
-  },
   postBtn: {
     borderRadius: 20,
     paddingHorizontal: 20,
