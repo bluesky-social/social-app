@@ -40,7 +40,7 @@ export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {
 }
 
 export function extToMime(ext: string) {
-  switch (ext) {
+  switch (ext.toLowerCase()) {
     case 'mp4':
       return 'video/mp4'
     case 'webm':
