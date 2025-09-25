@@ -2,7 +2,7 @@ import {type ReasonType} from '@atproto/api/dist/client/types/com/atproto/modera
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-export type TopLevelReason =
+export type ReportCategory =
   | 'childSafety'
   | 'violencePhysicalHarm'
   | 'sexualAdultContent'
@@ -13,7 +13,7 @@ export type TopLevelReason =
   | 'other'
 
 export interface ReportOptionCategory {
-  key: TopLevelReason
+  key: ReportCategory
   title: string
   description: string
   options: ReportOption[]
@@ -313,7 +313,7 @@ export function useReportOptions() {
     Object.values(categories) as ReportOptionCategory[]
   ).sort((a, b) => a.sort - b.sort)
 
-  const getCategory = (reasonName: TopLevelReason) => {
+  const getCategory = (reasonName: ReportCategory) => {
     return categories[reasonName]
   }
 
