@@ -1,9 +1,12 @@
 import {type AppBskyLabelerDefs, ComAtprotoModerationDefs} from '@atproto/api'
 
-import {TopLevelReportOption, type ReportOption} from './utils/useReportOptions'
+import {
+  type ReportOption,
+  type ReportOptionCategory,
+} from './utils/useReportOptions'
 
 export type ReportState = {
-  selectedTopLevelOption?: TopLevelReportOption
+  selectedCategory?: ReportOptionCategory
   selectedOption?: ReportOption
   selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed
   details?: string
@@ -14,11 +17,11 @@ export type ReportState = {
 
 export type ReportAction =
   | {
-      type: 'selectTopLevelOption'
-      option: TopLevelReportOption
+      type: 'selectCategory'
+      option: ReportOptionCategory
     }
   | {
-      type: 'clearTopLevelOption'
+      type: 'clearCategory'
     }
   | {
       type: 'selectOption'
@@ -50,7 +53,7 @@ export type ReportAction =
     }
 
 export const initialState: ReportState = {
-  selectedTopLevelOption: undefined,
+  selectedCategory: undefined,
   selectedOption: undefined,
   selectedLabeler: undefined,
   details: undefined,
@@ -60,17 +63,17 @@ export const initialState: ReportState = {
 
 export function reducer(state: ReportState, action: ReportAction): ReportState {
   switch (action.type) {
-    case 'selectTopLevelOption':
+    case 'selectCategory':
       return {
         ...state,
-        selectedTopLevelOption: action.option,
+        selectedCategory: action.option,
         activeStepIndex1: 2,
         detailsOpen: !!state.details,
       }
-    case 'clearTopLevelOption':
+    case 'clearCategory':
       return {
         ...state,
-        selectedTopLevelOption: undefined,
+        selectedCategory: undefined,
         selectedOption: undefined,
         selectedLabeler: undefined,
         activeStepIndex1: 1,
