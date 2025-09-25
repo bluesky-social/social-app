@@ -145,7 +145,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonSexualNCII',
         },
         {
-          title: _(msg`SexualSextortion`),
+          title: _(msg`Sextortion`),
           reason: 'tools.ozone.report.defs#reasonSexualSextortion',
         },
         {
