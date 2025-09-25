@@ -224,7 +224,7 @@ export function useProfileUpdateMutation() {
             return (
               res.data.displayName === updates.displayName &&
               res.data.description === updates.description &&
-              (res.data as any).pronouns === (updates as any).pronouns
+              res.data.pronouns === updates.pronouns
             )
           }),
       )
