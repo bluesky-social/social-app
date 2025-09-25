@@ -266,7 +266,11 @@ function Inner(props: ReportDialogProps) {
                       key={o.key}
                       option={o}
                       onSelect={() => {
-                        dispatch({type: 'selectCategory', option: o})
+                        dispatch({
+                          type: 'selectCategory',
+                          option: o,
+                          otherOption: getCategory('other').options[0],
+                        })
                       }}
                     />
                   ))}
