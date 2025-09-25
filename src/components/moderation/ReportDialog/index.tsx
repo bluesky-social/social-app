@@ -331,7 +331,7 @@ function Inner(props: ReportDialogProps) {
                 color="secondary"
                 shape="round"
                 onPress={() => {
-                  dispatch({type: 'clearCategory'})
+                  dispatch({type: 'clearOption'})
                 }}>
                 <ButtonIcon icon={X} />
               </Button>
