@@ -255,7 +255,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonRuleBanEvasion',
         },
         {
-          title: _(msg`Other`),
+          title: _(msg`Other Network Rule-breaking`),
           reason: 'tools.ozone.report.defs#reasonRuleOther',
         },
       ],
