@@ -132,7 +132,7 @@ export function useReportOptions() {
     },
     sexualAdultContent: {
       key: 'sexualAdultContent',
-      title: _(msg`Sexaul and Adult Content`),
+      title: _(msg`Sexual and Adult Content`),
       description: _(msg`Adult, child or animal sexual abuse`),
       sort: 3,
       options: [
