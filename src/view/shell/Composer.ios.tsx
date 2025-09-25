@@ -32,8 +32,9 @@ export function Composer({}: {winHeight: number}) {
       visible={open}
       presentationStyle="pageSheet"
       animationType="slide"
-      onRequestClose={() => ref.current?.onPressCancel()}>
-      <View style={[t.atoms.bg, a.flex_1]}>
+      onRequestClose={() => ref.current?.onPressCancel()}
+      backdropColor="transparent">
+      <View style={[a.flex_1, a.rounded_sheet, a.curve_continuous, t.atoms.bg]}>
         <TooltipSheetCompatProvider>
           <ComposePost
             cancelRef={ref}
@@ -45,7 +46,6 @@ export function Composer({}: {winHeight: number}) {
             text={state?.text}
             imageUris={state?.imageUris}
             videoUri={state?.videoUri}
-            openGallery={state?.openGallery}
           />
         </TooltipSheetCompatProvider>
       </View>
