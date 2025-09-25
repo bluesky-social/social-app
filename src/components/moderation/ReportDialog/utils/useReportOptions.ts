@@ -101,7 +101,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonViolenceAnimalWelfare',
         },
         {
-          title: _(msg`Threats or Inticement`),
+          title: _(msg`Threats or Incitement`),
           reason: 'tools.ozone.report.defs#reasonViolenceThreats',
         },
         {
