@@ -247,7 +247,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonRuleStolenContent',
         },
         {
-          title: _(msg`Promoting or Selling Prohibited Items of Services`),
+          title: _(msg`Promoting or Selling Prohibited Items or Services`),
           reason: 'tools.ozone.report.defs#reasonRuleProhibitedSales',
         },
         {
