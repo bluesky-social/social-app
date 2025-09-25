@@ -72,7 +72,6 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         activeStepIndex1: action.option.key === 'other' ? 3 : 2,
         selectedOption:
           action.option.key === 'other' ? action.otherOption : undefined,
-        detailsOpen: state.selectedCategory?.key === 'other',
       }
     case 'clearCategory':
       return {
@@ -103,6 +102,7 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         ...state,
         selectedLabeler: action.labeler,
         activeStepIndex1: 4,
+        detailsOpen: OtherReportReasons.has(state.selectedOption?.reason),
       }
     case 'clearLabeler':
       return {
