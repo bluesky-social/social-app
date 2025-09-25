@@ -21,7 +21,7 @@ export function ProfileHeaderHandle({
   const t = useTheme()
   const {_} = useLingui()
   const invalidHandle = isInvalidHandle(profile.handle)
-
+  const pronouns = profile.pronouns
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
 
   return (
@@ -37,7 +37,7 @@ export function ProfileHeaderHandle({
         </View>
       ) : undefined}
 
-      <View style={[a.flex_col, a.gap_xs]}>
+      <View style={[a.flex_row, a.flex_wrap, {gap: 6}]}>
         <Text
           emoji
           numberOfLines={1}
@@ -68,12 +68,14 @@ export function ProfileHeaderHandle({
               )}
         </Text>
         {pronouns && (
-          <Text style={[t.atoms.text_contrast_low, a.pb_md]}>
-            {sanitizePronouns(
-              pronouns,
-              // forceLTR handled by the sanitization function
-              isNative,
-            )}
+          <Text
+            style={[
+              t.atoms.text_contrast_low,
+              a.text_md,
+              a.leading_snug,
+              a.pb_sm,
+            ]}>
+            {sanitizePronouns(pronouns, isNative)}
           </Text>
         )}
       </View>

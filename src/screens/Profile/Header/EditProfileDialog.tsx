@@ -1,12 +1,13 @@
-import {useCallback, useEffect, useState} from 'react'
-import {Dimensions, View} from 'react-native'
+import {useCallback, useEffect, useRef, useState} from 'react'
+import {Dimensions, Pressable, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {urls} from '#/lib/constants'
+import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
 import {useWarnMaxGraphemeCount} from '#/lib/strings/helpers'
+import {isValidWebsiteFormat} from '#/lib/strings/website'
 import {logger} from '#/logger'
 import {type ImageMeta} from '#/state/gallery'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
@@ -15,10 +16,13 @@ import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
 import {atoms as a, useTheme} from '#/alf'
+import * as tokens from '#/alf/tokens'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {CircleX_Stroke2_Corner0_Rounded as CircleX} from '#/components/icons/CircleX'
+import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
@@ -26,8 +30,8 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 
 const DISPLAY_NAME_MAX_GRAPHEMES = 64
-const PRONOUNS_MAX_GRAPHEMES = 50
-const WEBSITE_MAX_GRAPHEMES = 300
+const PRONOUNS_MAX_GRAPHEMES = 20
+const WEBSITE_MAX_GRAPHEMES = 28
 const DESCRIPTION_MAX_GRAPHEMES = 256
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -117,10 +121,11 @@ function DialogInner({
   const [displayName, setDisplayName] = useState(initialDisplayName)
   const initialDescription = profile.description || ''
   const [description, setDescription] = useState(initialDescription)
-  const initialPronouns = ''
+  const initialPronouns = profile.pronouns || ''
   const [pronouns, setPronouns] = useState(initialPronouns)
-  const initialWebsite = ''
+  const initialWebsite = profile.website || ''
   const [website, setWebsite] = useState(initialWebsite)
+  const websiteInputRef = useRef<any>(null)
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
     profile.banner,
   )
@@ -182,15 +187,26 @@ function DialogInner({
     [setNewUserBanner, setUserBanner, setImageError],
   )
 
+  const onClearWebsite = useCallback(() => {
+    setWebsite('')
+    if (websiteInputRef.current) {
+      websiteInputRef.current.clear()
+    }
+  }, [setWebsite])
+
   const onPressSave = useCallback(async () => {
     setImageError('')
     try {
+      const trimmedWebsite = website.trimEnd().toLowerCase()
+      const websiteToSave = trimmedWebsite || undefined
+
       await updateProfileMutation({
         profile,
         updates: {
           displayName: displayName.trimEnd(),
           description: description.trimEnd(),
-          pronouns: pronouns.trimEnd(),
+          pronouns: pronouns.trimEnd().toLowerCase(),
+          website: websiteToSave,
         },
         newUserAvatar,
         newUserBanner,
@@ -209,6 +225,7 @@ function DialogInner({
     displayName,
     description,
     pronouns,
+    website,
     newUserAvatar,
     newUserBanner,
     setImageError,
@@ -227,7 +244,7 @@ function DialogInner({
     text: website,
     maxCount: WEBSITE_MAX_GRAPHEMES,
   })
-  const websiteInvalidFormat = !!(website && !website.match(/^https?:\/\/.+/))
+  const websiteInvalidFormat = !isValidWebsiteFormat(website)
   const descriptionTooLong = useWarnMaxGraphemeCount({
     text: description,
     maxCount: DESCRIPTION_MAX_GRAPHEMES,
@@ -448,15 +465,63 @@ function DialogInner({
           <TextField.LabelText>
             <Trans>Website</Trans>
           </TextField.LabelText>
-          <TextField.Root isInvalid={websiteTooLong || websiteInvalidFormat}>
-            <Dialog.Input
-              defaultValue={website}
-              onChangeText={setWebsite}
-              label={_(msg`Website`)}
-              placeholder={_(msg`URL`)}
-              testID="editProfileWebsiteInput"
-            />
-          </TextField.Root>
+          <View style={[a.w_full, a.relative]}>
+            <TextField.Root isInvalid={websiteTooLong || websiteInvalidFormat}>
+              {website && <TextField.Icon icon={Globe} />}
+              <Dialog.Input
+                inputRef={websiteInputRef}
+                defaultValue={website}
+                onChangeText={setWebsite}
+                label={_(msg`EditWebsite`)}
+                placeholder={_(msg`URL`)}
+                testID="editProfileWebsiteInput"
+                autoCapitalize="none"
+                keyboardType="url"
+                style={[
+                  website
+                    ? {
+                        paddingRight: tokens.space._5xl,
+                      }
+                    : {},
+                ]}
+              />
+            </TextField.Root>
+
+            {website && (
+              <View
+                style={[
+                  a.absolute,
+                  a.z_10,
+                  a.my_auto,
+                  a.inset_0,
+                  a.justify_center,
+                  a.pr_sm,
+                  {left: 'auto'},
+                ]}>
+                <Pressable
+                  testID="clearWebsiteBtn"
+                  onPress={onClearWebsite}
+                  accessibilityLabel={_(msg`Clear website`)}
+                  accessibilityHint={_(msg`Removes the website URL`)}
+                  hitSlop={HITSLOP_10}
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.justify_center,
+                    {
+                      width: tokens.space._2xl,
+                      height: tokens.space._2xl,
+                    },
+                    a.rounded_full,
+                  ]}>
+                  <CircleX
+                    width={tokens.space.lg}
+                    style={{color: t.palette.contrast_600}}
+                  />
+                </Pressable>
+              </View>
+            )}
+          </View>
           {websiteTooLong && (
             <Text
               style={[
@@ -479,7 +544,9 @@ function DialogInner({
                 a.font_bold,
                 {color: t.palette.negative_400},
               ]}>
-              <Trans>Website must start with http:// or https://</Trans>
+              <Trans>
+                Website must be a valid URL (e.g., https://bsky.app)
+              </Trans>
             </Text>
           )}
         </View>

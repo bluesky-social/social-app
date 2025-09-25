@@ -8,6 +8,6 @@ export function sanitizePronouns(
     return ''
   }
 
-  const trimmed = pronouns.trim()
+  const trimmed = pronouns.trim().toLowerCase()
   return forceLeftToRight ? forceLTR(trimmed) : trimmed
 }
