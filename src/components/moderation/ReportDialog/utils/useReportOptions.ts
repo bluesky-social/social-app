@@ -117,7 +117,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonViolenceGlorification',
         },
         {
-          title: _(msg`Extermist Content`),
+          title: _(msg`Extremist Content`),
           reason: 'tools.ozone.report.defs#reasonViolenceExtremistContent',
         },
         {
