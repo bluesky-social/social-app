@@ -199,7 +199,7 @@ export function useReportOptions() {
     misleading: {
       key: 'misleading',
       title: _(msg`Misleading`),
-      description: _(msg`Spam, scams, false info or impersonation`),
+      description: _(msg`Spam, scams, bots, false info, or impersonation`),
       sort: 5,
       options: [
         {
