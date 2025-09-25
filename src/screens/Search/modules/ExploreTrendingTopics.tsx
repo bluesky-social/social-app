@@ -104,7 +104,7 @@ export function TrendRow({
                 <Text
                   style={[
                     a.text_md,
-                    a.font_bold,
+                    a.font_semi_bold,
                     a.leading_tight,
                     {width: 20},
                   ]}>
@@ -113,7 +113,7 @@ export function TrendRow({
                   </Trans>
                 </Text>
                 <Text
-                  style={[a.text_md, a.font_bold, a.leading_tight]}
+                  style={[a.text_md, a.font_semi_bold, a.leading_tight]}
                   numberOfLines={1}>
                   {trend.displayName}
                 </Text>

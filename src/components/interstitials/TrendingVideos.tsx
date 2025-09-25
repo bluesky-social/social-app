@@ -82,7 +82,7 @@ export function TrendingVideos() {
           a.align_center,
           a.justify_between,
         ]}>
-        <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
+        <Text style={[a.text_sm, a.font_semi_bold, a.leading_snug]}>
           <Trans>Trending Videos</Trans>
         </Text>
         <Button

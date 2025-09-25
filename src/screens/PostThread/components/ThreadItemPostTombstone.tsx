@@ -46,7 +46,8 @@ export function ThreadItemPostTombstone({type}: ThreadItemPostTombstoneProps) {
         <View style={[a.flex_row, a.justify_center, {width: LINEAR_AVI_WIDTH}]}>
           <Icon style={[t.atoms.text_contrast_medium]} />
         </View>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+        <Text
+          style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
           {copy}
         </Text>
       </View>

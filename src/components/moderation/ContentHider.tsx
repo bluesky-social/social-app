@@ -178,9 +178,9 @@ function ContentHiderActive({
               style={[
                 a.flex_1,
                 a.text_left,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_snug,
-                gtMobile && [a.font_bold],
+                gtMobile && [a.font_semi_bold],
                 t.atoms.text_contrast_medium,
                 web({
                   marginBottom: 1,
@@ -192,9 +192,9 @@ function ContentHiderActive({
             {!modui.noOverride && (
               <Text
                 style={[
-                  a.font_bold,
+                  a.font_semi_bold,
                   a.leading_snug,
-                  gtMobile && [a.font_bold],
+                  gtMobile && [a.font_semi_bold],
                   t.atoms.text_contrast_high,
                   web({
                     marginBottom: 1,
