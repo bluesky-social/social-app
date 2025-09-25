@@ -219,7 +219,7 @@ export function useReportOptions() {
           reason: 'tools.ozone.report.defs#reasonMisleadingScam',
         },
         {
-          title: _(msg`Unlabelled GenAI or Synthetic Content`),
+          title: _(msg`Unlabeled Generative AI or Synthetic Content`),
           reason: 'tools.ozone.report.defs#reasonMisleadingSyntheticContent',
         },
         {
