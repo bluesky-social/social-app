@@ -37,7 +37,7 @@ import {type ReportDialogProps, type ReportSubject} from './types'
 import {parseReportSubject} from './utils/parseReportSubject'
 import {
   type ReportOption,
-  TopLevelReportOption,
+  type ReportOptionCategory,
   useReportOptions,
 } from './utils/useReportOptions'
 
@@ -99,7 +99,7 @@ function Inner(props: ReportDialogProps) {
   } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
   const copy = useCopyForSubject(props.subject)
-  const {reasons, sortedReasons, getTopLevelReason} = useReportOptions()
+  const {sortedCategories, getCategory} = useReportOptions()
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
   /**
@@ -241,32 +241,32 @@ function Inner(props: ReportDialogProps) {
             </Admonition.Outer>
           ) : (
             <>
-              {state.selectedTopLevelOption ? (
+              {state.selectedCategory ? (
                 <View style={[a.flex_row, a.align_center, a.gap_md]}>
                   <View style={[a.flex_1]}>
-                    <TopLevelOptionCard option={state.selectedTopLevelOption} />
+                    <CategoryCard option={state.selectedCategory} />
                   </View>
                   <Button
-                    testID="report:clearTopLevelOption"
+                    testID="report:clearCategory"
                     label={_(msg`Change report reason`)}
                     size="tiny"
                     variant="solid"
                     color="secondary"
                     shape="round"
                     onPress={() => {
-                      dispatch({type: 'clearTopLevelOption'})
+                      dispatch({type: 'clearCategory'})
                     }}>
                     <ButtonIcon icon={X} />
                   </Button>
                 </View>
               ) : (
                 <View style={[a.gap_sm]}>
-                  {sortedReasons.map(o => (
-                    <TopLevelOptionCard
+                  {sortedCategories.map(o => (
+                    <CategoryCard
                       key={o.key}
                       option={o}
                       onSelect={() => {
-                        dispatch({type: 'selectTopLevelOption', option: o})
+                        dispatch({type: 'selectCategory', option: o})
                       }}
                     />
                   ))}
@@ -314,7 +314,7 @@ function Inner(props: ReportDialogProps) {
         <StepOuter>
           <StepTitle
             index={2}
-            title={_(msg`Select a sub-category`)}
+            title={_(msg`Select a reason`)}
             activeIndex1={state.activeStepIndex1}
           />
           {state.selectedOption ? (
@@ -323,77 +323,40 @@ function Inner(props: ReportDialogProps) {
                 <OptionCard option={state.selectedOption} />
               </View>
               <Button
-                testID="report:clearTopLevelOption"
+                testID="report:clearReportOption"
                 label={_(msg`Change report reason`)}
                 size="tiny"
                 variant="solid"
                 color="secondary"
                 shape="round"
                 onPress={() => {
-                  dispatch({type: 'clearTopLevelOption'})
+                  dispatch({type: 'clearCategory'})
                 }}>
                 <ButtonIcon icon={X} />
               </Button>
             </View>
-          ) : state.selectedTopLevelOption ? (
+          ) : state.selectedCategory ? (
             <View style={[a.gap_sm]}>
-              {getTopLevelReason(state.selectedTopLevelOption.key).options.map(
-                o => (
-                  <OptionCard
-                    key={o.reason}
-                    option={o}
-                    onSelect={() => {
-                      dispatch({type: 'selectOption', option: o})
-                    }}
-                  />
-                ),
-              )}
-
-              {['post', 'account'].includes(props.subject.type) && (
-                <Link
-                  to={SUPPORT_PAGE}
-                  label={_(
-                    msg`Need to report a copyright violation, legal request, or regulatory compliance issue?`,
-                  )}>
-                  {({hovered, pressed}) => (
-                    <View
-                      style={[
-                        a.flex_row,
-                        a.align_center,
-                        a.w_full,
-                        a.px_md,
-                        a.py_sm,
-                        a.rounded_sm,
-                        a.border,
-                        hovered || pressed
-                          ? [t.atoms.border_contrast_high]
-                          : [t.atoms.border_contrast_low],
-                      ]}>
-                      <Text style={[a.flex_1, a.italic, a.leading_snug]}>
-                        <Trans>
-                          Need to report a copyright violation, legal request,
-                          or regulatory compliance issue?
-                        </Trans>
-                      </Text>
-                      <SquareArrowTopRight
-                        size="sm"
-                        fill={t.atoms.text.color}
-                      />
-                    </View>
-                  )}
-                </Link>
-              )}
+              {getCategory(state.selectedCategory.key).options.map(o => (
+                <OptionCard
+                  key={o.reason}
+                  option={o}
+                  onSelect={() => {
+                    dispatch({type: 'selectOption', option: o})
+                  }}
+                />
+              ))}
             </View>
           ) : null}
         </StepOuter>
 
         <StepOuter>
           <StepTitle
-            index={2}
+            index={3}
             title={_(msg`Select moderation service`)}
             activeIndex1={state.activeStepIndex1}
           />
-          {state.activeStepIndex1 >= 2 && (
+          {state.activeStepIndex1 >= 3 && (
             <>
               {state.selectedLabeler ? (
                 <>
@@ -466,11 +429,11 @@ function Inner(props: ReportDialogProps) {
 
         <StepOuter>
           <StepTitle
-            index={3}
+            index={4}
             title={_(msg`Submit report`)}
             activeIndex1={state.activeStepIndex1}
           />
-          {state.activeStepIndex1 === 3 && (
+          {state.activeStepIndex1 === 4 && (
             <>
               <View style={[a.pb_xs, a.gap_xs]}>
                 <Text style={[a.leading_snug, a.pb_xs]}>
@@ -649,12 +612,12 @@ function StepTitle({
   )
 }
 
-function TopLevelOptionCard({
+function CategoryCard({
   option,
   onSelect,
 }: {
-  option: TopLevelReportOption
-  onSelect?: (option: TopLevelReportOption) => void
+  option: ReportOptionCategory
+  onSelect?: (option: ReportOptionCategory) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
