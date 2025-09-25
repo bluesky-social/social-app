@@ -1,8 +1,9 @@
 import {type AppBskyLabelerDefs, ComAtprotoModerationDefs} from '@atproto/api'
 
-import {type ReportOption} from './utils/useReportOptions'
+import {TopLevelReportOption, type ReportOption} from './utils/useReportOptions'
 
 export type ReportState = {
+  selectedTopLevelOption?: TopLevelReportOption
   selectedOption?: ReportOption
   selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed
   details?: string
@@ -12,6 +13,13 @@ export type ReportState = {
 }
 
 export type ReportAction =
+  | {
+      type: 'selectTopLevelOption'
+      option: TopLevelReportOption
+    }
+  | {
+      type: 'clearTopLevelOption'
+    }
   | {
       type: 'selectOption'
       option: ReportOption
@@ -42,6 +50,7 @@ export type ReportAction =
     }
 
 export const initialState: ReportState = {
+  selectedTopLevelOption: undefined,
   selectedOption: undefined,
   selectedLabeler: undefined,
   details: undefined,
@@ -51,11 +60,29 @@ export const initialState: ReportState = {
 
 export function reducer(state: ReportState, action: ReportAction): ReportState {
   switch (action.type) {
+    case 'selectTopLevelOption':
+      return {
+        ...state,
+        selectedTopLevelOption: action.option,
+        activeStepIndex1: 2,
+        detailsOpen: !!state.details,
+      }
+    case 'clearTopLevelOption':
+      return {
+        ...state,
+        selectedTopLevelOption: undefined,
+        selectedOption: undefined,
+        selectedLabeler: undefined,
+        activeStepIndex1: 1,
+        detailsOpen:
+          !!state.details ||
+          state.selectedOption?.reason === ComAtprotoModerationDefs.REASONOTHER,
+      }
     case 'selectOption':
       return {
         ...state,
         selectedOption: action.option,
-        activeStepIndex1: 2,
+        activeStepIndex1: 3,
         detailsOpen:
           !!state.details ||
           action.option.reason === ComAtprotoModerationDefs.REASONOTHER,
@@ -65,7 +92,7 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         ...state,
         selectedOption: undefined,
         selectedLabeler: undefined,
-        activeStepIndex1: 1,
+        activeStepIndex1: 2,
         detailsOpen:
           !!state.details ||
           state.selectedOption?.reason === ComAtprotoModerationDefs.REASONOTHER,
@@ -74,13 +101,13 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
       return {
         ...state,
         selectedLabeler: action.labeler,
-        activeStepIndex1: 3,
+        activeStepIndex1: 4,
       }
     case 'clearLabeler':
       return {
         ...state,
         selectedLabeler: undefined,
-        activeStepIndex1: 2,
+        activeStepIndex1: 3,
         detailsOpen:
           !!state.details ||
           state.selectedOption?.reason === ComAtprotoModerationDefs.REASONOTHER,
