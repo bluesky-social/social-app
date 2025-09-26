@@ -1,8 +1,13 @@
-import {type AppBskyLabelerDefs, ComAtprotoModerationDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 
-import {type ReportOption} from './utils/useReportOptions'
+import {
+  OtherReportReasons,
+  type ReportOption,
+  type ReportOptionCategory,
+} from './utils/useReportOptions'
 
 export type ReportState = {
+  selectedCategory?: ReportOptionCategory
   selectedOption?: ReportOption
   selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed
   details?: string
@@ -12,6 +17,14 @@ export type ReportState = {
 }
 
 export type ReportAction =
+  | {
+      type: 'selectCategory'
+      option: ReportOptionCategory
+      otherOption: ReportOption
+    }
+  | {
+      type: 'clearCategory'
+    }
   | {
       type: 'selectOption'
       option: ReportOption
@@ -42,6 +55,7 @@ export type ReportAction =
     }
 
 export const initialState: ReportState = {
+  selectedCategory: undefined,
   selectedOption: undefined,
   selectedLabeler: undefined,
   details: undefined,
@@ -51,39 +65,50 @@ export const initialState: ReportState = {
 
 export function reducer(state: ReportState, action: ReportAction): ReportState {
   switch (action.type) {
+    case 'selectCategory':
+      return {
+        ...state,
+        selectedCategory: action.option,
+        activeStepIndex1: action.option.key === 'other' ? 3 : 2,
+        selectedOption:
+          action.option.key === 'other' ? action.otherOption : undefined,
+      }
+    case 'clearCategory':
+      return {
+        ...state,
+        selectedCategory: undefined,
+        selectedOption: undefined,
+        selectedLabeler: undefined,
+        activeStepIndex1: 1,
+        detailsOpen: false,
+      }
     case 'selectOption':
       return {
         ...state,
         selectedOption: action.option,
-        activeStepIndex1: 2,
-        detailsOpen:
-          !!state.details ||
-          action.option.reason === ComAtprotoModerationDefs.REASONOTHER,
+        activeStepIndex1: 3,
+        detailsOpen: OtherReportReasons.has(action.option.reason),
       }
     case 'clearOption':
       return {
         ...state,
         selectedOption: undefined,
         selectedLabeler: undefined,
-        activeStepIndex1: 1,
-        detailsOpen:
-          !!state.details ||
-          state.selectedOption?.reason === ComAtprotoModerationDefs.REASONOTHER,
+        activeStepIndex1: 2,
+        detailsOpen: false,
       }
     case 'selectLabeler':
       return {
         ...state,
         selectedLabeler: action.labeler,
-        activeStepIndex1: 3,
+        activeStepIndex1: 4,
+        detailsOpen: OtherReportReasons.has(state.selectedOption?.reason),
       }
     case 'clearLabeler':
       return {
         ...state,
         selectedLabeler: undefined,
-        activeStepIndex1: 2,
-        detailsOpen:
-          !!state.details ||
-          state.selectedOption?.reason === ComAtprotoModerationDefs.REASONOTHER,
+        activeStepIndex1: 3,
       }
     case 'setDetails':
       return {
