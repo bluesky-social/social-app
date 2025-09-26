@@ -60,29 +60,6 @@ function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
   return item.uri
 }
 
-// function EmptyStateComponent({
-//   message,
-//   button,
-//   icon,
-// }: {
-//   message?: string
-//   button?: EmptyStateButtonProps
-//   icon?: React.ReactElement
-// }) {
-//   return (
-//     <View style={[a.px_lg, a.py_5xl, a.align_center, a.justify_center]}>
-//       <EmptyState
-//         icon={icon ?? 'growth'}
-//         message={
-//           message ??
-//           'Starter packs let you share your favorite feeds and people with your friends.'
-//         }
-//         button={button}
-//       />
-//     </View>
-//   )
-// }
-
 export function ProfileStarterPacks({
   ref,
   scrollElRef,
