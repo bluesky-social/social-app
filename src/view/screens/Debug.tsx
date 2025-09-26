@@ -4,6 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
+import {HashtagWideIcon} from '#/lib/icons'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -333,7 +334,14 @@ function TypographyView() {
 }
 
 function EmptyStateView() {
-  return <EmptyState icon="bars" message="This is an empty state" />
+  const {_} = useLingui()
+
+  return (
+    <EmptyState
+      icon={<HashtagWideIcon size="2xl" />}
+      message={_(msg`This is an empty state`)}
+    />
+  )
 }
 
 function LoadingPlaceholderView() {
