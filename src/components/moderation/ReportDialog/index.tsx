@@ -219,17 +219,19 @@ function Inner(props: ReportDialogProps) {
             <Admonition.Outer type="error">
               <Admonition.Row>
                 <Admonition.Icon />
-                <Admonition.Text>
-                  <Trans>Something went wrong, please try again</Trans>
-                </Admonition.Text>
-                <Admonition.Button
-                  label={_(msg`Retry loading report options`)}
-                  onPress={() => refetchLabelers()}>
-                  <ButtonText>
-                    <Trans>Retry</Trans>
-                  </ButtonText>
-                  <ButtonIcon icon={Retry} />
-                </Admonition.Button>
+                <Admonition.Content style={[a.flex_row, a.align_center]}>
+                  <Admonition.Text>
+                    <Trans>Something went wrong, please try again</Trans>
+                  </Admonition.Text>
+                  <Admonition.Button
+                    label={_(msg`Retry loading report options`)}
+                    onPress={() => refetchLabelers()}>
+                    <ButtonText>
+                      <Trans>Retry</Trans>
+                    </ButtonText>
+                    <ButtonIcon icon={Retry} />
+                  </Admonition.Button>
+                </Admonition.Content>
               </Admonition.Row>
             </Admonition.Outer>
           ) : (
