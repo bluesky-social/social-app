@@ -54,7 +54,7 @@ export function TimeIndicator({
       <Text
         style={[
           {color: t.palette.white, fontSize: 12, fontVariant: ['tabular-nums']},
-          a.font_bold,
+          a.font_semi_bold,
           {lineHeight: 1.25},
         ]}>
         {`${minutes}:${seconds}`}

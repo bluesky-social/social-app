@@ -93,7 +93,7 @@ export function CountWheel({
             big ? a.text_md : a.text_sm,
             a.user_select_none,
             isLiked
-              ? [a.font_bold, s.likeColor]
+              ? [a.font_semi_bold, s.likeColor]
               : {color: t.palette.contrast_500},
           ]}>
           {formattedCount}
@@ -110,7 +110,7 @@ export function CountWheel({
               big ? a.text_md : a.text_sm,
               a.user_select_none,
               isLiked
-                ? [a.font_bold, s.likeColor]
+                ? [a.font_semi_bold, s.likeColor]
                 : {color: t.palette.contrast_500},
             ]}>
             {formattedPrevCount}

@@ -8,7 +8,6 @@ import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {useModalControls} from '#/state/modals'
 import {
   useListBlockMutation,
   useListDeleteMutation,
@@ -18,6 +17,7 @@ import {useRemoveFeedMutation} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {CreateOrEditListDialog} from '#/components/dialogs/lists/CreateOrEditListDialog'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLink} from '#/components/icons/ChainLink'
 import {DotGrid_Stroke2_Corner0_Rounded as DotGridIcon} from '#/components/icons/DotGrid'
@@ -44,7 +44,7 @@ export function MoreOptionsMenu({
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const {openModal} = useModalControls()
+  const editListDialogControl = useDialogControl()
   const deleteListPromptControl = useDialogControl()
   const reportDialogControl = useReportDialogControl()
   const navigation = useNavigation<NavigationProp>()
@@ -78,13 +78,6 @@ export function MoreOptionsMenu({
       })
       logger.error('Failed to remove pinned list', {message: e})
     }
-  }
-
-  const onPressEdit = () => {
-    openModal({
-      name: 'create-or-edit-list',
-      list,
-    })
   }
 
   const onPressDelete = async () => {
@@ -201,7 +194,7 @@ export function MoreOptionsMenu({
             <Menu.Group>
               <Menu.Item
                 label={_(msg`Edit list details`)}
-                onPress={onPressEdit}>
+                onPress={editListDialogControl.open}>
                 <Menu.ItemText>
                   <Trans>Edit list details</Trans>
                 </Menu.ItemText>
@@ -274,6 +267,8 @@ export function MoreOptionsMenu({
           )}
         </Menu.Outer>
       </Menu.Root>
+
+      <CreateOrEditListDialog control={editListDialogControl} list={list} />
 
       <Prompt.Basic
         control={deleteListPromptControl}

@@ -431,7 +431,7 @@ function TabBarItem({
           <Text
             emoji
             testID={testID ? `${testID}-${item}` : undefined}
-            style={[styles.itemText, t.atoms.text, a.text_md, a.font_bold]}
+            style={[styles.itemText, t.atoms.text, a.text_md, a.font_semi_bold]}
             onLayout={handleTextLayout}>
             {item}
           </Text>
