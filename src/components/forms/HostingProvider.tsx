@@ -1,5 +1,5 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {ActivityIndicator, Keyboard, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -17,11 +17,13 @@ export function HostingProvider({
   onSelectServiceUrl,
   onOpenDialog,
   minimal,
+  isDetectingProvider,
 }: {
   serviceUrl: string
   onSelectServiceUrl: (provider: string) => void
   onOpenDialog?: () => void
   minimal?: boolean
+  isDetectingProvider?: boolean
 }) {
   const serverInputControl = useDialogControl()
   const t = useTheme()
@@ -59,7 +61,11 @@ export function HostingProvider({
             <ButtonText style={[a.text_sm]}>
               {toNiceDomain(serviceUrl)}
             </ButtonText>
-            <ButtonIcon icon={PencilIcon} />
+            {isDetectingProvider ? (
+              <ActivityIndicator size={16} />
+            ) : (
+              <ButtonIcon icon={PencilIcon} />
+            )}
           </Button>
         </View>
       ) : (
@@ -103,14 +109,25 @@ export function HostingProvider({
                       : t.atoms.bg_contrast_100,
                     {marginLeft: 'auto', padding: 6},
                   ]}>
-                  <PencilIcon
-                    size="sm"
-                    style={{
-                      color: interacted
-                        ? t.palette.contrast_800
-                        : t.palette.contrast_500,
-                    }}
-                  />
+                  {isDetectingProvider ? (
+                    <ActivityIndicator
+                      size={16}
+                      color={
+                        interacted
+                          ? t.palette.contrast_800
+                          : t.palette.contrast_500
+                      }
+                    />
+                  ) : (
+                    <PencilIcon
+                      size="sm"
+                      style={{
+                        color: interacted
+                          ? t.palette.contrast_800
+                          : t.palette.contrast_500,
+                      }}
+                    />
+                  )}
                 </View>
               </>
             )
