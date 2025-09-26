@@ -11,7 +11,12 @@ import {
 export type OnboardingState = {
   hasPrev: boolean
   totalSteps: number
-  activeStep: 'profile' | 'interests' | 'suggested-accounts' | 'finished'
+  activeStep:
+    | 'profile'
+    | 'interests'
+    | 'suggested-accounts'
+    | 'suggested-starterpacks'
+    | 'finished'
   activeStepIndex: number
 
   interestsStepResults: {
@@ -38,6 +43,7 @@ export type OnboardingState = {
   experiments?: {
     onboarding_suggested_accounts?: boolean
     onboarding_value_prop?: boolean
+    onboarding_suggested_starterpacks?: boolean
   }
 }
 
@@ -163,51 +169,35 @@ export function reducer(
 ): OnboardingState {
   let next = {...s}
 
+  const stepOrder: OnboardingState['activeStep'][] = [
+    'profile',
+    'interests',
+    ...(s.experiments?.onboarding_suggested_accounts
+      ? (['suggested-accounts'] as const)
+      : []),
+    ...(s.experiments?.onboarding_suggested_starterpacks
+      ? (['suggested-starterpacks'] as const)
+      : []),
+    'finished',
+  ]
+
   switch (a.type) {
     case 'next': {
-      if (s.experiments?.onboarding_suggested_accounts) {
-        if (s.activeStep === 'profile') {
-          next.activeStep = 'interests'
-          next.activeStepIndex = 2
-        } else if (s.activeStep === 'interests') {
-          next.activeStep = 'suggested-accounts'
-          next.activeStepIndex = 3
-        }
-        if (s.activeStep === 'suggested-accounts') {
-          next.activeStep = 'finished'
-          next.activeStepIndex = 4
-        }
-      } else {
-        if (s.activeStep === 'profile') {
-          next.activeStep = 'interests'
-          next.activeStepIndex = 2
-        } else if (s.activeStep === 'interests') {
-          next.activeStep = 'finished'
-          next.activeStepIndex = 3
-        }
+      // 1-indexed for some reason
+      const nextIndex = s.activeStepIndex
+      const nextStep = stepOrder[nextIndex]
+      if (nextStep) {
+        next.activeStep = nextStep
+        next.activeStepIndex = nextIndex + 1
       }
       break
     }
     case 'prev': {
-      if (s.experiments?.onboarding_suggested_accounts) {
-        if (s.activeStep === 'interests') {
-          next.activeStep = 'profile'
-          next.activeStepIndex = 1
-        } else if (s.activeStep === 'suggested-accounts') {
-          next.activeStep = 'interests'
-          next.activeStepIndex = 2
-        } else if (s.activeStep === 'finished') {
-          next.activeStep = 'suggested-accounts'
-          next.activeStepIndex = 3
-        }
-      } else {
-        if (s.activeStep === 'interests') {
-          next.activeStep = 'profile'
-          next.activeStepIndex = 1
-        } else if (s.activeStep === 'finished') {
-          next.activeStep = 'interests'
-          next.activeStepIndex = 2
-        }
+      const prevIndex = s.activeStepIndex - 2
+      const prevStep = stepOrder[prevIndex]
+      if (prevStep) {
+        next.activeStep = prevStep
+        next.activeStepIndex = prevIndex + 1
       }
       break
     }
