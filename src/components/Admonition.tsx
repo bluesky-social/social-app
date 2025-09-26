@@ -3,17 +3,13 @@ import {type StyleProp, View, type ViewStyle} from 'react-native'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button as BaseButton, type ButtonProps} from '#/components/Button'
-import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
-import {Eye_Stroke2_Corner0_Rounded as InfoIcon} from '#/components/icons/Eye'
-import {Leaf_Stroke2_Corner0_Rounded as TipIcon} from '#/components/icons/Leaf'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Text as BaseText, type TextProps} from '#/components/Typography'
 
 export const colors = {
-  warning: {
-    light: '#DFBC00',
-    dark: '#BFAF1F',
-  },
+  warning: '#FFC404',
 }
 
 type Context = {
@@ -29,18 +25,42 @@ export function Icon() {
   const t = useTheme()
   const {type} = useContext(Context)
   const Icon = {
-    info: InfoIcon,
-    tip: TipIcon,
+    info: CircleInfoIcon,
+    tip: CircleInfoIcon,
     warning: WarningIcon,
-    error: ErrorIcon,
+    error: CircleXIcon,
   }[type]
   const fill = {
     info: t.atoms.text_contrast_medium.color,
     tip: t.palette.primary_500,
-    warning: colors.warning.light,
+    warning: colors.warning,
     error: t.palette.negative_500,
   }[type]
   return <Icon fill={fill} size="md" />
+}
+
+export function Content({
+  children,
+  style,
+  ...rest
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
+  return (
+    <View
+      style={[
+        a.gap_sm,
+        a.flex_1,
+        {
+          minHeight: 20,
+        },
+        style,
+      ]}
+      {...rest}>
+      {children}
+    </View>
+  )
 }
 
 export function Text({
@@ -68,9 +88,15 @@ export function Button({
   )
 }
 
-export function Row({children}: {children: React.ReactNode}) {
+export function Row({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
   return (
-    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+    <View style={[a.flex_1, a.flex_row, a.align_start, a.gap_sm, style]}>
       {children}
     </View>
   )
@@ -88,10 +114,10 @@ export function Outer({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const borderColor = {
-    info: t.atoms.border_contrast_low.borderColor,
-    tip: t.atoms.border_contrast_low.borderColor,
-    warning: t.atoms.border_contrast_low.borderColor,
-    error: t.atoms.border_contrast_low.borderColor,
+    info: t.atoms.border_contrast_high.borderColor,
+    tip: t.palette.primary_500,
+    warning: colors.warning,
+    error: t.palette.negative_500,
   }[type]
   return (
     <Context.Provider value={{type}}>
@@ -100,7 +126,7 @@ export function Outer({
           gtMobile ? a.p_md : a.p_sm,
           a.rounded_sm,
           a.border,
-          t.atoms.bg_contrast_25,
+          t.atoms.bg,
           {borderColor},
           style,
         ]}>
@@ -123,7 +149,9 @@ export function Admonition({
     <Outer type={type} style={style}>
       <Row>
         <Icon />
-        <Text>{children}</Text>
+        <Content>
+          <Text>{children}</Text>
+        </Content>
       </Row>
     </Outer>
   )
