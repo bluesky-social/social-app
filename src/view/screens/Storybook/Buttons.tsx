@@ -82,6 +82,40 @@ export function Buttons() {
           ))}
         </Fragment>
       ))}
+
+      {['tiny', 'small'].map(size => (
+        <View
+          key={size}
+          style={[a.flex_row, a.gap_md, a.align_start, {maxWidth: 350}]}>
+          <Button
+            label="stacked"
+            color="secondary"
+            shape="stacked"
+            size={size as ButtonSize}
+            style={[a.flex_1]}>
+            <ButtonIcon icon={Globe} />
+            <ButtonText>Post reply</ButtonText>
+          </Button>
+          <Button
+            label="stacked"
+            color="negative_subtle"
+            shape="stacked"
+            size={size as ButtonSize}
+            style={[a.flex_1]}>
+            <ButtonIcon icon={Globe} />
+            <ButtonText>Delete</ButtonText>
+          </Button>
+          <Button
+            label="stacked"
+            color="primary"
+            shape="stacked"
+            size={size as ButtonSize}
+            style={[a.flex_1]}>
+            <ButtonIcon icon={Globe} />
+            <ButtonText>Edit</ButtonText>
+          </Button>
+        </View>
+      ))}
     </View>
   )
 }

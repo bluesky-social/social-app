@@ -40,7 +40,7 @@ export type ButtonColor =
   | 'primary_subtle'
   | 'negative_subtle'
 export type ButtonSize = 'tiny' | 'small' | 'large'
-export type ButtonShape = 'round' | 'square' | 'default'
+export type ButtonShape = 'round' | 'square' | 'stacked' | 'default'
 export type VariantProps = {
   /**
    * The style variation of the button
@@ -509,6 +509,25 @@ export const Button = React.forwardRef<View, ButtonProps>(
             baseStyles.push(a.rounded_sm)
           }
         }
+      } else if (shape === 'stacked') {
+        if (size === 'large') {
+          // not implemented
+          baseStyles.push({})
+        } else if (size === 'small') {
+          baseStyles.push({
+            height: 80,
+            paddingHorizontal: 22,
+            borderRadius: 24,
+            gap: 4,
+          })
+        } else if (size === 'tiny') {
+          baseStyles.push({
+            paddingVertical: 10,
+            paddingHorizontal: 16,
+            borderRadius: 16,
+            gap: 2,
+          })
+        }
       }
 
       return {
@@ -523,9 +542,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
         variant,
         color,
         size,
+        shape,
         disabled: disabled || false,
       }),
-      [state, variant, color, size, disabled],
+      [state, variant, color, size, shape, disabled],
     )
 
     const flattenedBaseStyles = flatten([baseStyles, style])
@@ -545,7 +565,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           disabled: disabled || false,
         }}
         style={[
-          a.flex_row,
+          shape !== 'stacked' ? a.flex_row : undefined,
           a.align_center,
           a.justify_center,
           a.curve_continuous,
@@ -571,7 +591,7 @@ Button.displayName = 'Button'
 
 export function useSharedButtonTextStyles() {
   const t = useTheme()
-  const {color, variant, disabled, size} = useButtonContext()
+  const {color, variant, disabled, size, shape} = useButtonContext()
   return React.useMemo(() => {
     const baseStyles: TextStyle[] = []
 
@@ -751,22 +771,29 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_md, a.leading_snug, a.font_semi_bold)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_sm, a.leading_snug, a.font_semi_bold)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_xs, a.leading_snug, a.font_semi_bold)
+    }
+
+    if (shape === 'stacked') {
+      baseStyles.push(a.leading_tight)
     }
 
     return StyleSheet.flatten(baseStyles)
-  }, [t, variant, color, size, disabled])
+  }, [t, variant, color, size, shape, disabled])
 }
 
 export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text {...rest} style={[a.text_center, textStyles, style]}>
+    <Text
+      {...rest}
+      style={[a.text_center, textStyles, style]}
+      numberOfLines={2}>
       {children}
     </Text>
   )
@@ -783,7 +810,7 @@ export function ButtonIcon({
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size: buttonSize} = useButtonContext()
+  const {size: buttonSize, shape} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
   const {iconSize, iconContainerSize} = React.useMemo(() => {
     /**
@@ -813,6 +840,20 @@ export function ButtonIcon({
       '2xl': 32,
     }[iconSizeShorthand]
 
+    if (shape === 'stacked') {
+      const stackedIconSize = size
+        ? iconSize
+        : {
+            tiny: 16,
+            small: 24,
+            large: 24,
+          }[buttonSize || 'small']
+      return {
+        iconSize: stackedIconSize,
+        iconContainerSize: stackedIconSize,
+      }
+    }
+
     /*
      * Goal here is to match rendered text size so that different size icons
      * don't increase button size
@@ -827,7 +868,7 @@ export function ButtonIcon({
       iconSize,
       iconContainerSize,
     }
-  }, [buttonSize, size])
+  }, [buttonSize, size, shape])
 
   return (
     <View
