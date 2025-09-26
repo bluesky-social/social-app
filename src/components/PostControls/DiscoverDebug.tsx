@@ -5,8 +5,8 @@ import {t} from '@lingui/macro'
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useGate} from '#/lib/statsig/statsig'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_INTERNAL} from '#/env'
 
@@ -16,7 +16,6 @@ export function DiscoverDebug({
   feedContext: string | undefined
 }) {
   const {currentAccount} = useSession()
-  const {gtMobile} = useBreakpoints()
   const gate = useGate()
   const isDiscoverDebugUser =
     IS_INTERNAL ||
@@ -30,15 +29,11 @@ export function DiscoverDebug({
       <Pressable
         accessible={false}
         hitSlop={10}
-        style={[
-          a.absolute,
-          {zIndex: 1000, maxWidth: 65, bottom: -4},
-          gtMobile ? a.right_0 : a.left_0,
-        ]}
+        style={[a.absolute, {zIndex: 1000, maxWidth: 65, bottom: -4}, a.left_0]}
         onPress={e => {
           e.stopPropagation()
           Clipboard.setStringAsync(feedContext)
-          Toast.show(t`Copied to clipboard`, 'clipboard-check')
+          Toast.show(t`Copied to clipboard`)
         }}>
         <Text
           numberOfLines={1}
