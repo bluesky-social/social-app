@@ -17,7 +17,7 @@ export function ListEmbed({
   return (
     <ListCard.Default
       view={embed.view}
-      style={[a.border, t.atoms.border_contrast_medium, a.p_md, a.rounded_sm]}
+      style={[a.border, t.atoms.border_contrast_low, a.p_md, a.rounded_sm]}
     />
   )
 }
