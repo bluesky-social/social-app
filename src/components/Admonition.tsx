@@ -39,6 +39,30 @@ export function Icon() {
   return <Icon fill={fill} size="md" />
 }
 
+export function Content({
+  children,
+  style,
+  ...rest
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
+  return (
+    <View
+      style={[
+        a.gap_sm,
+        a.flex_1,
+        {
+          minHeight: 20,
+        },
+        style,
+      ]}
+      {...rest}>
+      {children}
+    </View>
+  )
+}
+
 export function Text({
   children,
   style,
@@ -47,18 +71,7 @@ export function Text({
   return (
     <BaseText
       {...rest}
-      style={[
-        a.flex_1,
-        a.text_sm,
-        a.leading_snug,
-        a.pr_md,
-        style,
-        {
-          minHeight: 20,
-          display: 'flex',
-          alignItems: 'center',
-        },
-      ]}>
+      style={[a.flex_1, a.text_sm, a.leading_snug, a.pr_md, style]}>
       {children}
     </BaseText>
   )
@@ -75,8 +88,18 @@ export function Button({
   )
 }
 
-export function Row({children}: {children: React.ReactNode}) {
-  return <View style={[a.flex_1, a.flex_row, a.gap_sm]}>{children}</View>
+export function Row({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
+  return (
+    <View style={[a.flex_1, a.flex_row, a.align_start, a.gap_sm, style]}>
+      {children}
+    </View>
+  )
 }
 
 export function Outer({
@@ -126,7 +149,9 @@ export function Admonition({
     <Outer type={type} style={style}>
       <Row>
         <Icon />
-        <Text>{children}</Text>
+        <Content>
+          <Text>{children}</Text>
+        </Content>
       </Row>
     </Outer>
   )

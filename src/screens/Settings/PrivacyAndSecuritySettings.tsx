@@ -1,4 +1,3 @@
-import {View} from 'react-native'
 import {type AppBskyNotificationDeclaration} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -112,7 +111,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
             <Admonition.Outer type="tip" style={[a.flex_1]}>
               <Admonition.Row>
                 <Admonition.Icon />
-                <View style={[a.flex_1, a.gap_sm]}>
+                <Admonition.Content>
                   <Admonition.Text>
                     <Trans>
                       Note: Bluesky is an open and public network. This setting
@@ -131,7 +130,7 @@ export function PrivacyAndSecuritySettingsScreen({}: Props) {
                       <Trans>Learn more about what is public on Bluesky.</Trans>
                     </InlineLinkText>
                   </Admonition.Text>
-                </View>
+                </Admonition.Content>
               </Admonition.Row>
             </Admonition.Outer>
           </SettingsList.Item>
