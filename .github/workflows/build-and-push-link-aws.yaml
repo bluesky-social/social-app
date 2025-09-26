@@ -1,6 +1,11 @@
 name: build-and-push-link-aws
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'bskylink/**'
+      - 'Dockerfile.bskylink'
+      - '.github/workflows/build-and-push-link-aws.yaml'
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
@@ -45,7 +50,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           file: ./Dockerfile.bskylink
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -34,7 +34,13 @@ export function SearchError({
             {maxWidth: gtMobile ? 394 : 294},
             gtMobile ? a.gap_md : a.gap_sm,
           ]}>
-          <Text style={[a.font_bold, a.text_lg, a.text_center, a.leading_snug]}>
+          <Text
+            style={[
+              a.font_semi_bold,
+              a.text_lg,
+              a.text_center,
+              a.leading_snug,
+            ]}>
             {title}
           </Text>
           {children}

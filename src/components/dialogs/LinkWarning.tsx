@@ -68,7 +68,7 @@ function InAppBrowserConsentInner({
       }>
       <View style={[a.gap_2xl]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_heavy, a.text_2xl]}>
+          <Text style={[a.font_bold, a.text_2xl]}>
             {potentiallyMisleading ? (
               <Trans>Potentially misleading link</Trans>
             ) : (
@@ -151,7 +151,8 @@ function LinkBox({href}: {href: string}) {
       ]}>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {scheme}
-        <Text style={[a.text_md, a.leading_snug, t.atoms.text, a.font_bold]}>
+        <Text
+          style={[a.text_md, a.leading_snug, t.atoms.text, a.font_semi_bold]}>
           {hostname}
         </Text>
         {rest}

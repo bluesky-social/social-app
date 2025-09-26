@@ -26,8 +26,9 @@ COPY --from=build /app /app
 RUN mkdir /app/data && chown node /app/data
 
 VOLUME /app/data
-EXPOSE 3000
+EXPOSE 3000 3001
 ENV CARD_PORT=3000
+ENV CARD_METRICS_PORT=3001
 ENV NODE_ENV=production
 # potential perf issues w/ io_uring on this version of node
 ENV UV_USE_IO_URING=0

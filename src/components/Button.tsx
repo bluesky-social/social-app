@@ -240,7 +240,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (color === 'secondary') {
           if (!disabled) {
-            baseStyles.push(t.atoms.bg_contrast_25)
+            baseStyles.push(t.atoms.bg_contrast_50)
             hoverStyles.push(t.atoms.bg_contrast_100)
           } else {
             baseStyles.push(t.atoms.bg_contrast_50)
@@ -289,11 +289,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_25,
-                dim: t.palette.primary_50,
-                dark: t.palette.primary_50,
-              }),
+              backgroundColor: t.palette.primary_50,
             })
           }
         } else if (color === 'negative_subtle') {
@@ -314,11 +310,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_25,
-                dim: t.palette.negative_50,
-                dark: t.palette.negative_50,
-              }),
+              backgroundColor: t.palette.negative_50,
             })
           }
         }
@@ -372,7 +364,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             if (!disabled) {
               baseStyles.push(t.atoms.bg)
               hoverStyles.push({
-                backgroundColor: t.palette.contrast_25,
+                backgroundColor: t.palette.contrast_50,
               })
             }
           }
@@ -396,7 +388,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             if (!disabled) {
               baseStyles.push(t.atoms.bg)
               hoverStyles.push({
-                backgroundColor: t.palette.contrast_25,
+                backgroundColor: t.palette.contrast_50,
               })
             }
           }

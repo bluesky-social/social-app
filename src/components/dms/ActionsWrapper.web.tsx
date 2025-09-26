@@ -72,9 +72,9 @@ export function ActionsWrapper({
 
   return (
     <View
-      // @ts-expect-error web only
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      // @ts-expect-error web only
       onFocus={onFocus}
       onBlur={onMouseLeave}
       style={[a.flex_1, isFromSelf ? a.flex_row : a.flex_row_reverse]}

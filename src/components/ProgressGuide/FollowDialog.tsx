@@ -360,7 +360,7 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
         style={[
           a.z_10,
           a.text_lg,
-          a.font_heavy,
+          a.font_bold,
           a.leading_tight,
           t.atoms.text_contrast_high,
         ]}>

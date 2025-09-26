@@ -142,7 +142,7 @@ function ModerationDetailsDialogInner({
         paddingBottom: 0,
       }}>
       <View style={[xGutters, a.pb_lg]}>
-        <Text emoji style={[t.atoms.text, a.text_2xl, a.font_heavy, a.mb_sm]}>
+        <Text emoji style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
           {name}
         </Text>
         <Text style={[t.atoms.text, a.text_sm, a.leading_snug]}>
