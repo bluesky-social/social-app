@@ -1,35 +1,31 @@
-import React from 'react'
-import {
-  ActivityIndicator,
-  type ListRenderItemInfo,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {useCallback, useMemo, useState} from 'react'
+import {type ListRenderItemInfo, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {cleanError} from '#/lib/strings/errors'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
+import {
+  type FeedNotification,
+  useNotificationFeedQuery,
+} from '#/state/queries/notifications/feed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListProps, type ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {atoms as a} from '#/alf'
+import {ListFooter} from '#/components/Lists'
 import {NotificationFeedItem} from './NotificationFeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 const LOADING_ITEM = {_reactKey: '__loading__'}
 
 export function NotificationFeed({
   filter,
   enabled,
   scrollElRef,
-  onPressTryAgain,
   onScrolledDownChange,
   ListHeaderComponent,
   refreshNotifications,
@@ -37,13 +33,12 @@ export function NotificationFeed({
   filter: 'all' | 'mentions'
   enabled: boolean
   scrollElRef?: ListRef
-  onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: ListProps['ListHeaderComponent']
   refreshNotifications: () => Promise<void>
 }) {
   const initialNumToRender = useInitialNumToRender()
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const {
@@ -55,6 +50,7 @@ export function NotificationFeed({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
+    refetch,
   } = useNotificationFeedQuery({
     enabled: enabled && !!moderationOpts,
     filter,
@@ -67,8 +63,8 @@ export function NotificationFeed({
   const isEmpty =
     !isFetching && !data?.pages.find(page => page.items.length > 0)
 
-  const items = React.useMemo(() => {
-    let arr: any[] = []
+  const items = useMemo(() => {
+    let arr: (FeedNotification | {_reactKey: string})[] = []
     if (isFetched) {
       if (isEmpty) {
         arr = arr.concat([EMPTY_FEED_ITEM])
@@ -77,16 +73,13 @@ export function NotificationFeed({
           arr = arr.concat(page.items)
         }
       }
-      if (isError && !isEmpty) {
-        arr = arr.concat([LOAD_MORE_ERROR_ITEM])
-      }
     } else {
       arr.push(LOADING_ITEM)
     }
     return arr
-  }, [isFetched, isError, isEmpty, data])
+  }, [isFetched, isEmpty, data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     try {
       setIsPTRing(true)
       await refreshNotifications()
@@ -99,7 +92,7 @@ export function NotificationFeed({
     }
   }, [refreshNotifications, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
     try {
@@ -109,27 +102,14 @@ export function NotificationFeed({
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  const onPressRetryLoadMore = React.useCallback(() => {
-    fetchNextPage()
-  }, [fetchNextPage])
-
-  const renderItem = React.useCallback(
-    ({item, index}: ListRenderItemInfo<any>) => {
+  const renderItem = useCallback(
+    ({item, index}: ListRenderItemInfo<FeedNotification>) => {
       if (item === EMPTY_FEED_ITEM) {
         return (
           <EmptyState
             icon="bell"
             message={_(msg`No notifications yet!`)}
-            style={styles.emptyState}
-          />
-        )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
-        return (
-          <LoadMoreRetryBtn
-            label={_(
-              msg`There was an issue fetching notifications. Tap here to try again.`,
-            )}
-            onPress={onPressRetryLoadMore}
+            style={[a.py_5xl]}
           />
         )
       } else if (item === LOADING_ITEM) {
@@ -144,28 +124,13 @@ export function NotificationFeed({
         />
       )
     },
-    [moderationOpts, _, onPressRetryLoadMore, filter],
-  )
-
-  const FeedFooter = React.useCallback(
-    () =>
-      isFetchingNextPage ? (
-        <View style={styles.feedFooter}>
-          <ActivityIndicator />
-        </View>
-      ) : (
-        <View />
-      ),
-    [isFetchingNextPage],
+    [moderationOpts, _, filter],
   )
 
   return (
-    <View style={s.hContentRegion}>
-      {error && (
-        <ErrorMessage
-          message={cleanError(error)}
-          onPressTryAgain={onPressTryAgain}
-        />
+    <View style={a.util_screen_outer}>
+      {error && isEmpty && (
+        <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
       )}
       <List
         testID="notifsFeed"
@@ -174,13 +139,22 @@ export function NotificationFeed({
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListHeaderComponent={ListHeaderComponent}
-        ListFooterComponent={FeedFooter}
+        ListFooterComponent={
+          isFetched && !isEmpty ? (
+            <ListFooter
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              error={error && !isEmpty ? cleanError(error) : undefined}
+              onRetry={fetchNextPage}
+              height={260}
+            />
+          ) : null
+        }
         refreshing={isPTRing}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
         onEndReachedThreshold={2}
         onScrolledDownChange={onScrolledDownChange}
-        contentContainerStyle={s.contentContainer}
         desktopFixedHeight
         initialNumToRender={initialNumToRender}
         windowSize={11}
@@ -190,8 +164,3 @@ export function NotificationFeed({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  feedFooter: {paddingTop: 20},
-  emptyState: {paddingVertical: 40},
-})
