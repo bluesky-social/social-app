@@ -7,7 +7,9 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
+import {useMerticDisabledPref} from '#/state/preferences'
 import {usePostThreadQuery} from '#/state/queries/post-thread'
+import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {PostLikedBy as PostLikedByComponent} from '#/view/com/post-thread/PostLikedBy'
 import * as Layout from '#/components/Layout'
@@ -18,6 +20,9 @@ export const PostLikedByScreen = ({route}: Props) => {
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
   const {data: post} = usePostThreadQuery(uri)
+
+  const {currentAccount} = useSession()
+  const {likeMetrics} = useMerticDisabledPref()
 
   let likeCount
   if (post?.thread.type === 'post') {
@@ -41,7 +46,13 @@ export const PostLikedByScreen = ({route}: Props) => {
                 <Trans>Liked By</Trans>
               </Layout.Header.TitleText>
               <Layout.Header.SubtitleText>
-                <Plural value={likeCount ?? 0} one="# like" other="# likes" />
+                {likeMetrics === 'hide-all' ||
+                (likeMetrics === 'hide-own' &&
+                  post?.thread.type === 'post' &&
+                  post.thread.post.author.did ===
+                    currentAccount?.did) ? null : (
+                  <Plural value={likeCount ?? 0} one="# like" other="# likes" />
+                )}
               </Layout.Header.SubtitleText>
             </>
           )}
