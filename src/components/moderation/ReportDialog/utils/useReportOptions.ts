@@ -319,3 +319,28 @@ export function useReportOptions() {
 
   return {categories, sortedCategories, getCategory}
 }
+
+const DeprecatedReportReasonMapping: Partial<Record<ReasonType, ReasonType>> = {
+  'tools.ozone.report.defs#reasonMisleadingSpam':
+    'com.atproto.moderation.defs#reasonSpam',
+  'tools.ozone.report.defs#reasonRuleOther':
+    'com.atproto.moderation.defs#reasonViolation',
+  'tools.ozone.report.defs#reasonMisleadingOther':
+    'com.atproto.moderation.defs#reasonMisleading',
+  'tools.ozone.report.defs#reasonSexualUnlabeled':
+    'com.atproto.moderation.defs#reasonSexual',
+  'tools.ozone.report.defs#reasonHarassmentOther':
+    'com.atproto.moderation.defs#reasonRude',
+  'tools.ozone.report.defs#reasonAppeal':
+    'com.atproto.moderation.defs#reasonAppeal',
+}
+
+export function newReportReasonToDeprecatedReason(
+  newReason: ReasonType,
+): ReasonType {
+  const maybeReason = DeprecatedReportReasonMapping[newReason]
+  if (maybeReason) {
+    return maybeReason
+  }
+  return 'com.atproto.moderation.defs#reasonOther'
+}
