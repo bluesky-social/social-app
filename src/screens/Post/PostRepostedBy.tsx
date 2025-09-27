@@ -7,7 +7,9 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
+import {useMerticDisabledPref} from '#/state/preferences'
 import {usePostThreadQuery} from '#/state/queries/post-thread'
+import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {PostRepostedBy as PostRepostedByComponent} from '#/view/com/post-thread/PostRepostedBy'
 import * as Layout from '#/components/Layout'
@@ -18,6 +20,9 @@ export const PostRepostedByScreen = ({route}: Props) => {
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
   const setMinimalShellMode = useSetMinimalShellMode()
   const {data: post} = usePostThreadQuery(uri)
+
+  const {currentAccount} = useSession()
+  const {repostMetrics} = useMerticDisabledPref()
 
   let quoteCount
   if (post?.thread.type === 'post') {
@@ -41,11 +46,17 @@ export const PostRepostedByScreen = ({route}: Props) => {
                 <Trans>Reposted By</Trans>
               </Layout.Header.TitleText>
               <Layout.Header.SubtitleText>
-                <Plural
-                  value={quoteCount ?? 0}
-                  one="# repost"
-                  other="# reposts"
-                />
+                {repostMetrics === 'hide-all' ||
+                (repostMetrics === 'hide-own' &&
+                  post?.thread.type === 'post' &&
+                  post.thread.post.author.did ===
+                    currentAccount?.did) ? null : (
+                  <Plural
+                    value={quoteCount ?? 0}
+                    one="# repost"
+                    other="# reposts"
+                  />
+                )}
               </Layout.Header.SubtitleText>
             </>
           )}
