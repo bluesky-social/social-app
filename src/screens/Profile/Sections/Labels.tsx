@@ -29,7 +29,7 @@ interface LabelsSectionProps {
   labelerError: Error | null
   moderationOpts: ModerationOpts
   scrollElRef: ListRef
-  headerOffset: number
+  headerHeight: number
   isFocused: boolean
   setScrollViewTag: (tag: number | null) => void
 }
@@ -41,7 +41,7 @@ export function ProfileLabelsSection({
   labelerError,
   moderationOpts,
   scrollElRef,
-  headerOffset,
+  headerHeight,
   isFocused,
   setScrollViewTag,
 }: LabelsSectionProps) {
@@ -50,9 +50,9 @@ export function ProfileLabelsSection({
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
       animated: isNative,
-      offset: -headerOffset,
+      offset: -headerHeight,
     })
-  }, [scrollElRef, headerOffset])
+  }, [scrollElRef, headerHeight])
 
   useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
@@ -124,7 +124,7 @@ export function ProfileLabelsSection({
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={a.px_xl}
-        headerOffset={headerOffset}
+        headerOffset={headerHeight}
         progressViewOffset={ios(0)}
         ListHeaderComponent={
           <LabelerListHeader
@@ -137,7 +137,7 @@ export function ProfileLabelsSection({
         }
         ListFooterComponent={
           <ListFooter
-            height={headerOffset + 180}
+            height={headerHeight + 180}
             style={a.border_transparent}
           />
         }

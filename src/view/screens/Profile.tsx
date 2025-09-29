@@ -380,7 +380,7 @@ function ProfileScreenLoaded({
                 isLabelerLoading={isLabelerLoading}
                 moderationOpts={moderationOpts}
                 scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
+                headerHeight={headerHeight}
                 isFocused={isFocused}
                 setScrollViewTag={setScrollViewTag}
               />
