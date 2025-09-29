@@ -39,7 +39,7 @@ export function ProgressGuideTask({
         <Text
           style={[
             a.text_sm,
-            a.font_bold,
+            a.font_semi_bold,
             a.leading_tight,
             tabularNumsTitle && {fontVariant: ['tabular-nums']},
           ]}>

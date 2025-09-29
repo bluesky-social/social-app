@@ -107,7 +107,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
               style={[a.gap_lg]}
               exiting={native(SlideOutLeft)}
               key={0}>
-              <Text style={[a.text_2xl, a.font_bold]}>
+              <Text style={[a.text_2xl, a.font_semi_bold]}>
                 <Trans>Add App Password</Trans>
               </Text>
               <Text style={[a.text_md, a.leading_snug]}>
@@ -183,7 +183,7 @@ function CreateDialogInner({passwords}: {passwords: string[]}) {
               style={[a.gap_lg]}
               entering={isWeb ? FadeIn.delay(200) : SlideInRight}
               key={1}>
-              <Text style={[a.text_2xl, a.font_bold]}>
+              <Text style={[a.text_2xl, a.font_semi_bold]}>
                 <Trans>Here is your app password!</Trans>
               </Text>
               <Text style={[a.text_md, a.leading_snug]}>

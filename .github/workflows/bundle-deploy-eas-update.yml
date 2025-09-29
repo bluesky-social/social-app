@@ -192,12 +192,12 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.2'
+          xcode-version: "16.2"
 
       - name: ☕️ Setup Cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
         with:
-          version: 1.14.3
+          version: 1.16.2
 
       - name: 💾 Cache Pods
         uses: actions/cache@v3
@@ -293,8 +293,8 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: ⚙️ Install dependencies
         run: yarn install
@@ -332,7 +332,7 @@ jobs:
         id: timestamp
         uses: nanzm/get-time-action@master
         with:
-          format: 'MM-DD-HH-mm-ss'
+          format: "MM-DD-HH-mm-ss"
 
       - name: 🚀 Upload Artifact
         id: upload-artifact

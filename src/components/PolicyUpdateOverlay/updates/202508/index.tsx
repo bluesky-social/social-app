@@ -69,7 +69,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
 
         {screenReaderEnabled ? (
           <View style={[a.gap_sm]}>
-            <Text emoji style={[a.text_2xl, a.font_bold, a.leading_snug]}>
+            <Text emoji style={[a.text_2xl, a.font_semi_bold, a.leading_snug]}>
               <Trans>Hey there 👋</Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
@@ -115,7 +115,7 @@ export function Content({state}: {state: PolicyUpdateState}) {
           </View>
         ) : (
           <View style={[a.gap_sm]}>
-            <Text emoji style={[a.text_2xl, a.font_bold, a.leading_snug]}>
+            <Text emoji style={[a.text_2xl, a.font_semi_bold, a.leading_snug]}>
               <Trans>Hey there 👋</Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>

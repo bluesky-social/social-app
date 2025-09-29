@@ -39,7 +39,7 @@ export function LiveIndicator({
         <Text
           style={[
             a.text_center,
-            a.font_bold,
+            a.font_semi_bold,
             fontSize,
             {color: t.palette.white},
           ]}>

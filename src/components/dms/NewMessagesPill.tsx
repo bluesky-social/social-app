@@ -88,7 +88,7 @@ export function NewMessagesPill({
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}>
-        <Text style={[a.font_bold]}>
+        <Text style={[a.font_semi_bold]}>
           <Trans>New messages</Trans>
         </Text>
       </AnimatedPressable>

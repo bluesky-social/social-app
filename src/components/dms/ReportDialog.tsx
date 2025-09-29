@@ -200,7 +200,7 @@ function SubmitStep({
       </Button>
 
       <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-        <Text style={[a.text_2xl, a.font_bold]}>{copy.title}</Text>
+        <Text style={[a.text_2xl, a.font_semi_bold]}>{copy.title}</Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           <Trans>
             Your report will be sent to the Bluesky Moderation Service
@@ -213,10 +213,11 @@ function SubmitStep({
       )}
 
       <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-        <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+        <Text
+          style={[a.font_semi_bold, a.text_md, t.atoms.text_contrast_medium]}>
           <Trans>Reason:</Trans>
         </Text>{' '}
-        <Text style={[a.font_bold, a.text_md]}>{reportOption.title}</Text>
+        <Text style={[a.font_semi_bold, a.text_md]}>{reportOption.title}</Text>
       </Text>
 
       <Divider />
@@ -346,7 +347,7 @@ function DoneStep({
   return (
     <View style={a.gap_2xl}>
       <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-        <Text style={[a.text_2xl, a.font_bold]}>
+        <Text style={[a.text_2xl, a.font_semi_bold]}>
           <Trans>Report submitted</Trans>
         </Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>

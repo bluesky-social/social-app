@@ -265,7 +265,8 @@ export function MessagesScreenInner({navigation, route}: Props) {
                       width={48}
                       fill={t.atoms.text_contrast_low.color}
                     />
-                    <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
+                    <Text
+                      style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
                       <Trans>Whoops!</Trans>
                     </Text>
                     <Text
@@ -298,7 +299,8 @@ export function MessagesScreenInner({navigation, route}: Props) {
                 <>
                   <View style={[a.pt_3xl, a.align_center]}>
                     <MessageIcon width={48} fill={t.palette.primary_500} />
-                    <Text style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_bold]}>
+                    <Text
+                      style={[a.pt_md, a.pb_sm, a.text_2xl, a.font_semi_bold]}>
                       <Trans>Nothing here</Trans>
                     </Text>
                     <Text

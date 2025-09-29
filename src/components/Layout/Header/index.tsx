@@ -181,7 +181,7 @@ export function TitleText({
     <Text
       style={[
         a.text_lg,
-        a.font_heavy,
+        a.font_bold,
         a.leading_tight,
         isIOS && align === 'platform' && a.text_center,
         gtMobile && a.text_xl,

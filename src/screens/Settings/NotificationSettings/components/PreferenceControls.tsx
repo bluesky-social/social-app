@@ -150,7 +150,7 @@ export function Inner({
       {'include' in preference && (
         <>
           <Divider />
-          <Text style={[a.font_bold, a.text_md]}>
+          <Text style={[a.font_semi_bold, a.text_md]}>
             <Trans>From</Trans>
           </Text>
           <Toggle.Group

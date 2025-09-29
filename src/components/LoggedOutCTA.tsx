@@ -50,7 +50,7 @@ export function LoggedOutCTA({style, gateName}: LoggedOutCTAProps) {
         <View style={[a.flex_row, a.align_center, a.flex_1, a.pr_md]}>
           <Logo width={30} style={[a.mr_md]} />
           <View style={[a.flex_1]}>
-            <Text style={[a.text_lg, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
               <Trans>Join Bluesky</Trans>
             </Text>
             <Text
