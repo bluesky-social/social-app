@@ -10,6 +10,7 @@ import {
   useUpdates,
 } from 'expo-updates'
 
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {IS_TESTFLIGHT} from '#/env'
@@ -146,7 +147,9 @@ export function useOTAUpdates() {
           logger.debug('No update available.')
         }
       } catch (err) {
-        logger.error('OTA Update Error', {safeMessage: err})
+        if (!isNetworkError(err)) {
+          logger.error('OTA Update Error', {safeMessage: err})
+        }
       }
     }, 10e3)
   }, [])
@@ -155,7 +158,9 @@ export function useOTAUpdates() {
     try {
       await updateTestflight()
     } catch (err: any) {
-      logger.error('Internal OTA Update Error', {safeMessage: err})
+      if (!isNetworkError(err)) {
+        logger.error('Internal OTA Update Error', {safeMessage: err})
+      }
     }
   }, [])
 
