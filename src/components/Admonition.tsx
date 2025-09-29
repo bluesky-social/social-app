@@ -1,7 +1,7 @@
 import {createContext, useContext} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button as BaseButton, type ButtonProps} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
@@ -62,9 +62,7 @@ export function Text({
   ...rest
 }: Pick<TextProps, 'children' | 'style'>) {
   return (
-    <BaseText
-      {...rest}
-      style={[a.flex_1, a.text_sm, a.leading_snug, a.pr_md, style]}>
+    <BaseText {...rest} style={[a.text_sm, a.leading_snug, a.pr_md, style]}>
       {children}
     </BaseText>
   )
@@ -105,7 +103,6 @@ export function Outer({
   style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const borderColor = {
     info: t.atoms.border_contrast_high.borderColor,
     tip: t.palette.primary_500,
@@ -116,7 +113,7 @@ export function Outer({
     <Context.Provider value={{type}}>
       <View
         style={[
-          gtMobile ? a.p_md : a.p_sm,
+          a.p_md,
           a.rounded_sm,
           a.border,
           t.atoms.bg,

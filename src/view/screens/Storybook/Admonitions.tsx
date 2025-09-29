@@ -48,21 +48,21 @@ export function Admonitions() {
       </Admonition>
 
       <AdmonitionOuter type="error">
-        <AdmonitionRow style={[a.align_center]}>
+        <AdmonitionRow>
           <AdmonitionIcon />
-          <AdmonitionContent style={[a.flex_row, a.align_center]}>
-            <AdmonitionText style={[a.flex_1]}>
+          <AdmonitionContent>
+            <AdmonitionText>
               <Trans>Something went wrong, please try again</Trans>
             </AdmonitionText>
-            <AdmonitionButton
-              label={_(msg`Retry loading report options`)}
-              onPress={() => {}}>
-              <ButtonText>
-                <Trans>Retry</Trans>
-              </ButtonText>
-              <ButtonIcon icon={Retry} />
-            </AdmonitionButton>
           </AdmonitionContent>
+          <AdmonitionButton
+            label={_(msg`Retry loading report options`)}
+            onPress={() => {}}>
+            <ButtonText>
+              <Trans>Retry</Trans>
+            </ButtonText>
+            <ButtonIcon icon={Retry} />
+          </AdmonitionButton>
         </AdmonitionRow>
       </AdmonitionOuter>
 
