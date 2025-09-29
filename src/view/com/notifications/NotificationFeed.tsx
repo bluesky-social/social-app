@@ -19,7 +19,6 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListProps, type ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
-import {useTheme} from '#/alf'
 import {Bell_Stroke2_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
 import {NotificationFeedItem} from './NotificationFeedItem'
 
@@ -47,7 +46,6 @@ export function NotificationFeed({
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {_} = useLingui()
-  const t = useTheme()
   const moderationOpts = useModerationOpts()
   const {
     data,
@@ -121,9 +119,7 @@ export function NotificationFeed({
       if (item === EMPTY_FEED_ITEM) {
         return (
           <EmptyState
-            icon={
-              <BellIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
-            }
+            icon={BellIcon}
             message={_(msg`No notifications yet!`)}
             style={styles.emptyState}
           />
@@ -149,7 +145,7 @@ export function NotificationFeed({
         />
       )
     },
-    [moderationOpts, _, onPressRetryLoadMore, filter, t],
+    [moderationOpts, _, onPressRetryLoadMore, filter],
   )
 
   const FeedFooter = React.useCallback(

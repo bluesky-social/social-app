@@ -201,7 +201,7 @@ let ListMaybePlaceholder = ({
           {paddingTop: 175, paddingBottom: 110},
         ]}>
         <EmptyState
-          icon={emptyStateIcon ?? 'growth'}
+          icon={emptyStateIcon}
           message={
             emptyMessage ??
             (emptyType === 'results'

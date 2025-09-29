@@ -5,7 +5,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {type AllNavigatorParams} from '#/lib/routes/types'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
-import {useTheme} from '#/alf'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
@@ -21,7 +20,6 @@ export function NotificationsActivityListScreen({
 }: Props) {
   const uris = decodeURIComponent(posts)
   const {_} = useLingui()
-  const t = useTheme()
 
   return (
     <Layout.Screen testID="NotificationsActivityListScreen">
@@ -39,9 +37,8 @@ export function NotificationsActivityListScreen({
         disablePoll
         renderEmptyState={() => (
           <EmptyState
-            icon={
-              <EditIcon size="2xl" fill={t.atoms.text_contrast_low.color} />
-            }
+            icon={EditIcon}
+            iconSize="2xl"
             message={_(msg`No posts here`)}
           />
         )}

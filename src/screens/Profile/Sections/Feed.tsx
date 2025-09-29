@@ -57,7 +57,6 @@ export function ProfileFeedSection({
   const adjustedInitialNumToRender = useInitialNumToRender({
     screenHeightOffset: headerHeight,
   })
-  const t = useTheme()
   const {gtPhone} = useBreakpoints()
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -77,24 +76,13 @@ export function ProfileFeedSection({
       <View style={[a.flex_1, a.justify_center, a.align_center]}>
         <EmptyState
           style={{width: '100%', marginTop: gtPhone ? 0 : 200}}
-          icon={
-            emptyStateIcon || (
-              <EditIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
-            )
-          }
+          icon={emptyStateIcon || EditIcon}
           message={emptyStateMessage || _(msg`No posts yet.`)}
           button={emptyStateButton}
         />
       </View>
     )
-  }, [
-    _,
-    emptyStateButton,
-    emptyStateIcon,
-    emptyStateMessage,
-    gtPhone,
-    t.atoms.text_contrast_low.color,
-  ])
+  }, [_, emptyStateButton, emptyStateIcon, emptyStateMessage, gtPhone])
 
   useEffect(() => {
     if (isIOS && isFocused && scrollElRef.current) {

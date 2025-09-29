@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {HashtagWideIcon} from '#/lib/icons'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {
@@ -18,6 +17,7 @@ import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 
 interface SectionRef {
@@ -72,7 +72,8 @@ export function FeedSection({
     return (
       <View style={[a.gap_xl, a.align_center]}>
         <EmptyState
-          icon={<HashtagWideIcon size="2xl" />}
+          icon={HashtagWideIcon}
+          iconSize="2xl"
           message={_(msg`This feed is empty.`)}
         />
         {isOwner && (
