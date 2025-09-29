@@ -9,6 +9,7 @@ import {device, useStorage} from '#/storage'
 /**
  * Location.useForegroundPermissions on web just errors if the navigator.permissions API is not available.
  * We need to catch and ignore it, since it's effectively denied.
+ * @see https://github.com/expo/expo/blob/72f1562ed9cce5ff6dfe04aa415b71632a3d4b87/packages/expo-location/src/Location.ts#L290-L293
  */
 const useForegroundPermissions = createPermissionHook({
   getMethod: () =>
