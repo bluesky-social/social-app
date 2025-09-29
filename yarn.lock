@@ -17071,11 +17071,6 @@ react-native-reanimated@^3.19.1:
     invariant "^2.2.4"
     react-native-is-edge-to-edge "1.1.7"
 
-react-native-root-siblings@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/react-native-root-siblings/-/react-native-root-siblings-5.0.1.tgz#97e050e5155228f65810fb1c466ff8e769c5272c"
-  integrity sha512-Ay3k/fBj6ReUkWX5WNS+oEAcgPLEGOK8n7K/L7D85mf3xvd8rm/b4spsv26E4HlFzluVx5HKbxEt9cl0wQ1u3g==
-
 react-native-safe-area-context@~5.6.0:
   version "5.6.1"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.6.1.tgz#cb4d249ef1a6f7e8fd0cfdfa9764838dffda26b6"
