@@ -321,15 +321,7 @@ class BskyAppAgent extends BskyAgent {
 
     // Now the agent is ready.
     const account = agentToSessionAccountOrThrow(this)
-    let lastSession = this.sessionManager.session
     this.persistSessionHandler = event => {
-      if (this.sessionManager.session) {
-        lastSession = this.sessionManager.session
-      } else if (event === 'network-error') {
-        // Put it back, we'll try again later.
-        this.sessionManager.session = lastSession
-      }
-
       onSessionChange(this, account.did, event)
       if (event !== 'create' && event !== 'update') {
         addSessionErrorLog(account.did, event)
