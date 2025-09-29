@@ -7,7 +7,7 @@ import {getDeviceGeolocation} from '#/state/geolocation/util'
 import {device, useStorage} from '#/storage'
 
 /**
- * Location.useForegroundPermission on web just errors if the navigator.permissions API is not available.
+ * Location.useForegroundPermissions on web just errors if the navigator.permissions API is not available.
  * We need to catch and ignore it, since it's effectively denied.
  */
 const useForegroundPermissions = createPermissionHook({
