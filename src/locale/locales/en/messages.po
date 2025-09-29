@@ -1100,7 +1100,7 @@ msgstr ""
 msgid "App Icon"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:87
+#: src/screens/Settings/LanguageSettings.tsx:103
 msgid "App Language"
 msgstr ""
 
@@ -2181,7 +2181,7 @@ msgstr ""
 msgid "Content from across the network we think you might like."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:153
+#: src/screens/Settings/LanguageSettings.tsx:169
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:76
 msgid "Content Languages"
 msgstr ""
@@ -4672,7 +4672,7 @@ msgstr ""
 msgid "Language Settings"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:78
+#: src/screens/Settings/LanguageSettings.tsx:94
 #: src/screens/Settings/Settings.tsx:228
 #: src/screens/Settings/Settings.tsx:231
 msgid "Languages"
@@ -6596,7 +6596,7 @@ msgstr ""
 msgid "Previous image"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:120
+#: src/screens/Settings/LanguageSettings.tsx:136
 msgid "Primary Language"
 msgstr ""
 
@@ -7667,11 +7667,15 @@ msgstr ""
 msgid "Select an option"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:98
+#: src/screens/Settings/LanguageSettings.tsx:114
 msgid "Select app language"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:164
+#: src/screens/Settings/LanguageSettings.tsx:215
+msgid "Select app translation service"
+msgstr ""
+
+#: src/screens/Settings/LanguageSettings.tsx:180
 msgid "Select content languages"
 msgstr ""
 
@@ -7704,7 +7708,7 @@ msgstr ""
 msgid "Select language..."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:178
+#: src/screens/Settings/LanguageSettings.tsx:194
 #: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:226
 msgid "Select languages"
 msgstr ""
@@ -7721,7 +7725,7 @@ msgstr ""
 msgid "Select post language"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:131
+#: src/screens/Settings/LanguageSettings.tsx:147
 msgid "Select primary language"
 msgstr ""
 
@@ -7746,11 +7750,11 @@ msgstr ""
 msgid "Select what content this mute word should apply to."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:91
+#: src/screens/Settings/LanguageSettings.tsx:107
 msgid "Select which language to use for the app's user interface."
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:157
+#: src/screens/Settings/LanguageSettings.tsx:173
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr ""
 
@@ -7763,12 +7767,16 @@ msgstr ""
 msgid "Select your interests from the options below"
 msgstr ""
 
-#: src/screens/Settings/LanguageSettings.tsx:124
+#: src/screens/Settings/LanguageSettings.tsx:140
 msgid "Select your preferred language for translations in your feed."
 msgstr ""
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:110
 msgid "Select your preferred notification channels"
+msgstr ""
+
+#: src/screens/Settings/LanguageSettings.tsx:206
+msgid "Select your preferred service for translations."
 msgstr ""
 
 #: src/view/com/composer/SelectMediaButton.tsx:390
@@ -9212,6 +9220,10 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:593
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:596
 msgid "Translate"
+msgstr ""
+
+#: src/screens/Settings/LanguageSettings.tsx:202
+msgid "Translation Service"
 msgstr ""
 
 #: src/screens/Settings/ThreadPreferences.tsx:115
