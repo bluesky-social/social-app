@@ -1,7 +1,7 @@
 import {createContext, useContext} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button as BaseButton, type ButtonProps} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
@@ -71,9 +71,9 @@ export function Text({
 export function Button({
   children,
   ...props
-}: Omit<ButtonProps, 'size' | 'variant' | 'color'>) {
+}: Omit<ButtonProps, 'size' | 'variant'>) {
   return (
-    <BaseButton size="tiny" variant="outline" color="secondary" {...props}>
+    <BaseButton size="tiny" {...props}>
       {children}
     </BaseButton>
   )
@@ -103,6 +103,7 @@ export function Outer({
   style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const borderColor = {
     info: t.atoms.border_contrast_high.borderColor,
     tip: t.palette.primary_500,
@@ -113,6 +114,7 @@ export function Outer({
     <Context.Provider value={{type}}>
       <View
         style={[
+          gtMobile ? a.p_md : a.p_sm,
           a.p_md,
           a.rounded_sm,
           a.border,

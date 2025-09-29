@@ -56,6 +56,7 @@ export function Admonitions() {
             </AdmonitionText>
           </AdmonitionContent>
           <AdmonitionButton
+            color="negative_subtle"
             label={_(msg`Retry loading report options`)}
             onPress={() => {}}>
             <ButtonText>
