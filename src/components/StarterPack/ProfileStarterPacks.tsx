@@ -53,7 +53,7 @@ interface ProfileFeedgensProps {
   isMe: boolean
   emptyStateMessage?: string
   emptyStateButton?: EmptyStateButtonProps
-  emptyStateIcon?: React.ReactElement
+  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
 }
 
 function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
@@ -97,6 +97,7 @@ export function ProfileStarterPacks({
         <View style={[a.px_lg, a.align_center, a.justify_center]}>
           <EmptyState
             icon={emptyStateIcon}
+            iconSize="3xl"
             message={
               emptyStateMessage ??
               _(

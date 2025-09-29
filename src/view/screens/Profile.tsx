@@ -43,7 +43,7 @@ import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
 import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {Image_Stroke1_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
@@ -188,7 +188,6 @@ function ProfileScreenLoaded({
   })
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
-  const t = useTheme()
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
@@ -451,13 +450,7 @@ function ProfileScreenLoaded({
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={_(msg`No replies yet.`)}
-                emptyStateIcon={
-                  <MessageIcon
-                    viewBox="0 0 51 51"
-                    size="3xl"
-                    fill={t.atoms.text_contrast_low.color}
-                  />
-                }
+                emptyStateIcon={MessageIcon}
               />
             )
           : null}
@@ -479,13 +472,7 @@ function ProfileScreenLoaded({
                   size: 'small',
                   color: 'primary',
                 }}
-                emptyStateIcon={
-                  <ImageIcon
-                    viewBox="0 0 51 51"
-                    size="3xl"
-                    fill={t.atoms.text_contrast_low.color}
-                  />
-                }
+                emptyStateIcon={ImageIcon}
               />
             )
           : null}
@@ -507,13 +494,7 @@ function ProfileScreenLoaded({
                   size: 'small',
                   color: 'primary',
                 }}
-                emptyStateIcon={
-                  <VideoIcon
-                    viewBox="0 0 51 51"
-                    size="3xl"
-                    fill={t.atoms.text_contrast_low.color}
-                  />
-                }
+                emptyStateIcon={VideoIcon}
               />
             )
           : null}
@@ -528,12 +509,7 @@ function ProfileScreenLoaded({
                 ignoreFilterFor={profile.did}
                 setScrollViewTag={setScrollViewTag}
                 emptyStateMessage={_(msg`No likes yet.`)}
-                emptyStateIcon={
-                  <HeartIcon
-                    size="3xl"
-                    fill={t.atoms.text_contrast_low.color}
-                  />
-                }
+                emptyStateIcon={HeartIcon}
               />
             )
           : null}
@@ -569,12 +545,7 @@ function ProfileScreenLoaded({
                   color: 'primary',
                   size: 'small',
                 }}
-                emptyStateIcon={
-                  <CircleAndSquareIcon
-                    size="3xl"
-                    fill={t.atoms.text_contrast_low.color}
-                  />
-                }
+                emptyStateIcon={CircleAndSquareIcon}
               />
             )
           : null}
