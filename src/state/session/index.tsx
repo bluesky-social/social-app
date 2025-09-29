@@ -51,6 +51,7 @@ class SessionStore {
   private listeners = new Set<() => void>()
 
   constructor() {
+    // Careful: By the time this runs, `persisted` needs to already be filled.
     const initialState = getInitialState(persisted.get('session').accounts)
     addSessionDebugLog({type: 'reducer:init', state: initialState})
     this.state = initialState
@@ -69,6 +70,8 @@ class SessionStore {
 
   dispatch = (action: Action) => {
     const nextState = reducer(this.state, action)
+    this.state = nextState
+    // Persist synchronously without waiting for the React render cycle.
     if (nextState.needsPersist) {
       nextState.needsPersist = false
       const persistedData = {
@@ -80,15 +83,13 @@ class SessionStore {
       addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
       persisted.write('session', persistedData)
     }
-    this.state = nextState
     this.listeners.forEach(listener => listener())
   }
 }
 
-const store = new SessionStore()
-
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const cancelPendingTask = useOneTaskAtATime()
+  const [store] = React.useState(() => new SessionStore())
   const state = React.useSyncExternalStore(store.subscribe, store.getState)
 
   const onAgentSessionChange = React.useCallback(
@@ -105,7 +106,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         sessionEvent,
       })
     },
-    [],
+    [store],
   )
 
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
@@ -129,7 +130,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logger.metric('account:create:success', metrics, {statsig: true})
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
@@ -156,7 +157,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const logoutCurrentAccount = React.useCallback<
@@ -175,7 +176,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
     },
-    [cancelPendingTask],
+    [store, cancelPendingTask],
   )
 
   const logoutEveryAccount = React.useCallback<
@@ -194,7 +195,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
     },
-    [cancelPendingTask],
+    [store, cancelPendingTask],
   )
 
   const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
@@ -220,7 +221,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [store, onAgentSessionChange, cancelPendingTask],
   )
 
   const partialRefreshSession = React.useCallback<
@@ -238,7 +239,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         emailAuthFactor: data.emailAuthFactor,
       },
     })
-  }, [state, cancelPendingTask])
+  }, [store, state, cancelPendingTask])
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
     account => {
@@ -254,7 +255,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
     },
-    [cancelPendingTask],
+    [store, cancelPendingTask],
   )
   React.useEffect(() => {
     return persisted.onUpdate('session', nextSession => {
@@ -284,7 +285,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     })
-  }, [state, resumeSession])
+  }, [store, state, resumeSession])
 
   const stateContext = React.useMemo(
     () => ({
