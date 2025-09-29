@@ -45,11 +45,14 @@ export function EmptyState({
       return placeholderIcon
     }
 
-    if (typeof icon === 'object' && React.isValidElement(icon)) {
+    if (React.isValidElement(icon)) {
       return icon
     }
 
-    if (typeof icon === 'function') {
+    if (
+      typeof icon === 'function' ||
+      (typeof icon === 'object' && icon && 'render' in icon)
+    ) {
       const IconComponent = icon
       return (
         <IconComponent

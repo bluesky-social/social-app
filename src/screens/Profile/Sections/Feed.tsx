@@ -33,7 +33,7 @@ interface FeedSectionProps {
   setScrollViewTag: (tag: number | null) => void
   emptyStateMessage?: string
   emptyStateButton?: EmptyStateButtonProps
-  emptyStateIcon?: React.ReactElement
+  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
 }
 
 export function ProfileFeedSection({
@@ -77,6 +77,7 @@ export function ProfileFeedSection({
         <EmptyState
           style={{width: '100%', marginTop: gtPhone ? 0 : 200}}
           icon={emptyStateIcon || EditIcon}
+          iconSize="3xl"
           message={emptyStateMessage || _(msg`No posts yet.`)}
           button={emptyStateButton}
         />
