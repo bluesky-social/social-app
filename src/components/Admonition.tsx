@@ -49,14 +49,7 @@ export function Content({
 }) {
   return (
     <View
-      style={[
-        a.gap_sm,
-        a.flex_1,
-        {
-          minHeight: 20,
-        },
-        style,
-      ]}
+      style={[a.gap_sm, a.flex_1, {minHeight: 20}, a.justify_center, style]}
       {...rest}>
       {children}
     </View>
