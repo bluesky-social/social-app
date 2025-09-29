@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSuggestedStarterPacksQuery} from '#/state/queries/useSuggestedStarterPacksQuery'
+import {useOnboardingSuggestedStarterPacksQuery} from '#/state/queries/useOnboardingSuggestedStarterPacksQuery'
 import {useOnboardingDispatch} from '#/state/shell'
 import {OnboardingControls} from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
@@ -34,12 +34,12 @@ export function StepSuggestedStarterpacks() {
   // }, [contentLanguages])
 
   const {
-    data: suggestedUsers,
+    data: suggestedStarterPacks,
     isLoading,
     error,
     isRefetching,
     refetch,
-  } = useSuggestedStarterPacksQuery({
+  } = useOnboardingSuggestedStarterPacksQuery({
     enabled: true,
     overrideInterests: state.interestsStepResults.selectedInterests,
   })
@@ -53,7 +53,7 @@ export function StepSuggestedStarterpacks() {
 
   return (
     <View style={[a.align_start]} testID="onboardingInterests">
-      <Text style={[a.font_heavy, a.text_3xl]}>
+      <Text style={[a.font_bold, a.text_3xl]}>
         <Trans comment="Accounts suggested to the user for them to follow">
           Suggested for you
         </Trans>
@@ -100,7 +100,7 @@ export function StepSuggestedStarterpacks() {
           </View>
         ) : (
           <View style={[a.flex_1, a.mt_md]}>
-            {suggestedUsers?.starterPacks.map(starterPack => (
+            {suggestedStarterPacks?.starterPacks.map(starterPack => (
               <View style={[a.pb_lg]} key={starterPack.uri}>
                 <StarterPackCard view={starterPack} />
               </View>
@@ -150,49 +150,3 @@ export function StepSuggestedStarterpacks() {
     </View>
   )
 }
-
-// function TabBar({
-//   selectedInterest,
-//   onSelectInterest,
-//   selectedInterests,
-//   hideDefaultTab,
-//   defaultTabLabel,
-// }: {
-//   selectedInterest: string | null
-//   onSelectInterest: (interest: string | null) => void
-//   selectedInterests: string[]
-//   hideDefaultTab?: boolean
-//   defaultTabLabel?: string
-// }) {
-//   const {_} = useLingui()
-//   const interestsDisplayNames = useInterestsDisplayNames()
-//   const interests = Object.keys(interestsDisplayNames)
-//     .sort(boostInterests(popularInterests))
-//     .sort(boostInterests(selectedInterests))
-
-//   return (
-//     <InterestTabs
-//       interests={hideDefaultTab ? interests : ['all', ...interests]}
-//       selectedInterest={
-//         selectedInterest || (hideDefaultTab ? interests[0] : 'all')
-//       }
-//       onSelectTab={tab => {
-//         logger.metric(
-//           'onboarding:suggestedAccounts:tabPressed',
-//           {tab: tab},
-//           {statsig: true},
-//         )
-//         onSelectInterest(tab === 'all' ? null : tab)
-//       }}
-//       interestsDisplayNames={
-//         hideDefaultTab
-//           ? interestsDisplayNames
-//           : {
-//               all: defaultTabLabel || _(msg`For You`),
-//               ...interestsDisplayNames,
-//             }
-//       }
-//       gutterWidth={isWeb ? 0 : tokens.space.xl}
-//     />
-//   )
-// }
