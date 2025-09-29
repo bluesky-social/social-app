@@ -1,4 +1,7 @@
-import Animated, {SharedValue, useAnimatedStyle} from 'react-native-reanimated'
+import Animated, {
+  type SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 

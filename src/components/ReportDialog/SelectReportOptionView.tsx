@@ -1,10 +1,13 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ReportOption, useReportOptions} from '#/lib/moderation/useReportOptions'
+import {
+  type ReportOption,
+  useReportOptions,
+} from '#/lib/moderation/useReportOptions'
 import {Link} from '#/components/Link'
 import {DMCA_LINK} from '#/components/ReportDialog/const'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
@@ -23,7 +26,7 @@ import {
 } from '#/components/icons/Chevron'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
 import {Text} from '#/components/Typography'
-import {ReportDialogProps} from './types'
+import {type ReportDialogProps} from './types'
 
 export function SelectReportOptionView(props: {
   params: ReportDialogProps['params']
@@ -82,7 +85,7 @@ export function SelectReportOptionView(props: {
       ) : null}
 
       <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-        <Text style={[a.text_2xl, a.font_bold]}>{i18n.title}</Text>
+        <Text style={[a.text_2xl, a.font_semi_bold]}>{i18n.title}</Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           {i18n.description}
         </Text>
@@ -170,7 +173,8 @@ function ReportOptionButton({
         interacted && t.atoms.bg_contrast_50,
       ]}>
       <View style={[a.flex_1, a.gap_xs]}>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+        <Text
+          style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
           {title}
         </Text>
         <Text style={[a.leading_tight, {maxWidth: 400}]}>{description}</Text>

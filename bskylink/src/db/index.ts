@@ -1,27 +1,30 @@
 import assert from 'assert'
 import {
   Kysely,
-  KyselyPlugin,
+  type KyselyPlugin,
   Migrator,
-  PluginTransformQueryArgs,
-  PluginTransformResultArgs,
+  type PluginTransformQueryArgs,
+  type PluginTransformResultArgs,
   PostgresDialect,
-  QueryResult,
-  RootOperationNode,
-  UnknownRow,
+  type QueryResult,
+  type RootOperationNode,
+  type UnknownRow,
 } from 'kysely'
 import {default as Pg} from 'pg'
 
 import {dbLogger as log} from '../logger.js'
 import {default as migrations} from './migrations/index.js'
 import {DbMigrationProvider} from './migrations/provider.js'
-import {DbSchema} from './schema.js'
+import {type DbSchema} from './schema.js'
 
 export class Database {
   migrator: Migrator
   destroyed = false
 
-  constructor(public db: Kysely<DbSchema>, public cfg: PgConfig) {
+  constructor(
+    public db: Kysely<DbSchema>,
+    public cfg: PgConfig,
+  ) {
     this.migrator = new Migrator({
       db,
       migrationTableSchema: cfg.schema,
@@ -31,6 +34,16 @@ export class Database {
 
   static postgres(opts: PgOptions): Database {
     const {schema, url, txLockNonce} = opts
+    log.info(
+      {
+        schema,
+        poolSize: opts.poolSize,
+        poolMaxUses: opts.poolMaxUses,
+        poolIdleTimeoutMs: opts.poolIdleTimeoutMs,
+      },
+      'Creating database connection',
+    )
+
     const pool =
       opts.pool ??
       new Pg.Pool({

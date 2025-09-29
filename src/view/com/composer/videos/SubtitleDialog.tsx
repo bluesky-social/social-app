@@ -1,6 +1,5 @@
 import {useCallback, useState} from 'react'
-import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
-import RNPickerSelect from 'react-native-picker-select'
+import {Keyboard, type StyleProp, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -98,7 +97,7 @@ function SubtitleDialogInner({
   return (
     <Dialog.ScrollableInner label={_(msg`Video settings`)}>
       <View style={a.gap_md}>
-        <Text style={[a.text_xl, a.font_bold, a.leading_tight]}>
+        <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
           <Trans>Alt text</Trans>
         </Text>
         <TextField.Root>
@@ -129,7 +128,7 @@ function SubtitleDialogInner({
                 a.my_md,
               ]}
             />
-            <Text style={[a.text_xl, a.font_bold, a.leading_tight]}>
+            <Text style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
               <Trans>Captions (.vtt)</Trans>
             </Text>
             <SubtitleFilePicker
@@ -236,23 +235,25 @@ function SubtitleFileRow({
             <PageTextIcon style={[t.atoms.text, a.flex_shrink_0]} size="sm" />
           )}
           <Text
-            style={[a.flex_1, a.leading_snug, a.font_bold, a.mb_2xs]}
+            style={[a.flex_1, a.leading_snug, a.font_semi_bold, a.mb_2xs]}
             numberOfLines={1}>
             {file.name}
           </Text>
-          <RNPickerSelect
-            placeholder={{
-              label: _(msg`Select language...`),
-              value: '',
-            }}
+          <select
             value={language}
-            onValueChange={handleValueChange}
-            items={otherLanguages.map(lang => ({
-              label: `${lang.name} (${langCode(lang)})`,
-              value: langCode(lang),
-            }))}
-            style={{viewContainer: {maxWidth: 200, flex: 1}}}
-          />
+            onChange={evt => handleValueChange(evt.target.value)}
+            style={{maxWidth: 200, flex: 1}}>
+            <option value="" disabled selected hidden>
+              {/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
+              <Trans>Select language...</Trans>
+            </option>
+            {otherLanguages.map(lang => (
+              <option key={langCode(lang)} value={langCode(lang)}>
+                {/* eslint-disable-next-line bsky-internal/avoid-unwrapped-text */}
+                {`${lang.name} (${langCode(lang)})`}
+              </option>
+            ))}
+          </select>
         </View>
       </View>
 

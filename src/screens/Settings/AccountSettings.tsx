@@ -7,9 +7,13 @@ import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
+import {AgeAssuranceAccountCard} from '#/components/ageAssurance/AgeAssuranceAccountCard'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import {VerifyEmailDialog} from '#/components/dialogs/VerifyEmailDialog'
+import {
+  EmailDialogScreenID,
+  useEmailDialogControl,
+} from '#/components/dialogs/EmailDialog'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon} from '#/components/icons/BirthdayCake'
 import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
@@ -21,6 +25,7 @@ import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/ic
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
+import {ChangePasswordDialog} from './components/ChangePasswordDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
 import {ExportCarDialog} from './components/ExportCarDialog'
 
@@ -30,9 +35,10 @@ export function AccountSettingsScreen({}: Props) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
-  const verifyEmailControl = useDialogControl()
+  const emailDialogControl = useEmailDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
+  const changePasswordControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
 
@@ -73,7 +79,11 @@ export function AccountSettingsScreen({}: Props) {
           {currentAccount && !currentAccount.emailConfirmed && (
             <SettingsList.PressableItem
               label={_(msg`Verify your email`)}
-              onPress={() => verifyEmailControl.open()}
+              onPress={() =>
+                emailDialogControl.open({
+                  id: EmailDialogScreenID.Verify,
+                })
+              }
               style={[
                 a.my_xs,
                 a.mx_lg,
@@ -87,35 +97,29 @@ export function AccountSettingsScreen({}: Props) {
                 color={t.palette.primary_500}
               />
               <SettingsList.ItemText
-                style={[{color: t.palette.primary_500}, a.font_bold]}>
+                style={[{color: t.palette.primary_500}, a.font_semi_bold]}>
                 <Trans>Verify your email</Trans>
               </SettingsList.ItemText>
               <SettingsList.Chevron color={t.palette.primary_500} />
             </SettingsList.PressableItem>
           )}
           <SettingsList.PressableItem
-            label={_(msg`Change email`)}
-            onPress={() => openModal({name: 'change-email'})}>
+            label={_(msg`Update email`)}
+            onPress={() =>
+              emailDialogControl.open({
+                id: EmailDialogScreenID.Update,
+              })
+            }>
             <SettingsList.ItemIcon icon={PencilIcon} />
             <SettingsList.ItemText>
-              <Trans>Change email</Trans>
+              <Trans>Update email</Trans>
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
           <SettingsList.Divider />
-          <SettingsList.Item>
-            <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
-            <SettingsList.ItemText>
-              <Trans>Birthday</Trans>
-            </SettingsList.ItemText>
-            <SettingsList.BadgeButton
-              label={_(msg`Edit`)}
-              onPress={() => birthdayControl.open()}
-            />
-          </SettingsList.Item>
           <SettingsList.PressableItem
             label={_(msg`Password`)}
-            onPress={() => openModal({name: 'change-password'})}>
+            onPress={() => changePasswordControl.open()}>
             <SettingsList.ItemIcon icon={LockIcon} />
             <SettingsList.ItemText>
               <Trans>Password</Trans>
@@ -132,6 +136,17 @@ export function AccountSettingsScreen({}: Props) {
             </SettingsList.ItemText>
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
+          <SettingsList.Item>
+            <SettingsList.ItemIcon icon={BirthdayCakeIcon} />
+            <SettingsList.ItemText>
+              <Trans>Birthday</Trans>
+            </SettingsList.ItemText>
+            <SettingsList.BadgeButton
+              label={_(msg`Edit`)}
+              onPress={() => birthdayControl.open()}
+            />
+          </SettingsList.Item>
+          <AgeAssuranceAccountCard style={[a.px_xl, a.pt_xs, a.pb_md]} />
           <SettingsList.Divider />
           <SettingsList.PressableItem
             label={_(msg`Export my data`)}
@@ -165,9 +180,9 @@ export function AccountSettingsScreen({}: Props) {
         </SettingsList.Container>
       </Layout.Content>
 
-      <VerifyEmailDialog control={verifyEmailControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
+      <ChangePasswordDialog control={changePasswordControl} />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
     </Layout.Screen>

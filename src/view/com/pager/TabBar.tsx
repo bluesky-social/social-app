@@ -1,11 +1,16 @@
 import {useCallback} from 'react'
-import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
+import {
+  type LayoutChangeEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
 import Animated, {
   interpolate,
   runOnJS,
   runOnUI,
   scrollTo,
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
@@ -267,15 +272,27 @@ export function TabBar({
         {
           translateX: interpolate(
             dragProgress.get(),
-            layoutsValue.map((l, i) => i),
-            layoutsValue.map(l => l.x + l.width / 2 - contentSize.get() / 2),
+            layoutsValue.map((l, i) => {
+              'worklet'
+              return i
+            }),
+            layoutsValue.map(l => {
+              'worklet'
+              return l.x + l.width / 2 - contentSize.get() / 2
+            }),
           ),
         },
         {
           scaleX: interpolate(
             dragProgress.get(),
-            textLayoutsValue.map((l, i) => i),
-            textLayoutsValue.map((l, i) => getScaleX(i)),
+            textLayoutsValue.map((l, i) => {
+              'worklet'
+              return i
+            }),
+            textLayoutsValue.map((l, i) => {
+              'worklet'
+              return getScaleX(i)
+            }),
           ),
         },
       ],
@@ -414,7 +431,7 @@ function TabBarItem({
           <Text
             emoji
             testID={testID ? `${testID}-${item}` : undefined}
-            style={[styles.itemText, t.atoms.text, a.text_md, a.font_bold]}
+            style={[styles.itemText, t.atoms.text, a.text_md, a.font_semi_bold]}
             onLayout={handleTextLayout}>
             {item}
           </Text>

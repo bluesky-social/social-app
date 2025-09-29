@@ -1,4 +1,4 @@
-import {envInt, envList, envStr} from '@atproto/common'
+import {envBool, envInt, envList, envStr} from '@atproto/common'
 
 export type Config = {
   service: ServiceConfig
@@ -9,7 +9,12 @@ export type ServiceConfig = {
   port: number
   version?: string
   hostnames: string[]
+  hostnamesSet: Set<string>
   appHostname: string
+  safelinkEnabled: boolean
+  safelinkPdsUrl?: string
+  safelinkAgentIdentifier?: string
+  safelinkAgentPass?: string
 }
 
 export type DbConfig = {
@@ -36,6 +41,10 @@ export type Environment = {
   dbPostgresPoolSize?: number
   dbPostgresPoolMaxUses?: number
   dbPostgresPoolIdleTimeoutMs?: number
+  safelinkEnabled?: boolean
+  safelinkPdsUrl?: string
+  safelinkAgentIdentifier?: string
+  safelinkAgentPass?: string
 }
 
 export const readEnv = (): Environment => {
@@ -52,6 +61,10 @@ export const readEnv = (): Environment => {
     dbPostgresPoolIdleTimeoutMs: envInt(
       'LINK_DB_POSTGRES_POOL_IDLE_TIMEOUT_MS',
     ),
+    safelinkEnabled: envBool('LINK_SAFELINK_ENABLED'),
+    safelinkPdsUrl: envStr('LINK_SAFELINK_PDS_URL'),
+    safelinkAgentIdentifier: envStr('LINK_SAFELINK_AGENT_IDENTIFIER'),
+    safelinkAgentPass: envStr('LINK_SAFELINK_AGENT_PASS'),
   }
 }
 
@@ -60,7 +73,12 @@ export const envToCfg = (env: Environment): Config => {
     port: env.port ?? 3000,
     version: env.version,
     hostnames: env.hostnames,
-    appHostname: env.appHostname || 'bsky.app',
+    hostnamesSet: new Set(env.hostnames),
+    appHostname: env.appHostname ?? 'bsky.app',
+    safelinkEnabled: env.safelinkEnabled ?? false,
+    safelinkPdsUrl: env.safelinkPdsUrl,
+    safelinkAgentIdentifier: env.safelinkAgentIdentifier,
+    safelinkAgentPass: env.safelinkAgentPass,
   }
   if (!env.dbPostgresUrl) {
     throw new Error('Must configure postgres url (LINK_DB_POSTGRES_URL)')
@@ -75,6 +93,7 @@ export const envToCfg = (env: Environment): Config => {
       size: env.dbPostgresPoolSize ?? 10,
     },
   }
+
   return {
     service: serviceCfg,
     db: dbCfg,

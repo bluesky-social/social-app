@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextStyle, View, ViewStyle} from 'react-native'
+import {type TextStyle, View, type ViewStyle} from 'react-native'
 
 import {capitalize} from '#/lib/strings/capitalize'
 import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
@@ -69,7 +69,7 @@ export function InterestButton({interest}: {interest: string}) {
           {
             color: t.palette.contrast_900,
           },
-          a.font_bold,
+          a.font_semi_bold,
           native({paddingTop: 2}),
           ctx.selected ? styles.textSelected : {},
         ]}>

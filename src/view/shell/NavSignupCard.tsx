@@ -36,7 +36,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
 
       <View style={[a.pt_lg]}>
         <Text
-          style={[a.text_3xl, a.font_heavy, {lineHeight: a.text_3xl.fontSize}]}>
+          style={[a.text_3xl, a.font_bold, {lineHeight: a.text_3xl.fontSize}]}>
           <Trans>Join the conversation</Trans>
         </Text>
       </View>
@@ -65,7 +65,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
       </View>
 
       <View style={[a.mt_md, a.w_full, {height: 32}]}>
-        <AppLanguageDropdown style={{marginTop: 0}} />
+        <AppLanguageDropdown />
       </View>
     </View>
   )

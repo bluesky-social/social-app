@@ -34,6 +34,9 @@ module.exports = {
           'P',
           'Admonition',
           'Admonition.Admonition',
+          'Toast.Action',
+          'AgeAssuranceAdmonition',
+          'Span',
         ],
         impliedTextProps: [],
         suggestedTextWrappers: {
@@ -108,6 +111,8 @@ module.exports = {
     'bskyembed',
     'src/locale/locales/_build/',
     'src/locale/locales/**/*.js',
+    '*.e2e.ts',
+    '*.e2e.tsx',
   ],
   settings: {
     componentWrapperFunctions: ['observer'],

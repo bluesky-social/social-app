@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - echoprom_fix
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}

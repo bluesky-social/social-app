@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -27,7 +27,7 @@ export function ErrorState({error}: {error: string}) {
     <View style={[a.px_xl]}>
       <CircleInfo width={48} style={[t.atoms.text_contrast_low]} />
 
-      <Text style={[a.text_xl, a.font_bold, a.pb_md, a.pt_xl]}>
+      <Text style={[a.text_xl, a.font_semi_bold, a.pb_md, a.pt_xl]}>
         <Trans>Hmmmm, we couldn't load that moderation service.</Trans>
       </Text>
       <Text

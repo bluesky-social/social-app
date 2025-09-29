@@ -1,32 +1,96 @@
-import React from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 
+import {type AgeAssuranceRedirectDialogState} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import * as Dialog from '#/components/Dialog'
+import {type Screen} from '#/components/dialogs/EmailDialog/types'
 
-type Control = Dialog.DialogOuterProps['control']
+type Control = Dialog.DialogControlProps
+
+export type StatefulControl<T> = {
+  control: Control
+  open: (value: T) => void
+  clear: () => void
+  value: T | undefined
+}
 
 type ControlsContext = {
   mutedWordsDialogControl: Control
   signinDialogControl: Control
+  inAppBrowserConsentControl: StatefulControl<string>
+  emailDialogControl: StatefulControl<Screen>
+  linkWarningDialogControl: StatefulControl<{
+    href: string
+    displayText: string
+    share?: boolean
+  }>
+  ageAssuranceRedirectDialogControl: StatefulControl<AgeAssuranceRedirectDialogState>
 }
 
-const ControlsContext = React.createContext({
-  mutedWordsDialogControl: {} as Control,
-  signinDialogControl: {} as Control,
-})
+const ControlsContext = createContext<ControlsContext | null>(null)
+ControlsContext.displayName = 'GlobalDialogControlsContext'
 
 export function useGlobalDialogsControlContext() {
-  return React.useContext(ControlsContext)
+  const ctx = useContext(ControlsContext)
+  if (!ctx) {
+    throw new Error(
+      'useGlobalDialogsControlContext must be used within a Provider',
+    )
+  }
+  return ctx
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const mutedWordsDialogControl = Dialog.useDialogControl()
   const signinDialogControl = Dialog.useDialogControl()
-  const ctx = React.useMemo<ControlsContext>(
-    () => ({mutedWordsDialogControl, signinDialogControl}),
-    [mutedWordsDialogControl, signinDialogControl],
+  const inAppBrowserConsentControl = useStatefulDialogControl<string>()
+  const emailDialogControl = useStatefulDialogControl<Screen>()
+  const linkWarningDialogControl = useStatefulDialogControl<{
+    href: string
+    displayText: string
+    share?: boolean
+  }>()
+  const ageAssuranceRedirectDialogControl =
+    useStatefulDialogControl<AgeAssuranceRedirectDialogState>()
+
+  const ctx = useMemo<ControlsContext>(
+    () => ({
+      mutedWordsDialogControl,
+      signinDialogControl,
+      inAppBrowserConsentControl,
+      emailDialogControl,
+      linkWarningDialogControl,
+      ageAssuranceRedirectDialogControl,
+    }),
+    [
+      mutedWordsDialogControl,
+      signinDialogControl,
+      inAppBrowserConsentControl,
+      emailDialogControl,
+      linkWarningDialogControl,
+      ageAssuranceRedirectDialogControl,
+    ],
   )
 
   return (
     <ControlsContext.Provider value={ctx}>{children}</ControlsContext.Provider>
+  )
+}
+
+export function useStatefulDialogControl<T>(
+  initialValue?: T,
+): StatefulControl<T> {
+  const [value, setValue] = useState(initialValue)
+  const control = Dialog.useDialogControl()
+  return useMemo(
+    () => ({
+      control,
+      open: (v: T) => {
+        setValue(v)
+        control.open()
+      },
+      clear: () => setValue(initialValue),
+      value,
+    }),
+    [control, value, initialValue],
   )
 }

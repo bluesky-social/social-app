@@ -7,12 +7,12 @@ import Animated, {
   LinearTransition,
   StretchOutY,
 } from 'react-native-reanimated'
-import {ComAtprotoServerListAppPasswords} from '@atproto/api'
+import {type ComAtprotoServerListAppPasswords} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {isWeb} from '#/platform/detection'
 import {
@@ -167,7 +167,7 @@ function AppPasswordCard({
           a.gap_sm,
         ]}>
         <View style={[a.gap_xs]}>
-          <Text style={[t.atoms.text, a.text_md, a.font_bold]}>
+          <Text style={[t.atoms.text, a.text_md, a.font_semi_bold]}>
             {appPassword.name}
           </Text>
           <Text style={[t.atoms.text_contrast_medium]}>

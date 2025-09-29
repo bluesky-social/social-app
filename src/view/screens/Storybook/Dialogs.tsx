@@ -22,7 +22,7 @@ export function Dialogs() {
     React.useState<boolean>()
   const [shouldRenderUnmountTest, setShouldRenderUnmountTest] =
     React.useState(false)
-  const unmountTestInterval = React.useRef<number>()
+  const unmountTestInterval = React.useRef<number>(undefined)
 
   const onUnmountTestStartPressWithClose = () => {
     setShouldRenderUnmountTest(true)

@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,7 +9,7 @@ import {Button, useButtonContext} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as LabelingServiceCard from '#/components/LabelingServiceCard'
 import {Text} from '#/components/Typography'
-import {ReportDialogProps} from './types'
+import {type ReportDialogProps} from './types'
 
 export function SelectLabelerView({
   ...props
@@ -24,7 +24,7 @@ export function SelectLabelerView({
   return (
     <View style={[a.gap_lg]}>
       <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
-        <Text style={[a.text_2xl, a.font_bold]}>
+        <Text style={[a.text_2xl, a.font_semi_bold]}>
           <Trans>Select moderator</Trans>
         </Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
@@ -75,7 +75,8 @@ function LabelerButton({
             handle: labeler.creator.handle,
           })}
         />
-        <Text style={[t.atoms.text_contrast_medium, a.text_sm, a.font_bold]}>
+        <Text
+          style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semi_bold]}>
           @{labeler.creator.handle}
         </Text>
       </LabelingServiceCard.Content>

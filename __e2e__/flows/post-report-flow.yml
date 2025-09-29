@@ -3,11 +3,14 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: "?users&follows&posts"
+      SERVER_PATH: "?users&follows&posts"
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 
 - tapOn:
     id: "postDropdownBtn"

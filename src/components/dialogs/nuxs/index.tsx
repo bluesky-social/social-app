@@ -1,20 +1,23 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {STALE} from '#/state/queries'
 import {Nux, useNuxs, useResetNuxs, useSaveNux} from '#/state/queries/nuxs'
 import {
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
+  type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {useProfileQuery} from '#/state/queries/profile'
-import {SessionAccount, useSession} from '#/state/session'
+import {type SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
+import {BookmarksAnnouncement} from '#/components/dialogs/nuxs/BookmarksAnnouncement'
 /*
  * NUXs
  */
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
+import {isExistingUserAsOf} from './utils'
 
 type Context = {
   activeNux: Nux | undefined
@@ -29,12 +32,23 @@ const queuedNuxs: {
     currentProfile: AppBskyActorDefs.ProfileViewDetailed
     preferences: UsePreferencesQueryResponse
   }) => boolean
-}[] = []
+}[] = [
+  {
+    id: Nux.BookmarksAnnouncement,
+    enabled: ({currentProfile}) => {
+      return isExistingUserAsOf(
+        '2025-09-08T00:00:00.000Z',
+        currentProfile.createdAt,
+      )
+    },
+  },
+]
 
 const Context = React.createContext<Context>({
   activeNux: undefined,
   dismissActiveNux: () => {},
 })
+Context.displayName = 'NuxDialogContext'
 
 export function useNuxDialogContext() {
   return React.useContext(Context)
@@ -43,7 +57,10 @@ export function useNuxDialogContext() {
 export function NuxDialogs() {
   const {currentAccount} = useSession()
   const {data: preferences} = usePreferencesQuery()
-  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const {data: profile} = useProfileQuery({
+    did: currentAccount?.did,
+    staleTime: STALE.INFINITY, // createdAt isn't gonna change
+  })
   const onboardingActive = useOnboardingState().isActive
 
   const isLoading =
@@ -102,7 +119,7 @@ function Inner({
   }
 
   React.useEffect(() => {
-    if (snoozed) return
+    if (snoozed) return // comment this out to test
     if (!nuxs) return
 
     for (const {id, enabled} of queuedNuxs) {
@@ -110,7 +127,7 @@ function Inner({
 
       // check if completed first
       if (nux && nux.completed) {
-        continue
+        continue // comment this out to test
       }
 
       // then check gate (track exposure)
@@ -163,6 +180,7 @@ function Inner({
   return (
     <Context.Provider value={ctx}>
       {/*For example, activeNux === Nux.NeueTypography && <NeueTypography />*/}
+      {activeNux === Nux.BookmarksAnnouncement && <BookmarksAnnouncement />}
     </Context.Provider>
   )
 }

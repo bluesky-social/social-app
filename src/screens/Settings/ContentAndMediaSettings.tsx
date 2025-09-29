@@ -14,7 +14,7 @@ import {
   useTrendingSettings,
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
-import {useTrendingConfig} from '#/state/trending-config'
+import {useTrendingConfig} from '#/state/service-config'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import * as Toggle from '#/components/forms/Toggle'
 import {Bubbles_Stroke2_Corner2_Rounded as BubblesIcon} from '#/components/icons/Bubble'
@@ -150,7 +150,7 @@ export function ContentAndMediaSettingsScreen({}: Props) {
               </Toggle.Item>
               <Toggle.Item
                 name="show_trending_videos"
-                label={_(msg`Enable trending videos in your Discover feed.`)}
+                label={_(msg`Enable trending videos in your Discover feed`)}
                 value={!trendingVideoDisabled}
                 onChange={value => {
                   const hide = Boolean(!value)

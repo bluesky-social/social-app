@@ -1,33 +1,42 @@
 import React, {memo} from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {HITSLOP_20} from '#/lib/constants'
 import {makeProfileLink} from '#/lib/routes/links'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {shareText, shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {logger} from '#/logger'
-import {Shadow} from '#/state/cache/types'
+import {isWeb} from '#/platform/detection'
+import {type Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
-import {useDevModeEnabled} from '#/state/preferences/dev-mode'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
   useProfileMuteMutationQueue,
 } from '#/state/queries/profile'
+import {useCanGoLive} from '#/state/service-config'
 import {useSession} from '#/state/session'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import * as Toast from '#/view/com/util/Toast'
 import {Button, ButtonIcon} from '#/components/Button'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {useDialogControl} from '#/components/Dialog'
+import {StarterPackDialog} from '#/components/dialogs/StarterPackDialog'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
+import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
+import {CircleX_Stroke2_Corner0_Rounded as CircleXIcon} from '#/components/icons/CircleX'
+import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
+import {Live_Stroke2_Corner0_Rounded as LiveIcon} from '#/components/icons/Live'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
@@ -37,12 +46,19 @@ import {
 } from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import {StarterPack} from '#/components/icons/StarterPack'
+import {EditLiveDialog} from '#/components/live/EditLiveDialog'
+import {GoLiveDialog} from '#/components/live/GoLiveDialog'
 import * as Menu from '#/components/Menu'
 import {
   ReportDialog,
   useReportDialogControl,
 } from '#/components/moderation/ReportDialog'
 import * as Prompt from '#/components/Prompt'
+import {useFullVerificationState} from '#/components/verification'
+import {VerificationCreatePrompt} from '#/components/verification/VerificationCreatePrompt'
+import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
+import {useDevMode} from '#/storage/hooks/dev-mode'
 
 let ProfileMenu = ({
   profile,
@@ -60,7 +76,9 @@ let ProfileMenu = ({
   const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
   const isFollowingBlockedAccount = isFollowing && isBlocked
   const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
-  const [devModeEnabled] = useDevModeEnabled()
+  const [devModeEnabled] = useDevMode()
+  const verification = useFullVerificationState({profile})
+  const canGoLive = useCanGoLive(currentAccount?.did)
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -71,6 +89,8 @@ let ProfileMenu = ({
 
   const blockPromptControl = Prompt.usePromptControl()
   const loggedOutWarningPromptControl = Prompt.usePromptControl()
+  const goLiveDialogControl = useDialogControl()
+  const addToStarterPacksDialogControl = useDialogControl()
 
   const showLoggedOutWarning = React.useMemo(() => {
     return (
@@ -188,6 +208,15 @@ let ProfileMenu = ({
     navigation.navigate('ProfileSearch', {name: profile.handle})
   }, [navigation, profile.handle])
 
+  const verificationCreatePromptControl = Prompt.usePromptControl()
+  const verificationRemovePromptControl = Prompt.usePromptControl()
+  const currentAccountVerifications =
+    profile.verification?.verifications?.filter(v => {
+      return v.issuer === currentAccount?.did
+    }) ?? []
+
+  const status = useActorStatus(profile)
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -213,7 +242,9 @@ let ProfileMenu = ({
           <Menu.Group>
             <Menu.Item
               testID="profileHeaderDropdownShareBtn"
-              label={_(msg`Share`)}
+              label={
+                isWeb ? _(msg`Copy link to profile`) : _(msg`Share via...`)
+              }
               onPress={() => {
                 if (showLoggedOutWarning) {
                   loggedOutWarningPromptControl.open()
@@ -222,9 +253,13 @@ let ProfileMenu = ({
                 }
               }}>
               <Menu.ItemText>
-                <Trans>Share</Trans>
+                {isWeb ? (
+                  <Trans>Copy link to profile</Trans>
+                ) : (
+                  <Trans>Share via...</Trans>
+                )}
               </Menu.ItemText>
-              <Menu.ItemIcon icon={Share} />
+              <Menu.ItemIcon icon={isWeb ? ChainLinkIcon : ArrowOutOfBoxIcon} />
             </Menu.Item>
             <Menu.Item
               testID="profileHeaderDropdownSearchBtn"
@@ -269,6 +304,15 @@ let ProfileMenu = ({
                   </>
                 )}
                 <Menu.Item
+                  testID="profileHeaderDropdownStarterPackAddRemoveBtn"
+                  label={_(msg`Add to starter packs`)}
+                  onPress={addToStarterPacksDialogControl.open}>
+                  <Menu.ItemText>
+                    <Trans>Add to starter packs</Trans>
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={StarterPack} />
+                </Menu.Item>
+                <Menu.Item
                   testID="profileHeaderDropdownListAddRemoveBtn"
                   label={_(msg`Add to lists`)}
                   onPress={onPressAddRemoveLists}>
@@ -277,6 +321,48 @@ let ProfileMenu = ({
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={List} />
                 </Menu.Item>
+                {isSelf && canGoLive && (
+                  <Menu.Item
+                    testID="profileHeaderDropdownListAddRemoveBtn"
+                    label={
+                      status.isActive
+                        ? _(msg`Edit live status`)
+                        : _(msg`Go live`)
+                    }
+                    onPress={goLiveDialogControl.open}>
+                    <Menu.ItemText>
+                      {status.isActive ? (
+                        <Trans>Edit live status</Trans>
+                      ) : (
+                        <Trans>Go live</Trans>
+                      )}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon icon={LiveIcon} />
+                  </Menu.Item>
+                )}
+                {verification.viewer.role === 'verifier' &&
+                  !verification.profile.isViewer &&
+                  (verification.viewer.hasIssuedVerification ? (
+                    <Menu.Item
+                      testID="profileHeaderDropdownVerificationRemoveButton"
+                      label={_(msg`Remove verification`)}
+                      onPress={() => verificationRemovePromptControl.open()}>
+                      <Menu.ItemText>
+                        <Trans>Remove verification</Trans>
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={CircleXIcon} />
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item
+                      testID="profileHeaderDropdownVerificationCreateButton"
+                      label={_(msg`Verify account`)}
+                      onPress={() => verificationCreatePromptControl.open()}>
+                      <Menu.ItemText>
+                        <Trans>Verify account</Trans>
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={CircleCheckIcon} />
+                    </Menu.Item>
+                  ))}
                 {!isSelf && (
                   <>
                     {!profile.viewer?.blocking &&
@@ -349,7 +435,7 @@ let ProfileMenu = ({
                   <Menu.ItemText>
                     <Trans>Copy at:// URI</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={Share} />
+                  <Menu.ItemIcon icon={ClipboardIcon} />
                 </Menu.Item>
                 <Menu.Item
                   testID="profileHeaderDropdownShareDIDBtn"
@@ -358,13 +444,18 @@ let ProfileMenu = ({
                   <Menu.ItemText>
                     <Trans>Copy DID</Trans>
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={Share} />
+                  <Menu.ItemIcon icon={ClipboardIcon} />
                 </Menu.Item>
               </Menu.Group>
             </>
           ) : null}
         </Menu.Outer>
       </Menu.Root>
+
+      <StarterPackDialog
+        control={addToStarterPacksDialogControl}
+        targetDid={profile.did}
+      />
 
       <ReportDialog
         control={reportDialogControl}
@@ -387,12 +478,12 @@ let ProfileMenu = ({
                 msg`The account will be able to interact with you after unblocking.`,
               )
             : profile.associated?.labeler
-            ? _(
-                msg`Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you.`,
-              )
-            : _(
-                msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-              )
+              ? _(
+                  msg`Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you.`,
+                )
+              : _(
+                  msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+                )
         }
         onConfirm={blockAccount}
         confirmButtonCta={
@@ -410,6 +501,26 @@ let ProfileMenu = ({
         onConfirm={onPressShare}
         confirmButtonCta={_(msg`Share anyway`)}
       />
+
+      <VerificationCreatePrompt
+        control={verificationCreatePromptControl}
+        profile={profile}
+      />
+      <VerificationRemovePrompt
+        control={verificationRemovePromptControl}
+        profile={profile}
+        verifications={currentAccountVerifications}
+      />
+
+      {status.isActive ? (
+        <EditLiveDialog
+          control={goLiveDialogControl}
+          status={status}
+          embed={status.embed}
+        />
+      ) : (
+        <GoLiveDialog control={goLiveDialogControl} profile={profile} />
+      )}
     </EventStopper>
   )
 }

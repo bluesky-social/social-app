@@ -17,6 +17,7 @@ export type QueryProps = {
   category?: string | null
   limit?: number
   enabled?: boolean
+  overrideInterests?: string[]
 }
 
 export const getSuggestedUsersQueryKeyRoot = 'unspecced-suggested-users'
@@ -24,6 +25,7 @@ export const createGetSuggestedUsersQueryKey = (props: QueryProps) => [
   getSuggestedUsersQueryKeyRoot,
   props.category,
   props.limit,
+  props.overrideInterests?.join(','),
 ]
 
 export function useGetSuggestedUsersQuery(props: QueryProps) {
@@ -36,6 +38,7 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
     queryKey: createGetSuggestedUsersQueryKey(props),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
+      const interests = aggregateUserInterests(preferences)
       const {data} = await agent.app.bsky.unspecced.getSuggestedUsers(
         {
           category: props.category ?? undefined,
@@ -43,7 +46,11 @@ export function useGetSuggestedUsersQuery(props: QueryProps) {
         },
         {
           headers: {
-            ...createBskyTopicsHeader(aggregateUserInterests(preferences)),
+            ...createBskyTopicsHeader(
+              props.overrideInterests && props.overrideInterests.length > 0
+                ? props.overrideInterests.join(',')
+                : interests,
+            ),
             'Accept-Language': contentLangs,
           },
         },

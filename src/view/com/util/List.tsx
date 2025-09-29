@@ -1,17 +1,17 @@
 import React, {memo} from 'react'
-import {RefreshControl, ViewToken} from 'react-native'
+import {RefreshControl, type ViewToken} from 'react-native'
 import {
-  FlatListPropsWithLayout,
+  type FlatListPropsWithLayout,
   runOnJS,
+  useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
 import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
 import {FlatList_INTERNAL} from './Views'
@@ -57,7 +57,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
       ...props
     },
     ref,
-  ): React.ReactElement => {
+  ): React.ReactElement<any> => {
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
     const dedupe = useDedupe(400)
@@ -152,7 +152,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
 
     return (
       <FlatList_INTERNAL
-        showsVerticalScrollIndicator={!isAndroid} // overridable
+        showsVerticalScrollIndicator // overridable
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         {...props}

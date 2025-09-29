@@ -21,8 +21,7 @@ import {
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {
   Button,
   ButtonIcon,
@@ -40,6 +39,7 @@ import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from './icons/Trash'
 
 type Props = {
   view: AppBskyFeedDefs.GeneratorView
+  onPress?: () => void
 }
 
 export function Default(props: Props) {
@@ -128,7 +128,7 @@ export function TitleAndByline({
     <View style={[a.flex_1]}>
       <Text
         emoji
-        style={[a.text_md, a.font_bold, a.leading_snug]}
+        style={[a.text_md, a.font_semi_bold, a.leading_snug]}
         numberOfLines={1}>
         {title}
       </Text>
@@ -214,7 +214,7 @@ export function DescriptionPlaceholder() {
 export function Likes({count}: {count: number}) {
   const t = useTheme()
   return (
-    <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+    <Text style={[a.text_sm, t.atoms.text_contrast_medium, a.font_semi_bold]}>
       <Trans>
         Liked by <Plural value={count || 0} one="# user" other="# users" />
       </Trans>

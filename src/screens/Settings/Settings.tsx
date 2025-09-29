@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {LayoutAnimation, Pressable, View} from 'react-native'
+import {Alert, LayoutAnimation, Pressable, View} from 'react-native'
 import {Linking} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {type AppBskyActorDefs, moderateProfile} from '@atproto/api'
@@ -8,20 +8,24 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {IS_INTERNAL} from '#/lib/app-info'
+import {useActorStatus} from '#/lib/actor-status'
 import {HELP_DESK_URL} from '#/lib/constants'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {useApplyPullRequestOTAUpdate} from '#/lib/hooks/useOTAUpdates'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {isIOS, isNative} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
+import {useAgent} from '#/state/session'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -29,11 +33,14 @@ import {useCloseAllActiveElements} from '#/state/util'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, platform, tokens, useBreakpoints, useTheme} from '#/alf'
+import {AgeAssuranceDismissibleNotice} from '#/components/ageAssurance/AgeAssuranceDismissibleNotice'
 import {AvatarStackWithFetch} from '#/components/AvatarStack'
+import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {Accessibility_Stroke2_Corner2_Rounded as AccessibilityIcon} from '#/components/icons/Accessibility'
+import {Bell_Stroke2_Corner0_Rounded as NotificationIcon} from '#/components/icons/Bell'
 import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components/icons/BubbleInfo'
 import {ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon} from '#/components/icons/Chevron'
 import {CircleQuestion_Stroke2_Corner2_Rounded as CircleQuestionIcon} from '#/components/icons/CircleQuestion'
@@ -53,8 +60,17 @@ import {Window_Stroke2_Corner2_Rounded as WindowIcon} from '#/components/icons/W
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
+import {ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {useFullVerificationState} from '#/components/verification'
+import {
+  shouldShowVerificationCheckButton,
+  VerificationCheckButton,
+} from '#/components/verification/VerificationCheckButton'
+import {IS_INTERNAL} from '#/env'
+import {device, useStorage} from '#/storage'
+import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
@@ -87,6 +103,8 @@ export function SettingsScreen({}: Props) {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
+          <AgeAssuranceDismissibleNotice style={[a.px_lg, a.pt_xs, a.pb_xl]} />
+
           <View
             style={[
               a.px_xl,
@@ -171,6 +189,14 @@ export function SettingsScreen({}: Props) {
             <SettingsList.ItemIcon icon={HandIcon} />
             <SettingsList.ItemText>
               <Trans>Moderation</Trans>
+            </SettingsList.ItemText>
+          </SettingsList.LinkItem>
+          <SettingsList.LinkItem
+            to="/settings/notifications"
+            label={_(msg`Notifications`)}>
+            <SettingsList.ItemIcon icon={NotificationIcon} />
+            <SettingsList.ItemText>
+              <Trans>Notifications</Trans>
             </SettingsList.ItemText>
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
@@ -278,10 +304,18 @@ function ProfilePreview({
   const {gtMobile} = useBreakpoints()
   const shadow = useProfileShadow(profile)
   const moderationOpts = useModerationOpts()
+  const verificationState = useFullVerificationState({
+    profile: shadow,
+  })
+  const {isActive: live} = useActorStatus(profile)
 
   if (!moderationOpts) return null
 
   const moderation = moderateProfile(profile, moderationOpts)
+  const displayName = sanitizeDisplayName(
+    profile.displayName || sanitizeHandle(profile.handle),
+    moderation.ui('displayName'),
+  )
 
   return (
     <>
@@ -290,22 +324,40 @@ function ProfilePreview({
         avatar={shadow.avatar}
         moderation={moderation.ui('avatar')}
         type={shadow.associated?.labeler ? 'labeler' : 'user'}
+        live={live}
       />
 
-      <Text
-        emoji
-        testID="profileHeaderDisplayName"
+      <View
         style={[
-          a.pt_sm,
-          t.atoms.text,
-          gtMobile ? a.text_4xl : a.text_3xl,
-          a.font_heavy,
+          a.flex_row,
+          a.gap_xs,
+          a.align_center,
+          a.justify_center,
+          a.w_full,
         ]}>
-        {sanitizeDisplayName(
-          profile.displayName || sanitizeHandle(profile.handle),
-          moderation.ui('displayName'),
+        <Text
+          emoji
+          testID="profileHeaderDisplayName"
+          numberOfLines={1}
+          style={[
+            a.pt_sm,
+            t.atoms.text,
+            gtMobile ? a.text_4xl : a.text_3xl,
+            a.font_bold,
+          ]}>
+          {displayName}
+        </Text>
+        {shouldShowVerificationCheckButton(verificationState) && (
+          <View
+            style={[
+              {
+                marginTop: platform({web: 8, ios: 8, android: 10}),
+              },
+            ]}>
+            <VerificationCheckButton profile={shadow} size="lg" />
+          </View>
         )}
-      </Text>
+      </View>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {sanitizeHandle(profile.handle, '@')}
       </Text>
@@ -315,9 +367,20 @@ function ProfilePreview({
 
 function DevOptions() {
   const {_} = useLingui()
+  const agent = useAgent()
+  const [override, setOverride] = useStorage(device, [
+    'policyUpdateDebugOverride',
+  ])
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {mutate: deleteChatDeclarationRecord} = useDeleteActorDeclaration()
+  const {
+    tryApplyUpdate,
+    revertToEmbedded,
+    isCurrentlyRunningPullRequestDeployment,
+    currentChannel,
+  } = useApplyPullRequestOTAUpdate()
+  const [actyNotifNudged, setActyNotifNudged] = useActivitySubscriptionsNudged()
 
   const resetOnboarding = async () => {
     navigation.navigate('Home')
@@ -328,6 +391,45 @@ function DevOptions() {
   const clearAllStorage = async () => {
     await clearStorage()
     Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
+  }
+
+  const onPressUnsnoozeReminder = () => {
+    const lastEmailConfirm = new Date()
+    // wind back 3 days
+    lastEmailConfirm.setDate(lastEmailConfirm.getDate() - 3)
+    persisted.write('reminders', {
+      ...persisted.get('reminders'),
+      lastEmailConfirm: lastEmailConfirm.toISOString(),
+    })
+    Toast.show(_(msg`You probably want to restart the app now.`))
+  }
+
+  const onPressActySubsUnNudge = () => {
+    setActyNotifNudged(false)
+  }
+
+  const onPressApplyOta = () => {
+    Alert.prompt(
+      'Apply OTA',
+      'Enter the channel for the OTA you wish to apply.',
+      [
+        {
+          style: 'cancel',
+          text: 'Cancel',
+        },
+        {
+          style: 'default',
+          text: 'Apply',
+          onPress: (channel?: string) => {
+            tryApplyUpdate(channel ?? '')
+          },
+        },
+      ],
+      'plain-text',
+      isCurrentlyRunningPullRequestDeployment
+        ? currentChannel
+        : 'pull-request-',
+    )
   }
 
   return (
@@ -368,12 +470,82 @@ function DevOptions() {
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
       <SettingsList.PressableItem
+        onPress={onPressUnsnoozeReminder}
+        label={_(msg`Unsnooze email reminder`)}>
+        <SettingsList.ItemText>
+          <Trans>Unsnooze email reminder</Trans>
+        </SettingsList.ItemText>
+      </SettingsList.PressableItem>
+      {actyNotifNudged && (
+        <SettingsList.PressableItem
+          onPress={onPressActySubsUnNudge}
+          label={_(msg`Reset activity subscription nudge`)}>
+          <SettingsList.ItemText>
+            <Trans>Reset activity subscription nudge</Trans>
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      )}
+      <SettingsList.PressableItem
         onPress={() => clearAllStorage()}
         label={_(msg`Clear all storage data`)}>
         <SettingsList.ItemText>
           <Trans>Clear all storage data (restart after this)</Trans>
         </SettingsList.ItemText>
       </SettingsList.PressableItem>
+      {isIOS ? (
+        <SettingsList.PressableItem
+          onPress={onPressApplyOta}
+          label={_(msg`Apply Pull Request`)}>
+          <SettingsList.ItemText>
+            <Trans>Apply Pull Request</Trans>
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      ) : null}
+      {isNative && isCurrentlyRunningPullRequestDeployment ? (
+        <SettingsList.PressableItem
+          onPress={revertToEmbedded}
+          label={_(msg`Unapply Pull Request`)}>
+          <SettingsList.ItemText>
+            <Trans>Unapply Pull Request {currentChannel}</Trans>
+          </SettingsList.ItemText>
+        </SettingsList.PressableItem>
+      ) : null}
+
+      <SettingsList.Divider />
+      <View style={[a.p_xl, a.gap_md]}>
+        <Text style={[a.text_lg, a.font_semi_bold]}>
+          PolicyUpdate202508 Debug
+        </Text>
+
+        <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_md]}>
+          <Button
+            onPress={() => {
+              setOverride(!override)
+            }}
+            label="Toggle"
+            color={override ? 'primary' : 'secondary'}
+            size="small"
+            style={[a.flex_1]}>
+            <ButtonText>
+              {override ? 'Disable debug mode' : 'Enable debug mode'}
+            </ButtonText>
+          </Button>
+
+          <Button
+            onPress={() => {
+              device.set([PolicyUpdate202508], false)
+              agent.bskyAppRemoveNuxs([PolicyUpdate202508])
+              Toast.show(`Done`, 'info')
+            }}
+            label="Reset policy update nux"
+            color="secondary"
+            size="small"
+            disabled={!override}>
+            <ButtonText>Reset state</ButtonText>
+          </Button>
+        </View>
+      </View>
+      <SettingsList.Divider />
     </>
   )
 }
@@ -420,6 +592,7 @@ function AccountRow({
   const moderationOpts = useModerationOpts()
   const removePromptControl = Prompt.usePromptControl()
   const {removeAccount} = useSessionApi()
+  const {isActive: live} = useActorStatus(profile)
 
   const onSwitchAccount = () => {
     if (pendingDid) return
@@ -437,6 +610,8 @@ function AccountRow({
             avatar={profile.avatar}
             moderation={moderateProfile(profile, moderationOpts).ui('avatar')}
             type={profile.associated?.labeler ? 'labeler' : 'user'}
+            live={live}
+            hideLiveBadge
           />
         ) : (
           <View style={[{width: 28}]} />

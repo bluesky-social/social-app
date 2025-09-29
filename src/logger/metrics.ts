@@ -1,3 +1,4 @@
+import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 
 export type MetricEvents = {
@@ -23,7 +24,10 @@ export type MetricEvents = {
       | 'Takendown'
     scope: 'current' | 'every'
   }
-  'notifications:openApp': {}
+  'notifications:openApp': {
+    reason: NotificationReason
+    causedBoot: boolean
+  }
   'notifications:request': {
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
     status: 'granted' | 'denied' | 'undetermined'
@@ -44,6 +48,11 @@ export type MetricEvents = {
   // Screen events
   'splash:signInPressed': {}
   'splash:createAccountPressed': {}
+  'welcomeModal:signupClicked': {}
+  'welcomeModal:exploreClicked': {}
+  'welcomeModal:signinClicked': {}
+  'welcomeModal:dismissed': {}
+  'welcomeModal:presented': {}
   'signup:nextPressed': {
     activeStep: number
     phoneVerificationRequired?: boolean
@@ -63,7 +72,9 @@ export type MetricEvents = {
     activeStep: number
     backgroundCount: number
   }
-  'signup:handleTaken': {}
+  'signup:handleTaken': {typeahead?: boolean}
+  'signup:handleAvailable': {typeahead?: boolean}
+  'signup:handleSuggestionSelected': {method: string}
   'signin:hostingProviderPressed': {
     hostingProviderDidChange: boolean
   }
@@ -83,6 +94,13 @@ export type MetricEvents = {
   'onboarding:interests:nextPressed': {
     selectedInterests: string[]
     selectedInterestsLength: number
+  }
+  'onboarding:suggestedAccounts:tabPressed': {
+    tab: string
+  }
+  'onboarding:suggestedAccounts:followAllPressed': {
+    tab: string
+    numAccounts: number
   }
   'onboarding:suggestedAccounts:nextPressed': {
     selectedAccountsLength: number
@@ -112,6 +130,9 @@ export type MetricEvents = {
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
   }
+  'onboarding:valueProp:stepOne:nextPressed': {}
+  'onboarding:valueProp:stepTwo:nextPressed': {}
+  'onboarding:valueProp:skipPressed': {}
   'home:feedDisplayed': {
     feedUrl: string
     feedType: string
@@ -126,6 +147,33 @@ export type MetricEvents = {
     feedUrl: string
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
+  }
+  'feed:save': {
+    feedUrl: string
+  }
+  'feed:unsave': {
+    feedUrl: string
+  }
+  'feed:pin': {
+    feedUrl: string
+  }
+  'feed:unpin': {
+    feedUrl: string
+  }
+  'feed:like': {
+    feedUrl: string
+  }
+  'feed:unlike': {
+    feedUrl: string
+  }
+  'feed:share': {
+    feedUrl: string
+  }
+  'feed:suggestion:seen': {
+    feedUrl: string
+  }
+  'feed:suggestion:press': {
+    feedUrl: string
   }
   'discover:showMore': {
     feedContext: string
@@ -172,20 +220,32 @@ export type MetricEvents = {
     likerClout: number | undefined
     postClout: number | undefined
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:repost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:unlike': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:unrepost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    feedDescriptor?: string
   }
   'post:mute': {}
   'post:unmute': {}
   'post:pin': {}
   'post:unpin': {}
+  'post:bookmark': {
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+  }
+  'post:unbookmark': {
+    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+  }
+  'bookmarks:view': {}
+  'bookmarks:post-clicked': {}
   'profile:follow': {
     didBecomeMutual: boolean | undefined
     followeeClout: number | undefined
@@ -205,6 +265,7 @@ export type MetricEvents = {
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
+      | 'OnboardingSuggestedAccounts'
   }
   'suggestedUser:follow': {
     logContext:
@@ -212,12 +273,17 @@ export type MetricEvents = {
       | 'InterstitialDiscover'
       | 'InterstitialProfile'
       | 'Profile'
+      | 'Onboarding'
     location: 'Card' | 'Profile'
     recId?: number
     position: number
   }
   'suggestedUser:press': {
-    logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'Onboarding'
     recId?: number
     position: number
   }
@@ -243,6 +309,7 @@ export type MetricEvents = {
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
+      | 'OnboardingSuggestedAccounts'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -370,4 +437,79 @@ export type MetricEvents = {
     targetLanguage: string
     textLength: number
   }
+
+  'verification:create': {}
+  'verification:revoke': {}
+  'verification:badge:click': {}
+  'verification:learn-more': {
+    location:
+      | 'initialAnnouncementeNux'
+      | 'verificationsDialog'
+      | 'verifierDialog'
+      | 'verificationSettings'
+  }
+  'verification:settings:hideBadges': {}
+  'verification:settings:unHideBadges': {}
+
+  'live:create': {duration: number}
+  'live:edit': {}
+  'live:remove': {}
+  'live:card:open': {subject: string; from: 'post' | 'profile'}
+  'live:card:watch': {subject: string}
+  'live:card:openProfile': {subject: string}
+  'live:view:profile': {subject: string}
+  'live:view:post': {subject: string; feed?: string}
+
+  'share:open': {context: 'feed' | 'thread'}
+  'share:press:copyLink': {}
+  'share:press:nativeShare': {}
+  'share:press:openDmSearch': {}
+  'share:press:dmSelected': {}
+  'share:press:recentDm': {}
+  'share:press:embed': {}
+
+  'thread:click:showOtherReplies': {}
+  'thread:preferences:load': {
+    [key: string]: any
+  }
+  'thread:preferences:update': {
+    [key: string]: any
+  }
+  'thread:click:headerMenuOpen': {}
+  'activitySubscription:enable': {
+    setting: 'posts' | 'posts_and_replies'
+  }
+  'activitySubscription:disable': {}
+  'activityPreference:changeChannels': {
+    name: string
+    push: boolean
+    list: boolean
+  }
+  'activityPreference:changeFilter': {
+    name: string
+    value: string
+  }
+
+  'ageAssurance:navigateToSettings': {}
+  'ageAssurance:dismissFeedBanner': {}
+  'ageAssurance:dismissSettingsNotice': {}
+  'ageAssurance:initDialogOpen': {
+    hasInitiatedPreviously: boolean
+  }
+  'ageAssurance:initDialogSubmit': {}
+  'ageAssurance:initDialogError': {
+    code: string
+  }
+  'ageAssurance:redirectDialogOpen': {}
+  'ageAssurance:redirectDialogSuccess': {}
+  'ageAssurance:redirectDialogFail': {}
+  'ageAssurance:appealDialogOpen': {}
+  'ageAssurance:appealDialogSubmit': {}
+
+  /*
+   * Specifically for the `BlockedGeoOverlay`
+   */
+  'blockedGeoOverlay:shown': {}
+
+  'geo:debug': {}
 }

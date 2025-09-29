@@ -1,4 +1,4 @@
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -28,7 +28,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
           <Text
             style={[
               t.atoms.text_contrast_medium,
-              a.font_bold,
+              a.font_semi_bold,
               a.text_sm,
               {textTransform: 'uppercase'},
             ]}>

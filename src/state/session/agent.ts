@@ -1,8 +1,19 @@
-import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {
+  Agent as BaseAgent,
+  type AtprotoServiceType,
+  type AtpSessionData,
+  type AtpSessionEvent,
+  BskyAgent,
+  type Did,
+} from '@atproto/api'
+import {type FetchHandler} from '@atproto/api/dist/agent'
+import {type SessionManager} from '@atproto/api/dist/session-manager'
 import {TID} from '@atproto/common-web'
+import {type FetchHandlerOptions} from '@atproto/xrpc'
 
 import {networkRetry} from '#/lib/async/retry'
 import {
+  BLUESKY_PROXY_HEADER,
   BSKY_SERVICE,
   DISCOVER_SAVED_FEED,
   IS_PROD_SERVICE,
@@ -19,12 +30,17 @@ import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
-import {SessionAccount} from './types'
+import {type SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
+
+export type ProxyHeaderValue = `${Did}#${AtprotoServiceType}`
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
-  return new BskyAppAgent({service: PUBLIC_BSKY_SERVICE})
+
+  const agent = new BskyAppAgent({service: PUBLIC_BSKY_SERVICE})
+  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
+  return agent
 }
 
 export async function createAgentAndResume(
@@ -61,6 +77,8 @@ export async function createAgentAndResume(
     }
   }
 
+  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
+
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
@@ -93,6 +111,9 @@ export async function createAgentAndLogin(
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
+
+  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
+
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
@@ -180,6 +201,8 @@ export async function createAgentAndCreateAccount(
     logger.error(e, {message: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
+  agent.configureProxy(BLUESKY_PROXY_HEADER.get())
+
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
@@ -234,7 +257,22 @@ export function sessionAccountToSession(
   }
 }
 
+export class Agent extends BaseAgent {
+  constructor(
+    proxyHeader: ProxyHeaderValue | null,
+    options: SessionManager | FetchHandler | FetchHandlerOptions,
+  ) {
+    super(options)
+    if (proxyHeader) {
+      this.configureProxy(proxyHeader)
+    }
+  }
+}
+
 // Not exported. Use factories above to create it.
+// WARN: In the factories above, we _manually set a proxy header_ for the agent after we do whatever it is we are supposed to do.
+// Ideally, we wouldn't be doing this. However, since there is so much logic that requires making calls to the PDS right now, it
+// feels safer to just let those run as-is and set the header afterward.
 let realFetch = globalThis.fetch
 class BskyAppAgent extends BskyAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =

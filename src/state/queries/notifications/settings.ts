@@ -1,72 +1,65 @@
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {type AppBskyNotificationDefs} from '@atproto/api'
+import {t} from '@lingui/macro'
+import {
+  type QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
-import {until} from '#/lib/async/until'
 import {logger} from '#/logger'
-import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
-import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 
-export function useNotificationSettingsMutation() {
-  const {_} = useLingui()
+const RQKEY_ROOT = 'notification-settings'
+const RQKEY = [RQKEY_ROOT]
+
+export function useNotificationSettingsQuery({
+  enabled,
+}: {enabled?: boolean} = {}) {
+  const agent = useAgent()
+
+  return useQuery({
+    queryKey: RQKEY,
+    queryFn: async () => {
+      const response = await agent.app.bsky.notification.getPreferences()
+      return response.data.preferences
+    },
+    enabled,
+  })
+}
+export function useNotificationSettingsUpdateMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (keys: string[]) => {
-      const enabled = keys[0] === 'enabled'
-
-      await agent.api.app.bsky.notification.putPreferences({
-        priority: enabled,
-      })
-
-      await until(
-        5, // 5 tries
-        1e3, // 1s delay between tries
-        res => res.data.priority === enabled,
-        () => agent.api.app.bsky.notification.listNotifications({limit: 1}),
-      )
-
-      eagerlySetCachedPriority(queryClient, enabled)
+    mutationFn: async (
+      update: Partial<AppBskyNotificationDefs.Preferences>,
+    ) => {
+      const response =
+        await agent.app.bsky.notification.putPreferencesV2(update)
+      return response.data.preferences
     },
-    onError: err => {
-      logger.error('Failed to save notification preferences', {
-        safeMessage: err,
-      })
-      Toast.show(
-        _(msg`Failed to save notification preferences, please try again`),
-        'xmark',
-      )
+    onMutate: update => {
+      optimisticUpdateNotificationSettings(queryClient, update)
     },
-    onSuccess: () => {
-      Toast.show(_(msg({message: 'Preference saved', context: 'toast'})))
-    },
-    onSettled: () => {
-      invalidateCachedUnreadPage()
-      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS('all')})
-      queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS('mentions')})
+    onError: e => {
+      logger.error('Could not update notification settings', {message: e})
+      queryClient.invalidateQueries({queryKey: RQKEY})
+      Toast.show(t`Could not update notification settings`, 'xmark')
     },
   })
 }
 
-function eagerlySetCachedPriority(
-  queryClient: ReturnType<typeof useQueryClient>,
-  enabled: boolean,
+function optimisticUpdateNotificationSettings(
+  queryClient: QueryClient,
+  update: Partial<AppBskyNotificationDefs.Preferences>,
 ) {
-  function updateData(old: any) {
-    if (!old) return old
-    return {
-      ...old,
-      pages: old.pages.map((page: any) => {
-        return {
-          ...page,
-          priority: enabled,
-        }
-      }),
-    }
-  }
-  queryClient.setQueryData(RQKEY_NOTIFS('all'), updateData)
-  queryClient.setQueryData(RQKEY_NOTIFS('mentions'), updateData)
+  queryClient.setQueryData(
+    RQKEY,
+    (old?: AppBskyNotificationDefs.Preferences) => {
+      if (!old) return old
+      return {...old, ...update}
+    },
+  )
 }

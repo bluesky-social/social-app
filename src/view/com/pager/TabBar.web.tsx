@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef} from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {type ScrollView, StyleSheet, View} from 'react-native'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -106,7 +106,9 @@ export function TabBar({
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
-              ref={node => (itemRefs.current[i] = node as any)}
+              ref={node => {
+                itemRefs.current[i] = node as any
+              }}
               style={styles.item}
               hoverStyle={t.atoms.bg_contrast_25}
               onPress={() => onPressItem(i)}
@@ -119,7 +121,7 @@ export function TabBar({
                     styles.itemText,
                     selected ? t.atoms.text : t.atoms.text_contrast_medium,
                     a.text_md,
-                    a.font_bold,
+                    a.font_semi_bold,
                     {lineHeight: 20},
                   ]}>
                   {item}
@@ -161,7 +163,7 @@ const desktopStyles = StyleSheet.create({
   },
   itemInner: {
     alignItems: 'center',
-    overflowX: 'hidden',
+    ...web({overflowX: 'hidden'}),
   },
   itemText: {
     textAlign: 'center',
@@ -204,7 +206,7 @@ const mobileStyles = StyleSheet.create({
   itemInner: {
     flexGrow: 1,
     alignItems: 'center',
-    overflowX: 'hidden',
+    ...web({overflowX: 'hidden'}),
   },
   itemText: {
     textAlign: 'center',

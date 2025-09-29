@@ -95,7 +95,11 @@ export const SplashScreen = ({
               )}
 
               <Text
-                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+                style={[
+                  a.text_md,
+                  a.font_semi_bold,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 <Trans>What's up?</Trans>
               </Text>
             </View>
@@ -154,9 +158,11 @@ function Footer() {
         a.absolute,
         a.inset_0,
         {top: 'auto'},
-        a.p_xl,
+        a.px_xl,
+        a.py_lg,
         a.border_t,
         a.flex_row,
+        a.align_center,
         a.flex_wrap,
         a.gap_xl,
         a.flex_1,

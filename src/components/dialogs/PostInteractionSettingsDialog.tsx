@@ -1,6 +1,10 @@
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPostgate, AtUri} from '@atproto/api'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {
+  type AppBskyFeedDefs,
+  type AppBskyFeedPostgate,
+  AtUri,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -22,7 +26,7 @@ import {
 import {
   createThreadgateViewQueryKey,
   getThreadgateView,
-  ThreadgateAllowUISetting,
+  type ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
   useSetThreadgateAllowMutation,
   useThreadgateViewQuery,
@@ -80,7 +84,7 @@ export function PostInteractionSettingsControlledDialog({
             ]}>
             <Trans>
               You can set default interaction settings in{' '}
-              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+              <Text style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
                 Settings &rarr; Moderation &rarr; Interaction settings
               </Text>
               .
@@ -96,7 +100,7 @@ export function PostInteractionSettingsControlledDialog({
 export function Header() {
   return (
     <View style={[a.gap_md, a.pb_sm]}>
-      <Text style={[a.text_2xl, a.font_bold]}>
+      <Text style={[a.text_2xl, a.font_semi_bold]}>
         <Trans>Post interaction settings</Trans>
       </Text>
       <Text style={[a.text_md, a.pb_xs]}>
@@ -325,7 +329,7 @@ export function PostInteractionSettingsForm({
       <View style={[a.flex_1, a.gap_md]}>
         <View style={[a.gap_lg]}>
           <View style={[a.gap_sm]}>
-            <Text style={[a.font_bold, a.text_lg]}>
+            <Text style={[a.font_semi_bold, a.text_lg]}>
               <Trans>Quote settings</Trans>
             </Text>
 
@@ -381,7 +385,7 @@ export function PostInteractionSettingsForm({
                 opacity: replySettingsDisabled ? 0.3 : 1,
               },
             ]}>
-            <Text style={[a.font_bold, a.text_lg]}>
+            <Text style={[a.font_semi_bold, a.text_lg]}>
               <Trans>Reply settings</Trans>
             </Text>
 
@@ -531,7 +535,9 @@ function Selectable({
             },
             style,
           ]}>
-          <Text style={[a.text_sm, isSelected && a.font_bold]}>{label}</Text>
+          <Text style={[a.text_sm, isSelected && a.font_semi_bold]}>
+            {label}
+          </Text>
           {isSelected ? (
             <Check size="sm" fill={t.palette.primary_500} />
           ) : (
@@ -558,7 +564,8 @@ export function usePrefetchPostInteractionSettings({
       await Promise.all([
         queryClient.prefetchQuery({
           queryKey: createPostgateQueryKey(postUri),
-          queryFn: () => getPostgateRecord({agent, postUri}),
+          queryFn: () =>
+            getPostgateRecord({agent, postUri}).then(res => res ?? null),
           staleTime: STALE.SECONDS.THIRTY,
         }),
         queryClient.prefetchQuery({

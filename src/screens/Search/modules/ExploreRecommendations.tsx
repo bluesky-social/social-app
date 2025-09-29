@@ -8,7 +8,7 @@ import {
   DEFAULT_LIMIT as RECOMMENDATIONS_COUNT,
   useTrendingTopics,
 } from '#/state/queries/trending/useTrendingTopics'
-import {useTrendingConfig} from '#/state/trending-config'
+import {useTrendingConfig} from '#/state/service-config'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Hashtag_Stroke2_Corner0_Rounded} from '#/components/icons/Hashtag'
 import {
@@ -50,7 +50,7 @@ function Inner() {
               fill={t.palette.primary_500}
               style={{marginLeft: -2}}
             />
-            <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>
+            <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>
               <Trans>Recommended</Trans>
             </Text>
           </View>

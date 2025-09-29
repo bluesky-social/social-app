@@ -112,7 +112,7 @@ export function SearchScreenShell({
       const newAccountHistory = [
         item.did,
         ...accountHistory.filter(p => p !== item.did),
-      ].slice(0, 5)
+      ].slice(0, 10)
       setAccountHistory(newAccountHistory)
     },
     [accountHistory, setAccountHistory],
@@ -460,7 +460,7 @@ let SearchScreenInner = ({
               a.pt_sm,
               a.pb_lg,
             ]}>
-            <Text style={[a.text_2xl, a.font_heavy]}>
+            <Text style={[a.text_2xl, a.font_bold]}>
               <Trans>Search</Trans>
             </Text>
           </View>

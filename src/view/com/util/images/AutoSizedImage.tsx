@@ -1,12 +1,15 @@
 import React, {useRef} from 'react'
-import {DimensionValue, Pressable, View} from 'react-native'
+import {type DimensionValue, Pressable, View} from 'react-native'
+import Animated, {
+  type AnimatedRef,
+  useAnimatedRef,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {AppBskyEmbedImages} from '@atproto/api'
+import {type AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HandleRef, useHandleRef} from '#/lib/hooks/useHandleRef'
-import type {Dimensions} from '#/lib/media/types'
+import {type Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -18,9 +21,11 @@ export function ConstrainedImage({
   aspectRatio,
   fullBleed,
   children,
+  minMobileAspectRatio,
 }: {
   aspectRatio: number
   fullBleed?: boolean
+  minMobileAspectRatio?: number
   children: React.ReactNode
 }) {
   const t = useTheme()
@@ -32,10 +37,10 @@ export function ConstrainedImage({
   const outerAspectRatio = React.useMemo<DimensionValue>(() => {
     const ratio =
       isNative || !gtMobile
-        ? Math.min(1 / aspectRatio, 16 / 9) // 9:16 bounding box
+        ? Math.min(1 / aspectRatio, minMobileAspectRatio ?? 16 / 9) // 9:16 bounding box
         : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
     return `${ratio * 100}%`
-  }, [aspectRatio, gtMobile])
+  }, [aspectRatio, gtMobile, minMobileAspectRatio])
 
   return (
     <View style={[a.w_full]}>
@@ -68,14 +73,17 @@ export function AutoSizedImage({
   image: AppBskyEmbedImages.ViewImage
   crop?: 'none' | 'square' | 'constrained'
   hideBadge?: boolean
-  onPress?: (containerRef: HandleRef, fetchedDims: Dimensions | null) => void
+  onPress?: (
+    containerRef: AnimatedRef<any>,
+    fetchedDims: Dimensions | null,
+  ) => void
   onLongPress?: () => void
   onPressIn?: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
-  const containerRef = useHandleRef()
+  const containerRef = useAnimatedRef()
   const fetchedDimsRef = useRef<{width: number; height: number} | null>(null)
 
   let aspectRatio: number | undefined
@@ -103,7 +111,7 @@ export function AutoSizedImage({
   const hasAlt = !!image.alt
 
   const contents = (
-    <View ref={containerRef} collapsable={false} style={{flex: 1}}>
+    <Animated.View ref={containerRef} collapsable={false} style={{flex: 1}}>
       <Image
         contentFit={isContain ? 'contain' : 'cover'}
         style={[a.w_full, a.h_full]}
@@ -177,15 +185,14 @@ export function AutoSizedImage({
                   },
                 ],
               ]}>
-              <Text
-                style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
+              <Text style={[a.font_bold, largeAlt ? a.text_xs : {fontSize: 8}]}>
                 ALT
               </Text>
             </View>
           )}
         </View>
       ) : null}
-    </View>
+    </Animated.View>
   )
 
   if (cropDisabled) {

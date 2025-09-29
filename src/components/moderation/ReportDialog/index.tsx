@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {type ScrollView} from 'react-native-gesture-handler'
+import {type AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -30,12 +30,12 @@ import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
-import {DMCA_LINK} from './const'
+import {SUPPORT_PAGE} from './const'
 import {useCopyForSubject} from './copy'
 import {initialState, reducer} from './state'
-import {ReportDialogProps, ReportSubject} from './types'
+import {type ReportDialogProps, type ReportSubject} from './types'
 import {parseReportSubject} from './utils/parseReportSubject'
-import {ReportOption, useReportOptions} from './utils/useReportOptions'
+import {type ReportOption, useReportOptions} from './utils/useReportOptions'
 
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
@@ -51,7 +51,7 @@ export function ReportDialog(
     [props.subject],
   )
   const onClose = React.useCallback(() => {
-    logger.metric('reportDialog:close', {})
+    logger.metric('reportDialog:close', {}, {statsig: false})
   }, [])
   return (
     <Dialog.Outer control={props.control} onClose={onClose}>
@@ -69,7 +69,7 @@ function Invalid() {
   const {_} = useLingui()
   return (
     <Dialog.ScrollableInner label={_(msg`Report dialog`)}>
-      <Text style={[a.font_heavy, a.text_xl, a.leading_snug, a.pb_xs]}>
+      <Text style={[a.font_bold, a.text_xl, a.leading_snug, a.pb_xs]}>
         <Trans>Invalid report subject</Trans>
       </Text>
       <Text style={[a.text_md, a.leading_snug]}>
@@ -155,17 +155,21 @@ function Inner(props: ReportDialogProps) {
         }),
       )
       setSuccess(true)
-      logger.metric('reportDialog:success', {
-        reason: state.selectedOption?.reason!,
-        labeler: state.selectedLabeler?.creator.handle!,
-        details: !!state.details,
-      })
+      logger.metric(
+        'reportDialog:success',
+        {
+          reason: state.selectedOption?.reason!,
+          labeler: state.selectedLabeler?.creator.handle!,
+          details: !!state.details,
+        },
+        {statsig: false},
+      )
       // give time for user feedback
       setTimeout(() => {
         props.control.close()
       }, 1e3)
     } catch (e: any) {
-      logger.metric('reportDialog:failure', {})
+      logger.metric('reportDialog:failure', {}, {statsig: false})
       logger.error(e, {
         source: 'ReportDialog',
       })
@@ -179,9 +183,13 @@ function Inner(props: ReportDialogProps) {
   }, [_, submitReport, state, dispatch, props, setPending, setSuccess])
 
   React.useEffect(() => {
-    logger.metric('reportDialog:open', {
-      subjectType: props.subject.type,
-    })
+    logger.metric(
+      'reportDialog:open',
+      {
+        subjectType: props.subject.type,
+      },
+      {statsig: false},
+    )
   }, [props.subject])
 
   return (
@@ -258,9 +266,9 @@ function Inner(props: ReportDialogProps) {
 
                   {['post', 'account'].includes(props.subject.type) && (
                     <Link
-                      to={DMCA_LINK}
+                      to={SUPPORT_PAGE}
                       label={_(
-                        msg`View details for reporting a copyright violation`,
+                        msg`Need to report a copyright violation, legal request, or regulatory compliance issue?`,
                       )}>
                       {({hovered, pressed}) => (
                         <View
@@ -277,7 +285,10 @@ function Inner(props: ReportDialogProps) {
                               : [t.atoms.border_contrast_low],
                           ]}>
                           <Text style={[a.flex_1, a.italic, a.leading_snug]}>
-                            <Trans>Need to report a copyright violation?</Trans>
+                            <Trans>
+                              Need to report a copyright violation, legal
+                              request, or regulatory compliance issue?
+                            </Trans>
                           </Text>
                           <SquareArrowTopRight
                             size="sm"
@@ -382,7 +393,7 @@ function Inner(props: ReportDialogProps) {
                 <Text style={[a.leading_snug, a.pb_xs]}>
                   <Trans>
                     Your report will be sent to{' '}
-                    <Text style={[a.font_bold, a.leading_snug]}>
+                    <Text style={[a.font_semi_bold, a.leading_snug]}>
                       {state.selectedLabeler?.creator.displayName}
                     </Text>
                     .
@@ -504,13 +515,13 @@ function StepTitle({
             backgroundColor: active
               ? t.palette.primary_500
               : completed
-              ? t.palette.primary_100
-              : t.atoms.bg_contrast_25.backgroundColor,
+                ? t.palette.primary_100
+                : t.atoms.bg_contrast_25.backgroundColor,
             borderColor: active
               ? t.palette.primary_500
               : completed
-              ? t.palette.primary_400
-              : t.atoms.border_contrast_low.borderColor,
+                ? t.palette.primary_400
+                : t.atoms.border_contrast_low.borderColor,
           },
         ]}>
         {completed ? (
@@ -518,15 +529,15 @@ function StepTitle({
         ) : (
           <Text
             style={[
-              a.font_heavy,
+              a.font_bold,
               a.text_center,
               t.atoms.text,
               {
                 color: active
                   ? 'white'
                   : completed
-                  ? t.palette.primary_700
-                  : t.atoms.text_contrast_medium.color,
+                    ? t.palette.primary_700
+                    : t.atoms.text_contrast_medium.color,
                 fontVariant: ['tabular-nums'],
                 width: 24,
                 height: 24,
@@ -541,7 +552,7 @@ function StepTitle({
       <Text
         style={[
           a.flex_1,
-          a.font_heavy,
+          a.font_bold,
           a.text_lg,
           a.leading_snug,
           active ? t.atoms.text : t.atoms.text_contrast_medium,
@@ -587,7 +598,7 @@ function OptionCard({
               ? [t.atoms.border_contrast_high]
               : [t.atoms.border_contrast_low],
           ]}>
-          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
             {option.title}
           </Text>
           <Text
@@ -659,7 +670,7 @@ function LabelerCard({
             avatar={labeler.creator.avatar}
           />
           <View style={[a.flex_1]}>
-            <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
               {title}
             </Text>
             <Text

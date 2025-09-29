@@ -1,6 +1,6 @@
 import {AtpAgent} from '@atproto/api'
 
-import {SupportedMimeTypes, VIDEO_SERVICE} from '#/lib/constants'
+import {type SupportedMimeTypes, VIDEO_SERVICE} from '#/lib/constants'
 
 export const createVideoEndpointUrl = (
   route: string,
@@ -40,7 +40,7 @@ export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {
 }
 
 export function extToMime(ext: string) {
-  switch (ext) {
+  switch (ext.toLowerCase()) {
     case 'mp4':
       return 'video/mp4'
     case 'webm':

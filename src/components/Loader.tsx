@@ -8,7 +8,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 import {atoms as a, flatten, useTheme} from '#/alf'
-import {Props, useCommonSVGProps} from '#/components/icons/common'
+import {type Props, useCommonSVGProps} from '#/components/icons/common'
 import {Loader_Stroke2_Corner0_Rounded as Icon} from '#/components/icons/Loader'
 
 export function Loader(props: Props) {

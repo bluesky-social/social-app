@@ -1,20 +1,21 @@
-import React from 'react'
+import {type JSX, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {
-  useLinkProps,
-  useNavigation,
-  useNavigationState,
-} from '@react-navigation/native'
+import {useNavigation, useNavigationState} from '@react-navigation/native'
 
+import {useActorStatus} from '#/lib/actor-status'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
-import {type CommonNavigatorParams} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
@@ -25,14 +26,13 @@ import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {useComposerControls} from '#/state/shell/composer'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {atoms as a, tokens, useLayoutBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useLayoutBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -40,6 +40,7 @@ import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
+import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {
   BulletList_Filled_Corner0_Rounded as ListFilled,
   BulletList_Stroke2_Corner0_Rounded as List,
@@ -100,6 +101,8 @@ function ProfileCard() {
       profile: profiles?.find(p => p.did === account.did),
     }))
 
+  const {isActive: live} = useActorStatus(profile)
+
   return (
     <View style={[a.my_md, !leftNavMinimal && [a.w_full, a.align_start]]}>
       {!isLoading && profile ? (
@@ -142,6 +145,7 @@ function ProfileCard() {
                       avatar={profile.avatar}
                       size={size}
                       type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                      live={live}
                     />
                   </View>
                   {!leftNavMinimal && (
@@ -157,7 +161,7 @@ function ProfileCard() {
                           },
                         ]}>
                         <Text
-                          style={[a.font_heavy, a.text_sm, a.leading_snug]}
+                          style={[a.font_bold, a.text_sm, a.leading_snug]}
                           numberOfLines={1}>
                           {sanitizeDisplayName(
                             profile.displayName || profile.handle,
@@ -226,7 +230,6 @@ function SwitchMenuItems({
   signOutPromptControl: DialogControlProps
 }) {
   const {_} = useLingui()
-  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
 
@@ -234,6 +237,7 @@ function SwitchMenuItems({
     setShowLoggedOut(true)
     closeEverything()
   }
+
   return (
     <Menu.Outer>
       {accounts && accounts.length > 0 && (
@@ -243,40 +247,17 @@ function SwitchMenuItems({
               <Trans>Switch account</Trans>
             </Menu.LabelText>
             {accounts.map(other => (
-              <Menu.Item
-                disabled={!!pendingDid}
-                style={[{minWidth: 150}]}
+              <SwitchMenuItem
                 key={other.account.did}
-                label={_(
-                  msg`Switch to ${sanitizeHandle(
-                    other.profile?.handle ?? other.account.handle,
-                    '@',
-                  )}`,
-                )}
-                onPress={() =>
-                  onPressSwitchAccount(other.account, 'SwitchAccount')
-                }>
-                <View style={[{marginLeft: tokens.space._2xs * -1}]}>
-                  <UserAvatar
-                    avatar={other.profile?.avatar}
-                    size={20}
-                    type={
-                      other.profile?.associated?.labeler ? 'labeler' : 'user'
-                    }
-                  />
-                </View>
-                <Menu.ItemText>
-                  {sanitizeHandle(
-                    other.profile?.handle ?? other.account.handle,
-                    '@',
-                  )}
-                </Menu.ItemText>
-              </Menu.Item>
+                account={other.account}
+                profile={other.profile}
+              />
             ))}
           </Menu.Group>
           <Menu.Divider />
         </>
       )}
+      <SwitcherMenuProfileLink />
       <Menu.Item
         label={_(msg`Add another account`)}
         onPress={onAddAnotherAccount}>
@@ -295,6 +276,95 @@ function SwitchMenuItems({
   )
 }
 
+function SwitcherMenuProfileLink() {
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
+  const navigation = useNavigation()
+  const context = Menu.useMenuContext()
+  const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/'
+  const [pathName] = useMemo(() => router.matchPath(profileLink), [profileLink])
+  const currentRouteInfo = useNavigationState(state => {
+    if (!state) {
+      return {name: 'Home'}
+    }
+    return getCurrentRoute(state)
+  })
+  let isCurrent =
+    currentRouteInfo.name === 'Profile'
+      ? isTab(currentRouteInfo.name, pathName) &&
+        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
+          currentAccount?.handle
+      : isTab(currentRouteInfo.name, pathName)
+  const onProfilePress = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) {
+        return
+      }
+      e.preventDefault()
+      context.control.close()
+      if (isCurrent) {
+        emitSoftReset()
+      } else {
+        const [screen, params] = router.matchPath(profileLink)
+        // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
+        navigation.navigate(screen, params, {pop: true})
+      }
+    },
+    [navigation, profileLink, isCurrent, context],
+  )
+  return (
+    <Menu.Item
+      label={_(msg`Go to profile`)}
+      // @ts-expect-error The function signature differs on web -inb
+      onPress={onProfilePress}
+      href={profileLink}>
+      <Menu.ItemIcon icon={UserCircle} />
+      <Menu.ItemText>
+        <Trans>Go to profile</Trans>
+      </Menu.ItemText>
+    </Menu.Item>
+  )
+}
+
+function SwitchMenuItem({
+  account,
+  profile,
+}: {
+  account: SessionAccount
+  profile: AppBskyActorDefs.ProfileViewDetailed | undefined
+}) {
+  const {_} = useLingui()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
+  const {isActive: live} = useActorStatus(profile)
+
+  return (
+    <Menu.Item
+      disabled={!!pendingDid}
+      style={[a.gap_sm, {minWidth: 150}]}
+      key={account.did}
+      label={_(
+        msg`Switch to ${sanitizeHandle(
+          profile?.handle ?? account.handle,
+          '@',
+        )}`,
+      )}
+      onPress={() => onPressSwitchAccount(account, 'SwitchAccount')}>
+      <View>
+        <UserAvatar
+          avatar={profile?.avatar}
+          size={20}
+          type={profile?.associated?.labeler ? 'labeler' : 'user'}
+          live={live}
+          hideLiveBadge
+        />
+      </View>
+      <Menu.ItemText>
+        {sanitizeHandle(profile?.handle ?? account.handle, '@')}
+      </Menu.ItemText>
+    </Menu.Item>
+  )
+}
+
 interface NavItemProps {
   count?: string
   hasNew?: boolean
@@ -308,7 +378,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  const [pathName] = React.useMemo(() => router.matchPath(href), [href])
+  const [pathName] = useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
     if (!state) {
       return {name: 'Home'}
@@ -321,8 +391,8 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
           currentAccount?.handle
       : isTab(currentRouteInfo.name, pathName)
-  const {onPress} = useLinkProps({to: href})
-  const onPressWrapped = React.useCallback(
+  const navigation = useNavigation<NavigationProp>()
+  const onPressWrapped = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       if (e.ctrlKey || e.metaKey || e.altKey) {
         return
@@ -331,10 +401,12 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
       if (isCurrent) {
         emitSoftReset()
       } else {
-        onPress()
+        const [screen, params] = router.matchPath(href)
+        // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
+        navigation.navigate(screen, params, {pop: true})
       }
     },
-    [onPress, isCurrent],
+    [navigation, href, isCurrent],
   )
 
   return (
@@ -360,7 +432,6 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         style={[
           a.align_center,
           a.justify_center,
-          a.z_10,
           {
             width: 24,
             height: 24,
@@ -391,10 +462,11 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
               style={[
                 a.absolute,
                 a.text_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 a.rounded_full,
                 a.text_center,
                 a.leading_tight,
+                a.z_20,
                 {
                   top: '-10%',
                   left: count.length === 1 ? 12 : 8,
@@ -420,6 +492,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
             style={[
               a.absolute,
               a.rounded_full,
+              a.z_20,
               {
                 backgroundColor: t.palette.primary_500,
                 width: 8,
@@ -436,7 +509,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         ) : null}
       </View>
       {!leftNavMinimal && (
-        <Text style={[a.text_xl, isCurrent ? a.font_heavy : a.font_normal]}>
+        <Text style={[a.text_xl, isCurrent ? a.font_bold : a.font_normal]}>
           {label}
         </Text>
       )}
@@ -447,10 +520,10 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
 function ComposeBtn() {
   const {currentAccount} = useSession()
   const {getState} = useNavigation()
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {_} = useLingui()
   const {leftNavMinimal} = useLayoutBreakpoints()
-  const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
+  const [isFetchingHandle, setIsFetchingHandle] = useState(false)
   const fetchHandle = useFetchHandle()
 
   const getProfileHandle = async () => {
@@ -571,7 +644,7 @@ export function DesktopLeftNav() {
       ]}>
       {hasSession ? (
         <ProfileCard />
-      ) : isDesktop ? (
+      ) : !leftNavMinimal ? (
         <View style={[a.pt_xl]}>
           <NavSignupCard />
         </View>
@@ -673,6 +746,29 @@ export function DesktopLeftNav() {
             label={_(msg`Lists`)}
           />
           <NavItem
+            href="/saved"
+            icon={
+              <Bookmark
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
+            iconFilled={
+              <BookmarkFilled
+                style={pal.text}
+                aria-hidden={true}
+                width={NAV_ICON_WIDTH}
+              />
+            }
+            label={_(
+              msg({
+                message: 'Saved',
+                context: 'link to bookmarks screen',
+              }),
+            )}
+          />
+          <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
             icon={
               <UserCircle
@@ -718,7 +814,7 @@ export function DesktopLeftNav() {
 
 const styles = StyleSheet.create({
   leftNav: {
-    position: 'fixed',
+    ...a.fixed,
     top: 0,
     paddingTop: 10,
     paddingBottom: 10,
@@ -736,7 +832,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: 86,
     alignItems: 'center',
-    overflowX: 'hidden',
+    ...web({overflowX: 'hidden'}),
   },
   backBtn: {
     position: 'absolute',

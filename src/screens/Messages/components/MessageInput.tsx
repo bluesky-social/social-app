@@ -18,15 +18,15 @@ import Graphemer from 'graphemer'
 
 import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
-import {useEmail} from '#/lib/hooks/useEmail'
 import {isIOS, isWeb} from '#/platform/detection'
+import {useEmail} from '#/state/email-verification'
 import {
   useMessageDraft,
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
-import {EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker.web'
+import {type EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {android, atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
@@ -174,6 +174,7 @@ export function MessageInput({
             a.text_md,
             a.px_sm,
             t.atoms.text,
+            android({paddingTop: 0}),
             {paddingBottom: isIOS ? 5 : 0},
             animatedStyle,
           ]}

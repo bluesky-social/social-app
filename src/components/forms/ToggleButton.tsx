@@ -1,5 +1,10 @@
 import React from 'react'
-import {AccessibilityProps, TextStyle, View, ViewStyle} from 'react-native'
+import {
+  type AccessibilityProps,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
 import {atoms as a, native, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
@@ -7,7 +12,7 @@ import {Text} from '#/components/Typography'
 
 type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps & {
-    children: React.ReactElement
+    children: React.ReactElement<any>
     testID?: string
   }
 
@@ -128,7 +133,7 @@ export function ButtonText({children}: {children: React.ReactNode}) {
     <Text
       style={[
         a.text_center,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_medium,
         textStyles,
       ]}>

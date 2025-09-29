@@ -119,7 +119,8 @@ export function Root({children}: {children: React.ReactNode}) {
   const hoverablesSV = useSharedValue<
     Record<string, {id: string; rect: Measurement}>
   >({})
-  const syncHoverablesThrottleRef = useRef<ReturnType<typeof setTimeout>>()
+  const syncHoverablesThrottleRef =
+    useRef<ReturnType<typeof setTimeout>>(undefined)
   const [hoveredMenuItem, setHoveredMenuItem] = useState<string | null>(null)
 
   const onHoverableTouchUp = useCallback((id: string) => {
@@ -190,7 +191,7 @@ export function Root({children}: {children: React.ReactNode}) {
           if (item) playHaptic('Light')
           setHoveredMenuItem(item)
         },
-      } satisfies ContextType),
+      }) satisfies ContextType,
     [
       measurement,
       setMeasurement,
@@ -556,7 +557,7 @@ export function Outer({
       // pure vibes based
       const TOP_INSET = insets.top + 80
       const BOTTOM_INSET_IOS = insets.bottom + 20
-      const BOTTOM_INSET_ANDROID = 12 // TODO: revisit when edge-to-edge mode is enabled -sfn
+      const BOTTOM_INSET_ANDROID = insets.bottom + 12
 
       const {height} = evt.nativeEvent.layout
       const topPosition =
@@ -710,8 +711,8 @@ export function Item({
       const xOffset = position
         ? position.x
         : align === 'left'
-        ? measurement.x
-        : measurement.x + measurement.width - layout.width
+          ? measurement.x
+          : measurement.x + measurement.width - layout.width
 
       registerHoverable(
         id,
@@ -795,7 +796,7 @@ export function ItemText({children, style}: ItemTextProps) {
       style={[
         a.flex_1,
         a.text_md,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_high,
         {paddingTop: 3},
         style,
@@ -854,7 +855,11 @@ export function LabelText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   return (
     <Text
-      style={[a.font_bold, t.atoms.text_contrast_medium, {marginBottom: -8}]}>
+      style={[
+        a.font_semi_bold,
+        t.atoms.text_contrast_medium,
+        {marginBottom: -8},
+      ]}>
       {children}
     </Text>
   )

@@ -9,7 +9,7 @@ import {
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
 import {useTrendingTopics} from '#/state/queries/trending/useTrendingTopics'
-import {useTrendingConfig} from '#/state/trending-config'
+import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useGutters, useTheme} from '#/alf'
@@ -82,7 +82,7 @@ export function Inner() {
                   style={[
                     t.atoms.text_contrast_medium,
                     a.text_sm,
-                    a.font_bold,
+                    a.font_semi_bold,
                   ]}>
                   {' '}
                 </Text>
@@ -101,7 +101,7 @@ export function Inner() {
                         style={[
                           t.atoms.text,
                           a.text_sm,
-                          a.font_bold,
+                          a.font_semi_bold,
                           {opacity: 0.7}, // NOTE: we use opacity 0.7 instead of a color to match the color of the home pager tab bar
                         ]}>
                         {topic.topic}

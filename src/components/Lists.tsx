@@ -1,5 +1,5 @@
-import React, {memo} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {memo} from 'react'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -95,7 +95,7 @@ function ListFooterMaybeError({
           )}
         </Text>
         <Button
-          variant="gradient"
+          variant="solid"
           label={_(msg`Press to retry`)}
           style={[
             a.align_center,

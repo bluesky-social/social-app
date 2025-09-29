@@ -284,7 +284,7 @@ export function SearchablePeopleList({
             style={[
               a.z_10,
               a.text_lg,
-              a.font_heavy,
+              a.font_bold,
               a.leading_tight,
               t.atoms.text_contrast_high,
             ]}>
@@ -390,13 +390,14 @@ function DefaultProfileCard({
             !enabled
               ? {opacity: 0.5}
               : pressed || focused || hovered
-              ? t.atoms.bg_contrast_25
-              : t.atoms.bg,
+                ? t.atoms.bg_contrast_25
+                : t.atoms.bg,
           ]}>
           <ProfileCard.Header>
             <ProfileCard.Avatar
               profile={profile}
               moderationOpts={moderationOpts}
+              disabledPreview
             />
             <View style={[a.flex_1]}>
               <ProfileCard.Name
@@ -483,7 +484,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput>
+  inputRef: React.RefObject<TextInput | null>
 }) {
   const t = useTheme()
   const {_} = useLingui()

@@ -1,34 +1,38 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
-  AppBskyActorDefs,
+  type AppBskyActorDefs,
   AppBskyFeedDefs,
-  AppBskyFeedPost,
+  type AppBskyFeedPost,
   AtUri,
-  BskyAgent,
+  type BskyAgent,
   moderatePost,
-  ModerationDecision,
+  type ModerationDecision,
+  type ModerationPrefs,
 } from '@atproto/api'
 import {
-  InfiniteData,
-  QueryClient,
-  QueryKey,
+  type InfiniteData,
+  type QueryClient,
+  type QueryKey,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {AuthorFeedAPI} from '#/lib/api/feed/author'
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
+import {DemoFeedAPI} from '#/lib/api/feed/demo'
 import {FollowingFeedAPI} from '#/lib/api/feed/following'
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
-import {FeedAPI, ReasonFeedSource} from '#/lib/api/feed/types'
+import {PostListFeedAPI} from '#/lib/api/feed/posts'
+import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
-import {FeedTuner, FeedTunerFn} from '#/lib/api/feed-manip'
+import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {logger} from '#/logger'
+import {useAgeAssuranceContext} from '#/state/ageAssurance'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
@@ -52,6 +56,7 @@ export type AuthorFilter =
   | 'posts_with_video'
 type FeedUri = string
 type ListUri = string
+type PostsUriList = string
 
 export type FeedDescriptor =
   | 'following'
@@ -59,6 +64,8 @@ export type FeedDescriptor =
   | `feedgen|${FeedUri}`
   | `likes|${ActorDid}`
   | `list|${ListUri}`
+  | `posts|${PostsUriList}`
+  | 'demo'
 export interface FeedParams {
   mergeFeedEnabled?: boolean
   mergeFeedSources?: string[]
@@ -90,6 +97,7 @@ export interface FeedPostSlice {
   isIncompleteThread: boolean
   isFallbackMarker: boolean
   feedContext: string | undefined
+  reqId: string | undefined
   feedPostUri: string
   reason?:
     | AppBskyFeedDefs.ReasonRepost
@@ -128,8 +136,18 @@ export function usePostFeedQuery(
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
+  /**
+   * Load bearing: we need to await AA state or risk FOUC. This marginally
+   * delays feeds, but AA state is fetched immediately on load and is then
+   * available for the remainder of the session, so this delay only affects cold
+   * loads. -esb
+   */
+  const {isReady: isAgeAssuranceReady} = useAgeAssuranceContext()
   const enabled =
-    opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
+    opts?.enabled !== false &&
+    Boolean(moderationOpts) &&
+    Boolean(preferences) &&
+    isAgeAssuranceReady
   const userInterests = aggregateUserInterests(preferences)
   const followingPinnedIndex =
     preferences?.savedFeeds?.findIndex(
@@ -200,7 +218,11 @@ export function usePostFeedQuery(
          * some not.
          */
         if (!agent.session) {
-          assertSomePostsPassModeration(res.feed)
+          assertSomePostsPassModeration(
+            res.feed,
+            preferences?.moderationPrefs ||
+              DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+          )
         }
 
         return {
@@ -314,6 +336,7 @@ export function usePostFeedQuery(
                     userActionHistory.seen(
                       slice.items.map(item => ({
                         feedContext: slice.feedContext,
+                        reqId: slice.reqId,
                         likeCount: item.post.likeCount ?? 0,
                         repostCount: item.post.repostCount ?? 0,
                         replyCount: item.post.replyCount ?? 0,
@@ -331,6 +354,7 @@ export function usePostFeedQuery(
                     isIncompleteThread: slice.isIncompleteThread,
                     isFallbackMarker: slice.isFallbackMarker,
                     feedContext: slice.feedContext,
+                    reqId: slice.reqId,
                     reason: slice.reason,
                     feedPostUri: slice.feedPostUri,
                     items: slice.items.map((item, i) => {
@@ -483,6 +507,11 @@ function createApi({
   } else if (feedDesc.startsWith('list')) {
     const [_, list] = feedDesc.split('|')
     return new ListFeedAPI({agent, feedParams: {list}})
+  } else if (feedDesc.startsWith('posts')) {
+    const [_, uriList] = feedDesc.split('|')
+    return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
+  } else if (feedDesc === 'demo') {
+    return new DemoFeedAPI({agent})
   } else {
     // shouldnt happen
     return new FollowingFeedAPI({agent})
@@ -583,7 +612,10 @@ export function* findAllProfilesInQueryData(
   }
 }
 
-function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
+function assertSomePostsPassModeration(
+  feed: AppBskyFeedDefs.FeedViewPost[],
+  moderationPrefs: ModerationPrefs,
+) {
   // no posts in this feed
   if (feed.length === 0) return true
 
@@ -593,7 +625,7 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   for (const item of feed) {
     const moderation = moderatePost(item.post, {
       userDid: undefined,
-      prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+      prefs: moderationPrefs,
     })
 
     if (!moderation.ui('contentList').filter) {

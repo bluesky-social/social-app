@@ -15,7 +15,7 @@ import {
   TitleText,
 } from '#/screens/Onboarding/Layout'
 import {
-  ApiResponseMap,
+  type ApiResponseMap,
   Context,
   useInterestsDisplayNames,
 } from '#/screens/Onboarding/state'
@@ -160,7 +160,16 @@ export function StepInterests() {
 
       <View style={[a.w_full, a.pt_2xl]}>
         {isLoading ? (
-          <Loader size="xl" />
+          <View
+            style={[
+              a.flex_1,
+              a.mt_md,
+              a.align_center,
+              a.justify_center,
+              {minHeight: 400},
+            ]}>
+            <Loader size="xl" />
+          </View>
         ) : isError || !data ? (
           <View
             style={[
@@ -175,7 +184,7 @@ export function StepInterests() {
               <Text
                 style={[
                   a.text_md,
-                  a.font_bold,
+                  a.font_semi_bold,
                   {
                     color: t.palette.negative_900,
                   },
@@ -235,8 +244,9 @@ export function StepInterests() {
         ) : (
           <Button
             disabled={saving || !data}
-            variant="gradient"
-            color="gradient_sky"
+            testID="onboardingContinue"
+            variant="solid"
+            color="primary"
             size="large"
             label={_(msg`Continue to next step`)}
             onPress={saveInterests}>

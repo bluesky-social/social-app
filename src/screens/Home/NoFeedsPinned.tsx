@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {useOverwriteSavedFeedsMutation} from '#/state/queries/preferences'
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -75,7 +75,7 @@ export function NoFeedsPinned({
           },
         ]}>
         <View style={[a.align_center, a.gap_sm, a.pb_xl]}>
-          <Text style={[a.text_xl, a.font_bold]}>
+          <Text style={[a.text_xl, a.font_semi_bold]}>
             <Trans>Whoops!</Trans>
           </Text>
           <Text

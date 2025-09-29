@@ -1,14 +1,14 @@
 import React from 'react'
-import {ListRenderItemInfo, View} from 'react-native'
-import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {type ListRenderItemInfo, View} from 'react-native'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {CommonNavigatorParams} from '#/lib/routes/types'
+import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {cleanError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
@@ -20,15 +20,15 @@ import {Post} from '#/view/com/post/Post'
 import {List} from '#/view/com/util/List'
 import {atoms as a, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
-const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
+const renderItem = ({item}: ListRenderItemInfo<AppBskyFeedDefs.PostView>) => {
   return <Post post={item} />
 }
 
-const keyExtractor = (item: PostView, index: number) => {
+const keyExtractor = (item: AppBskyFeedDefs.PostView, index: number) => {
   return `${item.uri}-${index}`
 }
 

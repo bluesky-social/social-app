@@ -1,11 +1,11 @@
 import React, {memo, useMemo} from 'react'
 import {View} from 'react-native'
 import {
-  AppBskyActorDefs,
-  AppBskyLabelerDefs,
+  type AppBskyActorDefs,
+  type AppBskyLabelerDefs,
   moderateProfile,
-  ModerationOpts,
-  RichText as RichTextAPI,
+  type ModerationOpts,
+  type RichText as RichTextAPI,
 } from '@atproto/api'
 import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -15,10 +15,9 @@ import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {Shadow} from '#/state/cache/types'
-import {useModalControls} from '#/state/modals'
+import {type Shadow} from '#/state/cache/types'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -27,7 +26,7 @@ import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {DialogOuterProps, useDialogControl} from '#/components/Dialog'
+import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -117,19 +116,7 @@ let ProfileHeaderLabeler = ({
     }
   }, [labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
 
-  const {openModal} = useModalControls()
   const editProfileControl = useDialogControl()
-  const onPressEditProfile = React.useCallback(() => {
-    if (isWeb) {
-      // temp, while we figure out the nested dialog bug
-      openModal({
-        name: 'edit-profile',
-        profile,
-      })
-    } else {
-      editProfileControl.open()
-    }
-  }, [editProfileControl, openModal, profile])
 
   const onPressSubscribe = React.useCallback(
     () =>
@@ -192,7 +179,7 @@ let ProfileHeaderLabeler = ({
                 size="small"
                 color="secondary"
                 variant="solid"
-                onPress={onPressEditProfile}
+                onPress={editProfileControl.open}
                 label={_(msg`Edit profile`)}
                 style={a.rounded_full}>
                 <ButtonText>
@@ -227,8 +214,8 @@ let ProfileHeaderLabeler = ({
                             ? t.palette.contrast_50
                             : t.palette.contrast_25
                           : state.hovered || state.pressed
-                          ? tokens.color.temp_purple_dark
-                          : tokens.color.temp_purple,
+                            ? tokens.color.temp_purple_dark
+                            : tokens.color.temp_purple,
                       },
                     ]}>
                     <Text
@@ -238,7 +225,7 @@ let ProfileHeaderLabeler = ({
                             ? t.palette.contrast_700
                             : t.palette.white,
                         },
-                        a.font_bold,
+                        a.font_semi_bold,
                         a.text_center,
                         a.leading_tight,
                       ]}>
@@ -310,7 +297,7 @@ let ProfileHeaderLabeler = ({
                     {({hovered, focused, pressed}) => (
                       <Text
                         style={[
-                          a.font_bold,
+                          a.font_semi_bold,
                           a.text_sm,
                           t.atoms.text_contrast_medium,
                           (hovered || focused || pressed) &&

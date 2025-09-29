@@ -3,13 +3,13 @@ import {View} from 'react-native'
 import {
   Gesture,
   GestureDetector,
-  NativeGesture,
+  type NativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   interpolate,
   runOnJS,
   runOnUI,
-  SharedValue,
+  type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -20,11 +20,11 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {useEventListener} from 'expo'
-import {VideoPlayer} from 'expo-video'
+import {type VideoPlayer} from 'expo-video'
 
-import {formatTime} from '#/view/com/util/post-embeds/VideoEmbedInner/web-controls/utils'
 import {tokens} from '#/alf'
 import {atoms as a} from '#/alf'
+import {formatTime} from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/utils'
 import {Text} from '#/components/Typography'
 
 // magic number that is roughly the min height of the write reply button
@@ -179,7 +179,7 @@ export function Scrubber({
           timeStyle,
         ]}
         pointerEvents="none">
-        <Text style={[a.text_center, a.font_bold]}>
+        <Text style={[a.text_center, a.font_semi_bold]}>
           <Text style={[a.text_5xl, {fontVariant: ['tabular-nums']}]}>
             {formatTime(currentSeekTime)}
           </Text>

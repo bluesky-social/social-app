@@ -1,30 +1,33 @@
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {isNative, isWeb} from '#/platform/detection'
 import {
-  SavedFeedItem,
+  type SavedFeedItem,
   useGetPopularFeedsQuery,
   useSavedFeeds,
   useSearchPopularFeedsMutation,
 } from '#/state/queries/feed'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useComposerControls} from '#/state/shell/composer'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {FAB} from '#/view/com/util/fab/FAB'
-import {List, ListMethods} from '#/view/com/util/List'
+import {List, type ListMethods} from '#/view/com/util/List'
 import {FeedFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
@@ -102,7 +105,7 @@ type FlatlistSlice =
 
 export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
-  const {openComposer} = useComposerControls()
+  const {openComposer} = useOpenComposer()
   const {isMobile} = useWebMediaQueries()
   const [query, setQuery] = React.useState('')
   const [isPTR, setIsPTR] = React.useState(false)
@@ -596,7 +599,9 @@ function FollowingFeed() {
             fill={t.palette.white}
           />
         </View>
-        <FeedCard.TitleAndByline title={_(msg`Following`)} />
+        <FeedCard.TitleAndByline
+          title={_(msg({message: 'Following', context: 'feed-name'}))}
+        />
       </FeedCard.Header>
     </View>
   )
@@ -695,7 +700,7 @@ function FeedsSavedHeader() {
       }>
       <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} size="lg" />
       <View style={[a.flex_1, a.gap_xs]}>
-        <Text style={[a.flex_1, a.text_2xl, a.font_heavy, t.atoms.text]}>
+        <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
           <Trans>My Feeds</Trans>
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
@@ -721,7 +726,7 @@ function FeedsAboutHeader() {
         size="lg"
       />
       <View style={[a.flex_1, a.gap_sm]}>
-        <Text style={[a.flex_1, a.text_2xl, a.font_heavy, t.atoms.text]}>
+        <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
           <Trans>Discover New Feeds</Trans>
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>

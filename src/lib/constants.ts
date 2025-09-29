@@ -1,10 +1,14 @@
 import {type Insets, Platform} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type AppBskyActorDefs, BSKY_LABELER_DID} from '@atproto/api'
+
+import {type ProxyHeaderValue} from '#/state/session/agent'
+import {BLUESKY_PROXY_DID, CHAT_PROXY_DID} from '#/env'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const BSKY_SERVICE = 'https://bsky.social'
+export const BSKY_SERVICE_DID = 'did:web:bsky.social'
 export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app'
 export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
@@ -31,6 +35,7 @@ export const DISCOVER_DEBUG_DIDS: Record<string, true> = {
   'did:plc:3jpt2mvvsumj2r7eqk4gzzjz': true, // esb.lol
   'did:plc:vjug55kidv6sye7ykr5faxxn': true, // emilyliu.me
   'did:plc:tgqseeot47ymot4zro244fj3': true, // iwsmith.bsky.social
+  'did:plc:2dzyut5lxna5ljiaasgeuffz': true, // darrin.bsky.team
 }
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
@@ -88,8 +93,6 @@ export const STAGING_FEEDS = [
   `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ]
 
-export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
-
 export const POST_IMG_MAX = {
   width: 2000,
   height: 2000,
@@ -121,7 +124,6 @@ export const createHitslop = (size: number): Insets => ({
 export const HITSLOP_10 = createHitslop(10)
 export const HITSLOP_20 = createHitslop(20)
 export const HITSLOP_30 = createHitslop(30)
-export const POST_CTRL_HITSLOP = {top: 5, bottom: 10, left: 10, right: 10}
 export const LANG_DROPDOWN_HITSLOP = {top: 10, bottom: 10, left: 4, right: 4}
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
@@ -179,6 +181,10 @@ export const VIDEO_SERVICE = 'https://video.bsky.app'
 export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
 
 export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
+/**
+ * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
+ * ISO megabytes.
+ */
 export const VIDEO_MAX_SIZE = 1000 * 1000 * 100 // 100mb
 
 export const SUPPORTED_MIME_TYPES = [
@@ -192,3 +198,43 @@ export const SUPPORTED_MIME_TYPES = [
 export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]
 
 export const EMOJI_REACTION_LIMIT = 5
+
+export const urls = {
+  website: {
+    blog: {
+      initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
+    },
+  },
+}
+
+export const PUBLIC_APPVIEW = 'https://api.bsky.app'
+export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
+export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
+
+export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
+
+// temp hack for e2e - esb
+export const BLUESKY_PROXY_HEADER = {
+  value: `${BLUESKY_PROXY_DID}#bsky_appview`,
+  get() {
+    return this.value as ProxyHeaderValue
+  },
+  set(value: string) {
+    this.value = value
+  },
+}
+
+export const DM_SERVICE_HEADERS = {
+  'atproto-proxy': `${CHAT_PROXY_DID}#bsky_chat`,
+}
+
+export const BLUESKY_MOD_SERVICE_HEADERS = {
+  'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
+}
+
+export const webLinks = {
+  tos: `https://bsky.social/about/support/tos`,
+  privacy: `https://bsky.social/about/support/privacy-policy`,
+  community: `https://bsky.social/about/support/community-guidelines`,
+  communityDeprecated: `https://bsky.social/about/support/community-guidelines-deprecated`,
+}

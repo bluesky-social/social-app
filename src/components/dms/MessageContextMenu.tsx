@@ -5,9 +5,8 @@ import {type ChatBskyConvoDefs, RichText} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {useTranslate} from '#/lib/hooks/useTranslate'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useConvoActive} from '#/state/messages/convo'
@@ -39,7 +38,7 @@ export let MessageContextMenu = ({
   const deleteControl = usePromptControl()
   const reportControl = usePromptControl()
   const langPrefs = useLanguagePrefs()
-  const openLink = useOpenLink()
+  const translate = useTranslate()
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
@@ -57,18 +56,18 @@ export let MessageContextMenu = ({
   }, [_, message.text, message.facets])
 
   const onPressTranslateMessage = useCallback(() => {
-    const translatorUrl = getTranslatorLink(
-      message.text,
-      langPrefs.primaryLanguage,
-    )
-    openLink(translatorUrl, true)
+    translate(message.text, langPrefs.primaryLanguage)
 
-    logger.metric('translate', {
-      sourceLanguages: [],
-      targetLanguage: langPrefs.primaryLanguage,
-      textLength: message.text.length,
-    })
-  }, [langPrefs.primaryLanguage, message.text, openLink])
+    logger.metric(
+      'translate',
+      {
+        sourceLanguages: [],
+        targetLanguage: langPrefs.primaryLanguage,
+        textLength: message.text.length,
+      },
+      {statsig: false},
+    )
+  }, [langPrefs.primaryLanguage, message.text, translate])
 
   const onDelete = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -124,8 +123,7 @@ export let MessageContextMenu = ({
           label={_(msg`Message options`)}
           contentLabel={_(
             msg`Message from @${
-              sender?.handle ?? // should always be defined
-              'unknown'
+              sender?.handle ?? 'unknown' // should always be defined
             }: ${message.text}`,
           )}>
           {children}

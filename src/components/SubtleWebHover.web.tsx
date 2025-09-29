@@ -1,7 +1,7 @@
 import {StyleSheet, View} from 'react-native'
 
 import {isTouchDevice} from '#/lib/browser'
-import {useTheme, ViewStyleProp} from '#/alf'
+import {useTheme, type ViewStyleProp} from '#/alf'
 
 export function SubtleWebHover({
   style,
@@ -11,7 +11,7 @@ export function SubtleWebHover({
   if (isTouchDevice) {
     return null
   }
-  let opacity: number
+  let opacity = 0.5
   switch (t.name) {
     case 'dark':
       opacity = 0.4

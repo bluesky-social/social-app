@@ -1,17 +1,17 @@
-import {TextStyle} from 'react-native'
+import {type TextStyle} from 'react-native'
 
 import {isAndroid, isWeb} from '#/platform/detection'
-import {Device, device} from '#/storage'
+import {type Device, device} from '#/storage'
 
 const WEB_FONT_FAMILIES = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
 
 const factor = 0.0625 // 1 - (15/16)
 const fontScaleMultipliers: Record<Device['fontScale'], number> = {
-  '-2': 1 - factor * 3,
-  '-1': 1 - factor * 2,
-  '0': 1 - factor * 1, // default
-  '1': 1,
-  '2': 1 + factor * 1,
+  '-2': 1 - factor * 1, // unused
+  '-1': 1 - factor * 1,
+  '0': 1, // default
+  '1': 1 + factor * 1,
+  '2': 1 + factor * 1, // unused
 }
 
 export function computeFontScaleMultiplier(scale: Device['fontScale']) {
@@ -43,11 +43,11 @@ export function applyFonts(style: TextStyle, fontFamily: 'system' | 'theme') {
       style.fontFamily =
         {
           400: 'Inter-Regular',
-          500: 'Inter-Regular',
+          500: 'Inter-Medium',
           600: 'Inter-SemiBold',
-          700: 'Inter-SemiBold',
-          800: 'Inter-ExtraBold',
-          900: 'Inter-ExtraBold',
+          700: 'Inter-Bold',
+          800: 'Inter-Bold',
+          900: 'Inter-Bold',
         }[String(style.fontWeight || '400')] || 'Inter-Regular'
 
       if (style.fontStyle === 'italic') {

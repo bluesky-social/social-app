@@ -25,6 +25,7 @@ import {messages as messagesEs} from '#/locale/locales/es/messages'
 import {messages as messagesEu} from '#/locale/locales/eu/messages'
 import {messages as messagesFi} from '#/locale/locales/fi/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
+import {messages as messagesFy} from '#/locale/locales/fy/messages'
 import {messages as messagesGa} from '#/locale/locales/ga/messages'
 import {messages as messagesGd} from '#/locale/locales/gd/messages'
 import {messages as messagesGl} from '#/locale/locales/gl/messages'
@@ -40,6 +41,7 @@ import {messages as messagesNe} from '#/locale/locales/ne/messages'
 import {messages as messagesNl} from '#/locale/locales/nl/messages'
 import {messages as messagesPl} from '#/locale/locales/pl/messages'
 import {messages as messagesPt_BR} from '#/locale/locales/pt-BR/messages'
+import {messages as messagesPt_PT} from '#/locale/locales/pt-PT/messages'
 import {messages as messagesRo} from '#/locale/locales/ro/messages'
 import {messages as messagesRu} from '#/locale/locales/ru/messages'
 import {messages as messagesSv} from '#/locale/locales/sv/messages'
@@ -161,6 +163,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       ])
       break
     }
+    case AppLanguage.fy: {
+      i18n.loadAndActivate({locale, messages: messagesFy})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/fy'),
+        import('@formatjs/intl-numberformat/locale-data/fy'),
+      ])
+      break
+    }
     case AppLanguage.ga: {
       i18n.loadAndActivate({locale, messages: messagesGa})
       await Promise.all([
@@ -274,6 +284,14 @@ export async function dynamicActivate(locale: AppLanguage) {
       await Promise.all([
         import('@formatjs/intl-pluralrules/locale-data/pt'),
         import('@formatjs/intl-numberformat/locale-data/pt'),
+      ])
+      break
+    }
+    case AppLanguage.pt_PT: {
+      i18n.loadAndActivate({locale, messages: messagesPt_PT})
+      await Promise.all([
+        import('@formatjs/intl-pluralrules/locale-data/pt-PT'),
+        import('@formatjs/intl-numberformat/locale-data/pt-PT'),
       ])
       break
     }

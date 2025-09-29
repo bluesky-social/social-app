@@ -1,10 +1,12 @@
 import React from 'react'
 
-import type {ContextType, ItemContextType} from '#/components/Menu/types'
+import {type ContextType, type ItemContextType} from '#/components/Menu/types'
 
 export const Context = React.createContext<ContextType | null>(null)
+Context.displayName = 'MenuContext'
 
 export const ItemContext = React.createContext<ItemContextType | null>(null)
+ItemContext.displayName = 'MenuItemContext'
 
 export function useMenuContext() {
   const context = React.useContext(Context)
