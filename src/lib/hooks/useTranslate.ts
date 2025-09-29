@@ -21,8 +21,9 @@ export function useTranslate() {
               'https://translate.google.com',
           ).hostname === 'translate.google.com'
       } catch {}
+      
+      // Check device is Android and user's preference is Google translate.
       if (isAndroid && is_google_translate) {
-        // Check device is Android and user's preference is Google translate.
         try {
           // use getApplicationIconAsync to determine if the translate app is installed
           if (
