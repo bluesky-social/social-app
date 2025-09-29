@@ -96,7 +96,7 @@ export function ProfileStarterPacks({
       return (
         <View style={[a.px_lg, a.align_center, a.justify_center]}>
           <EmptyState
-            icon={emptyStateIcon ?? 'growth'}
+            icon={emptyStateIcon}
             message={
               emptyStateMessage ??
               _(

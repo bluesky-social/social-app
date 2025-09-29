@@ -18,7 +18,6 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {HashtagWideIcon} from '#/lib/icons'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
@@ -31,6 +30,7 @@ import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
+import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import {ListFooter} from '#/components/Lists'
 
 const LOADING = {_reactKey: '__loading__'}
@@ -150,12 +150,7 @@ export function ProfileFeedgens({
       if (item === EMPTY) {
         return (
           <EmptyState
-            icon={
-              <HashtagWideIcon
-                size={64}
-                style={{color: t.atoms.text_contrast_low.color}}
-              />
-            }
+            icon={HashtagWideIcon}
             message={_(msg`You haven't made any custom feeds yet.`)}
             textStyle={[t.atoms.text_contrast_medium, a.font_medium]}
             button={{

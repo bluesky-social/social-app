@@ -86,13 +86,7 @@ export function MyLists({
       if (item === EMPTY) {
         return (
           <EmptyState
-            icon={
-              <ListIcon
-                size="3xl"
-                fill={t.atoms.text_contrast_low.color}
-                viewBox="0 0 47 38"
-              />
-            }
+            icon={ListIcon}
             message={_(
               msg`Lists allow you to see content from your favorite people.`,
             )}

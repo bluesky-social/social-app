@@ -12,7 +12,7 @@ import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {ComposeIcon2, HashtagWideIcon} from '#/lib/icons'
+import {ComposeIcon2} from '#/lib/icons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {type NavigationProp} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
@@ -45,6 +45,7 @@ import {
   ProfileFeedHeader,
   ProfileFeedHeaderSkeleton,
 } from '#/screens/Profile/components/ProfileFeedHeader'
+import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
@@ -191,7 +192,8 @@ export function ProfileFeedScreenInner({
   const renderPostsEmpty = useCallback(() => {
     return (
       <EmptyState
-        icon={<HashtagWideIcon size="2xl" />}
+        icon={HashtagWideIcon}
+        iconSize="2xl"
         message={_(msg`This feed is empty.`)}
       />
     )

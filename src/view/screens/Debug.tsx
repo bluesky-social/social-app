@@ -4,7 +4,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
-import {HashtagWideIcon} from '#/lib/icons'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
@@ -21,6 +20,7 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ViewSelector} from '#/view/com/util/ViewSelector'
+import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
@@ -338,7 +338,8 @@ function EmptyStateView() {
 
   return (
     <EmptyState
-      icon={<HashtagWideIcon size="2xl" />}
+      icon={HashtagWideIcon}
+      iconSize="2xl"
       message={_(msg`This is an empty state`)}
     />
   )

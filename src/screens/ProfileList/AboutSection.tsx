@@ -10,7 +10,7 @@ import {ListMembers} from '#/view/com/lists/ListMembers'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
@@ -39,7 +39,6 @@ export function AboutSection({
   const {gtMobile} = useBreakpoints()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const isOwner = list.creator.did === currentAccount?.did
-  const t = useTheme()
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -97,16 +96,7 @@ export function AboutSection({
   const renderEmptyState = useCallback(() => {
     return (
       <View style={[a.gap_xl, a.align_center]}>
-        <EmptyState
-          icon={
-            <ListIcon
-              size="3xl"
-              fill={t.atoms.text_contrast_low.color}
-              viewBox="0 0 47 38"
-            />
-          }
-          message={_(msg`This list is empty.`)}
-        />
+        <EmptyState icon={ListIcon} message={_(msg`This list is empty.`)} />
         {isOwner && (
           <Button
             testID="emptyStateAddUserBtn"
@@ -122,7 +112,7 @@ export function AboutSection({
         )}
       </View>
     )
-  }, [_, t.atoms.text_contrast_low.color, isOwner, onPressAddUser])
+  }, [_, isOwner, onPressAddUser])
 
   return (
     <View>

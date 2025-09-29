@@ -15,7 +15,6 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
-import {useTheme} from '#/alf'
 import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Prompt from '#/components/Prompt'
 import {EmptyState} from '../util/EmptyState'
@@ -52,7 +51,6 @@ export function PostFeedErrorMessage({
     () => detectKnownError(feedDesc, error),
     [feedDesc, error],
   )
-  const t = useTheme()
 
   if (
     typeof knownError !== 'undefined' &&
@@ -72,7 +70,8 @@ export function PostFeedErrorMessage({
   if (knownError === KnownError.Block) {
     return (
       <EmptyState
-        icon={<WarningIcon size="2xl" fill={t.atoms.text_contrast_low.color} />}
+        icon={WarningIcon}
+        iconSize="2xl"
         message={_l(msgLingui`Posts hidden`)}
         style={{paddingVertical: 40}}
       />

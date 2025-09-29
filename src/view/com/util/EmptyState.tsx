@@ -7,7 +7,6 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, type ButtonProps, ButtonText} from '#/components/Button'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
-import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {Text} from '#/components/Typography'
 
 export type EmptyStateButtonProps = Omit<ButtonProps, 'children' | 'label'> & {
@@ -18,13 +17,15 @@ export type EmptyStateButtonProps = Omit<ButtonProps, 'children' | 'label'> & {
 export function EmptyState({
   testID,
   icon,
+  iconSize = '3xl',
   message,
   style,
   textStyle,
   button,
 }: {
   testID?: string
-  icon: 'growth' | React.ReactElement
+  icon?: React.ComponentType<any> | React.ReactElement
+  iconSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl'
   message: string
   style?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
@@ -32,24 +33,33 @@ export function EmptyState({
 }) {
   const pal = usePalette('default')
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const iconSize = isTabletOrDesktop ? 64 : 48
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
   const placeholderIcon = (
-    <EditIcon size="3xl" fill={t.atoms.text_contrast_low.color} />
+    <EditIcon size="2xl" fill={t.atoms.text_contrast_low.color} />
   )
 
   const renderIcon = () => {
+    if (!icon) {
+      return placeholderIcon
+    }
+
     if (typeof icon === 'object' && React.isValidElement(icon)) {
       return icon
     }
 
-    if (icon === 'growth') {
-      return <Growth width={iconSize} fill={pal.colors.emptyStateIcon} />
+    if (typeof icon === 'function') {
+      const IconComponent = icon
+      return (
+        <IconComponent
+          size={iconSize}
+          style={{color: t.atoms.text_contrast_low.color}}
+        />
+      )
     }
 
-    return icon || placeholderIcon
+    return placeholderIcon
   }
 
   return (
@@ -65,10 +75,7 @@ export function EmptyState({
           {height: 80, width: 80},
           React.isValidElement(icon)
             ? a.bg_transparent
-            : [
-                isTabletOrDesktop && {width: 100, height: 100, marginTop: 50},
-                pal.viewLight,
-              ],
+            : [isTabletOrDesktop && {width: 100, height: 100, marginTop: 50}],
         ]}>
         {renderIcon()}
       </View>
