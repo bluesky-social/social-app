@@ -1081,18 +1081,4 @@
       </div>
     </section>
   </body>
-
-  <!-- reload image on click -->
-  <script>
-    document.querySelectorAll('.item[data-url]').forEach(item => {
-      const url = item.getAttribute('data-url')
-      if (url) {
-        const postContainer = document.createElement('div')
-        item.insertBefore(postContainer, item.firstChild)
-        render(<Post url={url} />, postContainer)
-      }
-    })
-
-    window.addEventListener('DOMContentLoaded', renderPosts)
-  </script>
 </html>
