@@ -11,6 +11,7 @@ import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useAgent, useSession} from '#/state/session'
+import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {AvatarStack} from '#/screens/Search/components/StarterPackCard'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -19,7 +20,8 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import * as bsky from '#/types/bsky'
-import {bulkWriteFollows} from '../util'
+
+const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
 
 export function StarterPackCard({
   view,
@@ -58,6 +60,7 @@ export function StarterPackCard({
     const dids = listItems
       .filter(
         li =>
+          li.subject.did !== IGNORED_ACCOUNT &&
           li.subject.did !== currentAccount?.did &&
           !isBlockedOrBlocking(li.subject) &&
           !isMuted(li.subject) &&
