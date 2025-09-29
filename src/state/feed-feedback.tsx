@@ -12,7 +12,6 @@ import throttle from 'lodash.throttle'
 
 import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/hooks/useCleanError'
-import {logEvent} from '#/lib/statsig/statsig'
 import {Logger} from '#/logger'
 import {
   type FeedSourceFeedInfo,
@@ -78,11 +77,20 @@ export function useFeedFeedback(
   const aggregatedStats = useRef<AggregatedStats | null>(null)
   const throttledFlushAggregatedStats = useMemo(
     () =>
-      throttle(() => flushToStatsig(aggregatedStats.current), 45e3, {
-        leading: true, // The outer call is already throttled somewhat.
-        trailing: true,
-      }),
-    [],
+      throttle(
+        () =>
+          flushToStatsig(
+            aggregatedStats.current,
+            feed?.feedDescriptor ?? 'unknown',
+            isDiscover,
+          ),
+        45e3,
+        {
+          leading: true, // The outer call is already throttled somewhat.
+          trailing: true,
+        },
+      ),
+    [feed?.feedDescriptor, isDiscover],
   )
 
   const sendToFeedNoDelay = useCallback(() => {
@@ -123,10 +131,19 @@ export function useFeedFeedback(
     sendOrAggregateInteractionsForStats(
       aggregatedStats.current,
       interactionsToSend,
+      feed?.feedDescriptor ?? 'unknown',
+      isDiscover,
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, proxyDid, enabled, feed])
+  }, [
+    agent,
+    throttledFlushAggregatedStats,
+    proxyDid,
+    enabled,
+    feed,
+    isDiscover,
+  ])
 
   const sendToFeed = useMemo(
     () =>
@@ -259,19 +276,37 @@ function createAggregatedStats(): AggregatedStats {
 function sendOrAggregateInteractionsForStats(
   stats: AggregatedStats,
   interactions: AppBskyFeedDefs.Interaction[],
+  feed: string,
+  isDiscover: boolean,
 ) {
   for (let interaction of interactions) {
     switch (interaction.event) {
       // Pressing "Show more" / "Show less" is relatively uncommon so we won't aggregate them.
       // This lets us send the feed context together with them.
       case 'app.bsky.feed.defs#requestLess': {
-        logEvent('discover:showLess', {
+        if (isDiscover) {
+          logger.metric(
+            'discover:showLess',
+            {feedContext: interaction.feedContext ?? ''},
+            {statsig: false},
+          )
+        }
+        logger.metric('feed:showLess', {
+          feed,
           feedContext: interaction.feedContext ?? '',
         })
         break
       }
       case 'app.bsky.feed.defs#requestMore': {
-        logEvent('discover:showMore', {
+        if (isDiscover) {
+          logger.metric(
+            'discover:showMore',
+            {feedContext: interaction.feedContext ?? ''},
+            {statsig: false},
+          )
+        }
+        logger.metric('feed:showMore', {
+          feed,
           feedContext: interaction.feedContext ?? '',
         })
         break
@@ -301,28 +336,52 @@ function sendOrAggregateInteractionsForStats(
   }
 }
 
-function flushToStatsig(stats: AggregatedStats | null) {
+function flushToStatsig(
+  stats: AggregatedStats | null,
+  feedDescriptor: string,
+  isDiscover: boolean,
+) {
   if (stats === null) {
     return
   }
 
   if (stats.clickthroughCount > 0) {
-    logEvent('discover:clickthrough', {
+    if (isDiscover) {
+      logger.metric(
+        'discover:clickthrough',
+        {count: stats.clickthroughCount},
+        {statsig: false},
+      )
+    }
+    logger.metric('feed:clickthrough', {
       count: stats.clickthroughCount,
+      feed: feedDescriptor,
     })
     stats.clickthroughCount = 0
   }
 
   if (stats.engagedCount > 0) {
-    logEvent('discover:engaged', {
+    if (isDiscover) {
+      logger.metric(
+        'discover:engaged',
+        {count: stats.engagedCount},
+        {statsig: false},
+      )
+    }
+    logger.metric('feed:engaged', {
       count: stats.engagedCount,
+      feed: feedDescriptor,
     })
     stats.engagedCount = 0
   }
 
   if (stats.seenCount > 0) {
-    logEvent('discover:seen', {
+    if (isDiscover) {
+      logger.metric('discover:seen', {count: stats.seenCount}, {statsig: false})
+    }
+    logger.metric('feed:seen', {
       count: stats.seenCount,
+      feed: feedDescriptor,
     })
     stats.seenCount = 0
   }

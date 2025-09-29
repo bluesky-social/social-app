@@ -191,6 +191,27 @@ export type MetricEvents = {
     count: number
   }
 
+  'feed:showMore': {
+    feed: string
+    feedContext: string
+  }
+  'feed:showLess': {
+    feed: string
+    feedContext: string
+  }
+  'feed:clickthrough': {
+    feed: string
+    count: number
+  }
+  'feed:engaged': {
+    feed: string
+    count: number
+  }
+  'feed:seen': {
+    feed: string
+    count: number
+  }
+
   'composer:gif:open': {}
   'composer:gif:select': {}
 
