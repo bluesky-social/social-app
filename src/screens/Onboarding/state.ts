@@ -18,6 +18,7 @@ export type OnboardingState = {
     | 'suggested-starterpacks'
     | 'finished'
   activeStepIndex: number
+  stepTransitionDirection: 'Forward' | 'Backward'
 
   interestsStepResults: {
     selectedInterests: string[]
@@ -137,6 +138,7 @@ export const initialState: OnboardingState = {
   totalSteps: 3,
   activeStep: 'profile',
   activeStepIndex: 1,
+  stepTransitionDirection: 'Forward',
 
   interestsStepResults: {
     selectedInterests: [],
@@ -190,6 +192,7 @@ export function reducer(
         next.activeStep = nextStep
         next.activeStepIndex = nextIndex + 1
       }
+      next.stepTransitionDirection = 'Forward'
       break
     }
     case 'prev': {
@@ -199,6 +202,7 @@ export function reducer(
         next.activeStep = prevStep
         next.activeStepIndex = prevIndex + 1
       }
+      next.stepTransitionDirection = 'Backward'
       break
     }
     case 'finish': {
