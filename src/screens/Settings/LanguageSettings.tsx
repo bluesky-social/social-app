@@ -1,4 +1,4 @@
-import {useCallback, useMemo} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -10,6 +10,7 @@ import {
 } from '#/lib/routes/types'
 import {languageName, sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
+import * as persisted from '#/state/persisted'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -68,6 +69,21 @@ export function LanguageSettingsScreen({}: Props) {
         .join(', ')
     )
   }, [langPrefs.appLanguage, langPrefs.contentLanguages])
+
+  const translation_services = [
+    {
+      label: 'Google',
+      value: 'https://translate.google.com/?sl=auto&tl=%lang%&text=%text%',
+    },
+    {
+      label: 'Kagi',
+      value: 'https://translate.kagi.com/?from=auto&to=%lang%&text=%text%',
+    },
+  ]
+
+  const [translation_service, set_translation_service] = useState(
+    persisted.get('translationService'),
+  )
 
   return (
     <Layout.Screen testID="PreferencesLanguagesScreen">
@@ -178,6 +194,43 @@ export function LanguageSettingsScreen({}: Props) {
                     : _(msg`Select languages`)}
                 </ButtonText>
               </Button>
+            </View>
+          </SettingsList.Group>
+          <SettingsList.Divider />
+          <SettingsList.Group iconInset={false}>
+            <SettingsList.ItemText>
+              <Trans>Translation Service</Trans>
+            </SettingsList.ItemText>
+            <View style={[a.gap_md]}>
+              <Text style={[a.leading_snug]}>
+                <Trans>Select your preferred service for translations.</Trans>
+              </Text>
+
+              <Select.Root
+                value={translation_service}
+                onValueChange={e => {
+                  set_translation_service(e)
+                  persisted.write('translationService', e)
+                }}>
+                <Select.Trigger label={_(msg`Select app translation service`)}>
+                  <Select.ValueText />
+                  <Select.Icon />
+                </Select.Trigger>
+                <Select.Content
+                  renderItem={({label, value}) => (
+                    <Select.Item value={value} label={label}>
+                      <Select.ItemIndicator />
+                      <Select.ItemText>
+                        {label}{' '}
+                        <Text style={{color: 'gray'}}>
+                          ({new URL(value).hostname})
+                        </Text>
+                      </Select.ItemText>
+                    </Select.Item>
+                  )}
+                  items={translation_services}
+                />
+              </Select.Root>
             </View>
           </SettingsList.Group>
         </SettingsList.Container>

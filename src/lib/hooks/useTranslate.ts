@@ -3,6 +3,7 @@ import * as IntentLauncher from 'expo-intent-launcher'
 
 import {getTranslatorLink} from '#/locale/helpers'
 import {isAndroid} from '#/platform/detection'
+import * as persisted from '#/state/persisted'
 import {useOpenLink} from './useOpenLink'
 
 export function useTranslate() {
@@ -11,7 +12,17 @@ export function useTranslate() {
   return useCallback(
     async (text: string, language: string) => {
       const translateUrl = getTranslatorLink(text, language)
-      if (isAndroid) {
+      let is_google_translate = true
+      // Put URL() logic inside a try/catch, because if the URL corrupts, the app will crash.
+      try {
+        is_google_translate =
+          new URL(
+            persisted.get('translationService') ||
+              'https://translate.google.com',
+          ).hostname === 'translate.google.com'
+      } catch {}
+      if (isAndroid && is_google_translate) {
+        // Check device is Android and user's preference is Google translate.
         try {
           // use getApplicationIconAsync to determine if the translate app is installed
           if (

@@ -127,7 +127,9 @@ const schema = z.object({
   mutedThreads: z.array(z.string()),
   trendingDisabled: z.boolean().optional(),
   trendingVideoDisabled: z.boolean().optional(),
+  translationService: z.string().optional(),
 })
+
 export type Schema = z.infer<typeof schema>
 
 export const defaults: Schema = {
@@ -174,6 +176,8 @@ export const defaults: Schema = {
   subtitlesEnabled: true,
   trendingDisabled: false,
   trendingVideoDisabled: false,
+  translationService:
+    'https://translate.google.com/?sl=auto&tl=%lang%&text=%text%',
 }
 
 export function tryParse(rawData: string): Schema | undefined {
