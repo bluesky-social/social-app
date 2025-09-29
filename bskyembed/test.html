@@ -30,9 +30,14 @@
         transition: opacity 0.2s ease-in-out;
       }
     </style>
+    <script>
+      // This overrides the default embed URL that the script uses
+      // (https://embed.bsky.app)
+      window.EMBED_URL = 'http://localhost:8100'
+    </script>
     <script
       async
-      src="http://localhost:5173/static/embed.js"
+      src="http://localhost:8100/static/embed.js"
       charset="utf-8"></script>
   </head>
   <body class="p12">
@@ -1075,18 +1080,4 @@
       </div>
     </section>
   </body>
-
-  <!-- reload image on click -->
-  <script>
-    document.querySelectorAll('.item[data-url]').forEach(item => {
-      const url = item.getAttribute('data-url')
-      if (url) {
-        const postContainer = document.createElement('div')
-        item.insertBefore(postContainer, item.firstChild)
-        render(<Post url={url} />, postContainer)
-      }
-    })
-
-    window.addEventListener('DOMContentLoaded', renderPosts)
-  </script>
 </html>

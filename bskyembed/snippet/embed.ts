@@ -3,9 +3,10 @@ interface Window {
   bluesky: {
     scan: (element?: Pick<Element, 'querySelectorAll'>) => void
   }
+  EMBED_URL?: string
 }
 
-const EMBED_URL = 'https://embed.bsky.app'
+const EMBED_URL = window.EMBED_URL || 'https://embed.bsky.app'
 
 window.bluesky = window.bluesky || {
   scan,
