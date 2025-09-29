@@ -13,6 +13,7 @@ import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {Portal} from '#/components/Portal'
+import {ScreenTransition} from '#/components/ScreenTransition'
 import {ENV} from '#/env'
 import {StepSuggestedAccounts} from './StepSuggestedAccounts'
 import {StepSuggestedStarterpacks} from './StepSuggestedStarterpacks'
@@ -69,15 +70,19 @@ export function Onboarding() {
               [state, dispatch, interestsDisplayNames],
             )}>
             <Layout>
-              {state.activeStep === 'profile' && <StepProfile />}
-              {state.activeStep === 'interests' && <StepInterests />}
-              {state.activeStep === 'suggested-accounts' && (
-                <StepSuggestedAccounts />
-              )}
-              {state.activeStep === 'suggested-starterpacks' && (
-                <StepSuggestedStarterpacks />
-              )}
-              {state.activeStep === 'finished' && <StepFinished />}
+              <ScreenTransition
+                key={state.activeStep}
+                direction={state.stepTransitionDirection}>
+                {state.activeStep === 'profile' && <StepProfile />}
+                {state.activeStep === 'interests' && <StepInterests />}
+                {state.activeStep === 'suggested-accounts' && (
+                  <StepSuggestedAccounts />
+                )}
+                {state.activeStep === 'suggested-starterpacks' && (
+                  <StepSuggestedStarterpacks />
+                )}
+                {state.activeStep === 'finished' && <StepFinished />}
+              </ScreenTransition>
             </Layout>
           </Context.Provider>
         </OnboardingHeaderSlot.Provider>
