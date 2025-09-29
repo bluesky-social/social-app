@@ -29,7 +29,7 @@ interface LabelsSectionProps {
   labelerError: Error | null
   moderationOpts: ModerationOpts
   scrollElRef: ListRef
-  headerHeight: number
+  headerOffset: number
   isFocused: boolean
   setScrollViewTag: (tag: number | null) => void
 }
@@ -41,20 +41,18 @@ export function ProfileLabelsSection({
   labelerError,
   moderationOpts,
   scrollElRef,
-  headerHeight,
+  headerOffset,
   isFocused,
   setScrollViewTag,
 }: LabelsSectionProps) {
   const t = useTheme()
 
   const onScrollToTop = useCallback(() => {
-    // @ts-expect-error TODO fix this
-    scrollElRef.current?.scrollTo({
+    scrollElRef.current?.scrollToOffset({
       animated: isNative,
-      x: 0,
-      y: -headerHeight,
+      offset: -headerOffset,
     })
-  }, [scrollElRef, headerHeight])
+  }, [scrollElRef, headerOffset])
 
   useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
@@ -126,7 +124,7 @@ export function ProfileLabelsSection({
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={a.px_xl}
-        headerOffset={headerHeight}
+        headerOffset={headerOffset}
         progressViewOffset={ios(0)}
         ListHeaderComponent={
           <LabelerListHeader
@@ -139,7 +137,7 @@ export function ProfileLabelsSection({
         }
         ListFooterComponent={
           <ListFooter
-            height={headerHeight + 180}
+            height={headerOffset + 180}
             style={a.border_transparent}
           />
         }
