@@ -28,9 +28,21 @@ import {useAgent} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
-export const DIRECT_FEEDBACK_INTERACTIONS = new Set<
+export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
   AppBskyFeedDefs.Interaction['event']
->(['app.bsky.feed.defs#requestLess', 'app.bsky.feed.defs#requestMore'])
+>([
+  // These are explicit actions and are therefore fine to send.
+  'app.bsky.feed.defs#requestLess',
+  'app.bsky.feed.defs#requestMore',
+  // These can be inferred from the firehose and are therefore fine to send.
+  'app.bsky.feed.defs#interactionLike',
+  'app.bsky.feed.defs#interactionQuote',
+  'app.bsky.feed.defs#interactionReply',
+  'app.bsky.feed.defs#interactionRepost',
+  // This can be inferred from pagination requests for everything except the very last page
+  // so it is fine to send. It is crucial for third party algorithmic feeds to receive these.
+  'app.bsky.feed.defs#interactionSeen',
+])
 
 const logger = Logger.create(Logger.Context.FeedFeedback)
 
@@ -228,7 +240,7 @@ function isInteractionAllowed(
     return false
   }
   const isDiscover = isDiscoverFeed(feed.feedDescriptor)
-  return isDiscover ? true : DIRECT_FEEDBACK_INTERACTIONS.has(interaction)
+  return isDiscover ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)
 }
 
 function toString(interaction: AppBskyFeedDefs.Interaction): string {
