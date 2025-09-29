@@ -145,8 +145,8 @@ export function useOTAUpdates() {
         } else {
           logger.debug('No update available.')
         }
-      } catch (e) {
-        logger.error('OTA Update Error', {error: `${e}`})
+      } catch (err) {
+        logger.error('OTA Update Error', {safeMessage: err})
       }
     }, 10e3)
   }, [])
@@ -154,8 +154,8 @@ export function useOTAUpdates() {
   const onIsTestFlight = React.useCallback(async () => {
     try {
       await updateTestflight()
-    } catch (e: any) {
-      logger.error('Internal OTA Update Error', {error: `${e}`})
+    } catch (err: any) {
+      logger.error('Internal OTA Update Error', {safeMessage: err})
     }
   }, [])
 
