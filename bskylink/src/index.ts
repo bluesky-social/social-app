@@ -16,7 +16,9 @@ export * from './logger.js'
 
 export class LinkService {
   public server?: http.Server
+  public metricsServer?: http.Server
   private terminator?: HttpTerminator
+  private metricsTerminator?: HttpTerminator
 
   constructor(
     public app: express.Application,
@@ -38,15 +40,28 @@ export class LinkService {
   }
 
   async start() {
+    // Start main HTTP server
     this.server = this.app.listen(this.ctx.cfg.service.port)
     this.server.keepAliveTimeout = 90000
     this.terminator = createHttpTerminator({server: this.server})
     await events.once(this.server, 'listening')
+
+    // Start metrics server
+    const metricsApp = express()
+    metricsApp.get('/metrics', (req, res) => {
+      res.set('Content-Type', this.ctx.metrics.register.contentType)
+      res.end(this.ctx.metrics.register.metrics())
+    })
+
+    this.metricsServer = metricsApp.listen(this.ctx.cfg.service.metricsPort)
+    this.metricsTerminator = createHttpTerminator({server: this.metricsServer})
+    await events.once(this.metricsServer, 'listening')
   }
 
   async destroy() {
     this.ctx.abortController.abort()
     await this.terminator?.terminate()
+    await this.metricsTerminator?.terminate()
     await this.ctx.db.close()
   }
 }
