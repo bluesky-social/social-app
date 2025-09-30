@@ -837,3 +837,47 @@ export function ButtonIcon({
     </View>
   )
 }
+
+export type StackedButtonProps = Omit<
+  ButtonProps,
+  keyof VariantProps | 'children'
+> &
+  Pick<VariantProps, 'color'> & {
+    children: React.ReactNode
+    icon: React.ComponentType<SVGIconProps>
+  }
+
+export function StackedButton({children, ...props}: StackedButtonProps) {
+  return (
+    <Button
+      {...props}
+      size="tiny"
+      style={[
+        a.flex_col,
+        {
+          height: 72,
+          paddingHorizontal: 16,
+          borderRadius: 20,
+          gap: 4,
+        },
+        props.style,
+      ]}>
+      <StackedButtonInnerText icon={props.icon}>
+        {children}
+      </StackedButtonInnerText>
+    </Button>
+  )
+}
+
+function StackedButtonInnerText({
+  children,
+  icon: Icon,
+}: Pick<StackedButtonProps, 'icon' | 'children'>) {
+  const textStyles = useSharedButtonTextStyles()
+  return (
+    <>
+      <Icon width={24} fill={textStyles.color} />
+      <ButtonText>{children}</ButtonText>
+    </>
+  )
+}
