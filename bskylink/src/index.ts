@@ -48,9 +48,14 @@ export class LinkService {
 
     // Start metrics server
     const metricsApp = express()
-    metricsApp.get('/metrics', (req, res) => {
-      res.set('Content-Type', this.ctx.metrics.register.contentType)
-      res.end(this.ctx.metrics.register.metrics())
+    metricsApp.get('/metrics', async (_req, res) => {
+      try {
+        const metrics = await this.ctx.metrics.getRegistry().metrics()
+        res.set('Content-Type', this.ctx.metrics.getRegistry().contentType)
+        res.end(metrics)
+      } catch (error) {
+        res.status(500).end('Error collecting metrics')
+      }
     })
 
     this.metricsServer = metricsApp.listen(this.ctx.cfg.service.metricsPort)
