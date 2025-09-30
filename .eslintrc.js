@@ -37,6 +37,7 @@ module.exports = {
           'Toast.Action',
           'AgeAssuranceAdmonition',
           'Span',
+          'StackedButton',
         ],
         impliedTextProps: [],
         suggestedTextWrappers: {
