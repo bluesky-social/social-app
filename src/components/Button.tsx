@@ -274,18 +274,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
         } else if (color === 'primary_subtle') {
           if (!disabled) {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_50,
-                dim: t.palette.primary_100,
-                dark: t.palette.primary_100,
-              }),
+              backgroundColor: t.palette.primary_50,
             })
             hoverStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_100,
-                dim: t.palette.primary_200,
-                dark: t.palette.primary_200,
-              }),
+              backgroundColor: t.palette.primary_100,
             })
           } else {
             baseStyles.push({
@@ -295,18 +287,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
         } else if (color === 'negative_subtle') {
           if (!disabled) {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_50,
-                dim: t.palette.negative_100,
-                dark: t.palette.negative_100,
-              }),
+              backgroundColor: t.palette.negative_50,
             })
             hoverStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_100,
-                dim: t.palette.negative_200,
-                dark: t.palette.negative_200,
-              }),
+              backgroundColor: t.palette.negative_100,
             })
           } else {
             baseStyles.push({
@@ -618,37 +602,21 @@ export function useSharedButtonTextStyles() {
       } else if (color === 'primary_subtle') {
         if (!disabled) {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.primary_600,
-              dim: t.palette.primary_800,
-              dark: t.palette.primary_800,
-            }),
+            color: t.palette.primary_600,
           })
         } else {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.primary_200,
-              dim: t.palette.primary_200,
-              dark: t.palette.primary_200,
-            }),
+            color: t.palette.primary_200,
           })
         }
       } else if (color === 'negative_subtle') {
         if (!disabled) {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.negative_600,
-              dim: t.palette.negative_800,
-              dark: t.palette.negative_800,
-            }),
+            color: t.palette.negative_600,
           })
         } else {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.negative_200,
-              dim: t.palette.negative_200,
-              dark: t.palette.negative_200,
-            }),
+            color: t.palette.negative_200,
           })
         }
       }
@@ -755,7 +723,7 @@ export function useSharedButtonTextStyles() {
     } else if (size === 'small') {
       baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_xs, a.leading_snug, a.font_semi_bold)
     }
 
     return StyleSheet.flatten(baseStyles)
