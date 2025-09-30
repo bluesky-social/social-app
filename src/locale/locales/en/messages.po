@@ -2805,10 +2805,6 @@ msgstr ""
 msgid "Dismiss this section"
 msgstr ""
 
-#: src/components/Toast/index.web.tsx:81
-msgid "Dismiss toast"
-msgstr ""
-
 #: src/screens/Settings/AccessibilitySettings.tsx:69
 #: src/screens/Settings/AccessibilitySettings.tsx:74
 msgid "Display larger alt text badges"
@@ -5693,7 +5689,7 @@ msgstr ""
 msgid "No results for \"{0}\"."
 msgstr ""
 
-#: src/components/Lists.tsx:190
+#: src/components/Lists.tsx:189
 msgid "No results found"
 msgstr ""
 
@@ -5926,7 +5922,7 @@ msgstr ""
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr ""
 
-#: src/components/Lists.tsx:95
+#: src/components/Lists.tsx:94
 msgid "Oops, something went wrong!"
 msgstr ""
 
@@ -6159,7 +6155,7 @@ msgstr ""
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
 msgstr ""
 
-#: src/components/Lists.tsx:191
+#: src/components/Lists.tsx:190
 #: src/view/screens/NotFound.tsx:47
 msgid "Page not found"
 msgstr ""
@@ -6588,7 +6584,7 @@ msgid "Press to attempt reconnection"
 msgstr ""
 
 #: src/components/Error.tsx:60
-#: src/components/Lists.tsx:100
+#: src/components/Lists.tsx:99
 #: src/screens/Messages/components/MessageListError.tsx:24
 #: src/screens/Signup/BackNextButtons.tsx:47
 msgid "Press to retry"
@@ -7352,10 +7348,14 @@ msgstr ""
 #: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: src/components/Lists.tsx:110
 #: src/components/moderation/ReportDialog/index.tsx:232
 =======
 #: src/components/Lists.tsx:111
+=======
+#: src/components/Lists.tsx:110
+>>>>>>> 7f27ec0c4 (chore: revert messages.po changes)
 #: src/components/moderation/ReportDialog/index.tsx:229
 >>>>>>> d20c48f3f (Nightly source-language update)
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
@@ -8297,7 +8297,7 @@ msgstr ""
 msgid "Something went wrong, please try again."
 msgstr ""
 
-#: src/components/Lists.tsx:175
+#: src/components/Lists.tsx:174
 msgid "Something went wrong!"
 msgstr ""
 
@@ -10160,7 +10160,7 @@ msgstr ""
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
-#: src/components/Lists.tsx:195
+#: src/components/Lists.tsx:194
 #: src/view/screens/NotFound.tsx:50
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr ""
@@ -10533,7 +10533,7 @@ msgstr ""
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr ""
 
-#: src/components/Lists.tsx:58
+#: src/components/Lists.tsx:57
 msgid "You have reached the end"
 msgstr ""
 
