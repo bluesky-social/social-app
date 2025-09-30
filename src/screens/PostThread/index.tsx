@@ -193,12 +193,11 @@ export function PostThread({uri}: {uri: string}) {
        * will give us a _positive_ offset, which will scroll the anchor post
        * back _up_ to the top of the screen.
        */
-      list.scrollToOffset({
-        offset: anchorOffsetTop - headerHeight,
-      })
+      const offset = anchorOffsetTop - headerHeight
+      list.scrollToOffset({offset})
 
       /*
-       * After the second pass, `deferParents` will be `false`, and we need
+       * After we manage to do a positive adjustment, we need
        * to ensure this doesn't run again until scroll handling is requested
        * again via `shouldHandleScroll.current === true` and a params
        * change via `prepareForParamsUpdate`.
@@ -210,7 +209,7 @@ export function PostThread({uri}: {uri: string}) {
        * subsequent size changes unrelated to a params change (like pagination)
        * do not affect scroll.
        */
-      if (!deferParents || isRoot) shouldHandleScroll.current = false
+      if (offset > 0 || isRoot) shouldHandleScroll.current = false
     }
   })
 
