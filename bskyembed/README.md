@@ -1,31 +1,26 @@
 ## Run / Test
 
-### Prep
+Install dependencies:
 
-#### In `/bskyembed`
+```bash
+cd bskyembed
+yarn
+```
 
-    # install deps
-    yarn
+Run the dev server:
 
-#### In `/` (root)
+```bash
+yarn dev
+```
 
-Make sure to follow main setup instructions first.
+You can see the embed homepage at http://localhost:5173
 
-    # generate embed static files
-    yarn build-embed
+### Testbed
 
-### Running
+In another terminal window, run the snippet dev script:
 
-#### In `/bskyweb`
+```bash
+yarn dev-snippet
+```
 
-    # run embedr service
-    make run-dev-embedr
-
-#### In `/bskyembed`
-
-    # run dev server
-    yarn dev
-
-Web server will be available at http://localhost:5173.
-
-Navigate to http://localhost:5173/test for a comprehensive live list of embed test cases.
+Then, open `file:/<your files>/social-app/bskyembed/test.html` in your browser.
