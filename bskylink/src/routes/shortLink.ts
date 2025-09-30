@@ -11,10 +11,7 @@ export default function (ctx: AppContext, app: Express) {
     '/:linkId',
     handler(async (req, res) => {
       const addMetrics = (statusCode: number) => {
-        ctx.metrics
-          .getCounter('shortLinkRequests')
-          .labels('GET', statusCode.toString())
-          .inc()
+        ctx.shortLinkRequests.labels('GET', statusCode.toString()).inc()
       }
 
       const linkId = req.params.linkId

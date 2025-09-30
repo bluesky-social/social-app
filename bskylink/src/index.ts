@@ -3,7 +3,9 @@ import type http from 'node:http'
 
 import cors from 'cors'
 import express from 'express'
+import promBundle from 'express-prom-bundle'
 import {createHttpTerminator, type HttpTerminator} from 'http-terminator'
+import {register} from 'prom-client'
 
 import {type Config} from './config.js'
 import {AppContext} from './context.js'
@@ -31,10 +33,28 @@ export class LinkService {
     app.use(i18n.init)
 
     const ctx = await AppContext.fromConfig(cfg)
-    app = routes(ctx, app)
-    app.use(errorHandler)
 
-    ctx.metrics.registerExpressMetrics(app)
+    // Add Prometheus middleware for automatic HTTP instrumentation
+    const metricsMiddleware = promBundle({
+      includeMethod: true,
+      includePath: true,
+      includeStatusCode: true,
+      includeUp: true,
+      promClient: {
+        collectDefaultMetrics: {},
+      },
+      autoregister: false,
+      normalizePath: req => {
+        if (req.route) {
+          return req.route.path
+        }
+        return '<unmatched>'
+      },
+    })
+    app.use(metricsMiddleware)
+
+    routes(ctx, app)
+    app.use(errorHandler)
 
     return new LinkService(app, ctx)
   }
@@ -50,8 +70,8 @@ export class LinkService {
     const metricsApp = express()
     metricsApp.get('/metrics', async (_req, res) => {
       try {
-        const metrics = await this.ctx.metrics.getRegistry().metrics()
-        res.set('Content-Type', this.ctx.metrics.getRegistry().contentType)
+        const metrics = await register.metrics()
+        res.set('Content-Type', register.contentType)
         res.end(metrics)
       } catch (error) {
         res.status(500).end('Error collecting metrics')

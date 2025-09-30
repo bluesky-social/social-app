@@ -50,12 +50,8 @@ export class SafelinkClient {
       const end = process.hrtime.bigint()
       const respTimeMs = Number(end - start) / 1_000_000 // ns to ms :3
 
-      this.ctx.metrics
-        .getCounter('safeLinkLookups')
-        .labels(status, cached ? 'yes' : 'no')
-        .inc()
-      this.ctx.metrics
-        .getHistogram('safeLinkLookupDuration')
+      this.ctx.safeLinkLookups.labels(status, cached ? 'yes' : 'no').inc()
+      this.ctx.safeLinkLookupDuration
         .labels(status, cached ? 'yes' : 'no')
         .observe(respTimeMs)
     }
