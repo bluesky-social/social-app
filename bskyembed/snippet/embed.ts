@@ -3,10 +3,17 @@ interface Window {
   bluesky: {
     scan: (element?: Pick<Element, 'querySelectorAll'>) => void
   }
-  EMBED_URL?: string
+  BSKY_DEV_EMBED_URL?: string
 }
 
-const EMBED_URL = window.EMBED_URL || 'https://embed.bsky.app'
+/**
+ * Allow url to be overwritten during development. `file:` protcol check
+ * should mean it won't ever get accidentally overridden in production
+ */
+const EMBED_URL =
+  window.location.protocol === 'file:' && window.BSKY_DEV_EMBED_URL
+    ? window.BSKY_DEV_EMBED_URL
+    : 'https://embed.bsky.app'
 
 window.bluesky = window.bluesky || {
   scan,
