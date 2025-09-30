@@ -322,6 +322,7 @@ class BskyAppAgent extends BskyAgent {
     // Now the agent is ready.
     const account = agentToSessionAccountOrThrow(this)
     this.persistSessionHandler = event => {
+      console.log('persistSessionHandler', {event})
       onSessionChange(this, account.did, event)
       if (event !== 'create' && event !== 'update') {
         addSessionErrorLog(account.did, event)
