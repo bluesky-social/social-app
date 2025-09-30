@@ -13,6 +13,7 @@ import {useLingui} from '@lingui/react'
 import {DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {
@@ -150,8 +151,10 @@ export function WizardProfileCard({
     if (profile.did === targetProfileDid) return
 
     if (!included) {
+      logger.metric('starterPack:addUser', {})
       dispatch({type: 'AddProfile', profile})
     } else {
+      logger.metric('starterPack:removeUser', {})
       dispatch({type: 'RemoveProfile', profileDid: profile.did})
     }
   }
