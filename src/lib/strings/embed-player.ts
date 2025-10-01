@@ -464,8 +464,8 @@ export function parseEmbedPlayerFromUrl(
 
     const path_components = urlp.pathname.slice(1, i + 1).split('/')
     if (path_components.length === 2) {
-      const [scan_embed_type, scan_id] =  path_components;
-      if (scan_embed_type === 'scan') { 
+      const [scan_embed_type, scan_id] = path_components
+      if (scan_embed_type === 'scan') {
         return {
           type: 'scaniverse_model',
           source: 'scaniverse',

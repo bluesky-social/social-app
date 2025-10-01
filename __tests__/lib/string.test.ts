@@ -817,26 +817,23 @@ describe('parseEmbedPlayerFromUrl', () => {
     undefined,
     undefined,
 
-
-
-
     undefined,
     undefined,
     undefined,
     {
       type: 'scaniverse_model',
       source: 'scaniverse',
-      playerUri: 'https://scaniverse.com/scan/complete?embed=1'
+      playerUri: 'https://scaniverse.com/scan/complete?embed=1',
     },
     {
       type: 'scaniverse_model',
       source: 'scaniverse',
-      playerUri: 'https://scaniverse.com/scan/complete?embed=1'
+      playerUri: 'https://scaniverse.com/scan/complete?embed=1',
     },
     {
       type: 'scaniverse_model',
       source: 'scaniverse',
-      playerUri: 'https://scaniverse.com/scan/complete?embed=1'
+      playerUri: 'https://scaniverse.com/scan/complete?embed=1',
     },
   ]
 
