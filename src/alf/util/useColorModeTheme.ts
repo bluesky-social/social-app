@@ -1,10 +1,10 @@
 import React from 'react'
 import {type ColorSchemeName, useColorScheme} from 'react-native'
+import {type ThemeName} from '@bsky.app/alf'
 
 import {isWeb} from '#/platform/detection'
 import {useThemePrefs} from '#/state/shell'
 import {dark, dim, light} from '#/alf/themes'
-import {type ThemeName} from '#/alf/types'
 
 export function useColorModeTheme(): ThemeName {
   const theme = useThemeName()

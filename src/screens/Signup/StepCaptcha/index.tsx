@@ -8,7 +8,6 @@ import {nanoid} from 'nanoid/non-secure'
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
@@ -143,7 +142,7 @@ function StepCaptchaInner({
   }, [dispatch, state.handle])
 
   return (
-    <ScreenTransition>
+    <>
       <View style={[a.gap_lg, a.pt_lg]}>
         <View
           style={[
@@ -171,7 +170,7 @@ function StepCaptchaInner({
         isLoading={state.isLoading}
         onBackPress={onBackPress}
       />
-    </ScreenTransition>
+    </>
   )
 }
 

@@ -106,7 +106,8 @@ function ThreadItemPostDeleted({
           ]}>
           <TrashIcon style={[t.atoms.text_contrast_medium]} />
         </View>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+        <Text
+          style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
           <Trans>Post has been deleted</Trans>
         </Text>
       </View>

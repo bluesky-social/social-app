@@ -95,7 +95,11 @@ export const SplashScreen = ({
               )}
 
               <Text
-                style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+                style={[
+                  a.text_md,
+                  a.font_semi_bold,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 <Trans>What's up?</Trans>
               </Text>
             </View>

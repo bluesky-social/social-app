@@ -353,7 +353,7 @@ export function TextInput({
               <Text
                 style={[
                   a.text_lg,
-                  a.font_bold,
+                  a.font_semi_bold,
                   t.atoms.text_contrast_medium,
                   t.atoms.border_contrast_high,
                   styles.dropText,

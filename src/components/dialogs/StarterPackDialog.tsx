@@ -172,7 +172,7 @@ function StarterPackList({
           isWeb ? a.mb_2xl : a.my_lg,
           a.align_center,
         ]}>
-        <Text style={[a.text_lg, a.font_bold]}>
+        <Text style={[a.text_lg, a.font_semi_bold]}>
           <Trans>Add to starter packs</Trans>
         </Text>
         <Button
@@ -189,7 +189,7 @@ function StarterPackList({
         <>
           <View
             style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
-            <Text style={[a.text_md, a.font_bold]}>
+            <Text style={[a.text_md, a.font_semi_bold]}>
               <Trans>New starter pack</Trans>
             </Text>
             <Button
@@ -331,7 +331,7 @@ function StarterPackItem({
   return (
     <View style={[a.flex_row, a.justify_between, a.align_center, a.py_md]}>
       <View>
-        <Text emoji style={[a.text_md, a.font_bold]} numberOfLines={1}>
+        <Text emoji style={[a.text_md, a.font_semi_bold]} numberOfLines={1}>
           {record.name}
         </Text>
 

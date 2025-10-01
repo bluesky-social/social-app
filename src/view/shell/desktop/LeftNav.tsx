@@ -161,7 +161,7 @@ function ProfileCard() {
                           },
                         ]}>
                         <Text
-                          style={[a.font_heavy, a.text_sm, a.leading_snug]}
+                          style={[a.font_bold, a.text_sm, a.leading_snug]}
                           numberOfLines={1}>
                           {sanitizeDisplayName(
                             profile.displayName || profile.handle,
@@ -462,7 +462,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
               style={[
                 a.absolute,
                 a.text_xs,
-                a.font_bold,
+                a.font_semi_bold,
                 a.rounded_full,
                 a.text_center,
                 a.leading_tight,
@@ -509,7 +509,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
         ) : null}
       </View>
       {!leftNavMinimal && (
-        <Text style={[a.text_xl, isCurrent ? a.font_heavy : a.font_normal]}>
+        <Text style={[a.text_xl, isCurrent ? a.font_bold : a.font_normal]}>
           {label}
         </Text>
       )}

@@ -167,7 +167,7 @@ function AppPasswordCard({
           a.gap_sm,
         ]}>
         <View style={[a.gap_xs]}>
-          <Text style={[t.atoms.text, a.text_md, a.font_bold]}>
+          <Text style={[t.atoms.text, a.text_md, a.font_semi_bold]}>
             {appPassword.name}
           </Text>
           <Text style={[t.atoms.text_contrast_medium]}>
@@ -195,7 +195,7 @@ function AppPasswordCard({
       </View>
       {appPassword.privileged && (
         <View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
-          <WarningIcon style={[{color: colors.warning[t.scheme]}]} />
+          <WarningIcon style={[{color: colors.warning}]} />
           <Text style={t.atoms.text_contrast_high}>
             <Trans>Allows access to direct messages</Trans>
           </Text>

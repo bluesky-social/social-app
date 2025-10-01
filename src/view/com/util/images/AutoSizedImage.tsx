@@ -185,8 +185,7 @@ export function AutoSizedImage({
                   },
                 ],
               ]}>
-              <Text
-                style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
+              <Text style={[a.font_bold, largeAlt ? a.text_xs : {fontSize: 8}]}>
                 ALT
               </Text>
             </View>

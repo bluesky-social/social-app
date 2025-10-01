@@ -89,7 +89,7 @@ const ImageAltTextInner = ({
       <Dialog.Close />
 
       <View>
-        <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
+        <Text style={[a.text_2xl, a.font_semi_bold, a.leading_tight, a.pb_sm]}>
           <Trans>Add alt text</Trans>
         </Text>
 

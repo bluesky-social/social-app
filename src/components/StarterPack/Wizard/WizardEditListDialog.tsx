@@ -105,7 +105,7 @@ export function WizardEditListDialog({
                 : [a.pb_sm, a.align_end],
             ]}>
             <View style={{width: 60}} />
-            <Text style={[a.font_bold, a.text_xl]}>
+            <Text style={[a.font_semi_bold, a.text_xl]}>
               {state.currentStep === 'Profiles' ? (
                 <Trans>Edit People</Trans>
               ) : (

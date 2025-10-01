@@ -175,19 +175,24 @@ export type MetricEvents = {
   'feed:suggestion:press': {
     feedUrl: string
   }
-  'discover:showMore': {
+  'feed:showMore': {
+    feed: string
     feedContext: string
   }
-  'discover:showLess': {
+  'feed:showLess': {
+    feed: string
     feedContext: string
   }
-  'discover:clickthrough': {
+  'feed:clickthrough': {
+    feed: string
     count: number
   }
-  'discover:engaged': {
+  'feed:engaged': {
+    feed: string
     count: number
   }
-  'discover:seen': {
+  'feed:seen': {
+    feed: string
     count: number
   }
 

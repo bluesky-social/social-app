@@ -1820,7 +1820,7 @@ function ErrorBanner({
             style={[
               {paddingLeft: 28},
               a.text_xs,
-              a.font_bold,
+              a.font_semi_bold,
               a.leading_snug,
               t.atoms.text_contrast_low,
             ]}>
@@ -1913,7 +1913,7 @@ function VideoUploadToolbar({state}: {state: VideoState}) {
           progress={wheelProgress}
         />
       </Animated.View>
-      <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
+      <NewText style={[a.font_semi_bold, a.ml_sm]}>{text}</NewText>
     </ToolbarWrapper>
   )
 }

@@ -137,7 +137,7 @@ function LanguageBtn(
             <Text
               style={[
                 {color},
-                a.font_bold,
+                a.font_semi_bold,
                 a.text_sm,
                 a.leading_snug,
                 {maxWidth: 100},
