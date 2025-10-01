@@ -209,17 +209,29 @@ let ProfileHeaderShell = ({
 
       {children}
 
-      {!isPlaceholderProfile && (
-        <View
-          style={[a.px_lg, a.pt_xs, a.pb_sm]}
-          pointerEvents={isIOS ? 'auto' : 'box-none'}>
-          {isMe ? (
-            <LabelsOnMe type="account" labels={profile.labels} />
-          ) : (
-            <ProfileHeaderAlerts moderation={moderation} />
-          )}
-        </View>
-      )}
+      {!isPlaceholderProfile &&
+        (isMe ? (
+          <LabelsOnMe
+            type="account"
+            labels={profile.labels}
+            style={[
+              a.px_lg,
+              a.pt_xs,
+              a.pb_sm,
+              isIOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
+            ]}
+          />
+        ) : (
+          <ProfileHeaderAlerts
+            moderation={moderation}
+            style={[
+              a.px_lg,
+              a.pt_xs,
+              a.pb_sm,
+              isIOS ? a.pointer_events_auto : {pointerEvents: 'box-none'},
+            ]}
+          />
+        ))}
 
       <GrowableAvatar style={[a.absolute, {top: 104, left: 10}]}>
         <TouchableWithoutFeedback

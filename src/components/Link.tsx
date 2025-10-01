@@ -165,8 +165,8 @@ export function useLink({
             if (isNative && screen !== 'NotFound') {
               const state = navigation.getState()
               // if screen is not in the current navigator, it means it's
-              // most likely a tab screen
-              if (!state.routeNames.includes(screen)) {
+              // most likely a tab screen. note: state can be undefined
+              if (!state?.routeNames.includes(screen)) {
                 const parent = navigation.getParent()
                 if (
                   parent &&

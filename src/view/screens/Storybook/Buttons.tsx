@@ -8,6 +8,7 @@ import {
   ButtonIcon,
   type ButtonSize,
   ButtonText,
+  StackedButton,
 } from '#/components/Button'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
@@ -17,6 +18,30 @@ export function Buttons() {
   return (
     <View style={[a.gap_md]}>
       <Text style={[a.font_bold, a.text_5xl]}>Buttons</Text>
+
+      <View style={[a.flex_row, a.gap_md, a.align_start, {maxWidth: 350}]}>
+        <StackedButton
+          label="stacked"
+          icon={Globe}
+          color="secondary"
+          style={[a.flex_1]}>
+          Bop it
+        </StackedButton>
+        <StackedButton
+          label="stacked"
+          icon={Globe}
+          color="negative_subtle"
+          style={[a.flex_1]}>
+          Twist it
+        </StackedButton>
+        <StackedButton
+          label="stacked"
+          icon={Globe}
+          color="primary"
+          style={[a.flex_1]}>
+          Pull it
+        </StackedButton>
+      </View>
 
       {[
         'primary',
