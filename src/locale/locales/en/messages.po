@@ -604,12 +604,12 @@ msgctxt "toast"
 msgid "Account muted"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:103
+#: src/components/moderation/ModerationDetailsDialog.tsx:105
 #: src/lib/moderation/useModerationCauseDescription.ts:98
 msgid "Account Muted"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:89
+#: src/components/moderation/ModerationDetailsDialog.tsx:91
 msgid "Account Muted by List"
 msgstr ""
 
@@ -735,8 +735,8 @@ msgstr ""
 msgid "Add media to post"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:403
-#: src/components/moderation/ReportDialog/index.tsx:407
+#: src/components/moderation/ReportDialog/index.tsx:406
+#: src/components/moderation/ReportDialog/index.tsx:410
 msgid "Add more details (optional)"
 msgstr ""
 
@@ -813,7 +813,7 @@ msgstr ""
 msgid "Additional details (limit 1000 characters)"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:421
+#: src/components/moderation/ReportDialog/index.tsx:424
 msgid "Additional details (limit 300 characters)"
 msgstr ""
 
@@ -903,7 +903,7 @@ msgid "Allow new messages from"
 msgstr ""
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:52
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:91
 msgid "Allow others to be notified of your posts"
 msgstr ""
 
@@ -1051,7 +1051,7 @@ msgstr ""
 msgid "an unknown error occurred"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:134
+#: src/components/moderation/ModerationDetailsDialog.tsx:136
 #: src/lib/moderation/useModerationCauseDescription.ts:144
 msgid "an unknown labeler"
 msgstr ""
@@ -1089,7 +1089,7 @@ msgstr ""
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:111
 #: src/screens/Settings/ActivityPrivacySettings.tsx:116
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgid "Anyone who follows me"
 msgstr ""
 
@@ -1125,8 +1125,8 @@ msgstr ""
 msgid "App password names must be at least 4 characters long"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:75
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:71
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
 msgid "App passwords"
 msgstr ""
 
@@ -1135,16 +1135,16 @@ msgstr ""
 msgid "App Passwords"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:150
-#: src/components/moderation/LabelsOnMeDialog.tsx:153
+#: src/components/moderation/LabelsOnMeDialog.tsx:152
+#: src/components/moderation/LabelsOnMeDialog.tsx:155
 msgid "Appeal"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:268
+#: src/components/moderation/LabelsOnMeDialog.tsx:270
 msgid "Appeal \"{0}\" label"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:258
+#: src/components/moderation/LabelsOnMeDialog.tsx:260
 #: src/screens/Messages/components/ChatDisabled.tsx:103
 msgctxt "toast"
 msgid "Appeal submitted"
@@ -1274,8 +1274,8 @@ msgstr ""
 msgid "Available"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:315
-#: src/components/moderation/LabelsOnMeDialog.tsx:316
+#: src/components/moderation/LabelsOnMeDialog.tsx:317
+#: src/components/moderation/LabelsOnMeDialog.tsx:318
 #: src/screens/Login/ChooseAccountForm.tsx:90
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ForgotPasswordForm.tsx:123
@@ -1558,7 +1558,7 @@ msgid "Business"
 msgstr ""
 
 #: src/components/LabelingServiceCard/index.tsx:62
-#: src/components/moderation/ReportDialog/index.tsx:683
+#: src/components/moderation/ReportDialog/index.tsx:686
 #: src/screens/Search/components/StarterPackCard.tsx:106
 #: src/screens/Search/Explore.tsx:930
 msgid "By {0}"
@@ -1695,7 +1695,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:325
+#: src/components/moderation/ReportDialog/index.tsx:328
 msgid "Change moderation service"
 msgstr ""
 
@@ -1712,7 +1712,7 @@ msgstr ""
 msgid "Change post language to {suggestedLanguageName}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:244
+#: src/components/moderation/ReportDialog/index.tsx:247
 msgid "Change report reason"
 msgstr ""
 
@@ -2186,12 +2186,12 @@ msgstr ""
 msgid "Content Languages"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:82
+#: src/components/moderation/ModerationDetailsDialog.tsx:84
 #: src/lib/moderation/useModerationCauseDescription.ts:82
 msgid "Content Not Available"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:50
+#: src/components/moderation/ModerationDetailsDialog.tsx:52
 #: src/components/moderation/ScreenHider.tsx:99
 #: src/lib/moderation/useGlobalLabelStrings.ts:22
 #: src/lib/moderation/useModerationCauseDescription.ts:45
@@ -2478,7 +2478,7 @@ msgstr ""
 msgid "Create new account"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:585
+#: src/components/moderation/ReportDialog/index.tsx:588
 #: src/components/ReportDialog/SelectReportOptionView.tsx:102
 msgid "Create report for {0}"
 msgstr ""
@@ -3055,7 +3055,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:63
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:62
 msgid "Email 2FA enabled"
 msgstr ""
 
@@ -3126,6 +3126,7 @@ msgid "Enable media players for"
 msgstr ""
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:139
+#: src/view/screens/Storybook/Admonitions.tsx:75
 msgid "Enable notifications for an account by visiting their profile and pressing the <0>bell icon</0> <1/>."
 msgstr ""
 
@@ -3231,7 +3232,7 @@ msgstr ""
 msgid "Error loading post"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:154
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:153
 msgid "Error loading preference"
 msgstr ""
 
@@ -3345,8 +3346,8 @@ msgstr ""
 msgid "Expires {0}"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:199
-#: src/components/moderation/ModerationDetailsDialog.tsx:208
+#: src/components/moderation/LabelsOnMeDialog.tsx:201
+#: src/components/moderation/ModerationDetailsDialog.tsx:210
 msgid "Expires in {0}"
 msgstr ""
 
@@ -3554,7 +3555,7 @@ msgstr ""
 msgid "Failed to send email, please try again."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:254
+#: src/components/moderation/LabelsOnMeDialog.tsx:256
 #: src/screens/Messages/components/ChatDisabled.tsx:99
 msgid "Failed to submit appeal, please try again."
 msgstr ""
@@ -4418,6 +4419,7 @@ msgid "If you want to change your password, we will send you a code to verify th
 msgstr ""
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:157
+#: src/view/screens/Storybook/Admonitions.tsx:89
 msgid "If you want to restrict who can receive notifications for your account's activity, you can change this in <0>Settings → Privacy and Security</0>."
 msgstr ""
 
@@ -4660,11 +4662,11 @@ msgstr ""
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:72
+#: src/components/moderation/LabelsOnMeDialog.tsx:74
 msgid "Labels on your account"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:74
+#: src/components/moderation/LabelsOnMeDialog.tsx:76
 msgid "Labels on your content"
 msgstr ""
 
@@ -4746,8 +4748,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:128
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:131
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
 msgid "Learn more about what is public on Bluesky."
 msgstr ""
 
@@ -5031,7 +5033,7 @@ msgstr ""
 msgid "Log"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:107
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:106
 msgid "Logged-out visibility"
 msgstr ""
 
@@ -5205,7 +5207,7 @@ msgstr ""
 msgid "Moderation"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:138
+#: src/components/moderation/ModerationDetailsDialog.tsx:140
 msgid "Moderation details"
 msgstr ""
 
@@ -5254,7 +5256,7 @@ msgstr ""
 msgid "Moderation tools"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:52
+#: src/components/moderation/ModerationDetailsDialog.tsx:54
 #: src/lib/moderation/useModerationCauseDescription.ts:47
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr ""
@@ -5437,8 +5439,8 @@ msgstr ""
 msgid "Navigates to your profile"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:271
-#: src/components/moderation/ReportDialog/index.tsx:288
+#: src/components/moderation/ReportDialog/index.tsx:274
+#: src/components/moderation/ReportDialog/index.tsx:291
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
 msgstr ""
 
@@ -5649,7 +5651,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:109
 #: src/screens/Settings/ActivityPrivacySettings.tsx:129
 #: src/screens/Settings/ActivityPrivacySettings.tsx:134
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:159
 msgid "No one"
 msgstr ""
 
@@ -5760,7 +5762,7 @@ msgstr ""
 msgid "Note about sharing"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:117
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:116
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr ""
 
@@ -5908,7 +5910,7 @@ msgstr ""
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:120
 #: src/screens/Settings/ActivityPrivacySettings.tsx:125
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:158
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:157
 msgid "Only followers who I follow"
 msgstr ""
 
@@ -6411,7 +6413,7 @@ msgstr ""
 msgid "Please enter your username"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:290
+#: src/components/moderation/LabelsOnMeDialog.tsx:292
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr ""
 
@@ -6463,7 +6465,7 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/screens/PostThread/index.tsx:502
+#: src/screens/PostThread/index.tsx:503
 msgctxt "description"
 msgid "Post"
 msgstr ""
@@ -6505,12 +6507,12 @@ msgstr ""
 msgid "Post has been deleted"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:107
+#: src/components/moderation/ModerationDetailsDialog.tsx:109
 #: src/lib/moderation/useModerationCauseDescription.ts:106
 msgid "Post Hidden by Muted Word"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:110
+#: src/components/moderation/ModerationDetailsDialog.tsx:112
 #: src/lib/moderation/useModerationCauseDescription.ts:115
 msgid "Post Hidden by You"
 msgstr ""
@@ -6618,11 +6620,12 @@ msgstr ""
 #: src/Navigation.tsx:407
 #: src/Navigation.tsx:415
 #: src/screens/Settings/ActivityPrivacySettings.tsx:40
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:45
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:44
 msgid "Privacy and Security"
 msgstr ""
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:161
+#: src/view/screens/Storybook/Admonitions.tsx:93
 msgid "Privacy and Security settings"
 msgstr ""
 
@@ -7091,12 +7094,12 @@ msgstr ""
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:116
+#: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:125
 msgid "Reply Hidden by Thread Author"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:115
+#: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:124
 msgid "Reply Hidden by You"
 msgstr ""
@@ -7345,7 +7348,7 @@ msgstr ""
 #: src/components/dms/MessageItem.tsx:322
 #: src/components/Error.tsx:65
 #: src/components/Lists.tsx:110
-#: src/components/moderation/ReportDialog/index.tsx:229
+#: src/components/moderation/ReportDialog/index.tsx:232
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:55
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoFallback.tsx:58
 #: src/components/StarterPack/ProfileStarterPacks.tsx:342
@@ -7363,10 +7366,12 @@ msgstr ""
 #: src/screens/Signup/BackNextButtons.tsx:53
 #: src/view/com/util/error/ErrorMessage.tsx:60
 #: src/view/com/util/error/ErrorScreen.tsx:97
+#: src/view/screens/Storybook/Admonitions.tsx:63
 msgid "Retry"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:226
+#: src/components/moderation/ReportDialog/index.tsx:229
+#: src/view/screens/Storybook/Admonitions.tsx:60
 msgid "Retry loading report options"
 msgstr ""
 
@@ -7709,7 +7714,7 @@ msgstr ""
 msgid "Select languages"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:310
+#: src/components/moderation/ReportDialog/index.tsx:313
 msgid "Select moderation service"
 msgstr ""
 
@@ -7819,7 +7824,7 @@ msgstr ""
 msgid "Send report to {0}"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:649
+#: src/components/moderation/ReportDialog/index.tsx:652
 msgid "Send report to {title}"
 msgstr ""
 
@@ -7875,7 +7880,7 @@ msgstr ""
 msgid "Settings for activity from others"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:85
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:84
 msgid "Settings for allowing others to be notified of your posts"
 msgstr ""
 
@@ -8270,9 +8275,10 @@ msgid "Something went wrong"
 msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:138
-#: src/components/moderation/ReportDialog/index.tsx:223
+#: src/components/moderation/ReportDialog/index.tsx:224
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
+#: src/view/screens/Storybook/Admonitions.tsx:55
 msgid "Something went wrong, please try again"
 msgstr ""
 
@@ -8315,8 +8321,8 @@ msgstr ""
 msgid "Sort replies to the same post by:"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:178
-#: src/components/moderation/ModerationDetailsDialog.tsx:186
+#: src/components/moderation/LabelsOnMeDialog.tsx:180
+#: src/components/moderation/ModerationDetailsDialog.tsx:188
 msgid "Source: <0>{sourceName}</0>"
 msgstr ""
 
@@ -8412,8 +8418,8 @@ msgstr ""
 
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123
-#: src/components/moderation/LabelsOnMeDialog.tsx:324
-#: src/components/moderation/LabelsOnMeDialog.tsx:325
+#: src/components/moderation/LabelsOnMeDialog.tsx:326
+#: src/components/moderation/LabelsOnMeDialog.tsx:327
 #: src/screens/Messages/components/ChatDisabled.tsx:154
 #: src/screens/Messages/components/ChatDisabled.tsx:155
 msgid "Submit"
@@ -8427,9 +8433,9 @@ msgstr ""
 msgid "Submit Appeal"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:387
-#: src/components/moderation/ReportDialog/index.tsx:444
-#: src/components/moderation/ReportDialog/index.tsx:451
+#: src/components/moderation/ReportDialog/index.tsx:390
+#: src/components/moderation/ReportDialog/index.tsx:447
+#: src/components/moderation/ReportDialog/index.tsx:454
 msgid "Submit report"
 msgstr ""
 
@@ -8630,7 +8636,7 @@ msgstr ""
 msgid "Text field"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:288
+#: src/components/moderation/LabelsOnMeDialog.tsx:290
 #: src/screens/Messages/components/ChatDisabled.tsx:120
 msgid "Text input field"
 msgstr ""
@@ -8687,7 +8693,7 @@ msgstr ""
 msgid "The app will be restarted"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:119
+#: src/components/moderation/ModerationDetailsDialog.tsx:121
 #: src/lib/moderation/useModerationCauseDescription.ts:128
 msgid "The author of this thread has hidden this reply."
 msgstr ""
@@ -8724,11 +8730,11 @@ msgstr ""
 msgid "The feed has been replaced with Discover."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:59
+#: src/components/moderation/LabelsOnMeDialog.tsx:61
 msgid "The following labels were applied to your account."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:60
+#: src/components/moderation/LabelsOnMeDialog.tsx:62
 msgid "The following labels were applied to your content."
 msgstr ""
 
@@ -8915,7 +8921,7 @@ msgstr ""
 msgid "This action can be undone at any time."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:271
+#: src/components/moderation/LabelsOnMeDialog.tsx:273
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr ""
 
@@ -8943,7 +8949,7 @@ msgstr ""
 msgid "This content is hosted by {0}. Do you want to enable external media?"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:84
+#: src/components/moderation/ModerationDetailsDialog.tsx:86
 #: src/lib/moderation/useModerationCauseDescription.ts:84
 msgid "This content is not available because one of the users involved has blocked the other."
 msgstr ""
@@ -9007,11 +9013,11 @@ msgstr ""
 msgid "This is not a valid link"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:168
+#: src/components/moderation/ModerationDetailsDialog.tsx:170
 msgid "This label was applied by the author."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:165
+#: src/components/moderation/LabelsOnMeDialog.tsx:167
 msgid "This label was applied by you."
 msgstr ""
 
@@ -9095,7 +9101,7 @@ msgstr ""
 msgid "This user has blocked you"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:79
+#: src/components/moderation/ModerationDetailsDialog.tsx:81
 #: src/lib/moderation/useModerationCauseDescription.ts:75
 msgid "This user has blocked you. You cannot view their content."
 msgstr ""
@@ -9104,11 +9110,11 @@ msgstr ""
 msgid "This user has requested that their content only be shown to signed-in users."
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:59
+#: src/components/moderation/ModerationDetailsDialog.tsx:61
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:91
+#: src/components/moderation/ModerationDetailsDialog.tsx:93
 msgid "This user is included in the <0>{0}</0> list which you have muted."
 msgstr ""
 
@@ -9240,7 +9246,7 @@ msgstr ""
 msgid "TV"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:64
 msgid "Two-factor authentication (2FA)"
 msgstr ""
 
@@ -9365,7 +9371,7 @@ msgstr ""
 msgid "Unfortunately, Bluesky is unavailable in Mississippi right now."
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:372
+#: src/components/moderation/ReportDialog/index.tsx:375
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
@@ -9617,7 +9623,7 @@ msgctxt "toast"
 msgid "User blocked"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:71
+#: src/components/moderation/ModerationDetailsDialog.tsx:73
 #: src/lib/moderation/useModerationCauseDescription.ts:63
 msgid "User Blocked"
 msgstr ""
@@ -9630,7 +9636,7 @@ msgstr ""
 msgid "User blocked by list"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:57
+#: src/components/moderation/ModerationDetailsDialog.tsx:59
 msgid "User Blocked by List"
 msgstr ""
 
@@ -9638,7 +9644,7 @@ msgstr ""
 msgid "User Blocking You"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:77
+#: src/components/moderation/ModerationDetailsDialog.tsx:79
 msgid "User Blocks You"
 msgstr ""
 
@@ -9852,7 +9858,7 @@ msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
 
-#: src/screens/Profile/Header/Shell.tsx:229
+#: src/screens/Profile/Header/Shell.tsx:241
 msgid "View {0}'s avatar"
 msgstr ""
 
@@ -10456,7 +10462,7 @@ msgstr ""
 msgid "You have blocked this user"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:73
+#: src/components/moderation/ModerationDetailsDialog.tsx:75
 #: src/lib/moderation/useModerationCauseDescription.ts:57
 #: src/lib/moderation/useModerationCauseDescription.ts:65
 msgid "You have blocked this user. You cannot view their content."
@@ -10476,11 +10482,11 @@ msgstr ""
 msgid "You have hidden this post"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:111
+#: src/components/moderation/ModerationDetailsDialog.tsx:113
 msgid "You have hidden this post."
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:104
+#: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:99
 msgid "You have muted this account."
 msgstr ""
@@ -10534,7 +10540,7 @@ msgstr ""
 msgid "You haven't muted any words or tags yet"
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:118
+#: src/components/moderation/ModerationDetailsDialog.tsx:120
 #: src/lib/moderation/useModerationCauseDescription.ts:127
 msgid "You hid this reply."
 msgstr ""
@@ -10551,11 +10557,11 @@ msgstr ""
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:79
+#: src/components/moderation/LabelsOnMeDialog.tsx:81
 msgid "You may appeal non-self labels if you feel they were placed in error."
 msgstr ""
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:84
+#: src/components/moderation/LabelsOnMeDialog.tsx:86
 msgid "You may appeal these labels if you feel they were placed in error."
 msgstr ""
 
@@ -10694,7 +10700,7 @@ msgstr ""
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr ""
 
-#: src/components/moderation/ModerationDetailsDialog.tsx:108
+#: src/components/moderation/ModerationDetailsDialog.tsx:110
 #: src/lib/moderation/useModerationCauseDescription.ts:108
 msgid "You've chosen to hide a word or tag within this post."
 msgstr ""
@@ -10881,7 +10887,7 @@ msgstr ""
 msgid "Your reply was sent"
 msgstr ""
 
-#: src/components/moderation/ReportDialog/index.tsx:394
+#: src/components/moderation/ReportDialog/index.tsx:397
 msgid "Your report will be sent to <0>{0}</0>."
 msgstr ""
 
