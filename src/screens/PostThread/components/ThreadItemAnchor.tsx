@@ -613,7 +613,14 @@ function ExpandedPostDetails({
       run()
       return false
     },
-    [translatedText, setTranslatedText, supportsTranslatorAPI, translate, post, langPrefs.primaryLanguage],
+    [
+      translatedText,
+      setTranslatedText,
+      supportsTranslatorAPI,
+      translate,
+      post,
+      langPrefs.primaryLanguage,
+    ],
   )
 
   return (

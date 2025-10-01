@@ -286,7 +286,14 @@ let PostMenuItems = ({
       console.error(err)
       Toast.show(_(msg`Could not translate`), 'xmark')
     }
-  }, [record.text, record.langs, langPrefs.primaryLanguage, translate, translateControl, _])
+  }, [
+    record.text,
+    record.langs,
+    langPrefs.primaryLanguage,
+    translate,
+    translateControl,
+    _,
+  ])
 
   const onHidePost = () => {
     hidePost({uri: postUri})
