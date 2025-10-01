@@ -18,17 +18,30 @@ const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
 export function SuggestedLanguage({
   text,
-  replyToLanguage: replyToLanguageProp,
+  replyToLanguages: replyToLanguagesProp,
   currentLanguages,
   onAcceptSuggestedLanguage,
 }: {
   text: string
-  replyToLanguage?: string
+  /**
+   * All languages associated with the post being replied to.
+   */
+  replyToLanguages: string[]
+  /**
+   * All languages currently selected for the post being composed.
+   */
   currentLanguages: string[]
+  /**
+   * Called when the user accepts a suggested language. We only pass a single
+   * language here. If the post being replied to has multiple languages, we
+   * only suggest the first one.
+   */
   onAcceptSuggestedLanguage: (language: string | null) => void
 }) {
   const langPrefs = useLanguagePrefs()
-  const replyToLanguage = cleanUpLanguage(replyToLanguageProp)
+  const replyToLanguages = replyToLanguagesProp
+    .map(lang => cleanUpLanguage(lang))
+    .filter(Boolean) as string[]
   const [hasInteracted, setHasInteracted] = useState(false)
   const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
@@ -63,14 +76,15 @@ export function SuggestedLanguage({
   const hasLanguageSuggestion =
     suggestedLanguage && !currentLanguages.includes(suggestedLanguage)
   /*
-   * We have not detected a different language, and the user has not already
-   * selected the language of the post they are replying to.
+   * We have not detected a different language, and the user is not already
+   * using or has not already selected one of the languages of the post they
+   * are replying to.
    */
   const hasSuggestedReplyLanguage =
     !hasInteracted &&
     !suggestedLanguage &&
-    replyToLanguage &&
-    !currentLanguages.includes(replyToLanguage)
+    replyToLanguages.length &&
+    !replyToLanguages.some(l => currentLanguages.includes(l))
 
   if (hasLanguageSuggestion) {
     const suggestedLanguageName = codeToLanguageName(
@@ -94,7 +108,7 @@ export function SuggestedLanguage({
     )
   } else if (hasSuggestedReplyLanguage) {
     const suggestedLanguageName = codeToLanguageName(
-      replyToLanguage,
+      replyToLanguages[0],
       langPrefs.appLanguage,
     )
 
@@ -109,7 +123,7 @@ export function SuggestedLanguage({
             </Trans>
           </RNText>
         }
-        value={replyToLanguage}
+        value={replyToLanguages[0]}
         onAccept={onAcceptSuggestedLanguage}
       />
     )

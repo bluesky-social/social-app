@@ -208,11 +208,10 @@ export const ComposePost = ({
   >(null)
 
   /**
-   * The language of the post being replied to, if any. We just use the first
-   * language available, for now.
+   * The language(s) of the post being replied to.
    */
-  const [replyToLanguage, setReplyToLanguage] = useState<string | undefined>(
-    replyTo?.langs?.[0],
+  const [replyToLanguages, setReplyToLanguages] = useState<string[]>(
+    replyTo?.langs || [],
   )
 
   /**
@@ -234,7 +233,7 @@ export const ComposePost = ({
    */
   const onSelectLanguage = () => {
     setAcceptedLanguageSuggestion(null)
-    setReplyToLanguage(undefined)
+    setReplyToLanguages([])
   }
 
   const [composerState, composerDispatch] = useReducer(
@@ -694,7 +693,7 @@ export const ComposePost = ({
     <>
       <SuggestedLanguage
         text={activePost.richtext.text}
-        replyToLanguage={replyToLanguage}
+        replyToLanguages={replyToLanguages}
         currentLanguages={currentLanguages}
         onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
       />
