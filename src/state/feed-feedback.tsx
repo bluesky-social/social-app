@@ -82,7 +82,6 @@ export function useFeedFeedback(
           flushToStatsig(
             aggregatedStats.current,
             feed?.feedDescriptor ?? 'unknown',
-            isDiscover,
           ),
         45e3,
         {
@@ -90,7 +89,7 @@ export function useFeedFeedback(
           trailing: true,
         },
       ),
-    [feed?.feedDescriptor, isDiscover],
+    [feed?.feedDescriptor],
   )
 
   const sendToFeedNoDelay = useCallback(() => {
@@ -132,18 +131,10 @@ export function useFeedFeedback(
       aggregatedStats.current,
       interactionsToSend,
       feed?.feedDescriptor ?? 'unknown',
-      isDiscover,
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [
-    agent,
-    throttledFlushAggregatedStats,
-    proxyDid,
-    enabled,
-    feed,
-    isDiscover,
-  ])
+  }, [agent, throttledFlushAggregatedStats, proxyDid, enabled, feed])
 
   const sendToFeed = useMemo(
     () =>
@@ -277,20 +268,12 @@ function sendOrAggregateInteractionsForStats(
   stats: AggregatedStats,
   interactions: AppBskyFeedDefs.Interaction[],
   feed: string,
-  isDiscover: boolean,
 ) {
   for (let interaction of interactions) {
     switch (interaction.event) {
       // Pressing "Show more" / "Show less" is relatively uncommon so we won't aggregate them.
       // This lets us send the feed context together with them.
       case 'app.bsky.feed.defs#requestLess': {
-        if (isDiscover) {
-          logger.metric(
-            'discover:showLess',
-            {feedContext: interaction.feedContext ?? ''},
-            {statsig: false},
-          )
-        }
         logger.metric('feed:showLess', {
           feed,
           feedContext: interaction.feedContext ?? '',
@@ -298,13 +281,6 @@ function sendOrAggregateInteractionsForStats(
         break
       }
       case 'app.bsky.feed.defs#requestMore': {
-        if (isDiscover) {
-          logger.metric(
-            'discover:showMore',
-            {feedContext: interaction.feedContext ?? ''},
-            {statsig: false},
-          )
-        }
         logger.metric('feed:showMore', {
           feed,
           feedContext: interaction.feedContext ?? '',
@@ -336,23 +312,12 @@ function sendOrAggregateInteractionsForStats(
   }
 }
 
-function flushToStatsig(
-  stats: AggregatedStats | null,
-  feedDescriptor: string,
-  isDiscover: boolean,
-) {
+function flushToStatsig(stats: AggregatedStats | null, feedDescriptor: string) {
   if (stats === null) {
     return
   }
 
   if (stats.clickthroughCount > 0) {
-    if (isDiscover) {
-      logger.metric(
-        'discover:clickthrough',
-        {count: stats.clickthroughCount},
-        {statsig: false},
-      )
-    }
     logger.metric('feed:clickthrough', {
       count: stats.clickthroughCount,
       feed: feedDescriptor,
@@ -361,13 +326,6 @@ function flushToStatsig(
   }
 
   if (stats.engagedCount > 0) {
-    if (isDiscover) {
-      logger.metric(
-        'discover:engaged',
-        {count: stats.engagedCount},
-        {statsig: false},
-      )
-    }
     logger.metric('feed:engaged', {
       count: stats.engagedCount,
       feed: feedDescriptor,
@@ -376,9 +334,6 @@ function flushToStatsig(
   }
 
   if (stats.seenCount > 0) {
-    if (isDiscover) {
-      logger.metric('discover:seen', {count: stats.seenCount}, {statsig: false})
-    }
     logger.metric('feed:seen', {
       count: stats.seenCount,
       feed: feedDescriptor,
