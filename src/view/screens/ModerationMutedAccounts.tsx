@@ -2,7 +2,6 @@ import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -27,7 +26,6 @@ type Props = NativeStackScreenProps<
 export function ModerationMutedAccounts({}: Props) {
   const t = useTheme()
   const moderationOpts = useModerationOpts()
-  const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
 
   const [isPTRing, setIsPTRing] = useState(false)

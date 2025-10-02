@@ -69,7 +69,7 @@ export function* findAllProfilesInQueryData(
     queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedUsers.OutputSchema>({
       queryKey: [getSuggestedUsersQueryKeyRoot],
     })
-  for (const [_, response] of responses) {
+  for (const [_key, response] of responses) {
     if (!response) {
       continue
     }

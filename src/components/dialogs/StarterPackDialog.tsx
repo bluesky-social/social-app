@@ -47,7 +47,6 @@ export function StarterPackDialog({
   targetDid,
   enabled,
 }: StarterPackDialogProps) {
-  const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const requireEmailVerification = useRequireEmailVerification()
 
