@@ -445,7 +445,7 @@ function Header({
                 <ButtonText>
                   <Trans>Follow all</Trans>
                 </ButtonText>
-                {isProcessing && <Loader size="xs" />}
+                {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
             )}
             <OverflowMenu
