@@ -6,7 +6,7 @@ import {BlueskyVideoView} from '@haileyok/bluesky-video'
 
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
-import {useAutoplayDisabled} from '#/state/preferences'
+import {useVideoAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
@@ -25,7 +25,7 @@ export function VideoPreview({
 }) {
   const t = useTheme()
   const playerRef = React.useRef<BlueskyVideoView>(null)
-  const autoplayDisabled = useAutoplayDisabled()
+  const autoplayDisabled = useVideoAutoplayDisabled()
   let aspectRatio = asset.width / asset.height
 
   if (isNaN(aspectRatio)) {

@@ -13,7 +13,7 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_20} from '#/lib/constants'
 import {type EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isWeb} from '#/platform/detection'
-import {useAutoplayDisabled} from '#/state/preferences'
+import {useGifAutoplayDisabled} from '#/state/preferences'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
@@ -88,7 +88,7 @@ export function GifEmbed({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const autoplayDisabled = useAutoplayDisabled()
+  const autoplayDisabled = useGifAutoplayDisabled()
 
   const playerRef = React.useRef<GifView>(null)
 
