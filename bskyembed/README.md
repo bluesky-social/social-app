@@ -23,4 +23,4 @@ In another terminal window, run the snippet dev script:
 yarn dev-snippet
 ```
 
-Then, open `file:/<your files>/social-app/bskyembed/test.html` in your browser.
+You can then see the testbed page at http://localhost:5173/test

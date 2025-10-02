@@ -7,11 +7,13 @@ interface Window {
 }
 
 /**
- * Allow url to be overwritten during development. `file:` protcol check
- * should mean it won't ever get accidentally overridden in production
+ * Allow url to be overwritten during development
  */
+const IS_DEV =
+  window.location.protocol === 'file:' ||
+  window.location.hostname === 'localhost'
 const EMBED_URL =
-  window.location.protocol === 'file:' && window.BSKY_DEV_EMBED_URL
+  IS_DEV && window.BSKY_DEV_EMBED_URL
     ? window.BSKY_DEV_EMBED_URL
     : 'https://embed.bsky.app'
 
