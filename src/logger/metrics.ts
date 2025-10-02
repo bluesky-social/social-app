@@ -321,8 +321,12 @@ export type MetricEvents = {
       | 'ChatsList'
       | 'SendViaChatDialog'
   }
-  'starterPack:addUser': {}
-  'starterPack:removeUser': {}
+  'starterPack:addUser': {
+    starterPackUri?: string
+  }
+  'starterPack:removeUser': {
+    starterPackUri?: string
+  }
   'starterPack:share': {
     starterPack: string
     shareType: 'link' | 'qrcode'
