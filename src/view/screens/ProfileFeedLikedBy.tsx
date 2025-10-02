@@ -1,6 +1,5 @@
 import {useCallback} from 'react'
 import {Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {
@@ -17,7 +16,6 @@ export const ProfileFeedLikedByScreen = ({route}: Props) => {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {name, rkey} = route.params
   const uri = makeRecordUri(name, 'app.bsky.feed.generator', rkey)
-  const {_} = useLingui()
 
   useFocusEffect(
     useCallback(() => {

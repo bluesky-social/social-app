@@ -492,23 +492,23 @@ function createApi({
       }
     }
   } else if (feedDesc.startsWith('author')) {
-    const [_, actor, filter] = feedDesc.split('|')
+    const [__, actor, filter] = feedDesc.split('|')
     return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
   } else if (feedDesc.startsWith('likes')) {
-    const [_, actor] = feedDesc.split('|')
+    const [__, actor] = feedDesc.split('|')
     return new LikesFeedAPI({agent, feedParams: {actor}})
   } else if (feedDesc.startsWith('feedgen')) {
-    const [_, feed] = feedDesc.split('|')
+    const [__, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
       agent,
       feedParams: {feed},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
-    const [_, list] = feedDesc.split('|')
+    const [__, list] = feedDesc.split('|')
     return new ListFeedAPI({agent, feedParams: {list}})
   } else if (feedDesc.startsWith('posts')) {
-    const [_, uriList] = feedDesc.split('|')
+    const [__, uriList] = feedDesc.split('|')
     return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
   } else if (feedDesc === 'demo') {
     return new DemoFeedAPI({agent})
