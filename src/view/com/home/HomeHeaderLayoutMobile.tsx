@@ -1,6 +1,7 @@
 import {type JSX} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -30,18 +31,18 @@ export function HomeHeaderLayoutMobile({
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {hasSession} = useSession()
   const playHaptic = useHaptics()
+  const {top: paddingTop} = useSafeAreaInsets()
 
   return (
     <Animated.View
       style={[
         a.fixed,
+        a.top_0,
+        a.left_0,
+        a.right_0,
         a.z_10,
         t.atoms.bg,
-        {
-          top: 0,
-          left: 0,
-          right: 0,
-        },
+        {paddingTop},
         headerMinimalShellTransform,
       ]}
       onLayout={e => {

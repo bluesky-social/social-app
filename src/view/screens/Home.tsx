@@ -79,7 +79,7 @@ export function HomeScreen(props: Props) {
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
-      <Layout.Screen testID="HomeScreen">
+      <Layout.Screen testID="HomeScreen" noInsetTop>
         <HomeScreenReady
           {...props}
           preferences={preferences}

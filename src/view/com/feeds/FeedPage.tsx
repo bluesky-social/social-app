@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {type AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -70,7 +71,8 @@ export function FeedPage({
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
-  const headerOffset = useHeaderOffset()
+  const {top: topInset} = useSafeAreaInsets()
+  const headerOffset = useHeaderOffset() + topInset
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
   const [hasNew, setHasNew] = useState(false)
