@@ -305,7 +305,7 @@ function StarterPackItem({
         listUri: listUri,
         actorDid: targetDid,
       })
-      logger.metric('starterPack:addUser', {starterPackUri})
+      logger.metric('starterPack:addUser', {starterPack: starterPackUri})
     } else {
       if (!starterPackWithMembership.listItem?.uri) {
         console.error('Cannot remove: missing membership URI')
@@ -317,7 +317,7 @@ function StarterPackItem({
         actorDid: targetDid,
         membershipUri: starterPackWithMembership.listItem.uri,
       })
-      logger.metric('starterPack:removeUser', {starterPackUri})
+      logger.metric('starterPack:removeUser', {starterPack: starterPackUri})
     }
   }
 

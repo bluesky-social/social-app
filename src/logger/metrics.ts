@@ -322,10 +322,10 @@ export type MetricEvents = {
       | 'SendViaChatDialog'
   }
   'starterPack:addUser': {
-    starterPackUri?: string
+    starterPack?: string
   }
   'starterPack:removeUser': {
-    starterPackUri?: string
+    starterPack?: string
   }
   'starterPack:share': {
     starterPack: string
