@@ -23,8 +23,17 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     ModuleDefinition {
       Name("ExpoReceiveAndroidIntents")
 
+      // Handle new intents received while the app is already running
+      // This is called when the app receives a share intent or other ACTION_SEND intent
+      // while it's already active in memory
       OnNewIntent {
         handleIntent(it)
+      }
+
+      // Handle the initial intent when the app is first created/launched
+      // This ensures we process share intents that were used to launch the app
+      OnCreate {
+        checkForInitialIntent()
       }
     }
 
@@ -50,6 +59,20 @@ class ExpoReceiveAndroidIntentsModule : Module() {
       } else if (it.action == Intent.ACTION_SEND_MULTIPLE) {
         handleAttachmentsIntent(it, type)
       }
+    }
+  }
+
+  // Check for and process any intent that was used to initially launch the app
+  private fun checkForInitialIntent() {
+    val activity = appContext.currentActivity ?: return
+    val intent = activity.intent
+
+    if (intent != null) {
+      // We delay processing by 1 second to ensure the app has fully initialized
+      // before attempting to handle the share intent
+      android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+        handleIntent(intent)
+      }, 1000)
     }
   }
 
