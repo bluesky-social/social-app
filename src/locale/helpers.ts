@@ -3,6 +3,7 @@ import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 
 import {hasProp} from '#/lib/type-guards'
+import * as persisted from '#/state/persisted'
 import {
   AppLanguage,
   type Language,
@@ -128,9 +129,12 @@ export function isPostInLanguage(
 }
 
 export function getTranslatorLink(text: string, lang: string): string {
-  return `https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(
-    text,
-  )}`
+  return (
+    persisted.get('translationService') ||
+    'https://translate.google.com/?sl=auto&tl=%lang%&text=%text%'
+  )
+    .replaceAll('%lang%', lang)
+    .replaceAll('%text%', encodeURIComponent(text))
 }
 
 /**
