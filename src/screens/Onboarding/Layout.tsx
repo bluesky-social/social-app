@@ -5,7 +5,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -129,7 +129,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       <ScrollView
         ref={scrollview}
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
-        contentContainerStyle={{borderWidth: 0}}
+        contentContainerStyle={{borderWidth: 0, minHeight: '100%'}}
+        showsVerticalScrollIndicator={!isAndroid}
         scrollIndicatorInsets={{bottom: footerHeight - insets.bottom}}
         // @ts-expect-error web only --prf
         dataSet={{'stable-gutters': 1}}>
