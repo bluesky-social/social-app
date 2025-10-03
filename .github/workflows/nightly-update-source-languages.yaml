@@ -16,11 +16,11 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           ssh-key: ${{secrets.GH_ACTION_DEPLOY_KEY}}
       - name: Install node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
       - name: Yarn install
