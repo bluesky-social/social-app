@@ -59,13 +59,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       aria-label={dialogLabel}
       accessibilityLabel={dialogLabel}
       accessibilityHint={_(msg`Customizes your Bluesky experience`)}
-      style={[
-        // @ts-ignore web only -prf
-        isWeb ? a.fixed : a.absolute,
-        a.inset_0,
-        a.flex_1,
-        t.atoms.bg,
-      ]}>
+      style={[isWeb ? a.fixed : a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
       {__DEV__ && (
         <Button
           variant="ghost"
