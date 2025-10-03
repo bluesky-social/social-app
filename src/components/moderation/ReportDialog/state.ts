@@ -1,13 +1,13 @@
 import {type AppBskyLabelerDefs} from '@atproto/api'
 
+import {OTHER_REPORT_REASONS} from '#/components/moderation/ReportDialog/const'
 import {
-  OtherReportReasons,
+  type ReportCategoryConfig,
   type ReportOption,
-  type ReportOptionCategory,
-} from './utils/useReportOptions'
+} from '#/components/moderation/ReportDialog/utils/useReportOptions'
 
 export type ReportState = {
-  selectedCategory?: ReportOptionCategory
+  selectedCategory?: ReportCategoryConfig
   selectedOption?: ReportOption
   selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed
   details?: string
@@ -19,7 +19,7 @@ export type ReportState = {
 export type ReportAction =
   | {
       type: 'selectCategory'
-      option: ReportOptionCategory
+      option: ReportCategoryConfig
       otherOption: ReportOption
     }
   | {
@@ -87,7 +87,7 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         ...state,
         selectedOption: action.option,
         activeStepIndex1: 3,
-        detailsOpen: OtherReportReasons.has(action.option.reason),
+        detailsOpen: OTHER_REPORT_REASONS.has(action.option.reason),
       }
     case 'clearOption':
       return {
@@ -102,7 +102,9 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         ...state,
         selectedLabeler: action.labeler,
         activeStepIndex1: 4,
-        detailsOpen: OtherReportReasons.has(state.selectedOption?.reason),
+        detailsOpen: state.selectedOption
+          ? OTHER_REPORT_REASONS.has(state.selectedOption?.reason)
+          : false,
       }
     case 'clearLabeler':
       return {

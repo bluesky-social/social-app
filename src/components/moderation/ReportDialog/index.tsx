@@ -36,8 +36,8 @@ import {initialState, reducer} from './state'
 import {type ReportDialogProps, type ReportSubject} from './types'
 import {parseReportSubject} from './utils/parseReportSubject'
 import {
+  type ReportCategoryConfig,
   type ReportOption,
-  type ReportOptionCategory,
   useReportOptions,
 } from './utils/useReportOptions'
 
@@ -620,8 +620,8 @@ function CategoryCard({
   option,
   onSelect,
 }: {
-  option: ReportOptionCategory
-  onSelect?: (option: ReportOptionCategory) => void
+  option: ReportCategoryConfig
+  onSelect?: (option: ReportCategoryConfig) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
