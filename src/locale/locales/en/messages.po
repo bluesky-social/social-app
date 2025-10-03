@@ -124,7 +124,7 @@ msgstr ""
 msgid "{0, plural, other {# people have}} used this starter pack!"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:357
+#: src/components/dialogs/StarterPackDialog.tsx:356
 msgid "{0, plural, other {+# more}}"
 msgstr ""
 
@@ -521,7 +521,7 @@ msgstr ""
 msgid "7 days"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:341
+#: src/screens/Onboarding/StepFinished.tsx:340
 msgid "A collection of popular feeds you can find on Bluesky, including News, Booksky, Game Dev, Blacksky, and Fountain Pens"
 msgstr ""
 
@@ -566,6 +566,10 @@ msgstr ""
 #. Accept a chat request
 #: src/screens/Messages/components/RequestListItem.tsx:42
 msgid "Accept Request"
+msgstr ""
+
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:179
+msgid "Accept this language suggestion"
 msgstr ""
 
 #: src/screens/Settings/AccessibilitySettings.tsx:44
@@ -654,8 +658,8 @@ msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:169
 #: src/components/dialogs/MutedWords.tsx:333
-#: src/components/dialogs/StarterPackDialog.tsx:371
-#: src/components/dialogs/StarterPackDialog.tsx:377
+#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:376
 #: src/view/com/modals/UserAddRemoveLists.tsx:235
 msgid "Add"
 msgstr ""
@@ -708,11 +712,11 @@ msgstr ""
 msgid "Add another account"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:811
+#: src/view/com/composer/Composer.tsx:853
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1444
+#: src/view/com/composer/Composer.tsx:1490
 msgid "Add another post to thread"
 msgstr ""
 
@@ -790,7 +794,7 @@ msgstr ""
 msgid "Add to saved posts"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:176
+#: src/components/dialogs/StarterPackDialog.tsx:175
 #: src/view/com/profile/ProfileMenu.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:311
 msgid "Add to starter packs"
@@ -805,7 +809,7 @@ msgstr ""
 msgid "Added to list"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:258
+#: src/components/dialogs/StarterPackDialog.tsx:257
 msgid "Added to starter pack"
 msgstr ""
 
@@ -879,7 +883,7 @@ msgstr ""
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:64
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:99
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:101
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:216
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:238
 msgid "All languages"
 msgstr ""
 
@@ -967,7 +971,7 @@ msgid "An email has been sent to {0}. It includes a confirmation code which you 
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:253
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:298
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:320
 msgid "An error has occurred"
 msgstr ""
 
@@ -1012,7 +1016,7 @@ msgstr ""
 msgid "An error occurred while uploading the video."
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:359
+#: src/screens/Onboarding/StepFinished.tsx:358
 msgid "An illustration of several Bluesky posts alongside repost, like, and comment icons"
 msgstr ""
 
@@ -1221,11 +1225,11 @@ msgstr ""
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:760
+#: src/view/com/composer/Composer.tsx:802
 msgid "Are you sure you'd like to discard this draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:950
+#: src/view/com/composer/Composer.tsx:992
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -1233,7 +1237,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:89
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:99
 msgid "Are you writing in <0>{suggestedLanguageName}</0>?"
 msgstr ""
 
@@ -1307,7 +1311,7 @@ msgstr ""
 msgid "Before creating a post or replying, you must first verify your email."
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:71
+#: src/components/dialogs/StarterPackDialog.tsx:70
 #: src/components/StarterPack/ProfileStarterPacks.tsx:231
 #: src/components/StarterPack/ProfileStarterPacks.tsx:241
 msgid "Before creating a starter pack, you must first verify your email."
@@ -1626,8 +1630,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:289
 #: src/screens/Takendown.tsx:108
 #: src/screens/Takendown.tsx:111
-#: src/view/com/composer/Composer.tsx:1005
-#: src/view/com/composer/Composer.tsx:1016
+#: src/view/com/composer/Composer.tsx:1047
+#: src/view/com/composer/Composer.tsx:1058
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:43
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:52
 #: src/view/shell/desktop/LeftNav.tsx:213
@@ -1706,10 +1710,6 @@ msgstr ""
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:164
 msgid "Change password dialog"
-msgstr ""
-
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:100
-msgid "Change post language to {suggestedLanguageName}"
 msgstr ""
 
 #: src/components/moderation/ReportDialog/index.tsx:247
@@ -1823,11 +1823,11 @@ msgstr ""
 msgid "Choose People"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:162
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:184
 msgid "Choose Post Languages"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:575
+#: src/screens/Onboarding/StepFinished.tsx:573
 msgid "Choose the algorithms that power your custom feeds."
 msgstr ""
 
@@ -1920,7 +1920,7 @@ msgstr ""
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
 #: src/components/dialogs/SearchablePeopleList.tsx:295
-#: src/components/dialogs/StarterPackDialog.tsx:179
+#: src/components/dialogs/StarterPackDialog.tsx:178
 #: src/components/dms/EmojiPopup.android.tsx:58
 #: src/components/dms/ReportDialog.tsx:387
 #: src/components/dms/ReportDialog.tsx:396
@@ -1938,7 +1938,7 @@ msgstr ""
 #: src/components/WhoCanReply.tsx:209
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:286
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:291
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:313
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:335
 #: src/view/com/feeds/MissingFeed.tsx:210
 #: src/view/com/feeds/MissingFeed.tsx:217
 msgid "Close"
@@ -1962,9 +1962,9 @@ msgstr ""
 #: src/components/dialogs/GifSelect.tsx:263
 #: src/components/verification/VerificationsDialog.tsx:136
 #: src/components/verification/VerifierDialog.tsx:142
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:182
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:276
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:308
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:204
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:298
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:330
 msgid "Close dialog"
 msgstr ""
 
@@ -2007,7 +2007,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1013
+#: src/view/com/composer/Composer.tsx:1055
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -2053,8 +2053,8 @@ msgstr ""
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:473
-#: src/screens/Onboarding/StepFinished.tsx:588
+#: src/screens/Onboarding/StepFinished.tsx:472
+#: src/screens/Onboarding/StepFinished.tsx:586
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
@@ -2066,7 +2066,7 @@ msgstr ""
 msgid "Compose new post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:914
+#: src/view/com/composer/Composer.tsx:956
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -2074,7 +2074,7 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1834
+#: src/view/com/composer/Composer.tsx:1883
 msgid "Compressing video..."
 msgstr ""
 
@@ -2411,8 +2411,8 @@ msgstr ""
 
 #. Text on button to create a new starter pack
 #. Text on button to create a new starter pack
-#: src/components/dialogs/StarterPackDialog.tsx:112
-#: src/components/dialogs/StarterPackDialog.tsx:201
+#: src/components/dialogs/StarterPackDialog.tsx:111
+#: src/components/dialogs/StarterPackDialog.tsx:200
 #: src/components/StarterPack/ProfileStarterPacks.tsx:296
 msgid "Create"
 msgstr ""
@@ -2483,8 +2483,8 @@ msgstr ""
 msgid "Create report for {0}"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:107
-#: src/components/dialogs/StarterPackDialog.tsx:196
+#: src/components/dialogs/StarterPackDialog.tsx:106
+#: src/components/dialogs/StarterPackDialog.tsx:195
 msgid "Create starter pack"
 msgstr ""
 
@@ -2639,7 +2639,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:685
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:687
-#: src/view/com/composer/Composer.tsx:924
+#: src/view/com/composer/Composer.tsx:966
 msgid "Delete post"
 msgstr ""
 
@@ -2752,8 +2752,8 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:92
 #: src/screens/Profile/Header/EditProfileDialog.tsx:82
-#: src/view/com/composer/Composer.tsx:762
-#: src/view/com/composer/Composer.tsx:957
+#: src/view/com/composer/Composer.tsx:804
+#: src/view/com/composer/Composer.tsx:999
 msgid "Discard"
 msgstr ""
 
@@ -2762,11 +2762,11 @@ msgstr ""
 msgid "Discard changes?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:759
+#: src/view/com/composer/Composer.tsx:801
 msgid "Discard draft?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:949
+#: src/view/com/composer/Composer.tsx:991
 msgid "Discard post?"
 msgstr ""
 
@@ -2789,7 +2789,7 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1758
+#: src/view/com/composer/Composer.tsx:1807
 msgid "Dismiss error"
 msgstr ""
 
@@ -2815,7 +2815,7 @@ msgstr ""
 msgid "Display name"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:347
+#: src/screens/Onboarding/StepFinished.tsx:346
 msgid "Ditch the trolls and clickbait. Find real people and conversations that matter to you."
 msgstr ""
 
@@ -2868,7 +2868,7 @@ msgstr ""
 #: src/view/com/auth/server-input/index.tsx:233
 #: src/view/com/composer/labels/LabelsBtn.tsx:223
 #: src/view/com/composer/labels/LabelsBtn.tsx:230
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:281
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:303
 #: src/view/com/composer/videos/SubtitleDialog.tsx:168
 #: src/view/com/composer/videos/SubtitleDialog.tsx:178
 msgid "Done"
@@ -3223,7 +3223,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1843
+#: src/view/com/composer/Composer.tsx:1892
 #: src/view/com/util/error/ErrorScreen.tsx:42
 msgid "Error"
 msgstr ""
@@ -3415,7 +3415,7 @@ msgstr ""
 msgid "Failed to add emoji reaction"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:270
+#: src/components/dialogs/StarterPackDialog.tsx:269
 msgid "Failed to add to starter pack"
 msgstr ""
 
@@ -3521,7 +3521,7 @@ msgstr ""
 msgid "Failed to remove emoji reaction"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:289
+#: src/components/dialogs/StarterPackDialog.tsx:288
 msgid "Failed to remove from starter pack"
 msgstr ""
 
@@ -3698,8 +3698,8 @@ msgstr ""
 msgid "Filter who you receive notifications from"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:479
-#: src/screens/Onboarding/StepFinished.tsx:591
+#: src/screens/Onboarding/StepFinished.tsx:478
+#: src/screens/Onboarding/StepFinished.tsx:589
 msgid "Finalizing"
 msgstr ""
 
@@ -3719,11 +3719,11 @@ msgstr ""
 msgid "Find people to follow"
 msgstr ""
 
-#: src/screens/Search/Shell.tsx:476
+#: src/screens/Search/Shell.tsx:475
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:345
+#: src/screens/Onboarding/StepFinished.tsx:344
 msgid "Find your people"
 msgstr ""
 
@@ -3750,7 +3750,7 @@ msgctxt "Name of app icon variant"
 msgid "Flat White"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:571
+#: src/screens/Onboarding/StepFinished.tsx:569
 msgid "Flexible"
 msgstr ""
 
@@ -3924,7 +3924,7 @@ msgstr ""
 msgid "Forever"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:354
+#: src/screens/Onboarding/StepFinished.tsx:353
 msgid "Forget the noise"
 msgstr ""
 
@@ -3941,7 +3941,7 @@ msgstr ""
 msgid "Forgot?"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:336
+#: src/screens/Onboarding/StepFinished.tsx:335
 msgid "Free your feed"
 msgstr ""
 
@@ -4598,7 +4598,7 @@ msgstr ""
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1777
+#: src/view/com/composer/Composer.tsx:1826
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -4801,8 +4801,8 @@ msgstr ""
 msgid "Let's get your password reset!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:481
-#: src/screens/Onboarding/StepFinished.tsx:591
+#: src/screens/Onboarding/StepFinished.tsx:480
+#: src/screens/Onboarding/StepFinished.tsx:589
 msgid "Let's go!"
 msgstr ""
 
@@ -4854,7 +4854,7 @@ msgstr ""
 
 #: src/screens/Post/PostLikedBy.tsx:41
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:32
-#: src/view/screens/ProfileFeedLikedBy.tsx:34
+#: src/view/screens/ProfileFeedLikedBy.tsx:32
 msgid "Liked By"
 msgstr ""
 
@@ -5266,8 +5266,8 @@ msgstr ""
 msgid "More feeds"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:70
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:73
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:87
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:90
 msgid "More languages..."
 msgstr ""
 
@@ -5372,11 +5372,11 @@ msgid "Muted accounts"
 msgstr ""
 
 #: src/Navigation.tsx:187
-#: src/view/screens/ModerationMutedAccounts.tsx:118
+#: src/view/screens/ModerationMutedAccounts.tsx:116
 msgid "Muted Accounts"
 msgstr ""
 
-#: src/view/screens/ModerationMutedAccounts.tsx:204
+#: src/view/screens/ModerationMutedAccounts.tsx:202
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr ""
 
@@ -5448,7 +5448,7 @@ msgstr ""
 msgid "Need to report a copyright violation?"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:559
+#: src/screens/Onboarding/StepFinished.tsx:557
 msgid "Never lose access to your followers or data."
 msgstr ""
 
@@ -5548,7 +5548,7 @@ msgstr ""
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:193
+#: src/components/dialogs/StarterPackDialog.tsx:192
 msgid "New starter pack"
 msgstr ""
 
@@ -5575,8 +5575,8 @@ msgstr ""
 #: src/screens/Login/LoginForm.tsx:350
 #: src/screens/Login/SetNewPasswordForm.tsx:182
 #: src/screens/Login/SetNewPasswordForm.tsx:188
-#: src/screens/Onboarding/StepFinished.tsx:474
-#: src/screens/Onboarding/StepFinished.tsx:483
+#: src/screens/Onboarding/StepFinished.tsx:473
+#: src/screens/Onboarding/StepFinished.tsx:482
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:157
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:165
 #: src/screens/Signup/BackNextButtons.tsx:67
@@ -5596,7 +5596,7 @@ msgstr ""
 msgid "Next image"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:356
+#: src/screens/Onboarding/StepFinished.tsx:355
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
 msgstr ""
 
@@ -5639,7 +5639,7 @@ msgstr ""
 msgid "No messages yet"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:338
+#: src/screens/Onboarding/StepFinished.tsx:337
 msgid "No more doomscrolling junk-filled algorithms. Find feeds that work for you, not against you."
 msgstr ""
 
@@ -5843,7 +5843,7 @@ msgid "Off"
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:256
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:301
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:323
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "Oh no!"
 msgstr ""
@@ -5880,11 +5880,11 @@ msgstr ""
 msgid "Onboarding reset"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:359
+#: src/view/com/composer/Composer.tsx:398
 msgid "One or more GIFs is missing alt text."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:356
+#: src/view/com/composer/Composer.tsx:395
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -5896,7 +5896,7 @@ msgstr ""
 msgid "One or more of your selected files are too large. Maximum size is 100 MB."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:366
+#: src/view/com/composer/Composer.tsx:405
 msgid "One or more videos is missing alt text."
 msgstr ""
 
@@ -5935,7 +5935,7 @@ msgstr ""
 msgid "Oops!"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:555
+#: src/screens/Onboarding/StepFinished.tsx:553
 msgid "Open"
 msgstr ""
 
@@ -5953,7 +5953,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageInput.web.tsx:181
-#: src/view/com/composer/Composer.tsx:1429
+#: src/view/com/composer/Composer.tsx:1475
 msgid "Open emoji picker"
 msgstr ""
 
@@ -6053,7 +6053,7 @@ msgstr ""
 msgid "Opens device gallery to select up to {MAX_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1430
+#: src/view/com/composer/Composer.tsx:1476
 msgid "Opens emoji picker"
 msgstr ""
 
@@ -6087,7 +6087,7 @@ msgstr ""
 msgid "Opens password reset form"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:103
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:129
 msgid "Opens post language settings"
 msgstr ""
 
@@ -6470,12 +6470,12 @@ msgctxt "description"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1076
+#: src/view/com/composer/Composer.tsx:1118
 msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1074
+#: src/view/com/composer/Composer.tsx:1116
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -6527,7 +6527,7 @@ msgid "Post Interaction Settings"
 msgstr ""
 
 #. Accessibility label for button that opens dialog to choose post language settings
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:98
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:124
 msgid "Post language selection"
 msgstr ""
 
@@ -6640,7 +6640,7 @@ msgstr ""
 msgid "Privacy Policy"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1840
+#: src/view/com/composer/Composer.tsx:1889
 msgid "Processing video..."
 msgstr ""
 
@@ -6666,7 +6666,7 @@ msgctxt "toast"
 msgid "Profile updated"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:541
+#: src/screens/Onboarding/StepFinished.tsx:539
 msgid "Public"
 msgstr ""
 
@@ -6679,22 +6679,22 @@ msgid "Public, sharable lists which can be used to drive feeds."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1056
+#: src/view/com/composer/Composer.tsx:1098
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1049
+#: src/view/com/composer/Composer.tsx:1091
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1034
+#: src/view/com/composer/Composer.tsx:1076
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1041
+#: src/view/com/composer/Composer.tsx:1083
 msgid "Publish reply"
 msgstr ""
 
@@ -6853,7 +6853,7 @@ msgstr ""
 msgid "Recent Searches"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:210
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:232
 msgid "Recently used"
 msgstr ""
 
@@ -6881,8 +6881,8 @@ msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:171
 #: src/components/dialogs/MutedWords.tsx:443
-#: src/components/dialogs/StarterPackDialog.tsx:371
-#: src/components/dialogs/StarterPackDialog.tsx:377
+#: src/components/dialogs/StarterPackDialog.tsx:370
+#: src/components/dialogs/StarterPackDialog.tsx:376
 #: src/components/FeedCard.tsx:343
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:111
@@ -7027,7 +7027,7 @@ msgstr ""
 msgid "Removed from saved posts"
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:277
+#: src/components/dialogs/StarterPackDialog.tsx:276
 msgid "Removed from starter pack"
 msgstr ""
 
@@ -7084,7 +7084,7 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1072
+#: src/view/com/composer/Composer.tsx:1114
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -7501,7 +7501,7 @@ msgstr ""
 #: src/components/forms/SearchInput.tsx:34
 #: src/components/forms/SearchInput.tsx:36
 #: src/screens/Search/Shell.tsx:307
-#: src/screens/Search/Shell.tsx:464
+#: src/screens/Search/Shell.tsx:463
 #: src/view/shell/bottom-bar/BottomBar.tsx:198
 msgid "Search"
 msgstr ""
@@ -7561,8 +7561,8 @@ msgstr ""
 msgid "Search is currently unavailable when logged out"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:193
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:194
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:215
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:216
 msgid "Search languages"
 msgstr ""
 
@@ -7644,7 +7644,7 @@ msgstr ""
 msgid "Select {0}"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:58
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:72
 msgid "Select {langName}"
 msgstr ""
 
@@ -7710,7 +7710,7 @@ msgid "Select language..."
 msgstr ""
 
 #: src/screens/Settings/LanguageSettings.tsx:178
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:226
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:248
 msgid "Select languages"
 msgstr ""
 
@@ -7722,7 +7722,7 @@ msgstr ""
 msgid "Select moderator"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:45
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:57
 msgid "Select post language"
 msgstr ""
 
@@ -7743,7 +7743,7 @@ msgstr ""
 msgid "Select the moderation service(s) to report to"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:172
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:194
 msgid "Select up to 3 languages used in this post"
 msgstr ""
 
@@ -7805,7 +7805,7 @@ msgstr ""
 msgid "Send message"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/RecentChats.tsx:123
+#: src/components/PostControls/ShareMenu/RecentChats.tsx:122
 msgid "Send post to {name}"
 msgstr ""
 
@@ -8211,16 +8211,16 @@ msgstr ""
 msgid "Similar accounts"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:380
-#: src/screens/Onboarding/StepFinished.tsx:462
+#: src/screens/Onboarding/StepFinished.tsx:379
+#: src/screens/Onboarding/StepFinished.tsx:461
 #: src/screens/Onboarding/StepInterests/index.tsx:240
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:222
 #: src/screens/StarterPack/Wizard/index.tsx:218
 msgid "Skip"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:373
-#: src/screens/Onboarding/StepFinished.tsx:459
+#: src/screens/Onboarding/StepFinished.tsx:372
+#: src/screens/Onboarding/StepFinished.tsx:458
 msgid "Skip introduction and start using your account"
 msgstr ""
 
@@ -8344,7 +8344,7 @@ msgstr ""
 msgid "Sports"
 msgstr ""
 
-#: src/components/PostControls/ShareMenu/RecentChats.tsx:208
+#: src/components/PostControls/ShareMenu/RecentChats.tsx:207
 msgid "Start a conversation, and it will appear here."
 msgstr ""
 
@@ -8754,6 +8754,10 @@ msgstr ""
 msgid "The open social network."
 msgstr ""
 
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:119
+msgid "The post you're replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
+msgstr ""
+
 #: src/view/screens/PrivacyPolicy.tsx:38
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr ""
@@ -8884,7 +8888,7 @@ msgid "There was an issue. Please check your internet connection and try again."
 msgstr ""
 
 #: src/components/dialogs/GifSelect.tsx:258
-#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:303
+#: src/view/com/composer/select-language/PostLanguageSelectDialog.tsx:325
 #: src/view/com/util/ErrorBoundary.tsx:59
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr ""
@@ -9065,7 +9069,7 @@ msgstr ""
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:475
+#: src/view/com/composer/Composer.tsx:514
 msgid "This post's author has disabled quote posts."
 msgstr ""
 
@@ -9493,7 +9497,7 @@ msgstr ""
 msgid "Unsubscribed from list"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:852
+#: src/view/com/composer/Composer.tsx:894
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -9579,7 +9583,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1837
+#: src/view/com/composer/Composer.tsx:1886
 msgid "Uploading video..."
 msgstr ""
 
@@ -9837,7 +9841,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1847
+#: src/view/com/composer/Composer.tsx:1896
 msgid "Video uploaded"
 msgstr ""
 
@@ -9853,7 +9857,7 @@ msgstr ""
 msgid "Videos must be less than 3 minutes long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:546
+#: src/view/com/composer/Composer.tsx:585
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr ""
@@ -9906,8 +9910,8 @@ msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:198
 #: src/components/interstitials/TrendingVideos.tsx:220
-#: src/screens/Search/modules/ExploreTrendingVideos.tsx:194
-#: src/screens/Search/modules/ExploreTrendingVideos.tsx:213
+#: src/screens/Search/modules/ExploreTrendingVideos.tsx:193
+#: src/screens/Search/modules/ExploreTrendingVideos.tsx:212
 msgid "View more"
 msgstr ""
 
@@ -9915,7 +9919,7 @@ msgstr ""
 msgid "View more trending videos"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:541
+#: src/view/com/composer/Composer.tsx:580
 msgid "View post"
 msgstr ""
 
@@ -10046,7 +10050,7 @@ msgstr ""
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:533
+#: src/screens/Onboarding/StepFinished.tsx:531
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr ""
 
@@ -10143,7 +10147,7 @@ msgstr ""
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:472
+#: src/view/com/composer/Composer.tsx:511
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -10194,7 +10198,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:51
 #: src/view/com/auth/SplashScreen.web.tsx:103
-#: src/view/com/composer/Composer.tsx:812
+#: src/view/com/composer/Composer.tsx:854
 msgid "What's up?"
 msgstr ""
 
@@ -10225,7 +10229,7 @@ msgid "Whoops!"
 msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:125
-#: src/screens/Search/modules/ExploreTrendingVideos.tsx:108
+#: src/screens/Search/modules/ExploreTrendingVideos.tsx:107
 msgid "Whoops! Trending videos failed to load."
 msgstr ""
 
@@ -10272,12 +10276,12 @@ msgstr ""
 msgid "Write a message"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:912
+#: src/view/com/composer/Composer.tsx:954
 msgid "Write post"
 msgstr ""
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:90
-#: src/view/com/composer/Composer.tsx:810
+#: src/view/com/composer/Composer.tsx:852
 msgid "Write your reply"
 msgstr ""
 
@@ -10295,7 +10299,7 @@ msgstr ""
 msgid "www.mylivestream.tv"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:102
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:181
 msgid "Yes"
 msgstr ""
 
@@ -10508,7 +10512,7 @@ msgstr ""
 msgid "You have no lists."
 msgstr ""
 
-#: src/components/dialogs/StarterPackDialog.tsx:101
+#: src/components/dialogs/StarterPackDialog.tsx:100
 msgid "You have no starter packs."
 msgstr ""
 
@@ -10516,7 +10520,7 @@ msgstr ""
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
 msgstr ""
 
-#: src/view/screens/ModerationMutedAccounts.tsx:179
+#: src/view/screens/ModerationMutedAccounts.tsx:177
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
 msgstr ""
 
@@ -10691,7 +10695,7 @@ msgstr ""
 msgid "You're in line"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:530
+#: src/screens/Onboarding/StepFinished.tsx:528
 msgid "You're ready to go!"
 msgstr ""
 
@@ -10855,15 +10859,15 @@ msgstr ""
 msgid "Your password must be at least 8 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:537
+#: src/view/com/composer/Composer.tsx:576
 msgid "Your post was sent"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:534
+#: src/view/com/composer/Composer.tsx:573
 msgid "Your posts were sent"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:545
+#: src/screens/Onboarding/StepFinished.tsx:543
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr ""
 
@@ -10871,11 +10875,11 @@ msgstr ""
 msgid "Your preferred language"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:422
+#: src/screens/Onboarding/StepFinished.tsx:421
 msgid "Your profile picture"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:350
+#: src/screens/Onboarding/StepFinished.tsx:349
 msgid "Your profile picture surrounded by concentric circles of other users' profile pictures"
 msgstr ""
 
@@ -10883,7 +10887,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:536
+#: src/view/com/composer/Composer.tsx:575
 msgid "Your reply was sent"
 msgstr ""
 
