@@ -173,7 +173,9 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               </View>
             </View>
 
-            <View style={[a.w_full, a.mb_5xl, a.pt_md]}>{children}</View>
+            <View style={[a.w_full, a.h_full, a.mb_5xl, a.pt_md]}>
+              {children}
+            </View>
 
             <View style={{height: 100 + footerHeight}} />
           </View>
