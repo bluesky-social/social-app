@@ -1,4 +1,3 @@
-import * as RootReportDefs from '@atproto/api/dist/client/types/com/atproto/moderation/defs'
 import * as OzoneReportDefs from '@atproto/api/dist/client/types/tools/ozone/report/defs'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -24,7 +23,7 @@ export type ReportCategoryConfig = {
 
 export type ReportOption = {
   title: string
-  reason: RootReportDefs.ReasonType
+  reason: OzoneReportDefs.ReasonType
 }
 
 export function useReportOptions() {
@@ -277,7 +276,7 @@ export function useReportOptions() {
       options: [
         {
           title: _(msg`Other`),
-          reason: RootReportDefs.REASONOTHER,
+          reason: OzoneReportDefs.REASONRULEOTHER,
         },
       ],
       isOther: true,
