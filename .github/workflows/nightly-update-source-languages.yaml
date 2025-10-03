@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           ssh-key: ${{secrets.GH_ACTION_DEPLOY_KEY}}
       - name: Install node
