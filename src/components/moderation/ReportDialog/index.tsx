@@ -156,8 +156,6 @@ function Inner(props: ReportDialogProps) {
   const hasSupportedLabelers = !!supportedLabelers.length
   const hasSingleSupportedLabeler = supportedLabelers.length === 1
 
-  console.log(supportedLabelers)
-
   const onSubmit = React.useCallback(async () => {
     dispatch({type: 'clearError'})
 
@@ -263,7 +261,7 @@ function Inner(props: ReportDialogProps) {
                   </View>
                   <Button
                     testID="report:clearCategory"
-                    label={_(msg`Change report reason`)}
+                    label={_(msg`Change report category`)}
                     size="tiny"
                     variant="solid"
                     color="secondary"
