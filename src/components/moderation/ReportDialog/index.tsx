@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {type ScrollView} from 'react-native-gesture-handler'
-import {type AppBskyLabelerDefs} from '@atproto/api'
+import {type AppBskyLabelerDefs, BSKY_LABELER_DID} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -30,7 +30,11 @@ import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSubmitReportMutation} from './action'
-import {SUPPORT_PAGE} from './const'
+import {
+  BSKY_LABELER_ONLY_REPORT_REASONS,
+  NEW_TO_OLD_REASONS_MAP,
+  SUPPORT_PAGE,
+} from './const'
 import {useCopyForSubject} from './copy'
 import {initialState, reducer} from './state'
 import {type ReportDialogProps, type ReportSubject} from './types'
@@ -135,13 +139,24 @@ function Inner(props: ReportDialogProps) {
       })
       .filter(l => {
         if (!state.selectedOption) return true
+        // some reasons ONLY go to Bluesky
+        if (BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)) {
+          return l.creator.did === BSKY_LABELER_DID
+        }
         const reasonTypes: string[] | undefined = l.reasonTypes
         if (reasonTypes === undefined) return true
-        return reasonTypes.includes(state.selectedOption.reason)
+        return (
+          reasonTypes.includes(state.selectedOption.reason) ||
+          reasonTypes.includes(
+            NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
+          )
+        )
       })
   }, [props, allLabelers, state.selectedOption])
   const hasSupportedLabelers = !!supportedLabelers.length
   const hasSingleSupportedLabeler = supportedLabelers.length === 1
+
+  console.log(supportedLabelers)
 
   const onSubmit = React.useCallback(async () => {
     dispatch({type: 'clearError'})
