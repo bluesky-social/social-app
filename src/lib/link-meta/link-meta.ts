@@ -62,7 +62,10 @@ export async function getLinkMeta(
     likelyType,
     url,
   }
-  if (likelyType !== LikelyType.HTML) {
+  const trustedHostnames: string[] = ['storage.courtlistener.com']
+  const isTrusted = trustedHostnames.includes(urlp.hostname)
+  // Only allow non-HTML links to continue if they're from trusted sources
+  if (likelyType !== LikelyType.HTML && !isTrusted) {
     return meta
   }
 
