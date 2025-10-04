@@ -87,7 +87,7 @@ export function Row({
   style?: StyleProp<ViewStyle>
 }) {
   return (
-    <View style={[a.flex_1, a.flex_row, a.align_start, a.gap_sm, style]}>
+    <View style={[a.w_full, a.flex_row, a.align_start, a.gap_sm, style]}>
       {children}
     </View>
   )
